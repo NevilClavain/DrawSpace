@@ -27,6 +27,7 @@
 #include "luaclass_renderstatesset.h"
 #include "luaclass_renderassembly.h"
 #include "mainservice.h"
+#include "renderingaspectimpl.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -42,8 +43,8 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "set_pass_depthclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate },
     { "create_pass_viewportquad", &LuaClass_RenderPassNodeGraph::LUA_createpassviewportquad },
     { "remove_pass_viewportquad", &LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad },
-    { "load_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadresources },
-    { "unload_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadresources },
+    { "configure_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources },
+    { "release_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadresources },
     { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
 	{ 0, 0 }
 };
@@ -268,19 +269,19 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadresources( lua_State* p_L )
+int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{		
-        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : argument(s) missing" );
+        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
     LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
     if( NULL == lua_renderassembly )
     {
-        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : argument 1 must be of type LuaClass_RenderAssembly" );
+        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : argument 1 must be of type LuaClass_RenderAssembly" );
     }
 
     if( m_passes.count( pass_id ) )
@@ -306,9 +307,9 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadresources( lua_State* 
                 if( !status )
                 {
                     // clean tout ce qui a deja ete charge...
-                    unload_resources( p_L, pass_id );
+                    cleanup_resources( p_L, pass_id );
 
-                    LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : shader loading operation failed" );
+                    LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : shader loading operation failed" );
                 }
                 else
                 {
@@ -334,9 +335,9 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadresources( lua_State* 
                     if( !status )
                     {
                         // clean tout ce qui a deja ete charge...
-                        unload_resources( p_L, pass_id );
+                        cleanup_resources( p_L, pass_id );
 
-                        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : texture loading operation failed" );
+                        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : texture loading operation failed" );
                     }
                     else
                     {
@@ -348,17 +349,17 @@ int LuaClass_RenderPassNodeGraph::LUA_loadpassviewportquadresources( lua_State* 
         }
         else
         {
-            LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : no viewportquad created for this pass" );
+            LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : no viewportquad created for this pass" );
         }
     }
     else
     {
-        LUA_ERROR( "RenderPassNodeGraph::load_pass_viewportquad_resources : unknown pass id" );
+        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : unknown pass id" );
     }
     return 0;
 }
 
-void LuaClass_RenderPassNodeGraph::unload_resources( lua_State* p_L, const dsstring& p_passid )
+void LuaClass_RenderPassNodeGraph::cleanup_resources( lua_State* p_L, const dsstring& p_passid )
 {
     dsstring pass_id = p_passid;
 
@@ -404,16 +405,16 @@ void LuaClass_RenderPassNodeGraph::unload_resources( lua_State* p_L, const dsstr
     }
 }
 
-int LuaClass_RenderPassNodeGraph::LUA_unloadpassviewportquadresources( lua_State* p_L )
+int LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadresources( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
-        LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_resources : argument(s) missing" );
+        LUA_ERROR( "RenderPassNodeGraph::release_pass_viewportquad_resources : argument(s) missing" );
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
-    unload_resources( p_L, pass_id );
+    cleanup_resources( p_L, pass_id );
 
     return 0;
 }

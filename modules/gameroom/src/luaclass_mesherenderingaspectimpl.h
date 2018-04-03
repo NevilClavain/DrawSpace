@@ -38,7 +38,9 @@ private:
     DrawSpace::Core::Fx                                          m_fx;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl*  m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                          m_entity_rendering_aspect;
+    dsstring                                                     m_id;
 
+    void cleanup_resources( lua_State* p_L );
 
 public:
 
@@ -47,12 +49,13 @@ public:
 
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
-
-
-
+    int LUA_registertorendering( lua_State* p_L );
+    int LUA_unregisterfromrendering( lua_State* p_L );
    
+    
     static const char className[];
     static const Luna<LuaClass_MesheRenderingAspectImpl>::RegType methods[];
+    
 };
 
 #endif

@@ -36,6 +36,7 @@ const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[
     { "set_root", &LuaClass_EntityNodeGraph::LUA_setroot },
     { "add_child", &LuaClass_EntityNodeGraph::LUA_addchild },
     { "remove", &LuaClass_EntityNodeGraph::LUA_remove },
+    { "set_camera", &LuaClass_EntityNodeGraph::LUA_setcamera },
     { "dump", &LuaClass_EntityNodeGraph::LUA_dumpcontent },
 	{ 0, 0 }
 };
@@ -149,6 +150,24 @@ int LuaClass_EntityNodeGraph::LUA_remove( lua_State* p_L )
 
     m_entities[entity_id].Erase();
     m_entities.erase( entity_id );
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_setcamera( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "EntityNodeGraph::set_camera : argument(s) missing" );
+	}
+
+    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    if( NULL == lua_ent )
+    {
+        LUA_ERROR( "EntityNodeGraph::set_camera : argument 1 must be of type LuaClass_Entity" );
+    }
+
+    m_entitygraph.SetCurrentCameraEntity( &lua_ent->GetEntity() );
     return 0;
 }
 

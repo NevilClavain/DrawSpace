@@ -48,7 +48,7 @@ protected:
     std::unordered_map<dsstring, Passe>                                     m_passes;
     dsstring                                                                m_id;
 
-    void unload_resources( lua_State* p_L, const dsstring& p_passid );
+    void cleanup_resources( lua_State* p_L, const dsstring& p_passid );
 
 public:
 	LuaClass_RenderPassNodeGraph( lua_State* p_L );
@@ -66,8 +66,8 @@ public:
     int LUA_createpassviewportquad( lua_State* p_L );
     int LUA_removepassviewportquad( lua_State* p_L );
 
-    int LUA_loadpassviewportquadresources( lua_State* p_L );
-    int LUA_unloadpassviewportquadresources( lua_State* p_L );
+    int LUA_configurepassviewportquadresources( lua_State* p_L );
+    int LUA_releasepassviewportquadresources( lua_State* p_L );
 
     int LUA_updaterenderingqueues( lua_State* p_L );
     
