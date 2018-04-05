@@ -1998,8 +1998,17 @@ bool D3D9Renderer::GUI_InitSubSystem( void )
 
     CEGUI::Direct3D9Renderer::bootstrapSystem( m_lpd3ddevice );
 
-    m_guisubsystem.SetReady();
+    m_guisubsystem.SetReady( true );
     return true;
+}
+
+void D3D9Renderer::GUI_ReleaseSubSystem( void )
+{
+    if( m_lpd3ddevice )
+    {
+        CEGUI::Direct3D9Renderer::destroySystem();
+    }
+    m_guisubsystem.SetReady( false );
 }
 
 void D3D9Renderer::GUI_Render( void )
@@ -2081,9 +2090,19 @@ void D3D9Renderer::GUI_LoadLayout( const dsstring& p_layout_path, const dsstring
     m_guisubsystem.LoadLayout( p_layout_path, p_widgets_path );
 }
 
+void D3D9Renderer::GUI_UnloadAllLayouts( void )
+{
+    m_guisubsystem.UnloadAllLayouts();
+}
+
 void D3D9Renderer::GUI_LoadScheme( const dsstring& p_scheme_path )
 {
     m_guisubsystem.LoadScheme( p_scheme_path );
+}
+
+void D3D9Renderer::GUI_ReleaseAllSchemes( void )
+{
+    m_guisubsystem.ReleaseAllSchemes();
 }
 
 void D3D9Renderer::GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName )

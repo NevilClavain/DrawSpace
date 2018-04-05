@@ -39,13 +39,16 @@ class RenderingSystem : public Interface::System
 private:
     DrawSpace::Interface::Renderer*  m_renderer;
     bool                             m_gui_enabled;
+    bool                             m_draw_text_elements;
+    bool                             m_init_phase;
+    bool                             m_init_phase_status;
 public:
     RenderingSystem( void );
     ~RenderingSystem( void );
 
     void EnableGUI( bool p_state );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
+    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
     void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
 
     void Run( EntityGraph::EntityNodeGraph* p_entitygraph );

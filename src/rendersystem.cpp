@@ -48,13 +48,33 @@ void RenderingSystem::EnableGUI( bool p_state )
     m_gui_enabled = p_state;
 }
 
+bool RenderingSystem::Init( EntityNodeGraph* p_entitygraph )
+{
+    m_init_phase = true;
+    m_init_phase_status = true;
+    p_entitygraph->AcceptSystemLeafToRoot( this );
+    return m_init_phase_status;
+}
+
 void RenderingSystem::Run( EntityNodeGraph* p_entitygraph )
 {
+    m_init_phase = false;
+    m_draw_text_elements = false;
+    
+    /////////////// rendu general
     p_entitygraph->AcceptSystemLeafToRoot( this );
+
+    ////////////// rendu GUI (CEGUI)
     if( m_gui_enabled )
     {
         m_renderer->GUI_Render();
     }
+
+    ////////// rendu console : par dessus tout le reste, meme les IHM CEGUI
+    m_draw_text_elements = true;
+    p_entitygraph->AcceptSystemLeafToRoot( this );
+
+    ///////////
     m_renderer->FlipScreen();
 }
 
@@ -63,6 +83,16 @@ void RenderingSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
-        rendering_aspect->Draw( p_entity );
+        if( m_init_phase )
+        {
+            if( false == rendering_aspect->Init( p_entity ) )
+            {
+                m_init_phase_status = false;
+            }
+        }
+        else
+        {
+            rendering_aspect->Run( p_entity, m_draw_text_elements );
+        }
     }
 }

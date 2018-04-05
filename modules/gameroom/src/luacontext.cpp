@@ -27,6 +27,7 @@
 #include "luaclass_globals.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderer.h"
+#include "luaclass_gui.h"
 #include "luaclass_renderstatesset.h"
 #include "luaclass_renderassembly.h"
 #include "luaclass_entity.h"
@@ -56,6 +57,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Globals>::Register( m_L );
     Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
     Luna<LuaClass_Renderer>::Register( m_L );
+    Luna<LuaClass_Gui>::Register( m_L );
     Luna<LuaClass_RenderStatesSet>::Register( m_L );
     Luna<LuaClass_RenderAssembly>::Register( m_L );
     Luna<LuaClass_Entity>::Register( m_L );

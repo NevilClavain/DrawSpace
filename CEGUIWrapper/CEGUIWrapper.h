@@ -78,7 +78,7 @@ public:
     ~CEGUIWrapper( void );
 
     
-    void SetReady( void );
+    void SetReady( bool p_ready );
     void RenderGUI( void );
 
     void SetResourcesRootDirectory( const dsstring& p_path );
@@ -93,8 +93,10 @@ public:
     void OnChar( long p_key );
 
     void LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
+    void UnloadAllLayouts( void );
 
     void LoadScheme( const dsstring& p_scheme_path );
+    void ReleaseAllSchemes( void );
 
     void SetLayout( const dsstring& p_layoutpath );
 

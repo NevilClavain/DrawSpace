@@ -41,9 +41,9 @@ CEGUIWrapper::~CEGUIWrapper( void )
 {
 }
 
-void CEGUIWrapper::SetReady( void )
+void CEGUIWrapper::SetReady( bool p_ready )
 {
-    m_ready = true;
+    m_ready = p_ready;
 }
 
 void CEGUIWrapper::RenderGUI( void )
@@ -202,6 +202,11 @@ void CEGUIWrapper::LoadScheme( const dsstring& p_scheme_path )
     SchemeManager::getSingleton().createFromFile( p_scheme_path );
 }
 
+void CEGUIWrapper::ReleaseAllSchemes( void )
+{
+    SchemeManager::getSingleton().destroyAll();
+}
+
 void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path )
 {
     WindowManager& wmgr = WindowManager::getSingleton();
@@ -229,6 +234,16 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path, const dsstring& p_
     {
         _DSEXCEPTION( "JSON parse : unexpected type for token 0" );
     }  
+}
+
+void CEGUIWrapper::UnloadAllLayouts( void )
+{
+    m_editBoxes.clear();
+    m_layoutsTable.clear();
+    m_layoutNamesTable.clear();
+
+    WindowManager& wmgr = WindowManager::getSingleton();
+    wmgr.destroyAllWindows();
 }
 
 void CEGUIWrapper::recurs_register_widgets( JSONParser& p_parser, int& p_token_index, const dsstring& p_layout_path, const dsstring& p_parent )
@@ -279,7 +294,7 @@ void CEGUIWrapper::SetLayout( const dsstring& p_layoutpath )
     {
         m_currentLayoutName = p_layoutpath;
         m_currentLayout = m_layoutNamesTable[p_layoutpath];
-        System::getSingleton().getDefaultGUIContext().setRootWindow( m_currentLayout );        
+        System::getSingleton().getDefaultGUIContext().setRootWindow( m_currentLayout );      
     }
     else
     {
@@ -298,7 +313,6 @@ void CEGUIWrapper::Store( const dsstring& p_layoutName, const dsstring& p_parent
         if( wt.count( p_parentName ) > 0 )
         {
             Window* parent = wt[p_parentName];
-            //Window* child = parent->getChild( p_id );
             Window* child = parent->getChildRecursive( p_childName );
 
             if( !child )

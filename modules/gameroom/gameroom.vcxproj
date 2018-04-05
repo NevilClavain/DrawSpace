@@ -106,6 +106,7 @@
     <ClCompile Include="src\luaclass_textrenderingaspectimpl.cpp" />
     <ClCompile Include="src\luaclass_fpstransformaspectimpl.cpp" />
     <ClCompile Include="src\luacontext.cpp" />
+    <ClCompile Include="src\luaclass_gui.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mainservice.cpp" />
     <ClCompile Include="src\rootimpl.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="src\luaclass_renderstatesset.h" />
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\luaclass_entitynodegraph.h" />
+    <ClInclude Include="src\luaclass_gui.h" />
     <ClInclude Include="src\luna.h" />
     <ClInclude Include="src\mainservice.h" />
     <ClInclude Include="src\rootimpl.h" />

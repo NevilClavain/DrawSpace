@@ -218,6 +218,7 @@ public:
     virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
     virtual bool GUI_InitSubSystem( void );
+    virtual void GUI_ReleaseSubSystem( void );
     virtual void GUI_Render( void );
     virtual void GUI_SetResourcesRootDirectory( const dsstring& p_path );
 
@@ -230,7 +231,9 @@ public:
     virtual void GUI_OnKeyUp( long p_key );
     virtual void GUI_OnChar( long p_key );
     virtual void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
+    virtual void GUI_UnloadAllLayouts( void );
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path );
+    virtual void GUI_ReleaseAllSchemes( void );
     virtual void GUI_SetLayout( const dsstring& p_layoutpath );
     virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
     virtual void GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );

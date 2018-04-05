@@ -52,10 +52,27 @@ void RenderingAspect::RemoveImplementation( DrawSpace::Interface::AspectImplemen
     } 
 }
 
-void RenderingAspect::Draw( Entity* p_owner_entity )
+bool RenderingAspect::Init( Core::Entity* p_owner_entity )
+{
+    bool status = true;
+    for( size_t i = 0; i < m_impls.size(); i++ )
+    {
+        if( false == m_impls[i]->Init( p_owner_entity ) )
+        {
+            status = false;
+        }
+    }
+    return status;
+}
+
+void RenderingAspect::Run( Entity* p_owner_entity, bool p_drawtextlements )
 {    
     for( size_t i = 0; i < m_impls.size(); i++ )
     {
-        m_impls[i]->Run( p_owner_entity );
-    }   
+        if( p_drawtextlements == m_impls[i]->IsText() )
+        {
+            m_impls[i]->Run( p_owner_entity );
+        }
+    }
 }
+

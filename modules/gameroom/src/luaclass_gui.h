@@ -22,39 +22,31 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _QUADRENDERINGASPECTIMPL_H_
-#define _QUADRENDERINGASPECTIMPL_H_
+#ifndef _LUACLASS_GUI_H_
+#define _LUACLASS_GUI_H_
 
-#include "renderingaspectimpl.h"
+#include "luna.h"
 #include "renderer.h"
-#include "plugin.h"
-#include "renderingnode.h"
-#include "renderpassnodegraph.h"
 
-namespace DrawSpace
+class LuaClass_Gui
 {
-namespace AspectImplementations
-{
-class QuadRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
-{
-
-private:
-    void*                                   m_sh_data;
-    void*                                   m_rs_data;
-    void*                                   m_tx_data;
-    void*                                   m_meshe_data;
-
-    Utils::Matrix                           m_proj;
+protected:
+    DrawSpace::Interface::Renderer* m_renderer;
 
 public:
-    QuadRenderingAspectImpl( void );
+	LuaClass_Gui( lua_State* p_L );
+	~LuaClass_Gui( void );
 
-    bool IsText( void ) override { return true; };
+    int LUA_init( lua_State* p_L );
+    int LUA_setresourcespath( lua_State* p_L );
+    int LUA_loadscheme( lua_State* p_L );
+    int LUA_loadlayout( lua_State* p_L );
+    int LUA_setlayout( lua_State* p_L );
+    int LUA_showgui( lua_State* p_L );
 
-    bool Init( DrawSpace::Core::Entity* p_entity );
-    void Run( DrawSpace::Core::Entity* p_entity );
+    static const char className[];
+    static const Luna<LuaClass_Gui>::RegType methods[];
+
 };
-}
-}
 
 #endif

@@ -129,6 +129,8 @@ public:
 
     void RequestMemAllocDump( void );
 
+    void RequestGuiDisplay( bool p_display );
+
     
 
     friend class BaseSingleton<MainService>;

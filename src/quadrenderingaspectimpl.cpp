@@ -32,17 +32,44 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface;
 
-QuadRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
-m_pass_name( p_pass_name ),
-m_renderer( DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface ),
-m_rendering_node( _DRAWSPACE_NEW_( RenderingNode, RenderingNode ) ),
-m_cb( _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) ) )
+QuadRenderingAspectImpl::QuadRenderingAspectImpl( void )
 {
-    m_rendering_node->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
-    m_rendering_node->RegisterHandler( m_cb );
+}
 
-    m_world.Identity();
+bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity )
+{
+    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+
+    ComponentList<Core::RenderingNode*> quads_nodes;
+    m_owner->GetComponentsByType<Core::RenderingNode*>( quads_nodes );
+
+    Core::RenderingNode* node = quads_nodes[0]->getPurpose();
+
+    Fx* fx = node->GetFx();
+
+    if( false == renderer->CreateShaders( fx, &m_sh_data ) )
+    {
+        _DSEXCEPTION( "Cannot create Shaders" )
+    }
+    
+    for( long j = 0; j < node->GetTextureListSize(); j++ )
+    {
+        Texture* current_tx = node->GetTexture( j );
+        if( NULL != current_tx )
+        {
+            if( false == renderer->CreateTexture( current_tx, &m_tx_data ) )
+            {
+                dsstring path;
+                current_tx->GetPath( path );
+
+                dsstring excp_msg = "Cannot create Texture ";
+                excp_msg += path;
+                _DSEXCEPTION( excp_msg  )
+            }
+        }
+    }
 
 
     // construire le meshe
@@ -72,84 +99,39 @@ m_cb( _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( thi
     v4.tu[0] = 0.0;
     v4.tv[0] = 1.0;
 
-    m_rendering_node->GetMeshe()->AddVertex( v1 );
-    m_rendering_node->GetMeshe()->AddVertex( v2 );
-    m_rendering_node->GetMeshe()->AddVertex( v3 );
-    m_rendering_node->GetMeshe()->AddVertex( v4 );
+    node->GetMeshe()->AddVertex( v1 );
+    node->GetMeshe()->AddVertex( v2 );
+    node->GetMeshe()->AddVertex( v3 );
+    node->GetMeshe()->AddVertex( v4 );
 
-    m_rendering_node->GetMeshe()->AddTriangle( Triangle( 0, 2, 1 ) );
-    m_rendering_node->GetMeshe()->AddTriangle( Triangle( 0, 3, 2 ) );
+    node->GetMeshe()->AddTriangle( Triangle( 0, 2, 1 ) );
+    node->GetMeshe()->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    if( false == renderer->CreateMeshe( node->GetMeshe(), &m_meshe_data ) )
+    {
+        _DSEXCEPTION( "Cannot create Meshe" )
+    }
 
     // construire un matrice projection classique
     DrawSpace::Interface::Renderer::Characteristics characteristics;
-    DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( characteristics );
     m_proj.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 10.0 );
 
-}
 
-QuadRenderingAspectImpl::PassSlot::~PassSlot( void )
-{
-    Meshe* meshe = m_rendering_node->GetMeshe();
-    _DRAWSPACE_DELETE_( meshe );
-    _DRAWSPACE_DELETE_( m_rendering_node );
-    _DRAWSPACE_DELETE_( m_cb );
-}       
-
-void QuadRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
-{
-    Matrix view;
-    view.Identity();
-    m_renderer->DrawMeshe( m_world, view, m_proj );
-}
-
-
-QuadRenderingAspectImpl::QuadRenderingAspectImpl( void )
-{
-}
-
-bool QuadRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
-{
-    bool updated_queue = false;
-
-    ComponentList<PassSlot> pass_slots;
-
-    m_owner->GetComponentsByType<PassSlot>( pass_slots );
-
-    for( size_t i = 0; i < pass_slots.size(); i++ )
-    {
-        if( pass_slots[i]->getPurpose().m_pass_name == p_name )
-        {
-            if( m_add_in_rendergraph )
-            {
-                // ajout du renderingnode dans la renderingqueue  
-                p_passqueue->Add( pass_slots[i]->getPurpose().m_rendering_node );
-            }
-            else
-            {
-                // suppression du renderingnode de la renderingqueue
-                p_passqueue->Remove( pass_slots[i]->getPurpose().m_rendering_node );
-            }
-            updated_queue = true;
-        }
-    }
-    return updated_queue;
-}
-
-void QuadRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
-{
-    m_add_in_rendergraph = true;
-    p_rendergraph.Accept( this );
-}
-
-void QuadRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
-{
-    m_add_in_rendergraph = false;
-    p_rendergraph.Accept( this );
+    return true;
 }
 
 void QuadRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 {
+    ComponentList<bool> flags;
+    m_owner->GetComponentsByType<bool>( flags );
+    
+    if( false == flags[0]->getPurpose() )
+    {
+        return;
+    }
+
+
     TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 
     if( transform_aspect )
@@ -157,14 +139,62 @@ void QuadRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         Matrix world;
         transform_aspect->GetWorldTransform( world );
 
-        // redistribution de la transfo world...
+        Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
-        ComponentList<PassSlot> pass_slots;
-        m_owner->GetComponentsByType<PassSlot>( pass_slots );
+        ComponentList<Core::RenderingNode*> quads_nodes;         
+        m_owner->GetComponentsByType<Core::RenderingNode*>( quads_nodes );
 
-        for( size_t i = 0; i < pass_slots.size(); i++ )
+        Core::RenderingNode* node = quads_nodes[0]->getPurpose();
+
+        Fx* fx = node->GetFx();
+
+        renderer->BeginScreen();
+
+        for( long j = 0; j < node->GetTextureListSize(); j++ )
         {
-            pass_slots[i]->getPurpose().m_world = world;
+            Texture* current_tx = node->GetTexture( j );
+            if( NULL != current_tx )
+            {
+                renderer->SetTexture( m_tx_data, j );
+            }
         }
+
+        renderer->SetShaders( m_sh_data );
+        renderer->SetMeshe( m_meshe_data );
+        renderer->ApplyRenderStatesIn( fx );
+
+        std::map<dsstring, RenderingNode::ShadersParams*> node_shaders_params;
+        node->GetShadersParams( node_shaders_params );
+
+        for( std::map<dsstring, RenderingNode::ShadersParams*>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
+        {
+            RenderingNode::ShadersParams* sp = it->second;
+
+            if( sp->vector )
+            {
+                renderer->SetFxShaderParams( sp->shader_index, sp->param_register, sp->param_values );
+            }
+            else
+            {
+                renderer->SetFxShaderMatrix( sp->shader_index, sp->param_register, sp->mat );
+            }
+        }
+
+        Matrix view;
+        view.Identity();
+        renderer->DrawMeshe( world, view, m_proj );
+
+        renderer->ApplyRenderStatesOut( fx );
+
+        for( long j = 0; j < node->GetTextureListSize(); j++ )
+        {
+            Texture* current_tx = node->GetTexture( j );
+            if( NULL != current_tx )
+            {
+                renderer->UnsetTexture( j );
+            }
+        }
+
+        renderer->EndScreen();
     }
 }

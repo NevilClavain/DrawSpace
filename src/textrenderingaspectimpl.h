@@ -62,7 +62,11 @@ public:
     
 public:
     TextRenderingAspectImpl( void );
-    virtual void Run( DrawSpace::Core::Entity* p_entity );
+
+    bool IsText( void ) override { return true; };
+
+    bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
+    void Run( DrawSpace::Core::Entity* p_entity );
 };
 
 }

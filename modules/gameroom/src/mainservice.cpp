@@ -184,13 +184,13 @@ bool MainService::Init( void )
     
     rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
-
+    
     create_console_quad();
 
     // ajout du quad console a la scene
     m_quadEntityNode = root_entity_node.AddChild( &m_quadEntity );
 
-    m_quadRender.RegisterToRendering( m_rendergraphs["rg"]->GetRenderGraph() );
+    
     m_rendergraphs["rg"]->GetRenderGraph().PushSignal_UpdatedRenderingQueues();
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -294,9 +294,9 @@ void MainService::OnChar( long p_char, long p_scan )
         }
 
         RenderingAspect* rendering_aspect = m_quadEntity.GetAspect<RenderingAspect>();
-        RenderingNode* quad_pass = rendering_aspect->GetComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot" )->getPurpose().GetRenderingNode();
-        quad_pass->SetDrawingState( m_console_active );
-     
+        rendering_aspect->GetComponent<bool>( "draw" )->getPurpose() = m_console_active;
+
+
         return;
     }
 
@@ -392,20 +392,24 @@ void MainService::create_console_quad( void )
     RenderingAspect* rendering_aspect = m_quadEntity.AddAspect<RenderingAspect>();
     rendering_aspect->AddImplementation( &m_quadRender );
 
-    rendering_aspect->AddComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot", "final_pass" );
-    RenderingNode* quad_pass = rendering_aspect->GetComponent<QuadRenderingAspectImpl::PassSlot>( "finalpass_slot" )->getPurpose().GetRenderingNode();
-    quad_pass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
+    rendering_aspect->AddComponent<Core::RenderingNode*>( "quad_rn", _DRAWSPACE_NEW_( Core::RenderingNode, Core::RenderingNode ) );
+    rendering_aspect->AddComponent<bool>( "draw", false );
 
-    quad_pass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
-    quad_pass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+    RenderingNode* quad_node = rendering_aspect->GetComponent<Core::RenderingNode*>( "quad_rn" )->getPurpose();
 
-    quad_pass->GetFx()->GetShader( 0 )->LoadFromFile();
-    quad_pass->GetFx()->GetShader( 1 )->LoadFromFile();
+    quad_node->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    quad_pass->AddShaderParameter( 1, "color", 0 );
-    quad_pass->SetShaderRealVector( "color", Vector( 0.5, 0.5, 0.5, 0.85 ) );
+    quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
+    quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+
+    quad_node->GetFx()->GetShader( 0 )->LoadFromFile();
+    quad_node->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    quad_node->AddShaderParameter( 1, "color", 0 );
+    quad_node->SetShaderRealVector( "color", Vector( 0.5, 0.5, 0.5, 0.85 ) );
 
     RenderStatesSet quadpass_rss;
+
     quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     
     quadpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
@@ -418,9 +422,10 @@ void MainService::create_console_quad( void )
     quadpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
     quadpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "false" ) );
 
-    quad_pass->GetFx()->SetRenderStates( quadpass_rss );
 
-    quad_pass->SetOrderNumber( 11000 );
+    quad_node->GetFx()->SetRenderStates( quadpass_rss );
+
+    quad_node->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
 
     TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
 
@@ -433,8 +438,6 @@ void MainService::create_console_quad( void )
 
     transform_aspect->AddComponent<Matrix>( "quad_pos" );
     transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, 0.0, -1.0 );
-
-    quad_pass->SetDrawingState( m_console_active );
 }
 
 
@@ -529,4 +532,9 @@ void MainService::RequestLuaFileExec( const dsstring& p_path )
 void MainService::RequestMemAllocDump( void )
 {
     MemAlloc::GetInstance()->DumpContent();
+}
+
+void MainService::RequestGuiDisplay( bool p_display )
+{
+    m_systemsHub.EnableGUI( p_display );
 }

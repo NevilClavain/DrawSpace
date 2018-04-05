@@ -93,7 +93,8 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    virtual void Run( DrawSpace::Core::Entity* p_entity );
+    bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
+    void Run( DrawSpace::Core::Entity* p_entity );
 };
 }
 }
