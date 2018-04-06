@@ -154,7 +154,7 @@ public:
     virtual void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path ) = 0;
     virtual void GUI_UnloadAllLayouts( void ) = 0;
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path ) = 0;
-    virtual void GUI_ReleaseAllSchemes( void ) = 0;
+    virtual void GUI_UnloadAllSchemes( void ) = 0;
     virtual void GUI_SetLayout( const dsstring& p_layoutpath ) = 0;
     virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName ) = 0;
     virtual void GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state ) = 0;

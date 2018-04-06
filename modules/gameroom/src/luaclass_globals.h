@@ -41,6 +41,7 @@ public:
     int LUA_totalmem( lua_State* p_L );
     int LUA_addappruncb( lua_State* p_L );
     int LUA_removeappruncb( lua_State* p_L );
+    int LUA_reset( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];

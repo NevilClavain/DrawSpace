@@ -38,9 +38,12 @@ public:
 	~LuaClass_Gui( void );
 
     int LUA_init( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
     int LUA_setresourcespath( lua_State* p_L );
     int LUA_loadscheme( lua_State* p_L );
+    int LUA_unloadallschemes( lua_State* p_L );
     int LUA_loadlayout( lua_State* p_L );
+    int LUA_unloadalllayouts( lua_State* p_L );
     int LUA_setlayout( lua_State* p_L );
     int LUA_showgui( lua_State* p_L );
 

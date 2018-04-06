@@ -282,7 +282,7 @@ public:
     virtual void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
     virtual void GUI_UnloadAllLayouts( void );
     virtual void GUI_LoadScheme( const dsstring& p_scheme_path );
-    virtual void GUI_ReleaseAllSchemes( void );
+    virtual void GUI_UnloadAllSchemes( void );
     virtual void GUI_SetLayout( const dsstring& p_layoutpath );
     virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
     virtual void GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );

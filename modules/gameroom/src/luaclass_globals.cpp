@@ -38,6 +38,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "totalmem", &LuaClass_Globals::LUA_totalmem },
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
+    { "reset", &LuaClass_Globals::LUA_reset },
 	{ 0, 0 }
 };
 
@@ -147,4 +148,10 @@ int LuaClass_Globals::LUA_totalmem( lua_State* p_L )
 {
     lua_pushinteger( p_L, DrawSpace::Utils::MemAlloc::GetInstance()->GetTotalSize() );
     return 1;
+}
+
+int LuaClass_Globals::LUA_reset( lua_State* p_L )
+{
+    MainService::GetInstance()->RequestLuaStackReset();
+    return 0;
 }

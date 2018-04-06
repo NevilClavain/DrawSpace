@@ -41,6 +41,7 @@ protected:
     static const int                                                                m_console_max_lines_display = 31;
     static const int                                                                m_console_y_pos = 50;
 
+    bool                                                                            m_request_lua_reset;
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
@@ -90,6 +91,8 @@ protected:
 
     void execute_lua_run_cbs( void );
 
+    void buil_lua_prerequisites( void );
+
 public:
 
     MainService( void );
@@ -130,6 +133,8 @@ public:
     void RequestMemAllocDump( void );
 
     void RequestGuiDisplay( bool p_display );
+
+    void RequestLuaStackReset();
 
     
 

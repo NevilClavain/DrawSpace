@@ -202,7 +202,7 @@ void CEGUIWrapper::LoadScheme( const dsstring& p_scheme_path )
     SchemeManager::getSingleton().createFromFile( p_scheme_path );
 }
 
-void CEGUIWrapper::ReleaseAllSchemes( void )
+void CEGUIWrapper::UnloadAllSchemes( void )
 {
     SchemeManager::getSingleton().destroyAll();
 }

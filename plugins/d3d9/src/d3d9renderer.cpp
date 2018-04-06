@@ -2100,9 +2100,9 @@ void D3D9Renderer::GUI_LoadScheme( const dsstring& p_scheme_path )
     m_guisubsystem.LoadScheme( p_scheme_path );
 }
 
-void D3D9Renderer::GUI_ReleaseAllSchemes( void )
+void D3D9Renderer::GUI_UnloadAllSchemes( void )
 {
-    m_guisubsystem.ReleaseAllSchemes();
+    m_guisubsystem.UnloadAllSchemes();
 }
 
 void D3D9Renderer::GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName )

@@ -96,7 +96,7 @@ public:
     void UnloadAllLayouts( void );
 
     void LoadScheme( const dsstring& p_scheme_path );
-    void ReleaseAllSchemes( void );
+    void UnloadAllSchemes( void );
 
     void SetLayout( const dsstring& p_layoutpath );
 

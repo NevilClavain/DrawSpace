@@ -51,6 +51,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "connect_renderingaspect_rendergraph", &LuaClass_Entity::LUA_connect_renderingaspect_rendergraph },
     { "configure_timemanager", &LuaClass_Entity::LUA_configuretimemmanager },
     { "read_timemanager", &LuaClass_Entity::LUA_readtimemmanager },
+    { "release_timemanager", &LuaClass_Entity::LUA_releasetimemmanager },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
 	{ 0, 0 }
@@ -174,6 +175,28 @@ int LuaClass_Entity::LUA_readtimemmanager( lua_State* p_L )
     } LUA_CATCH;
 
     return 4;
+}
+
+int LuaClass_Entity::LUA_releasetimemmanager( lua_State* p_L )
+{
+    TimeAspect* time_aspect = m_entity.GetAspect<TimeAspect>();
+    if( NULL == time_aspect )
+    {
+        LUA_ERROR( "Entity::release_timemanager : time aspect doesnt exists in this entity!" );
+    }
+
+    LUA_TRY
+    {
+        time_aspect->RemoveComponent<TimeManager>( "time_manager" );
+        time_aspect->RemoveComponent<TimeAspect::TimeScale>( "time_scale" );
+        time_aspect->RemoveComponent<dsstring>( "output_formated_datetime" );
+        time_aspect->RemoveComponent<dstime>( "time" );
+        time_aspect->RemoveComponent<int>( "output_fps" );
+        time_aspect->RemoveComponent<int>( "output_world_nbsteps" );
+        time_aspect->RemoveComponent<dsreal>( "output_time_factor" );
+
+    } LUA_CATCH;
+    return 0;
 }
 
 int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )

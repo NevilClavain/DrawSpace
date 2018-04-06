@@ -31,9 +31,12 @@ const char LuaClass_Gui::className[] = "Gui";
 const Luna<LuaClass_Gui>::RegType LuaClass_Gui::methods[] =
 {
     { "init", &LuaClass_Gui::LUA_init },
+    { "release", &LuaClass_Gui::LUA_release },
     { "set_resourcespath", &LuaClass_Gui::LUA_setresourcespath },
     { "load_scheme", &LuaClass_Gui::LUA_loadscheme },
+    { "unload_allschemes", &LuaClass_Gui::LUA_unloadallschemes },
     { "load_layout", &LuaClass_Gui::LUA_loadlayout },
+    { "unload_alllayouts", &LuaClass_Gui::LUA_unloadalllayouts },
     { "set_layout", &LuaClass_Gui::LUA_setlayout },
     { "show_gui", &LuaClass_Gui::LUA_showgui },
 	{ 0, 0 }
@@ -51,6 +54,12 @@ LuaClass_Gui::~LuaClass_Gui( void )
 int LuaClass_Gui::LUA_init( lua_State* p_L )
 {
     m_renderer->GUI_InitSubSystem();
+    return 0;
+}
+
+int LuaClass_Gui::LUA_release( lua_State* p_L )
+{
+    m_renderer->GUI_ReleaseSubSystem();
     return 0;
 }
 
@@ -82,6 +91,12 @@ int LuaClass_Gui::LUA_loadscheme( lua_State* p_L )
     return 0;
 }
 
+int LuaClass_Gui::LUA_unloadallschemes( lua_State* p_L )
+{
+    m_renderer->GUI_UnloadAllSchemes();
+    return 0;
+}
+
 int LuaClass_Gui::LUA_loadlayout( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
@@ -108,6 +123,12 @@ int LuaClass_Gui::LUA_setlayout( lua_State* p_L )
     dsstring path = luaL_checkstring( p_L, 1 );
     m_renderer->GUI_SetLayout( path );
 
+    return 0;
+}
+
+int LuaClass_Gui::LUA_unloadalllayouts( lua_State* p_L )
+{
+    m_renderer->GUI_UnloadAllLayouts();
     return 0;
 }
 

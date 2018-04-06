@@ -99,6 +99,9 @@ bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity )
     v4.tu[0] = 0.0;
     v4.tv[0] = 1.0;
 
+    node->GetMeshe()->ClearTriangles();
+    node->GetMeshe()->ClearVertices();
+
     node->GetMeshe()->AddVertex( v1 );
     node->GetMeshe()->AddVertex( v2 );
     node->GetMeshe()->AddVertex( v3 );
