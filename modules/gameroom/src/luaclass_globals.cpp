@@ -36,8 +36,14 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "dofile", &LuaClass_Globals::LUA_dofile },
     { "dumpmem", &LuaClass_Globals::LUA_dumpmem },
     { "totalmem", &LuaClass_Globals::LUA_totalmem },
+    
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
+    { "add_keydowncb", &LuaClass_Globals::LUA_addkeydowncb },
+    { "remove_keydowncb", &LuaClass_Globals::LUA_removekeydowncb },
+    { "add_keyupcb", &LuaClass_Globals::LUA_addkeyupcb },
+    { "remove_keyupcb", &LuaClass_Globals::LUA_removekeyupcb },
+
     { "reset", &LuaClass_Globals::LUA_reset },
 	{ 0, 0 }
 };
@@ -97,12 +103,12 @@ int LuaClass_Globals::LUA_dumpmem( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
+void LuaClass_Globals::add_callback( lua_State* p_L, const std::function<void(const std::string&, int)>& p_register_func )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{
-        LUA_ERROR( "Globals::add_appruncb : argument(s) missing" );
+        LUA_ERROR( "Globals::add_callback : argument(s) missing" );
 	}
 
     dsstring cbid = luaL_checkstring( p_L, 1 );
@@ -111,17 +117,16 @@ int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
     if( status > 0 )
     {
         int reffunc = luaL_ref( p_L, LUA_REGISTRYINDEX );     
-        MainService::GetInstance()->RegisterRunCallback( cbid, reffunc );
+        
+        p_register_func( cbid, reffunc );
     }
     else
     {
         LUA_ERROR( "Globals::add_appruncb : argument 2 must be a function" );
     }
-
-    return 0;
 }
 
-int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
+void LuaClass_Globals::remove_callback( lua_State* p_L, const std::function<int(const std::string&)>& p_unregister_func )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
@@ -130,8 +135,7 @@ int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
 	}
     dsstring cbid = luaL_checkstring( p_L, 1 );
 
-    int reffunc = MainService::GetInstance()->UnregisterRunCallback( cbid );
-
+    int reffunc = p_unregister_func( cbid );
     if( -1 == reffunc )
     {
         LUA_ERROR( "Globals::remove_appruncb : unknown callback id" );
@@ -141,6 +145,41 @@ int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
         // liberer la ref...
         luaL_unref( p_L, LUA_REGISTRYINDEX, reffunc );
     }
+}
+
+int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
+{
+    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterRunCallback( p_cbid, p_reffunc ); } );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
+{
+    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterRunCallback( p_cbid ); } );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_addkeydowncb( lua_State* p_L )
+{
+    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterKeyPressCallback( p_cbid, p_reffunc ); } );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_removekeydowncb( lua_State* p_L )
+{
+    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterKeyPressCallback( p_cbid ); } );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_addkeyupcb( lua_State* p_L )
+{
+    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterEndKeyPressCallback( p_cbid, p_reffunc ); } );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_removekeyupcb( lua_State* p_L )
+{
+    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterEndKeyPressCallback( p_cbid ); } );
     return 0;
 }
 

@@ -29,6 +29,11 @@
 
 class LuaClass_Globals
 {
+protected:
+
+    void add_callback( lua_State* p_L, const std::function<void(const std::string&, int)>& p_register_func );
+    void remove_callback( lua_State* p_L, const std::function<int(const std::string&)>& p_unregister_func );
+
 public:
 	LuaClass_Globals( lua_State* p_L );
 	~LuaClass_Globals( void );
@@ -39,8 +44,17 @@ public:
     int LUA_dofile( lua_State* p_L );
     int LUA_dumpmem( lua_State* p_L );
     int LUA_totalmem( lua_State* p_L );
+    
     int LUA_addappruncb( lua_State* p_L );
     int LUA_removeappruncb( lua_State* p_L );
+
+    int LUA_addkeydowncb( lua_State* p_L );
+    int LUA_removekeydowncb( lua_State* p_L );
+
+    int LUA_addkeyupcb( lua_State* p_L );
+    int LUA_removekeyupcb( lua_State* p_L );
+
+
     int LUA_reset( lua_State* p_L );
 
     static const char className[];

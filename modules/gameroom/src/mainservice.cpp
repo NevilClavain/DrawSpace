@@ -184,6 +184,11 @@ void MainService::OnKeyPress( long p_key )
     {
         return;
     }
+
+    for( auto it = m_keypress_lua_callbacks.begin(); it != m_keypress_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaKeyPressFunc( it->second, p_key );
+    }
 }
 
 void MainService::OnEndKeyPress( long p_key )
@@ -191,6 +196,11 @@ void MainService::OnEndKeyPress( long p_key )
     if( m_console_active )
     {
         return;
+    }
+
+    for( auto it = m_endkeypress_lua_callbacks.begin(); it != m_endkeypress_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaEndKeyPressFunc( it->second, p_key );
     }
 }
 
@@ -250,6 +260,13 @@ void MainService::OnChar( long p_char, long p_scan )
         {
             m_console_texts[m_console_current_line] += p_char;
         }
+    }
+    else
+    {
+        for( auto it = m_onchar_lua_callbacks.begin(); it != m_onchar_lua_callbacks.end(); ++it )
+        {
+            LuaContext::GetInstance()->CallLuaOnCharFunc( it->second );
+        }       
     }
 }
 
@@ -382,10 +399,8 @@ void MainService::create_console_quad( void )
 
 void MainService::execute_lua_run_cbs( void )
 {
-    //for( size_t i = 0; i < m_run_lua_callbacks.size(); i++ )
     for( auto it = m_run_lua_callbacks.begin(); it != m_run_lua_callbacks.end(); ++it )
     {
-        //LuaContext::GetInstance()->CallLuaAppRunFunc( m_run_lua_callbacks[i] );
         LuaContext::GetInstance()->CallLuaAppRunFunc( it->second );
     }
 }
@@ -434,6 +449,55 @@ int MainService::UnregisterRunCallback( const dsstring& p_id )
     }
     return index;
 }
+
+void MainService::RegisterKeyPressCallback( const dsstring& p_id, int p_regindex )
+{
+    m_keypress_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterKeyPressCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_keypress_lua_callbacks.count( p_id ) )
+    {
+        index = m_keypress_lua_callbacks[p_id];
+        m_keypress_lua_callbacks.erase( p_id );       
+    }
+    return index;
+}
+
+void MainService::RegisterEndKeyPressCallback( const dsstring& p_id, int p_regindex )
+{
+    m_endkeypress_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterEndKeyPressCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_endkeypress_lua_callbacks.count( p_id ) )
+    {
+        index = m_endkeypress_lua_callbacks[p_id];
+        m_endkeypress_lua_callbacks.erase( p_id );       
+    }
+    return index;
+}
+
+void MainService::RegisterOnCharCallback( const dsstring& p_id, int p_regindex )
+{
+    m_onchar_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterOnCharCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_onchar_lua_callbacks.count( p_id ) )
+    {
+        index = m_onchar_lua_callbacks[p_id];
+        m_onchar_lua_callbacks.erase( p_id );       
+    }
+    return index;
+}
+
 
 
 DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )

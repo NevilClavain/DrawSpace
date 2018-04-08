@@ -65,6 +65,9 @@ public:
 	dsstring GetLastError( void );
 
     void CallLuaAppRunFunc( int p_regindex );
+    void CallLuaKeyPressFunc( int p_regindex, int p_char );
+    void CallLuaEndKeyPressFunc( int p_regindex, int p_char );
+    void CallLuaOnCharFunc( int p_regindex );
 
     static void PushError( lua_State* p_L, const dsstring& p_text );
 

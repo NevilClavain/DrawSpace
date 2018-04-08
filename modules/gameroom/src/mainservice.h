@@ -65,10 +65,12 @@ protected:
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
     DrawSpace::Core::BaseCallback<void, int>*                                       m_closeapp_cb;
-
-    /// callbacks lua sur le Run()
-    //std::vector<int>                                                                m_run_lua_callbacks;
+    
     std::map<dsstring, int>                                                         m_run_lua_callbacks;
+    std::map<dsstring, int>                                                         m_keypress_lua_callbacks;
+    std::map<dsstring, int>                                                         m_endkeypress_lua_callbacks;
+    std::map<dsstring, int>                                                         m_onchar_lua_callbacks;
+
 
 
     //////////////gestion de la console///////////////////
@@ -120,8 +122,18 @@ public:
     void UnregisterRenderGraph( const std::string& p_id );
     void RegisterEntityGraph( const std::string& p_id, LuaClass_EntityNodeGraph* p_eg );
     void UnregisterEntityGraph( const std::string& p_id );
+
     void RegisterRunCallback( const dsstring& p_id, int p_regindex );
     int UnregisterRunCallback( const dsstring& p_id );
+
+    void RegisterKeyPressCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterKeyPressCallback( const dsstring& p_id );
+
+    void RegisterEndKeyPressCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterEndKeyPressCallback( const dsstring& p_id );
+
+    void RegisterOnCharCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterOnCharCallback( const dsstring& p_id );
 
     DrawSpace::Interface::MesheImport* GetMesheImport( void );
 

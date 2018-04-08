@@ -114,6 +114,39 @@ void LuaContext::CallLuaAppRunFunc( int p_regindex )
     }
 }
 
+void LuaContext::CallLuaKeyPressFunc( int p_regindex, int p_char )
+{
+    lua_rawgeti( m_L, LUA_REGISTRYINDEX, p_regindex );
+
+    lua_pushinteger( m_L, p_char );
+
+    if( lua_pcall( m_L, 1, 0, NULL ) != 0 )
+    {
+        // si erreur lua (syntaxe ou autre) dans une callback function lua, faire une exception, car inutile de boucler a l'infini sur la meme erreur (notamment pour les calbacks fonction lua appelees depuis le Run())
+        dsstring err_text = lua_tostring( m_L, -1 );
+        _DSEXCEPTION( err_text );
+    }
+}
+
+void LuaContext::CallLuaEndKeyPressFunc( int p_regindex, int p_char )
+{
+    lua_rawgeti( m_L, LUA_REGISTRYINDEX, p_regindex );
+
+    lua_pushinteger( m_L, p_char );
+
+    if( lua_pcall( m_L, 1, 0, NULL ) != 0 )
+    {
+        // si erreur lua (syntaxe ou autre) dans une callback function lua, faire une exception, car inutile de boucler a l'infini sur la meme erreur (notamment pour les calbacks fonction lua appelees depuis le Run())
+        dsstring err_text = lua_tostring( m_L, -1 );
+        _DSEXCEPTION( err_text );
+    }
+}
+
+void LuaContext::CallLuaOnCharFunc( int p_regindex )
+{
+
+}
+
 dsstring LuaContext::GetLastError( void )
 {
     return m_error;

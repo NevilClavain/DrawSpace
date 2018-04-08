@@ -342,7 +342,7 @@ void MainService::OnKeyPress( long p_key )
 {
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnKeyUp( p_key );
+        m_renderer->GUI_OnKeyDown( p_key );
         return;
     }
 
@@ -368,7 +368,7 @@ void MainService::OnEndKeyPress( long p_key )
 {
     if( m_hmi_mode )
     {
-        m_renderer->GUI_OnKeyDown( p_key );
+        m_renderer->GUI_OnKeyUp( p_key );
         return;
     }
 
