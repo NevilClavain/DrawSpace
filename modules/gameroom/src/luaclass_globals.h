@@ -54,6 +54,24 @@ public:
     int LUA_addkeyupcb( lua_State* p_L );
     int LUA_removekeyupcb( lua_State* p_L );
 
+    int LUA_addoncharcb( lua_State* p_L );
+    int LUA_removeoncharcb( lua_State* p_L );
+
+    int LUA_addmousemovecb( lua_State* p_L );
+    int LUA_removemousemovecb( lua_State* p_L );
+
+    int LUA_addmouseleftbuttondowncb( lua_State* p_L );
+    int LUA_removemouseleftbuttondowncb( lua_State* p_L );
+
+    int LUA_addmouseleftbuttonupcb( lua_State* p_L );
+    int LUA_removemouseleftbuttonupcb( lua_State* p_L );
+
+    int LUA_addmouserightbuttondowncb( lua_State* p_L );
+    int LUA_removemouserightbuttondowncb( lua_State* p_L );
+
+    int LUA_addmouserightbuttonupcb( lua_State* p_L );
+    int LUA_removemouserightbuttonupcb( lua_State* p_L );
+
 
     int LUA_reset( lua_State* p_L );
 

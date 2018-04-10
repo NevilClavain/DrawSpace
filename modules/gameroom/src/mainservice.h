@@ -70,6 +70,11 @@ protected:
     std::map<dsstring, int>                                                         m_keypress_lua_callbacks;
     std::map<dsstring, int>                                                         m_endkeypress_lua_callbacks;
     std::map<dsstring, int>                                                         m_onchar_lua_callbacks;
+    std::map<dsstring, int>                                                         m_mousemove_lua_callbacks;
+    std::map<dsstring, int>                                                         m_mouseleftbuttondown_lua_callbacks;
+    std::map<dsstring, int>                                                         m_mouseleftbuttonup_lua_callbacks;
+    std::map<dsstring, int>                                                         m_mouserightbuttondown_lua_callbacks;
+    std::map<dsstring, int>                                                         m_mouserightbuttonup_lua_callbacks;
 
 
 
@@ -134,6 +139,22 @@ public:
 
     void RegisterOnCharCallback( const dsstring& p_id, int p_regindex );
     int UnregisterOnCharCallback( const dsstring& p_id );
+
+    void RegisterMouseMoveCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterMouseMoveCallback( const dsstring& p_id );
+
+    void RegisterMouseLeftButtonDownCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterMouseLeftButtonDownCallback( const dsstring& p_id );
+
+    void RegisterMouseLeftButtonUpCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterMouseLeftButtonUpCallback( const dsstring& p_id );
+
+    void RegisterMouseRightButtonDownCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterMouseRightButtonDownCallback( const dsstring& p_id );
+
+    void RegisterMouseRightButtonUpCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterMouseRightButtonUpCallback( const dsstring& p_id );
+
 
     DrawSpace::Interface::MesheImport* GetMesheImport( void );
 

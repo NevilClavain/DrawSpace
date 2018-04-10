@@ -187,7 +187,7 @@ void MainService::OnKeyPress( long p_key )
 
     for( auto it = m_keypress_lua_callbacks.begin(); it != m_keypress_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaKeyPressFunc( it->second, p_key );
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_key );
     }
 }
 
@@ -200,7 +200,7 @@ void MainService::OnEndKeyPress( long p_key )
 
     for( auto it = m_endkeypress_lua_callbacks.begin(); it != m_endkeypress_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaEndKeyPressFunc( it->second, p_key );
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_key );
     }
 }
 
@@ -265,13 +265,21 @@ void MainService::OnChar( long p_char, long p_scan )
     {
         for( auto it = m_onchar_lua_callbacks.begin(); it != m_onchar_lua_callbacks.end(); ++it )
         {
-            LuaContext::GetInstance()->CallLuaOnCharFunc( it->second );
+            LuaContext::GetInstance()->CallLuaFunc( it->second, p_char, p_scan );
         }       
     }
 }
 
 void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
 {
+    if( m_console_active )
+    {
+        return;
+    }
+    for( auto it = m_mousemove_lua_callbacks.begin(); it != m_mousemove_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym, p_dx, p_dy );
+    }
 }
 
 void MainService::OnMouseWheel( long p_delta )
@@ -280,18 +288,50 @@ void MainService::OnMouseWheel( long p_delta )
 
 void MainService::OnMouseLeftButtonDown( long p_xm, long p_ym )
 {
+    if( m_console_active )
+    {
+        return;
+    }
+    for( auto it = m_mouseleftbuttondown_lua_callbacks.begin(); it != m_mouseleftbuttondown_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+    }
 }
 
 void MainService::OnMouseLeftButtonUp( long p_xm, long p_ym )
 {
+    if( m_console_active )
+    {
+        return;
+    }
+    for( auto it = m_mouseleftbuttonup_lua_callbacks.begin(); it != m_mouseleftbuttonup_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+    }
 }
 
 void MainService::OnMouseRightButtonDown( long p_xm, long p_ym )
 {
+    if( m_console_active )
+    {
+        return;
+    }
+    for( auto it = m_mouserightbuttondown_lua_callbacks.begin(); it != m_mouserightbuttondown_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+    }
 }
 
 void MainService::OnMouseRightButtonUp( long p_xm, long p_ym )
 {
+    if( m_console_active )
+    {
+        return;
+    }
+    for( auto it = m_mouserightbuttonup_lua_callbacks.begin(); it != m_mouserightbuttonup_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+    }
 }
 
 void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
@@ -401,7 +441,7 @@ void MainService::execute_lua_run_cbs( void )
 {
     for( auto it = m_run_lua_callbacks.begin(); it != m_run_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaAppRunFunc( it->second );
+        LuaContext::GetInstance()->CallLuaFunc( it->second );
     }
 }
 
@@ -445,7 +485,7 @@ int MainService::UnregisterRunCallback( const dsstring& p_id )
     if( m_run_lua_callbacks.count( p_id ) )
     {
         index = m_run_lua_callbacks[p_id];
-        m_run_lua_callbacks.erase( p_id );       
+        m_run_lua_callbacks.erase( p_id );
     }
     return index;
 }
@@ -461,7 +501,7 @@ int MainService::UnregisterKeyPressCallback( const dsstring& p_id )
     if( m_keypress_lua_callbacks.count( p_id ) )
     {
         index = m_keypress_lua_callbacks[p_id];
-        m_keypress_lua_callbacks.erase( p_id );       
+        m_keypress_lua_callbacks.erase( p_id );
     }
     return index;
 }
@@ -477,7 +517,7 @@ int MainService::UnregisterEndKeyPressCallback( const dsstring& p_id )
     if( m_endkeypress_lua_callbacks.count( p_id ) )
     {
         index = m_endkeypress_lua_callbacks[p_id];
-        m_endkeypress_lua_callbacks.erase( p_id );       
+        m_endkeypress_lua_callbacks.erase( p_id );
     }
     return index;
 }
@@ -493,11 +533,90 @@ int MainService::UnregisterOnCharCallback( const dsstring& p_id )
     if( m_onchar_lua_callbacks.count( p_id ) )
     {
         index = m_onchar_lua_callbacks[p_id];
-        m_onchar_lua_callbacks.erase( p_id );       
+        m_onchar_lua_callbacks.erase( p_id );
     }
     return index;
 }
 
+void MainService::RegisterMouseMoveCallback( const dsstring& p_id, int p_regindex )
+{
+    m_mousemove_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterMouseMoveCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_mousemove_lua_callbacks.count( p_id ) )
+    {
+        index = m_mousemove_lua_callbacks[p_id];
+        m_mousemove_lua_callbacks.erase( p_id );
+    }
+    return index;
+}
+
+void MainService::RegisterMouseLeftButtonDownCallback( const dsstring& p_id, int p_regindex )
+{
+    m_mouseleftbuttondown_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterMouseLeftButtonDownCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_mouseleftbuttondown_lua_callbacks.count( p_id ) )
+    {
+        index = m_mouseleftbuttondown_lua_callbacks[p_id];
+        m_mouseleftbuttondown_lua_callbacks.erase( p_id );
+    }
+    return index;
+}
+
+void MainService::RegisterMouseLeftButtonUpCallback( const dsstring& p_id, int p_regindex )
+{
+    m_mouseleftbuttonup_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterMouseLeftButtonUpCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_mouseleftbuttonup_lua_callbacks.count( p_id ) )
+    {
+        index = m_mouseleftbuttonup_lua_callbacks[p_id];
+        m_mouseleftbuttonup_lua_callbacks.erase( p_id );
+    }
+    return index;
+}
+
+void MainService::RegisterMouseRightButtonDownCallback( const dsstring& p_id, int p_regindex )
+{
+    m_mouserightbuttondown_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterMouseRightButtonDownCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_mouserightbuttondown_lua_callbacks.count( p_id ) )
+    {
+        index = m_mouserightbuttondown_lua_callbacks[p_id];
+        m_mouserightbuttondown_lua_callbacks.erase( p_id );
+    }
+    return index;
+}
+
+void MainService::RegisterMouseRightButtonUpCallback( const dsstring& p_id, int p_regindex )
+{
+    m_mouserightbuttonup_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterMouseRightButtonUpCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_mouserightbuttonup_lua_callbacks.count( p_id ) )
+    {
+        index = m_mouserightbuttonup_lua_callbacks[p_id];
+        m_mouserightbuttonup_lua_callbacks.erase( p_id );
+    }
+    return index;
+}
 
 
 DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
@@ -616,6 +735,8 @@ void MainService::buil_lua_prerequisites( void )
 
     LuaContext::GetInstance()->Execute( "print_memsize=function() g:print('Total mem = '..g:totalmem()..' byte(s)') end" );
 
+
+    // build la console lua
 
     DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
     DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();

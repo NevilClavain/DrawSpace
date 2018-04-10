@@ -47,6 +47,16 @@ public:
     int LUA_setlayout( lua_State* p_L );
     int LUA_showgui( lua_State* p_L );
 
+    int LUA_onkeydown(lua_State* p_L );
+    int LUA_onkeyup(lua_State* p_L );
+    int LUA_onchar(lua_State* p_L );
+
+    int LUA_onmousemove(lua_State* p_L );
+    int LUA_onmouseleftbuttondown(lua_State* p_L );
+    int LUA_onmouseleftbuttonup(lua_State* p_L );
+    int LUA_onmouserightbuttondown(lua_State* p_L );
+    int LUA_onmouserightbuttonup(lua_State* p_L );
+
     static const char className[];
     static const Luna<LuaClass_Gui>::RegType methods[];
 

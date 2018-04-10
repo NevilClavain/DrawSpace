@@ -39,6 +39,16 @@ const Luna<LuaClass_Gui>::RegType LuaClass_Gui::methods[] =
     { "unload_alllayouts", &LuaClass_Gui::LUA_unloadalllayouts },
     { "set_layout", &LuaClass_Gui::LUA_setlayout },
     { "show_gui", &LuaClass_Gui::LUA_showgui },
+
+    { "on_keydown", &LuaClass_Gui::LUA_onkeydown },
+    { "on_keyup", &LuaClass_Gui::LUA_onkeyup },
+    { "on_char", &LuaClass_Gui::LUA_onchar },
+    { "on_mousemove", &LuaClass_Gui::LUA_onmousemove },
+    { "on_mouseleftbuttondown", &LuaClass_Gui::LUA_onmouseleftbuttondown },
+    { "on_mouseleftbuttonup", &LuaClass_Gui::LUA_onmouseleftbuttonup },
+    { "on_mouserightbuttondown", &LuaClass_Gui::LUA_onmouserightbuttondown },
+    { "on_mouserightbuttonup", &LuaClass_Gui::LUA_onmouserightbuttonup },
+    
 	{ 0, 0 }
 };
 
@@ -146,3 +156,84 @@ int LuaClass_Gui::LUA_showgui( lua_State* p_L )
 
     return 0;
 }
+
+int LuaClass_Gui::LUA_onkeydown(lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Gui::on_keydown : argument(s) missing" );
+	}
+    int key = luaL_checkint( p_L, 1 );
+    m_renderer->GUI_OnKeyDown( key );
+
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onkeyup(lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Gui::on_keyup : argument(s) missing" );
+	}
+    int key = luaL_checkint( p_L, 1 );
+    m_renderer->GUI_OnKeyUp( key );
+
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onchar(lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Gui::on_char : argument(s) missing" );
+	}
+    int ch = luaL_checkint( p_L, 1 );
+    m_renderer->GUI_OnChar( ch );
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onmousemove(lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 4 )
+	{		
+        LUA_ERROR( "Gui::on_mousemove : argument(s) missing" );
+	}
+    int xm = luaL_checkint( p_L, 1 );
+    int ym = luaL_checkint( p_L, 2 );
+    int dx = luaL_checkint( p_L, 3 );
+    int dy = luaL_checkint( p_L, 4 );
+
+    m_renderer->GUI_OnMouseMove( xm, ym, dx, dy );
+
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onmouseleftbuttondown(lua_State* p_L )
+{
+    m_renderer->GUI_OnMouseLeftButtonDown();
+
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onmouseleftbuttonup(lua_State* p_L )
+{
+    m_renderer->GUI_OnMouseLeftButtonUp();
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onmouserightbuttondown(lua_State* p_L )
+{
+    m_renderer->GUI_OnMouseRightButtonDown();
+    return 0;
+}
+
+int LuaClass_Gui::LUA_onmouserightbuttonup(lua_State* p_L )
+{
+    m_renderer->GUI_OnMouseRightButtonUp();
+    return 0;
+}
+

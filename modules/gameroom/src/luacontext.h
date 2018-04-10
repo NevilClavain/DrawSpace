@@ -54,6 +54,13 @@ protected:
 
 	lua_State*					m_L;
 	std::string					m_error;
+
+    inline void push_luafunc_arg( int p_val )
+    {
+        lua_pushinteger( m_L, p_val );
+    }
+
+
 public:	
 	~LuaContext( void );
 
@@ -63,12 +70,31 @@ public:
 	bool Execute( const std::string& p_script );
 	bool ExecuteFromFile( const std::string& p_fichier );
 	dsstring GetLastError( void );
+    
+    template<class... Args>
+    void CallLuaFunc( int p_regindex, Args&&... p_args )
+    {
+        lua_rawgeti( m_L, LUA_REGISTRYINDEX, p_regindex );
 
-    void CallLuaAppRunFunc( int p_regindex );
-    void CallLuaKeyPressFunc( int p_regindex, int p_char );
-    void CallLuaEndKeyPressFunc( int p_regindex, int p_char );
-    void CallLuaOnCharFunc( int p_regindex );
+        int nb_args = sizeof...(Args);
 
+        const int a[] = {0, (process_one_type<Args>(p_args), 0)...};
+		static_cast<void>(a);
+
+        if( lua_pcall( m_L, nb_args, 0, NULL ) != 0 )
+        {
+            // si erreur lua (syntaxe ou autre) dans une callback function lua, faire une exception, car inutile de boucler a l'infini sur la meme erreur (notamment pour les calbacks fonction lua appelees depuis le Run())
+            dsstring err_text = lua_tostring( m_L, -1 );
+            _DSEXCEPTION( err_text );
+        }
+	};
+
+    template<class A>
+    void process_one_type( A p_a ) 
+    {
+        push_luafunc_arg( p_a );
+    }
+    
     static void PushError( lua_State* p_L, const dsstring& p_text );
 
     friend class BaseSingleton<LuaContext>;
