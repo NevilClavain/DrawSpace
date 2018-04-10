@@ -40,6 +40,9 @@ const Luna<LuaClass_Gui>::RegType LuaClass_Gui::methods[] =
     { "set_layout", &LuaClass_Gui::LUA_setlayout },
     { "show_gui", &LuaClass_Gui::LUA_showgui },
 
+    { "set_mousecursorimage", &LuaClass_Gui::LUA_setmousecursorimage },
+    { "show_mousecursor", &LuaClass_Gui::LUA_showmousecursor },
+
     { "on_keydown", &LuaClass_Gui::LUA_onkeydown },
     { "on_keyup", &LuaClass_Gui::LUA_onkeyup },
     { "on_char", &LuaClass_Gui::LUA_onchar },
@@ -156,6 +159,34 @@ int LuaClass_Gui::LUA_showgui( lua_State* p_L )
 
     return 0;
 }
+
+int LuaClass_Gui::LUA_setmousecursorimage( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Gui::set_mousecursorimage : argument(s) missing" );
+	}
+
+    dsstring path = luaL_checkstring( p_L, 1 );
+    m_renderer->GUI_SetMouseCursorImage( path );
+    return 0;
+}
+
+int LuaClass_Gui::LUA_showmousecursor( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Gui::show_mousecursor : argument(s) missing" );
+	}
+
+    bool disp = luaL_checkint( p_L, 1 );
+    m_renderer->GUI_ShowMouseCursor( disp );
+
+    return 0;
+}
+
 
 int LuaClass_Gui::LUA_onkeydown(lua_State* p_L )
 {

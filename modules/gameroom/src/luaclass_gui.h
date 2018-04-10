@@ -47,6 +47,9 @@ public:
     int LUA_setlayout( lua_State* p_L );
     int LUA_showgui( lua_State* p_L );
 
+    int LUA_setmousecursorimage( lua_State* p_L );
+    int LUA_showmousecursor( lua_State* p_L );
+
     int LUA_onkeydown(lua_State* p_L );
     int LUA_onkeyup(lua_State* p_L );
     int LUA_onchar(lua_State* p_L );
