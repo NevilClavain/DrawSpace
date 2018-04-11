@@ -38,6 +38,12 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
+    using GUIWidgetPushButtonClickedCallback = DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>;
+
+    GUIWidgetPushButtonClickedCallback                                              m_guiwidgetpushbuttonclicked_cb;
+
+    DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousevisible_cb;
+
     static const int                                                                m_console_max_lines_display = 31;
     static const int                                                                m_console_y_pos = 50;
 
@@ -75,6 +81,7 @@ protected:
     std::map<dsstring, int>                                                         m_mouseleftbuttonup_lua_callbacks;
     std::map<dsstring, int>                                                         m_mouserightbuttondown_lua_callbacks;
     std::map<dsstring, int>                                                         m_mouserightbuttonup_lua_callbacks;
+    std::map<dsstring, int>                                                         m_guipushbuttonclicked_lua_callbacks;
 
 
 
@@ -83,6 +90,8 @@ protected:
     std::vector<dsstring>                                                           m_console_texts;
     int                                                                             m_console_current_line;
 
+
+    void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 
     void set_mouse_circular_mode( bool p_state );
 
@@ -155,6 +164,8 @@ public:
     void RegisterMouseRightButtonUpCallback( const dsstring& p_id, int p_regindex );
     int UnregisterMouseRightButtonUpCallback( const dsstring& p_id );
 
+    void RegisterGuiPushButtonClickedCallback( const dsstring& p_id, int p_regindex );
+    int UnregisterGuiPushButtonClickedCallback( const dsstring& p_id );
 
     DrawSpace::Interface::MesheImport* GetMesheImport( void );
 
@@ -168,6 +179,8 @@ public:
     void RequestGuiDisplay( bool p_display );
 
     void RequestLuaStackReset();
+
+    void RequestMousecursorDisplayState( bool p_display );
 
     
 

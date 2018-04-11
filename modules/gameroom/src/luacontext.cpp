@@ -113,3 +113,47 @@ void LuaContext::PushError( lua_State* p_L, const dsstring& p_text )
 	lua_pushstring( p_L, p_text.c_str() );
 	lua_error( p_L );
 }
+
+void LuaContext::AddCallback( lua_State* p_L, const std::function<void(const std::string&, int)>& p_register_func )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
+	{
+        LUA_ERROR( "AddCallback : argument(s) missing" );
+	}
+
+    dsstring cbid = luaL_checkstring( p_L, 1 );
+    int status = lua_isfunction( p_L, 2 );
+
+    if( status > 0 )
+    {
+        int reffunc = luaL_ref( p_L, LUA_REGISTRYINDEX );     
+        
+        p_register_func( cbid, reffunc );
+    }
+    else
+    {
+        LUA_ERROR( "AddCallback : argument 2 must be a function" );
+    }
+}
+
+void LuaContext::RemoveCallback( lua_State* p_L, const std::function<int(const std::string&)>& p_unregister_func )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "RemoveCallback : argument(s) missing" );
+	}
+    dsstring cbid = luaL_checkstring( p_L, 1 );
+
+    int reffunc = p_unregister_func( cbid );
+    if( -1 == reffunc )
+    {
+        LUA_ERROR( "RemoveCallback : unknown callback id" );
+    }
+    else
+    {
+        // liberer la ref...
+        luaL_unref( p_L, LUA_REGISTRYINDEX, reffunc );
+    }
+}

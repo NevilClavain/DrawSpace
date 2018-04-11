@@ -51,6 +51,9 @@ const Luna<LuaClass_Gui>::RegType LuaClass_Gui::methods[] =
     { "on_mouseleftbuttonup", &LuaClass_Gui::LUA_onmouseleftbuttonup },
     { "on_mouserightbuttondown", &LuaClass_Gui::LUA_onmouserightbuttondown },
     { "on_mouserightbuttonup", &LuaClass_Gui::LUA_onmouserightbuttonup },
+
+    { "add_pushbuttonclickedcb", &LuaClass_Gui::LUA_addpushbuttonclickedcb },
+    { "remove_buttonclickedcb", &LuaClass_Gui::LUA_removepushbuttonclickedcb },
     
 	{ 0, 0 }
 };
@@ -265,6 +268,18 @@ int LuaClass_Gui::LUA_onmouserightbuttondown(lua_State* p_L )
 int LuaClass_Gui::LUA_onmouserightbuttonup(lua_State* p_L )
 {
     m_renderer->GUI_OnMouseRightButtonUp();
+    return 0;
+}
+
+int LuaClass_Gui::LUA_addpushbuttonclickedcb( lua_State* p_L )
+{
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterGuiPushButtonClickedCallback( p_cbid, p_reffunc ); } );
+    return 0;
+}
+
+int LuaClass_Gui::LUA_removepushbuttonclickedcb( lua_State* p_L )
+{
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterGuiPushButtonClickedCallback( p_cbid ); } );
     return 0;
 }
 

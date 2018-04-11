@@ -37,7 +37,8 @@ _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 MainService::MainService( void ) :
 m_console_active( false ),
 m_console_current_line( 0 ),
-m_request_lua_reset( false )
+m_request_lua_reset( false ),
+m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked )
 {
     m_console_texts.push_back( "Console: input ready" );
     m_console_texts.push_back( ">" );
@@ -72,7 +73,7 @@ bool MainService::Init( void )
     DrawSpace::Core::BaseCallback<void, int>* closeapp_cb;
     closeapp_cb = app_cbs[0]->getPurpose();
 
-
+    m_mousevisible_cb = mousevisible_cb;
     m_mousecircularmode_cb = mousecircularmode_cb;
     m_closeapp_cb = closeapp_cb;
 
@@ -97,7 +98,7 @@ bool MainService::Init( void )
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear" ) );
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
-    
+    m_renderer->GUI_RegisterPushButtonEventClickedHandler( &m_guiwidgetpushbuttonclicked_cb );
 
     create_console_quad();
 
@@ -336,6 +337,14 @@ void MainService::OnMouseRightButtonUp( long p_xm, long p_ym )
 
 void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
+}
+
+void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id )
+{
+    for( auto it = m_guipushbuttonclicked_lua_callbacks.begin(); it != m_guipushbuttonclicked_lua_callbacks.end(); ++it )
+    {
+        LuaContext::GetInstance()->CallLuaFunc( it->second, p_layout, p_widget_id );
+    }
 }
 
 void MainService::process_console_command( const dsstring& p_cmd )
@@ -619,6 +628,23 @@ int MainService::UnregisterMouseRightButtonUpCallback( const dsstring& p_id )
 }
 
 
+void MainService::RegisterGuiPushButtonClickedCallback( const dsstring& p_id, int p_regindex )
+{
+    m_guipushbuttonclicked_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterGuiPushButtonClickedCallback( const dsstring& p_id )
+{
+    int index = -1;
+    if( m_guipushbuttonclicked_lua_callbacks.count( p_id ) )
+    {
+        index = m_guipushbuttonclicked_lua_callbacks[p_id];
+        m_guipushbuttonclicked_lua_callbacks.erase( p_id );
+    }
+    return index;
+}
+
+
 DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
 {
     return &m_meshe_import;
@@ -659,6 +685,11 @@ void MainService::RequestMemAllocDump( void )
 void MainService::RequestGuiDisplay( bool p_display )
 {
     m_systemsHub.EnableGUI( p_display );
+}
+
+void MainService::RequestMousecursorDisplayState( bool p_display )
+{
+    (*m_mousevisible_cb)( p_display );
 }
 
 void MainService::RequestLuaStackReset()

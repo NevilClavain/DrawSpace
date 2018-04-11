@@ -56,6 +56,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "add_mouserightbuttonupcb", &LuaClass_Globals::LUA_addmouserightbuttonupcb },
     { "remove_mouserightbuttonupcb", &LuaClass_Globals::LUA_removemouserightbuttonupcb },
 
+    { "show_mousecursor", &LuaClass_Globals::LUA_showmousecursor },
+
     { "reset", &LuaClass_Globals::LUA_reset },
 	{ 0, 0 }
 };
@@ -115,160 +117,128 @@ int LuaClass_Globals::LUA_dumpmem( lua_State* p_L )
     return 0;
 }
 
-void LuaClass_Globals::add_callback( lua_State* p_L, const std::function<void(const std::string&, int)>& p_register_func )
-{
-	int argc = lua_gettop( p_L );
-	if( argc < 2 )
-	{
-        LUA_ERROR( "Globals::add_callback : argument(s) missing" );
-	}
-
-    dsstring cbid = luaL_checkstring( p_L, 1 );
-    int status = lua_isfunction( p_L, 2 );
-
-    if( status > 0 )
-    {
-        int reffunc = luaL_ref( p_L, LUA_REGISTRYINDEX );     
-        
-        p_register_func( cbid, reffunc );
-    }
-    else
-    {
-        LUA_ERROR( "Globals::add_appruncb : argument 2 must be a function" );
-    }
-}
-
-void LuaClass_Globals::remove_callback( lua_State* p_L, const std::function<int(const std::string&)>& p_unregister_func )
-{
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{
-        LUA_ERROR( "Globals::remove_callback : argument(s) missing" );
-	}
-    dsstring cbid = luaL_checkstring( p_L, 1 );
-
-    int reffunc = p_unregister_func( cbid );
-    if( -1 == reffunc )
-    {
-        LUA_ERROR( "Globals::remove_callback : unknown callback id" );
-    }
-    else
-    {
-        // liberer la ref...
-        luaL_unref( p_L, LUA_REGISTRYINDEX, reffunc );
-    }
-}
-
 int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterRunCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterRunCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterRunCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterRunCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addkeydowncb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterKeyPressCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterKeyPressCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removekeydowncb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterKeyPressCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterKeyPressCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addkeyupcb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterEndKeyPressCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterEndKeyPressCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removekeyupcb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterEndKeyPressCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterEndKeyPressCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addoncharcb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterOnCharCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterOnCharCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removeoncharcb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterOnCharCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterOnCharCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmousemovecb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseMoveCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseMoveCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 int LuaClass_Globals::LUA_removemousemovecb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseMoveCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseMoveCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmouseleftbuttondowncb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseLeftButtonDownCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseLeftButtonDownCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouseleftbuttondowncb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseLeftButtonDownCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseLeftButtonDownCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmouseleftbuttonupcb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseLeftButtonUpCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseLeftButtonUpCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouseleftbuttonupcb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseLeftButtonUpCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseLeftButtonUpCallback( p_cbid ); } );
     return 0;
 }
 
 
 int LuaClass_Globals::LUA_addmouserightbuttondowncb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseRightButtonDownCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseRightButtonDownCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouserightbuttondowncb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseRightButtonDownCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseRightButtonDownCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmouserightbuttonupcb( lua_State* p_L )
 {
-    add_callback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseRightButtonUpCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseRightButtonUpCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouserightbuttonupcb( lua_State* p_L )
 {
-    remove_callback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseRightButtonUpCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseRightButtonUpCallback( p_cbid ); } );
     return 0;
 }
 
 
+int LuaClass_Globals::LUA_showmousecursor( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Globals::show_mousecursor : argument(s) missing" );
+	}
 
+    bool disp = luaL_checkint( p_L, 1 );
+    MainService::GetInstance()->RequestMousecursorDisplayState( disp );
+
+    return 0;
+}
 
 int LuaClass_Globals::LUA_totalmem( lua_State* p_L )
 {

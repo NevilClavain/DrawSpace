@@ -60,6 +60,10 @@ public:
     int LUA_onmouserightbuttondown(lua_State* p_L );
     int LUA_onmouserightbuttonup(lua_State* p_L );
 
+    int LUA_addpushbuttonclickedcb( lua_State* p_L );
+    int LUA_removepushbuttonclickedcb( lua_State* p_L );
+
+
     static const char className[];
     static const Luna<LuaClass_Gui>::RegType methods[];
 

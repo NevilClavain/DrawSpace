@@ -60,6 +60,10 @@ protected:
         lua_pushinteger( m_L, p_val );
     }
 
+    inline void push_luafunc_arg( const std::string& p_val )
+    {
+        lua_pushstring( m_L, p_val.c_str() );
+    }
 
 public:	
 	~LuaContext( void );
@@ -96,6 +100,10 @@ public:
     }
     
     static void PushError( lua_State* p_L, const dsstring& p_text );
+
+    static void AddCallback( lua_State* p_L, const std::function<void(const std::string&, int)>& p_register_func );
+    static void RemoveCallback( lua_State* p_L, const std::function<int(const std::string&)>& p_unregister_func );
+
 
     friend class BaseSingleton<LuaContext>;
 };
