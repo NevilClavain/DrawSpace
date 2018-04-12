@@ -180,7 +180,8 @@ public:
 
     void RequestLuaStackReset();
 
-    void RequestMousecursorDisplayState( bool p_display );
+    void RequestMouseCursorDisplayState( bool p_display );
+    void RequestMouseCursorCircularMode( bool p_state );
 
     
 

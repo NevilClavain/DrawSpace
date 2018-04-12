@@ -135,17 +135,18 @@ int LuaClass_FPSTransformAspectImpl::LUA_release( lua_State* p_L )
 
 int LuaClass_FPSTransformAspectImpl::LUA_update( lua_State* p_L )
 {
+    
     if( !m_entity_transform_aspect )
     {
         LUA_ERROR( "FPSTransformAspectImpl::update : no transform aspect" );
     }
 
 	int argc = lua_gettop( p_L );
-	if( argc < 6 )
+	if( argc < 9 )
 	{
         LUA_ERROR( "FPSTransformAspectImpl::update : argument(s) missing" );
 	}
-
+    
     LUA_TRY
     {
         dsreal yaw = luaL_checknumber( p_L, 1 );
@@ -156,6 +157,11 @@ int LuaClass_FPSTransformAspectImpl::LUA_update( lua_State* p_L )
         dsreal z = luaL_checknumber( p_L, 5 );
 
         bool ymvt = luaL_checkint( p_L, 6 );
+        
+        dsreal xspeed = luaL_checknumber( p_L, 7 );
+        dsreal yspeed = luaL_checknumber( p_L, 8 );
+        dsreal zspeed = luaL_checknumber( p_L, 9 );
+
 
         m_entity_transform_aspect->GetComponent<dsreal>( "yaw" )->getPurpose() = yaw;
         m_entity_transform_aspect->GetComponent<dsreal>( "pitch" )->getPurpose() = pitch;
@@ -164,8 +170,11 @@ int LuaClass_FPSTransformAspectImpl::LUA_update( lua_State* p_L )
 
         m_entity_transform_aspect->GetComponent<bool>( "ymvt" )->getPurpose() = ymvt;
 
+        Vector speed( xspeed, yspeed, zspeed, 1.0 );
+        m_entity_transform_aspect->GetComponent<Vector>( "speed" )->getPurpose() = speed;
+        
     } LUA_CATCH;
-
+    
     return 0;
 }
 
@@ -189,6 +198,8 @@ int LuaClass_FPSTransformAspectImpl::LUA_read( lua_State* p_L )
         dsreal z = mat( 3, 2 );
 
         bool ymvt = m_entity_transform_aspect->GetComponent<bool>( "ymvt" )->getPurpose();
+
+        Vector speed = m_entity_transform_aspect->GetComponent<Vector>( "speed" )->getPurpose();
     
         lua_pushnumber( p_L, yaw );
         lua_pushnumber( p_L, pitch );
@@ -197,7 +208,11 @@ int LuaClass_FPSTransformAspectImpl::LUA_read( lua_State* p_L )
         lua_pushnumber( p_L, z );
         lua_pushinteger( p_L, ymvt );
 
+        lua_pushinteger( p_L, speed[0] );
+        lua_pushinteger( p_L, speed[1] );
+        lua_pushinteger( p_L, speed[2] );
+
     } LUA_CATCH;
 
-    return 6;
+    return 9;
 }

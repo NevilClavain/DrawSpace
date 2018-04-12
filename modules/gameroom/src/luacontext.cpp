@@ -35,6 +35,8 @@
 #include "luaclass_fpstransformaspectimpl.h"
 #include "luaclass_textrenderingaspectimpl.h"
 #include "luaclass_mesherenderingaspectimpl.h"
+#include "luaclass_syncangle.h"
+#include "luaclass_syncscalar.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -65,6 +67,8 @@ void LuaContext::Startup( void )
     Luna<LuaClass_FPSTransformAspectImpl>::Register( m_L );
     Luna<LuaClass_TextRenderingAspectImpl>::Register( m_L );
     Luna<LuaClass_MesheRenderingAspectImpl>::Register( m_L );
+    Luna<LuaClass_SyncAngle>::Register( m_L );
+    Luna<LuaClass_SyncScalar>::Register( m_L );
 }
 
 void LuaContext::Shutdown( void )

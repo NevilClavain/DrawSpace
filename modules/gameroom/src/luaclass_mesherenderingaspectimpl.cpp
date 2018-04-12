@@ -131,6 +131,8 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
             DrawSpace::Core::RenderStatesSet& rss = lua_renderassembly->GetRenderStatesSet();
             m_fx.SetRenderStates( rss );
 
+            ///////////////////////// les textures
+
             for( size_t i = 0; i < DrawSpace::Core::RenderingNode::NbMaxTextures; i++ )
             {
                 dsstring texture_path = lua_renderassembly->GetTextureFile( i );

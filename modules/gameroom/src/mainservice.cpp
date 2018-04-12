@@ -687,9 +687,14 @@ void MainService::RequestGuiDisplay( bool p_display )
     m_systemsHub.EnableGUI( p_display );
 }
 
-void MainService::RequestMousecursorDisplayState( bool p_display )
+void MainService::RequestMouseCursorDisplayState( bool p_display )
 {
     (*m_mousevisible_cb)( p_display );
+}
+
+void MainService::RequestMouseCursorCircularMode( bool p_state )
+{
+    set_mouse_circular_mode( p_state );
 }
 
 void MainService::RequestLuaStackReset()

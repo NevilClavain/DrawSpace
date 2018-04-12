@@ -57,6 +57,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "remove_mouserightbuttonupcb", &LuaClass_Globals::LUA_removemouserightbuttonupcb },
 
     { "show_mousecursor", &LuaClass_Globals::LUA_showmousecursor },
+    { "set_mousecursorcircularmode", &LuaClass_Globals::LUA_setmousecursorcircularmode },
 
     { "reset", &LuaClass_Globals::LUA_reset },
 	{ 0, 0 }
@@ -235,7 +236,21 @@ int LuaClass_Globals::LUA_showmousecursor( lua_State* p_L )
 	}
 
     bool disp = luaL_checkint( p_L, 1 );
-    MainService::GetInstance()->RequestMousecursorDisplayState( disp );
+    MainService::GetInstance()->RequestMouseCursorDisplayState( disp );
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_setmousecursorcircularmode( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Globals::set_mousecursorcircularmode : argument(s) missing" );
+	}
+
+    bool disp = luaL_checkint( p_L, 1 );
+    MainService::GetInstance()->RequestMouseCursorCircularMode( disp );
 
     return 0;
 }

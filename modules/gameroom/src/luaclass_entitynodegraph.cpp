@@ -116,7 +116,7 @@ int LuaClass_EntityNodeGraph::LUA_addchild( lua_State* p_L )
 
     if( NULL == lua_ent )
     {
-        LUA_ERROR( "EntityNodeGraph::add_child : argument 2 must be of type LuaClass_Entity" );
+        LUA_ERROR( "EntityNodeGraph::add_child : argument 3 must be of type LuaClass_Entity" );
     }
 
     if( m_entities.count( entity_id ) )

@@ -44,7 +44,7 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
         _DSEXCEPTION( "Need a time reference!!!" )
     }    
 
-    // recup des composants donnees d'entr�es
+    // recup des composants donnees d'entrees
     ComponentList<dsreal> angles;
     p_transformaspect->GetComponentsByType<dsreal>( angles );
 

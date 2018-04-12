@@ -103,8 +103,10 @@
     <ClCompile Include="src\luaclass_renderer.cpp" />
     <ClCompile Include="src\luaclass_renderpassnodegraph.cpp" />
     <ClCompile Include="src\luaclass_renderstatesset.cpp" />
+    <ClCompile Include="src\luaclass_syncscalar.cpp" />
     <ClCompile Include="src\luaclass_textrenderingaspectimpl.cpp" />
     <ClCompile Include="src\luaclass_fpstransformaspectimpl.cpp" />
+    <ClCompile Include="src\luaclass_syncangle.cpp" />
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\luaclass_gui.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -116,12 +118,14 @@
     <ClInclude Include="src\luaclass_entity.h" />
     <ClInclude Include="src\luaclass_mesherenderingaspectimpl.h" />
     <ClInclude Include="src\luaclass_renderassembly.h" />
+    <ClInclude Include="src\luaclass_syncscalar.h" />
     <ClInclude Include="src\luaclass_textrenderingaspectimpl.h" />
     <ClInclude Include="src\luaclass_fpstransformaspectimpl.h" />
     <ClInclude Include="src\luaclass_globals.h" />
     <ClInclude Include="src\luaclass_renderer.h" />
     <ClInclude Include="src\luaclass_renderpassnodegraph.h" />
     <ClInclude Include="src\luaclass_renderstatesset.h" />
+    <ClInclude Include="src\luaclass_syncangle.h" />
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\luaclass_entitynodegraph.h" />
     <ClInclude Include="src\luaclass_gui.h" />
