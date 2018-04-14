@@ -38,15 +38,18 @@ private:
     DrawSpace::Core::Fx                                          m_fx;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl*  m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                          m_entity_rendering_aspect;
-    dsstring                                                     m_id;
+    DrawSpace::Core::Entity*                                     m_entity;
+    //dsstring                                                     m_id;
 
-    void cleanup_resources( lua_State* p_L );
+    void cleanup_resources( lua_State* p_L, const dsstring& p_id );
 
 public:
 
 	LuaClass_MesheRenderingAspectImpl( lua_State* p_L );
 	~LuaClass_MesheRenderingAspectImpl( void );
 
+    int LUA_attachtoentity( lua_State* p_L );
+    int LUA_detachfromentity( lua_State* p_L );
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
     int LUA_registertorendering( lua_State* p_L );

@@ -38,6 +38,8 @@ using namespace DrawSpace::AspectImplementations;
 const char LuaClass_MesheRenderingAspectImpl::className[] = "MesheRenderingAspectImpl";
 const Luna<LuaClass_MesheRenderingAspectImpl>::RegType LuaClass_MesheRenderingAspectImpl::methods[] =
 {
+    { "attach_toentity", &LuaClass_MesheRenderingAspectImpl::LUA_attachtoentity },
+    { "detach_fromentity", &LuaClass_MesheRenderingAspectImpl::LUA_detachfromentity },
     { "configure", &LuaClass_MesheRenderingAspectImpl::LUA_configure },
     { "release", &LuaClass_MesheRenderingAspectImpl::LUA_release },
     { "register_to_rendering", &LuaClass_MesheRenderingAspectImpl::LUA_registertorendering },
@@ -46,7 +48,8 @@ const Luna<LuaClass_MesheRenderingAspectImpl>::RegType LuaClass_MesheRenderingAs
 };
 
 LuaClass_MesheRenderingAspectImpl::LuaClass_MesheRenderingAspectImpl( lua_State* p_L ) :
-m_meshe_render( NULL )
+m_meshe_render( NULL ),
+m_entity( NULL )
 {
     m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
 }
@@ -55,47 +58,107 @@ LuaClass_MesheRenderingAspectImpl::~LuaClass_MesheRenderingAspectImpl( void )
 {
 }
 
-int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
+int LuaClass_MesheRenderingAspectImpl::LUA_attachtoentity( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 5 )
+	if( argc < 1 )
 	{		
-        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument(s) missing" );
+        LUA_ERROR( "MesheRenderingAspectImpl::attach_toentity : argument(s) missing" );
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
     if( NULL == lua_ent )
     {
-        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
+        LUA_ERROR( "MesheRenderingAspectImpl::attach_toentity : argument 1 must be of type LuaClass_Entity" );
     }
 
-    dsstring pass_id = luaL_checkstring( p_L, 2 );
-    LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 3 );
+    DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
+    RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
+
+    if( NULL == rendering_aspect )
+    {
+        LUA_ERROR( "MesheRenderingAspectImpl::attach_toentity : entity has no rendering aspect!" );
+    }
+
+    m_entity_rendering_aspect = rendering_aspect;
+    m_entity = &entity;
+
+    m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
+    m_entity_rendering_aspect->AddImplementation( m_meshe_render );
+
+    return 0;
+}
+
+int LuaClass_MesheRenderingAspectImpl::LUA_detachfromentity( lua_State* p_L )
+{
+    if( NULL == m_entity )
+    {
+        LUA_ERROR( "MesheRenderingAspectImpl::detach_fromentity : argument(s) missing" );
+    }
+
+    if( m_meshe_render )
+    {
+        _DRAWSPACE_DELETE_( m_meshe_render );
+    }
+
+    LUA_TRY
+    {
+        m_entity_rendering_aspect->RemoveImplementation( m_meshe_render );
+
+    } LUA_CATCH; 
+
+    m_entity_rendering_aspect = NULL;
+    m_entity = NULL;
+
+    return 0;
+}
+
+
+int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 4 )
+	{		
+        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument(s) missing" );
+	}
+
+    /*
+    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    if( NULL == lua_ent )
+    {
+        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
+    }
+    */
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
     if( NULL == lua_renderassembly )
     {
         LUA_ERROR( "MesheRenderingAspectImpl::configure : argument 1 must be of type LuaClass_RenderAssembly" );
     }
 
-    dsstring meshe_path = luaL_checkstring( p_L, 4 );
-    int meshe_index = luaL_checkint( p_L, 5 );
+    dsstring meshe_path = luaL_checkstring( p_L, 3 );
+    int meshe_index = luaL_checkint( p_L, 4 );
 
-    DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
+    //DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
 
     // recupere l'aspect rendu s'il existe pour cette entitee
-    RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
-    if( rendering_aspect )
+    //RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
+    //if( rendering_aspect )
+
+    if( m_entity_rendering_aspect )
     {
         
-        m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
-        rendering_aspect->AddImplementation( m_meshe_render );
+        //m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
+        //m_entity_rendering_aspect->AddImplementation( m_meshe_render );
         
         LUA_TRY
         {
-            rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
-            RenderingNode* rnode = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
+            m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
+            RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
 
 
-            m_entity_rendering_aspect = rendering_aspect;
+            //m_entity_rendering_aspect = rendering_aspect;
 
             // ici completer le passSlot avec les infos du RenderAssembly
 
@@ -117,7 +180,7 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
                 if( !status )
                 {
                     // clean tout ce qui a deja ete charge...
-                    cleanup_resources( p_L );
+                    cleanup_resources( p_L, pass_id );
                     LUA_ERROR( "MesheRenderingAspectImpl::configure : shader loading operation failed" );
                 }
                 else
@@ -144,7 +207,7 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
                     if( !status )
                     {
                         // clean tout ce qui a deja ete charge...
-                        cleanup_resources( p_L );
+                        cleanup_resources( p_L, pass_id );
                         LUA_ERROR( "MesheRenderingAspectImpl::load_pass_viewportquad_resources : texture loading operation failed" );
                     }
                     else
@@ -160,7 +223,7 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
             bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
             if( !status )
             {
-                cleanup_resources( p_L );
+                cleanup_resources( p_L, pass_id );
                 LUA_ERROR( "MesheRenderingAspectImpl::configure : meshe loading operation failed" );
             }
             rnode->SetMeshe( &m_meshe );
@@ -168,22 +231,23 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
 
         } LUA_CATCH;
 
-        m_id = pass_id;
+        //m_id = pass_id;
     }
     else
     {
-        m_entity_rendering_aspect = NULL;
-        LUA_ERROR( "MesheRenderingAspectImpl::configure : entity passed on arg has no rendering aspect" );    
+        //m_entity_rendering_aspect = NULL;
+        //LUA_ERROR( "MesheRenderingAspectImpl::configure : entity passed on arg has no rendering aspect" );
+        LUA_ERROR( "MesheRenderingAspectImpl::configure : not attached to an entity" );
     }
 
     return 0;
 }
 
-void LuaClass_MesheRenderingAspectImpl::cleanup_resources( lua_State* p_L )
+void LuaClass_MesheRenderingAspectImpl::cleanup_resources( lua_State* p_L, const dsstring& p_id )
 {
     if( m_entity_rendering_aspect )
     {
-        RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( m_id )->getPurpose().GetRenderingNode();
+        RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( p_id )->getPurpose().GetRenderingNode();
 
         for( long i = 0; i < m_fx.GetShadersListSize(); i++ )
         {
@@ -204,18 +268,19 @@ void LuaClass_MesheRenderingAspectImpl::cleanup_resources( lua_State* p_L )
 
         LUA_TRY
         {
-            m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( m_id );
-            m_entity_rendering_aspect->RemoveImplementation( m_meshe_render );
+            m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( p_id );
+            //m_entity_rendering_aspect->RemoveImplementation( m_meshe_render );
 
         } LUA_CATCH; 
 
+        /*
         if( m_meshe_render )
         {
             _DRAWSPACE_DELETE_( m_meshe_render );
         }
-
-        m_entity_rendering_aspect = NULL;
-        m_id = "";
+        */
+        //m_entity_rendering_aspect = NULL;
+        //m_id = "";
     }
     else
     {
@@ -225,7 +290,15 @@ void LuaClass_MesheRenderingAspectImpl::cleanup_resources( lua_State* p_L )
 
 int LuaClass_MesheRenderingAspectImpl::LUA_release( lua_State* p_L )
 {
-    cleanup_resources( p_L );
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "MesheRenderingAspectImpl::release : argument(s) missing" );
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+
+    cleanup_resources( p_L, pass_id );
     return 0;
 }
 

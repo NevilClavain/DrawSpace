@@ -134,8 +134,7 @@ int LuaClass_FPSTransformAspectImpl::LUA_release( lua_State* p_L )
 }
 
 int LuaClass_FPSTransformAspectImpl::LUA_update( lua_State* p_L )
-{
-    
+{    
     if( !m_entity_transform_aspect )
     {
         LUA_ERROR( "FPSTransformAspectImpl::update : no transform aspect" );
