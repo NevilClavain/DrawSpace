@@ -29,6 +29,7 @@
 #include "misc_utils.h"
 #include "renderer.h"
 #include "plugin.h"
+#include "md5.h"
 
 
 using namespace DrawSpace;
@@ -48,7 +49,10 @@ m_render_target_height( 256 ),
 m_renderpurpose( RENDERPURPOSE_COLOR ),
 m_rendertarget( RENDERTARGET_GPU ),
 m_purpose( PURPOSE_COLORFROMFILE ),
-m_render_data( NULL )
+m_render_data( NULL ),
+m_width( 256 ),
+m_height( 256 ),
+m_bpp( 4 )
 {
 }
 
@@ -63,7 +67,10 @@ m_render_target_height( p_render_target_height ),
 m_renderpurpose( p_rp ),
 m_rendertarget( p_rt ),
 m_purpose( PURPOSE_COLORFROMFILE ),
-m_render_data( NULL )
+m_render_data( NULL ),
+m_width( 256 ),
+m_height( 256 ),
+m_bpp( 4 )
 {
 }
 
@@ -138,14 +145,6 @@ void Texture::SetFormat( long p_width, long p_height, long p_bpp )
 {
     m_width = p_width;
     m_height = p_height;
-
-    // bpp = -1 -> pas un format de couleur (texture floating point, ou format inconnu)
-    /*
-    if( -1 == p_bpp )
-    {
-        _DSEXCEPTION( "Unsupported pixel format for texture" );
-    }
-    */
 
     m_bpp = p_bpp;
 }
@@ -261,4 +260,34 @@ dsstring Texture::compute_final_path( void )
 void Texture::SetRootPath( const dsstring& p_path )
 {
     m_rootpath = p_path;
+}
+
+void Texture::GetMD5( dsstring& p_md5 )
+{
+    MD5 md5;
+
+    dsstring hash_path = md5.digestMemory( (BYTE*)m_path.c_str(), (int)( m_path.size() ) );
+
+    unsigned long rt_infos[3];
+    rt_infos[0] = (unsigned long)m_render_target;
+    rt_infos[1] = m_render_target_width;
+    rt_infos[2] = m_render_target_height;
+
+    dsstring hash_rt_infos = md5.digestMemory( (BYTE*)rt_infos, (int)( 3 * sizeof( unsigned long ) ) );
+
+    unsigned long format_infos[3];
+    format_infos[0] = (unsigned long)m_width;
+    format_infos[1] = (unsigned long)m_height;
+    format_infos[2] = (unsigned long)m_bpp;
+
+    dsstring hash_ft_infos = md5.digestMemory( (BYTE*)format_infos, (int)( 3 * sizeof( unsigned long ) ) );
+
+    unsigned char modes_infos[3];
+    modes_infos[0] = (unsigned char)m_renderpurpose;
+    modes_infos[1] = (unsigned char)m_rendertarget;
+    modes_infos[2] = (unsigned char)m_purpose;
+
+    dsstring hash_modes_infos = md5.digestMemory( (BYTE*)modes_infos, (int)( 3 * sizeof( unsigned char ) ) );
+
+    p_md5 = hash_path + hash_rt_infos + hash_ft_infos + hash_modes_infos;
 }

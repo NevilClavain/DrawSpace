@@ -51,6 +51,31 @@ MainService::~MainService( void )
 
 bool MainService::Init( void )
 {
+    /////////////// temp tests
+
+    Texture ta;
+    Texture* tb = new Texture();
+
+    Texture tc( "test1.bmp" );
+
+    Texture td( "test1.bmp", true );
+
+    dsstring tah;
+    ta.GetMD5( tah );
+
+    dsstring tbh;
+    tb->GetMD5( tbh );
+
+    dsstring tch;
+    tc.GetMD5( tch );
+
+    dsstring tdh;
+    td.GetMD5( tdh );
+
+
+    _asm nop
+
+
     //////////////recup params du service //////////////////
 
     ComponentList<DrawSpace::Logger::Configuration*> logconfs;

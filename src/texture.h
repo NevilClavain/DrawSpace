@@ -124,6 +124,8 @@ public:
 
     void* GetRenderData( void );
 
+    void GetMD5( dsstring& p_md5 );
+
 };
 }
 }
