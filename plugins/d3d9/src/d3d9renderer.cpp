@@ -414,6 +414,15 @@ void D3D9Renderer::BeginTarget( void* p_data )
         m_targettextures_base[p_texture].render_to_surface->BeginScene( m_targettextures_base[p_texture].surface, NULL );
     }
     */
+
+    TextureInfos* ti = (TextureInfos*)p_data;
+    dsstring hash = ti->hash;
+
+    if( m_targettextures_base.count( hash ) > 0 )
+    {
+        m_targettextures_base[hash].render_to_surface->BeginScene( m_targettextures_base[hash].surface, NULL );
+    }
+
 }
 
 //void D3D9Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
@@ -425,6 +434,14 @@ void D3D9Renderer::EndTarget( void* p_data )
         m_targettextures_base[p_texture].render_to_surface->EndScene( 0 );
     }
     */
+
+    TextureInfos* ti = (TextureInfos*)p_data;
+    dsstring hash = ti->hash;
+
+    if( m_targettextures_base.count( hash ) > 0 )
+    {
+        m_targettextures_base[hash].render_to_surface->EndScene( 0 );
+    }
 }
 
 
@@ -773,20 +790,20 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
 {
     DECLARE_D3D9ASSERT_VARS
 
-    dsstring path;
-    p_texture->GetPath( path );
+    dsstring hash;
+    p_texture->GetMD5( hash );
     LPDIRECT3DTEXTURE9	d3dt9;
     TextureInfos* texture_infos;
    
-    if( m_textures_base.count( path ) > 0 )
+    if( m_textures_base.count( hash ) > 0 )
     {
-        *p_data = (void*)m_textures_base[path];
+        *p_data = (void*)m_textures_base[hash];
 
-        long width = m_textures_base[path]->descr.Width;
-        long height = m_textures_base[path]->descr.Height;
+        long width = m_textures_base[hash]->descr.Width;
+        long height = m_textures_base[hash]->descr.Height;
         long bpp;
 
-        switch( m_textures_base[path]->descr.Format )
+        switch( m_textures_base[hash]->descr.Format )
         {
             case D3DFMT_A8R8G8B8:
             case D3DFMT_X8R8G8B8:
@@ -815,7 +832,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         }
 
         p_texture->SetFormat( width, height, bpp );
-        p_texture->SetRenderData( (void*)m_textures_base[path] );
+        p_texture->SetRenderData( (void*)m_textures_base[hash] );
         
         return true;
     }
@@ -832,23 +849,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         p_texture->GetRenderTargetDims( rw, rh );
 
         D3DFORMAT format; 
-        /*
-        if( Texture::RENDERPURPOSE_COLOR == p_texture->GetRenderPurpose() )
-        {
-            format = D3DFMT_A8R8G8B8;
-        }
-        else
-        {
-            if( Texture::RENDERPURPOSE_FLOAT == p_texture->GetRenderPurpose() )
-            {
-                format = D3DFMT_R16F;
-            }
-            else
-            {
-                format = D3DFMT_R32F;
-            }
-        }
-        */
+
         switch( p_texture->GetRenderPurpose() )
         {
             case Texture::RENDERPURPOSE_COLOR:
@@ -879,6 +880,9 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         d3dt9->GetSurfaceLevel( 0, &surface );
         surface->GetDesc( &desc );
 
+        dsstring path;
+        p_texture->GetPath( path );
+
         hRes = D3DXCreateRenderToSurface( m_lpd3ddevice, desc.Width, desc.Height, desc.Format, TRUE, m_depthbuffer_format, &render_to_surface );
         D3D9_CHECK( D3DXCreateRenderToSurface )
 
@@ -887,7 +891,7 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         targettexture_infos.render_to_surface = render_to_surface;
         targettexture_infos.surface = surface;
 
-        m_targettextures_base[p_texture] = targettexture_infos;
+        m_targettextures_base[hash] = targettexture_infos;
 
         texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
         texture_infos->path = path;
@@ -896,7 +900,9 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
         texture_infos->descr = desc;
         texture_infos->render_texture = true;
         texture_infos->bits = NULL;
-        m_textures_base[path] = texture_infos;
+        texture_infos->hash = hash;
+
+        m_textures_base[hash] = texture_infos;
 
         hRes = m_lpd3ddevice->CreateTexture( rw, rh, 1, /*D3DUSAGE_DYNAMIC*/ 0, format, D3DPOOL_SYSTEMMEM, &d3dt9, NULL );
         D3D9_CHECK( CreateTexture )
@@ -906,6 +912,9 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
     }
     else
     {
+        dsstring path;
+        p_texture->GetPath( path );
+
         switch( p_texture->GetPurpose() )
         {
             case Texture::PURPOSE_COLORFROMFILE:
@@ -924,7 +933,8 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     texture_infos->bits = NULL;
                     d3dt9->GetLevelDesc( 0, &texture_infos->descr );
 
-                    m_textures_base[path] = texture_infos;
+                    texture_infos->hash = hash;
+                    m_textures_base[hash] = texture_infos;
 
                     *p_data = (void*)texture_infos;
                 }
@@ -946,7 +956,8 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     texture_infos->render_texture = false;
                     texture_infos->bits = NULL;
                     d3dt9->GetLevelDesc( 0, &texture_infos->descr );
-                    m_textures_base[path] = texture_infos;
+                    texture_infos->hash = hash;
+                    m_textures_base[hash] = texture_infos;
 
                     
                     *p_data = (void*)texture_infos;
@@ -972,7 +983,8 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                     texture_infos->render_texture = false;
                     texture_infos->bits = NULL;
                     d3dt9->GetLevelDesc( 0, &texture_infos->descr );
-                    m_textures_base[path] = texture_infos;
+                    texture_infos->hash = hash;
+                    m_textures_base[hash] = texture_infos;
                     
                     *p_data = (void*)texture_infos;
 
@@ -982,28 +994,29 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 break;
 
             case Texture::PURPOSE_FLOAT32VECTOR:
+                {
+                    long w, h, bpp;
+                    p_texture->GetFormat( w, h, bpp );
 
-                long w, h, bpp;
-                p_texture->GetFormat( w, h, bpp );
+                    hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 1, D3DUSAGE_DYNAMIC, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &d3dt9 );                   
+                    D3D9_CHECK( D3DXCreateTexture );
 
-                hRes = D3DXCreateTexture( m_lpd3ddevice, w, h, 1, D3DUSAGE_DYNAMIC, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &d3dt9 );                   
-                D3D9_CHECK( D3DXCreateTexture );
-
-                texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
-                texture_infos->path = path;
-                texture_infos->texture_instance = p_texture;
-                texture_infos->texture = d3dt9;
-                texture_infos->texture2 = NULL;
-                texture_infos->render_texture = false;
-                texture_infos->bits = NULL;
-                d3dt9->GetLevelDesc( 0, &texture_infos->descr );
-                m_textures_base[path] = texture_infos;
+                    texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
+                    texture_infos->path = path;
+                    texture_infos->texture_instance = p_texture;
+                    texture_infos->texture = d3dt9;
+                    texture_infos->texture2 = NULL;
+                    texture_infos->render_texture = false;
+                    texture_infos->bits = NULL;
+                    d3dt9->GetLevelDesc( 0, &texture_infos->descr );
+                    texture_infos->hash = hash;
+                    m_textures_base[hash] = texture_infos;
                     
-                *p_data = (void*)texture_infos;
+                    *p_data = (void*)texture_infos;
 
-                // inutile d'appeler SetFormat() sur la texture
-                setformat_call = false;
-
+                    // inutile d'appeler SetFormat() sur la texture
+                    setformat_call = false;
+                }
                 break;
         }
     }
@@ -1063,13 +1076,13 @@ void D3D9Renderer::DestroyTexture( void* p_data )
     {
         ti->texture2->Release();
 
-        if( m_targettextures_base.count( ti->texture_instance ) > 0 )
+        if( m_targettextures_base.count( ti->hash ) > 0 )
         {
-            TargetTextureInfos tti = m_targettextures_base[ti->texture_instance];
+            TargetTextureInfos tti = m_targettextures_base[ti->hash];
             tti.render_to_surface->Release();
             tti.surface->Release();
             
-            m_targettextures_base.erase( ti->texture_instance );
+            m_targettextures_base.erase( ti->hash );
         }
     }
 
@@ -1079,9 +1092,9 @@ void D3D9Renderer::DestroyTexture( void* p_data )
         ti->bits = NULL;
     }
 
-    if( m_textures_base.count( ti->path ) > 0 )
+    if( m_textures_base.count( ti->hash ) > 0 )
     {
-        m_textures_base.erase( ti->path );
+        m_textures_base.erase( ti->hash );
     }
 
     ti->texture_instance->SetRenderData( NULL );

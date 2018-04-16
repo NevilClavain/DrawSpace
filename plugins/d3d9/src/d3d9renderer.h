@@ -76,6 +76,7 @@ protected:
         void*                       bits;
         dsstring                    path;
         DrawSpace::Core::Texture*   texture_instance;
+        dsstring                    hash; // hash des caracteristique class Texture associee
 
     } TextureInfos;
 
@@ -133,7 +134,8 @@ protected:
 
     
     std::map<dsstring, TextureInfos*>                           m_textures_base;
-    std::map<DrawSpace::Core::Texture*, TargetTextureInfos>     m_targettextures_base;
+    //std::map<DrawSpace::Core::Texture*, TargetTextureInfos>     m_targettextures_base;
+    std::map<dsstring, TargetTextureInfos>                      m_targettextures_base;
     
     std::map<dsstring, MesheData*>                              m_meshes_base;
     

@@ -176,7 +176,7 @@ void RenderingQueue::Draw( void )
 
     if( m_target )
     {
-        renderer->EndTarget( m_target );
+        renderer->EndTarget( m_target->GetRenderData() );
     }
     else
     {
