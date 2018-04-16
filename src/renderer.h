@@ -73,8 +73,11 @@ public:
     virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a ) = 0;
     virtual void ClearDepth( dsreal p_value = 1.0 ) = 0;
 
-    virtual void BeginTarget( DrawSpace::Core::Texture* p_texture ) = 0;
-    virtual void EndTarget( DrawSpace::Core::Texture* p_texture ) = 0;
+    //virtual void BeginTarget( DrawSpace::Core::Texture* p_texture ) = 0;
+    virtual void BeginTarget( void* p_data ) = 0;
+
+    //virtual void EndTarget( DrawSpace::Core::Texture* p_texture ) = 0;
+    virtual void EndTarget( void* p_data ) = 0;
 
 
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data ) = 0;

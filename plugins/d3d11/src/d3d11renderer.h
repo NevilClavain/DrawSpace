@@ -89,6 +89,8 @@ protected:
         void*                                                       bits;
         bool                                                        content_access; // si false, on ne peut acceder au contenu de cette texture
 
+        dsstring                                                    hash; // hash des caracteristique class Texture associee
+
     } TextureInfos;
 
     typedef struct
@@ -174,7 +176,9 @@ protected:
     IFW1FontWrapper*                                                m_fontWrapper;
 
     std::map<dsstring, TextureInfos*>                               m_textures_base;
-    std::map<DrawSpace::Core::Texture*, TextureInfos*>              m_targettextures_base;
+    //std::map<DrawSpace::Core::Texture*, TextureInfos*>              m_targettextures_base;
+    std::map<dsstring, TextureInfos*>                               m_targettextures_base;
+
     std::map<dsstring, MesheData*>                                  m_meshes_base;
     std::map<dsstring, ShadersData*>                                m_shaders_bases;
     std::map<dsstring, DrawSpace::Core::Fx*>                        m_fx_bases;
@@ -223,8 +227,14 @@ public:
     virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
     virtual void ClearDepth( dsreal p_value = 1.0 );
 
+    /*
     virtual void BeginTarget( DrawSpace::Core::Texture* p_texture );
     virtual void EndTarget( DrawSpace::Core::Texture* p_texture );
+    */
+
+    virtual void BeginTarget( void* p_data );
+    virtual void EndTarget( void* p_data );
+
 
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
     virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );    

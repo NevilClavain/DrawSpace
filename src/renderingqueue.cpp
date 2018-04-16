@@ -79,7 +79,8 @@ void RenderingQueue::Draw( void )
 
     if( m_target )
     {
-        renderer->BeginTarget( m_target );
+        //renderer->BeginTarget( m_target );
+        renderer->BeginTarget( m_target->GetRenderData() );
     }
     else
     {
@@ -640,6 +641,7 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     Texture* curr_tx = curr_node->GetTexture( p_texturestage );
                     if( curr_tx )
                     {
+                        /*
                         dsstring path;
                         curr_tx->GetPath( path );
 
@@ -647,6 +649,13 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                         dsstring signature = path + dsstring( ":" ) + itoa( p_texturestage, buff, 10 );
 
                         out_lists[signature].push_back( curr_node );
+                        */
+
+                        dsstring curr_txt_md5;
+                        curr_tx->GetMD5( curr_txt_md5 );
+                        dsstring stage( itoa( p_texturestage, buff, 10 ) );
+                        dsstring signature = curr_txt_md5 + ":" + stage;
+
                     }
                     else
                     {

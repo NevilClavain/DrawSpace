@@ -605,8 +605,10 @@ void D3D11Renderer::ClearDepth( dsreal p_value )
     m_lpd3ddevcontext->ClearDepthStencilView( m_currentView, D3D11_CLEAR_DEPTH, p_value, 0 );
 }
 
-void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
+//void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
+void D3D11Renderer::BeginTarget( void* p_data )
 {
+    /*
     if( m_targettextures_base.count( p_texture ) > 0 )
     {
         m_currentTarget = m_targettextures_base[p_texture]->rendertextureTargetView;
@@ -627,10 +629,37 @@ void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
 
         BeginScreen();
     }
+    */
+
+    TextureInfos* ti = (TextureInfos*)p_data;
+    dsstring hash = ti->hash;
+
+    if( m_targettextures_base.count( hash ) > 0 )
+    {
+        m_currentTarget = m_targettextures_base[hash]->rendertextureTargetView;
+        m_currentView = m_targettextures_base[hash]->stencilDepthView;
+
+        m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
+
+        m_lpd3ddevcontext->RSSetViewports( 1, &m_targettextures_base[hash]->viewport );
+    }
+    else
+    {
+        // pas trouvé de texture cible à setter 
+
+        // quick'n dirty pour eviter que ce rendu ne vienne écraser le résultat de la rendertarget actuelle (positionnée par le dernier 
+        // appel à OMSetRenderTargets() )
+
+        // a noter que ce pb n'existait pas en D3D9 (API structurée différement)
+
+        BeginScreen();
+    }
 }
 
-void D3D11Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
+//void D3D11Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
+void D3D11Renderer::EndTarget( void* p_data )
 {
+    // rien a faire ici en D3D11...
 }
 
 bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
@@ -948,18 +977,26 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
     ID3D11Texture2D*        d3dt11_clone = NULL;
     TextureInfos*           texture_infos;
 
-    dsstring path;
-    p_texture->GetPath( path );
+    //dsstring path;
+    //p_texture->GetPath( path );
+    dsstring hash;
+    p_texture->GetMD5( hash );
 
-    if( m_textures_base.count( path ) > 0 )
+    //if( m_textures_base.count( path ) > 0 )
+    if( m_textures_base.count( hash ) > 0 )
     {
-        *p_data = (void*)m_textures_base[path];
-        
-        long width = m_textures_base[path]->descr.Width;
-        long height = m_textures_base[path]->descr.Height;
+        //*p_data = (void*)m_textures_base[path];
+        *p_data = (void*)m_textures_base[hash];
+    
+        //long width = m_textures_base[path]->descr.Width;
+        //long height = m_textures_base[path]->descr.Height;
+        long width = m_textures_base[hash]->descr.Width;
+        long height = m_textures_base[hash]->descr.Height;
+
         long bpp;
 
-        switch( m_textures_base[path]->descr.Format )
+        //switch( m_textures_base[path]->descr.Format )
+        switch( m_textures_base[hash]->descr.Format )
         {
             case DXGI_FORMAT_R8G8B8A8_TYPELESS:
             case DXGI_FORMAT_R8G8B8A8_UNORM:
@@ -986,11 +1023,10 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
                 bpp = -1;
                 break;
         }
-
-        // inutile, puisque cette texture est deja "passee" par ici...
-        
-        //p_texture->SetFormat( width, height, bpp );
+               
+        p_texture->SetFormat( width, height, bpp );
         //p_texture->SetRenderData( (void*)m_textures_base[path] );
+        p_texture->SetRenderData( (void*)m_textures_base[hash] );
         
         return true;
     }
@@ -1117,6 +1153,9 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         D3D11_TEXTURE2D_DESC descr;
         d3dt11->GetDesc( &descr );
 
+        dsstring path;
+        p_texture->GetPath( path );
+
         texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
         texture_infos->content_access = ( Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget() ? true : false );
         texture_infos->bits = NULL;
@@ -1131,7 +1170,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         // creation d'un stencil-depth buffer associe
         create_depth_stencil_buffer( rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &texture_infos->stencilDepthBuffer, &texture_infos->stencilDepthView );
 
-        m_textures_base[path] = texture_infos;
+        //m_textures_base[path] = texture_infos;
+        m_textures_base[hash] = texture_infos;
 
         texture_infos->viewport.Width = descr.Width;
         texture_infos->viewport.Height = descr.Height;
@@ -1141,7 +1181,9 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         texture_infos->viewport.TopLeftX = 0.0;
         texture_infos->viewport.TopLeftY = 0.0;  
 
-        m_targettextures_base[p_texture] = texture_infos;
+        texture_infos->hash = hash;
+        //m_targettextures_base[p_texture] = texture_infos;
+        m_targettextures_base[hash] = texture_infos;
 
         *p_data = (void*)texture_infos;
     }
@@ -1157,6 +1199,9 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             hRes = D3DX11CreateShaderResourceViewFromMemory( m_lpd3ddevice, data, data_size, NULL, NULL, &textureResourceView, NULL );
             D3D11_CHECK( D3DX11CreateShaderResourceViewFromMemory )
 
+            dsstring path;
+            p_texture->GetPath( path );
+
             texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
             texture_infos->content_access = false;
             texture_infos->bits = NULL;
@@ -1169,7 +1214,10 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->stencilDepthBuffer = NULL;
             texture_infos->stencilDepthView = NULL;
 
-            m_textures_base[path] = texture_infos;
+            //m_textures_base[path] = texture_infos;
+
+            texture_infos->hash = hash;
+            m_textures_base[hash] = texture_infos;
 
             *p_data = (void*)texture_infos;
         
@@ -1204,6 +1252,10 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             long w, h, bpp;
             p_texture->GetFormat( w, h, bpp );
 
+            dsstring path;
+            p_texture->GetPath( path );
+
+
             D3D11_TEXTURE2D_DESC desc;
             desc.Width = w;
             desc.Height = h;
@@ -1236,6 +1288,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             D3D11_TEXTURE2D_DESC descr;
             d3dt11->GetDesc( &descr );
 
+            texture_infos->hash = hash;
             texture_infos->descr = descr;
 
             D3D11_SHADER_RESOURCE_VIEW_DESC     shaderResourceViewDesc;
@@ -1252,7 +1305,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
             texture_infos->textureShaderResourceView = textureResourceView;
 
-            m_textures_base[path] = texture_infos;
+            //m_textures_base[path] = texture_infos;
+            m_textures_base[hash] = texture_infos;
 
             *p_data = (void*)texture_infos;
                    
@@ -1347,17 +1401,32 @@ void D3D11Renderer::DestroyTexture( void* p_data )
         ti->bits = NULL;
     }
 
+    /*
     if( m_textures_base.count( ti->path ) > 0 )
     {
         m_textures_base.erase( ti->path );
     }
+    */
+    if( m_textures_base.count( ti->hash ) > 0 )
+    {
+        m_textures_base.erase( ti->hash );
+    }
+
+
     ti->texture_instance->SetRenderData( NULL );
 
-
+    /*
     if( m_targettextures_base.count( ti->texture_instance ) > 0 )
     {
         m_targettextures_base.erase( ti->texture_instance );
     }
+    */
+
+    if( m_targettextures_base.count( ti->hash ) > 0 )
+    {
+        m_targettextures_base.erase( ti->hash );
+    }
+
 
     _DRAWSPACE_DELETE_( ti );
 }

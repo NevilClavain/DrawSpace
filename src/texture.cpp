@@ -275,13 +275,6 @@ void Texture::GetMD5( dsstring& p_md5 )
 
     dsstring hash_rt_infos = md5.digestMemory( (BYTE*)rt_infos, (int)( 3 * sizeof( unsigned long ) ) );
 
-    unsigned long format_infos[3];
-    format_infos[0] = (unsigned long)m_width;
-    format_infos[1] = (unsigned long)m_height;
-    format_infos[2] = (unsigned long)m_bpp;
-
-    dsstring hash_ft_infos = md5.digestMemory( (BYTE*)format_infos, (int)( 3 * sizeof( unsigned long ) ) );
-
     unsigned char modes_infos[3];
     modes_infos[0] = (unsigned char)m_renderpurpose;
     modes_infos[1] = (unsigned char)m_rendertarget;
@@ -289,5 +282,20 @@ void Texture::GetMD5( dsstring& p_md5 )
 
     dsstring hash_modes_infos = md5.digestMemory( (BYTE*)modes_infos, (int)( 3 * sizeof( unsigned char ) ) );
 
-    p_md5 = hash_path + hash_rt_infos + hash_ft_infos + hash_modes_infos;
+
+    p_md5 = hash_path + hash_rt_infos + hash_modes_infos;
+
+    if( !IsRenderTarget() && GetPurpose() != PURPOSE_COLORFROMFILE )
+    {
+        // prendre aussi en compte m_width, m_height et m_bpp, qui servent de parametres d'entrees dans ce cas
+
+        unsigned long format_infos[3];
+        format_infos[0] = (unsigned long)m_width;
+        format_infos[1] = (unsigned long)m_height;
+        format_infos[2] = (unsigned long)m_bpp;
+
+        dsstring hash_ft_infos = md5.digestMemory( (BYTE*)format_infos, (int)( 3 * sizeof( unsigned long ) ) );
+
+        p_md5 += hash_ft_infos;
+    }
 }

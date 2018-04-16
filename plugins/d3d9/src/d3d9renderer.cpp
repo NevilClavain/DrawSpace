@@ -405,20 +405,26 @@ void D3D9Renderer::ClearDepth( dsreal p_value )
     m_lpd3ddevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 0 ), (float)p_value, 0 );
 }
 
-void D3D9Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
+//void D3D9Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
+void D3D9Renderer::BeginTarget( void* p_data )
 {
+    /*
     if( m_targettextures_base.count( p_texture ) > 0 )
     {
         m_targettextures_base[p_texture].render_to_surface->BeginScene( m_targettextures_base[p_texture].surface, NULL );
     }
+    */
 }
 
-void D3D9Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
+//void D3D9Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
+void D3D9Renderer::EndTarget( void* p_data )
 {
+    /*
     if( m_targettextures_base.count( p_texture ) > 0 )
     {
         m_targettextures_base[p_texture].render_to_surface->EndScene( 0 );
     }
+    */
 }
 
 
@@ -808,12 +814,9 @@ bool D3D9Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_
                 break;
         }
 
-        // inutile, puisque cette texture est d�ja "pass�e" par ici...
+        p_texture->SetFormat( width, height, bpp );
+        p_texture->SetRenderData( (void*)m_textures_base[path] );
         
-        //p_texture->SetFormat( width, height, bpp );
-        //p_texture->SetRenderData( (void*)m_textures_base[path] );
-        
-
         return true;
     }
 
