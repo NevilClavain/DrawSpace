@@ -52,6 +52,12 @@
     <ClCompile Include="src\luaclass_syncscalar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\luaclass_texturesset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\luaclass_fxparams.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -111,6 +117,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_syncscalar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_texturesset.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_fxparams.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

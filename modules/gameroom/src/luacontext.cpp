@@ -37,6 +37,8 @@
 #include "luaclass_mesherenderingaspectimpl.h"
 #include "luaclass_syncangle.h"
 #include "luaclass_syncscalar.h"
+#include "luaclass_texturesset.h"
+#include "luaclass_fxparams.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -61,6 +63,8 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Renderer>::Register( m_L );
     Luna<LuaClass_Gui>::Register( m_L );
     Luna<LuaClass_RenderStatesSet>::Register( m_L );
+    Luna<LuaClass_TexturesSet>::Register( m_L );
+    Luna<LuaClass_FxParams>::Register( m_L );
     Luna<LuaClass_RenderAssembly>::Register( m_L );
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
