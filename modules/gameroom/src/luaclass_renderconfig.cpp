@@ -22,54 +22,46 @@
 */
 /* -*-LIC_END-*- */
 
+#include "luacontext.h"
+#include "luaclass_renderconfig.h"
+#include "luaclass_rendercontext.h"
 
-#include "module_root.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Interface::Module;
-
-
-void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
+const char LuaClass_RenderConfig::className[] = "RenderConfig";
+const Luna<LuaClass_RenderConfig>::RegType LuaClass_RenderConfig::methods[] =
 {
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+    { "add_rendercontext", &LuaClass_RenderConfig::LUA_addrendercontext },
+	{ 0, 0 }
+};
+
+LuaClass_RenderConfig::LuaClass_RenderConfig( lua_State* p_L )
+{
 }
 
-std::vector<dsstring> Root::GetServicesList( void )
+LuaClass_RenderConfig::~LuaClass_RenderConfig( void )
 {
-    std::vector<dsstring> list;
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
+}
+
+int LuaClass_RenderConfig::LUA_addrendercontext( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "RenderConfig::add_rendercontext : argument(s) missing" );
+	}
+    LuaClass_RenderConfig* lua_rc = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
+    if( NULL == lua_rc )
     {
-        list.push_back( it->first );
+        LUA_ERROR( "RenderConfig::add_rendercontext : argument 1 must be of type LuaClass_RenderConfig" );
     }
-    return list;
+    return 0;
 }
 
-Service* Root::InstanciateService( const dsstring& p_id )
+int LuaClass_RenderConfig::GetRenderContextListSize( void ) const
 {
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
+    return m_renderContexts.size();
 }
 
-
-DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::InstanciateRenderingAspectImpls( const dsstring& p_id )
+LuaClass_RenderContext* LuaClass_RenderConfig::GetRenderContext( int p_index ) const
 {
-    return NULL;
-}
-
-DrawSpace::Interface::AspectImplementations::TransformAspectImpl* Root::InstanciateTransformAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
-
-DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Root::InstanciateServiceAspectImpl( const dsstring& p_id )
-{
-    return NULL;
-}
-
-void Root::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
+    return m_renderContexts[p_index];
 }

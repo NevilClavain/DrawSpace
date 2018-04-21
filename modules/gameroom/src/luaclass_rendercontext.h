@@ -23,53 +23,50 @@
 /* -*-LIC_END-*- */
 
 
-#include "module_root.h"
+#ifndef _LUACLASS_RENDERCONTEXT_H_
+#define _LUACLASS_RENDERCONTEXT_H_
 
-using namespace DrawSpace;
-using namespace DrawSpace::Interface::Module;
+#include "luna.h"
+#include "renderingnode.h"
 
+class LuaClass_FxParams;
+class LuaClass_TexturesSet;
 
-void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
+class LuaClass_RenderContext
 {
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
+public:
+    using NamedShaderParam = std::pair<dsstring, DrawSpace::Core::RenderingNode::ShadersParams>;
 
-std::vector<dsstring> Root::GetServicesList( void )
-{
-    std::vector<dsstring> list;
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
+private:
+    int                                 m_rendering_order;
+    dsstring                            m_passname;
+    std::vector<LuaClass_FxParams*>     m_fxparams;
+    std::vector<LuaClass_TexturesSet*>  m_textures_sets;
+    std::vector<NamedShaderParam>       m_shaders_params;
 
-Service* Root::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
-}
+public:
+	LuaClass_RenderContext( lua_State* p_L );
+	~LuaClass_RenderContext( void );
 
+    int LUA_addfxparams( lua_State* p_L );
+    int LUA_addtexturesset( lua_State* p_L );
+    int LUA_setrenderingorder( lua_State* p_L );
+    int LUA_addshaderparam( lua_State* p_L );
+    
 
-DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::InstanciateRenderingAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
+    int GetFxParamsListSize( void ) const;
+    LuaClass_FxParams* GetFxParams( int p_index ) const;
 
-DrawSpace::Interface::AspectImplementations::TransformAspectImpl* Root::InstanciateTransformAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
+    int GetTexturesSetListSize( void ) const;
+    LuaClass_TexturesSet* GetTexturesSet( int p_index ) const;
 
-DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Root::InstanciateServiceAspectImpl( const dsstring& p_id )
-{
-    return NULL;
-}
+    int GetShadersParamsListSize( void ) const;
+    NamedShaderParam GetNamedShaderParam( int p_index ) const;
 
-void Root::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
-}
+    int GetRenderingOrder( void ) const;
+
+    static const char className[];
+    static const Luna<LuaClass_RenderContext>::RegType methods[];
+};
+
+#endif

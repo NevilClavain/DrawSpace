@@ -669,13 +669,16 @@ void MainService::RequestConsolePrint( const dsstring& p_msg )
 }
 
 
-void MainService::RequestLuaFileExec( const dsstring& p_path )
+bool MainService::RequestLuaFileExec( const dsstring& p_path, dsstring& p_err )
 {
     if( false == LuaContext::GetInstance()->ExecuteFromFile( p_path ) )
     {
         dsstring lua_err = LuaContext::GetInstance()->GetLastError();
         print_console_line( lua_err );
+        p_err = lua_err;
+        return false;
     }
+    return true;
 }
 
 void MainService::RequestMemAllocDump( void )
@@ -744,6 +747,8 @@ void MainService::buil_lua_prerequisites( void )
     LuaContext::GetInstance()->Execute( "renderer=Renderer()" );
     LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')" );
     LuaContext::GetInstance()->Execute( "rg:create_root('final_pass')" );
+    LuaContext::GetInstance()->Execute( "rg:update_renderingqueues()" );
+    
 
     LuaContext::GetInstance()->Execute( "eg=EntityNodeGraph('eg')" );
     LuaContext::GetInstance()->Execute( "root_entity=Entity()" );
@@ -770,7 +775,7 @@ void MainService::buil_lua_prerequisites( void )
     LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10" );
 
 
-    LuaContext::GetInstance()->Execute( "print_memsize=function() g:print('Total mem = '..g:totalmem()..' byte(s)') end" );
+    LuaContext::GetInstance()->Execute( "print_memsize=function() g:print('Total mem = '..g:total_mem()..' byte(s)') end" );
 
 
     // build la console lua

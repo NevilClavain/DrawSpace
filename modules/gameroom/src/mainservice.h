@@ -172,7 +172,7 @@ public:
     void RequestClose( void );
     void RequestClearConsole( void );
     void RequestConsolePrint( const dsstring& p_msg );
-    void RequestLuaFileExec( const dsstring& p_path );
+    bool RequestLuaFileExec( const dsstring& p_path, dsstring& p_err );
 
     void RequestMemAllocDump( void );
 

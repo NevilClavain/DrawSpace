@@ -69,7 +69,7 @@ int LuaClass_FxParams::LUA_addshaderfile( lua_State* p_L )
 	}
 
     dsstring shader_path = luaL_checkstring( p_L, 1 );
-    bool is_compiled = luaL_checkstring( p_L, 2 );
+    bool is_compiled = luaL_checkint( p_L, 2 );
 
     std::pair<dsstring,bool> shader_info( shader_path, is_compiled );
     m_shaders.push_back( shader_info );

@@ -41,7 +41,8 @@ m_target_clear_color_r( 0 ),
 m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
-m_switches_cost( 0 )
+m_switches_cost( 0 ),
+m_ready( true )
 {
 
 
@@ -55,7 +56,8 @@ m_target_clear_color_r( 0 ),
 m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
-m_switches_cost( 0 )
+m_switches_cost( 0 ),
+m_ready( true )
 {
 
 
@@ -73,14 +75,23 @@ bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
 
 void RenderingQueue::Draw( void )
 {
+    if( !m_ready )
+    {
+        _DSEXCEPTION( "RenderingQueue not ready : call UpdateOutputQueue() or UpdateOutputQueueNoOpt() before trying to draw queue content" )
+    }
+
     m_switches_cost = 0;
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
     if( m_target )
     {
-        //renderer->BeginTarget( m_target );
-        renderer->BeginTarget( m_target->GetRenderData() );
+        void* texture_render_data = m_target->GetRenderData();
+        if( NULL == texture_render_data )
+        {
+            _DSEXCEPTION( "target texture not initialised in renderer" )
+        }
+        renderer->BeginTarget( texture_render_data );
     }
     else
     {
@@ -187,6 +198,9 @@ void RenderingQueue::Draw( void )
 void RenderingQueue::Add( RenderingNode* p_node )
 {
     m_renderingorder_nodes[p_node->GetOrderNumber()].push_back( p_node );
+
+    // a new node was added; we cannot consider we're 'ready' until a new call to UpdateOutputQueue() or UpdateOutputQueueNoOpt() has been made (new node probably need resources creation in renderer plugin...)
+    m_ready = false;
 }
 
 void RenderingQueue::Remove( RenderingNode* p_node )
@@ -258,6 +272,8 @@ void RenderingQueue::UpdateOutputQueue( void )
     }
 
     cleanup_output_list();
+
+    m_ready = true;
 }
 
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
@@ -291,8 +307,8 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
         m_unsetvtexture_groups[i].clear();
     }
 
-
     cleanup_output_list();
+    m_ready = true;
 }
 
 double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists )

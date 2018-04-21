@@ -22,54 +22,21 @@
 */
 /* -*-LIC_END-*- */
 
+#ifndef _LUACLASS_SKYBOXRENDERING_H_
+#define _LUACLASS_SKYBOXRENDERING_H_
 
-#include "module_root.h"
+#include "luna.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Interface::Module;
-
-
-void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
+class LuaClass_SkyboxRendering
 {
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
+private:
 
-std::vector<dsstring> Root::GetServicesList( void )
-{
-    std::vector<dsstring> list;
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
+public:
+	LuaClass_SkyboxRendering( lua_State* p_L );
+	~LuaClass_SkyboxRendering( void );
 
-Service* Root::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
-}
+    static const char className[];
+    static const Luna<LuaClass_SkyboxRendering>::RegType methods[];
+};
 
-
-DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::InstanciateRenderingAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
-
-DrawSpace::Interface::AspectImplementations::TransformAspectImpl* Root::InstanciateTransformAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
-
-DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Root::InstanciateServiceAspectImpl( const dsstring& p_id )
-{
-    return NULL;
-}
-
-void Root::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
-}
+#endif

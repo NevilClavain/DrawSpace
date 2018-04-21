@@ -59,12 +59,12 @@ void RootImpl::Init( void )
 
 dsstring RootImpl::GetModuleName( void )
 {
-    return "GameRoomRoot";
+    return "GameRoom";
 }
 
 dsstring RootImpl::GetModuleDescr( void )
 {
-    return "GameRoom";
+    return "GameRoom module";
 }
 
 DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* RootImpl::InstanciateServiceAspectImpl( const dsstring& p_id )

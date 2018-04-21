@@ -39,6 +39,10 @@
 #include "luaclass_syncscalar.h"
 #include "luaclass_texturesset.h"
 #include "luaclass_fxparams.h"
+#include "luaclass_rendercontext.h"
+#include "luaclass_renderconfig.h"
+#include "luaclass_skyboxrendering.h"
+#include "luaclass_module.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -71,8 +75,12 @@ void LuaContext::Startup( void )
     Luna<LuaClass_FPSTransformAspectImpl>::Register( m_L );
     Luna<LuaClass_TextRenderingAspectImpl>::Register( m_L );
     Luna<LuaClass_MesheRenderingAspectImpl>::Register( m_L );
+    Luna<LuaClass_SkyboxRendering>::Register( m_L );
     Luna<LuaClass_SyncAngle>::Register( m_L );
     Luna<LuaClass_SyncScalar>::Register( m_L );
+    Luna<LuaClass_RenderContext>::Register( m_L );
+    Luna<LuaClass_RenderConfig>::Register( m_L );
+    Luna<LuaClass_Module>::Register( m_L );
 }
 
 void LuaContext::Shutdown( void )

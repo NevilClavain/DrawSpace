@@ -39,7 +39,6 @@ private:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl*  m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                          m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                     m_entity;
-    //dsstring                                                     m_id;
 
     void cleanup_resources( lua_State* p_L, const dsstring& p_id );
 

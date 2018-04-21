@@ -136,6 +136,8 @@ protected:
 
     std::map<dsstring, DrawSpace::Core::Fx*>                                m_fx_bases;
 
+    bool                                                                    m_ready;   // true if UpdateOutputQueue() UpdateOutputQueueNoOpt() were called at least once
+
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 

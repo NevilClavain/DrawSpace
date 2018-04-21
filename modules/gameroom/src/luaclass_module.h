@@ -22,54 +22,31 @@
 */
 /* -*-LIC_END-*- */
 
+#ifndef _LUACLASS_MODULE_H_
+#define _LUACLASS_MODULE_H_
 
+#include "luna.h"
 #include "module_root.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Interface::Module;
-
-
-void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
+class LuaClass_Module
 {
-    DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
+private:
+    dsstring m_module_path;
+    dsstring m_module_instance_id;
 
-std::vector<dsstring> Root::GetServicesList( void )
-{
-    std::vector<dsstring> list;
-    for( auto it = m_services.begin(); it != m_services.end(); ++it )
-    {
-        list.push_back( it->first );
-    }
-    return list;
-}
+    DrawSpace::Interface::Module::Root* m_mod_root;
 
-Service* Root::InstanciateService( const dsstring& p_id )
-{
-    if( m_services.count( p_id ) > 0 )
-    {
-        return m_services[p_id];
-    }
-    return NULL;
-}
+public:
+	LuaClass_Module( lua_State* p_L );
+	~LuaClass_Module( void );
 
+    int LUA_load( lua_State* p_L );
+    int LUA_getmodulename( lua_State* p_L );
+    int LUA_getmoduledescr( lua_State* p_L );
+    int LUA_getserviceslist( lua_State* p_L );
 
-DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::InstanciateRenderingAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
+    static const char className[];
+    static const Luna<LuaClass_Module>::RegType methods[];
+};
 
-DrawSpace::Interface::AspectImplementations::TransformAspectImpl* Root::InstanciateTransformAspectImpls( const dsstring& p_id )
-{
-    return NULL;
-}
-
-DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Root::InstanciateServiceAspectImpl( const dsstring& p_id )
-{
-    return NULL;
-}
-
-void Root::DumpMemoryAllocs( void )
-{
-    DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
-}
+#endif

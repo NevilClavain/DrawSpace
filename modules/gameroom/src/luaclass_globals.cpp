@@ -33,9 +33,9 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "quit", &LuaClass_Globals::LUA_quit },
     { "clear_console", &LuaClass_Globals::LUA_clearconsole },
     { "print", &LuaClass_Globals::LUA_print },
-    { "dofile", &LuaClass_Globals::LUA_dofile },
-    { "dumpmem", &LuaClass_Globals::LUA_dumpmem },
-    { "totalmem", &LuaClass_Globals::LUA_totalmem },
+    { "do_file", &LuaClass_Globals::LUA_dofile },
+    { "dump_mem", &LuaClass_Globals::LUA_dumpmem },
+    { "total_mem", &LuaClass_Globals::LUA_totalmem },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -106,9 +106,14 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 	}
 
 	dsstring path = luaL_checkstring( p_L, 1 );
+    dsstring lua_err;
 
-    MainService::GetInstance()->RequestLuaFileExec( path );
-
+    if( false == MainService::GetInstance()->RequestLuaFileExec( path, lua_err ) )
+    {
+        // erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas allé au bout)
+        // on prefere arreter toute l'appli...
+        _DSEXCEPTION("Error in executed script : " + lua_err )
+    }
     return 0;
 }
 
