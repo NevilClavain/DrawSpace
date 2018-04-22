@@ -669,8 +669,9 @@ void MainService::RequestConsolePrint( const dsstring& p_msg )
 }
 
 
-bool MainService::RequestLuaFileExec( const dsstring& p_path, dsstring& p_err )
+int MainService::RequestLuaFileExec( const dsstring& p_path, dsstring& p_err )
 {
+    /*
     if( false == LuaContext::GetInstance()->ExecuteFromFile( p_path ) )
     {
         dsstring lua_err = LuaContext::GetInstance()->GetLastError();
@@ -679,6 +680,20 @@ bool MainService::RequestLuaFileExec( const dsstring& p_path, dsstring& p_err )
         return false;
     }
     return true;
+    */
+
+    int status = LuaContext::GetInstance()->ExecuteFromFile( p_path );
+    if( -2 == status )
+    {
+        dsstring lua_err = LuaContext::GetInstance()->GetLastError();
+        p_err = lua_err;
+    }
+    else if( -1 == status )
+    {
+        dsstring msg = "cannot open lua script file : " + p_path;
+        print_console_line( msg );
+    }
+    return status;
 }
 
 void MainService::RequestMemAllocDump( void )

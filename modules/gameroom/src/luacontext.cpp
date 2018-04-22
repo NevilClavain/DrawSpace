@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-
+#include "file.h"
 #include "luacontext.h"
 #include "luaclass_globals.h"
 #include "luaclass_renderpassnodegraph.h"
@@ -105,18 +105,34 @@ bool LuaContext::Execute( const std::string& p_script )
     return true;
 }
 
-bool LuaContext::ExecuteFromFile( const std::string& p_fichier )
+int LuaContext::ExecuteFromFile( const std::string& p_filepath )
 {
-	int status = luaL_dofile( m_L, p_fichier.c_str() );
+    int global_status = 0;
+    long fsize;
+    void* content = DrawSpace::Utils::File::LoadAndAllocBinaryFile( p_filepath, &fsize );
+    if( !content )
+    {
+        global_status = -1;
+        return global_status;
+    }
+
+    char* text = new char[fsize + 1];
+    memcpy( text, content, fsize );
+    text[fsize] = 0;
+
+    int status = luaL_dostring( m_L, text );
+
+    _DRAWSPACE_DELETE_N_( content );
+    delete[] text;
 	if( status )
 	{
         m_error = lua_tostring( m_L, -1 );
 		// popper le message d'erreur
 		lua_pop( m_L, 1 );
-        return false;
-	}
 
-	return true;
+        global_status = -2;
+	}
+	return global_status;
 }
 
 dsstring LuaContext::GetLastError( void )

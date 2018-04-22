@@ -72,7 +72,7 @@ public:
 	void Shutdown( void );
 
 	bool Execute( const std::string& p_script );
-	bool ExecuteFromFile( const std::string& p_fichier );
+	int ExecuteFromFile( const std::string& p_filepath );
 	dsstring GetLastError( void );
     
     template<class... Args>
