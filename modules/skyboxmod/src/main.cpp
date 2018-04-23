@@ -31,4 +31,10 @@ __declspec(dllexport) DrawSpace::Interface::Module::Root* PIFactory( void )
 {
     return new SkyboxRoot;
 }
+
+__declspec(dllexport) void PITrash( DrawSpace::Interface::Module::Root* p_itf )
+{
+    SkyboxRoot* itf = static_cast<SkyboxRoot*>( p_itf );
+    delete itf;
+}
 }

@@ -61,6 +61,7 @@ typedef enum
 } PluginManagerStatus;
 
 #define PIFACTORYSYMBOLNAME "PIFactory"
+#define PITRASHSYMBOLNAME   "PITrash"
 
 namespace DrawSpace
 {

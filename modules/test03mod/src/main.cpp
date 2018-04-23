@@ -52,4 +52,9 @@ __declspec(dllexport) DrawSpace::Interface::Module::Root* PIFactory( void )
 {
     return new Test03Root;
 }
+__declspec(dllexport) void PITrash( DrawSpace::Interface::Module::Root* p_itf )
+{
+    Test03Root* itf = static_cast<Test03Root*>( p_itf );
+    delete itf;
+}
 }

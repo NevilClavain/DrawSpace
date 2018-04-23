@@ -52,4 +52,9 @@ __declspec(dllexport) DrawSpace::Interface::Module::Root* PIFactory( void )
 {
     return new RootImpl;
 }
+__declspec(dllexport) void PITrash( DrawSpace::Interface::Module::Root* p_itf )
+{
+    RootImpl* itf = static_cast<RootImpl*>( p_itf );
+    delete itf;
+}
 }

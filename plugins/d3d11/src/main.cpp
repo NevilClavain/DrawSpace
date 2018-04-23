@@ -30,5 +30,11 @@ __declspec(dllexport) DrawSpace::Interface::Renderer* PIFactory( void )
 {
     return new D3D11Renderer;
 }
+
+__declspec(dllexport) void PITrash( DrawSpace::Interface::Renderer* p_itf )
+{
+    D3D11Renderer* itf = static_cast<D3D11Renderer*>( p_itf );
+    delete itf;
+}
 }
 
