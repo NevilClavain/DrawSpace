@@ -45,6 +45,8 @@ public:
     int LUA_getmoduledescr( lua_State* p_L );
     int LUA_getserviceslist( lua_State* p_L );
 
+    DrawSpace::Interface::Module::Root* GetModuleRoot( void ) const;
+
     static const char className[];
     static const Luna<LuaClass_Module>::RegType methods[];
 };

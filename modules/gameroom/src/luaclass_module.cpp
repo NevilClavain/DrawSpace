@@ -104,3 +104,8 @@ int LuaClass_Module::LUA_getserviceslist( lua_State* p_L )
     }
     return list.size();
 }
+
+DrawSpace::Interface::Module::Root* LuaClass_Module::GetModuleRoot( void ) const
+{
+    return m_mod_root;
+}

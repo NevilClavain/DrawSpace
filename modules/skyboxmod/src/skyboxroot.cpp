@@ -63,3 +63,9 @@ DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* SkyboxRoot::In
     }
     return NULL;
 }
+
+void SkyboxRoot::TrashRenderingAspectImpls( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl )
+{
+    DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl* sb_impl = static_cast<DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl*>( p_impl );
+    delete sb_impl;
+}

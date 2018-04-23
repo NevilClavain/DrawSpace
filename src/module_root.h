@@ -67,8 +67,13 @@ public:
     virtual Service*                                                            InstanciateService( const dsstring& p_id );
 
     virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );
+    virtual void                                                                TrashRenderingAspectImpls( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl ) {};
+
     virtual DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   InstanciateTransformAspectImpls( const dsstring& p_id );
+    virtual void                                                                TrashTransformAspectImpls( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl ) {};
+
     virtual DrawSpace::Interface::AspectImplementations::ServiceAspectImpl*     InstanciateServiceAspectImpl( const dsstring& p_id );
+    virtual void                                                                TrashServiceAspectImpls( DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl ) {};
 
 
 };
