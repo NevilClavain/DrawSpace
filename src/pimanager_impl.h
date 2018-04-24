@@ -108,7 +108,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::Instanciate( Handle p
 
     if( NULL == proc )
     {
-        return PIM_FAIL_FACTORYFUNCNOTFOUND;
+        return PIM_FAIL_ENTRYPOINTNOTFOUND;
     }
     else
     {
@@ -117,7 +117,28 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::Instanciate( Handle p
         *p_inst = inst;
         return PIM_OK;
     }
-    return PIM_OK;
 }
 
+template<typename base>
+PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::TrashInstance( const char* p_path, base* p_inst )
+{
+    typename LibList::iterator it = get_lib_list()->find( p_path );
+    if( it == get_lib_list()->end() )
+    {
+        return PIM_FAIL_UNKNOWN;
+    }
+
+    // TODO  : verifier que le handle fourni est bien dans m_libs; sinon retour PIM_FAIL_UNKNOWN
+    FARPROC proc = GetProcAddress( it->second.handle, PITRASHSYMBOLNAME );
+    if( NULL == proc )
+    {
+        return PIM_FAIL_ENTRYPOINTNOTFOUND;
+    }
+    else
+    {
+        Trash trash = (Trash)proc;
+        (*trash)( p_inst );
+        return PIM_OK;    
+    }
+}
 

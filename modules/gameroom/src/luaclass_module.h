@@ -41,6 +41,7 @@ public:
 	~LuaClass_Module( void );
 
     int LUA_load( lua_State* p_L );
+    int LUA_unload( lua_State* p_L );
     int LUA_getmodulename( lua_State* p_L );
     int LUA_getmoduledescr( lua_State* p_L );
     int LUA_getserviceslist( lua_State* p_L );

@@ -92,3 +92,24 @@ bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instan
 
     return true;
 }
+
+bool PILoad::UnloadModule( const dsstring& p_file, DrawSpace::Interface::Module::Root* p_module_root )
+{
+	dsstring complete_path = p_file;
+#ifdef _DEBUG
+	complete_path += ".dll";
+#else
+	complete_path += "_r.dll";
+#endif
+
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::TrashInstance( complete_path.c_str(), p_module_root ) != PIM_OK )
+    {
+        return false;
+    }
+    
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::UnloadPlugin( complete_path.c_str() ) != PIM_OK )
+    {
+        return false;
+    }
+    return true;
+}

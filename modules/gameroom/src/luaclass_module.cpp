@@ -30,6 +30,7 @@ const char LuaClass_Module::className[] = "Module";
 const Luna<LuaClass_Module>::RegType LuaClass_Module::methods[] =
 {
     { "load", &LuaClass_Module::LUA_load },
+    { "unload", &LuaClass_Module::LUA_unload },
     { "get_name", &LuaClass_Module::LUA_getmodulename },
     { "get_descr", &LuaClass_Module::LUA_getmoduledescr },
     { "get_services", &LuaClass_Module::LUA_getserviceslist },
@@ -60,7 +61,16 @@ int LuaClass_Module::LUA_load( lua_State* p_L )
 {
     if( !DrawSpace::Utils::PILoad::LoadModule( m_module_path, m_module_instance_id, &m_mod_root ) )
     {
-        LUA_ERROR( "fail to load module root" );
+        LUA_ERROR( "fail to load module" );
+    }
+    return 0;
+}
+
+int LuaClass_Module::LUA_unload( lua_State* p_L )
+{
+    if( !DrawSpace::Utils::PILoad::UnloadModule( m_module_path, m_mod_root ) )
+    {
+        LUA_ERROR( "fail to unload module" );
     }
     return 0;
 }

@@ -56,7 +56,7 @@ typedef enum
     PIM_FAIL_PILOADING,
     PIM_FAIL_PIUNLOADING,
     PIM_FAIL_UNKNOWN,
-    PIM_FAIL_FACTORYFUNCNOTFOUND,
+    PIM_FAIL_ENTRYPOINTNOTFOUND,
 
 } PluginManagerStatus;
 
@@ -76,12 +76,14 @@ public:
 private:
     typedef struct
     {
-        Handle        handle;
-        dsstring   path;
-        long          refcount;
+        Handle          handle;
+        dsstring        path;
+        long            refcount;
+
     } PluginInfos;
 
     typedef base* (* Factory)( void );
+    typedef void  (* Trash)( base* );
 
     typedef std::map<std::string, PluginInfos> LibList;
 
@@ -98,6 +100,7 @@ public:
     static PluginManagerStatus LoadPlugin( const char* p_path, Handle& p_handle );
     static PluginManagerStatus UnloadPlugin( const char* p_path );
     static PluginManagerStatus Instanciate( Handle p_handle, base** p_inst );
+    static PluginManagerStatus TrashInstance( const char* p_path, base* p_inst );
 };
 }
 }
