@@ -351,8 +351,13 @@ void SkyboxRenderingAspectImpl::init_rendering_objects( void )
     ComponentList<std::vector<dsstring>> skybox_passes;
     m_owner->GetComponentsByType<std::vector<dsstring>>( skybox_passes );
 
+    /*
     ComponentList<std::vector<Texture*>> skybox_textures;
     m_owner->GetComponentsByType<std::vector<Texture*>>( skybox_textures );
+    */
+
+    ComponentList<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>> skybox_textures;
+    m_owner->GetComponentsByType<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( skybox_textures );
 
     ComponentList<Fx*> skybox_fxs;
     m_owner->GetComponentsByType<Fx*>( skybox_fxs );
@@ -367,15 +372,35 @@ void SkyboxRenderingAspectImpl::init_rendering_objects( void )
         dsstring pass_name;
         pass_name = passes_names[i];
 
+        /*
         std::vector<Texture*> textures_set = skybox_textures[i]->getPurpose();
 
-        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name ) );    
+        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name ) );
         for( size_t j = 0; j < 6; j++ )
         {
             pass_slot->GetRenderingNode( j )->SetOrderNumber( skybox_ro[i]->getPurpose() );
             pass_slot->GetRenderingNode( j )->SetFx( skybox_fxs[i]->getPurpose() );
            
             pass_slot->GetRenderingNode( j )->SetTexture( textures_set[j], 0 );
+        }
+        
+        m_pass_slots.push_back( pass_slot );
+        */
+
+        std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6> textures = skybox_textures[i]->getPurpose();
+
+        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name ) );
+        for( size_t j = 0; j < 6; j++ )
+        {
+            pass_slot->GetRenderingNode( j )->SetOrderNumber( skybox_ro[i]->getPurpose() );
+            pass_slot->GetRenderingNode( j )->SetFx( skybox_fxs[i]->getPurpose() );
+
+            std::array<Texture*,RenderingNode::NbMaxTextures> textures_set = textures[j];
+
+            for( size_t k = 0; k < RenderingNode::NbMaxTextures; k++ )
+            {
+                pass_slot->GetRenderingNode( j )->SetTexture( textures_set[k], k );
+            }
         }
 
         m_pass_slots.push_back( pass_slot );

@@ -47,7 +47,7 @@ m_rendering_order( 10000 )
         LUA_ERROR( "RenderContext::RenderContext : argument(s) missing" );
 	}
 
-    dsstring pass_name = luaL_checkstring( p_L, 1 );
+    m_passname = luaL_checkstring( p_L, 1 );
 }
 
 LuaClass_RenderContext::~LuaClass_RenderContext( void )
@@ -159,4 +159,9 @@ int LuaClass_RenderContext::GetShadersParamsListSize( void ) const
 LuaClass_RenderContext::NamedShaderParam LuaClass_RenderContext::GetNamedShaderParam( int p_index ) const
 {
     return m_shaders_params[p_index];
+}
+
+dsstring LuaClass_RenderContext::GetPassName( void ) const
+{
+    return m_passname;
 }

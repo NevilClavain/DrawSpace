@@ -107,7 +107,7 @@ void RenderingQueue::Draw( void )
         renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b, m_target_clear_color_a );
     }
 
-    for( std::list<Operation>::iterator it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
+    for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
     {
         Operation curr_operation = (*it);
 
@@ -241,7 +241,7 @@ void RenderingQueue::UpdateOutputQueue( void )
     m_nodes.clear();
     m_fx_bases.clear();
 
-    for( std::map<long, std::vector<RenderingNode*>>::iterator it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
+    for( auto it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
     {
         std::vector<RenderingNode*> sorted_list;
         sort_list( (*it).second, sorted_list );
@@ -281,7 +281,7 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
     m_nodes.clear();
     m_fx_bases.clear();
 
-    for( std::map<long, std::vector<RenderingNode*>>::iterator it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
+    for( auto it = m_renderingorder_nodes.begin(); it != m_renderingorder_nodes.end(); ++it )
     {
         for( size_t i = 0; i < (*it).second.size(); i++ )
         {
@@ -321,7 +321,7 @@ double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode
         return 0.0;
     }
 
-    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = p_lists.begin(); it != p_lists.end(); ++it )
+    for( auto it = p_lists.begin(); it != p_lists.end(); ++it )
     {
         if( (*it).second.size() > 1 )
         {
@@ -339,7 +339,7 @@ double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode
 
         //compter nbre de nodes
         long count2 = 0;
-        for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = p_lists.begin(); it != p_lists.end(); ++it )
+        for( auto it = p_lists.begin(); it != p_lists.end(); ++it )
         {
             count2 += (long)( (*it).second.size() );
         }
@@ -500,7 +500,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     }
 
     // type selectionne : retirer de p_todo
-    for( std::vector<SortCategory>::iterator it = p_todo.begin(); it != p_todo.end(); ++it )
+    for( auto it = p_todo.begin(); it != p_todo.end(); ++it )
     {
         if( TEXTURE_LIST == sel_type )
         {
@@ -521,7 +521,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     }
 
     // appels recursifs
-    for( std::map<dsstring, std::vector<RenderingNode*>>::iterator it = selected_lists.begin(); it != selected_lists.end(); ++it )
+    for( auto it = selected_lists.begin(); it != selected_lists.end(); ++it )
     {
         if( (*it).second.size() > 2 )
         {
@@ -906,7 +906,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         std::map<dsstring, RenderingNode::ShadersParams*> node_shaders_params;
         node->GetShadersParams( node_shaders_params );
 
-        for( std::map<dsstring, RenderingNode::ShadersParams*>::iterator it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
+        for( auto it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
         {
             operation.type = SET_SHADERS_PARAMS;
             

@@ -37,6 +37,7 @@
 #include <typeinfo>
 #include <algorithm>
 #include <functional>
+#include <array>
 
 #include "flags.h"
 

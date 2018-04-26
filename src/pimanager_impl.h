@@ -47,7 +47,7 @@
 template <typename base>
 PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::LoadPlugin( const char* p_path, Handle& p_handle )
 {
-    typename LibList::iterator it = get_lib_list()->find( p_path );
+    auto it = get_lib_list()->find( p_path );
     if( it == get_lib_list()->end() )
     {
         HMODULE hMod = LoadLibraryA( p_path );
@@ -81,7 +81,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::LoadPlugin( const cha
 template <typename base>
 PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::UnloadPlugin( const char* p_path )
 {
-    typename LibList::iterator it = get_lib_list()->find( p_path );
+    auto it = get_lib_list()->find( p_path );
     if( it == get_lib_list()->end() )
     {
         return PIM_FAIL_UNKNOWN;
@@ -122,7 +122,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::Instanciate( Handle p
 template<typename base>
 PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::TrashInstance( const char* p_path, base* p_inst )
 {
-    typename LibList::iterator it = get_lib_list()->find( p_path );
+    auto it = get_lib_list()->find( p_path );
     if( it == get_lib_list()->end() )
     {
         return PIM_FAIL_UNKNOWN;

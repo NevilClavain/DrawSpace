@@ -27,12 +27,16 @@
 
 #include "luna.h"
 #include "renderingaspectimpl.h"
+#include "luaclass_entity.h"
+#include "renderingaspect.h"
 
 class LuaClass_SkyboxRendering
 {
 private:
 
-    DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* m_skyboxRender;
+    DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   m_skyboxRender;
+    DrawSpace::Aspect::RenderingAspect*                                 m_entity_rendering_aspect;
+    DrawSpace::Core::Entity*                                            m_entity;
 
 public:
 	LuaClass_SkyboxRendering( lua_State* p_L );
@@ -40,6 +44,15 @@ public:
 
     int LUA_instanciateRenderingImpl( lua_State* p_L );
     int LUA_trashRenderingImpl( lua_State* p_L );
+
+    int LUA_attachtoentity( lua_State* p_L );
+    int LUA_detachfromentity( lua_State* p_L );
+
+    int LUA_configure( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
+
+    int LUA_registertorendering( lua_State* p_L );
+    int LUA_unregisterfromrendering( lua_State* p_L );
 
     static const char className[];
     static const Luna<LuaClass_SkyboxRendering>::RegType methods[];

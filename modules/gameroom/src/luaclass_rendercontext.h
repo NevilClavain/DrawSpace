@@ -65,6 +65,8 @@ public:
 
     int GetRenderingOrder( void ) const;
 
+    dsstring GetPassName( void ) const;
+
     static const char className[];
     static const Luna<LuaClass_RenderContext>::RegType methods[];
 };
