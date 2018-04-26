@@ -48,11 +48,14 @@ int LuaClass_RenderConfig::LUA_addrendercontext( lua_State* p_L )
 	{		
         LUA_ERROR( "RenderConfig::add_rendercontext : argument(s) missing" );
 	}
-    LuaClass_RenderConfig* lua_rc = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
+    LuaClass_RenderContext* lua_rc = Luna<LuaClass_RenderContext>::check( p_L, 1 );
     if( NULL == lua_rc )
     {
-        LUA_ERROR( "RenderConfig::add_rendercontext : argument 1 must be of type LuaClass_RenderConfig" );
+        LUA_ERROR( "RenderConfig::add_rendercontext : argument 1 must be of type LuaClass_RenderContext" );
     }
+
+    m_renderContexts.push_back( lua_rc );
+
     return 0;
 }
 

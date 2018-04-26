@@ -153,7 +153,7 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
 	{		
         LUA_ERROR( "SkyboxRendering::configure : argument(s) missing" );
 	}
-    LuaClass_RenderConfig* lua_renderconfig = Luna<LuaClass_RenderConfig>::check( p_L, 2 );
+    LuaClass_RenderConfig* lua_renderconfig = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
     if( NULL == lua_renderconfig )
     {
         LUA_ERROR( "SkyboxRendering::configure : argument 1 must be of type LuaClass_RenderConfig" );
@@ -205,6 +205,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                         {
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_name ) );
                             // ici...
+
+                            _asm nop
                         }                        
                     }                    
                 }
