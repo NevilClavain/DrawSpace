@@ -43,6 +43,7 @@
 #include "luaclass_renderconfig.h"
 #include "luaclass_skyboxrendering.h"
 #include "luaclass_module.h"
+#include "luaclass_matrix.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -81,6 +82,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RenderContext>::Register( m_L );
     Luna<LuaClass_RenderConfig>::Register( m_L );
     Luna<LuaClass_Module>::Register( m_L );
+    Luna<LuaClass_Matrix>::Register( m_L );
 }
 
 void LuaContext::Shutdown( void )
