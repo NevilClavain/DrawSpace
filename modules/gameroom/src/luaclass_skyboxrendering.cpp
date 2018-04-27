@@ -29,6 +29,7 @@
 #include "luaclass_renderconfig.h"
 #include "luaclass_rendercontext.h"
 #include "luaclass_texturesset.h"
+#include "luaclass_fxparams.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -178,38 +179,125 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
             }
             m_entity_rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
             
-            ////////////// jeu de 6 textures par slot pass
+            ///////////////// jeux de textures pour chaque passes
 
             for( int i = 0; i < rc_list_size; i++ )
             {
                 LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
-                int textures_set_size = render_context->GetTexturesSetListSize();
+                dsstring pass_name = render_context->GetPassName();
 
+                int textures_set_size = render_context->GetTexturesSetListSize();
                 if( textures_set_size != 6 )
                 {
                     LUA_ERROR( "SkyboxRendering::configure : textures set size must have 6 entries" );
                     // todo : cleanup_resources
                 }
 
-                std::vector<Texture*> skybox_textures;
+                ////////////// 6 jeux de 32 textures stages
+                std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6> skybox_textures = { NULL };
 
-                for( int j = 0; j < textures_set_size; j++ )
+                for( int texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++ )
                 {
-                    LuaClass_TexturesSet* txts_set = render_context->GetTexturesSet( j );
-                    
-                    
-                    for( int k = 0; k < RenderingNode::GetTextureListSize(); k++ )
+                    LuaClass_TexturesSet* txts_set = render_context->GetTexturesSet( texture_face_index );
+                                        
+                    for( int texture_stage_index = 0; texture_stage_index < RenderingNode::GetTextureListSize(); texture_stage_index++ )
                     {
-                        dsstring texture_name = txts_set->GetTextureFile( k );
+                        dsstring texture_name = txts_set->GetTextureFile( texture_stage_index );
                         if( texture_name != "" )
                         {
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_name ) );
-                            // ici...
 
-                            _asm nop
+                            bool status = texture->LoadFromFile();
+
+                            status = texture->LoadFromFile();
+                            if( !status )
+                            {                                
+                                // todo : cleanup_resources
+                                LUA_ERROR( "MesheRenderingAspectImpl::configure : texture loading operation failed" );
+                            }
+                            else
+                            {
+                                skybox_textures[texture_face_index][texture_stage_index] = texture;
+                            }
                         }                        
                     }                    
                 }
+
+                dsstring component_name = "skybox_textures/" + pass_name;
+
+                m_entity_rendering_aspect->AddComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( component_name, skybox_textures );
+            }
+
+            ////////////////// fx pour chaque passes
+
+            for( int i = 0; i < rc_list_size; i++ )
+            {
+                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context->GetPassName();
+
+                // pour les skybox, on a besoin que d'un seul fx....
+                if( render_context->GetFxParamsListSize() < 1 )
+                {
+                    LUA_ERROR( "SkyboxRendering::configure : missing fx parameters description" );
+                    // todo : cleanup_resources                    
+                }
+                LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+
+                Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
+              
+                fx->SetRenderStates( fx_params->GetRenderStatesSet() );
+
+                for( size_t j = 0; j < fx_params->GetNbShaderFiles(); j++ )
+                {
+                    std::pair<dsstring,bool> shader_file_infos = fx_params->GetShaderFile( j );
+                    Shader* shader = _DRAWSPACE_NEW_( Shader, Shader( shader_file_infos.first, shader_file_infos.second ) );
+
+                    bool status = shader->LoadFromFile();
+
+                    if( !status )
+                    {
+                        // todo : cleanup_resources
+                        LUA_ERROR( "MesheRenderingAspectImpl::configure : shader loading operation failed" );
+                    }
+                    else
+                    {
+                        fx->AddShader( shader );
+                    }
+                }
+
+                dsstring component_name = "skybox_fx/" + pass_name;
+
+                m_entity_rendering_aspect->AddComponent<Fx*>( component_name, fx );
+            }
+
+            //////////////// parametres de shaders
+            for( int i = 0; i < rc_list_size; i++ )
+            {
+                std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
+
+                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context->GetPassName();
+
+                for( int j = 0; j < render_context->GetShadersParamsListSize(); j++ )
+                {
+                    LuaClass_RenderContext::NamedShaderParam param = render_context->GetNamedShaderParam( j );
+                    skybox_texturepass_shaders_params.push_back( param );
+                }
+
+                dsstring component_name = "skybox_shaders_params/" + pass_name;
+
+                m_entity_rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name, skybox_texturepass_shaders_params );
+            }
+
+            ///////////////// rendering order
+
+            for( int i = 0; i < rc_list_size; i++ )
+            {
+                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context->GetPassName();
+
+                dsstring component_name = "skybox_ro/" + pass_name;
+                m_entity_rendering_aspect->AddComponent<int>( component_name, render_context->GetRenderingOrder() );
             }
 
         } LUA_CATCH; 

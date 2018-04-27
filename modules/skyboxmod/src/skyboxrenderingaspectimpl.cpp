@@ -35,6 +35,8 @@ using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
 
+#define SB_DIM 0.5
+
 SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
     m_pass_name( p_pass_name )
 {
@@ -49,27 +51,27 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
         {
             case FrontQuad:
 
-                v1.x = -0.5;
-                v1.y = 0.5;
-                v1.z = -0.5;
+                v1.x = -SB_DIM;
+                v1.y = SB_DIM;
+                v1.z = -SB_DIM;
                 v1.tu[0] = 0.0;
                 v1.tv[0] = 0.0;
 
-                v2.x = 0.5;
-                v2.y = 0.5;
-                v2.z = -0.5;
+                v2.x = SB_DIM;
+                v2.y = SB_DIM;
+                v2.z = -SB_DIM;
                 v2.tu[0] = 1.0;
                 v2.tv[0] = 0.0;
 
-                v3.x = 0.5;
-                v3.y = -0.5;
-                v3.z = -0.5;
+                v3.x = SB_DIM;
+                v3.y = -SB_DIM;
+                v3.z = -SB_DIM;
                 v3.tu[0] = 1.0;
                 v3.tv[0] = 1.0;
 
-                v4.x = -0.5;
-                v4.y = -0.5;
-                v4.z = -0.5;
+                v4.x = -SB_DIM;
+                v4.y = -SB_DIM;
+                v4.z = -SB_DIM;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
@@ -79,27 +81,27 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
             case RearQuad:
 
-                v1.x = 0.5;
-                v1.y = 0.5;
-                v1.z = 0.5;
+                v1.x = SB_DIM;
+                v1.y = SB_DIM;
+                v1.z = SB_DIM;
                 v1.tu[0] = 0.0;
                 v1.tv[0] = 0.0;
 
-                v2.x = -0.5;
-                v2.y = 0.5;
-                v2.z = 0.5;
+                v2.x = -SB_DIM;
+                v2.y = SB_DIM;
+                v2.z = SB_DIM;
                 v2.tu[0] = 1.0;
                 v2.tv[0] = 0.0;
 
-                v3.x = -0.5;
-                v3.y = -0.5;
-                v3.z = 0.5;
+                v3.x = -SB_DIM;
+                v3.y = -SB_DIM;
+                v3.z = SB_DIM;
                 v3.tu[0] = 1.0;
                 v3.tv[0] = 1.0;
 
-                v4.x = 0.5;
-                v4.y = -0.5;
-                v4.z = 0.5;
+                v4.x = SB_DIM;
+                v4.y = -SB_DIM;
+                v4.z = SB_DIM;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
@@ -108,27 +110,27 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
             case LeftQuad:
 
-                v1.x = -0.5;
-                v1.y = 0.5;
-                v1.z = 0.5;
+                v1.x = -SB_DIM;
+                v1.y = SB_DIM;
+                v1.z = SB_DIM;
                 v1.tu[0] = 0.0;
                 v1.tv[0] = 0.0;
 
-                v2.x = -0.5;
-                v2.y = 0.5;
-                v2.z = -0.5;
+                v2.x = -SB_DIM;
+                v2.y = SB_DIM;
+                v2.z = -SB_DIM;
                 v2.tu[0] = 1.0;
                 v2.tv[0] = 0.0;
 
-                v3.x = -0.5;
-                v3.y = -0.5;
-                v3.z = -0.5;
+                v3.x = -SB_DIM;
+                v3.y = -SB_DIM;
+                v3.z = -SB_DIM;
                 v3.tu[0] = 1.0;
                 v3.tv[0] = 1.0;
 
-                v4.x = -0.5;
-                v4.y = -0.5;
-                v4.z = 0.5;
+                v4.x = -SB_DIM;
+                v4.y = -SB_DIM;
+                v4.z = SB_DIM;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
@@ -137,27 +139,27 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
             case RightQuad:
 
-                v1.x = 0.5;
-                v1.y = 0.5;
-                v1.z = -0.5;
+                v1.x = SB_DIM;
+                v1.y = SB_DIM;
+                v1.z = -SB_DIM;
                 v1.tu[0] = 0.0;
                 v1.tv[0] = 0.0;
 
-                v2.x = 0.5;
-                v2.y = 0.5;
-                v2.z = 0.5;
+                v2.x = SB_DIM;
+                v2.y = SB_DIM;
+                v2.z = SB_DIM;
                 v2.tu[0] = 1.0;
                 v2.tv[0] = 0.0;
 
-                v3.x = 0.5;
-                v3.y = -0.5;
-                v3.z = 0.5;
+                v3.x = SB_DIM;
+                v3.y = -SB_DIM;
+                v3.z = SB_DIM;
                 v3.tu[0] = 1.0;
                 v3.tv[0] = 1.0;
 
-                v4.x = 0.5;
-                v4.y = -0.5;
-                v4.z = -0.5;
+                v4.x = SB_DIM;
+                v4.y = -SB_DIM;
+                v4.z = -SB_DIM;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
@@ -166,27 +168,27 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
             case TopQuad:
 
-                v1.x = -0.5;
-                v1.y = 0.5;
-                v1.z = 0.5;
+                v1.x = -SB_DIM;
+                v1.y = SB_DIM;
+                v1.z = SB_DIM;
                 v1.tu[0] = 0.0;
                 v1.tv[0] = 0.0;
 
-                v2.x = 0.5;
-                v2.y = 0.5;
-                v2.z = 0.5;
+                v2.x = SB_DIM;
+                v2.y = SB_DIM;
+                v2.z = SB_DIM;
                 v2.tu[0] = 1.0;
                 v2.tv[0] = 0.0;
 
-                v3.x = 0.5;
-                v3.y = 0.5;
-                v3.z = -0.5;
+                v3.x = SB_DIM;
+                v3.y = SB_DIM;
+                v3.z = -SB_DIM;
                 v3.tu[0] = 1.0;
                 v3.tv[0] = 1.0;
 
-                v4.x = -0.5;
-                v4.y = 0.5;
-                v4.z = -0.5;
+                v4.x = -SB_DIM;
+                v4.y = SB_DIM;
+                v4.z = -SB_DIM;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 
@@ -195,27 +197,27 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
             case BottomQuad:
 
-                v1.x = -0.5;
-                v1.y = -0.5;
-                v1.z = -0.5;
+                v1.x = -SB_DIM;
+                v1.y = -SB_DIM;
+                v1.z = -SB_DIM;
                 v1.tu[0] = 0.0;
                 v1.tv[0] = 0.0;
 
-                v2.x = 0.5;
-                v2.y = -0.5;
-                v2.z = -0.5;
+                v2.x = SB_DIM;
+                v2.y = -SB_DIM;
+                v2.z = -SB_DIM;
                 v2.tu[0] = 1.0;
                 v2.tv[0] = 0.0;
 
-                v3.x = 0.5;
-                v3.y = -0.5;
-                v3.z = 0.5;
+                v3.x = SB_DIM;
+                v3.y = -SB_DIM;
+                v3.z = SB_DIM;
                 v3.tu[0] = 1.0;
                 v3.tv[0] = 1.0;
 
-                v4.x = -0.5;
-                v4.y = -0.5;
-                v4.z = 0.5;
+                v4.x = -SB_DIM;
+                v4.y = -SB_DIM;
+                v4.z = SB_DIM;
                 v4.tu[0] = 0.0;
                 v4.tv[0] = 1.0;
 

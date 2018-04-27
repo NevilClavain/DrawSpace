@@ -208,7 +208,7 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
                     {
                         // clean tout ce qui a deja ete charge...
                         cleanup_resources( p_L, pass_id );
-                        LUA_ERROR( "MesheRenderingAspectImpl::load_pass_viewportquad_resources : texture loading operation failed" );
+                        LUA_ERROR( "MesheRenderingAspectImpl::configure : texture loading operation failed" );
                     }
                     else
                     {
