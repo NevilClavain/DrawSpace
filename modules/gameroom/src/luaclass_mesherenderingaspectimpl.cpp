@@ -67,10 +67,6 @@ int LuaClass_MesheRenderingAspectImpl::LUA_attachtoentity( lua_State* p_L )
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "MesheRenderingAspectImpl::attach_toentity : argument 1 must be of type LuaClass_Entity" );
-    }
 
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
     RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
@@ -122,20 +118,8 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
         LUA_ERROR( "MesheRenderingAspectImpl::configure : argument(s) missing" );
 	}
 
-    /*
-    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
-    }
-    */
-
     dsstring pass_id = luaL_checkstring( p_L, 1 );
     LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
-    if( NULL == lua_renderassembly )
-    {
-        LUA_ERROR( "MesheRenderingAspectImpl::configure : argument 1 must be of type LuaClass_RenderAssembly" );
-    }
 
     dsstring meshe_path = luaL_checkstring( p_L, 3 );
     int meshe_index = luaL_checkint( p_L, 4 );
@@ -316,10 +300,6 @@ int LuaClass_MesheRenderingAspectImpl::LUA_registertorendering( lua_State* p_L )
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
-    if( NULL == lua_rg )
-    {
-        LUA_ERROR( "MesheRenderingAspectImpl::register_to_rendering : argument 1 must be of type LuaClass_RenderPassNodeGraph" );
-    }
 
     m_meshe_render->RegisterToRendering( lua_rg->GetRenderGraph() );
     return 0;
@@ -339,10 +319,6 @@ int LuaClass_MesheRenderingAspectImpl::LUA_unregisterfromrendering( lua_State* p
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
-    if( NULL == lua_rg )
-    {
-        LUA_ERROR( "MesheRenderingAspectImpl::unregister_from_rendering : argument 1 must be of type LuaClass_RenderPassNodeGraph" );
-    }
 
     m_meshe_render->UnregisterFromRendering( lua_rg->GetRenderGraph() );
     return 0;

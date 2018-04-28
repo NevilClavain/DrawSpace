@@ -27,7 +27,6 @@
 
 #include "luna.h"
 #include "fpstransformaspectimpl.h"
-#include "luaclass_entity.h"
 #include "transformaspect.h"
 
 class LuaClass_FPSTransformAspectImpl

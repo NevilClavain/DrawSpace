@@ -87,10 +87,6 @@ int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
 
     dsstring entity_id = luaL_checkstring( p_L, 1 );
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 2 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "EntityNodeGraph::set_root : argument 2 must be of type LuaClass_Entity" );
-    }
     
     if( m_entities.count( entity_id ) )
     {
@@ -114,10 +110,6 @@ int LuaClass_EntityNodeGraph::LUA_addchild( lua_State* p_L )
     dsstring entity_id = luaL_checkstring( p_L, 2 );
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 3 );
 
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "EntityNodeGraph::add_child : argument 3 must be of type LuaClass_Entity" );
-    }
 
     if( m_entities.count( entity_id ) )
     {
@@ -162,10 +154,6 @@ int LuaClass_EntityNodeGraph::LUA_setcamera( lua_State* p_L )
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "EntityNodeGraph::set_camera : argument 1 must be of type LuaClass_Entity" );
-    }
 
     m_entitygraph.SetCurrentCameraEntity( &lua_ent->GetEntity() );
     return 0;

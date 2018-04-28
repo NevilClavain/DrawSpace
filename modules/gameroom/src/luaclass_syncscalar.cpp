@@ -61,10 +61,6 @@ int LuaClass_SyncScalar::LUA_initfromtimeaspectof( lua_State* p_L )
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "SyncScalar::init_fromtimeaspectof : argument 1 must be of type LuaClass_Entity" );
-    }
 
     dsreal init_angle = luaL_checknumber( p_L, 2 );
 

@@ -62,10 +62,6 @@ int LuaClass_RenderContext::LUA_addfxparams( lua_State* p_L )
         LUA_ERROR( "RenderContext::add_fxparams : argument(s) missing" );
 	}
     LuaClass_FxParams* lua_fx = Luna<LuaClass_FxParams>::check( p_L, 1 );
-    if( NULL == lua_fx )
-    {
-        LUA_ERROR( "RenderContext::add_fxparams : argument 1 must be of type LuaClass_FxParams" );
-    }
 
     m_fxparams.push_back( lua_fx );
     return 0;
@@ -79,10 +75,6 @@ int LuaClass_RenderContext::LUA_addtexturesset( lua_State* p_L )
         LUA_ERROR( "RenderContext::add_texturesset : argument(s) missing" );
 	}
     LuaClass_TexturesSet* lua_textures = Luna<LuaClass_TexturesSet>::check( p_L, 1 );
-    if( NULL == lua_textures )
-    {
-        LUA_ERROR( "RenderContext::add_texturesset : argument 1 must be of type LuaClass_TexturesSet" );
-    }
 
     m_textures_sets.push_back( lua_textures );
     return 0;

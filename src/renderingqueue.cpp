@@ -565,30 +565,6 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
         switch( p_type )
         {
 
-            /*
-            case FX_LIST:
-                {
-                    Fx* curr_fx = curr_node->GetFx();
-
-                    if( curr_fx )
-                    {
-                        dsstring curr_fx_md5;
-                        curr_fx->GetMD5( curr_fx_md5 );
-                        out_lists[curr_fx_md5].push_back( curr_node );
-                    }
-                    else
-                    {
-                        // pas de fx : ne doit pas influer sur les comptages de redondances
-                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
-                        sprintf( buff, "%x", (long long)curr_node );
-                        dsstring id = dsstring( "void_fx:" ) + dsstring( buff );
-                        out_lists[id].push_back( curr_node );
-                    }
-                }
-                break;
-
-            */
-
             case SHADERS_LIST:
                 {
                     Fx* curr_fx = curr_node->GetFx();
@@ -657,16 +633,6 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     Texture* curr_tx = curr_node->GetTexture( p_texturestage );
                     if( curr_tx )
                     {
-                        /*
-                        dsstring path;
-                        curr_tx->GetPath( path );
-
-                        char buff[64];
-                        dsstring signature = path + dsstring( ":" ) + itoa( p_texturestage, buff, 10 );
-
-                        out_lists[signature].push_back( curr_node );
-                        */
-
                         dsstring curr_txt_md5;
                         curr_tx->GetMD5( curr_txt_md5 );
                         dsstring stage( itoa( p_texturestage, buff, 10 ) );

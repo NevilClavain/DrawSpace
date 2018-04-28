@@ -279,10 +279,6 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
     LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
-    if( NULL == lua_renderassembly )
-    {
-        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : argument 1 must be of type LuaClass_RenderAssembly" );
-    }
 
     if( m_passes.count( pass_id ) )
     {

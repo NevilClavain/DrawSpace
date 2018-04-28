@@ -252,10 +252,7 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
-    if( NULL == lua_rg )
-    {
-        LUA_ERROR( "Entity::connect_renderingaspect_rendergraph : arg 1 must be of type LuaClass_RenderPassNodeGraph" );
-    }
+
 
     RenderingAspect* rendering_aspect = m_entity.GetAspect<RenderingAspect>();
     if( rendering_aspect )

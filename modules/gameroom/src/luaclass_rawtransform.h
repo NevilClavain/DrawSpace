@@ -22,45 +22,33 @@
 */
 /* -*-LIC_END-*- */
 
-#include "luacontext.h"
-#include "luaclass_renderconfig.h"
-#include "luaclass_rendercontext.h"
+#ifndef _LUACLASS_FPSRAWTRANSFOR_H_
+#define _LUACLASS_FPSRAWTRANSFOR_H_
 
-const char LuaClass_RenderConfig::className[] = "RenderConfig";
-const Luna<LuaClass_RenderConfig>::RegType LuaClass_RenderConfig::methods[] =
+#include "luna.h"
+#include "rawtransformaspectimpl.h"
+#include "transformaspect.h"
+
+
+class LuaClass_RawTransform
 {
-    { "add_rendercontext", &LuaClass_RenderConfig::LUA_addrendercontext },
-	{ 0, 0 }
+private:
+    DrawSpace::AspectImplementations::RawTransformAspectImpl    m_raw_transformer;
+    DrawSpace::Aspect::TransformAspect*                         m_entity_transform_aspect;
+
+public:
+
+	LuaClass_RawTransform( lua_State* p_L );
+	~LuaClass_RawTransform( void );
+
+    int LUA_configure( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
+    int LUA_update( lua_State* p_L );
+    int LUA_read( lua_State* p_L );
+
+    static const char className[];
+    static const Luna<LuaClass_RawTransform>::RegType methods[];
+
 };
 
-LuaClass_RenderConfig::LuaClass_RenderConfig( lua_State* p_L )
-{
-}
-
-LuaClass_RenderConfig::~LuaClass_RenderConfig( void )
-{
-}
-
-int LuaClass_RenderConfig::LUA_addrendercontext( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{		
-        LUA_ERROR( "RenderConfig::add_rendercontext : argument(s) missing" );
-	}
-    LuaClass_RenderContext* lua_rc = Luna<LuaClass_RenderContext>::check( p_L, 1 );
-
-    m_renderContexts.push_back( lua_rc );
-
-    return 0;
-}
-
-int LuaClass_RenderConfig::GetRenderContextListSize( void ) const
-{
-    return m_renderContexts.size();
-}
-
-LuaClass_RenderContext* LuaClass_RenderConfig::GetRenderContext( int p_index ) const
-{
-    return m_renderContexts[p_index];
-}
+#endif

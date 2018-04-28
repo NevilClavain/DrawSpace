@@ -60,10 +60,6 @@ int LuaClass_TextRenderingAspectImpl::LUA_configure( lua_State* p_L )
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "TextRenderingAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
-    }
 
     dsstring id = luaL_checkstring( p_L, 2 );
     int posx = luaL_checkint( p_L, 3 );

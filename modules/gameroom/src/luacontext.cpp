@@ -33,6 +33,7 @@
 #include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_fpstransformaspectimpl.h"
+#include "luaclass_rawtransform.h"
 #include "luaclass_textrenderingaspectimpl.h"
 #include "luaclass_mesherenderingaspectimpl.h"
 #include "luaclass_syncangle.h"
@@ -74,6 +75,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
     Luna<LuaClass_FPSTransformAspectImpl>::Register( m_L );
+    Luna<LuaClass_RawTransform>::Register( m_L );
     Luna<LuaClass_TextRenderingAspectImpl>::Register( m_L );
     Luna<LuaClass_MesheRenderingAspectImpl>::Register( m_L );
     Luna<LuaClass_SkyboxRendering>::Register( m_L );

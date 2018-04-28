@@ -69,10 +69,6 @@ int LuaClass_SkyboxRendering::LUA_instanciateRenderingImpl( lua_State* p_L )
 	}
 
     LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
-    if( NULL == lua_mod )
-    {
-        LUA_ERROR( "SkyboxRendering::instanciate_renderingimpl : argument 1 must be of type LuaClass_Module" );
-    }
 
     m_skyboxRender = lua_mod->GetModuleRoot()->InstanciateRenderingAspectImpls( "skyboxRender" );
 
@@ -88,10 +84,6 @@ int LuaClass_SkyboxRendering::LUA_trashRenderingImpl( lua_State* p_L )
 	}
 
     LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
-    if( NULL == lua_mod )
-    {
-        LUA_ERROR( "SkyboxRendering::trash_renderingimpl : argument 1 must be of type LuaClass_Module" );
-    }
 
     lua_mod->GetModuleRoot()->TrashRenderingAspectImpls( m_skyboxRender );
 
@@ -107,10 +99,6 @@ int LuaClass_SkyboxRendering::LUA_attachtoentity( lua_State* p_L )
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "SkyboxRendering::attach_toentity : argument 1 must be of type LuaClass_Entity" );
-    }
 
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
     RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
@@ -155,10 +143,6 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
         LUA_ERROR( "SkyboxRendering::configure : argument(s) missing" );
 	}
     LuaClass_RenderConfig* lua_renderconfig = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
-    if( NULL == lua_renderconfig )
-    {
-        LUA_ERROR( "SkyboxRendering::configure : argument 1 must be of type LuaClass_RenderConfig" );
-    }
 
     if( m_entity_rendering_aspect )
     {
@@ -329,10 +313,6 @@ int LuaClass_SkyboxRendering::LUA_registertorendering( lua_State* p_L )
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
-    if( NULL == lua_rg )
-    {
-        LUA_ERROR( "SkyboxRendering::register_to_rendering : argument 1 must be of type LuaClass_RenderPassNodeGraph" );
-    }
 
     m_skyboxRender->RegisterToRendering( lua_rg->GetRenderGraph() );
     return 0;
@@ -352,10 +332,6 @@ int LuaClass_SkyboxRendering::LUA_unregisterfromrendering( lua_State* p_L )
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
-    if( NULL == lua_rg )
-    {
-        LUA_ERROR( "SkyboxRendering::unregister_from_rendering : argument 1 must be of type LuaClass_RenderPassNodeGraph" );
-    }
 
     m_skyboxRender->UnregisterFromRendering( lua_rg->GetRenderGraph() );
     return 0;

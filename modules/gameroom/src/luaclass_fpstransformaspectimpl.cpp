@@ -24,6 +24,7 @@
 
 #include "luacontext.h"
 #include "luaclass_fpstransformaspectimpl.h"
+#include "luaclass_entity.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -59,10 +60,6 @@ int LuaClass_FPSTransformAspectImpl::LUA_configure( lua_State* p_L )
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
-    if( NULL == lua_ent )
-    {
-        LUA_ERROR( "FPSTransformAspectImpl::configure : argument 1 must be of type LuaClass_Entity" );
-    }
 
     dsreal yaw = luaL_checknumber( p_L, 2 );
     dsreal pitch = luaL_checknumber( p_L, 3 );
@@ -83,8 +80,7 @@ int LuaClass_FPSTransformAspectImpl::LUA_configure( lua_State* p_L )
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY
-        {
-            transform_aspect->SetImplementation( &m_fps_transformer );
+        {            
             transform_aspect->AddComponent<dsreal>( "yaw", yaw );
             transform_aspect->AddComponent<dsreal>( "pitch", pitch );
 
@@ -100,7 +96,7 @@ int LuaClass_FPSTransformAspectImpl::LUA_configure( lua_State* p_L )
     else
     {
         m_entity_transform_aspect = NULL;
-        LUA_ERROR( "FPSTransformAspectImpl::configure : entity passed on arg has no transform aspect" );    
+        LUA_ERROR( "FPSTransformAspectImpl::configure : entity passed on arg has no transform aspect" );
     }
 
     return 0;

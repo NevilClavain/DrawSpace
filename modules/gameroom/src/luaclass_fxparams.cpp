@@ -51,10 +51,6 @@ int LuaClass_FxParams::LUA_setrenderstatesset( lua_State* p_L )
 	}
 
     LuaClass_RenderStatesSet* lua_rss = Luna<LuaClass_RenderStatesSet>::check( p_L, 1 );
-    if( NULL == lua_rss )
-    {
-        LUA_ERROR( "FxParams::set_renderstatesset : argument 1 must be of type LuaClass_RenderStatesSet" );
-    }
 
     m_rss = lua_rss->GetRenderStatesSet();
     return 0;
