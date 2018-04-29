@@ -34,8 +34,8 @@ const char LuaClass_RawTransform::className[] = "RawTransform";
 const Luna<LuaClass_RawTransform>::RegType LuaClass_RawTransform::methods[] =
 {
     { "configure", &LuaClass_RawTransform::LUA_configure },
-    { "update", &LuaClass_RawTransform::LUA_update },
-    { "read", &LuaClass_RawTransform::LUA_read },
+    { "add_matrix", &LuaClass_RawTransform::LUA_addmatrix },
+    { "update_matrix", &LuaClass_RawTransform::LUA_updatematrix },
     { "release", &LuaClass_RawTransform::LUA_release },
 	{ 0, 0 }
 };
@@ -53,7 +53,7 @@ LuaClass_RawTransform::~LuaClass_RawTransform( void )
 int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 2 )
+	if( argc < 1 /*2*/ )
 	{
         LUA_ERROR( "RawTransform::configure : argument(s) missing" );
 	}
@@ -62,13 +62,14 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
 
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
 
+    /*
     std::vector<Matrix> mats;
-
     for( int i = 0; i < argc - 1; i++ )
     {
         LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check( p_L, 2 + i );
         mats.push_back( lua_mat->GetMatrix() );
     }
+    */
 
     // recupere l'aspect transfo s'il existe pour cette entitee
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
@@ -77,7 +78,8 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
         transform_aspect->SetImplementation( &m_raw_transformer );
         m_entity_transform_aspect = transform_aspect;
 
-       LUA_TRY
+        /*
+        LUA_TRY
         {
             for( size_t i = 0; i < mats.size(); i++ )
             {
@@ -87,6 +89,7 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
             }
 
         } LUA_CATCH;
+        */
     }
     else
     {
@@ -102,12 +105,53 @@ int LuaClass_RawTransform::LUA_release( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_RawTransform::LUA_update( lua_State* p_L )
+int LuaClass_RawTransform::LUA_addmatrix( lua_State* p_L )
 {
+    if( !m_entity_transform_aspect )
+    {
+        LUA_ERROR( "RawTransform::add_matrix : no transform aspect" );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
+	{
+        LUA_ERROR( "RawTransform::add_matrix : argument(s) missing" );
+	}
+
+    dsstring id = luaL_checkstring( p_L, 1 );
+    LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check( p_L, 2 );
+
+    LUA_TRY
+    {
+        m_entity_transform_aspect->AddComponent<Matrix>( id, lua_mat->GetMatrix() );
+
+    } LUA_CATCH;
+
     return 0;
 }
 
-int LuaClass_RawTransform::LUA_read( lua_State* p_L )
+int LuaClass_RawTransform::LUA_updatematrix( lua_State* p_L )
 {
+    if( !m_entity_transform_aspect )
+    {
+        LUA_ERROR( "RawTransform::update : no transform aspect" );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
+	{
+        LUA_ERROR( "RawTransform::update_matrix : argument(s) missing" );
+	}
+
+    dsstring id = luaL_checkstring( p_L, 1 );
+    LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check( p_L, 2 );
+
+    LUA_TRY
+    {
+        m_entity_transform_aspect->GetComponent<Matrix>( id )->getPurpose() = lua_mat->GetMatrix();
+
+    } LUA_CATCH;
+
     return 0;
 }
+
