@@ -173,10 +173,6 @@ void Parser::GetLastError( dsstring& p_lasterror )
 
 void Parser::error_message( long p_line_num, const dsstring& p_msg )
 {
-    dsstring line_num;
-
-    IntToString( p_line_num, line_num );
-
-    m_lasterror = "line " + line_num;
+    m_lasterror = "line " + std::to_string( p_line_num );
     m_lasterror += ": " + p_msg;
 }

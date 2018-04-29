@@ -59,9 +59,6 @@ namespace Utils
     long StringToInt( const dsstring& p_value );
     dsreal StringToReal( const dsstring& p_value );
 
-    void IntToString( long p_value, dsstring& p_str );
-    void RealToString( dsreal p_value, dsstring& p_str );
-
     dswstring   String2WString( const dsstring& p_s );
     dsstring    WString2String( const dswstring& p_s );
 }

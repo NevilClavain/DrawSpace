@@ -141,19 +141,6 @@ dsreal DrawSpace::Utils::StringToReal( const dsstring& p_value )
     return atof( p_value.c_str() );
 }
 
-void DrawSpace::Utils::IntToString( long p_value, dsstring& p_str )
-{
-    char str[128];
-    sprintf( str, "%d", p_value );
-    p_str = dsstring( str );
-}
-
-void DrawSpace::Utils::RealToString( dsreal p_value, dsstring& p_str )
-{
-    char str[128];
-    sprintf( str, "%f", p_value );
-    p_str = dsstring( str );
-}
 
 dswstring DrawSpace::Utils::String2WString( const dsstring& p_s )
 {
