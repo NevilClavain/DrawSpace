@@ -73,7 +73,9 @@
     <ClCompile Include="src\luaclass_matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaclass_rawtransform.cpp" />
+    <ClCompile Include="src\luaclass_rawtransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
