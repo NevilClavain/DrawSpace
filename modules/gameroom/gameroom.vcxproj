@@ -100,7 +100,7 @@
     <ClCompile Include="src\luaclass_fxparams.cpp" />
     <ClCompile Include="src\luaclass_globals.cpp" />
     <ClCompile Include="src\luaclass_matrix.cpp" />
-    <ClCompile Include="src\luaclass_mesherenderingaspectimpl.cpp" />
+    <ClCompile Include="src\luaclass_mesherendering.cpp" />
     <ClCompile Include="src\luaclass_module.cpp" />
     <ClCompile Include="src\luaclass_rawtransform.cpp" />
     <ClCompile Include="src\luaclass_renderassembly.cpp" />
@@ -126,7 +126,7 @@
     <ClInclude Include="src\luaclass_entity.h" />
     <ClInclude Include="src\luaclass_fxparams.h" />
     <ClInclude Include="src\luaclass_matrix.h" />
-    <ClInclude Include="src\luaclass_mesherenderingaspectimpl.h" />
+    <ClInclude Include="src\luaclass_mesherendering.h" />
     <ClInclude Include="src\luaclass_module.h" />
     <ClInclude Include="src\luaclass_rawtransform.h" />
     <ClInclude Include="src\luaclass_renderassembly.h" />

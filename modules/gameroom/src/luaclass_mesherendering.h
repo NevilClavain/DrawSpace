@@ -22,8 +22,8 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_MESHERENDERINGASPECTIMPL_H_
-#define _LUACLASS_MESHERENDERINGASPECTIMPL_H_
+#ifndef _LUACLASS_MESHERENDERING_H_
+#define _LUACLASS_MESHERENDERING_H_
 
 #include "luna.h"
 #include "mesherenderingaspectimpl.h"
@@ -31,7 +31,7 @@
 #include "renderingaspect.h"
 #include "mesheimport.h"
 
-class LuaClass_MesheRenderingAspectImpl
+class LuaClass_MesheRendering
 {
 private:
     DrawSpace::Core::Meshe                                       m_meshe;
@@ -44,8 +44,8 @@ private:
 
 public:
 
-	LuaClass_MesheRenderingAspectImpl( lua_State* p_L );
-	~LuaClass_MesheRenderingAspectImpl( void );
+	LuaClass_MesheRendering( lua_State* p_L );
+	~LuaClass_MesheRendering( void );
 
     int LUA_attachtoentity( lua_State* p_L );
     int LUA_detachfromentity( lua_State* p_L );
@@ -56,7 +56,7 @@ public:
    
     
     static const char className[];
-    static const Luna<LuaClass_MesheRenderingAspectImpl>::RegType methods[];
+    static const Luna<LuaClass_MesheRendering>::RegType methods[];
     
 };
 

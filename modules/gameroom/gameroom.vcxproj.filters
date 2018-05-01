@@ -37,9 +37,6 @@
     <ClCompile Include="src\luaclass_fpstransformaspectimpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaclass_mesherenderingaspectimpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\luaclass_renderassembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -74,6 +71,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\luaclass_rawtransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\luaclass_mesherendering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,9 +122,6 @@
     <ClInclude Include="src\luaclass_fpstransformaspectimpl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\luaclass_mesherenderingaspectimpl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\luaclass_renderassembly.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -159,6 +156,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_rawtransform.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_mesherendering.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
