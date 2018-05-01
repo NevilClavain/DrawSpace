@@ -174,7 +174,7 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                 if( textures_set_size != 6 )
                 {
                     LUA_ERROR( "SkyboxRendering::configure : textures set size must have 6 entries" );
-                    // todo : cleanup_resources
+                    cleanup_resources( p_L );
                 }
 
                 ////////////// 6 jeux de 32 textures stages
@@ -196,8 +196,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                             status = texture->LoadFromFile();
                             if( !status )
                             {                                
-                                // todo : cleanup_resources
-                                LUA_ERROR( "MesheRenderingAspectImpl::configure : texture loading operation failed" );
+                                LUA_ERROR( "SkyboxRendering::configure : texture loading operation failed" );
+                                cleanup_resources( p_L );
                             }
                             else
                             {
@@ -240,8 +240,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
 
                     if( !status )
                     {
-                        // todo : cleanup_resources
                         LUA_ERROR( "MesheRenderingAspectImpl::configure : shader loading operation failed" );
+                        cleanup_resources( p_L );
                     }
                     else
                     {
