@@ -30,7 +30,7 @@
 #include "luaclass_entity.h"
 #include "renderingaspect.h"
 
-class LuaClass_TextRenderingAspectImpl
+class LuaClass_TextRendering
 {
 private:
     
@@ -40,8 +40,8 @@ private:
 
 public:
 
-	LuaClass_TextRenderingAspectImpl( lua_State* p_L );
-	~LuaClass_TextRenderingAspectImpl( void );
+	LuaClass_TextRendering( lua_State* p_L );
+	~LuaClass_TextRendering( void );
 
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
@@ -49,7 +49,7 @@ public:
     int LUA_update( lua_State* p_L );
    
     static const char className[];
-    static const Luna<LuaClass_TextRenderingAspectImpl>::RegType methods[];
+    static const Luna<LuaClass_TextRendering>::RegType methods[];
 
 };
 

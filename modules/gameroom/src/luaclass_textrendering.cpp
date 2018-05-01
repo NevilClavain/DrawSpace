@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "luacontext.h"
-#include "luaclass_textrenderingaspectimpl.h"
+#include "luaclass_textrendering.h"
 
 
 using namespace DrawSpace;
@@ -32,26 +32,26 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 
-const char LuaClass_TextRenderingAspectImpl::className[] = "TextRenderingAspectImpl";
-const Luna<LuaClass_TextRenderingAspectImpl>::RegType LuaClass_TextRenderingAspectImpl::methods[] =
+const char LuaClass_TextRendering::className[] = "TextRendering";
+const Luna<LuaClass_TextRendering>::RegType LuaClass_TextRendering::methods[] =
 {
-    { "configure", &LuaClass_TextRenderingAspectImpl::LUA_configure },
-    { "update", &LuaClass_TextRenderingAspectImpl::LUA_update },
-    { "release", &LuaClass_TextRenderingAspectImpl::LUA_release },
+    { "configure", &LuaClass_TextRendering::LUA_configure },
+    { "update", &LuaClass_TextRendering::LUA_update },
+    { "release", &LuaClass_TextRendering::LUA_release },
 	{ 0, 0 }
 };
 
-LuaClass_TextRenderingAspectImpl::LuaClass_TextRenderingAspectImpl( lua_State* p_L ) :
+LuaClass_TextRendering::LuaClass_TextRendering( lua_State* p_L ) :
 m_entity_rendering_aspect( NULL )
 {
 }
 
-LuaClass_TextRenderingAspectImpl::~LuaClass_TextRenderingAspectImpl( void )
+LuaClass_TextRendering::~LuaClass_TextRendering( void )
 {
 }
 
 
-int LuaClass_TextRenderingAspectImpl::LUA_configure( lua_State* p_L )
+int LuaClass_TextRendering::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 8 )
@@ -94,7 +94,7 @@ int LuaClass_TextRenderingAspectImpl::LUA_configure( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_TextRenderingAspectImpl::LUA_release( lua_State* p_L )
+int LuaClass_TextRendering::LUA_release( lua_State* p_L )
 {
     if( m_entity_rendering_aspect )
     {
@@ -115,7 +115,7 @@ int LuaClass_TextRenderingAspectImpl::LUA_release( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_TextRenderingAspectImpl::LUA_update( lua_State* p_L )
+int LuaClass_TextRendering::LUA_update( lua_State* p_L )
 {
     if( !m_entity_rendering_aspect )
     {
