@@ -112,7 +112,7 @@
     <ClCompile Include="src\luaclass_skyboxrendering.cpp" />
     <ClCompile Include="src\luaclass_syncscalar.cpp" />
     <ClCompile Include="src\luaclass_textrendering.cpp" />
-    <ClCompile Include="src\luaclass_fpstransformaspectimpl.cpp" />
+    <ClCompile Include="src\luaclass_fpstransform.cpp" />
     <ClCompile Include="src\luaclass_syncangle.cpp" />
     <ClCompile Include="src\luaclass_texturesset.cpp" />
     <ClCompile Include="src\luacontext.cpp" />
@@ -135,7 +135,7 @@
     <ClInclude Include="src\luaclass_skyboxrendering.h" />
     <ClInclude Include="src\luaclass_syncscalar.h" />
     <ClInclude Include="src\luaclass_textrendering.h" />
-    <ClInclude Include="src\luaclass_fpstransformaspectimpl.h" />
+    <ClInclude Include="src\luaclass_fpstransform.h" />
     <ClInclude Include="src\luaclass_globals.h" />
     <ClInclude Include="src\luaclass_renderer.h" />
     <ClInclude Include="src\luaclass_renderpassnodegraph.h" />

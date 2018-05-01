@@ -32,7 +32,7 @@
 #include "luaclass_renderassembly.h"
 #include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
-#include "luaclass_fpstransformaspectimpl.h"
+#include "luaclass_fpstransform.h"
 #include "luaclass_rawtransform.h"
 #include "luaclass_textrendering.h"
 #include "luaclass_mesherendering.h"
@@ -74,7 +74,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RenderAssembly>::Register( m_L );
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
-    Luna<LuaClass_FPSTransformAspectImpl>::Register( m_L );
+    Luna<LuaClass_FPSTransform>::Register( m_L );
     Luna<LuaClass_RawTransform>::Register( m_L );
     Luna<LuaClass_TextRendering>::Register( m_L );
     Luna<LuaClass_MesheRendering>::Register( m_L );

@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "luacontext.h"
-#include "luaclass_fpstransformaspectimpl.h"
+#include "luaclass_fpstransform.h"
 #include "luaclass_entity.h"
 
 using namespace DrawSpace;
@@ -32,31 +32,31 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 
-const char LuaClass_FPSTransformAspectImpl::className[] = "FPSTransformAspectImpl";
-const Luna<LuaClass_FPSTransformAspectImpl>::RegType LuaClass_FPSTransformAspectImpl::methods[] =
+const char LuaClass_FPSTransform::className[] = "FPSTransform";
+const Luna<LuaClass_FPSTransform>::RegType LuaClass_FPSTransform::methods[] =
 {
-    { "configure", &LuaClass_FPSTransformAspectImpl::LUA_configure },
-    { "update", &LuaClass_FPSTransformAspectImpl::LUA_update },
-    { "read", &LuaClass_FPSTransformAspectImpl::LUA_read },
-    { "release", &LuaClass_FPSTransformAspectImpl::LUA_release },
+    { "configure", &LuaClass_FPSTransform::LUA_configure },
+    { "update", &LuaClass_FPSTransform::LUA_update },
+    { "read", &LuaClass_FPSTransform::LUA_read },
+    { "release", &LuaClass_FPSTransform::LUA_release },
 	{ 0, 0 }
 };
 
-LuaClass_FPSTransformAspectImpl::LuaClass_FPSTransformAspectImpl( lua_State* p_L ) :
+LuaClass_FPSTransform::LuaClass_FPSTransform( lua_State* p_L ) :
 m_entity_transform_aspect( NULL )
 {
 }
 
-LuaClass_FPSTransformAspectImpl::~LuaClass_FPSTransformAspectImpl( void )
+LuaClass_FPSTransform::~LuaClass_FPSTransform( void )
 {
 }
 
-int LuaClass_FPSTransformAspectImpl::LUA_configure( lua_State* p_L )
+int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 7 )
 	{
-        LUA_ERROR( "FPSTransformAspectImpl::configure : argument(s) missing" );
+        LUA_ERROR( "FPSTransform::configure : argument(s) missing" );
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
@@ -96,13 +96,13 @@ int LuaClass_FPSTransformAspectImpl::LUA_configure( lua_State* p_L )
     else
     {
         m_entity_transform_aspect = NULL;
-        LUA_ERROR( "FPSTransformAspectImpl::configure : entity passed on arg has no transform aspect" );
+        LUA_ERROR( "FPSTransform::configure : entity passed on arg has no transform aspect" );
     }
 
     return 0;
 }
 
-int LuaClass_FPSTransformAspectImpl::LUA_release( lua_State* p_L )
+int LuaClass_FPSTransform::LUA_release( lua_State* p_L )
 {
     if( m_entity_transform_aspect )
     {
@@ -124,22 +124,22 @@ int LuaClass_FPSTransformAspectImpl::LUA_release( lua_State* p_L )
     }
     else
     {
-        LUA_ERROR( "FPSTransformAspectImpl::release : no transform aspect" );
+        LUA_ERROR( "FPSTransform::release : no transform aspect" );
     }
     return 0;
 }
 
-int LuaClass_FPSTransformAspectImpl::LUA_update( lua_State* p_L )
+int LuaClass_FPSTransform::LUA_update( lua_State* p_L )
 {    
     if( !m_entity_transform_aspect )
     {
-        LUA_ERROR( "FPSTransformAspectImpl::update : no transform aspect" );
+        LUA_ERROR( "FPSTransform::update : no transform aspect" );
     }
 
 	int argc = lua_gettop( p_L );
 	if( argc < 9 )
 	{
-        LUA_ERROR( "FPSTransformAspectImpl::update : argument(s) missing" );
+        LUA_ERROR( "FPSTransform::update : argument(s) missing" );
 	}
     
     LUA_TRY
@@ -173,11 +173,11 @@ int LuaClass_FPSTransformAspectImpl::LUA_update( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_FPSTransformAspectImpl::LUA_read( lua_State* p_L )
+int LuaClass_FPSTransform::LUA_read( lua_State* p_L )
 {
     if( !m_entity_transform_aspect )
     {
-        LUA_ERROR( "FPSTransformAspectImpl::read : no transform aspect" );
+        LUA_ERROR( "FPSTransform::read : no transform aspect" );
     }
 
     LUA_TRY
