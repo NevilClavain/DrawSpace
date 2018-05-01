@@ -35,6 +35,7 @@ class LuaClass_RawTransform
 private:
     DrawSpace::AspectImplementations::RawTransformAspectImpl    m_raw_transformer;
     DrawSpace::Aspect::TransformAspect*                         m_entity_transform_aspect;
+    std::vector<std::string>                                    m_matrix_ids;  // les ids de tt les composants Matrix
 
 public:
 

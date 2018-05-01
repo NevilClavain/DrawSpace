@@ -184,7 +184,7 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                 {
                     LuaClass_TexturesSet* txts_set = render_context->GetTexturesSet( texture_face_index );
                                         
-                    for( int texture_stage_index = 0; texture_stage_index < RenderingNode::GetTextureListSize(); texture_stage_index++ )
+                    for( int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++ )
                     {
                         dsstring texture_name = txts_set->GetTextureFile( texture_stage_index );
                         if( texture_name != "" )
@@ -294,8 +294,103 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
     return 0;
 }
 
+void LuaClass_SkyboxRendering::cleanup_resources( lua_State* p_L )
+{
+    if( m_entity_rendering_aspect )
+    {
+        std::vector<dsstring> passes_list = m_entity_rendering_aspect->GetComponent<std::vector<dsstring>>( "skybox_passes" )->getPurpose();
+
+        int rc_list_size = passes_list.size();
+
+        //////////////// textures
+        for( int i = 0; i < rc_list_size; i++ )
+        {
+            dsstring pass_name = passes_list[i];            
+            dsstring component_name = "skybox_textures/" + pass_name;
+
+            std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6> skybox_textures = m_entity_rendering_aspect->GetComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( component_name )->getPurpose();
+
+            for( size_t texture_face_index = 0; texture_face_index < skybox_textures.size(); texture_face_index++ )
+            {
+                std::array<Texture*,RenderingNode::NbMaxTextures> texture_set = skybox_textures[texture_face_index];
+            
+                for( size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++ )
+                {
+                    Texture* texture = texture_set[texture_stage_index];
+                    if( texture )
+                    {
+                        _DRAWSPACE_DELETE_( texture );
+                    }
+                }
+            }
+
+            LUA_TRY
+            {
+                m_entity_rendering_aspect->RemoveComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( component_name );
+
+            } LUA_CATCH;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //////////////// fx
+        for( int i = 0; i < rc_list_size; i++ )
+        {
+            dsstring pass_name = passes_list[i];            
+            dsstring component_name = "skybox_fx/" + pass_name;
+
+            Fx* fx = m_entity_rendering_aspect->GetComponent<Fx*>( component_name )->getPurpose();
+
+            for( int j = 0; j < fx->GetShadersListSize(); j++ )
+            {
+                Shader* shader = fx->GetShader( j );
+                _DRAWSPACE_DELETE_( shader );
+            }
+            _DRAWSPACE_DELETE_( fx );
+
+            LUA_TRY
+            {
+                m_entity_rendering_aspect->RemoveComponent<Fx*>( component_name );
+
+            } LUA_CATCH;
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //////////////// args shaders
+        for( int i = 0; i < rc_list_size; i++ )
+        {
+            dsstring pass_name = passes_list[i];            
+            dsstring component_name = "skybox_shaders_params/" + pass_name;
+
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //////////////// rendering orders
+        for( int i = 0; i < rc_list_size; i++ )
+        {
+            dsstring pass_name = passes_list[i];            
+            dsstring component_name = "skybox_ro/" + pass_name;
+
+            m_entity_rendering_aspect->RemoveComponent<int>( component_name );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        LUA_TRY
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<dsstring>>( "skybox_passes" );
+
+        } LUA_CATCH;
+
+    }
+    else
+    {
+        LUA_ERROR( "SkyboxRendering::cleanup_resources : no rendering aspect" );
+    }
+}
+
 int LuaClass_SkyboxRendering::LUA_release( lua_State* p_L )
 {
+    cleanup_resources( p_L );
     return 0;
 }
 

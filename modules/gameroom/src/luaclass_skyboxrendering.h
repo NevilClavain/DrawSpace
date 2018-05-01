@@ -38,6 +38,8 @@ private:
     DrawSpace::Aspect::RenderingAspect*                                 m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                            m_entity;
 
+    void cleanup_resources( lua_State* p_L );
+
 public:
 	LuaClass_SkyboxRendering( lua_State* p_L );
 	~LuaClass_SkyboxRendering( void );

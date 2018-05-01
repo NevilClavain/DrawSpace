@@ -124,25 +124,13 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
     dsstring meshe_path = luaL_checkstring( p_L, 3 );
     int meshe_index = luaL_checkint( p_L, 4 );
 
-    //DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
-
     // recupere l'aspect rendu s'il existe pour cette entitee
-    //RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
-    //if( rendering_aspect )
-
     if( m_entity_rendering_aspect )
-    {
-        
-        //m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
-        //m_entity_rendering_aspect->AddImplementation( m_meshe_render );
-        
+    {               
         LUA_TRY
         {
             m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
             RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
-
-
-            //m_entity_rendering_aspect = rendering_aspect;
 
             // ici completer le passSlot avec les infos du RenderAssembly
 
@@ -214,8 +202,6 @@ int LuaClass_MesheRenderingAspectImpl::LUA_configure( lua_State* p_L )
             rnode->SetFx( &m_fx );
 
         } LUA_CATCH;
-
-        //m_id = pass_id;
     }
     else
     {
@@ -253,22 +239,13 @@ void LuaClass_MesheRenderingAspectImpl::cleanup_resources( lua_State* p_L, const
         LUA_TRY
         {
             m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( p_id );
-            //m_entity_rendering_aspect->RemoveImplementation( m_meshe_render );
 
         } LUA_CATCH; 
 
-        /*
-        if( m_meshe_render )
-        {
-            _DRAWSPACE_DELETE_( m_meshe_render );
-        }
-        */
-        //m_entity_rendering_aspect = NULL;
-        //m_id = "";
     }
     else
     {
-        LUA_ERROR( "MesheRenderingAspectImpl::release : no rendering aspect" );
+        LUA_ERROR( "MesheRenderingAspectImpl::cleanup_resources : no rendering aspect" );
     }
 }
 

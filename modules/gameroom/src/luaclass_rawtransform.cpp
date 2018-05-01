@@ -53,7 +53,7 @@ LuaClass_RawTransform::~LuaClass_RawTransform( void )
 int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 /*2*/ )
+	if( argc < 1 )
 	{
         LUA_ERROR( "RawTransform::configure : argument(s) missing" );
 	}
@@ -62,34 +62,12 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
 
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
 
-    /*
-    std::vector<Matrix> mats;
-    for( int i = 0; i < argc - 1; i++ )
-    {
-        LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check( p_L, 2 + i );
-        mats.push_back( lua_mat->GetMatrix() );
-    }
-    */
-
     // recupere l'aspect transfo s'il existe pour cette entitee
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if( transform_aspect )
     {
         transform_aspect->SetImplementation( &m_raw_transformer );
         m_entity_transform_aspect = transform_aspect;
-
-        /*
-        LUA_TRY
-        {
-            for( size_t i = 0; i < mats.size(); i++ )
-            {
-                dsstring comp_name = "mat_" + std::to_string( i );
-
-                m_entity_transform_aspect->AddComponent<Matrix>( comp_name );
-            }
-
-        } LUA_CATCH;
-        */
     }
     else
     {
@@ -102,6 +80,23 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
 
 int LuaClass_RawTransform::LUA_release( lua_State* p_L )
 {
+    if( !m_entity_transform_aspect )
+    {
+        LUA_ERROR( "RawTransform::release : no transform aspect" );
+    }
+
+    // clear all matrix components
+    for( size_t i = 0; i < m_matrix_ids.size(); i++ )
+    {        
+        LUA_TRY
+        {
+            m_entity_transform_aspect->RemoveComponent<Matrix>( m_matrix_ids[i] );
+            m_entity_transform_aspect->RemoveImplementation();
+
+        } LUA_CATCH;
+    }
+
+    m_entity_transform_aspect = NULL;
     return 0;
 }
 
@@ -127,6 +122,8 @@ int LuaClass_RawTransform::LUA_addmatrix( lua_State* p_L )
 
     } LUA_CATCH;
 
+    m_matrix_ids.push_back( id ); // memoriser pour le release()
+
     return 0;
 }
 
@@ -134,7 +131,7 @@ int LuaClass_RawTransform::LUA_updatematrix( lua_State* p_L )
 {
     if( !m_entity_transform_aspect )
     {
-        LUA_ERROR( "RawTransform::update : no transform aspect" );
+        LUA_ERROR( "RawTransform::update_matrix : no transform aspect" );
     }
 
 	int argc = lua_gettop( p_L );
