@@ -52,7 +52,6 @@ protected:
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
-    //DrawSpace::Interface::MesheImport*                                              m_meshe_import;
     DrawSpace::Utils::AC3DMesheImport                                               m_meshe_import;
 
     std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
@@ -86,6 +85,7 @@ protected:
 
 
     //////////////gestion de la console///////////////////
+    bool                                                                            m_console_ready;
     bool                                                                            m_console_active;
     std::vector<dsstring>                                                           m_console_texts;
     int                                                                             m_console_current_line;

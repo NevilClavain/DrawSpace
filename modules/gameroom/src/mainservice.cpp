@@ -35,6 +35,7 @@ using namespace DrawSpace::Utils;
 _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 
 MainService::MainService( void ) :
+m_console_ready( false ),
 m_console_active( false ),
 m_console_current_line( 0 ),
 m_request_lua_reset( false ),
@@ -380,6 +381,11 @@ void MainService::process_console_command( const dsstring& p_cmd )
 
 void MainService::print_console_line( const dsstring& p_text )
 {
+    if( !m_console_ready )
+    {
+        return;
+    }
+
     m_console_texts.push_back( p_text );
     m_console_current_line++;
 }
@@ -671,17 +677,6 @@ void MainService::RequestConsolePrint( const dsstring& p_msg )
 
 int MainService::RequestLuaFileExec( const dsstring& p_path, dsstring& p_err )
 {
-    /*
-    if( false == LuaContext::GetInstance()->ExecuteFromFile( p_path ) )
-    {
-        dsstring lua_err = LuaContext::GetInstance()->GetLastError();
-        print_console_line( lua_err );
-        p_err = lua_err;
-        return false;
-    }
-    return true;
-    */
-
     int status = LuaContext::GetInstance()->ExecuteFromFile( p_path );
     if( -2 == status )
     {
@@ -723,78 +718,11 @@ void MainService::RequestLuaStackReset()
 
 void MainService::buil_lua_prerequisites( void )
 {
-    /*
-    LuaContext::GetInstance()->Execute( "FALSE=0" );
-    LuaContext::GetInstance()->Execute( "TRUE=1" );
 
-    // type d'aspect
-    LuaContext::GetInstance()->Execute( "BODY_ASPECT=0" );
-    LuaContext::GetInstance()->Execute( "CAMERA_ASPECT=1" );
-    LuaContext::GetInstance()->Execute( "PHYSICS_ASPECT=2" );
-    LuaContext::GetInstance()->Execute( "RENDERING_ASPECT=3" );
-    LuaContext::GetInstance()->Execute( "SERVICE_ASPECT=4" );
-    LuaContext::GetInstance()->Execute( "TIME_ASPECT=5" );
-    LuaContext::GetInstance()->Execute( "TRANSFORM_ASPECT=6" );
-
-    // args loading shaders
-    LuaContext::GetInstance()->Execute( "SHADER_COMPILED=1");
-    LuaContext::GetInstance()->Execute( "SHADER_NOT_COMPILED=0");
-
-    // time scale
-    LuaContext::GetInstance()->Execute( "NORMAL_TIME=0");
-    LuaContext::GetInstance()->Execute( "MUL2_TIME=1");
-    LuaContext::GetInstance()->Execute( "MUL4_TIME=2");
-    LuaContext::GetInstance()->Execute( "MUL10_TIME=3");
-    LuaContext::GetInstance()->Execute( "MUL100_TIME=4");
-    LuaContext::GetInstance()->Execute( "MUL500_TIME=5");
-    LuaContext::GetInstance()->Execute( "SEC_1HOUR_TIME=6");
-    LuaContext::GetInstance()->Execute( "SEC_1DAY_TIME=7");
-    LuaContext::GetInstance()->Execute( "SEC_30DAYS_TIME=8");
-    LuaContext::GetInstance()->Execute( "SEC_1YEAR_TIME=9");
-    LuaContext::GetInstance()->Execute( "DIV2_TIME=10");
-    LuaContext::GetInstance()->Execute( "DIV4_TIME=11");
-    LuaContext::GetInstance()->Execute( "DIV10_TIME=12");
-    LuaContext::GetInstance()->Execute( "FREEZE=13");
-
-
-
-    LuaContext::GetInstance()->Execute( "g=Globals()" );
-    LuaContext::GetInstance()->Execute( "renderer=Renderer()" );
-    LuaContext::GetInstance()->Execute( "rg=RenderPassNodeGraph('rg')" );
-    LuaContext::GetInstance()->Execute( "rg:create_root('final_pass')" );
-    LuaContext::GetInstance()->Execute( "rg:update_renderingqueues()" );
-    
-
-    LuaContext::GetInstance()->Execute( "eg=EntityNodeGraph('eg')" );
-    LuaContext::GetInstance()->Execute( "root_entity=Entity()" );
-
-    LuaContext::GetInstance()->Execute( "root_entity:add_aspect(RENDERING_ASPECT)" );
-    LuaContext::GetInstance()->Execute( "root_entity:add_aspect(TIME_ASPECT)" );
-    LuaContext::GetInstance()->Execute( "root_entity:configure_timemanager(NORMAL_TIME)" );
-
-    LuaContext::GetInstance()->Execute( "root_entity:connect_renderingaspect_rendergraph(rg)" );
-    LuaContext::GetInstance()->Execute( "eg:set_root('root', root_entity )" );
-
-
-    // creation cote lua de l'enum RenderState::Operation
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_NONE=0" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETCULLING=1" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ENABLEZBUFFER=2" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETTEXTUREFILTERTYPE=3" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE=4" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_SETFILLMODE=5" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDENABLE=6" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDOP=7" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDFUNC=8" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDDEST=9" );
-    LuaContext::GetInstance()->Execute( "RENDERSTATE_OPE_ALPHABLENDSRC=10" );
-
-
-    LuaContext::GetInstance()->Execute( "print_memsize=function() g:print('Total mem = '..g:total_mem()..' byte(s)') end" );
-    */
+    m_console_ready = false;
 
     LuaContext::GetInstance()->ExecuteFromFile( "gameroom.lua" );
-
+   
 
     // build la console lua
 
@@ -806,6 +734,8 @@ void MainService::buil_lua_prerequisites( void )
     rendering_aspect->AddImplementation( &m_textRender );
     
     rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
+
+    m_console_ready = true;
 
     // ajout du quad console a la scene
     m_quadEntityNode = root_entity_node.AddChild( &m_quadEntity );
