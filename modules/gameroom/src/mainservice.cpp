@@ -723,7 +723,7 @@ void MainService::RequestLuaStackReset()
 
 void MainService::buil_lua_prerequisites( void )
 {
-
+    /*
     LuaContext::GetInstance()->Execute( "FALSE=0" );
     LuaContext::GetInstance()->Execute( "TRUE=1" );
 
@@ -791,6 +791,9 @@ void MainService::buil_lua_prerequisites( void )
 
 
     LuaContext::GetInstance()->Execute( "print_memsize=function() g:print('Total mem = '..g:total_mem()..' byte(s)') end" );
+    */
+
+    LuaContext::GetInstance()->ExecuteFromFile( "gameroom.lua" );
 
 
     // build la console lua

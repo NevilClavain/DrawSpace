@@ -91,11 +91,11 @@ int LuaClass_RawTransform::LUA_release( lua_State* p_L )
         LUA_TRY
         {
             m_entity_transform_aspect->RemoveComponent<Matrix>( m_matrix_ids[i] );
-            m_entity_transform_aspect->RemoveImplementation();
 
         } LUA_CATCH;
     }
 
+    m_entity_transform_aspect->RemoveImplementation();
     m_entity_transform_aspect = NULL;
     return 0;
 }

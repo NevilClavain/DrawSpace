@@ -141,7 +141,7 @@ int LuaClass_Matrix::LUA_rotation( lua_State* p_L )
 
     dsreal ang = luaL_checknumber( p_L, 4 );
 
-    m_matrix.Rotation( Vector( x, y, z, 1.0 ), Maths::DegToRad( ang ) );
+    m_matrix.Rotation( Vector( x, y, z, 1.0 ), ang );
 
     return 0;
 }

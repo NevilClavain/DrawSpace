@@ -70,16 +70,7 @@ public:
         dsreal*                 m_timefactor;
         bool*                   m_freeze;
 
-    public:
-
-        TimeAngle( void ) :
-        m_value( 0.0 ),
-        m_tm( NULL ),
-        m_timefactor( NULL ),
-        m_freeze( NULL )
-        {
-        }
-
+        // seul TimeAspect appelle ce ctor
         TimeAngle( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
         m_value( p_initval ),
         m_tm( p_tm ),
@@ -88,8 +79,23 @@ public:
         {        
         }
 
+    public:
+        
+        TimeAngle( void ) :
+        m_value( 0.0 ),
+        m_tm( NULL ),
+        m_timefactor( NULL ),
+        m_freeze( NULL )
+        {
+        }
+        
         void Increase( dsreal p_delta )
         {
+            if( NULL == m_freeze )
+            {
+                _DSEXCEPTION( "TimeAngle object must be initialized from TimeAngleFactory")
+            }
+
             if( true == *m_freeze )
             {
                 return;
@@ -102,6 +108,11 @@ public:
         }
         void Decrease( dsreal p_delta )
         {
+            if( NULL == m_freeze )
+            {
+                _DSEXCEPTION( "TimeAngle object must be initialized from TimeAngleFactory")
+            }
+
             if( true == *m_freeze )
             {
                 return;
@@ -122,6 +133,8 @@ public:
         }
 
         dsreal GetValue( void ) const { return m_value; };
+
+        friend class TimeAspect;
     };
 
     class TimeScalar
@@ -132,16 +145,7 @@ public:
         dsreal*                 m_timefactor;
         bool*                   m_freeze;
 
-    public:
-
-        TimeScalar( void ) :
-        m_value( 0.0 ),
-        m_tm( NULL ),
-        m_timefactor( NULL ),
-        m_freeze( NULL )
-        {
-        }
-
+        // seul TimeAspect appelle ce ctor
         TimeScalar( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
         m_value( p_initval ),
         m_tm( p_tm ),
@@ -150,8 +154,24 @@ public:
         {        
         }
 
+    public:
+
+        
+        TimeScalar( void ) :
+        m_value( 0.0 ),
+        m_tm( NULL ),
+        m_timefactor( NULL ),
+        m_freeze( NULL )
+        {
+        }
+       
         void Increase( dsreal p_delta )
         {
+            if( NULL == m_freeze )
+            {
+                _DSEXCEPTION( "TimeScalar object must be initialized from TimeScalarFactory")
+            }
+
             if( true == *m_freeze )
             {
                 return;
@@ -164,6 +184,11 @@ public:
         }
         void Decrease( dsreal p_delta )
         {
+            if( NULL == m_freeze )
+            {
+                _DSEXCEPTION( "TimeScalar object must be initialized from TimeScalarFactory")
+            }
+
             if( true == *m_freeze )
             {
                 return;
@@ -184,6 +209,8 @@ public:
         }
 
         dsreal GetValue( void ) const { return m_value; };
+
+        friend class TimeAspect;
     };
 
 protected:
