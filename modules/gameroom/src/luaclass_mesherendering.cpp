@@ -24,7 +24,11 @@
 
 #include "luacontext.h"
 #include "luaclass_mesherendering.h"
-#include "luaclass_renderassembly.h"
+//#include "luaclass_renderassembly.h"
+#include "luaclass_texturesset.h"
+#include "luaclass_fxparams.h"
+#include "luaclass_rendercontext.h"
+#include "luaclass_renderconfig.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "mainservice.h"
 
@@ -119,7 +123,8 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
-    LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
+    //LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
+    LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 2 );
 
     dsstring meshe_path = luaL_checkstring( p_L, 3 );
     int meshe_index = luaL_checkint( p_L, 4 );
@@ -132,8 +137,104 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
             m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
             RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
 
+            for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
+            {
+                LuaClass_RenderContext* render_context = rcfg->GetRenderContext( i );
+                if( render_context->GetPassName() == pass_id )
+                {
+                    //  on a besoin que d'un seul fx....
+                    if( render_context->GetFxParamsListSize() < 1 )
+                    {
+                        cleanup_resources( p_L, pass_id );
+                        LUA_ERROR( "MesheRendering::configure : missing fx parameters description" );                
+                    }  
+
+                    LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+
+                    ///////////////////////// les shaders
+                    size_t nb_shaders = fx_params->GetNbShaderFiles();
+                    for( size_t i = 0; i < nb_shaders; i++ )
+                    {
+                        std::pair<dsstring,bool> shader_infos = fx_params->GetShaderFile( i );
+
+                        dsstring shader_path = shader_infos.first;
+                        bool is_compiled = shader_infos.second;
+
+                        bool status;
+
+                        Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
+                        status = shader->LoadFromFile( shader_path, is_compiled );
+
+                        if( !status )
+                        {
+                            // clean tout ce qui a deja ete charge...
+                            cleanup_resources( p_L, pass_id );
+                            LUA_ERROR( "MesheRendering::configure : shader loading operation failed" );
+                        }
+                        else
+                        {
+                            m_fx.AddShader( shader );                    
+                        }
+                    }
+
+                    ///////////////////////// les rendestates
+
+                    DrawSpace::Core::RenderStatesSet& rss = fx_params->GetRenderStatesSet();
+                    m_fx.SetRenderStates( rss );
+
+
+                    ///////////////////////// les textures
+
+                    size_t nb_textures_set = render_context->GetTexturesSetListSize();
+                    //  on a besoin que d'un seul jeu de textures...
+                    if( nb_textures_set != 1 )
+                    {
+                        cleanup_resources( p_L, pass_id );
+                        LUA_ERROR( "MesheRendering::configure : no textures set provided !" );
+                    }
+
+                    
+                    LuaClass_TexturesSet* textures = render_context->GetTexturesSet( 0 );
+
+                    for( size_t i = 0; i < DrawSpace::Core::RenderingNode::NbMaxTextures; i++ )
+                    {
+                        dsstring texture_path = textures->GetTextureFile( i );
+                        if( texture_path != "" )
+                        {
+                            bool status;
+                            Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
+                            status = texture->LoadFromFile();
+                            if( !status )
+                            {
+                                // clean tout ce qui a deja ete charge...
+                                cleanup_resources( p_L, pass_id );
+                                LUA_ERROR( "MesheRendering::configure : texture loading operation failed" );
+                            }
+                            else
+                            {
+                                rnode->SetTexture( texture, i );
+                            }
+                        }
+                    }
+
+                    // et pour finir, le meshe
+                    bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
+                    if( !status )
+                    {
+                        cleanup_resources( p_L, pass_id );
+                        LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
+                    }
+                    rnode->SetMeshe( &m_meshe );
+                    rnode->SetFx( &m_fx );
+
+                    break;
+                }
+            }
+
+
             // ici completer le passSlot avec les infos du RenderAssembly
 
+            /*
             ///////////////////////// les shaders
             size_t nb_shaders = lua_renderassembly->GetNbShaderFiles();
 
@@ -200,6 +301,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
             }
             rnode->SetMeshe( &m_meshe );
             rnode->SetFx( &m_fx );
+            */
 
         } LUA_CATCH;
     }

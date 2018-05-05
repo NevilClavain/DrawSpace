@@ -25,7 +25,6 @@
 #include "luacontext.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderstatesset.h"
-//#include "luaclass_renderassembly.h"
 
 #include "luaclass_texturesset.h"
 #include "luaclass_fxparams.h"
@@ -286,7 +285,6 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
 
     LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 2 );
 
-
     if( m_passes.count( pass_id ) )
     {
         for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
@@ -341,7 +339,7 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                     ///////////////////////// les textures
 
                     size_t nb_textures_set = render_context->GetTexturesSetListSize();
-
+                    //  on a besoin que d'un seul jeu de textures...
                     if( nb_textures_set != 1 )
                     {
                         cleanup_resources( p_L, pass_id );
