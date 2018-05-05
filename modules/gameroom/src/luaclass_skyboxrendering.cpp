@@ -173,8 +173,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                 int textures_set_size = render_context->GetTexturesSetListSize();
                 if( textures_set_size != 6 )
                 {
-                    LUA_ERROR( "SkyboxRendering::configure : textures set size must have 6 entries" );
                     cleanup_resources( p_L );
+                    LUA_ERROR( "SkyboxRendering::configure : textures set size must have 6 entries" );                    
                 }
 
                 ////////////// 6 jeux de 32 textures stages
@@ -196,8 +196,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                             status = texture->LoadFromFile();
                             if( !status )
                             {                                
-                                LUA_ERROR( "SkyboxRendering::configure : texture loading operation failed" );
                                 cleanup_resources( p_L );
+                                LUA_ERROR( "SkyboxRendering::configure : texture loading operation failed" );
                             }
                             else
                             {
@@ -222,8 +222,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
                 // pour les skybox, on a besoin que d'un seul fx....
                 if( render_context->GetFxParamsListSize() < 1 )
                 {
-                    LUA_ERROR( "SkyboxRendering::configure : missing fx parameters description" );
-                    // todo : cleanup_resources                    
+                    cleanup_resources( p_L );
+                    LUA_ERROR( "SkyboxRendering::configure : missing fx parameters description" );                                   
                 }
                 LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
 
@@ -240,8 +240,8 @@ int LuaClass_SkyboxRendering::LUA_configure( lua_State* p_L )
 
                     if( !status )
                     {
-                        LUA_ERROR( "MesheRenderingAspectImpl::configure : shader loading operation failed" );
                         cleanup_resources( p_L );
+                        LUA_ERROR( "MesheRenderingAspectImpl::configure : shader loading operation failed" );
                     }
                     else
                     {

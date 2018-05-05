@@ -25,7 +25,12 @@
 #include "luacontext.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderstatesset.h"
-#include "luaclass_renderassembly.h"
+//#include "luaclass_renderassembly.h"
+
+#include "luaclass_texturesset.h"
+#include "luaclass_fxparams.h"
+#include "luaclass_rendercontext.h"
+#include "luaclass_renderconfig.h"
 #include "mainservice.h"
 #include "renderingaspectimpl.h"
 
@@ -278,6 +283,111 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
 	}
 
     dsstring pass_id = luaL_checkstring( p_L, 1 );
+
+    LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 2 );
+
+
+    if( m_passes.count( pass_id ) )
+    {
+        for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
+        {
+            LuaClass_RenderContext* render_context = rcfg->GetRenderContext( i );
+            if( render_context->GetPassName() == pass_id )
+            {        
+                ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
+                if( vpq )
+                {
+                    //  on a besoin que d'un seul fx....
+                    if( render_context->GetFxParamsListSize() < 1 )
+                    {
+                        cleanup_resources( p_L, pass_id );
+                        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : missing fx parameters description" );                
+                    }            
+
+                    LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+
+                    ///////////////////////// les shaders
+                    size_t nb_shaders = fx_params->GetNbShaderFiles();
+
+                    for( size_t i = 0; i < nb_shaders; i++ )
+                    {
+                        std::pair<dsstring,bool> shader_infos = fx_params->GetShaderFile( i );
+
+                        dsstring shader_path = shader_infos.first;
+                        bool is_compiled = shader_infos.second;
+
+                        bool status;
+
+                        Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
+                        status = shader->LoadFromFile( shader_path, is_compiled );
+
+                        if( !status )
+                        {
+                            // clean tout ce qui a deja ete charge...
+                            cleanup_resources( p_L, pass_id );
+                            LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : shader loading operation failed" );
+                        }
+                        else
+                        {
+                            m_passes[pass_id].m_fx.AddShader( shader );
+                            m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
+                        }
+                    }
+                    ///////////////////////// les rendestates
+
+                    DrawSpace::Core::RenderStatesSet& rss = fx_params->GetRenderStatesSet();
+                    m_passes[pass_id].m_fx.SetRenderStates( rss );
+
+                    ///////////////////////// les textures
+
+                    size_t nb_textures_set = render_context->GetTexturesSetListSize();
+
+                    if( nb_textures_set != 1 )
+                    {
+                        cleanup_resources( p_L, pass_id );
+                        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : no textures set provided !" );
+                    }
+
+                    LuaClass_TexturesSet* textures = render_context->GetTexturesSet( 0 );
+
+                    for( size_t i = 0; i < DrawSpace::Core::RenderingNode::NbMaxTextures; i++ )
+                    {
+                        dsstring texture_path = textures->GetTextureFile( i );
+                        if( texture_path != "" )
+                        {
+                            bool status;
+                            Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
+                            status = texture->LoadFromFile();
+                            if( !status )
+                            {
+                                // clean tout ce qui a deja ete charge...
+                                cleanup_resources( p_L, pass_id );
+
+                                LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : texture loading operation failed" );
+                            }
+                            else
+                            {
+                                m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetTexture( texture, i );
+                                m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
+                            }
+                        }
+                    }              
+                }
+                else 
+                {
+                    LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : no viewportquad created for this pass" );
+                }
+
+                break;
+            }
+        }
+    }
+    else
+    {
+        LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : unknown pass id" );
+    }
+
+    /*
     LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
 
     if( m_passes.count( pass_id ) )
@@ -352,6 +462,9 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
     {
         LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : unknown pass id" );
     }
+    */
+
+
     return 0;
 }
 
