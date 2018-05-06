@@ -40,12 +40,10 @@ using namespace DrawSpace::Interface::Module;
 RootImpl::RootImpl( void )
 { 
     Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "gameroom_data/shaders_bank" );
-    Texture::SetRootPath( "gameroom_data/textures_bank" );
-    RenderStatesSet::SetRootPath( "gameroom_data/renderstates_bank" );
-
-    AC3DMesheImport::SetRootPath( "gameroom_data/meshes_bank" );
-    LuaContext::GetInstance()->SetRootPath( "gameroom_data/scripts_bank" );
+    Shader::SetRootPath( "test_data/shaders_bank" );
+    Texture::SetRootPath( "test_data/textures_bank" );
+    AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
+    LuaContext::GetInstance()->SetRootPath( "lua_commons" );
 
     //File::MountVirtualFS( "test_data.bank" );
 }
