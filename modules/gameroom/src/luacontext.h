@@ -55,6 +55,8 @@ protected:
 	lua_State*					m_L;
 	std::string					m_error;
 
+    dsstring                    m_rootpath;
+
     inline void push_luafunc_arg( int p_val )
     {
         lua_pushinteger( m_L, p_val );
@@ -68,11 +70,13 @@ protected:
 public:	
 	~LuaContext( void );
 
+    void SetRootPath( const dsstring& p_path );
+
 	void Startup( void );
 	void Shutdown( void );
 
-	bool Execute( const std::string& p_script );
-	int ExecuteFromFile( const std::string& p_filepath );
+	bool Execute( const dsstring& p_script );
+	int ExecuteFromFile( const dsstring& p_filepath );
 	dsstring GetLastError( void );
     
     template<class... Args>

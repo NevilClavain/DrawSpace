@@ -721,7 +721,10 @@ void MainService::buil_lua_prerequisites( void )
 
     m_console_ready = false;
 
-    LuaContext::GetInstance()->ExecuteFromFile( "gameroom.lua" );
+    if( -1 == LuaContext::GetInstance()->ExecuteFromFile( "gameroom.lua" ) )
+    {
+        _DSEXCEPTION( "Unable to open gameroom.lua" );
+    }
    
 
     // build la console lua

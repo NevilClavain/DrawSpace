@@ -30,6 +30,7 @@
 #include "renderstate.h"
 #include "AC3DMeshe.h"
 #include "mainservice.h"
+#include "luacontext.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -39,14 +40,14 @@ using namespace DrawSpace::Interface::Module;
 RootImpl::RootImpl( void )
 { 
     Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "test_data/shaders_bank" );
-    Texture::SetRootPath( "test_data/textures_bank" );
-    RenderStatesSet::SetRootPath( "test_data/renderstates_bank" );
+    Shader::SetRootPath( "gameroom_data/shaders_bank" );
+    Texture::SetRootPath( "gameroom_data/textures_bank" );
+    RenderStatesSet::SetRootPath( "gameroom_data/renderstates_bank" );
 
-    AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
+    AC3DMesheImport::SetRootPath( "gameroom_data/meshes_bank" );
+    LuaContext::GetInstance()->SetRootPath( "gameroom_data/scripts_bank" );
 
     //File::MountVirtualFS( "test_data.bank" );
-
 }
 
 RootImpl::~RootImpl( void )

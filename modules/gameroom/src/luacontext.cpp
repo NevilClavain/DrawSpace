@@ -96,7 +96,7 @@ void LuaContext::Shutdown( void )
     }
 }
 
-bool LuaContext::Execute( const std::string& p_script )
+bool LuaContext::Execute( const dsstring& p_script )
 {
 	int status = luaL_dostring( m_L, p_script.c_str() );
 	if( status )
@@ -109,11 +109,14 @@ bool LuaContext::Execute( const std::string& p_script )
     return true;
 }
 
-int LuaContext::ExecuteFromFile( const std::string& p_filepath )
+int LuaContext::ExecuteFromFile( const dsstring& p_filepath )
 {
     int global_status = 0;
     long fsize;
-    void* content = DrawSpace::Utils::File::LoadAndAllocBinaryFile( p_filepath, &fsize );
+
+    dsstring final_path = m_rootpath + + "/" + p_filepath;
+
+    void* content = DrawSpace::Utils::File::LoadAndAllocBinaryFile( final_path, &fsize );
     if( !content )
     {
         global_status = -1;
@@ -192,4 +195,9 @@ void LuaContext::RemoveCallback( lua_State* p_L, const std::function<int(const s
         // liberer la ref...
         luaL_unref( p_L, LUA_REGISTRYINDEX, reffunc );
     }
+}
+
+void LuaContext::SetRootPath( const dsstring& p_path )
+{
+    m_rootpath = p_path;
 }
