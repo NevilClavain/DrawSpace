@@ -39,10 +39,16 @@ using namespace DrawSpace::Interface::Module;
 
 RootImpl::RootImpl( void )
 { 
+    /*
     Shader::EnableShadersDescrInFinalPath( true );
     Shader::SetRootPath( "test_data/shaders_bank" );
     Texture::SetRootPath( "test_data/textures_bank" );
     AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
+    LuaContext::GetInstance()->SetRootPath( "lua_commons" );
+    */
+
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "console_data/shaders_bank" );
     LuaContext::GetInstance()->SetRootPath( "lua_commons" );
 
     //File::MountVirtualFS( "test_data.bank" );

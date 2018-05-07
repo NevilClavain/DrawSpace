@@ -26,6 +26,13 @@
 #include "luaclass_globals.h"
 #include "mainservice.h"
 #include "memalloc.h"
+#include "shader.h"
+#include "texture.h"
+#include "AC3DMeshe.h"
+
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 const char LuaClass_Globals::className[] = "Globals";
 const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
@@ -59,7 +66,12 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "show_mousecursor", &LuaClass_Globals::LUA_showmousecursor },
     { "set_mousecursorcircularmode", &LuaClass_Globals::LUA_setmousecursorcircularmode },
 
-    { "reset", &LuaClass_Globals::LUA_reset },
+    { "set_texturesrootpath", &LuaClass_Globals::LUA_settexturesrootpath },
+    { "set_shadersrootpath", &LuaClass_Globals::LUA_setshadersrootpath },
+    { "set_meshesrootpath", &LuaClass_Globals::LUA_setmeshesrootpath },
+    { "set_scriptsrootpath", &LuaClass_Globals::LUA_setscriptsrootpath },
+    { "set_virtualfs", &LuaClass_Globals::LUA_setvirtualfs },
+
 	{ 0, 0 }
 };
 
@@ -271,5 +283,78 @@ int LuaClass_Globals::LUA_totalmem( lua_State* p_L )
 int LuaClass_Globals::LUA_reset( lua_State* p_L )
 {
     MainService::GetInstance()->RequestLuaStackReset();
+    return 0;
+}
+
+int LuaClass_Globals::LUA_settexturesrootpath( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Globals::set_texturesrootpath : argument(s) missing" );
+	}
+
+	dsstring path = luaL_checkstring( p_L, 1 );
+    Texture::SetRootPath( path );
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_setshadersrootpath( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Globals::set_shadersrootpath : argument(s) missing" );
+	}
+
+	dsstring path = luaL_checkstring( p_L, 1 );
+
+    Shader::SetRootPath( path );
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_setmeshesrootpath( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Globals::set_meshesrootpath : argument(s) missing" );
+	}
+
+	dsstring path = luaL_checkstring( p_L, 1 );
+
+    AC3DMesheImport::SetRootPath( path );
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_setscriptsrootpath( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Globals::set_scriptsrootpath : argument(s) missing" );
+	}
+
+	dsstring path = luaL_checkstring( p_L, 1 );
+
+    LuaContext::GetInstance()->SetRootPath( path );
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_setvirtualfs( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Globals::set_virtualfs : argument(s) missing" );
+	}
+
+	dsstring path = luaL_checkstring( p_L, 1 );
+
+    File::MountVirtualFS( path );
     return 0;
 }
