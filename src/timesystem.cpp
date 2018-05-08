@@ -59,34 +59,30 @@ void TimeSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 
         m_time_aspect->Update();
     }
-    else
-    {    
-        PhysicsAspect* physics_aspect = p_entity->GetAspect<PhysicsAspect>();
-        if( physics_aspect )
+
+    PhysicsAspect* physics_aspect = p_entity->GetAspect<PhysicsAspect>();
+    if( physics_aspect )
+    {
+        if( m_time_aspect )
         {
-            if( m_time_aspect )
-            {
-                physics_aspect->SetTimeAspect( m_time_aspect );
-            }
-            else
-            {
-                _DSEXCEPTION( "No time manager available to run physic world" );
-            }
+            physics_aspect->SetTimeAspect( m_time_aspect );
         }
         else
         {
-            TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-            if( transform_aspect )
-            {
-                if( m_time_aspect )
-                {
-                    transform_aspect->SetTimeAspect( m_time_aspect );
-                }
-                else
-                {
-                    _DSEXCEPTION( "No time manager available to run transformations" );
-                }
-            }
+            _DSEXCEPTION( "No time manager available to run physic world" );
+        }
+    }
+
+    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+    if( transform_aspect )
+    {
+        if( m_time_aspect )
+        {
+            transform_aspect->SetTimeAspect( m_time_aspect );
+        }
+        else
+        {
+            _DSEXCEPTION( "No time manager available to run transformations" );
         }
     }
 }
