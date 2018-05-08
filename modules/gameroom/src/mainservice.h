@@ -92,6 +92,8 @@ protected:
 
     bool                                                                            m_console_newline;
 
+    bool                                                                            m_print_from_command;
+
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 

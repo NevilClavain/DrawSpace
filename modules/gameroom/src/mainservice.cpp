@@ -254,18 +254,20 @@ void MainService::OnChar( long p_char, long p_scan )
             cmd++; // sauter le '>' 
             if( strcmp( cmd, "" ) )
             {
+                m_print_from_command = true;
                 process_console_command( cmd );
                 m_console_newline = true;
             }
 
             if( m_console_newline )
             {
-
                 m_console_texts.push_back( ">" );
                 m_console_current_line++;
 
                 m_console_newline = false;
             }
+
+            m_print_from_command = false;
         }
         else
         {
@@ -397,7 +399,18 @@ void MainService::print_console_line( const dsstring& p_text )
     m_console_texts.push_back( p_text );
     m_console_current_line++;
 
-    m_console_newline = true;
+    if( m_print_from_command )
+    {
+        // origine de la chaine d'appels : execution d'une commande lua depuis la console
+        m_console_newline = true;
+    }
+    else
+    {
+        // on passe ici par exemple, typiquement depuis un g:print() appele dans une callback gui d'un script lua
+
+        m_console_texts.push_back( ">" );
+        m_console_current_line++;
+    }
 }
 
 
