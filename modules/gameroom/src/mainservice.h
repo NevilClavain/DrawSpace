@@ -90,6 +90,8 @@ protected:
     std::vector<dsstring>                                                           m_console_texts;
     int                                                                             m_console_current_line;
 
+    bool                                                                            m_console_newline;
+
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 

@@ -255,9 +255,17 @@ void MainService::OnChar( long p_char, long p_scan )
             if( strcmp( cmd, "" ) )
             {
                 process_console_command( cmd );
+                m_console_newline = true;
             }
-            m_console_texts.push_back( ">" );
-            m_console_current_line++;    
+
+            if( m_console_newline )
+            {
+
+                m_console_texts.push_back( ">" );
+                m_console_current_line++;
+
+                m_console_newline = false;
+            }
         }
         else
         {
@@ -387,9 +395,9 @@ void MainService::print_console_line( const dsstring& p_text )
     }
 
     m_console_texts.push_back( p_text );
-    m_console_texts.push_back( ">" );
     m_console_current_line++;
-    m_console_current_line++;
+
+    m_console_newline = true;
 }
 
 
@@ -668,8 +676,7 @@ void MainService::RequestClearConsole( void )
 {
     m_console_texts.clear();
     m_console_texts.push_back( "Command input ready" );
-    m_console_texts.push_back( ">" );
-    m_console_current_line = 1;
+    m_console_current_line = 0;
 }
 
 void MainService::RequestConsolePrint( const dsstring& p_msg )
