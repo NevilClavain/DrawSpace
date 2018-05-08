@@ -387,6 +387,8 @@ void MainService::print_console_line( const dsstring& p_text )
     }
 
     m_console_texts.push_back( p_text );
+    m_console_texts.push_back( ">" );
+    m_console_current_line++;
     m_console_current_line++;
 }
 
@@ -666,7 +668,8 @@ void MainService::RequestClearConsole( void )
 {
     m_console_texts.clear();
     m_console_texts.push_back( "Command input ready" );
-    m_console_current_line = 0;
+    m_console_texts.push_back( ">" );
+    m_console_current_line = 1;
 }
 
 void MainService::RequestConsolePrint( const dsstring& p_msg )

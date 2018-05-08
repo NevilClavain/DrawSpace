@@ -72,6 +72,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "set_scriptsrootpath", &LuaClass_Globals::LUA_setscriptsrootpath },
     { "set_virtualfs", &LuaClass_Globals::LUA_setvirtualfs },
 
+    { "reset", &LuaClass_Globals::LUA_reset },
+
 	{ 0, 0 }
 };
 
