@@ -52,6 +52,8 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "configure_timemanager", &LuaClass_Entity::LUA_configuretimemmanager },
     { "read_timemanager", &LuaClass_Entity::LUA_readtimemmanager },
     { "release_timemanager", &LuaClass_Entity::LUA_releasetimemmanager },
+    { "configure_world", &LuaClass_Entity::LUA_configureworld },
+    { "release_world", &LuaClass_Entity::LUA_releaseworld },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
 	{ 0, 0 }
@@ -198,6 +200,46 @@ int LuaClass_Entity::LUA_releasetimemmanager( lua_State* p_L )
     } LUA_CATCH;
     return 0;
 }
+
+int LuaClass_Entity::LUA_configureworld( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Entity::configure_world : argument(s) missing" );
+	}
+
+    bool gravity = luaL_checkint( p_L, 1 );
+
+    if( gravity && argc < 4 )
+    {
+        LUA_ERROR( "Entity::configure_world : argument(s) missing" );
+    }
+
+    dsreal xg = luaL_checknumber( p_L, 2 );
+    dsreal yg = luaL_checknumber( p_L, 3 );
+    dsreal zg = luaL_checknumber( p_L, 4 );
+
+    PhysicsAspect* physics_aspect = m_entity.GetAspect<PhysicsAspect>();
+    if( NULL == physics_aspect )
+    {
+        LUA_ERROR( "Entity::configure_world : physics aspect doesnt exists in this entity!" );
+    }
+
+    physics_aspect->AddComponent<bool>( "gravity_state", gravity );
+
+    if( gravity )
+    {
+        physics_aspect->AddComponent<Vector>( "gravity", Vector( xg, yg, zg, 1.0 ) );
+    }
+    return 0;
+}
+
+int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
+{
+    return 0;
+}
+
 
 int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
 {
