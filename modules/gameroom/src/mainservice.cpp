@@ -424,6 +424,10 @@ void MainService::set_mouse_circular_mode( bool p_state )
 
 void MainService::create_console_quad( void )
 {
+    // parametrage localisation des shaders pour pouvoir creer la console
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "console_data/shaders_bank" );
+
     RenderingAspect* rendering_aspect = m_quadEntity.AddAspect<RenderingAspect>();
     rendering_aspect->AddImplementation( &m_quadRender );
 
@@ -741,6 +745,12 @@ void MainService::RequestLuaStackReset()
 
 void MainService::buil_lua_prerequisites( void )
 {
+    /// paths resources par defaut....
+    Shader::EnableShadersDescrInFinalPath( true );
+    Shader::SetRootPath( "console_data/shaders_bank" );
+    LuaContext::GetInstance()->SetRootPath( "lua_commons" );
+    //File::MountVirtualFS( "test_data.bank" );
+
 
     m_console_ready = false;
 
