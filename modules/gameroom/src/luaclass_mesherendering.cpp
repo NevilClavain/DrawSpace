@@ -24,12 +24,13 @@
 
 #include "luacontext.h"
 #include "luaclass_mesherendering.h"
-//#include "luaclass_renderassembly.h"
 #include "luaclass_texturesset.h"
 #include "luaclass_fxparams.h"
 #include "luaclass_rendercontext.h"
 #include "luaclass_renderconfig.h"
 #include "luaclass_renderpassnodegraph.h"
+#include "luaclass_entity.h"
+
 #include "mainservice.h"
 
 using namespace DrawSpace;
@@ -53,6 +54,7 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
 
 LuaClass_MesheRendering::LuaClass_MesheRendering( lua_State* p_L ) :
 m_meshe_render( NULL ),
+m_entity_rendering_aspect( NULL ),
 m_entity( NULL )
 {
     m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
@@ -232,83 +234,10 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
             }
 
 
-            // ici completer le passSlot avec les infos du RenderAssembly
-
-            /*
-            ///////////////////////// les shaders
-            size_t nb_shaders = lua_renderassembly->GetNbShaderFiles();
-
-            for( size_t i = 0; i < nb_shaders; i++ )
-            {
-                std::pair<dsstring,bool> shader_infos = lua_renderassembly->GetShaderFile( i );
-
-                dsstring shader_path = shader_infos.first;
-                bool is_compiled = shader_infos.second;
-
-                bool status;
-
-                Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
-                status = shader->LoadFromFile( shader_path, is_compiled );
-
-                if( !status )
-                {
-                    // clean tout ce qui a deja ete charge...
-                    cleanup_resources( p_L, pass_id );
-                    LUA_ERROR( "MesheRendering::configure : shader loading operation failed" );
-                }
-                else
-                {
-                    m_fx.AddShader( shader );                    
-                }
-            }
-
-            ///////////////////////// les rendestates
-
-            DrawSpace::Core::RenderStatesSet& rss = lua_renderassembly->GetRenderStatesSet();
-            m_fx.SetRenderStates( rss );
-
-            ///////////////////////// les textures
-
-            for( size_t i = 0; i < DrawSpace::Core::RenderingNode::NbMaxTextures; i++ )
-            {
-                dsstring texture_path = lua_renderassembly->GetTextureFile( i );
-                if( texture_path != "" )
-                {
-                    bool status;
-                    Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-                    status = texture->LoadFromFile();
-                    if( !status )
-                    {
-                        // clean tout ce qui a deja ete charge...
-                        cleanup_resources( p_L, pass_id );
-                        LUA_ERROR( "MesheRendering::configure : texture loading operation failed" );
-                    }
-                    else
-                    {
-                        rnode->SetTexture( texture, i );
-                    }
-                }
-            }
-
-            ///////
-
-            // et pour finir, le meshe
-            bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
-            if( !status )
-            {
-                cleanup_resources( p_L, pass_id );
-                LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
-            }
-            rnode->SetMeshe( &m_meshe );
-            rnode->SetFx( &m_fx );
-            */
-
         } LUA_CATCH;
     }
     else
     {
-        //m_entity_rendering_aspect = NULL;
-        //LUA_ERROR( "MesheRendering::configure : entity passed on arg has no rendering aspect" );
         LUA_ERROR( "MesheRendering::configure : not attached to an entity" );
     }
 

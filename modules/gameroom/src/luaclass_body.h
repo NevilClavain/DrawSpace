@@ -22,41 +22,44 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_MESHERENDERING_H_
-#define _LUACLASS_MESHERENDERING_H_
+#ifndef _LUACLASS_BODY_H_
+#define _LUACLASS_BODY_H_
 
 #include "luna.h"
-#include "mesherenderingaspectimpl.h"
-#include "renderingaspect.h"
-#include "mesheimport.h"
+#include "bodyaspect.h"
+#include "transformaspect.h"
+#include "meshe.h"
 
-class LuaClass_MesheRendering
+class LuaClass_Body
 {
 private:
-    DrawSpace::Core::Meshe                                       m_meshe;
-    DrawSpace::Core::Fx                                          m_fx;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl*  m_meshe_render;
-    DrawSpace::Aspect::RenderingAspect*                          m_entity_rendering_aspect;
-    DrawSpace::Core::Entity*                                     m_entity;
+    DrawSpace::Core::Entity*                m_entity;
+    DrawSpace::Aspect::TransformAspect*     m_entity_transform_aspect;
+    DrawSpace::Aspect::BodyAspect*          m_entity_body_aspect;
 
-    void cleanup_resources( lua_State* p_L, const dsstring& p_id );
+    int                                     m_shape_type;
+    DrawSpace::Aspect::BodyAspect::Mode     m_mode;
+    DrawSpace::Core::Meshe                  m_meshe;
+
 
 public:
 
-	LuaClass_MesheRendering( lua_State* p_L );
-	~LuaClass_MesheRendering( void );
-
     int LUA_attachtoentity( lua_State* p_L );
     int LUA_detachfromentity( lua_State* p_L );
-    int LUA_configure( lua_State* p_L );
-    int LUA_release( lua_State* p_L );
-    int LUA_registertorendering( lua_State* p_L );
-    int LUA_unregisterfromrendering( lua_State* p_L );
-   
-    
+
+    int LUA_configureshape( lua_State* p_L );
+    int LUA_configureattitude( lua_State* p_L );
+    int LUA_configuremass( lua_State* p_L );
+    int LUA_configuremode( lua_State* p_L );
+    int LUA_configurestate( lua_State* p_L );
+
+
+
+	LuaClass_Body( lua_State* p_L );
+	~LuaClass_Body( void );
+
     static const char className[];
-    static const Luna<LuaClass_MesheRendering>::RegType methods[];
-    
+    static const Luna<LuaClass_Body>::RegType methods[];
 };
 
 #endif

@@ -98,7 +98,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 
         if( 0 == p_list.count( curr_entity ) )
         {
-            // cette entit� n'est pas dans la liste fournie en entr�e -> a �t� retir�e du graph
+            // cette entite n'est pas dans la liste fournie en entr�e -> a ete retiree du graph
             on_removed_bodyentity( curr_entity );
             to_remove.push_back( curr_entity );
         }
@@ -216,6 +216,11 @@ void PhysicsAspect::StepSimulation( void )
 
             ComponentList<bool> bools;
             body_aspect->GetComponentsByType<bool>( bools );
+
+            if( bools.size() < 2 )
+            {
+                _DSEXCEPTION( "Bad number of bool components for BodyAspect" )
+            }
 
             // reset du composant "contactState" (bools[1])
             bools[1]->getPurpose() = false;
