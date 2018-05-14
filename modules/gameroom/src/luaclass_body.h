@@ -53,6 +53,7 @@ public:
     int LUA_configuremode( lua_State* p_L );
     int LUA_configurestate( lua_State* p_L );
 
+    int LUA_updateattitude( lua_State* p_L );
 
 
 	LuaClass_Body( lua_State* p_L );

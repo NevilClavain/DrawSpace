@@ -42,6 +42,7 @@ const Luna<LuaClass_Matrix>::RegType LuaClass_Matrix::methods[] =
     { "inverse", &LuaClass_Matrix::LUA_inverse },
     { "set_value", &LuaClass_Matrix::LUA_setvalue },
     { "get_value", &LuaClass_Matrix::LUA_getvalue },
+    { "set_product", &LuaClass_Matrix::LUA_storeproduct },
 	{ 0, 0 }
 };
 
@@ -183,6 +184,22 @@ int LuaClass_Matrix::LUA_getvalue( lua_State* p_L )
 
     lua_pushnumber( p_L, m_matrix( r, c ) );
     return 1;
+}
+
+int LuaClass_Matrix::LUA_storeproduct( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 2 )
+	{		
+        LUA_ERROR( "Matrix::store_product : argument(s) missing" );
+	}
+
+    LuaClass_Matrix* lua_m1 = Luna<LuaClass_Matrix>::check( p_L, 1 );
+    LuaClass_Matrix* lua_m2 = Luna<LuaClass_Matrix>::check( p_L, 2 );
+
+    m_matrix = lua_m1->GetMatrix() * lua_m2->GetMatrix();
+
+    return 0;
 }
 
 DrawSpace::Utils::Matrix LuaClass_Matrix::GetMatrix( void ) const

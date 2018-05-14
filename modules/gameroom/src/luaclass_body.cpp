@@ -45,6 +45,8 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_mass", &LuaClass_Body::LUA_configuremass },
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
     { "configure_state", &LuaClass_Body::LUA_configurestate },
+
+    { "update_attitude", &LuaClass_Body::LUA_updateattitude },
 	{ 0, 0 }
 };
 
@@ -92,8 +94,6 @@ int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
     // bind transfo and body aspects
     m_entity_transform_aspect->SetImplementation( m_entity_body_aspect->GetTransformAspectImpl() );
 
-    //m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
-
     return 0;
 }
 
@@ -105,7 +105,6 @@ int LuaClass_Body::LUA_detachfromentity( lua_State* p_L )
     }
 
     m_entity_transform_aspect->RemoveImplementation();
-    //m_entity_body_aspect->RemoveComponent<bool>( "contact_state" );
 
     m_entity_body_aspect = NULL;
     m_entity_transform_aspect = NULL;
@@ -191,7 +190,7 @@ int LuaClass_Body::LUA_configureattitude( lua_State* p_L )
 
     if( NULL == m_entity_body_aspect )
     {
-        LUA_ERROR( "Body::configure_shape : no body aspect" );
+        LUA_ERROR( "Body::configure_attitude : no body aspect" );
     }
 
     m_entity_body_aspect->AddComponent<Matrix>( "attitude", lua_mat->GetMatrix() );
@@ -256,6 +255,25 @@ int LuaClass_Body::LUA_configurestate( lua_State* p_L )
 
     m_entity_body_aspect->AddComponent<bool>( "enable", state );
     m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
+
+    return 0;
+}
+
+int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Body::update_attitude : argument(s) missing" );
+	}
+    LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check( p_L, 1 );
+
+    if( NULL == m_entity_body_aspect )
+    {
+        LUA_ERROR( "Body::update_attitude : no body aspect" );
+    }
+
+    m_entity_body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = lua_mat->GetMatrix();
 
     return 0;
 }

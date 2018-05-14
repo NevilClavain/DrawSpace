@@ -51,6 +51,8 @@ public:
     int LUA_setvalue( lua_State* p_L );
     int LUA_getvalue( lua_State* p_L );
 
+    int LUA_storeproduct( lua_State* p_L );
+
     DrawSpace::Utils::Matrix GetMatrix( void ) const;
 
     static const char className[];
