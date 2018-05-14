@@ -34,8 +34,6 @@ class LuaClass_Entity
 protected:
     DrawSpace::Core::Entity m_entity;
 
-    bool                    m_gravity_enabled;
-
     typedef enum
     {
         BODY_ASPECT,

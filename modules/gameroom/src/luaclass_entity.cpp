@@ -59,8 +59,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ 0, 0 }
 };
 
-LuaClass_Entity::LuaClass_Entity( lua_State* p_L ) : 
-m_gravity_enabled( false )
+LuaClass_Entity::LuaClass_Entity( lua_State* p_L )
 {
 }
 
@@ -229,9 +228,7 @@ int LuaClass_Entity::LUA_configureworld( lua_State* p_L )
 
     physics_aspect->AddComponent<bool>( "gravity_state", gravity );
 
-    m_gravity_enabled = gravity;
-
-    if( m_gravity_enabled )
+    if( gravity )
     {
         physics_aspect->AddComponent<Vector>( "gravity", Vector( xg, yg, zg, 1.0 ) );
     }
@@ -247,7 +244,7 @@ int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
         LUA_ERROR( "Entity::release_world : physics aspect doesnt exists in this entity!" );
     }
 
-    if( m_gravity_enabled )
+    if( physics_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() )
     {
         physics_aspect->RemoveComponent<Vector>( "gravity" );
     }
