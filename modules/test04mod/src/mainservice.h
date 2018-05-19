@@ -100,14 +100,13 @@ protected:
         DrawSpace::Core::Entity*                                                    dynCubeEntity;
         DrawSpace::EntityGraph::EntityNode*                                         dynCubeEntityNode;
         DrawSpace::AspectImplementations::MesheRenderingAspectImpl*                 dynCubeRender;
+        DrawSpace::Aspect::BodyAspect*                                              dynCubeBodyAspect;
 
     } dynamic_cube;
 
     std::vector<dynamic_cube>                                                       m_dynamic_cubes;
 
     SystemsUpdateEvtCb                                                              m_systems_update_evt_cb;
-
-    bool                                                                            m_clean_cubes;
 
     void set_mouse_circular_mode( bool p_state );
 

@@ -83,20 +83,18 @@ void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
     {
         btRigidBody* bd = body_aspect->GetRigidBody();
 
-        if( NULL == bd )
+        if( bd )
         {
-            _DSEXCEPTION( "body aspect not initialized" )
+            // maintenant fait dans body_aspect->Release() ou body_aspect->RegisterToWorld
+            // si le body passe d'un monde a l'autre (attachment/detachment)
+
+            //m_world->removeRigidBody( bd );
+
+            m_bodies.erase( bd );
+
+            // non ce n'est pas au systeme de releaser le body aspect
+            //body_aspect->Release();
         }
-
-        // maintenant fait dans body_aspect->Release() ou body_aspect->RegisterToWorld
-        // si le body passe d'un monde a l'autre (attachment/detachment)
-
-        //m_world->removeRigidBody( bd );
-
-        m_bodies.erase( bd );
-
-        // non ce n'est pas au systeme de releaser le body aspect
-        //body_aspect->Release();
     }
 }
 
@@ -299,10 +297,7 @@ void PhysicsAspect::UnregisterRigidBody( btRigidBody* p_rigidbody )
 {
     if( m_bodies.count( p_rigidbody ) )
     {
+        m_bodies_set.erase( m_bodies[p_rigidbody] );
         m_bodies.erase( p_rigidbody );
-    }
-    else
-    {
-        _DSEXCEPTION( "unknown rigid body" )
     }
 }

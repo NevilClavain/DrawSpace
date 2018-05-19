@@ -38,8 +38,7 @@ MainService::MainService( void ) :
 m_waves_inc( true ),
 m_hmi_mode( true ),
 m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
-m_systems_update_evt_cb( this, &MainService::on_systems_update_evt ),
-m_clean_cubes( false )
+m_systems_update_evt_cb( this, &MainService::on_systems_update_evt )
 {
 }
 
@@ -595,29 +594,24 @@ void MainService::create_skybox( void )
 
 void MainService::clean_cubes( void )
 {
+
     for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
     {
-        m_dynamic_cubes[i].dynCubeEntityNode->Erase();
+        m_dynamic_cubes[i].dynCubeBodyAspect->Release();
+        m_dynamic_cubes[i].dynCubeEntity->RemoveAspect<BodyAspect>();
+
         m_dynamic_cubes[i].dynCubeRender->UnregisterFromRendering( m_rendergraph );
-    }
 
-    m_clean_cubes = true;
+        m_dynamic_cubes[i].dynCubeEntityNode->Erase();
 
-    /*
-    // pour traiter correctement tout les evts provoques par le retrait des entites    
-    m_systemsHub.Run( &m_entitygraph );
-    m_rendergraph.PushSignal_UpdatedRenderingQueues();
-
-    // seulement ensuite on peut desallouer
-    for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
-    {      
         _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntity );
         _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntityNode );
         _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeRender );
     }
 
     m_dynamic_cubes.clear();
-    */
+
+    m_rendergraph.PushSignal_UpdatedRenderingQueues();
 }
 
 void MainService::create_dynamic_cube( void )
@@ -728,6 +722,10 @@ void MainService::create_dynamic_cube( void )
     TransformAspect* transform_aspect = cube.dynCubeEntity->AddAspect<TransformAspect>();
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+
+    body_aspect->Init();
+
+    cube.dynCubeBodyAspect = body_aspect;
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -840,6 +838,8 @@ void MainService::create_static_cube( void )
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
+    body_aspect->Init();
+
 }
 
 void MainService::create_ground( void )
@@ -941,6 +941,8 @@ void MainService::create_ground( void )
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
+    body_aspect->Init();
+
 }
 
 
@@ -976,24 +978,4 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
 
 void MainService::on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt )
 {
-    if( DrawSpace::Systems::Hub::SYSTEMS_UPDATE_END == p_evt )
-    {
-        if( m_clean_cubes )
-        {
-    
-            m_rendergraph.PushSignal_UpdatedRenderingQueues();
-
-            // seulement ensuite on peut desallouer
-            for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
-            {      
-                _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntity );
-                _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntityNode );
-                _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeRender );
-            }
-
-            m_dynamic_cubes.clear();
-
-            m_clean_cubes = false;
-        }
-    }
 }
