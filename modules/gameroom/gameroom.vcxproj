@@ -104,7 +104,6 @@
     <ClCompile Include="src\luaclass_mesherendering.cpp" />
     <ClCompile Include="src\luaclass_module.cpp" />
     <ClCompile Include="src\luaclass_rawtransform.cpp" />
-    <ClCompile Include="src\luaclass_renderassembly.cpp" />
     <ClCompile Include="src\luaclass_renderconfig.cpp" />
     <ClCompile Include="src\luaclass_rendercontext.cpp" />
     <ClCompile Include="src\luaclass_renderer.cpp" />
@@ -131,7 +130,6 @@
     <ClInclude Include="src\luaclass_mesherendering.h" />
     <ClInclude Include="src\luaclass_module.h" />
     <ClInclude Include="src\luaclass_rawtransform.h" />
-    <ClInclude Include="src\luaclass_renderassembly.h" />
     <ClInclude Include="src\luaclass_renderconfig.h" />
     <ClInclude Include="src\luaclass_rendercontext.h" />
     <ClInclude Include="src\luaclass_skyboxrendering.h" />

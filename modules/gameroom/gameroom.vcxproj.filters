@@ -31,9 +31,6 @@
     <ClCompile Include="src\luaclass_entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaclass_renderassembly.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\luaclass_gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_entity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\luaclass_renderassembly.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_gui.h">

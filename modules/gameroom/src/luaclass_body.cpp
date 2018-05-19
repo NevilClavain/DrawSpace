@@ -46,7 +46,11 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
     { "configure_state", &LuaClass_Body::LUA_configurestate },
 
+    { "init", &LuaClass_Body::LUA_init },
+
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
+
+    { "release", &LuaClass_Body::LUA_release },
 	{ 0, 0 }
 };
 
@@ -55,7 +59,10 @@ m_entity( NULL ),
 m_entity_transform_aspect( NULL ),
 m_entity_body_aspect( NULL ),
 m_shape_type( -1 ),
-m_mode( DrawSpace::Aspect::BodyAspect::NOT_READY )
+m_mode( BodyAspect::NOT_READY ),
+m_attitude_setted( false ),
+m_mass_setted( false ),
+m_state_setted( false )
 {
 }
 
@@ -194,6 +201,7 @@ int LuaClass_Body::LUA_configureattitude( lua_State* p_L )
     }
 
     m_entity_body_aspect->AddComponent<Matrix>( "attitude", lua_mat->GetMatrix() );
+    m_attitude_setted = true;
 
     return 0;
 }
@@ -214,6 +222,7 @@ int LuaClass_Body::LUA_configuremass( lua_State* p_L )
     }
 
     m_entity_body_aspect->AddComponent<dsreal>( "mass", mass );
+    m_mass_setted = true;
 
     return 0;
 }
@@ -256,8 +265,23 @@ int LuaClass_Body::LUA_configurestate( lua_State* p_L )
     m_entity_body_aspect->AddComponent<bool>( "enable", state );
     m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
 
+    m_state_setted = true;
+
     return 0;
 }
+
+ int LuaClass_Body::LUA_init( lua_State* p_L )
+ {
+    if( NULL == m_entity_body_aspect )
+    {
+        LUA_ERROR( "Body::init : no body aspect" );
+    }
+
+    m_entity_body_aspect->Init();
+
+    return 0;
+ }
+
 
 int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
 {
@@ -274,6 +298,79 @@ int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
     }
 
     m_entity_body_aspect->GetComponent<Matrix>( "attitude" )->getPurpose() = lua_mat->GetMatrix();
+
+    return 0;
+}
+
+int LuaClass_Body::LUA_release( lua_State* p_L )
+{
+    if( NULL == m_entity_body_aspect )
+    {
+        LUA_ERROR( "Body::release : no body aspect" );
+    }
+
+    if( m_shape_type != -1 )
+    {    
+       switch( m_shape_type )
+       {
+            case 0: // SHAPE_BOX
+            {
+                //m_entity_body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( xdim, ydim, zdim, 1.0 ) );
+                
+                m_entity_body_aspect->RemoveComponent<BodyAspect::BoxCollisionShape>( "shape" );
+            }
+            break;
+
+            case 1: // SHAPE_SPHERE
+            {
+
+                //m_entity_body_aspect->AddComponent<BodyAspect::SphereCollisionShape>( "shape", ray );
+
+                m_entity_body_aspect->RemoveComponent<BodyAspect::SphereCollisionShape>( "shape" );
+            }
+            break;
+
+            case 2: // SHAPE_MESHE
+            {
+
+                //m_entity_body_aspect->AddComponent<BodyAspect::MesheCollisionShape>( "shape", m_meshe );
+
+                m_entity_body_aspect->RemoveComponent<BodyAspect::MesheCollisionShape>( "shape" );
+                m_meshe.ClearTriangles();
+                m_meshe.ClearVertices();
+            }
+            break; 
+       }
+
+       m_shape_type = -1;
+    }
+
+    if( m_attitude_setted )
+    {
+        m_entity_body_aspect->RemoveComponent<Matrix>( "attitude" );
+        m_attitude_setted = false;
+    }
+
+    if( m_mass_setted )
+    {
+        m_entity_body_aspect->RemoveComponent<dsreal>( "mass" );
+        m_mass_setted = false;
+    }
+
+    if( m_mode != BodyAspect::NOT_READY )
+    {
+        m_entity_body_aspect->RemoveComponent<BodyAspect::Mode>( "mode" );
+        m_mode = BodyAspect::NOT_READY;
+    }
+
+    if( m_state_setted )
+    {
+        m_entity_body_aspect->RemoveComponent<bool>( "enable" );
+        m_entity_body_aspect->RemoveComponent<bool>( "contact_state" );
+        m_state_setted = false;  
+    }
+
+    m_entity_body_aspect->Release();
 
     return 0;
 }

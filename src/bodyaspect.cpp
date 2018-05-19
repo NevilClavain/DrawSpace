@@ -29,6 +29,8 @@
 #include "entity.h"
 #include "transformaspect.h"
 
+#include "physicsaspect.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
@@ -46,7 +48,10 @@ m_attachment_owner( NULL ),
 m_init_as_attached( false ),
 m_init_as_detached( false ),
 m_mode( NOT_READY ),
-m_prev_attachment_owner( NULL )
+m_prev_attachment_owner( NULL ),
+m_initialized( false ),
+m_world( NULL ),
+m_physical_aspect_owner( NULL )
 {
     m_mem_transform.Identity();
     m_mem_linearspeed = _DRAWSPACE_NEW_( btVector3, btVector3( 0.0, 0.0, 0.0 ) );
@@ -55,6 +60,8 @@ m_prev_attachment_owner( NULL )
 
 BodyAspect::~BodyAspect( void )
 {
+    _DRAWSPACE_DELETE_( m_mem_linearspeed );
+    _DRAWSPACE_DELETE_( m_mem_angularspeed );
 }
 
 
@@ -111,6 +118,10 @@ btRigidBody* BodyAspect::GetRigidBody( void ) const
 
 btRigidBody* BodyAspect::Init( void )
 {
+    if( m_initialized )
+    {
+        _DSEXCEPTION( "bodyaspect already initialized !" )
+    }
     ///////////////////////////////////////
 
     ComponentList<Mode> modes;
@@ -248,11 +259,43 @@ btRigidBody* BodyAspect::Init( void )
     }
     m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
 
+    m_initialized = true;
     return m_rigidBody;
+}
+
+
+void BodyAspect::RegisterPhysicalAspect( PhysicsAspect* p_physical_aspect )
+{
+    if( !m_initialized )
+    {
+        _DSEXCEPTION( "bodyaspect not initialized" )
+    }
+
+    if( NULL == m_physical_aspect_owner )
+    {
+        m_physical_aspect_owner = p_physical_aspect;
+        m_world = m_physical_aspect_owner->GetWorld();
+        m_world->addRigidBody( m_rigidBody );
+    }
+    else
+    {
+        // ce body passe d'un world a l'autre (attachment/detachment)
+
+        m_world->removeRigidBody( m_rigidBody );
+
+        m_physical_aspect_owner = p_physical_aspect;
+        m_world = m_physical_aspect_owner->GetWorld();
+        m_world->addRigidBody( m_rigidBody );
+    }
 }
 
 void BodyAspect::Release( void )
 {
+    if( !m_initialized )
+    {
+        _DSEXCEPTION( "bodyaspect already released !" )
+    }
+
     //////////// memoriser differentes choses avant de nettoyer...////////////////
 
     if( BODY == m_mode )
@@ -274,12 +317,24 @@ void BodyAspect::Release( void )
 
     _DRAWSPACE_DELETE_( m_motionState );
     _DRAWSPACE_DELETE_( m_collisionShape );
+
+    if( m_world )
+    {
+        m_world->removeRigidBody( m_rigidBody );
+        m_physical_aspect_owner->UnregisterRigidBody( m_rigidBody );
+
+        m_world = NULL;
+        m_physical_aspect_owner = NULL;
+    }
+
     _DRAWSPACE_DELETE_( m_rigidBody );
 
     if( m_mesh )
     {
         _DRAWSPACE_DELETE_( m_mesh );
     }
+
+    m_initialized = false;
 }
 
 AspectImplementations::BodyTransformAspectImpl* BodyAspect::GetTransformAspectImpl( void )

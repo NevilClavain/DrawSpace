@@ -41,6 +41,8 @@ class Entity;
 }
 namespace Aspect
 {
+class PhysicsAspect;
+
 class BodyAspect : public Core::Aspect 
 {
 public:
@@ -55,6 +57,11 @@ public:
     } Mode;
 
 protected:
+
+    bool                                                    m_initialized;
+
+    btDiscreteDynamicsWorld*                                m_world;
+    PhysicsAspect*                                          m_physical_aspect_owner;
 
     btDefaultMotionState*                                   m_motionState;
     btCollisionShape*                                       m_collisionShape;
@@ -210,6 +217,8 @@ public:
     void GetLastTransform( Utils::Matrix& p_mat );
 
     void SetAncestorsList( std::vector<Core::Entity*>& p_ancestors );
+
+    void RegisterPhysicalAspect( PhysicsAspect* p_physical_aspect );
 
     friend class AspectImplementations::BodyTransformAspectImpl;
 };

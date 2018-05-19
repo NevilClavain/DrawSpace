@@ -29,7 +29,6 @@
 #include "luaclass_renderer.h"
 #include "luaclass_gui.h"
 #include "luaclass_renderstatesset.h"
-#include "luaclass_renderassembly.h"
 #include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_fpstransform.h"
@@ -72,7 +71,6 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RenderStatesSet>::Register( m_L );
     Luna<LuaClass_TexturesSet>::Register( m_L );
     Luna<LuaClass_FxParams>::Register( m_L );
-    Luna<LuaClass_RenderAssembly>::Register( m_L );
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
     Luna<LuaClass_FPSTransform>::Register( m_L );

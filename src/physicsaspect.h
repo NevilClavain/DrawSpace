@@ -65,6 +65,10 @@ public:
     void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
+
+    void UnregisterRigidBody( btRigidBody* p_rigidbody );
+
+    btDiscreteDynamicsWorld* GetWorld( void ) const;
 };
 }
 }

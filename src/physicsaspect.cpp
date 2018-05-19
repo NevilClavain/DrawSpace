@@ -58,21 +58,46 @@ PhysicsAspect::~PhysicsAspect( void )
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-    btRigidBody* bd = body_aspect->Init();
+
+    // non ce n'est pas au systeme d'initialiser le body aspect
+    //btRigidBody* bd = body_aspect->Init();
+
+    btRigidBody* bd = body_aspect->GetRigidBody();
+
+    if( NULL == bd )
+    {
+        _DSEXCEPTION( "body aspect not initialized" )
+    }
 
     m_bodies[bd] = p_entity;
-    m_world->addRigidBody( bd );   
+
+    //m_world->addRigidBody( bd );
+    body_aspect->RegisterPhysicalAspect( this );
  }
 
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 {
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-    btRigidBody* bd = body_aspect->GetRigidBody();
 
-    m_world->removeRigidBody( bd );
-    m_bodies.erase( bd );
+    if( body_aspect )
+    {
+        btRigidBody* bd = body_aspect->GetRigidBody();
 
-    body_aspect->Release();
+        if( NULL == bd )
+        {
+            _DSEXCEPTION( "body aspect not initialized" )
+        }
+
+        // maintenant fait dans body_aspect->Release() ou body_aspect->RegisterToWorld
+        // si le body passe d'un monde a l'autre (attachment/detachment)
+
+        //m_world->removeRigidBody( bd );
+
+        m_bodies.erase( bd );
+
+        // non ce n'est pas au systeme de releaser le body aspect
+        //body_aspect->Release();
+    }
 }
 
 void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
@@ -98,7 +123,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 
         if( 0 == p_list.count( curr_entity ) )
         {
-            // cette entite n'est pas dans la liste fournie en entr�e -> a ete retiree du graph
+            // cette entite n'est pas dans la liste fournie en entree -> a ete retiree du graph
             on_removed_bodyentity( curr_entity );
             to_remove.push_back( curr_entity );
         }
@@ -262,5 +287,22 @@ void PhysicsAspect::StepSimulation( void )
                 }
             }            
 	    }
+    }
+}
+
+btDiscreteDynamicsWorld* PhysicsAspect::GetWorld( void ) const
+{
+    return m_world;
+}
+
+void PhysicsAspect::UnregisterRigidBody( btRigidBody* p_rigidbody )
+{
+    if( m_bodies.count( p_rigidbody ) )
+    {
+        m_bodies.erase( p_rigidbody );
+    }
+    else
+    {
+        _DSEXCEPTION( "unknown rigid body" )
     }
 }

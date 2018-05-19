@@ -40,6 +40,9 @@ private:
     int                                     m_shape_type;
     DrawSpace::Aspect::BodyAspect::Mode     m_mode;
     DrawSpace::Core::Meshe                  m_meshe;
+    bool                                    m_attitude_setted;
+    bool                                    m_mass_setted;
+    bool                                    m_state_setted;
 
 
 public:
@@ -53,7 +56,11 @@ public:
     int LUA_configuremode( lua_State* p_L );
     int LUA_configurestate( lua_State* p_L );
 
+    int LUA_init( lua_State* p_L );
+
     int LUA_updateattitude( lua_State* p_L );
+
+    int LUA_release( lua_State* p_L );
 
 
 	LuaClass_Body( lua_State* p_L );

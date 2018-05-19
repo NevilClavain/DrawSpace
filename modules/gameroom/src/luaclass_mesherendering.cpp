@@ -267,6 +267,9 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L, const dsstring&
             }
         }
 
+        m_meshe.ClearTriangles();
+        m_meshe.ClearVertices();
+
         LUA_TRY
         {
             m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( p_id );
