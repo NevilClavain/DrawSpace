@@ -57,31 +57,10 @@ PhysicsAspect::~PhysicsAspect( void )
 
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
-    /*
-    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-
-    // non ce n'est pas au systeme d'initialiser le body aspect
-    //btRigidBody* bd = body_aspect->Init();
-
-    btRigidBody* bd = body_aspect->GetRigidBody();
-
-    if( NULL == bd )
-    {
-        _DSEXCEPTION( "body aspect not initialized" )
-    }
-
-    m_bodies[bd] = p_entity;
-
-    //m_world->addRigidBody( bd );
-    body_aspect->RegisterPhysicalAspect( this );
-    */
-
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
     btRigidBody* bd = body_aspect->Init();
 
     m_bodies[bd] = p_entity;
-    //m_world->addRigidBody( bd );
-
     body_aspect->RegisterPhysicalAspect( this );
  }
 
@@ -95,20 +74,6 @@ void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 
         if( bd )
         {
-            /*
-            // maintenant fait dans body_aspect->Release() ou body_aspect->RegisterToWorld
-            // si le body passe d'un monde a l'autre (attachment/detachment)
-
-            //m_world->removeRigidBody( bd );
-
-            m_bodies.erase( bd );
-
-            // non ce n'est pas au systeme de releaser le body aspect
-            //body_aspect->Release();
-            */
-
-            //m_world->removeRigidBody( bd );
-
             m_bodies.erase( bd );
             body_aspect->Release();
         }
@@ -148,18 +113,6 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
     {
         // effacer de m_bodies_set
         m_bodies_set.erase( to_remove[i] );
-
-        /* FAIT DANS on_removed_bodyentity
-        // effacer de m_bodies
-        for( auto it = m_bodies.begin(); it != m_bodies.end(); ++it )
-        {
-            if( (*it).second == to_remove[i] )
-            {
-                m_bodies.erase( it );
-                break;
-            }
-        }
-        */
     }
 }
 
