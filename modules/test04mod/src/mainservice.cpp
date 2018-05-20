@@ -723,7 +723,6 @@ void MainService::create_dynamic_cube( void )
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
-    body_aspect->Init();
 
     cube.dynCubeBodyAspect = body_aspect;
 
@@ -838,7 +837,6 @@ void MainService::create_static_cube( void )
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
-    body_aspect->Init();
 
 }
 
@@ -941,7 +939,6 @@ void MainService::create_ground( void )
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
-    body_aspect->Init();
 
 }
 

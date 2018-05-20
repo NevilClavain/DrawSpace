@@ -266,6 +266,7 @@ btRigidBody* BodyAspect::Init( void )
 
 void BodyAspect::RegisterPhysicalAspect( PhysicsAspect* p_physical_aspect )
 {
+    
     if( !m_initialized )
     {
         _DSEXCEPTION( "bodyaspect not initialized" )
@@ -287,6 +288,7 @@ void BodyAspect::RegisterPhysicalAspect( PhysicsAspect* p_physical_aspect )
         m_world = m_physical_aspect_owner->GetWorld();
         m_world->addRigidBody( m_rigidBody );
     }
+    
 }
 
 void BodyAspect::Release( void )
@@ -318,6 +320,7 @@ void BodyAspect::Release( void )
     _DRAWSPACE_DELETE_( m_motionState );
     _DRAWSPACE_DELETE_( m_collisionShape );
 
+    
     if( m_world )
     {
         m_world->removeRigidBody( m_rigidBody );
@@ -326,6 +329,8 @@ void BodyAspect::Release( void )
         m_world = NULL;
         m_physical_aspect_owner = NULL;
     }
+    
+
 
     _DRAWSPACE_DELETE_( m_rigidBody );
 

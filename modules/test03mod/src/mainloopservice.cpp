@@ -900,8 +900,6 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
     body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    body_aspect->Init();
-
     TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
     
@@ -1058,8 +1056,6 @@ void MainLoopService::create_ground( void )
     body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    body_aspect->Init();
-
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
 }
@@ -1108,8 +1104,6 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
 
     body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
-
-    body_aspect->Init();
 
     TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );

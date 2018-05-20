@@ -46,8 +46,6 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
     { "configure_state", &LuaClass_Body::LUA_configurestate },
 
-    { "init", &LuaClass_Body::LUA_init },
-
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
 
     { "release", &LuaClass_Body::LUA_release },
@@ -269,18 +267,6 @@ int LuaClass_Body::LUA_configurestate( lua_State* p_L )
 
     return 0;
 }
-
- int LuaClass_Body::LUA_init( lua_State* p_L )
- {
-    if( NULL == m_entity_body_aspect )
-    {
-        LUA_ERROR( "Body::init : no body aspect" );
-    }
-
-    m_entity_body_aspect->Init();
-
-    return 0;
- }
 
 
 int LuaClass_Body::LUA_updateattitude( lua_State* p_L )

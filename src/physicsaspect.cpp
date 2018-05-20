@@ -57,6 +57,7 @@ PhysicsAspect::~PhysicsAspect( void )
 
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
+    /*
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
 
     // non ce n'est pas au systeme d'initialiser le body aspect
@@ -73,6 +74,15 @@ void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 
     //m_world->addRigidBody( bd );
     body_aspect->RegisterPhysicalAspect( this );
+    */
+
+    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+    btRigidBody* bd = body_aspect->Init();
+
+    m_bodies[bd] = p_entity;
+    //m_world->addRigidBody( bd );
+
+    body_aspect->RegisterPhysicalAspect( this );
  }
 
 void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
@@ -85,6 +95,7 @@ void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 
         if( bd )
         {
+            /*
             // maintenant fait dans body_aspect->Release() ou body_aspect->RegisterToWorld
             // si le body passe d'un monde a l'autre (attachment/detachment)
 
@@ -94,6 +105,12 @@ void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
 
             // non ce n'est pas au systeme de releaser le body aspect
             //body_aspect->Release();
+            */
+
+            //m_world->removeRigidBody( bd );
+
+            m_bodies.erase( bd );
+            body_aspect->Release();
         }
     }
 }
