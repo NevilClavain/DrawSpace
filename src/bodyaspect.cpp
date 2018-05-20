@@ -600,11 +600,11 @@ void BodyAspect::attach_to( BodyAspect* body_aspect )
     
     if( NOT_READY == m_mode )
     {
-        // pas encore pr�t, ignorer; on repassera ici au prochain cycle ( attach_to appel� cycliquement tant que m_attachment_owner == NULL : cf BodyAspect::ManageAttachment() )
+        // pas encore pret, ignorer; on repassera ici au prochain cycle ( attach_to appele cycliquement tant que m_attachment_owner == NULL : cf BodyAspect::ManageAttachment() )
         return;
     }
     
-     // pour l'instant, seul les BODY peuvent �tre attach�/d�tach�s a un ATTRACTOR_COLLIDER
+     // pour l'instant, seul les BODY peuvent etre attache/detaches a un ATTRACTOR_COLLIDER
 
     if( m_mode != BODY )
     {
