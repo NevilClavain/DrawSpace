@@ -80,7 +80,6 @@ bool MainService::Init( void )
     m_closeapp_cb = closeapp_cb;
 
     ////////////////////////////////////////////////////////
-
         
     logconf->RegisterSink( &logger );
     logger.SetConfiguration( logconf );
@@ -101,6 +100,17 @@ bool MainService::Init( void )
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
     m_renderer->GUI_RegisterPushButtonEventClickedHandler( &m_guiwidgetpushbuttonclicked_cb );
+
+
+
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    m_renderer->GetRenderCharacteristics( characteristics );
+
+
+    m_console_y_pos = characteristics.height_resol * 0.5;
+    m_console_y_pos += 50;
+
+    ////////////////////////////////////////////////////////
 
     create_console_quad();
 
@@ -445,7 +455,7 @@ void MainService::create_console_quad( void )
     quad_node->GetFx()->GetShader( 1 )->LoadFromFile();
 
     quad_node->AddShaderParameter( 1, "color", 0 );
-    quad_node->SetShaderRealVector( "color", Vector( 0.5, 0.5, 0.5, 0.85 ) );
+    quad_node->SetShaderRealVector( "color", Vector( 0.5, 0.5, 0.5, 0.75 ) );
 
     RenderStatesSet quadpass_rss;
 
@@ -472,11 +482,11 @@ void MainService::create_console_quad( void )
 
     
     transform_aspect->AddComponent<Matrix>( "quad_scaling" );
-    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().Scale( 2.0, 2.0, 1.0 );
+    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().Scale( 1.0, 1.0, 1.0 );
     
 
     transform_aspect->AddComponent<Matrix>( "quad_pos" );
-    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, 0.0, -1.0 );
+    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, -0.5, -1.0 );
 }
 
 

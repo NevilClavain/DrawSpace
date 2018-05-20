@@ -44,8 +44,8 @@ protected:
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousevisible_cb;
 
-    static const int                                                                m_console_max_lines_display = 31;
-    static const int                                                                m_console_y_pos = 50;
+    static const int                                                                m_console_max_lines_display = 22; //31;
+    int                                                                             m_console_y_pos;// = 500;//50;
 
     bool                                                                            m_request_lua_reset;
 
