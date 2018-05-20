@@ -362,13 +362,11 @@ void BodyAspect::Update( void )
 
         if( m_init_as_attached )
         {
-            //m_attachment_owner->GetLastTransform( mat_b );
             m_attachment_owner->compute_global_transf( mat_b );
             mat_b.Inverse();
         }
         else if( m_init_as_detached )
         {
-            //m_prev_attachment_owner->GetLastTransform( mat_b );
             m_prev_attachment_owner->compute_global_transf( mat_b );
         }
                        
@@ -664,7 +662,7 @@ void BodyAspect::GetLastTransform( Utils::Matrix& p_mat )
     {
         // attached : ajouter la transfo du body auquel on est attache
         DrawSpace::Utils::Matrix mat_b;
-        //m_attachment_owner->GetLastTransform( mat_b );
+
         m_attachment_owner->compute_global_transf( mat_b );
 
         DrawSpace::Utils::Matrix res = updated_matrix * mat_b;
