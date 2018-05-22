@@ -30,6 +30,7 @@
 #include "luaclass_renderconfig.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_entity.h"
+#include "luaclass_matrix.h"
 
 #include "mainservice.h"
 
@@ -49,6 +50,10 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
     { "release", &LuaClass_MesheRendering::LUA_release },
     { "register_to_rendering", &LuaClass_MesheRendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_MesheRendering::LUA_unregisterfromrendering },
+    { "set_shaderreal", &LuaClass_MesheRendering::LUA_setshaderreal },
+    { "set_shaderrealvector", &LuaClass_MesheRendering::LUA_setshaderrealvector },
+    { "set_shaderrealmatrix", &LuaClass_MesheRendering::LUA_setshaderrealmatrix },
+    { "set_shaderbool", &LuaClass_MesheRendering::LUA_setshaderbool },
 	{ 0, 0 }
 };
 
@@ -138,6 +143,8 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
         {
             m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
             RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
+
+            m_renderingnodes[pass_id] = rnode;
 
             for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
             {
@@ -229,10 +236,21 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     rnode->SetMeshe( &m_meshe );
                     rnode->SetFx( &m_fx );
 
+                    /// params de shaders
+
+                    for( int j = 0; j < render_context->GetShadersParamsListSize(); j++ )
+                    {
+                        LuaClass_RenderContext::NamedShaderParam param = render_context->GetNamedShaderParam( j );
+                    
+                        dsstring param_id = param.first;
+
+                        RenderingNode::ShadersParams indexes = param.second;
+                        rnode->AddShaderParameter( indexes.shader_index, param_id, indexes.param_register );                    
+                    }
+
                     break;
                 }
             }
-
 
         } LUA_CATCH;
     }
@@ -244,10 +262,128 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
     return 0;
 }
 
+int LuaClass_MesheRendering::LUA_setshaderreal( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 3 )
+	{		
+        LUA_ERROR( "MesheRendering::set_shaderreal : argument(s) missing" );
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    dsstring param_id = luaL_checkstring( p_L, 2 );
+    dsreal val = luaL_checknumber( p_L, 3 );
+
+    if( 0 == m_renderingnodes.count( pass_id ) )
+    {
+        LUA_ERROR( "MesheRendering::set_shaderreal : unknown pass" ) ;
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderReal( param_id, val );
+
+        } LUA_CATCH;    
+    }
+
+    return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setshaderrealvector( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 6 )
+	{		
+        LUA_ERROR( "MesheRendering::set_shaderrealvector : argument(s) missing" );
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    dsstring param_id = luaL_checkstring( p_L, 2 );
+    dsreal valx = luaL_checknumber( p_L, 3 );
+    dsreal valy = luaL_checknumber( p_L, 4 );
+    dsreal valz = luaL_checknumber( p_L, 5 );
+    dsreal valw = luaL_checknumber( p_L, 5 );
+
+    if( 0 == m_renderingnodes.count( pass_id ) )
+    {
+        LUA_ERROR( "MesheRendering::set_shaderrealvector : unknown pass" ) ;
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderRealVector( param_id, Vector( valx, valy, valz, valw ) );
+
+        } LUA_CATCH;    
+    }
+    return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setshaderrealmatrix( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 3 )
+	{		
+        LUA_ERROR( "MesheRendering::set_shaderrealmatrix : argument(s) missing" );
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    dsstring param_id = luaL_checkstring( p_L, 2 );
+    LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check( p_L, 3 );
+
+    if( 0 == m_renderingnodes.count( pass_id ) )
+    {
+        LUA_ERROR( "MesheRendering::set_shaderrealmatrix : unknown pass" ) ;
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderRealMatrix( param_id, lua_mat->GetMatrix() );
+
+        } LUA_CATCH;    
+    }
+    return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setshaderbool( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 3 )
+	{
+        LUA_ERROR( "MesheRendering::set_shaderreal : argument(s) missing" );
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    dsstring param_id = luaL_checkstring( p_L, 2 );
+    bool val = luaL_checkint( p_L, 3 );
+
+    if( 0 == m_renderingnodes.count( pass_id ) )
+    {
+        LUA_ERROR( "MesheRendering::set_shaderreal : unknown pass" ) ;
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderBool( param_id, val );
+
+        } LUA_CATCH;    
+    }
+    return 0;
+}
+
 void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L, const dsstring& p_id )
 {
     if( m_entity_rendering_aspect )
     {
+        for( auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it )
+        {
+            it->second->CleanupShaderParams();
+        }
+        m_renderingnodes.clear();
+
         RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( p_id )->getPurpose().GetRenderingNode();
 
         for( long i = 0; i < m_fx.GetShadersListSize(); i++ )
@@ -275,7 +411,6 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L, const dsstring&
             m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( p_id );
 
         } LUA_CATCH; 
-
     }
     else
     {

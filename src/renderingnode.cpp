@@ -24,6 +24,7 @@
 
 #include "renderingnode.h"
 #include "memalloc.h"
+#include "exceptions.h"
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -34,9 +35,7 @@ m_handler( NULL ),
 m_meshe( NULL ),
 m_fx( NULL ),
 m_drawing_enabled( true )
-{
-    //m_fx = _DRAWSPACE_NEW_( Fx, Fx );
-    
+{ 
     for( long i = 0; i < NbMaxTextures; i++ )
     {
         m_textures[i] = NULL;
@@ -46,7 +45,7 @@ m_drawing_enabled( true )
 
 RenderingNode::~RenderingNode( void )
 {
-    //_DRAWSPACE_DELETE_( m_fx );
+    CleanupShaderParams();
 }
 
 long RenderingNode::GetOrderNumber( void )
@@ -118,6 +117,10 @@ void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )
         m_shader_params[p_id]->param_values = vec;
         m_shader_params[p_id]->vector = true;
     }
+    else
+    {
+        _DSEXCEPTION( "Unknown shader param id" )
+    }
 }
 
 void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_value )
@@ -129,6 +132,10 @@ void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_v
         m_shader_params[p_id]->param_values = vec;
         m_shader_params[p_id]->vector = true;
     }
+    else
+    {
+        _DSEXCEPTION( "Unknown shader param id" )
+    }
 }
 
 void RenderingNode::SetShaderRealMatrix( const dsstring& p_id, const Matrix& p_value )
@@ -137,6 +144,10 @@ void RenderingNode::SetShaderRealMatrix( const dsstring& p_id, const Matrix& p_v
     {
         m_shader_params[p_id]->mat = p_value;
         m_shader_params[p_id]->vector = false;
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown shader param id" )
     }
 }
 
@@ -153,6 +164,10 @@ void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
         m_shader_params[p_id]->param_values = vec;
         m_shader_params[p_id]->vector = true;
     }
+    else
+    {
+        _DSEXCEPTION( "Unknown shader param id" )
+    }
 }
 
 void RenderingNode::UpdateShaderParams( const dsstring& p_id, RenderingNode::ShadersParams& p_params )
@@ -168,6 +183,15 @@ void RenderingNode::UpdateShaderParams( const dsstring& p_id, RenderingNode::Sha
 void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist )
 {
     p_outlist = m_shader_params;
+}
+
+void RenderingNode::CleanupShaderParams( void )
+{
+    for( auto it = m_shader_params.begin(); it != m_shader_params.end(); ++it )
+    {
+        _DRAWSPACE_DELETE_( it->second );
+    }
+    m_shader_params.clear();
 }
 
 void RenderingNode::SetDrawingState( bool p_drawing )
