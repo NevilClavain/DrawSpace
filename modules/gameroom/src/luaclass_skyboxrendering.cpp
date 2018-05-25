@@ -48,6 +48,7 @@ const Luna<LuaClass_SkyboxRendering>::RegType LuaClass_SkyboxRendering::methods[
     { "release", &LuaClass_SkyboxRendering::LUA_release },
     { "register_to_rendering", &LuaClass_SkyboxRendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_SkyboxRendering::LUA_unregisterfromrendering },
+    { "set_shaderrealvector", &LuaClass_SkyboxRendering::LUA_setshaderrealvector },
 	{ 0, 0 }
 };
 
@@ -432,3 +433,43 @@ int LuaClass_SkyboxRendering::LUA_unregisterfromrendering( lua_State* p_L )
     return 0;
 }
 
+int LuaClass_SkyboxRendering::LUA_setshaderrealvector( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 6 )
+	{		
+        LUA_ERROR( "SkyboxRendering::set_shaderrealvector : argument(s) missing" );
+	}
+
+    dsstring pass_id = luaL_checkstring( p_L, 1 );
+    dsstring param_id = luaL_checkstring( p_L, 2 );
+    dsreal valx = luaL_checknumber( p_L, 3 );
+    dsreal valy = luaL_checknumber( p_L, 4 );
+    dsreal valz = luaL_checknumber( p_L, 5 );
+    dsreal valw = luaL_checknumber( p_L, 5 );
+
+    dsstring component_name = "skybox_shaders_params/" + pass_id;
+    
+    LUA_TRY
+    {
+        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params = m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose();
+        for( auto it = skybox_texturepass_shaders_params.begin(); it != skybox_texturepass_shaders_params.end(); ++it )
+        {
+            if( it->first == param_id )
+            {
+                it->second.vector = true;
+                it->second.param_values[0] = valx;
+                it->second.param_values[1] = valy;
+                it->second.param_values[2] = valz;
+                it->second.param_values[3] = valw;
+
+                m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose() = skybox_texturepass_shaders_params;
+
+                break;
+            }
+        }
+
+    } LUA_CATCH;
+
+    return 0;
+}
