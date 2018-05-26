@@ -124,41 +124,47 @@ int LuaClass_MesheRendering::LUA_detachfromentity( lua_State* p_L )
 int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 4 )
+	//if( argc < 4 )
+
+    if( argc < 3 )
 	{		
         LUA_ERROR( "MesheRendering::configure : argument(s) missing" );
 	}
 
-    dsstring pass_id = luaL_checkstring( p_L, 1 );
-    //LuaClass_RenderAssembly* lua_renderassembly = Luna<LuaClass_RenderAssembly>::check( p_L, 2 );
-    LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 2 );
+    //dsstring pass_id = luaL_checkstring( p_L, 1 );
 
-    dsstring meshe_path = luaL_checkstring( p_L, 3 );
-    int meshe_index = luaL_checkint( p_L, 4 );
+    LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
+    dsstring meshe_path = luaL_checkstring( p_L, 2 );
+    int meshe_index = luaL_checkint( p_L, 3 );
 
     // recupere l'aspect rendu s'il existe pour cette entitee
     if( m_entity_rendering_aspect )
     {               
         LUA_TRY
         {
-            m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
-            RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
-
-            m_renderingnodes[pass_id] = rnode;
 
             for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
-            {
+            {               
                 LuaClass_RenderContext* render_context = rcfg->GetRenderContext( i );
-                if( render_context->GetPassName() == pass_id )
-                {
+                dsstring pass_id = render_context->GetPassName();
+
+                //if( render_context->GetPassName() == pass_id )
+                //{
+
+                    m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
+                    RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
+                    m_renderingnodes[pass_id] = rnode;
+
                     //  on a besoin que d'un seul fx....
                     if( render_context->GetFxParamsListSize() < 1 )
                     {
-                        cleanup_resources( p_L, pass_id );
+                        cleanup_resources( p_L );
                         LUA_ERROR( "MesheRendering::configure : missing fx parameters description" );                
                     }  
 
                     LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+
+                    DrawSpace::Core::Fx* fx = _DRAWSPACE_NEW_( Fx, Fx  );
 
                     ///////////////////////// les shaders
                     size_t nb_shaders = fx_params->GetNbShaderFiles();
@@ -177,19 +183,19 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                         if( !status )
                         {
                             // clean tout ce qui a deja ete charge...
-                            cleanup_resources( p_L, pass_id );
+                            cleanup_resources( p_L );
                             LUA_ERROR( "MesheRendering::configure : shader loading operation failed" );
                         }
                         else
                         {
-                            m_fx.AddShader( shader );                    
+                            fx->AddShader( shader );                    
                         }
                     }
 
                     ///////////////////////// les rendestates
 
                     DrawSpace::Core::RenderStatesSet& rss = fx_params->GetRenderStatesSet();
-                    m_fx.SetRenderStates( rss );
+                    fx->SetRenderStates( rss );
 
 
                     ///////////////////////// les textures
@@ -198,7 +204,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     //  on a besoin que d'un seul jeu de textures...
                     if( nb_textures_set != 1 )
                     {
-                        cleanup_resources( p_L, pass_id );
+                        cleanup_resources( p_L );
                         LUA_ERROR( "MesheRendering::configure : no textures set provided !" );
                     }
 
@@ -216,7 +222,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                             if( !status )
                             {
                                 // clean tout ce qui a deja ete charge...
-                                cleanup_resources( p_L, pass_id );
+                                cleanup_resources( p_L );
                                 LUA_ERROR( "MesheRendering::configure : texture loading operation failed" );
                             }
                             else
@@ -230,11 +236,11 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
                     if( !status )
                     {
-                        cleanup_resources( p_L, pass_id );
+                        cleanup_resources( p_L );
                         LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
                     }
                     rnode->SetMeshe( &m_meshe );
-                    rnode->SetFx( &m_fx );
+                    rnode->SetFx( fx );
 
                     /// params de shaders
 
@@ -248,8 +254,8 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                         rnode->AddShaderParameter( indexes.shader_index, param_id, indexes.param_register );                    
                     }
 
-                    break;
-                }
+                    //break;
+                //}
             }
 
         } LUA_CATCH;
@@ -374,43 +380,49 @@ int LuaClass_MesheRendering::LUA_setshaderbool( lua_State* p_L )
     return 0;
 }
 
-void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L, const dsstring& p_id )
+
+void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
 {
     if( m_entity_rendering_aspect )
-    {
+    {        
         for( auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it )
         {
             it->second->CleanupShaderParams();
+
+            dsstring id = it->first;
+
+            RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( id )->getPurpose().GetRenderingNode();
+
+            Fx* fx = rnode->GetFx();
+            for( long i = 0; i < fx->GetShadersListSize(); i++ )
+            {
+                Shader* shader = fx->GetShader( i );
+                _DRAWSPACE_DELETE_( shader );
+            }
+            fx->ClearShaders();
+
+            _DRAWSPACE_DELETE_( fx );
+
+            for( long i = 0; i < rnode->GetTextureListSize(); i++ )
+            {
+                Texture* texture = rnode->GetTexture( i );
+                if( texture )
+                {
+                    _DRAWSPACE_DELETE_( texture );
+                    rnode->SetTexture( NULL, i );
+                }
+            }
+
+            m_meshe.ClearTriangles();
+            m_meshe.ClearVertices();
+
+            LUA_TRY
+            {
+                m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( id );
+
+            } LUA_CATCH; 
         }
         m_renderingnodes.clear();
-
-        RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( p_id )->getPurpose().GetRenderingNode();
-
-        for( long i = 0; i < m_fx.GetShadersListSize(); i++ )
-        {
-            Shader* shader = m_fx.GetShader( i );
-            _DRAWSPACE_DELETE_( shader );
-        }
-        m_fx.ClearShaders();
-
-        for( long i = 0; i < rnode->GetTextureListSize(); i++ )
-        {
-            Texture* texture = rnode->GetTexture( i );
-            if( texture )
-            {
-                _DRAWSPACE_DELETE_( texture );
-                rnode->SetTexture( NULL, i );
-            }
-        }
-
-        m_meshe.ClearTriangles();
-        m_meshe.ClearVertices();
-
-        LUA_TRY
-        {
-            m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( p_id );
-
-        } LUA_CATCH; 
     }
     else
     {
@@ -420,15 +432,7 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L, const dsstring&
 
 int LuaClass_MesheRendering::LUA_release( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{		
-        LUA_ERROR( "MesheRendering::release : argument(s) missing" );
-	}
-
-    dsstring pass_id = luaL_checkstring( p_L, 1 );
-
-    cleanup_resources( p_L, pass_id );
+    cleanup_resources( p_L );
     return 0;
 }
 

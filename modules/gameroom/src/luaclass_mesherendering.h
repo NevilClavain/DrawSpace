@@ -34,14 +34,14 @@ class LuaClass_MesheRendering
 {
 private:
     DrawSpace::Core::Meshe                                          m_meshe;
-    DrawSpace::Core::Fx                                             m_fx;
+    //DrawSpace::Core::Fx                                             m_fx;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl*     m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                        m_entity;
 
     std::map<dsstring, DrawSpace::Core::RenderingNode*>             m_renderingnodes; // classes par passes
 
-    void cleanup_resources( lua_State* p_L, const dsstring& p_id );
+    void cleanup_resources( lua_State* p_L );
 
 public:
 
