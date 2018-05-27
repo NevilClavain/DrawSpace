@@ -69,6 +69,8 @@ public:
     int LUA_configurepassviewportquadresources( lua_State* p_L );
     int LUA_releasepassviewportquadresources( lua_State* p_L );
 
+    int LUA_setviewportquadshaderrealvector( lua_State* p_L );
+
     int LUA_updaterenderingqueues( lua_State* p_L );
     
     static const char className[];
