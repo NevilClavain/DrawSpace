@@ -57,6 +57,8 @@ public:
     int LUA_setshaderrealmatrix( lua_State* p_L );
     int LUA_setshaderbool( lua_State* p_L );
 
+    int LUA_setpassnodetexturefrompass( lua_State* p_L );
+
 
     int LUA_release( lua_State* p_L );
     int LUA_registertorendering( lua_State* p_L );

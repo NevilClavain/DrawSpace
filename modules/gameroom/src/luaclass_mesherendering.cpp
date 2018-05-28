@@ -54,6 +54,7 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
     { "set_shaderrealvector", &LuaClass_MesheRendering::LUA_setshaderrealvector },
     { "set_shaderrealmatrix", &LuaClass_MesheRendering::LUA_setshaderrealmatrix },
     { "set_shaderbool", &LuaClass_MesheRendering::LUA_setshaderbool },
+    { "set_passnodetexturefrompass", &LuaClass_MesheRendering::LUA_setpassnodetexturefrompass },
 	{ 0, 0 }
 };
 
@@ -471,5 +472,30 @@ int LuaClass_MesheRendering::LUA_unregisterfromrendering( lua_State* p_L )
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
 
     m_meshe_render->UnregisterFromRendering( lua_rg->GetRenderGraph() );
+    return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setpassnodetexturefrompass( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 4 )
+	{		
+        LUA_ERROR( "MesheRendering::set_passnodetexturefrompass : argument(s) missing" );
+	}
+
+    LuaClass_RenderPassNodeGraph* rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
+    dsstring pass_src_id = luaL_checkstring( p_L, 2 );
+    dsstring pass_dest_id = luaL_checkstring( p_L, 3 );
+    int stage = luaL_checkint( p_L, 4 );
+
+    if( 0 == m_renderingnodes.count( pass_dest_id ) )
+    {
+        LUA_ERROR( "MesheRendering::set_passnodetexturefrompass : unknown pass" ) ;
+    }
+    else
+    {
+        m_renderingnodes[pass_dest_id]->SetTexture( rg->GetNode( pass_src_id ).GetTargetTexture(), stage );
+    }
+
     return 0;
 }

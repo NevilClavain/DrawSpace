@@ -72,6 +72,8 @@ public:
     int LUA_setviewportquadshaderrealvector( lua_State* p_L );
 
     int LUA_updaterenderingqueues( lua_State* p_L );
+
+    DrawSpace::RenderGraph::RenderPassNode& GetNode( const dsstring& p_pass_id );
     
     static const char className[];
     static const Luna<LuaClass_RenderPassNodeGraph>::RegType methods[];

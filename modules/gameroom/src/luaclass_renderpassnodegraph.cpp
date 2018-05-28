@@ -538,3 +538,15 @@ int LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector( lua_State
     }
     return 0;
 }
+
+DrawSpace::RenderGraph::RenderPassNode& LuaClass_RenderPassNodeGraph::GetNode( const dsstring& p_pass_id )
+{
+    if( 0 == m_passes.count( p_pass_id ) )
+    {
+        _DSEXCEPTION( "unknown pass id" )
+    }
+    else
+    {
+        return m_passes[p_pass_id].m_renderpassnode;
+    }
+}

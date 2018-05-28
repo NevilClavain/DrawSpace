@@ -102,6 +102,7 @@ void RenderPassNodeGraph::ProcessSignals( void )
             /// update all rendering queues
             for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
             {
+                dsstring dbg_name = it->data()->m_name;
                 if( it->data()->m_renderingqueue_update_flag )
                 {
                     // mise a jour buffer renderingqueue

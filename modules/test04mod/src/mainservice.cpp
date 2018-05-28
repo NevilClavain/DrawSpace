@@ -859,14 +859,6 @@ void MainService::create_ground( void )
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
 
-    ////////////////////////////////////////////////////////
-
-    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    //ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-
-    ////////////////////////////////////////////////////////
-
 
 
     ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
