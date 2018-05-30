@@ -34,12 +34,17 @@ class LuaClass_MesheRendering
 {
 private:
     DrawSpace::Core::Meshe                                          m_meshe;
-    //DrawSpace::Core::Fx                                             m_fx;
+
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl*     m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                        m_entity;
 
     std::map<dsstring, DrawSpace::Core::RenderingNode*>             m_renderingnodes; // classes par passes
+
+    // ici stocker les ptr des textures associees a un des renderingnodes mais pas allouees
+    // via LUA_configure() mais allouees et appartenant a des entitees exterieures
+    // (typiquement : textures target d'une rendering passe)
+    std::set<DrawSpace::Core::Texture*>                             m_external_textures;
 
     void cleanup_resources( lua_State* p_L );
 

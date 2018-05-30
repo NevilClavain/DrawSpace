@@ -472,12 +472,12 @@ void LuaClass_RenderPassNodeGraph::cleanup_resources( lua_State* p_L, const dsst
         }
         else
         {
-            LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_resources : no viewportquad created for this pass" );
+            LUA_ERROR( "RenderPassNodeGraph::cleanup_resources : no viewportquad created for this pass" );
         }
     }
     else
     {
-        LUA_ERROR( "RenderPassNodeGraph::unload_pass_viewportquad_resources : unknown pass id" );
+        LUA_ERROR( "RenderPassNodeGraph::cleanup_resources : unknown pass id" );
     }
 }
 

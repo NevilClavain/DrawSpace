@@ -409,8 +409,18 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
                 Texture* texture = rnode->GetTexture( i );
                 if( texture )
                 {
-                    _DRAWSPACE_DELETE_( texture );
-                    rnode->SetTexture( NULL, i );
+                    if( 0 == m_external_textures.count( texture ) )
+                    {
+                        // pas une texture target d'une pass quelconque (car sinon dans ce cas, ce n'est pas a cette classe de 
+                        // rdessallouer)
+
+                        _DRAWSPACE_DELETE_( texture );
+                        rnode->SetTexture( NULL, i );
+                    }
+                    else
+                    {
+                        m_external_textures.erase( texture );
+                    }
                 }
             }
 
@@ -494,7 +504,10 @@ int LuaClass_MesheRendering::LUA_setpassnodetexturefrompass( lua_State* p_L )
     }
     else
     {
-        m_renderingnodes[pass_dest_id]->SetTexture( rg->GetNode( pass_src_id ).GetTargetTexture(), stage );
+        Texture* target_texture = rg->GetNode( pass_src_id ).GetTargetTexture();
+        m_renderingnodes[pass_dest_id]->SetTexture( target_texture, stage );
+
+        m_external_textures.insert( target_texture );
     }
 
     return 0;
