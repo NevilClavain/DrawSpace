@@ -74,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;D3D11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx11sdk/include;./../../../DrawSpace_thirdparts/fw1FontWrapper/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0;./../../CEGUIWrapper</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/dx11sdk/include;./../../../DrawSpace_thirdparts/fw1FontWrapper/include;./../../../DrawSpace_thirdparts/CEGUI-0.8.7/include/cegui-0;./../../CEGUIWrapper;./../../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
