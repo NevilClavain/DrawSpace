@@ -42,6 +42,7 @@ private:
     dsstring                            m_passname;
     std::vector<LuaClass_FxParams*>     m_fxparams;
     std::vector<LuaClass_TexturesSet*>  m_textures_sets;
+    std::vector<LuaClass_TexturesSet*>  m_vertex_textures_sets;
     std::vector<NamedShaderParam>       m_shaders_params;
 
 public:
@@ -50,6 +51,7 @@ public:
 
     int LUA_addfxparams( lua_State* p_L );
     int LUA_addtexturesset( lua_State* p_L );
+    int LUA_addvertextexturesset( lua_State* p_L );
     int LUA_setrenderingorder( lua_State* p_L );
     int LUA_addshaderparam( lua_State* p_L );
     
@@ -59,6 +61,9 @@ public:
 
     int GetTexturesSetListSize( void ) const;
     LuaClass_TexturesSet* GetTexturesSet( int p_index ) const;
+
+    int GetVertexTexturesSetListSize( void ) const;
+    LuaClass_TexturesSet* GetVertexTexturesSet( int p_index ) const;
 
     int GetShadersParamsListSize( void ) const;
     NamedShaderParam GetNamedShaderParam( int p_index ) const;

@@ -34,6 +34,7 @@ const Luna<LuaClass_RenderContext>::RegType LuaClass_RenderContext::methods[] =
 {
     { "add_fxparams", &LuaClass_RenderContext::LUA_addfxparams },
     { "add_texturesset", &LuaClass_RenderContext::LUA_addtexturesset },
+    { "add_vertextexturesset", &LuaClass_RenderContext::LUA_addtexturesset },
     { "set_renderingorder", &LuaClass_RenderContext::LUA_setrenderingorder },
     { "add_shaderparam", &LuaClass_RenderContext::LUA_addshaderparam },
 	{ 0, 0 }
@@ -78,6 +79,19 @@ int LuaClass_RenderContext::LUA_addtexturesset( lua_State* p_L )
     LuaClass_TexturesSet* lua_textures = Luna<LuaClass_TexturesSet>::check( p_L, 1 );
 
     m_textures_sets.push_back( lua_textures );
+    return 0;
+}
+
+int LuaClass_RenderContext::LUA_addvertextexturesset( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "RenderContext::add_vertextexturesset : argument(s) missing" );
+	}
+    LuaClass_TexturesSet* lua_textures = Luna<LuaClass_TexturesSet>::check( p_L, 1 );
+
+    m_vertex_textures_sets.push_back( lua_textures );
     return 0;
 }
 
@@ -137,6 +151,16 @@ int LuaClass_RenderContext::GetTexturesSetListSize( void ) const
 LuaClass_TexturesSet* LuaClass_RenderContext::GetTexturesSet( int p_index ) const
 {
     return m_textures_sets[p_index];
+}
+
+int LuaClass_RenderContext::GetVertexTexturesSetListSize( void ) const
+{
+    return m_vertex_textures_sets.size();
+}
+
+LuaClass_TexturesSet* LuaClass_RenderContext::GetVertexTexturesSet( int p_index ) const
+{
+    return m_vertex_textures_sets[p_index];
 }
 
 int LuaClass_RenderContext::GetRenderingOrder( void ) const
