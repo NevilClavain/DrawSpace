@@ -34,6 +34,12 @@ using namespace DrawSpace::Utils;
 
 _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 
+#ifdef _DEBUG
+static const dsstring console_welcome = "Console: input ready (debug build)";
+#else
+static const dsstring console_welcome = "Console: input ready (release build)";
+#endif
+
 MainService::MainService( void ) :
 m_console_ready( false ),
 m_console_active( false ),
@@ -41,7 +47,7 @@ m_console_current_line( 0 ),
 m_request_lua_reset( false ),
 m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked )
 {
-    m_console_texts.push_back( "Console: input ready" );
+    m_console_texts.push_back( console_welcome );
     m_console_texts.push_back( ">" );
     m_console_current_line++;
 }
@@ -702,7 +708,7 @@ void MainService::RequestClose( void )
 void MainService::RequestClearConsole( void )
 {
     m_console_texts.clear();
-    m_console_texts.push_back( "Command input ready" );
+    m_console_texts.push_back( console_welcome );
     m_console_current_line = 0;
 }
 
