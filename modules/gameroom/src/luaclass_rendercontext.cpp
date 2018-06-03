@@ -34,7 +34,7 @@ const Luna<LuaClass_RenderContext>::RegType LuaClass_RenderContext::methods[] =
 {
     { "add_fxparams", &LuaClass_RenderContext::LUA_addfxparams },
     { "add_texturesset", &LuaClass_RenderContext::LUA_addtexturesset },
-    { "add_vertextexturesset", &LuaClass_RenderContext::LUA_addtexturesset },
+    { "add_vertextexturesset", &LuaClass_RenderContext::LUA_addvertextexturesset },
     { "set_renderingorder", &LuaClass_RenderContext::LUA_setrenderingorder },
     { "add_shaderparam", &LuaClass_RenderContext::LUA_addshaderparam },
 	{ 0, 0 }

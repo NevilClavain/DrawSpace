@@ -163,6 +163,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                 LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
 
                 DrawSpace::Core::Fx* fx = _DRAWSPACE_NEW_( Fx, Fx  );
+                rnode->SetFx( fx );
 
                 ///////////////////////// les shaders
                 size_t nb_shaders = fx_params->GetNbShaderFiles();
@@ -200,7 +201,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
                 size_t nb_textures_set = render_context->GetTexturesSetListSize();
                 //  on a besoin que d'un seul jeu de textures...
-                if( nb_textures_set != 1 )
+                if( nb_textures_set < 0 )
                 {
                     cleanup_resources( p_L );
                     LUA_ERROR( "MesheRendering::configure : no textures set provided !" );
@@ -236,11 +237,11 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                 size_t nb_vtextures_set = render_context->GetVertexTexturesSetListSize();
                 if( nb_vtextures_set > 0 )
                 {
-                    LuaClass_TexturesSet* vtextures = render_context->GetTexturesSet( 0 );
+                    LuaClass_TexturesSet* vtextures = render_context->GetVertexTexturesSet( 0 );
 
                     for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
                     {
-                        dsstring texture_path = textures->GetTextureFile( j );
+                        dsstring texture_path = vtextures->GetTextureFile( j );
                         if( texture_path != "" )
                         {
                             bool status;
@@ -268,7 +269,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
                 }
                 rnode->SetMeshe( &m_meshe );
-                rnode->SetFx( fx );
+
 
                 /// params de shaders
 
