@@ -22,28 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 #ifndef _DSAPP_H_
 #define _DSAPP_H_
 
@@ -55,21 +33,6 @@ namespace DrawSpace
 class App
 {
 protected:
-    /*
-    class Config : public Utils::Parser
-    {
-    protected:
-        bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
-
-    public:
-        long        m_width;
-        long        m_height;
-        bool        m_fullscreen;
-        dsstring    m_renderplugin;
-
-        Config( long p_width, long p_height, bool p_fullscreen, bool p_multithread );
-    };
-    */
 
     class Config : public DrawSpace::Utils::JSONParser
     {
