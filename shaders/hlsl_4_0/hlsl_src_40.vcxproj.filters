@@ -108,5 +108,17 @@
     <FxCompile Include="spaceimpostor.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="heightmap.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap_mirror.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap_mirror.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
