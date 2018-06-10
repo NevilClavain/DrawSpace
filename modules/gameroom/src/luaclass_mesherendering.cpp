@@ -268,6 +268,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     cleanup_resources( p_L );
                     LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
                 }
+                m_meshe.ComputeNormales( false );
                 rnode->SetMeshe( &m_meshe );
 
 
