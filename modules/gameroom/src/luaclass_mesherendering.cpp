@@ -138,6 +138,13 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
     dsstring meshe_path = luaL_checkstring( p_L, 2 );
     int meshe_index = luaL_checkint( p_L, 3 );
 
+    int spherical_normales = -1;
+
+    if( argc == 4 )
+    {
+        spherical_normales = luaL_checkint( p_L, 4 );
+    }
+
     // recupere l'aspect rendu s'il existe pour cette entitee
     if( m_entity_rendering_aspect )
     {               
@@ -268,7 +275,14 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     cleanup_resources( p_L );
                     LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
                 }
-                m_meshe.ComputeNormales( false );
+                if( spherical_normales == -1 )
+                {
+                    m_meshe.ComputeNormales( false );
+                }
+                else
+                {
+                    m_meshe.ComputeNormales( spherical_normales );
+                }
                 rnode->SetMeshe( &m_meshe );
 
 
