@@ -30,6 +30,8 @@ typedef struct
     XMFLOAT3 pos;
     XMFLOAT3 normale;
     XMFLOAT4 t[9];
+    XMFLOAT3 tangent;
+    XMFLOAT3 binormale;
 
 } d3d11vertex;
 

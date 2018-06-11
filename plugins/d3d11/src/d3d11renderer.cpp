@@ -605,32 +605,8 @@ void D3D11Renderer::ClearDepth( dsreal p_value )
     m_lpd3ddevcontext->ClearDepthStencilView( m_currentView, D3D11_CLEAR_DEPTH, p_value, 0 );
 }
 
-//void D3D11Renderer::BeginTarget( DrawSpace::Core::Texture* p_texture )
 void D3D11Renderer::BeginTarget( void* p_data )
 {
-    /*
-    if( m_targettextures_base.count( p_texture ) > 0 )
-    {
-        m_currentTarget = m_targettextures_base[p_texture]->rendertextureTargetView;
-        m_currentView = m_targettextures_base[p_texture]->stencilDepthView;
-
-        m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
-
-        m_lpd3ddevcontext->RSSetViewports( 1, &m_targettextures_base[p_texture]->viewport );
-    }
-    else
-    {
-        // pas trouvé de texture cible à setter 
-
-        // quick'n dirty pour eviter que ce rendu ne vienne écraser le résultat de la rendertarget actuelle (positionnée par le dernier 
-        // appel à OMSetRenderTargets() )
-
-        // a noter que ce pb n'existait pas en D3D9 (API structurée différement)
-
-        BeginScreen();
-    }
-    */
-
     TextureInfos* ti = (TextureInfos*)p_data;
     dsstring hash = ti->hash;
 
@@ -656,7 +632,6 @@ void D3D11Renderer::BeginTarget( void* p_data )
     }
 }
 
-//void D3D11Renderer::EndTarget( DrawSpace::Core::Texture* p_texture )
 void D3D11Renderer::EndTarget( void* p_data )
 {
     // rien a faire ici en D3D11...
@@ -702,6 +677,14 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
         v[i].normale.x = (float)vertex.nx;
         v[i].normale.y = (float)vertex.ny;
         v[i].normale.z = (float)vertex.nz;
+
+        v[i].tangent.x = (float)vertex.tx;
+        v[i].tangent.y = (float)vertex.ty;
+        v[i].tangent.z = (float)vertex.tz;
+
+        v[i].binormale.x = (float)vertex.bx;
+        v[i].binormale.y = (float)vertex.by;
+        v[i].binormale.z = (float)vertex.bz;
 
         for( size_t j = 0; j < 9; j++ )
         {
@@ -854,6 +837,18 @@ bool D3D11Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* 
         v[i].pos.x = (float)vertex.x;
         v[i].pos.y = (float)vertex.y;
         v[i].pos.z = (float)vertex.z;
+
+        v[i].normale.x = (float)vertex.nx;
+        v[i].normale.y = (float)vertex.ny;
+        v[i].normale.z = (float)vertex.nz;
+
+        v[i].tangent.x = (float)vertex.tx;
+        v[i].tangent.y = (float)vertex.ty;
+        v[i].tangent.z = (float)vertex.tz;
+
+        v[i].binormale.x = (float)vertex.bx;
+        v[i].binormale.y = (float)vertex.by;
+        v[i].binormale.z = (float)vertex.bz;
 
         for( size_t j = 0; j < 9; j++ )
         {
@@ -1401,12 +1396,6 @@ void D3D11Renderer::DestroyTexture( void* p_data )
         ti->bits = NULL;
     }
 
-    /*
-    if( m_textures_base.count( ti->path ) > 0 )
-    {
-        m_textures_base.erase( ti->path );
-    }
-    */
     if( m_textures_base.count( ti->hash ) > 0 )
     {
         m_textures_base.erase( ti->hash );
@@ -1414,13 +1403,6 @@ void D3D11Renderer::DestroyTexture( void* p_data )
 
 
     ti->texture_instance->SetRenderData( NULL );
-
-    /*
-    if( m_targettextures_base.count( ti->texture_instance ) > 0 )
-    {
-        m_targettextures_base.erase( ti->texture_instance );
-    }
-    */
 
     if( m_targettextures_base.count( ti->hash ) > 0 )
     {
@@ -1693,6 +1675,8 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         { "TEXCOORD", 6, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 7, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 8, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "BINORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,   0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
     dsstring hash;

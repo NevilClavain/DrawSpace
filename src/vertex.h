@@ -37,7 +37,7 @@ class Vertex
 private:
     void init_text_coords( void )
     {
-        for( long i = 0; i < /*10*/9; i++ )
+        for( long i = 0; i < 9; i++ )
         {
             tu[i] = 0.0;
             tv[i] = 0.0;
@@ -54,12 +54,13 @@ public:
     dsreal	ny;
     dsreal	nz;
 
-    /*
-    float	tu[10];
-    float	tv[10];
-    float	tw[10];
-    float	ta[10];
-    */
+    dsreal	tx;
+    dsreal	ty;
+    dsreal	tz;
+
+    dsreal	bx;
+    dsreal	by;
+    dsreal	bz;
 
     float	tu[9];
     float	tv[9];
@@ -72,7 +73,13 @@ public:
     z( 0.0 ),
     nx( 0.0 ),
     ny( 0.0 ),
-    nz( 0.0 )
+    nz( 0.0 ),
+    tx( 0.0 ),
+    ty( 0.0 ),
+    tz( 0.0 ),
+    bx( 0.0 ),
+    by( 0.0 ),
+    bz( 0.0 )
     {
         init_text_coords();
     };

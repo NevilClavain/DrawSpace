@@ -273,7 +273,9 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         { 0, 120, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 6 },
         { 0, 136, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 7 },
         { 0, 152, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 8 },
-        /*{ 0, 168, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 9 },*/
+        { 0, 168, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
+        { 0, 184, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
+        
         D3DDECL_END()
     };
 
@@ -498,6 +500,15 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
         v->ny = (float)vertex.ny;
         v->nz = (float)vertex.nz;
 
+        v->tx = (float)vertex.tx;
+        v->ty = (float)vertex.ty;
+        v->tz = (float)vertex.tz;
+
+        v->bx = (float)vertex.bx;
+        v->by = (float)vertex.by;
+        v->bz = (float)vertex.bz;
+
+
         v->tu0 = vertex.tu[0];
         v->tu1 = vertex.tu[1];
         v->tu2 = vertex.tu[2];
@@ -647,6 +658,14 @@ bool D3D9Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p
         v->nx = (float)vertex.nx;
         v->ny = (float)vertex.ny;
         v->nz = (float)vertex.nz;
+
+        v->tx = (float)vertex.tx;
+        v->ty = (float)vertex.ty;
+        v->tz = (float)vertex.tz;
+
+        v->bx = (float)vertex.bx;
+        v->by = (float)vertex.by;
+        v->bz = (float)vertex.bz;
 
         v->tu0 = vertex.tu[0];
         v->tu1 = vertex.tu[1];
