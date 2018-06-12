@@ -272,7 +272,7 @@ void Meshe::ComputeNormales( bool p_spherical_normales )
     }
     else
     {
-        for( std::map<long, std::vector<Triangle>>::iterator it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
+        for( auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
         {
             Vector normales_sum;
 
