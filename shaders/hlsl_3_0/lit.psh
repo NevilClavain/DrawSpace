@@ -22,9 +22,12 @@
 */
 /* -*-LIC_END-*- */
 
-float4 Ambient_Color : register(c0);
+float4      Ambient_Color   : register(c0);
+float4      Lights_Enabled  : register(c1);
+float4      Light0_Color    : register(c2);
+float4      Light0_Dir      : register(c3);
 
-sampler2D Texture0 : register(s0);
+sampler2D   Texture0        : register(s0);
 
 struct PS_INTPUT 
 {
@@ -40,21 +43,15 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float4 baseColor = tex2D(Texture0, input.TexCoord0.xy);
 
-    float4 Light0_Color = 1.0;
-
     float3 nNorm = normalize(input.Normale);
+
 	
-
-    float diff;
-
-    float3 ld;
-    ld[0] = 1.0;
-    ld[1] = 1.0;
-    ld[2] = 0.0;
-
-    diff = dot(normalize(ld), nNorm);
-
-    final_color += max(0.0, diff * baseColor * Light0_Color);
+    if (Lights_Enabled.x > 0.0)
+    {
+        float diff;
+        diff = dot(normalize(-Light0_Dir.xyz), nNorm);
+        final_color += max(0.0, diff * baseColor * Light0_Color);        
+    }
 
     final_color += Ambient_Color * baseColor;
     

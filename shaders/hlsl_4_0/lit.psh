@@ -44,26 +44,22 @@ struct PS_INTPUT
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
     float4 Ambient_Color = vec[0];
+    float4 Lights_Enabled = vec[1];
+    float4 Light0_Color = vec[2];
+    float4 Light0_Dir = vec[3];
 
     float4 final_color = 0.0;
 
     float4 baseColor = txDiffuse.Sample(sam, input.TexCoord0);
 
-    float4 Light0_Color = 1.0;
-
-    float3 nNorm = normalize(input.Normale);
+    float3 nNorm = normalize(input.Normale.xyz);
 	
-
-    float diff;
-
-    float3 ld;
-    ld[0] = 1.0;
-    ld[1] = 1.0;
-    ld[2] = 0.0;
-
-    diff = dot(normalize(ld), nNorm);
-
-    final_color += max(0.0, diff * baseColor * Light0_Color);
+    if (Lights_Enabled.x > 0.0)
+    {
+        float diff;
+        diff = dot(normalize(-Light0_Dir.xyz), nNorm);
+        final_color += max(0.0, diff * baseColor * Light0_Color);
+    }
 
     final_color += Ambient_Color * baseColor;
     
