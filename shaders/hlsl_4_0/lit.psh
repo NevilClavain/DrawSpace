@@ -30,19 +30,26 @@ cbuffer legacyargs : register(b0)
 };
 
 
-Texture2D txDiffuse         : register(t0);
-SamplerState sam            : register(s0);
+Texture2D txColor           : register(t0);
+SamplerState samColor       : register(s0);
+
 
 struct PS_INTPUT 
 {
-    float4 Position : SV_POSITION;
-	float2 TexCoord0: TEXCOORD0;
-    float4 Normale : TEXCOORD1;
+    float4 Position         : SV_POSITION;
+	float2 TexCoord0        : TEXCOORD0;
+    float4 Normale          : TEXCOORD1;
+    float4 Half0            : TEXCOORD2;
 };
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
+    float4 spec_flags = vec[7];
+
+    float spec_power = spec_flags.y;
+    bool spec_enabled = spec_flags.x;
+
     float4 Ambient_Color = vec[0];
     float4 Lights_Enabled = vec[1];
     float4 Light0_Color = vec[2];
@@ -50,18 +57,24 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 final_color = 0.0;
 
-    float4 baseColor = txDiffuse.Sample(sam, input.TexCoord0);
-
+    float4 baseColor = txColor.Sample(samColor, input.TexCoord0);
     float3 nNorm = normalize(input.Normale.xyz);
 	
     if (Lights_Enabled.x > 0.0)
     {
         float diff;
+        float spec = 0.0;
+
         diff = dot(normalize(-Light0_Dir.xyz), nNorm);
-        final_color += max(0.0, diff * baseColor * Light0_Color);
+
+        if (spec_enabled)
+        {
+            spec = pow(clamp(dot(nNorm, normalize(input.Half0.xyz)), 0.0, 1.0), spec_power);            
+        }
+
+        final_color += max(0.0, diff * baseColor * Light0_Color) + spec;
     }
 
-    final_color += Ambient_Color * baseColor;
-    
+    final_color += Ambient_Color * baseColor;    
     return saturate(final_color);
 }

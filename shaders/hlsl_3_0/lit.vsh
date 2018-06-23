@@ -25,19 +25,23 @@
 
 float4x4 matWorldViewProjection     : register(c0);
 float4x4 matWorld                   : register(c8);
+float4x4 matCam                     : register(c16);
+float4 Lights_Enabled               : register(c24);
+float4 Light0_Dir                   : register(c25);
 
 struct VS_INPUT 
 {
-   float4 Position  : POSITION0;
-   float3 Normal    : NORMAL0;
-   float4 TexCoord0 : TEXCOORD0;    
+   float4 Position      : POSITION0;
+   float3 Normal        : NORMAL0;
+   float4 TexCoord0     : TEXCOORD0;    
 };
 
 struct VS_OUTPUT 
 {
-   float4 Position  : POSITION0;
-   float4 TexCoord0 : TEXCOORD0;
-   float4 Normale : TEXCOORD1;
+   float4 Position      : POSITION0;
+   float4 TexCoord0     : TEXCOORD0;
+   float4 Normale       : TEXCOORD1;
+   float4 Half0         : TEXCOORD2;
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
@@ -54,6 +58,30 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     worldRot[2][3] = 0.0;
 
     Output.Normale = mul(Input.Normal, worldRot);
+
+    float4 CamPos;
+    float4 Pos2;
+    float3 nView;
+    float3 nLight;
+
+    CamPos[0] = matCam[3][0];
+    CamPos[1] = matCam[3][1];
+    CamPos[2] = matCam[3][2];
+    CamPos[3] = 1.0;
+
+    Pos2 = mul(Input.Position, matWorld);
+    nView = normalize(CamPos.xyz - Pos2.xyz);
+
+    if (Lights_Enabled.x > 0.0)
+    {
+        nLight = normalize(-Light0_Dir.xyz);
+        Output.Half0.xyz = (nLight + nView);
+        Output.Half0[3] = 0.0;
+    }
+    else
+    {
+        Output.Half0 = 0.0;
+    }
 
     return( Output );   
 }
