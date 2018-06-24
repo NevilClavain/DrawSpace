@@ -123,5 +123,8 @@
     <FxCompile Include="lit.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="generic_rendering.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

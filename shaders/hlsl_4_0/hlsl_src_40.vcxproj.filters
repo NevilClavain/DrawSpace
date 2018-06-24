@@ -126,5 +126,8 @@
     <FxCompile Include="lit.psh">
       <Filter>pixel_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="generic_rendering.hlsl">
+      <Filter>commons</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

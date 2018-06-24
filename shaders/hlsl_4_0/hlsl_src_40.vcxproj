@@ -13,6 +13,7 @@
   <ItemGroup>
     <FxCompile Include="atmospheric_scattering.hlsl" />
     <FxCompile Include="fbm.hlsl" />
+    <FxCompile Include="generic_rendering.hlsl" />
     <FxCompile Include="landscapes.hlsl" />
     <FxCompile Include="mat_input_constants.hlsl" />
     <FxCompile Include="multifbm_height.hlsl" />
