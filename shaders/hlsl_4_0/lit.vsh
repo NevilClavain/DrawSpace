@@ -30,6 +30,7 @@ cbuffer legacyargs : register(b0)
 };
 
 #include "mat_input_constants.hlsl"
+#include "generic_rendering.hlsl"
 
 struct VS_INPUT
 {
@@ -65,37 +66,16 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.Position = mul(pos, mat_WorldViewProj);
     Output.TexCoord0 = Input.TexCoord0.xy;
 
-	// NORMAL : pour lumieres diffuses : NORMAL transformee (sans les translations) dans repere world
-    float4x4 worldRot = mat[matWorld];
-    worldRot[0][3] = 0.0;
-    worldRot[1][3] = 0.0;
-    worldRot[2][3] = 0.0;
-
-    Output.Normale = mul(Input.Normal, worldRot);
-
-    float4 CamPos;
-    float4 Pos2;
-    float3 nView;
-    float3 nLight;
-
-    CamPos[0] = mat_Cam[3][0];
-    CamPos[1] = mat_Cam[3][1];
-    CamPos[2] = mat_Cam[3][2];
-    CamPos[3] = 1.0;
-
-    Pos2 = mul(pos, mat_World);
-    nView = normalize(CamPos.xyz - Pos2.xyz);
+    Output.Normale = TransformedNormaleForLights(Input.Normal, mat_World);
 
     if (Lights_Enabled.x > 0.0)
     {
-        nLight = normalize(-Light0_Dir.xyz);
-        Output.Half0.xyz = (nLight + nView);
-        Output.Half0[3] = 0.0;
+        Output.Half0 = HalfVectorForLights(pos, Light0_Dir, mat_Cam, mat_World);
     }
     else
     {
         Output.Half0 = 0.0;
-    } 
+    }
     return (Output);
 
 }

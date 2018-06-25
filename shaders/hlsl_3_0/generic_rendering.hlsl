@@ -49,3 +49,38 @@ float4 reflectedVertexPos(float4 p_vertex, float4 p_reflectorPos, float4 p_refle
     rvp = mul(viewPos, p_matProj);
     return rvp;
 }
+
+//pour lumieres diffuses : NORMAL transformee (sans les translations)
+//dans repereworld
+float4 TransformedNormaleForLights(float3 p_normale, float4x4 p_worldmat)
+{
+    float4x4 worldRot = p_worldmat;
+    worldRot[0][3] = 0.0;
+    worldRot[1][3] = 0.0;
+    worldRot[2][3] = 0.0;
+    return mul(p_normale, worldRot);
+}
+
+// compute half-vector for specular lights
+float4 HalfVectorForLights(float4 p_pos, float4 p_lightdir, float4x4 p_cammat, float4x4 p_worldmat)
+{
+    float4 CamPos;
+    float4 Pos2;
+    float3 nView;
+    float3 nLight;
+
+    CamPos[0] = p_cammat[3][0];
+    CamPos[1] = p_cammat[3][1];
+    CamPos[2] = p_cammat[3][2];
+    CamPos[3] = 1.0;
+
+    Pos2 = mul(p_pos, p_worldmat);
+    nView = normalize(CamPos.xyz - Pos2.xyz);
+
+    nLight = normalize(-p_lightdir.xyz);
+
+    float4 H;
+    H.xyz = nLight + nView;
+    H.w = 0.0;
+    return H;
+}

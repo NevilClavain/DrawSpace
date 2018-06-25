@@ -44,6 +44,8 @@ struct VS_OUTPUT
    float4 Half0         : TEXCOORD2;
 };
 
+#include "generic_rendering.hlsl"
+
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
     VS_OUTPUT Output;
@@ -51,35 +53,14 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     Output.Position = mul( Input.Position, matWorldViewProjection );
     Output.TexCoord0 = Input.TexCoord0;
 
-	// NORMAL : pour lumieres diffuses : NORMAL transformee (sans les translations) dans repere world
-    float4x4 worldRot = matWorld;
-    worldRot[0][3] = 0.0;
-    worldRot[1][3] = 0.0;
-    worldRot[2][3] = 0.0;
-
-    Output.Normale = mul(Input.Normal, worldRot);
-
-    float4 CamPos;
-    float4 Pos2;
-    float3 nView;
-    float3 nLight;
-
-    CamPos[0] = matCam[3][0];
-    CamPos[1] = matCam[3][1];
-    CamPos[2] = matCam[3][2];
-    CamPos[3] = 1.0;
-
-    Pos2 = mul(Input.Position, matWorld);
-    nView = normalize(CamPos.xyz - Pos2.xyz);
+    Output.Normale = TransformedNormaleForLights(Input.Normal, matWorld);
 
     if (Lights_Enabled.x > 0.0)
     {
-        nLight = normalize(-Light0_Dir.xyz);
-        Output.Half0.xyz = (nLight + nView);
-        Output.Half0[3] = 0.0;
+        Output.Half0 = HalfVectorForLights(Input.Position, Light0_Dir, matCam, matWorld);
     }
     else
-    {
+    {        
         Output.Half0 = 0.0;
     }
 
