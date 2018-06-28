@@ -42,6 +42,7 @@ struct PS_INTPUT
     float4 Half0            : TEXCOORD2;
 };
 
+#include "generic_rendering.hlsl"
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
@@ -58,23 +59,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 final_color = 0.0;
 
     float4 baseColor = txColor.Sample(samColor, input.TexCoord0);
-    float3 nNorm = normalize(input.Normale.xyz);
-	
-    if (Lights_Enabled.x > 0.0)
-    {
-        float diff;
-        float spec = 0.0;
 
-        diff = dot(normalize(-Light0_Dir.xyz), nNorm);
-
-        if (spec_enabled)
-        {
-            spec = pow(clamp(dot(nNorm, normalize(input.Half0.xyz)), 0.0, 1.0), spec_power);            
-        }
-
-        final_color += max(0.0, diff * baseColor * Light0_Color) + spec;
-    }
-
-    final_color += Ambient_Color * baseColor;    
+    final_color += computePixelColorFromLight(baseColor, Ambient_Color, (bool)Lights_Enabled.x, Light0_Color,
+                                                Light0_Dir, input.Normale, spec_enabled, spec_power, input.Half0);
     return saturate(final_color);
 }

@@ -84,3 +84,29 @@ float4 HalfVectorForLights(float4 p_pos, float4 p_lightdir, float4x4 p_cammat, f
     H.w = 0.0;
     return H;
 }
+
+
+// compute pixel color combined from base color and light parameters
+float4 computePixelColorFromLight(float4 p_basecolor,
+                                    float4 p_ambient_color, bool p_light_enabled, float4 p_light_color, float4 p_light_dir, 
+                                    float4 p_normale, bool p_spec_enabled, float p_spec_power, float4 p_half0)
+{
+    float4 final_color = 0.0;
+    float3 nNorm = normalize(p_normale);
+
+    if (p_light_enabled)
+    {
+        float diff;
+        float spec = 0.0;
+
+        diff = dot(normalize(-p_light_dir.xyz), nNorm);
+        if (p_spec_enabled)
+        {
+            spec = pow(clamp(dot(nNorm, normalize(p_half0.xyz)), 0.0, 1.0), p_spec_power);
+        }
+
+        final_color += max(0.0, diff * p_basecolor * p_light_color) + spec;
+    }
+    final_color += p_ambient_color * p_basecolor;
+    return saturate(final_color);
+}
