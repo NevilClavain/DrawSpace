@@ -27,6 +27,10 @@ float4      Lights_Enabled  : register(c1);
 float4      Light0_Color    : register(c2);
 float4      Light0_Dir      : register(c3);
 float4      SpecFlags       : register(c7);
+float4      self_emissive   : register(c8);
+float4      absorption      : register(c9);
+float4      color           : register(c10);
+float4      color_source    : register(c11);
 
 sampler2D   Texture0        : register(s0);
 
@@ -45,12 +49,18 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     float spec_power = SpecFlags.y;
     bool spec_enabled = SpecFlags.x;
 
+    absorption = 1.0 - absorption;
+
     float4 final_color = 0.0;
 
-    float4 baseColor = tex2D(Texture0, input.TexCoord0.xy);
+    float4 base_color = (color_source * tex2D(Texture0, input.TexCoord0.xy)) + ((1.0 - color_source) * color);
 
-    final_color += computePixelColorFromLight(baseColor, Ambient_Color, (bool)Lights_Enabled.x, Light0_Color,
+    float4 pixel_light_color = 0.0;
+
+    pixel_light_color += computePixelColorFromLight(base_color, Ambient_Color, (bool) Lights_Enabled.x, Light0_Color,
                                                 Light0_Dir, input.Normale, spec_enabled, spec_power, input.Half0);
+
+    final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
 
     return saturate(final_color);
 }

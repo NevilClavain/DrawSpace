@@ -44,9 +44,24 @@ struct PS_INTPUT
 
 #include "generic_rendering.hlsl"
 
+// base_color = (bf * texture) + ((1-bf) * input_color )
+
+// pl = f(base_color, lights)
+
+// em = self-emissive
+// ab = lightabsorption
+ 
+// (1-em) * (ab * pl) + (em * base_color)
+
 float4 ps_main(PS_INTPUT input) : SV_Target
-{   
+{
+    float4 final_color = 0.0;
+
     float4 spec_flags = vec[7];
+    float4 self_emissive = vec[8];
+    float4 absorption = 1.0 - vec[9];
+    float4 color = vec[10];
+    float4 color_source = vec[11];
 
     float spec_power = spec_flags.y;
     bool spec_enabled = spec_flags.x;
@@ -56,11 +71,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 Light0_Color = vec[2];
     float4 Light0_Dir = vec[3];
 
-    float4 final_color = 0.0;
 
-    float4 baseColor = txColor.Sample(samColor, input.TexCoord0);
+    float4 base_color = (color_source * txColor.Sample(samColor, input.TexCoord0)) + ((1.0 - color_source) * color);
 
-    final_color += computePixelColorFromLight(baseColor, Ambient_Color, (bool)Lights_Enabled.x, Light0_Color,
+    float4 pixel_light_color = 0.0;
+
+    pixel_light_color += computePixelColorFromLight(base_color, Ambient_Color, (bool) Lights_Enabled.x, Light0_Color,
                                                 Light0_Dir, input.Normale, spec_enabled, spec_power, input.Half0);
+
+    final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
+
     return saturate(final_color);
 }
