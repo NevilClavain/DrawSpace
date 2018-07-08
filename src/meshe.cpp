@@ -255,52 +255,36 @@ void Meshe::GetMD5( dsstring& p_md5 )
     delete[] tbuff;
 }
 
-void Meshe::ComputeNormales( bool p_spherical_normales )
+void Meshe::ComputeNormales( void )
 {
-    if( p_spherical_normales )
+    for( auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
     {
-        for( size_t i = 0; i < m_vertices.size(); i++ )
+        Vector normales_sum;
+
+        std::vector<Triangle> triangles_list = it->second;
+
+        for( size_t i = 0; i < triangles_list.size(); i++ )
         {
-            Vector v( m_vertices[i].x, m_vertices[i].y, m_vertices[i].z, 1.0 );
+            Triangle triangle = triangles_list[i];
+            Vertex v1 = m_vertices[triangle.vertex1];
+            Vertex v2 = m_vertices[triangle.vertex2];
+            Vertex v3 = m_vertices[triangle.vertex3];
 
-            v.Normalize();
+            Vector d1( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0 );
+            Vector d2( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0 );
 
-            m_vertices[i].nx = v[0];
-            m_vertices[i].ny = v[1];
-            m_vertices[i].nz = v[2];
+            Vector res = ProdVec( d1, d2 );
+            res.Normalize();
+
+            normales_sum = normales_sum + res;
         }
-    }
-    else
-    {
-        for( auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
-        {
-            Vector normales_sum;
 
-            std::vector<Triangle> triangles_list = it->second;
+        normales_sum.Scale( 1.0 / triangles_list.size() );
+        normales_sum.Normalize();
 
-            for( size_t i = 0; i < triangles_list.size(); i++ )
-            {
-                Triangle triangle = triangles_list[i];
-                Vertex v1 = m_vertices[triangle.vertex1];
-                Vertex v2 = m_vertices[triangle.vertex2];
-                Vertex v3 = m_vertices[triangle.vertex3];
-
-                Vector d1( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0 );
-                Vector d2( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0 );
-
-                Vector res = ProdVec( d1, d2 );
-                res.Normalize();
-
-                normales_sum = normales_sum + res;
-            }
-
-            normales_sum.Scale( 1.0 / triangles_list.size() );
-            normales_sum.Normalize();
-
-            m_vertices[it->first].nx = normales_sum[0];
-            m_vertices[it->first].ny = normales_sum[1];
-            m_vertices[it->first].nz = normales_sum[2];
-        }
+        m_vertices[it->first].nx = normales_sum[0];
+        m_vertices[it->first].ny = normales_sum[1];
+        m_vertices[it->first].nz = normales_sum[2];
     }
 }
 
