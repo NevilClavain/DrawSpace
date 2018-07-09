@@ -31,8 +31,7 @@
 #include "ac3dmeshe.h"
 #include "renderer.h"
 #include "plugin.h"
-
-
+#include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -259,6 +258,8 @@ void Meshe::ComputeNormales( void )
 {
     for( auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
     {
+        Vector tangents_sum;
+        Vector binormales_sum;
         Vector normales_sum;
 
         std::vector<Triangle> triangles_list = it->second;
@@ -270,21 +271,34 @@ void Meshe::ComputeNormales( void )
             Vertex v2 = m_vertices[triangle.vertex2];
             Vertex v3 = m_vertices[triangle.vertex3];
 
-            Vector d1( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0 );
-            Vector d2( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0 );
+            Vector t, b, n;
+            compute_TBN( v1, v2, v3, 0, t, b, n );
 
-            Vector res = ProdVec( d1, d2 );
-            res.Normalize();
-
-            normales_sum = normales_sum + res;
+            normales_sum = normales_sum + n;
+            binormales_sum = binormales_sum + b;
+            tangents_sum = tangents_sum + t;
         }
 
         normales_sum.Scale( 1.0 / triangles_list.size() );
         normales_sum.Normalize();
 
+        binormales_sum.Scale( 1.0 / triangles_list.size() );
+        binormales_sum.Normalize();
+
+        tangents_sum.Scale( 1.0 / triangles_list.size() );
+        tangents_sum.Normalize();
+
         m_vertices[it->first].nx = normales_sum[0];
         m_vertices[it->first].ny = normales_sum[1];
         m_vertices[it->first].nz = normales_sum[2];
+
+        m_vertices[it->first].bx = binormales_sum[0];
+        m_vertices[it->first].by = binormales_sum[1];
+        m_vertices[it->first].bz = binormales_sum[2];
+
+        m_vertices[it->first].tx = tangents_sum[0];
+        m_vertices[it->first].ty = tangents_sum[1];
+        m_vertices[it->first].tz = tangents_sum[2];
     }
 }
 
@@ -306,4 +320,47 @@ void Meshe::GetPath( dsstring& p_path )
 void Meshe::SetPath( const dsstring& p_path )
 {
     m_path = p_path;
+}
+
+void Meshe::compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
+                    Vector& p_T, Vector& p_B, Vector& p_N )
+{
+    Vector v2v1( p_v2.x - p_v1.x, p_v2.y- p_v1.y, p_v2.z - p_v1.z, 1.0 );
+    Vector v3v1( p_v3.x - p_v1.x, p_v3.y- p_v1.y, p_v3.z - p_v1.z, 1.0 );
+
+    dsreal c2c1t;
+    dsreal c2c1b;
+
+    dsreal c3c1t;
+    dsreal c3c1b;
+
+    c2c1t = p_v2.tu[p_stage] - p_v1.tu[p_stage];
+    c2c1b = p_v2.tv[p_stage] - p_v1.tv[p_stage];
+
+    c3c1t = p_v3.tu[p_stage] - p_v1.tu[p_stage];
+    c3c1b = p_v3.tv[p_stage] - p_v1.tv[p_stage];
+
+    dsreal det = (c2c1t * c3c1b) - (c3c1t * c2c1b);
+
+    Vector t, b, n;
+
+    t[0] = ( ( c3c1b * v2v1[0] ) - ( c2c1b * v3v1[0] ) ) / det;
+    t[1] = ( ( c3c1b * v2v1[1] ) - ( c2c1b * v3v1[1] ) ) / det;
+    t[2] = ( ( c3c1b * v2v1[2] ) - ( c2c1b * v3v1[2] ) ) / det;
+    t[3] = 1.0;
+
+    b[0] = ( ( -c3c1t * v2v1[0] ) + ( c2c1t * v3v1[0] ) ) / det;
+    b[1] = ( ( -c3c1t * v2v1[1] ) + ( c2c1t * v3v1[1] ) ) / det;
+    b[2] = ( ( -c3c1t * v2v1[2] ) + ( c2c1t * v3v1[2] ) ) / det;
+    b[3] = 1.0;
+
+    n = ProdVec( b, t );
+
+    t.Normalize();
+    b.Normalize();
+    n.Normalize();
+
+    p_T = t;
+    p_B = b;
+    p_N = n;
 }

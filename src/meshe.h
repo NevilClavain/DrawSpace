@@ -56,6 +56,9 @@ protected:
 
     dsstring                                    m_path;
 
+    void compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
+                        Utils::Vector& p_T, Utils::Vector& p_B, Utils::Vector& p_N );
+
 public:
 
     Meshe( void );
