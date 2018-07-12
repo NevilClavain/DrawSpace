@@ -29,17 +29,17 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-
 Texture2D txColor           : register(t0);
 SamplerState samColor       : register(s0);
 
-
 struct PS_INTPUT 
 {
-    float4 Position         : SV_POSITION;
-	float2 TexCoord0        : TEXCOORD0;
-    float4 Normale          : TEXCOORD1;
-    float4 Half0            : TEXCOORD2;
+    float4 Position     : SV_POSITION;
+    float2 TexCoord0    : TEXCOORD0;
+    float4 Normale      : TEXCOORD1;
+    float4 Tangent      : TEXCOORD2;
+    float4 Binormale    : TEXCOORD3;
+    float4 Half0        : TEXCOORD4;
 };
 
 #include "generic_rendering.hlsl"

@@ -36,6 +36,8 @@ struct VS_INPUT
 {
     float3 Position     : POSITION;
     float3 Normal       : NORMALE;
+    float3 Tangent      : TANGENT;
+    float3 Binormale    : BINORMALE;
     float4 TexCoord0    : TEXCOORD0;
 };
 
@@ -44,7 +46,9 @@ struct VS_OUTPUT
     float4 Position     : SV_POSITION;
     float2 TexCoord0    : TEXCOORD0;
     float4 Normale      : TEXCOORD1;
-    float4 Half0        : TEXCOORD2;
+    float4 Tangent      : TEXCOORD2;
+    float4 Binormale    : TEXCOORD3;
+    float4 Half0        : TEXCOORD4;
 };
 
 VS_OUTPUT vs_main(VS_INPUT Input)
@@ -67,6 +71,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.TexCoord0 = Input.TexCoord0.xy;
 
     Output.Normale = TransformedNormaleForLights(Input.Normal, mat_World);
+
+    Output.Tangent.xyz = Input.Tangent;
+    Output.Tangent.w = 1.0;
+
+    Output.Binormale.xyz = Input.Binormale;
+    Output.Binormale.w = 1.0;
 
     if (Lights_Enabled.x > 0.0)
     {
