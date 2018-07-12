@@ -94,7 +94,7 @@ void RenderPassNode::Erase( void )
     if( !m_tree_node->is_root() )
     {
         PassDescr* parent_pass = m_tree_node->parent().data();
-        for( size_t i = 0; i < parent_pass->m_viewportquad->GetTextureListSize(); i++ )
+        for( long i = 0; i < parent_pass->m_viewportquad->GetTextureListSize(); i++ )
         {
             Texture* parent_texture = parent_pass->m_viewportquad->GetTexture( i );
 
