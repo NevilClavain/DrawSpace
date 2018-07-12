@@ -70,7 +70,10 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.Position = mul(pos, mat_WorldViewProj);
     Output.TexCoord0 = Input.TexCoord0.xy;
 
-    Output.Normale = TransformedNormaleForLights(Input.Normal, mat_World);
+    //Output.Normale = TransformedNormaleForLights(Input.Normal, mat_World);
+
+    Output.Normale.xyz = Input.Normal;
+    Output.Normale.w = 1.0;
 
     Output.Tangent.xyz = Input.Tangent;
     Output.Tangent.w = 1.0;

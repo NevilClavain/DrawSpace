@@ -42,6 +42,7 @@ struct PS_INTPUT
     float4 Half0        : TEXCOORD4;
 };
 
+#include "mat_input_constants.hlsl"
 #include "generic_rendering.hlsl"
 
 // base_color = (bf * texture) + ((1-bf) * input_color )
@@ -71,13 +72,17 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 Light0_Color = vec[2];
     float4 Light0_Dir = vec[3];
 
+    float4x4 mat_World = mat[matWorld_ps];
+
+    float4 tn = TransformedNormaleForLights(input.Normale.xyz, mat_World);
+
 
     float4 base_color = (color_source * txColor.Sample(samColor, input.TexCoord0)) + ((1.0 - color_source) * color);
 
     float4 pixel_light_color = 0.0;
 
     pixel_light_color += computePixelColorFromLight(base_color, Ambient_Color, (bool) Lights_Enabled.x, Light0_Color,
-                                                Light0_Dir, input.Normale, spec_enabled, spec_power, input.Half0);
+                                                Light0_Dir, /*input.Normale*/tn, spec_enabled, spec_power, input.Half0);
 
     final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
 
