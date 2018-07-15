@@ -33,15 +33,19 @@ struct VS_INPUT
 {
    float4 Position      : POSITION0;
    float3 Normal        : NORMAL0;
+   float3 Tangent       : TANGENT0;
+   float3 Binormale     : BINORMAL0;
    float4 TexCoord0     : TEXCOORD0;    
 };
 
 struct VS_OUTPUT 
 {
-   float4 Position      : POSITION0;
-   float4 TexCoord0     : TEXCOORD0;
-   float4 Normale       : TEXCOORD1;
-   float4 Half0         : TEXCOORD2;
+    float4 Position     : POSITION0;
+    float2 TexCoord0    : TEXCOORD0;
+    float4 Normale      : TEXCOORD1;
+    float4 Tangent      : TEXCOORD2;
+    float4 Binormale    : TEXCOORD3;
+    float4 Half0        : TEXCOORD4;
 };
 
 #include "generic_rendering.hlsl"
@@ -53,7 +57,16 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     Output.Position = mul( Input.Position, matWorldViewProjection );
     Output.TexCoord0 = Input.TexCoord0;
 
-    Output.Normale = TransformedNormaleForLights(Input.Normal, matWorld);
+    //Output.Normale = TransformedNormaleForLights(Input.Normal, matWorld);
+
+    Output.Normale.xyz = Input.Normal;
+    Output.Normale.w = 1.0;
+
+    Output.Tangent.xyz = Input.Tangent;
+    Output.Tangent.w = 1.0;
+
+    Output.Binormale.xyz = Input.Binormale;
+    Output.Binormale.w = 1.0;
 
     if (Lights_Enabled.x > 0.0)
     {

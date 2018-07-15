@@ -274,40 +274,6 @@ void Meshe::ComputeNormales( void )
             Vector t, b, n;
             compute_TBN( v1, v2, v3, 0, t, b, n );
 
-            //test purpose
-            /*
-            Vector zn( 0.0, 0.0, 1.0, 1.0 );
-            Matrix m;
-
-            m( 0, 0 ) = t[0];
-            m( 1, 0 ) = t[1];
-            m( 2, 0 ) = t[2];
-            m( 3, 0 ) = 0.0;
-
-            m( 0, 1 ) = b[0];
-            m( 1, 1 ) = b[1];
-            m( 2, 1 ) = b[2];
-            m( 3, 1 ) = 0.0;
-
-            m( 0, 2 ) = n[0];
-            m( 1, 2 ) = n[1];
-            m( 2, 2 ) = n[2];
-            m( 3, 2 ) = 0.0;
-
-            m( 0, 3 ) = 0.0;
-            m( 1, 3 ) = 0.0;
-            m( 2, 3 ) = 0.0;
-            m( 3, 3 ) = 1.0;
-
-            m.Transpose();
-
-            Vector out;
-
-            m.Transform( &zn, &out );
-
-            _asm nop
-            */
-
             normales_sum = normales_sum + n;
             binormales_sum = binormales_sum + b;
             tangents_sum = tangents_sum + t;         

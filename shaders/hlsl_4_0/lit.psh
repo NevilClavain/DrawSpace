@@ -74,15 +74,44 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4x4 mat_World = mat[matWorld_ps];
 
-    float4 tn = TransformedNormaleForLights(input.Normale.xyz, mat_World);
+    float4 local_normale = { 0.0, 0.0, 1.0, 1.0 };
 
+    local_normale = normalize(local_normale);
+
+    float4x4 tbn_mat;
+
+    tbn_mat[0][0] = input.Tangent[0];
+    tbn_mat[1][0] = input.Tangent[1];
+    tbn_mat[2][0] = input.Tangent[2];
+    tbn_mat[3][0] = 0.0;
+
+    tbn_mat[0][1] = input.Binormale[0];
+    tbn_mat[1][1] = input.Binormale[1];
+    tbn_mat[2][1] = input.Binormale[2];
+    tbn_mat[3][1] = 0.0;
+
+    tbn_mat[0][2] = input.Normale[0];
+    tbn_mat[1][2] = input.Normale[1];
+    tbn_mat[2][2] = input.Normale[2];
+    tbn_mat[3][2] = 0.0;
+
+    tbn_mat[0][3] = 0.0;
+    tbn_mat[1][3] = 0.0;
+    tbn_mat[2][3] = 0.0;
+    tbn_mat[3][3] = 1.0;
+
+    transpose(tbn_mat);
+
+    float4 object_normale = mul(tbn_mat, local_normale);
+
+    float4 world_normale = TransformedNormaleForLights(object_normale, mat_World);
 
     float4 base_color = (color_source * txColor.Sample(samColor, input.TexCoord0)) + ((1.0 - color_source) * color);
 
     float4 pixel_light_color = 0.0;
 
     pixel_light_color += computePixelColorFromLight(base_color, Ambient_Color, (bool) Lights_Enabled.x, Light0_Color,
-                                                Light0_Dir, /*input.Normale*/tn, spec_enabled, spec_power, input.Half0);
+                                                Light0_Dir, world_normale, spec_enabled, spec_power, input.Half0);
 
     final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
 
