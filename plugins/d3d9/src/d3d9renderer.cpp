@@ -273,8 +273,8 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
         { 0, 120, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 6 },
         { 0, 136, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 7 },
         { 0, 152, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 8 },
-        { 0, 168, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
-        { 0, 184, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
+        { 0, 168, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
+        { 0, 180, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 },
         
         D3DDECL_END()
     };
@@ -477,7 +477,9 @@ bool D3D9Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
                                                                                         D3DFVF_TEX5 |
                                                                                         D3DFVF_TEX6 |
                                                                                         D3DFVF_TEX7 |
-                                                                                        D3DFVF_TEX8, D3DPOOL_DEFAULT, &meshe_data->vertex_buffer, NULL );
+                                                                                        D3DFVF_TEX8 |
+                                                                                        D3DFVF_NORMAL |
+                                                                                        D3DFVF_NORMAL, D3DPOOL_DEFAULT, &meshe_data->vertex_buffer, NULL );
     D3D9_CHECK( CreateVertexBuffer );
 
     hRes = m_lpd3ddevice->CreateIndexBuffer( nb_triangles * sizeof( d3d9triangle ), 0, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &meshe_data->index_buffer, NULL );	
