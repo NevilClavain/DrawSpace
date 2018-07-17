@@ -110,3 +110,61 @@ float4 computePixelColorFromLight(float4 p_basecolor,
     final_color += p_ambient_color * p_basecolor;
     return saturate(final_color);
 }
+
+float4 bump_bias_vector(float2 p_tex_coords, Texture2D p_txBump, SamplerState p_samBump, int p_texture_resol, float p_vector_bias)
+{
+    float texel_size = 1.0 / (float)p_texture_resol;
+
+    float2 left_coords = p_tex_coords;
+    left_coords.x -= texel_size;
+
+    float2 right_coords = p_tex_coords;
+    right_coords.x += texel_size;
+
+    float2 up_coords = p_tex_coords;
+    up_coords.y -= texel_size;
+
+    float2 down_coords = p_tex_coords;
+    down_coords.y += texel_size;
+
+
+    float4 bump_left = p_txBump.Sample(p_samBump, left_coords);
+    float4 bump_right = p_txBump.Sample(p_samBump, right_coords);
+    float4 bump_up = p_txBump.Sample(p_samBump, up_coords);
+    float4 bump_down = p_txBump.Sample(p_samBump, down_coords);
+
+    float bump_center = p_txBump.Sample(p_samBump, down_coords).x;
+
+    float vector_bias = p_vector_bias;
+    float3 vec_left;
+    vec_left.x = -vector_bias;
+    vec_left.y = 0.0;
+    vec_left.z = (bump_left - bump_center);
+
+    float3 vec_right;
+    vec_right.x = vector_bias;
+    vec_right.y = 0.0;
+    vec_right.z = (bump_right - bump_center);
+
+    float3 vec_up;
+    vec_up.x = 0.0;
+    vec_up.y = -vector_bias;
+    vec_up.z = (bump_up - bump_center);
+
+    float3 vec_down;
+    vec_down.x = 0.0;
+    vec_down.y = vector_bias;
+    vec_down.z = (bump_down - bump_center);
+
+    float3 vec1 = normalize(cross(vec_right, vec_down));
+    float3 vec2 = normalize(cross(vec_down, vec_left));
+    float3 vec3 = normalize(cross(vec_left, vec_up));
+    float3 vec4 = normalize(cross(vec_up, vec_right));
+
+    float4 avg; 
+    
+    avg.xyz = normalize(0.25 * (vec1 + vec2 + vec3 + vec4));
+    avg.w = 1.0;
+
+    return avg;
+}

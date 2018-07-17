@@ -32,6 +32,9 @@ cbuffer legacyargs : register(b0)
 Texture2D txColor           : register(t0);
 SamplerState samColor       : register(s0);
 
+Texture2D txBump            : register(t1);
+SamplerState samBump        : register(s1);
+
 struct PS_INTPUT 
 {
     float4 Position     : SV_POSITION;
@@ -74,7 +77,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4x4 mat_World = mat[matWorld_ps];
 
-    float4 local_normale = { 0.0, 0.0, 1.0, 1.0 };
+    float4 local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, 512, 0.15);
 
     local_normale = normalize(local_normale);
 

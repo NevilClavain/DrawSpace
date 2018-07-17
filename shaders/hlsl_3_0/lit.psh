@@ -35,6 +35,7 @@ float4      color_source    : register(c11);
 float4x4    matWorld        : register(c108);
 
 sampler2D   Texture0        : register(s0);
+sampler2D   BumpTexture     : register(s1);
 
 struct PS_INTPUT 
 {
@@ -66,8 +67,12 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     float4 final_color = 0.0;
 
-
+    /*
     float4 local_normale = { 0.0, 0.0, 1.0, 1.0 };
+    local_normale = normalize(local_normale);
+    */
+
+    float4 local_normale = bump_bias_vector(input.TexCoord0, BumpTexture, 512, 0.85);
     local_normale = normalize(local_normale);
 
     float4x4 tbn_mat;
