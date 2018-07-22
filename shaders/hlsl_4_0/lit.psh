@@ -48,6 +48,12 @@ struct PS_INTPUT
 #include "mat_input_constants.hlsl"
 #include "generic_rendering.hlsl"
 
+// Flags ->
+//          
+//          .x = specular power; if == 0.0 specular is deactivated
+//          .y = bump mapping bias. if == 0.0, bump mapping is deactivated
+//          .z = texture size
+
 // base_color = (bf * texture) + ((1-bf) * input_color )
 
 // pl = f(base_color, lights)
@@ -61,14 +67,22 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float4 final_color = 0.0;
 
-    float4 spec_flags = vec[7];
+    float4 flags = vec[7];
     float4 self_emissive = vec[8];
     float4 absorption = 1.0 - vec[9];
     float4 color = vec[10];
     float4 color_source = vec[11];
 
-    float spec_power = spec_flags.y;
-    bool spec_enabled = spec_flags.x;
+    float spec_power = flags.x;
+    bool spec_enabled = false;
+
+    if (spec_power > 0.0)
+    {
+        spec_enabled = true;
+    }
+
+    int texture_size = flags.z;
+    float bump_bias = flags.y;
 
     float4 Ambient_Color = vec[0];
     float4 Lights_Enabled = vec[1];
@@ -77,9 +91,20 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4x4 mat_World = mat[matWorld_ps];
 
-    float4 local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, 512, 0.15);
+    float4 local_normale;
 
-    local_normale = normalize(local_normale);
+    if (bump_bias > 0.0)
+    {
+        local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, texture_size, bump_bias);
+        local_normale = normalize(local_normale);
+    }
+    else
+    {
+        local_normale.x = 0.0;
+        local_normale.y = 0.0;
+        local_normale.z = 1.0;
+        local_normale.w = 1.0;
+    }
 
     float4x4 tbn_mat;
 
