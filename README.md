@@ -30,6 +30,10 @@ Animated water rendering:
 
 ![alt tag](https://2.bp.blogspot.com/-HnAy0gWSaUU/V9ZWNcaTIGI/AAAAAAAAB2k/0f6tlp99QYQ0iic15LBRxZM1wu6T9OXoQCLcB/s640/water2.jpg)
 
+Material shaders:
+
+![alt tag](https://1.bp.blogspot.com/-aqQActz5-Cw/W1TiUw-LkHI/AAAAAAAADW0/kPXzccgRmcIDiRSuflPfqITef64f6Lr5ACLcBGAs/s1600/bumpmap.jpg)
+
 3D clouds:
 
 ![alt tag](https://1.bp.blogspot.com/-v8Ay57cOyoU/V9ZVmdgARHI/AAAAAAAAB2A/4SaU7m9dmooubJ3PR6tdow8N5KZpituXwCLcB/s640/3Dclouds.jpg)
