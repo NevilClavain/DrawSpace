@@ -27,6 +27,8 @@
 #include "luaclass_entity.h"
 #include "luaclass_matrix.h"
 
+#include "mainservice.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -62,6 +64,7 @@ m_attitude_setted( false ),
 m_mass_setted( false ),
 m_state_setted( false )
 {
+    m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
 }
 
 LuaClass_Body::~LuaClass_Body( void )

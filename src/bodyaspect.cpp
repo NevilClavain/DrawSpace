@@ -212,6 +212,10 @@ btRigidBody* BodyAspect::Init( void )
     }
     else if( meshecollision_shapes.size() )
     {
+        if( COLLIDER != m_mode && ATTRACTOR_COLLIDER != m_mode)
+        {
+            _DSEXCEPTION( "Meshe collision shape is for colliders only !! (see bullet source code)" );        
+        }
         Meshe meshe = meshecollision_shapes[0]->getPurpose().m_meshe;
 
         m_mesh = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
