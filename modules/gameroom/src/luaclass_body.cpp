@@ -47,7 +47,7 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_mass", &LuaClass_Body::LUA_configuremass },
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
     { "configure_state", &LuaClass_Body::LUA_configurestate },
-
+    { "update_state", &LuaClass_Body::LUA_updatestate },
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
 
     { "release", &LuaClass_Body::LUA_release },
@@ -271,6 +271,25 @@ int LuaClass_Body::LUA_configurestate( lua_State* p_L )
     return 0;
 }
 
+int LuaClass_Body::LUA_updatestate( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Body::update_state : argument(s) missing" );
+	}
+
+    bool state = luaL_checkint( p_L, 1 );
+
+    if( NULL == m_entity_body_aspect )
+    {
+        LUA_ERROR( "Body::update_state : no body aspect" );
+    }
+
+    m_entity_body_aspect->GetComponent<bool>( "enable" )->getPurpose() = state;
+
+    return 0;
+}
 
 int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
 {

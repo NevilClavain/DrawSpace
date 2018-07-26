@@ -55,8 +55,8 @@ public:
     int LUA_configuremass( lua_State* p_L );
     int LUA_configuremode( lua_State* p_L );
     int LUA_configurestate( lua_State* p_L );
-
     int LUA_updateattitude( lua_State* p_L );
+    int LUA_updatestate( lua_State* p_L );
 
     int LUA_release( lua_State* p_L );
 
