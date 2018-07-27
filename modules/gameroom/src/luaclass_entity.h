@@ -69,6 +69,7 @@ public:
 
     int LUA_configuretimemmanager( lua_State* p_L );
     int LUA_readtimemmanager( lua_State* p_L );
+    int LUA_updatetimemmanager( lua_State* p_L );
     int LUA_releasetimemmanager( lua_State* p_L );
 
     

@@ -51,6 +51,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "connect_renderingaspect_rendergraph", &LuaClass_Entity::LUA_connect_renderingaspect_rendergraph },
     { "configure_timemanager", &LuaClass_Entity::LUA_configuretimemmanager },
     { "read_timemanager", &LuaClass_Entity::LUA_readtimemmanager },
+    { "update_timemanager", &LuaClass_Entity::LUA_updatetimemmanager },
     { "release_timemanager", &LuaClass_Entity::LUA_releasetimemmanager },
     { "configure_world", &LuaClass_Entity::LUA_configureworld },
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
@@ -177,6 +178,29 @@ int LuaClass_Entity::LUA_readtimemmanager( lua_State* p_L )
     } LUA_CATCH;
 
     return 4;
+}
+
+int LuaClass_Entity::LUA_updatetimemmanager( lua_State* p_L )
+{
+    TimeAspect* time_aspect = m_entity.GetAspect<TimeAspect>();
+    if( NULL == time_aspect )
+    {
+        LUA_ERROR( "Entity::update_timemanager : time aspect doesnt exists in this entity!" );
+    }
+
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{
+        LUA_ERROR( "Entity::update_timemanager : argument(s) missing" );
+	}
+
+    TimeAspect::TimeScale time_scale = static_cast<TimeAspect::TimeScale>( luaL_checkint( p_L, 1 ) );
+    LUA_TRY
+    {
+        time_aspect->GetComponent<TimeAspect::TimeScale>( "time_scale" )->getPurpose() = time_scale;
+
+    } LUA_CATCH;
+    return 0;
 }
 
 int LuaClass_Entity::LUA_releasetimemmanager( lua_State* p_L )
