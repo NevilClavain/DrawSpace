@@ -72,6 +72,8 @@ public:
 
     int LUA_reset( lua_State* p_L );
 
+    int LUA_sleep( lua_State* p_L );
+
     int LUA_settexturesrootpath( lua_State* p_L );
     int LUA_setshadersrootpath( lua_State* p_L );
     int LUA_setmeshesrootpath( lua_State* p_L );

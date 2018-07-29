@@ -72,6 +72,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "set_scriptsrootpath", &LuaClass_Globals::LUA_setscriptsrootpath },
     { "set_virtualfs", &LuaClass_Globals::LUA_setvirtualfs },
 
+    { "sleep", &LuaClass_Globals::LUA_sleep },
     { "reset", &LuaClass_Globals::LUA_reset },
 
 	{ 0, 0 }
@@ -358,5 +359,18 @@ int LuaClass_Globals::LUA_setvirtualfs( lua_State* p_L )
 	dsstring path = luaL_checkstring( p_L, 1 );
 
     File::MountVirtualFS( path );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_sleep( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Globals::sleep : argument(s) missing" );
+	}
+
+    int delayMs = luaL_checkint( p_L, 1 );
+    Sleep( delayMs );
     return 0;
 }
