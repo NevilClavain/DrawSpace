@@ -535,11 +535,12 @@ void BodyAspect::body_state( bool p_enabled )
     {
         if( p_enabled )
         {
+            m_rigidBody->forceActivationState( ACTIVE_TAG );
             m_rigidBody->activate();
         }
         else
         {
-            m_rigidBody->forceActivationState( WANTS_DEACTIVATION );
+            m_rigidBody->forceActivationState( DISABLE_SIMULATION );
         }
 
         m_body_active = p_enabled;
