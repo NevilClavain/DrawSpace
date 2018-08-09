@@ -905,6 +905,11 @@ void MainService::create_ground( void )
 
     ground_bumppass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
 
+
+    ground_bumppass->AddShaderParameter( 1, "bump_bias", 0 );
+    ground_bumppass->SetShaderRealVector( "bump_bias", Vector( 2.7, 0.0, 0.0, 0.0 ) );
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
