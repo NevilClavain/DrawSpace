@@ -56,9 +56,16 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4x4 mat_WorldViewProj = mat[matWorldViewProjection];
     float4x4 mat_World = mat[matWorld];
     float4x4 mat_Cam = mat[matCam];
+    float4x4 mat_View = mat[matView];
+    float4x4 mat_Proj = mat[matProj];
+
 
     float4 Lights_Enabled = vec[24];
     float4 Light0_Dir = vec[25];
+
+    float4 Flags = vec[26];
+    float4 reflectorPos = vec[27];
+    float4 reflectorNormal = vec[28];
 
     /////////////////////////////////////
 
@@ -67,8 +74,14 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     pos.xyz = Input.Position;
     pos.w = 1.0;
 
-    Output.Position = mul(pos, mat_WorldViewProj);
-    Output.TexCoord0 = Input.TexCoord0.xy;
+    if (Flags.x == 1.0)
+    {
+        Output.Position = reflectedVertexPos(pos, reflectorPos, reflectorNormal, mat_World, mat_View, mat_Proj);
+    }
+    else
+    {
+        Output.Position = mul(pos, mat_WorldViewProj);
+    }
 
     Output.Normale.xyz = Input.Normal;
     Output.Normale.w = 1.0;
@@ -79,6 +92,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.Binormale.xyz = Input.Binormale;
     Output.Binormale.w = 1.0;
 
+    Output.TexCoord0 = Input.TexCoord0.xy;
+
     if (Lights_Enabled.x > 0.0)
     {
         Output.Half0 = HalfVectorForLights(pos, Light0_Dir, mat_Cam, mat_World);
@@ -88,5 +103,4 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         Output.Half0 = 0.0;
     }
     return (Output);
-
 }

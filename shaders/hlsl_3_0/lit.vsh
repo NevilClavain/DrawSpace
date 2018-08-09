@@ -24,10 +24,18 @@
 
 
 float4x4 matWorldViewProjection     : register(c0);
+float4x4 matWorldView               : register(c4);
 float4x4 matWorld                   : register(c8);
+float4x4 matView                    : register(c12);
 float4x4 matCam                     : register(c16);
+float4x4 matProj                    : register(c20);
+
 float4 Lights_Enabled               : register(c24);
 float4 Light0_Dir                   : register(c25);
+
+float4 Flags                        : register(c26);
+float4 reflectorPos                 : register(c27);
+float4 reflectorNormal              : register(c28);
 
 struct VS_INPUT 
 {
@@ -50,14 +58,22 @@ struct VS_OUTPUT
 
 #include "generic_rendering.hlsl"
 
+// Flags ->
+//          
+//          .x = 1.0 -> mirror mode activated
+
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
     VS_OUTPUT Output;
 
-    Output.Position = mul( Input.Position, matWorldViewProjection );
-    Output.TexCoord0 = Input.TexCoord0;
-
-    //Output.Normale = TransformedNormaleForLights(Input.Normal, matWorld);
+    if (Flags.x == 1.0)
+    {
+        Output.Position = reflectedVertexPos(Input.Position, reflectorPos, reflectorNormal, matWorld, matView, matProj);
+    }
+    else
+    {
+        Output.Position = mul(Input.Position, matWorldViewProjection);
+    }
 
     Output.Normale.xyz = Input.Normal;
     Output.Normale.w = 1.0;
@@ -67,6 +83,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
     Output.Binormale.xyz = Input.Binormale;
     Output.Binormale.w = 1.0;
+    
+    Output.TexCoord0 = Input.TexCoord0;
 
     if (Lights_Enabled.x > 0.0)
     {
