@@ -74,6 +74,9 @@ public:
 
     int LUA_sleep( lua_State* p_L );
 
+    int LUA_signalrenderscenebegin( lua_State* p_L );
+    int LUA_signalrendersceneend( lua_State* p_L );
+
     int LUA_settexturesrootpath( lua_State* p_L );
     int LUA_setshadersrootpath( lua_State* p_L );
     int LUA_setmeshesrootpath( lua_State* p_L );

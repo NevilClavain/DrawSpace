@@ -98,7 +98,11 @@ void TimeAspect::get_tm( void )
 void TimeAspect::Update( void )
 {
     get_tm();
-    m_tm->Update();
+
+    if( m_active )
+    {
+        m_tm->Update();
+    }
 
     ComponentList<dsstring> strs;
     GetComponentsByType<dsstring>( strs );
@@ -161,6 +165,7 @@ void TimeAspect::Update( void )
 
 void TimeAspect::Activate( void )
 {
+    m_tm->Reset();
     ComponentList<dstime> times_count;
     GetComponentsByType<dstime>( times_count );
 

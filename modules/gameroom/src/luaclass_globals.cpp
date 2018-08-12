@@ -75,6 +75,9 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "sleep", &LuaClass_Globals::LUA_sleep },
     { "reset", &LuaClass_Globals::LUA_reset },
 
+    { "signal_renderscenebegin", &LuaClass_Globals::LUA_signalrenderscenebegin },
+    { "signal_rendersceneend", &LuaClass_Globals::LUA_signalrendersceneend },
+
 	{ 0, 0 }
 };
 
@@ -372,5 +375,33 @@ int LuaClass_Globals::LUA_sleep( lua_State* p_L )
 
     int delayMs = luaL_checkint( p_L, 1 );
     Sleep( delayMs );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_signalrenderscenebegin( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Globals::signal_renderscenebegin : argument(s) missing" );
+	}
+
+    dsstring entitygraph_id = luaL_checkstring( p_L, 1 );
+
+    MainService::GetInstance()->RequestSignalRenderSceneBegin( entitygraph_id );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_signalrendersceneend( lua_State* p_L )
+{
+	int argc = lua_gettop( p_L );
+	if( argc < 1 )
+	{		
+        LUA_ERROR( "Globals::signal_rendersceneend : argument(s) missing" );
+	}
+
+    dsstring entitygraph_id = luaL_checkstring( p_L, 1 );
+
+    MainService::GetInstance()->RequestSignalRenderSceneEnd( entitygraph_id );
     return 0;
 }

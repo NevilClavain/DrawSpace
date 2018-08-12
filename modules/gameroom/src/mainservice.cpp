@@ -386,7 +386,7 @@ void MainService::process_console_command( const dsstring& p_cmd )
     {
         if( m_request_lua_reset )
         {
-            m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneEnd();
+            //m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneEnd();
 
             LuaContext::GetInstance()->Execute( "root_entity:release_timemanager()" );
 
@@ -796,5 +796,29 @@ void MainService::buil_lua_prerequisites( void )
     m_rendergraphs["rg"]->GetRenderGraph().PushSignal_UpdatedRenderingQueues();
 
     m_systemsHub.Init( &m_entitygraphs["eg"]->GetEntityGraph() );
-    m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneBegin();
+    //m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneBegin();
+}
+
+void MainService::RequestSignalRenderSceneBegin( const dsstring& p_entitygraph_id )
+{
+    if( m_entitygraphs.count( p_entitygraph_id ) )
+    {
+        m_entitygraphs[p_entitygraph_id]->GetEntityGraph().PushSignal_RenderSceneBegin();
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown entitygraph id" );
+    }
+}
+
+void MainService::RequestSignalRenderSceneEnd( const dsstring& p_entitygraph_id )
+{
+    if( m_entitygraphs.count( p_entitygraph_id ) )
+    {
+        m_entitygraphs[p_entitygraph_id]->GetEntityGraph().PushSignal_RenderSceneEnd();
+    }
+    else
+    {
+        _DSEXCEPTION( "Unknown entitygraph id" );
+    }
 }

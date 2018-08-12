@@ -104,10 +104,15 @@ void TimeManager::Update( void )
         if( current_tick - m_last_tick >= 1000 )
         {
             m_last_deltatime = current_tick - m_last_tick;
-            m_ready = true;
             m_last_tick = current_tick;
             m_fps = m_frame_count;
             m_frame_count = 0;
+
+            if( m_fps > 1 )
+            {
+                // declare ready only if we get a decent fps
+                m_ready = true;
+            }
         }		
     }
     else

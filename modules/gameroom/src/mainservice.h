@@ -187,6 +187,10 @@ public:
     void RequestMouseCursorDisplayState( bool p_display );
     void RequestMouseCursorCircularMode( bool p_state );
 
+
+    void RequestSignalRenderSceneBegin( const dsstring& p_entitygraph_id );
+    void RequestSignalRenderSceneEnd( const dsstring& p_entitygraph_id );
+
     
 
     friend class BaseSingleton<MainService>;
