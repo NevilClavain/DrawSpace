@@ -102,64 +102,64 @@ void TimeAspect::Update( void )
     if( m_active )
     {
         m_tm->Update();
-    }
 
-    ComponentList<dsstring> strs;
-    GetComponentsByType<dsstring>( strs );
+        ComponentList<dsstring> strs;
+        GetComponentsByType<dsstring>( strs );
 
-    // put current formated date/time in component string[0]
-    struct tm* mytime;
+        // put current formated date/time in component string[0]
+        struct tm* mytime;
 
-    mytime = _gmtime64( &m_current_time );
-    if( mytime )
-    {
-        strs[0]->getPurpose() = asctime( mytime );
-    }
-    else
-    {
-        strs[0]->getPurpose() = "???";
-    }
+        mytime = _gmtime64( &m_current_time );
+        if( mytime )
+        {
+            strs[0]->getPurpose() = asctime( mytime );
+        }
+        else
+        {
+            strs[0]->getPurpose() = "???";
+        }
 
-    ComponentList<dstime> times_count;
-    GetComponentsByType<dstime>( times_count );
-    // update current time
-    times_count[0]->getPurpose() = m_current_time;
+        ComponentList<dstime> times_count;
+        GetComponentsByType<dstime>( times_count );
+        // update current time
+        times_count[0]->getPurpose() = m_current_time;
 
-    ComponentList<int> ints;
-    GetComponentsByType<int>( ints );
+        ComponentList<int> ints;
+        GetComponentsByType<int>( ints );
 
-    // put current fps
+        // put current fps
 
-    if( m_tm->IsReady() )
-    {
-        ints[0]->getPurpose() = m_tm->GetFPS();
-    }
-    else
-    {
-        ints[0]->getPurpose() = 0;
-    }
+        if( m_tm->IsReady() )
+        {
+            ints[0]->getPurpose() = m_tm->GetFPS();
+        }
+        else
+        {
+            ints[0]->getPurpose() = 0;
+        }
 
 
-    // update physic world nb steps
+        // update physic world nb steps
 
-    ints[1]->getPurpose() = m_world_nbsteps;
+        ints[1]->getPurpose() = m_world_nbsteps;
 
-    // update time factor
+        // update time factor
 
-    ComponentList<dsreal> reals;
-    GetComponentsByType<dsreal>( reals );
+        ComponentList<dsreal> reals;
+        GetComponentsByType<dsreal>( reals );
 
-    reals[0]->getPurpose() = m_time_factor;
+        reals[0]->getPurpose() = m_time_factor;
 
-    // gestion scale (ou mode) temp
+        // gestion scale (ou mode) temp
 
-    ComponentList<TimeScale> time_scales;
-    GetComponentsByType<TimeScale>( time_scales );
+        ComponentList<TimeScale> time_scales;
+        GetComponentsByType<TimeScale>( time_scales );
 
-    if( m_mode != time_scales[0]->getPurpose() )
-    {
-        // update !
-        set_time_factor( time_scales[0]->getPurpose() );
+        if( m_mode != time_scales[0]->getPurpose() )
+        {
+            // update !
+            set_time_factor( time_scales[0]->getPurpose() );
+        }
     }
 }
 
@@ -184,6 +184,7 @@ void TimeAspect::Deactivate( void )
 {
     m_timer.SetState( false );
     m_active = false;
+    m_tm->Reset();
 }
 
 void TimeAspect::on_timer( DrawSpace::Utils::Timer* p_timer )

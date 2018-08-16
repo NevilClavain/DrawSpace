@@ -46,8 +46,6 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_attitude", &LuaClass_Body::LUA_configureattitude },
     { "configure_mass", &LuaClass_Body::LUA_configuremass },
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
-    { "configure_state", &LuaClass_Body::LUA_configurestate },
-    { "update_state", &LuaClass_Body::LUA_updatestate },
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
 
     { "release", &LuaClass_Body::LUA_release },
@@ -61,8 +59,7 @@ m_entity_body_aspect( NULL ),
 m_shape_type( -1 ),
 m_mode( BodyAspect::NOT_READY ),
 m_attitude_setted( false ),
-m_mass_setted( false ),
-m_state_setted( false )
+m_mass_setted( false )
 {
     m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
 }
@@ -102,6 +99,9 @@ int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
     // bind transfo and body aspects
     m_entity_transform_aspect->SetImplementation( m_entity_body_aspect->GetTransformAspectImpl() );
 
+    // add bool component for contact state
+    m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
+
     return 0;
 }
 
@@ -111,6 +111,8 @@ int LuaClass_Body::LUA_detachfromentity( lua_State* p_L )
     {
         LUA_ERROR( "Body::detach_fromentity : argument(s) missing" );
     }
+
+    m_entity_body_aspect->RemoveComponent<bool>( "contact_state" );
 
     m_entity_transform_aspect->RemoveImplementation();
 
@@ -248,49 +250,6 @@ int LuaClass_Body::LUA_configuremode( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_Body::LUA_configurestate( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{
-        LUA_ERROR( "Body::configure_state : argument(s) missing" );
-	}
-
-    bool state = luaL_checkint( p_L, 1 );
-
-    if( NULL == m_entity_body_aspect )
-    {
-        LUA_ERROR( "Body::configure_state : no body aspect" );
-    }
-
-    m_entity_body_aspect->AddComponent<bool>( "enable", state );
-    m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
-
-    m_state_setted = true;
-
-    return 0;
-}
-
-int LuaClass_Body::LUA_updatestate( lua_State* p_L )
-{
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{
-        LUA_ERROR( "Body::update_state : argument(s) missing" );
-	}
-
-    bool state = luaL_checkint( p_L, 1 );
-
-    if( NULL == m_entity_body_aspect )
-    {
-        LUA_ERROR( "Body::update_state : no body aspect" );
-    }
-
-    m_entity_body_aspect->GetComponent<bool>( "enable" )->getPurpose() = state;
-
-    return 0;
-}
-
 int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
@@ -370,14 +329,6 @@ int LuaClass_Body::LUA_release( lua_State* p_L )
         m_entity_body_aspect->RemoveComponent<BodyAspect::Mode>( "mode" );
         m_mode = BodyAspect::NOT_READY;
     }
-
-    if( m_state_setted )
-    {
-        m_entity_body_aspect->RemoveComponent<bool>( "enable" );
-        m_entity_body_aspect->RemoveComponent<bool>( "contact_state" );
-        m_state_setted = false;  
-    }
-
     m_entity_body_aspect->Release();
 
     return 0;

@@ -42,8 +42,6 @@ private:
     DrawSpace::Core::Meshe                  m_meshe;
     bool                                    m_attitude_setted;
     bool                                    m_mass_setted;
-    bool                                    m_state_setted;
-
 
 public:
 
@@ -54,12 +52,9 @@ public:
     int LUA_configureattitude( lua_State* p_L );
     int LUA_configuremass( lua_State* p_L );
     int LUA_configuremode( lua_State* p_L );
-    int LUA_configurestate( lua_State* p_L );
     int LUA_updateattitude( lua_State* p_L );
-    int LUA_updatestate( lua_State* p_L );
 
     int LUA_release( lua_State* p_L );
-
 
 	LuaClass_Body( lua_State* p_L );
 	~LuaClass_Body( void );

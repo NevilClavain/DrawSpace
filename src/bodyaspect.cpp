@@ -353,8 +353,6 @@ AspectImplementations::BodyTransformAspectImpl* BodyAspect::GetTransformAspectIm
 
 void BodyAspect::Update( void )
 {
-    ComponentList<bool> flags;
-    GetComponentsByType<bool>( flags );
 
     btScalar                 bt_matrix[16];
     DrawSpace::Utils::Matrix local_transf;
@@ -406,20 +404,6 @@ void BodyAspect::Update( void )
     {
         m_motionState->m_graphicsWorldTrans.getOpenGLMatrix( bt_matrix );
         convert_matrix_from_bt( bt_matrix, local_transf );
-    }
-
-    
-    //////////////////////////////////////////////
-    // activer/desactiver cinematique du body (si pas collider)
-
-    if( flags.size() > 0 && BODY == m_mode )
-    {
-        bool enable_body = flags[0]->getPurpose();
-
-        if( enable_body != m_body_active )
-        {
-            body_state( enable_body );            
-        }
     }
 
     ///////////////////////////////////////////////
@@ -526,24 +510,6 @@ void BodyAspect::Update( void )
                 mats[0]->getPurpose() = local_transf;
             }
         }
-    }
-}
-
-void BodyAspect::body_state( bool p_enabled )
-{
-    if( m_rigidBody )
-    {
-        if( p_enabled )
-        {
-            m_rigidBody->forceActivationState( ACTIVE_TAG );
-            m_rigidBody->activate();
-        }
-        else
-        {
-            m_rigidBody->forceActivationState( DISABLE_SIMULATION );
-        }
-
-        m_body_active = p_enabled;
     }
 }
 

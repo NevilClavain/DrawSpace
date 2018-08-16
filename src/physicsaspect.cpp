@@ -210,13 +210,13 @@ void PhysicsAspect::StepSimulation( void )
             ComponentList<bool> bools;
             body_aspect->GetComponentsByType<bool>( bools );
 
-            if( bools.size() < 2 )
+            if( bools.size() < 1 )
             {
                 _DSEXCEPTION( "Bad number of bool components for BodyAspect" )
             }
 
             // reset du composant "contactState" (bools[1])
-            bools[1]->getPurpose() = false;
+            bools[0]->getPurpose() = false;
         }
 
         int numManifolds = m_world->getDispatcher()->getNumManifolds();
@@ -239,7 +239,7 @@ void PhysicsAspect::StepSimulation( void )
                     ComponentList<bool> bools;
                     body_aspect->GetComponentsByType<bool>( bools );
 
-                    bools[1]->getPurpose() = true;
+                    bools[0]->getPurpose() = true;
                 }
             }
             if( m_bodies.count( obB ) > 0 )
@@ -251,7 +251,7 @@ void PhysicsAspect::StepSimulation( void )
                     ComponentList<bool> bools;
                     body_aspect->GetComponentsByType<bool>( bools );
 
-                    bools[1]->getPurpose() = true;
+                    bools[0]->getPurpose() = true;
                 }
             }            
 	    }
