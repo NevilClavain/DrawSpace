@@ -37,6 +37,7 @@ float4 Flags                        : register(c26);
 float4 reflectorPos                 : register(c27);
 float4 reflectorNormal              : register(c28);
 
+
 struct VS_INPUT 
 {
    float4 Position      : POSITION0;
@@ -54,6 +55,8 @@ struct VS_OUTPUT
     float4 Tangent      : TEXCOORD2;
     float4 Binormale    : TEXCOORD3;
     float4 Half0        : TEXCOORD4;
+
+    float Fog           : FOG;
 };
 
 #include "generic_rendering.hlsl"
@@ -61,6 +64,7 @@ struct VS_OUTPUT
 // Flags ->
 //          
 //          .x = 1.0 -> mirror mode activated
+//          .y -> fog intensity
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -94,6 +98,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     {        
         Output.Half0 = 0.0;
     }
+
+    float4 PositionWV = mul(Input.Position, matWorldView);
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, Flags.y));
 
     return( Output );   
 }

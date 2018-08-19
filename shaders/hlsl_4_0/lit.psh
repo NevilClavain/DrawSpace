@@ -43,6 +43,7 @@ struct PS_INTPUT
     float4 Tangent      : TEXCOORD2;
     float4 Binormale    : TEXCOORD3;
     float4 Half0        : TEXCOORD4;
+    float  Fog          : FOG;
 };
 
 #include "mat_input_constants.hlsl"
@@ -72,6 +73,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 absorption = 1.0 - vec[9];
     float4 color = vec[10];
     float4 color_source = vec[11];
+    float4 fog_color = vec[12];
 
     float spec_power = flags.x;
     bool spec_enabled = false;
@@ -142,6 +144,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
                                                 Light0_Dir, world_normale, spec_enabled, spec_power, input.Half0);
 
     final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
+
+    final_color = saturate(lerp(fog_color, final_color, input.Fog));
 
     return saturate(final_color);
 }

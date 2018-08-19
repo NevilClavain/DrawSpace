@@ -168,3 +168,18 @@ float4 bump_bias_vector(float2 p_tex_coords, Texture2D p_txBump, SamplerState p_
 
     return avg;
 }
+
+float ComputeExp2Fog(float4 worldViewPos, float density)
+{
+    float4 org;
+   
+    org.x = 0.0;
+    org.y = 0.0;
+    org.z = 0.0;
+    org.w = 1.0;
+
+    float4 d = -worldViewPos[2];
+    return 1 / exp2(d * density);
+   
+   // retour a 0.0 -> brouillard au maximum
+}

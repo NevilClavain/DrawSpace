@@ -31,6 +31,7 @@ float4      self_emissive   : register(c8);
 float4      absorption      : register(c9);
 float4      color           : register(c10);
 float4      color_source    : register(c11);
+float4      fog_color       : register(c12);
 
 float4x4    matWorld        : register(c108);
 
@@ -45,6 +46,7 @@ struct PS_INTPUT
     float4 Tangent      : TEXCOORD2;
     float4 Binormale    : TEXCOORD3;
     float4 Half0        : TEXCOORD4;
+    float Fog           : FOG;
 };
 
 #include "generic_rendering.hlsl"
@@ -132,6 +134,8 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
                                                 Light0_Dir, world_normale, spec_enabled, spec_power, input.Half0);
 
     final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
+
+    final_color = saturate(lerp(fog_color, final_color, input.Fog));
 
     return saturate(final_color);
 }

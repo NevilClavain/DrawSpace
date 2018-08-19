@@ -32,6 +32,11 @@ cbuffer legacyargs : register(b0)
 #include "mat_input_constants.hlsl"
 #include "generic_rendering.hlsl"
 
+// Flags ->
+//          
+//          .x = 1.0 -> mirror mode activated
+//          .y -> fog intensity
+
 struct VS_INPUT
 {
     float3 Position     : POSITION;
@@ -49,11 +54,13 @@ struct VS_OUTPUT
     float4 Tangent      : TEXCOORD2;
     float4 Binormale    : TEXCOORD3;
     float4 Half0        : TEXCOORD4;
+    float  Fog          : FOG;
 };
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
     float4x4 mat_WorldViewProj = mat[matWorldViewProjection];
+    float4x4 mat_WorldView = mat[matWorldView];
     float4x4 mat_World = mat[matWorld];
     float4x4 mat_Cam = mat[matCam];
     float4x4 mat_View = mat[matView];
@@ -102,5 +109,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     {
         Output.Half0 = 0.0;
     }
+
+    float4 PositionWV = mul(pos, mat_WorldView);
+    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, Flags.y));
+
     return (Output);
 }
