@@ -27,7 +27,7 @@ float4      Lights_Enabled  : register(c1);
 float4      Light0_Color    : register(c2);
 float4      Light0_Dir      : register(c3);
 float4      Flags           : register(c7);
-float4      self_emissive   : register(c8);
+float4      self_emissive_i : register(c8);
 float4      absorption      : register(c9);
 float4      color           : register(c10);
 float4      color_source    : register(c11);
@@ -37,6 +37,7 @@ float4x4    matWorld        : register(c108);
 
 sampler2D   Texture0        : register(s0);
 sampler2D   BumpTexture     : register(s1);
+sampler2D   MaskTexture     : register(s2);
 
 struct PS_INTPUT 
 {
@@ -71,11 +72,36 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 {   
     float spec_power = Flags.x;
     bool spec_enabled = false;
+    bool mask_mode = Flags.w;
 
-    if( spec_power > 0.0 )
+    float4 self_emissive = self_emissive_i;
+
+    if (mask_mode)
     {
-        spec_enabled = true;
+        float4 mask = tex2D(MaskTexture, input.TexCoord0.xy);
+
+        if (mask.r == 1.0 && mask.g == 0.0 && mask.b == 0.0)
+        {
+            spec_enabled = true;
+        }
+        else if (mask.r == 0.0 && mask.g == 1.0 && mask.b == 0.0)
+        {
+            self_emissive = 1.0;
+
+        }
+        else
+        {
+            self_emissive = 0.0;
+        }
     }
+    else
+    {
+        if (spec_power > 0.0)
+        {
+            spec_enabled = true;
+        }
+    }
+
 
     int texture_size = Flags.z;
     float bump_bias = Flags.y;

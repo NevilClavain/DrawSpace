@@ -35,6 +35,9 @@ SamplerState samColor       : register(s0);
 Texture2D txBump            : register(t1);
 SamplerState samBump        : register(s1);
 
+Texture2D txMask            : register(t2);
+SamplerState samMask        : register(s2);
+
 struct PS_INTPUT 
 {
     float4 Position     : SV_POSITION;
@@ -78,9 +81,32 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float spec_power = flags.x;
     bool spec_enabled = false;
 
-    if (spec_power > 0.0)
+    bool mask_mode = flags.w;
+
+    if( mask_mode )
     {
-        spec_enabled = true;
+        float4 mask = txMask.Sample(samMask, input.TexCoord0);
+
+        if (mask.r == 1.0 && mask.g == 0.0 && mask.b == 0.0)
+        {
+            spec_enabled = true;
+        }
+        else if (mask.r == 0.0 && mask.g == 1.0 && mask.b == 0.0)
+        {
+            self_emissive = 1.0;
+
+        }
+        else
+        {
+            self_emissive = 0.0;
+        }        
+    }
+    else
+    {
+        if (spec_power > 0.0)
+        {
+            spec_enabled = true;
+        }        
     }
 
     int texture_size = flags.z;
