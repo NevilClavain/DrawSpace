@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -14,18 +14,19 @@
     <ProjectGuid>{9F52257F-A5E2-4298-BE75-CFC1A0BC7553}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>d3d11</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -57,9 +58,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace.lib;CEGUIWrapper.lib;BulletDynamics_vs2013_debug.lib;BulletCollision_vs2013_debug.lib;LinearMath_vs2013_debug.lib;fw1fontwrapper.lib;CEGUIBase-0_d.lib;CEGUIDirect3D11Renderer-0_d.lib;physfs.lib;jsmn.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace.lib;CEGUIWrapper.lib;BulletDynamics_vs2017_debug.lib;BulletCollision_vs2017_debug.lib;LinearMath_vs2017_debug.lib;fw1fontwrapper.lib;CEGUIBase-0_d.lib;CEGUIDirect3D11Renderer-0_d.lib;physfs.lib;jsmn.lib</AdditionalDependencies>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d11.dll</OutputFile>
-      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx11sdk\Lib\x86;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\fw1fontwrapper\Lib\x86;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx11sdk\Lib\x86;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.87\lib\vs2017;.\..\..\..\DrawSpace_thirdparts\fw1fontwrapper\Lib\x86;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\physfs-2.0.3/vs2017/Debug;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\drawspaced3d11.dll .\..\..\..\Drawspace_samples\bin</Command>
@@ -81,9 +82,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace_r.lib;CEGUIWrapper_r.lib;BulletDynamics_vs2013.lib;BulletCollision_vs2013.lib;LinearMath_vs2013.lib;fw1fontwrapper.lib;CEGUIBase-0.lib;CEGUIDirect3D11Renderer-0.lib;physfs.lib;jsmn.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;dxgi.lib;drawspace_r.lib;CEGUIWrapper_r.lib;BulletDynamics_vs2017.lib;BulletCollision_vs2017.lib;LinearMath_vs2017.lib;fw1fontwrapper.lib;CEGUIBase-0.lib;CEGUIDirect3D11Renderer-0.lib;physfs.lib;jsmn_r.lib</AdditionalDependencies>
       <OutputFile>$(SolutionDir)\libs\drawspaced3d11_r.dll</OutputFile>
-      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx11sdk\Lib\x86;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.82\lib\vs2013;.\..\..\..\DrawSpace_thirdparts\fw1fontwrapper\Lib\x86;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\PhysicsFS_VS2013SDK\lib;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\..\..\..\DrawSpace_thirdparts\dx11sdk\Lib\x86;.\..\..\libs;.\..\..\..\DrawSpace_thirdparts\bullet-2.87\lib\vs2017;.\..\..\..\DrawSpace_thirdparts\fw1fontwrapper\Lib\x86;.\..\..\..\DrawSpace_thirdparts\CEGUI-0.8.7\lib;.\..\..\..\DrawSpace_thirdparts\physfs-2.0.3/vs2017/Release;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\drawspaced3d11_r.dll .\..\..\..\Drawspace_samples\bin</Command>
