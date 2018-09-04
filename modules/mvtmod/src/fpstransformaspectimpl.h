@@ -22,36 +22,25 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_FPSTRANSFORMASPECTIMPL_H_
-#define _LUACLASS_FPSTRANSFORMASPECTIMPL_H_
 
-#include "luna.h"
+#ifndef _FPSTRANSFORMASPECTIMPL_H_
+#define _FPSTRANSFORMASPECTIMPL_H_
+
 #include "transformaspectimpl.h"
-#include "transformaspect.h"
+#include "quaternion.h"
 
-class LuaClass_FPSTransform
+namespace DrawSpace
 {
-private:
-    //DrawSpace::AspectImplementations::FPSTransformAspectImpl    m_fps_transformer;
-    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   m_fps_transformer;
-    DrawSpace::Aspect::TransformAspect*                                 m_entity_transform_aspect;
-
+namespace AspectImplementations
+{
+class FPSTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
+{
 public:
+    FPSTransformAspectImpl( void );
 
-	LuaClass_FPSTransform( lua_State* p_L );
-	~LuaClass_FPSTransform( void );
-
-    int LUA_instanciateTransformationImpl(lua_State* p_L);
-    int LUA_trashTransformationImpl(lua_State* p_L);
-
-    int LUA_configure( lua_State* p_L );
-    int LUA_release( lua_State* p_L );
-    int LUA_update( lua_State* p_L );
-    int LUA_read( lua_State* p_L );
-
-    static const char className[];
-    static const Luna<LuaClass_FPSTransform>::RegType methods[];
-
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
 };
+}
+}
 
 #endif

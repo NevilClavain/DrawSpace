@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawspace", "drawspace_msvs2013.vcxproj", "{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}"
 EndProject
@@ -103,6 +103,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gameroom", "modules\gameroo
 		{B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4} = {B7EFFA78-D4D4-4961-8912-7D6EE42E0BB4}
 		{9F52257F-A5E2-4298-BE75-CFC1A0BC7553} = {9F52257F-A5E2-4298-BE75-CFC1A0BC7553}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mvtmod", "modules\mvtmod\mvtmod.vcxproj", "{0F763DD0-41AC-4D0C-AF86-043E0437770E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -274,6 +276,14 @@ Global
 		{14611459-1562-4926-B3F0-0672A4ABEADF}.Release|Win32.ActiveCfg = Release|Win32
 		{14611459-1562-4926-B3F0-0672A4ABEADF}.Release|Win32.Build.0 = Release|Win32
 		{14611459-1562-4926-B3F0-0672A4ABEADF}.Release|x64.ActiveCfg = Release|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Debug|ARM.ActiveCfg = Debug|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Debug|Win32.Build.0 = Debug|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Debug|x64.ActiveCfg = Debug|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|ARM.ActiveCfg = Release|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|Win32.ActiveCfg = Release|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|Win32.Build.0 = Release|Win32
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -290,5 +300,9 @@ Global
 		{D95DC06A-2240-4B10-9269-44A1A9B84AB2} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{1C2CBD21-80D4-4C73-8439-B2CD3ADD041C} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{14611459-1562-4926-B3F0-0672A4ABEADF} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
+		{0F763DD0-41AC-4D0C-AF86-043E0437770E} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C06E5DB-F7E5-45B4-9AF2-015D06D099F4}
 	EndGlobalSection
 EndGlobal

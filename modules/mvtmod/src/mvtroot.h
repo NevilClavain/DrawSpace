@@ -22,36 +22,24 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_FPSTRANSFORMASPECTIMPL_H_
-#define _LUACLASS_FPSTRANSFORMASPECTIMPL_H_
 
-#include "luna.h"
-#include "transformaspectimpl.h"
-#include "transformaspect.h"
+#ifndef _SKYBOXROOT_H_
+#define _SKYBOXROOT_H_
 
-class LuaClass_FPSTransform
+#include "module_root.h"
+
+class MvtRoot : public DrawSpace::Interface::Module::Root
 {
-private:
-    //DrawSpace::AspectImplementations::FPSTransformAspectImpl    m_fps_transformer;
-    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   m_fps_transformer;
-    DrawSpace::Aspect::TransformAspect*                                 m_entity_transform_aspect;
-
 public:
+    MvtRoot( void );
+    virtual ~MvtRoot( void );
 
-	LuaClass_FPSTransform( lua_State* p_L );
-	~LuaClass_FPSTransform( void );
+    virtual dsstring GetModuleName( void );
+    virtual dsstring GetModuleDescr( void );
+    virtual void Init( void );
 
-    int LUA_instanciateTransformationImpl(lua_State* p_L);
-    int LUA_trashTransformationImpl(lua_State* p_L);
-
-    int LUA_configure( lua_State* p_L );
-    int LUA_release( lua_State* p_L );
-    int LUA_update( lua_State* p_L );
-    int LUA_read( lua_State* p_L );
-
-    static const char className[];
-    static const Luna<LuaClass_FPSTransform>::RegType methods[];
-
+    virtual DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   InstanciateTransformAspectImpls(const dsstring& p_id);
+    virtual void                                                                TrashTransformAspectImpls(DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl);
 };
 
 #endif

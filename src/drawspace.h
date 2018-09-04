@@ -104,8 +104,6 @@
 
 #include "transformaspect.h"
 #include "rawtransformaspectimpl.h"
-#include "fpstransformaspectimpl.h"
-#include "freetransformaspectimpl.h"
 #include "bodytransformaspectimpl.h"
 #include "orbittransformaspectimpl.h"
 #include "revolutiontransformaspectimpl.h"

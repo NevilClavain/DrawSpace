@@ -24,17 +24,20 @@
 
 #include "luacontext.h"
 #include "luaclass_fpstransform.h"
+#include "luaclass_module.h"
 #include "luaclass_entity.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
-using namespace DrawSpace::AspectImplementations;
+
 
 const char LuaClass_FPSTransform::className[] = "FPSTransform";
 const Luna<LuaClass_FPSTransform>::RegType LuaClass_FPSTransform::methods[] =
 {
+    { "instanciate_transformimpl", &LuaClass_FPSTransform::LUA_instanciateTransformationImpl },
+    { "trash_transformimpl", &LuaClass_FPSTransform::LUA_trashTransformationImpl },
     { "configure", &LuaClass_FPSTransform::LUA_configure },
     { "update", &LuaClass_FPSTransform::LUA_update },
     { "read", &LuaClass_FPSTransform::LUA_read },
@@ -49,6 +52,32 @@ m_entity_transform_aspect( NULL )
 
 LuaClass_FPSTransform::~LuaClass_FPSTransform( void )
 {
+}
+
+int LuaClass_FPSTransform::LUA_instanciateTransformationImpl(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("FPSTransform::instanciate_transformimpl : argument(s) missing");
+    }
+    LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check(p_L, 1);
+
+    m_fps_transformer = lua_mod->GetModuleRoot()->InstanciateTransformAspectImpls( "fps" );
+    return 0;
+}
+
+int LuaClass_FPSTransform::LUA_trashTransformationImpl(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("FPSTransform::trash_transformimpl : argument(s) missing");
+    }
+    LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check(p_L, 1);
+
+    lua_mod->GetModuleRoot()->TrashTransformAspectImpls( m_fps_transformer );
+    return 0;
 }
 
 int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
@@ -76,7 +105,7 @@ int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if( transform_aspect )
     {
-        transform_aspect->SetImplementation( &m_fps_transformer );
+        transform_aspect->SetImplementation( m_fps_transformer );
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY
