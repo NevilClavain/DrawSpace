@@ -22,24 +22,24 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_FPSTRANSFORMASPECTIMPL_H_
-#define _LUACLASS_FPSTRANSFORMASPECTIMPL_H_
+#ifndef _LUACLASS_FREETRANSFORMASPECTIMPL_H_
+#define _LUACLASS_FREETRANSFORMASPECTIMPL_H_
 
 #include "luna.h"
 #include "transformaspectimpl.h"
 #include "transformaspect.h"
 
-class LuaClass_FPSTransform
+class LuaClass_FreeTransform
 {
 private:
 
-    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   m_fps_transformer;
+    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   m_free_transformer;
     DrawSpace::Aspect::TransformAspect*                                 m_entity_transform_aspect;
 
 public:
 
-	LuaClass_FPSTransform( lua_State* p_L );
-	~LuaClass_FPSTransform( void );
+	LuaClass_FreeTransform( lua_State* p_L );
+	~LuaClass_FreeTransform( void );
 
     int LUA_instanciateTransformationImpl(lua_State* p_L);
     int LUA_trashTransformationImpl(lua_State* p_L);
@@ -50,7 +50,7 @@ public:
     int LUA_read( lua_State* p_L );
 
     static const char className[];
-    static const Luna<LuaClass_FPSTransform>::RegType methods[];
+    static const Luna<LuaClass_FreeTransform>::RegType methods[];
 
 };
 

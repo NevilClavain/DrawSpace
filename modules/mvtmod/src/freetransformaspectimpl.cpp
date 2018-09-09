@@ -63,7 +63,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     m_time_aspect->GetComponentsByType<TimeAspect::TimeScale>( time_scales );
 
 
-    //vitesses demand�es...
+    //vitesses demandées...
 
     ComponentList<dsreal> reals;
     p_transformaspect->GetComponentsByType<dsreal>( reals );
@@ -77,7 +77,7 @@ void FreeTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAs
     }
 
 
-    // axe demand�
+    // axe demandé
     Vector rot_axis_x = vectors[1]->getPurpose();
     Vector rot_axis_y = vectors[2]->getPurpose();    
     Vector rot_axis_z = vectors[3]->getPurpose();

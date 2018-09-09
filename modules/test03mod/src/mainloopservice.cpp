@@ -47,7 +47,9 @@ m_systems_update_evt_cb( this, &MainLoopService::on_systems_update_evt ),
 //m_show_cube( true ),
 m_cube_is_relative( false ),
 m_attaching( 0 ),
-m_detaching( 0 )
+m_detaching( 0 ),
+m_fps_transformer( NULL ),
+m_free_transformer( NULL)
 //m_cube_is_relative( true )
 {
 }
@@ -226,13 +228,24 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     create_sphere( id, m_planet1Entity, &m_planet1Render, BodyAspect::ATTRACTOR_COLLIDER );
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    DrawSpace::Interface::Module::Root* mvtmod_root;
+
+    if (!DrawSpace::Utils::PILoad::LoadModule("mvtmod", "mvt", &mvtmod_root))
+    {
+        _DSEXCEPTION("fail to load mvtmod module root")
+    }
+
+    m_fps_transformer = mvtmod_root->InstanciateTransformAspectImpls("fps");
+    m_free_transformer = mvtmod_root->InstanciateTransformAspectImpls("free");
 
 
     ///////////////////////////////////////////////////////////////////////////
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_fps_transformer );
+    transform_aspect->SetImplementation( m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
@@ -258,7 +271,7 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
 
     transform_aspect = m_camera2Entity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_free_transformer );
+    transform_aspect->SetImplementation( m_free_transformer );
   
     transform_aspect->AddComponent<dsreal>( "rspeed_x", 0.0 );
     transform_aspect->AddComponent<dsreal>( "rspeed_y", 0.0 );

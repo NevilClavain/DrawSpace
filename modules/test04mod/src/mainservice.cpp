@@ -38,7 +38,8 @@ MainService::MainService( void ) :
 m_waves_inc( true ),
 m_hmi_mode( true ),
 m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
-m_systems_update_evt_cb( this, &MainService::on_systems_update_evt )
+m_systems_update_evt_cb( this, &MainService::on_systems_update_evt ),
+m_fps_transformer( NULL )
 {
 }
 
@@ -207,9 +208,21 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////////
 
+    DrawSpace::Interface::Module::Root* mvtmod_root;
+
+    if (!DrawSpace::Utils::PILoad::LoadModule("mvtmod", "mvt", &mvtmod_root))
+    {
+        _DSEXCEPTION("fail to load mvtmod module root")
+    }
+    
+    m_fps_transformer = mvtmod_root->InstanciateTransformAspectImpls( "fps" );
+
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_fps_transformer );
+    transform_aspect->SetImplementation( m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 

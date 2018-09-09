@@ -99,6 +99,7 @@
     <ClCompile Include="src\luaclass_body.cpp" />
     <ClCompile Include="src\luaclass_entity.cpp" />
     <ClCompile Include="src\luaclass_entitynodegraph.cpp" />
+    <ClCompile Include="src\luaclass_freetransform.cpp" />
     <ClCompile Include="src\luaclass_fxparams.cpp" />
     <ClCompile Include="src\luaclass_globals.cpp" />
     <ClCompile Include="src\luaclass_matrix.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="src\crtp_singleton.h" />
     <ClInclude Include="src\luaclass_body.h" />
     <ClInclude Include="src\luaclass_entity.h" />
+    <ClInclude Include="src\luaclass_freetransform.h" />
     <ClInclude Include="src\luaclass_fxparams.h" />
     <ClInclude Include="src\luaclass_matrix.h" />
     <ClInclude Include="src\luaclass_mesherendering.h" />

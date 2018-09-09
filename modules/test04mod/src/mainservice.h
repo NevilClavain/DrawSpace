@@ -75,8 +75,8 @@ protected:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_staticCubeRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
-    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
-    DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;                       
+    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_fps_transformer;
 
     DrawSpace::Core::Entity                                                         m_cameraEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_cameraEntityNode;

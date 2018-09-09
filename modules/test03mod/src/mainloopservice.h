@@ -114,7 +114,6 @@ protected:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_planet1Render;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
-    //DrawSpace::AspectImplementations::SkyboxRenderingAspectImpl                     m_skyboxRender;
 
 
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
@@ -132,8 +131,12 @@ protected:
 
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_transformer;
-    DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
-    DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;
+    
+    //DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
+    //DrawSpace::AspectImplementations::FreeTransformAspectImpl                       m_free_transformer;
+
+    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_fps_transformer;
+    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_free_transformer;
     
     DrawSpace::Interface::MesheImport*                                              m_meshe_import;
 

@@ -81,7 +81,7 @@ protected:
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_impostors_transformer;
-    DrawSpace::AspectImplementations::FPSTransformAspectImpl                        m_fps_transformer;
+    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_fps_transformer;
 
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;
