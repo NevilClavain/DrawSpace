@@ -35,8 +35,6 @@ using namespace DrawSpace::AspectImplementations;
 
 MvtRoot::MvtRoot( void )
 {
-    Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "skybox_data/shaders_bank" );
 }
 
 MvtRoot::~MvtRoot( void )
