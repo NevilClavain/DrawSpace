@@ -74,7 +74,7 @@ public:
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
 
-        DrawSpace::Core::RenderingNode* GetRenderingNode( int p_quad ) { return m_rendering_node[p_quad]; };
+        DrawSpace::Core::RenderingNode* GetRenderingNode( int p_quad ) const { return m_rendering_node[p_quad]; };
 
         friend class SkyboxRenderingAspectImpl;
     };
