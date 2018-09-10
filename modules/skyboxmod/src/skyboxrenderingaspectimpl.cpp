@@ -255,7 +255,9 @@ SkyboxRenderingAspectImpl::PassSlot::~PassSlot( void )
     for( long i = 0; i < 6; i++ )
     {
         _DRAWSPACE_DELETE_( m_rendering_node[i] );
+        _DRAWSPACE_DELETE_( m_meshes[i] );
     }
+    _DRAWSPACE_DELETE_( m_cb );
 }       
 
 void SkyboxRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
