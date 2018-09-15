@@ -23,33 +23,24 @@
 /* -*-LIC_END-*- */
 
 
-#ifndef _LUACLASS_FXPARAMS_H_
-#define _LUACLASS_FXPARAMS_H_
+#ifndef _VOLUMETRICSROOT_H_
+#define _VOLUMETRICSROOT_H_
 
-#include "luna.h"
-#include "RenderStatesSet.h"
+#include "module_root.h"
 
-class LuaClass_FxParams
+
+class VolumetricsRoot : public DrawSpace::Interface::Module::Root
 {
-protected:
-    DrawSpace::Core::RenderStatesSet            m_rss;
-    std::vector<std::pair<dsstring,bool>>       m_shaders;
-
 public:
-	LuaClass_FxParams( lua_State* p_L );
-	~LuaClass_FxParams( void );
+    VolumetricsRoot( void );
+    virtual ~VolumetricsRoot( void );
 
-    int LUA_setrenderstatesset( lua_State* p_L );
-    int LUA_addshaderfile( lua_State* p_L );
+    virtual dsstring GetModuleName( void );
+    virtual dsstring GetModuleDescr( void );
+    virtual void Init( void );
 
-    DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
-    size_t GetNbShaderFiles( void ) const;
-    std::pair<dsstring,bool> GetShaderFile( int p_index ) const;
-
-    static const char className[];
-    static const Luna<LuaClass_FxParams>::RegType methods[];
-
-    int m_ref;
+    virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );
+    virtual void                                                                TrashRenderingAspectImpls( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
 };
 
 #endif

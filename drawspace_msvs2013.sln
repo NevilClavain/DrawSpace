@@ -106,6 +106,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gameroom", "modules\gameroo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mvtmod", "modules\mvtmod\mvtmod.vcxproj", "{0F763DD0-41AC-4D0C-AF86-043E0437770E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "volumetricsmod", "modules\volumetricsmod\volumetricsmod.vcxproj", "{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -284,6 +286,14 @@ Global
 		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|Win32.ActiveCfg = Release|Win32
 		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|Win32.Build.0 = Release|Win32
 		{0F763DD0-41AC-4D0C-AF86-043E0437770E}.Release|x64.ActiveCfg = Release|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Debug|ARM.ActiveCfg = Debug|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Debug|Win32.Build.0 = Debug|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Debug|x64.ActiveCfg = Debug|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Release|ARM.ActiveCfg = Release|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Release|Win32.ActiveCfg = Release|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Release|Win32.Build.0 = Release|Win32
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -301,6 +311,7 @@ Global
 		{1C2CBD21-80D4-4C73-8439-B2CD3ADD041C} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{14611459-1562-4926-B3F0-0672A4ABEADF} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 		{0F763DD0-41AC-4D0C-AF86-043E0437770E} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
+		{C98924BF-A10D-45A9-8AB8-57AE352B1B2C} = {8DF252D9-3F5E-4047-B88C-AB80C0B3558C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C06E5DB-F7E5-45B4-9AF2-015D06D099F4}

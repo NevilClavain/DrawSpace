@@ -23,33 +23,18 @@
 /* -*-LIC_END-*- */
 
 
-#ifndef _LUACLASS_FXPARAMS_H_
-#define _LUACLASS_FXPARAMS_H_
+#include "volumetricsroot.h"
 
-#include "luna.h"
-#include "RenderStatesSet.h"
-
-class LuaClass_FxParams
+extern "C"
 {
-protected:
-    DrawSpace::Core::RenderStatesSet            m_rss;
-    std::vector<std::pair<dsstring,bool>>       m_shaders;
+__declspec(dllexport) DrawSpace::Interface::Module::Root* PIFactory( void )
+{
+    return new VolumetricsRoot;
+}
 
-public:
-	LuaClass_FxParams( lua_State* p_L );
-	~LuaClass_FxParams( void );
-
-    int LUA_setrenderstatesset( lua_State* p_L );
-    int LUA_addshaderfile( lua_State* p_L );
-
-    DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
-    size_t GetNbShaderFiles( void ) const;
-    std::pair<dsstring,bool> GetShaderFile( int p_index ) const;
-
-    static const char className[];
-    static const Luna<LuaClass_FxParams>::RegType methods[];
-
-    int m_ref;
-};
-
-#endif
+__declspec(dllexport) void PITrash( DrawSpace::Interface::Module::Root* p_itf )
+{
+    VolumetricsRoot* itf = static_cast<VolumetricsRoot*>( p_itf );
+    delete itf;
+}
+}

@@ -22,34 +22,46 @@
 */
 /* -*-LIC_END-*- */
 
-
-#ifndef _LUACLASS_FXPARAMS_H_
-#define _LUACLASS_FXPARAMS_H_
+#ifndef _LUACLASS_RENDERING_H_
+#define _LUACLASS_RENDERING_H_
 
 #include "luna.h"
-#include "RenderStatesSet.h"
+#include "renderingaspectimpl.h"
+#include "luaclass_entity.h"
+#include "renderingaspect.h"
 
-class LuaClass_FxParams
+
+// rendering implementation from a module, encapsulated in a lua class
+class LuaClass_Rendering
 {
-protected:
-    DrawSpace::Core::RenderStatesSet            m_rss;
-    std::vector<std::pair<dsstring,bool>>       m_shaders;
+private:
+
+    DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   m_rendering_impl;
+    DrawSpace::Aspect::RenderingAspect*                                 m_entity_rendering_aspect;
+    DrawSpace::Core::Entity*                                            m_entity;
+
+    void cleanup_resources( lua_State* p_L );
 
 public:
-	LuaClass_FxParams( lua_State* p_L );
-	~LuaClass_FxParams( void );
+    LuaClass_Rendering( lua_State* p_L );
+	~LuaClass_Rendering( void );
 
-    int LUA_setrenderstatesset( lua_State* p_L );
-    int LUA_addshaderfile( lua_State* p_L );
+    int LUA_instanciateRenderingImpl( lua_State* p_L );
+    int LUA_trashRenderingImpl( lua_State* p_L );
 
-    DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
-    size_t GetNbShaderFiles( void ) const;
-    std::pair<dsstring,bool> GetShaderFile( int p_index ) const;
+    int LUA_attachtoentity( lua_State* p_L );
+    int LUA_detachfromentity( lua_State* p_L );
+
+    int LUA_configure( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
+
+    int LUA_registertorendering( lua_State* p_L );
+    int LUA_unregisterfromrendering( lua_State* p_L );
+
+    int LUA_setshaderrealvector( lua_State* p_L );
 
     static const char className[];
-    static const Luna<LuaClass_FxParams>::RegType methods[];
-
-    int m_ref;
+    static const Luna<LuaClass_Rendering>::RegType methods[];
 };
 
 #endif
