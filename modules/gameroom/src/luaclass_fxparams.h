@@ -31,9 +31,15 @@
 
 class LuaClass_FxParams
 {
+public:
+    struct Data
+    {
+        DrawSpace::Core::RenderStatesSet            rss;
+        std::vector<std::pair<dsstring, bool>>      shaders;
+    };
+
 protected:
-    DrawSpace::Core::RenderStatesSet            m_rss;
-    std::vector<std::pair<dsstring,bool>>       m_shaders;
+    Data m_data;
 
 public:
 	LuaClass_FxParams( lua_State* p_L );
@@ -42,9 +48,10 @@ public:
     int LUA_setrenderstatesset( lua_State* p_L );
     int LUA_addshaderfile( lua_State* p_L );
 
-    DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
-    size_t GetNbShaderFiles( void ) const;
-    std::pair<dsstring,bool> GetShaderFile( int p_index ) const;
+    inline Data GetData( void ) const
+    {
+        return m_data;
+    }
 
     static const char className[];
     static const Luna<LuaClass_FxParams>::RegType methods[];

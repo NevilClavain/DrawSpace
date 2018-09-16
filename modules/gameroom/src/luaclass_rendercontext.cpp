@@ -24,8 +24,7 @@
 
 #include "luacontext.h"
 #include "luaclass_rendercontext.h"
-#include "luaclass_fxparams.h"
-#include "luaclass_texturesset.h"
+
 
 using namespace DrawSpace::Core;
 
@@ -40,8 +39,7 @@ const Luna<LuaClass_RenderContext>::RegType LuaClass_RenderContext::methods[] =
 	{ 0, 0 }
 };
 
-LuaClass_RenderContext::LuaClass_RenderContext( lua_State* p_L ) :
-m_rendering_order( 10000 )
+LuaClass_RenderContext::LuaClass_RenderContext( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
@@ -49,7 +47,7 @@ m_rendering_order( 10000 )
         LUA_ERROR( "RenderContext::RenderContext : argument(s) missing" );
 	}
 
-    m_passname = luaL_checkstring( p_L, 1 );
+    m_data.passname = luaL_checkstring( p_L, 1 );
 }
 
 LuaClass_RenderContext::~LuaClass_RenderContext( void )
@@ -65,7 +63,7 @@ int LuaClass_RenderContext::LUA_addfxparams( lua_State* p_L )
 	}
     LuaClass_FxParams* lua_fx = Luna<LuaClass_FxParams>::check( p_L, 1 );
 
-    m_fxparams.push_back( lua_fx );
+    m_data.fxparams.push_back( lua_fx->GetData() );
     return 0;
 }
 
@@ -78,7 +76,7 @@ int LuaClass_RenderContext::LUA_addtexturesset( lua_State* p_L )
 	}
     LuaClass_TexturesSet* lua_textures = Luna<LuaClass_TexturesSet>::check( p_L, 1 );
 
-    m_textures_sets.push_back( lua_textures );
+    m_data.textures_sets.push_back( lua_textures->GetData() );
     return 0;
 }
 
@@ -91,7 +89,7 @@ int LuaClass_RenderContext::LUA_addvertextexturesset( lua_State* p_L )
 	}
     LuaClass_TexturesSet* lua_textures = Luna<LuaClass_TexturesSet>::check( p_L, 1 );
 
-    m_vertex_textures_sets.push_back( lua_textures );
+    m_data.vertex_textures_sets.push_back( lua_textures->GetData() );
     return 0;
 }
 
@@ -104,7 +102,7 @@ int LuaClass_RenderContext::LUA_setrenderingorder( lua_State* p_L )
 	}
     
     int ro = luaL_checkint( p_L, 1 );
-    m_rendering_order = ro;
+    m_data.rendering_order = ro;
 
     return 0;
 }
@@ -128,57 +126,7 @@ int LuaClass_RenderContext::LUA_addshaderparam( lua_State* p_L )
 
     NamedShaderParam param = NamedShaderParam( shader_param_id, sp );
 
-    m_shaders_params.push_back( param );
+    m_data.shaders_params.push_back( param );
 
     return 0;
-}
-
-int LuaClass_RenderContext::GetFxParamsListSize( void ) const
-{
-    return m_fxparams.size();
-}
-
-LuaClass_FxParams* LuaClass_RenderContext::GetFxParams( int p_index ) const
-{
-    return m_fxparams[p_index];
-}
-
-int LuaClass_RenderContext::GetTexturesSetListSize( void ) const
-{
-    return m_textures_sets.size();
-}
-
-LuaClass_TexturesSet* LuaClass_RenderContext::GetTexturesSet( int p_index ) const
-{
-    return m_textures_sets[p_index];
-}
-
-int LuaClass_RenderContext::GetVertexTexturesSetListSize( void ) const
-{
-    return m_vertex_textures_sets.size();
-}
-
-LuaClass_TexturesSet* LuaClass_RenderContext::GetVertexTexturesSet( int p_index ) const
-{
-    return m_vertex_textures_sets[p_index];
-}
-
-int LuaClass_RenderContext::GetRenderingOrder( void ) const
-{
-    return m_rendering_order;
-}
-
-int LuaClass_RenderContext::GetShadersParamsListSize( void ) const
-{
-    return m_shaders_params.size();
-}
-
-LuaClass_RenderContext::NamedShaderParam LuaClass_RenderContext::GetNamedShaderParam( int p_index ) const
-{
-    return m_shaders_params[p_index];
-}
-
-dsstring LuaClass_RenderContext::GetPassName( void ) const
-{
-    return m_passname;
 }

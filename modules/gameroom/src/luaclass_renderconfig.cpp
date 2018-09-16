@@ -24,7 +24,7 @@
 
 #include "luacontext.h"
 #include "luaclass_renderconfig.h"
-#include "luaclass_rendercontext.h"
+
 
 const char LuaClass_RenderConfig::className[] = "RenderConfig";
 const Luna<LuaClass_RenderConfig>::RegType LuaClass_RenderConfig::methods[] =
@@ -50,7 +50,7 @@ int LuaClass_RenderConfig::LUA_addrendercontext( lua_State* p_L )
 	}
     LuaClass_RenderContext* lua_rc = Luna<LuaClass_RenderContext>::check( p_L, 1 );
 
-    m_renderContexts.push_back( lua_rc );
+    m_renderContexts.push_back( lua_rc->GetData() );
 
     return 0;
 }
@@ -60,7 +60,7 @@ int LuaClass_RenderConfig::GetRenderContextListSize( void ) const
     return m_renderContexts.size();
 }
 
-LuaClass_RenderContext* LuaClass_RenderConfig::GetRenderContext( int p_index ) const
+LuaClass_RenderContext::Data LuaClass_RenderConfig::GetRenderContext( int p_index ) const
 {
     return m_renderContexts[p_index];
 }

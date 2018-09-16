@@ -52,7 +52,7 @@ int LuaClass_FxParams::LUA_setrenderstatesset( lua_State* p_L )
 
     LuaClass_RenderStatesSet* lua_rss = Luna<LuaClass_RenderStatesSet>::check( p_L, 1 );
 
-    m_rss = lua_rss->GetRenderStatesSet();
+    m_data.rss = lua_rss->GetRenderStatesSet();
     return 0;
 }
 
@@ -68,21 +68,6 @@ int LuaClass_FxParams::LUA_addshaderfile( lua_State* p_L )
     bool is_compiled = luaL_checkint( p_L, 2 );
 
     std::pair<dsstring,bool> shader_info( shader_path, is_compiled );
-    m_shaders.push_back( shader_info );
+    m_data.shaders.push_back( shader_info );
     return 0;
-}
-
-DrawSpace::Core::RenderStatesSet LuaClass_FxParams::GetRenderStatesSet( void ) const
-{
-    return m_rss;
-}
-
-size_t LuaClass_FxParams::GetNbShaderFiles( void ) const
-{
-    return m_shaders.size();
-}
-
-std::pair<dsstring,bool> LuaClass_FxParams::GetShaderFile( int p_index ) const
-{
-    return m_shaders[p_index];
 }

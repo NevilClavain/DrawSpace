@@ -324,27 +324,27 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
     {
         for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
         {
-            LuaClass_RenderContext* render_context = rcfg->GetRenderContext( i );
-            if( render_context->GetPassName() == pass_id )
+            LuaClass_RenderContext::Data render_context = rcfg->GetRenderContext( i );
+            if( render_context.passname == pass_id )
             {        
                 ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
                 if( vpq )
                 {
                     //  on a besoin que d'un seul fx....
-                    if( render_context->GetFxParamsListSize() < 1 )
+                    if( render_context.fxparams.size() < 1 )
                     {
                         cleanup_resources( p_L, pass_id );
                         LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : missing fx parameters description" );                
                     }            
 
-                    LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+                    LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
 
                     ///////////////////////// les shaders
-                    size_t nb_shaders = fx_params->GetNbShaderFiles();
+                    size_t nb_shaders = fx_params.shaders.size();
 
                     for( size_t i = 0; i < nb_shaders; i++ )
                     {
-                        std::pair<dsstring,bool> shader_infos = fx_params->GetShaderFile( i );
+                        std::pair<dsstring,bool> shader_infos = fx_params.shaders[i];
 
                         dsstring shader_path = shader_infos.first;
                         bool is_compiled = shader_infos.second;
@@ -368,12 +368,12 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                     }
                     ///////////////////////// les rendestates
 
-                    DrawSpace::Core::RenderStatesSet& rss = fx_params->GetRenderStatesSet();
+                    DrawSpace::Core::RenderStatesSet& rss = fx_params.rss;
                     m_passes[pass_id].m_fx.SetRenderStates( rss );
 
                     ///////////////////////// les textures
 
-                    size_t nb_textures_set = render_context->GetTexturesSetListSize();
+                    size_t nb_textures_set = render_context.textures_sets.size();
                     //  on a besoin que d'un seul jeu de textures...
                     if( nb_textures_set != 1 )
                     {
@@ -381,11 +381,11 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                         LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : no textures set provided !" );
                     }
 
-                    LuaClass_TexturesSet* textures = render_context->GetTexturesSet( 0 );
+                    LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
 
                     for( size_t i = 0; i < DrawSpace::Core::RenderingNode::NbMaxTextures; i++ )
                     {
-                        dsstring texture_path = textures->GetTextureFile( i );
+                        dsstring texture_path = textures.textures[i];
                         if( texture_path != "" )
                         {
                             bool status;
@@ -408,9 +408,9 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
 
                     /// params de shaders
 
-                    for( int j = 0; j < render_context->GetShadersParamsListSize(); j++ )
+                    for( size_t j = 0; j < render_context.shaders_params.size(); j++ )
                     {
-                        LuaClass_RenderContext::NamedShaderParam param = render_context->GetNamedShaderParam( j );
+                        LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
                     
                         dsstring param_id = param.first;
 

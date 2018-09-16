@@ -31,8 +31,14 @@
 
 class LuaClass_TexturesSet
 {
+public:
+    struct Data
+    {
+        dsstring textures[DrawSpace::Core::RenderingNode::NbMaxTextures];
+    };
+
 protected:
-    dsstring m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures];
+    Data m_data;
 
 public:
 	LuaClass_TexturesSet( lua_State* p_L );
@@ -40,7 +46,10 @@ public:
 
     int LUA_settexturefiletostage( lua_State* p_L );
 
-    dsstring GetTextureFile( int p_stage ) const;
+    inline Data GetData( void ) const
+    {
+        return m_data;
+    }
 
     static const char className[];
     static const Luna<LuaClass_TexturesSet>::RegType methods[];    

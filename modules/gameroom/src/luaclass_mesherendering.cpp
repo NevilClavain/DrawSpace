@@ -145,30 +145,30 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
         {
             for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
             {               
-                LuaClass_RenderContext* render_context = rcfg->GetRenderContext( i );
-                dsstring pass_id = render_context->GetPassName();
+                LuaClass_RenderContext::Data render_context = rcfg->GetRenderContext( i );
+                dsstring pass_id = render_context.passname;
 
                 m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
                 RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
                 m_renderingnodes[pass_id] = rnode;
 
                 //  on a besoin que d'un seul fx....
-                if( render_context->GetFxParamsListSize() < 1 )
+                if( render_context.fxparams.size() < 1 )
                 {
                     cleanup_resources( p_L );
                     LUA_ERROR( "MesheRendering::configure : missing fx parameters description" );                
                 }  
 
-                LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+                LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
 
                 DrawSpace::Core::Fx* fx = _DRAWSPACE_NEW_( Fx, Fx  );
                 rnode->SetFx( fx );
 
                 ///////////////////////// les shaders
-                size_t nb_shaders = fx_params->GetNbShaderFiles();
+                size_t nb_shaders = fx_params.shaders.size();
                 for( size_t j = 0; j < nb_shaders; j++ )
                 {
-                    std::pair<dsstring,bool> shader_infos = fx_params->GetShaderFile( j );
+                    std::pair<dsstring,bool> shader_infos = fx_params.shaders[j];
 
                     dsstring shader_path = shader_infos.first;
                     bool is_compiled = shader_infos.second;
@@ -192,13 +192,13 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
                 ///////////////////////// les rendestates
 
-                DrawSpace::Core::RenderStatesSet& rss = fx_params->GetRenderStatesSet();
+                DrawSpace::Core::RenderStatesSet& rss = fx_params.rss;
                 fx->SetRenderStates( rss );
 
 
                 ///////////////////////// les textures
 
-                size_t nb_textures_set = render_context->GetTexturesSetListSize();
+                size_t nb_textures_set = render_context.textures_sets.size();
                 //  on a besoin que d'un seul jeu de textures...
                 if( nb_textures_set < 0 )
                 {
@@ -207,11 +207,11 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                 }
 
                     
-                LuaClass_TexturesSet* textures = render_context->GetTexturesSet( 0 );
+                LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
 
                 for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
                 {
-                    dsstring texture_path = textures->GetTextureFile( j );
+                    dsstring texture_path = textures.textures[0];
                     if( texture_path != "" )
                     {
                         bool status;
@@ -233,14 +233,14 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
                 ///////////////////////// les vertex textures
 
-                size_t nb_vtextures_set = render_context->GetVertexTexturesSetListSize();
+                size_t nb_vtextures_set = render_context.vertex_textures_sets.size();
                 if( nb_vtextures_set > 0 )
                 {
-                    LuaClass_TexturesSet* vtextures = render_context->GetVertexTexturesSet( 0 );
+                    LuaClass_TexturesSet::Data vtextures = render_context.vertex_textures_sets[0];
 
                     for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
                     {
-                        dsstring texture_path = vtextures->GetTextureFile( j );
+                        dsstring texture_path = vtextures.textures[j];
                         if( texture_path != "" )
                         {
                             bool status;
@@ -273,9 +273,9 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
                 /// params de shaders
 
-                for( int j = 0; j < render_context->GetShadersParamsListSize(); j++ )
+                for( size_t j = 0; j < render_context.shaders_params.size(); j++ )
                 {
-                    LuaClass_RenderContext::NamedShaderParam param = render_context->GetNamedShaderParam( j );
+                    LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
                     
                     dsstring param_id = param.first;
 

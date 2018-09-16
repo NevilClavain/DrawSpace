@@ -29,21 +29,31 @@
 #include "luna.h"
 #include "renderingnode.h"
 
-class LuaClass_FxParams;
-class LuaClass_TexturesSet;
+#include "luaclass_fxparams.h"
+#include "luaclass_texturesset.h"
+
 
 class LuaClass_RenderContext
 {
 public:
     using NamedShaderParam = std::pair<dsstring, DrawSpace::Core::RenderingNode::ShadersParams>;
 
+    struct Data
+    {
+        Data( void ) : rendering_order(10000)
+        {
+        }
+
+        int                                     rendering_order;
+        dsstring                                passname;
+        std::vector<LuaClass_FxParams::Data>    fxparams;
+        std::vector<LuaClass_TexturesSet::Data> textures_sets;
+        std::vector<LuaClass_TexturesSet::Data> vertex_textures_sets;
+        std::vector<NamedShaderParam>           shaders_params;
+    };
+
 private:
-    int                                 m_rendering_order;
-    dsstring                            m_passname;
-    std::vector<LuaClass_FxParams*>     m_fxparams;
-    std::vector<LuaClass_TexturesSet*>  m_textures_sets;
-    std::vector<LuaClass_TexturesSet*>  m_vertex_textures_sets;
-    std::vector<NamedShaderParam>       m_shaders_params;
+    Data m_data;
 
 public:
 	LuaClass_RenderContext( lua_State* p_L );
@@ -54,23 +64,13 @@ public:
     int LUA_addvertextexturesset( lua_State* p_L );
     int LUA_setrenderingorder( lua_State* p_L );
     int LUA_addshaderparam( lua_State* p_L );
-    
+   
+    inline Data GetData(void) const
+    {
+        return m_data;
+    }
 
-    int GetFxParamsListSize( void ) const;
-    LuaClass_FxParams* GetFxParams( int p_index ) const;
-
-    int GetTexturesSetListSize( void ) const;
-    LuaClass_TexturesSet* GetTexturesSet( int p_index ) const;
-
-    int GetVertexTexturesSetListSize( void ) const;
-    LuaClass_TexturesSet* GetVertexTexturesSet( int p_index ) const;
-
-    int GetShadersParamsListSize( void ) const;
-    NamedShaderParam GetNamedShaderParam( int p_index ) const;
-
-    int GetRenderingOrder( void ) const;
-
-    dsstring GetPassName( void ) const;
+    //dsstring GetPassName( void ) const;
 
     static const char className[];
     static const Luna<LuaClass_RenderContext>::RegType methods[];

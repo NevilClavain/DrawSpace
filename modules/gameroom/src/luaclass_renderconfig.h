@@ -26,14 +26,14 @@
 #define _LUACLASS_RENDERCONFIG_H_
 
 #include "luna.h"
+#include "luaclass_rendercontext.h"
 
-class LuaClass_RenderContext;
 
 class LuaClass_RenderConfig
 {
 protected:
 
-    std::vector<LuaClass_RenderContext*>     m_renderContexts;
+    std::vector<LuaClass_RenderContext::Data>     m_renderContexts;
 
 public:
 	LuaClass_RenderConfig( lua_State* p_L );
@@ -42,8 +42,7 @@ public:
     int LUA_addrendercontext( lua_State* p_L );
 
     int GetRenderContextListSize( void ) const;
-    LuaClass_RenderContext* GetRenderContext( int p_index ) const;
-
+    LuaClass_RenderContext::Data GetRenderContext( int p_index ) const;
 
     static const char className[];
     static const Luna<LuaClass_RenderConfig>::RegType methods[];

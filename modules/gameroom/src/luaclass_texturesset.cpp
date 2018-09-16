@@ -51,12 +51,7 @@ int LuaClass_TexturesSet::LUA_settexturefiletostage( lua_State* p_L )
     dsstring texture_path = luaL_checkstring( p_L, 1 );
     int stage = luaL_checkint( p_L, 2 );
 
-    m_textures[stage] = texture_path;
+    m_data.textures[stage] = texture_path;
 
     return 0;
-}
-
-dsstring LuaClass_TexturesSet::GetTextureFile( int p_stage ) const
-{
-    return m_textures[p_stage];
 }
