@@ -64,7 +64,7 @@ LuaClass_Rendering::~LuaClass_Rendering( void )
 
 int LuaClass_Rendering::LUA_instanciateRenderingImpl( lua_State* p_L )
 {
-    /*
+    
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{		
@@ -75,13 +75,13 @@ int LuaClass_Rendering::LUA_instanciateRenderingImpl( lua_State* p_L )
     dsstring implementation_id = luaL_checkstring(p_L, 2);
 
     m_rendering_impl = lua_mod->GetModuleRoot()->InstanciateRenderingAspectImpls( implementation_id );
-    */
+    
     return 0;
 }
 
 int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
 {
-    /*
+    
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -91,13 +91,13 @@ int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
     LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
 
     lua_mod->GetModuleRoot()->TrashRenderingAspectImpls( m_rendering_impl );
-    */
+    
     return 0;
 }
 
 int LuaClass_Rendering::LUA_attachtoentity( lua_State* p_L )
 {
-    /*
+    
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -118,13 +118,13 @@ int LuaClass_Rendering::LUA_attachtoentity( lua_State* p_L )
     m_entity = &entity;
 
     m_entity_rendering_aspect->AddImplementation( m_rendering_impl );
-    */
+    
     return 0;
 }
 
 int LuaClass_Rendering::LUA_detachfromentity( lua_State* p_L )
 {
-    /*
+    
     if( NULL == m_entity )
     {
         LUA_ERROR( "Rendering::detach_fromentity : argument(s) missing" );
@@ -138,13 +138,13 @@ int LuaClass_Rendering::LUA_detachfromentity( lua_State* p_L )
 
     m_entity_rendering_aspect = NULL;
     m_entity = NULL;
-    */
+    
     return 0;
 }
 
 int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 {
-    /*
+    
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -163,9 +163,9 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
             std::vector<dsstring> passes;            
             for( int i = 0; i < rc_list_size; i++ )
             {
-                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
+                LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
 
-                dsstring pass_name = render_context->GetPassName();
+                dsstring pass_name = render_context.passname;
                 
                 passes.push_back( pass_name );
             }
@@ -175,10 +175,10 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
             for( int i = 0; i < rc_list_size; i++ )
             {
-                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
-                dsstring pass_name = render_context->GetPassName();
+                LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context.passname;
 
-                int textures_set_size = render_context->GetTexturesSetListSize();
+                int textures_set_size = render_context.textures_sets.size();
 
                 ////////////// les N jeux de 32 textures stages
                 std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>> textures;
@@ -187,11 +187,11 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 {
                     std::array<Texture*, RenderingNode::NbMaxTextures> textures_set;
 
-                    LuaClass_TexturesSet* txts_set = render_context->GetTexturesSet( texture_face_index );
+                    LuaClass_TexturesSet::Data txts_set = render_context.textures_sets[texture_face_index];
                                         
                     for( int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++ )
                     {
-                        dsstring texture_name = txts_set->GetTextureFile( texture_stage_index );
+                        dsstring texture_name = txts_set.textures[texture_stage_index];
                         if( texture_name != "" )
                         {
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_name ) );
@@ -225,23 +225,23 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
             for( int i = 0; i < rc_list_size; i++ )
             {
-                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
-                dsstring pass_name = render_context->GetPassName();
+                LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context.passname;
 
-                if( render_context->GetFxParamsListSize() < 1 )
+                if( render_context.fxparams.size() < 1 )
                 {
                     cleanup_resources( p_L );
                     LUA_ERROR( "Rendering::configure : missing fx parameters description" );                                   
                 }
-                LuaClass_FxParams* fx_params = render_context->GetFxParams( 0 );
+                LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
 
                 Fx* fx = _DRAWSPACE_NEW_( Fx, Fx );
               
-                fx->SetRenderStates( fx_params->GetRenderStatesSet() );
+                fx->SetRenderStates( fx_params.rss );
 
-                for( size_t j = 0; j < fx_params->GetNbShaderFiles(); j++ )
+                for( size_t j = 0; j < fx_params.shaders.size(); j++ )
                 {
-                    std::pair<dsstring,bool> shader_file_infos = fx_params->GetShaderFile( j );
+                    std::pair<dsstring,bool> shader_file_infos = fx_params.shaders[j];
                     Shader* shader = _DRAWSPACE_NEW_( Shader, Shader( shader_file_infos.first, shader_file_infos.second ) );
 
                     bool status = shader->LoadFromFile();
@@ -267,12 +267,12 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
             {
                 std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
 
-                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
-                dsstring pass_name = render_context->GetPassName();
+                LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context.passname;
 
-                for( int j = 0; j < render_context->GetShadersParamsListSize(); j++ )
+                for( size_t j = 0; j < render_context.shaders_params.size(); j++ )
                 {
-                    LuaClass_RenderContext::NamedShaderParam param = render_context->GetNamedShaderParam( j );
+                    LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
                     texturepass_shaders_params.push_back( param );
                 }
 
@@ -285,11 +285,11 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
             for( int i = 0; i < rc_list_size; i++ )
             {
-                LuaClass_RenderContext* render_context = lua_renderconfig->GetRenderContext( i );
-                dsstring pass_name = render_context->GetPassName();
+                LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
+                dsstring pass_name = render_context.passname;
 
                 dsstring component_name = "renderingimpl_ro/" + pass_name;
-                m_entity_rendering_aspect->AddComponent<int>( component_name, render_context->GetRenderingOrder() );
+                m_entity_rendering_aspect->AddComponent<int>( component_name, render_context.rendering_order );
             }
 
         } LUA_CATCH; 
@@ -298,13 +298,13 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
     {
         LUA_ERROR( "Rendering::configure : not attached to an entity" );
     }
-    */
+    
     return 0;
 }
 
 void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
 {
-    /*
+    
     if( m_entity_rendering_aspect )
     {
         std::vector<dsstring> passes_list = m_entity_rendering_aspect->GetComponent<std::vector<dsstring>>( "passes" )->getPurpose();
@@ -395,18 +395,18 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
     {
         LUA_ERROR( "Rendering::cleanup_resources : no rendering aspect" );
     }
-    */
+    
 }
 
 int LuaClass_Rendering::LUA_release( lua_State* p_L )
 {
-    //cleanup_resources( p_L );
+    cleanup_resources( p_L );
     return 0;
 }
 
 int LuaClass_Rendering::LUA_registertorendering( lua_State* p_L )
 {
-    /*
+    
     if( NULL == m_rendering_impl )
     {
         LUA_ERROR( "Rendering::register_to_rendering : no rendering aspect impl created" );
@@ -421,13 +421,13 @@ int LuaClass_Rendering::LUA_registertorendering( lua_State* p_L )
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
 
     m_rendering_impl->RegisterToRendering( lua_rg->GetRenderGraph() );
-    */
+    
     return 0;
 }
 
 int LuaClass_Rendering::LUA_unregisterfromrendering( lua_State* p_L )
 {
-    /*
+    
     if( NULL == m_rendering_impl)
     {
         LUA_ERROR( "Rendering::unregister_from_rendering : no rendering aspect impl created" );
@@ -442,13 +442,13 @@ int LuaClass_Rendering::LUA_unregisterfromrendering( lua_State* p_L )
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
 
     m_rendering_impl->UnregisterFromRendering( lua_rg->GetRenderGraph() );
-    */
+    
     return 0;
 }
 
 int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
 {
-    /*
+    
 	int argc = lua_gettop( p_L );
 	if( argc < 6 )
 	{		
@@ -484,6 +484,6 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
         }
 
     } LUA_CATCH;
-    */
+    
     return 0;
 }
