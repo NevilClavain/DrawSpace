@@ -941,26 +941,9 @@ void MainLoopService::create_skybox( void )
 
     rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
 
-    /*
-    ////////////// jeu de 6 textures par slot pass
-
-    std::vector<Texture*> skybox_textures;
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ) );
-    skybox_textures.push_back( _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) ) );
-
-    for( int i = 0; i < 6; i++ )
-    {
-        skybox_textures[i]->LoadFromFile();    
-    }
-
-    rendering_aspect->AddComponent<std::vector<Texture*>>( "skybox_textures", skybox_textures );
-    */
-
     ////////////// 6 jeux de 32 textures stages
+
+    /*
     std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6> skybox_textures = { NULL };
 
     skybox_textures[0][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) );
@@ -977,6 +960,27 @@ void MainLoopService::create_skybox( void )
 
     rendering_aspect->AddComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( "skybox_textures", skybox_textures );
     rendering_aspect->AddComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( "skybox_mirror_textures", skybox_textures );
+    */
+
+    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
+
+    std::array<std::array<Texture*, RenderingNode::NbMaxTextures>, 6> textures = { NULL };
+    textures[0][0] = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
+    textures[1][0] = _DRAWSPACE_NEW_(Texture, Texture("sb2.bmp"));
+    textures[2][0] = _DRAWSPACE_NEW_(Texture, Texture("sb3.bmp"));
+    textures[3][0] = _DRAWSPACE_NEW_(Texture, Texture("sb1.bmp"));
+    textures[4][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
+    textures[5][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
+
+    for (int i = 0; i < 6; i++)
+    {
+        textures[i][0]->LoadFromFile();
+
+        skybox_textures.push_back(textures[i]);
+    }
+    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>("skybox_textures", skybox_textures);
+    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>("skybox_mirror_textures", skybox_textures);
+
 
     /////////////// les FX pour chaque slot pass
 

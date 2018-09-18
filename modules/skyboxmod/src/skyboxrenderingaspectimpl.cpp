@@ -355,8 +355,9 @@ void SkyboxRenderingAspectImpl::init_rendering_objects( void )
     ComponentList<std::vector<dsstring>> skybox_passes;
     m_owner->GetComponentsByType<std::vector<dsstring>>( skybox_passes );
 
-    ComponentList<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>> skybox_textures;
-    m_owner->GetComponentsByType<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( skybox_textures );
+    ComponentList<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>> skybox_textures;
+    m_owner->GetComponentsByType<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>>( skybox_textures );
+
 
     ComponentList<Fx*> skybox_fxs;
     m_owner->GetComponentsByType<Fx*>( skybox_fxs );
@@ -371,7 +372,7 @@ void SkyboxRenderingAspectImpl::init_rendering_objects( void )
         dsstring pass_name;
         pass_name = passes_names[i];
 
-        std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6> textures = skybox_textures[i]->getPurpose();
+        std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures = skybox_textures[i]->getPurpose();
 
         PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name ) );
         for( size_t j = 0; j < 6; j++ )
@@ -386,10 +387,8 @@ void SkyboxRenderingAspectImpl::init_rendering_objects( void )
                 pass_slot->GetRenderingNode( j )->SetTexture( textures_set[k], k );
             }
         }
-
         m_pass_slots.push_back( pass_slot );
-    }
-    
+    }    
     update_shader_params();   
 }
 

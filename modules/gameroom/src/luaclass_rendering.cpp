@@ -37,7 +37,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 
 
-const char LuaClass_Rendering::className[] = "Foo";
+const char LuaClass_Rendering::className[] = "Rendering";
 const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
 {    
     { "instanciate_renderingimpl", &LuaClass_Rendering::LUA_instanciateRenderingImpl },    
@@ -185,7 +185,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
                 for( int texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++ )
                 {
-                    std::array<Texture*, RenderingNode::NbMaxTextures> textures_set;
+                    std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { NULL };
 
                     LuaClass_TexturesSet::Data txts_set = render_context.textures_sets[texture_face_index];
                                         
@@ -206,8 +206,6 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                             }
                             else
                             {
-                                //textures[texture_face_index][texture_stage_index] = texture;
-
                                 textures_set[texture_stage_index] = texture;
                             }
                         }                        
