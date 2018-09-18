@@ -112,7 +112,6 @@
     <ClCompile Include="src\luaclass_rendering.cpp" />
     <ClCompile Include="src\luaclass_renderpassnodegraph.cpp" />
     <ClCompile Include="src\luaclass_renderstatesset.cpp" />
-    <ClCompile Include="src\luaclass_skyboxrendering.cpp" />
     <ClCompile Include="src\luaclass_syncscalar.cpp" />
     <ClCompile Include="src\luaclass_textrendering.cpp" />
     <ClCompile Include="src\luaclass_fpstransform.cpp" />
@@ -137,7 +136,6 @@
     <ClInclude Include="src\luaclass_renderconfig.h" />
     <ClInclude Include="src\luaclass_rendercontext.h" />
     <ClInclude Include="src\luaclass_rendering.h" />
-    <ClInclude Include="src\luaclass_skyboxrendering.h" />
     <ClInclude Include="src\luaclass_syncscalar.h" />
     <ClInclude Include="src\luaclass_textrendering.h" />
     <ClInclude Include="src\luaclass_fpstransform.h" />

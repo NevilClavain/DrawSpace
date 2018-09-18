@@ -52,9 +52,6 @@
     <ClCompile Include="src\luaclass_renderconfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaclass_skyboxrendering.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\luaclass_module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,9 +138,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_renderconfig.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\luaclass_skyboxrendering.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_module.h">

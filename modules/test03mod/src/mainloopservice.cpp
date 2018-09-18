@@ -943,25 +943,6 @@ void MainLoopService::create_skybox( void )
 
     ////////////// 6 jeux de 32 textures stages
 
-    /*
-    std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6> skybox_textures = { NULL };
-
-    skybox_textures[0][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb0.bmp" ) );
-    skybox_textures[1][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb2.bmp" ) );
-    skybox_textures[2][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb3.bmp" ) );
-    skybox_textures[3][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb1.bmp" ) );
-    skybox_textures[4][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) );
-    skybox_textures[5][0] = _DRAWSPACE_NEW_( Texture, Texture( "sb4.bmp" ) );
-
-    for( int i = 0; i < 6; i++ )
-    {
-        skybox_textures[i][0]->LoadFromFile();    
-    }
-
-    rendering_aspect->AddComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( "skybox_textures", skybox_textures );
-    rendering_aspect->AddComponent<std::array<std::array<Texture*,RenderingNode::NbMaxTextures>,6>>( "skybox_mirror_textures", skybox_textures );
-    */
-
     std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
 
     std::array<std::array<Texture*, RenderingNode::NbMaxTextures>, 6> textures = { NULL };

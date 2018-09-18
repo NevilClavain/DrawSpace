@@ -42,7 +42,6 @@
 #include "luaclass_fxparams.h"
 #include "luaclass_rendercontext.h"
 #include "luaclass_renderconfig.h"
-#include "luaclass_skyboxrendering.h"
 #include "luaclass_module.h"
 #include "luaclass_matrix.h"
 #include "luaclass_body.h"
@@ -80,7 +79,6 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RawTransform>::Register( m_L );
     Luna<LuaClass_TextRendering>::Register( m_L );
     Luna<LuaClass_MesheRendering>::Register( m_L );
-    Luna<LuaClass_SkyboxRendering>::Register( m_L );
     Luna<LuaClass_SyncAngle>::Register( m_L );
     Luna<LuaClass_SyncScalar>::Register( m_L );
     Luna<LuaClass_RenderContext>::Register( m_L );
