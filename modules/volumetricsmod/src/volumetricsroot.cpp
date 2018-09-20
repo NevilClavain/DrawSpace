@@ -24,6 +24,7 @@
 
 #include "volumetricsroot.h"
 #include "file.h"
+#include "nebulaerenderingaspectimpl.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -53,7 +54,11 @@ void VolumetricsRoot::Init( void )
 }
 
 DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* VolumetricsRoot::InstanciateRenderingAspectImpls( const dsstring& p_id )
-{    
+{
+    if( "nebulaeRender" == p_id )
+    {
+        return new DrawSpace::AspectImplementations::NebulaeRenderingAspectImpl;
+    }
     return NULL;
 }
 
