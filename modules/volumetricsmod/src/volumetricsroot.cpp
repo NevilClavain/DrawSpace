@@ -64,5 +64,6 @@ DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* VolumetricsRoo
 
 void VolumetricsRoot::TrashRenderingAspectImpls( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl )
 {
-
+    DrawSpace::AspectImplementations::NebulaeRenderingAspectImpl* nb_impl = static_cast<DrawSpace::AspectImplementations::NebulaeRenderingAspectImpl*>(p_impl);
+    delete nb_impl;
 }
