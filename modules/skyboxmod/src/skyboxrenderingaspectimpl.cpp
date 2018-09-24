@@ -411,7 +411,7 @@ void SkyboxRenderingAspectImpl::update_shader_params( void ) // for all passes
 
     m_owner->GetComponentsByType<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( skybox_shaders_params );
 
-    for( size_t i = 0; i < skybox_shaders_params.size(); i++ )
+    for( size_t i = 0; i < m_pass_slots.size(); i++ )
     {
         // pour chaque passe
         PassSlot* curr_pass = m_pass_slots[i];
