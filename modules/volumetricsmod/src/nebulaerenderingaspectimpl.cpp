@@ -183,8 +183,9 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
     ComponentList<std::vector<dsstring>> passes;
     m_owner->GetComponentsByType<std::vector<dsstring>>( passes );
 
-    ComponentList<std::array<Texture*,RenderingNode::NbMaxTextures>> textures;
-    m_owner->GetComponentsByType<std::array<Texture*,RenderingNode::NbMaxTextures>>( textures );
+    ComponentList<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> textures;
+    m_owner->GetComponentsByType<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>(textures);
+
 
     ComponentList<Fx*> fxs;
     m_owner->GetComponentsByType<Fx*>( fxs );
@@ -204,13 +205,15 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
         pass_slot->GetRenderingNode()->SetOrderNumber( ro[i]->getPurpose() );
         pass_slot->GetRenderingNode()->SetFx( fxs[i]->getPurpose() );
 
-        std::array<Texture*,RenderingNode::NbMaxTextures> textures_set = textures[i]->getPurpose();
-
-        for( size_t k = 0; k < RenderingNode::NbMaxTextures; k++ )
+        if(textures[0]->getPurpose().size() )
         {
-            pass_slot->GetRenderingNode()->SetTexture( textures_set[k], k );
+            std::array<Texture*,RenderingNode::NbMaxTextures> textures_set = textures[0]->getPurpose()[0];
+            for( size_t k = 0; k < RenderingNode::NbMaxTextures; k++ )
+            {
+                pass_slot->GetRenderingNode()->SetTexture( textures_set[k], k );
+            }
         }
-
+        
         m_pass_slots.push_back( pass_slot );
     }
     
@@ -231,21 +234,22 @@ void NebulaeRenderingAspectImpl::update_shader_params( void ) // for all passes
     ////////////////////////////////////////////////////////
     //recup des params shaders
 
-    ComponentList<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> shaders_params;
+    ComponentList<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> neb_shaders_params;
 
-    m_owner->GetComponentsByType<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( shaders_params );
-
-    for( size_t i = 0; i < shaders_params.size(); i++ )
-    {
+    m_owner->GetComponentsByType<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>(neb_shaders_params);
+    
+    for( size_t i = 0; i < m_pass_slots.size(); i++ )
+    {       
         // pour chaque passe
         PassSlot* curr_pass = m_pass_slots[i];
 
-        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = shaders_params[i]->getPurpose();
+        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> shaders_params = neb_shaders_params[i]->getPurpose();
 
         for( size_t k = 0; k < shaders_params.size(); k++ )
         {
-            std::pair<dsstring, RenderingNode::ShadersParams> shader_params_pair = pass_shaders_params[k];
+            std::pair<dsstring, RenderingNode::ShadersParams> shader_params_pair = shaders_params[k];
             curr_pass->GetRenderingNode()->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
         }
     }
+    
 }
