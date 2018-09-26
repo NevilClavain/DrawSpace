@@ -458,7 +458,7 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
     dsreal valx = luaL_checknumber( p_L, 3 );
     dsreal valy = luaL_checknumber( p_L, 4 );
     dsreal valz = luaL_checknumber( p_L, 5 );
-    dsreal valw = luaL_checknumber( p_L, 5 );
+    dsreal valw = luaL_checknumber( p_L, 6 );
 
     dsstring component_name = "renderingimpl_shaders_params/" + pass_id;
     
