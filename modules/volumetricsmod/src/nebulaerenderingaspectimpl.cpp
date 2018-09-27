@@ -80,6 +80,10 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
     m_meshe->AddTriangle(Triangle(0, 3, 1));
     m_meshe->AddTriangle(Triangle(1, 3, 2));
 
+
+
+    m_meshe->ComputeNormales();
+
     /////////////////
     
     m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );

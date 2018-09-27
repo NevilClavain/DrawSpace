@@ -30,21 +30,34 @@ cbuffer legacyargs : register(b0)
 };
 
 #include "mat_input_constants.hlsl"
+#include "mat_input_constants.hlsl"
 
 struct VS_INPUT
 {
-    float3 Position : POSITION;
-    float4 TexCoord0 : TEXCOORD0;
+    float3 Position     : POSITION;
+    float3 Normal       : NORMALE;
+    float4 TexCoord0    : TEXCOORD0;
 };
 
 struct VS_OUTPUT
 {
-    float4 Position : SV_POSITION;
-    float2 TexCoord0 : TEXCOORD0;
+    float4 Position     : SV_POSITION;
+    float2 TexCoord0    : TEXCOORD0;
+    float4 Normale      : TEXCOORD1;
 };
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
+    float4x4 mat_World = mat[matWorld];
+    float4x4 mat_View = mat[matView];
+
+    float4x4 id = 0;
+    id[0][0] = 1.0;
+    id[1][1] = 1.0;
+    id[2][2] = -1.0;
+    id[3][3] = 1.0;
+    float4x4 matView2 = mul(mat_View, id);
+
     VS_OUTPUT Output;
     float4 pos;
     pos.xyz = Input.Position;
@@ -52,6 +65,20 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     Output.Position = mul(pos, mat[matWorldViewProjection]);
     Output.TexCoord0 = Input.TexCoord0.xy;
-      
+
+    float4 normale;
+    normale.xyz = Input.Normal;
+    normale.w = 1.0;
+
+    float4x4 mWorldView = mul(mat_World, matView2);
+
+    mWorldView[3][0] = 0.0;
+    mWorldView[3][1] = 0.0;
+    mWorldView[3][2] = 0.0;
+
+    //Output.Normale = normalize(mul(mul(normale, mat_World), matView2));
+
+    Output.Normale = normalize(mul(normale, mWorldView));
+          
     return (Output);
 }

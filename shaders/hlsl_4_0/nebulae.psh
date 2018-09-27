@@ -38,15 +38,20 @@ SamplerState sampModMask    : register(s1);
 
 struct PS_INTPUT 
 {
-    float4 Position : SV_POSITION;
-	float2 TexCoord0: TEXCOORD0;
+    float4 Position         : SV_POSITION;
+	float2 TexCoord0        : TEXCOORD0;
+    float4 Normale          : TEXCOORD1;
 };
+
+
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float4 color_neb = txDiffuse.Sample(sam, input.TexCoord0);    
     float4 color_mask = ModMask.Sample(sampModMask, input.TexCoord0);
     float4 color_global = vec[0];
+
+    color_global.a = abs(input.Normale.z * input.Normale.z);
 
     float4 final_neb_color = color_mask * color_neb;
     final_neb_color.w = 1.0;
