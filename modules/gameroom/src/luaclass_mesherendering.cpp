@@ -211,7 +211,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
                 for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
                 {
-                    dsstring texture_path = textures.textures[0];
+                    dsstring texture_path = textures.textures[j];
                     if( texture_path != "" )
                     {
                         bool status;
