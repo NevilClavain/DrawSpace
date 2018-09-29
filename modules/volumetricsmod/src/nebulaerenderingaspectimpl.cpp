@@ -26,6 +26,7 @@
 #include "nebulaerenderingaspectimpl.h"
 #include "renderingaspect.h"
 #include "transformaspect.h"
+#include "maths.h"
 
 
 using namespace DrawSpace;
@@ -44,41 +45,89 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
     // BUILD MESHE HERE
 
-    Vertex v1, v2, v3, v4;
+    dsreal angle = 90.0;
 
+    
     m_meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
 
-    v1.x = -0.5;
-    v1.y = 0.5;
-    v1.z = 0.0;
-    v1.tu[0] = 0.0;
-    v1.tv[0] = 0.0;
 
-    v2.x = 0.5;
-    v2.y = 0.5;
-    v2.z = 0.0;
-    v2.tu[0] = 1.0;
-    v2.tv[0] = 0.0;
 
-    v3.x = 0.5;
-    v3.y = -0.5;
-    v3.z = 0.0;
-    v3.tu[0] = 1.0;
-    v3.tv[0] = 1.0;
 
-    v4.x = -0.5;
-    v4.y = -0.5;
-    v4.z = 0.0;
-    v4.tu[0] = 0.0;
-    v4.tv[0] = 1.0;
+    Vector vi1(-0.5, 0.5, 0.0, 1.0 );
+    Vector vi2( 0.5, 0.5, 0.0, 1.0 );
+    Vector vi3( 0.5, -0.5, 0.0, 1.0 );
+    Vector vi4( -0.5, -0.5, 0.0, 1.0 );
 
-    m_meshe->AddVertex(v1);
-    m_meshe->AddVertex(v2);
-    m_meshe->AddVertex(v3);
-    m_meshe->AddVertex(v4);
+    Vector vo1;
+    Vector vo2;
+    Vector vo3;
+    Vector vo4;
 
-    m_meshe->AddTriangle(Triangle(0, 3, 1));
-    m_meshe->AddTriangle(Triangle(1, 3, 2));
+    for( int i = 0; i < 8; i++ )
+    {
+
+        Vertex v1, v2, v3, v4;
+
+
+        Matrix mrot;
+
+        mrot.Rotation( Vector( 1.0, 0.0, 0.0, 1.0), Utils::Maths::DegToRad( angle ) );
+
+        angle += 45.0;
+
+        mrot.Transform( &vi1, &vo1 );
+        mrot.Transform( &vi2, &vo2 );
+        mrot.Transform( &vi3, &vo3 );
+        mrot.Transform( &vi4, &vo4 );
+
+
+
+
+
+
+        v1.x = vo1[0];
+        v1.y = vo1[1];
+        v1.z = vo1[2];
+
+        v2.x = vo2[0];
+        v2.y = vo2[1];
+        v2.z = vo2[2];
+
+        v3.x = vo3[0];
+        v3.y = vo3[1];
+        v3.z = vo3[2];
+
+        v4.x = vo4[0];
+        v4.y = vo4[1];
+        v4.z = vo4[2];
+
+        v1.tu[0] = 0.0;
+        v1.tv[0] = 0.0;
+
+        v2.tu[0] = 1.0;
+        v2.tv[0] = 0.0;
+
+        v3.tu[0] = 1.0;
+        v3.tv[0] = 1.0;
+
+        v4.tu[0] = 0.0;
+        v4.tv[0] = 1.0;
+
+
+        m_meshe->AddVertex(v1);
+        m_meshe->AddVertex(v2);
+        m_meshe->AddVertex(v3);
+        m_meshe->AddVertex(v4);
+
+        int index = 4 * i;
+
+        m_meshe->AddTriangle(Triangle(index, index + 3, index + 1));
+        m_meshe->AddTriangle(Triangle(index + 1, index + 3, index + 2));
+
+    }
+
+
+
 
 
 
