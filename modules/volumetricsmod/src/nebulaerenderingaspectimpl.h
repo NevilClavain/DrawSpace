@@ -44,7 +44,17 @@ public:
     class PassSlot
     {
     private:
-        typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
+
+        using QuadAxis = enum
+        {
+            X_AXIS,
+            Y_AXIS,
+            Z_AXIS
+        };
+
+        using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
+
+        static const int atlasResolution = 8;
 
         dsstring                                m_pass_name;        
         RenderingNodeDrawCallback*              m_cb;
@@ -55,6 +65,9 @@ public:
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
+        void        create_axis_quad( QuadAxis p_axis, int p_angle_step, int& p_nb_vertex );
+
+        void        generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
     public:
 
         Utils::Matrix                           m_world;
@@ -81,7 +94,7 @@ protected:
     void        release_rendering_objects( void );
 
     void        update_shader_params( void ); // for all passes
-
+   
 public:
     NebulaeRenderingAspectImpl( void );
 

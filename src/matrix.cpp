@@ -96,7 +96,7 @@ void Matrix::Rotation( const Vector& p_axis, dsreal p_angle )
     m_configinfos.values[3] = p_angle;
 }
 
-void Matrix::Transform( Vector* p_vec_in, Vector* p_vec_out )
+void Matrix::Transform( Vector* p_vec_in, Vector* p_vec_out ) const
 {
     (*p_vec_out)[0] = (*p_vec_in)[0] * m_matrix[0][0] +
                       (*p_vec_in)[1] * m_matrix[1][0] +

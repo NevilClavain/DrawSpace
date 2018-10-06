@@ -42,97 +42,17 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
-
     // BUILD MESHE HERE
 
     dsreal angle = 90.0;
-
+    int nb_vertex = 0;
     
     m_meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
-
-
-
-
-    Vector vi1(-0.5, 0.5, 0.0, 1.0 );
-    Vector vi2( 0.5, 0.5, 0.0, 1.0 );
-    Vector vi3( 0.5, -0.5, 0.0, 1.0 );
-    Vector vi4( -0.5, -0.5, 0.0, 1.0 );
-
-    Vector vo1;
-    Vector vo2;
-    Vector vo3;
-    Vector vo4;
-
-    for( int i = 0; i < 8; i++ )
-    {
-
-        Vertex v1, v2, v3, v4;
-
-
-        Matrix mrot;
-
-        mrot.Rotation( Vector( 1.0, 0.0, 0.0, 1.0), Utils::Maths::DegToRad( angle ) );
-
-        angle += 45.0;
-
-        mrot.Transform( &vi1, &vo1 );
-        mrot.Transform( &vi2, &vo2 );
-        mrot.Transform( &vi3, &vo3 );
-        mrot.Transform( &vi4, &vo4 );
-
-
-
-
-
-
-        v1.x = vo1[0];
-        v1.y = vo1[1];
-        v1.z = vo1[2];
-
-        v2.x = vo2[0];
-        v2.y = vo2[1];
-        v2.z = vo2[2];
-
-        v3.x = vo3[0];
-        v3.y = vo3[1];
-        v3.z = vo3[2];
-
-        v4.x = vo4[0];
-        v4.y = vo4[1];
-        v4.z = vo4[2];
-
-        v1.tu[0] = 0.0;
-        v1.tv[0] = 0.0;
-
-        v2.tu[0] = 1.0;
-        v2.tv[0] = 0.0;
-
-        v3.tu[0] = 1.0;
-        v3.tv[0] = 1.0;
-
-        v4.tu[0] = 0.0;
-        v4.tv[0] = 1.0;
-
-
-        m_meshe->AddVertex(v1);
-        m_meshe->AddVertex(v2);
-        m_meshe->AddVertex(v3);
-        m_meshe->AddVertex(v4);
-
-        int index = 4 * i;
-
-        m_meshe->AddTriangle(Triangle(index, index + 3, index + 1));
-        m_meshe->AddTriangle(Triangle(index + 1, index + 3, index + 2));
-
-    }
-
-
-
-
-
-
-    m_meshe->ComputeNormales();
-
+    
+    create_axis_quad( X_AXIS, 15, nb_vertex );
+    create_axis_quad( Y_AXIS, 15, nb_vertex );
+    create_axis_quad( Z_AXIS, 15, nb_vertex );
+    
     /////////////////
     
     m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
@@ -154,10 +74,202 @@ NebulaeRenderingAspectImpl::PassSlot::~PassSlot( void )
     _DRAWSPACE_DELETE_(m_cb);
 }       
 
+void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad( QuadAxis p_axis, int p_angle_step, int& p_nb_vertex)
+{
+    Vector vo1;
+    Vector vo2;
+    Vector vo3;
+    Vector vo4;
+
+    dsreal angle = 0.0;
+
+    int nb_loop = 360 / p_angle_step;
+
+    for (int i = 0; i < nb_loop; i++)
+    {
+        Vertex v1, v2, v3, v4;
+
+        switch( p_axis )
+        {
+            case X_AXIS:
+            {
+                Vector vi1(-0.5, 0.5, 0.0, 1.0);
+                Vector vi2(0.5, 0.5, 0.0, 1.0);
+                Vector vi3(0.5, -0.5, 0.0, 1.0);
+                Vector vi4(-0.5, -0.5, 0.0, 1.0);
+
+                Matrix mrot;
+                mrot.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), Utils::Maths::DegToRad( angle ) );
+
+                angle += p_angle_step;
+
+                mrot.Transform( &vi1, &vo1 );
+                mrot.Transform( &vi2, &vo2 );
+                mrot.Transform( &vi3, &vo3 );
+                mrot.Transform( &vi4, &vo4 );
+            }
+            break;
+
+            case Y_AXIS:
+            {
+                Vector vi1(-0.5, 0.5, 0.0, 1.0);
+                Vector vi2(0.5, 0.5, 0.0, 1.0);
+                Vector vi3(0.5, -0.5, 0.0, 1.0);
+                Vector vi4(-0.5, -0.5, 0.0, 1.0);
+
+                Matrix mrot;
+                mrot.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), Utils::Maths::DegToRad( angle ) );
+
+                angle += p_angle_step;
+
+                mrot.Transform( &vi1, &vo1 );
+                mrot.Transform( &vi2, &vo2 );
+                mrot.Transform( &vi3, &vo3 );
+                mrot.Transform( &vi4, &vo4 );
+            }
+
+            break;
+
+            case Z_AXIS:
+            {
+                Vector vi1(-0.5, 0.0, 0.5, 1.0);
+                Vector vi2(0.5, 0.0, 0.5, 1.0);
+                Vector vi3(0.5, 0.0, -0.5, 1.0);
+                Vector vi4(-0.5, 0.0, -0.5, 1.0);
+
+                Matrix mrot;
+                mrot.Rotation(Vector(0.0, 0.0, 1.0, 1.0), Utils::Maths::DegToRad(angle));
+
+                angle += p_angle_step;
+
+                mrot.Transform(&vi1, &vo1);
+                mrot.Transform(&vi2, &vo2);
+                mrot.Transform(&vi3, &vo3);
+                mrot.Transform(&vi4, &vo4);
+            }
+            break;
+        }
+
+        v1.x = vo1[0];
+        v1.y = vo1[1];
+        v1.z = vo1[2];
+
+        v2.x = vo2[0];
+        v2.y = vo2[1];
+        v2.z = vo2[2];
+
+        v3.x = vo3[0];
+        v3.y = vo3[1];
+        v3.z = vo3[2];
+
+        v4.x = vo4[0];
+        v4.y = vo4[1];
+        v4.z = vo4[2];
+
+        dsreal tu1, tv1;
+        dsreal tu2, tv2;
+
+        generate_uvcoords( tu1, tv1, tu2, tv2 );
+
+        v1.tu[0] = tu1;
+        v1.tv[0] = tv1;
+
+        v2.tu[0] = tu2;
+        v2.tv[0] = tv1;
+
+        v3.tu[0] = tu2;
+        v3.tv[0] = tv2;
+
+        v4.tu[0] = tu1;
+        v4.tv[0] = tv2;
+
+
+        /*
+        v1.tu[0] = 0.0;
+        v1.tv[0] = 0.0;
+
+        v2.tu[0] = 0.125;
+        v2.tv[0] = 0.0;
+
+        v3.tu[0] = 0.125;
+        v3.tv[0] = 0.125;
+
+        v4.tu[0] = 0.0;
+        v4.tv[0] = 0.125;
+        */
+
+        v1.tu[1] = 0.0;
+        v1.tv[1] = 0.0;
+
+        v2.tu[1] = 1.0;
+        v2.tv[1] = 0.0;
+
+        v3.tu[1] = 1.0;
+        v3.tv[1] = 1.0;
+
+        v4.tu[1] = 0.0;
+        v4.tv[1] = 1.0;
+
+
+        m_meshe->AddVertex(v1);
+        m_meshe->AddVertex(v2);
+        m_meshe->AddVertex(v3);
+        m_meshe->AddVertex(v4);
+
+        int index = 4 * i;
+
+        index += p_nb_vertex;
+
+        m_meshe->AddTriangle(Triangle(index, index + 3, index + 1));
+        m_meshe->AddTriangle(Triangle(index + 1, index + 3, index + 2));
+    }
+
+    m_meshe->ComputeNormales();
+
+    p_nb_vertex += 4 * nb_loop;
+}
+
+
 void NebulaeRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
     m_renderer->DrawMeshe( m_world, m_view, m_proj );
 }
+
+void NebulaeRenderingAspectImpl::PassSlot::generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2)
+{
+    static int u;
+    static int v;
+
+    dsreal step = 1.0 / atlasResolution;
+
+    dsreal u1, u2;
+    dsreal v1, v2;
+
+    u1 = u * step;
+    u2 = u1 + step;
+    
+    v1 = v * step;
+    v2 = v1 + step;
+
+    p_u1 = u1;
+    p_u2 = u2;
+
+    p_v1 = v1;
+    p_v2 = v2;
+
+    u++;
+    if( 8 == u )
+    {
+        u = 0;
+        v++;
+        if( 8 == v )
+        {
+            v = 0;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 NebulaeRenderingAspectImpl::NebulaeRenderingAspectImpl( void )
 {
@@ -303,6 +415,6 @@ void NebulaeRenderingAspectImpl::update_shader_params( void ) // for all passes
             std::pair<dsstring, RenderingNode::ShadersParams> shader_params_pair = shaders_params[k];
             curr_pass->GetRenderingNode()->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
         }
-    }
-    
+    }   
 }
+

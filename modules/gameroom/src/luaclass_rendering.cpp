@@ -464,8 +464,8 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
     
     LUA_TRY
     {
-        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params = m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose();
-        for( auto it = texturepass_shaders_params.begin(); it != texturepass_shaders_params.end(); ++it )
+        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose();
+        for( auto it = pass_shaders_params.begin(); it != pass_shaders_params.end(); ++it )
         {
             if( it->first == param_id )
             {
@@ -475,7 +475,7 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
                 it->second.param_values[2] = valz;
                 it->second.param_values[3] = valw;
 
-                m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose() = texturepass_shaders_params;
+                m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose() = pass_shaders_params;
 
                 break;
             }

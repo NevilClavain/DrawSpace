@@ -37,13 +37,15 @@ struct VS_INPUT
     float3 Position     : POSITION;
     float3 Normal       : NORMALE;
     float4 TexCoord0    : TEXCOORD0;
+    float4 TexCoord1    : TEXCOORD1;
 };
 
 struct VS_OUTPUT
 {
     float4 Position     : SV_POSITION;
     float2 TexCoord0    : TEXCOORD0;
-    float4 Normale      : TEXCOORD1;
+    float2 TexCoord1    : TEXCOORD1;
+    float4 Normale      : TEXCOORD2;
 };
 
 VS_OUTPUT vs_main(VS_INPUT Input)
@@ -65,6 +67,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     Output.Position = mul(pos, mat[matWorldViewProjection]);
     Output.TexCoord0 = Input.TexCoord0.xy;
+    Output.TexCoord1 = Input.TexCoord1.xy;
 
     float4 normale;
     normale.xyz = Input.Normal;
@@ -76,9 +79,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     mWorldView[3][1] = 0.0;
     mWorldView[3][2] = 0.0;
 
-    //Output.Normale = normalize(mul(mul(normale, mat_World), matView2));
-
     Output.Normale = normalize(mul(normale, mWorldView));
-          
+            
     return (Output);
 }

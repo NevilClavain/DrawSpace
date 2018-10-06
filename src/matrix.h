@@ -242,8 +242,8 @@ public:
 
     void Rotation( const Vector& p_axis, dsreal p_angle );
     void Inverse( void );
-    void Transform( Vector* p_vec_in, Vector* p_vec_out );
-    dsreal* GetArray( void ) { return (dsreal*)m_matrix; };
+    void Transform( Vector* p_vec_in, Vector* p_vec_out ) const;
+    inline dsreal* GetArray( void ) const { return (dsreal*)m_matrix; };
 
     static void MatrixMult( Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes );
 };
