@@ -197,39 +197,33 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
 
                 ///////////////////////// les textures
-
-                size_t nb_textures_set = render_context.textures_sets.size();
-                //  on a besoin que d'un seul jeu de textures...
-                if( nb_textures_set < 0 )
-                {
-                    cleanup_resources( p_L );
-                    LUA_ERROR( "MesheRendering::configure : no textures set provided !" );
-                }
-
                     
-                LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
-
-                for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
+                size_t nb_textures_set = render_context.textures_sets.size();
+                if (nb_textures_set > 0)
                 {
-                    dsstring texture_path = textures.textures[j];
-                    if( texture_path != "" )
+                    LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
+
+                    for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
                     {
-                        bool status;
-                        Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-                        status = texture->LoadFromFile();
-                        if( !status )
+                        dsstring texture_path = textures.textures[j];
+                        if( texture_path != "" )
                         {
-                            // clean tout ce qui a deja ete charge...
-                            cleanup_resources( p_L );
-                            LUA_ERROR( "MesheRendering::configure : texture loading operation failed" );
-                        }
-                        else
-                        {
-                            rnode->SetTexture( texture, j );
+                            bool status;
+                            Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
+                            status = texture->LoadFromFile();
+                            if( !status )
+                            {
+                                // clean tout ce qui a deja ete charge...
+                                cleanup_resources( p_L );
+                                LUA_ERROR( "MesheRendering::configure : texture loading operation failed" );
+                            }
+                            else
+                            {
+                                rnode->SetTexture( texture, j );
+                            }
                         }
                     }
                 }
-
 
                 ///////////////////////// les vertex textures
 
