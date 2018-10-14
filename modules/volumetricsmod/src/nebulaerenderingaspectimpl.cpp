@@ -183,21 +183,6 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad( QuadAxis p_axis, in
         v4.tu[0] = tu1;
         v4.tv[0] = tv2;
 
-
-        /*
-        v1.tu[0] = 0.0;
-        v1.tv[0] = 0.0;
-
-        v2.tu[0] = 0.125;
-        v2.tv[0] = 0.0;
-
-        v3.tu[0] = 0.125;
-        v3.tv[0] = 0.125;
-
-        v4.tu[0] = 0.0;
-        v4.tv[0] = 0.125;
-        */
-
         v1.tu[1] = 0.0;
         v1.tv[1] = 0.0;
 

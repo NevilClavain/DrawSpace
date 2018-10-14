@@ -46,6 +46,7 @@
 #include "luaclass_matrix.h"
 #include "luaclass_body.h"
 #include "luaclass_rendering.h"
+#include "luaclass_nebulaespecificconfig.h"
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -86,7 +87,8 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Module>::Register( m_L );
     Luna<LuaClass_Matrix>::Register( m_L );    
     Luna<LuaClass_Body>::Register( m_L );
-    Luna<LuaClass_Rendering>::Register(m_L);    
+    Luna<LuaClass_Rendering>::Register(m_L);
+    Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
 }
 
 void LuaContext::Shutdown( void )

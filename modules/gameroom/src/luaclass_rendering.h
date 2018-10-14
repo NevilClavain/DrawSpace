@@ -60,6 +60,11 @@ public:
 
     int LUA_setshaderrealvector( lua_State* p_L );
 
+    inline DrawSpace::Aspect::RenderingAspect* GetRenderingAspect(void) const 
+    { 
+        return m_entity_rendering_aspect;
+    }
+
     static const char className[];
     static const Luna<LuaClass_Rendering>::RegType methods[];
 };
