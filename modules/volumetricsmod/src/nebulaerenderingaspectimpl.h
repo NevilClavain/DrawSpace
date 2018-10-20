@@ -90,7 +90,7 @@ protected:
 
     // data model
     using UVPairList = std::vector<std::pair<int, int>>;
-    using Bloc = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, UVPairList>;
+    using Bloc = std::tuple<DrawSpace::Utils::Vector, dsreal, UVPairList>;
     using DataModel = std::vector<Bloc>;
 
     DataModel               m_data_model;

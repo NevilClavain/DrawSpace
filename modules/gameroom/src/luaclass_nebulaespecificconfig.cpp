@@ -45,19 +45,19 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
     UVPairList uvpl0;
     uvpl0.push_back(std::make_pair<int, int>(1, 2));
     uvpl0.push_back(std::make_pair<int, int>(3, 4));
-    Utils::Vector scale0( 1.2, 2.3, 3.4, 1.0);
+    dsreal scale0( 1.2 );
     Utils::Vector pos0(10.2, 20.3, 30.4, 1.0);
 
-    m_dataModel.push_back(std::make_tuple(scale0,pos0,uvpl0));
+    m_dataModel.push_back(std::make_tuple(pos0,scale0,uvpl0));
 
 
     UVPairList uvpl1;
     uvpl1.push_back(std::make_pair<int, int>(100, 201));
     uvpl1.push_back(std::make_pair<int, int>(34, 44));
-    Utils::Vector scale1(0.5, 0.5, 0.6, 1.0);
+    dsreal scale1(0.5);
     Utils::Vector pos1(0.0, 0.3, -1000.0, 1.0);
 
-    m_dataModel.push_back(std::make_tuple(scale1, pos1, uvpl1));
+    m_dataModel.push_back(std::make_tuple(pos1, scale1, uvpl1));
 }
 
 LuaClass_NebulaeSpecificConfig::~LuaClass_NebulaeSpecificConfig(void)
@@ -80,10 +80,10 @@ int LuaClass_NebulaeSpecificConfig::LUA_apply(lua_State* p_L)
     /*
     for(auto& e : m_dataModel )
     {
-        Utils::Vector s;
+        dsreal s;
         Utils::Vector p;
         UVPairList    uv;
-        std::tie(s, p, uv) = e;
+        std::tie(p, s, uv) = e;
 
         _asm nop
     }
