@@ -30,7 +30,6 @@ cbuffer legacyargs : register(b0)
 };
 
 #include "mat_input_constants.hlsl"
-#include "mat_input_constants.hlsl"
 
 struct VS_INPUT
 {
@@ -38,6 +37,7 @@ struct VS_INPUT
     float3 Normal       : NORMALE;
     float4 TexCoord0    : TEXCOORD0;
     float4 TexCoord1    : TEXCOORD1;
+    float4 Color        : TEXCOORD2;
 };
 
 struct VS_OUTPUT
@@ -46,6 +46,7 @@ struct VS_OUTPUT
     float2 TexCoord0    : TEXCOORD0;
     float2 TexCoord1    : TEXCOORD1;
     float4 Normale      : TEXCOORD2;
+    float4 Color        : TEXCOORD3;
 };
 
 VS_OUTPUT vs_main(VS_INPUT Input)
@@ -80,6 +81,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     mWorldView[3][2] = 0.0;
 
     Output.Normale = normalize(mul(normale, mWorldView));
+
+    Output.Color = Input.Color;
             
     return (Output);
 }

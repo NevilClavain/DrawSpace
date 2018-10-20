@@ -27,6 +27,9 @@
 #include "renderingaspect.h"
 #include "luaclass_rendering.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Utils;
+
 const char LuaClass_NebulaeSpecificConfig::className[] = "NebulaeSpecificConfig";
 const Luna<LuaClass_NebulaeSpecificConfig>::RegType LuaClass_NebulaeSpecificConfig::methods[] =
 {
@@ -36,6 +39,25 @@ const Luna<LuaClass_NebulaeSpecificConfig>::RegType LuaClass_NebulaeSpecificConf
 
 LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
 {
+
+    // for test purpose...
+
+    UVPairList uvpl0;
+    uvpl0.push_back(std::make_pair<int, int>(1, 2));
+    uvpl0.push_back(std::make_pair<int, int>(3, 4));
+    Utils::Vector scale0( 1.2, 2.3, 3.4, 1.0);
+    Utils::Vector pos0(10.2, 20.3, 30.4, 1.0);
+
+    m_dataModel.push_back(std::make_tuple(scale0,pos0,uvpl0));
+
+
+    UVPairList uvpl1;
+    uvpl1.push_back(std::make_pair<int, int>(100, 201));
+    uvpl1.push_back(std::make_pair<int, int>(34, 44));
+    Utils::Vector scale1(0.5, 0.5, 0.6, 1.0);
+    Utils::Vector pos1(0.0, 0.3, -1000.0, 1.0);
+
+    m_dataModel.push_back(std::make_tuple(scale1, pos1, uvpl1));
 }
 
 LuaClass_NebulaeSpecificConfig::~LuaClass_NebulaeSpecificConfig(void)
@@ -55,6 +77,21 @@ int LuaClass_NebulaeSpecificConfig::LUA_apply(lua_State* p_L)
     LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
     DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
 
-    _asm nop
+    /*
+    for(auto& e : m_dataModel )
+    {
+        Utils::Vector s;
+        Utils::Vector p;
+        UVPairList    uv;
+        std::tie(s, p, uv) = e;
+
+        _asm nop
+    }
+    */
+
+    entity_rendering_aspect->AddComponent<DataModel>( "nebulae_specific_config", m_dataModel );
+
+    return 0;
 }
+
 

@@ -27,10 +27,19 @@
 #define _LUACLASS_NEBULAESPECIFICCONFIG_H_
 
 #include "luna.h"
+#include "misc_utils.h"
 
 class LuaClass_NebulaeSpecificConfig
 {
 private:
+
+    // data model
+    using UVPairList    = std::vector<std::pair<int,int>>;
+    using Bloc          = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, UVPairList>;
+    using DataModel     = std::vector<Bloc>;
+
+    DataModel m_dataModel;
+
 
 public:
     LuaClass_NebulaeSpecificConfig(lua_State* p_L);

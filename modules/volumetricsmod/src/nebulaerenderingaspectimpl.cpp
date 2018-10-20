@@ -49,10 +49,26 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
     
     m_meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
     
-    create_axis_quad( X_AXIS, 15, nb_vertex );
-    create_axis_quad( Y_AXIS, 15, nb_vertex );
-    create_axis_quad( Z_AXIS, 15, nb_vertex );
-    
+    Vector pos0( 0.0, 0.0, 0.0, 1.0);
+    Vector color0(0.0, 0.0, 0.0, 1.0);
+    dsreal scale0 = 1.0;
+    create_bloc(pos0, color0, scale0, nb_vertex);
+
+    Vector pos1(0.3, 0.2, 0.0, 1.0);
+    Vector color1(0.99, 0.0, 0.9, 1.0);
+    dsreal scale1 = 1.2;
+    create_bloc(pos1, color1, scale1, nb_vertex);
+
+    Vector pos2(0.0, -0.45, 0.27, 1.0);
+    Vector color2(0.99, 0.0, 0.9, 1.0);
+    dsreal scale2 = 1.9;
+    create_bloc(pos2, color2, scale2, nb_vertex);
+
+    Vector pos3(0.67, -0.55, 0.07, 1.0);
+    Vector color3(0.99, 0.0, 0.9, 1.0);
+    dsreal scale3 = 1.3;
+    create_bloc(pos3, color3, scale3, nb_vertex);
+
     /////////////////
     
     m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
@@ -69,12 +85,20 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
 NebulaeRenderingAspectImpl::PassSlot::~PassSlot( void )
 {    
-    _DRAWSPACE_DELETE_( m_rendering_node );
-    _DRAWSPACE_DELETE_( m_meshe );
+    _DRAWSPACE_DELETE_(m_rendering_node);
+    _DRAWSPACE_DELETE_(m_meshe);
     _DRAWSPACE_DELETE_(m_cb);
-}       
+}
 
-void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad( QuadAxis p_axis, int p_angle_step, int& p_nb_vertex)
+void NebulaeRenderingAspectImpl::PassSlot::create_bloc(const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex)
+{
+    int step = 15;
+    create_axis_quad( p_pos, p_color, p_scale, X_AXIS, step, p_nb_vertex );
+    create_axis_quad( p_pos, p_color, p_scale, Y_AXIS, step, p_nb_vertex );
+    create_axis_quad( p_pos, p_color, p_scale, Z_AXIS, step, p_nb_vertex );
+}
+
+void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex)
 {
     Vector vo1;
     Vector vo2;
@@ -150,6 +174,28 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad( QuadAxis p_axis, in
             break;
         }
 
+        vo1.Scale(p_scale);
+        vo2.Scale(p_scale);
+        vo3.Scale(p_scale);
+        vo4.Scale(p_scale);
+
+        vo1[0] += p_pos[0];
+        vo1[1] += p_pos[1];
+        vo1[2] += p_pos[2];
+
+        vo2[0] += p_pos[0];
+        vo2[1] += p_pos[1];
+        vo2[2] += p_pos[2];
+
+        vo3[0] += p_pos[0];
+        vo3[1] += p_pos[1];
+        vo3[2] += p_pos[2];
+
+        vo4[0] += p_pos[0];
+        vo4[1] += p_pos[1];
+        vo4[2] += p_pos[2];
+
+
         v1.x = vo1[0];
         v1.y = vo1[1];
         v1.z = vo1[2];
@@ -194,6 +240,38 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad( QuadAxis p_axis, in
 
         v4.tu[1] = 0.0;
         v4.tv[1] = 1.0;
+
+
+
+        /////////////////////
+
+        
+
+
+        v1.tu[2] = p_color[0];
+        v1.tv[2] = p_color[1];
+        v1.tw[2] = p_color[2];
+        v1.ta[2] = p_color[3];
+
+        v2.tu[2] = p_color[0];
+        v2.tv[2] = p_color[1];
+        v2.tw[2] = p_color[2];
+        v2.ta[2] = p_color[3];
+
+        v3.tu[2] = p_color[0];
+        v3.tv[2] = p_color[1];
+        v3.tw[2] = p_color[2];
+        v3.ta[2] = p_color[3];
+
+        v4.tu[2] = p_color[0];
+        v4.tv[2] = p_color[1];
+        v4.tw[2] = p_color[2];
+        v4.ta[2] = p_color[3];
+
+
+
+
+        /////////////////////
 
 
         m_meshe->AddVertex(v1);
@@ -336,12 +414,18 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
     ComponentList<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> textures;
     m_owner->GetComponentsByType<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>(textures);
 
-
     ComponentList<Fx*> fxs;
     m_owner->GetComponentsByType<Fx*>( fxs );
 
     ComponentList<int> ro;
     m_owner->GetComponentsByType<int>( ro );
+
+    //// retrieve specific config....
+
+    ComponentList<DataModel> datamodels;
+    m_owner->GetComponentsByType<DataModel>(datamodels);
+
+    m_data_model = datamodels[0]->getPurpose();
 
     std::vector<dsstring> passes_names = passes[0]->getPurpose();
     
@@ -362,8 +446,7 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
             {
                 pass_slot->GetRenderingNode()->SetTexture( textures_set[k], k );
             }
-        }
-        
+        }        
         m_pass_slots.push_back( pass_slot );
     }
     

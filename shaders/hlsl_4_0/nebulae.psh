@@ -42,6 +42,7 @@ struct PS_INTPUT
 	float2 TexCoord0        : TEXCOORD0;
     float2 TexCoord1        : TEXCOORD1;
     float4 Normale          : TEXCOORD2;
+    float4 Color            : TEXCOORD3;
 };
 
 
@@ -50,7 +51,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float4 color_neb = txDiffuse.Sample(sam, input.TexCoord0);    
     float4 color_mask = ModMask.Sample(sampModMask, input.TexCoord1);
-    float4 color_global = vec[0];
+    float4 color_global = input.Color;
 
     color_global.a = abs(input.Normale.z * input.Normale.z);
 

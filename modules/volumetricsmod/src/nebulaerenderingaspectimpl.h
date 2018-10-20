@@ -65,9 +65,11 @@ public:
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
-        void        create_axis_quad( QuadAxis p_axis, int p_angle_step, int& p_nb_vertex );
-
+        void        create_axis_quad( const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex );
         void        generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
+
+        void        create_bloc( const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex);
+
     public:
 
         Utils::Matrix                           m_world;
@@ -85,6 +87,13 @@ public:
     };
 
 protected:
+
+    // data model
+    using UVPairList = std::vector<std::pair<int, int>>;
+    using Bloc = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, UVPairList>;
+    using DataModel = std::vector<Bloc>;
+
+    DataModel               m_data_model;
 
     std::vector<PassSlot*>  m_pass_slots;
 
