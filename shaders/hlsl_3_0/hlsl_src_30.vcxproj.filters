@@ -126,5 +126,11 @@
     <FxCompile Include="generic_rendering.hlsl">
       <Filter>commons</Filter>
     </FxCompile>
+    <FxCompile Include="nebulae.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="nebulae.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
