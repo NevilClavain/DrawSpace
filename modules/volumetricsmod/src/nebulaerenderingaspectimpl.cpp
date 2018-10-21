@@ -38,7 +38,8 @@ using namespace DrawSpace::Utils;
 
 
 NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
-    m_pass_name( p_pass_name )
+    m_pass_name( p_pass_name ),
+    m_meshe_handle( NULL )
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -75,7 +76,11 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
     m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
     m_rendering_node->RegisterHandler( m_cb );
-    m_rendering_node->SetMeshe( m_meshe );
+    //m_rendering_node->SetMeshe( m_meshe );
+
+    
+    bool meshe_creation = m_renderer->CreateMeshe(m_meshe, &m_meshe_handle);
+
 
     m_world.Identity();
     
@@ -85,6 +90,9 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
 NebulaeRenderingAspectImpl::PassSlot::~PassSlot( void )
 {    
+
+    m_renderer->RemoveMeshe(m_meshe, m_meshe_handle);
+
     _DRAWSPACE_DELETE_(m_rendering_node);
     _DRAWSPACE_DELETE_(m_meshe);
     _DRAWSPACE_DELETE_(m_cb);
@@ -295,6 +303,7 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(const Utils::Vector&
 
 void NebulaeRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
+    m_renderer->SetMeshe( m_meshe_handle );
     m_renderer->DrawMeshe( m_world, m_view, m_proj );
 }
 
