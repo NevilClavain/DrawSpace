@@ -56,21 +56,24 @@ public:
 
         static const int atlasResolution = 8;
 
-        dsstring                                m_pass_name;        
-        RenderingNodeDrawCallback*              m_cb;
-        DrawSpace::Interface::Renderer*         m_renderer;
+        dsstring                                                m_pass_name;
+        RenderingNodeDrawCallback*                              m_cb;
+        DrawSpace::Interface::Renderer*                         m_renderer;
 
-        DrawSpace::Core::RenderingNode*         m_rendering_node;
+        DrawSpace::Core::RenderingNode*                         m_rendering_node;
         
-        DrawSpace::Core::Meshe*                 m_meshe;
-        void*                                   m_meshe_handle;
+        //DrawSpace::Core::Meshe*                                 m_meshe;
+        //void*                                                   m_meshe_handle;
+
+        std::vector<std::pair<DrawSpace::Core::Meshe*, void*>> m_meshes;
+        std::vector<std::pair<DrawSpace::Core::Meshe*, void*>> m_meshes_z_sortered;
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
-        void        create_axis_quad( const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex );
+        void        create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex);
         void        generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
 
-        void        create_bloc( const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex);
+        void        create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex);
 
     public:
 

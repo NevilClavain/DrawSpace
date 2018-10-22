@@ -38,8 +38,7 @@ using namespace DrawSpace::Utils;
 
 
 NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
-    m_pass_name( p_pass_name ),
-    m_meshe_handle( NULL )
+    m_pass_name( p_pass_name )
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
@@ -47,28 +46,31 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
     dsreal angle = 90.0;
     int nb_vertex = 0;
+
+    DrawSpace::Core::Meshe* meshe;
+    void*                   meshe_handle;
     
-    m_meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
+    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
     
     Vector pos0( 0.0, 0.0, 0.0, 1.0);
     Vector color0(0.0, 0.0, 0.0, 1.0);
     dsreal scale0 = 1.0;
-    create_bloc(pos0, color0, scale0, nb_vertex);
+    create_bloc(meshe, pos0, color0, scale0, nb_vertex);
 
     Vector pos1(0.3, 0.2, 0.0, 1.0);
     Vector color1(0.99, 0.0, 0.9, 1.0);
     dsreal scale1 = 1.2;
-    create_bloc(pos1, color1, scale1, nb_vertex);
+    create_bloc(meshe, pos1, color1, scale1, nb_vertex);
 
     Vector pos2(0.0, -0.45, 0.27, 1.0);
     Vector color2(0.99, 0.0, 0.9, 1.0);
     dsreal scale2 = 1.9;
-    create_bloc(pos2, color2, scale2, nb_vertex);
+    create_bloc(meshe, pos2, color2, scale2, nb_vertex);
 
     Vector pos3(0.67, -0.55, 0.07, 1.0);
     Vector color3(0.99, 0.0, 0.9, 1.0);
     dsreal scale3 = 1.3;
-    create_bloc(pos3, color3, scale3, nb_vertex);
+    create_bloc(meshe, pos3, color3, scale3, nb_vertex);
 
     /////////////////
     
@@ -76,10 +78,12 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
     m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
     m_rendering_node->RegisterHandler( m_cb );
-    //m_rendering_node->SetMeshe( m_meshe );
+
 
     
-    bool meshe_creation = m_renderer->CreateMeshe(m_meshe, &m_meshe_handle);
+    bool meshe_creation = m_renderer->CreateMeshe(meshe, &meshe_handle);
+
+    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
 
 
     m_world.Identity();
@@ -90,23 +94,27 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
 NebulaeRenderingAspectImpl::PassSlot::~PassSlot( void )
 {    
-
-    m_renderer->RemoveMeshe(m_meshe, m_meshe_handle);
+    //m_renderer->RemoveMeshe(m_meshe, m_meshe_handle);
+    for( auto it = m_meshes.begin(); it != m_meshes.end(); ++it )
+    {
+        m_renderer->RemoveMeshe(it->first, it->second);
+        _DRAWSPACE_DELETE_(it->first);
+    }
 
     _DRAWSPACE_DELETE_(m_rendering_node);
-    _DRAWSPACE_DELETE_(m_meshe);
+    //_DRAWSPACE_DELETE_(m_meshe);
     _DRAWSPACE_DELETE_(m_cb);
 }
 
-void NebulaeRenderingAspectImpl::PassSlot::create_bloc(const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex)
+void NebulaeRenderingAspectImpl::PassSlot::create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex)
 {
     int step = 15;
-    create_axis_quad( p_pos, p_color, p_scale, X_AXIS, step, p_nb_vertex );
-    create_axis_quad( p_pos, p_color, p_scale, Y_AXIS, step, p_nb_vertex );
-    create_axis_quad( p_pos, p_color, p_scale, Z_AXIS, step, p_nb_vertex );
+    create_axis_quad( p_meshe, p_pos, p_color, p_scale, X_AXIS, step, p_nb_vertex );
+    create_axis_quad( p_meshe, p_pos, p_color, p_scale, Y_AXIS, step, p_nb_vertex );
+    create_axis_quad( p_meshe, p_pos, p_color, p_scale, Z_AXIS, step, p_nb_vertex );
 }
 
-void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex)
+void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex)
 {
     Vector vo1;
     Vector vo2;
@@ -282,20 +290,20 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(const Utils::Vector&
         /////////////////////
 
 
-        m_meshe->AddVertex(v1);
-        m_meshe->AddVertex(v2);
-        m_meshe->AddVertex(v3);
-        m_meshe->AddVertex(v4);
+        p_meshe->AddVertex(v1);
+        p_meshe->AddVertex(v2);
+        p_meshe->AddVertex(v3);
+        p_meshe->AddVertex(v4);
 
         int index = 4 * i;
 
         index += p_nb_vertex;
 
-        m_meshe->AddTriangle(Triangle(index, index + 3, index + 1));
-        m_meshe->AddTriangle(Triangle(index + 1, index + 3, index + 2));
+        p_meshe->AddTriangle(Triangle(index, index + 3, index + 1));
+        p_meshe->AddTriangle(Triangle(index + 1, index + 3, index + 2));
     }
 
-    m_meshe->ComputeNormales();
+    p_meshe->ComputeNormales();
 
     p_nb_vertex += 4 * nb_loop;
 }
@@ -303,8 +311,25 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(const Utils::Vector&
 
 void NebulaeRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
-    m_renderer->SetMeshe( m_meshe_handle );
-    m_renderer->DrawMeshe( m_world, m_view, m_proj );
+
+    m_meshes_z_sortered.clear();
+
+    // temp : simulate z sort
+    for (auto it = m_meshes.begin(); it != m_meshes.end(); ++it)
+    {
+        m_meshes_z_sortered.push_back( *it );
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    for (auto it = m_meshes_z_sortered.begin(); it != m_meshes_z_sortered.end(); ++it)
+    {
+        m_renderer->SetMeshe( it->second );
+        m_renderer->DrawMeshe( m_world, m_view, m_proj );
+    }
+
+    //m_renderer->SetMeshe( m_meshe_handle );
+    //m_renderer->DrawMeshe( m_world, m_view, m_proj );
 }
 
 void NebulaeRenderingAspectImpl::PassSlot::generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2)
