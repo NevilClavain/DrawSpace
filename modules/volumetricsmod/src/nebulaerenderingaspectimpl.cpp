@@ -27,6 +27,7 @@
 #include "renderingaspect.h"
 #include "transformaspect.h"
 #include "maths.h"
+#include <functional>
 
 
 using namespace DrawSpace;
@@ -42,48 +43,66 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 
+    m_cb = _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &PassSlot::on_renderingnode_draw));
+    m_rendering_node = _DRAWSPACE_NEW_(RenderingNode, RenderingNode);
+    m_rendering_node->RegisterHandler(m_cb);
+
     // BUILD MESHE HERE
 
     dsreal angle = 90.0;
-    int nb_vertex = 0;
+    int nb_vertex;
 
     DrawSpace::Core::Meshe* meshe;
     void*                   meshe_handle;
     
-    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
-    
+
+    nb_vertex = 0;
+    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);    
     Vector pos0( 0.0, 0.0, 0.0, 1.0);
     Vector color0(0.0, 0.0, 0.0, 1.0);
     dsreal scale0 = 1.0;
     create_bloc(meshe, pos0, color0, scale0, nb_vertex);
+    m_renderer->CreateMeshe(meshe, &meshe_handle);
+    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
 
+    nb_vertex = 0;
+    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
     Vector pos1(0.3, 0.2, 0.0, 1.0);
-    Vector color1(0.99, 0.0, 0.9, 1.0);
+    Vector color1(0.99, 0.5, 0.9, 1.0);
     dsreal scale1 = 1.2;
     create_bloc(meshe, pos1, color1, scale1, nb_vertex);
+    m_renderer->CreateMeshe(meshe, &meshe_handle);
+    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
 
+
+    nb_vertex = 0;
+    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
     Vector pos2(0.0, -0.45, 0.27, 1.0);
     Vector color2(0.99, 0.0, 0.9, 1.0);
-    dsreal scale2 = 1.9;
+    dsreal scale2 = 1.2;
     create_bloc(meshe, pos2, color2, scale2, nb_vertex);
+    m_renderer->CreateMeshe(meshe, &meshe_handle);
+    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
 
-    Vector pos3(0.67, -0.55, 0.07, 1.0);
-    Vector color3(0.99, 0.0, 0.9, 1.0);
-    dsreal scale3 = 1.3;
-    create_bloc(meshe, pos3, color3, scale3, nb_vertex);
+    //Vector pos1(0.3, 0.2, 0.0, 1.0);
+    //Vector color1(0.99, 0.0, 0.9, 1.0);
+    //dsreal scale1 = 1.2;
+    //create_bloc(meshe, pos1, color1, scale1, nb_vertex);
+
+    //Vector pos2(0.0, -0.45, 0.27, 1.0);
+    //Vector color2(0.99, 0.0, 0.9, 1.0);
+    //dsreal scale2 = 1.9;
+    //create_bloc(meshe, pos2, color2, scale2, nb_vertex);
+
+    //Vector pos3(0.67, -0.55, 0.07, 1.0);
+    //Vector color3(0.99, 0.0, 0.9, 1.0);
+    //dsreal scale3 = 1.3;
+    //create_bloc(meshe, pos3, color3, scale3, nb_vertex);
 
     /////////////////
     
-    m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
+        
 
-    m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
-    m_rendering_node->RegisterHandler( m_cb );
-
-
-    
-    bool meshe_creation = m_renderer->CreateMeshe(meshe, &meshe_handle);
-
-    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
 
 
     m_world.Identity();
@@ -94,15 +113,12 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
 
 NebulaeRenderingAspectImpl::PassSlot::~PassSlot( void )
 {    
-    //m_renderer->RemoveMeshe(m_meshe, m_meshe_handle);
     for( auto it = m_meshes.begin(); it != m_meshes.end(); ++it )
     {
         m_renderer->RemoveMeshe(it->first, it->second);
         _DRAWSPACE_DELETE_(it->first);
     }
-
     _DRAWSPACE_DELETE_(m_rendering_node);
-    //_DRAWSPACE_DELETE_(m_meshe);
     _DRAWSPACE_DELETE_(m_cb);
 }
 
@@ -312,24 +328,49 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(DrawSpace::Core::Mes
 void NebulaeRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
 
-    m_meshes_z_sortered.clear();
+    Matrix global_transform = m_world * m_view;
 
-    // temp : simulate z sort
+    std::vector<std::tuple<dsreal, DrawSpace::Core::Meshe*, void*>> meshes_working_list;
+
     for (auto it = m_meshes.begin(); it != m_meshes.end(); ++it)
     {
-        m_meshes_z_sortered.push_back( *it );
+        DrawSpace::Core::Meshe* meshe = it->first;
+
+        int nbv = meshe->GetVertexListSize();
+
+        dsreal sum = 0.0;
+
+        for( int i = 0; i < nbv; ++i )
+        {
+            Vertex v;
+            meshe->GetVertex( i, v );
+
+            Vector v1( v.x, v.y, v.z, 1.0 );
+            Vector vout;
+
+            global_transform.Transform( &v1, &vout );
+            dsreal zres = vout[2];
+            sum += zres;                      
+        }
+
+        dsreal z_final = sum / nbv;
+        meshes_working_list.push_back(std::make_tuple(z_final, it->first, it->second));
     }
+
+    std::sort(meshes_working_list.begin(), meshes_working_list.end(), 
+        [](const std::tuple<dsreal, DrawSpace::Core::Meshe*, void*>& p_a, const std::tuple<dsreal, DrawSpace::Core::Meshe*, void*>& p_b) -> bool { return p_a < p_b; });
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    for (auto it = m_meshes_z_sortered.begin(); it != m_meshes_z_sortered.end(); ++it)
+    for (auto it = meshes_working_list.begin(); it != meshes_working_list.end(); ++it)
     {
-        m_renderer->SetMeshe( it->second );
+        dsreal z;
+        DrawSpace::Core::Meshe* meshe;
+        void* meshe_handle;
+        std::tie(z, meshe, meshe_handle) = *it;
+        m_renderer->SetMeshe( meshe_handle );
         m_renderer->DrawMeshe( m_world, m_view, m_proj );
     }
-
-    //m_renderer->SetMeshe( m_meshe_handle );
-    //m_renderer->DrawMeshe( m_world, m_view, m_proj );
 }
 
 void NebulaeRenderingAspectImpl::PassSlot::generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2)

@@ -62,11 +62,8 @@ public:
 
         DrawSpace::Core::RenderingNode*                         m_rendering_node;
         
-        //DrawSpace::Core::Meshe*                                 m_meshe;
-        //void*                                                   m_meshe_handle;
 
         std::vector<std::pair<DrawSpace::Core::Meshe*, void*>> m_meshes;
-        std::vector<std::pair<DrawSpace::Core::Meshe*, void*>> m_meshes_z_sortered;
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
