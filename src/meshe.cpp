@@ -68,12 +68,12 @@ bool Meshe::LoadFromFile( const dsstring& p_filepath, long p_index )
     return false;
 }
 
-long Meshe::GetVertexListSize( void )
+long Meshe::GetVertexListSize( void ) const
 {
     return (long)m_vertices.size();
 }
 
-long Meshe::GetTrianglesListSize( void )
+long Meshe::GetTrianglesListSize( void ) const
 {
     return (long)m_triangles.size();
 }

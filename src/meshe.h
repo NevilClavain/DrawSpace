@@ -69,8 +69,8 @@ public:
 
     void ComputeNormales( void );
 
-    long GetVertexListSize( void );
-    long GetTrianglesListSize( void );
+    long GetVertexListSize( void ) const;
+    long GetTrianglesListSize( void ) const;
 
     void GetVertex( long p_index, Vertex& p_vertex );
     void GetTriangles( long p_index, Triangle& p_triangle );
