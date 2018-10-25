@@ -45,19 +45,31 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
     UVPairList uvpl0;
     uvpl0.push_back(std::make_pair<int, int>(1, 2));
     uvpl0.push_back(std::make_pair<int, int>(3, 4));
+
+    UVPairList maskuvpl0;
+    maskuvpl0.push_back(std::make_pair<int, int>(10, 20));
+    maskuvpl0.push_back(std::make_pair<int, int>(-30, -40));
+
+
     dsreal scale0( 1.2 );
     Utils::Vector pos0(10.2, 20.3, 30.4, 1.0);
 
-    m_dataModel.push_back(std::make_tuple(pos0,scale0,uvpl0));
+    m_dataModel.push_back(std::make_tuple(pos0,scale0,uvpl0,maskuvpl0));
 
 
     UVPairList uvpl1;
     uvpl1.push_back(std::make_pair<int, int>(100, 201));
     uvpl1.push_back(std::make_pair<int, int>(34, 44));
+
+    UVPairList maskuvpl1;
+    maskuvpl1.push_back(std::make_pair<int, int>(12, 34));
+    maskuvpl1.push_back(std::make_pair<int, int>(56, 78));
+
+
     dsreal scale1(0.5);
     Utils::Vector pos1(0.0, 0.3, -1000.0, 1.0);
 
-    m_dataModel.push_back(std::make_tuple(pos1, scale1, uvpl1));
+    m_dataModel.push_back(std::make_tuple(pos1,scale1,uvpl1,maskuvpl1));
 }
 
 LuaClass_NebulaeSpecificConfig::~LuaClass_NebulaeSpecificConfig(void)

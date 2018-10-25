@@ -55,20 +55,30 @@ public:
         using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
 
         static const int atlasResolution = 8;
+        static const int maskAtlasResolution = 4;
 
         dsstring                                                m_pass_name;
         RenderingNodeDrawCallback*                              m_cb;
         DrawSpace::Interface::Renderer*                         m_renderer;
 
         DrawSpace::Core::RenderingNode*                         m_rendering_node;
-        
+
+
+        //// temp
+        int m_u_count;
+        int m_v_count;        
+        int m_u2_count;
+        int m_v2_count;
+
 
         std::vector<std::pair<DrawSpace::Core::Meshe*, void*>> m_meshes;
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
         void        create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex);
-        void        generate_uvcoords(dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
+        
+        //// temp
+        void        generate_uvcoords(int p_atlasResolution, int& p_u_count, int& p_v_count, dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
 
         void        create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex);
 
@@ -92,7 +102,7 @@ protected:
 
     // data model
     using UVPairList = std::vector<std::pair<int, int>>;
-    using Bloc = std::tuple<DrawSpace::Utils::Vector, dsreal, UVPairList>;
+    using Bloc = std::tuple<DrawSpace::Utils::Vector, dsreal, UVPairList, UVPairList>;
     using DataModel = std::vector<Bloc>;
 
     DataModel               m_data_model;
