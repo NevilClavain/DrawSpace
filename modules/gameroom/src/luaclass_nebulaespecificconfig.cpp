@@ -41,7 +41,7 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
 {
 
     // for test purpose...
-
+    /*
     UVPairList uvpl0;
     uvpl0.push_back(std::make_pair<int, int>(1, 2));
     uvpl0.push_back(std::make_pair<int, int>(3, 4));
@@ -53,8 +53,9 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
 
     dsreal scale0( 1.2 );
     Utils::Vector pos0(10.2, 20.3, 30.4, 1.0);
+    Utils::Vector color0(0.3, 0.4, 0.5, 1.0);
 
-    m_dataModel.push_back(std::make_tuple(pos0,scale0,uvpl0,maskuvpl0));
+    m_dataModel.push_back(std::make_tuple(color0, pos0,scale0,uvpl0,maskuvpl0));
 
 
     UVPairList uvpl1;
@@ -68,8 +69,133 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
 
     dsreal scale1(0.5);
     Utils::Vector pos1(0.0, 0.3, -1000.0, 1.0);
+    Utils::Vector color1(0.3, 0.2, 0.1, 1.0);
 
-    m_dataModel.push_back(std::make_tuple(pos1,scale1,uvpl1,maskuvpl1));
+
+    m_dataModel.push_back(std::make_tuple(color1,pos1,scale1,uvpl1,maskuvpl1));
+    */
+
+
+    UVPairList uvpl0;
+    uvpl0.push_back(std::make_pair<int, int>(0, 0));
+    uvpl0.push_back(std::make_pair<int, int>(0, 1));
+    uvpl0.push_back(std::make_pair<int, int>(3, 2));
+    uvpl0.push_back(std::make_pair<int, int>(3, 3));
+    uvpl0.push_back(std::make_pair<int, int>(5, 6));
+    uvpl0.push_back(std::make_pair<int, int>(7, 1));
+    uvpl0.push_back(std::make_pair<int, int>(3, 0));
+    uvpl0.push_back(std::make_pair<int, int>(3, 4));
+    uvpl0.push_back(std::make_pair<int, int>(2, 2));
+    uvpl0.push_back(std::make_pair<int, int>(2, 6));
+    uvpl0.push_back(std::make_pair<int, int>(2, 1));
+
+    uvpl0.push_back(std::make_pair<int, int>(0, 0));
+    uvpl0.push_back(std::make_pair<int, int>(0, 5));
+    uvpl0.push_back(std::make_pair<int, int>(3, 5));
+    uvpl0.push_back(std::make_pair<int, int>(3, 6));
+    uvpl0.push_back(std::make_pair<int, int>(5, 6));
+    uvpl0.push_back(std::make_pair<int, int>(7, 1));
+    uvpl0.push_back(std::make_pair<int, int>(3, 7));
+    uvpl0.push_back(std::make_pair<int, int>(3, 4));
+    uvpl0.push_back(std::make_pair<int, int>(2, 1));
+    uvpl0.push_back(std::make_pair<int, int>(2, 0));
+    uvpl0.push_back(std::make_pair<int, int>(2, 1));
+
+    uvpl0.push_back(std::make_pair<int, int>(0, 0));
+    uvpl0.push_back(std::make_pair<int, int>(0, 2));
+    uvpl0.push_back(std::make_pair<int, int>(3, 5));
+    uvpl0.push_back(std::make_pair<int, int>(3, 5));
+    uvpl0.push_back(std::make_pair<int, int>(4, 4));
+    uvpl0.push_back(std::make_pair<int, int>(7, 5));
+    uvpl0.push_back(std::make_pair<int, int>(3, 1));
+    uvpl0.push_back(std::make_pair<int, int>(4, 3));
+    uvpl0.push_back(std::make_pair<int, int>(2, 5));
+    uvpl0.push_back(std::make_pair<int, int>(2, 7));
+    uvpl0.push_back(std::make_pair<int, int>(2, 3));
+
+    uvpl0.push_back(std::make_pair<int, int>(0, 5));
+    uvpl0.push_back(std::make_pair<int, int>(0, 1));
+    uvpl0.push_back(std::make_pair<int, int>(4, 2));
+    uvpl0.push_back(std::make_pair<int, int>(3, 4));
+    uvpl0.push_back(std::make_pair<int, int>(4, 6));
+    uvpl0.push_back(std::make_pair<int, int>(7, 5));
+    uvpl0.push_back(std::make_pair<int, int>(3, 0));
+    uvpl0.push_back(std::make_pair<int, int>(4, 1));
+    uvpl0.push_back(std::make_pair<int, int>(2, 1));
+    uvpl0.push_back(std::make_pair<int, int>(2, 2));
+    uvpl0.push_back(std::make_pair<int, int>(2, 4));
+
+
+    UVPairList maskuvpl0;
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 1));
+
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 1));
+
+
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(4, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 1));
+
+
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 2));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(2, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 3));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 1));
+    maskuvpl0.push_back(std::make_pair<int, int>(1, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(3, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 0));
+    maskuvpl0.push_back(std::make_pair<int, int>(0, 1));
+
+
+    dsreal scale0(1.2);
+    Utils::Vector pos0(0.0, 0.0, -1.0, 1.0);
+    Utils::Vector color0(1.0, 0.5, 0.5, 1.0);
+
+    m_dataModel.push_back(std::make_tuple(color0, pos0, scale0, uvpl0, maskuvpl0));
+
 }
 
 LuaClass_NebulaeSpecificConfig::~LuaClass_NebulaeSpecificConfig(void)
@@ -88,18 +214,6 @@ int LuaClass_NebulaeSpecificConfig::LUA_apply(lua_State* p_L)
 
     LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
     DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
-
-    /*
-    for(auto& e : m_dataModel )
-    {
-        dsreal s;
-        Utils::Vector p;
-        UVPairList    uv;
-        std::tie(p, s, uv) = e;
-
-        _asm nop
-    }
-    */
 
     entity_rendering_aspect->AddComponent<DataModel>( "nebulae_specific_config", m_dataModel );
 

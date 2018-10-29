@@ -39,6 +39,12 @@ namespace AspectImplementations
 {
 class NebulaeRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
+protected:
+    // data model
+    using UVPairList = std::vector<std::pair<int, int>>;
+    using Bloc = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, dsreal, UVPairList, UVPairList>;
+    using DataModel = std::vector<Bloc>;
+
 public:
     
     class PassSlot
@@ -63,24 +69,21 @@ public:
 
         DrawSpace::Core::RenderingNode*                         m_rendering_node;
 
+        int                                                     m_uv_index;
+        int                                                     m_uv_mask_index;
 
-        //// temp
-        int m_u_count;
-        int m_v_count;        
-        int m_u2_count;
-        int m_v2_count;
 
 
         std::vector<std::pair<DrawSpace::Core::Meshe*, void*>> m_meshes;
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
-        void        create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, int& p_nb_vertex);
+        void        create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex);
         
         //// temp
         void        generate_uvcoords(int p_atlasResolution, int& p_u_count, int& p_v_count, dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
 
-        void        create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, int& p_nb_vertex);
+        void        create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex);
 
     public:
 
@@ -90,7 +93,7 @@ public:
 
        
 
-        PassSlot( const dsstring& p_pass_name );
+        PassSlot( const dsstring& p_pass_name, const DataModel& p_dataModel );
         ~PassSlot( void );
 
         DrawSpace::Core::RenderingNode* GetRenderingNode( void ) const { return m_rendering_node; };
@@ -99,11 +102,6 @@ public:
     };
 
 protected:
-
-    // data model
-    using UVPairList = std::vector<std::pair<int, int>>;
-    using Bloc = std::tuple<DrawSpace::Utils::Vector, dsreal, UVPairList, UVPairList>;
-    using DataModel = std::vector<Bloc>;
 
     DataModel               m_data_model;
 
