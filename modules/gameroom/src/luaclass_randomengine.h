@@ -24,28 +24,23 @@
 */
 /* -*-LIC_END-*- */
 
+#include <random>
 #include "luna.h"
-#include "misc_utils.h"
 
-class LuaClass_NebulaeSpecificConfig
+class LuaClass_RandomEngine
 {
 private:
-
-    // data model
-    using UVPairList    = std::vector<std::pair<int,int>>;
-    using Bloc          = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, dsreal, UVPairList, UVPairList>;
-    using DataModel     = std::vector<Bloc>;
-
-    DataModel m_dataModel;
-
+    std::unique_ptr<std::default_random_engine> m_random_engine;
 
 public:
-    LuaClass_NebulaeSpecificConfig(lua_State* p_L);
-    ~LuaClass_NebulaeSpecificConfig(void);
+    LuaClass_RandomEngine(lua_State* p_L);
+    ~LuaClass_RandomEngine(void);
 
-    int LUA_apply(lua_State* p_L);
-   
+    int LUA_setseedfromtime(lua_State* p_L);
+    int LUA_setseed(lua_State* p_L);
+
+    std::default_random_engine& GetRandomEngine( void ) const;
+
     static const char className[];
-    static const Luna<LuaClass_NebulaeSpecificConfig>::RegType methods[];
+    static const Luna<LuaClass_RandomEngine>::RegType methods[];
 };
-

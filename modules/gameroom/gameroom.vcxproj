@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\luaclass_body.cpp" />
+    <ClCompile Include="src\luaclass_distribution.cpp" />
     <ClCompile Include="src\luaclass_entity.cpp" />
     <ClCompile Include="src\luaclass_entitynodegraph.cpp" />
     <ClCompile Include="src\luaclass_freetransform.cpp" />
@@ -106,6 +107,7 @@
     <ClCompile Include="src\luaclass_mesherendering.cpp" />
     <ClCompile Include="src\luaclass_module.cpp" />
     <ClCompile Include="src\luaclass_nebulaespecificconfig.cpp" />
+    <ClCompile Include="src\luaclass_randomengine.cpp" />
     <ClCompile Include="src\luaclass_rawtransform.cpp" />
     <ClCompile Include="src\luaclass_renderconfig.cpp" />
     <ClCompile Include="src\luaclass_rendercontext.cpp" />
@@ -127,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="src\crtp_singleton.h" />
     <ClInclude Include="src\luaclass_body.h" />
+    <ClInclude Include="src\luaclass_distribution.h" />
     <ClInclude Include="src\luaclass_entity.h" />
     <ClInclude Include="src\luaclass_freetransform.h" />
     <ClInclude Include="src\luaclass_fxparams.h" />
@@ -134,6 +137,7 @@
     <ClInclude Include="src\luaclass_mesherendering.h" />
     <ClInclude Include="src\luaclass_module.h" />
     <ClInclude Include="src\luaclass_nebulaespecificconfig.h" />
+    <ClInclude Include="src\luaclass_randomengine.h" />
     <ClInclude Include="src\luaclass_rawtransform.h" />
     <ClInclude Include="src\luaclass_renderconfig.h" />
     <ClInclude Include="src\luaclass_rendercontext.h" />
