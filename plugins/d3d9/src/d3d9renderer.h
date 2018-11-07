@@ -150,6 +150,10 @@ protected:
 
     CEGUIWrapper                                                m_guisubsystem;
 
+    dsstring                                                    m_driver_type;
+    D3DDEVTYPE                                                  m_dev_type;
+    int                                                         m_vproc;
+
 
     void set_vertexshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );
     void set_pixelshader_constants( DWORD p_startreg, dsreal *p_ftab, DWORD p_v4fCount );

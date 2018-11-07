@@ -191,6 +191,8 @@ protected:
 
     CEGUIWrapper                                                    m_guisubsystem;
 
+    dsstring                                                        m_driver_type;
+
 
     void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
     void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );

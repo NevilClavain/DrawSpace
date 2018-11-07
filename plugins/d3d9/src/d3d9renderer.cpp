@@ -50,7 +50,7 @@ D3D9Renderer::~D3D9Renderer( void )
 
 void D3D9Renderer::GetDescr( dsstring& p_descr )
 {
-    p_descr = "Direct3D9";
+    p_descr = "Direct3D9 " + m_driver_type;
 }
 
 void D3D9Renderer::GetShadersDescr( dsstring& p_descr )
@@ -65,21 +65,21 @@ void D3D9Renderer::DumpMemoryAllocs( void )
 
 D3DFORMAT D3D9Renderer::find_depthbuffer_format( int p_adapterordinal, D3DFORMAT p_displayformat )
 {
-    HRESULT hRes = m_lpd3d->CheckDeviceFormat( p_adapterordinal, D3DDEVTYPE_HAL, p_displayformat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, D3DFMT_D32 );
+    HRESULT hRes = m_lpd3d->CheckDeviceFormat( p_adapterordinal, m_dev_type, p_displayformat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, D3DFMT_D32 );
     if( D3D_OK == hRes )
     {
         return D3DFMT_D32;  
     }
     else
     {
-        hRes = m_lpd3d->CheckDeviceFormat( p_adapterordinal, D3DDEVTYPE_HAL, p_displayformat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, D3DFMT_D24X8 );
+        hRes = m_lpd3d->CheckDeviceFormat( p_adapterordinal, m_dev_type, p_displayformat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, D3DFMT_D24X8 );
         if( D3D_OK == hRes )
         {
             return D3DFMT_D24X8;
         }
         else
         {
-            hRes = m_lpd3d->CheckDeviceFormat( p_adapterordinal, D3DDEVTYPE_HAL, p_displayformat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, D3DFMT_D16 );
+            hRes = m_lpd3d->CheckDeviceFormat( p_adapterordinal, m_dev_type, p_displayformat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, D3DFMT_D16 );
             if( D3D_OK == hRes )
             {
                 return D3DFMT_D16;
@@ -151,8 +151,32 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
     D3DCAPS9 caps;
 
-    hRes = m_lpd3d->GetDeviceCaps( adapter, D3DDEVTYPE_HAL, &caps );
-    D3D9_CHECK( GetDeviceCaps )
+    static std::vector<std::tuple<D3DDEVTYPE, int, dsstring>> driver_type =
+    {
+        { D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING, "HAL initialized"},        
+        { D3DDEVTYPE_REF, D3DCREATE_SOFTWARE_VERTEXPROCESSING, "REF initialized"},
+        { D3DDEVTYPE_SW, D3DCREATE_SOFTWARE_VERTEXPROCESSING, "SW initialized"}        
+    };
+
+    HRESULT r;
+    for (auto& e : driver_type)
+    {
+        D3DDEVTYPE dev_type;
+        int vproc;
+        dsstring type;
+        std::tie(dev_type, vproc, type) = e;
+
+        r = m_lpd3d->GetDeviceCaps(adapter, dev_type, &caps);
+        if (r == S_OK)
+        {
+            m_driver_type = type;
+            m_dev_type = dev_type;
+            m_vproc = vproc;
+            break;
+        }
+    }
+    hRes = r;
+    D3D9_CHECK(GetDeviceCaps)
 
     DWORD vs_version_maj = D3DSHADER_VERSION_MAJOR( caps.VertexShaderVersion );
     DWORD vs_version_min = D3DSHADER_VERSION_MINOR( caps.VertexShaderVersion );
@@ -256,9 +280,10 @@ bool D3D9Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_
 
 		_DSDEBUG( logger, dsstring(" -> WINDOWED ") << p_w_width << dsstring( " x " ) << p_w_height )
     }
+    
+    hRes = m_lpd3d->CreateDevice(adapter, m_dev_type, m_hwnd, m_vproc | D3DCREATE_FPU_PRESERVE, &d3dpp, &m_lpd3ddevice);
+    D3D9_CHECK(CreateDevice)
 
-    hRes = m_lpd3d->CreateDevice( adapter, D3DDEVTYPE_HAL, m_hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE, &d3dpp, &m_lpd3ddevice );
-    D3D9_CHECK( CreateDevice )
 
     D3DVERTEXELEMENT9 vdecl[] = 
     {

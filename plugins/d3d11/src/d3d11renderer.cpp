@@ -60,7 +60,7 @@ D3D11Renderer::~D3D11Renderer( void )
 
 void D3D11Renderer::GetDescr( dsstring& p_descr )
 {
-    p_descr = "Direct3D11";
+    p_descr = "Direct3D11 - " + m_driver_type;
 }
 
 void D3D11Renderer::GetShadersDescr( dsstring& p_descr )
@@ -184,19 +184,36 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     }
 
+    static std::vector<std::pair<D3D_DRIVER_TYPE,dsstring>> driver_type =
+    {
+        { D3D_DRIVER_TYPE_HARDWARE, "HARDWARE initialized"},
+        { D3D_DRIVER_TYPE_WARP, "WARP initialized"},
+        { D3D_DRIVER_TYPE_REFERENCE, "REF initialized"},
+        { D3D_DRIVER_TYPE_SOFTWARE, "SOFTWARE initialized"}
+    };
 
-    hRes = D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE,
-                                  NULL,
-                                  createDeviceFlags,
-                                  NULL,
-                                  0,
-                                  D3D11_SDK_VERSION,
-                                  &sd,
-                                  &m_lpd3dswapchain,
-                                  &m_lpd3ddevice,
-                                  NULL,
-                                  &m_lpd3ddevcontext );
+    HRESULT r;
+    for( auto& e : driver_type)
+    {
+        r = D3D11CreateDeviceAndSwapChain(NULL, e.first,
+            NULL,
+            createDeviceFlags,
+            NULL,
+            0,
+            D3D11_SDK_VERSION,
+            &sd,
+            &m_lpd3dswapchain,
+            &m_lpd3ddevice,
+            NULL,
+            &m_lpd3ddevcontext);
 
+        if( r == S_OK )
+        {
+            m_driver_type = e.second;
+            break;
+        }
+    }
+    hRes = r;
     D3D11_CHECK( D3D11CreateDeviceAndSwapChain )
 
     if( p_fullscreen )
