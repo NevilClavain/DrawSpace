@@ -44,6 +44,13 @@ public:
     ~LuaClass_NebulaeSpecificConfig(void);
 
     int LUA_apply(lua_State* p_L);
+
+    int LUA_createbloc(lua_State* p_L);
+    int LUA_setbloccolor(lua_State* p_L);
+    int LUA_setblocposition(lua_State* p_L);
+    int LUA_setblocscale(lua_State* p_L);
+    int LUA_addbloctextureuvpair(lua_State* p_L);
+    int LUA_addblocmaskuvpair(lua_State* p_L);
    
     static const char className[];
     static const Luna<LuaClass_NebulaeSpecificConfig>::RegType methods[];

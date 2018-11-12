@@ -64,8 +64,8 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
                 LUA_ERROR("Distribution::Distribution : argument(s) missing");
             }
 
-            dsreal min = luaL_checkint(p_L, 2);
-            dsreal max = luaL_checkint(p_L, 3);
+            dsreal min = luaL_checknumber(p_L, 2);
+            dsreal max = luaL_checknumber(p_L, 3);
             m_distribution = std::make_unique<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>>(min, max);
         } },
     };
@@ -103,12 +103,16 @@ int LuaClass_Distribution::LUA_generate(lua_State* p_L)
             DistributionWrapperImpl<std::uniform_int_distribution<int>>* distribution = static_cast<DistributionWrapperImpl<std::uniform_int_distribution<int>>*>(dw);
 
             int val = distribution->Generate<int>(lua_random_engine->GetRandomEngine());
-
             lua_pushinteger(p_L, val);
 
         } },
         { "uniform_real_distribution", [&](void)
         {
+            DistributionWrapper* dw = m_distribution.get();
+            DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>* distribution = static_cast<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>*>(dw);
+
+            dsreal val = distribution->Generate<dsreal>(lua_random_engine->GetRandomEngine());
+            lua_pushnumber(p_L, val);
         } },
     };
 

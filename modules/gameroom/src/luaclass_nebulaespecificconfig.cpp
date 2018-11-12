@@ -34,6 +34,12 @@ const char LuaClass_NebulaeSpecificConfig::className[] = "NebulaeSpecificConfig"
 const Luna<LuaClass_NebulaeSpecificConfig>::RegType LuaClass_NebulaeSpecificConfig::methods[] =
 {
     { "apply", &LuaClass_NebulaeSpecificConfig::LUA_apply },
+    { "create_bloc", &LuaClass_NebulaeSpecificConfig::LUA_createbloc },
+    { "set_bloccolor", &LuaClass_NebulaeSpecificConfig::LUA_setbloccolor },
+    { "set_blocposition", &LuaClass_NebulaeSpecificConfig::LUA_setblocposition },
+    { "set_blocscale", &LuaClass_NebulaeSpecificConfig::LUA_setblocscale },
+    { "add_bloctextureuvpair", &LuaClass_NebulaeSpecificConfig::LUA_addbloctextureuvpair },
+    { "add_blocmaskuvpair", &LuaClass_NebulaeSpecificConfig::LUA_addblocmaskuvpair },
     { 0, 0 }
 };
 
@@ -75,7 +81,7 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
     m_dataModel.push_back(std::make_tuple(color1,pos1,scale1,uvpl1,maskuvpl1));
     */
 
-
+    /*
     UVPairList uvpl0;
     uvpl0.push_back(std::make_pair<int, int>(0, 0));
     uvpl0.push_back(std::make_pair<int, int>(0, 1));
@@ -195,12 +201,12 @@ LuaClass_NebulaeSpecificConfig::LuaClass_NebulaeSpecificConfig(lua_State* p_L)
     Utils::Vector color0(1.0, 0.5, 0.5, 1.0);
 
     m_dataModel.push_back(std::make_tuple(color0, pos0, scale0, uvpl0, maskuvpl0));
+    */
 
 }
 
 LuaClass_NebulaeSpecificConfig::~LuaClass_NebulaeSpecificConfig(void)
 {
-
 }
 
 
@@ -220,4 +226,135 @@ int LuaClass_NebulaeSpecificConfig::LUA_apply(lua_State* p_L)
     return 0;
 }
 
+int LuaClass_NebulaeSpecificConfig::LUA_createbloc(lua_State* p_L)
+{
+    Utils::Vector   default_color(0.0, 0.0, 0.0, 1.0);
+    Utils::Vector   default_pos(0.0, 0.0, 0.0, 1.0);
+    UVPairList      default_textureuvpair;
+    UVPairList      default_maskuvpair;
+
+    m_dataModel.push_back(std::make_tuple(default_color, default_pos, 1.0, default_textureuvpair, default_maskuvpair));
+
+    return 0;
+}
+
+int LuaClass_NebulaeSpecificConfig::LUA_setbloccolor(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("Distribution::set_bloccolor : argument(s) missing");
+    }
+
+    size_t bloc_index = luaL_checkint(p_L, 1);
+    dsreal r = luaL_checknumber(p_L, 2);
+    dsreal g = luaL_checknumber(p_L, 3);
+    dsreal b = luaL_checknumber(p_L, 4);
+
+    if(bloc_index >= m_dataModel.size())
+    {
+        LUA_ERROR("Distribution::set_bloccolor : bad index");
+    }
+
+    Utils::Vector& color = std::get<0>( m_dataModel[bloc_index] );
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+
+    return 0;
+}
+
+int LuaClass_NebulaeSpecificConfig::LUA_setblocposition(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("Distribution::set_blocposition : argument(s) missing");
+    }
+
+    size_t bloc_index = luaL_checkint(p_L, 1);
+    dsreal x = luaL_checknumber(p_L, 2);
+    dsreal y = luaL_checknumber(p_L, 3);
+    dsreal z = luaL_checknumber(p_L, 4);
+
+    if (bloc_index >= m_dataModel.size())
+    {
+        LUA_ERROR("Distribution::set_blocposition : bad index");
+    }
+
+    Utils::Vector& pos = std::get<1>(m_dataModel[bloc_index]);
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    return 0;
+}
+
+int LuaClass_NebulaeSpecificConfig::LUA_setblocscale(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Distribution::set_blocscale : argument(s) missing");
+    }
+
+    size_t bloc_index = luaL_checkint(p_L, 1);
+    dsreal scale_input = luaL_checknumber(p_L, 2);
+
+    if (bloc_index >= m_dataModel.size())
+    {
+        LUA_ERROR("Distribution::set_blocscale : bad index");
+    }
+
+    dsreal& scale = std::get<2>(m_dataModel[bloc_index]);
+    scale = scale_input;
+    return 0;
+}
+
+int LuaClass_NebulaeSpecificConfig::LUA_addbloctextureuvpair(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("Distribution::add_bloctextureuvpair : argument(s) missing");
+    }
+
+    size_t bloc_index = luaL_checkint(p_L, 1);
+    int u = luaL_checkint(p_L, 2);
+    int v = luaL_checkint(p_L, 3);
+
+    if (bloc_index >= m_dataModel.size())
+    {
+        LUA_ERROR("Distribution::add_bloctextureuvpair : bad index");
+    }
+
+    UVPairList& uvpairlist = std::get<3>(m_dataModel[bloc_index]);
+    std::pair<int, int> uv( u, v);  
+    uvpairlist.push_back(uv);
+
+    return 0;
+}
+
+int LuaClass_NebulaeSpecificConfig::LUA_addblocmaskuvpair(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("Distribution::add_blocmaskuvpair : argument(s) missing");
+    }
+
+    size_t bloc_index = luaL_checkint(p_L, 1);
+    int u = luaL_checkint(p_L, 2);
+    int v = luaL_checkint(p_L, 3);
+
+    if (bloc_index >= m_dataModel.size())
+    {
+        LUA_ERROR("Distribution::add_blocmaskuvpair : bad index");
+    }
+
+    UVPairList& uvpairlist = std::get<4>(m_dataModel[bloc_index]);
+    std::pair<int, int> uv(u, v);
+    uvpairlist.push_back(uv);
+
+    return 0;
+}
 
