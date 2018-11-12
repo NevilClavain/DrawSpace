@@ -70,53 +70,6 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name, con
 
     }
 
-
-    /*
-    // BUILD MESHE HERE
-
-    dsreal angle = 90.0;
-    int nb_vertex;
-
-    DrawSpace::Core::Meshe* meshe;
-    void*                   meshe_handle;
-    
-
-    nb_vertex = 0;
-    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);    
-    Vector pos0( 0.0, 0.0, 0.0, 1.0);
-    Vector color0(0.0, 0.0, 0.0, 1.0);
-    dsreal scale0 = 0.45;
-    create_bloc(meshe, pos0, color0, scale0, nb_vertex);
-    m_renderer->CreateMeshe(meshe, &meshe_handle);
-    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
-
-    nb_vertex = 0;
-    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
-    Vector pos1(0.3, 0.2, 0.0, 1.0);
-    Vector color1(0.99, 0.5, 0.9, 1.0);
-    dsreal scale1 = 1.2;
-    create_bloc(meshe, pos1, color1, scale1, nb_vertex);
-    m_renderer->CreateMeshe(meshe, &meshe_handle);
-    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
-
-
-    nb_vertex = 0;
-    meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
-    Vector pos2(0.0, -0.45, 0.27, 1.0);
-    Vector color2(0.79, 0.333, 0.9, 1.0);
-    dsreal scale2 = 0.89;
-    create_bloc(meshe, pos2, color2, scale2, nb_vertex);
-    m_renderer->CreateMeshe(meshe, &meshe_handle);
-    m_meshes.push_back(std::make_pair(meshe, meshe_handle));
-
-    */
-
-    /////////////////
-    
-        
-
-
-
     m_world.Identity();
     
     m_view.Identity();
