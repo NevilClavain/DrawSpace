@@ -36,8 +36,9 @@ private:
     using Bloc          = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, dsreal, UVPairList, UVPairList>;
     using DataModel     = std::vector<Bloc>;
 
-    DataModel m_dataModel;
-
+    DataModel   m_dataModel;
+    int         m_texture_atlas_resolution;
+    int         m_mask_atlas_resolution;
 
 public:
     LuaClass_NebulaeSpecificConfig(lua_State* p_L);
@@ -51,6 +52,8 @@ public:
     int LUA_setblocscale(lua_State* p_L);
     int LUA_addbloctextureuvpair(lua_State* p_L);
     int LUA_addblocmaskuvpair(lua_State* p_L);
+
+    int LUA_settexturesresolutions(lua_State* p_L);
    
     static const char className[];
     static const Luna<LuaClass_NebulaeSpecificConfig>::RegType methods[];

@@ -38,7 +38,7 @@ using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
 
 
-NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name, const DataModel& p_dataModel ) :
+NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name, const DataModel& p_dataModel, int p_textureAtlasResolution, int p_maskAtlasResolution ) :
     m_pass_name( p_pass_name )
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -63,11 +63,10 @@ NebulaeRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name, con
         void*                   meshe_handle;
         meshe = _DRAWSPACE_NEW_(Core::Meshe, Core::Meshe);
 
-        create_bloc(meshe, position, color, scale, uv, uvmask, nb_vertex);
+        create_bloc(meshe, p_textureAtlasResolution, p_maskAtlasResolution, position, color, scale, uv, uvmask, nb_vertex);
 
         m_renderer->CreateMeshe(meshe, &meshe_handle);
         m_meshes.push_back(std::make_pair(meshe, meshe_handle));
-
     }
 
     m_world.Identity();
@@ -87,17 +86,17 @@ NebulaeRenderingAspectImpl::PassSlot::~PassSlot( void )
     _DRAWSPACE_DELETE_(m_cb);
 }
 
-void NebulaeRenderingAspectImpl::PassSlot::create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex)
+void NebulaeRenderingAspectImpl::PassSlot::create_bloc(DrawSpace::Core::Meshe* p_meshe, int p_texture_atlas_resolution, int p_mask_atlas_resolution, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex)
 {
     m_uv_index = 0;
     m_uv_mask_index = 0;
     int step = 15;
-    create_axis_quad( p_meshe, p_pos, p_color, p_scale, X_AXIS, step, p_uvs, p_uvs_mask, p_nb_vertex );
-    create_axis_quad( p_meshe, p_pos, p_color, p_scale, Y_AXIS, step, p_uvs, p_uvs_mask, p_nb_vertex );
-    create_axis_quad( p_meshe, p_pos, p_color, p_scale, Z_AXIS, step, p_uvs, p_uvs_mask, p_nb_vertex );
+    create_axis_quad( p_meshe, p_texture_atlas_resolution, p_mask_atlas_resolution, p_pos, p_color, p_scale, X_AXIS, step, p_uvs, p_uvs_mask, p_nb_vertex );
+    create_axis_quad( p_meshe, p_texture_atlas_resolution, p_mask_atlas_resolution, p_pos, p_color, p_scale, Y_AXIS, step, p_uvs, p_uvs_mask, p_nb_vertex );
+    create_axis_quad( p_meshe, p_texture_atlas_resolution, p_mask_atlas_resolution, p_pos, p_color, p_scale, Z_AXIS, step, p_uvs, p_uvs_mask, p_nb_vertex );
 }
 
-void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex)
+void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(DrawSpace::Core::Meshe* p_meshe, int p_texture_atlas_resolution, int p_mask_atlas_resolution, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex)
 {
     Vector vo1;
     Vector vo2;
@@ -218,7 +217,7 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(DrawSpace::Core::Mes
         ui = p_uvs[m_uv_index].first;
         vi = p_uvs[m_uv_index].second;
 
-        generate_uvcoords(atlasResolution, ui, vi, tu1, tv1, tu2, tv2 );
+        generate_uvcoords(p_texture_atlas_resolution, ui, vi, tu1, tv1, tu2, tv2 );
 
         m_uv_index++;
         if(m_uv_index == p_uvs.size())
@@ -247,7 +246,7 @@ void NebulaeRenderingAspectImpl::PassSlot::create_axis_quad(DrawSpace::Core::Mes
         ui = p_uvs_mask[m_uv_mask_index].first;
         vi = p_uvs_mask[m_uv_mask_index].second;
 
-        generate_uvcoords(maskAtlasResolution, ui, vi, tum1, tvm1, tum2, tvm2);
+        generate_uvcoords(p_mask_atlas_resolution, ui, vi, tum1, tvm1, tum2, tvm2);
 
         m_uv_mask_index++;
         if (m_uv_mask_index == p_uvs_mask.size())
@@ -489,8 +488,14 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
 
     ComponentList<DataModel> datamodels;
     m_owner->GetComponentsByType<DataModel>(datamodels);
-
     m_data_model = datamodels[0]->getPurpose();
+
+    //// retrieve textures atlas resolution...
+
+    ComponentList<std::pair<int, int>> texture_atlas_resols;
+    m_owner->GetComponentsByType<std::pair<int, int>>(texture_atlas_resols);
+
+
 
     std::vector<dsstring> passes_names = passes[0]->getPurpose();
     
@@ -499,7 +504,7 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
         dsstring pass_name;
         pass_name = passes_names[i];
        
-        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name, m_data_model) );
+        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name, m_data_model, texture_atlas_resols[0]->getPurpose().first, texture_atlas_resols[0]->getPurpose().second) );
 
         pass_slot->GetRenderingNode()->SetOrderNumber( ro[i]->getPurpose() );
         pass_slot->GetRenderingNode()->SetFx( fxs[i]->getPurpose() );

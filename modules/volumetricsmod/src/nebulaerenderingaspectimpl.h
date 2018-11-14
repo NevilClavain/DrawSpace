@@ -60,8 +60,8 @@ public:
 
         using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
 
-        static const int atlasResolution = 8;
-        static const int maskAtlasResolution = 4;
+        //static const int atlasResolution = 8;
+        //static const int maskAtlasResolution = 4;
 
         dsstring                                                m_pass_name;
         RenderingNodeDrawCallback*                              m_cb;
@@ -78,12 +78,12 @@ public:
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
-        void        create_axis_quad(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex);
+        void        create_axis_quad(DrawSpace::Core::Meshe* p_meshe, int p_texture_atlas_resolution, int p_mask_atlas_resolution, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, QuadAxis p_axis, int p_angle_step, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex);
         
         //// temp
         void        generate_uvcoords(int p_atlasResolution, int& p_u_count, int& p_v_count, dsreal& p_u1, dsreal& p_v1, dsreal& p_u2, dsreal& p_v2);
 
-        void        create_bloc(DrawSpace::Core::Meshe* p_meshe, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex);
+        void        create_bloc(DrawSpace::Core::Meshe* p_meshe, int p_texture_atlas_resolution, int p_mask_atlas_resolution, const Utils::Vector& p_pos, const Utils::Vector& p_color, dsreal p_scale, const UVPairList& p_uvs, const UVPairList& p_uvs_mask, int& p_nb_vertex);
 
     public:
 
@@ -93,7 +93,7 @@ public:
 
        
 
-        PassSlot( const dsstring& p_pass_name, const DataModel& p_dataModel );
+        PassSlot( const dsstring& p_pass_name, const DataModel& p_dataModel, int p_textureAtlasResolution, int p_maskAtlasResolution);
         ~PassSlot( void );
 
         DrawSpace::Core::RenderingNode* GetRenderingNode( void ) const { return m_rendering_node; };
