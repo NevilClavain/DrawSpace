@@ -34,6 +34,7 @@ const char LuaClass_NebulaeSpecificConfig::className[] = "NebulaeSpecificConfig"
 const Luna<LuaClass_NebulaeSpecificConfig>::RegType LuaClass_NebulaeSpecificConfig::methods[] =
 {
     { "apply", &LuaClass_NebulaeSpecificConfig::LUA_apply },
+    { "cleanup", &LuaClass_NebulaeSpecificConfig::LUA_cleanup },
     { "create_bloc", &LuaClass_NebulaeSpecificConfig::LUA_createbloc },
     { "set_bloccolor", &LuaClass_NebulaeSpecificConfig::LUA_setbloccolor },
     { "set_blocposition", &LuaClass_NebulaeSpecificConfig::LUA_setblocposition },
@@ -70,6 +71,23 @@ int LuaClass_NebulaeSpecificConfig::LUA_apply(lua_State* p_L)
 
     std::pair<int,int> texturesAtlasResols = std::make_pair(m_texture_atlas_resolution, m_mask_atlas_resolution);
     entity_rendering_aspect->AddComponent<std::pair<int, int>>("nebulae_texture_atlas_resols", texturesAtlasResols);
+
+    return 0;
+}
+
+int LuaClass_NebulaeSpecificConfig::LUA_cleanup(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("NebulaeSpecificConfig::cleanup : argument(s) missing");
+    }
+
+    LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
+    DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
+
+    entity_rendering_aspect->RemoveComponent<DataModel>("nebulae_specific_config");
+    entity_rendering_aspect->RemoveComponent<std::pair<int, int>>("nebulae_texture_atlas_resols");
 
     return 0;
 }

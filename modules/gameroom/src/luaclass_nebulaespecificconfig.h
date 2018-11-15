@@ -45,6 +45,7 @@ public:
     ~LuaClass_NebulaeSpecificConfig(void);
 
     int LUA_apply(lua_State* p_L);
+    int LUA_cleanup(lua_State* p_L);
 
     int LUA_createbloc(lua_State* p_L);
     int LUA_setbloccolor(lua_State* p_L);
