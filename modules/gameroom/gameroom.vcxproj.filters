@@ -88,6 +88,9 @@
     <ClCompile Include="src\luaclass_distribution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\luaclass_vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -183,6 +186,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luaclass_distribution.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\luaclass_vector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
