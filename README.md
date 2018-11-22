@@ -38,6 +38,10 @@ Material shaders:
 
 ![alt tag](https://1.bp.blogspot.com/-v8Ay57cOyoU/V9ZVmdgARHI/AAAAAAAAB2A/4SaU7m9dmooubJ3PR6tdow8N5KZpituXwCLcB/s640/3Dclouds.jpg)
 
+3D Procedural nebulaes:
+
+![alt tag](https://drive.google.com/open?id=1VA83pBLdWvT08qO1mxVZmFmdtvE0o9zU)
+
 Procedural planet:
 
 ![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
