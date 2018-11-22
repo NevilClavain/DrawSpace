@@ -40,7 +40,9 @@ Material shaders:
 
 3D Procedural nebulaes:
 
-![alt tag](https://drive.google.com/open?id=1VA83pBLdWvT08qO1mxVZmFmdtvE0o9zU)
+![alt tag](https://2.bp.blogspot.com/-Fyo2sXWBE90/W_cV-LBmosI/AAAAAAAADYA/CyU9eVvPnKkWcO8CGC1dbJT13s6vbA-4gCLcBGAs/s1600/neb3D.jpg)
+
+![alt tag](https://3.bp.blogspot.com/-pHgix9EjETQ/W_cWy3-HCLI/AAAAAAAADYI/-9l-7kKhqWIJ4P9rYNEjv_cZvRi5HxvHACLcBGAs/s1600/neb3D_2.jpg)
 
 Procedural planet:
 
