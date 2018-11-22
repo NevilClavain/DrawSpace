@@ -31,7 +31,6 @@
 class LuaClass_Vector
 {
 protected:
-
     std::unique_ptr<DrawSpace::Utils::Vector>        m_vector;
 
 public:
@@ -56,6 +55,9 @@ public:
 
     int LUA_dotproductwith(lua_State* p_L);
     int LUA_crossproductwith(lua_State* p_L);
+    int LUA_copy(lua_State* p_L);
+    int LUA_addwith(lua_State* p_L);
+    int LUA_subwith(lua_State* p_L);
 
     DrawSpace::Utils::Vector getVector( void ) const;
 

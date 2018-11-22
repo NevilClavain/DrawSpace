@@ -126,7 +126,6 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 	dsstring path = luaL_checkstring( p_L, 1 );
     dsstring lua_err;
 
-
     int status = MainService::GetInstance()->RequestLuaFileExec( path, lua_err );
     if( -2 == status )
     {

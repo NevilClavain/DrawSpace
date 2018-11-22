@@ -45,6 +45,9 @@ const Luna<LuaClass_Vector>::RegType LuaClass_Vector::methods[] =
     { "scale", &LuaClass_Vector::LUA_scale },
     { "dotproduct_with", &LuaClass_Vector::LUA_dotproductwith },
     { "crossproduct_with", &LuaClass_Vector::LUA_crossproductwith },
+    { "copy", &LuaClass_Vector::LUA_copy },
+    { "add_with", &LuaClass_Vector::LUA_addwith },
+    { "sub_with", &LuaClass_Vector::LUA_subwith },
     { 0, 0 }
 };
 
@@ -200,6 +203,55 @@ int LuaClass_Vector::LUA_crossproductwith(lua_State* p_L)
     *m_vector = ProdVec(vectorA->getVector(), vectorB->getVector());
     return 0;
 }
+
+int LuaClass_Vector::LUA_copy(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Vector::copy : argument(s) missing");
+    }
+
+    LuaClass_Vector* vectorA = Luna<LuaClass_Vector>::check(p_L, 1);
+    *m_vector = vectorA->getVector();
+
+    return 0;
+}
+
+int LuaClass_Vector::LUA_addwith(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Vector::add_with : argument(s) missing");
+    }
+    LuaClass_Vector* vectorA = Luna<LuaClass_Vector>::check(p_L, 1);
+
+    (*m_vector)[0] = (*m_vector)[0] + (vectorA->getVector())[0];
+    (*m_vector)[1] = (*m_vector)[1] + (vectorA->getVector())[1];
+    (*m_vector)[2] = (*m_vector)[2] + (vectorA->getVector())[2];
+
+    return 0;
+}
+
+int LuaClass_Vector::LUA_subwith(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Vector::sub_with : argument(s) missing");
+    }
+    LuaClass_Vector* vectorA = Luna<LuaClass_Vector>::check(p_L, 1);
+
+    (*m_vector)[0] = (*m_vector)[0] - (vectorA->getVector())[0];
+    (*m_vector)[1] = (*m_vector)[1] - (vectorA->getVector())[1];
+    (*m_vector)[2] = (*m_vector)[2] - (vectorA->getVector())[2];
+
+    return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////
 
 DrawSpace::Utils::Vector LuaClass_Vector::getVector(void) const
 {

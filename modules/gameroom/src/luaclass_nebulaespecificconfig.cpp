@@ -101,7 +101,9 @@ int LuaClass_NebulaeSpecificConfig::LUA_createbloc(lua_State* p_L)
 
     m_dataModel.push_back(std::make_tuple(default_color, default_pos, 1.0, default_textureuvpair, default_maskuvpair));
 
-    return 0;
+    // return bloc index;
+    lua_pushinteger( p_L, m_dataModel.size() - 1);
+    return 1;
 }
 
 int LuaClass_NebulaeSpecificConfig::LUA_setbloccolor(lua_State* p_L)
