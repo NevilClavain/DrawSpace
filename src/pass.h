@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 #ifndef _PASS_H_
 #define _PASS_H_
@@ -93,7 +72,7 @@ public:
     virtual void CreateViewportQuad( dsreal p_z_offset = 0.0 );
     virtual void CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height, dsreal p_z_offset = 0.0 );
 
-    virtual ViewportQuad* GetViewportQuad( void );
+    virtual ViewportQuad* GetViewportQuad( void ) const;
 
     virtual void SetSpecificName( const dsstring& p_name );
     virtual void GetSpecificName( dsstring& p_name );
@@ -133,7 +112,7 @@ public:
 
     bool Initialize( void );
     
-    Core::Texture* GetTargetTexture( void );
+    Core::Texture* GetTargetTexture( void ) const;
 
 };
 }

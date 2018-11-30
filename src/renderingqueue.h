@@ -165,6 +165,9 @@ public:
     RenderingQueue( Texture* p_target );
     ~RenderingQueue( void );
 
+    long GetTheoricalSwitchesCost(void) const;
+    long GetSwitchesCost(void) const;
+
     void Add( RenderingNode* p_node );
     void Remove( RenderingNode* p_node );
     void Draw( void );
@@ -175,9 +178,6 @@ public:
 
     void UpdateOutputQueue( void );
     void UpdateOutputQueueNoOpt( void );
-
-    long GetTheoricalSwitchesCost( void );
-    long GetSwitchesCost( void );
 };
 }
 }

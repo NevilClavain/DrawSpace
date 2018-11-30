@@ -1168,12 +1168,12 @@ void RenderingQueue::cleanup_output_list( void )
     }
 }
 
-long RenderingQueue::GetSwitchesCost( void )
+long RenderingQueue::GetSwitchesCost( void ) const
 {
     return m_switches_cost;
 }
 
-long RenderingQueue::GetTheoricalSwitchesCost( void )
+long RenderingQueue::GetTheoricalSwitchesCost( void ) const
 {
     long cost = 0;
 
