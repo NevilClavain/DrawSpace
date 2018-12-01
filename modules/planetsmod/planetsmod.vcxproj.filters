@@ -25,15 +25,6 @@
     <ClCompile Include="src\lod_face.cpp">
       <Filter>lod</Filter>
     </ClCompile>
-    <ClCompile Include="src\lod_layer.cpp">
-      <Filter>lod</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lod_collisions.cpp">
-      <Filter>lod</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lod_root.cpp">
-      <Filter>lod</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\planetsrenderingaspectimpl.h" />
@@ -57,15 +48,6 @@
       <Filter>lod</Filter>
     </ClInclude>
     <ClInclude Include="src\lod_face.h">
-      <Filter>lod</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lod_layer.h">
-      <Filter>lod</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lod_collisions.h">
-      <Filter>lod</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lod_root.h">
       <Filter>lod</Filter>
     </ClInclude>
   </ItemGroup>

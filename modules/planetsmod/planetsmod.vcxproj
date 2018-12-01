@@ -95,13 +95,10 @@
   <ItemGroup>
     <ClCompile Include="src\lod_binder.cpp" />
     <ClCompile Include="src\lod_body.cpp" />
-    <ClCompile Include="src\lod_collisions.cpp" />
     <ClCompile Include="src\lod_config.cpp" />
     <ClCompile Include="src\lod_drawing.cpp" />
     <ClCompile Include="src\lod_face.cpp" />
-    <ClCompile Include="src\lod_layer.cpp" />
     <ClCompile Include="src\lod_patch.cpp" />
-    <ClCompile Include="src\lod_root.cpp" />
     <ClCompile Include="src\lod_subpass.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\planetsrenderingaspectimpl.cpp" />
@@ -110,13 +107,10 @@
   <ItemGroup>
     <ClInclude Include="src\lod_binder.h" />
     <ClInclude Include="src\lod_body.h" />
-    <ClInclude Include="src\lod_collisions.h" />
     <ClInclude Include="src\lod_config.h" />
     <ClInclude Include="src\lod_drawing.h" />
     <ClInclude Include="src\lod_face.h" />
-    <ClInclude Include="src\lod_layer.h" />
     <ClInclude Include="src\lod_patch.h" />
-    <ClInclude Include="src\lod_root.h" />
     <ClInclude Include="src\lod_subpass.h" />
     <ClInclude Include="src\planetsrenderingaspectimpl.h" />
     <ClInclude Include="src\planetsroot.h" />
