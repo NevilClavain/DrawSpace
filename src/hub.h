@@ -39,16 +39,15 @@ namespace Systems
 class Hub : public Interface::System
 {
 public:
-    typedef enum
+    enum SystemsUpdateEvent
     {
         SYSTEMS_UPDATE_BEGIN,
         SYSTEMS_UPDATE_END
 
-    } SystemsUpdateEvent;
+    };
 
-    typedef DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>                                               SystemsUpdateEventHandler;
+    using SystemsUpdateEventHandler = DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent> ;
     
-
 private:
     DrawSpace::Systems::RenderingSystem             m_renderingSystem;
     DrawSpace::Systems::TransformSystem             m_transformSystem;

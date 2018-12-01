@@ -38,9 +38,22 @@ using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
 
 
+//Root::on_camera_event : 
+// -> EntityNodeGraph::CAMERA_ACTIVE
+// -> EntityNodeGraph::CAMERA_INACTIVE
+
+//Root::on_nodes_event :
+// -> EntityNode::ADDED_IN_TREE
+// -> EntityNode::REMOVED_FROM_TREE
+
+//Root::on_scenegraph_event :
+// -> Systems::Hub::SYSTEMS_UPDATE_BEGIN
+// -> Systems::Hub::SYSTEMS_UPDATE_END
+
 
 PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void )
 {
+    _asm nop
 }
 
 bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
