@@ -981,6 +981,10 @@ void MainLoopService::create_skybox( void )
 
     rendering_aspect->AddComponent<Fx*>( "skybox_fx", skybox_texturepass_fx );
 
+    /////////// params shaders
+
+    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
+    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>("skybox_texturepass_shaders_params", skybox_texturepass_shaders_params);
 
     //////////////// valeur du rendering order pour chaque slot pass
     rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
