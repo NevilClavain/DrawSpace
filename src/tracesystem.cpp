@@ -61,16 +61,16 @@ void TraceSystem::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
     logger.SetConfiguration( p_logconf );
 }
 
-bool TraceSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
+bool TraceSystem::init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     return true;
 }
 
-void TraceSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
+void TraceSystem::release( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
 }
 
-void TraceSystem::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
+void TraceSystem::run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     if( p_entitygraph->ToDump() )
     {

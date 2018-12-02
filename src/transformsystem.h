@@ -39,8 +39,11 @@ class TransformSystem : public Interface::System
 {
 protected:
 
-    int                                 m_step;   
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph) { return true; };
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
+    int                                 m_step;   
     DrawSpace::Utils::Matrix            m_viewtransform_todispatch;
     DrawSpace::Utils::Matrix            m_projtransform_todispatch;
 
@@ -48,11 +51,9 @@ public:
     TransformSystem( void );
     ~TransformSystem( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    dsstring GetSystemId(void) const { return "TransformSystem"; };
 };
 }
 }

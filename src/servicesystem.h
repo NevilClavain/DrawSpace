@@ -36,6 +36,11 @@ class ServiceSystem : public Interface::System
 {
 protected:
 
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
+
     dsstring    m_callsource;
     bool        m_init_status;
 
@@ -51,11 +56,9 @@ public:
     ServiceSystem( void );
     ~ServiceSystem( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    dsstring GetSystemId(void) const { return "ServiceSystem"; };
 
     void OnKeyPress( EntityGraph::EntityNodeGraph* p_entitygraph, long p_key );
     void OnEndKeyPress( EntityGraph::EntityNodeGraph* p_entitygraph, long p_key );

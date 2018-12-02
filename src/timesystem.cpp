@@ -44,7 +44,7 @@ TimeSystem::~TimeSystem(void)
 {
 }
 
-void TimeSystem::Run( EntityNodeGraph* p_entitygraph )
+void TimeSystem::run( EntityNodeGraph* p_entitygraph )
 {
     m_time_aspect = NULL;
     p_entitygraph->AcceptSystemRootToLeaf( this );

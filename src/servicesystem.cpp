@@ -40,7 +40,7 @@ ServiceSystem::~ServiceSystem(void)
 {
 }
 
-bool ServiceSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
+bool ServiceSystem::init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     m_init_status = true;
     m_callsource = "Init";
@@ -49,13 +49,13 @@ bool ServiceSystem::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
     return m_init_status;
 }
 
-void ServiceSystem::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
+void ServiceSystem::release( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     m_callsource = "Release";
     p_entitygraph->AcceptSystemLeafToRoot( this );
 }
 
-void ServiceSystem::Run( EntityNodeGraph* p_entitygraph )
+void ServiceSystem::run( EntityNodeGraph* p_entitygraph )
 {
     m_callsource = "Run";
     p_entitygraph->AcceptSystemLeafToRoot( this );

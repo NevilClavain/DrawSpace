@@ -48,7 +48,7 @@ void RenderingSystem::EnableGUI( bool p_state )
     m_gui_enabled = p_state;
 }
 
-bool RenderingSystem::Init( EntityNodeGraph* p_entitygraph )
+bool RenderingSystem::init( EntityNodeGraph* p_entitygraph )
 {
     m_init_phase = true;
     m_init_phase_status = true;
@@ -56,7 +56,7 @@ bool RenderingSystem::Init( EntityNodeGraph* p_entitygraph )
     return m_init_phase_status;
 }
 
-void RenderingSystem::Run( EntityNodeGraph* p_entitygraph )
+void RenderingSystem::run( EntityNodeGraph* p_entitygraph )
 {
     m_init_phase = false;
     m_draw_text_elements = false;

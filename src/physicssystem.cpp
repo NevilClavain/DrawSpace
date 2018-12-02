@@ -43,7 +43,7 @@ PhysicsSystem::~PhysicsSystem( void )
 {
 }
 
-void PhysicsSystem::Run( EntityNodeGraph* p_entitygraph )
+void PhysicsSystem::run( EntityNodeGraph* p_entitygraph )
 {
     m_world_bodies_list.clear(); // clear list of entities with body aspect
     m_current_graph = p_entitygraph;

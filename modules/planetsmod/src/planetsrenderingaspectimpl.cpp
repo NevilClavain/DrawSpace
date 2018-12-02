@@ -98,6 +98,11 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
     p_rendergraph.Accept( this );
 }
 
+bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
+{
+    return true;
+}
+
 void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 {
     TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();

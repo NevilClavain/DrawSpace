@@ -43,7 +43,6 @@ public:
     {
         SYSTEMS_UPDATE_BEGIN,
         SYSTEMS_UPDATE_END
-
     };
 
     using SystemsUpdateEventHandler = DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent> ;
@@ -55,11 +54,8 @@ private:
     DrawSpace::Systems::TimeSystem                  m_timeSystem;
     DrawSpace::Systems::TraceSystem                 m_traceSystem;
 
-
     std::vector<DrawSpace::Interface::System*>      m_systems;
-
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
-
 
 public:
     Hub( void );

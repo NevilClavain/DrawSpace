@@ -37,6 +37,11 @@ namespace Systems
 class RenderingSystem : public Interface::System
 {
 private:
+
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
     DrawSpace::Interface::Renderer*  m_renderer;
     bool                             m_gui_enabled;
     bool                             m_draw_text_elements;
@@ -47,12 +52,9 @@ public:
     ~RenderingSystem( void );
 
     void EnableGUI( bool p_state );
-
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    dsstring GetSystemId(void) const { return "RenderingSystem"; };
 };
 
 }

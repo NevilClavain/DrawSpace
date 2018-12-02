@@ -38,7 +38,11 @@ namespace Systems
 class PhysicsSystem : public Interface::System
 {
 protected:
-    
+
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph) { return true; };
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
     std::set<Core::Entity*>             m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)
     EntityGraph::EntityNodeGraph*       m_current_graph;
 
@@ -47,11 +51,9 @@ public:
     PhysicsSystem( void );
     ~PhysicsSystem( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    dsstring GetSystemId(void) const { return "PhysicsSystem"; };
 };
 }
 }

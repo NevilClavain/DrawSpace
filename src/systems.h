@@ -34,10 +34,88 @@ namespace Interface
 class System
 {
 public:
-    virtual bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
-    virtual void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
-    virtual void Run( EntityGraph::EntityNodeGraph* p_entitygraph ) = 0;
+    enum Event
+    {
+        SYSTEM_INIT_BEGIN,
+        SYSTEM_INIT_END,
+        SYSTEM_RUN_BEGIN,
+        SYSTEM_RUN_END,
+        SYSTEM_RELEASE_BEGIN,
+        SYSTEM_RELEASE_END
+    };
+
+    using SystemEventsHandler = DrawSpace::Core::BaseCallback2<void, Event, dsstring>;
+
+protected:
+
+    std::set<SystemEventsHandler*>            m_system_evt_handlers;
+
+    virtual bool init(EntityGraph::EntityNodeGraph* p_entitygraph) = 0;
+    virtual void release(EntityGraph::EntityNodeGraph* p_entitygraph) = 0;
+    virtual void run(EntityGraph::EntityNodeGraph* p_entitygraph) = 0;
+
+public:
+
+    // NVI pattern
+    bool Init(EntityGraph::EntityNodeGraph* p_entitygraph)
+    {
+        for (auto& e : m_system_evt_handlers)
+        {
+            (*e)(SYSTEM_INIT_BEGIN, GetSystemId());
+        }
+
+        bool status = init( p_entitygraph );
+
+        for (auto& e : m_system_evt_handlers)
+        {
+            (*e)(SYSTEM_INIT_END, GetSystemId());
+        }
+
+        return status;
+    }
+
+    void Release(EntityGraph::EntityNodeGraph* p_entitygraph)
+    {
+        for (auto& e : m_system_evt_handlers)
+        {
+            (*e)(SYSTEM_RELEASE_BEGIN, GetSystemId());
+        }
+
+        release(p_entitygraph);
+
+        for (auto& e : m_system_evt_handlers)
+        {
+            (*e)(SYSTEM_RELEASE_END, GetSystemId());
+        }
+    }
+    
+    void Run(EntityGraph::EntityNodeGraph* p_entitygraph)
+    {
+        for (auto& e : m_system_evt_handlers)
+        {
+            (*e)(SYSTEM_RUN_BEGIN, GetSystemId());
+        }
+
+        run(p_entitygraph);
+
+        for (auto& e : m_system_evt_handlers)
+        {
+            (*e)(SYSTEM_RUN_END, GetSystemId());
+        }
+    }
+
+    virtual dsstring GetSystemId(void) const = 0;
     virtual void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity ) {};
+
+    void RegisterSystemEvtHandler(SystemEventsHandler* p_handler) 
+    { 
+        m_system_evt_handlers.insert(p_handler);
+    }
+
+    void UnregisterSystemEvtHandler(SystemEventsHandler* p_handler)
+    {
+        m_system_evt_handlers.erase(p_handler);
+    }
 };
 }
 }

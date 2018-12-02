@@ -43,7 +43,7 @@ TransformSystem::~TransformSystem( void )
 }
 
 
-void TransformSystem::Run( EntityNodeGraph* p_entitygraph )
+void TransformSystem::run( EntityNodeGraph* p_entitygraph )
 {
     m_step = 0;
     p_entitygraph->AcceptSystemRootToLeaf( this );

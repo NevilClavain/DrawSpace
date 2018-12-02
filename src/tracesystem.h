@@ -35,15 +35,17 @@ namespace Systems
 {
 class TraceSystem : public Interface::System
 {
+protected:
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
 public:
 
     void SetLogConf( DrawSpace::Logger::Configuration* p_logconf );
-
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    dsstring GetSystemId(void) const { return "TraceSystem"; };
 
 };
 }

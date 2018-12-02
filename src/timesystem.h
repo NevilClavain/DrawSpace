@@ -38,18 +38,19 @@ class TimeSystem : public Interface::System
 {
 protected:
 
-    //Utils::TimeManager* m_currtm;
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph) { return true; };
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
     Aspect::TimeAspect* m_time_aspect;
 
 public:
     TimeSystem( void );
     ~TimeSystem( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph ) { return true; };
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph ) {};
-
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
     void VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity );
+
+    dsstring GetSystemId(void) const { return "TimeSystem"; };
 };
 
 }
