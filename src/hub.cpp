@@ -40,7 +40,7 @@ Hub::Hub( void )
 
 }
 
-bool Hub::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
+bool Hub::init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     for( size_t i = 0; i < m_systems.size(); i++ )
     {
@@ -52,7 +52,7 @@ bool Hub::Init( EntityGraph::EntityNodeGraph* p_entitygraph )
     return true;
 }
 
-void Hub::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
+void Hub::release( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     for( size_t i = 0; i < m_systems.size(); i++ )
     {
@@ -60,7 +60,7 @@ void Hub::Release( EntityGraph::EntityNodeGraph* p_entitygraph )
     }
 }
 
-void Hub::Run( EntityGraph::EntityNodeGraph* p_entitygraph )
+void Hub::run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     /// signifier debut run des systemes
     for( auto it = m_systems_update_evt_handlers.begin(); it != m_systems_update_evt_handlers.end(); ++it )

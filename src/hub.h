@@ -57,14 +57,17 @@ private:
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
 
+protected:
+    bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void release(EntityGraph::EntityNodeGraph* p_entitygraph);
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
 public:
     Hub( void );
 
-    bool Init( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Release( EntityGraph::EntityNodeGraph* p_entitygraph );
-    void Run( EntityGraph::EntityNodeGraph* p_entitygraph );
-
     void SetLogConf( DrawSpace::Logger::Configuration* p_logconf );
+
+    dsstring GetSystemId(void) const { return "HubSystem"; };
 
     void EnableGUI( bool p_state );
 
