@@ -39,12 +39,12 @@ PlanetsRoot::~PlanetsRoot( void )
 {
 }
 
-dsstring PlanetsRoot::GetModuleName( void )
+dsstring PlanetsRoot::GetModuleName( void ) const
 {
     return "PlanetsMod";
 }
 
-dsstring PlanetsRoot::GetModuleDescr( void )
+dsstring PlanetsRoot::GetModuleDescr( void ) const
 {
     return "Planets rendering module";
 }
@@ -57,7 +57,9 @@ DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* PlanetsRoot::I
 {
     if ("planetsRender" == p_id)
     {
-        return new DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl;
+        DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl* impl = new DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl;
+        impl->SetHub( m_hub );
+        return impl;
     }
 
     return NULL;

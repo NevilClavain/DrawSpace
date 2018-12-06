@@ -55,8 +55,8 @@ public:
     RootImpl( void );
     virtual ~RootImpl( void );
 
-    virtual dsstring GetModuleName( void );
-    virtual dsstring GetModuleDescr( void );
+    virtual dsstring GetModuleName( void ) const;
+    virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
     DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* InstanciateServiceAspectImpl( const dsstring& p_id );
 };

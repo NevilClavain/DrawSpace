@@ -38,15 +38,15 @@ class RenderingSystem : public Interface::System
 {
 private:
 
-    bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
-    void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
+    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
+    //void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     DrawSpace::Interface::Renderer*  m_renderer;
     bool                             m_gui_enabled;
     bool                             m_draw_text_elements;
-    bool                             m_init_phase;
-    bool                             m_init_phase_status;
+    //bool                             m_init_phase;
+    //bool                             m_init_phase_status;
 public:
     RenderingSystem( void );
     ~RenderingSystem( void );

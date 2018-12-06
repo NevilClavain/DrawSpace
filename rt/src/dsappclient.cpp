@@ -71,19 +71,16 @@ bool dsAppClient::OnIdleAppInit( void )
 
         // construction du graph avec une entité :)
         ServiceAspect* service_aspect = m_rootEntity.AddAspect<ServiceAspect>();
-        service_aspect->AddImplementation( m_service );
 
         // quelques parametres a passer au service...
-        service_aspect->AddComponent<DrawSpace::Logger::Configuration*>( "logconf", DrawSpace::Logger::Configuration::GetInstance() );
-        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>( "mousecircularmode_cb", m_mouse_circularmode_update_cb );
-        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>( "mousevisible_cb", m_mouse_visible_cb );
-        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, int>*>( "closeapp_cb", m_close_app_cb );
+        service_aspect->AddComponent<DrawSpace::Logger::Configuration*>("logconf", DrawSpace::Logger::Configuration::GetInstance());
+        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>("mousecircularmode_cb", m_mouse_circularmode_update_cb);
+        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>("mousevisible_cb", m_mouse_visible_cb);
+        service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, int>*>("closeapp_cb", m_close_app_cb);
 
-        m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
+        service_aspect->AddImplementation( m_service );
 
-        // lancer init du service
-        m_serviceSystem.Init( &m_entitygraph );
-    
+        m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );    
     }
     else
     {
@@ -101,7 +98,10 @@ void dsAppClient::OnClose( void )
 {
     _DSDEBUG(logger, dsstring("RT shutdown..."))
 
-    m_serviceSystem.Release( &m_entitygraph );
+    //m_serviceSystem.Release( &m_entitygraph );
+
+    ServiceAspect* service_aspect = m_rootEntity.GetAspect<ServiceAspect>();
+    service_aspect->RemoveImplementation(m_service);
 }
 
 void dsAppClient::OnKeyPress( long p_key ) 

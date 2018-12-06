@@ -43,7 +43,7 @@ public:
 
     void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
     void RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
-    bool Init( Core::Entity* p_owner_entity );
+    //bool Init( Core::Entity* p_owner_entity );
     void Run( Core::Entity* p_owner_entity, bool p_drawtextlements );
 };
 }

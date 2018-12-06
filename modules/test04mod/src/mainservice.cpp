@@ -289,7 +289,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
+    //m_systemsHub.Init( &m_entitygraph );
 
     m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
@@ -347,7 +347,7 @@ void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
-    m_systemsHub.Release( &m_entitygraph );
+    //m_systemsHub.Release( &m_entitygraph );
 }
 
 void MainService::OnKeyPress( long p_key )

@@ -38,12 +38,12 @@ SkyboxRoot::~SkyboxRoot( void )
 {
 }
 
-dsstring SkyboxRoot::GetModuleName( void )
+dsstring SkyboxRoot::GetModuleName( void ) const
 {
     return "SkyboxMod";
 }
 
-dsstring SkyboxRoot::GetModuleDescr( void )
+dsstring SkyboxRoot::GetModuleDescr( void ) const
 {
     return "Skybox module";
 }

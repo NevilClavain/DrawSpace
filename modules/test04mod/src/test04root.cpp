@@ -57,12 +57,12 @@ void Test04Root::Init( void )
 {
 }
 
-dsstring Test04Root::GetModuleName( void )
+dsstring Test04Root::GetModuleName( void ) const
 {
     return "Test04Root";
 }
 
-dsstring Test04Root::GetModuleDescr( void )
+dsstring Test04Root::GetModuleDescr( void ) const
 {
     return "Test04 module";
 }

@@ -25,6 +25,7 @@
 #include "luacontext.h"
 #include "luaclass_module.h"
 #include "piload.h"
+#include "mainservice.h"
 
 const char LuaClass_Module::className[] = "Module";
 const Luna<LuaClass_Module>::RegType LuaClass_Module::methods[] =
@@ -63,6 +64,8 @@ int LuaClass_Module::LUA_load( lua_State* p_L )
     {
         LUA_ERROR( "fail to load module" );
     }
+    m_mod_root->SetHub( MainService::GetInstance()->GetHub() );
+
     return 0;
 }
 

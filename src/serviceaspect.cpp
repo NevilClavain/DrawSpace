@@ -24,6 +24,7 @@
 
 
 #include "serviceaspect.h"
+#include "entity.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -38,8 +39,24 @@ void ServiceAspect::AddImplementation( AspectImplementations::ServiceAspectImpl*
 {
     m_impls.push_back( p_impl );
     p_impl->SetOwner( this );
+
+    p_impl->Init();
 }
 
+void ServiceAspect::RemoveImplementation(DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl)
+{
+    for (auto it = m_impls.begin(); it != m_impls.end(); ++it)
+    {
+        if (*it == p_impl)
+        {
+            p_impl->Release();
+            m_impls.erase(it);
+            break;
+        }
+    }
+}
+
+/*
 bool ServiceAspect::Init( void )
 {
     bool global_status = true;
@@ -51,7 +68,7 @@ bool ServiceAspect::Init( void )
 
     return global_status;
 }
-
+*/
 void ServiceAspect::Run( void )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
@@ -59,7 +76,7 @@ void ServiceAspect::Run( void )
         m_impls[i]->Run();
     }
 }
-
+/*
 void ServiceAspect::Release( void )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
@@ -67,7 +84,7 @@ void ServiceAspect::Release( void )
         m_impls[i]->Release();
     }
 }
-
+*/
 void ServiceAspect::OnKeyPress( long p_key )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )

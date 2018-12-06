@@ -27,6 +27,7 @@
 #include "renderingaspect.h"
 #include "transformaspect.h"
 #include "maths.h"
+#include "hub.h"
 #include <functional>
 
 
@@ -51,13 +52,17 @@ using namespace DrawSpace::Utils;
 // -> Systems::Hub::SYSTEMS_UPDATE_END
 
 
-PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void )
+PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void ) :
+m_hub( NULL ),
+m_system_evt_cb( this, &PlanetsRenderingAspectImpl::on_system_event )
 {
-    _asm nop
 }
 
 bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
 {
+
+
+
     bool updated_queue = false;
 
     /*
@@ -100,7 +105,28 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
 
 bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
 {
+    if( m_hub )
+    {
+        std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
+        for(auto& e : systems )
+        {
+            e->RegisterSystemEvtHandler(&m_system_evt_cb);
+        }
+    }
+
     return true;
+}
+
+void PlanetsRenderingAspectImpl::Release(void)
+{
+    if (m_hub)
+    {
+        std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
+        for (auto& e : systems)
+        {
+            e->UnregisterSystemEvtHandler(&m_system_evt_cb);
+        }
+    }
 }
 
 void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
@@ -152,3 +178,12 @@ void PlanetsRenderingAspectImpl::update_shader_params( void ) // for all passes
 {
 }
 
+void PlanetsRenderingAspectImpl::SetHub(Systems::Hub* p_hub)
+{
+    m_hub = p_hub;
+}
+
+void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
+{
+    _asm nop
+}

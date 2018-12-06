@@ -73,12 +73,12 @@ void Test03Root::Init( void )
     m_services["mainloop"] = new MainLoopService();
 }
 
-dsstring Test03Root::GetModuleName( void )
+dsstring Test03Root::GetModuleName( void ) const
 {
     return "Test03Root";
 }
 
-dsstring Test03Root::GetModuleDescr( void )
+dsstring Test03Root::GetModuleDescr( void ) const
 {
     return "test03 module";
 }

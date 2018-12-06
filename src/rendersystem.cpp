@@ -47,7 +47,7 @@ void RenderingSystem::EnableGUI( bool p_state )
 {
     m_gui_enabled = p_state;
 }
-
+/*
 bool RenderingSystem::init( EntityNodeGraph* p_entitygraph )
 {
     m_init_phase = true;
@@ -55,10 +55,10 @@ bool RenderingSystem::init( EntityNodeGraph* p_entitygraph )
     p_entitygraph->AcceptSystemLeafToRoot( this );
     return m_init_phase_status;
 }
-
+*/
 void RenderingSystem::run( EntityNodeGraph* p_entitygraph )
 {
-    m_init_phase = false;
+    //m_init_phase = false;
     m_draw_text_elements = false;
     
     /////////////// rendu general
@@ -83,6 +83,7 @@ void RenderingSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     RenderingAspect* rendering_aspect = p_entity->GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
+        /*
         if( m_init_phase )
         {
             if( false == rendering_aspect->Init( p_entity ) )
@@ -94,5 +95,8 @@ void RenderingSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
         {
             rendering_aspect->Run( p_entity, m_draw_text_elements );
         }
+        */
+
+        rendering_aspect->Run(p_entity, m_draw_text_elements);
     }
 }

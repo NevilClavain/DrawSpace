@@ -66,6 +66,7 @@ public:
     bool IsText( void ) override { return true; };
 
     bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
+    void Release( void ) {};
     void Run( DrawSpace::Core::Entity* p_entity );
 };
 

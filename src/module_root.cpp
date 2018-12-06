@@ -24,17 +24,23 @@
 
 
 #include "module_root.h"
+#include "hub.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface::Module;
+using namespace DrawSpace::Systems;
 
+Root::Root(void) : 
+m_hub( NULL )
+{
+}
 
 void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )
 {
     DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
 }
 
-std::vector<dsstring> Root::GetServicesList( void )
+std::vector<dsstring> Root::GetServicesList( void ) const
 {
     std::vector<dsstring> list;
     for( auto it = m_services.begin(); it != m_services.end(); ++it )
@@ -53,6 +59,10 @@ Service* Root::InstanciateService( const dsstring& p_id )
     return NULL;
 }
 
+void Root::SetHub(Systems::Hub* p_hub)
+{
+    m_hub = p_hub;
+}
 
 DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* Root::InstanciateRenderingAspectImpls( const dsstring& p_id )
 {

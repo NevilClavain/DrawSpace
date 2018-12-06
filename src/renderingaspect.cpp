@@ -24,6 +24,7 @@
 
 
 #include "renderingaspect.h"
+#include "entity.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -38,6 +39,8 @@ void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectI
 {
     m_impls.push_back( p_impl );
     p_impl->SetOwner( this );
+
+    p_impl->Init( m_owner );
 }
 
 void RenderingAspect::RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl )
@@ -46,12 +49,13 @@ void RenderingAspect::RemoveImplementation( DrawSpace::Interface::AspectImplemen
     {
         if( *it == p_impl )
         {
+            p_impl->Release();
             m_impls.erase( it );
             break;
         }
     } 
 }
-
+/*
 bool RenderingAspect::Init( Core::Entity* p_owner_entity )
 {
     bool status = true;
@@ -64,7 +68,7 @@ bool RenderingAspect::Init( Core::Entity* p_owner_entity )
     }
     return status;
 }
-
+*/
 void RenderingAspect::Run( Entity* p_owner_entity, bool p_drawtextlements )
 {    
     for( size_t i = 0; i < m_impls.size(); i++ )

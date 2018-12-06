@@ -39,8 +39,8 @@ class TransformSystem : public Interface::System
 {
 protected:
 
-    bool init(EntityGraph::EntityNodeGraph* p_entitygraph) { return true; };
-    void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
+    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph) { return true; };
+    //void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     int                                 m_step;   

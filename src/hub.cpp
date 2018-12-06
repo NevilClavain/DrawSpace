@@ -40,6 +40,7 @@ Hub::Hub( void )
 
 }
 
+/*
 bool Hub::init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     for( size_t i = 0; i < m_systems.size(); i++ )
@@ -59,6 +60,7 @@ void Hub::release( EntityGraph::EntityNodeGraph* p_entitygraph )
         m_systems[i]->Release( p_entitygraph );
     }
 }
+*/
 
 void Hub::run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
@@ -103,4 +105,9 @@ void Hub::UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handle
 void Hub::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
 {
     m_traceSystem.SetLogConf( p_logconf );
+}
+
+std::vector<DrawSpace::Interface::System*> Hub::GetSystems(void) const
+{
+    return m_systems;
 }

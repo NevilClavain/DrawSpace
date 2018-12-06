@@ -68,12 +68,12 @@ void AstrolabRoot::Init( void )
     m_services["mainloop"] = MainLoopService::GetInstance();
 }
 
-dsstring AstrolabRoot::GetModuleName( void )
+dsstring AstrolabRoot::GetModuleName( void ) const
 {
     return "AstrolabMod";
 }
 
-dsstring AstrolabRoot::GetModuleDescr( void )
+dsstring AstrolabRoot::GetModuleDescr( void ) const
 {
     return "Astrolab module";
 }

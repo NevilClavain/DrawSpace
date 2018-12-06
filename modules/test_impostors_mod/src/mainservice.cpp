@@ -192,8 +192,6 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
-
     m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
@@ -222,8 +220,6 @@ void MainService::Run( void )
 void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
-
-    m_systemsHub.Release( &m_entitygraph );
 }
 
 void MainService::create_skybox( void )

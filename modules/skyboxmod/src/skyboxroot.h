@@ -36,8 +36,8 @@ public:
     SkyboxRoot( void );
     virtual ~SkyboxRoot( void );
 
-    virtual dsstring GetModuleName( void );
-    virtual dsstring GetModuleDescr( void );
+    virtual dsstring GetModuleName( void ) const;
+    virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
 
     virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );

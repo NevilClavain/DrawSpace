@@ -55,11 +55,10 @@ void MemAlloc::DumpContent( void )
     _DSDEBUG( logger, dsstring( "Allocations total size : " ) << (unsigned int)m_totalsize << dsstring( " byte(s)" ) )
 
     long count = 1;
-    for( std::map<void*, entry>::iterator it = m_blocs.begin(); it != m_blocs.end(); ++it )
+    for( auto& it = m_blocs.begin(); it != m_blocs.end(); ++it )
     {
         _DSDEBUG( logger, dsstring( "--> " ) << count << dsstring( "/ ptr = " ) << (*it).first << dsstring( " size = " ) << (*it).second.size << dsstring( " object = " ) << (*it).second.item.c_str() << dsstring( " in function : " ) << (*it).second.func.c_str()
             << dsstring( " " ) << (*it).second.file.c_str() << dsstring( ", line " ) << (*it).second.linenum )
-
         count++;
     }
 }

@@ -34,6 +34,8 @@ namespace DrawSpace
 {
 namespace Core
 {
+class Entity;
+
 template<typename T>
 using ComponentList = std::vector<Component<T>*>;
 
@@ -47,12 +49,15 @@ protected:
     // 2eme map pour regrouper les composants en fct de leur type
     std::unordered_map<size_t, std::vector<BaseComponent*>>   m_components_by_type;
 
+    // entity owner
+    Entity* m_owner;
+
 public:
-    Aspect( void ) {};
+    Aspect( void ) : m_owner(NULL) {};
     virtual ~Aspect( void ) {}
       
     template<typename T, class... Args>
-    void AddComponent( const dsstring& p_id, Args&&... p_args )
+    inline void AddComponent( const dsstring& p_id, Args&&... p_args )
     {
         if( m_components.count( p_id ) > 0 )
         {
@@ -70,7 +75,7 @@ public:
     }
         
     template<typename T>
-    void RemoveComponent( const dsstring& p_id )
+    inline void RemoveComponent( const dsstring& p_id )
     {
         if( 0 == m_components.count( p_id ) )
         {
@@ -95,7 +100,7 @@ public:
     }
     
     template<typename T>
-    Component<T>* GetComponent( const dsstring& p_id )
+    inline Component<T>* GetComponent( const dsstring& p_id )
     {
         if( 0 == m_components.count( p_id ) )
         {
@@ -108,7 +113,7 @@ public:
     }
 
     template<typename T>
-    void GetComponentsByType( ComponentList<T>& p_outlist )
+    inline void GetComponentsByType( ComponentList<T>& p_outlist )
     {
         size_t tid = typeid(T).hash_code();
         if( m_components_by_type.count( tid ) > 0 )
@@ -120,6 +125,8 @@ public:
             }
         }
     }
+
+    inline void SetOwnerEntity(Entity* p_entity) { m_owner = p_entity; }
 };
 }
 }

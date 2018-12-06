@@ -44,6 +44,7 @@ public:
     bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
     void SetRendergraph( DrawSpace::RenderGraph::RenderPassNodeGraph* p_rendergraph );
     bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
+    void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
 };
 }

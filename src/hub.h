@@ -58,8 +58,8 @@ private:
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
 
 protected:
-    bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
-    void release(EntityGraph::EntityNodeGraph* p_entitygraph);
+    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
+    //void release(EntityGraph::EntityNodeGraph* p_entitygraph);
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 public:
@@ -73,6 +73,8 @@ public:
 
     void RegisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
     void UnregisterSystemsUpdateEvtHandler( SystemsUpdateEventHandler* p_handler );
+
+    std::vector<DrawSpace::Interface::System*> GetSystems( void ) const;
 
 };
 }

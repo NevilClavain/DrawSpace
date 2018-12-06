@@ -49,7 +49,7 @@ public:
     }
     
     template<typename T>
-    T* AddAspect( void )
+    inline T* AddAspect( void )
     {
         size_t tid = typeid(T).hash_code();
         if( m_aspects.count( tid ) )
@@ -57,12 +57,13 @@ public:
             _DSEXCEPTION( "Aspect type already exists in this entity : " + dsstring( typeid(T).name() ) );
         }
         T* p = _DRAWSPACE_NEW_( T, T );
+        p->SetOwnerEntity(this);
         m_aspects[tid] = p;
         return p;
     }
 
     template<typename T>
-    void RemoveAspect( void )
+    inline void RemoveAspect( void )
     {
         size_t tid = typeid(T).hash_code();
         if( m_aspects.count( tid ) )
@@ -77,7 +78,7 @@ public:
     }
 
     template<typename T>
-    T* GetAspect( void )
+    inline T* GetAspect( void )
     {
         size_t tid = typeid(T).hash_code();
 
@@ -91,7 +92,7 @@ public:
         return aspect;
     }
 
-    void GetAllAspects( std::vector<Aspect*>& p_list )
+    inline void GetAllAspects( std::vector<Aspect*>& p_list )
     {
         for( auto it = m_aspects.begin(); it != m_aspects.end(); ++it )
         {

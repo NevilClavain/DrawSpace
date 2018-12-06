@@ -64,12 +64,12 @@ void GUILabRoot::Init( void )
     m_services["mainloop"] = new MainLoopService();
 }
 
-dsstring GUILabRoot::GetModuleName( void )
+dsstring GUILabRoot::GetModuleName( void ) const
 {
     return "GUILabMod";
 }
 
-dsstring GUILabRoot::GetModuleDescr( void )
+dsstring GUILabRoot::GetModuleDescr( void ) const
 {
     return "CEGUI lab test module";
 }

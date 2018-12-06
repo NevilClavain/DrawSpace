@@ -39,12 +39,12 @@ VolumetricsRoot::~VolumetricsRoot( void )
 {
 }
 
-dsstring VolumetricsRoot::GetModuleName( void )
+dsstring VolumetricsRoot::GetModuleName( void ) const
 {
     return "VolumetricsMod";
 }
 
-dsstring VolumetricsRoot::GetModuleDescr( void )
+dsstring VolumetricsRoot::GetModuleDescr( void ) const
 {
     return "Volumetrics rendering module";
 }

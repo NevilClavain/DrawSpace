@@ -57,12 +57,12 @@ void RootImpl::Init( void )
 {
 }
 
-dsstring RootImpl::GetModuleName( void )
+dsstring RootImpl::GetModuleName( void ) const
 {
     return "TestImpostorsRoot";
 }
 
-dsstring RootImpl::GetModuleDescr( void )
+dsstring RootImpl::GetModuleDescr( void ) const
 {
     return "Impostors test module";
 }

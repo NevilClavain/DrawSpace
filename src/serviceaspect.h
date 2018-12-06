@@ -42,10 +42,11 @@ public:
     ServiceAspect( void );
 
     void AddImplementation( DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl );
+    void RemoveImplementation(DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl);
 
-    bool Init( void );
+    //bool Init( void );
     void Run( void );
-    void Release( void );
+    //void Release( void );
 
     void OnKeyPress( long p_key );
     void OnEndKeyPress( long p_key );

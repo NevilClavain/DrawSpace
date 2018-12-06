@@ -143,7 +143,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.Init( &m_entitygraph );
+    
 
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -177,11 +177,7 @@ void MainService::Run( void )
 
 void MainService::Release( void )
 {
-    _DSDEBUG( logger, dsstring("MainService : shutdown...") );
-
-
-    
-    m_systemsHub.Release( &m_entitygraph );
+    _DSDEBUG( logger, dsstring("MainService : shutdown...") );      
 }
 
 void MainService::OnKeyPress( long p_key )

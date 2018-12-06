@@ -64,12 +64,12 @@ CDLODPlanetRoot::~CDLODPlanetRoot( void )
 {
 }
 
-dsstring CDLODPlanetRoot::GetModuleName( void )
+dsstring CDLODPlanetRoot::GetModuleName( void ) const
 {
     return "CDLODPlanetMod";
 }
 
-dsstring CDLODPlanetRoot::GetModuleDescr( void )
+dsstring CDLODPlanetRoot::GetModuleDescr( void ) const
 {
     return "CDLOD/Procedural planet module";
 }

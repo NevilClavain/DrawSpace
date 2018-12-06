@@ -39,7 +39,7 @@ ServiceSystem::ServiceSystem(void)
 ServiceSystem::~ServiceSystem(void)
 {
 }
-
+/*
 bool ServiceSystem::init( EntityGraph::EntityNodeGraph* p_entitygraph )
 {
     m_init_status = true;
@@ -54,6 +54,7 @@ void ServiceSystem::release( EntityGraph::EntityNodeGraph* p_entitygraph )
     m_callsource = "Release";
     p_entitygraph->AcceptSystemLeafToRoot( this );
 }
+*/
 
 void ServiceSystem::run( EntityNodeGraph* p_entitygraph )
 {
@@ -66,21 +67,21 @@ void ServiceSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     ServiceAspect* service_aspect = p_entity->GetAspect<ServiceAspect>();
     if( service_aspect )
     {
-        if( "Init" == m_callsource )
+        /*if( "Init" == m_callsource )
         {
             if( false == service_aspect->Init() )
             {
                 m_init_status = false;
             }        
         }
-        else if( "Run" == m_callsource )
+        else*/ if( "Run" == m_callsource )
         {
             service_aspect->Run();
-        }
+        }/*
         else if( "Release" == m_callsource )
         {
             service_aspect->Release();
-        }
+        }*/
         else if( "OnKeyPress" == m_callsource )
         {
             service_aspect->OnKeyPress( m_key );

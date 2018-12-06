@@ -172,6 +172,7 @@ public:
     int UnregisterGuiPushButtonClickedCallback( const dsstring& p_id );
 
     DrawSpace::Interface::MesheImport* GetMesheImport( void );
+    DrawSpace::Systems::Hub* GetHub( void );
 
     void RequestClose( void );
     void RequestClearConsole( void );

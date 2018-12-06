@@ -41,12 +41,12 @@ MvtRoot::~MvtRoot( void )
 {
 }
 
-dsstring MvtRoot::GetModuleName( void )
+dsstring MvtRoot::GetModuleName( void ) const
 {
     return "MvtMod";
 }
 
-dsstring MvtRoot::GetModuleDescr( void )
+dsstring MvtRoot::GetModuleDescr( void ) const
 {
     return "Movements module";
 }

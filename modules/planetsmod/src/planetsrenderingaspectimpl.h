@@ -29,26 +29,36 @@
 #include "plugin.h"
 #include "renderingnode.h"
 #include "renderpassnodegraph.h"
+#include "hub.h"
 
 namespace DrawSpace
 {
+namespace Systems
+{
+    class Hub;
+}
 namespace AspectImplementations
 {
 class PlanetsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 protected:
 
+    using SystemsEvtCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
+
 public:
     
 protected:
 
-    bool        m_add_in_rendergraph;
+    bool            m_add_in_rendergraph;
+    Systems::Hub*   m_hub;
+    SystemsEvtCb    m_system_evt_cb;
 
-    void        init_rendering_objects(void);
-    void        release_rendering_objects(void);
+    void            init_rendering_objects(void);
+    void            release_rendering_objects(void);
 
-    void        update_shader_params(void); // for all passes
+    void            update_shader_params(void); // for all passes
 
+    void            on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
    
 public:
     PlanetsRenderingAspectImpl( void );
@@ -59,7 +69,10 @@ public:
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
     virtual bool Init( DrawSpace::Core::Entity* p_entity );
+    virtual void Release(void);
     virtual void Run( DrawSpace::Core::Entity* p_entity );
+
+    virtual void SetHub(Systems::Hub* p_hub);
 };
 }
 }

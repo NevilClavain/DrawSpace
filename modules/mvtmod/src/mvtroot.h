@@ -34,8 +34,8 @@ public:
     MvtRoot( void );
     virtual ~MvtRoot( void );
 
-    virtual dsstring GetModuleName( void );
-    virtual dsstring GetModuleDescr( void );
+    virtual dsstring GetModuleName( void ) const;
+    virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
 
     virtual DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   InstanciateTransformAspectImpls(const dsstring& p_id);

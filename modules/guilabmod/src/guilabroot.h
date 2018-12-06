@@ -57,8 +57,8 @@ public:
     GUILabRoot( void );
     virtual ~GUILabRoot( void );
 
-    virtual dsstring GetModuleName( void );
-    virtual dsstring GetModuleDescr( void );
+    virtual dsstring GetModuleName( void ) const;
+    virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
 
 };

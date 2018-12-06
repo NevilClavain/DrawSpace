@@ -165,9 +165,6 @@ void MainService::Run( void )
 void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
-
-    m_systemsHub.Release( &m_entitygraphs["eg"]->GetEntityGraph() );
-
     LuaContext::GetInstance()->Shutdown();
 }
 
@@ -386,11 +383,7 @@ void MainService::process_console_command( const dsstring& p_cmd )
     {
         if( m_request_lua_reset )
         {
-            //m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneEnd();
-
             LuaContext::GetInstance()->Execute( "root_entity:release_timemanager()" );
-
-            m_systemsHub.Release( &m_entitygraphs["eg"]->GetEntityGraph() );
 
             DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
             DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
@@ -445,10 +438,8 @@ void MainService::create_console_quad( void )
     Shader::SetRootPath( "console_data/shaders_bank" );
 
     RenderingAspect* rendering_aspect = m_quadEntity.AddAspect<RenderingAspect>();
-    rendering_aspect->AddImplementation( &m_quadRender );
-
-    rendering_aspect->AddComponent<Core::RenderingNode*>( "quad_rn", _DRAWSPACE_NEW_( Core::RenderingNode, Core::RenderingNode ) );
-    rendering_aspect->AddComponent<bool>( "draw", false );
+    rendering_aspect->AddComponent<Core::RenderingNode*>("quad_rn", _DRAWSPACE_NEW_(Core::RenderingNode, Core::RenderingNode));
+    rendering_aspect->AddComponent<bool>("draw", false);
 
     RenderingNode* quad_node = rendering_aspect->GetComponent<Core::RenderingNode*>( "quad_rn" )->getPurpose();
 
@@ -481,6 +472,9 @@ void MainService::create_console_quad( void )
     quad_node->GetFx()->SetRenderStates( quadpass_rss );
 
     quad_node->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
+
+    rendering_aspect->AddImplementation(&m_quadRender);
+
 
     TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
 
@@ -694,10 +688,14 @@ int MainService::UnregisterGuiPushButtonClickedCallback( const dsstring& p_id )
     return index;
 }
 
-
 DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
 {
     return &m_meshe_import;
+}
+
+DrawSpace::Systems::Hub* MainService::GetHub(void)
+{
+    return &m_systemsHub;
 }
 
 void MainService::RequestClose( void )
@@ -791,12 +789,8 @@ void MainService::buil_lua_prerequisites( void )
 
     // ajout du quad console a la scene
     m_quadEntityNode = root_entity_node.AddChild( &m_quadEntity );
-
     
     m_rendergraphs["rg"]->GetRenderGraph().PushSignal_UpdatedRenderingQueues();
-
-    m_systemsHub.Init( &m_entitygraphs["eg"]->GetEntityGraph() );
-    //m_entitygraphs["eg"]->GetEntityGraph().PushSignal_RenderSceneBegin();
 }
 
 void MainService::RequestSignalRenderSceneBegin( const dsstring& p_entitygraph_id )
