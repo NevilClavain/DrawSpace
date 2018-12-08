@@ -239,10 +239,16 @@ int LuaClass_Entity::LUA_configureworld( lua_State* p_L )
     {
         LUA_ERROR( "Entity::configure_world : argument(s) missing" );
     }
+    dsreal xg;
+    dsreal yg;
+    dsreal zg;
 
-    dsreal xg = luaL_checknumber( p_L, 2 );
-    dsreal yg = luaL_checknumber( p_L, 3 );
-    dsreal zg = luaL_checknumber( p_L, 4 );
+    if( argc == 4 )
+    {
+        xg = luaL_checknumber( p_L, 2 );
+        yg = luaL_checknumber( p_L, 3 );
+        zg = luaL_checknumber( p_L, 4 );
+    }
 
     PhysicsAspect* physics_aspect = m_entity.GetAspect<PhysicsAspect>();
     if( NULL == physics_aspect )
