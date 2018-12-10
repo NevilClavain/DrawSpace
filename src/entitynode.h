@@ -45,7 +45,7 @@ public:
 
     } Event;
 
-    typedef DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>        EventsHandler;
+    using EventsHandler = DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>;
    
     // no need of copy ctor, because m_tree_node and m_owner_graph are shared by all instances
     // (they represent not private resources as it's the case in RAII for example)
