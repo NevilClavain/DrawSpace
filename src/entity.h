@@ -41,10 +41,10 @@ public:
 
     Entity( void ) {};
     ~Entity( void )
-    {
-        for( auto it = m_aspects.begin(); it != m_aspects.end(); ++it )
+    {        
+        for( auto&e : m_aspects)
         {
-            _DRAWSPACE_DELETE_( it->second );
+            _DRAWSPACE_DELETE_(e.second);
         }
     }
     
@@ -94,25 +94,25 @@ public:
 
     inline void GetAllAspects( std::vector<Aspect*>& p_list )
     {
-        for( auto it = m_aspects.begin(); it != m_aspects.end(); ++it )
+        for( auto& e: m_aspects)
         {
-            p_list.push_back( it->second );
+            p_list.push_back(e.second);
         }
     }
 
     inline void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) 
     {
-        for (auto it = m_aspects.begin(); it != m_aspects.end(); ++it)
+        for (auto& e : m_aspects)
         {
-            it->second->OnAddedInGraph(p_entitynodegraph);
+            e.second->OnAddedInGraph(p_entitynodegraph);
         }
     };
 
     inline void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
     {
-        for (auto it = m_aspects.begin(); it != m_aspects.end(); ++it)
+        for (auto& e : m_aspects)
         {
-            it->second->OnRemovedFromGraph(p_entitynodegraph);
+            e.second->OnRemovedFromGraph(p_entitynodegraph);
         }
     };
 
