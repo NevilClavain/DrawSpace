@@ -46,6 +46,8 @@ EntityNodeGraph::~EntityNodeGraph( void )
 
 EntityNode EntityNodeGraph::SetRoot( Entity* p_entity )
 {
+    p_entity->OnAddedInGraph( this );
+
     m_root_entity = p_entity;
 	m_tree.insert( m_root_entity );
 	EntityNode node( &m_tree.root(), this );
@@ -55,6 +57,7 @@ EntityNode EntityNodeGraph::SetRoot( Entity* p_entity )
 
 void EntityNodeGraph::Erase(void)
 {
+    m_tree.root().data()->OnRemovedFromGraph( this );
 	m_tree.root().erase();
 }
 

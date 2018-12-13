@@ -41,6 +41,11 @@ namespace RenderGraph
 class RenderPassNodeGraph;
 }
 
+namespace EntityGraph
+{
+class EntityNodeGraph;
+}
+
 namespace Interface
 {
 namespace AspectImplementations
@@ -49,13 +54,18 @@ class RenderingAspectImpl abstract
 {
 protected:
     DrawSpace::Aspect::RenderingAspect* m_owner;
+    EntityGraph::EntityNodeGraph*       m_entitynodegraph;
 
 public:
-    RenderingAspectImpl( void ) : m_owner( NULL )
+    RenderingAspectImpl( void ) : 
+    m_owner( NULL ), 
+    m_entitynodegraph(NULL)
     {    
     }
-    virtual void SetOwner( DrawSpace::Aspect::RenderingAspect* p_owner ) { m_owner = p_owner; };
-    virtual bool IsText( void ) { return false; };
+    virtual inline void SetOwner( DrawSpace::Aspect::RenderingAspect* p_owner ) { m_owner = p_owner; };
+    virtual inline bool IsText( void ) { return false; };
+
+    virtual inline void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) { m_entitynodegraph = p_entitynodegraph; };
 
     ///////////// API ///////////////////////////////////////////
 
@@ -66,6 +76,7 @@ public:
     virtual bool Init( DrawSpace::Core::Entity* p_entity ) = 0;
     virtual void Release( void ) = 0;
     virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;
+
 };
 }
 }

@@ -65,6 +65,8 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
         _DSEXCEPTION( "Detached node; cannot add child to it!" );
     }
 
+    p_entity->OnAddedInGraph( m_owner_graph );
+
 	EntityTree::node_type::iterator it = m_tree_node->insert( p_entity );
     EntityNode node(&(*it), m_owner_graph );
 	return node;
@@ -72,10 +74,11 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
 
 void EntityNode::Erase(void)
 {
+    Entity* entity = m_tree_node->data();
+    entity->OnRemovedFromGraph(m_owner_graph);
+
     // desinscription dans la table EntityNodeGraph::m_entity_to_node
     m_owner_graph->m_entity_to_node.erase( m_tree_node->data() );
-
-    Entity* entity = m_tree_node->data();
 	m_tree_node->erase();
 
     std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;

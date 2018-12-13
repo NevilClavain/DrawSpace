@@ -99,6 +99,23 @@ public:
             p_list.push_back( it->second );
         }
     }
+
+    inline void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) 
+    {
+        for (auto it = m_aspects.begin(); it != m_aspects.end(); ++it)
+        {
+            it->second->OnAddedInGraph(p_entitynodegraph);
+        }
+    };
+
+    inline void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+    {
+        for (auto it = m_aspects.begin(); it != m_aspects.end(); ++it)
+        {
+            it->second->OnRemovedFromGraph(p_entitynodegraph);
+        }
+    };
+
 };
 }
 }

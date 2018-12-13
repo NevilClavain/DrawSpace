@@ -25,13 +25,15 @@
 
 #include "renderingaspect.h"
 #include "entity.h"
+#include "entitynodegraph.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Interface;
 
-RenderingAspect::RenderingAspect( void )
+RenderingAspect::RenderingAspect( void ) :
+m_entitynodegraph( NULL )
 {
 }
 
@@ -39,6 +41,10 @@ void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectI
 {
     m_impls.push_back( p_impl );
     p_impl->SetOwner( this );
+    if( m_entitynodegraph )
+    {
+        p_impl->SetEntityNodeGraph( m_entitynodegraph );
+    }
 
     p_impl->Init( m_owner );
 }
@@ -50,25 +56,17 @@ void RenderingAspect::RemoveImplementation( DrawSpace::Interface::AspectImplemen
         if( *it == p_impl )
         {
             p_impl->Release();
+
+            if (m_entitynodegraph)
+            {
+                p_impl->SetEntityNodeGraph(NULL);
+            }
             m_impls.erase( it );
             break;
         }
     } 
 }
-/*
-bool RenderingAspect::Init( Core::Entity* p_owner_entity )
-{
-    bool status = true;
-    for( size_t i = 0; i < m_impls.size(); i++ )
-    {
-        if( false == m_impls[i]->Init( p_owner_entity ) )
-        {
-            status = false;
-        }
-    }
-    return status;
-}
-*/
+
 void RenderingAspect::Run( Entity* p_owner_entity, bool p_drawtextlements )
 {    
     for( size_t i = 0; i < m_impls.size(); i++ )
@@ -80,3 +78,20 @@ void RenderingAspect::Run( Entity* p_owner_entity, bool p_drawtextlements )
     }
 }
 
+void RenderingAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+{
+    m_entitynodegraph = p_entitynodegraph;
+    for(auto& e : m_impls)
+    {
+        e->SetEntityNodeGraph(p_entitynodegraph);
+    }
+}
+
+void RenderingAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+{
+    m_entitynodegraph = p_entitynodegraph;
+    for(auto& e : m_impls)
+    {
+        e->SetEntityNodeGraph(NULL);
+    }
+}

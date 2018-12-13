@@ -37,14 +37,19 @@ class RenderingAspect : public Core::Aspect
 {
 protected:
     std::vector<DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*>   m_impls;
+    EntityGraph::EntityNodeGraph*                                                    m_entitynodegraph;
 
 public:
     RenderingAspect( void );
 
     void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
     void RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
-    //bool Init( Core::Entity* p_owner_entity );
+
     void Run( Core::Entity* p_owner_entity, bool p_drawtextlements );
+
+    void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
+    void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
+
 };
 }
 }
