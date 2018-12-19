@@ -112,12 +112,10 @@
 #include "serviceaspectimpl.h"
 
 #include "cameraaspect.h"
-
 #include "bodyaspect.h"
 #include "physicsaspect.h"
-
 #include "timeaspect.h"
-
+#include "informationsaspect.h"
 
 #include "rendersystem.h"
 #include "transformsystem.h"

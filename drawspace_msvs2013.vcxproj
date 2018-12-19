@@ -66,6 +66,7 @@
     <ClInclude Include="src\bodytransformaspectimpl.h" />
     <ClInclude Include="src\hub.h" />
     <ClInclude Include="src\impostorsrenderingaspectimpl.h" />
+    <ClInclude Include="src\informationsaspect.h" />
     <ClInclude Include="src\orbittransformaspectimpl.h" />
     <ClInclude Include="src\physicssystem.h" />
     <ClCompile Include="src\renderpassnode.cpp" />

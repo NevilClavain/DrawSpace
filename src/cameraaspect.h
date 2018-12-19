@@ -22,8 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-
-
 #ifndef _CAMERAASPECT_H_
 #define _CAMERAASPECT_H_
 

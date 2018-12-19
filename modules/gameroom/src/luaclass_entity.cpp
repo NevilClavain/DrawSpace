@@ -33,6 +33,7 @@
 #include "physicsaspect.h"
 #include "renderingaspect.h"
 #include "serviceaspect.h"
+#include "informationsaspect.h"
 #include "timeaspect.h"
 #include "transformaspect.h"
 #include "textrenderingaspectimpl.h"
@@ -93,6 +94,7 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
         { SERVICE_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<ServiceAspect>(); } },
         { TIME_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<TimeAspect>(); } },
         { TRANSFORM_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<TransformAspect>(); } },
+        { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<InfosAspect>(); } },
     };
 
     aspect_add_aig[aspect_type]( m_entity );
@@ -117,6 +119,7 @@ int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
         { SERVICE_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<ServiceAspect>(); } },
         { TIME_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<TimeAspect>(); } },
         { TRANSFORM_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<TransformAspect>(); } },
+        { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<InfosAspect>(); } },
     };
 
     aspect_remove_aig[aspect_type]( m_entity );
@@ -324,13 +327,50 @@ int LuaClass_Entity::LUA_releasecamera( lua_State* p_L )
     CameraAspect* camera_aspect = m_entity.GetAspect<CameraAspect>();
     if( NULL == camera_aspect )
     {
-        LUA_ERROR( "Entity::release_camera : camera_aspect aspect doesnt exists in this entity!" );
+        LUA_ERROR( "Entity::release_camera : camera aspect doesnt exists in this entity!" );
     }
 
     LUA_TRY
     {
         camera_aspect->RemoveComponent<Matrix>( "camera_proj" );
         camera_aspect->RemoveComponent<dsstring>("camera_name");
+
+    } LUA_CATCH;
+
+    return 0;
+}
+
+int LuaClass_Entity::LUA_configureinfos(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Entity::configure_infos : argument(s) missing");
+    }
+
+    InfosAspect* infos_aspect = m_entity.GetAspect<InfosAspect>();
+    if (NULL == infos_aspect)
+    {
+        LUA_ERROR("Entity::configure_infos : infos aspect doesnt exists in this entity!");
+    }
+
+    dsstring infos_string = luaL_checkstring(p_L, 1);
+    infos_aspect->AddComponent<dsstring>("infos", infos_string);
+
+    return 0;
+}
+
+int LuaClass_Entity::LUA_releaseinfos(lua_State* p_L)
+{
+    InfosAspect* infos_aspect = m_entity.GetAspect<InfosAspect>();
+    if (NULL == infos_aspect)
+    {
+        LUA_ERROR("Entity::release_infos : infos aspect doesnt exists in this entity!");
+    }
+
+    LUA_TRY
+    {
+        infos_aspect->RemoveComponent<dsstring>("infos");
 
     } LUA_CATCH;
 

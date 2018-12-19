@@ -671,5 +671,8 @@
     <ClInclude Include="src\quadrenderingaspectimpl.h">
       <Filter>aspectimplementations</Filter>
     </ClInclude>
+    <ClInclude Include="src\informationsaspect.h">
+      <Filter>aspect</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
