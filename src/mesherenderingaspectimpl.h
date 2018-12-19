@@ -79,6 +79,7 @@ public:
     bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
     virtual void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
+    void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
 };
 }
 }

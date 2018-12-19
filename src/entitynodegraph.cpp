@@ -106,7 +106,10 @@ void EntityNodeGraph::RegisterCameraEvtHandler( CameraEventHandler* p_handler )
     m_camevt_handlers.insert( p_handler );
 
     // annoncer la camera active au nouvel abonne de cet evt...
-    (*p_handler)( CAMERA_ACTIVE, m_curr_entity_camera );
+    if( m_curr_entity_camera )
+    {
+        (*p_handler)( CAMERA_ACTIVE, m_curr_entity_camera );
+    }
 }
 
 void EntityNodeGraph::UnregisterNodesEvtHandler( EntityNode::EventsHandler* p_handler )

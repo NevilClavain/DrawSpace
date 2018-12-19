@@ -98,9 +98,10 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    virtual bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
-    virtual void Release(void) {};
-    virtual void Run( DrawSpace::Core::Entity* p_entity );
+    bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
+    void Release(void) {};
+    void Run( DrawSpace::Core::Entity* p_entity );
+    void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
 };
 }
 }

@@ -43,15 +43,22 @@ class PlanetsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementa
 {
 protected:
 
-    using SystemsEvtCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
+    using SystemsEvtCb      = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
+    using CameraEventsCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
+    using NodesEventsCb     = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
+
 
 public:
     
 protected:
 
-    bool            m_add_in_rendergraph;
-    Systems::Hub*   m_hub;
-    SystemsEvtCb    m_system_evt_cb;
+    bool                            m_add_in_rendergraph;
+    Systems::Hub*                   m_hub;
+    SystemsEvtCb                    m_system_evt_cb;
+    CameraEventsCb                  m_cameras_evt_cb;
+    NodesEventsCb                   m_nodes_evt_cb;
+
+    EntityGraph::EntityNodeGraph*   m_entitynodegraph;
 
     void            init_rendering_objects(void);
     void            release_rendering_objects(void);
@@ -59,6 +66,8 @@ protected:
     void            update_shader_params(void); // for all passes
 
     void            on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
+    void            on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
+    void            on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
    
 public:
     PlanetsRenderingAspectImpl( void );
@@ -68,9 +77,10 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    virtual bool Init( DrawSpace::Core::Entity* p_entity );
-    virtual void Release(void);
-    virtual void Run( DrawSpace::Core::Entity* p_entity );
+    bool Init( DrawSpace::Core::Entity* p_entity );
+    void Release(void);
+    void Run( DrawSpace::Core::Entity* p_entity );
+    void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
 
     virtual void SetHub(Systems::Hub* p_hub);
 };

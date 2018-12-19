@@ -49,6 +49,7 @@ public:
     int LUA_remove( lua_State* p_L );
     int LUA_dumpcontent( lua_State* p_L );
     int LUA_setcamera( lua_State* p_L );
+    int LUA_unsetcamera(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_EntityNodeGraph>::RegType methods[];

@@ -26,6 +26,7 @@
 #include "planetsrenderingaspectimpl.h"
 #include "renderingaspect.h"
 #include "transformaspect.h"
+#include "cameraaspect.h"
 #include "maths.h"
 #include "hub.h"
 #include <functional>
@@ -53,16 +54,16 @@ using namespace DrawSpace::Utils;
 
 
 PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void ) :
-m_hub( NULL ),
-m_system_evt_cb( this, &PlanetsRenderingAspectImpl::on_system_event )
+m_hub(NULL),
+m_system_evt_cb( this, &PlanetsRenderingAspectImpl::on_system_event ),
+m_cameras_evt_cb( this, &PlanetsRenderingAspectImpl::on_cameras_event),
+m_nodes_evt_cb( this, &PlanetsRenderingAspectImpl::on_nodes_event),
+m_entitynodegraph(NULL)
 {
 }
 
 bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
 {
-
-
-
     bool updated_queue = false;
 
     /*
@@ -113,19 +114,27 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
             e->RegisterSystemEvtHandler(&m_system_evt_cb);
         }
     }
+    else
+    {
+        _DSEXCEPTION( "hub not set !!" )
+    }
 
     return true;
 }
 
 void PlanetsRenderingAspectImpl::Release(void)
 {
-    if (m_hub)
+    if( m_hub )
     {
         std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
         for (auto& e : systems)
         {
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
+    }
+    else
+    {
+        _DSEXCEPTION( "hub not set !!" )
     }
 }
 
@@ -186,4 +195,32 @@ void PlanetsRenderingAspectImpl::SetHub(Systems::Hub* p_hub)
 void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
 {
     _asm nop
+}
+
+void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity)
+{
+    CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
+    dsstring cam_name = curr_camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();
+
+    _asm nop
+}
+
+void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity)
+{
+    _asm nop
+}
+
+void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+{   
+    if(p_entitynodegraph)
+    {
+        p_entitynodegraph->RegisterCameraEvtHandler( &m_cameras_evt_cb );
+        p_entitynodegraph->RegisterNodesEvtHandler( &m_nodes_evt_cb );
+    }
+    else // p_entitynodegraph == NULL -> we unregister from callback
+    {
+        m_entitynodegraph->UnregisterCameraEvtHandler( &m_cameras_evt_cb );
+        m_entitynodegraph->UnregisterNodesEvtHandler( &m_nodes_evt_cb );
+    }
+    m_entitynodegraph = p_entitynodegraph;
 }

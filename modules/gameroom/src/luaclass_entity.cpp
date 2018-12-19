@@ -288,7 +288,7 @@ int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
 int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 )
+	if( argc < 4 )
 	{
         LUA_ERROR( "Entity::configure_camera : argument(s) missing" );
 	}
@@ -304,10 +304,18 @@ int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
     dsreal zn = luaL_checknumber( p_L, 3 );
     dsreal zf = luaL_checknumber( p_L, 4 );
 
+    dsstring camera_name = "camera";
+
+    if( argc == 5 )
+    {
+        camera_name = luaL_checkstring(p_L, 5);
+    }
+
     Matrix proj;
     proj.Perspective( w, h, zn, zf );
     camera_aspect->AddComponent<Matrix>( "camera_proj", proj );
 
+    camera_aspect->AddComponent<dsstring>( "camera_name", camera_name );
     return 0;
 }
 
@@ -322,6 +330,7 @@ int LuaClass_Entity::LUA_releasecamera( lua_State* p_L )
     LUA_TRY
     {
         camera_aspect->RemoveComponent<Matrix>( "camera_proj" );
+        camera_aspect->RemoveComponent<dsstring>("camera_name");
 
     } LUA_CATCH;
 
