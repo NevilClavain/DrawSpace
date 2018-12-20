@@ -58,6 +58,8 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
+    { "setup_info", &LuaClass_Entity::LUA_setupinfo },
+    { "release_info", &LuaClass_Entity::LUA_releaseinfo },
 	{ 0, 0 }
 };
 
@@ -340,37 +342,46 @@ int LuaClass_Entity::LUA_releasecamera( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_Entity::LUA_configureinfos(lua_State* p_L)
+int LuaClass_Entity::LUA_setupinfo(lua_State* p_L)
 {
     int argc = lua_gettop(p_L);
-    if (argc < 1)
+    if (argc < 2)
     {
-        LUA_ERROR("Entity::configure_infos : argument(s) missing");
+        LUA_ERROR("Entity::setup_infos : argument(s) missing");
     }
 
     InfosAspect* infos_aspect = m_entity.GetAspect<InfosAspect>();
     if (NULL == infos_aspect)
     {
-        LUA_ERROR("Entity::configure_infos : infos aspect doesnt exists in this entity!");
+        LUA_ERROR("Entity::setup_infos : infos aspect doesnt exists in this entity!");
     }
 
-    dsstring infos_string = luaL_checkstring(p_L, 1);
-    infos_aspect->AddComponent<dsstring>("infos", infos_string);
+    dsstring key_string = luaL_checkstring(p_L, 1);
+    dsstring infos_string = luaL_checkstring(p_L, 2);
+    infos_aspect->AddComponent<dsstring>(key_string, infos_string);
 
     return 0;
 }
 
-int LuaClass_Entity::LUA_releaseinfos(lua_State* p_L)
+int LuaClass_Entity::LUA_releaseinfo(lua_State* p_L)
 {
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Entity::release_infos : argument(s) missing");
+    }
+
     InfosAspect* infos_aspect = m_entity.GetAspect<InfosAspect>();
     if (NULL == infos_aspect)
     {
         LUA_ERROR("Entity::release_infos : infos aspect doesnt exists in this entity!");
     }
 
+    dsstring key_string = luaL_checkstring(p_L, 1);
+
     LUA_TRY
     {
-        infos_aspect->RemoveComponent<dsstring>("infos");
+        infos_aspect->RemoveComponent<dsstring>(key_string);
 
     } LUA_CATCH;
 

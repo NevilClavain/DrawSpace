@@ -80,8 +80,8 @@ public:
     int LUA_configurecamera( lua_State* p_L );
     int LUA_releasecamera( lua_State* p_L );
 
-    int LUA_configureinfos(lua_State* p_L);
-    int LUA_releaseinfos(lua_State* p_L);
+    int LUA_setupinfo(lua_State* p_L);
+    int LUA_releaseinfo(lua_State* p_L);
 
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
 

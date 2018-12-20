@@ -27,6 +27,7 @@
 #include "renderingaspect.h"
 #include "transformaspect.h"
 #include "cameraaspect.h"
+#include "informationsaspect.h"
 #include "maths.h"
 #include "hub.h"
 #include <functional>
@@ -207,7 +208,19 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
 
 void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity)
 {
-    _asm nop
+    InfosAspect* infos_aspect = p_entity->GetAspect<InfosAspect>();
+    if( infos_aspect )
+    {
+        ComponentList<dsstring> infos;
+        infos_aspect->GetComponentsByType<dsstring>( infos );
+
+        if( infos.size() )
+        {
+            dsstring info = infos[0]->getPurpose();
+
+            _asm nop
+        }
+    }
 }
 
 void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
