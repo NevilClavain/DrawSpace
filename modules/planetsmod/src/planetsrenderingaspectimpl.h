@@ -52,13 +52,44 @@ public:
     
 protected:
 
-    bool                            m_add_in_rendergraph;
-    Systems::Hub*                   m_hub;
-    SystemsEvtCb                    m_system_evt_cb;
-    CameraEventsCb                  m_cameras_evt_cb;
-    NodesEventsCb                   m_nodes_evt_cb;
+    ///////////////////////////////////////////////////////////////////////////
 
-    EntityGraph::EntityNodeGraph*   m_entitynodegraph;
+    bool                                                m_add_in_rendergraph;
+    Systems::Hub*                                       m_hub;
+    SystemsEvtCb                                        m_system_evt_cb;
+    CameraEventsCb                                      m_cameras_evt_cb;
+    NodesEventsCb                                       m_nodes_evt_cb;
+    EntityGraph::EntityNodeGraph*                       m_entitynodegraph;
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    enum CameraType
+    {
+        FREE,
+        FREE_ON_PLANET,
+        INERTBODY_LINKED,
+    };
+
+    struct RegisteredBody
+    {
+    
+    };
+
+    struct RegisteredCamera
+    {
+        dsstring                    camera_name;
+        CameraType                  type;
+        DrawSpace::Core::Entity*    attached_body;
+    };
+
+    std::map<DrawSpace::Core::Entity*, RegisteredBody>              m_registered_bodies;
+    std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
+
+
+    std::map<dsstring, DrawSpace::Core::Entity*>                    m_entities;  // stockage de toutes les entities du graph
+
+
+    ///////////////////////////////////////////////////////////////////////////
 
     void            init_rendering_objects(void);
     void            release_rendering_objects(void);

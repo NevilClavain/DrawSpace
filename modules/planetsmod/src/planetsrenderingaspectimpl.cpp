@@ -27,6 +27,7 @@
 #include "renderingaspect.h"
 #include "transformaspect.h"
 #include "cameraaspect.h"
+#include "bodyaspect.h"
 #include "informationsaspect.h"
 #include "maths.h"
 #include "hub.h"
@@ -208,17 +209,77 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
 
 void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity)
 {
+    dsstring entity_name;
     InfosAspect* infos_aspect = p_entity->GetAspect<InfosAspect>();
     if( infos_aspect )
     {
-        ComponentList<dsstring> infos;
-        infos_aspect->GetComponentsByType<dsstring>( infos );
+        entity_name = infos_aspect->GetComponent<dsstring>( "entity_name" )->getPurpose();
 
-        if( infos.size() )
+        if(0 == m_entities.count(entity_name))
         {
-            dsstring info = infos[0]->getPurpose();
+            // enregistrer cette entity
+            m_entities[entity_name] = p_entity;
+        }
+        else
+        {
+            _DSEXCEPTION( "entities with same name not allowed" )
+        }
 
-            _asm nop
+        CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
+        BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+
+        if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
+        {
+            if( body_aspect )
+            {
+                RegisteredBody reg_body;
+            
+
+                //...
+
+                m_registered_bodies[p_entity] = reg_body;
+            }
+
+            if (camera_aspect)
+            {
+                RegisteredCamera reg_camera;
+                dsstring camera_name = camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();                
+                reg_camera.camera_name = camera_name;
+
+                Component<dsstring>* referent_body = infos_aspect->GetComponent<dsstring>("referent_body");
+                if( referent_body )
+                {
+                    reg_camera.type = INERTBODY_LINKED;
+
+                    dsstring referent_body_name = referent_body->getPurpose();
+
+                    if (m_entities.count(referent_body_name))
+                    {
+                        reg_camera.attached_body = m_entities.at(referent_body_name);
+                    }
+                    else
+                    {
+                        _DSEXCEPTION("camera referent body : cannot find entity with corresponding name")
+                    }
+
+                    m_registered_camerapoints[camera_name] = reg_camera;
+                }
+                else
+                {
+                    reg_camera.type = FREE;
+                    reg_camera.attached_body = NULL;
+
+                    m_registered_camerapoints[camera_name] = reg_camera;
+                }
+            }
+        }
+        else if (DrawSpace::EntityGraph::EntityNode::REMOVED_FROM_TREE == p_event)
+        {
+            if (m_entities.count(entity_name))
+            {
+                // desenregistrer cette entity
+                m_entities.erase(entity_name);
+            }
         }
     }
 }
