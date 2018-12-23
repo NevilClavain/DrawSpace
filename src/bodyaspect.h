@@ -47,14 +47,13 @@ class BodyAspect : public Core::Aspect
 {
 public:
 
-    typedef enum
+    enum Mode
     {
         NOT_READY,
         BODY,
         COLLIDER,
-        ATTRACTOR_COLLIDER
-    
-    } Mode;
+        ATTRACTOR_COLLIDER    
+    };
 
 protected:
 
