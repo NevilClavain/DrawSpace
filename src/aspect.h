@@ -109,7 +109,8 @@ public:
     {
         if( 0 == m_components.count( p_id ) )
         {
-            _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
+            //_DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
+            return NULL;
         }
 
         Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );

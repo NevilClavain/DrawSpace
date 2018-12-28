@@ -160,7 +160,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
             ////////////// noms des passes
 
-            std::vector<dsstring> passes;            
+            std::vector<dsstring> passes;
             for( int i = 0; i < rc_list_size; i++ )
             {
                 LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
@@ -169,10 +169,14 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 
                 passes.push_back( pass_name );
             }
-            m_entity_rendering_aspect->AddComponent<std::vector<dsstring>>( "passes", passes );
-            
+          
+            std::vector<std::vector<dsstring>> passes_names_layers;
+            passes_names_layers.push_back(passes);
+            m_entity_rendering_aspect->AddComponent<std::vector<std::vector<dsstring>>>("passes", passes_names_layers);
+  
             ///////////////// jeux de textures pour chaque passes
 
+            std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
             for( int i = 0; i < rc_list_size; i++ )
             {
                 LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
@@ -214,13 +218,17 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     textures.push_back( textures_set );
                 }
 
-                dsstring component_name = "renderingimpl_textures/" + pass_name;
-
-                m_entity_rendering_aspect->AddComponent<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>>( component_name, textures );
+                config_textures.push_back(textures);
             }
+
+            std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures;
+            layers_textures.push_back(config_textures);
+            m_entity_rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
+
 
             ////////////////// fx pour chaque passes
 
+            std::vector<Fx*> config_fxs;
             for( int i = 0; i < rc_list_size; i++ )
             {
                 LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
@@ -255,12 +263,15 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     }
                 }
 
-                dsstring component_name = "renderingimpl_fx/" + pass_name;
-
-                m_entity_rendering_aspect->AddComponent<Fx*>( component_name, fx );
+                config_fxs.push_back( fx );
             }
 
+            std::vector<std::vector<Fx*>> layers_fx;
+            layers_fx.push_back(config_fxs);
+            m_entity_rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
+
             //////////////// parametres de shaders
+            std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> config_shadersparams;
             for( int i = 0; i < rc_list_size; i++ )
             {
                 std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
@@ -274,21 +285,27 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     texturepass_shaders_params.push_back( param );
                 }
 
-                dsstring component_name = "renderingimpl_shaders_params/" + pass_name;
-
-                m_entity_rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name, texturepass_shaders_params );
+                config_shadersparams.push_back(texturepass_shaders_params);
             }
+
+            std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> layers_shaders_params;
+            layers_shaders_params.push_back(config_shadersparams);
+            m_entity_rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>( "layers_shaders_params", layers_shaders_params);
 
             ///////////////// rendering order
 
+            std::vector<int> config_ros;
             for( int i = 0; i < rc_list_size; i++ )
             {
                 LuaClass_RenderContext::Data render_context = lua_renderconfig->GetRenderContext( i );
                 dsstring pass_name = render_context.passname;
 
-                dsstring component_name = "renderingimpl_ro/" + pass_name;
-                m_entity_rendering_aspect->AddComponent<int>( component_name, render_context.rendering_order );
+                config_ros.push_back(render_context.rendering_order);
             }
+
+            std::vector<std::vector<int>> layers_ro;
+            layers_ro.push_back(config_ros);
+            m_entity_rendering_aspect->AddComponent<std::vector<std::vector<int>>>( "layers_ro", layers_ro);
 
         } LUA_CATCH; 
     }
@@ -301,93 +318,67 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 }
 
 void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
-{
-    
+{    
     if( m_entity_rendering_aspect )
     {
-        std::vector<dsstring> passes_list = m_entity_rendering_aspect->GetComponent<std::vector<dsstring>>( "passes" )->getPurpose();
+        std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures;
+        layers_textures = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose();
 
-        int rc_list_size = passes_list.size();
-
-        //////////////// textures
-        for( int i = 0; i < rc_list_size; i++ )
+        for (auto& e1 : layers_textures)
         {
-            dsstring pass_name = passes_list[i];            
-            dsstring component_name = "renderingimpl_textures/" + pass_name;
-
-            std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>> textures = m_entity_rendering_aspect->GetComponent<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>>( component_name )->getPurpose();
-
-            for( size_t texture_face_index = 0; texture_face_index < textures.size(); texture_face_index++ )
+            for (auto& e2 : e1)
             {
-                std::array<Texture*,RenderingNode::NbMaxTextures> texture_set = textures[texture_face_index];
-            
-                for( size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++ )
+                for (auto& e3 : e2)
                 {
-                    Texture* texture = texture_set[texture_stage_index];
-                    if( texture )
+                    std::array<Texture*, RenderingNode::NbMaxTextures> texture_set = e3;
+
+                    for (size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++)
                     {
-                        _DRAWSPACE_DELETE_( texture );
+                        Texture* texture = texture_set[texture_stage_index];
+                        if (texture)
+                        {
+                            _DRAWSPACE_DELETE_(texture);
+                        }
                     }
                 }
             }
-
-            LUA_TRY
-            {
-                m_entity_rendering_aspect->RemoveComponent<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>>( component_name );
-
-            } LUA_CATCH;
         }
+
+        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //////////////// fx
-        for( int i = 0; i < rc_list_size; i++ )
+
+        std::vector<std::vector<Fx*>> layers_fx = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
+
+        for( auto& e1 : layers_fx)
         {
-            dsstring pass_name = passes_list[i];            
-            dsstring component_name = "renderingimpl_fx/" + pass_name;
-
-            Fx* fx = m_entity_rendering_aspect->GetComponent<Fx*>( component_name )->getPurpose();
-
-            for( int j = 0; j < fx->GetShadersListSize(); j++ )
+            for( auto& e2 : e1 )
             {
-                Shader* shader = fx->GetShader( j );
-                _DRAWSPACE_DELETE_( shader );
+                Fx* fx = e2;
+                for (int j = 0; j < fx->GetShadersListSize(); j++)
+                {
+                    Shader* shader = fx->GetShader(j);
+                    _DRAWSPACE_DELETE_(shader);
+                }
+                _DRAWSPACE_DELETE_(fx);
             }
-            _DRAWSPACE_DELETE_( fx );
-
-            LUA_TRY
-            {
-                m_entity_rendering_aspect->RemoveComponent<Fx*>( component_name );
-
-            } LUA_CATCH;
         }
+        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<Fx*>>>("layers_fx");
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         //////////////// args shaders
-        for( int i = 0; i < rc_list_size; i++ )
-        {
-            dsstring pass_name = passes_list[i];            
-            dsstring component_name = "renderingimpl_shaders_params/" + pass_name;
-
-            m_entity_rendering_aspect->RemoveComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name );
-        }
+     
+        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params");
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //////////////// rendering orders
-        for( int i = 0; i < rc_list_size; i++ )
-        {
-            dsstring pass_name = passes_list[i];            
-            dsstring component_name = "renderingimpl_ro/" + pass_name;
 
-            m_entity_rendering_aspect->RemoveComponent<int>( component_name );
-        }
+        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<int>>>( "layers_ro" );
 
-        ///////////////////////////////////////////////////////////////////////////////////////////
 
-        LUA_TRY
-        {
-            m_entity_rendering_aspect->RemoveComponent<std::vector<dsstring>>( "passes" );
 
-        } LUA_CATCH;
-
+        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<dsstring>>>("passes");
     }
     else
     {
@@ -445,26 +436,56 @@ int LuaClass_Rendering::LUA_unregisterfromrendering( lua_State* p_L )
 }
 
 int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
-{
-    
+{   
 	int argc = lua_gettop( p_L );
-	if( argc < 6 )
+	if( argc < 7 )
 	{		
         LUA_ERROR( "Rendering::set_shaderrealvector : argument(s) missing" );
 	}
 
-    dsstring pass_id = luaL_checkstring( p_L, 1 );
-    dsstring param_id = luaL_checkstring( p_L, 2 );
-    dsreal valx = luaL_checknumber( p_L, 3 );
-    dsreal valy = luaL_checknumber( p_L, 4 );
-    dsreal valz = luaL_checknumber( p_L, 5 );
-    dsreal valw = luaL_checknumber( p_L, 6 );
+    int rendering_layer_index = luaL_checkinteger(p_L, 1);
+    dsstring pass_id = luaL_checkstring( p_L, 2 );
+    dsstring param_id = luaL_checkstring( p_L, 3 );
+    
+    dsreal valx = luaL_checknumber( p_L, 4 );
+    dsreal valy = luaL_checknumber( p_L, 5 );
+    dsreal valz = luaL_checknumber( p_L, 6 );
+    dsreal valw = luaL_checknumber( p_L, 7 );
 
-    dsstring component_name = "renderingimpl_shaders_params/" + pass_id;
+    //dsstring component_name = "renderingimpl_shaders_params/" + pass_id;
     
     LUA_TRY
     {
-        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose();
+        //std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose();
+
+        std::vector<std::vector<dsstring>> passes_names_layers = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
+
+        std::vector<dsstring> passes_names = passes_names_layers[rendering_layer_index];
+
+        // find passe index
+        size_t pass_index;
+        bool pass_found = false;
+        for( pass_index = 0; pass_index < passes_names.size(); pass_index++ )
+        {
+            if(passes_names[pass_index] == pass_id)
+            {
+                pass_found = true;
+                break;
+            }        
+        }
+
+        if( !pass_found )
+        {
+            LUA_ERROR("Rendering::set_shaderrealvector : unknown pass id");
+        }
+
+        std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> layers_shaders_params =
+            m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose();
+
+
+        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = layers_shaders_params[rendering_layer_index][pass_index];
+
+        
         for( auto it = pass_shaders_params.begin(); it != pass_shaders_params.end(); ++it )
         {
             if( it->first == param_id )
@@ -475,12 +496,14 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
                 it->second.param_values[2] = valz;
                 it->second.param_values[3] = valw;
 
-                m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose() = pass_shaders_params;
+                //m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose() = pass_shaders_params;
+
+                m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose()[rendering_layer_index][pass_index] = pass_shaders_params;
 
                 break;
             }
         }
-
+        
     } LUA_CATCH;
     
     return 0;

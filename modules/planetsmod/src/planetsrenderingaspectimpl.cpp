@@ -215,21 +215,21 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
     {
         entity_name = infos_aspect->GetComponent<dsstring>( "entity_name" )->getPurpose();
 
-        if(0 == m_entities.count(entity_name))
-        {
-            // enregistrer cette entity
-            m_entities[entity_name] = p_entity;
-        }
-        else
-        {
-            _DSEXCEPTION( "entities with same name not allowed" )
-        }
-
         CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
         BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
 
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
         {
+            if (0 == m_entities.count(entity_name))
+            {
+                // enregistrer cette entity
+                m_entities[entity_name] = p_entity;
+            }
+            else
+            {
+                _DSEXCEPTION("entities with same name not allowed")
+            }
+
             if( body_aspect )
             {
                 RegisteredBody reg_body;

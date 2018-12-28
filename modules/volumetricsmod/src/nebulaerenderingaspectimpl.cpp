@@ -382,18 +382,6 @@ void NebulaeRenderingAspectImpl::PassSlot::generate_uvcoords(int p_atlasResoluti
     p_v1 = v1;
     p_v2 = v2;
 
-    /*
-    p_u_count++;
-    if(p_atlasResolution == p_u_count)
-    {
-        p_u_count = 0;
-        p_v_count++;
-        if(p_atlasResolution == p_v_count)
-        {
-            p_v_count = 0;
-        }
-    }
-    */
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -472,18 +460,6 @@ void NebulaeRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void NebulaeRenderingAspectImpl::init_rendering_objects( void )
 {
-    ComponentList<std::vector<dsstring>> passes;
-    m_owner->GetComponentsByType<std::vector<dsstring>>( passes );
-
-    ComponentList<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> textures;
-    m_owner->GetComponentsByType<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>(textures);
-
-    ComponentList<Fx*> fxs;
-    m_owner->GetComponentsByType<Fx*>( fxs );
-
-    ComponentList<int> ro;
-    m_owner->GetComponentsByType<int>( ro );
-
     //// retrieve specific config....
 
     ComponentList<DataModel> datamodels;
@@ -495,31 +471,49 @@ void NebulaeRenderingAspectImpl::init_rendering_objects( void )
     ComponentList<std::pair<int, int>> texture_atlas_resols;
     m_owner->GetComponentsByType<std::pair<int, int>>(texture_atlas_resols);
 
+    std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
 
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<dsstring> passes_names = passes_names_layers[0];
 
-    std::vector<dsstring> passes_names = passes[0]->getPurpose();
-    
-    for( size_t i = 0; i < passes_names.size(); i++ )
-    {        
+    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = m_owner->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose();
+
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> passes_textures = layers_textures[0];
+
+    std::vector<std::vector<Fx*>> layers_fx = m_owner->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
+
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<Fx*> fxs = layers_fx[0];
+
+    std::vector<std::vector<int>> layers_ro = m_owner->GetComponent<std::vector<std::vector<int>>>("layers_ro")->getPurpose();
+
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<int> ros = layers_ro[0];
+
+    for (size_t i = 0; i < passes_names.size(); i++)
+    {
         dsstring pass_name;
         pass_name = passes_names[i];
-       
-        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name, m_data_model, texture_atlas_resols[0]->getPurpose().first, texture_atlas_resols[0]->getPurpose().second) );
 
-        pass_slot->GetRenderingNode()->SetOrderNumber( ro[i]->getPurpose() );
-        pass_slot->GetRenderingNode()->SetFx( fxs[i]->getPurpose() );
+        PassSlot* pass_slot = _DRAWSPACE_NEW_(PassSlot, PassSlot(pass_name, m_data_model, texture_atlas_resols[0]->getPurpose().first, texture_atlas_resols[0]->getPurpose().second));
 
-        if(textures[0]->getPurpose().size() )
+        pass_slot->GetRenderingNode()->SetOrderNumber(ros[i]);
+        pass_slot->GetRenderingNode()->SetFx(fxs[i]);
+
+        std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures = passes_textures[i];
+
+        if (textures.size())
         {
-            std::array<Texture*,RenderingNode::NbMaxTextures> textures_set = textures[0]->getPurpose()[0];
-            for( size_t k = 0; k < RenderingNode::NbMaxTextures; k++ )
+            std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = textures[0];
+            for (size_t k = 0; k < RenderingNode::NbMaxTextures; k++)
             {
-                pass_slot->GetRenderingNode()->SetTexture( textures_set[k], k );
+                pass_slot->GetRenderingNode()->SetTexture(textures_set[k], k);
             }
-        }        
-        m_pass_slots.push_back( pass_slot );
+        }
+        m_pass_slots.push_back(pass_slot);
     }
-    
+
     update_shader_params();   
 }
 
@@ -534,25 +528,30 @@ void NebulaeRenderingAspectImpl::release_rendering_objects( void )
 
 void NebulaeRenderingAspectImpl::update_shader_params( void ) // for all passes
 {
+
     ////////////////////////////////////////////////////////
     //recup des params shaders
 
-    ComponentList<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> neb_shaders_params;
+    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> layers_shaders_params =
+        m_owner->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose();
 
-    m_owner->GetComponentsByType<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>(neb_shaders_params);
-    
-    for( size_t i = 0; i < m_pass_slots.size(); i++ )
-    {       
+    // il n'y a qu'un seul layer de rendu dans ce module
+    std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> shaders_params_passes = layers_shaders_params[0];
+
+    for (size_t i = 0; i < m_pass_slots.size(); i++)
+    {
         // pour chaque passe
         PassSlot* curr_pass = m_pass_slots[i];
 
-        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> shaders_params = neb_shaders_params[i]->getPurpose();
+        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> shaders_params = shaders_params_passes[i];
 
-        for( size_t k = 0; k < shaders_params.size(); k++ )
+        for (size_t k = 0; k < shaders_params.size(); k++)
         {
             std::pair<dsstring, RenderingNode::ShadersParams> shader_params_pair = shaders_params[k];
-            curr_pass->GetRenderingNode()->UpdateShaderParams( shader_params_pair.first, shader_params_pair.second );
+
+            curr_pass->GetRenderingNode()->UpdateShaderParams(shader_params_pair.first, shader_params_pair.second);
         }
-    }   
+    }
+
 }
 

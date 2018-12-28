@@ -352,43 +352,50 @@ void SkyboxRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void SkyboxRenderingAspectImpl::init_rendering_objects( void )
 {
-    ComponentList<std::vector<dsstring>> skybox_passes;
-    m_owner->GetComponentsByType<std::vector<dsstring>>( skybox_passes );
+    std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
 
-    ComponentList<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>> skybox_textures;
-    m_owner->GetComponentsByType<std::vector<std::array<Texture*,RenderingNode::NbMaxTextures>>>( skybox_textures );
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<dsstring> passes_names = passes_names_layers[0];
+
+    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = m_owner->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose();
+
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> passes_textures = layers_textures[0];
+
+    std::vector<std::vector<Fx*>> layers_fx = m_owner->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
+
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<Fx*> fxs = layers_fx[0];
+
+    std::vector<std::vector<int>> layers_ro = m_owner->GetComponent<std::vector<std::vector<int>>>("layers_ro")->getPurpose();
+
+    // il n'ya qu'un seul layer de rendu dans ce module
+    std::vector<int> ros = layers_ro[0];
 
 
-    ComponentList<Fx*> skybox_fxs;
-    m_owner->GetComponentsByType<Fx*>( skybox_fxs );
-
-    ComponentList<int> skybox_ro;
-    m_owner->GetComponentsByType<int>( skybox_ro );
-
-    std::vector<dsstring> passes_names = skybox_passes[0]->getPurpose();
-    
-    for( size_t i = 0; i < passes_names.size(); i++ )
-    {        
+    for (size_t i = 0; i < passes_names.size(); i++)
+    {
         dsstring pass_name;
         pass_name = passes_names[i];
 
-        std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures = skybox_textures[i]->getPurpose();
+        std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures = passes_textures[i];
 
-        PassSlot* pass_slot = _DRAWSPACE_NEW_( PassSlot, PassSlot( pass_name ) );
-        for( size_t j = 0; j < 6; j++ )
+        PassSlot* pass_slot = _DRAWSPACE_NEW_(PassSlot, PassSlot(pass_name));
+        for (size_t j = 0; j < 6; j++)
         {
-            pass_slot->GetRenderingNode( j )->SetOrderNumber( skybox_ro[i]->getPurpose() );
-            pass_slot->GetRenderingNode( j )->SetFx( skybox_fxs[i]->getPurpose() );
+            pass_slot->GetRenderingNode(j)->SetOrderNumber(ros[i]);
+            pass_slot->GetRenderingNode(j)->SetFx(fxs[i]);
 
-            std::array<Texture*,RenderingNode::NbMaxTextures> textures_set = textures[j];
+            std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = textures[j];
 
-            for( size_t k = 0; k < RenderingNode::NbMaxTextures; k++ )
+            for (size_t k = 0; k < RenderingNode::NbMaxTextures; k++)
             {
-                pass_slot->GetRenderingNode( j )->SetTexture( textures_set[k], k );
+                pass_slot->GetRenderingNode(j)->SetTexture(textures_set[k], k);
             }
         }
-        m_pass_slots.push_back( pass_slot );
-    }    
+        m_pass_slots.push_back(pass_slot);
+    }
+    
     update_shader_params();   
 }
 
@@ -406,17 +413,18 @@ void SkyboxRenderingAspectImpl::update_shader_params( void ) // for all passes
     ////////////////////////////////////////////////////////
     //recup des params shaders
 
+    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> layers_shaders_params = 
+        m_owner->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>( "layers_shaders_params" )->getPurpose();
 
-    ComponentList<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> skybox_shaders_params;
-
-    m_owner->GetComponentsByType<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( skybox_shaders_params );
+    // il n'y a qu'un seul layer de rendu dans ce module
+    std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> shaders_params_passes = layers_shaders_params[0];
 
     for( size_t i = 0; i < m_pass_slots.size(); i++ )
     {
         // pour chaque passe
         PassSlot* curr_pass = m_pass_slots[i];
 
-        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> shaders_params = skybox_shaders_params[i]->getPurpose();
+        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> shaders_params = shaders_params_passes[i];
 
         for( size_t k = 0; k < shaders_params.size(); k++ )
         {
