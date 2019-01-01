@@ -50,17 +50,16 @@ int LuaClass_RenderConfig::LUA_addrendercontext( lua_State* p_L )
 	}
     LuaClass_RenderContext* lua_rc = Luna<LuaClass_RenderContext>::check( p_L, 1 );
 
-    m_renderContexts.push_back( lua_rc->GetData() );
-
+    m_data.render_contexts.push_back( lua_rc->GetData() );
     return 0;
 }
 
 int LuaClass_RenderConfig::GetRenderContextListSize( void ) const
 {
-    return m_renderContexts.size();
+    return m_data.render_contexts.size();
 }
 
 LuaClass_RenderContext::Data LuaClass_RenderConfig::GetRenderContext( int p_index ) const
 {
-    return m_renderContexts[p_index];
+    return m_data.render_contexts[p_index];
 }

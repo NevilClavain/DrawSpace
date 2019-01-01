@@ -31,9 +31,16 @@
 
 class LuaClass_RenderConfig
 {
-protected:
+public:
 
-    std::vector<LuaClass_RenderContext::Data>     m_renderContexts;
+    struct Data
+    {
+        std::vector<LuaClass_RenderContext::Data>     render_contexts;
+    };
+
+private:
+
+    Data m_data;
 
 public:
 	LuaClass_RenderConfig( lua_State* p_L );
@@ -43,6 +50,11 @@ public:
 
     int GetRenderContextListSize( void ) const;
     LuaClass_RenderContext::Data GetRenderContext( int p_index ) const;
+
+    inline Data GetData(void) const
+    {
+        return m_data;
+    }
 
     static const char className[];
     static const Luna<LuaClass_RenderConfig>::RegType methods[];

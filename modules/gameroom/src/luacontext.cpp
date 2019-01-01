@@ -42,6 +42,7 @@
 #include "luaclass_fxparams.h"
 #include "luaclass_rendercontext.h"
 #include "luaclass_renderconfig.h"
+#include "luaclass_renderlayer.h"
 #include "luaclass_module.h"
 #include "luaclass_matrix.h"
 #include "luaclass_vector.h"
@@ -90,15 +91,16 @@ void LuaContext::Startup( void )
     Luna<LuaClass_SyncScalar>::Register( m_L );
     Luna<LuaClass_RenderContext>::Register( m_L );
     Luna<LuaClass_RenderConfig>::Register( m_L );
+    Luna<LuaClass_RenderLayer>::Register(m_L);
     Luna<LuaClass_Module>::Register( m_L );
     Luna<LuaClass_Matrix>::Register( m_L );
     Luna<LuaClass_Vector>::Register(m_L);
     Luna<LuaClass_Body>::Register( m_L );
     Luna<LuaClass_Rendering>::Register(m_L);
-    Luna<LuaClass_RandomEngine>::Register(m_L);
     lua_checkstack(m_L, 1);
+    Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
-    Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);   
+    Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);       
 }
 
 void LuaContext::Shutdown( void )
