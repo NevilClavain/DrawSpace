@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2018                        
+* Emmanuel Chaumont Copyright (c) 2013-2019                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -100,7 +100,7 @@ void RenderPassNode::Erase( void )
 
             if( parent_texture != NULL && parent_texture == pass->m_targettexture )
             {
-                parent_pass->m_viewportquad->SetTexture( NULL, i ); // supprimer la m_targettexture texture chez le parent; La m_targettexture en elle meme est proprement dessallouée un peu plus bas lors du pass->CleanUp();
+                parent_pass->m_viewportquad->SetTexture( NULL, i ); // supprimer la m_targettexture texture chez le parent; La m_targettexture en elle meme est proprement dessallouï¿½e un peu plus bas lors du pass->CleanUp();
             }
         }
     }    

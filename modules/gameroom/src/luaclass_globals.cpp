@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2018                        
+* Emmanuel Chaumont Copyright (c) 2013-2019                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -129,7 +129,7 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
     int status = MainService::GetInstance()->RequestLuaFileExec( path, lua_err );
     if( -2 == status )
     {
-        // erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas allé au bout)
+        // erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas allï¿½ au bout)
         // on prefere arreter toute l'appli...
         _DSEXCEPTION("Error in executed script " + path + " : " + lua_err );
     }

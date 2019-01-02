@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2018                        
+* Emmanuel Chaumont Copyright (c) 2013-2019                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -21,7 +21,6 @@
 *
 */
 /* -*-LIC_END-*- */
-
 
 #include "piload.h"
 #include "pimanager.h"
