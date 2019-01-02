@@ -53,13 +53,3 @@ int LuaClass_RenderConfig::LUA_addrendercontext( lua_State* p_L )
     m_data.render_contexts.push_back( lua_rc->GetData() );
     return 0;
 }
-
-int LuaClass_RenderConfig::GetRenderContextListSize( void ) const
-{
-    return m_data.render_contexts.size();
-}
-
-LuaClass_RenderContext::Data LuaClass_RenderConfig::GetRenderContext( int p_index ) const
-{
-    return m_data.render_contexts[p_index];
-}

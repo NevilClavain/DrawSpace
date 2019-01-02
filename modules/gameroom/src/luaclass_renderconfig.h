@@ -48,8 +48,6 @@ public:
 
     int LUA_addrendercontext( lua_State* p_L );
 
-    int GetRenderContextListSize( void ) const;
-    LuaClass_RenderContext::Data GetRenderContext( int p_index ) const;
 
     inline Data GetData(void) const
     {

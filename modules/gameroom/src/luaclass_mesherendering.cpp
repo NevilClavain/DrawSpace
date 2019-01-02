@@ -143,9 +143,11 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
     {               
         LUA_TRY
         {
-            for( int i = 0; i < rcfg->GetRenderContextListSize(); i++ )
+            LuaClass_RenderConfig::Data rcfg_data = rcfg->GetData();
+
+            for(size_t i = 0; i < rcfg_data.render_contexts.size(); i++)
             {               
-                LuaClass_RenderContext::Data render_context = rcfg->GetRenderContext( i );
+                LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
                 dsstring pass_id = render_context.passname;
 
                 m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
