@@ -92,7 +92,7 @@ bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, D
 
 void PlanetsRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
-    //init_rendering_objects();
+    init_rendering_objects();
 
     m_add_in_rendergraph = true;
     p_rendergraph.Accept( this );
@@ -171,7 +171,21 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 {
-    update_shader_params();   
+    std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
+
+    size_t nb_layers = passes_names_layers.size();
+
+    for( size_t i = 0; i < nb_layers; i++ )
+    {
+        std::vector<dsstring> layer_passes = passes_names_layers[i];
+
+        for (size_t j = 0; j < layer_passes.size(); j++)
+        {
+            dsstring pass_id = layer_passes[j];
+        }
+    }
+
+    update_shader_params();
 }
 
 void PlanetsRenderingAspectImpl::release_rendering_objects( void )
