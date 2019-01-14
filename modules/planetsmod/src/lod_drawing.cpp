@@ -434,7 +434,7 @@ void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
     m_renderer = p_renderer;
 }
 
-
+/*
 void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
 {  
     for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
@@ -456,6 +456,30 @@ void Drawing::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawS
 
 	m_scenenodegraph = NULL;
 }
+*/
+
+void Drawing::AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue)
+{
+    for( auto& e : m_passesnodes )
+    {
+        if( e.first == p_passname )
+        {
+            p_passqueue->Add( e.second );
+        }
+    }
+}
+
+void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue)
+{
+    for( auto& e : m_passesnodes )
+    {
+        if( e.first == p_passname )
+        {
+            p_passqueue->Remove(e.second);
+        }
+    }
+}
+
 
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
@@ -530,7 +554,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-void Drawing::RegisterSinglePassSlot( Pass* p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
+void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
 {
 
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
@@ -555,6 +579,8 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, Binder* p_binder, int p_orie
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
                 node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+
+                m_facedrawingnodes.push_back(node_landplace);
             }
 
             break;
@@ -584,6 +610,8 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, Binder* p_binder, int p_orie
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
                 node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+
+                m_facedrawingnodes.push_back(node_landplace);
             }
             break;
 
@@ -603,7 +631,7 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, Binder* p_binder, int p_orie
         // enregistrer le node jupes terrain
         node_skirts->RegisterHandler( cb );
       
-        std::pair<Pass*, FaceDrawingNode*> p_s( p_pass, node_skirts );
+        std::pair<dsstring, FaceDrawingNode*> p_s = std::make_pair( p_pass, node_skirts );
         m_passesnodes.push_back( p_s );
 
         m_nodes[node_skirts] = p_orientation;
@@ -617,7 +645,7 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, Binder* p_binder, int p_orie
     // enregistrer le node patch terrain
     node->RegisterHandler( cb );
       
-    std::pair<Pass*, FaceDrawingNode*> p( p_pass, node );
+    std::pair<dsstring, FaceDrawingNode*> p = std::make_pair( p_pass, node );
     m_passesnodes.push_back( p );
 
     m_nodes[node] = p_orientation;
@@ -630,7 +658,7 @@ void Drawing::RegisterSinglePassSlot( Pass* p_pass, Binder* p_binder, int p_orie
     {
         node_landplace->RegisterHandler( cb );
     
-        std::pair<Pass*, FaceDrawingNode*> p_s( p_pass, node_landplace );
+        std::pair<dsstring, FaceDrawingNode*> p_s = std::make_pair( p_pass, node_landplace );
         m_passesnodes.push_back( p_s );
 
         m_nodes[node_landplace] = p_orientation;

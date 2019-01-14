@@ -25,6 +25,8 @@
     <ClCompile Include="src\lod_face.cpp">
       <Filter>lod</Filter>
     </ClCompile>
+    <ClCompile Include="src\multifractalbinder.cpp" />
+    <ClCompile Include="src\planetdetailsbinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\planetsrenderingaspectimpl.h" />
@@ -50,6 +52,8 @@
     <ClInclude Include="src\lod_face.h">
       <Filter>lod</Filter>
     </ClInclude>
+    <ClInclude Include="src\multifractalbinder.h" />
+    <ClInclude Include="src\planetdetailsbinder.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="lod">

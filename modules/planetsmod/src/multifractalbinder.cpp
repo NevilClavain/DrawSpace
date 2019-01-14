@@ -22,26 +22,52 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
+#include "multifractalbinder.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
-#include <random>
-#include "luna.h"
-
-class LuaClass_RandomEngine
+MultiFractalBinder::MultiFractalBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset,
+                                            dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2 ) :
+m_plains_amplitude( p_plains_amplitude ),
+m_mountains_amplitude( p_mountains_amplitude ),
+m_vertical_offset( p_vertical_offset ),
+m_mountains_offset( p_mountains_offset ),
+/*
+m_plains_seed1(234.4),
+m_plains_seed2(9334.1),
+m_mix_seed1(823.4),
+m_mix_seed2(509.0)
+*/
+m_plains_seed1( p_plains_seed1 ),
+m_plains_seed2( p_plains_seed2 ),
+m_mix_seed1( p_mix_seed1 ),
+m_mix_seed2( p_mix_seed2 )
 {
-private:
-    std::unique_ptr<std::default_random_engine> m_random_engine;
+}
 
-public:
-    LuaClass_RandomEngine(lua_State* p_L);
-    ~LuaClass_RandomEngine(void);
+void MultiFractalBinder::Bind( void )
+{
+	Vector landscape_control;
+	Vector seeds;
 
-    int LUA_setseedfromtime(lua_State* p_L);
-    int LUA_setseed(lua_State* p_L);
+	landscape_control[0] = m_plains_amplitude;
+	landscape_control[1] = m_mountains_amplitude;
+	landscape_control[2] = m_vertical_offset;
+	landscape_control[3] = m_mountains_offset;
 
-    std::default_random_engine& GetRandomEngine( void ) const;
+	seeds[0] = m_plains_seed1;
+	seeds[1] = m_plains_seed2;
+	seeds[2] = m_mix_seed1;
+	seeds[3] = m_mix_seed2;
 
-    static const char className[];
-    static const Luna<LuaClass_RandomEngine>::RegType methods[];
-};
+	m_renderer->SetFxShaderParams( 0, 40, landscape_control );
+	m_renderer->SetFxShaderParams( 0, 41, seeds );
+}
+
+void MultiFractalBinder::Unbind( void )
+{
+}
+
+

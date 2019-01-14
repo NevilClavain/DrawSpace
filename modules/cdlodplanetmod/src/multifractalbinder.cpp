@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 #include "multifractalbinder.h"
 
@@ -56,12 +35,6 @@ m_plains_amplitude( p_plains_amplitude ),
 m_mountains_amplitude( p_mountains_amplitude ),
 m_vertical_offset( p_vertical_offset ),
 m_mountains_offset( p_mountains_offset ),
-/*
-m_plains_seed1(234.4),
-m_plains_seed2(9334.1),
-m_mix_seed1(823.4),
-m_mix_seed2(509.0)
-*/
 m_plains_seed1( p_plains_seed1 ),
 m_plains_seed2( p_plains_seed2 ),
 m_mix_seed1( p_mix_seed1 ),

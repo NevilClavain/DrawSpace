@@ -53,6 +53,7 @@
 
 
 #include "luaclass_nebulaespecificconfig.h"
+#include "luaclass_planetspecificconfig.h"
 
 
 LuaContext::LuaContext( void ) :
@@ -100,7 +101,8 @@ void LuaContext::Startup( void )
     lua_checkstack(m_L, 1);
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
-    Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);       
+    Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
+    Luna<LuaClass_PlanetSpecificConfig>::Register(m_L);
 }
 
 void LuaContext::Shutdown( void )

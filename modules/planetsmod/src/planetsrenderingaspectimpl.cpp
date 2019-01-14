@@ -59,33 +59,24 @@ m_hub(NULL),
 m_system_evt_cb( this, &PlanetsRenderingAspectImpl::on_system_event ),
 m_cameras_evt_cb( this, &PlanetsRenderingAspectImpl::on_cameras_event),
 m_nodes_evt_cb( this, &PlanetsRenderingAspectImpl::on_nodes_event),
-m_entitynodegraph(NULL)
+m_entitynodegraph(NULL),
+m_drawable(&m_config)
 {
+    m_drawable.SetRenderer(SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface);
 }
 
 bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
 {
     bool updated_queue = false;
 
-    /*
-    for( size_t i = 0; i < m_pass_slots.size(); i++ )
+    if (m_add_in_rendergraph)
     {
-        if( m_pass_slots[i]->m_pass_name == p_name )
-        {
-            if( m_add_in_rendergraph )
-            {
-                // ajout du renderingnode dans la renderingqueue  
-                p_passqueue->Add( m_pass_slots[i]->m_rendering_node );
-            }
-            else
-            {
-                // suppression du renderingnode de la renderingqueue
-                p_passqueue->Remove( m_pass_slots[i]->m_rendering_node );
-            }
-            updated_queue = true;
-        }
+        m_drawable.AddInRendergraph(p_name, p_passqueue);
     }
-    */
+    else
+    {
+        m_drawable.RemoveFromRendergraph(p_name, p_passqueue);
+    }
     return updated_queue;
 }
 
@@ -170,6 +161,29 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 {
+    //// retrieve specific config....
+
+    dsreal planet_ray = m_owner->GetComponent<dsreal>( "planet_ray")->getPurpose();
+    dsreal plains_amplitude = m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose();
+    dsreal mountains_amplitude = m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose();
+    dsreal vertical_offset = m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose();
+    dsreal mountains_offset = m_owner->GetComponent<dsreal>("mountains_offset")->getPurpose();
+    dsreal plains_seed1 = m_owner->GetComponent<dsreal>("plains_seed1")->getPurpose();
+    dsreal plains_seed2 = m_owner->GetComponent<dsreal>("plains_seed2")->getPurpose();
+    dsreal mix_seed1 = m_owner->GetComponent<dsreal>("mix_seed1")->getPurpose();
+    dsreal mix_seed2 = m_owner->GetComponent<dsreal>("mix_seed2")->getPurpose();
+
+    dsreal terrainbump_factor = m_owner->GetComponent<dsreal>("terrainbump_factor")->getPurpose();
+    dsreal splat_transition_up_relative_alt = m_owner->GetComponent<dsreal>("splat_transition_up_relative_alt")->getPurpose();
+    dsreal splat_transition_down_relative_alt = m_owner->GetComponent<dsreal>("splat_transition_down_relative_alt")->getPurpose();
+    int splat_texture_resol = m_owner->GetComponent<int>("splat_texture_resol")->getPurpose();
+
+    dsreal atmo_kr = m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose();
+    dsreal fog_alt_limit = m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose();
+    dsreal fog_density = m_owner->GetComponent<dsreal>("fog_density")->getPurpose();
+
+    /////////////////
+
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
 
     size_t nb_layers = passes_names_layers.size();
