@@ -325,65 +325,84 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
 {    
     if( m_entity_rendering_aspect )
-    {
-        std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures;
-        layers_textures = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose();
-
-        for (auto& e1 : layers_textures)
+    {        
+        Component<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>* layers_textures_comp;
+                
+        layers_textures_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
+        if( layers_textures_comp )
         {
-            for (auto& e2 : e1)
+            std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = layers_textures_comp->getPurpose();
+            for (auto& e1 : layers_textures)
             {
-                for (auto& e3 : e2)
+                for (auto& e2 : e1)
                 {
-                    std::array<Texture*, RenderingNode::NbMaxTextures> texture_set = e3;
-
-                    for (size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++)
+                    for (auto& e3 : e2)
                     {
-                        Texture* texture = texture_set[texture_stage_index];
-                        if (texture)
+                        std::array<Texture*, RenderingNode::NbMaxTextures> texture_set = e3;
+
+                        for (size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++)
                         {
-                            _DRAWSPACE_DELETE_(texture);
+                            Texture* texture = texture_set[texture_stage_index];
+                            if (texture)
+                            {
+                                _DRAWSPACE_DELETE_(texture);
+                            }
                         }
                     }
                 }
             }
+
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
         }
-
-        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
-
+       
         ///////////////////////////////////////////////////////////////////////////////////////////
         //////////////// fx
 
-        std::vector<std::vector<Fx*>> layers_fx = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
+        Component<std::vector<std::vector<Fx*>>>* layers_fx_comp;
 
-        for( auto& e1 : layers_fx)
+        layers_fx_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx");
+        if( layers_fx_comp )
         {
-            for( auto& e2 : e1 )
+            std::vector<std::vector<Fx*>> layers_fx = layers_fx_comp->getPurpose();
+            for( auto& e1 : layers_fx)
             {
-                Fx* fx = e2;
-                for (int j = 0; j < fx->GetShadersListSize(); j++)
+                for( auto& e2 : e1 )
                 {
-                    Shader* shader = fx->GetShader(j);
-                    _DRAWSPACE_DELETE_(shader);
+                    Fx* fx = e2;
+                    for (int j = 0; j < fx->GetShadersListSize(); j++)
+                    {
+                        Shader* shader = fx->GetShader(j);
+                        _DRAWSPACE_DELETE_(shader);
+                    }
+                    _DRAWSPACE_DELETE_(fx);
                 }
-                _DRAWSPACE_DELETE_(fx);
             }
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<Fx*>>>("layers_fx");
         }
-        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<Fx*>>>("layers_fx");
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //////////////// args shaders
      
-        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params");
+        if(m_entity_rendering_aspect->GetComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params");
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         //////////////// rendering orders
 
-        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<int>>>( "layers_ro" );
+        if(m_entity_rendering_aspect->GetComponent<std::vector<std::vector<int>>>("layers_ro"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<int>>>( "layers_ro" );
+        }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //////////////// passes names
 
-
-        m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<dsstring>>>("passes");
+        if(m_entity_rendering_aspect->GetComponent< std::vector<std::vector<dsstring>>>("passes"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::vector<dsstring>>>("passes");
+        }
     }
     else
     {

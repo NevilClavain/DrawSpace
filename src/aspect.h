@@ -47,6 +47,8 @@ class Aspect abstract
 {
 protected:
 
+    static int                                                m_uid_count;
+
     // map globale, regroupant les composants par id...
     std::unordered_map<dsstring, BaseComponent*>              m_components;
 
@@ -55,6 +57,8 @@ protected:
 
     // entity owner
     Entity* m_owner;
+
+    void logComponent(const dsstring& p_comment, const dsstring& p_id, BaseComponent* p_instance) const;
 
 public:
     Aspect( void ) : m_owner(NULL) {};
@@ -76,6 +80,9 @@ public:
 
         size_t tid = typeid(T).hash_code();
         m_components_by_type[tid].push_back( newcomp );
+
+        newcomp->m_uid = m_uid_count++;
+        logComponent("AddComponent : ", p_id, newcomp);        
     }
         
     template<typename T>
@@ -86,6 +93,8 @@ public:
             _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
         Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
+
+        logComponent("RemoveComponent : ", p_id, comp);
               
         // suppression dans m_components_by_type
         size_t tid = typeid(T).hash_code();

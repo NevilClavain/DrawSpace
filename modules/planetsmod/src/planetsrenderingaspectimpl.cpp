@@ -30,6 +30,8 @@
 #include "informationsaspect.h"
 #include "maths.h"
 #include "hub.h"
+
+#include "planetdetailsbinder.h"
 #include <functional>
 
 
@@ -123,6 +125,11 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
+
+        for (int orientation = 0; orientation < 6; orientation++)
+        {
+            _DRAWSPACE_DELETE_(m_planet_detail_binder[orientation]);
+        }
     }
     else
     {
@@ -185,16 +192,61 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     /////////////////
 
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
+    std::vector<std::vector<Fx*>> layers_fx = m_owner->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
+    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = m_owner->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose();
+    std::vector<std::vector<int>> layers_ro = m_owner->GetComponent<std::vector<std::vector<int>>>("layers_ro")->getPurpose();
 
     size_t nb_layers = passes_names_layers.size();
 
     for( size_t i = 0; i < nb_layers; i++ )
     {
         std::vector<dsstring> layer_passes = passes_names_layers[i];
+        std::vector<Fx*> fxs = layers_fx[i];
+
+        std::vector<int> ros = layers_ro[i];
+
+        std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> textures_set = layers_textures[i];
 
         for (size_t j = 0; j < layer_passes.size(); j++)
         {
             dsstring pass_id = layer_passes[j];
+
+            Fx* fx = fxs[j];
+            int ro = ros[j];
+
+            std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> pass_textures_set = textures_set[j];
+
+            std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures = pass_textures_set[0];
+
+            if(DetailsLayer == i)
+            {
+                for (int orientation = 0; orientation < 6; orientation++)
+                {
+                    m_planet_detail_binder[orientation] = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, plains_amplitude,
+                                                                    mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
+                                                                    mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
+                                                                    splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
+                                                                    fog_alt_limit, fog_density) );
+                                    
+                    m_planet_detail_binder[i]->SetFx( fx );
+                    for( size_t stage = 0; stage < pass_textures.size(); stage++ )
+                    {
+                        m_planet_detail_binder[orientation]->SetTexture(pass_textures[stage], stage );
+                    }
+
+                    // ICI !!!
+
+                    m_drawable.RegisterSinglePassSlot( pass_id, m_planet_detail_binder[i], orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro );
+                }
+            }
+            else if(AtmosphereLayer == i)
+            {
+                // pour plus tard...
+            }
+            else if(FlatCloudsLayer == i)
+            {
+                // pour plus tard...
+            }
         }
     }
 

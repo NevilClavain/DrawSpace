@@ -330,6 +330,9 @@
     <ClCompile Include="src\quadrenderingaspectimpl.cpp">
       <Filter>aspectimplementations</Filter>
     </ClCompile>
+    <ClCompile Include="src\aspect.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />

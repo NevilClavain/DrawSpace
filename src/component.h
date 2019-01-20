@@ -31,7 +31,11 @@ namespace DrawSpace
 {
 namespace Core
 {
-class BaseComponent abstract {};
+class BaseComponent abstract 
+{
+public:
+    int m_uid;
+};
 
 template<typename T>
 using ComponentPurpose = std::unique_ptr<T>;

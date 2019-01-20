@@ -53,6 +53,9 @@ protected:
     using CameraEventsCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
     using NodesEventsCb     = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
 
+    static const int DetailsLayer       = 0;
+    static const int AtmosphereLayer    = 1;
+    static const int FlatCloudsLayer    = 2;
 
 protected:
 

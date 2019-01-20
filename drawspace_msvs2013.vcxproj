@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ac3dmeshe.cpp" />
+    <ClCompile Include="src\aspect.cpp" />
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\bodyaspect.cpp" />
     <ClCompile Include="src\bodytransformaspectimpl.cpp" />
