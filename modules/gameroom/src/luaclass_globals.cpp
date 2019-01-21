@@ -43,6 +43,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "do_file", &LuaClass_Globals::LUA_dofile },
     { "dump_mem", &LuaClass_Globals::LUA_dumpmem },
     { "total_mem", &LuaClass_Globals::LUA_totalmem },
+    { "log", &LuaClass_Globals::LUA_log },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -283,6 +284,21 @@ int LuaClass_Globals::LUA_totalmem( lua_State* p_L )
 {
     lua_pushinteger( p_L, DrawSpace::Utils::MemAlloc::GetInstance()->GetTotalSize() );
     return 1;
+}
+
+
+int LuaClass_Globals::LUA_log(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Globals::log : argument(s) missing");
+    }
+    int level = luaL_checkint(p_L, 1);
+    dsstring log = luaL_checkstring(p_L, 2);
+    MainService::GetInstance()->RequestLog( level, log );
+
+    return 0;
 }
 
 int LuaClass_Globals::LUA_reset( lua_State* p_L )

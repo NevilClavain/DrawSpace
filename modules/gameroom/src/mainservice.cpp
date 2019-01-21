@@ -822,3 +822,31 @@ void MainService::RequestSignalRenderSceneEnd( const dsstring& p_entitygraph_id 
         _DSEXCEPTION( "Unknown entitygraph id" );
     }
 }
+
+void MainService::RequestLog(int p_level, const dsstring& p_log)
+{
+    dsstring final_log = "LUALOG : " + p_log;
+    switch( p_level )
+    {
+        default:
+        case 0:
+            _DSTRACE(logger, final_log);
+            break;
+
+        case 1:
+            _DSDEBUG(logger, final_log);
+            break;
+
+        case 2:
+            _DSWARN(logger, final_log);
+            break;
+
+        case 3:
+            _DSERROR(logger, final_log);
+            break;
+
+        case 4:
+            _DSFATAL(logger, final_log);
+            break;
+    }    
+}

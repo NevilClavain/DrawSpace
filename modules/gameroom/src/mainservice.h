@@ -187,12 +187,11 @@ public:
     void RequestMouseCursorDisplayState( bool p_display );
     void RequestMouseCursorCircularMode( bool p_state );
 
-
     void RequestSignalRenderSceneBegin( const dsstring& p_entitygraph_id );
     void RequestSignalRenderSceneEnd( const dsstring& p_entitygraph_id );
 
-    
-
+    void RequestLog( int p_level, const dsstring& p_log );
+  
     friend class BaseSingleton<MainService>;
 };
 
