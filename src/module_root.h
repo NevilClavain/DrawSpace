@@ -24,30 +24,6 @@
 
 #pragma once
 
-/* -*-LIC_BEGIN-*- */
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2018                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-/* -*-LIC_END-*- */
-
 #include "module_service.h"
 #include "plugin.h"
 
@@ -58,6 +34,12 @@
 
 namespace DrawSpace
 {
+namespace Utils
+{
+    class MemAlloc;
+}
+
+
 namespace Systems
 {
     class Hub;
@@ -90,6 +72,7 @@ public:
     virtual dsstring                                                            GetModuleDescr( void ) const = 0;
     
     virtual void                                                                Init( void ) = 0;
+    virtual void                                                                Release(void) = 0;
 
     virtual void                                                                DumpMemoryAllocs( void );
 
@@ -105,7 +88,7 @@ public:
     virtual DrawSpace::Interface::AspectImplementations::ServiceAspectImpl*     InstanciateServiceAspectImpl( const dsstring& p_id );
     virtual void                                                                TrashServiceAspectImpls( DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl ) {};
 
-
+    virtual Utils::MemAlloc*                                                    GetMemAllocInstance( void ) const;
 };
 }
 }

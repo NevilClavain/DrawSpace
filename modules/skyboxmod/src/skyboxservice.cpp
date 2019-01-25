@@ -113,6 +113,12 @@ m_texturemirrorpass( NULL )
 
 SkyboxService::~SkyboxService( void )
 {
+    _DRAWSPACE_DELETE_(m_texturesnamesparam);
+    _DRAWSPACE_DELETE_(m_texturebankvirtualfspathparam);
+    _DRAWSPACE_DELETE_(m_texturebankpathparam);
+    _DRAWSPACE_DELETE_(m_reflectornormaleparam);
+    _DRAWSPACE_DELETE_(m_texturemirrorpassparam);
+    _DRAWSPACE_DELETE_(m_texturepassparam);
 }
 
 void SkyboxService::GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys )

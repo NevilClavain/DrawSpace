@@ -78,3 +78,8 @@ void CDLODPlanetRoot::Init( void )
 {
     m_services["cdlodplanet"] = new CDLODPlanetService( m_id );
 }
+
+void CDLODPlanetRoot::Release(void)
+{
+    delete m_services["cdlodplanet"];
+}

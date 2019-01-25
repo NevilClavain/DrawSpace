@@ -136,7 +136,7 @@ protected:
 
 public:
     SkyboxService( const dsstring& p_id );
-    ~SkyboxService( void );
+    virtual ~SkyboxService( void );
 
     virtual void                            GetKeys( std::vector<DrawSpace::Module::KeySinkBase*>& p_keys );
     virtual void                            Init( DrawSpace::Logger::Configuration* p_logconf, 

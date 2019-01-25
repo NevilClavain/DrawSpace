@@ -68,6 +68,11 @@ void AstrolabRoot::Init( void )
     m_services["mainloop"] = MainLoopService::GetInstance();
 }
 
+void AstrolabRoot::Release(void)
+{
+    delete m_services["mainloop"];
+}
+
 dsstring AstrolabRoot::GetModuleName( void ) const
 {
     return "AstrolabMod";

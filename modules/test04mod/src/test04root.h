@@ -36,6 +36,8 @@ public:
     virtual dsstring GetModuleName( void ) const;
     virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
+    virtual void Release(void);
+
     DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* InstanciateServiceAspectImpl( const dsstring& p_id );
 };
 

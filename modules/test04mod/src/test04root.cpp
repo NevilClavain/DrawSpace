@@ -56,6 +56,10 @@ void Test04Root::Init( void )
 {
 }
 
+void Test04Root::Release(void)
+{
+}
+
 dsstring Test04Root::GetModuleName( void ) const
 {
     return "Test04Root";

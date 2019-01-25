@@ -53,6 +53,11 @@ void PlanetsRoot::Init( void )
 {
 }
 
+void PlanetsRoot::Release(void)
+{
+
+}
+
 DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* PlanetsRoot::InstanciateRenderingAspectImpls( const dsstring& p_id )
 {
     if ("planetsRender" == p_id)

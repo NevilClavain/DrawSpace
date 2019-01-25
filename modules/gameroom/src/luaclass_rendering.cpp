@@ -32,6 +32,9 @@
 #include "luaclass_texturesset.h"
 #include "luaclass_fxparams.h"
 
+#include "mainservice.h"
+#include "memalloc.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -75,6 +78,16 @@ int LuaClass_Rendering::LUA_instanciateRenderingImpl( lua_State* p_L )
     LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
     dsstring implementation_id = luaL_checkstring(p_L, 2);
 
+    // ici appel de MemAlloc::GetTotalSize()
+
+    dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
+
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("*******************Dumping ") << mod_name << dsstring( " mem allocs*******************"));
+    lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
+
+    size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
+
     m_rendering_impl = lua_mod->GetModuleRoot()->InstanciateRenderingAspectImpls( implementation_id );
     
     return 0;
@@ -92,6 +105,16 @@ int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
     LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
 
     lua_mod->GetModuleRoot()->TrashRenderingAspectImpls( m_rendering_impl );
+
+    // ici appel de MemAlloc::GetTotalSize() pour comparaison 
+
+    dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
+
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("*******************Dumping ") << mod_name << dsstring("mem allocs*******************"));
+    lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
+
+    size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
     
     return 0;
 }

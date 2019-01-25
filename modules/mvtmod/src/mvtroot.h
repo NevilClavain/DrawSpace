@@ -36,6 +36,7 @@ public:
     virtual dsstring GetModuleName( void ) const;
     virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
+    virtual void Release(void);
 
     virtual DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   InstanciateTransformAspectImpls(const dsstring& p_id);
     virtual void                                                                TrashTransformAspectImpls(DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl);

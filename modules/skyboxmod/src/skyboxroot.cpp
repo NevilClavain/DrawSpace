@@ -53,6 +53,11 @@ void SkyboxRoot::Init( void )
     m_services["skybox"] = new SkyboxService( m_id );
 }
 
+void SkyboxRoot::Release(void)
+{
+    delete m_services["skybox"];
+}
+
 DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* SkyboxRoot::InstanciateRenderingAspectImpls( const dsstring& p_id )
 {    
     if( "skyboxRender" == p_id )

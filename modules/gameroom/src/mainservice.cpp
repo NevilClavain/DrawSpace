@@ -825,7 +825,7 @@ void MainService::RequestSignalRenderSceneEnd( const dsstring& p_entitygraph_id 
 
 void MainService::RequestLog(int p_level, const dsstring& p_log)
 {
-    dsstring final_log = "LUALOG : " + p_log;
+    dsstring final_log = "LUALUALUALUALUALUALUALUALUALUALUALOG : " + p_log;
     switch( p_level )
     {
         default:
@@ -849,4 +849,33 @@ void MainService::RequestLog(int p_level, const dsstring& p_log)
             _DSFATAL(logger, final_log);
             break;
     }    
+}
+
+DrawSpace::Logger::Sink& MainService::RequestLogger(void) const
+{
+    return logger;
+}
+
+void MainService::RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root)
+{
+    if(0 == m_loaded_modules.count( p_mod_root ) )
+    {
+        m_loaded_modules.insert( p_mod_root);
+    }
+    else
+    {
+        // exception
+    }
+}
+
+void MainService::UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root)
+{
+    if (m_loaded_modules.count(p_mod_root))
+    {
+        m_loaded_modules.erase( p_mod_root );
+    }
+    else
+    {
+        // exception
+    }
 }

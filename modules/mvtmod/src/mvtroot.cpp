@@ -55,6 +55,10 @@ void MvtRoot::Init( void )
 {
 }
 
+void MvtRoot::Release(void)
+{
+}
+
 DrawSpace::Interface::AspectImplementations::TransformAspectImpl* MvtRoot::InstanciateTransformAspectImpls(const dsstring& p_id)
 {
     if( "fps" == p_id )

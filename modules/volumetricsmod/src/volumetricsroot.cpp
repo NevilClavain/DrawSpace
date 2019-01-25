@@ -53,6 +53,10 @@ void VolumetricsRoot::Init( void )
 {
 }
 
+void VolumetricsRoot::Release(void)
+{
+}
+
 DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* VolumetricsRoot::InstanciateRenderingAspectImpls( const dsstring& p_id )
 {
     if( "nebulaeRender" == p_id )

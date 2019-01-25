@@ -24,10 +24,12 @@
 
 #include "module_root.h"
 #include "hub.h"
+#include "memalloc.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface::Module;
 using namespace DrawSpace::Systems;
+using namespace DrawSpace::Utils;
 
 Root::Root(void) : 
 m_hub( NULL )
@@ -81,4 +83,9 @@ DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* Root::Instanciat
 void Root::DumpMemoryAllocs( void )
 {
     DrawSpace::Utils::MemAlloc::GetInstance()->DumpContent();
+}
+
+MemAlloc* Root::GetMemAllocInstance(void) const
+{
+    return MemAlloc::GetInstance();
 }

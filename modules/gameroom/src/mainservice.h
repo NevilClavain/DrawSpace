@@ -81,7 +81,8 @@ protected:
     std::map<dsstring, int>                                                         m_mouserightbuttonup_lua_callbacks;
     std::map<dsstring, int>                                                         m_guipushbuttonclicked_lua_callbacks;
 
-
+    // list des modules charges
+    std::set<DrawSpace::Interface::Module::Root*>                                   m_loaded_modules;
 
     //////////////gestion de la console///////////////////
     bool                                                                            m_console_ready;
@@ -191,6 +192,11 @@ public:
     void RequestSignalRenderSceneEnd( const dsstring& p_entitygraph_id );
 
     void RequestLog( int p_level, const dsstring& p_log );
+
+    DrawSpace::Logger::Sink& RequestLogger( void ) const;
+
+    void RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
+    void UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
   
     friend class BaseSingleton<MainService>;
 };

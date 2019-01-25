@@ -37,6 +37,7 @@ public:
     virtual dsstring GetModuleName( void ) const;
     virtual dsstring GetModuleDescr( void ) const;
     virtual void Init( void );
+    virtual void Release(void);
 
     virtual DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*   InstanciateRenderingAspectImpls( const dsstring& p_id );
     virtual void                                                                TrashRenderingAspectImpls( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );

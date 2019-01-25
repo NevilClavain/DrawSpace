@@ -64,6 +64,11 @@ void Test01Root::Init( void )
     m_services["mainloop"] = new MainLoopService();
 }
 
+void Test01Root::Release(void)
+{
+    delete m_services["mainloop"];
+}
+
 dsstring Test01Root::GetModuleName( void ) const
 {
     return "Test01Mod";

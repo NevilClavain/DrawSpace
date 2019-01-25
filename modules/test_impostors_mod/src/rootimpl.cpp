@@ -56,6 +56,10 @@ void RootImpl::Init( void )
 {
 }
 
+void RootImpl::Release(void)
+{
+}
+
 dsstring RootImpl::GetModuleName( void ) const
 {
     return "TestImpostorsRoot";

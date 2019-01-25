@@ -101,6 +101,8 @@ bool PILoad::UnloadModule( const dsstring& p_file, DrawSpace::Interface::Module:
 	complete_path += "_r.dll";
 #endif
 
+    p_module_root->Release();
+
     if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::TrashInstance( complete_path.c_str(), p_module_root ) != PIM_OK )
     {
         return false;

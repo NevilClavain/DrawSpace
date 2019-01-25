@@ -64,6 +64,11 @@ void GUILabRoot::Init( void )
     m_services["mainloop"] = new MainLoopService();
 }
 
+void GUILabRoot::Release(void)
+{
+    delete m_services["mainloop"];
+}
+
 dsstring GUILabRoot::GetModuleName( void ) const
 {
     return "GUILabMod";
