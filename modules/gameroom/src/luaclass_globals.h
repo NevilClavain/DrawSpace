@@ -85,6 +85,8 @@ public:
 
     int LUA_setvirtualfs( lua_State* p_L );
 
+    int LUA_dsexception( lua_State* p_L );
+
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];
 };

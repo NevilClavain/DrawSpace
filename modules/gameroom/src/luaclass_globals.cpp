@@ -79,6 +79,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "signal_renderscenebegin", &LuaClass_Globals::LUA_signalrenderscenebegin },
     { "signal_rendersceneend", &LuaClass_Globals::LUA_signalrendersceneend },
 
+    { "ds_exception", &LuaClass_Globals::LUA_dsexception },
+
 	{ 0, 0 }
 };
 
@@ -418,5 +420,19 @@ int LuaClass_Globals::LUA_signalrendersceneend( lua_State* p_L )
     dsstring entitygraph_id = luaL_checkstring( p_L, 1 );
 
     MainService::GetInstance()->RequestSignalRenderSceneEnd( entitygraph_id );
+    return 0;
+}
+
+int LuaClass_Globals::LUA_dsexception(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::ds_exception : argument(s) missing");
+    }
+
+    dsstring text = luaL_checkstring(p_L, 1);
+    _DSEXCEPTION( text );
+
     return 0;
 }
