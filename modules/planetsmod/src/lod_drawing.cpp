@@ -558,6 +558,7 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
 {
 
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+    node->m_debug_id = "node";
     m_facedrawingnodes.push_back( node );
 
     FaceDrawingNode* node_skirts = NULL;
@@ -577,6 +578,7 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+                node_landplace->m_debug_id = "LOWRES_MESHE_node_landplace";
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
                 node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
 
@@ -594,6 +596,7 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
         case Body::LOWRES_SKIRT_MESHE:
 
             node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+            node_skirts->m_debug_id = "LOWRES_SKIRT_MESHE_skirts";
             m_facedrawingnodes.push_back( node_skirts );
 
             // node patch terrain
@@ -608,6 +611,7 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
                 node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+                node_landplace->m_debug_id = "LOWRES_SKIRT_MESHE_node_landplace";
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
                 node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
 

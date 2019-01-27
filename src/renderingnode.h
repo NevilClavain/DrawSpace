@@ -54,6 +54,8 @@ public:
 
     } ShadersParams;
 
+    dsstring                                m_debug_id;
+
 protected:
 
     Fx*                                     m_fx;

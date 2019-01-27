@@ -881,6 +881,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         operation.type = DRAW_NODE;
         operation.node = node;
+        operation.comment = node->m_debug_id;
         m_outputqueue.push_back( operation );
 
         if( m_tx_datas.count( node ) )

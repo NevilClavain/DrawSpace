@@ -241,6 +241,8 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
         m_rendering_node[i] = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
         m_rendering_node[i]->RegisterHandler( m_cb );
         m_rendering_node[i]->SetMeshe( m_meshes[i] );
+
+        m_rendering_node[i]->m_debug_id = "skybox_node";
     }
 
     m_world.Identity();
