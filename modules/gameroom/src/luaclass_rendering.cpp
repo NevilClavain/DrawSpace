@@ -87,6 +87,7 @@ int LuaClass_Rendering::LUA_instanciateRenderingImpl( lua_State* p_L )
     _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
 
     size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
+    m_total_mem_allocs = total;
 
     m_rendering_impl = lua_mod->GetModuleRoot()->InstanciateRenderingAspectImpls( implementation_id );
     
@@ -115,6 +116,13 @@ int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
     _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
 
     size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
+
+    if( total != m_total_mem_allocs )
+    {
+        dsstring log = dsstring( "RENDERING MODULE MEM LEAK DETECTED " ) + mod_name;
+        MainService::GetInstance()->RequestLog(4, log); // 4 = FATAL
+        _DSEXCEPTION( log );
+    }
     
     return 0;
 }

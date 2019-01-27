@@ -40,6 +40,8 @@ private:
     DrawSpace::Aspect::RenderingAspect*                                 m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                            m_entity;
 
+    size_t                                                              m_total_mem_allocs;
+
     void cleanup_resources( lua_State* p_L );
 
 public:
