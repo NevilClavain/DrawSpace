@@ -63,8 +63,6 @@ protected:
 
     Patch*                                                                      m_current_patch;
 
-    DrawSpace::Utils::TimeManager*                                              m_timemanager;
-
     double                                                                      m_relative_alt;
 
     bool                                                                        m_enable_cdlod;
@@ -83,8 +81,7 @@ public:
     static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 
-    Body( DrawSpace::Utils::TimeManager* p_time, Config* p_config, int p_layer_index,
-            Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges );
+    Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges );
 
     virtual ~Body( void );
 

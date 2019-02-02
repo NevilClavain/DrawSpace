@@ -48,11 +48,9 @@ public:
     
     };
 
-
     double                          m_lod0base;
     int                             m_nbLODRanges_freeCameras;
     int                             m_nbLODRanges_inertBodies;
-
 
     std::vector<LayerDescriptor>    m_layers_descr;
     int                             m_ground_layer;  // index dans m_layers_descr

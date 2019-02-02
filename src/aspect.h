@@ -141,6 +141,7 @@ public:
     }
 
     inline void SetOwnerEntity(Entity* p_entity) { m_owner = p_entity; }
+    inline Entity* GetOwnerEntity( void ) const { return m_owner; };
 
     virtual void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
     virtual void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};

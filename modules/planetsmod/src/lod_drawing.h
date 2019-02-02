@@ -30,6 +30,14 @@
 #include "lod_body.h"
 #include "scenenodegraph.h"
 
+namespace DrawSpace
+{
+namespace Core
+{
+class Entity;
+}
+};
+
 namespace LOD
 {
 struct Config;
@@ -115,7 +123,7 @@ protected:
 
     std::vector<Body*>                                                          m_planetbodies;
 
-    std::vector<std::pair<dsstring, FaceDrawingNode*> >                         m_passesnodes;
+    std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
 
     std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
 
@@ -124,16 +132,15 @@ protected:
     RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler;
     
     std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers; 
-
     
     DrawSpace::Interface::Renderer*                                             m_renderer;
-    DrawSpace::Core::SceneNodeGraph*                                            m_scenenodegraph;
-    
-    DrawSpace::Utils::Matrix                                                    m_globaltransformation;
-    
+       
     Config*                                                                     m_config;
 
     DrawSpace::Core::Meshe*                                                     m_landplace_meshes[6];
+
+    DrawSpace::Core::Entity*                                                    m_owner_entity;
+
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -149,17 +156,16 @@ public:
     Drawing( Config* p_config );
     virtual ~Drawing( void );
 
+    void Startup( DrawSpace::Core::Entity* p_entity );
+    void Shutdown( void );
+
+
     RenderingNodeDrawCallback* GetSingleNodeDrawHandler(void) const;
 
     void SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies );
     void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
-    void SetFinalTransform(const DrawSpace::Utils::Matrix& p_mat);
     void SetLayerNodeDrawingState(int p_layer_index, bool p_drawing_state);
 
-    /*
-    void OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
-    void OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node );
-    */
     void AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
     void RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
 

@@ -53,6 +53,7 @@ private:
         dsreal atmo_kr; 
         dsreal fog_alt_limit; 
         dsreal fog_density;
+        bool   enable_landplace_patch;
     };
 
     PlanetDetails m_planets_details;
@@ -72,6 +73,7 @@ public:
     int LUA_setsplattingparams(lua_State* p_L);
     int LUA_setfogandatmoparams(lua_State* p_L);
     int LUA_setterrainbumpfactor(lua_State* p_L);
+    int LUA_enablelandplacepatch(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_PlanetSpecificConfig>::RegType methods[];

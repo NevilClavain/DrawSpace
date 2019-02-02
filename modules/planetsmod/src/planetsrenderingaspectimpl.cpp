@@ -34,6 +34,8 @@
 #include "planetdetailsbinder.h"
 #include <functional>
 
+#include "lod_layer.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -62,9 +64,22 @@ m_system_evt_cb( this, &PlanetsRenderingAspectImpl::on_system_event ),
 m_cameras_evt_cb( this, &PlanetsRenderingAspectImpl::on_cameras_event),
 m_nodes_evt_cb( this, &PlanetsRenderingAspectImpl::on_nodes_event),
 m_entitynodegraph(NULL),
-m_drawable(&m_config)
+m_drawable(&m_config),
+m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation)
 {
-    m_drawable.SetRenderer(SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface);
+    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
+    m_drawable.SetRenderer(m_renderer);
+}
+
+PlanetsRenderingAspectImpl::~PlanetsRenderingAspectImpl(void)
+{
+    for (size_t i = 0; i < m_layers_list.size(); i++)
+    {
+        LOD::Body* slod_body = m_layers_list[i]->GetBody();
+        _DRAWSPACE_DELETE_(slod_body);
+
+        _DRAWSPACE_DELETE_(m_layers_list[i]);
+    }
 }
 
 bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue )
@@ -92,10 +107,10 @@ void PlanetsRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::Re
 
 void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
-    //release_rendering_objects();
-
     m_add_in_rendergraph = false;
     p_rendergraph.Accept( this );
+
+    release_rendering_objects();
 }
 
 bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
@@ -189,6 +204,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     dsreal fog_alt_limit = m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose();
     dsreal fog_density = m_owner->GetComponent<dsreal>("fog_density")->getPurpose();
 
+    bool enable_landplace_patch = m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose();
+
     /////////////////
 
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
@@ -198,8 +215,49 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     size_t nb_layers = passes_names_layers.size();
 
+    // complete m_config layers
+
+    m_config.m_landplace_patch = enable_landplace_patch;
+    m_config.m_ground_layer = 0;
+    m_config.m_lod0base = 19000.0;
+    m_config.m_ground_layer = 0;
+    m_config.m_nbLODRanges_inertBodies = 15;
+    m_config.m_nbLODRanges_freeCameras = 14;
+
     for( size_t i = 0; i < nb_layers; i++ )
     {
+        LOD::Config::LayerDescriptor ld;
+
+        switch( i )
+        {
+            case DetailsLayer:
+
+                ld.enable_collisions = true;
+                ld.enable_datatextures = true;
+                ld.enable_lod = true;
+                ld.min_lodlevel = 0;
+                ld.ray = planet_ray;
+                for (int i = 0; i < 6; i++)
+                {
+                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.patchTexturesBinder[i] = NULL;
+                }
+
+                m_config.m_layers_descr.push_back( ld );
+
+                break;
+
+            case AtmosphereLayer:
+                // pour plus tard...
+                break;
+
+            case FlatCloudsLayer:
+                // pour plus tard...
+                break;               
+        }
+
+        ///////////////////////////
+
         std::vector<dsstring> layer_passes = passes_names_layers[i];
         std::vector<Fx*> fxs = layers_fx[i];
 
@@ -229,6 +287,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                                                                     fog_alt_limit, fog_density) );
                                     
                     m_planet_detail_binder[i]->SetFx( fx );
+                    m_planet_detail_binder[i]->SetRenderer( m_renderer );
                     for( size_t stage = 0; stage < pass_textures.size(); stage++ )
                     {
                         m_planet_detail_binder[orientation]->SetTexture(pass_textures[stage], stage );
@@ -250,18 +309,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
         }
     }
 
+    m_drawable.Startup( m_owner->GetOwnerEntity() );
+
     update_shader_params();
 }
 
 void PlanetsRenderingAspectImpl::release_rendering_objects( void )
 {
-    /*
-    for( size_t i = 0; i < m_pass_slots.size(); i++ )
-    {
-        _DRAWSPACE_DELETE_( m_pass_slots[i] );
-    }
-    m_pass_slots.clear();
-    */
+    m_drawable.Shutdown();
 }
 
 void PlanetsRenderingAspectImpl::update_shader_params( void ) // for all passes
@@ -283,7 +338,21 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
     CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
     dsstring cam_name = curr_camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();
 
-    _asm nop
+    if(DrawSpace::EntityGraph::EntityNodeGraph::CAMERA_ACTIVE == p_event)
+    {
+        if (m_registered_camerapoints.count(cam_name) > 0)
+        {
+            std::vector<LOD::Body*> planet_bodies;
+
+            for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
+            {
+                LOD::Layer* layer = m_registered_camerapoints[cam_name].layers[i];
+
+                planet_bodies.push_back(layer->GetBody());
+            }
+            m_drawable.SetCurrentPlanetBodies(planet_bodies);
+        }
+    }
 }
 
 void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity)
@@ -348,6 +417,8 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                     reg_camera.type = FREE;
                     reg_camera.attached_body = NULL;
 
+                    create_camera_collisions(reg_camera, false);
+
                     m_registered_camerapoints[camera_name] = reg_camera;
                 }
             }
@@ -360,6 +431,25 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                 m_entities.erase(entity_name);
             }
         }
+    }
+}
+
+LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, int p_dest)
+{
+    LOD::SubPass::EntryInfos ei;
+
+    return ei;
+}
+
+void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate)
+{
+    for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
+    {
+        LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras));    
+        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(&m_config, slod_body, &m_subpass_creation_cb, i));
+
+        p_cameradescr.layers.push_back(layer);
+        m_layers_list.push_back(layer);
     }
 }
 

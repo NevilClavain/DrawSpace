@@ -26,16 +26,20 @@
 #include "lod_binder.h"
 #include "lod_config.h"
 
+#include "entity.h"
 #include "renderer.h"
 #include "plugin.h"
 #include "memalloc.h"
 #include "exceptions.h"
 #include "maths.h"
 
+#include "transformaspect.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Aspect;
 using namespace LOD;
 
 
@@ -395,34 +399,46 @@ bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Utils::Vector& p_
 
 Drawing::Drawing( Config* p_config ) :
 m_renderer( NULL ),
-m_config( p_config )
+m_config( p_config ),
+m_owner_entity( NULL )
 {
-    m_singlenode_draw_handler = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_rendering_singlenode_draw ) );
-
-    if( m_config->m_landplace_patch )
-    {
-        create_all_landplace_meshes();
-    }
 }
 
 Drawing::~Drawing( void )
 {
-    if( m_config->m_landplace_patch )
+}
+
+void Drawing::Startup( Core::Entity* p_entity )
+{
+    m_singlenode_draw_handler = _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_rendering_singlenode_draw));
+
+    if (m_config->m_landplace_patch)
+    {
+        create_all_landplace_meshes();
+    }
+
+    m_owner_entity = p_entity;
+}
+
+void Drawing::Shutdown(void)
+{
+    if (m_config->m_landplace_patch)
     {
         destroy_all_landplace_meshes();
     }
-    _DRAWSPACE_DELETE_( m_singlenode_draw_handler );
+    _DRAWSPACE_DELETE_(m_singlenode_draw_handler);
 
-    for( size_t i = 0; i < m_drawing_handlers.size(); i++ )
+    for (size_t i = 0; i < m_drawing_handlers.size(); i++)
     {
-        _DRAWSPACE_DELETE_( m_drawing_handlers[i] );
+        _DRAWSPACE_DELETE_(m_drawing_handlers[i]);
     }
 
-    for( size_t i = 0; i < m_facedrawingnodes.size(); i++ )
+    for (size_t i = 0; i < m_facedrawingnodes.size(); i++)
     {
-        _DRAWSPACE_DELETE_( m_facedrawingnodes[i] );
+        _DRAWSPACE_DELETE_(m_facedrawingnodes[i]);
     }
 }
+
 
 void Drawing::SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies )
 {
@@ -434,29 +450,6 @@ void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
     m_renderer = p_renderer;
 }
 
-/*
-void Drawing::OnRegister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
-{  
-    for( auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it )
-    {
-        std::pair<Pass*, FaceDrawingNode*> curr_pair = *it;
-        curr_pair.first->GetRenderingQueue()->Add( curr_pair.second );
-    }
-
-    m_scenenodegraph = p_scenegraph;
-}
-
-void Drawing::OnUnregister( DrawSpace::Core::SceneNodeGraph* p_scenegraph, DrawSpace::Core::BaseSceneNode* p_node )
-{
-	for (auto it = m_passesnodes.begin(); it != m_passesnodes.end(); ++it)
-	{
-		std::pair<Pass*, FaceDrawingNode*> curr_pair = *it;
-		curr_pair.first->GetRenderingQueue()->Remove( curr_pair.second );
-	}
-
-	m_scenenodegraph = NULL;
-}
-*/
 
 void Drawing::AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue)
 {
@@ -490,12 +483,17 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix proj;
+    DrawSpace::Utils::Matrix world;
 
-    if( m_scenenodegraph )
+    TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+    if( !transform_aspect )
     {
-        m_scenenodegraph->GetCurrentCameraView( view );
-        m_scenenodegraph->GetCurrentCameraProj( proj );
+        _DSEXCEPTION( "Owner entity has no transform aspect!" );
     }
+
+    transform_aspect->GetViewTransform(view);
+    transform_aspect->GetProjTransform(proj);
+    transform_aspect->GetWorldTransform(world);
 
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
 
@@ -524,7 +522,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     face_node->UpdateRelativeHotPoint( hotpoint );
 
 
-    face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, m_globaltransformation, view, proj, true );
+    face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, world, view, proj, true );
     node_binder->Unbind();
 }
 
@@ -677,11 +675,6 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void ) const
 {
     return m_singlenode_draw_handler;
-}
-
-void Drawing::SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat )
-{
-    m_globaltransformation = p_mat;
 }
 
 void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state )

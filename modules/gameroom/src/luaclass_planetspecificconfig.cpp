@@ -42,6 +42,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_splattingparams", &LuaClass_PlanetSpecificConfig::LUA_setsplattingparams },
     { "set_fogandatmoparams", &LuaClass_PlanetSpecificConfig::LUA_setfogandatmoparams },
     { "set_terrainbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setterrainbumpfactor },
+    { "enable_landplacepatch", &LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch },
     { 0, 0 }
 };
 
@@ -84,6 +85,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("atmo_kr", m_planets_details.atmo_kr);
     entity_rendering_aspect->AddComponent<dsreal>("fog_alt_limit", m_planets_details.fog_alt_limit);
     entity_rendering_aspect->AddComponent<dsreal>("fog_density", m_planets_details.fog_density);
+    entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
 
     return 0;
 }
@@ -115,6 +117,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     entity_rendering_aspect->RemoveComponent<dsreal>("atmo_kr");
     entity_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
     entity_rendering_aspect->RemoveComponent<dsreal>("fog_density");
+    entity_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
 
     return 0;
 }
@@ -214,5 +217,17 @@ int LuaClass_PlanetSpecificConfig::LUA_setterrainbumpfactor(lua_State* p_L)
     }
 
     m_planets_details.terrainbump_factor = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::enable_landplacepatch : argument(s) missing");
+    }
+
+    m_planets_details.enable_landplace_patch = luaL_checkint(p_L, 1);
     return 0;
 }

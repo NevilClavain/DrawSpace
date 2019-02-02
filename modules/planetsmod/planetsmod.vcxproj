@@ -98,6 +98,7 @@
     <ClCompile Include="src\lod_config.cpp" />
     <ClCompile Include="src\lod_drawing.cpp" />
     <ClCompile Include="src\lod_face.cpp" />
+    <ClCompile Include="src\lod_layer.cpp" />
     <ClCompile Include="src\lod_patch.cpp" />
     <ClCompile Include="src\lod_subpass.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="src\lod_config.h" />
     <ClInclude Include="src\lod_drawing.h" />
     <ClInclude Include="src\lod_face.h" />
+    <ClInclude Include="src\lod_layer.h" />
     <ClInclude Include="src\lod_patch.h" />
     <ClInclude Include="src\lod_subpass.h" />
     <ClInclude Include="src\multifractalbinder.h" />

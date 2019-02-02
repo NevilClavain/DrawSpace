@@ -37,8 +37,14 @@
 
 class PlanetDetailsBinder;
 
+namespace LOD
+{
+class Layer;
+}
+
 namespace DrawSpace
 {
+
 namespace Systems
 {
 class Hub;
@@ -52,6 +58,7 @@ protected:
     using SystemsEvtCb      = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
     using CameraEventsCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
     using NodesEventsCb     = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
+    using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, int>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;
@@ -85,9 +92,11 @@ protected:
 
     struct RegisteredCamera
     {
-        dsstring                    camera_name;
-        CameraType                  type;
-        DrawSpace::Core::Entity*    attached_body;
+        dsstring                            camera_name;
+        CameraType                          type;
+        DrawSpace::Core::Entity*            attached_body;
+
+        std::vector<LOD::Layer*>            layers;
     };
 
     std::map<DrawSpace::Core::Entity*, RegisteredBody>              m_registered_bodies;
@@ -101,19 +110,29 @@ protected:
 
     PlanetDetailsBinder*                                            m_planet_detail_binder[6] = { NULL };
 
+    SubPassCreationCb                                               m_subpass_creation_cb;
+
+    std::vector<LOD::Layer*>                                        m_layers_list;
+
+    DrawSpace::Interface::Renderer*                                 m_renderer;
+
     ///////////////////////////////////////////////////////////////////////////
 
-    void            init_rendering_objects(void);
-    void            release_rendering_objects(void);
+    void                        init_rendering_objects(void);
+    void                        release_rendering_objects(void);
 
-    void            update_shader_params(void); // for all passes
+    void                        update_shader_params(void); // for all passes
 
-    void            on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
-    void            on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
-    void            on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
+    void                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
+    void                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
+    void                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
+    LOD::SubPass::EntryInfos    on_subpasscreation(LOD::SubPass* p_pass, int p_dest);
+
+    void                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
    
 public:
     PlanetsRenderingAspectImpl( void );
+    virtual ~PlanetsRenderingAspectImpl(void);
 
     bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
 

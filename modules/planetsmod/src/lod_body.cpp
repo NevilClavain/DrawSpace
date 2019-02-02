@@ -42,8 +42,7 @@ Meshe* Body::m_patch3_meshe = NULL;  // patch terrains moyenne resolution
 Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 
-Body::Body( DrawSpace::Utils::TimeManager* p_time, Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
-m_timemanager( p_time ),
+Body::Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
 m_current_face( -1 ),
 m_current_patch( NULL ),
 m_relative_alt( 0.0 ),
