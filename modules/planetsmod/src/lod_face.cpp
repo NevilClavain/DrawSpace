@@ -737,6 +737,9 @@ void Face::recursive_split( BaseQuadtreeNode* p_currpatch, int p_dest_depth, int
     }
 }
 
+
+// 3/2/2019 : pas sur que ca serve...
+/*
 void Face::Split( int p_depth )
 {
     if( !m_rootpatch )
@@ -745,7 +748,7 @@ void Face::Split( int p_depth )
     }
     recursive_split( m_rootpatch, p_depth, 0 );
 }
-
+*/
 void Face::Reset( void )
 {
     recursive_merge( m_rootpatch );

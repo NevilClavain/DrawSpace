@@ -107,5 +107,6 @@ public:
     void                        Reset( void ); // merge all
 
     static void                 BuildMeshes(void);
+    static void                 DestroyMeshes(void);
 };
 }

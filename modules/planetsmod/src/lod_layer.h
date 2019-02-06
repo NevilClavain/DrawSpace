@@ -43,11 +43,19 @@ protected:
     Body*                              m_body;
     Layer::SubPassCreationHandler*     m_handler;
 
+    bool                               m_hot;
+
+    dsreal                             m_planetray;
+
 public:
     Layer( Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
 
     Body* GetBody(void) const;
     Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
+
+    void Compute(void);
+
+    void SetHotState(bool p_hotstate);
 
 };
 }

@@ -168,6 +168,9 @@ void Root::on_camera_event( DrawSpace::Core::SceneNodeGraph::CameraEvent p_event
 
 void Root::on_nodes_event( DrawSpace::Core::SceneNodeGraph::NodesEvent p_event, DrawSpace::Core::BaseSceneNode* p_node )
 {
+    dsstring debug_name;
+    p_node->GetSceneName(debug_name);
+
     if( SceneNodeGraph::NODE_REGISTERED == p_event )
     {
         SceneNode<InertBody>* inertbody_node = dynamic_cast<SceneNode<InertBody>*>( p_node );

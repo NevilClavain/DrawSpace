@@ -78,7 +78,7 @@ void Body::Compute( void )
 
     for( long i = 0; i < 6; i++ )
     {        
-        bool status = m_faces[i]->ComputeAlignmentFactor();
+        m_faces[i]->ComputeAlignmentFactor();
     }
 
     int curr_face = 0;
@@ -477,6 +477,15 @@ void Body::BuildMeshes( void )
     m_skirt_meshe->SetPath( "sphereLOD skirt_meshe" );
 }
 
+void Body::DestroyMeshes( void )
+{
+    _DRAWSPACE_DELETE_( m_skirt_meshe );
+    _DRAWSPACE_DELETE_(m_patch3_meshe);
+    _DRAWSPACE_DELETE_(m_patch2_meshe);
+    _DRAWSPACE_DELETE_(m_patch_meshe);
+}
+
+
 void Body::RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler )
 {
     m_patchupdate_handlers.push_back( p_handler );
@@ -564,8 +573,6 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
         }
     }
 }
-
-
 
 void Body::Reset( void )
 {

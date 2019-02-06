@@ -129,6 +129,8 @@ protected:
     LOD::SubPass::EntryInfos    on_subpasscreation(LOD::SubPass* p_pass, int p_dest);
 
     void                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
+
+    void                        compute_layers(void);
    
 public:
     PlanetsRenderingAspectImpl( void );

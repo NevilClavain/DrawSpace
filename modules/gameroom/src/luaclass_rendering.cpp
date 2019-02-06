@@ -111,7 +111,7 @@ int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
 
     dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
 
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("*******************Dumping ") << mod_name << dsstring("mem allocs*******************"));
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("*******************Dumping ") << mod_name << dsstring(" mem allocs*******************"));
     lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
     _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
 

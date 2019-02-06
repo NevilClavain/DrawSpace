@@ -128,20 +128,29 @@ public:
     void                                    GetCurrentCubeFaceHotPoint(DrawSpace::Utils::Vector& p_cubeface_hotpoint) const;
     void                                    GetRelativeHotPoint(DrawSpace::Utils::Vector& p_rhotpoint) const;
     
+    // appele par Body::UpdateHotPoint()
     void                                    UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
 
-    void                                    UpdateLODComputationParams( void );
-    void                                    UpdateLODComputationResults( void );
+    // appelé par Body::UpdateRelativeAlt()
     void                                    UpdateRelativeAlt(dsreal p_alt);
 
-    void                                    Compute( void );    
-    bool                                    ComputeAlignmentFactor( void );
+    // appelé par Body::Compute()
+    void                                    UpdateLODComputationParams(void);
+    void                                    UpdateLODComputationResults(void);
+    void                                    Compute( void );
+    bool                                    ComputeAlignmentFactor(void);
+
+
 
     void                                    ResetDisplayList( void );    
     void                                    SetHotState( bool p_hotstate );
 
+    // 3/2/2019 : pas sur que ca serve... 
+    /*
     void                                    Split( int p_depth );
+    */
     void                                    Reset( void ); // merge all
+    
 
 };
 }

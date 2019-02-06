@@ -69,10 +69,14 @@ m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation)
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
+
+    LOD::Body::BuildMeshes();
 }
 
 PlanetsRenderingAspectImpl::~PlanetsRenderingAspectImpl(void)
 {
+    LOD::Body::DestroyMeshes();
+
     for (size_t i = 0; i < m_layers_list.size(); i++)
     {
         LOD::Body* slod_body = m_layers_list[i]->GetBody();
@@ -165,15 +169,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         transform_aspect->GetViewTransform( view );
 
         Matrix proj;
-        transform_aspect->GetProjTransform( proj ); 
-        /*
-        for( size_t i = 0; i < m_pass_slots.size(); i++ )
-        {
-            m_pass_slots[i]->m_world = world;
-            m_pass_slots[i]->m_view = view;
-            m_pass_slots[i]->m_proj = proj;
-        }
-        */
+        transform_aspect->GetProjTransform( proj );
     }
 
     update_shader_params();
@@ -184,6 +180,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 {
     //// retrieve specific config....
+    
 
     dsreal planet_ray = m_owner->GetComponent<dsreal>( "planet_ray")->getPurpose();
     dsreal plains_amplitude = m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose();
@@ -232,8 +229,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
         {
             case DetailsLayer:
 
-                ld.enable_collisions = true;
-                ld.enable_datatextures = true;
+                ld.enable_collisions = false;//true;  // temporaire
+                ld.enable_datatextures = false;//true; // temporaire
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -308,7 +305,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
             }
         }
     }
-
+    
     m_drawable.Startup( m_owner->GetOwnerEntity() );
 
     update_shader_params();
@@ -330,7 +327,17 @@ void PlanetsRenderingAspectImpl::SetHub(Systems::Hub* p_hub)
 
 void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
 {
-    _asm nop
+    if( "TransformSystem" == p_id)
+    {
+        if (DrawSpace::Interface::System::SYSTEM_RUN_BEGIN == p_event)
+        {
+            // apply gravity
+        }
+        else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
+        {
+            compute_layers();
+        }        
+    }
 }
 
 void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity)
@@ -448,6 +455,8 @@ void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspect
         LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras));    
         LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(&m_config, slod_body, &m_subpass_creation_cb, i));
 
+        layer->SetHotState(p_hotstate);
+
         p_cameradescr.layers.push_back(layer);
         m_layers_list.push_back(layer);
     }
@@ -466,4 +475,12 @@ void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph
         m_entitynodegraph->UnregisterNodesEvtHandler( &m_nodes_evt_cb );
     }
     m_entitynodegraph = p_entitynodegraph;
+}
+
+void PlanetsRenderingAspectImpl::compute_layers(void)
+{
+    for(auto& e : m_layers_list)
+    {
+        e->Compute();
+    }
 }

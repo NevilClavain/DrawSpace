@@ -32,8 +32,11 @@ using namespace LOD;
 Layer::Layer(Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index) :
 m_config(p_config),
 m_body(p_body),
-m_handler(p_handler)
+m_handler(p_handler),
+m_hot(false)
 {
+    m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
+    p_body->Initialize();
 }
 
 Body* Layer::GetBody(void) const
@@ -44,4 +47,15 @@ Body* Layer::GetBody(void) const
 Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
 {
     return m_handler;
+}
+
+void Layer::SetHotState(bool p_hotstate)
+{
+    m_hot = p_hotstate;
+    m_body->SetHotState(m_hot);
+}
+
+void Layer::Compute(void)
+{
+
 }
