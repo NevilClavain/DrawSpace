@@ -90,13 +90,17 @@ bool PlanetsRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, D
 {
     bool updated_queue = false;
 
-    if (m_add_in_rendergraph)
+    if(m_passes.count( p_name ))
     {
-        m_drawable.AddInRendergraph(p_name, p_passqueue);
-    }
-    else
-    {
-        m_drawable.RemoveFromRendergraph(p_name, p_passqueue);
+        if (m_add_in_rendergraph)
+        {
+            m_drawable.AddInRendergraph(p_name, p_passqueue);
+        }
+        else
+        {
+            m_drawable.RemoveFromRendergraph(p_name, p_passqueue);
+        }
+        updated_queue = true;
     }
     return updated_queue;
 }
@@ -265,6 +269,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
         for (size_t j = 0; j < layer_passes.size(); j++)
         {
             dsstring pass_id = layer_passes[j];
+            m_passes.insert( pass_id );
 
             Fx* fx = fxs[j];
             int ro = ros[j];

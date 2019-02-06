@@ -116,6 +116,8 @@ protected:
 
     DrawSpace::Interface::Renderer*                                 m_renderer;
 
+    std::set<dsstring>                                              m_passes;
+
     ///////////////////////////////////////////////////////////////////////////
 
     void                        init_rendering_objects(void);
