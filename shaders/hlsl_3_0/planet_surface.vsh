@@ -22,28 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 float4x4 matWorldViewProjection: register(c0);
 float4x4 matWorldView: register(c4);
 float4x4 matWorld : register(c8);
@@ -173,7 +151,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     float4 vertex_pos;
     float4 PositionWV;
 
-
     if (patch_translation.z > 0.0)
     {
         // landplace patch
@@ -244,8 +221,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	
 	    float4 v_position2;	
 	    v_position2.w = 1.0;
-	    v_position2.xyz = CubeToSphere( ProjectVectorToCube( flag0.x, v_position.xyz ) );
+        v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
 
+        
 	    // final scaling
 
 	    v_position3 = v_position2 * flag0.z;	
@@ -258,13 +236,15 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	    float horizon_limit = sqrt( viewer_alt * viewer_alt - flag0.z * flag0.z );
 
 
-
+        
         float4 global_uv = 0.0;
         global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
         global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
         float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+        
 
-	    if( vertex_distance < /*1.015*/ /*2.0*/ 1.05 * horizon_limit )
+        
+	    if( vertex_distance < 1.05 * horizon_limit )
 	    {	
         	
             v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
@@ -278,7 +258,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 			    if( Input.TexCoord0.z == 0.0 )
 			    {
-                    v_position3 *= (1.0 + (/*v_factor * */ (v_alt / flag0.z)));
+                    v_position3 *= (1.0 + ((v_alt / flag0.z)));
                 }
                 else
                 {
@@ -286,6 +266,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
                 }
             }
 	    }
+        
 
 	    v_position3.w = 1.0;
 

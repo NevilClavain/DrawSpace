@@ -234,7 +234,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
             case DetailsLayer:
 
                 ld.enable_collisions = false;//true;  // temporaire
-                ld.enable_datatextures = false;//true; // temporaire
+                ld.enable_datatextures = true; // temporaire
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -294,8 +294,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                     {
                         m_planet_detail_binder[orientation]->SetTexture(pass_textures[stage], stage );
                     }
-
-                    // ICI !!!
 
                     m_drawable.RegisterSinglePassSlot( pass_id, m_planet_detail_binder[i], orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro );
                 }
@@ -389,7 +387,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
             {
                 _DSEXCEPTION("entities with same name not allowed")
             }
-
+            /* temporaire
             if( body_aspect )
             {
                 RegisteredBody reg_body;
@@ -399,6 +397,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
 
                 m_registered_bodies[p_entity] = reg_body;
             }
+            */
 
             if (camera_aspect)
             {

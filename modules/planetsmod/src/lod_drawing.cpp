@@ -288,7 +288,6 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             min_lod_level = curr_lod_level;
         }
 
-
         Patch* ref_patch = m_display_list[i]->GetTextureReferent();
         Texture* refpatchtexture = ref_patch->GetDataTexture();
 
@@ -556,7 +555,7 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
 {
 
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
-    node->m_debug_id = "node";
+    node->m_debug_id = "planet main node";
     m_facedrawingnodes.push_back( node );
 
     FaceDrawingNode* node_skirts = NULL;
