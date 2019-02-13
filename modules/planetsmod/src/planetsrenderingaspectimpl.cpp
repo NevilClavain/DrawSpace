@@ -32,6 +32,7 @@
 #include "hub.h"
 
 #include "planetdetailsbinder.h"
+#include "planetclimatebinder.h"
 #include <functional>
 
 #include "lod_layer.h"
@@ -152,6 +153,7 @@ void PlanetsRenderingAspectImpl::Release(void)
         for (int orientation = 0; orientation < 6; orientation++)
         {
             _DRAWSPACE_DELETE_(m_planet_detail_binder[orientation]);
+            _DRAWSPACE_DELETE_(m_planet_climate_binder[orientation]);
         }
     }
     else
@@ -185,8 +187,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 {
     //// retrieve specific config....
     
-
-    dsreal planet_ray = m_owner->GetComponent<dsreal>( "planet_ray")->getPurpose();
+    dsreal planet_ray = m_owner->GetComponent<dsreal>("planet_ray")->getPurpose();
     dsreal plains_amplitude = m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose();
     dsreal mountains_amplitude = m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose();
     dsreal vertical_offset = m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose();
@@ -204,6 +205,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     dsreal atmo_kr = m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose();
     dsreal fog_alt_limit = m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose();
     dsreal fog_density = m_owner->GetComponent<dsreal>("fog_density")->getPurpose();
+    dsreal beach_limit = m_owner->GetComponent<dsreal>("beach_limit")->getPurpose();
 
     bool enable_landplace_patch = m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose();
 
@@ -234,18 +236,20 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
             case DetailsLayer:
 
                 ld.enable_collisions = false;//true;  // temporaire
-                ld.enable_datatextures = true; // temporaire
+                ld.enable_datatextures = false; // temporaire
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
                 for (int i = 0; i < 6; i++)
                 {
+                    m_planet_climate_binder[i] = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
+                        plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit));
+                        
                     ld.groundCollisionsBinder[i] = NULL;
-                    ld.patchTexturesBinder[i] = NULL;
+                    ld.patchTexturesBinder[i] = m_planet_climate_binder[i];
                 }
 
                 m_config.m_layers_descr.push_back( ld );
-
                 break;
 
             case AtmosphereLayer:

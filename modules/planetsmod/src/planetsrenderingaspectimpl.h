@@ -36,6 +36,7 @@
 #include "lod_drawing.h"
 
 class PlanetDetailsBinder;
+class PlanetClimateBinder;
 
 namespace LOD
 {
@@ -109,6 +110,7 @@ protected:
     LOD::Drawing                                                    m_drawable;
 
     PlanetDetailsBinder*                                            m_planet_detail_binder[6] = { NULL };
+    PlanetClimateBinder*                                            m_planet_climate_binder[6] = { NULL };
 
     SubPassCreationCb                                               m_subpass_creation_cb;
 

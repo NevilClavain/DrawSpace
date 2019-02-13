@@ -342,7 +342,7 @@ void FaceDrawingNode::SetBinder( Binder* p_binder )
 {
     m_binder = p_binder;
 
-    SetFx( p_binder->GetFx() );
+    SetFx( m_binder->GetFx() );
     for( long i = 0; i < RenderingNode::GetTextureListSize(); i++ )
     {
         Texture* texture = p_binder->GetTexture( i );
