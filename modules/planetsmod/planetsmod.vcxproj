@@ -103,6 +103,7 @@
     <ClCompile Include="src\lod_subpass.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\multifractalbinder.cpp" />
+    <ClCompile Include="src\planetclimatebinder.cpp" />
     <ClCompile Include="src\planetdetailsbinder.cpp" />
     <ClCompile Include="src\planetsrenderingaspectimpl.cpp" />
     <ClCompile Include="src\planetsroot.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="src\lod_patch.h" />
     <ClInclude Include="src\lod_subpass.h" />
     <ClInclude Include="src\multifractalbinder.h" />
+    <ClInclude Include="src\planetclimatebinder.h" />
     <ClInclude Include="src\planetdetailsbinder.h" />
     <ClInclude Include="src\planetsrenderingaspectimpl.h" />
     <ClInclude Include="src\planetsroot.h" />

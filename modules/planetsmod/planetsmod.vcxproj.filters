@@ -30,6 +30,7 @@
     <ClCompile Include="src\lod_layer.cpp">
       <Filter>lod</Filter>
     </ClCompile>
+    <ClCompile Include="src\planetclimatebinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\planetsrenderingaspectimpl.h" />
@@ -60,6 +61,7 @@
     <ClInclude Include="src\lod_layer.h">
       <Filter>lod</Filter>
     </ClInclude>
+    <ClInclude Include="src\planetclimatebinder.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="lod">
