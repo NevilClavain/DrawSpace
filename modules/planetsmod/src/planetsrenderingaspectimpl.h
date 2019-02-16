@@ -112,6 +112,10 @@ protected:
     PlanetDetailsBinder*                                            m_planet_detail_binder[6] = { NULL };
     PlanetClimateBinder*                                            m_planet_climate_binder[6] = { NULL };
 
+    DrawSpace::Core::Fx                                             m_climate_fx;
+    DrawSpace::Core::Shader*                                        m_climate_vshader;
+    DrawSpace::Core::Shader*                                        m_climate_pshader;
+
     SubPassCreationCb                                               m_subpass_creation_cb;
 
     std::vector<LOD::Layer*>                                        m_layers_list;

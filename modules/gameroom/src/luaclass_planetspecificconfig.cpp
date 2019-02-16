@@ -35,6 +35,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
 {
     { "apply", &LuaClass_PlanetSpecificConfig::LUA_apply },
     { "cleanup", &LuaClass_PlanetSpecificConfig::LUA_cleanup },
+    { "set_resourcespath", &LuaClass_PlanetSpecificConfig::LUA_setresourcespath },
     { "set_planetray", &LuaClass_PlanetSpecificConfig::LUA_setplanetray },
     { "set_amplitudes", &LuaClass_PlanetSpecificConfig::LUA_setamplitudes },
     { "set_offsets", &LuaClass_PlanetSpecificConfig::LUA_setoffsets },
@@ -43,6 +44,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_fogandatmoparams", &LuaClass_PlanetSpecificConfig::LUA_setfogandatmoparams },
     { "set_terrainbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setterrainbumpfactor },
     { "set_beachlimit", &LuaClass_PlanetSpecificConfig::LUA_setbeachlimit },
+    { "set_climateshaders", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaders },
     { "enable_landplacepatch", &LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch },
     { 0, 0 }
 };
@@ -67,6 +69,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
     DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
 
+    entity_rendering_aspect->AddComponent<dsstring>("resources_path", m_planets_details.resources_path);
     entity_rendering_aspect->AddComponent<dsreal>("planet_ray", m_planets_details.planet_ray);
     entity_rendering_aspect->AddComponent<dsreal>("plains_amplitude", m_planets_details.plains_amplitude);
     entity_rendering_aspect->AddComponent<dsreal>("mountains_amplitude", m_planets_details.mountains_amplitude);
@@ -89,6 +92,9 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("beach_limit", m_planets_details.beach_limit);
     entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
 
+    std::pair<dsstring, dsstring> climate_shaders(m_planets_details.climate_vshader, m_planets_details.climate_pshader);
+    entity_rendering_aspect->AddComponent<std::pair<dsstring,dsstring>>("climate_shaders", climate_shaders);
+
     return 0;
 }
 
@@ -103,6 +109,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
     DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
 
+    entity_rendering_aspect->RemoveComponent<dsstring>("resources_path");
     entity_rendering_aspect->RemoveComponent<dsreal>("planet_ray");
     entity_rendering_aspect->RemoveComponent<dsreal>("plains_amplitude");
     entity_rendering_aspect->RemoveComponent<dsreal>("mountains_amplitude");
@@ -121,10 +128,23 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     entity_rendering_aspect->RemoveComponent<dsreal>("fog_density");
     entity_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
     entity_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
+    entity_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
 
     return 0;
 }
 
+int LuaClass_PlanetSpecificConfig::LUA_setresourcespath(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_resourcespath : argument(s) missing");
+    }
+
+    m_planets_details.resources_path = luaL_checkstring(p_L, 1);
+
+    return 0;
+}
 
 int LuaClass_PlanetSpecificConfig::LUA_setplanetray(lua_State* p_L)
 {
@@ -244,5 +264,19 @@ int LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch(lua_State* p_L)
     }
 
     m_planets_details.enable_landplace_patch = luaL_checkint(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setclimateshaders(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_climateshaders : argument(s) missing");
+    }
+
+    m_planets_details.climate_vshader = luaL_checkstring(p_L, 1);
+    m_planets_details.climate_pshader = luaL_checkstring(p_L, 2);
+
     return 0;
 }

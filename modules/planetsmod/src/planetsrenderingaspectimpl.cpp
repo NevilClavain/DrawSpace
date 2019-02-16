@@ -66,7 +66,9 @@ m_cameras_evt_cb( this, &PlanetsRenderingAspectImpl::on_cameras_event),
 m_nodes_evt_cb( this, &PlanetsRenderingAspectImpl::on_nodes_event),
 m_entitynodegraph(NULL),
 m_drawable(&m_config),
-m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation)
+m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation),
+m_climate_vshader( NULL ),
+m_climate_pshader( NULL )
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
@@ -152,8 +154,24 @@ void PlanetsRenderingAspectImpl::Release(void)
 
         for (int orientation = 0; orientation < 6; orientation++)
         {
-            _DRAWSPACE_DELETE_(m_planet_detail_binder[orientation]);
-            _DRAWSPACE_DELETE_(m_planet_climate_binder[orientation]);
+            if(m_planet_detail_binder[orientation])
+            {
+                _DRAWSPACE_DELETE_(m_planet_detail_binder[orientation]);
+            }            
+            if(m_planet_climate_binder[orientation])
+            {
+                _DRAWSPACE_DELETE_(m_planet_climate_binder[orientation]);
+            }
+        }
+
+        if(m_climate_vshader)
+        {
+            _DRAWSPACE_DELETE_(m_climate_vshader);
+        }
+
+        if (m_climate_pshader)
+        {
+            _DRAWSPACE_DELETE_(m_climate_pshader);
         }
     }
     else
@@ -187,6 +205,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 {
     //// retrieve specific config....
     
+    dsstring shaders_path = m_owner->GetComponent<dsstring>("resources_path")->getPurpose();
+
     dsreal planet_ray = m_owner->GetComponent<dsreal>("planet_ray")->getPurpose();
     dsreal plains_amplitude = m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose();
     dsreal mountains_amplitude = m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose();
@@ -209,6 +229,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     bool enable_landplace_patch = m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose();
 
+    dsstring climate_vshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first;
+    dsstring climate_pshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second;
+
     /////////////////
 
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
@@ -217,6 +240,25 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     std::vector<std::vector<int>> layers_ro = m_owner->GetComponent<std::vector<std::vector<int>>>("layers_ro")->getPurpose();
 
     size_t nb_layers = passes_names_layers.size();
+
+    // setup patch texture fx (subpass) for layer 0 
+
+    Shader::SetRootPath(shaders_path);
+
+    m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, true));
+    m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, true));
+
+    m_climate_vshader->LoadFromFile();
+    m_climate_pshader->LoadFromFile();
+
+    m_climate_fx.AddShader(m_climate_vshader);
+    m_climate_fx.AddShader(m_climate_pshader);
+
+    RenderStatesSet climate_rss;
+    climate_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear"));
+    climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none"));
+
+    m_climate_fx.SetRenderStates(climate_rss);
 
     // complete m_config layers
 
@@ -236,7 +278,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
             case DetailsLayer:
 
                 ld.enable_collisions = false;//true;  // temporaire
-                ld.enable_datatextures = false; // temporaire
+                ld.enable_datatextures = true; // temporaire
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -244,6 +286,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                 {
                     m_planet_climate_binder[i] = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
                         plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit));
+
+                    m_planet_climate_binder[i]->SetFx( &m_climate_fx );
                         
                     ld.groundCollisionsBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = m_planet_climate_binder[i];

@@ -37,24 +37,29 @@ private:
 
     struct PlanetDetails
     {
-        dsreal planet_ray; 
-        dsreal plains_amplitude;
-        dsreal mountains_amplitude; 
-        dsreal vertical_offset;
-        dsreal mountains_offset;
-        dsreal plains_seed1; 
-        dsreal plains_seed2; 
-        dsreal mix_seed1; 
-        dsreal mix_seed2;
-        dsreal terrainbump_factor;
-        dsreal splat_transition_up_relative_alt; 
-        dsreal splat_transition_down_relative_alt;
-        int    splat_texture_resol;
-        dsreal atmo_kr; 
-        dsreal fog_alt_limit; 
-        dsreal fog_density;
-        dsreal beach_limit;
-        bool   enable_landplace_patch;
+        dsstring    resources_path;
+        dsreal      planet_ray; 
+        dsreal      plains_amplitude;
+        dsreal      mountains_amplitude; 
+        dsreal      vertical_offset;
+        dsreal      mountains_offset;
+        dsreal      plains_seed1; 
+        dsreal      plains_seed2; 
+        dsreal      mix_seed1; 
+        dsreal      mix_seed2;
+        dsreal      terrainbump_factor;
+        dsreal      splat_transition_up_relative_alt; 
+        dsreal      splat_transition_down_relative_alt;
+        int         splat_texture_resol;
+        dsreal      atmo_kr; 
+        dsreal      fog_alt_limit; 
+        dsreal      fog_density;
+        dsreal      beach_limit;
+
+        dsstring    climate_vshader;
+        dsstring    climate_pshader;
+
+        bool        enable_landplace_patch;
     };
 
     PlanetDetails m_planets_details;
@@ -67,6 +72,7 @@ public:
     int LUA_apply(lua_State* p_L);
     int LUA_cleanup(lua_State* p_L);
 
+    int LUA_setresourcespath(lua_State* p_L);
     int LUA_setplanetray(lua_State* p_L);
     int LUA_setamplitudes(lua_State* p_L);
     int LUA_setoffsets(lua_State* p_L);
@@ -76,6 +82,7 @@ public:
     int LUA_setterrainbumpfactor(lua_State* p_L);
     int LUA_setbeachlimit(lua_State* p_L);
     int LUA_enablelandplacepatch(lua_State* p_L);
+    int LUA_setclimateshaders(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_PlanetSpecificConfig>::RegType methods[];
