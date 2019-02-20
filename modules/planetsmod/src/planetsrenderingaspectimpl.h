@@ -93,12 +93,24 @@ protected:
 
     struct RegisteredCamera
     {
+        Core::Entity*                       owner_entity; // l'entite possedant l'aspect camera
         dsstring                            camera_name;
         CameraType                          type;
         DrawSpace::Core::Entity*            attached_body;
 
+        bool                                relative_alt_valid;
+        dsreal                              relative_alt;
+
         std::vector<LOD::Layer*>            layers;
     };
+
+    DrawSpace::Core::Entity*                                        m_owner_entity;
+
+    dsreal                                                          m_planet_ray;
+
+    LOD::SubPass::singleshot_subpasses_stack                        m_singleshot_subpasses_stack;
+    LOD::SubPass::singleshot_subpasses                              m_singleshot_subpasses;
+    LOD::SubPass::permanent_subpasses                               m_permanent_subpasses;
 
     std::map<DrawSpace::Core::Entity*, RegisteredBody>              m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
@@ -139,6 +151,10 @@ protected:
     void                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 
     void                        compute_layers(void);
+
+    void                        draw_sub_passes(void);
+
+    void                        manage_camerapoints(void);
    
 public:
     PlanetsRenderingAspectImpl( void );

@@ -54,8 +54,8 @@ public:
     Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
 
     void Compute(void);
-
     void SetHotState(bool p_hotstate);
-
+    void UpdateRelativeAlt(dsreal p_alt);
+    void UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
 };
 }

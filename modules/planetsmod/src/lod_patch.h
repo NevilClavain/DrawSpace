@@ -103,7 +103,7 @@ protected:
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
     void                                    prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_layer_index );
-    void                                    destroy_color_texture( void );
+    //void                                    destroy_color_texture( void );
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
     
 public:
@@ -129,6 +129,8 @@ public:
     void                                SetNeighbour(DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id);
     void                                ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     bool                                IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
+
+    void                                DestroyColorTexture(void);
 
     virtual void                        SubPassDone( void );
 

@@ -98,19 +98,11 @@ public:
                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
                             int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density );
 
-	virtual void Bind( void );
-	virtual void Unbind( void );
-
-
-	void Update(const DrawSpace::Utils::Matrix& p_global_transform);
-
-
 	dsreal inline GetOceansDetailsAlt( void ) const { return m_ocean_details_alt; };
 	PlanetLight inline GetLight( int p_index ) const { return m_lights[p_index]; };
     dsreal inline GetAtmoThickness(void) const { return m_atmoThickness; };
 
     void EnableAtmoRender(bool p_value);
-
     void SetLandscapeBumpFactor( dsreal p_factor );  
     void SetAtmoKr( dsreal p_kr );
     void SetFogAltLimit( dsreal p_fogaltlimit );
@@ -119,5 +111,10 @@ public:
     {
         m_mirror_mode = p_state;
     }
+
+    virtual void Bind(void);
+    virtual void Unbind(void);
+    void Update(const DrawSpace::Utils::Matrix& p_global_transform);
+
 };
 

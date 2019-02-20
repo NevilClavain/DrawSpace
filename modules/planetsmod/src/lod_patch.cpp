@@ -180,7 +180,7 @@ m_nbLODRanges( p_nbLODRanges )
 
 Patch::~Patch( void )
 {
-    destroy_color_texture();
+    //destroy_color_texture();
 }
 
 void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_layer_index )
@@ -220,7 +220,7 @@ void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int 
     }
 }
 
-void Patch::destroy_color_texture( void )
+void Patch::DestroyColorTexture( void )
 {
     // remove texture on renderer side
 
@@ -231,7 +231,6 @@ void Patch::destroy_color_texture( void )
             try
             {
                 remove_entry_from_queue( m_subpass_entry_infos );
-
             } 
             catch( ... )
             {

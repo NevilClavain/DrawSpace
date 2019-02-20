@@ -143,7 +143,8 @@ void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {    
     QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
     
-    Patch* patch = node->GetContent();    
+    Patch* patch = node->GetContent();
+    patch->DestroyColorTexture();
     _DRAWSPACE_DELETE_( patch );
 }
 
@@ -686,7 +687,6 @@ dsreal Face::GetRelativeAltSphere( void ) const
 {
     return m_relative_alt_sphere;
 }
-
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {

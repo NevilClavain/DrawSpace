@@ -59,3 +59,13 @@ void Layer::Compute(void)
 {
 
 }
+
+void Layer::UpdateRelativeAlt(dsreal p_alt)
+{
+    m_body->UpdateRelativeAlt(p_alt);
+}
+
+void Layer::UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos)
+{
+    m_body->UpdateInvariantViewerPos( p_pos );
+}

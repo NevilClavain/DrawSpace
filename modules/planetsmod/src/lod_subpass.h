@@ -34,7 +34,7 @@ class SubPass abstract
 public:
 
     using singleshot_subpasses_stack    = std::list<SubPass*>;
-    using singleshot_subpasses          = std::vector<SubPass*>;
+    using singleshot_subpasses          = std::list<SubPass*>;
     using permanent_subpasses           = std::vector<SubPass*>;
 
     using EntryInfos = struct

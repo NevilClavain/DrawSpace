@@ -355,6 +355,9 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
         // pour eviter la saturation des couleurs dues � l'additivit� 
         final_color.xyz = final_color.xyz / count_lights;
     }
+    // temporaire
+    //final_color.rgb = temp_humidity.rgb;
+    //final_color.a = 1.0;
 
 	return final_color;
 }

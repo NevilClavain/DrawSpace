@@ -133,6 +133,8 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
         {
             e->RegisterSystemEvtHandler(&m_system_evt_cb);
         }
+
+        m_owner_entity = p_entity;
     }
     else
     {
@@ -183,7 +185,6 @@ void PlanetsRenderingAspectImpl::Release(void)
 void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 {
     TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-
     if( transform_aspect )
     {
         Matrix world;        
@@ -194,11 +195,26 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
         Matrix proj;
         transform_aspect->GetProjTransform( proj );
+
+
+
+        for (int orientation = 0; orientation < 6; orientation++)
+        {
+            m_planet_detail_binder[orientation]->Update( world );
+
+        }
+
+    }
+    else
+    {
+        _DSEXCEPTION("Planet must have transform aspect!!!")
     }
 
     update_shader_params();
 
     ////////////////////////////////////////////////////////
+
+    draw_sub_passes();
 }
 
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
@@ -231,6 +247,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     dsstring climate_vshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first;
     dsstring climate_pshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second;
+
+
+    m_planet_ray = planet_ray * 1000.0;
 
     /////////////////
 
@@ -287,6 +306,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                     m_planet_climate_binder[i] = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
                         plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit));
 
+                    m_planet_climate_binder[i]->SetRenderer(m_renderer);
                     m_planet_climate_binder[i]->SetFx( &m_climate_fx );
                         
                     ld.groundCollisionsBinder[i] = NULL;
@@ -336,12 +356,15 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                                                                     splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
                                                                     fog_alt_limit, fog_density) );
                                     
-                    m_planet_detail_binder[i]->SetFx( fx );
-                    m_planet_detail_binder[i]->SetRenderer( m_renderer );
+                    m_planet_detail_binder[orientation]->SetFx( fx );
+                    m_planet_detail_binder[orientation]->SetRenderer( m_renderer );
                     for( size_t stage = 0; stage < pass_textures.size(); stage++ )
                     {
                         m_planet_detail_binder[orientation]->SetTexture(pass_textures[stage], stage );
                     }
+
+                    m_planet_detail_binder[orientation]->EnableAtmoRender( false );
+
 
                     m_drawable.RegisterSinglePassSlot( pass_id, m_planet_detail_binder[i], orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro );
                 }
@@ -387,6 +410,7 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
         else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
         {
             compute_layers();
+            manage_camerapoints();
         }        
     }
 }
@@ -452,6 +476,9 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                 RegisteredCamera reg_camera;
                 dsstring camera_name = camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();                
                 reg_camera.camera_name = camera_name;
+                reg_camera.relative_alt_valid = false;
+
+                reg_camera.owner_entity = p_entity;
 
                 Component<dsstring>* referent_body = infos_aspect->GetComponent<dsstring>("referent_body");
                 if( referent_body )
@@ -493,10 +520,57 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
     }
 }
 
+void PlanetsRenderingAspectImpl::draw_sub_passes(void)
+{
+    for( auto& e : m_singleshot_subpasses)
+    {
+        LOD::SubPass* sp = e;
+        sp->DrawSubPass();
+        sp->SubPassDone();
+    }
+    m_singleshot_subpasses.clear();
+}
+
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, int p_dest)
 {
-    LOD::SubPass::EntryInfos ei;
+    LOD::FaceDrawingNode* node = static_cast<LOD::FaceDrawingNode*>(p_pass->GetNode());
 
+    node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
+
+    // on ajoute le node a la queue directement ici
+    p_pass->GetPass()->GetRenderingQueue()->Add(node);
+    p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+
+    LOD::SubPass::EntryInfos ei;
+    
+    ei.singleshot_subpasses_stack = &m_singleshot_subpasses_stack;
+    ei.singleshot_subpasses = &m_singleshot_subpasses;
+    ei.permanent_subpasses = &m_permanent_subpasses;
+
+    switch (p_dest)
+    {
+        case 0:
+            m_singleshot_subpasses_stack.push_front(p_pass);
+            ei.singleshot_subpasses_stack_position = m_singleshot_subpasses_stack.begin();
+            break;
+
+        case 1:
+            m_singleshot_subpasses.push_back(p_pass);
+            ei.singleshot_subpasses_position = m_singleshot_subpasses.end();
+            --ei.singleshot_subpasses_position;
+            break;
+
+        case 2:
+            m_permanent_subpasses.push_back(p_pass);
+            ei.permanent_subpasses_position = m_permanent_subpasses.end() - 1;
+            break;
+
+        default:
+            _DSEXCEPTION("unknow destination for subpass");
+            break;
+    }
+    ei.queue_id = p_dest;
+    
     return ei;
 }
 
@@ -534,5 +608,58 @@ void PlanetsRenderingAspectImpl::compute_layers(void)
     for(auto& e : m_layers_list)
     {
         e->Compute();
+    }
+}
+
+void PlanetsRenderingAspectImpl::manage_camerapoints(void)
+{
+    Matrix planet_world;
+    TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+    if (transform_aspect)
+    {        
+        transform_aspect->GetWorldTransform(planet_world);
+    }
+    else
+    {
+        _DSEXCEPTION("Planet must have transform aspect!!!")
+    }
+
+    for(auto& camera: m_registered_camerapoints)
+    {
+        if(CameraType::FREE == camera.second.type || CameraType::FREE_ON_PLANET == camera.second.type)
+        {
+            TransformAspect* camera_transform_aspect = camera.second.owner_entity->GetAspect<TransformAspect>();
+
+            if (camera_transform_aspect)
+            {
+                Matrix camera_world;
+                camera_transform_aspect->GetWorldTransform(camera_world);
+
+                DrawSpace::Utils::Vector camera_pos_from_planet;
+                camera_pos_from_planet[0] = camera_world(3, 0) - planet_world(3, 0);
+                camera_pos_from_planet[1] = camera_world(3, 1) - planet_world(3, 1);
+                camera_pos_from_planet[2] = camera_world(3, 2) - planet_world(3, 2);
+                camera_pos_from_planet[3] = 1.0;
+
+                dsreal rel_alt = (camera_pos_from_planet.Length() / m_planet_ray);
+
+                camera.second.relative_alt_valid = true;
+                camera.second.relative_alt = rel_alt;
+
+                for(auto& camera_layer: camera.second.layers)
+                {
+                    camera_layer->UpdateRelativeAlt( rel_alt );
+                    camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
+                }
+            }
+            else
+            {
+                _DSEXCEPTION("Camera must have transform aspect!!!")
+            }
+        }
+        else
+        {
+            // inertbody linked
+        }
     }
 }

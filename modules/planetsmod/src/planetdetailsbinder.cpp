@@ -105,9 +105,9 @@ m_fog_density( p_fog_density )
 	m_lights[0].m_color[1] = 0.99;
 	m_lights[0].m_color[2] = 0.99;
 	m_lights[0].m_color[3] = 1.0;
-	m_lights[0].m_dir[0] = 1.0;
-	m_lights[0].m_dir[1] = 0.0;
-	m_lights[0].m_dir[2] = 0.0;
+	m_lights[0].m_dir[0] = 0.0;
+	m_lights[0].m_dir[1] = 1.0;
+	m_lights[0].m_dir[2] = 1.0;
 	m_lights[0].m_dir[3] = 1.0;
 
 	m_lights[0].m_dir.Normalize();
@@ -137,9 +137,9 @@ m_fog_density( p_fog_density )
 	m_lights[2].m_dir.Normalize();
 
 	m_ambient = false;
-	m_ambient_color[0] = 0.1;
-	m_ambient_color[1] = 0.1;
-	m_ambient_color[2] = 0.1;
+	m_ambient_color[0] = 0.0;
+	m_ambient_color[1] = 0.0;
+	m_ambient_color[2] = 0.0;
 	m_ambient_color[3] = 1.0;
 
 }

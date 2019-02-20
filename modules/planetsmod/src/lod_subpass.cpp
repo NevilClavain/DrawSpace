@@ -63,8 +63,10 @@ void SubPass::remove_entry_from_queue( const EntryInfos& p_entryInfos )
             break;
 
         case 1:
-
-            p_entryInfos.singleshot_subpasses->erase( p_entryInfos.singleshot_subpasses_position );
+            {
+                auto it = p_entryInfos.singleshot_subpasses_position;
+                p_entryInfos.singleshot_subpasses->erase( it );
+            }
             break;
 
         case 2:
