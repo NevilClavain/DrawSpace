@@ -217,6 +217,11 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     draw_sub_passes();
 }
 
+void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
+{
+    _asm nop
+}
+
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 {
     //// retrieve specific config....

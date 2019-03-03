@@ -506,13 +506,9 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
     dsreal valy = luaL_checknumber( p_L, 5 );
     dsreal valz = luaL_checknumber( p_L, 6 );
     dsreal valw = luaL_checknumber( p_L, 7 );
-
-    //dsstring component_name = "renderingimpl_shaders_params/" + pass_id;
     
     LUA_TRY
     {
-        //std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose();
-
         std::vector<std::vector<dsstring>> passes_names_layers = m_entity_rendering_aspect->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
 
         std::vector<dsstring> passes_names = passes_names_layers[rendering_layer_index];
@@ -550,8 +546,6 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
                 it->second.param_values[1] = valy;
                 it->second.param_values[2] = valz;
                 it->second.param_values[3] = valw;
-
-                //m_entity_rendering_aspect->GetComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( component_name )->getPurpose() = pass_shaders_params;
 
                 m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose()[rendering_layer_index][pass_index] = pass_shaders_params;
 

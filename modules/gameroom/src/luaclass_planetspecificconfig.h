@@ -29,6 +29,14 @@
 #include "luna.h"
 #include "misc_utils.h"
 
+namespace DrawSpace
+{
+namespace Aspect
+{
+class RenderingAspect;
+}
+}
+
 class LuaClass_PlanetSpecificConfig
 {
 private:
@@ -64,6 +72,8 @@ private:
 
     PlanetDetails m_planets_details;
 
+    DrawSpace::Aspect::RenderingAspect* m_rendering_aspect;
+
 
 public:
     LuaClass_PlanetSpecificConfig(lua_State* p_L);
@@ -71,6 +81,8 @@ public:
 
     int LUA_apply(lua_State* p_L);
     int LUA_cleanup(lua_State* p_L);
+
+    int LUA_updated(lua_State* p_L);
 
     int LUA_setresourcespath(lua_State* p_L);
     int LUA_setplanetray(lua_State* p_L);

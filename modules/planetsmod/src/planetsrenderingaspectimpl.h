@@ -170,6 +170,9 @@ public:
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
 
+
+    void ComponentsUpdated(void);
+
     virtual void SetHub(Systems::Hub* p_hub);
 };
 }

@@ -68,6 +68,8 @@ public:
     virtual void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph ) {};
     virtual void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph ) {};
 
+    virtual void ComponentsUpdated( void ) {};
+
     virtual bool Init( DrawSpace::Core::Entity* p_entity ) = 0;
     virtual void Release( void ) = 0;
     virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;

@@ -45,6 +45,12 @@ public:
 
 class PlanetDetailsBinder : public MultiFractalBinder
 {
+public:
+
+    bool														m_ambient;
+    DrawSpace::Utils::Vector									m_ambient_color;
+    PlanetLight													m_lights[3];
+
 protected:
 
 	dsreal														m_innerRadius;
@@ -71,10 +77,6 @@ protected:
 	DrawSpace::Utils::Vector									m_atmo_scattering_flags5;
 	DrawSpace::Utils::Vector									m_atmo_scattering_flags6;
 
-	bool														m_ambient;
-	DrawSpace::Utils::Vector									m_ambient_color;
-
-	PlanetLight													m_lights[3];
 
 	DrawSpace::Utils::Matrix									m_planet_final_transform_rots;
 

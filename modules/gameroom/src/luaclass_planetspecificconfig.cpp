@@ -35,6 +35,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
 {
     { "apply", &LuaClass_PlanetSpecificConfig::LUA_apply },
     { "cleanup", &LuaClass_PlanetSpecificConfig::LUA_cleanup },
+    { "updated", &LuaClass_PlanetSpecificConfig::LUA_updated },
     { "set_resourcespath", &LuaClass_PlanetSpecificConfig::LUA_setresourcespath },
     { "set_planetray", &LuaClass_PlanetSpecificConfig::LUA_setplanetray },
     { "set_amplitudes", &LuaClass_PlanetSpecificConfig::LUA_setamplitudes },
@@ -49,7 +50,8 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { 0, 0 }
 };
 
-LuaClass_PlanetSpecificConfig::LuaClass_PlanetSpecificConfig(lua_State* p_L) 
+LuaClass_PlanetSpecificConfig::LuaClass_PlanetSpecificConfig(lua_State* p_L) :
+m_rendering_aspect( NULL )
 {
 }
 
@@ -95,41 +97,55 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     std::pair<dsstring, dsstring> climate_shaders(m_planets_details.climate_vshader, m_planets_details.climate_pshader);
     entity_rendering_aspect->AddComponent<std::pair<dsstring,dsstring>>("climate_shaders", climate_shaders);
 
+    m_rendering_aspect = entity_rendering_aspect;
+
     return 0;
 }
 
 int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
 {
-    int argc = lua_gettop(p_L);
-    if (argc < 1)
+    if (NULL == m_rendering_aspect)
     {
-        LUA_ERROR("PlanetSpecificConfig::cleanup : argument(s) missing");
+        _DSEXCEPTION("rendering aspect not set !!!");
     }
 
-    LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
-    DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
+    m_rendering_aspect->RemoveComponent<dsstring>("resources_path");
+    m_rendering_aspect->RemoveComponent<dsreal>("planet_ray");
+    m_rendering_aspect->RemoveComponent<dsreal>("plains_amplitude");
+    m_rendering_aspect->RemoveComponent<dsreal>("mountains_amplitude");
+    m_rendering_aspect->RemoveComponent<dsreal>("vertical_offset");
+    m_rendering_aspect->RemoveComponent<dsreal>("mountains_offset");
+    m_rendering_aspect->RemoveComponent<dsreal>("plains_seed1");
+    m_rendering_aspect->RemoveComponent<dsreal>("plains_seed2");
+    m_rendering_aspect->RemoveComponent<dsreal>("mix_seed1");
+    m_rendering_aspect->RemoveComponent<dsreal>("mix_seed2");
+    m_rendering_aspect->RemoveComponent<dsreal>("terrainbump_factor");
+    m_rendering_aspect->RemoveComponent<dsreal>("splat_transition_up_relative_alt");
+    m_rendering_aspect->RemoveComponent<dsreal>("splat_transition_down_relative_alt");
+    m_rendering_aspect->RemoveComponent<int>("splat_texture_resol");
+    m_rendering_aspect->RemoveComponent<dsreal>("atmo_kr");
+    m_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
+    m_rendering_aspect->RemoveComponent<dsreal>("fog_density");
+    m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
+    m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
+    m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
 
-    entity_rendering_aspect->RemoveComponent<dsstring>("resources_path");
-    entity_rendering_aspect->RemoveComponent<dsreal>("planet_ray");
-    entity_rendering_aspect->RemoveComponent<dsreal>("plains_amplitude");
-    entity_rendering_aspect->RemoveComponent<dsreal>("mountains_amplitude");
-    entity_rendering_aspect->RemoveComponent<dsreal>("vertical_offset");
-    entity_rendering_aspect->RemoveComponent<dsreal>("mountains_offset");
-    entity_rendering_aspect->RemoveComponent<dsreal>("plains_seed1");
-    entity_rendering_aspect->RemoveComponent<dsreal>("plains_seed2");
-    entity_rendering_aspect->RemoveComponent<dsreal>("mix_seed1");
-    entity_rendering_aspect->RemoveComponent<dsreal>("mix_seed2");
-    entity_rendering_aspect->RemoveComponent<dsreal>("terrainbump_factor");
-    entity_rendering_aspect->RemoveComponent<dsreal>("splat_transition_up_relative_alt");
-    entity_rendering_aspect->RemoveComponent<dsreal>("splat_transition_down_relative_alt");
-    entity_rendering_aspect->RemoveComponent<int>("splat_texture_resol");
-    entity_rendering_aspect->RemoveComponent<dsreal>("atmo_kr");
-    entity_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
-    entity_rendering_aspect->RemoveComponent<dsreal>("fog_density");
-    entity_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
-    entity_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
-    entity_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
+    return 0;
+}
 
+int LuaClass_PlanetSpecificConfig::LUA_updated(lua_State* p_L)
+{
+    if( NULL == m_rendering_aspect )
+    {
+        _DSEXCEPTION( "rendering aspect not set !!!");
+    }
+    m_rendering_aspect->GetComponent<dsstring>("resources_path")->getPurpose() = m_planets_details.resources_path;
+
+    // TODO : completer avec les autres params....
+
+
+    // signaler le chgt d'un ou plusieurs components...
+    m_rendering_aspect->ComponentsUpdated();
     return 0;
 }
 

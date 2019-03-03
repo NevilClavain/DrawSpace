@@ -49,6 +49,8 @@ public:
     void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
     void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
 
+    void ComponentsUpdated(void);
+
 };
 }
 }

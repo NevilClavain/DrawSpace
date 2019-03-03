@@ -94,3 +94,11 @@ void RenderingAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
         e->SetEntityNodeGraph(NULL);
     }
 }
+
+void RenderingAspect::ComponentsUpdated(void)
+{
+    for (auto& e : m_impls)
+    {
+        e->ComponentsUpdated();
+    }
+}
