@@ -45,6 +45,8 @@ private:
 
     struct PlanetDetails
     {
+        using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
+
         dsstring    resources_path;
         dsreal      planet_ray; 
         dsreal      plains_amplitude;
@@ -68,6 +70,9 @@ private:
         dsstring    climate_pshader;
 
         bool        enable_landplace_patch;
+
+        Lights      lights[4];
+
     };
 
     PlanetDetails m_planets_details;
@@ -95,6 +100,10 @@ public:
     int LUA_setbeachlimit(lua_State* p_L);
     int LUA_enablelandplacepatch(lua_State* p_L);
     int LUA_setclimateshaders(lua_State* p_L);
+
+    int LUA_enablelight(lua_State* p_L);
+    int LUA_setlightcolor(lua_State* p_L);
+    int LUA_setlightdir(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_PlanetSpecificConfig>::RegType methods[];

@@ -47,18 +47,27 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_beachlimit", &LuaClass_PlanetSpecificConfig::LUA_setbeachlimit },
     { "set_climateshaders", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaders },
     { "enable_landplacepatch", &LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch },
+    { "enable_light", &LuaClass_PlanetSpecificConfig::LUA_enablelight },
+    { "set_lightcolor", &LuaClass_PlanetSpecificConfig::LUA_setlightcolor },
+    { "set_lightdir", &LuaClass_PlanetSpecificConfig::LUA_setlightdir },
     { 0, 0 }
 };
 
 LuaClass_PlanetSpecificConfig::LuaClass_PlanetSpecificConfig(lua_State* p_L) :
 m_rendering_aspect( NULL )
 {
+    // prepare lights tuple
+    for( int i = 0; i < 4; i++ )
+    {
+        std::array<dsreal, 3> light_color = { 1.0, 1.0, 1.0 };
+        std::array <dsreal, 3> light_dir = { 0.0, 1.0, 0.0 };
+        m_planets_details.lights[i] = std::make_tuple( false, light_color, light_dir);
+    }
 }
 
 LuaClass_PlanetSpecificConfig::~LuaClass_PlanetSpecificConfig(void)
 {
 }
-
 
 int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
 {
@@ -97,6 +106,13 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     std::pair<dsstring, dsstring> climate_shaders(m_planets_details.climate_vshader, m_planets_details.climate_pshader);
     entity_rendering_aspect->AddComponent<std::pair<dsstring,dsstring>>("climate_shaders", climate_shaders);
 
+    std::vector<PlanetDetails::Lights> lights;
+    for( int i = 0; i < 4; i++ )
+    {
+        lights.push_back(m_planets_details.lights[i] );
+    }
+    entity_rendering_aspect->AddComponent<std::vector<PlanetDetails::Lights>>("lights", lights);
+
     m_rendering_aspect = entity_rendering_aspect;
 
     return 0;
@@ -129,6 +145,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
+    m_rendering_aspect->RemoveComponent<std::vector<PlanetDetails::Lights>>("lights");
 
     return 0;
 }
@@ -295,4 +312,62 @@ int LuaClass_PlanetSpecificConfig::LUA_setclimateshaders(lua_State* p_L)
     m_planets_details.climate_pshader = luaL_checkstring(p_L, 2);
 
     return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_enablelight(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetSpecificConfig::enable_light : argument(s) missing");
+    }
+
+    int light_index = luaL_checkint(p_L, 1);
+    bool light_state = luaL_checkint(p_L, 2);
+
+    std::get<0>(m_planets_details.lights[light_index]) = light_state;
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setlightcolor(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_lightcolor : argument(s) missing");
+    }
+
+    int light_index = luaL_checkint(p_L, 1);
+    dsreal r = luaL_checknumber(p_L, 2);
+    dsreal g = luaL_checknumber(p_L, 3);
+    dsreal b = luaL_checknumber(p_L, 4);
+
+    std::array<dsreal, 3> color;
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+    std::get<1>(m_planets_details.lights[light_index]) = color;
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setlightdir(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_lightdir : argument(s) missing");
+    }
+
+    int light_index = luaL_checkint(p_L, 1);
+    dsreal x = luaL_checknumber(p_L, 2);
+    dsreal y = luaL_checknumber(p_L, 3);
+    dsreal z = luaL_checknumber(p_L, 4);
+
+    std::array<dsreal, 3> dir;
+    dir[0] = x;
+    dir[1] = y;
+    dir[2] = z;
+    std::get<2>(m_planets_details.lights[light_index]) = dir;
+    return 0;
+
 }

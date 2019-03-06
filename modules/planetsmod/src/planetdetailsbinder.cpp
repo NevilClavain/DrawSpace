@@ -99,7 +99,7 @@ m_fog_density( p_fog_density )
 	m_atmo_scattering_flags6[2] = 0.78;
 	m_atmo_scattering_flags6[3] = 1.0;
 
-
+    
 	m_lights[0].m_enable = true;
 	m_lights[0].m_color[0] = 1.0;
 	m_lights[0].m_color[1] = 0.99;
