@@ -219,7 +219,52 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 {
-    _asm nop
+    // setup lights...
+    
+    using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
+    std::vector<Lights> lights = m_owner->GetComponent<std::vector<Lights>>("lights")->getPurpose();
+
+    if (4 != lights.size())
+    {
+        _DSEXCEPTION("Planet lights : 4 entry required")
+    }
+
+    Lights ambient = lights[0];
+    Lights dir0 = lights[1];
+    Lights dir1 = lights[2];
+    Lights dir2 = lights[3];
+
+    for (int orientation = 0; orientation < 6; orientation++)
+    {
+        m_planet_detail_binder[orientation]->m_ambient = std::get<0>(ambient);
+        m_planet_detail_binder[orientation]->m_ambient_color[0] = std::get<1>(ambient)[0];
+        m_planet_detail_binder[orientation]->m_ambient_color[1] = std::get<1>(ambient)[1];
+        m_planet_detail_binder[orientation]->m_ambient_color[2] = std::get<1>(ambient)[2];
+
+        m_planet_detail_binder[orientation]->m_lights[0].m_enable = std::get<0>(dir0);
+        m_planet_detail_binder[orientation]->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
+        m_planet_detail_binder[orientation]->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
+        m_planet_detail_binder[orientation]->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
+        m_planet_detail_binder[orientation]->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
+        m_planet_detail_binder[orientation]->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
+        m_planet_detail_binder[orientation]->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
+
+        m_planet_detail_binder[orientation]->m_lights[1].m_enable = std::get<0>(dir1);
+        m_planet_detail_binder[orientation]->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
+        m_planet_detail_binder[orientation]->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
+        m_planet_detail_binder[orientation]->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
+        m_planet_detail_binder[orientation]->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
+        m_planet_detail_binder[orientation]->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
+        m_planet_detail_binder[orientation]->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
+
+        m_planet_detail_binder[orientation]->m_lights[2].m_enable = std::get<0>(dir2);
+        m_planet_detail_binder[orientation]->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
+        m_planet_detail_binder[orientation]->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
+        m_planet_detail_binder[orientation]->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
+        m_planet_detail_binder[orientation]->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
+        m_planet_detail_binder[orientation]->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
+        m_planet_detail_binder[orientation]->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
+    }    
 }
 
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
@@ -377,46 +422,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                     }
 
                     m_planet_detail_binder[orientation]->EnableAtmoRender( false );
-
-
-                    // setup lights...
-
-                    Lights ambient = lights[0];
-                    Lights dir0 = lights[1];
-                    Lights dir1 = lights[2];
-                    Lights dir2 = lights[3];
-
-                    m_planet_detail_binder[orientation]->m_ambient = std::get<0>( ambient );
-                    m_planet_detail_binder[orientation]->m_ambient_color[0] = std::get<1>(ambient)[0];
-                    m_planet_detail_binder[orientation]->m_ambient_color[1] = std::get<1>(ambient)[1];
-                    m_planet_detail_binder[orientation]->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-                    m_planet_detail_binder[orientation]->m_lights[0].m_enable = std::get<0>(dir0);
-                    m_planet_detail_binder[orientation]->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-                    m_planet_detail_binder[orientation]->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-                    m_planet_detail_binder[orientation]->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-                    m_planet_detail_binder[orientation]->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
-                    m_planet_detail_binder[orientation]->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
-                    m_planet_detail_binder[orientation]->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
-
-                    m_planet_detail_binder[orientation]->m_lights[1].m_enable = std::get<0>(dir1);
-                    m_planet_detail_binder[orientation]->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-                    m_planet_detail_binder[orientation]->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-                    m_planet_detail_binder[orientation]->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-                    m_planet_detail_binder[orientation]->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
-                    m_planet_detail_binder[orientation]->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
-                    m_planet_detail_binder[orientation]->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
-
-                    m_planet_detail_binder[orientation]->m_lights[2].m_enable = std::get<0>(dir2);
-                    m_planet_detail_binder[orientation]->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-                    m_planet_detail_binder[orientation]->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-                    m_planet_detail_binder[orientation]->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-                    m_planet_detail_binder[orientation]->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
-                    m_planet_detail_binder[orientation]->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
-                    m_planet_detail_binder[orientation]->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
-
-
-
+                    
                     m_drawable.RegisterSinglePassSlot( pass_id, m_planet_detail_binder[i], orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro );
                 }
             }
@@ -430,6 +436,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
             }
         }
     }
+
+    ComponentsUpdated();
     
     m_drawable.Startup( m_owner->GetOwnerEntity() );
 

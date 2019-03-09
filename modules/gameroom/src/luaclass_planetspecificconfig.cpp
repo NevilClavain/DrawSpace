@@ -156,10 +156,13 @@ int LuaClass_PlanetSpecificConfig::LUA_updated(lua_State* p_L)
     {
         _DSEXCEPTION( "rendering aspect not set !!!");
     }
-    m_rendering_aspect->GetComponent<dsstring>("resources_path")->getPurpose() = m_planets_details.resources_path;
 
-    // TODO : completer avec les autres params....
-
+    std::vector<PlanetDetails::Lights> lights;
+    for (int i = 0; i < 4; i++)
+    {
+        lights.push_back(m_planets_details.lights[i]);
+    }
+    m_rendering_aspect->GetComponent<std::vector<PlanetDetails::Lights>>("lights")->getPurpose() = lights;
 
     // signaler le chgt d'un ou plusieurs components...
     m_rendering_aspect->ComponentsUpdated();
