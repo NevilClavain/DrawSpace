@@ -70,6 +70,7 @@ private:
         dsstring    climate_pshader;
 
         bool        enable_landplace_patch;
+        bool        enable_atmosphere;
 
         Lights      lights[4];
 
@@ -99,6 +100,7 @@ public:
     int LUA_setterrainbumpfactor(lua_State* p_L);
     int LUA_setbeachlimit(lua_State* p_L);
     int LUA_enablelandplacepatch(lua_State* p_L);
+    int LUA_enableatmosphere(lua_State* p_L);
     int LUA_setclimateshaders(lua_State* p_L);
 
     int LUA_enablelight(lua_State* p_L);

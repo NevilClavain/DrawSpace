@@ -91,7 +91,7 @@ m_fog_density( p_fog_density )
 	m_atmo_scattering_flags5[0] = 3.5 * m_atmoThickness; // altitude limite de transition entre xxxfromspace_atmo_scattering et xxxfromatmo_atmo_scattering
 	m_atmo_scattering_flags5[1] = m_fog_alt_limit;//FOG_ALT_LIMIT; // altitude debut d'apparition du fog "sol"
 	m_atmo_scattering_flags5[2] = m_fog_density; // intensite fog "sol"
-	m_atmo_scattering_flags5[3] = 1.0;
+	m_atmo_scattering_flags5[3] = 0.0;
 
 	// couleurs fog "sol"    
 	m_atmo_scattering_flags6[0] = 0.45;

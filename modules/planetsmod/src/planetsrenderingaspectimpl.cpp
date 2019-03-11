@@ -196,14 +196,10 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         Matrix proj;
         transform_aspect->GetProjTransform( proj );
 
-
-
         for (int orientation = 0; orientation < 6; orientation++)
         {
             m_planet_detail_binder[orientation]->Update( world );
-
         }
-
     }
     else
     {
@@ -219,6 +215,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 {
+    bool enable_atmosphere = m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose();
+
     // setup lights...
     
     using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
@@ -233,6 +231,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
     Lights dir0 = lights[1];
     Lights dir1 = lights[2];
     Lights dir2 = lights[3];
+
+    /////////////////////////////////////////////////////////////////////
 
     for (int orientation = 0; orientation < 6; orientation++)
     {
@@ -264,6 +264,9 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         m_planet_detail_binder[orientation]->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
         m_planet_detail_binder[orientation]->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
         m_planet_detail_binder[orientation]->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
+
+
+        m_planet_detail_binder[orientation]->EnableAtmoRender(enable_atmosphere);
     }    
 }
 
@@ -294,6 +297,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     dsreal beach_limit = m_owner->GetComponent<dsreal>("beach_limit")->getPurpose();
 
     bool enable_landplace_patch = m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose();
+    bool enable_atmosphere = m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose();
 
     dsstring climate_vshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first;
     dsstring climate_pshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second;
@@ -421,7 +425,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                         m_planet_detail_binder[orientation]->SetTexture(pass_textures[stage], stage );
                     }
 
-                    m_planet_detail_binder[orientation]->EnableAtmoRender( false );
+                    m_planet_detail_binder[orientation]->EnableAtmoRender( enable_atmosphere );
                     
                     m_drawable.RegisterSinglePassSlot( pass_id, m_planet_detail_binder[i], orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro );
                 }
