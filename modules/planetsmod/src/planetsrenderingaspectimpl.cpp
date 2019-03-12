@@ -178,6 +178,15 @@ void PlanetsRenderingAspectImpl::Release(void)
             }
         }
 
+        for (auto& e : m_planet_atmosphere_binder)
+        {
+            for (auto& e2 : e.second)
+            {
+                PlanetDetailsBinder* binder = e2;
+                _DRAWSPACE_DELETE_(binder);
+            }
+        }
+
 
         if(m_climate_vshader)
         {
@@ -218,6 +227,17 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 e2->Update( world );
             }
         }
+
+        for (auto& e : m_planet_atmosphere_binder)
+        {
+            for (auto& e2 : e.second)
+            {
+                PlanetDetailsBinder* binder = e2;
+
+                e2->Update( world );
+            }
+        }
+
     }
     else
     {
@@ -287,9 +307,44 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             binder->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
             binder->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
 
-
             binder->EnableAtmoRender(enable_atmosphere);
+        }
+    }
 
+    for (auto& e : m_planet_atmosphere_binder)
+    {
+        for (auto& e2 : e.second)
+        {
+            PlanetDetailsBinder* binder = e2;
+
+            binder->m_ambient = std::get<0>(ambient);
+            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
+            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
+            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
+
+            binder->m_lights[0].m_enable = std::get<0>(dir0);
+            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
+            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
+            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
+            binder->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
+            binder->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
+            binder->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
+
+            binder->m_lights[1].m_enable = std::get<0>(dir1);
+            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
+            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
+            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
+            binder->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
+            binder->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
+            binder->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
+
+            binder->m_lights[2].m_enable = std::get<0>(dir2);
+            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
+            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
+            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
+            binder->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
+            binder->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
+            binder->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
         }
     }
 
@@ -406,7 +461,18 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                 break;
 
             case AtmosphereLayer:
-                // pour plus tard...
+                ld.enable_collisions = false;
+                ld.enable_datatextures = false;
+                ld.enable_lod = false;
+                ld.min_lodlevel = 0;
+                ld.ray = planet_ray + 399.0;
+                for (int i = 0; i < 6; i++)
+                {
+                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.patchTexturesBinder[i] = NULL;
+                }
+
+                m_config.m_layers_descr.push_back(ld);
                 break;
 
             case FlatCloudsLayer:
@@ -433,8 +499,15 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
             std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> pass_textures_set = textures_set[j];
 
-            std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures = pass_textures_set[0];
+            //std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures = pass_textures_set[0];
 
+            std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
+            
+            if(pass_textures_set.size() > 0 )
+            {
+                pass_textures = pass_textures_set[0];
+            }
+            
             if(DetailsLayer == i)
             {
                 std::array<PlanetDetailsBinder*, 6> details_binders;
@@ -464,7 +537,25 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
             }
             else if(AtmosphereLayer == i)
             {
-                // pour plus tard...
+                std::array<PlanetDetailsBinder*, 6> atmo_binders;
+
+                for (int orientation = 0; orientation < 6; orientation++)
+                {
+                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, plains_amplitude,
+                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
+                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
+                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
+                        fog_alt_limit, fog_density));
+
+                    binder->SetFx(fx);
+                    binder->SetRenderer(m_renderer);
+
+                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::HIRES_MESHE, AtmosphereLayer, ro);
+                    atmo_binders[orientation] = binder;
+                }
+
+                m_planet_atmosphere_binder[pass_id] = atmo_binders;
+
             }
             else if(FlatCloudsLayer == i)
             {
