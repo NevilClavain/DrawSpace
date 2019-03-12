@@ -121,8 +121,11 @@ protected:
     LOD::Config                                                     m_config;
     LOD::Drawing                                                    m_drawable;
 
-    PlanetDetailsBinder*                                            m_planet_detail_binder[6] = { NULL };
-    PlanetClimateBinder*                                            m_planet_climate_binder[6] = { NULL };
+    std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
+
+    //PlanetClimateBinder*                                            m_planet_climate_binder[6] = { NULL };
+
+    std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;
 
     DrawSpace::Core::Fx                                             m_climate_fx;
     DrawSpace::Core::Shader*                                        m_climate_vshader;

@@ -154,17 +154,30 @@ void PlanetsRenderingAspectImpl::Release(void)
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
 
+        /*
         for (int orientation = 0; orientation < 6; orientation++)
         {
-            if(m_planet_detail_binder[orientation])
-            {
-                _DRAWSPACE_DELETE_(m_planet_detail_binder[orientation]);
-            }            
             if(m_planet_climate_binder[orientation])
             {
                 _DRAWSPACE_DELETE_(m_planet_climate_binder[orientation]);
             }
         }
+        */
+
+        for (auto& e : m_planet_climate_binder)
+        {
+            _DRAWSPACE_DELETE_( e );
+        }
+
+        for (auto& e : m_planet_detail_binder)
+        {
+            for (auto& e2 : e.second)
+            {
+                PlanetDetailsBinder* binder = e2;
+                _DRAWSPACE_DELETE_(binder);
+            }
+        }
+
 
         if(m_climate_vshader)
         {
@@ -196,9 +209,14 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         Matrix proj;
         transform_aspect->GetProjTransform( proj );
 
-        for (int orientation = 0; orientation < 6; orientation++)
+        for (auto& e : m_planet_detail_binder)
         {
-            m_planet_detail_binder[orientation]->Update( world );
+            for (auto& e2 : e.second)
+            {
+                PlanetDetailsBinder* binder = e2;
+
+                e2->Update( world );
+            }
         }
     }
     else
@@ -232,42 +250,49 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
     Lights dir1 = lights[2];
     Lights dir2 = lights[3];
 
-    /////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-    for (int orientation = 0; orientation < 6; orientation++)
+    for (auto& e : m_planet_detail_binder)
     {
-        m_planet_detail_binder[orientation]->m_ambient = std::get<0>(ambient);
-        m_planet_detail_binder[orientation]->m_ambient_color[0] = std::get<1>(ambient)[0];
-        m_planet_detail_binder[orientation]->m_ambient_color[1] = std::get<1>(ambient)[1];
-        m_planet_detail_binder[orientation]->m_ambient_color[2] = std::get<1>(ambient)[2];
+        for (auto& e2 : e.second)
+        {
+            PlanetDetailsBinder* binder = e2;
 
-        m_planet_detail_binder[orientation]->m_lights[0].m_enable = std::get<0>(dir0);
-        m_planet_detail_binder[orientation]->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-        m_planet_detail_binder[orientation]->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-        m_planet_detail_binder[orientation]->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-        m_planet_detail_binder[orientation]->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
-        m_planet_detail_binder[orientation]->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
-        m_planet_detail_binder[orientation]->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
+            binder->m_ambient = std::get<0>(ambient);
+            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
+            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
+            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
 
-        m_planet_detail_binder[orientation]->m_lights[1].m_enable = std::get<0>(dir1);
-        m_planet_detail_binder[orientation]->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-        m_planet_detail_binder[orientation]->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-        m_planet_detail_binder[orientation]->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-        m_planet_detail_binder[orientation]->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
-        m_planet_detail_binder[orientation]->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
-        m_planet_detail_binder[orientation]->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
+            binder->m_lights[0].m_enable = std::get<0>(dir0);
+            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
+            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
+            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
+            binder->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
+            binder->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
+            binder->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
 
-        m_planet_detail_binder[orientation]->m_lights[2].m_enable = std::get<0>(dir2);
-        m_planet_detail_binder[orientation]->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-        m_planet_detail_binder[orientation]->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-        m_planet_detail_binder[orientation]->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-        m_planet_detail_binder[orientation]->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
-        m_planet_detail_binder[orientation]->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
-        m_planet_detail_binder[orientation]->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
+            binder->m_lights[1].m_enable = std::get<0>(dir1);
+            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
+            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
+            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
+            binder->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
+            binder->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
+            binder->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
+
+            binder->m_lights[2].m_enable = std::get<0>(dir2);
+            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
+            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
+            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
+            binder->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
+            binder->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
+            binder->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
 
 
-        m_planet_detail_binder[orientation]->EnableAtmoRender(enable_atmosphere);
-    }    
+            binder->EnableAtmoRender(enable_atmosphere);
+
+        }
+    }
+
 }
 
 void PlanetsRenderingAspectImpl::init_rendering_objects( void )
@@ -365,14 +390,16 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                 ld.ray = planet_ray;
                 for (int i = 0; i < 6; i++)
                 {
-                    m_planet_climate_binder[i] = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
+                    PlanetClimateBinder* binder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
                         plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit));
 
-                    m_planet_climate_binder[i]->SetRenderer(m_renderer);
-                    m_planet_climate_binder[i]->SetFx( &m_climate_fx );
-                        
+                    binder->SetRenderer(m_renderer);
+                    binder->SetFx(&m_climate_fx);
+
                     ld.groundCollisionsBinder[i] = NULL;
-                    ld.patchTexturesBinder[i] = m_planet_climate_binder[i];
+                    ld.patchTexturesBinder[i] = binder;
+
+                    m_planet_climate_binder[i] = binder;
                 }
 
                 m_config.m_layers_descr.push_back( ld );
@@ -410,25 +437,30 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
             if(DetailsLayer == i)
             {
+                std::array<PlanetDetailsBinder*, 6> details_binders;
+
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    m_planet_detail_binder[orientation] = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, plains_amplitude,
-                                                                    mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                                                                    mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                                                                    splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                                                                    fog_alt_limit, fog_density) );
-                                    
-                    m_planet_detail_binder[orientation]->SetFx( fx );
-                    m_planet_detail_binder[orientation]->SetRenderer( m_renderer );
-                    for( size_t stage = 0; stage < pass_textures.size(); stage++ )
+                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, plains_amplitude,
+                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
+                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
+                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
+                        fog_alt_limit, fog_density));
+
+                    binder->SetFx(fx);
+                    binder->SetRenderer(m_renderer);
+                    for (size_t stage = 0; stage < pass_textures.size(); stage++)
                     {
-                        m_planet_detail_binder[orientation]->SetTexture(pass_textures[stage], stage );
+                        binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_planet_detail_binder[orientation]->EnableAtmoRender( enable_atmosphere );
-                    
-                    m_drawable.RegisterSinglePassSlot( pass_id, m_planet_detail_binder[i], orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro );
+                    binder->EnableAtmoRender(enable_atmosphere);
+
+                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);                    
+                    details_binders[orientation] = binder;
                 }
+
+                m_planet_detail_binder[pass_id] = details_binders;
             }
             else if(AtmosphereLayer == i)
             {
