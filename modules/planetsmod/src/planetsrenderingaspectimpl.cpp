@@ -287,25 +287,25 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
             binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
             binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
+            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
+            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
+            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
 
             binder->m_lights[1].m_enable = std::get<0>(dir1);
             binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
             binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
             binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
+            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
+            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
+            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
 
             binder->m_lights[2].m_enable = std::get<0>(dir2);
             binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
             binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
             binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
+            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
+            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
+            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
 
             binder->EnableAtmoRender(enable_atmosphere);
         }
@@ -326,25 +326,25 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
             binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
             binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = std::get<2>(dir0)[2];
+            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
+            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
+            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
 
             binder->m_lights[1].m_enable = std::get<0>(dir1);
             binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
             binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
             binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = std::get<2>(dir1)[2];
+            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
+            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
+            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
 
             binder->m_lights[2].m_enable = std::get<0>(dir2);
             binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
             binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
             binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = std::get<2>(dir2)[2];
+            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
+            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
+            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
         }
     }
 
