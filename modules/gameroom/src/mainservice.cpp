@@ -458,7 +458,7 @@ void MainService::create_console_quad( void )
     quad_node->GetFx()->GetShader( 1 )->LoadFromFile();
 
     quad_node->AddShaderParameter( 1, "color", 0 );
-    quad_node->SetShaderRealVector( "color", Vector( 0.5, 0.5, 0.5, 0.75 ) );
+    quad_node->SetShaderRealVector( "color", Vector( 0.05, 0.05, 0.85, 0.55 ) );
 
     RenderStatesSet quadpass_rss;
 
