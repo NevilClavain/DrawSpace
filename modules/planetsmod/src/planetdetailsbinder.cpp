@@ -29,7 +29,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, 
+PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,
                                             dsreal p_mountains_offset,
                                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
@@ -52,8 +52,7 @@ m_fog_density( p_fog_density )
 	m_groundfromspace_ESun = 24.0;
 	m_groundfromatmo_ESun = 12.0;
 
-    m_atmoThickness = 0.03 * p_planetRay;
-
+    m_atmoThickness = p_atmoThickness;
 
 	m_innerRadius = p_planetRay;
 	m_outerRadius = p_planetRay + m_atmoThickness;

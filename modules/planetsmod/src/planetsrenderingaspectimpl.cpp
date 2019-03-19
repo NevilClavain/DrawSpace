@@ -357,6 +357,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     dsstring shaders_path = m_owner->GetComponent<dsstring>("resources_path")->getPurpose();
 
     dsreal planet_ray = m_owner->GetComponent<dsreal>("planet_ray")->getPurpose();
+    dsreal atmo_thickness = m_owner->GetComponent<dsreal>("atmo_thickness")->getPurpose();
     dsreal plains_amplitude = m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose();
     dsreal mountains_amplitude = m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose();
     dsreal vertical_offset = m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose();
@@ -465,7 +466,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
                 ld.min_lodlevel = 0;
-                ld.ray = planet_ray + 399.0;
+                ld.ray = planet_ray + atmo_thickness;
                 for (int i = 0; i < 6; i++)
                 {
                     ld.groundCollisionsBinder[i] = NULL;
@@ -514,7 +515,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, plains_amplitude,
+                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
@@ -541,7 +542,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, plains_amplitude,
+                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,

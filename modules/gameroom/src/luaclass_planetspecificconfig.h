@@ -49,6 +49,7 @@ private:
 
         dsstring    resources_path;
         dsreal      planet_ray; 
+        dsreal      atmo_thickness;
         dsreal      plains_amplitude;
         dsreal      mountains_amplitude; 
         dsreal      vertical_offset;
@@ -92,6 +93,7 @@ public:
 
     int LUA_setresourcespath(lua_State* p_L);
     int LUA_setplanetray(lua_State* p_L);
+    int LUA_setatmothickness(lua_State* p_L);
     int LUA_setamplitudes(lua_State* p_L);
     int LUA_setoffsets(lua_State* p_L);
     int LUA_setseeds(lua_State* p_L);
