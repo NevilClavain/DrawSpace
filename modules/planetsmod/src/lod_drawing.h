@@ -80,6 +80,8 @@ protected:
 
     DrawSpace::Utils::Vector            m_relativehotpoint;
 
+    dsstring                            m_current_body_description; // for debug purpose only
+
     void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
@@ -96,6 +98,9 @@ public:
                 const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, bool p_bind_ht_texture );
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
+
+
+    void SetCurrentBodyDescription( const dsstring& p_descr );
     
     void GetStats( Stats& p_stats );
 

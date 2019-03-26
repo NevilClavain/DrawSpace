@@ -424,10 +424,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     // complete m_config layers
 
-    m_config.m_landplace_patch = enable_landplace_patch;
-    m_config.m_ground_layer = 0;
-    m_config.m_lod0base = 19000.0;
-    m_config.m_ground_layer = 0;
+    m_config.m_landplace_patch = enable_landplace_patch;    
+    m_config.m_lod0base = 19000.0;    
     m_config.m_nbLODRanges_inertBodies = 15;
     m_config.m_nbLODRanges_freeCameras = 14;
 
@@ -444,6 +442,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
+                ld.description = "Details Layer";
                 for (int i = 0; i < 6; i++)
                 {
                     PlanetClimateBinder* binder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
@@ -467,6 +466,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
                 ld.enable_lod = false;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray + atmo_thickness;
+                ld.description = "Atmosphere Layer";
                 for (int i = 0; i < 6; i++)
                 {
                     ld.groundCollisionsBinder[i] = NULL;
@@ -597,6 +597,7 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
         else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
         {
             compute_layers();
+            manage_bodies();
             manage_camerapoints();
         }        
     }
@@ -646,17 +647,30 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
             {
                 _DSEXCEPTION("entities with same name not allowed")
             }
-            /* temporaire
+
             if( body_aspect )
             {
                 RegisteredBody reg_body;
-            
+
+                reg_body.relative_alt_valid = false;
+
+                for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
+                {
+                    LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_inertBodies, m_config.m_layers_descr[i].description));
+                    LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(&m_config, slod_body, &m_subpass_creation_cb, i));
+
+                    layer->SetHotState(false);
+                    m_layers_list.push_back(layer);
+                    reg_body.layers.push_back(layer);
+
+                    
+                }
 
                 //...
 
                 m_registered_bodies[p_entity] = reg_body;
             }
-            */
+
 
             if (camera_aspect)
             {
@@ -677,6 +691,8 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                     if (m_entities.count(referent_body_name))
                     {
                         reg_camera.attached_body = m_entities.at(referent_body_name);
+                        
+                        reg_camera.layers = m_registered_bodies[reg_camera.attached_body].layers;
                     }
                     else
                     {
@@ -765,7 +781,7 @@ void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspect
 {
     for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
     {
-        LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras));    
+        LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras, m_config.m_layers_descr[i].description));
         LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(&m_config, slod_body, &m_subpass_creation_cb, i));
 
         layer->SetHotState(p_hotstate);
@@ -798,6 +814,63 @@ void PlanetsRenderingAspectImpl::compute_layers(void)
     }
 }
 
+void PlanetsRenderingAspectImpl::manage_bodies(void)
+{
+    Matrix planet_world;
+    TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+    if (transform_aspect)
+    {
+        transform_aspect->GetWorldTransform(planet_world);
+    }
+    else
+    {
+        _DSEXCEPTION("Planet must have transform aspect!!!")
+    }
+
+    DrawSpace::Utils::Vector planetbodypos;
+    planetbodypos[0] = planet_world(3, 0);
+    planetbodypos[1] = planet_world(3, 1);
+    planetbodypos[2] = planet_world(3, 2);
+
+
+    for (auto& body : m_registered_bodies)
+    {
+        LOD::Layer* layer = body.second.layers[DetailsLayer];
+
+        Matrix body_world;
+
+        TransformAspect* body_transform_aspect = body.first->GetAspect<TransformAspect>();
+        if (body_transform_aspect)
+        {
+            body_transform_aspect->GetWorldTransform(body_world);
+        }
+        else
+        {
+            _DSEXCEPTION("Body must have transform aspect!!!")
+        }
+
+        Vector body_pos;
+        body_pos[0] = body_world(3, 0);
+        body_pos[1] = body_world(3, 1);
+        body_pos[2] = body_world(3, 2);
+
+        Vector delta;
+
+        delta[0] = body_pos[0] - planetbodypos[0];
+        delta[1] = body_pos[1] - planetbodypos[1];
+        delta[2] = body_pos[2] - planetbodypos[2];
+        delta[3] = 1.0;
+
+        dsreal rel_alt = delta.Length() / m_planet_ray;
+
+        body.second.relative_alt_valid = true;
+        body.second.relative_alt = rel_alt;
+
+        layer->UpdateRelativeAlt(rel_alt);
+        layer->UpdateInvariantViewerPos( delta );
+    }
+}
+
 void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 {
     Matrix planet_world;
@@ -813,40 +886,36 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 
     for(auto& camera: m_registered_camerapoints)
     {
-        if(CameraType::FREE == camera.second.type || CameraType::FREE_ON_PLANET == camera.second.type)
+        // process all type of cameras 
+
+        TransformAspect* camera_transform_aspect = camera.second.owner_entity->GetAspect<TransformAspect>();
+
+        if (camera_transform_aspect)
         {
-            TransformAspect* camera_transform_aspect = camera.second.owner_entity->GetAspect<TransformAspect>();
+            Matrix camera_world;
+            camera_transform_aspect->GetWorldTransform(camera_world);
 
-            if (camera_transform_aspect)
+            DrawSpace::Utils::Vector camera_pos_from_planet;
+            camera_pos_from_planet[0] = camera_world(3, 0) - planet_world(3, 0);
+            camera_pos_from_planet[1] = camera_world(3, 1) - planet_world(3, 1);
+            camera_pos_from_planet[2] = camera_world(3, 2) - planet_world(3, 2);
+            camera_pos_from_planet[3] = 1.0;
+
+            dsreal rel_alt = (camera_pos_from_planet.Length() / m_planet_ray);
+
+            camera.second.relative_alt_valid = true;
+            camera.second.relative_alt = rel_alt;
+
+            for(auto& camera_layer: camera.second.layers)
             {
-                Matrix camera_world;
-                camera_transform_aspect->GetWorldTransform(camera_world);
-
-                DrawSpace::Utils::Vector camera_pos_from_planet;
-                camera_pos_from_planet[0] = camera_world(3, 0) - planet_world(3, 0);
-                camera_pos_from_planet[1] = camera_world(3, 1) - planet_world(3, 1);
-                camera_pos_from_planet[2] = camera_world(3, 2) - planet_world(3, 2);
-                camera_pos_from_planet[3] = 1.0;
-
-                dsreal rel_alt = (camera_pos_from_planet.Length() / m_planet_ray);
-
-                camera.second.relative_alt_valid = true;
-                camera.second.relative_alt = rel_alt;
-
-                for(auto& camera_layer: camera.second.layers)
-                {
-                    camera_layer->UpdateRelativeAlt( rel_alt );
-                    camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
-                }
-            }
-            else
-            {
-                _DSEXCEPTION("Camera must have transform aspect!!!")
+                camera_layer->UpdateRelativeAlt( rel_alt );
+                camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
             }
         }
         else
         {
-            // inertbody linked
+            _DSEXCEPTION("Camera must have transform aspect!!!")
         }
+
     }
 }

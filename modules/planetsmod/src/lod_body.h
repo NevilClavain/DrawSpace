@@ -69,6 +69,8 @@ protected:
 
     DrawSpace::Utils::Vector                                                    m_invariant_viewerpos; //relatif au centre planete
 
+    dsstring                                                                    m_description; // for debug purpose only;
+
     void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
     static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt );
@@ -81,7 +83,7 @@ public:
     static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 
-    Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges );
+    Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description );
 
     virtual ~Body( void );
 
@@ -92,6 +94,8 @@ public:
     int                         GetCurrentFace(void) const;
     void                        GetInvariantViewerPos(DrawSpace::Utils::Vector& p_pos) const;
     dsreal                      GetDiameter(void) const;
+
+    dsstring                    GetDescription(void) const;
 
     
     void                        Initialize(void);

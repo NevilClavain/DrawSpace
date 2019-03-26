@@ -68,6 +68,12 @@ void FaceDrawingNode::SetDrawPatchMode( DrawPatchMode p_mode )
     m_drawpatch_mode = p_mode;
 }
 
+
+void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
+{
+    m_current_body_description = p_descr;
+}
+
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
@@ -121,9 +127,6 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         global_uvcoords[1] = patch_scale * ( global_uvcoords[1] - middle_y ) + middle_y;
         global_uvcoords[3] = patch_scale * ( global_uvcoords[3] - middle_y ) + middle_y;
     }
-
-
-
 
     Vector view_pos = p_invariant_view_pos;
 
@@ -473,6 +476,8 @@ void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core:
 }
 
 
+
+
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 {
     if( 0 == m_planetbodies.size() )
@@ -505,6 +510,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
  
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
+    face_node->SetCurrentBodyDescription( planetbody->GetDescription() );
 
     Binder* node_binder = face_node->GetBinder();
     node_binder->Bind();
@@ -527,6 +533,11 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
 void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
+    if (0 == m_planetbodies.size())
+    {
+        return;
+    }
+
     DrawSpace::Utils::Matrix world;
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix proj;

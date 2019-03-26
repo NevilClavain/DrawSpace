@@ -49,6 +49,5 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 	}
 
 	color.w = point_alt;
-
 	return color;	
 }

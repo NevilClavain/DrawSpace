@@ -42,11 +42,12 @@ Meshe* Body::m_patch3_meshe = NULL;  // patch terrains moyenne resolution
 Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 
-Body::Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
+Body::Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description) :
 m_current_face( -1 ),
 m_current_patch( NULL ),
 m_relative_alt( 0.0 ),
-m_config( p_config )
+m_config( p_config ),
+m_description(p_description)
 {
     m_enable_cdlod = p_config->m_layers_descr[p_layer_index].enable_lod;
     m_diameter = 1000.0 * m_config->m_layers_descr[p_layer_index].ray * 2.0;
@@ -542,6 +543,11 @@ Face* Body::GetFace( int p_faceid ) const
 dsreal Body::GetDiameter(void) const
 {
     return m_diameter;
+}
+
+dsstring Body::GetDescription(void) const
+{
+    return m_description;
 }
 
 void Body::SetHotState( bool p_hotstate )

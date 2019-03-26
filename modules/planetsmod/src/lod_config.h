@@ -37,15 +37,16 @@ public:
 
     using LayerDescriptor = struct
     {
-        bool    enable_collisions;
-        bool    enable_datatextures;
-        bool    enable_lod;
-        long    min_lodlevel;  // valable si enable_lod == true
-        dsreal  ray;
+        bool        enable_collisions;
+        bool        enable_datatextures;
+        bool        enable_lod;
+        long        min_lodlevel;  // valable si enable_lod == true
+        dsreal      ray;
 
-        Binder* groundCollisionsBinder[6];
-        Binder* patchTexturesBinder[6];
-    
+        Binder*     groundCollisionsBinder[6];
+        Binder*     patchTexturesBinder[6];
+
+        dsstring    description; // for debug purpose only;
     };
 
     double                          m_lod0base;
@@ -53,7 +54,7 @@ public:
     int                             m_nbLODRanges_inertBodies;
 
     std::vector<LayerDescriptor>    m_layers_descr;
-    int                             m_ground_layer;  // index dans m_layers_descr
+
 
     bool                            m_landplace_patch;
 

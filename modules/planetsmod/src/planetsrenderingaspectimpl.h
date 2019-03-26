@@ -88,7 +88,10 @@ protected:
 
     struct RegisteredBody
     {
-    
+        bool                                relative_alt_valid;
+        dsreal                              relative_alt;
+
+        std::vector<LOD::Layer*>            layers;
     };
 
     struct RegisteredCamera
@@ -158,6 +161,7 @@ protected:
     void                        draw_sub_passes(void);
 
     void                        manage_camerapoints(void);
+    void                        manage_bodies(void);
    
 public:
     PlanetsRenderingAspectImpl( void );
