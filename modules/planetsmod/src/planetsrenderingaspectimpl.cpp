@@ -835,39 +835,43 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
 
     for (auto& body : m_registered_bodies)
     {
-        LOD::Layer* layer = body.second.layers[DetailsLayer];
-
-        Matrix body_world;
-
-        TransformAspect* body_transform_aspect = body.first->GetAspect<TransformAspect>();
-        if (body_transform_aspect)
+        for(auto& e : body.second.layers) 
         {
-            body_transform_aspect->GetWorldTransform(body_world);
+            //LOD::Layer* layer = body.second.layers[DetailsLayer];
+            LOD::Layer* layer = e;
+
+            Matrix body_world;
+
+            TransformAspect* body_transform_aspect = body.first->GetAspect<TransformAspect>();
+            if (body_transform_aspect)
+            {
+                body_transform_aspect->GetWorldTransform(body_world);
+            }
+            else
+            {
+                _DSEXCEPTION("Body must have transform aspect!!!")
+            }
+
+            Vector body_pos;
+            body_pos[0] = body_world(3, 0);
+            body_pos[1] = body_world(3, 1);
+            body_pos[2] = body_world(3, 2);
+
+            Vector delta;
+
+            delta[0] = body_pos[0] - planetbodypos[0];
+            delta[1] = body_pos[1] - planetbodypos[1];
+            delta[2] = body_pos[2] - planetbodypos[2];
+            delta[3] = 1.0;
+
+            dsreal rel_alt = delta.Length() / m_planet_ray;
+
+            body.second.relative_alt_valid = true;
+            body.second.relative_alt = rel_alt;
+
+            layer->UpdateRelativeAlt(rel_alt);
+            layer->UpdateInvariantViewerPos( delta );
         }
-        else
-        {
-            _DSEXCEPTION("Body must have transform aspect!!!")
-        }
-
-        Vector body_pos;
-        body_pos[0] = body_world(3, 0);
-        body_pos[1] = body_world(3, 1);
-        body_pos[2] = body_world(3, 2);
-
-        Vector delta;
-
-        delta[0] = body_pos[0] - planetbodypos[0];
-        delta[1] = body_pos[1] - planetbodypos[1];
-        delta[2] = body_pos[2] - planetbodypos[2];
-        delta[3] = 1.0;
-
-        dsreal rel_alt = delta.Length() / m_planet_ray;
-
-        body.second.relative_alt_valid = true;
-        body.second.relative_alt = rel_alt;
-
-        layer->UpdateRelativeAlt(rel_alt);
-        layer->UpdateInvariantViewerPos( delta );
     }
 }
 
