@@ -596,7 +596,6 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
         }
         else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
         {
-            compute_layers();
             manage_bodies();
             manage_camerapoints();
         }        
@@ -806,14 +805,6 @@ void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph
     m_entitynodegraph = p_entitynodegraph;
 }
 
-void PlanetsRenderingAspectImpl::compute_layers(void)
-{
-    for(auto& e : m_layers_list)
-    {
-        e->Compute();
-    }
-}
-
 void PlanetsRenderingAspectImpl::manage_bodies(void)
 {
     Matrix planet_world;
@@ -837,7 +828,6 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
     {
         for(auto& e : body.second.layers) 
         {
-            //LOD::Layer* layer = body.second.layers[DetailsLayer];
             LOD::Layer* layer = e;
 
             Matrix body_world;
@@ -871,6 +861,15 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
 
             layer->UpdateRelativeAlt(rel_alt);
             layer->UpdateInvariantViewerPos( delta );
+
+            // ICI
+            /*
+            if( rel_alt < 4.2 )
+            {
+                layer->SetHotState(true);
+            }
+            
+            */
         }
     }
 }

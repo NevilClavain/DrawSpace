@@ -55,11 +55,6 @@ void Layer::SetHotState(bool p_hotstate)
     m_body->SetHotState(m_hot);
 }
 
-void Layer::Compute(void)
-{
-
-}
-
 void Layer::UpdateRelativeAlt(dsreal p_alt)
 {
     m_body->UpdateRelativeAlt(p_alt);

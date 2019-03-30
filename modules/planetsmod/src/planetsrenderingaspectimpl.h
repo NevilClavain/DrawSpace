@@ -156,8 +156,6 @@ protected:
 
     void                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 
-    void                        compute_layers(void);
-
     void                        draw_sub_passes(void);
 
     void                        manage_camerapoints(void);
