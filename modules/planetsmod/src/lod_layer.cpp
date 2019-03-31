@@ -44,6 +44,11 @@ Body* Layer::GetBody(void) const
     return m_body;
 }
 
+bool Layer::GetHostState(void) const
+{
+    return m_hot;
+}
+
 Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
 {
     return m_handler;
@@ -63,4 +68,9 @@ void Layer::UpdateRelativeAlt(dsreal p_alt)
 void Layer::UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos)
 {
     m_body->UpdateInvariantViewerPos( p_pos );
+}
+
+void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
+{
+    m_body->UpdateHotPoint( p_vector );
 }

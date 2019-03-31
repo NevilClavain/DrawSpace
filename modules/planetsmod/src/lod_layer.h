@@ -39,22 +39,25 @@ public:
 
 protected:
 
-    Config*                            m_config;
-    Body*                              m_body;
-    Layer::SubPassCreationHandler*     m_handler;
+    Config*                             m_config;
+    Body*                               m_body;
+    Layer::SubPassCreationHandler*      m_handler;
 
-    bool                               m_hot;
+    bool                                m_hot;
 
-    dsreal                             m_planetray;
+    dsreal                              m_planetray;
+
 
 public:
     Layer( Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
 
     Body* GetBody(void) const;
+    bool  GetHostState(void) const;
     Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
 
     void SetHotState(bool p_hotstate);
     void UpdateRelativeAlt(dsreal p_alt);
     void UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
+    void UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
 };
 }

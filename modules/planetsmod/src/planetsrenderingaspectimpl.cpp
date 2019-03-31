@@ -823,7 +823,6 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
     planetbodypos[1] = planet_world(3, 1);
     planetbodypos[2] = planet_world(3, 2);
 
-
     for (auto& body : m_registered_bodies)
     {
         for(auto& e : body.second.layers) 
@@ -861,15 +860,16 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
 
             layer->UpdateRelativeAlt(rel_alt);
             layer->UpdateInvariantViewerPos( delta );
-
-            // ICI
-            /*
+            
             if( rel_alt < 4.2 )
             {
                 layer->SetHotState(true);
             }
-            
-            */
+
+            if(layer->GetHostState())
+            {
+                layer->UpdateHotPoint(delta);
+            }                   
         }
     }
 }
@@ -913,6 +913,14 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             {
                 camera_layer->UpdateRelativeAlt( rel_alt );
                 camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
+
+
+                if (camera_layer->GetHostState())
+                {
+                    // si hot, c'est une camera de type FREE_ON_PLANET
+                    // donc faire un UpdateHotPoint
+                    camera_layer->UpdateHotPoint(camera_pos_from_planet);
+                }
             }
         }
         else
