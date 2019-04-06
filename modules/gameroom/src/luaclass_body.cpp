@@ -26,6 +26,7 @@
 #include "luaclass_body.h"
 #include "luaclass_entity.h"
 #include "luaclass_matrix.h"
+#include "luaclass_vector.h"
 
 #include "mainservice.h"
 
@@ -46,7 +47,10 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_attitude", &LuaClass_Body::LUA_configureattitude },
     { "configure_mass", &LuaClass_Body::LUA_configuremass },
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
+    { "configure_force", &LuaClass_Body::LUA_configureforce },
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
+    { "update_force", &LuaClass_Body::LUA_updateforce },
+    { "update_forcestate", &LuaClass_Body::LUA_updateforcestate },
 
     { "release", &LuaClass_Body::LUA_release },
 	{ 0, 0 }
@@ -230,6 +234,26 @@ int LuaClass_Body::LUA_configuremass( lua_State* p_L )
     return 0;
 }
 
+int LuaClass_Body::LUA_configureforce(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("Body::configure_force : argument(s) missing");
+    }
+
+    dsstring forceid = luaL_checkstring(p_L, 1);
+
+    LuaClass_Vector* lua_vec = Luna<LuaClass_Vector>::check(p_L, 2);
+
+    int forcemode = luaL_checkint(p_L, 3);
+    bool enabled = luaL_checkint(p_L, 4);
+
+    m_entity_body_aspect->AddComponent<BodyAspect::Force>(forceid, lua_vec->getVector(), (BodyAspect::Force::Mode)forcemode, enabled);
+
+    return 0;
+}
+
 int LuaClass_Body::LUA_configuremode( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
@@ -253,7 +277,7 @@ int LuaClass_Body::LUA_configuremode( lua_State* p_L )
 int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 )
+	if( argc < 2 )
 	{
         LUA_ERROR( "Body::update_attitude : argument(s) missing" );
 	}
@@ -268,6 +292,46 @@ int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
 
     return 0;
 }
+
+int LuaClass_Body::LUA_updateforce(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Body::update_force : argument(s) missing");
+    }
+
+    dsstring forceid = luaL_checkstring(p_L, 1);
+    LuaClass_Vector* lua_vec = Luna<LuaClass_Vector>::check(p_L, 2);
+    
+    m_entity_body_aspect->GetComponent< BodyAspect::Force>(forceid)->getPurpose().UpdateForce(lua_vec->getVector());
+
+    return 0;
+}
+
+int LuaClass_Body::LUA_updateforcestate(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Body::update_forcestate : argument(s) missing");
+    }
+
+    dsstring forceid = luaL_checkstring(p_L, 1);
+    bool enabled = luaL_checkint(p_L, 2);
+    
+    if(enabled)
+    {
+        m_entity_body_aspect->GetComponent< BodyAspect::Force>(forceid)->getPurpose().Enable();
+    }
+    else
+    {
+        m_entity_body_aspect->GetComponent< BodyAspect::Force>(forceid)->getPurpose().Disable();
+    }
+
+    return 0;
+}
+
 
 int LuaClass_Body::LUA_release( lua_State* p_L )
 {

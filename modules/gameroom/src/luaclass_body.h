@@ -51,8 +51,13 @@ public:
     int LUA_configureshape( lua_State* p_L );
     int LUA_configureattitude( lua_State* p_L );
     int LUA_configuremass( lua_State* p_L );
+    int LUA_configureforce( lua_State* p_L );
+
     int LUA_configuremode( lua_State* p_L );
+
     int LUA_updateattitude( lua_State* p_L );
+    int LUA_updateforce(lua_State* p_L);
+    int LUA_updateforcestate(lua_State* p_L);
 
     int LUA_release( lua_State* p_L );
 
