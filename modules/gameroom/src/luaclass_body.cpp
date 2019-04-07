@@ -51,6 +51,7 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
     { "update_force", &LuaClass_Body::LUA_updateforce },
     { "update_forcestate", &LuaClass_Body::LUA_updateforcestate },
+    { "zero_speed", &LuaClass_Body::LUA_zerospeed },
 
     { "release", &LuaClass_Body::LUA_release },
 	{ 0, 0 }
@@ -106,6 +107,9 @@ int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
     // add bool component for contact state
     m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
 
+    // add bool component for linear speed stop
+    m_entity_body_aspect->AddComponent<bool>("stop_linear_speed", false);
+
     return 0;
 }
 
@@ -117,6 +121,7 @@ int LuaClass_Body::LUA_detachfromentity( lua_State* p_L )
     }
 
     m_entity_body_aspect->RemoveComponent<bool>( "contact_state" );
+    m_entity_body_aspect->RemoveComponent<bool>("stop_linear_speed");
 
     m_entity_transform_aspect->RemoveImplementation();
 
@@ -250,6 +255,7 @@ int LuaClass_Body::LUA_configureforce(lua_State* p_L)
     bool enabled = luaL_checkint(p_L, 4);
 
     m_entity_body_aspect->AddComponent<BodyAspect::Force>(forceid, lua_vec->getVector(), (BodyAspect::Force::Mode)forcemode, enabled);
+    m_forces_id.push_back(forceid);
 
     return 0;
 }
@@ -332,6 +338,12 @@ int LuaClass_Body::LUA_updateforcestate(lua_State* p_L)
     return 0;
 }
 
+int LuaClass_Body::LUA_zerospeed(lua_State* p_L)
+{
+    m_entity_body_aspect->GetComponent<bool>("stop_linear_speed")->getPurpose() = true;
+    return 0;
+}
+
 
 int LuaClass_Body::LUA_release( lua_State* p_L )
 {
@@ -345,27 +357,19 @@ int LuaClass_Body::LUA_release( lua_State* p_L )
        switch( m_shape_type )
        {
             case 0: // SHAPE_BOX
-            {
-                //m_entity_body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( xdim, ydim, zdim, 1.0 ) );
-                
+            {                
                 m_entity_body_aspect->RemoveComponent<BodyAspect::BoxCollisionShape>( "shape" );
             }
             break;
 
             case 1: // SHAPE_SPHERE
             {
-
-                //m_entity_body_aspect->AddComponent<BodyAspect::SphereCollisionShape>( "shape", ray );
-
                 m_entity_body_aspect->RemoveComponent<BodyAspect::SphereCollisionShape>( "shape" );
             }
             break;
 
             case 2: // SHAPE_MESHE
             {
-
-                //m_entity_body_aspect->AddComponent<BodyAspect::MesheCollisionShape>( "shape", m_meshe );
-
                 m_entity_body_aspect->RemoveComponent<BodyAspect::MesheCollisionShape>( "shape" );
                 m_meshe.ClearTriangles();
                 m_meshe.ClearVertices();
@@ -374,6 +378,12 @@ int LuaClass_Body::LUA_release( lua_State* p_L )
        }
 
        m_shape_type = -1;
+    }
+
+    // release forces
+    for(auto& e : m_forces_id)
+    {
+        m_entity_body_aspect->RemoveComponent<Matrix>(e);
     }
 
     if( m_attitude_setted )

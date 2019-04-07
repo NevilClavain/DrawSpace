@@ -410,63 +410,77 @@ void BodyAspect::Update( void )
 
     if( m_motionState && BODY == m_mode )
     {
-        ComponentList<Force> forces;
-        GetComponentsByType<Force>( forces );
+        ComponentList<bool> flags;
+        GetComponentsByType<bool>(flags);
 
-        for( size_t i = 0; i < forces.size(); ++i )
+        bool& stop_linear_speed = flags[1]->getPurpose();
+
+        if(stop_linear_speed)
         {
-            Force applied_force = forces[i]->getPurpose();
-
-            if( applied_force.m_enabled )
-            {
-                Vector force_v = applied_force.m_force_dir;
-                force_v.Scale( applied_force.m_force_scale );
-
-                Vector final_force_v;
-        
-                if( Force::LOCALE == applied_force.m_mode )
-                {
-                    Matrix local_rot = local_transf;
-                    local_rot.ClearTranslation();
-                    local_rot.Transform( &force_v, &final_force_v );            
-                }
-                else
-                {
-                    final_force_v = force_v;
-                }
-
-                m_rigidBody->applyForce( btVector3( final_force_v[0], final_force_v[1], final_force_v[2] ), 
-                                            btVector3( 0.0, 0.0, 0.0 ) );
-            }
+            m_rigidBody->setLinearVelocity(btVector3(0.0, 0.0, 0.0));
+            stop_linear_speed = false;
         }
-
-        ComponentList<Torque> torques;
-        GetComponentsByType<Torque>( torques );
-
-        for( size_t i = 0; i < torques.size(); ++i )
+        else
         {
-            Torque applied_torque = torques[i]->getPurpose();
+            ComponentList<Force> forces;
+            GetComponentsByType<Force>( forces );
 
-            if( applied_torque.m_enabled )
+            for( size_t i = 0; i < forces.size(); ++i )
             {
-                Vector torque_v = applied_torque.m_torque_axis;
-                torque_v.Scale( applied_torque.m_torque_scale );
+                Force applied_force = forces[i]->getPurpose();
 
-                Vector final_torque_v;
+                if( applied_force.m_enabled )
+                {
+                    Vector force_v = applied_force.m_force_dir;
+                    force_v.Scale( applied_force.m_force_scale );
+
+                    Vector final_force_v;
         
-                if( Torque::LOCALE == applied_torque.m_mode )
-                {
-                    Matrix local_rot = local_transf;
-                    local_rot.ClearTranslation();
-                    local_rot.Transform( &torque_v, &final_torque_v );            
-                }
-                else
-                {
-                    final_torque_v = torque_v;
-                }
+                    if( Force::LOCALE == applied_force.m_mode )
+                    {
+                        Matrix local_rot = local_transf;
+                        local_rot.ClearTranslation();
+                        local_rot.Transform( &force_v, &final_force_v );            
+                    }
+                    else
+                    {
+                        final_force_v = force_v;
+                    }
 
-                m_rigidBody->applyTorque( btVector3( final_torque_v[0], final_torque_v[1], final_torque_v[2] ) );
+                    m_rigidBody->applyForce( btVector3( final_force_v[0], final_force_v[1], final_force_v[2] ), 
+                                                btVector3( 0.0, 0.0, 0.0 ) );
+                }
             }
+
+            ComponentList<Torque> torques;
+            GetComponentsByType<Torque>( torques );
+
+            for( size_t i = 0; i < torques.size(); ++i )
+            {
+                Torque applied_torque = torques[i]->getPurpose();
+
+                if( applied_torque.m_enabled )
+                {
+                    Vector torque_v = applied_torque.m_torque_axis;
+                    torque_v.Scale( applied_torque.m_torque_scale );
+
+                    Vector final_torque_v;
+        
+                    if( Torque::LOCALE == applied_torque.m_mode )
+                    {
+                        Matrix local_rot = local_transf;
+                        local_rot.ClearTranslation();
+                        local_rot.Transform( &torque_v, &final_torque_v );            
+                    }
+                    else
+                    {
+                        final_torque_v = torque_v;
+                    }
+
+                    m_rigidBody->applyTorque( btVector3( final_torque_v[0], final_torque_v[1], final_torque_v[2] ) );
+                }
+            }
+
         }
     }
 

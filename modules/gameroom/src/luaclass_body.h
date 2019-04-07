@@ -43,6 +43,8 @@ private:
     bool                                    m_attitude_setted;
     bool                                    m_mass_setted;
 
+    std::vector<dsstring>                   m_forces_id;
+
 public:
 
     int LUA_attachtoentity( lua_State* p_L );
@@ -58,6 +60,8 @@ public:
     int LUA_updateattitude( lua_State* p_L );
     int LUA_updateforce(lua_State* p_L);
     int LUA_updateforcestate(lua_State* p_L);
+
+    int LUA_zerospeed(lua_State* p_L);
 
     int LUA_release( lua_State* p_L );
 
