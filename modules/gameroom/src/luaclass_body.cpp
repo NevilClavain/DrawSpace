@@ -47,11 +47,19 @@ const Luna<LuaClass_Body>::RegType LuaClass_Body::methods[] =
     { "configure_attitude", &LuaClass_Body::LUA_configureattitude },
     { "configure_mass", &LuaClass_Body::LUA_configuremass },
     { "configure_mode", &LuaClass_Body::LUA_configuremode },
+
     { "configure_force", &LuaClass_Body::LUA_configureforce },
+    { "configure_torque", &LuaClass_Body::LUA_configuretorque },
+
     { "update_attitude", &LuaClass_Body::LUA_updateattitude },
     { "update_force", &LuaClass_Body::LUA_updateforce },
     { "update_forcestate", &LuaClass_Body::LUA_updateforcestate },
+
+    { "update_torce", &LuaClass_Body::LUA_updatetorque },
+    { "update_torquestate", &LuaClass_Body::LUA_updatetorquestate },
+
     { "zero_speed", &LuaClass_Body::LUA_zerospeed },
+    { "zero_angularespeed", &LuaClass_Body::LUA_zeroangularspeed },
 
     { "release", &LuaClass_Body::LUA_release },
 	{ 0, 0 }
@@ -110,6 +118,10 @@ int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
     // add bool component for linear speed stop
     m_entity_body_aspect->AddComponent<bool>("stop_linear_speed", false);
 
+    // add bool component for angular speed stop
+    m_entity_body_aspect->AddComponent<bool>("stop_angular_speed", false);
+
+
     return 0;
 }
 
@@ -122,6 +134,7 @@ int LuaClass_Body::LUA_detachfromentity( lua_State* p_L )
 
     m_entity_body_aspect->RemoveComponent<bool>( "contact_state" );
     m_entity_body_aspect->RemoveComponent<bool>("stop_linear_speed");
+    m_entity_body_aspect->RemoveComponent<bool>("stop_angular_speed");
 
     m_entity_transform_aspect->RemoveImplementation();
 
@@ -260,6 +273,27 @@ int LuaClass_Body::LUA_configureforce(lua_State* p_L)
     return 0;
 }
 
+int LuaClass_Body::LUA_configuretorque(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("Body::configure_torque : argument(s) missing");
+    }
+
+    dsstring torqueid = luaL_checkstring(p_L, 1);
+
+    LuaClass_Vector* lua_vec = Luna<LuaClass_Vector>::check(p_L, 2);
+
+    int torquemode = luaL_checkint(p_L, 3);
+    bool enabled = luaL_checkint(p_L, 4);
+
+    m_entity_body_aspect->AddComponent<BodyAspect::Torque>(torqueid, lua_vec->getVector(), (BodyAspect::Torque::Mode)torquemode, enabled);
+    m_torques_id.push_back(torqueid);
+
+    return 0;
+}
+
 int LuaClass_Body::LUA_configuremode( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
@@ -310,7 +344,7 @@ int LuaClass_Body::LUA_updateforce(lua_State* p_L)
     dsstring forceid = luaL_checkstring(p_L, 1);
     LuaClass_Vector* lua_vec = Luna<LuaClass_Vector>::check(p_L, 2);
     
-    m_entity_body_aspect->GetComponent< BodyAspect::Force>(forceid)->getPurpose().UpdateForce(lua_vec->getVector());
+    m_entity_body_aspect->GetComponent<BodyAspect::Force>(forceid)->getPurpose().UpdateForce(lua_vec->getVector());
 
     return 0;
 }
@@ -328,19 +362,66 @@ int LuaClass_Body::LUA_updateforcestate(lua_State* p_L)
     
     if(enabled)
     {
-        m_entity_body_aspect->GetComponent< BodyAspect::Force>(forceid)->getPurpose().Enable();
+        m_entity_body_aspect->GetComponent<BodyAspect::Force>(forceid)->getPurpose().Enable();
     }
     else
     {
-        m_entity_body_aspect->GetComponent< BodyAspect::Force>(forceid)->getPurpose().Disable();
+        m_entity_body_aspect->GetComponent<BodyAspect::Force>(forceid)->getPurpose().Disable();
     }
 
     return 0;
 }
 
+
+int LuaClass_Body::LUA_updatetorque(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Body::update_torque : argument(s) missing");
+    }
+
+    dsstring torqueid = luaL_checkstring(p_L, 1);
+    LuaClass_Vector* lua_vec = Luna<LuaClass_Vector>::check(p_L, 2);
+
+    m_entity_body_aspect->GetComponent<BodyAspect::Torque>(torqueid)->getPurpose().UpdateForce(lua_vec->getVector());
+
+    return 0;
+}
+
+int LuaClass_Body::LUA_updatetorquestate(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Body::update_torquestate : argument(s) missing");
+    }
+
+    dsstring torqueid = luaL_checkstring(p_L, 1);
+    bool enabled = luaL_checkint(p_L, 2);
+
+    if (enabled)
+    {
+        m_entity_body_aspect->GetComponent<BodyAspect::Torque>(torqueid)->getPurpose().Enable();
+    }
+    else
+    {
+        m_entity_body_aspect->GetComponent<BodyAspect::Torque>(torqueid)->getPurpose().Disable();
+    }
+
+    return 0;
+}
+
+
 int LuaClass_Body::LUA_zerospeed(lua_State* p_L)
 {
     m_entity_body_aspect->GetComponent<bool>("stop_linear_speed")->getPurpose() = true;
+    return 0;
+}
+
+int LuaClass_Body::LUA_zeroangularspeed(lua_State* p_L)
+{
+    m_entity_body_aspect->GetComponent<bool>("stop_angular_speed")->getPurpose() = true;
     return 0;
 }
 
@@ -380,11 +461,16 @@ int LuaClass_Body::LUA_release( lua_State* p_L )
        m_shape_type = -1;
     }
 
-    // release forces
+    // release forces & torques
     for(auto& e : m_forces_id)
     {
         m_entity_body_aspect->RemoveComponent<Matrix>(e);
     }
+    for (auto& e : m_torques_id)
+    {
+        m_entity_body_aspect->RemoveComponent<Matrix>(e);
+    }
+
 
     if( m_attitude_setted )
     {
