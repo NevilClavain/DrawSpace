@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Button" name="Button_Pause" >
+            <Property name="Area" value="{{0,390},{0,15},{0,511},{0,53}}" />
+            <Property name="Text" value="Pause" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_x1" >
+            <Property name="Area" value="{{0,515},{0,15},{0,602},{0,53}}" />
+            <Property name="Text" value="x1" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_x5" >
+            <Property name="Area" value="{{0,605},{0,15},{0,692},{0,53}}" />
+            <Property name="Text" value="x5" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_x20" >
+            <Property name="Area" value="{{0,695},{0,15},{0,782},{0,53}}" />
+            <Property name="Text" value="x20" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_x100" >
+            <Property name="Area" value="{{0,785},{0,15},{0,872},{0,53}}" />
+            <Property name="Text" value="x100" />
+        </Window>
+    </Window>
+</GUILayout>

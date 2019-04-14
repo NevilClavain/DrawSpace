@@ -2,6 +2,7 @@
 <Project CEGUIDefaultResolution="1440x810" CEGUIVersion="0.8" baseDirectory="." fontsPath="fonts" imagesetsPath="imagesets" layoutsPath="layouts" looknfeelsPath="looknfeel" schemesPath="schemes" version="CEED Project 1" xmlSchemasPath="xml_schemas">
     <Items>
         <Item path="fonts/AudioWide-Regular-12.font" type="file" />
+        <Item path="layouts/planetfogatmosetup.layout" type="file" />
         <Item path="layouts/planetgroundsetup.layout" type="file" />
         <Item path="layouts/planetseedssetup.layout" type="file" />
         <Item path="layouts/planetsetup.layout" type="file" />
@@ -11,6 +12,6 @@
         <Item path="imagesets/xfskin.imageset" type="file" />
         <Item path="looknfeel/xfskin.looknfeel" type="file" />
         <Item path="schemes/xfskin.scheme" type="file" />
-        <Item path="layouts/planetfogatmosetup.layout" type="file" />
+        <Item path="layouts/timecontrol.layout" type="file" />
     </Items>
 </Project>
