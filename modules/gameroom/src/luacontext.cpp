@@ -206,7 +206,7 @@ void LuaContext::RemoveCallback( lua_State* p_L, const std::function<int(const s
     int reffunc = p_unregister_func( cbid );
     if( -1 == reffunc )
     {
-        LUA_ERROR( "RemoveCallback : unknown callback id" );
+        LUA_ERROR( "RemoveCallback : unknown callback id :" + cbid);
     }
     else
     {
