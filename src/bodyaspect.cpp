@@ -412,19 +412,22 @@ void BodyAspect::Update( void )
         ComponentList<bool> flags;
         GetComponentsByType<bool>(flags);
 
-        bool& stop_linear_speed = flags[1]->getPurpose();
-        bool& stop_angular_speed = flags[2]->getPurpose();
-
-        if(stop_linear_speed)
+        if( flags.size() >= 3 )
         {
-            m_rigidBody->setLinearVelocity(btVector3(0.0, 0.0, 0.0));
-            stop_linear_speed = false;
-        }
+            bool& stop_linear_speed = flags[1]->getPurpose();
+            bool& stop_angular_speed = flags[2]->getPurpose();
 
-        if(stop_angular_speed)
-        {
-            m_rigidBody->setAngularVelocity(btVector3(0.0, 0.0, 0.0));
-            stop_angular_speed = false;
+            if(stop_linear_speed)
+            {
+                m_rigidBody->setLinearVelocity(btVector3(0.0, 0.0, 0.0));
+                stop_linear_speed = false;
+            }
+
+            if(stop_angular_speed)
+            {
+                m_rigidBody->setAngularVelocity(btVector3(0.0, 0.0, 0.0));
+                stop_angular_speed = false;
+            }
         }
 
         ComponentList<Force> forces;

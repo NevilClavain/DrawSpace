@@ -904,8 +904,7 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
     body_aspect->AddComponent<BodyAspect::Torque>( "torque_neg", Vector( 0.0, -7.0, 0.0, 1.0 ) );
 
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
-
-    body_aspect->AddComponent<bool>( "enable", true );
+    
     body_aspect->AddComponent<bool>( "contact_state", false );
 
     TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
@@ -928,6 +927,78 @@ void MainLoopService::create_skybox( void )
     
     rendering_aspect->AddImplementation( m_skyboxRender );
 
+
+
+    ////////////// noms des passes
+    std::vector<std::vector<dsstring>>                                                          passes_names_layers = { {"texture_pass"} };
+
+    ////////////// 6 jeux de 32 textures stages
+
+
+    ///////////////// jeux de textures pour chaque passes
+    //std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
+
+    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
+
+    std::array<std::array<Texture*, RenderingNode::NbMaxTextures>, 6> textures = { NULL };
+    textures[0][0] = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
+    textures[1][0] = _DRAWSPACE_NEW_(Texture, Texture("sb2.bmp"));
+    textures[2][0] = _DRAWSPACE_NEW_(Texture, Texture("sb3.bmp"));
+    textures[3][0] = _DRAWSPACE_NEW_(Texture, Texture("sb1.bmp"));
+    textures[4][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
+    textures[5][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
+
+    for (int i = 0; i < 6; i++)
+    {
+        textures[i][0]->LoadFromFile();
+        skybox_textures.push_back(textures[i]);
+    }
+
+    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { {skybox_textures} };
+
+    /////////////// les FX pour chaque passes
+
+    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
+
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+
+    skybox_texturepass_fx->GetShader(0)->LoadFromFile();
+    skybox_texturepass_fx->GetShader(1)->LoadFromFile();
+
+    RenderStatesSet skybox_texturepass_rss;
+    skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    skybox_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+    skybox_texturepass_fx->SetRenderStates(skybox_texturepass_rss);
+
+   
+    std::vector<std::vector<Fx*>>                                                               layers_fx = { { skybox_texturepass_fx } };
+
+
+    /////////// params shaders
+
+    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = {
+                                                                                                                            {
+                                                                                                                              {}
+                                                                                                                            }
+    };
+
+    //////////////// valeur du rendering order pour chaque slot pass
+
+    std::vector<std::vector<int>>                                                               layers_ro = { {-1000} };
+
+
+
+    rendering_aspect->AddComponent<std::vector<std::vector<dsstring>>>("passes", passes_names_layers);
+    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
+    rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
+    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
+    rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
+
+
+
+    /*
     ////////////// noms des passes
 
     std::vector<dsstring> skybox_passes;
@@ -983,6 +1054,7 @@ void MainLoopService::create_skybox( void )
 
     //////////////// valeur du rendering order pour chaque slot pass
     rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
+    */
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
@@ -1050,7 +1122,6 @@ void MainLoopService::create_ground( void )
     
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
-    body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
@@ -1099,7 +1170,6 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
 
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", p_mode );
 
-    body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
     TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();

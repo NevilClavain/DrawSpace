@@ -547,7 +547,6 @@ void MainService::create_ground( void )
 
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
-    body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );

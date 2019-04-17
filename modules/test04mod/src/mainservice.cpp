@@ -492,16 +492,13 @@ void MainService::create_skybox( void )
     rendering_aspect->AddImplementation( m_skyboxRender );
 
     ////////////// noms des passes
-
-    std::vector<dsstring> skybox_passes;
-
-    skybox_passes.push_back( "texture_pass" );
-    skybox_passes.push_back( "texturemirror_pass" );
-
-    rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
-
+    std::vector<std::vector<dsstring>>                                                          passes_names_layers = { {"texture_pass", "texturemirror_pass"} };
 
     ////////////// 6 jeux de 32 textures stages
+    
+
+    ///////////////// jeux de textures pour chaque passes
+    //std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
 
     std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
 
@@ -516,65 +513,55 @@ void MainService::create_skybox( void )
     for (int i = 0; i < 6; i++)
     {
         textures[i][0]->LoadFromFile();
-
         skybox_textures.push_back(textures[i]);
     }
-    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>( "skybox_textures", skybox_textures );
-    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>( "skybox_mirror_textures", skybox_textures );
 
-    /////////////// les FX pour chaque slot pass
+    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = {{skybox_textures,skybox_textures}};
 
-    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
+    /////////////// les FX pour chaque passes
 
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
 
-    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
-    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+
+    skybox_texturepass_fx->GetShader(0)->LoadFromFile();
+    skybox_texturepass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturepass_rss;
-    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    skybox_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
 
-    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
+    skybox_texturepass_fx->SetRenderStates(skybox_texturepass_rss);
 
-    rendering_aspect->AddComponent<Fx*>( "skybox_fx", skybox_texturepass_fx );
+    Fx* skybox_texturemirrorpass_fx = _DRAWSPACE_NEW_(Fx, Fx);
 
-    
-    Fx* skybox_texturemirrorpass_fx = _DRAWSPACE_NEW_( Fx, Fx );
+    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror.vso", true)));
+    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror.pso", true)));
 
-    skybox_texturemirrorpass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
-    skybox_texturemirrorpass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
-
-    skybox_texturemirrorpass_fx->GetShader( 0 )->LoadFromFile();
-    skybox_texturemirrorpass_fx->GetShader( 1 )->LoadFromFile();
+    skybox_texturemirrorpass_fx->GetShader(0)->LoadFromFile();
+    skybox_texturemirrorpass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturemirrorpass_rss;
-    skybox_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "ccw" ) );
-    skybox_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturemirrorpass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::SETCULLING, "cw" ) );
+    skybox_texturemirrorpass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    skybox_texturemirrorpass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "ccw"));
+    skybox_texturemirrorpass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    skybox_texturemirrorpass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"));
 
-    skybox_texturemirrorpass_fx->SetRenderStates( skybox_texturemirrorpass_rss );
-    
-    rendering_aspect->AddComponent<Fx*>( "skybox_mirror_fx", skybox_texturemirrorpass_fx );
-    
+    skybox_texturemirrorpass_fx->SetRenderStates(skybox_texturemirrorpass_rss);
+
+
+    std::vector<std::vector<Fx*>>                                                               layers_fx = {{ skybox_texturepass_fx, skybox_texturemirrorpass_fx}};
+
 
     /////////// params shaders
-    
-    //std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> skybox_shaders_params;
-
-    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
-
-    
-    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturemirrorpass_shaders_params;
 
     std::pair<dsstring, RenderingNode::ShadersParams> reflector_pos;
     reflector_pos.first = "reflector_pos";
     reflector_pos.second.shader_index = 0;
     reflector_pos.second.param_register = 24;
     reflector_pos.second.vector = true;
-    reflector_pos.second.param_values = Vector( 0.0, -4.0, 0.0, 1.0 );
+    reflector_pos.second.param_values = Vector(0.0, -4.0, 0.0, 1.0);
 
 
     std::pair<dsstring, RenderingNode::ShadersParams> reflector_normale;
@@ -582,20 +569,26 @@ void MainService::create_skybox( void )
     reflector_normale.second.shader_index = 0;
     reflector_normale.second.param_register = 25;
     reflector_normale.second.vector = true;
-    reflector_normale.second.param_values = Vector( 0.0, 1.0, 0.0, 1.0 );
-    
+    reflector_normale.second.param_values = Vector(0.0, 1.0, 0.0, 1.0);
 
-    skybox_texturemirrorpass_shaders_params.push_back( reflector_pos );
-    skybox_texturemirrorpass_shaders_params.push_back( reflector_normale );
-    
-
- 
-    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( "skybox_texturepass_shaders_params", skybox_texturepass_shaders_params );
-    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( "skybox_texturemirrorpass_shaders_params", skybox_texturemirrorpass_shaders_params );
+    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = { 
+                                                                                                                            { 
+                                                                                                                              {},
+                                                                                                                              {reflector_pos,reflector_normale} 
+                                                                                                                            }
+                                                                                                                        };
 
     //////////////// valeur du rendering order pour chaque slot pass
-    rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
-    rendering_aspect->AddComponent<int>( "skybox_mirror_ro", -1000 );
+
+    std::vector<std::vector<int>>                                                               layers_ro = {{-1000, -1000}};
+
+
+
+    rendering_aspect->AddComponent<std::vector<std::vector<dsstring>>>("passes", passes_names_layers);
+    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
+    rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
+    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
+    rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
@@ -731,7 +724,6 @@ void MainService::create_dynamic_cube( void )
     body_aspect->AddComponent<dsreal>( "mass", 7.0 );
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
 
-    body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
 
@@ -848,7 +840,6 @@ void MainService::create_static_cube( void )
     
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
-    body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
@@ -947,7 +938,6 @@ void MainService::create_ground( void )
     
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
 
-    body_aspect->AddComponent<bool>( "enable", true );
     body_aspect->AddComponent<bool>( "contact_state", false );
 
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
