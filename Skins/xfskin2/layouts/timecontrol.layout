@@ -2,27 +2,39 @@
 
 <GUILayout version="4" >
     <Window type="DefaultWindow" name="root" >
-        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="Area" value="{{0,5},{0,0},{1,5},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="xfskin/Button" name="Button_Pause" >
-            <Property name="Area" value="{{0,390},{0,15},{0,511},{0,53}}" />
+            <Property name="Area" value="{{0,350},{0,15},{0,471},{0,53}}" />
             <Property name="Text" value="Pause" />
         </Window>
-        <Window type="xfskin/Button" name="Button_x1" >
-            <Property name="Area" value="{{0,515},{0,15},{0,602},{0,53}}" />
-            <Property name="Text" value="x1" />
+        <Window type="xfskin/Button" name="Button_x10" >
+            <Property name="Area" value="{{0,565},{0,15},{0,652},{0,53}}" />
+            <Property name="Text" value="x10" />
         </Window>
-        <Window type="xfskin/Button" name="Button_x5" >
-            <Property name="Area" value="{{0,605},{0,15},{0,692},{0,53}}" />
-            <Property name="Text" value="x5" />
+        <Window type="xfskin/Button" name="Button_1sec_1hour" >
+            <Property name="Area" value="{{0,745},{0,15},{0,832},{0,53}}" />
+            <Property name="Text" value="1 s = 1 h" />
         </Window>
-        <Window type="xfskin/Button" name="Button_x20" >
-            <Property name="Area" value="{{0,695},{0,15},{0,782},{0,53}}" />
-            <Property name="Text" value="x20" />
+        <Window type="xfskin/Button" name="Button_1sec_1day" >
+            <Property name="Area" value="{{0,835},{0,15},{0,922},{0,53}}" />
+            <Property name="Text" value="1 s = 1 d" />
         </Window>
         <Window type="xfskin/Button" name="Button_x100" >
-            <Property name="Area" value="{{0,785},{0,15},{0,872},{0,53}}" />
+            <Property name="Area" value="{{0,655},{0,15},{0,742},{0,53}}" />
             <Property name="Text" value="x100" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_x1" >
+            <Property name="Area" value="{{0,475},{0,15},{0,562},{0,53}}" />
+            <Property name="Text" value="x1" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_0Rots" >
+            <Property name="Area" value="{{0,950},{0,15},{0,1070},{0,53}}" />
+            <Property name="Text" value="Clear rot." />
+        </Window>
+        <Window type="xfskin/Button" name="Button_0Transl" >
+            <Property name="Area" value="{{0,1075},{0,15},{0,1195},{0,53}}" />
+            <Property name="Text" value="Clear transl." />
         </Window>
     </Window>
 </GUILayout>

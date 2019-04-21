@@ -70,10 +70,10 @@ public:
 
     int LUA_configuretimemmanager( lua_State* p_L );
     int LUA_readtimemmanager( lua_State* p_L );
-    int LUA_updatetimemmanager( lua_State* p_L );
+    int LUA_updatetimescale( lua_State* p_L );
+    int LUA_updatetime(lua_State* p_L);
     int LUA_releasetimemmanager( lua_State* p_L );
 
-    
     int LUA_configureworld( lua_State* p_L );
     int LUA_releaseworld( lua_State* p_L );
 
