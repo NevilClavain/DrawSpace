@@ -43,7 +43,7 @@ struct Config;
 class Patch : public SubPass
 {
 public:
-    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, int>;
+    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
     static const int    NorthNeighbour      = 0;
     static const int    SouthNeighbour      = 1;
@@ -102,7 +102,7 @@ protected:
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
-    void                                    prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_layer_index );
+    void                                    prepare_data_texture( Patch::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index );
     //void                                    destroy_color_texture( void );
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
     

@@ -30,6 +30,11 @@
 
 namespace DrawSpace
 {
+namespace Utils
+{
+class TimeManager;
+}
+
 namespace Aspect
 {
 class RenderingAspect;
@@ -70,7 +75,7 @@ public:
 
     virtual void ComponentsUpdated( void ) {};
 
-    virtual bool Init( DrawSpace::Core::Entity* p_entity ) = 0;
+    virtual bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager ) = 0;
     virtual void Release( void ) = 0;
     virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;
 

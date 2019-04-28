@@ -127,25 +127,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_texturepass.GetRenderingQueue()->EnableTargetClearing( false );
 
 
+
+    m_rootEntityNode = m_entitygraph.SetRoot(&m_rootEntity);
+
     //////////////////////////////////////////////////////////////////////////
     
-    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
-
-    rendering_aspect->AddImplementation( &m_passesRender );
-
-    m_passesRender.SetRendergraph( &m_rendergraph );
-
-    rendering_aspect->AddImplementation( &m_textRender );
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 10, 0, 255, 0, "..." );
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "current camera", 10, 30, 255, 0, 255, "..." );
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "datetime", 10, 50, 0, 255, 0, "..." );
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "cubecontact_state", 10, 70, 0, 255, 0, "..." );
-
-
-    m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
-    
-    //////////////////////////////////////////////////////////////////////////
-
     TimeAspect* time_aspect = m_timeEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
@@ -181,6 +167,23 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
 
     m_camerasTimeEntityNode = m_rootEntityNode.AddChild( &m_camerasTimeEntity );
+
+    //////////////////////////////////////////////////////////////////////////
+
+
+    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation(&m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+
+    m_passesRender.SetRendergraph(&m_rendergraph);
+
+    rendering_aspect->AddImplementation(&m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("fps", 10, 10, 0, 255, 0, "...");
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("current camera", 10, 30, 255, 0, 255, "...");
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("datetime", 10, 50, 0, 255, 0, "...");
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("cubecontact_state", 10, 70, 0, 255, 0, "...");
+
+
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -859,7 +862,8 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
 {
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_cubeRender );
+    TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( &m_cubeRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "cube_texturepass_slot", "texture_pass" );
 
@@ -924,8 +928,10 @@ void MainLoopService::create_skybox( void )
 
 
     RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
+
+    TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();
     
-    rendering_aspect->AddImplementation( m_skyboxRender );
+    rendering_aspect->AddImplementation( m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
 
 
@@ -997,66 +1003,6 @@ void MainLoopService::create_skybox( void )
     rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
 
 
-
-    /*
-    ////////////// noms des passes
-
-    std::vector<dsstring> skybox_passes;
-
-    skybox_passes.push_back( "texture_pass" );
-
-    rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
-
-    ////////////// 6 jeux de 32 textures stages
-
-    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
-
-    std::array<std::array<Texture*, RenderingNode::NbMaxTextures>, 6> textures = { NULL };
-    textures[0][0] = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
-    textures[1][0] = _DRAWSPACE_NEW_(Texture, Texture("sb2.bmp"));
-    textures[2][0] = _DRAWSPACE_NEW_(Texture, Texture("sb3.bmp"));
-    textures[3][0] = _DRAWSPACE_NEW_(Texture, Texture("sb1.bmp"));
-    textures[4][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
-    textures[5][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
-
-    for (int i = 0; i < 6; i++)
-    {
-        textures[i][0]->LoadFromFile();
-
-        skybox_textures.push_back(textures[i]);
-    }
-    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>("skybox_textures", skybox_textures);
-    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>("skybox_mirror_textures", skybox_textures);
-
-
-    /////////////// les FX pour chaque slot pass
-
-    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
-    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
-
-    RenderStatesSet skybox_texturepass_rss;
-    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
-
-    rendering_aspect->AddComponent<Fx*>( "skybox_fx", skybox_texturepass_fx );
-
-    /////////// params shaders
-
-    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
-    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>("skybox_texturepass_shaders_params", skybox_texturepass_shaders_params);
-
-    //////////////// valeur du rendering order pour chaque slot pass
-    rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
-    */
-
-
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
     transform_aspect->SetImplementation( &m_transformer );
@@ -1072,7 +1018,8 @@ void MainLoopService::create_ground( void )
 {
     RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_groundRender );
+    TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -1132,7 +1079,9 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
 {
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( p_render );
+    TimeAspect* time_aspect = m_timeEntity.GetAspect<TimeAspect>();
+
+    rendering_aspect->AddImplementation( p_render, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "sphere_texturepass_slot", "texture_pass" );
 

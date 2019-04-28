@@ -122,6 +122,7 @@
     <ClCompile Include="src\luaclass_fpstransform.cpp" />
     <ClCompile Include="src\luaclass_syncangle.cpp" />
     <ClCompile Include="src\luaclass_texturesset.cpp" />
+    <ClCompile Include="src\luaclass_timemanagerref.cpp" />
     <ClCompile Include="src\luacontext.cpp" />
     <ClCompile Include="src\luaclass_gui.cpp" />
     <ClCompile Include="src\luaclass_vector.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="src\luaclass_renderstatesset.h" />
     <ClInclude Include="src\luaclass_syncangle.h" />
     <ClInclude Include="src\luaclass_texturesset.h" />
+    <ClInclude Include="src\luaclass_timemanagerref.h" />
     <ClInclude Include="src\luacontext.h" />
     <ClInclude Include="src\luaclass_entitynodegraph.h" />
     <ClInclude Include="src\luaclass_gui.h" />

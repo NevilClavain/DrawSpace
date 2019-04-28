@@ -136,11 +136,11 @@ m_nbLODRanges( p_nbLODRanges )
     {
         if( m_lod_level == m_nbLODRanges - 1)
         {
-            prepare_data_texture( m_subpasscreation_handler, 1, p_layer_index );
+            prepare_data_texture( m_subpasscreation_handler, SubPass::IMMEDIATE_SINGLE_SUBPASS, p_layer_index );
         }
         else if( m_lod_level >= m_nbLODRanges - 8 )
         {
-            prepare_data_texture( m_subpasscreation_handler, 0, p_layer_index );
+            prepare_data_texture( m_subpasscreation_handler, SubPass::DELAYED_SINGLE_SUBPASS, p_layer_index );
         }
     }
 
@@ -183,7 +183,7 @@ Patch::~Patch( void )
     //destroy_color_texture();
 }
 
-void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, int p_subpass_dest, int p_layer_index )
+void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index )
 {
     m_datatexture_pass = create_data_texture_pass();
 

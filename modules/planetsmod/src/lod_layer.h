@@ -35,7 +35,7 @@ class Layer
 {
 public:
 
-    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, int>;
+    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
 protected:
 
@@ -59,5 +59,6 @@ public:
     void UpdateRelativeAlt(dsreal p_alt);
     void UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
     void UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
+    void Compute( void );
 };
 }

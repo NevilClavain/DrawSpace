@@ -31,6 +31,7 @@
 #include "renderingnode.h"
 #include "renderpassnodegraph.h"
 #include "hub.h"
+#include "timemanager.h"
 
 #include "lod_config.h"
 #include "lod_drawing.h"
@@ -59,7 +60,8 @@ protected:
     using SystemsEvtCb      = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
     using CameraEventsCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
     using NodesEventsCb     = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
-    using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, int>;
+    using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
+    using TimerCb           = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;
@@ -67,7 +69,6 @@ protected:
 
 protected:
 
-    ///////////////////////////////////////////////////////////////////////////
 
     bool                                                m_add_in_rendergraph;
     Systems::Hub*                                       m_hub;
@@ -75,9 +76,9 @@ protected:
     CameraEventsCb                                      m_cameras_evt_cb;
     NodesEventsCb                                       m_nodes_evt_cb;
     EntityGraph::EntityNodeGraph*                       m_entitynodegraph;
-
-    ///////////////////////////////////////////////////////////////////////////
-
+    TimerCb                                             m_timer_cb;
+    DrawSpace::Utils::Timer                             m_timer;
+    DrawSpace::Utils::TimeManager*                      m_timemanager;
 
     enum CameraType
     {
@@ -142,6 +143,8 @@ protected:
 
     std::set<dsstring>                                              m_passes;
 
+    
+
     ///////////////////////////////////////////////////////////////////////////
 
     void                        init_rendering_objects(void);
@@ -149,10 +152,11 @@ protected:
 
     void                        update_shader_params(void); // for all passes
 
+    void                        on_timer(DrawSpace::Utils::Timer* p_timer);
     void                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
     void                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
     void                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
-    LOD::SubPass::EntryInfos    on_subpasscreation(LOD::SubPass* p_pass, int p_dest);
+    LOD::SubPass::EntryInfos    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
 
     void                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 
@@ -170,7 +174,7 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    bool Init( DrawSpace::Core::Entity* p_entity );
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager );
     void Release(void);
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);

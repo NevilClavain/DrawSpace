@@ -26,11 +26,11 @@
 #include "luaclass_rendering.h"
 #include "luaclass_module.h"
 #include "luaclass_renderpassnodegraph.h"
-//#include "luaclass_renderconfig.h"
-//#include "luaclass_rendercontext.h"
 #include "luaclass_renderlayer.h"
 #include "luaclass_texturesset.h"
 #include "luaclass_fxparams.h"
+#include "luaclass_timemanagerref.h"
+#include "timemanager.h"
 
 #include "mainservice.h"
 #include "memalloc.h"
@@ -39,7 +39,6 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
-
 
 const char LuaClass_Rendering::className[] = "Rendering";
 const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
@@ -60,6 +59,13 @@ const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
 LuaClass_Rendering::LuaClass_Rendering( lua_State* p_L ):
 m_rendering_impl( NULL )
 {
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Rendering::Rendering : argument(s) missing");
+    }
+    LuaClass_TimeManagerRef* lua_tmref = Luna<LuaClass_TimeManagerRef>::check(p_L, 1);
+    m_tm = lua_tmref->GetTimeManager();
 }
 
 LuaClass_Rendering::~LuaClass_Rendering( void )
@@ -128,8 +134,7 @@ int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
 }
 
 int LuaClass_Rendering::LUA_attachtoentity( lua_State* p_L )
-{
-    
+{  
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -149,7 +154,7 @@ int LuaClass_Rendering::LUA_attachtoentity( lua_State* p_L )
     m_entity_rendering_aspect = rendering_aspect;
     m_entity = &entity;
 
-    m_entity_rendering_aspect->AddImplementation( m_rendering_impl );
+    m_entity_rendering_aspect->AddImplementation( m_rendering_impl, m_tm);
     
     return 0;
 }

@@ -38,7 +38,7 @@ QuadRenderingAspectImpl::QuadRenderingAspectImpl( void )
 {
 }
 
-bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity )
+bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 

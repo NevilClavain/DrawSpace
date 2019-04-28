@@ -42,7 +42,7 @@ public:
     PassesRenderingAspectImpl( void );
     bool VisitRenderPassDescr( const dsstring& p_name, DrawSpace::Core::RenderingQueue* p_passqueue );
     void SetRendergraph( DrawSpace::RenderGraph::RenderPassNodeGraph* p_rendergraph );
-    bool Init( DrawSpace::Core::Entity* p_entity ) { return true; };
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
     void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};

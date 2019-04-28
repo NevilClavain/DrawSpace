@@ -119,24 +119,25 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////////////////////////////////
 
-    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
-
-    rendering_aspect->AddImplementation( &m_passesRender );
-    m_passesRender.SetRendergraph( &m_rendergraph );
-
-    rendering_aspect->AddImplementation( &m_textRender );
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 255, 255, "..." );
-
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
-    time_aspect->AddComponent<TimeManager>( "time_manager" );
-    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
-    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
-    time_aspect->AddComponent<dstime>( "time", 0 );
-    time_aspect->AddComponent<int>( "output_fps" );
-    time_aspect->AddComponent<int>( "output_world_nbsteps" );
+    time_aspect->AddComponent<TimeManager>("time_manager");
+    time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::NORMAL_TIME);
+    time_aspect->AddComponent<dsstring>("output_formated_datetime", "...");
+    time_aspect->AddComponent<dstime>("time", 0);
+    time_aspect->AddComponent<int>("output_fps");
+    time_aspect->AddComponent<int>("output_world_nbsteps");
 
-    time_aspect->AddComponent<dsreal>( "output_time_factor" );
+    time_aspect->AddComponent<dsreal>("output_time_factor");
+
+    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    m_passesRender.SetRendergraph( &m_rendergraph );
+
+    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 255, 255, "..." );
+
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 

@@ -76,7 +76,6 @@ void Body::Initialize( void )
 
 void Body::Compute( void )
 {
-
     for( long i = 0; i < 6; i++ )
     {        
         m_faces[i]->ComputeAlignmentFactor();

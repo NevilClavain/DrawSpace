@@ -75,7 +75,7 @@ int LuaClass_TextRendering::LUA_configure( lua_State* p_L )
     RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
-        rendering_aspect->AddImplementation( &m_text_render );
+        rendering_aspect->AddImplementation( &m_text_render, NULL );
         m_entity_rendering_aspect = rendering_aspect;
 
         LUA_TRY

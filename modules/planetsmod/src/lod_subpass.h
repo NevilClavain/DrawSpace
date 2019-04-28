@@ -37,6 +37,13 @@ public:
     using singleshot_subpasses          = std::list<SubPass*>;
     using permanent_subpasses           = std::vector<SubPass*>;
 
+    using Destination = enum
+    {
+        DELAYED_SINGLE_SUBPASS      = 0,
+        IMMEDIATE_SINGLE_SUBPASS    = 1,
+        PERMANENT_SUBPASS           = 2    
+    };
+
     using EntryInfos = struct
     {    
         int queue_id; // 0 ->singleshot_subpasses_stack 1 -> singleshot_subpasses 2 -> permanent_subpasses

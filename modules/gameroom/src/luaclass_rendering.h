@@ -30,6 +30,13 @@
 #include "luaclass_entity.h"
 #include "renderingaspect.h"
 
+namespace DrawSpace
+{
+namespace Utils
+{
+class TimeManager;
+}
+}
 
 // rendering implementation from a module, encapsulated in a lua class
 class LuaClass_Rendering
@@ -41,6 +48,7 @@ private:
     DrawSpace::Core::Entity*                                            m_entity;
 
     size_t                                                              m_total_mem_allocs;
+    DrawSpace::Utils::TimeManager*                                      m_tm;
 
     void cleanup_resources( lua_State* p_L );
 

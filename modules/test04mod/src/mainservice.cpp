@@ -158,30 +158,35 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////////////////////////////////
 
-    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
-
-    rendering_aspect->AddImplementation( &m_passesRender );
-    m_passesRender.SetRendergraph( &m_rendergraph );
-
-    rendering_aspect->AddImplementation( &m_textRender );
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "queue_debug", 600, 10, 255, 100, 255, "..." );
-
 
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
-    time_aspect->AddComponent<TimeManager>( "time_manager" );
-    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
-    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
-    time_aspect->AddComponent<dstime>( "time", 0 );
-    time_aspect->AddComponent<int>( "output_fps" );
-    time_aspect->AddComponent<int>( "output_world_nbsteps" );
+    time_aspect->AddComponent<TimeManager>("time_manager");
+    time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::NORMAL_TIME);
+    time_aspect->AddComponent<dsstring>("output_formated_datetime", "...");
+    time_aspect->AddComponent<dstime>("time", 0);
+    time_aspect->AddComponent<int>("output_fps");
+    time_aspect->AddComponent<int>("output_world_nbsteps");
 
-    time_aspect->AddComponent<dsreal>( "output_time_factor" );
+    time_aspect->AddComponent<dsreal>("output_time_factor");
 
-    m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
-    m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
+    m_fps_yaw = time_aspect->TimeAngleFactory(0.0);
+    m_fps_pitch = time_aspect->TimeAngleFactory(0.0);
 
-    m_waves = time_aspect->TimeScalarFactory( 0.0 );
+    m_waves = time_aspect->TimeScalarFactory(0.0);
+
+
+
+
+    RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
+
+    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    m_passesRender.SetRendergraph( &m_rendergraph );
+
+    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "queue_debug", 600, 10, 255, 100, 255, "..." );
+
+
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
@@ -489,7 +494,8 @@ void MainService::create_skybox( void )
 
     RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
     
-    rendering_aspect->AddImplementation( m_skyboxRender );
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
 
     ////////////// noms des passes
     std::vector<std::vector<dsstring>>                                                          passes_names_layers = { {"texture_pass", "texturemirror_pass"} };
@@ -632,7 +638,9 @@ void MainService::create_dynamic_cube( void )
     cube.dynCubeEntityNode = _DRAWSPACE_NEW_( DrawSpace::EntityGraph::EntityNode, DrawSpace::EntityGraph::EntityNode );
 
     RenderingAspect* rendering_aspect = cube.dynCubeEntity->AddAspect<RenderingAspect>();
-    rendering_aspect->AddImplementation( cube.dynCubeRender );
+
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( cube.dynCubeRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -749,7 +757,9 @@ void MainService::create_dynamic_cube( void )
 void MainService::create_static_cube( void )
 {
     RenderingAspect* rendering_aspect = m_staticCubeEntity.AddAspect<RenderingAspect>();
-    rendering_aspect->AddImplementation( &m_staticCubeRender );
+
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( &m_staticCubeRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
 
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
@@ -850,7 +860,9 @@ void MainService::create_static_cube( void )
 void MainService::create_ground( void )
 {
     RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
-    rendering_aspect->AddImplementation( &m_groundRender );
+
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////

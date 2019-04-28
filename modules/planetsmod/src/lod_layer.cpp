@@ -74,3 +74,8 @@ void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
 {
     m_body->UpdateHotPoint( p_vector );
 }
+
+void Layer::Compute(void)
+{
+    m_body->Compute();
+}

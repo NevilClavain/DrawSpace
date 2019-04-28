@@ -120,14 +120,32 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////////////////////////////////
 
+
+    TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
+
+    time_aspect->AddComponent<TimeManager>("time_manager");
+    time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::NORMAL_TIME);
+    time_aspect->AddComponent<dsstring>("output_formated_datetime", "...");
+    time_aspect->AddComponent<dstime>("time", 0);
+    time_aspect->AddComponent<int>("output_fps");
+    time_aspect->AddComponent<int>("output_world_nbsteps");
+
+    time_aspect->AddComponent<dsreal>("output_time_factor");
+
+    m_fps_yaw = time_aspect->TimeAngleFactory(0.0);
+    m_fps_pitch = time_aspect->TimeAngleFactory(0.0);
+
+
+
     RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_passesRender );
+    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     m_passesRender.SetRendergraph( &m_rendergraph );
 
-    rendering_aspect->AddImplementation( &m_textRender );
+    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
 
+    /*
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>( "time_manager" );
@@ -141,7 +159,7 @@ bool MainService::Init( void )
 
     m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
     m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
-
+    */
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
@@ -234,9 +252,79 @@ void MainService::create_skybox( void )
 
 
     RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
-    
-    rendering_aspect->AddImplementation( m_skyboxRender );
 
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation( m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+
+    ////////////// noms des passes
+    std::vector<std::vector<dsstring>>                                                          passes_names_layers = { {"texture_pass"} };
+
+    ////////////// 6 jeux de 32 textures stages
+
+
+    ///////////////// jeux de textures pour chaque passes
+    //std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
+
+    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
+
+    std::array<std::array<Texture*, RenderingNode::NbMaxTextures>, 6> textures = { NULL };
+    textures[0][0] = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
+    textures[1][0] = _DRAWSPACE_NEW_(Texture, Texture("sb2.bmp"));
+    textures[2][0] = _DRAWSPACE_NEW_(Texture, Texture("sb3.bmp"));
+    textures[3][0] = _DRAWSPACE_NEW_(Texture, Texture("sb1.bmp"));
+    textures[4][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
+    textures[5][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
+
+    for (int i = 0; i < 6; i++)
+    {
+        textures[i][0]->LoadFromFile();
+        skybox_textures.push_back(textures[i]);
+    }
+
+    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { {skybox_textures} };
+
+    /////////////// les FX pour chaque passes
+
+    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
+
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+
+    skybox_texturepass_fx->GetShader(0)->LoadFromFile();
+    skybox_texturepass_fx->GetShader(1)->LoadFromFile();
+
+    RenderStatesSet skybox_texturepass_rss;
+    skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    skybox_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+    skybox_texturepass_fx->SetRenderStates(skybox_texturepass_rss);
+
+   
+    std::vector<std::vector<Fx*>>                                                               layers_fx = { { skybox_texturepass_fx } };
+
+
+    /////////// params shaders
+
+    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = {
+                                                                                                                            {
+                                                                                                                              {}
+                                                                                                                            }
+    };
+
+    //////////////// valeur du rendering order pour chaque slot pass
+
+    std::vector<std::vector<int>>                                                               layers_ro = { {-1000} };
+
+
+
+    rendering_aspect->AddComponent<std::vector<std::vector<dsstring>>>("passes", passes_names_layers);
+    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
+    rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
+    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
+    rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
+
+
+    /*
     ////////////// noms des passes
 
     std::vector<dsstring> skybox_passes;
@@ -284,8 +372,6 @@ void MainService::create_skybox( void )
        
     /////////// params shaders
     
-    //std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> skybox_shaders_params;
-
     std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
 
         
@@ -293,6 +379,7 @@ void MainService::create_skybox( void )
 
     //////////////// valeur du rendering order pour chaque slot pass
     rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
+    */
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
@@ -309,7 +396,9 @@ void MainService::create_world_impostor( void )
 {
     RenderingAspect* rendering_aspect = m_worldImpostorsEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_worldImpostorsRender );
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+
+    rendering_aspect->AddImplementation( &m_worldImpostorsRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -384,7 +473,9 @@ void MainService::create_screen_impostors( void )
 {
     RenderingAspect* rendering_aspect = m_impostorsEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_impostorsRender );
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+
+    rendering_aspect->AddImplementation( &m_impostorsRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -502,7 +593,9 @@ void MainService::create_ground( void )
 {
     RenderingAspect* rendering_aspect = m_groundEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_groundRender );
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+
+    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 

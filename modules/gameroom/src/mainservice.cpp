@@ -479,7 +479,7 @@ void MainService::create_console_quad( void )
 
     quad_node->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
 
-    rendering_aspect->AddImplementation(&m_quadRender);
+    rendering_aspect->AddImplementation(&m_quadRender, NULL);
 
 
     TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
@@ -787,7 +787,7 @@ void MainService::buil_lua_prerequisites( void )
 
     RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_textRender );
+    rendering_aspect->AddImplementation( &m_textRender, NULL );
     
     rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
 

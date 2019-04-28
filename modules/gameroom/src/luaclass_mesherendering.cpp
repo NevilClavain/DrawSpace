@@ -92,7 +92,7 @@ int LuaClass_MesheRendering::LUA_attachtoentity( lua_State* p_L )
     m_entity = &entity;
 
     m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
-    m_entity_rendering_aspect->AddImplementation( m_meshe_render );
+    m_entity_rendering_aspect->AddImplementation( m_meshe_render, NULL );
 
     return 0;
 }

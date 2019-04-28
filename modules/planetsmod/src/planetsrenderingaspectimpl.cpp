@@ -68,7 +68,8 @@ m_entitynodegraph(NULL),
 m_drawable(&m_config),
 m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation),
 m_climate_vshader( NULL ),
-m_climate_pshader( NULL )
+m_climate_pshader( NULL ),
+m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer)
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
@@ -124,7 +125,7 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
     release_rendering_objects();
 }
 
-bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
+bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
 {
     if( m_hub )
     {
@@ -140,6 +141,14 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity)
     {
         _DSEXCEPTION( "hub not set !!" )
     }
+
+    m_timemanager = p_timemanager;
+
+    m_timer.SetHandler(&m_timer_cb);
+    m_timer.SetPeriod(5000);
+    m_timemanager->RegisterTimer(&m_timer);
+
+    m_timer.SetState(true);
 
     return true;
 }
@@ -586,6 +595,10 @@ void PlanetsRenderingAspectImpl::SetHub(Systems::Hub* p_hub)
     m_hub = p_hub;
 }
 
+void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
+{
+}
+
 void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
 {
     if( "TransformSystem" == p_id)
@@ -733,7 +746,7 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
     m_singleshot_subpasses.clear();
 }
 
-LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, int p_dest)
+LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
 {
     LOD::FaceDrawingNode* node = static_cast<LOD::FaceDrawingNode*>(p_pass->GetNode());
 
@@ -869,6 +882,7 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
             if(layer->GetHostState())
             {
                 layer->UpdateHotPoint(delta);
+                layer->Compute();
             }                   
         }
     }
@@ -920,6 +934,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                     // si hot, c'est une camera de type FREE_ON_PLANET
                     // donc faire un UpdateHotPoint
                     camera_layer->UpdateHotPoint(camera_pos_from_planet);
+                    camera_layer->Compute();
                 }
             }
         }

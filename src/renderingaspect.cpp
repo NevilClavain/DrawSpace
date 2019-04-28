@@ -36,7 +36,7 @@ m_entitynodegraph( NULL )
 {
 }
 
-void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectImpl* p_impl )
+void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectImpl* p_impl, DrawSpace::Utils::TimeManager* p_timemanager )
 {
     m_impls.push_back( p_impl );
     p_impl->SetOwner( this );
@@ -45,7 +45,7 @@ void RenderingAspect::AddImplementation( AspectImplementations::RenderingAspectI
         p_impl->SetEntityNodeGraph( m_entitynodegraph );
     }
 
-    p_impl->Init( m_owner );
+    p_impl->Init( m_owner, p_timemanager );
 }
 
 void RenderingAspect::RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl )

@@ -430,7 +430,7 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
     RenderingAspect* rendering_aspect = m_entity.GetAspect<RenderingAspect>();
     if( rendering_aspect )
     {
-        rendering_aspect->AddImplementation( &lua_rg->GetPassesRenderAspectImpl() );
+        rendering_aspect->AddImplementation( &lua_rg->GetPassesRenderAspectImpl(), NULL );
     }
     else
     {

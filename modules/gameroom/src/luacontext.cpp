@@ -50,6 +50,7 @@
 #include "luaclass_rendering.h"
 #include "luaclass_randomengine.h"
 #include "luaclass_distribution.h"
+#include "luaclass_timemanagerref.h"
 
 
 #include "luaclass_nebulaespecificconfig.h"
@@ -96,9 +97,10 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Module>::Register( m_L );
     Luna<LuaClass_Matrix>::Register( m_L );
     Luna<LuaClass_Vector>::Register(m_L);
+    Luna<LuaClass_TimeManagerRef>::Register(m_L);
     Luna<LuaClass_Body>::Register( m_L );
-    Luna<LuaClass_Rendering>::Register(m_L);
     lua_checkstack(m_L, 1);
+    Luna<LuaClass_Rendering>::Register(m_L);    
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
     Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
