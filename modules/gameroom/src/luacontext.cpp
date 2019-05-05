@@ -74,7 +74,7 @@ void LuaContext::Startup( void )
     luaopen_base( m_L );
     luaopen_table( m_L );
     luaopen_string( m_L );
-
+    
     Luna<LuaClass_Globals>::Register( m_L );
     Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
     Luna<LuaClass_Renderer>::Register( m_L );
@@ -98,13 +98,15 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Matrix>::Register( m_L );
     Luna<LuaClass_Vector>::Register(m_L);
     Luna<LuaClass_TimeManagerRef>::Register(m_L);
+    lua_checkstack(m_L, 25);
     Luna<LuaClass_Body>::Register( m_L );
-    lua_checkstack(m_L, 1);
+    //lua_checkstack(m_L, 1);
     Luna<LuaClass_Rendering>::Register(m_L);    
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
     Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
     Luna<LuaClass_PlanetSpecificConfig>::Register(m_L);
+    
 }
 
 void LuaContext::Shutdown( void )

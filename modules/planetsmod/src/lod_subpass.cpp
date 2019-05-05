@@ -56,24 +56,22 @@ DrawSpace::IntermediatePass* SubPass::GetPass( void ) const
 void SubPass::remove_entry_from_queue( const EntryInfos& p_entryInfos )
 {
     switch( p_entryInfos.queue_id )
-    {
-        case 0:
+    {        
+        case DELAYED_SINGLE_SUBPASS:
 
             p_entryInfos.singleshot_subpasses_stack->erase( p_entryInfos.singleshot_subpasses_stack_position );
             break;
 
-        case 1:
+        case IMMEDIATE_SINGLE_SUBPASS:
             {
                 auto it = p_entryInfos.singleshot_subpasses_position;
                 p_entryInfos.singleshot_subpasses->erase( it );
             }
             break;
 
-        case 2:
-
+        case PERMANENT_SUBPASS:
             p_entryInfos.permanent_subpasses->erase( p_entryInfos.permanent_subpasses_position );
-            break;
-    
+            break;    
     }
 }
 

@@ -145,7 +145,7 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpa
     m_timemanager = p_timemanager;
 
     m_timer.SetHandler(&m_timer_cb);
-    m_timer.SetPeriod(5000);
+    m_timer.SetPeriod(20);
     m_timemanager->RegisterTimer(&m_timer);
 
     m_timer.SetState(true);
@@ -162,16 +162,6 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
-
-        /*
-        for (int orientation = 0; orientation < 6; orientation++)
-        {
-            if(m_planet_climate_binder[orientation])
-            {
-                _DRAWSPACE_DELETE_(m_planet_climate_binder[orientation]);
-            }
-        }
-        */
 
         for (auto& e : m_planet_climate_binder)
         {
@@ -595,10 +585,6 @@ void PlanetsRenderingAspectImpl::SetHub(Systems::Hub* p_hub)
     m_hub = p_hub;
 }
 
-void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
-{
-}
-
 void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
 {
     if( "TransformSystem" == p_id)
@@ -735,8 +721,28 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
     }
 }
 
+void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
+{
+    if (m_singleshot_subpasses_stack.size() > 0)
+    {
+        LOD::SubPass* pass = m_singleshot_subpasses_stack.back();
+        pass->SetTimerReadyFlag(true);
+    }
+}
+
 void PlanetsRenderingAspectImpl::draw_sub_passes(void)
 {
+    if (m_singleshot_subpasses_stack.size() > 0)
+    {
+        LOD::SubPass* sp = m_singleshot_subpasses_stack.back();
+        if (sp->GetTimerReadyFlag())
+        {
+            m_singleshot_subpasses_stack.pop_back();
+            sp->DrawSubPass();
+            sp->SubPassDone();
+        }
+    }
+
     for( auto& e : m_singleshot_subpasses)
     {
         LOD::SubPass* sp = e;
@@ -764,18 +770,19 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
 
     switch (p_dest)
     {
-        case 0:
+        case LOD::SubPass::DELAYED_SINGLE_SUBPASS:
             m_singleshot_subpasses_stack.push_front(p_pass);
             ei.singleshot_subpasses_stack_position = m_singleshot_subpasses_stack.begin();
+            p_pass->SetTimerReadyFlag( false );
             break;
 
-        case 1:
+        case LOD::SubPass::IMMEDIATE_SINGLE_SUBPASS:
             m_singleshot_subpasses.push_back(p_pass);
             ei.singleshot_subpasses_position = m_singleshot_subpasses.end();
             --ei.singleshot_subpasses_position;
             break;
 
-        case 2:
+        case LOD::SubPass::PERMANENT_SUBPASS:
             m_permanent_subpasses.push_back(p_pass);
             ei.permanent_subpasses_position = m_permanent_subpasses.end() - 1;
             break;
