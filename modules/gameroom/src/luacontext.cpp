@@ -98,9 +98,8 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Matrix>::Register( m_L );
     Luna<LuaClass_Vector>::Register(m_L);
     Luna<LuaClass_TimeManagerRef>::Register(m_L);
-    lua_checkstack(m_L, 25);
+    lua_checkstack(m_L, 100);   // pos et valeur trouvees empiriquement
     Luna<LuaClass_Body>::Register( m_L );
-    //lua_checkstack(m_L, 1);
     Luna<LuaClass_Rendering>::Register(m_L);    
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
