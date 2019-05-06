@@ -88,7 +88,7 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
 
     AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
 
-    static std::map<AspectType, std::function<void( DrawSpace::Core::Entity& )>> aspect_add_aig = 
+    static const std::map<AspectType, std::function<void( DrawSpace::Core::Entity& )>> aspect_add_aig = 
     {
         { BODY_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<BodyAspect>(); } },
         { CAMERA_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<CameraAspect>(); } },
@@ -100,7 +100,7 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
         { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<InfosAspect>(); } },
     };
 
-    aspect_add_aig[aspect_type]( m_entity );
+    aspect_add_aig.at(aspect_type)( m_entity );
     return 0;
 }
 
@@ -113,7 +113,7 @@ int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
 	}
     AspectType aspect_type = static_cast<AspectType>( luaL_checkint( p_L, 1 ) );
 
-    static std::map<AspectType, std::function<void( DrawSpace::Core::Entity& )>> aspect_remove_aig = 
+    static const std::map<AspectType, std::function<void( DrawSpace::Core::Entity& )>> aspect_remove_aig = 
     {
         { BODY_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<BodyAspect>(); } },
         { CAMERA_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<CameraAspect>(); } },
@@ -125,7 +125,7 @@ int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
         { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<InfosAspect>(); } },
     };
 
-    aspect_remove_aig[aspect_type]( m_entity );
+    aspect_remove_aig.at(aspect_type)( m_entity );
     return 0;
 }
 

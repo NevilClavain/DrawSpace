@@ -52,6 +52,8 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "enable_light", &LuaClass_PlanetSpecificConfig::LUA_enablelight },
     { "set_lightcolor", &LuaClass_PlanetSpecificConfig::LUA_setlightcolor },
     { "set_lightdir", &LuaClass_PlanetSpecificConfig::LUA_setlightdir },
+
+    { "get_outparam", &LuaClass_PlanetSpecificConfig::LUA_getoutparam },
     { 0, 0 }
 };
 
@@ -120,6 +122,12 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     }
     entity_rendering_aspect->AddComponent<std::vector<PlanetDetails::Lights>>("lights", lights);
 
+    ///////////////////////
+    // OUT params
+
+    entity_rendering_aspect->AddComponent<int>("OUT_test", 667);
+
+
     m_rendering_aspect = entity_rendering_aspect;
 
     return 0;
@@ -155,6 +163,8 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
     m_rendering_aspect->RemoveComponent<std::vector<PlanetDetails::Lights>>("lights");
+
+    m_rendering_aspect->RemoveComponent<int>("OUT_test");
 
     return 0;
 }
@@ -409,5 +419,29 @@ int LuaClass_PlanetSpecificConfig::LUA_setlightdir(lua_State* p_L)
     dir[2] = z;
     std::get<2>(m_planets_details.lights[light_index]) = dir;
     return 0;
+}
 
+int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::get_outparam : argument(s) missing");
+    }
+
+    dsstring id = luaL_checkstring(p_L, 1);
+
+    static const std::map<dsstring, std::function<void(lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect)>> retrieve_param =
+    {
+        { "OUT_test", [](lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect) { lua_pushinteger(p_L, p_rendering_aspect->GetComponent<int>("OUT_test")->getPurpose()); } },
+    };
+
+    if(retrieve_param.count(id))
+    {
+        retrieve_param.at(id)(p_L, m_rendering_aspect);
+        return 1;
+    }
+
+    LUA_ERROR("PlanetSpecificConfig::get_outparam : Unknown param id : " << id);
+    return 0;
 }

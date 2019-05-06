@@ -109,6 +109,9 @@ public:
     int LUA_setlightcolor(lua_State* p_L);
     int LUA_setlightdir(lua_State* p_L);
 
+
+    int LUA_getoutparam(lua_State* p_L);
+
     static const char className[];
     static const Luna<LuaClass_PlanetSpecificConfig>::RegType methods[];
 };
