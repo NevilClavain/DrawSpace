@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "planetsrenderingaspectimpl.h"
+#include "csts.h"
 #include "renderingaspect.h"
 #include "transformaspect.h"
 #include "cameraaspect.h"
@@ -145,7 +146,7 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpa
     m_timemanager = p_timemanager;
 
     m_timer.SetHandler(&m_timer_cb);
-    m_timer.SetPeriod(20);
+    m_timer.SetPeriod(LOD::cst::timerPeriod);
     m_timemanager->RegisterTimer(&m_timer);
 
     m_timer.SetState(true);
@@ -248,6 +249,11 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     ////////////////////////////////////////////////////////
 
     draw_sub_passes();
+
+
+    ///// Update OUT parameters in specific config
+
+    m_owner->GetComponent<int>("OUT_test")->getPurpose() = 9998;
 }
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
@@ -881,7 +887,7 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
             layer->UpdateRelativeAlt(rel_alt);
             layer->UpdateInvariantViewerPos( delta );
             
-            if( rel_alt < 4.2 )
+            if( rel_alt < LOD::cst::hotRelativeAlt )
             {
                 layer->SetHotState(true);
             }

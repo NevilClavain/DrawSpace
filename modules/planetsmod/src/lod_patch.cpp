@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "lod_patch.h"
+#include "csts.h"
 #include "lod_drawing.h"
 #include "lod_config.h"
 #include "renderer.h"
@@ -398,7 +399,7 @@ dsreal Patch::GetUnitSideLenght( void ) const
 
 dsreal Patch::GetTriangleSideLength( void ) const
 {
-    return ( ( m_sidelength * m_ray ) / ( PATCH_RESOLUTION - 1 ) );
+    return ( ( m_sidelength * m_ray ) / ( cst::patchResolution - 1 ) );
 }
 
 void Patch::GetPos( dsreal& p_xpos, dsreal& p_ypos ) const
@@ -647,15 +648,13 @@ DrawSpace::IntermediatePass* Patch::create_data_texture_pass( void )
     //ipass->SetTargetDims( 256, 256 );
     //ipass->SetTargetDims( 128, 128 );
 
-    ipass->SetTargetDims( PATCH_HIGH_RESOLUTION, PATCH_HIGH_RESOLUTION );
+    ipass->SetTargetDims( cst::patchHighResolution, cst::patchHighResolution );
 
     ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOATVECTOR );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( false );
     ipass->GetRenderingQueue()->EnableTargetClearing( false );
-    //ipass->GetRenderingQueue()->SetTargetClearingColor( 0, 0, 0, 255 );
-
     return ipass;
 }
 

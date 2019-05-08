@@ -24,7 +24,7 @@
 
 #pragma once
 
-
+#include "csts.h"
 #include "renderingnode.h"
 #include "quadtree.h"
 #include "renderer.h"
@@ -78,7 +78,7 @@ protected:
     int                                                         m_work_lod_slipping_sup;
     int                                                         m_work_lod_slipping_inf;    
 
-    dsreal                                                      m_lodranges[NB_LOD_RANGES_MAX];
+    dsreal                                                      m_lodranges[cst::nbLODRangesMax];
 
     Patch::SubPassCreationHandler*                              m_subpasscreation_handler;
 

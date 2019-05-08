@@ -62,6 +62,9 @@
       <Filter>lod</Filter>
     </ClInclude>
     <ClInclude Include="src\planetclimatebinder.h" />
+    <ClInclude Include="src\csts.h">
+      <Filter>lod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="lod">

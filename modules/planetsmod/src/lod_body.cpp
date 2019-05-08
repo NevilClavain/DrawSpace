@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "lod_body.h"
+#include "csts.h"
 #include "lod_config.h"
 #include "renderer.h"
 #include "plugin.h"
@@ -461,19 +462,19 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 void Body::BuildMeshes( void )
 {
     m_patch_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_RESOLUTION, m_patch_meshe, false, false );
+    build_meshe( cst::patchResolution, m_patch_meshe, false, false );
     m_patch_meshe->SetPath( "sphereLOD patch_meshe" );
 
     m_patch2_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_HIGH_RESOLUTION, m_patch2_meshe, true, false );
+    build_meshe( cst::patchHighResolution, m_patch2_meshe, true, false );
     m_patch2_meshe->SetPath( "sphereLOD patch2_meshe" );
 
     m_patch3_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_AVG_RESOLUTION, m_patch3_meshe, true, false );
+    build_meshe( cst::patchAvgResolution, m_patch3_meshe, true, false );
     m_patch3_meshe->SetPath( "sphereLOD patch3_meshe" );
 
     m_skirt_meshe = _DRAWSPACE_NEW_( Core::Meshe, Core::Meshe );
-    build_meshe( PATCH_RESOLUTION, m_skirt_meshe, false, true );
+    build_meshe( cst::patchResolution, m_skirt_meshe, false, true );
     m_skirt_meshe->SetPath( "sphereLOD skirt_meshe" );
 }
 

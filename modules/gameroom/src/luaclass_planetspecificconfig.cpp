@@ -125,7 +125,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     ///////////////////////
     // OUT params
 
-    entity_rendering_aspect->AddComponent<int>("OUT_test", 667);
+    entity_rendering_aspect->AddComponent<int>("OUT_test", 0);
 
 
     m_rendering_aspect = entity_rendering_aspect;

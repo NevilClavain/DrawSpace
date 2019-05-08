@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "lod_drawing.h"
+#include "csts.h"
 #include "lod_binder.h"
 #include "lod_config.h"
 
@@ -143,7 +144,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     pixels_flags[3] = p_patch->GetOrientation();
 
     Vector pixels_flags_2;
-    pixels_flags_2[0] = PATCH_HIGH_RESOLUTION;
+    pixels_flags_2[0] = cst::patchHighResolution;
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
     m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
@@ -780,7 +781,7 @@ void Drawing::create_all_landplace_meshes( void )
     {
         m_landplace_meshes[i] = _DRAWSPACE_NEW_( Meshe, Meshe );
 
-        create_landplace_meshe( PATCH_AVG_RESOLUTION, i, m_landplace_meshes[i] );
+        create_landplace_meshe( cst::patchAvgResolution, i, m_landplace_meshes[i] );
 
         m_landplace_meshes[i]->SetPath( "sphereLOD landplace meshe" );
     }
