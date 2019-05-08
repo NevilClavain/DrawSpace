@@ -127,6 +127,9 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
 
     entity_rendering_aspect->AddComponent<int>("OUT_test", 0);
 
+    // subpass queues activity
+    entity_rendering_aspect->AddComponent<int>("OUT_delayedSingleSubPassQueueSize", 0);
+
 
     m_rendering_aspect = entity_rendering_aspect;
 
@@ -165,6 +168,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<std::vector<PlanetDetails::Lights>>("lights");
 
     m_rendering_aspect->RemoveComponent<int>("OUT_test");
+    m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
 
     return 0;
 }
@@ -434,6 +438,7 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
     static const std::map<dsstring, std::function<void(lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect)>> retrieve_param =
     {
         { "OUT_test", [](lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect) { lua_pushinteger(p_L, p_rendering_aspect->GetComponent<int>("OUT_test")->getPurpose()); } },
+        { "OUT_delayedSingleSubPassQueueSize", [](lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect) { lua_pushinteger(p_L, p_rendering_aspect->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose()); } },
     };
 
     if(retrieve_param.count(id))

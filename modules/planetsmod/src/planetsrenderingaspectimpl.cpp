@@ -253,7 +253,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     ///// Update OUT parameters in specific config
 
-    m_owner->GetComponent<int>("OUT_test")->getPurpose() = 9998;
+    m_owner->GetComponent<int>("OUT_test")->getPurpose() = 9998;    
+    m_owner->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose() = m_singleshot_subpasses_stack.size();
 }
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
