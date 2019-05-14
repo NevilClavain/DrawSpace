@@ -125,10 +125,11 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     ///////////////////////
     // OUT params
 
-    entity_rendering_aspect->AddComponent<int>("OUT_test", 0);
-
     // subpass queues activity
-    entity_rendering_aspect->AddComponent<int>("OUT_delayedSingleSubPassQueueSize", 0);
+    entity_rendering_aspect->AddComponent<int>("OUT_delayedSingleSubPassQueueSize");
+
+    // cameras infos
+    entity_rendering_aspect->AddComponent<std::map<dsstring,std::tuple<int>>>("OUT_viewsInfos");
 
 
     m_rendering_aspect = entity_rendering_aspect;
@@ -167,8 +168,9 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
     m_rendering_aspect->RemoveComponent<std::vector<PlanetDetails::Lights>>("lights");
 
-    m_rendering_aspect->RemoveComponent<int>("OUT_test");
+
     m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
+    m_rendering_aspect->RemoveComponent<std::map<dsstring, std::tuple<int>>>("OUT_viewsInfos");
 
     return 0;
 }
@@ -427,6 +429,7 @@ int LuaClass_PlanetSpecificConfig::LUA_setlightdir(lua_State* p_L)
 
 int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
 {
+    int nb_ret = 0;
     int argc = lua_gettop(p_L);
     if (argc < 1)
     {
@@ -435,18 +438,28 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
 
     dsstring id = luaL_checkstring(p_L, 1);
 
-    static const std::map<dsstring, std::function<void(lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect)>> retrieve_param =
+    if(id == "OUT_delayedSingleSubPassQueueSize")
     {
-        { "OUT_test", [](lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect) { lua_pushinteger(p_L, p_rendering_aspect->GetComponent<int>("OUT_test")->getPurpose()); } },
-        { "OUT_delayedSingleSubPassQueueSize", [](lua_State* p_L, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect) { lua_pushinteger(p_L, p_rendering_aspect->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose()); } },
-    };
-
-    if(retrieve_param.count(id))
-    {
-        retrieve_param.at(id)(p_L, m_rendering_aspect);
+        lua_pushinteger(p_L, m_rendering_aspect->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose());
         return 1;
     }
+    else if( id == "OUT_viewsInfos")
+    {
+        std::map<dsstring, std::tuple<int>>& viewInfos = m_rendering_aspect->GetComponent<std::map<dsstring, std::tuple<int>>>("OUT_viewsInfos")->getPurpose();
+        
+        lua_pushinteger(p_L, viewInfos.size()); nb_ret++;
+        for(auto& e : viewInfos)
+        {
+            dsstring camera_name = e.first;
+            int currentLOD = std::get<0>(e.second);
 
-    LUA_ERROR("PlanetSpecificConfig::get_outparam : Unknown param id : " << id);
-    return 0;
+            lua_pushstring(p_L, camera_name.c_str()); nb_ret++;
+            lua_pushinteger(p_L, currentLOD); nb_ret++;            
+        }
+    }
+    else
+    {
+        LUA_ERROR("PlanetSpecificConfig::get_outparam : Unknown param id : " << id);
+    }    
+    return nb_ret;
 }

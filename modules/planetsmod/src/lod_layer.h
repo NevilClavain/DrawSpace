@@ -33,20 +33,27 @@ class Body;
 
 class Layer
 {
+private:
+
+    using PatchUpdateCb = DrawSpace::Core::CallBack2<Layer, void, Patch*, int>;
+
 public:
 
     using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
-protected:
+private:
 
     Config*                             m_config;
     Body*                               m_body;
     Layer::SubPassCreationHandler*      m_handler;
-
     bool                                m_hot;
+    int                                 m_current_lod;
 
     dsreal                              m_planetray;
 
+    PatchUpdateCb                       m_patch_update_cb;
+
+    void on_patchupdate(Patch* p_patch, int p_patch_lod);
 
 public:
     Layer( Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
@@ -54,6 +61,7 @@ public:
     Body* GetBody(void) const;
     bool  GetHostState(void) const;
     Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
+    int GetCurrentLOD(void) const;
 
     void SetHotState(bool p_hotstate);
     void UpdateRelativeAlt(dsreal p_alt);

@@ -33,10 +33,13 @@ Layer::Layer(Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_ha
 m_config(p_config),
 m_body(p_body),
 m_handler(p_handler),
-m_hot(false)
+m_hot(false),
+m_current_lod(-1),
+m_patch_update_cb(this, &Layer::on_patchupdate)
 {
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
     p_body->Initialize();
+    p_body->RegisterPatchUpdateHandler(&m_patch_update_cb);
 }
 
 Body* Layer::GetBody(void) const
@@ -52,6 +55,11 @@ bool Layer::GetHostState(void) const
 Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
 {
     return m_handler;
+}
+
+int Layer::GetCurrentLOD(void) const
+{
+    return m_current_lod;
 }
 
 void Layer::SetHotState(bool p_hotstate)
@@ -78,4 +86,9 @@ void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
 void Layer::Compute(void)
 {
     m_body->Compute();
+}
+
+void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
+{
+    m_current_lod = p_patch_lod;
 }
