@@ -129,7 +129,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<int>("OUT_delayedSingleSubPassQueueSize");
 
     // cameras infos
-    entity_rendering_aspect->AddComponent<std::map<dsstring,std::tuple<int>>>("OUT_viewsInfos");
+    entity_rendering_aspect->AddComponent<std::map<dsstring,std::tuple<int,bool>>>("OUT_viewsInfos");
 
 
     m_rendering_aspect = entity_rendering_aspect;
@@ -170,7 +170,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
 
 
     m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
-    m_rendering_aspect->RemoveComponent<std::map<dsstring, std::tuple<int>>>("OUT_viewsInfos");
+    m_rendering_aspect->RemoveComponent<std::map<dsstring, std::tuple<int,bool>>>("OUT_viewsInfos");
 
     return 0;
 }
@@ -445,16 +445,18 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
     }
     else if( id == "OUT_viewsInfos")
     {
-        std::map<dsstring, std::tuple<int>>& viewInfos = m_rendering_aspect->GetComponent<std::map<dsstring, std::tuple<int>>>("OUT_viewsInfos")->getPurpose();
+        std::map<dsstring, std::tuple<int,bool>>& viewInfos = m_rendering_aspect->GetComponent<std::map<dsstring, std::tuple<int,bool>>>("OUT_viewsInfos")->getPurpose();
         
         lua_pushinteger(p_L, viewInfos.size()); nb_ret++;
         for(auto& e : viewInfos)
         {
             dsstring camera_name = e.first;
             int currentLOD = std::get<0>(e.second);
+            int relative = std::get<1>(e.second);
 
             lua_pushstring(p_L, camera_name.c_str()); nb_ret++;
-            lua_pushinteger(p_L, currentLOD); nb_ret++;            
+            lua_pushinteger(p_L, currentLOD); nb_ret++;
+            lua_pushinteger(p_L, relative); nb_ret++;
         }
     }
     else

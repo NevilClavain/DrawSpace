@@ -255,15 +255,15 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     m_owner->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose() = m_singleshot_subpasses_stack.size();
 
-    std::map<dsstring, std::tuple<int>> registeredCameraInfos;
+    std::map<dsstring, std::tuple<int,bool>> registeredCameraInfos;
     for(auto& e : m_registered_camerapoints)
     {
         int currentLOD = e.second.layers[0]->GetCurrentLOD();
 
-        registeredCameraInfos[e.first] = std::make_tuple(currentLOD);
+        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, true);
     }
 
-    m_owner->GetComponent<std::map<dsstring, std::tuple<int>>>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
+    m_owner->GetComponent<std::map<dsstring, std::tuple<int,bool>>>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
 }
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
