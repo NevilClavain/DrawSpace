@@ -237,7 +237,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 e2->Update( world );
             }
         }
-
     }
     else
     {
@@ -259,11 +258,12 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     for(auto& e : m_registered_camerapoints)
     {
         int currentLOD = e.second.layers[0]->GetCurrentLOD();
+        bool relative = e.second.layers[0]->GetHostState();
 
-        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, true);
+        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative);
     }
 
-    m_owner->GetComponent<std::map<dsstring, std::tuple<int,bool>>>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
+    m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
 }
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
