@@ -550,6 +550,11 @@ dsstring Body::GetDescription(void) const
     return m_description;
 }
 
+dsreal Body::GetRelativeAlt(void) const
+{
+    return m_relative_alt;
+}
+
 void Body::SetHotState( bool p_hotstate )
 {
     check_currentpatch_event( NULL, -1 );    

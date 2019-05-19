@@ -62,7 +62,7 @@ public:
     bool  GetHostState(void) const;
     Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
     int GetCurrentLOD(void) const;
-
+    
     void SetHotState(bool p_hotstate);
     void UpdateRelativeAlt(dsreal p_alt);
     void UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);

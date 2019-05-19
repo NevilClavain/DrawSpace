@@ -63,7 +63,7 @@ protected:
     using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using TimerCb           = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
 
-    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool>>;
+    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal>>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;

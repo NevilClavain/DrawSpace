@@ -453,10 +453,15 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
             dsstring camera_name = e.first;
             int currentLOD = std::get<0>(e.second);
             int relative = std::get<1>(e.second);
+            double rel_alt = std::get<2>(e.second);
+            double alt = std::get<3>(e.second);
 
             lua_pushstring(p_L, camera_name.c_str()); nb_ret++;
             lua_pushinteger(p_L, currentLOD); nb_ret++;
             lua_pushinteger(p_L, relative); nb_ret++;
+            lua_pushnumber(p_L, rel_alt); nb_ret++;
+            lua_pushnumber(p_L, alt); nb_ret++;
+
         }
     }
     else

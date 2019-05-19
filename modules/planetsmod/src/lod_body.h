@@ -94,8 +94,8 @@ public:
     int                         GetCurrentFace(void) const;
     void                        GetInvariantViewerPos(DrawSpace::Utils::Vector& p_pos) const;
     dsreal                      GetDiameter(void) const;
-
     dsstring                    GetDescription(void) const;
+    dsreal                      GetRelativeAlt(void) const;
 
     
     void                        Initialize(void);

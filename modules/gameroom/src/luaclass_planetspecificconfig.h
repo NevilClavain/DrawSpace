@@ -81,7 +81,7 @@ private:
 
     DrawSpace::Aspect::RenderingAspect* m_rendering_aspect;
 
-    using ViewOutInfos = std::map<dsstring, std::tuple<int, bool>>;
+    using ViewOutInfos = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal>>;
 
 public:
     LuaClass_PlanetSpecificConfig(lua_State* p_L);
