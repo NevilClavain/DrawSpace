@@ -22,6 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
+
 #include "luacontext.h"
 #include "luaclass_globals.h"
 #include "mainservice.h"
@@ -44,6 +47,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "dump_mem", &LuaClass_Globals::LUA_dumpmem },
     { "total_mem", &LuaClass_Globals::LUA_totalmem },
     { "log", &LuaClass_Globals::LUA_log },
+    { "format_real", &LuaClass_Globals::LUA_formatreal },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -288,7 +292,6 @@ int LuaClass_Globals::LUA_totalmem( lua_State* p_L )
     return 1;
 }
 
-
 int LuaClass_Globals::LUA_log(lua_State* p_L)
 {
     int argc = lua_gettop(p_L);
@@ -301,6 +304,24 @@ int LuaClass_Globals::LUA_log(lua_State* p_L)
     MainService::GetInstance()->RequestLog( level, log );
 
     return 0;
+}
+
+int LuaClass_Globals::LUA_formatreal(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Globals::format_real : argument(s) missing");
+    }
+    dsreal value = luaL_checknumber(p_L, 1);
+    int precision = luaL_checkint(p_L, 2);
+
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(precision) << value;
+    dsstring s = stream.str();
+    
+    lua_pushstring(p_L, stream.str().c_str());
+    return 1;
 }
 
 int LuaClass_Globals::LUA_reset( lua_State* p_L )
