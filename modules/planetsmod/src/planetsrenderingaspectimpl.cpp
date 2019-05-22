@@ -249,7 +249,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     draw_sub_passes();
 
-
     ///// Update OUT parameters in specific config
 
     m_owner->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose() = m_singleshot_subpasses_stack.size();
@@ -260,12 +259,10 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         int currentLOD = e.second.layers[0]->GetCurrentLOD();
         bool relative = e.second.layers[0]->GetHostState();
         dsreal rel_alt = 0.0;
-        if(relative)
-        {
-            rel_alt = e.second.layers[0]->GetBody()->GetRelativeAlt();
-        }
+        rel_alt = e.second.relative_alt;
+        dsreal altitude = e.second.layers[0]->GetBody()->GetHotPointAltitud();
 
-        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, 2.3);
+        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, altitude);
     }
 
     m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
