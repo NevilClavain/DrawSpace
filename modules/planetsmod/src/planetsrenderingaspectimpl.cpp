@@ -863,52 +863,49 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
 
     for (auto& body : m_registered_bodies)
     {
-        for(auto& e : body.second.layers) 
+        LOD::Layer* layer = body.second.layers[0];
+
+        Matrix body_world;
+
+        TransformAspect* body_transform_aspect = body.first->GetAspect<TransformAspect>();
+        if (body_transform_aspect)
         {
-            LOD::Layer* layer = e;
+            body_transform_aspect->GetWorldTransform(body_world);
+        }
+        else
+        {
+            _DSEXCEPTION("Body must have transform aspect!!!")
+        }
 
-            Matrix body_world;
+        Vector body_pos;
+        body_pos[0] = body_world(3, 0);
+        body_pos[1] = body_world(3, 1);
+        body_pos[2] = body_world(3, 2);
 
-            TransformAspect* body_transform_aspect = body.first->GetAspect<TransformAspect>();
-            if (body_transform_aspect)
-            {
-                body_transform_aspect->GetWorldTransform(body_world);
-            }
-            else
-            {
-                _DSEXCEPTION("Body must have transform aspect!!!")
-            }
+        Vector delta;
 
-            Vector body_pos;
-            body_pos[0] = body_world(3, 0);
-            body_pos[1] = body_world(3, 1);
-            body_pos[2] = body_world(3, 2);
+        delta[0] = body_pos[0] - planetbodypos[0];
+        delta[1] = body_pos[1] - planetbodypos[1];
+        delta[2] = body_pos[2] - planetbodypos[2];
+        delta[3] = 1.0;
 
-            Vector delta;
+        dsreal rel_alt = delta.Length() / m_planet_ray;
 
-            delta[0] = body_pos[0] - planetbodypos[0];
-            delta[1] = body_pos[1] - planetbodypos[1];
-            delta[2] = body_pos[2] - planetbodypos[2];
-            delta[3] = 1.0;
+        body.second.relative_alt_valid = true;
+        body.second.relative_alt = rel_alt;
 
-            dsreal rel_alt = delta.Length() / m_planet_ray;
+        layer->UpdateRelativeAlt(rel_alt);
+        layer->UpdateInvariantViewerPos(delta);
 
-            body.second.relative_alt_valid = true;
-            body.second.relative_alt = rel_alt;
+        if (rel_alt < LOD::cst::hotRelativeAlt)
+        {
+            layer->SetHotState(true);
+        }
 
-            layer->UpdateRelativeAlt(rel_alt);
-            layer->UpdateInvariantViewerPos( delta );
-            
-            if( rel_alt < LOD::cst::hotRelativeAlt )
-            {
-                layer->SetHotState(true);
-            }
-
-            if(layer->GetHostState())
-            {
-                layer->UpdateHotPoint(delta);
-                layer->Compute();
-            }                   
+        if (layer->GetHostState())
+        {
+            layer->UpdateHotPoint(delta);
+            layer->Compute();
         }
     }
 }
