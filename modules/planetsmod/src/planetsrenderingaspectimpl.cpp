@@ -897,15 +897,22 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
         layer->UpdateRelativeAlt(rel_alt);
         layer->UpdateInvariantViewerPos(delta);
 
-        if (rel_alt < LOD::cst::hotRelativeAlt)
+        if (!layer->GetHostState())
         {
-            layer->SetHotState(true);
+            if (rel_alt < LOD::cst::hotRelativeAlt)
+            {
+                layer->SetHotState(true);
+            }
         }
-
-        if (layer->GetHostState())
+        else
         {
             layer->UpdateHotPoint(delta);
             layer->Compute();
+
+            if (rel_alt >= LOD::cst::hotRelativeAlt)
+            {
+                layer->SetHotState(false);
+            }
         }
     }
 }
