@@ -57,39 +57,6 @@ protected:
 public:
 
     // NVI pattern
-    /*
-    bool Init(EntityGraph::EntityNodeGraph* p_entitygraph)
-    {
-        for (auto& e : m_system_evt_handlers)
-        {
-            (*e)(SYSTEM_INIT_BEGIN, GetSystemId());
-        }
-
-        bool status = init( p_entitygraph );
-
-        for (auto& e : m_system_evt_handlers)
-        {
-            (*e)(SYSTEM_INIT_END, GetSystemId());
-        }
-
-        return status;
-    }
-
-    void Release(EntityGraph::EntityNodeGraph* p_entitygraph)
-    {
-        for (auto& e : m_system_evt_handlers)
-        {
-            (*e)(SYSTEM_RELEASE_BEGIN, GetSystemId());
-        }
-
-        release(p_entitygraph);
-
-        for (auto& e : m_system_evt_handlers)
-        {
-            (*e)(SYSTEM_RELEASE_END, GetSystemId());
-        }
-    }
-    */
     void Run(EntityGraph::EntityNodeGraph* p_entitygraph)
     {
         for (auto& e : m_system_evt_handlers)

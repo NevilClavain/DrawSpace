@@ -317,7 +317,7 @@ int LuaClass_Body::LUA_configuremode( lua_State* p_L )
 int LuaClass_Body::LUA_updateattitude( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 2 )
+	if( argc < 1 )
 	{
         LUA_ERROR( "Body::update_attitude : argument(s) missing" );
 	}
