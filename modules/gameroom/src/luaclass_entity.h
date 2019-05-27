@@ -43,7 +43,8 @@ protected:
         SERVICE_ASPECT,
         TIME_ASPECT,
         TRANSFORM_ASPECT,
-        INFOS_ASPECT
+        INFOS_ASPECT,
+        RESOURCES_ASPECT
 
     } AspectType;
 

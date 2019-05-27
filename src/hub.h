@@ -30,6 +30,7 @@
 #include "physicssystem.h"
 #include "rendersystem.h"
 #include "tracesystem.h"
+#include "resourcessystem.h"
 
 namespace DrawSpace
 {
@@ -52,13 +53,13 @@ private:
     DrawSpace::Systems::PhysicsSystem               m_physicsSystem;
     DrawSpace::Systems::TimeSystem                  m_timeSystem;
     DrawSpace::Systems::TraceSystem                 m_traceSystem;
+    DrawSpace::Systems::ResourcesSystem             m_resourcesSystem;
 
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
 
 protected:
-    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
-    //void release(EntityGraph::EntityNodeGraph* p_entitygraph);
+
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 public:

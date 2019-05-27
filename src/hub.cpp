@@ -32,35 +32,14 @@ using namespace DrawSpace::Aspect;
 Hub::Hub( void )
 {
     // attention ! l'ordre est important ! ( par ex. time system doit etre execute avant tt les autres!)
+
+    m_systems.push_back( &m_resourcesSystem );
     m_systems.push_back( &m_timeSystem );
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
     m_systems.push_back( &m_renderingSystem );
     m_systems.push_back( &m_traceSystem );
-
 }
-
-/*
-bool Hub::init( EntityGraph::EntityNodeGraph* p_entitygraph )
-{
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        if( false == m_systems[i]->Init( p_entitygraph ) )
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-void Hub::release( EntityGraph::EntityNodeGraph* p_entitygraph )
-{
-    for( size_t i = 0; i < m_systems.size(); i++ )
-    {
-        m_systems[i]->Release( p_entitygraph );
-    }
-}
-*/
 
 void Hub::run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {

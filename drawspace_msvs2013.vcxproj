@@ -74,6 +74,8 @@
     <ClCompile Include="src\renderpassnodegraph.cpp" />
     <ClCompile Include="src\renderstatesset.cpp" />
     <ClCompile Include="src\rendersystem.cpp" />
+    <ClCompile Include="src\resourcesaspect.cpp" />
+    <ClCompile Include="src\resourcessytem.cpp" />
     <ClCompile Include="src\revolutiontransformaspectimpl.cpp" />
     <ClCompile Include="src\serviceaspect.cpp" />
     <ClCompile Include="src\servicesystem.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="src\renderingaspect.h" />
     <ClInclude Include="src\renderingaspectimpl.h" />
     <ClInclude Include="src\rendersystem.h" />
+    <ClInclude Include="src\resourcesaspect.h" />
+    <ClInclude Include="src\resourcessystem.h" />
     <ClInclude Include="src\revolutiontransformaspectimpl.h" />
     <ClInclude Include="src\serviceaspect.h" />
     <ClInclude Include="src\serviceaspectimpl.h" />
