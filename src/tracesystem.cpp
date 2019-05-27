@@ -60,16 +60,6 @@ void TraceSystem::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
     p_logconf->RegisterSink( &logger );
     logger.SetConfiguration( p_logconf );
 }
-/*
-bool TraceSystem::init( EntityGraph::EntityNodeGraph* p_entitygraph )
-{
-    return true;
-}
-
-void TraceSystem::release( EntityGraph::EntityNodeGraph* p_entitygraph )
-{
-}
-*/
 
 void TraceSystem::run( EntityGraph::EntityNodeGraph* p_entitygraph )
 {

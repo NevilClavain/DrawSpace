@@ -36,9 +36,6 @@ namespace Systems
 class PhysicsSystem : public Interface::System
 {
 protected:
-
-    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph) { return true; };
-    //void release(EntityGraph::EntityNodeGraph* p_entitygraph) {};
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     std::set<Core::Entity*>             m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)

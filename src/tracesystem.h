@@ -35,8 +35,6 @@ namespace Systems
 class TraceSystem : public Interface::System
 {
 protected:
-    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
-    //void release(EntityGraph::EntityNodeGraph* p_entitygraph);
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 public:

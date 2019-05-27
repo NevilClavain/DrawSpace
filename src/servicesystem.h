@@ -35,14 +35,10 @@ namespace Systems
 class ServiceSystem : public Interface::System
 {
 protected:
-
-    //bool init(EntityGraph::EntityNodeGraph* p_entitygraph);
-    //void release(EntityGraph::EntityNodeGraph* p_entitygraph);
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 
     dsstring    m_callsource;
-//    bool        m_init_status;
 
     long        m_key;
     long        m_char;

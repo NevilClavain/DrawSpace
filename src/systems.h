@@ -36,12 +36,8 @@ class System
 public:
     enum Event
     {
-        //SYSTEM_INIT_BEGIN,
-        //SYSTEM_INIT_END,
         SYSTEM_RUN_BEGIN,
         SYSTEM_RUN_END,
-        //SYSTEM_RELEASE_BEGIN,
-        //SYSTEM_RELEASE_END
     };
 
     using SystemEventsHandler = DrawSpace::Core::BaseCallback2<void, Event, dsstring>;
@@ -50,8 +46,6 @@ protected:
 
     std::set<SystemEventsHandler*>            m_system_evt_handlers;
 
-    //virtual bool init(EntityGraph::EntityNodeGraph* p_entitygraph) = 0;
-    //virtual void release(EntityGraph::EntityNodeGraph* p_entitygraph) = 0;
     virtual void run(EntityGraph::EntityNodeGraph* p_entitygraph) = 0;
 
 public:
