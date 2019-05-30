@@ -113,27 +113,27 @@ void Texture::ReleaseData( void )
     }
 }
 
-void* Texture::GetData( void )
+void* Texture::GetData( void ) const
 {
     return m_filedata;
 }
 
-long Texture::GetDataSize( void )
+long Texture::GetDataSize( void ) const
 {
     return m_filedatasize;
 }
 
-void Texture::GetPath( dsstring& p_path )
+void Texture::GetPath( dsstring& p_path ) const
 {
     p_path = compute_final_path();
 }
 
-bool Texture::IsRenderTarget( void )
+bool Texture::IsRenderTarget( void ) const
 {
     return m_render_target;
 }
 
-void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h )
+void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h ) const
 {
     p_w = m_render_target_width;
     p_h = m_render_target_height;
@@ -162,24 +162,24 @@ void Texture::SetRenderData( void* p_render_data )
     m_render_data = p_render_data;
 }
 
-void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp )
+void Texture::GetFormat( long& p_width, long& p_height, long& p_bpp ) const
 {
     p_width = m_width;
     p_height = m_height;
     p_bpp = m_bpp;
 }
 
-Texture::RenderPurpose Texture::GetRenderPurpose( void )
+Texture::RenderPurpose Texture::GetRenderPurpose( void ) const
 {
     return m_renderpurpose;
 }
 
-Texture::RenderTarget Texture::GetRenderTarget( void )
+Texture::RenderTarget Texture::GetRenderTarget( void ) const
 {
     return m_rendertarget;
 }
 
-Texture::Purpose Texture::GetPurpose( void )
+Texture::Purpose Texture::GetPurpose( void ) const
 {
     return m_purpose;
 }
@@ -211,7 +211,7 @@ void Texture::ReleaseTextureContent( void )
     renderer->ReleaseTextureContent( m_render_data );
 }
 
-void* Texture::GetTextureContentPtr( void )
+void* Texture::GetTextureContentPtr( void ) const
 {
     if( !m_render_data )
     {
@@ -244,12 +244,12 @@ bool Texture::UpdateTextureContent( void )
     return renderer->UpdateTextureContent( m_render_data );
 }
 
-void* Texture::GetRenderData( void )
+void* Texture::GetRenderData( void ) const
 {
     return m_render_data;
 }
 
-dsstring Texture::compute_final_path( void )
+dsstring Texture::compute_final_path( void ) const
 {
     dsstring final_path = m_rootpath + "/";
     
@@ -262,7 +262,7 @@ void Texture::SetRootPath( const dsstring& p_path )
     m_rootpath = p_path;
 }
 
-void Texture::GetMD5( dsstring& p_md5 )
+void Texture::GetMD5( dsstring& p_md5 ) const
 {
     MD5 md5;
 

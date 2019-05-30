@@ -29,17 +29,39 @@
 
 namespace DrawSpace
 {
-    namespace Systems
+namespace Systems
+{
+class ResourcesSystem : public Interface::System
+{
+protected:
+
+    using Bloc = struct
     {
-        class ResourcesSystem : public Interface::System
-        {
-        protected:
-            void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+        void*   data;
+        int     size;
+    };
 
-        public:
-            dsstring GetSystemId(void) const { return "ResourcesSystem"; };
+    static dsstring                 m_textures_rootpath;
 
-        };
-    }
+    std::map<dsstring,Bloc>         m_texturesBloc;
+
+
+
+
+
+    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
+    dsstring compute_textures_final_path(const dsstring& p_path) const;
+
+public:
+    dsstring GetSystemId(void) const { return "ResourcesSystem"; };
+
+    void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
+
+
+    void SetTexturesRootPath(const dsstring& p_path);
+
+};
+}
 }
 

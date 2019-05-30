@@ -84,7 +84,7 @@ protected:
     Purpose                         m_purpose;
 
 
-    dsstring compute_final_path( void );
+    dsstring compute_final_path( void ) const;
     
 public:
     Texture( void );
@@ -92,39 +92,35 @@ public:
                 RenderPurpose p_rp = RENDERPURPOSE_COLOR, RenderTarget p_rt = RENDERTARGET_GPU );
     ~Texture( void );
 
-    static void SetRootPath( const dsstring& p_path );
-
-    bool LoadFromFile( void );
-    void ReleaseData( void );
-
-    void* GetData( void );
-    long GetDataSize( void );
-
-    void GetPath( dsstring& p_path );
-
-
-    bool IsRenderTarget( void );
-    void GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h );
-
-    void SetFormat( long p_width, long p_height, long p_bpp );
-    void SetRenderData( void* p_renderdata );
-    void GetFormat( long& p_width, long& p_height, long& p_bpp );
-
-    RenderPurpose GetRenderPurpose( void );
-    RenderTarget GetRenderTarget( void );
-    Purpose GetPurpose( void );
-    void SetPurpose( Purpose p_purpose );
+    
+    void*           GetData(void) const;
+    long            GetDataSize(void) const;
+    void            GetPath(dsstring& p_path) const;
+    void            GetRenderTargetDims(unsigned long& p_w, unsigned long& p_h) const;
+    void            GetFormat(long& p_width, long& p_height, long& p_bpp) const;
+    RenderPurpose   GetRenderPurpose(void) const;
+    RenderTarget    GetRenderTarget(void) const;
+    Purpose         GetPurpose(void) const;
+    void*           GetTextureContentPtr(void) const;
+    void*           GetRenderData(void) const;
+    void            GetMD5(dsstring& p_md5) const;
+    bool            IsRenderTarget(void) const;
 
 
-    bool AllocTextureContent( void );
-    void ReleaseTextureContent( void );
-    void* GetTextureContentPtr( void );
-    bool CopyTextureContent( void );
-    bool UpdateTextureContent( void );
+    static void     SetRootPath(const dsstring& p_path);
 
-    void* GetRenderData( void );
+    bool            LoadFromFile( void );
+    void            ReleaseData( void );
+       
+    void            SetFormat( long p_width, long p_height, long p_bpp );
+    void            SetRenderData( void* p_renderdata );   
+    void            SetPurpose( Purpose p_purpose );
 
-    void GetMD5( dsstring& p_md5 );
+    bool            AllocTextureContent( void );
+    void            ReleaseTextureContent( void );
+    
+    bool            CopyTextureContent( void );
+    bool            UpdateTextureContent( void );
 
 };
 }

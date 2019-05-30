@@ -283,6 +283,19 @@ void MainService::create_skybox( void )
 
     std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { {skybox_textures} };
 
+
+
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_skyboxEntity.AddAspect<ResourcesAspect>();
+
+    Texture* texture_0 = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(texture_0, false));
+
+
+
+
     /////////////// les FX pour chaque passes
 
     Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
