@@ -36,6 +36,7 @@ _DECLARE_DS_LOGGER( logger, "test_impostors_mainservice", NULL )
 MainService::MainService( void ) :
 m_fps_transformer( NULL )
 {
+    DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("test_data/textures_bank");
 }
 
 bool MainService::Init( void )
@@ -145,22 +146,6 @@ bool MainService::Init( void )
     rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
 
-    /*
-    TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
-
-    time_aspect->AddComponent<TimeManager>( "time_manager" );
-    time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", TimeAspect::NORMAL_TIME );
-    time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
-    time_aspect->AddComponent<dstime>( "time", 0 );
-    time_aspect->AddComponent<int>( "output_fps" );
-    time_aspect->AddComponent<int>( "output_world_nbsteps" );
-
-    time_aspect->AddComponent<dsreal>( "output_time_factor" );
-
-    m_fps_yaw = time_aspect->TimeAngleFactory( 0.0 );
-    m_fps_pitch = time_aspect->TimeAngleFactory( 0.0 );
-    */
-
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -177,9 +162,11 @@ bool MainService::Init( void )
 
     create_camera();
     create_skybox();
-    create_ground();
-    create_screen_impostors();
-    create_world_impostor();
+
+    // temporaire
+    //create_ground();
+    //create_screen_impostors();
+    //create_world_impostor();
 
 
 
@@ -195,6 +182,8 @@ bool MainService::Init( void )
     // designer la camera courante    
     m_entitygraph.SetCurrentCameraEntity( &m_cameraEntity );
 
+    // temporaire
+    /*
     // ajouter le ground a la scene
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
@@ -206,7 +195,7 @@ bool MainService::Init( void )
     // ajout de l'impostor world a la scene
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
-
+    */
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -263,7 +252,7 @@ void MainService::create_skybox( void )
 
 
     ///////////////// jeux de textures pour chaque passes
-    //std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
+
 
     std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
 
@@ -277,7 +266,7 @@ void MainService::create_skybox( void )
 
     for (int i = 0; i < 6; i++)
     {
-        textures[i][0]->LoadFromFile();
+        //textures[i][0]->LoadFromFile();
         skybox_textures.push_back(textures[i]);
     }
 
@@ -285,14 +274,16 @@ void MainService::create_skybox( void )
 
 
 
-
     /////////// resources ////////////////////////////////
 
     ResourcesAspect* resources_aspect = m_skyboxEntity.AddAspect<ResourcesAspect>();
 
-    Texture* texture_0 = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(texture_0, false));
-
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(textures[0][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_1", std::make_tuple(textures[1][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_2", std::make_tuple(textures[2][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_3", std::make_tuple(textures[3][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
 
 
 
@@ -336,63 +327,6 @@ void MainService::create_skybox( void )
     rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
     rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
 
-
-    /*
-    ////////////// noms des passes
-
-    std::vector<dsstring> skybox_passes;
-
-    skybox_passes.push_back( "texture_pass" );
-
-    rendering_aspect->AddComponent<std::vector<dsstring>>( "skybox_passes", skybox_passes );
-
-    ////////////// 6 jeux de 32 textures stages
-    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
-
-    std::array<std::array<Texture*, RenderingNode::NbMaxTextures>, 6> textures = { NULL };
-    textures[0][0] = _DRAWSPACE_NEW_(Texture, Texture("sb0.bmp"));
-    textures[1][0] = _DRAWSPACE_NEW_(Texture, Texture("sb2.bmp"));
-    textures[2][0] = _DRAWSPACE_NEW_(Texture, Texture("sb3.bmp"));
-    textures[3][0] = _DRAWSPACE_NEW_(Texture, Texture("sb1.bmp"));
-    textures[4][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
-    textures[5][0] = _DRAWSPACE_NEW_(Texture, Texture("sb4.bmp"));
-
-    for (int i = 0; i < 6; i++)
-    {
-        textures[i][0]->LoadFromFile();
-
-        skybox_textures.push_back( textures[i] );
-    }
-    rendering_aspect->AddComponent<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>("skybox_textures", skybox_textures);
-
-    /////////////// les FX pour chaque slot pass
-
-    Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_( Fx, Fx );
-
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    skybox_texturepass_fx->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
-
-    skybox_texturepass_fx->GetShader( 0 )->LoadFromFile();
-    skybox_texturepass_fx->GetShader( 1 )->LoadFromFile();
-
-    RenderStatesSet skybox_texturepass_rss;
-    skybox_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-    skybox_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
-
-    skybox_texturepass_fx->SetRenderStates( skybox_texturepass_rss );
-
-    rendering_aspect->AddComponent<Fx*>( "skybox_fx", skybox_texturepass_fx );
-       
-    /////////// params shaders
-    
-    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> skybox_texturepass_shaders_params;
-
-        
-    rendering_aspect->AddComponent<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>( "skybox_texturepass_shaders_params", skybox_texturepass_shaders_params );
-
-    //////////////// valeur du rendering order pour chaque slot pass
-    rendering_aspect->AddComponent<int>( "skybox_ro", -1000 );
-    */
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
@@ -467,7 +401,7 @@ void MainService::create_world_impostor( void )
     impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
 
     impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
-    impostors_texturepass->GetTexture( 0 )->LoadFromFile();
+    //impostors_texturepass->GetTexture( 0 )->LoadFromFile();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -588,7 +522,7 @@ void MainService::create_screen_impostors( void )
     impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
 
     impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "star.bmp" ) ), 0 );
-    impostors_texturepass->GetTexture( 0 )->LoadFromFile();
+    //impostors_texturepass->GetTexture( 0 )->LoadFromFile();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -629,7 +563,7 @@ void MainService::create_ground( void )
     ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
 
     ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+    //ground_texturepass->GetTexture( 0 )->LoadFromFile();
 
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );

@@ -59,7 +59,7 @@ public:
     void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
 
 
-    void SetTexturesRootPath(const dsstring& p_path);
+    static void SetTexturesRootPath(const dsstring& p_path);
 
 };
 }

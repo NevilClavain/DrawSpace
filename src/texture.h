@@ -82,9 +82,7 @@ protected:
     RenderPurpose                   m_renderpurpose;
     RenderTarget                    m_rendertarget;
     Purpose                         m_purpose;
-
-
-    dsstring compute_final_path( void ) const;
+    
     
 public:
     Texture( void );
@@ -106,11 +104,6 @@ public:
     void            GetMD5(dsstring& p_md5) const;
     bool            IsRenderTarget(void) const;
 
-
-    static void     SetRootPath(const dsstring& p_path);
-
-    bool            LoadFromFile( void );
-    void            ReleaseData( void );
        
     void            SetFormat( long p_width, long p_height, long p_bpp );
     void            SetRenderData( void* p_renderdata );   
@@ -121,6 +114,8 @@ public:
     
     bool            CopyTextureContent( void );
     bool            UpdateTextureContent( void );
+
+    void            SetData( void* p_data, long p_size );
 
 };
 }

@@ -65,42 +65,37 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<1>( e->getPurpose() );
             if( !loaded )
             {
-                dsstring asset_path;
+                dsstring asset_path;                
                 std::get<0>( e->getPurpose() )->GetPath(asset_path);
-                Texture* texture = std::get<0>( e->getPurpose() );
 
-                Bloc texture_bloc;
+                dsstring final_asset_path = compute_textures_final_path(asset_path);
+
+                Texture* texture = std::get<0>( e->getPurpose() );
                
-                if(m_texturesBloc.find(asset_path) == m_texturesBloc.end())
+                if(m_texturesBloc.find(final_asset_path) == m_texturesBloc.end())
                 {
                     Bloc bloc;
                     long size;
                     void* data;
 
                     // load it
-                    data = Utils::File::LoadAndAllocBinaryFile(compute_textures_final_path(asset_path), &size);
+                    data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
                     if (!data)
                     {
-                        _DSEXCEPTION("ResourcesSystem : failed to load " + asset_path);
+                        _DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
                     }
                     bloc.data = data;
                     bloc.size = size;
 
-                    m_texturesBloc[asset_path] = bloc;
-                    texture_bloc = bloc;
-                }
-                else
-                {
-                    texture_bloc = m_texturesBloc.at(asset_path);
+                    m_texturesBloc[final_asset_path] = bloc;
                 }
 
                 // update texture
-
+                texture->SetData(m_texturesBloc.at(final_asset_path).data, m_texturesBloc.at(final_asset_path).size);
 
                 loaded = true;
             }
         }
-
     }
 }
 
