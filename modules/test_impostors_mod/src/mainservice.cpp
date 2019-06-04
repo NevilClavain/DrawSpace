@@ -37,6 +37,8 @@ MainService::MainService( void ) :
 m_fps_transformer( NULL )
 {
     DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("test_data/textures_bank");
+    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("test_data/shaders_bank");
+    DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(true);
 }
 
 bool MainService::Init( void )
@@ -273,20 +275,6 @@ void MainService::create_skybox( void )
     std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { {skybox_textures} };
 
 
-
-    /////////// resources ////////////////////////////////
-
-    ResourcesAspect* resources_aspect = m_skyboxEntity.AddAspect<ResourcesAspect>();
-
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(textures[0][0], false));
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_1", std::make_tuple(textures[1][0], false));
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_2", std::make_tuple(textures[2][0], false));
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_3", std::make_tuple(textures[3][0], false));
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
-    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
-
-
-
     /////////////// les FX pour chaque passes
 
     Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
@@ -294,8 +282,8 @@ void MainService::create_skybox( void )
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
 
-    skybox_texturepass_fx->GetShader(0)->LoadFromFile();
-    skybox_texturepass_fx->GetShader(1)->LoadFromFile();
+    //skybox_texturepass_fx->GetShader(0)->LoadFromFile();
+    //skybox_texturepass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturepass_rss;
     skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -326,6 +314,23 @@ void MainService::create_skybox( void )
     rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
     rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
     rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
+
+
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_skyboxEntity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(textures[0][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_1", std::make_tuple(textures[1][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_2", std::make_tuple(textures[2][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_3", std::make_tuple(textures[3][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false));
+
 
 
 

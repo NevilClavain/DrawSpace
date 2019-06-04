@@ -83,6 +83,7 @@ protected:
     RenderTarget                    m_rendertarget;
     Purpose                         m_purpose;
     
+    dsstring                        compute_final_path(void) const;
     
 public:
     Texture( void );
@@ -94,6 +95,7 @@ public:
     void*           GetData(void) const;
     long            GetDataSize(void) const;
     void            GetPath(dsstring& p_path) const;
+    void            GetBasePath(dsstring& p_path) const;
     void            GetRenderTargetDims(unsigned long& p_w, unsigned long& p_h) const;
     void            GetFormat(long& p_width, long& p_height, long& p_bpp) const;
     RenderPurpose   GetRenderPurpose(void) const;
@@ -116,6 +118,11 @@ public:
     bool            UpdateTextureContent( void );
 
     void            SetData( void* p_data, long p_size );
+
+    static void     SetRootPath(const dsstring& p_path);
+
+    bool            LoadFromFile(void);
+    void            ReleaseData(void);
 
 };
 }

@@ -37,6 +37,8 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
+dsstring Texture::m_rootpath = ".";
+
 
 Texture::Texture( void ) :
 m_filedata( NULL ), 
@@ -74,7 +76,41 @@ m_bpp( 4 )
 
 Texture::~Texture( void )
 {
+    ReleaseData();
+}
 
+bool Texture::LoadFromFile(void)
+{
+    if (m_filedata)
+    {
+        // nettoyer
+        ReleaseData();
+    }
+
+    if ("" == m_path)
+    {
+        _DSEXCEPTION("Texture filepath not initialized!");
+    }
+
+    long size;
+    void* data = Utils::File::LoadAndAllocBinaryFile(compute_final_path(), &size);
+    if (!data)
+    {
+        return false;
+    }
+    m_filedata = data;
+    m_filedatasize = size;
+    return true;
+}
+
+void Texture::ReleaseData(void)
+{
+    if (m_filedata)
+    {
+        _DRAWSPACE_DELETE_N_(m_filedata);
+        m_filedata = NULL;
+        m_filedatasize = -1;
+    }
 }
 
 void* Texture::GetData( void ) const
@@ -89,6 +125,11 @@ long Texture::GetDataSize( void ) const
 
 void Texture::GetPath( dsstring& p_path ) const
 {
+    p_path = compute_final_path();
+}
+
+void Texture::GetBasePath(dsstring& p_path) const
+{
     p_path = m_path;
 }
 
@@ -102,8 +143,6 @@ void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h ) cons
     p_w = m_render_target_width;
     p_h = m_render_target_height;
 }
-
-
 
 void Texture::SetFormat( long p_width, long p_height, long p_bpp )
 {
@@ -211,6 +250,20 @@ bool Texture::UpdateTextureContent( void )
 void* Texture::GetRenderData( void ) const
 {
     return m_render_data;
+}
+
+
+dsstring Texture::compute_final_path(void) const
+{
+    dsstring final_path = m_rootpath + "/";
+
+    final_path += m_path;
+    return final_path;
+}
+
+void Texture::SetRootPath(const dsstring& p_path)
+{
+    m_rootpath = p_path;
 }
 
 void Texture::GetMD5( dsstring& p_md5 ) const

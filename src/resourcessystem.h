@@ -43,7 +43,12 @@ protected:
 
     static dsstring                 m_textures_rootpath;
 
-    std::map<dsstring,Bloc>         m_texturesBloc;
+    static dsstring                 m_shaders_rootpath;
+    static bool                     m_addshaderspath;
+
+
+    std::map<dsstring,Bloc>         m_texturesBlocs;
+    std::map<dsstring,Bloc>         m_shadersBlocs;
 
 
 
@@ -53,6 +58,34 @@ protected:
 
     dsstring compute_textures_final_path(const dsstring& p_path) const;
 
+    dsstring compute_shaders_final_path(const dsstring& p_path) const;
+
+    template<typename T>
+    void updateAssetFromCache(T* p_asset, std::map<dsstring, Bloc>& p_blocs, dsstring p_final_asset_path) const
+    {       
+        if (p_blocs.find(p_final_asset_path) == p_blocs.end())
+        {
+            Bloc bloc;
+            long size;
+            void* data;
+
+            // load it
+            data = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &size);
+            if (!data)
+            {
+                _DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);
+            }
+            bloc.data = data;
+            bloc.size = size;
+
+            p_blocs[p_final_asset_path] = bloc;
+        }
+
+        // update asset
+        p_asset->SetData(p_blocs.at(p_final_asset_path).data, p_blocs.at(p_final_asset_path).size);
+    }
+
+
 public:
     dsstring GetSystemId(void) const { return "ResourcesSystem"; };
 
@@ -60,6 +93,9 @@ public:
 
 
     static void SetTexturesRootPath(const dsstring& p_path);
+    static void EnableShadersDescrInFinalPath(bool p_state);
+    static void SetShadersRootPath(const dsstring& p_path);
+
 
 };
 }

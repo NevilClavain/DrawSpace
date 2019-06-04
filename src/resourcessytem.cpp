@@ -24,10 +24,12 @@
 
 #include "resourcessystem.h"
 #include "resourcesaspect.h"
+
 #include "texture.h"
+#include "shader.h"
 
-
-
+#include "renderer.h"
+#include "plugin.h"
 #include "file.h"
 
 
@@ -37,10 +39,23 @@ using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Interface;
 
 
 dsstring ResourcesSystem::m_textures_rootpath = ".";
+dsstring ResourcesSystem::m_shaders_rootpath = ".";
+bool ResourcesSystem::m_addshaderspath = false;
 
+
+void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
+{
+    m_addshaderspath = p_state;
+}
+
+void ResourcesSystem::SetShadersRootPath(const dsstring& p_path)
+{
+    m_shaders_rootpath = p_path;
+}
 
 void ResourcesSystem::SetTexturesRootPath(const dsstring& p_path)
 {
@@ -65,34 +80,28 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<1>( e->getPurpose() );
             if( !loaded )
             {
-                dsstring asset_path;                
-                std::get<0>( e->getPurpose() )->GetPath(asset_path);
-
+                dsstring asset_path;
+                std::get<0>(e->getPurpose())->GetBasePath(asset_path);
                 dsstring final_asset_path = compute_textures_final_path(asset_path);
 
-                Texture* texture = std::get<0>( e->getPurpose() );
-               
-                if(m_texturesBloc.find(final_asset_path) == m_texturesBloc.end())
-                {
-                    Bloc bloc;
-                    long size;
-                    void* data;
+                updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesBlocs, final_asset_path);
+                loaded = true;
+            }
+        }
 
-                    // load it
-                    data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
-                    if (!data)
-                    {
-                        _DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
-                    }
-                    bloc.data = data;
-                    bloc.size = size;
+        ComponentList<std::tuple<Shader*, bool>> shaders_assets;
+        resources_aspect->GetComponentsByType<std::tuple<Shader*, bool>>(shaders_assets);
 
-                    m_texturesBloc[final_asset_path] = bloc;
-                }
+        for (auto& e : shaders_assets)
+        {
+            bool& loaded = std::get<1>(e->getPurpose());
+            if (!loaded)
+            {
+                dsstring asset_path;
+                std::get<0>(e->getPurpose())->GetBasePath(asset_path);
+                dsstring final_asset_path = compute_shaders_final_path(asset_path);
 
-                // update texture
-                texture->SetData(m_texturesBloc.at(final_asset_path).data, m_texturesBloc.at(final_asset_path).size);
-
+                updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersBlocs, final_asset_path);
                 loaded = true;
             }
         }
@@ -105,3 +114,19 @@ dsstring ResourcesSystem::compute_textures_final_path(const dsstring& p_path) co
     final_path += p_path;
     return final_path;
 }
+
+dsstring ResourcesSystem::compute_shaders_final_path(const dsstring& p_path) const
+{
+    dsstring final_path = m_shaders_rootpath + "/";
+    if (m_addshaderspath)
+    {
+        Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+        dsstring m_shader_descr;
+        renderer->GetShadersDescr(m_shader_descr);
+        final_path += m_shader_descr + "/";
+    }
+    final_path += p_path;
+
+    return final_path;
+}
+

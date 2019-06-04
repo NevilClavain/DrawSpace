@@ -44,7 +44,7 @@ protected:
     size_t                          m_datasize;
     bool                            m_compiled;
 
-    dsstring compute_final_path( void );
+    dsstring compute_final_path( void ) const;
 
 public:
     Shader( void );
@@ -52,24 +52,22 @@ public:
     Shader( bool p_compiled );
     ~Shader( void );
 
-    static void EnableShadersDescrInFinalPath( bool p_state );
-    static void SetRootPath( const dsstring& p_path );
 
-    bool	IsCompiled( void );
-    void*	GetData( void );
-    size_t	GetDataSize( void );
+    bool	        IsCompiled( void ) const;
+    void*	        GetData( void ) const;
+    size_t	        GetDataSize( void ) const;
+    void            GetPath(dsstring& p_path) const;
+    void            GetBasePath(dsstring& p_path) const;
 
-    bool	LoadFromFile( void );
-    bool    LoadFromFile( const dsstring& p_filepath, bool p_compiled );
-    void	ReleaseData( void );
+    static void     EnableShadersDescrInFinalPath(bool p_state);
+    static void     SetRootPath(const dsstring& p_path);
 
+    bool	        LoadFromFile( void );
+    bool            LoadFromFile( const dsstring& p_filepath, bool p_compiled );
+    void	        ReleaseData( void );
 
-    void    SetText( const dsstring& p_text );
-
-  
-
-    void    GetPath( dsstring& p_path );
-
+    void            SetText( const dsstring& p_text );
+    void            SetData(void* p_data, long p_size);
 };
 }
 }

@@ -66,31 +66,26 @@ Shader::~Shader( void )
     ReleaseData();
 }
 
-void Shader::EnableShadersDescrInFinalPath( bool p_state )
-{
-    m_addshaderspath = p_state;
-}
-
-void Shader::SetRootPath( const dsstring& p_path )
-{
-    m_rootpath = p_path;
-}
-
-
-bool Shader::IsCompiled( void )
-{
-    return m_compiled;
-}
-
-void* Shader::GetData( void )
+void* Shader::GetData( void ) const
 {
     return m_data;
 }
 
-size_t Shader::GetDataSize( void )
+size_t Shader::GetDataSize( void ) const
 {
     return m_datasize;
 }
+
+void Shader::GetPath(dsstring& p_path) const
+{
+    p_path = compute_final_path();
+}
+
+void Shader::GetBasePath(dsstring& p_path) const
+{
+    p_path = m_filepath;
+}
+
 
 bool Shader::LoadFromFile( void )
 {
@@ -116,6 +111,22 @@ bool Shader::LoadFromFile( void )
     return true;
 }
 
+void Shader::EnableShadersDescrInFinalPath(bool p_state)
+{
+    m_addshaderspath = p_state;
+}
+
+void Shader::SetRootPath(const dsstring& p_path)
+{
+    m_rootpath = p_path;
+}
+
+bool Shader::IsCompiled(void) const
+{
+    return m_compiled;
+}
+
+
 bool Shader::LoadFromFile( const dsstring& p_filepath, bool p_compiled )
 {
     m_filepath = p_filepath;
@@ -140,13 +151,7 @@ void Shader::SetText( const dsstring& p_text )
     memcpy( m_data, (void *)p_text.c_str(), p_text.size() );
 }
 
-
-void Shader::GetPath( dsstring& p_path )
-{
-    p_path = compute_final_path();
-}
-
-dsstring Shader::compute_final_path( void )
+dsstring Shader::compute_final_path( void ) const
 {
     dsstring final_path = m_rootpath + "/";
     if( m_addshaderspath )    
@@ -159,4 +164,10 @@ dsstring Shader::compute_final_path( void )
     final_path += m_filepath;
 
     return final_path;
+}
+
+void Shader::SetData(void* p_data, long p_size)
+{
+    m_data = p_data;
+    m_datasize = p_size;
 }
