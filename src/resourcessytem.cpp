@@ -84,7 +84,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 std::get<0>(e->getPurpose())->GetBasePath(asset_path);
                 dsstring final_asset_path = compute_textures_final_path(asset_path);
 
-                updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesBlocs, final_asset_path);
+                updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesCaches, final_asset_path);
                 loaded = true;
             }
         }
@@ -101,7 +101,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 std::get<0>(e->getPurpose())->GetBasePath(asset_path);
                 dsstring final_asset_path = compute_shaders_final_path(asset_path);
 
-                updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersBlocs, final_asset_path);
+                updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCaches, final_asset_path);
                 loaded = true;
             }
         }

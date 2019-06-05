@@ -165,10 +165,10 @@ bool MainService::Init( void )
     create_camera();
     create_skybox();
 
-    // temporaire
-    //create_ground();
-    //create_screen_impostors();
-    //create_world_impostor();
+    
+    create_ground();    
+    create_screen_impostors();
+    create_world_impostor();
 
 
 
@@ -184,20 +184,24 @@ bool MainService::Init( void )
     // designer la camera courante    
     m_entitygraph.SetCurrentCameraEntity( &m_cameraEntity );
 
-    // temporaire
-    /*
+    
+    
     // ajouter le ground a la scene
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
 
+    
+    
     // ajout du champ d'impostors a la scene
     m_impostorsEntityNode = m_World1EntityNode.AddChild( &m_impostorsEntity );
     m_impostorsRender.RegisterToRendering( m_rendergraph );
 
+
+
     // ajout de l'impostor world a la scene
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
-    */
+    
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -408,6 +412,12 @@ void MainService::create_world_impostor( void )
     impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
     //impostors_texturepass->GetTexture( 0 )->LoadFromFile();
 
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_worldImpostorsEntity.AddAspect<ResourcesAspect>();
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass->GetTexture(0), false));
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TransformAspect* transform_aspect = m_worldImpostorsEntity.AddAspect<TransformAspect>();
@@ -486,8 +496,6 @@ void MainService::create_screen_impostors( void )
         h_pos += h_step;
     }
 
-
-    //ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
     RenderingNode* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
 
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
@@ -510,7 +518,7 @@ void MainService::create_screen_impostors( void )
     impostors_texturepass->SetOrderNumber( 1000 );
 
     RenderStatesSet impostors_texturepass_rss;
-    //impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+
     impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
     impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ALPHABLENDENABLE, "true" ) );
@@ -526,8 +534,12 @@ void MainService::create_screen_impostors( void )
 
     impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
 
-    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "star.bmp" ) ), 0 );
-    //impostors_texturepass->GetTexture( 0 )->LoadFromFile();
+    impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "star.bmp" ) ), 0 );    
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_impostorsEntity.AddAspect<ResourcesAspect>();
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass->GetTexture(0), false));
+    
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -558,9 +570,6 @@ void MainService::create_ground( void )
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-    ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     RenderStatesSet ground_texturepass_rss;
     ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     ground_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
@@ -568,8 +577,6 @@ void MainService::create_ground( void )
     ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
 
     ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    //ground_texturepass->GetTexture( 0 )->LoadFromFile();
-
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
@@ -577,6 +584,13 @@ void MainService::create_ground( void )
 
     ground_texturepass->SetOrderNumber( -500 );
 
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_groundEntity.AddAspect<ResourcesAspect>();
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("ground_texture", std::make_tuple(ground_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -35,7 +35,7 @@ class ResourcesSystem : public Interface::System
 {
 protected:
 
-    using Bloc = struct
+    using Blob = struct
     {
         void*   data;
         int     size;
@@ -47,8 +47,8 @@ protected:
     static bool                     m_addshaderspath;
 
 
-    std::map<dsstring,Bloc>         m_texturesBlocs;
-    std::map<dsstring,Bloc>         m_shadersBlocs;
+    std::map<dsstring, Blob>        m_texturesCaches;
+    std::map<dsstring, Blob>        m_shadersCaches;
 
 
 
@@ -61,11 +61,11 @@ protected:
     dsstring compute_shaders_final_path(const dsstring& p_path) const;
 
     template<typename T>
-    void updateAssetFromCache(T* p_asset, std::map<dsstring, Bloc>& p_blocs, dsstring p_final_asset_path) const
+    void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blocs, dsstring p_final_asset_path) const
     {       
         if (p_blocs.find(p_final_asset_path) == p_blocs.end())
         {
-            Bloc bloc;
+            Blob blob;
             long size;
             void* data;
 
@@ -75,10 +75,10 @@ protected:
             {
                 _DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);
             }
-            bloc.data = data;
-            bloc.size = size;
+            blob.data = data;
+            blob.size = size;
 
-            p_blocs[p_final_asset_path] = bloc;
+            p_blocs[p_final_asset_path] = blob;
         }
 
         // update asset
