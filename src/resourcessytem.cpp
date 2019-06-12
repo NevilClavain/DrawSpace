@@ -27,6 +27,11 @@
 
 #include "texture.h"
 #include "shader.h"
+#include "meshe.h"
+
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
 
 #include "renderer.h"
 #include "plugin.h"
@@ -43,6 +48,7 @@ using namespace DrawSpace::Interface;
 
 
 dsstring ResourcesSystem::m_textures_rootpath = ".";
+dsstring ResourcesSystem::m_meshes_rootpath = ".";
 dsstring ResourcesSystem::m_shaders_rootpath = ".";
 bool ResourcesSystem::m_addshaderspath = false;
 
@@ -60,6 +66,11 @@ void ResourcesSystem::SetShadersRootPath(const dsstring& p_path)
 void ResourcesSystem::SetTexturesRootPath(const dsstring& p_path)
 {
     m_textures_rootpath = p_path;
+}
+
+void ResourcesSystem::SetMeshesRootPath(const dsstring& p_path)
+{
+    m_meshes_rootpath = p_path;
 }
 
 void ResourcesSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
@@ -105,7 +116,99 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 loaded = true;
             }
         }
+
+        ComponentList<std::tuple<Meshe*, dsstring, dsstring, bool>> meshes_assets;
+        resources_aspect->GetComponentsByType<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshes_assets);
+
+        for (auto& e : meshes_assets)
+        {
+            Meshe* target_meshe = std::get<0>(e->getPurpose());
+            bool& loaded = std::get<3>(e->getPurpose());
+            if (!loaded)
+            {
+                Assimp::Importer importer;
+                dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
+
+                dsstring meshe_id = std::get<2>(e->getPurpose());
+
+                const aiScene* scene = importer.ReadFile(final_asset_path,
+                    aiProcess_CalcTangentSpace |
+                    aiProcess_Triangulate |
+                    aiProcess_JoinIdenticalVertices |
+                    aiProcess_FlipUVs |
+                    aiProcess_SortByPType);
+
+                if(scene)
+                {
+                    bool hasMeshes = scene->HasMeshes();
+                    aiMesh** meshes = scene->mMeshes;
+
+                    aiNode* root = scene->mRootNode;
+                    if( root )
+                    {
+                        aiNode* meshe_node = root->FindNode(meshe_id.c_str());
+
+                        if(meshe_node)
+                        {
+                            build_meshe(meshe_node, meshes, target_meshe);
+                        }
+                        else
+                        {
+                            _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+                        }
+                    }                    
+                }
+
+                loaded = true;
+            }
+        }
     }
+}
+
+void ResourcesSystem::build_meshe(aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
+{
+    dsstring name = p_ai_node->mName.C_Str();
+
+    unsigned int nb_meshes = p_ai_node->mNumMeshes;
+    int global_index = 0;
+
+    unsigned int* indexes = p_ai_node->mMeshes;
+    for( unsigned int i = 0; i < nb_meshes; i++ )
+    {
+        aiMesh* meshe = p_meshes[indexes[i]];
+        
+        for( size_t j = 0; j < meshe->mNumFaces; j++)
+        {
+            aiFace face = meshe->mFaces[j];
+
+            if(face.mNumIndices != 3)
+            {
+                _DSEXCEPTION( "Face must have exactly 3 indices");
+            }
+
+            int i1 = face.mIndices[0];
+            int i2 = face.mIndices[1];
+            int i3 = face.mIndices[2];
+
+            p_destination->AddTriangle(Core::Triangle(i1 + global_index, i2 + global_index, i3 + global_index));
+        }
+
+        const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+        for (size_t j = 0; j < meshe->mNumVertices; j++)
+        {
+            aiVector3D v_in = meshe->mVertices[j];
+
+            DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
+            aiVector3D texCoord = meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D;
+            
+            v_out.tu[0] = texCoord[0];
+            v_out.tv[0] = texCoord[1];
+
+            p_destination->AddVertex( v_out );
+        }
+
+        global_index += meshe->mNumVertices;
+    }   
 }
 
 dsstring ResourcesSystem::compute_textures_final_path(const dsstring& p_path) const
@@ -130,3 +233,9 @@ dsstring ResourcesSystem::compute_shaders_final_path(const dsstring& p_path) con
     return final_path;
 }
 
+dsstring ResourcesSystem::compute_meshes_final_path(const dsstring& p_path) const
+{
+    dsstring final_path = m_meshes_rootpath + "/";
+    final_path += p_path;
+    return final_path;
+}

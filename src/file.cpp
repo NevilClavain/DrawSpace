@@ -34,7 +34,8 @@ dsstring File::m_virtualFsArchiveName;
 
 File::File( const dsstring& p_filename, Mode p_mode ) : 
 m_fp( NULL ),
-m_vfp( NULL )
+m_vfp( NULL ),
+m_current_pos( 0 )
 {
     if( LOCALFILESYSTEM == m_fsMode )
     {
@@ -76,6 +77,39 @@ m_vfp( NULL )
             _DSEXCEPTION( "unsupported file access on VIRTUALFILESYSTEM mode" );
         }
     }
+}
+
+File::File(const dsstring& p_filename, const dsstring& p_mode) :
+m_fp(NULL),
+m_vfp(NULL),
+m_current_pos(0)
+{
+    if (LOCALFILESYSTEM == m_fsMode)
+    {
+        m_fp = fopen(p_filename.c_str(), p_mode.c_str());
+
+        if (!m_fp)
+        {
+            _DSEXCEPTION(dsstring("Failed to open file ") + p_filename);
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        if ("r" == p_mode || "rb" == p_mode)
+        {
+            m_vfp = PHYSFS_openRead(p_filename.c_str());
+
+            if (!m_vfp)
+            {
+                _DSEXCEPTION(dsstring("Failed to open virtual file ") + p_filename);
+            }
+        }
+        else
+        {
+            _DSEXCEPTION("unsupported file access on VIRTUALFILESYSTEM mode");
+        }
+    }
+
 }
 
 File::~File( void )
@@ -159,28 +193,7 @@ bool File::Gets( char* p_buff, int p_nbToRead )
             if( 0 == real_size )
             {
                 return false;
-            }
-            
-
-            /*
-            char* buff = p_buff;
-            int real_size = PHYSFS_read( m_vfp, buff, 1, p_nbToRead );
-
-            if( 0 == real_size )
-            {
-                return false;
-            }
-
-            // emuler le comportement du fgets : il faut donc tronquer quand une fin de ligne est rencontree
-            for( int i = 0; i < real_size; i++ )
-            {
-                if( '\n' == buff[i] || '\r' == buff[i] )
-                {
-                    buff[i] = 0x00;
-                    return true;
-                }
-            }
-            */
+            }           
             return true;
         }
         else
@@ -199,14 +212,25 @@ void File::Flush( void )
         {
             fflush( m_fp );
         }
+        else
+        {
+            _DSEXCEPTION("File not open !");
+        }
     }
     else // VIRTUALFILESYSTEM
     {
-        _DSEXCEPTION( "unsupported method on VIRTUALFILESYSTEM mode" );
+        if( m_vfp )
+        {
+            PHYSFS_flush( m_vfp );
+        }
+        else
+        {
+            _DSEXCEPTION("Virtual file not open !");
+        }
     }
 }
 
-long File::FileSize( void )
+size_t File::FileSize( void ) const
 {
     if( LOCALFILESYSTEM == m_fsMode )
     {
@@ -241,6 +265,136 @@ long File::fileSize( FILE *p_fp )
     long size = ftell( p_fp );
     fseek( p_fp, current_pos, SEEK_SET );
     return size;
+}
+
+size_t File::Read(void* p_buffer, size_t p_size, size_t p_count)
+{
+    size_t status = 0;
+    if (LOCALFILESYSTEM == m_fsMode)
+    {
+        if (m_fp)
+        {
+            status = ::fread(p_buffer, p_size, p_count, m_fp);
+        }
+        else
+        {
+            _DSEXCEPTION("File not open !");
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        if (m_vfp)
+        {
+            status = ::PHYSFS_read(m_vfp, p_buffer, p_size, p_count);
+        }
+        else
+        {
+            _DSEXCEPTION("Virtual file not open !");
+        }
+    }   
+    return status;
+}
+
+size_t File::Write(const void* p_buffer, size_t p_size, size_t p_count)
+{
+    size_t status = 0;
+    if (LOCALFILESYSTEM == m_fsMode)
+    {
+        if (m_fp)
+        {
+            status = ::fwrite(p_buffer, p_size, p_count, m_fp);
+        }
+        else
+        {
+            _DSEXCEPTION("File not open !");
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        if (m_vfp)
+        {
+            status = ::PHYSFS_write(m_vfp, p_buffer, p_size, p_count);
+        }
+        else
+        {
+            _DSEXCEPTION("Virtual file not open !");
+        }
+    }
+    return status;
+}
+
+bool File::Seek(size_t p_offset, int p_origin)
+{
+    if (LOCALFILESYSTEM == m_fsMode)
+    {
+        if (m_fp)
+        {
+            // 0 -> call success
+            return (0 == fseek(m_fp, (long)p_offset, (int)p_origin) ? true : false);
+        }
+        else
+        {
+            _DSEXCEPTION("File not open !");
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        if (m_vfp)
+        {
+            PHYSFS_uint64 final_offset = 0;
+            long fsize = PHYSFS_fileLength(m_vfp);
+
+            switch(p_origin)
+            {
+                case 0: //SEEK_SET
+                    final_offset = p_offset;
+                    break;
+
+                case 1: //SEEK_CUR
+                    final_offset = m_current_pos + (long)p_offset;
+                    break;
+
+                case 2: //SEEK_END
+                    final_offset = fsize - 1 - p_offset;
+                    break;
+            }
+
+            m_current_pos = final_offset;
+
+            // 0 -> call fail
+            return (0 == PHYSFS_seek(m_vfp, final_offset) ? false : true);
+        }
+        else
+        {
+            _DSEXCEPTION("Virtual file not open !");
+        }
+    }
+}
+
+size_t File::Tell() const
+{
+    if (LOCALFILESYSTEM == m_fsMode)
+    {
+        if (m_fp)
+        {
+            return ftell(m_fp);
+        }
+        else
+        {
+            _DSEXCEPTION("File not open !");
+        }
+    }
+    else // VIRTUALFILESYSTEM
+    {
+        if (m_vfp)
+        {
+            return PHYSFS_tell(m_vfp);
+        }
+        else
+        {
+            _DSEXCEPTION("Virtual file not open !");
+        }
+    }
 }
 
 void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )

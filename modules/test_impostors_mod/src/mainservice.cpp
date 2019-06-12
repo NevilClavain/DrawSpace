@@ -39,6 +39,8 @@ m_fps_transformer( NULL )
     DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("test_data/textures_bank");
     DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("test_data/shaders_bank");
     DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(true);
+
+    DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath("test_data/meshes_bank");
 }
 
 bool MainService::Init( void )
@@ -576,21 +578,24 @@ void MainService::create_ground( void )
 
     ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
 
-    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
+    ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
-    ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
+    //ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
+    //ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
     ground_texturepass->SetOrderNumber( -500 );
 
     /////////// resources ////////////////////////////////
 
     ResourcesAspect* resources_aspect = m_groundEntity.AddAspect<ResourcesAspect>();
+
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("ground_texture", std::make_tuple(ground_texturepass->GetTexture(0), false));
 
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("ground_meshe", std::make_tuple(ground_texturepass->GetMeshe(), "water.ac", "my_flat_mesh", false));
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

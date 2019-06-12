@@ -27,8 +27,17 @@
 #include "systems.h"
 #include "entitynodegraph.h"
 
+
+struct aiNode;
+struct aiMesh;
+
 namespace DrawSpace
 {
+namespace Core
+{
+class Meshe;
+}
+
 namespace Systems
 {
 class ResourcesSystem : public Interface::System
@@ -46,19 +55,19 @@ protected:
     static dsstring                 m_shaders_rootpath;
     static bool                     m_addshaderspath;
 
+    static dsstring                 m_meshes_rootpath;
 
     std::map<dsstring, Blob>        m_texturesCaches;
     std::map<dsstring, Blob>        m_shadersCaches;
 
-
-
-
-
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     dsstring compute_textures_final_path(const dsstring& p_path) const;
-
     dsstring compute_shaders_final_path(const dsstring& p_path) const;
+    dsstring compute_meshes_final_path(const dsstring& p_path) const;
+
+    // recursive
+    void build_meshe(aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
     template<typename T>
     void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blocs, dsstring p_final_asset_path) const
@@ -95,6 +104,7 @@ public:
     static void SetTexturesRootPath(const dsstring& p_path);
     static void EnableShadersDescrInFinalPath(bool p_state);
     static void SetShadersRootPath(const dsstring& p_path);
+    static void SetMeshesRootPath(const dsstring& p_path);
 
 
 };
