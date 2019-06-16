@@ -24,9 +24,12 @@
 */
 /* -*-LIC_END-*- */
 
+#include <assimp/Importer.hpp>      // C++ importer interface
+
 #include "systems.h"
 #include "entitynodegraph.h"
-#include <assimp/Importer.hpp>      // C++ importer interface
+
+#include "resourcesiosystem.h"
 
 struct aiNode;
 struct aiScene;
@@ -62,6 +65,7 @@ protected:
     std::map<dsstring, Blob>                m_shadersCache;
     std::map<dsstring, const aiScene*>      m_meshesCache;
 
+    ResourcesIOSystem                       m_iosystem;
     Assimp::Importer                        m_importer;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
@@ -100,6 +104,8 @@ protected:
 
 
 public:
+
+    ResourcesSystem( void );
 
     dsstring GetSystemId(void) const { return "ResourcesSystem"; };
 

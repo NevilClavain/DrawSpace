@@ -49,6 +49,11 @@ dsstring ResourcesSystem::m_meshes_rootpath = ".";
 dsstring ResourcesSystem::m_shaders_rootpath = ".";
 bool ResourcesSystem::m_addshaderspath = false;
 
+ResourcesSystem::ResourcesSystem(void)
+{
+    m_importer.SetIOHandler( &m_iosystem);
+}
+
 void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
 {
     m_addshaderspath = p_state;
