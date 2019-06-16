@@ -58,6 +58,13 @@ protected:
     DrawSpace::Core::Entity                                                         m_groundEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_groundEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_cubeEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_cubeEntityNode;
+
+    DrawSpace::Core::Entity                                                         m_cube2Entity;
+    DrawSpace::EntityGraph::EntityNode                                              m_cube2EntityNode;
+
+
     DrawSpace::Core::Entity                                                         m_impostorsEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_impostorsEntityNode;
 
@@ -73,6 +80,8 @@ protected:
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
+    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cube2Render;
     DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_impostorsRender;
     DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_worldImpostorsRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
@@ -96,6 +105,7 @@ protected:
 
     void create_skybox( void );
     void create_ground( void );
+    void create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity );
     void create_camera( void );
     void create_screen_impostors( void );
     void create_world_impostor( void );

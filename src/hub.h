@@ -76,6 +76,8 @@ public:
 
     std::vector<DrawSpace::Interface::System*> GetSystems( void ) const;
 
+    void ReleaseAssets( void );
+
 };
 }
 }

@@ -26,9 +26,10 @@
 
 #include "systems.h"
 #include "entitynodegraph.h"
-
+#include <assimp/Importer.hpp>      // C++ importer interface
 
 struct aiNode;
+struct aiScene;
 struct aiMesh;
 
 namespace DrawSpace
@@ -50,15 +51,18 @@ protected:
         int     size;
     };
 
-    static dsstring                 m_textures_rootpath;
+    static dsstring                         m_textures_rootpath;
 
-    static dsstring                 m_shaders_rootpath;
-    static bool                     m_addshaderspath;
+    static dsstring                         m_shaders_rootpath;
+    static bool                             m_addshaderspath;
 
-    static dsstring                 m_meshes_rootpath;
+    static dsstring                         m_meshes_rootpath;
 
-    std::map<dsstring, Blob>        m_texturesCaches;
-    std::map<dsstring, Blob>        m_shadersCaches;
+    std::map<dsstring, Blob>                m_texturesCache;
+    std::map<dsstring, Blob>                m_shadersCache;
+    std::map<dsstring, const aiScene*>      m_meshesCache;
+
+    Assimp::Importer                        m_importer;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
@@ -70,9 +74,9 @@ protected:
     void build_meshe(aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
     template<typename T>
-    void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blocs, dsstring p_final_asset_path) const
+    void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blobs, dsstring p_final_asset_path) const
     {       
-        if (p_blocs.find(p_final_asset_path) == p_blocs.end())
+        if (p_blobs.find(p_final_asset_path) == p_blobs.end())
         {
             Blob blob;
             long size;
@@ -87,24 +91,28 @@ protected:
             blob.data = data;
             blob.size = size;
 
-            p_blocs[p_final_asset_path] = blob;
+            p_blobs[p_final_asset_path] = blob;
         }
 
         // update asset
-        p_asset->SetData(p_blocs.at(p_final_asset_path).data, p_blocs.at(p_final_asset_path).size);
+        p_asset->SetData(p_blobs.at(p_final_asset_path).data, p_blobs.at(p_final_asset_path).size);
     }
 
 
 public:
+
     dsstring GetSystemId(void) const { return "ResourcesSystem"; };
 
     void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
+
+    void ReleaseAssets( void );
 
 
     static void SetTexturesRootPath(const dsstring& p_path);
     static void EnableShadersDescrInFinalPath(bool p_state);
     static void SetShadersRootPath(const dsstring& p_path);
     static void SetMeshesRootPath(const dsstring& p_path);
+
 
 
 };

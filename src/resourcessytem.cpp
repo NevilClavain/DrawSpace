@@ -29,14 +29,12 @@
 #include "shader.h"
 #include "meshe.h"
 
-#include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
 #include "renderer.h"
 #include "plugin.h"
 #include "file.h"
-
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -46,12 +44,10 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-
 dsstring ResourcesSystem::m_textures_rootpath = ".";
 dsstring ResourcesSystem::m_meshes_rootpath = ".";
 dsstring ResourcesSystem::m_shaders_rootpath = ".";
 bool ResourcesSystem::m_addshaderspath = false;
-
 
 void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
 {
@@ -95,7 +91,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 std::get<0>(e->getPurpose())->GetBasePath(asset_path);
                 dsstring final_asset_path = compute_textures_final_path(asset_path);
 
-                updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesCaches, final_asset_path);
+                updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesCache, final_asset_path);
                 loaded = true;
             }
         }
@@ -112,7 +108,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 std::get<0>(e->getPurpose())->GetBasePath(asset_path);
                 dsstring final_asset_path = compute_shaders_final_path(asset_path);
 
-                updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCaches, final_asset_path);
+                updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
                 loaded = true;
             }
         }
@@ -126,40 +122,60 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {
-                Assimp::Importer importer;
                 dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
-
                 dsstring meshe_id = std::get<2>(e->getPurpose());
+                
 
-                const aiScene* scene = importer.ReadFile(final_asset_path,
-                    aiProcess_CalcTangentSpace |
-                    aiProcess_Triangulate |
-                    aiProcess_JoinIdenticalVertices |
-                    aiProcess_FlipUVs |
-                    aiProcess_SortByPType);
-
-                if(scene)
+                if( m_meshesCache.find(final_asset_path) == m_meshesCache.end() )
                 {
-                    bool hasMeshes = scene->HasMeshes();
-                    aiMesh** meshes = scene->mMeshes;
+                    const aiScene* scene = m_importer.ReadFile(final_asset_path,
+                        aiProcess_CalcTangentSpace |
+                        aiProcess_Triangulate |
+                        aiProcess_JoinIdenticalVertices |
+                        aiProcess_FlipUVs |
+                        aiProcess_SortByPType);
 
-                    aiNode* root = scene->mRootNode;
-                    if( root )
+                    if (scene)
                     {
-                        aiNode* meshe_node = root->FindNode(meshe_id.c_str());
-
-                        if(meshe_node)
+                        if( !scene->HasMeshes() )
                         {
-                            build_meshe(meshe_node, meshes, target_meshe);
+                            _DSEXCEPTION("No meshes in file : " + final_asset_path);
+                        }
+                        aiMesh** meshes = scene->mMeshes;
+
+                        aiNode* root = scene->mRootNode;
+                        if (root)
+                        {
+                            aiNode* meshe_node = root->FindNode(meshe_id.c_str());
+                            if (meshe_node)
+                            {
+                                build_meshe(meshe_node, meshes, target_meshe);
+                                m_meshesCache[final_asset_path] = scene;
+                            }
+                            else
+                            {
+                                _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+                            }
                         }
                         else
                         {
-                            _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+                            _DSEXCEPTION("No root found in assimp scene description");
                         }
-                    }                    
+                    }
+                    else
+                    {
+                        _DSEXCEPTION("Assimp importer cannot load meshe " + final_asset_path);
+                    }
                 }
-
-                loaded = true;
+                else
+                {
+                    const aiScene* scene = m_meshesCache[final_asset_path];
+                    aiMesh** meshes = scene->mMeshes;
+                    aiNode* root = scene->mRootNode;
+                    aiNode* meshe_node = root->FindNode(meshe_id.c_str());                
+                    build_meshe(meshe_node, meshes, target_meshe);
+                }                             
+                loaded = true;            
             }
         }
     }
@@ -238,4 +254,18 @@ dsstring ResourcesSystem::compute_meshes_final_path(const dsstring& p_path) cons
     dsstring final_path = m_meshes_rootpath + "/";
     final_path += p_path;
     return final_path;
+}
+
+void ResourcesSystem::ReleaseAssets(void)
+{
+    for(auto& e : m_texturesCache)
+    {
+        _DRAWSPACE_DELETE_(e.second.data);
+    }
+    for (auto& e : m_shadersCache)
+    {
+        _DRAWSPACE_DELETE_(e.second.data);
+    }
+
+    m_importer.FreeScene();
 }

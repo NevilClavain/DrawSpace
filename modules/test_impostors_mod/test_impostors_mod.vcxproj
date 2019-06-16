@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEST03MOD_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include;./../../../DrawSpace_thirdparts/Assimp-4.1.0/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,7 +79,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TEST02MOD_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include;./../../../DrawSpace_thirdparts/Assimp-4.1.0/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

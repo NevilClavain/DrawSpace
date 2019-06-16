@@ -61,7 +61,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BT_USE_DOUBLE_PRECISION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./../src;./../../DrawSpace_thirdparts/bullet-2.87/src;./../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../src;./../../DrawSpace_thirdparts/bullet-2.87/src;./../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../DrawSpace_thirdparts/JSON-jsmn/include;./../../DrawSpace_thirdparts/Assimp-4.1.0/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,7 +85,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;BT_USE_DOUBLE_PRECISION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./../src;./../../DrawSpace_thirdparts/bullet-2.87/src;./../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../src;./../../DrawSpace_thirdparts/bullet-2.87/src;./../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../DrawSpace_thirdparts/JSON-jsmn/include;./../../DrawSpace_thirdparts/Assimp-4.1.0/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

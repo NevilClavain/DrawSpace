@@ -90,3 +90,8 @@ std::vector<DrawSpace::Interface::System*> Hub::GetSystems(void) const
 {
     return m_systems;
 }
+
+void Hub::ReleaseAssets(void)
+{
+    m_resourcesSystem.ReleaseAssets();
+}

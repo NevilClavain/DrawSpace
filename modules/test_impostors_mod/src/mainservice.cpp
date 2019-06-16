@@ -168,7 +168,9 @@ bool MainService::Init( void )
     create_skybox();
 
     
-    create_ground();    
+    create_ground();
+    create_cube( 0.0, 9.0, 10.0, m_cubeRender, m_cubeEntity);
+    create_cube(0.0, 15.0, 14.0, m_cube2Render, m_cube2Entity);
     create_screen_impostors();
     create_world_impostor();
 
@@ -192,8 +194,17 @@ bool MainService::Init( void )
     m_groundEntityNode = m_World1EntityNode.AddChild( &m_groundEntity );
     m_groundRender.RegisterToRendering( m_rendergraph );
 
-    
-    
+
+    // ajouter le cube a la scene
+    m_cubeEntityNode = m_World1EntityNode.AddChild(&m_cubeEntity);
+    m_cubeRender.RegisterToRendering(m_rendergraph);
+
+    // ajouter le cube a la scene
+    m_cube2EntityNode = m_World1EntityNode.AddChild(&m_cube2Entity);
+    m_cube2Render.RegisterToRendering(m_rendergraph);
+
+
+
     // ajout du champ d'impostors a la scene
     m_impostorsEntityNode = m_World1EntityNode.AddChild( &m_impostorsEntity );
     m_impostorsRender.RegisterToRendering( m_rendergraph );
@@ -235,6 +246,8 @@ void MainService::Run( void )
 void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
+
+    m_systemsHub.ReleaseAssets();
 }
 
 void MainService::create_skybox( void )
@@ -552,6 +565,64 @@ void MainService::create_screen_impostors( void )
     transform_aspect->AddComponent<Matrix>( "pos" );
 
     transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
+}
+
+void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity )
+{
+    RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+
+    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+
+    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+
+    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
+    cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
+
+    cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
+    cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+
+    RenderStatesSet cube_texturepass_rss;
+    cube_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
+    cube_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+    cube_texturepass->GetFx()->SetRenderStates(cube_texturepass_rss);
+
+    cube_texturepass->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("family.jpg")), 0);
+
+    cube_texturepass->SetMeshe(_DRAWSPACE_NEW_(Meshe, Meshe));
+
+    cube_texturepass->SetOrderNumber(1100);
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = p_entity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(), "family_cube.ac", "cube_photos", false));
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+
+    BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("shape", Vector(2.0, 2.0, 2.0, 1.0));
+
+    Matrix cube_attitude;
+
+    cube_attitude.Translation(p_x, p_y, p_z);
+    body_aspect->AddComponent<Matrix>("attitude", cube_attitude);
+
+    body_aspect->AddComponent<BodyAspect::Mode>("mode", BodyAspect::BODY);
+
+    body_aspect->AddComponent<bool>("contact_state", false);
+
+    transform_aspect->SetImplementation(body_aspect->GetTransformAspectImpl());
+
 }
 
 
