@@ -612,13 +612,14 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
     TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
 
     BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("shape", Vector(2.0, 2.0, 2.0, 1.0));
+    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
 
     Matrix cube_attitude;
 
     cube_attitude.Translation(p_x, p_y, p_z);
     body_aspect->AddComponent<Matrix>("attitude", cube_attitude);
 
+    body_aspect->AddComponent<dsreal>("mass", 7.0);
     body_aspect->AddComponent<BodyAspect::Mode>("mode", BodyAspect::BODY);
 
     body_aspect->AddComponent<bool>("contact_state", false);
@@ -647,7 +648,10 @@ void MainService::create_ground( void )
 
     RenderStatesSet ground_texturepass_rss;
     ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
+    ground_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "point"));
+
     ground_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
+    ground_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear"));
 
     ground_texturepass->GetFx()->SetRenderStates( ground_texturepass_rss );
 
@@ -660,16 +664,16 @@ void MainService::create_ground( void )
     ground_texturepass->SetOrderNumber( -500 );
 
     /////////// resources ////////////////////////////////
-
+    
     ResourcesAspect* resources_aspect = m_groundEntity.AddAspect<ResourcesAspect>();
-
+    
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("ground_texture", std::make_tuple(ground_texturepass->GetTexture(0), false));
 
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
 
     resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("ground_meshe", std::make_tuple(ground_texturepass->GetMeshe(), "water.ac", "my_flat_mesh", false));
-
+    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();    
@@ -679,7 +683,7 @@ void MainService::create_ground( void )
 
     Matrix ground_attitude;
     
-    ground_attitude.Translation( 0.0, -3.0, 0.0 );
+    ground_attitude.Translation( 0.0, 0.0, 0.0 );
     body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
 
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
@@ -710,7 +714,7 @@ void MainService::create_camera( void )
     transform_aspect->AddComponent<Vector>( "speed" );
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 10.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 30.0, 1.0 ) );
 
     transform_aspect->AddComponent<bool>( "ymvt", true );
 
