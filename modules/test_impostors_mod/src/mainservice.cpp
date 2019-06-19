@@ -173,6 +173,7 @@ bool MainService::Init( void )
     create_ground();
     create_cube( 0.0, 9.0, 10.0, m_cubeRender, m_cubeEntity);
     create_cube(0.0, 15.0, 14.0, m_cube2Render, m_cube2Entity);
+    create_composition(-13.0, 8.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity);
     create_screen_impostors();
     create_world_impostor();
 
@@ -204,6 +205,15 @@ bool MainService::Init( void )
     // ajouter le cube a la scene
     m_cube2EntityNode = m_World1EntityNode.AddChild(&m_cube2Entity);
     m_cube2Render.RegisterToRendering(m_rendergraph);
+
+
+
+    m_mainBodyEntityNode = m_World1EntityNode.AddChild(&m_mainBodyEntity);
+    m_mainBodyRender.RegisterToRendering(m_rendergraph);
+
+
+    m_feetEntityNode = m_mainBodyEntityNode.AddChild(&m_feetEntity);
+    m_feetRender.RegisterToRendering(m_rendergraph);
 
 
 
@@ -605,7 +615,8 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
 
-    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(), "family_cube.ac", "cube_photos", false));
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(), 
+                                                                                                                "family_cube.ac", "cube_photos", false));
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -626,6 +637,116 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 
     transform_aspect->SetImplementation(body_aspect->GetTransformAspectImpl());
 
+}
+
+void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z, 
+                                    DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, 
+                                        DrawSpace::Core::Entity& p_entity,
+                                        DrawSpace::AspectImplementations::RawTransformAspectImpl& p_transform_impl,
+                                        DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl_2,
+                                        DrawSpace::Core::Entity& p_entity_2 )
+{
+    {
+        RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
+        TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+
+        rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+
+        rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+
+        RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
+        cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
+
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+
+        RenderStatesSet cube_texturepass_rss;
+        cube_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
+        cube_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+        cube_texturepass->GetFx()->SetRenderStates(cube_texturepass_rss);
+
+        cube_texturepass->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("tex59.jpg")), 0);
+
+        cube_texturepass->SetMeshe(_DRAWSPACE_NEW_(Meshe, Meshe));
+
+        cube_texturepass->SetOrderNumber(1100);
+
+        /////////// resources ////////////////////////////////
+
+        ResourcesAspect* resources_aspect = p_entity.AddAspect<ResourcesAspect>();
+
+        resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
+
+        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+
+        resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
+            "composition.ac", "main_body", false));
+
+
+        //////// transform //////////////////////////////////
+
+        TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+
+        transform_aspect->SetImplementation(&p_transform_impl);
+
+        transform_aspect->AddComponent<Matrix>("pos");
+
+        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(p_x, p_y, p_z, 1.0));
+
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    {
+        RenderingAspect* rendering_aspect = p_entity_2.AddAspect<RenderingAspect>();
+        TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+
+        rendering_aspect->AddImplementation(&p_rendering_aspect_impl_2, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+
+        rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+
+        RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
+        cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
+
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+
+        RenderStatesSet cube_texturepass_rss;
+        cube_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
+        cube_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+        cube_texturepass->GetFx()->SetRenderStates(cube_texturepass_rss);
+
+        cube_texturepass->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("tex59.jpg")), 0);
+
+        cube_texturepass->SetMeshe(_DRAWSPACE_NEW_(Meshe, Meshe));
+
+        cube_texturepass->SetOrderNumber(1100);
+
+        /////////// resources ////////////////////////////////
+
+        ResourcesAspect* resources_aspect = p_entity_2.AddAspect<ResourcesAspect>();
+
+        resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
+
+        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+
+        resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
+            "composition.ac", "feet", false));
+
+
+        //////// transform //////////////////////////////////
+
+        TransformAspect* transform_aspect = p_entity_2.AddAspect<TransformAspect>();
+
+        transform_aspect->SetImplementation(&p_transform_impl);
+
+        transform_aspect->AddComponent<Matrix>("pos");
+        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
+
+    }
 }
 
 
@@ -672,7 +793,8 @@ void MainService::create_ground( void )
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
     resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
 
-    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("ground_meshe", std::make_tuple(ground_texturepass->GetMeshe(), "water.ac", "my_flat_mesh", false));
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("ground_meshe", std::make_tuple(ground_texturepass->GetMeshe(),
+                                                                                                                "water.ac", "my_flat_mesh", false));
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -120,7 +120,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
         ComponentList<std::tuple<Meshe*, dsstring, dsstring, bool>> meshes_assets;
         resources_aspect->GetComponentsByType<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshes_assets);
-
+        
         for (auto& e : meshes_assets)
         {
             Meshe* target_meshe = std::get<0>(e->getPurpose());
@@ -130,7 +130,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
                 dsstring meshe_id = std::get<2>(e->getPurpose());
                 
-
                 if( m_meshesCache.find(final_asset_path) == m_meshesCache.end() )
                 {
                     const aiScene* scene = m_importer.ReadFile(final_asset_path,
@@ -177,12 +176,21 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                     const aiScene* scene = m_meshesCache[final_asset_path];
                     aiMesh** meshes = scene->mMeshes;
                     aiNode* root = scene->mRootNode;
-                    aiNode* meshe_node = root->FindNode(meshe_id.c_str());                
-                    build_meshe(meshe_node, meshes, target_meshe);
+                    aiNode* meshe_node = root->FindNode(meshe_id.c_str());
+
+                    if(meshe_node)
+                    {
+                        build_meshe(meshe_node, meshes, target_meshe);
+                    }
+                    else
+                    {
+                        _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+                    }
                 }                             
                 loaded = true;            
             }
         }
+        
     }
 }
 
