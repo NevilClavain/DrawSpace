@@ -57,58 +57,121 @@ public:
 
 protected:
 
-    bool                                                    m_initialized;
+    bool                                                        m_initialized;
 
-    btDiscreteDynamicsWorld*                                m_world;
-    PhysicsAspect*                                          m_physical_aspect_owner;
+    btDiscreteDynamicsWorld*                                    m_world;
+    PhysicsAspect*                                              m_physical_aspect_owner;
 
-    btDefaultMotionState*                                   m_motionState;
-    btCollisionShape*                                       m_collisionShape;
-    btTriangleMesh*                                         m_mesh;
-    btRigidBody*                                            m_rigidBody;
+    btDefaultMotionState*                                       m_motionState;
+
+    btCollisionShape*                                           m_collisionShape;
+    std::vector<std::pair<btCollisionShape*, Utils::Matrix>>    m_collisionShapesList;
+
+    btCompoundShape*                                            m_compoundShape;
 
 
-    AspectImplementations::BodyTransformAspectImpl          m_tr_aspectimpl;
+    btTriangleMesh*                                             m_mesh;
+    btRigidBody*                                                m_rigidBody;
 
-    bool                                                    m_body_active;
 
-    Utils::Matrix                                           m_collider_local_mat;
+    AspectImplementations::BodyTransformAspectImpl              m_tr_aspectimpl;
 
-    BodyAspect*                                             m_attachment_owner; // si pas NULL, le body auquel on est attach�
+    bool                                                        m_body_active;
 
-    Mode                                                    m_mode;
+    Utils::Matrix                                               m_collider_local_mat;
 
-    std::vector<Core::Entity*>                              m_ancestors;
+    BodyAspect*                                                 m_attachment_owner; // si pas NULL, le body auquel on est attach�
+
+    Mode                                                        m_mode;
+
+    std::vector<Core::Entity*>                                  m_ancestors;
 
     ///////////////////////////////////////////////////////////////////////////////////
 
-    Utils::Matrix                                           m_mem_transform;
-    Utils::Matrix                                           m_mem_localbt_transform; // la transform pure calculee par bullet
-    BodyAspect*                                             m_prev_attachment_owner;
-    btVector3*                                              m_mem_linearspeed;
-    btVector3*                                              m_mem_angularspeed;
-    bool                                                    m_init_as_attached;
-    bool                                                    m_init_as_detached;
+    Utils::Matrix                                               m_mem_transform;
+    Utils::Matrix                                               m_mem_localbt_transform; // la transform pure calculee par bullet
+    BodyAspect*                                                 m_prev_attachment_owner;
+    btVector3*                                                  m_mem_linearspeed;
+    btVector3*                                                  m_mem_angularspeed;
+    bool                                                        m_init_as_attached;
+    bool                                                        m_init_as_detached;
 
 
 public:
 
     struct BoxCollisionShape
     {
-        BoxCollisionShape( const Utils::Vector& p_box ) : m_box( p_box ) {};
+        BoxCollisionShape( const Utils::Vector& p_box ) : m_box( p_box ) 
+        {
+            m_transformation.Identity();
+        };
+
+        BoxCollisionShape(const Utils::Vector& p_box, const Utils::Matrix& p_mat) : 
+            m_box(p_box),
+            m_transformation(p_mat)
+        {
+        };
+
+        Utils::Matrix GetTransform( void ) const { return m_transformation; };
+        Utils::Vector GetPos( void ) const { return m_box; };
+
+    private:
         Utils::Vector m_box;
+        Utils::Matrix m_transformation;
     };
 
     struct SphereCollisionShape
     {
-        SphereCollisionShape( dsreal p_ray ) : m_ray( p_ray ) {};
+        SphereCollisionShape( dsreal p_ray ) : m_ray( p_ray ) 
+        {
+            m_transformation.Identity();
+        };
+
+        SphereCollisionShape(dsreal p_ray, const Utils::Matrix& p_mat) : 
+            m_ray(p_ray),
+            m_transformation(p_mat)
+        {
+        };
+
+        Utils::Matrix GetTransform(void) const { return m_transformation; };
+
+        dsreal GetRay( void ) const { return m_ray; };
+    private:
         dsreal m_ray;
+        Utils::Matrix m_transformation;
     };
 
     struct MesheCollisionShape
     {
-        MesheCollisionShape( const Core::Meshe& p_meshe ) : m_meshe( p_meshe ) {};
+        MesheCollisionShape( const Core::Meshe& p_meshe ) : m_meshe( p_meshe ) 
+        {
+            m_transformation.Identity();
+        };
+        MesheCollisionShape(const Core::Meshe& p_meshe, const Utils::Matrix& p_mat) : 
+            m_meshe(p_meshe),
+            m_transformation(p_mat)
+        {
+            m_transformation.Identity();
+        };
+
+        Utils::Matrix GetTransform(void) const { return m_transformation; };
+    
         Core::Meshe m_meshe;
+    public:
+        Utils::Matrix m_transformation;
+    };
+
+    struct CompoundCollisionShape
+    {
+        CompoundCollisionShape(void) 
+        {
+            m_transformation.Identity();
+        };
+
+        Utils::Matrix GetTransform(void) const { return m_transformation; };
+
+    private:
+        Utils::Matrix m_transformation;
     };
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

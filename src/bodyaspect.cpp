@@ -39,6 +39,7 @@ using namespace DrawSpace::Utils;
 BodyAspect::BodyAspect( void ) :
 m_motionState( NULL ),
 m_collisionShape( NULL ),
+m_compoundShape( NULL ),
 m_rigidBody( NULL ),
 m_mesh( NULL ),
 m_tr_aspectimpl( this ),
@@ -191,11 +192,101 @@ btRigidBody* BodyAspect::Init( void )
     ComponentList<BoxCollisionShape> boxcollision_shapes;
     ComponentList<SphereCollisionShape> spherecollision_shapes;
     ComponentList<MesheCollisionShape> meshecollision_shapes;
+    ComponentList<CompoundCollisionShape> compoundcollision_shapes;
 
     GetComponentsByType<BoxCollisionShape>( boxcollision_shapes );
     GetComponentsByType<SphereCollisionShape>( spherecollision_shapes );
     GetComponentsByType<MesheCollisionShape>( meshecollision_shapes );
+    GetComponentsByType<CompoundCollisionShape>(compoundcollision_shapes);
 
+    for(auto& e: boxcollision_shapes)
+    {
+        DrawSpace::Utils::Vector box_dims;
+        box_dims = e->getPurpose().GetPos();
+
+        btBoxShape* shape = _DRAWSPACE_NEW_(btBoxShape, btBoxShape(btVector3(box_dims[0], box_dims[1], box_dims[2])));
+
+        Utils::Matrix transf = e->getPurpose().GetTransform();
+
+        m_collisionShapesList.push_back( std::make_pair(shape, transf) );
+    }
+
+    for (auto& e : spherecollision_shapes)
+    {
+        dsreal sphere_radius = spherecollision_shapes[0]->getPurpose().GetRay();;
+        btSphereShape* shape = _DRAWSPACE_NEW_(btSphereShape, btSphereShape(sphere_radius));
+
+        Utils::Matrix transf = e->getPurpose().GetTransform();
+
+        m_collisionShapesList.push_back(std::make_pair(shape, transf));
+    }
+
+    for (auto& e : meshecollision_shapes)
+    {
+        if (COLLIDER != m_mode && ATTRACTOR_COLLIDER != m_mode)
+        {
+            _DSEXCEPTION("Meshe collision shape is for colliders only !! (see bullet source code)");
+        }
+        Meshe meshe = meshecollision_shapes[0]->getPurpose().m_meshe;
+
+        m_mesh = _DRAWSPACE_NEW_(btTriangleMesh, btTriangleMesh);
+
+        for (long i = 0; i < meshe.GetTrianglesListSize(); i++)
+        {
+            Triangle curr_triangle;
+            meshe.GetTriangles(i, curr_triangle);
+
+            Vertex v1, v2, v3;
+
+            meshe.GetVertex(curr_triangle.vertex1, v1);
+            meshe.GetVertex(curr_triangle.vertex2, v2);
+            meshe.GetVertex(curr_triangle.vertex3, v3);
+
+            btVector3 a(v1.x, v1.y, v1.z);
+            btVector3 b(v2.x, v2.y, v2.z);
+            btVector3 c(v3.x, v3.y, v3.z);
+
+            m_mesh->addTriangle(a, b, c, false);
+        }
+
+        btBvhTriangleMeshShape* shape = _DRAWSPACE_NEW_(btBvhTriangleMeshShape, btBvhTriangleMeshShape(m_mesh, true, true));
+
+        Utils::Matrix transf = e->getPurpose().GetTransform();
+
+        m_collisionShapesList.push_back(std::make_pair(shape, transf));
+    }
+
+    if(compoundcollision_shapes.size())
+    {
+        btCompoundShape* shape = _DRAWSPACE_NEW_(btCompoundShape, btCompoundShape);
+
+        for( auto& e : m_collisionShapesList )
+        {
+            btScalar    btmat[16];
+            btCollisionShape* sub_shape = e.first;
+            Matrix mat = e.second;
+
+            convert_matrix_to_bt(mat, btmat);
+
+            btTransform bttransf;
+            bttransf.setFromOpenGLMatrix(btmat);
+
+            shape->addChildShape(bttransf, sub_shape);
+        }
+        m_compoundShape = shape;
+        m_collisionShape = m_compoundShape;
+    }
+    else
+    {
+        // no compound declared...
+        // get the last one only
+        if(m_collisionShapesList.size())
+        {
+            m_collisionShape = m_collisionShapesList.back().first;
+        }
+    }
+
+    /*
     if( boxcollision_shapes.size() )
     {
         DrawSpace::Utils::Vector box_dims;
@@ -237,8 +328,9 @@ btRigidBody* BodyAspect::Init( void )
             m_mesh->addTriangle( a, b, c, false );
         }
 
-        m_collisionShape = _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( m_mesh, true, true ) );   
+        m_collisionShape = _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( m_mesh, true, true ) );
     }
+    */
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -246,12 +338,13 @@ btRigidBody* BodyAspect::Init( void )
 
     btVector3 localInertia( 0, 0, 0 );
 
-    if( mass > 0.0 && BODY == m_mode )
+    if( mass > 0.0 && BODY == m_mode && m_collisionShape )
     {        
         m_collisionShape->calculateLocalInertia( mass, localInertia );
     }
 
     //si collider, mass == 0.0
+
     btRigidBody::btRigidBodyConstructionInfo boxRigidBodyConstructionInfo( mass, m_motionState, m_collisionShape, localInertia );
 
     m_rigidBody = _DRAWSPACE_NEW_(  btRigidBody, btRigidBody( boxRigidBodyConstructionInfo ) );
@@ -321,8 +414,22 @@ void BodyAspect::Release( void )
     ////////////////////////////////////////////////////////////
 
     _DRAWSPACE_DELETE_( m_motionState );
-    _DRAWSPACE_DELETE_( m_collisionShape );
 
+    /*
+    if(m_collisionShape )
+    {
+        _DRAWSPACE_DELETE_( m_collisionShape );
+    }
+    */
+    //replaced by this
+    for(auto& e : m_collisionShapesList)
+    {
+        _DRAWSPACE_DELETE_(e.first);
+    }
+    if( m_compoundShape )
+    {
+        _DRAWSPACE_DELETE_(m_compoundShape);
+    }
     
     if( m_world )
     {

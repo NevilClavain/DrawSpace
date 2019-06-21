@@ -173,7 +173,7 @@ bool MainService::Init( void )
     create_ground();
     create_cube( 0.0, 9.0, 10.0, m_cubeRender, m_cubeEntity);
     create_cube(0.0, 15.0, 14.0, m_cube2Render, m_cube2Entity);
-    create_composition(-13.0, 8.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity);
+    create_composition(-13.0, 28.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity);
     create_screen_impostors();
     create_world_impostor();
 
@@ -687,6 +687,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         //////// transform //////////////////////////////////
 
+        /*
         TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
 
         transform_aspect->SetImplementation(&p_transform_impl);
@@ -694,6 +695,42 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         transform_aspect->AddComponent<Matrix>("pos");
 
         transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(p_x, p_y, p_z, 1.0));
+        */
+
+
+
+
+
+
+        TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+
+        BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
+
+
+        body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("main_box", Vector(1.5, 1.0, 1.0, 1.0));
+
+        Utils::Matrix feet_pos;
+        feet_pos.Translation(1.22307, -3.31759, 0.01);
+
+        body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("feet", Vector(0.1, 2.5, 0.2, 1.0), feet_pos);
+
+        
+        body_aspect->AddComponent<BodyAspect::CompoundCollisionShape>("global_shape");
+
+        
+
+        Matrix cube_attitude;
+
+        cube_attitude.Translation(p_x, p_y, p_z);
+        body_aspect->AddComponent<Matrix>("attitude", cube_attitude);
+
+        body_aspect->AddComponent<dsreal>("mass", 0.1);
+        body_aspect->AddComponent<BodyAspect::Mode>("mode", BodyAspect::BODY);
+
+        body_aspect->AddComponent<bool>("contact_state", false);
+
+        transform_aspect->SetImplementation(body_aspect->GetTransformAspectImpl());
+
 
     }
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -739,12 +776,14 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         //////// transform //////////////////////////////////
 
+        
         TransformAspect* transform_aspect = p_entity_2.AddAspect<TransformAspect>();
 
         transform_aspect->SetImplementation(&p_transform_impl);
 
         transform_aspect->AddComponent<Matrix>("pos");
         transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
+        
 
     }
 }
