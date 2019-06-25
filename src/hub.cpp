@@ -95,3 +95,8 @@ void Hub::ReleaseAssets(void)
 {
     m_resourcesSystem.ReleaseAssets();
 }
+
+DrawSpace::Systems::ResourcesSystem& Hub::GetResourcesSystem(void)
+{
+    return m_resourcesSystem;
+}

@@ -40,6 +40,8 @@ namespace DrawSpace
 namespace Core
 {
 class Meshe;
+class Texture;
+class Shader;
 }
 
 namespace Systems
@@ -114,11 +116,17 @@ public:
     void ReleaseAssets( void );
 
 
+    //////// direct API, useful for non-entity client //////
+
+    void LoadTexture(Core::Texture* p_texture);
+    void LoadShader(Core::Shader* p_shader);
+
+    ////////////////////////////////////////////////////////
+
     static void SetTexturesRootPath(const dsstring& p_path);
     static void EnableShadersDescrInFinalPath(bool p_state);
     static void SetShadersRootPath(const dsstring& p_path);
     static void SetMeshesRootPath(const dsstring& p_path);
-
 
 
 };

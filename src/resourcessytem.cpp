@@ -282,3 +282,19 @@ void ResourcesSystem::ReleaseAssets(void)
 
     m_importer.FreeScene();
 }
+
+void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
+{
+    dsstring asset_path;
+    p_texture->GetBasePath(asset_path);
+    dsstring final_asset_path = compute_textures_final_path(asset_path);
+    updateAssetFromCache<Texture>(p_texture, m_texturesCache, final_asset_path);
+}
+
+void ResourcesSystem::LoadShader(Core::Shader* p_shader)
+{
+    dsstring asset_path;
+    p_shader->GetBasePath(asset_path);
+    dsstring final_asset_path = compute_shaders_final_path(asset_path);
+    updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);
+}

@@ -68,6 +68,7 @@ public:
     void SetLogConf( DrawSpace::Logger::Configuration* p_logconf );
 
     dsstring GetSystemId(void) const { return "HubSystem"; };
+    DrawSpace::Systems::ResourcesSystem& GetResourcesSystem( void );
 
     void EnableGUI( bool p_state );
 
@@ -76,8 +77,7 @@ public:
 
     std::vector<DrawSpace::Interface::System*> GetSystems( void ) const;
 
-    void ReleaseAssets( void );
-
+    void ReleaseAssets( void );    
 };
 }
 }

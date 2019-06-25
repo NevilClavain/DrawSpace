@@ -114,8 +114,9 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+    m_systemsHub.GetResourcesSystem().LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
+    m_systemsHub.GetResourcesSystem().LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
+
 
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
     m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
@@ -299,7 +300,6 @@ void MainService::create_skybox( void )
 
     for (int i = 0; i < 6; i++)
     {
-        //textures[i][0]->LoadFromFile();
         skybox_textures.push_back(textures[i]);
     }
 
@@ -312,9 +312,6 @@ void MainService::create_skybox( void )
 
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
-
-    //skybox_texturepass_fx->GetShader(0)->LoadFromFile();
-    //skybox_texturepass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturepass_rss;
     skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -418,8 +415,9 @@ void MainService::create_world_impostor( void )
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor.vso", true ) ) );
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor.pso", true ) ) );
 
-    impostors_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    impostors_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+    m_systemsHub.GetResourcesSystem().LoadShader(impostors_texturepass->GetFx()->GetShader(0));
+    m_systemsHub.GetResourcesSystem().LoadShader(impostors_texturepass->GetFx()->GetShader(1));
+
 
     impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );
     impostors_texturepass->SetShaderRealVector( "globalscale", Vector( 5.0, 5.0, 0.0, 1.0 ) );
@@ -437,7 +435,6 @@ void MainService::create_world_impostor( void )
     impostors_texturepass->GetFx()->SetRenderStates( impostors_texturepass_rss );
 
     impostors_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
-    //impostors_texturepass->GetTexture( 0 )->LoadFromFile();
 
     /////////// resources ////////////////////////////////
 
@@ -530,8 +527,10 @@ void MainService::create_screen_impostors( void )
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.vso", true ) ) );
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor.pso", true ) ) );
 
-    impostors_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    impostors_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_systemsHub.GetResourcesSystem().LoadShader(impostors_texturepass->GetFx()->GetShader(0));
+    m_systemsHub.GetResourcesSystem().LoadShader(impostors_texturepass->GetFx()->GetShader(1));
+
 
     impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );
     impostors_texturepass->SetShaderRealVector( "globalscale", Vector( 5.0, 5.0, 0.0, 1.0 ) );
@@ -724,7 +723,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         cube_attitude.Translation(p_x, p_y, p_z);
         body_aspect->AddComponent<Matrix>("attitude", cube_attitude);
 
-        body_aspect->AddComponent<dsreal>("mass", 0.1);
+        body_aspect->AddComponent<dsreal>("mass", 70000.1);
         body_aspect->AddComponent<BodyAspect::Mode>("mode", BodyAspect::BODY);
 
         body_aspect->AddComponent<bool>("contact_state", false);
@@ -818,8 +817,6 @@ void MainService::create_ground( void )
     ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "map.jpg" ) ), 0 );
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
-    //ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    //ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
     ground_texturepass->SetOrderNumber( -500 );
 
