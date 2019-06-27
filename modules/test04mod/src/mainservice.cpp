@@ -40,11 +40,18 @@ m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
 m_systems_update_evt_cb( this, &MainService::on_systems_update_evt ),
 m_fps_transformer( NULL )
 {
+    DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("test_data/textures_bank");
+    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("test_data/shaders_bank");
+    DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(true);
+
+    DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath("test_data/meshes_bank");
+
+    //File::MountVirtualFS("test_data.bank");
+
 }
 
 bool MainService::Init( void )
 {
-
 
     //////////////recup params du service //////////////////
 
@@ -119,8 +126,9 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask.vso", true ) ) );
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask.pso", true ) ) );
 
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+    m_systemsHub.GetResourcesSystem().LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
+    m_systemsHub.GetResourcesSystem().LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
+
 
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
     m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
@@ -151,8 +159,12 @@ bool MainService::Init( void )
     m_wavespass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
     m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.vso", true ) ) );
     m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.pso", true ) ) );
-    m_wavespass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
-    m_wavespass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
+
+    m_systemsHub.GetResourcesSystem().LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(0));
+    m_systemsHub.GetResourcesSystem().LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(1));
+
+
+
     m_wavespass.GetViewportQuad()->AddShaderParameter( 1, "waves", 0 );
     
 
@@ -518,7 +530,6 @@ void MainService::create_skybox( void )
 
     for (int i = 0; i < 6; i++)
     {
-        textures[i][0]->LoadFromFile();
         skybox_textures.push_back(textures[i]);
     }
 
@@ -531,8 +542,6 @@ void MainService::create_skybox( void )
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
 
-    skybox_texturepass_fx->GetShader(0)->LoadFromFile();
-    skybox_texturepass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturepass_rss;
     skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -544,9 +553,6 @@ void MainService::create_skybox( void )
 
     skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror.vso", true)));
     skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror.pso", true)));
-
-    skybox_texturemirrorpass_fx->GetShader(0)->LoadFromFile();
-    skybox_texturemirrorpass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturemirrorpass_rss;
     skybox_texturemirrorpass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -595,6 +601,28 @@ void MainService::create_skybox( void )
     rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
     rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
     rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
+
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_skyboxEntity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(textures[0][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_1", std::make_tuple(textures[1][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_2", std::make_tuple(textures[2][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_3", std::make_tuple(textures[3][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
+
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_mirror_vshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_mirror_pshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(1), false));
+
+
+
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
@@ -650,12 +678,7 @@ void MainService::create_dynamic_cube( void )
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-
-    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
-    cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
 
     RenderStatesSet cube_texturepass_rss;
@@ -668,11 +691,9 @@ void MainService::create_dynamic_cube( void )
 
     cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
     rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot", "texturemirror_pass" );
@@ -683,13 +704,7 @@ void MainService::create_dynamic_cube( void )
     cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
     cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
 
-
-    cube_texturemirrorpass->GetFx()->GetShader( 0 )->LoadFromFile();
-    cube_texturemirrorpass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     cube_texturemirrorpass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
-    cube_texturemirrorpass->GetTexture( 0 )->LoadFromFile();
-
 
     RenderStatesSet cube_texturemirrorpass_rss;
     cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -703,7 +718,6 @@ void MainService::create_dynamic_cube( void )
 
     cube_texturemirrorpass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     cube_texturemirrorpass->GetMeshe()->SetImporter( m_meshe_import );
-    cube_texturemirrorpass->GetMeshe()->LoadFromFile( "object.ac", 0 );
 
     cube_texturemirrorpass->AddShaderParameter( 0, "reflector_pos", 24 );
     cube_texturemirrorpass->AddShaderParameter( 0, "reflector_normale", 25 );
@@ -712,7 +726,25 @@ void MainService::create_dynamic_cube( void )
     cube_texturemirrorpass->SetShaderRealVector( "reflector_normale", Vector( 0.0, 1.0, 0.0, 1.0 ) );
 
 
+    /////////// resources ////////////////////////////////
 
+    ResourcesAspect* resources_aspect = cube.dynCubeEntity->AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture_mirror", std::make_tuple(cube_texturemirrorpass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
+        "object.ac", "box", false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_mirror", std::make_tuple(cube_texturemirrorpass->GetMeshe(),
+        "object.ac", "box", false));
 
 
 
@@ -770,13 +802,7 @@ void MainService::create_static_cube( void )
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-
-    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    cube_texturepass->GetTexture( 0 )->LoadFromFile();
-
 
     RenderStatesSet cube_texturepass_rss;
     cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -788,7 +814,7 @@ void MainService::create_static_cube( void )
 
     cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
+
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -800,13 +826,7 @@ void MainService::create_static_cube( void )
     cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
     cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
 
-
-    cube_texturemirrorpass->GetFx()->GetShader( 0 )->LoadFromFile();
-    cube_texturemirrorpass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     cube_texturemirrorpass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    cube_texturemirrorpass->GetTexture( 0 )->LoadFromFile();
-
 
     RenderStatesSet cube_texturemirrorpass_rss;
     cube_texturemirrorpass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -821,7 +841,6 @@ void MainService::create_static_cube( void )
 
     cube_texturemirrorpass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     cube_texturemirrorpass->GetMeshe()->SetImporter( m_meshe_import );
-    cube_texturemirrorpass->GetMeshe()->LoadFromFile( "object.ac", 0 );
 
     cube_texturemirrorpass->AddShaderParameter( 0, "reflector_pos", 24 );
     cube_texturemirrorpass->AddShaderParameter( 0, "reflector_normale", 25 );
@@ -829,10 +848,31 @@ void MainService::create_static_cube( void )
     cube_texturemirrorpass->SetShaderRealVector( "reflector_pos", Vector( 0.0, -4.0, 0.0, 1.0 ) );
     cube_texturemirrorpass->SetShaderRealVector( "reflector_normale", Vector( 0.0, 1.0, 0.0, 1.0 ) );
 
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_staticCubeEntity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture_mirror", std::make_tuple(cube_texturemirrorpass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(1), false));
+
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
+        "object.ac", "box", false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_mirror", std::make_tuple(cube_texturemirrorpass->GetMeshe(),
+        "object.ac", "box", false));
+
     //////////////////////////////////////////////////////////////////////////
 
-
-   TransformAspect* transform_aspect = m_staticCubeEntity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect = m_staticCubeEntity.AddAspect<TransformAspect>();
 
 
     BodyAspect* body_aspect = m_staticCubeEntity.AddAspect<BodyAspect>();
@@ -879,10 +919,6 @@ void MainService::create_ground( void )
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
 
 
-
-    ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     ground_texturepass->AddShaderParameter( 1, "color", 0 );
     ground_texturepass->SetShaderRealVector( "color", Vector( 1.0, 0.0, 1.0, 1.0 ) );
 
@@ -896,7 +932,6 @@ void MainService::create_ground( void )
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -907,8 +942,6 @@ void MainService::create_ground( void )
     ground_bumppass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
     ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.vso", true ) ) );
     ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.pso", true ) ) );
-    ground_bumppass->GetFx()->GetShader( 0 )->LoadFromFile();
-    ground_bumppass->GetFx()->GetShader( 1 )->LoadFromFile();
 
     RenderStatesSet ground_bumppass_rss;
 
@@ -920,7 +953,6 @@ void MainService::create_ground( void )
 
     ground_bumppass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     ground_bumppass->GetMeshe()->SetImporter( m_meshe_import );
-    ground_bumppass->GetMeshe()->LoadFromFile( "water.ac", 0 );
 
     ground_bumppass->SetTexture( m_wavespass.GetTargetTexture(), 0 );
 
@@ -928,6 +960,22 @@ void MainService::create_ground( void )
     ground_bumppass->AddShaderParameter( 1, "bump_bias", 0 );
     ground_bumppass->SetShaderRealVector( "bump_bias", Vector( 2.7, 0.0, 0.0, 0.0 ) );
 
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_groundEntity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader_bumppass", std::make_tuple(ground_bumppass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader_bumppass", std::make_tuple(ground_bumppass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(ground_texturepass->GetMeshe(),
+        "water.ac", "my_flat_mesh", false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_bumppass", std::make_tuple(ground_bumppass->GetMeshe(),
+        "water.ac", "my_flat_mesh", false));
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
