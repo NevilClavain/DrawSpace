@@ -47,7 +47,6 @@ m_fps_transformer( NULL )
     DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath("test_data/meshes_bank");
 
     //File::MountVirtualFS("test_data.bank");
-
 }
 
 bool MainService::Init( void )

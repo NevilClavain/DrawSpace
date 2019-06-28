@@ -51,6 +51,13 @@ m_fps_transformer( NULL ),
 m_free_transformer( NULL)
 //m_cube_is_relative( true )
 {
+    DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("test_data/textures_bank");
+    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("test_data/shaders_bank");
+    DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(true);
+
+    DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath("test_data/meshes_bank");
+
+    //File::MountVirtualFS("test_data.bank");
 }
 
 MainLoopService::~MainLoopService( void )
@@ -111,12 +118,11 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 0 )->LoadFromFile();
-    m_finalpass.GetViewportQuad()->GetFx()->GetShader( 1 )->LoadFromFile();
-
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
     m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
 
+    m_systemsHub.GetResourcesSystem().LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
+    m_systemsHub.GetResourcesSystem().LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
 
 
 
@@ -874,9 +880,6 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-    cube_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    cube_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
-
     RenderStatesSet cube_texturepass_rss;
     cube_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     cube_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
@@ -886,10 +889,8 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
 
     cube_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     cube_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    cube_texturepass->GetMeshe()->LoadFromFile( "object.ac", 0 );
 
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "bellerophon.jpg" ) ), 0 );
-    cube_texturepass->GetTexture( 0 )->LoadFromFile();
 
     p_entity.AddAspect<TransformAspect>();
     
@@ -910,6 +911,21 @@ void MainLoopService::create_cube( const Matrix& p_transform, DrawSpace::Core::E
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
     
     body_aspect->AddComponent<bool>( "contact_state", false );
+
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = p_entity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
+        "object.ac", "box", false));
+
+
 
     TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
@@ -956,7 +972,6 @@ void MainLoopService::create_skybox( void )
 
     for (int i = 0; i < 6; i++)
     {
-        textures[i][0]->LoadFromFile();
         skybox_textures.push_back(textures[i]);
     }
 
@@ -969,8 +984,6 @@ void MainLoopService::create_skybox( void )
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
 
-    skybox_texturepass_fx->GetShader(0)->LoadFromFile();
-    skybox_texturepass_fx->GetShader(1)->LoadFromFile();
 
     RenderStatesSet skybox_texturepass_rss;
     skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -1003,6 +1016,26 @@ void MainLoopService::create_skybox( void )
     rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
 
 
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_skyboxEntity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_0", std::make_tuple(textures[0][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_1", std::make_tuple(textures[1][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_2", std::make_tuple(textures[2][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_3", std::make_tuple(textures[3][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
+
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false));
+
+
+
+
+
+
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
     transform_aspect->SetImplementation( &m_transformer );
@@ -1030,8 +1063,6 @@ void MainLoopService::create_ground( void )
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-    ground_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    ground_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
 
     RenderStatesSet ground_texturepass_rss;
     ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -1042,10 +1073,10 @@ void MainLoopService::create_ground( void )
 
     ground_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     ground_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    ground_texturepass->GetMeshe()->LoadFromFile( "water.ac", 0 );
+
 
     ground_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
-    ground_texturepass->GetTexture( 0 )->LoadFromFile();
+
 
     TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
 
@@ -1071,8 +1102,21 @@ void MainLoopService::create_ground( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = m_groundEntity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(ground_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(ground_texturepass->GetMeshe(),
+        "water.ac", "my_flat_mesh", false));
+
+
+    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
 }
 
 void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core::Entity& p_entity, DrawSpace::AspectImplementations::MesheRenderingAspectImpl* p_render, BodyAspect::Mode p_mode )
@@ -1092,8 +1136,6 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
     sphere_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
     sphere_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
 
-    sphere_texturepass->GetFx()->GetShader( 0 )->LoadFromFile();
-    sphere_texturepass->GetFx()->GetShader( 1 )->LoadFromFile();
 
     RenderStatesSet sphere_texturepass_rss;
     sphere_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
@@ -1104,10 +1146,9 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
 
     sphere_texturepass->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     sphere_texturepass->GetMeshe()->SetImporter( m_meshe_import );
-    sphere_texturepass->GetMeshe()->LoadFromFile( "planet.ac", 0 );
 
     sphere_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
-    sphere_texturepass->GetTexture( 0 )->LoadFromFile();
+
 
     p_entity.AddAspect<TransformAspect>();
     
@@ -1120,6 +1161,21 @@ void MainLoopService::create_sphere( const Matrix& p_transform, DrawSpace::Core:
     body_aspect->AddComponent<BodyAspect::Mode>( "mode", p_mode );
 
     body_aspect->AddComponent<bool>( "contact_state", false );
+
+
+    /////////// resources ////////////////////////////////
+
+    ResourcesAspect* resources_aspect = p_entity.AddAspect<ResourcesAspect>();
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(sphere_texturepass->GetFx()->GetShader(0), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(sphere_texturepass->GetFx()->GetShader(1), false));
+
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(sphere_texturepass->GetTexture(0), false));
+
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(sphere_texturepass->GetMeshe(),
+        "planet.ac", "sphere", false));
+
+
 
     TransformAspect* transform_aspect = p_entity.GetAspect<TransformAspect>();
     transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
