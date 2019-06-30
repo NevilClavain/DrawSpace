@@ -54,14 +54,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SHIPMOD_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include;./../../../DrawSpace_thirdparts/Assimp-4.1.0/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(SolutionDir)\libs\skyboxmod.dll</OutputFile>
-      <AdditionalLibraryDirectories>.\..\..\libs;./../../../DrawSpace_thirdparts/bullet-2.87/lib/vs2017;.\..\..\..\DrawSpace_thirdparts\physfs-2.0.3\vs2017\Debug;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;drawspace.lib;BulletDynamics_vs2017_debug.lib;BulletCollision_vs2017_debug.lib;LinearMath_vs2017_debug.lib;physfs.lib;jsmn.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\..\..\libs;./../../../DrawSpace_thirdparts/bullet-2.87/lib/vs2017;.\..\..\..\DrawSpace_thirdparts\physfs-2.0.3\vs2017\Debug;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib;.\..\..\..\DrawSpace_thirdparts\Assimp-4.1.0\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;drawspace.lib;BulletDynamics_vs2017_debug.lib;BulletCollision_vs2017_debug.lib;LinearMath_vs2017_debug.lib;physfs.lib;jsmn.lib;assimp-vc120-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\skyboxmod.dll .\..\..\..\Drawspace_samples\bin
@@ -77,7 +77,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SHIPMOD_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../src;./../../../DrawSpace_thirdparts/bullet-2.87/src;./../../../DrawSpace_thirdparts/physfs-2.0.3/include;./../../../DrawSpace_thirdparts/JSON-jsmn/include;./../../../DrawSpace_thirdparts/Assimp-4.1.0/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,8 +85,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(SolutionDir)\libs\skyboxmod_r.dll</OutputFile>
-      <AdditionalLibraryDirectories>.\..\..\libs;./../../../DrawSpace_thirdparts/bullet-2.87/lib/vs2017;.\..\..\..\DrawSpace_thirdparts\physfs-2.0.3\vs2017\Release;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;drawspace_r.lib;BulletDynamics_vs2017.lib;BulletCollision_vs2017.lib;LinearMath_vs2017.lib;physfs.lib;jsmn_r.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\..\..\libs;./../../../DrawSpace_thirdparts/bullet-2.87/lib/vs2017;.\..\..\..\DrawSpace_thirdparts\physfs-2.0.3\vs2017\Release;.\..\..\..\DrawSpace_thirdparts\JSON-jsmn\lib;.\..\..\..\DrawSpace_thirdparts\Assimp-4.1.0\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;drawspace_r.lib;BulletDynamics_vs2017.lib;BulletCollision_vs2017.lib;LinearMath_vs2017.lib;physfs.lib;jsmn_r.lib;assimp-vc120-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy .\..\..\libs\skyboxmod_r.dll .\..\..\..\Drawspace_samples\bin</Command>
