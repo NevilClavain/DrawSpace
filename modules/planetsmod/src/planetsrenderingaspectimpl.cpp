@@ -29,6 +29,7 @@
 #include "cameraaspect.h"
 #include "bodyaspect.h"
 #include "informationsaspect.h"
+#include "resourcesaspect.h"
 #include "maths.h"
 #include "hub.h"
 
@@ -411,6 +412,17 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     m_planet_ray = planet_ray * 1000.0;
 
+    //////////// Resources ///////////////////////////
+
+    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+    if( !resources_aspect )
+    {
+        _DSEXCEPTION("Planet : resources aspect required for planet entity")
+    }
+
+    
+
+
     /////////////////
 
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
@@ -429,6 +441,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     m_climate_vshader->LoadFromFile();
     m_climate_pshader->LoadFromFile();
+
+    //resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(m_climate_vshader, false));
+    //resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(m_climate_pshader, false));
+
 
     m_climate_fx.AddShader(m_climate_vshader);
     m_climate_fx.AddShader(m_climate_pshader);
