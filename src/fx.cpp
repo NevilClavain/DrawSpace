@@ -102,12 +102,16 @@ void Fx::GetShadersMD5( dsstring& p_md5 )
     unsigned char* shaders;
 
     dsstring hash_shaders = "";
-
-
     size_t total_shaders_data_size = 0;
     for( size_t i = 0; i < m_shaders.size(); i++ )
     {
-        total_shaders_data_size += m_shaders[i]->GetDataSize();
+        size_t shader_data_size = m_shaders[i]->GetDataSize();
+        if(-1 == shader_data_size)
+        {
+            _DSEXCEPTION( "shader not initialized !");
+        }
+
+        total_shaders_data_size += shader_data_size;
     }
 
     shaders = new unsigned char[total_shaders_data_size];
