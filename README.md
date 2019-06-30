@@ -15,6 +15,7 @@ DrawSpace currently rely on some 3rd-parts libraries:
 	** Shiny C/C++/Lua profiler : http://sourceforge.net/projects/shinyprofiler/
         
 	** Bullet physics 2.82 :      http://bulletphysics.org/wordpress/
+	** Assimp :                   http://www.assimp.org/
 	** Lua 5.1 :                  http://www.lua.org/
 	** PhysicsFS 2.0.3 :          https://icculus.org/physfs/
 	** CEGUI 0.8.7 :              http://cegui.org.uk/
