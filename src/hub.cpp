@@ -96,7 +96,21 @@ void Hub::ReleaseAssets(void)
     m_resourcesSystem.ReleaseAssets();
 }
 
+/*
 DrawSpace::Systems::ResourcesSystem& Hub::GetResourcesSystem(void)
 {
     return m_resourcesSystem;
+}
+*/
+
+Interface::System* Hub::GetSystem(const dsstring& p_id)
+{
+    for( auto& e : m_systems)
+    {
+        if( e->GetSystemId() == p_id)
+        {
+            return e;
+        }
+    }
+    return NULL;
 }
