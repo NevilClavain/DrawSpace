@@ -72,7 +72,7 @@ public:
             _DSEXCEPTION( "Component with same id already exists : " + p_id );
         }
 
-        Component<T>* newcomp =  _DRAWSPACE_NEW_( Component<T>, Component<T> );
+        Component<T>* newcomp = _DRAWSPACE_NEW_WITH_COMMENT( Component<T>, Component<T>, p_id);
         newcomp->MakePurpose( (std::forward<Args>(p_args))... );
         m_components[p_id] = newcomp;
 
