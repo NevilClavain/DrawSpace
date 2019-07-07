@@ -33,6 +33,8 @@
 
 #define _DRAWSPACE_NEW_FROM_MEMMGR_( __mgr__, __type__, __item__ ) __mgr__->Register<__type__>( new __item__, sizeof( __item__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
 
+#define _DRAWSPACE_NEW_WITH_COMMENT( __type__, __item__, __comment__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, sizeof( __item__ ), #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
+
 #define _DRAWSPACE_DELETE_( __ptr__ ) delete __ptr__; DrawSpace::Utils::MemAlloc::GetInstance()->Unregister( __ptr__ ); __ptr__ = NULL
 #define _DRAWSPACE_DELETE_N_( __ptr__ ) delete[] __ptr__; DrawSpace::Utils::MemAlloc::GetInstance()->Unregister( __ptr__ ); __ptr__ = NULL
 #define _DRAWSPACE_DELETE_FROM_MEMMGR_( __mgr__, __ptr__ ) delete __ptr__; __mgr__->Unregister( __ptr__ ); __ptr__ = NULL
@@ -52,6 +54,7 @@ protected:
         dsstring    func;
         long        linenum;
         dsstring    file;
+        dsstring    comment;
 
     } entry;
 
@@ -61,7 +64,7 @@ protected:
 
     MemAlloc( void );
 
-    void register_bloc( void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename );
+    void register_bloc( void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment );
 
 public:
     
@@ -72,10 +75,10 @@ public:
     void DumpContent( void );
 
     template <typename base>
-    base* Register( base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename )
+    base* Register( base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment = "")
     {
         base* t = p_ptr;
-        register_bloc( t, p_size, p_item, p_funcname, p_line, p_filename );
+        register_bloc( t, p_size, p_item, p_funcname, p_line, p_filename, p_comment);
 
         return t;
     };

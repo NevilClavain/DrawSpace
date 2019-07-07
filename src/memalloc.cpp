@@ -56,12 +56,12 @@ void MemAlloc::DumpContent( void )
     for( auto& it = m_blocs.begin(); it != m_blocs.end(); ++it )
     {
         _DSDEBUG( logger, dsstring( "--> " ) << count << dsstring( "/ ptr = " ) << (*it).first << dsstring( " size = " ) << (*it).second.size << dsstring( " object = " ) << (*it).second.item.c_str() << dsstring( " in function : " ) << (*it).second.func.c_str()
-            << dsstring( " " ) << (*it).second.file.c_str() << dsstring( ", line " ) << (*it).second.linenum )
+            << dsstring( " " ) << (*it).second.file.c_str() << dsstring( ", line " ) << (*it).second.linenum << dsstring(" comment = [") << (*it).second.comment << dsstring("]"))
         count++;
     }
 }
 
-void MemAlloc::register_bloc( void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename )
+void MemAlloc::register_bloc( void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment)
 {
     entry e;
     e.file = p_filename;
@@ -69,6 +69,7 @@ void MemAlloc::register_bloc( void* p_ptr, size_t p_size, const std::string& p_i
     e.item = p_item;
     e.linenum = p_line;
     e.size = p_size;
+    e.comment = p_comment;
     m_blocs[p_ptr] = e;
 
     m_totalsize += p_size;
