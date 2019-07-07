@@ -53,15 +53,6 @@ using namespace DrawSpace::Interface::Module;
 
 Test03Root::Test03Root( void )
 { 
-    Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "test_data/shaders_bank" );
-    Texture::SetRootPath( "test_data/textures_bank" );
-    RenderStatesSet::SetRootPath( "test_data/renderstates_bank" );
-
-    AC3DMesheImport::SetRootPath( "test_data/meshes_bank" );
-
-    //File::MountVirtualFS( "test_data.bank" );
-
 }
 
 Test03Root::~Test03Root( void )
