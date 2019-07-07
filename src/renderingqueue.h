@@ -166,6 +166,7 @@ public:
 
     long GetTheoricalSwitchesCost(void) const;
     long GetSwitchesCost(void) const;
+    bool IsReady(void) const;
 
     void Add( RenderingNode* p_node );
     void Remove( RenderingNode* p_node );

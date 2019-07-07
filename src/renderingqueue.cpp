@@ -216,6 +216,11 @@ void RenderingQueue::Remove( RenderingNode* p_node )
     }
 }
 
+bool RenderingQueue::IsReady(void) const
+{
+    return m_ready;
+}
+
 void RenderingQueue::EnableDepthClearing( bool p_enable )
 {
     m_clear_depth = p_enable;
