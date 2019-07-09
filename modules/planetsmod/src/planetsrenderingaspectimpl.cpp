@@ -425,10 +425,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, true));
     m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, true));
-
-    //m_climate_vshader->LoadFromFile();
-    //m_climate_pshader->LoadFromFile();
-
     
     //////////// Resources ///////////////////////////
 
