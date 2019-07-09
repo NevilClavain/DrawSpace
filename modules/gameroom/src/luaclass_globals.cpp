@@ -73,6 +73,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 
     { "set_texturesrootpath", &LuaClass_Globals::LUA_settexturesrootpath },
     { "set_shadersrootpath", &LuaClass_Globals::LUA_setshadersrootpath },
+    { "enable_shadersdescrinfinalpath", &LuaClass_Globals::LUA_enableshadersdescrinfinalpath },
     { "set_meshesrootpath", &LuaClass_Globals::LUA_setmeshesrootpath },
     { "set_scriptsrootpath", &LuaClass_Globals::LUA_setscriptsrootpath },
     { "set_virtualfs", &LuaClass_Globals::LUA_setvirtualfs },
@@ -84,6 +85,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "signal_rendersceneend", &LuaClass_Globals::LUA_signalrendersceneend },
 
     { "ds_exception", &LuaClass_Globals::LUA_dsexception },
+
+    { "release_assets", &LuaClass_Globals::LUA_ReleaseAssets },
 
 	{ 0, 0 }
 };
@@ -339,7 +342,10 @@ int LuaClass_Globals::LUA_settexturesrootpath( lua_State* p_L )
 	}
 
 	dsstring path = luaL_checkstring( p_L, 1 );
-    Texture::SetRootPath( path );
+
+    Texture::SetRootPath( path ); // temporaire, a supprimer quand tout lua stack utilisera le resource system
+
+    DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath(path);
 
     return 0;
 }
@@ -354,7 +360,23 @@ int LuaClass_Globals::LUA_setshadersrootpath( lua_State* p_L )
 
 	dsstring path = luaL_checkstring( p_L, 1 );
 
-    Shader::SetRootPath( path );
+    Shader::SetRootPath( path ); // temporaire, a supprimer quand tout lua stack utilisera le resource system
+
+    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath(path);
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_enableshadersdescrinfinalpath(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::enable_shadersdescrinfinalpath : argument(s) missing");
+    }
+
+    bool enable = luaL_checkint(p_L, 1);
+    DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(enable);
 
     return 0;
 }
@@ -369,7 +391,9 @@ int LuaClass_Globals::LUA_setmeshesrootpath( lua_State* p_L )
 
 	dsstring path = luaL_checkstring( p_L, 1 );
 
-    AC3DMesheImport::SetRootPath( path );
+    AC3DMesheImport::SetRootPath( path ); // temporaire, a supprimer quand tout lua stack utilisera le resource system
+
+    DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath(path);
 
     return 0;
 }
@@ -455,5 +479,11 @@ int LuaClass_Globals::LUA_dsexception(lua_State* p_L)
     dsstring text = luaL_checkstring(p_L, 1);
     _DSEXCEPTION( text );
 
+    return 0;
+}
+
+int LuaClass_Globals::LUA_ReleaseAssets(lua_State* p_L)
+{
+    MainService::GetInstance()->RequestReleaseAssets();
     return 0;
 }

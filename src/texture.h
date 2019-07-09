@@ -82,6 +82,8 @@ protected:
     RenderPurpose                   m_renderpurpose;
     RenderTarget                    m_rendertarget;
     Purpose                         m_purpose;
+
+    bool                            m_dataowner;
     
     dsstring                        compute_final_path(void) const;
     

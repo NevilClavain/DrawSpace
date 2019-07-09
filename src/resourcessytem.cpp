@@ -273,12 +273,17 @@ void ResourcesSystem::ReleaseAssets(void)
 {
     for(auto& e : m_texturesCache)
     {
-        _DRAWSPACE_DELETE_(e.second.data);
+        _DRAWSPACE_DELETE_N_(e.second.data);
     }
     for (auto& e : m_shadersCache)
     {
         _DRAWSPACE_DELETE_(e.second.data);
     }
+
+    m_shadersCache.clear();
+    m_meshesCache.clear();
+    m_texturesCache.clear();
+
 
     m_importer.FreeScene();
 }

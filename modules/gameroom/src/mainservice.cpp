@@ -172,6 +172,7 @@ void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
     LuaContext::GetInstance()->Shutdown();
+    m_systemsHub.ReleaseAssets();
 }
 
 void MainService::print_console_content( void )
@@ -854,6 +855,11 @@ void MainService::RequestLog(int p_level, const dsstring& p_log)
 DrawSpace::Logger::Sink& MainService::RequestLogger(void) const
 {
     return logger;
+}
+
+void MainService::RequestReleaseAssets(void)
+{
+    m_systemsHub.ReleaseAssets();
 }
 
 void MainService::RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root)

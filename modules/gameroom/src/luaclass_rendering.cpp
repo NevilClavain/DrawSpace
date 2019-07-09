@@ -88,9 +88,9 @@ int LuaClass_Rendering::LUA_instanciateRenderingImpl( lua_State* p_L )
 
     dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
 
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("*******************Dumping ") << mod_name << dsstring( " mem allocs*******************"));
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << mod_name << dsstring( " mem allocs*******************"));
     lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
 
     size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
     m_total_mem_allocs = total;
@@ -117,9 +117,9 @@ int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
 
     dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
 
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("*******************Dumping ") << mod_name << dsstring(" mem allocs*******************"));
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << mod_name << dsstring(" mem allocs*******************"));
     lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("************************************************************************************"));
+    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
 
     size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
 

@@ -52,7 +52,8 @@ m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL ),
 m_width( 256 ),
 m_height( 256 ),
-m_bpp( 4 )
+m_bpp( 4 ),
+m_dataowner(false)
 {
 }
 
@@ -70,7 +71,8 @@ m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL ),
 m_width( 256 ),
 m_height( 256 ),
-m_bpp( 4 )
+m_bpp( 4 ),
+m_dataowner(false)
 {
 }
 
@@ -100,12 +102,14 @@ bool Texture::LoadFromFile(void)
     }
     m_filedata = data;
     m_filedatasize = size;
+
+    m_dataowner = true;
     return true;
 }
 
 void Texture::ReleaseData(void)
 {
-    if (m_filedata)
+    if (m_filedata && m_dataowner)
     {
         _DRAWSPACE_DELETE_N_(m_filedata);
         m_filedata = NULL;

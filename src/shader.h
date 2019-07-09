@@ -43,6 +43,7 @@ protected:
     void*                           m_data;
     size_t                          m_datasize;
     bool                            m_compiled;
+    bool                            m_dataowner;
 
     dsstring compute_final_path( void ) const;
 

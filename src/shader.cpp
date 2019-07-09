@@ -42,7 +42,8 @@ bool Shader::m_addshaderspath = false;
 Shader::Shader( void ) :
 m_data( NULL ), 
 m_compiled( false ), 
-m_datasize( -1 )
+m_datasize( -1 ),
+m_dataowner( false )
 {
 }
 
@@ -50,14 +51,16 @@ Shader::Shader( const dsstring& p_filepath, bool p_compiled ) :
 m_filepath( p_filepath ), 
 m_data( NULL ), 
 m_compiled( p_compiled ), 
-m_datasize( -1 )
+m_datasize( -1 ),
+m_dataowner(false)
 {
 }
 
 Shader::Shader( bool p_compiled ) : 
 m_data( NULL ), 
 m_compiled( p_compiled ), 
-m_datasize( -1 )
+m_datasize( -1 ),
+m_dataowner(false)
 {
 }
 
@@ -108,6 +111,8 @@ bool Shader::LoadFromFile( void )
     }
     m_data = data;
     m_datasize = size;
+
+    m_dataowner = true;
     return true;
 }
 
@@ -136,7 +141,7 @@ bool Shader::LoadFromFile( const dsstring& p_filepath, bool p_compiled )
 
 void Shader::ReleaseData( void )
 {
-    if( m_data )
+    if( m_data && m_dataowner )
     {
         _DRAWSPACE_DELETE_N_( m_data );
         m_data = NULL;

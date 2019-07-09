@@ -188,7 +188,6 @@ void PlanetsRenderingAspectImpl::Release(void)
             }
         }
 
-
         if(m_climate_vshader)
         {
             _DRAWSPACE_DELETE_(m_climate_vshader);
@@ -412,18 +411,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     m_planet_ray = planet_ray * 1000.0;
 
-    //////////// Resources ///////////////////////////
-
-    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
-    if( !resources_aspect )
-    {
-        _DSEXCEPTION("Planet : resources aspect required for planet entity")
-    }
-
-    
-
-
-    /////////////////
 
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
     std::vector<std::vector<Fx*>> layers_fx = m_owner->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
@@ -439,11 +426,23 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
     m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, true));
     m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, true));
 
-    m_climate_vshader->LoadFromFile();
-    m_climate_pshader->LoadFromFile();
+    //m_climate_vshader->LoadFromFile();
+    //m_climate_pshader->LoadFromFile();
 
-    //resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(m_climate_vshader, false));
-    //resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(m_climate_pshader, false));
+    
+    //////////// Resources ///////////////////////////
+
+    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        _DSEXCEPTION("Planet : resources aspect required for planet entity")
+    }
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(m_climate_vshader, false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(m_climate_pshader, false));
+
+    /////////////////
+
 
 
     m_climate_fx.AddShader(m_climate_vshader);
@@ -607,6 +606,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
 void PlanetsRenderingAspectImpl::release_rendering_objects( void )
 {
+
+    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>("vshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>("pshader");
+
     m_drawable.Shutdown();
 }
 
@@ -772,6 +777,12 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         if (sp->GetTimerReadyFlag())
         {
             m_singleshot_subpasses_stack.pop_back();
+
+            if( !sp->GetPass()->GetRenderingQueue()->IsReady() )
+            {
+                sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+            }
+
             sp->DrawSubPass();
             sp->SubPassDone();
         }
@@ -780,6 +791,12 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
     for( auto& e : m_singleshot_subpasses)
     {
         LOD::SubPass* sp = e;
+
+        if (!sp->GetPass()->GetRenderingQueue()->IsReady())
+        {
+            sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+        }
+
         sp->DrawSubPass();
         sp->SubPassDone();
     }
@@ -794,7 +811,21 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
 
     // on ajoute le node a la queue directement ici
     p_pass->GetPass()->GetRenderingQueue()->Add(node);
-    p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+
+
+    //p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+
+    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        _DSEXCEPTION("Planet : resources aspect required for planet entity")
+    }
+
+    //resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(m_climate_vshader, false));
+
+
+
+
 
     LOD::SubPass::EntryInfos ei;
     

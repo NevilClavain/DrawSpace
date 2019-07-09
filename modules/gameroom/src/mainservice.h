@@ -193,6 +193,8 @@ public:
 
     void RequestLog( int p_level, const dsstring& p_log );
 
+    void RequestReleaseAssets( void );
+
     DrawSpace::Logger::Sink& RequestLogger( void ) const;
 
     void RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);

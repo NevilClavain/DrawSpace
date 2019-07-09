@@ -82,7 +82,7 @@ public:
         m_components_by_type[tid].push_back( newcomp );
 
         newcomp->m_uid = m_uid_count++;
-        logComponent("AddComponent : ", p_id, newcomp);        
+        //logComponent("AddComponent : ", p_id, newcomp);        
     }
         
     template<typename T>
@@ -94,7 +94,7 @@ public:
         }
         Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
 
-        logComponent("RemoveComponent : ", p_id, comp);
+        //logComponent("RemoveComponent : ", p_id, comp);
               
         // suppression dans m_components_by_type
         size_t tid = typeid(T).hash_code();

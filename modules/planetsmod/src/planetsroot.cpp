@@ -33,10 +33,6 @@ using namespace DrawSpace::Interface::Module;
 
 PlanetsRoot::PlanetsRoot( void )
 {
-    Shader::EnableShadersDescrInFinalPath(true);
-
-    //Shader::SetRootPath("test_data/shaders_bank");
-    //File::MountVirtualFS( "test_data.bank" );
 }
 
 PlanetsRoot::~PlanetsRoot( void )
