@@ -180,7 +180,17 @@ int LuaClass_Rendering::LUA_detachfromentity( lua_State* p_L )
 }
 
 int LuaClass_Rendering::LUA_configure( lua_State* p_L )
-{    
+{
+    if( NULL == m_entity)
+    {
+        LUA_ERROR("Rendering::configure : no attached entity");
+    }
+    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        LUA_ERROR("Rendering::configure : attached entity has no resources aspect !");
+    }
+
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -246,19 +256,9 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                             if( texture_name != "" )
                             {
                                 Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_name ) );
+                                resources_aspect->AddComponent<std::tuple<Texture*, bool>>(texture_name, std::make_tuple(texture, false));
 
-                                bool status = texture->LoadFromFile();
-
-                                status = texture->LoadFromFile();
-                                if( !status )
-                                {                                
-                                    cleanup_resources( p_L );
-                                    LUA_ERROR( "Rendering::configure : texture loading operation failed" );
-                                }
-                                else
-                                {
-                                    textures_set[texture_stage_index] = texture;
-                                }
+                                textures_set[texture_stage_index] = texture;
                             }                        
                         }
 
@@ -292,18 +292,8 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     {
                         std::pair<dsstring,bool> shader_file_infos = fx_params.shaders[j];
                         Shader* shader = _DRAWSPACE_NEW_( Shader, Shader( shader_file_infos.first, shader_file_infos.second ) );
-
-                        bool status = shader->LoadFromFile();
-
-                        if( !status )
-                        {
-                            cleanup_resources( p_L );
-                            LUA_ERROR( "Rendering::configure : shader loading operation failed" );
-                        }
-                        else
-                        {
-                            fx->AddShader( shader );
-                        }
+                        resources_aspect->AddComponent<std::tuple<Shader*, bool>>(shader_file_infos.first, std::make_tuple(shader, false));
+                        fx->AddShader(shader);
                     }
 
                     config_fxs.push_back( fx );
@@ -359,7 +349,17 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 }
 
 void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
-{    
+{  
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("Rendering::configure : no attached entity");
+    }
+    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        LUA_ERROR("Rendering::configure : attached entity has no resources aspect !");
+    }
+
     if( m_entity_rendering_aspect )
     {        
         Component<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>* layers_textures_comp;
@@ -381,6 +381,10 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
                             Texture* texture = texture_set[texture_stage_index];
                             if (texture)
                             {
+                                dsstring id;
+                                texture->GetBasePath(id);
+                                resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(id);
+
                                 _DRAWSPACE_DELETE_(texture);
                             }
                         }
@@ -408,6 +412,11 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
                     for (int j = 0; j < fx->GetShadersListSize(); j++)
                     {
                         Shader* shader = fx->GetShader(j);
+
+                        dsstring id;
+                        shader->GetBasePath(id);
+                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(id);
+
                         _DRAWSPACE_DELETE_(shader);
                     }
                     _DRAWSPACE_DELETE_(fx);
