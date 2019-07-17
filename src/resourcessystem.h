@@ -29,8 +29,6 @@
 #include "systems.h"
 #include "entitynodegraph.h"
 
-#include "resourcesiosystem.h"
-
 struct aiNode;
 struct aiScene;
 struct aiMesh;
@@ -67,7 +65,6 @@ protected:
     std::map<dsstring, Blob>                m_shadersCache;
     std::map<dsstring, const aiScene*>      m_meshesCache;
 
-    ResourcesIOSystem                       m_iosystem;
     Assimp::Importer                        m_importer;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);

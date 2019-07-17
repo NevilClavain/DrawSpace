@@ -75,8 +75,6 @@
     <ClCompile Include="src\renderstatesset.cpp" />
     <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\resourcesaspect.cpp" />
-    <ClCompile Include="src\resourcesiostream.cpp" />
-    <ClCompile Include="src\resourcesiosystem.cpp" />
     <ClCompile Include="src\resourcessytem.cpp" />
     <ClCompile Include="src\revolutiontransformaspectimpl.cpp" />
     <ClCompile Include="src\serviceaspect.cpp" />
@@ -182,8 +180,6 @@
     <ClInclude Include="src\renderingaspectimpl.h" />
     <ClInclude Include="src\rendersystem.h" />
     <ClInclude Include="src\resourcesaspect.h" />
-    <ClInclude Include="src\resourcesiosystem.h" />
-    <ClInclude Include="src\resourcesiostream.h" />
     <ClInclude Include="src\resourcessystem.h" />
     <ClInclude Include="src\revolutiontransformaspectimpl.h" />
     <ClInclude Include="src\serviceaspect.h" />

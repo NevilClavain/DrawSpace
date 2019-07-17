@@ -196,7 +196,6 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 	{		
         LUA_ERROR( "Rendering::configure : argument(s) missing" );
 	}
-    //LuaClass_RenderConfig* lua_renderconfig = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
 
     LuaClass_RenderLayer* lua_renderlayer = Luna<LuaClass_RenderLayer>::check(p_L, 1);
 
@@ -256,7 +255,8 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                             if( texture_name != "" )
                             {
                                 Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_name ) );
-                                resources_aspect->AddComponent<std::tuple<Texture*, bool>>(texture_name, std::make_tuple(texture, false));
+                                dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                                resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
 
                                 textures_set[texture_stage_index] = texture;
                             }                        
@@ -292,7 +292,8 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     {
                         std::pair<dsstring,bool> shader_file_infos = fx_params.shaders[j];
                         Shader* shader = _DRAWSPACE_NEW_( Shader, Shader( shader_file_infos.first, shader_file_infos.second ) );
-                        resources_aspect->AddComponent<std::tuple<Shader*, bool>>(shader_file_infos.first, std::make_tuple(shader, false));
+                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                        resources_aspect->AddComponent<std::tuple<Shader*, bool>>(res_id, std::make_tuple(shader, false));
                         fx->AddShader(shader);
                     }
 
@@ -352,12 +353,12 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
 {  
     if (NULL == m_entity)
     {
-        LUA_ERROR("Rendering::configure : no attached entity");
+        LUA_ERROR("Rendering::cleanup_resources : no attached entity");
     }
     ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
     if (!resources_aspect)
     {
-        LUA_ERROR("Rendering::configure : attached entity has no resources aspect !");
+        LUA_ERROR("Rendering::cleanup_resources : attached entity has no resources aspect !");
     }
 
     if( m_entity_rendering_aspect )
@@ -382,8 +383,8 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
                             if (texture)
                             {
                                 dsstring id;
-                                texture->GetBasePath(id);
-                                resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(id);
+                                dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                                resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
 
                                 _DRAWSPACE_DELETE_(texture);
                             }
@@ -414,8 +415,8 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
                         Shader* shader = fx->GetShader(j);
 
                         dsstring id;
-                        shader->GetBasePath(id);
-                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(id);
+                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(res_id);
 
                         _DRAWSPACE_DELETE_(shader);
                     }

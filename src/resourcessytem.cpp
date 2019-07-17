@@ -51,7 +51,7 @@ bool ResourcesSystem::m_addshaderspath = false;
 
 ResourcesSystem::ResourcesSystem(void)
 {
-    m_importer.SetIOHandler( &m_iosystem);
+    //m_importer.SetIOHandler( &m_iosystem);
 }
 
 void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
@@ -132,7 +132,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 
                 if( m_meshesCache.find(final_asset_path) == m_meshesCache.end() )
                 {
-                    const aiScene* scene = m_importer.ReadFile(final_asset_path,
+                    void* data;
+                    long size;
+                    data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
+                    if (!data)
+                    {
+                        _DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
+                    }
+
+                    const aiScene* scene = m_importer.ReadFileFromMemory(data, size,
                         aiProcess_CalcTangentSpace |
                         aiProcess_Triangulate |
                         aiProcess_JoinIdenticalVertices |
@@ -165,6 +173,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                         {
                             _DSEXCEPTION("No root found in assimp scene description");
                         }
+
+                        _DRAWSPACE_DELETE_N_(data);
                     }
                     else
                     {

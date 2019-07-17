@@ -124,19 +124,27 @@ int LuaClass_MesheRendering::LUA_detachfromentity( lua_State* p_L )
 
 int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
-	//if( argc < 4 )
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("MesheRendering::configure : no attached entity");
+    }
+    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        LUA_ERROR("MesheRendering::configure : attached entity has no resources aspect !");
+    }
 
+	int argc = lua_gettop( p_L );
     if( argc < 3 )
 	{		
         LUA_ERROR( "MesheRendering::configure : argument(s) missing" );
 	}
 
-    //dsstring pass_id = luaL_checkstring( p_L, 1 );
-
     LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
     dsstring meshe_path = luaL_checkstring( p_L, 2 );
-    int meshe_index = luaL_checkint( p_L, 3 );
+
+    //int meshe_index = luaL_checkint( p_L, 3 ); // TO BE CONTINUED
+    dsstring meshe_name = luaL_checkstring(p_L, 3);
 
     // recupere l'aspect rendu s'il existe pour cette entitee
     if( m_entity_rendering_aspect )
@@ -175,21 +183,11 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     dsstring shader_path = shader_infos.first;
                     bool is_compiled = shader_infos.second;
 
-                    bool status;
+                    Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
 
-                    Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
-                    status = shader->LoadFromFile( shader_path, is_compiled );
-
-                    if( !status )
-                    {
-                        // clean tout ce qui a deja ete charge...
-                        cleanup_resources( p_L );
-                        LUA_ERROR( "MesheRendering::configure : shader loading operation failed" );
-                    }
-                    else
-                    {
-                        fx->AddShader( shader );                    
-                    }
+                    dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                    resources_aspect->AddComponent<std::tuple<Shader*, bool>>(res_id, std::make_tuple(shader, false));
+                    fx->AddShader(shader);
                 }
 
                 ///////////////////////// les rendestates
@@ -210,19 +208,11 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                         dsstring texture_path = textures.textures[j];
                         if( texture_path != "" )
                         {
-                            bool status;
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-                            status = texture->LoadFromFile();
-                            if( !status )
-                            {
-                                // clean tout ce qui a deja ete charge...
-                                cleanup_resources( p_L );
-                                LUA_ERROR( "MesheRendering::configure : texture loading operation failed" );
-                            }
-                            else
-                            {
-                                rnode->SetTexture( texture, j );
-                            }
+
+                            dsstring res_id = dsstring( "texture_" ) + std::to_string((int)texture);
+                            resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+                            rnode->SetTexture(texture, j);
                         }
                     }
                 }
@@ -239,23 +229,17 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                         dsstring texture_path = vtextures.textures[j];
                         if( texture_path != "" )
                         {
-                            bool status;
+                            //bool status;
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-                            status = texture->LoadFromFile();
-                            if( !status )
-                            {
-                                // clean tout ce qui a deja ete charge...
-                                cleanup_resources( p_L );
-                                LUA_ERROR( "MesheRendering::configure : vertex texture loading operation failed" );
-                            }
-                            else
-                            {
-                                rnode->SetVertexTexture( texture, j );
-                            }
+
+                            dsstring res_id = dsstring("vtexture_") + std::to_string((int)texture);
+                            resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+                            rnode->SetVertexTexture(texture, j);
                         }
                     }
                 }
 
+                /*
                 // et pour finir, le meshe
                 bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
                 if( !status )
@@ -263,8 +247,14 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     cleanup_resources( p_L );
                     LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
                 }
-
+                */
                 m_meshe.ComputeNormales();
+                
+                resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_path, 
+                    std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
+
+                m_meshe.SetPath(meshe_path);
+
                 rnode->SetMeshe( &m_meshe );
 
                 /// params de shaders
@@ -278,7 +268,6 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                     RenderingNode::ShadersParams indexes = param.second;
                     rnode->AddShaderParameter( indexes.shader_index, param_id, indexes.param_register );                    
                 }
-
             }
 
         } LUA_CATCH;
@@ -406,6 +395,16 @@ int LuaClass_MesheRendering::LUA_setshaderbool( lua_State* p_L )
 
 void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
 {
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("MesheRendering::cleanup_resources : no attached entity");
+    }
+    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        LUA_ERROR("MesheRendering::cleanup_resources : attached entity has no resources aspect !");
+    }
+
     if( m_entity_rendering_aspect )
     {        
         for( auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it )
@@ -420,6 +419,9 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
             for( long i = 0; i < fx->GetShadersListSize(); i++ )
             {
                 Shader* shader = fx->GetShader( i );
+                dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(res_id);
+
                 _DRAWSPACE_DELETE_( shader );
             }
             fx->ClearShaders();
@@ -435,6 +437,9 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
                     {
                         // pas une texture target d'une pass quelconque (car sinon dans ce cas, ce n'est pas a cette classe de 
                         // rdessallouer)
+
+                        dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                        resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
 
                         _DRAWSPACE_DELETE_( texture );
                         rnode->SetTexture( NULL, i );
@@ -456,6 +461,9 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
                         // pas une texture target d'une pass quelconque (car sinon dans ce cas, ce n'est pas a cette classe de 
                         // rdessallouer)
 
+                        dsstring res_id = dsstring("vtexture_") + std::to_string((int)vtexture);
+                        resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
+
                         _DRAWSPACE_DELETE_( vtexture );
                         rnode->SetVertexTexture( NULL, i );
                     }
@@ -466,9 +474,6 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
                 }
             }
 
-            m_meshe.ClearTriangles();
-            m_meshe.ClearVertices();
-
             LUA_TRY
             {
                 m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( id );
@@ -476,6 +481,13 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
             } LUA_CATCH; 
         }
         m_renderingnodes.clear();
+
+        m_meshe.ClearTriangles();
+        m_meshe.ClearVertices();
+
+        dsstring meshe_path;
+        m_meshe.GetPath(meshe_path);
+        resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_path);
     }
     else
     {
