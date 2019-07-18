@@ -238,17 +238,6 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                         }
                     }
                 }
-
-                /*
-                // et pour finir, le meshe
-                bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
-                if( !status )
-                {
-                    cleanup_resources( p_L );
-                    LUA_ERROR( "MesheRendering::configure : meshe loading operation failed" );
-                }
-                */
-                m_meshe.ComputeNormales();
                 
                 resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_path, 
                     std::make_tuple(&m_meshe, meshe_path, meshe_name, false));

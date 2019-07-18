@@ -190,13 +190,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                     if(meshe_node)
                     {
-                        build_meshe(meshe_node, meshes, target_meshe);
+                        build_meshe(meshe_node, meshes, target_meshe);                        
                     }
                     else
                     {
                         _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
                     }
-                }                             
+                }
+                target_meshe->ComputeNormales();
+
                 loaded = true;            
             }
         }
