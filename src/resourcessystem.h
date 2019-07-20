@@ -54,18 +54,16 @@ protected:
         int     size;
     };
 
-    static dsstring                         m_textures_rootpath;
+    static dsstring                                                     m_textures_rootpath;
 
-    static dsstring                         m_shaders_rootpath;
-    static bool                             m_addshaderspath;
+    static dsstring                                                     m_shaders_rootpath;
+    static bool                                                         m_addshaderspath;
 
-    static dsstring                         m_meshes_rootpath;
+    static dsstring                                                     m_meshes_rootpath;
 
-    std::map<dsstring, Blob>                m_texturesCache;
-    std::map<dsstring, Blob>                m_shadersCache;
-    std::map<dsstring, const aiScene*>      m_meshesCache;
-
-    Assimp::Importer                        m_importer;
+    std::map<dsstring, Blob>                                            m_texturesCache;
+    std::map<dsstring, Blob>                                            m_shadersCache;
+    std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
@@ -111,6 +109,7 @@ public:
     void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
 
     void ReleaseAssets( void );
+    void ReleaseShaderAsset( const dsstring& p_asset);
 
 
     //////// direct API, useful for non-entity client //////

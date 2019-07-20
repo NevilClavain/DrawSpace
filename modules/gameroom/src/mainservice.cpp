@@ -124,7 +124,7 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////
 
-    create_console_quad();
+    create_console_quad(static_cast<DrawSpace::Systems::ResourcesSystem*>(m_systemsHub.GetSystem("ResourcesSystem")));
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -438,11 +438,14 @@ void MainService::set_mouse_circular_mode( bool p_state )
     }
 }
 
-void MainService::create_console_quad( void )
+void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res_system)
 {
     // parametrage localisation des shaders pour pouvoir creer la console
     Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "console_data/shaders_bank" );
+    Shader::SetRootPath( "console_data/shaders_bank" ); // temporaire, a supprimer quand tout lua stack utilisera le resource system
+
+    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("console_data/shaders_bank");
+    DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(TRUE);
 
     RenderingAspect* rendering_aspect = m_quadEntity.AddAspect<RenderingAspect>();
     rendering_aspect->AddComponent<Core::RenderingNode*>("quad_rn", _DRAWSPACE_NEW_(Core::RenderingNode, Core::RenderingNode));
@@ -455,8 +458,8 @@ void MainService::create_console_quad( void )
     quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
     quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
 
-    quad_node->GetFx()->GetShader( 0 )->LoadFromFile();
-    quad_node->GetFx()->GetShader( 1 )->LoadFromFile();
+    p_res_system->LoadShader(quad_node->GetFx()->GetShader(0));
+    p_res_system->LoadShader(quad_node->GetFx()->GetShader(1));
 
     quad_node->AddShaderParameter( 1, "color", 0 );
     quad_node->SetShaderRealVector( "color", Vector( 0.05, 0.05, 0.85, 0.55 ) );
@@ -494,6 +497,10 @@ void MainService::create_console_quad( void )
 
     transform_aspect->AddComponent<Matrix>( "quad_pos" );
     transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, -0.5, -1.0 );
+
+    // shaders quad charges dans le plugin graphique (QuadRenderingAspectImpl::Init()), on a plus besoin des data chargees des shaders : les liberer/retirer du resources system
+    p_res_system->ReleaseShaderAsset("color.vso");
+    p_res_system->ReleaseShaderAsset("color.pso");
 }
 
 

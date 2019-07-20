@@ -102,7 +102,7 @@ protected:
     void create_skybox( void );
     void create_ground( void );
     void create_camera( void );
-    void create_console_quad( void );
+    void create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res_system);
 
     void process_console_command( const dsstring& p_cmd );
     void print_console_line( const dsstring& p_text );

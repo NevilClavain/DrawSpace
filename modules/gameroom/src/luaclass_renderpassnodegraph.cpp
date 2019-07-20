@@ -34,6 +34,8 @@
 #include "renderingaspectimpl.h"
 #include "vector.h"
 
+#include "mainservice.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -310,6 +312,9 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
 
 int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_State* p_L )
 {
+    DrawSpace::Systems::Hub* hub = MainService::GetInstance()->GetHub();
+    Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(hub->GetSystem("ResourcesSystem"));
+
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
 	{		
@@ -350,23 +355,13 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
 
                         dsstring shader_path = shader_infos.first;
                         bool is_compiled = shader_infos.second;
+                        Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
 
-                        bool status;
+                        resources_system->LoadShader( shader );
 
-                        Shader* shader = _DRAWSPACE_NEW_( Shader, Shader );
-                        status = shader->LoadFromFile( shader_path, is_compiled );
+                        m_passes[pass_id].m_fx.AddShader(shader);
+                        m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
 
-                        if( !status )
-                        {
-                            // clean tout ce qui a deja ete charge...
-                            cleanup_resources( p_L, pass_id );
-                            LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : shader loading operation failed" );
-                        }
-                        else
-                        {
-                            m_passes[pass_id].m_fx.AddShader( shader );
-                            m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
-                        }
                     }
                     ///////////////////////// les rendestates
 
@@ -390,21 +385,11 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                         dsstring texture_path = textures.textures[i];
                         if( texture_path != "" )
                         {
-                            bool status;
+                            //bool status;
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-                            status = texture->LoadFromFile();
-                            if( !status )
-                            {
-                                // clean tout ce qui a deja ete charge...
-                                cleanup_resources( p_L, pass_id );
-
-                                LUA_ERROR( "RenderPassNodeGraph::configure_pass_viewportquad_resources : texture loading operation failed" );
-                            }
-                            else
-                            {
-                                m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetTexture( texture, i );
-                                m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
-                            }
+                            resources_system->LoadTexture(texture);
+                            m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetTexture(texture, i);
+                            m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
                         }
                     }
 

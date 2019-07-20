@@ -238,8 +238,10 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
                         }
                     }
                 }
+
+                dsstring meshe_res_id = dsstring("meshe_") + pass_id;
                 
-                resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_path, 
+                resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
                     std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
 
                 m_meshe.SetPath(meshe_path);
@@ -468,15 +470,15 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
                 m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( id );
 
             } LUA_CATCH; 
+
+
+            dsstring meshe_res_id = dsstring("meshe_") + id;
+            resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
         }
         m_renderingnodes.clear();
 
         m_meshe.ClearTriangles();
         m_meshe.ClearVertices();
-
-        dsstring meshe_path;
-        m_meshe.GetPath(meshe_path);
-        resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_path);
     }
     else
     {

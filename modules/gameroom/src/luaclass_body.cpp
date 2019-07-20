@@ -74,7 +74,7 @@ m_mode( BodyAspect::NOT_READY ),
 m_attitude_setted( false ),
 m_mass_setted( false )
 {
-    m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
+    //m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
 }
 
 LuaClass_Body::~LuaClass_Body( void )
@@ -147,6 +147,16 @@ int LuaClass_Body::LUA_detachfromentity( lua_State* p_L )
 
 int LuaClass_Body::LUA_configureshape( lua_State* p_L )
 {
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("Body::configure_shape : no attached entity");
+    }
+    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        LUA_ERROR("Body::configure_shape : attached entity has no resources aspect !");
+    }
+
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{
@@ -195,15 +205,27 @@ int LuaClass_Body::LUA_configureshape( lua_State* p_L )
                 LUA_ERROR( "Body::configure_shape : argument(s) missing" );
 	        }
             dsstring meshe_path = luaL_checkstring( p_L, 2 );
-            int meshe_index = luaL_checkint( p_L, 3 );
+            //int meshe_index = luaL_checkint( p_L, 3 );
+            dsstring meshe_name = luaL_checkstring(p_L, 3);
 
+            /*
             bool status = m_meshe.LoadFromFile( meshe_path, meshe_index );
             if( !status )
             {
                 LUA_ERROR( "Body::configure_shape : meshe loading operation failed" );
             }
+            */
+
+            dsstring res_id = "body_" + meshe_path;
 
             m_entity_body_aspect->AddComponent<BodyAspect::MesheCollisionShape>( "shape", m_meshe );
+            Meshe* mesheref = &m_entity_body_aspect->GetComponent<BodyAspect::MesheCollisionShape>("shape")->getPurpose().m_meshe;
+
+            m_meshe.SetPath(meshe_path);
+
+            resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(res_id,
+                std::make_tuple(mesheref, meshe_path, meshe_name, false));
+
         }
         break;    
     }
@@ -433,6 +455,16 @@ int LuaClass_Body::LUA_release( lua_State* p_L )
         LUA_ERROR( "Body::release : no body aspect" );
     }
 
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("Body::configure_shape : no attached entity");
+    }
+    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    if (!resources_aspect)
+    {
+        LUA_ERROR("Body::configure_shape : attached entity has no resources aspect !");
+    }
+
     if( m_shape_type != -1 )
     {    
        switch( m_shape_type )
@@ -454,6 +486,12 @@ int LuaClass_Body::LUA_release( lua_State* p_L )
                 m_entity_body_aspect->RemoveComponent<BodyAspect::MesheCollisionShape>( "shape" );
                 m_meshe.ClearTriangles();
                 m_meshe.ClearVertices();
+
+                dsstring meshe_path;
+                m_meshe.GetPath(meshe_path);
+
+                dsstring res_id = "body_" + meshe_path;
+                resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(res_id);
             }
             break; 
        }

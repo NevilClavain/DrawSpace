@@ -51,7 +51,6 @@ bool ResourcesSystem::m_addshaderspath = false;
 
 ResourcesSystem::ResourcesSystem(void)
 {
-    //m_importer.SetIOHandler( &m_iosystem);
 }
 
 void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
@@ -140,7 +139,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                         _DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
                     }
 
-                    const aiScene* scene = m_importer.ReadFileFromMemory(data, size,
+                    Assimp::Importer* importer = new Assimp::Importer();
+
+                    const aiScene* scene = importer->ReadFileFromMemory(data, size,
                         aiProcess_CalcTangentSpace |
                         aiProcess_Triangulate |
                         aiProcess_JoinIdenticalVertices |
@@ -162,7 +163,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                             if (meshe_node)
                             {
                                 build_meshe(meshe_node, meshes, target_meshe);
-                                m_meshesCache[final_asset_path] = scene;
+                                m_meshesCache[final_asset_path] = std::make_pair(importer, scene );
+
                             }
                             else
                             {
@@ -183,9 +185,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 }
                 else
                 {
-                    const aiScene* scene = m_meshesCache[final_asset_path];
-                    aiMesh** meshes = scene->mMeshes;
-                    aiNode* root = scene->mRootNode;
+                    //const aiScene* scene = m_meshesCache.at(final_asset_path);
+                    std::pair<Assimp::Importer*, const aiScene*> entry = m_meshesCache.at(final_asset_path);
+
+                    aiMesh** meshes = entry.second->mMeshes;
+                    aiNode* root = entry.second->mRootNode;
+
                     aiNode* meshe_node = root->FindNode(meshe_id.c_str());
 
                     if(meshe_node)
@@ -201,8 +206,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                 loaded = true;            
             }
-        }
-        
+        }   
     }
 }
 
@@ -291,13 +295,26 @@ void ResourcesSystem::ReleaseAssets(void)
     {
         _DRAWSPACE_DELETE_(e.second.data);
     }
+    for (auto& e : m_meshesCache)
+    {
+        e.second.first->FreeScene();
+        _DRAWSPACE_DELETE_(e.second.first);
+    }
 
     m_shadersCache.clear();
     m_meshesCache.clear();
     m_texturesCache.clear();
+}
 
+void ResourcesSystem::ReleaseShaderAsset(const dsstring& p_asset)
+{
+    dsstring final_asset_path = compute_shaders_final_path(p_asset);
 
-    m_importer.FreeScene();
+    if( m_shadersCache.count(final_asset_path) )
+    {
+        _DRAWSPACE_DELETE_N_(m_shadersCache.at(final_asset_path).data);
+        m_shadersCache.erase(final_asset_path);
+    }
 }
 
 void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
