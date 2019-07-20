@@ -109,20 +109,7 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
     absorption = 1.0 - absorption;
 
     float4 final_color = 0.0;
-    float4 local_normale; 
-    
-    if (bump_bias > 0.0)
-    {
-        local_normale = bump_bias_vector(input.TexCoord0, BumpTexture, texture_size, bump_bias);
-        local_normale = normalize(local_normale);        
-    }
-    else
-    {
-        local_normale.x = 0.0;
-        local_normale.y = 0.0;
-        local_normale.z = 1.0;
-        local_normale.w = 1.0;
-    }
+
 
     float4x4 tbn_mat;
 
@@ -148,7 +135,19 @@ float4 ps_main( PS_INTPUT input ) : COLOR0
 
     transpose(tbn_mat);
 
-    float4 object_normale = mul(tbn_mat, local_normale);
+    float4 object_normale;
+    
+    if (bump_bias > 0.0)
+    {
+        float4 local_normale;
+        local_normale = bump_bias_vector(input.TexCoord0, BumpTexture, texture_size, bump_bias);
+        local_normale = normalize(local_normale);
+        object_normale = mul(tbn_mat, local_normale);
+    }
+    else
+    {
+        object_normale = input.Normale;
+    }
 
     float4 world_normale = TransformedNormaleForLights(object_normale, matWorld);
 

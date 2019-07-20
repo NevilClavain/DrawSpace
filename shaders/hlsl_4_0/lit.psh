@@ -118,21 +118,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4x4 mat_World = mat[matWorld_ps];
 
-    float4 local_normale;
-
-    if (bump_bias > 0.0)
-    {
-        local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, texture_size, bump_bias);
-        local_normale = normalize(local_normale);
-    }
-    else
-    {
-        local_normale.x = 0.0;
-        local_normale.y = 0.0;
-        local_normale.z = 1.0;
-        local_normale.w = 1.0;
-    }
-
     float4x4 tbn_mat;
 
     tbn_mat[0][0] = input.Tangent[0];
@@ -156,8 +141,20 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     tbn_mat[3][3] = 1.0;
 
     transpose(tbn_mat);
+    
+    float4 object_normale;
 
-    float4 object_normale = mul(tbn_mat, local_normale);
+    if (bump_bias > 0.0)
+    {
+        float4 local_normale;
+        local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, texture_size, bump_bias);
+        local_normale = normalize(local_normale);
+        object_normale = mul(tbn_mat, local_normale);
+    }
+    else
+    {
+        object_normale = input.Normale;
+    }
 
     float4 world_normale = TransformedNormaleForLights(object_normale, mat_World);
 
