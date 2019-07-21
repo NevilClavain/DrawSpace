@@ -41,6 +41,7 @@ static const dsstring console_welcome = "Console: input ready (release build)";
 #endif
 
 extern DrawSpace::Logger::Sink aspect_logger;
+extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
 
 MainService::MainService( void ) :
 m_console_ready( false ),
@@ -94,6 +95,9 @@ bool MainService::Init( void )
 
     logconf->RegisterSink(&aspect_logger);
     aspect_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&rs_logger);
+    rs_logger.SetConfiguration(logconf);
 
 
     logconf->RegisterSink( MemAlloc::GetLogSink() );

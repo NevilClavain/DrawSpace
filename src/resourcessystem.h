@@ -72,7 +72,7 @@ protected:
     dsstring compute_meshes_final_path(const dsstring& p_path) const;
 
     // recursive
-    void build_meshe(aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
+    void build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
     template<typename T>
     void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blobs, dsstring p_final_asset_path) const

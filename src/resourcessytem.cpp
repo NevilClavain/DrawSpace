@@ -36,6 +36,8 @@
 #include "plugin.h"
 #include "file.h"
 
+DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::GetInstance());
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
@@ -125,7 +127,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             Meshe* target_meshe = std::get<0>(e->getPurpose());
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
-            {
+            {               
                 dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
                 dsstring meshe_id = std::get<2>(e->getPurpose());
                 
@@ -159,10 +161,30 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                         aiNode* root = scene->mRootNode;
                         if (root)
                         {
+                            _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS***********************************"));
+                            _DSDEBUG(rs_logger, dsstring("resources = ") << final_asset_path);
+                            _DSDEBUG(rs_logger, dsstring("scene HasMeshes ") << scene->HasMeshes() );
+                            _DSDEBUG(rs_logger, dsstring("scene num Meshes ") << scene->mNumMeshes);
+
+                            _DSDEBUG(rs_logger, dsstring("scene HasTextures ") << scene->HasTextures());
+                            _DSDEBUG(rs_logger, dsstring("scene num Textures ") << scene->mNumTextures);
+
+                            _DSDEBUG(rs_logger, dsstring("scene HasMaterials ") << scene->HasMaterials());
+                            _DSDEBUG(rs_logger, dsstring("scene num Materials ") << scene->mNumMaterials);
+
+                            _DSDEBUG(rs_logger, dsstring("scene HasLights ") << scene->HasLights());
+                            _DSDEBUG(rs_logger, dsstring("scene num Lights ") << scene->mNumLights);
+
+                            _DSDEBUG(rs_logger, dsstring("scene HasCameras ") << scene->HasCameras());
+                            _DSDEBUG(rs_logger, dsstring("scene num Cameras ") << scene->mNumCameras);
+
+                            _DSDEBUG(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
+                            _DSDEBUG(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
+
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
                             {
-                                build_meshe(meshe_node, meshes, target_meshe);
+                                build_meshe(meshe_id, meshe_node, meshes, target_meshe);
                                 m_meshesCache[final_asset_path] = std::make_pair(importer, scene );
 
                             }
@@ -170,6 +192,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                             {
                                 _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
                             }
+                            _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
                         }
                         else
                         {
@@ -195,7 +218,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                     if(meshe_node)
                     {
-                        build_meshe(meshe_node, meshes, target_meshe);                        
+                        build_meshe(meshe_id, meshe_node, meshes, target_meshe);
                     }
                     else
                     {
@@ -210,7 +233,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
     }
 }
 
-void ResourcesSystem::build_meshe(aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
+void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
 {
     dsstring name = p_ai_node->mName.C_Str();
 
@@ -221,6 +244,17 @@ void ResourcesSystem::build_meshe(aiNode* p_ai_node, aiMesh** p_meshes, Core::Me
     for( unsigned int i = 0; i < nb_meshes; i++ )
     {
         aiMesh* meshe = p_meshes[indexes[i]];
+
+        _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS***********************************"));
+        _DSDEBUG(rs_logger, dsstring("meshe id = ") + p_id);
+        _DSDEBUG(rs_logger, dsstring("name = ") << dsstring( meshe->mName.C_Str() ));
+        _DSDEBUG(rs_logger, dsstring("meshe HasPositions ") << meshe->HasPositions());
+        _DSDEBUG(rs_logger, dsstring("meshe HasFaces ") << meshe->HasFaces());
+        _DSDEBUG(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());        
+        _DSDEBUG(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
+        _DSDEBUG(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
+
+        _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS END*******************************"));
         
         for( size_t j = 0; j < meshe->mNumFaces; j++)
         {
