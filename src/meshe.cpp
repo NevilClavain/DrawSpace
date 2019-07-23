@@ -254,9 +254,9 @@ void Meshe::GetMD5( dsstring& p_md5 )
     delete[] tbuff;
 }
 
-void Meshe::ComputeNormales( void )
+void Meshe::ComputeTBs(void)
 {
-    for( auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it )
+    for (auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it)
     {
         Vector tangents_sum;
         Vector binormales_sum;
@@ -264,7 +264,7 @@ void Meshe::ComputeNormales( void )
 
         std::vector<Triangle> triangles_list = it->second;
 
-        for( size_t i = 0; i < triangles_list.size(); i++ )
+        for (size_t i = 0; i < triangles_list.size(); i++)
         {
             Triangle triangle = triangles_list[i];
             Vertex v1 = m_vertices[triangle.vertex1];
@@ -272,28 +272,22 @@ void Meshe::ComputeNormales( void )
             Vertex v3 = m_vertices[triangle.vertex3];
 
             Vector t, b, n;
-            compute_TBN( v1, v2, v3, 0, t, b, n );
+            compute_TBN(v1, v2, v3, 0, t, b, n);
 
             normales_sum = normales_sum + n;
             binormales_sum = binormales_sum + b;
-            tangents_sum = tangents_sum + t;         
+            tangents_sum = tangents_sum + t;
         }
 
-        normales_sum.Scale( 1.0 / triangles_list.size() );
+        normales_sum.Scale(1.0 / triangles_list.size());
         normales_sum.Normalize();
 
-        binormales_sum.Scale( 1.0 / triangles_list.size() );
+        binormales_sum.Scale(1.0 / triangles_list.size());
         binormales_sum.Normalize();
 
-        tangents_sum.Scale( 1.0 / triangles_list.size() );
+        tangents_sum.Scale(1.0 / triangles_list.size());
         tangents_sum.Normalize();
 
-        // computes normales with 2nd loop
-        /*
-        //m_vertices[it->first].nx = normales_sum[0];
-        //m_vertices[it->first].ny = normales_sum[1];
-        //m_vertices[it->first].nz = normales_sum[2];
-        */
 
         m_vertices[it->first].bx = binormales_sum[0];
         m_vertices[it->first].by = binormales_sum[1];
@@ -303,8 +297,10 @@ void Meshe::ComputeNormales( void )
         m_vertices[it->first].ty = tangents_sum[1];
         m_vertices[it->first].tz = tangents_sum[2];
     }
+}
 
-    // computes normales only
+void Meshe::ComputeNormales( void )
+{
     for (std::map<long, std::vector<Triangle>>::iterator it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it)
     {
         Vector normales_sum;

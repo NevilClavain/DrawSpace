@@ -146,6 +146,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                     const aiScene* scene = importer->ReadFileFromMemory(data, size,
                         aiProcess_CalcTangentSpace |
                         aiProcess_Triangulate |
+                        //aiProcess_GenSmoothNormals |
                         aiProcess_JoinIdenticalVertices |
                         aiProcess_FlipUVs |
                         aiProcess_SortByPType);
@@ -208,7 +209,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 }
                 else
                 {
-                    //const aiScene* scene = m_meshesCache.at(final_asset_path);
                     std::pair<Assimp::Importer*, const aiScene*> entry = m_meshesCache.at(final_asset_path);
 
                     aiMesh** meshes = entry.second->mMeshes;
@@ -225,7 +225,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                         _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
                     }
                 }
-                target_meshe->ComputeNormales();
 
                 loaded = true;            
             }
@@ -253,6 +252,7 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
         _DSDEBUG(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());        
         _DSDEBUG(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
         _DSDEBUG(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
+        _DSDEBUG(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
 
         _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS END*******************************"));
         
@@ -273,21 +273,60 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
         }
 
         const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+        bool hasN = meshe->HasNormals();
+        bool hasTB = meshe->HasTangentsAndBitangents();
+
         for (size_t j = 0; j < meshe->mNumVertices; j++)
         {
             aiVector3D v_in = meshe->mVertices[j];
 
             DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
-            aiVector3D texCoord = meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D;
-            
-            v_out.tu[0] = texCoord[0];
-            v_out.tv[0] = texCoord[1];
 
+            if(meshe->GetNumUVChannels() > 0)
+            {
+                aiVector3D texCoord = meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D;            
+                v_out.tu[0] = texCoord[0];
+                v_out.tv[0] = texCoord[1];
+            }
+            
+            if (hasN)
+            {
+                // model has its own normales, so use it
+                v_out.nx = meshe->mNormals[j][0];
+                v_out.ny = meshe->mNormals[j][1];
+                v_out.nz = meshe->mNormals[j][2];
+            }
+            
+            if (hasTB)
+            {
+                // model has its own tangent and binormales, so use it
+
+                v_out.tx = meshe->mTangents[j][0];
+                v_out.ty = meshe->mTangents[j][1];
+                v_out.tz = meshe->mTangents[j][2];
+
+                v_out.bx = meshe->mBitangents[j][0];
+                v_out.by = meshe->mBitangents[j][1];
+                v_out.bz = meshe->mBitangents[j][2];
+            }
+            
             p_destination->AddVertex( v_out );
         }
 
+        if(!meshe->HasNormals())
+        {
+            p_destination->ComputeNormales();
+        }
+
+        if(!meshe->HasTangentsAndBitangents())
+        {
+            if(meshe->GetNumUVChannels() > 0)
+            {
+                p_destination->ComputeTBs();
+            }            
+        }
         global_index += meshe->mNumVertices;
-    }   
+    }
 }
 
 dsstring ResourcesSystem::compute_textures_final_path(const dsstring& p_path) const

@@ -142,8 +142,6 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
     LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
     dsstring meshe_path = luaL_checkstring( p_L, 2 );
-
-    //int meshe_index = luaL_checkint( p_L, 3 ); // TO BE CONTINUED
     dsstring meshe_name = luaL_checkstring(p_L, 3);
 
     // recupere l'aspect rendu s'il existe pour cette entitee

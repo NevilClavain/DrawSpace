@@ -67,6 +67,7 @@ public:
     bool LoadFromFile( const dsstring& p_filepath, long p_index );
 
     void ComputeNormales( void );
+    void ComputeTBs(void);
 
     long GetVertexListSize( void ) const;
     long GetTrianglesListSize( void ) const;
