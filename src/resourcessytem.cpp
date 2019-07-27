@@ -125,6 +125,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
         for (auto& e : meshes_assets)
         {
             Meshe* target_meshe = std::get<0>(e->getPurpose());
+
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {               
@@ -133,6 +134,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 
                 if( m_meshesCache.find(final_asset_path) == m_meshesCache.end() )
                 {
+                    Meshe::NormalesGenerationMode normales_gen_mode = target_meshe->GetNGenerationMode();
+                    Meshe::TangentBinormalesGenerationMode tb_gen_mode = target_meshe->GetTBGenerationMode();
+
                     void* data;
                     long size;
                     data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
@@ -143,14 +147,22 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                     Assimp::Importer* importer = new Assimp::Importer();
 
-                    const aiScene* scene = importer->ReadFileFromMemory(data, size,
-                        aiProcess_CalcTangentSpace |
-                        aiProcess_Triangulate |
-                        //aiProcess_GenSmoothNormals |
+                    unsigned int flags = aiProcess_Triangulate |
                         aiProcess_JoinIdenticalVertices |
                         aiProcess_FlipUVs |
-                        aiProcess_SortByPType);
+                        aiProcess_SortByPType;
 
+                    if(Meshe::NORMALES_AUTO == normales_gen_mode || Meshe::NORMALES_FROMLOADER == normales_gen_mode)
+                    {
+                        flags |= aiProcess_GenSmoothNormals;
+                    }
+
+                    if (Meshe::TB_AUTO == tb_gen_mode || Meshe::TB_FROMLOADER == tb_gen_mode)
+                    {
+                        flags |= aiProcess_CalcTangentSpace;
+                    }
+
+                    const aiScene* scene = importer->ReadFileFromMemory(data, size,flags);
                     if (scene)
                     {
                         if( !scene->HasMeshes() )
@@ -236,6 +248,10 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
 {
     dsstring name = p_ai_node->mName.C_Str();
 
+    Meshe::NormalesGenerationMode normales_gen_mode = p_destination->GetNGenerationMode();
+    Meshe::TangentBinormalesGenerationMode tb_gen_mode = p_destination->GetTBGenerationMode();
+
+
     unsigned int nb_meshes = p_ai_node->mNumMeshes;
     int global_index = 0;
 
@@ -289,7 +305,7 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
                 v_out.tv[0] = texCoord[1];
             }
             
-            if (hasN)
+            if (hasN && (normales_gen_mode == Meshe::NORMALES_AUTO || normales_gen_mode == Meshe::TB_FROMLOADER))
             {
                 // model has its own normales, so use it
                 v_out.nx = meshe->mNormals[j][0];
@@ -297,7 +313,7 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
                 v_out.nz = meshe->mNormals[j][2];
             }
             
-            if (hasTB)
+            if (hasTB && (tb_gen_mode == Meshe::TB_AUTO || tb_gen_mode == Meshe::TB_FROMLOADER))
             {
                 // model has its own tangent and binormales, so use it
 
@@ -313,18 +329,23 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
             p_destination->AddVertex( v_out );
         }
 
-        if(!meshe->HasNormals())
+        if(normales_gen_mode==Meshe::NORMALES_COMPUTED || (normales_gen_mode == Meshe::NORMALES_AUTO && !hasN) )
         {
             p_destination->ComputeNormales();
         }
 
-        if(!meshe->HasTangentsAndBitangents())
+        if(tb_gen_mode == Meshe::TB_COMPUTED || tb_gen_mode == Meshe::TB_AUTO && !hasTB)
         {
             if(meshe->GetNumUVChannels() > 0)
             {
                 p_destination->ComputeTBs();
-            }            
+            }
+            else
+            {
+                _DSEXCEPTION( "No UV channel in meshe, cannot compute T,B vectors")
+            }
         }
+
         global_index += meshe->mNumVertices;
     }
 }

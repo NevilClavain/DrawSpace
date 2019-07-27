@@ -55,6 +55,8 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
     { "set_shaderrealmatrix", &LuaClass_MesheRendering::LUA_setshaderrealmatrix },
     { "set_shaderbool", &LuaClass_MesheRendering::LUA_setshaderbool },
     { "set_passnodetexturefrompass", &LuaClass_MesheRendering::LUA_setpassnodetexturefrompass },
+    { "set_normalegenerationmode", &LuaClass_MesheRendering::LUA_setNormaleGenerationMode },
+    { "set_tbgenerationmode", &LuaClass_MesheRendering::LUA_setTBGenerationMode },
 	{ 0, 0 }
 };
 
@@ -63,7 +65,7 @@ m_meshe_render( NULL ),
 m_entity_rendering_aspect( NULL ),
 m_entity( NULL )
 {
-    m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
+    //m_meshe.SetImporter( MainService::GetInstance()->GetMesheImport() );
 }
 
 LuaClass_MesheRendering::~LuaClass_MesheRendering( void )
@@ -555,3 +557,32 @@ int LuaClass_MesheRendering::LUA_setpassnodetexturefrompass( lua_State* p_L )
 
     return 0;
 }
+
+int LuaClass_MesheRendering::LUA_setNormaleGenerationMode(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("MesheRendering::set_normalegenerationmode : argument(s) missing");
+    }
+
+    int mode = luaL_checkint(p_L, 1);
+
+    m_meshe.SetNGenerationMode( static_cast<Meshe::NormalesGenerationMode>(mode));
+    return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setTBGenerationMode(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("MesheRendering::set_tbgenerationmode : argument(s) missing");
+    }
+
+    int mode = luaL_checkint(p_L, 1);
+
+    m_meshe.SetTBGenerationMode(static_cast<Meshe::TangentBinormalesGenerationMode>(mode));
+    return 0;
+}
+

@@ -42,6 +42,24 @@ namespace Core
 
 class Meshe
 {
+public:
+
+    using NormalesGenerationMode = enum
+    {
+        NORMALES_DISCARDED,
+        NORMALES_AUTO,
+        NORMALES_FROMLOADER,
+        NORMALES_COMPUTED
+    };
+
+    using TangentBinormalesGenerationMode = enum
+    {
+        TB_DISCARDED,
+        TB_AUTO,
+        TB_FROMLOADER,
+        TB_COMPUTED
+    };
+
 protected:
     std::vector<Vertex>                         m_vertices;
     std::vector<Triangle>                       m_triangles;
@@ -54,6 +72,9 @@ protected:
     void*                                       m_render_data;
 
     dsstring                                    m_path;
+
+    NormalesGenerationMode                      m_n_gen_mode;
+    TangentBinormalesGenerationMode             m_tb_gen_mode;
 
     void compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
                         Utils::Vector& p_T, Utils::Vector& p_B, Utils::Vector& p_N );
@@ -98,6 +119,12 @@ public:
 
     void GetPath( dsstring& p_path );
     void SetPath( const dsstring& p_path );
+
+    void SetNGenerationMode(NormalesGenerationMode p_mode);
+    NormalesGenerationMode GetNGenerationMode( void ) const;
+
+    void SetTBGenerationMode(TangentBinormalesGenerationMode p_mode);
+    TangentBinormalesGenerationMode GetTBGenerationMode(void) const;
 
 };
 }

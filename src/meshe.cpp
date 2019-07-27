@@ -40,7 +40,9 @@ using namespace DrawSpace::Interface;
 
 Meshe::Meshe( void ) : 
 m_importer( NULL ), 
-m_render_data( NULL )
+m_render_data( NULL ),
+m_n_gen_mode(NORMALES_COMPUTED),
+m_tb_gen_mode(TB_COMPUTED)
 {
 }
 
@@ -394,4 +396,24 @@ void Meshe::compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p
     p_T = t;
     p_B = b;
     p_N = n;
+}
+
+void Meshe::SetNGenerationMode(NormalesGenerationMode p_mode)
+{
+    m_n_gen_mode = p_mode;
+}
+
+Meshe::NormalesGenerationMode Meshe::GetNGenerationMode(void) const
+{
+    return m_n_gen_mode;
+}
+
+void Meshe::SetTBGenerationMode(TangentBinormalesGenerationMode p_mode)
+{
+    m_tb_gen_mode = p_mode;
+}
+
+Meshe::TangentBinormalesGenerationMode Meshe::GetTBGenerationMode(void) const
+{
+    return m_tb_gen_mode;
 }

@@ -69,6 +69,8 @@ public:
     int LUA_registertorendering( lua_State* p_L );
     int LUA_unregisterfromrendering( lua_State* p_L );
    
+    int LUA_setNormaleGenerationMode(lua_State* p_L);
+    int LUA_setTBGenerationMode(lua_State* p_L);
     
     static const char className[];
     static const Luna<LuaClass_MesheRendering>::RegType methods[];
