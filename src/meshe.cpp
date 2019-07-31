@@ -44,6 +44,7 @@ m_render_data( NULL ),
 m_n_gen_mode(NORMALES_COMPUTED),
 m_tb_gen_mode(TB_COMPUTED)
 {
+    m_normales_transf.Identity();
 }
 
 Meshe::~Meshe( void )
@@ -416,4 +417,14 @@ void Meshe::SetTBGenerationMode(TangentBinormalesGenerationMode p_mode)
 Meshe::TangentBinormalesGenerationMode Meshe::GetTBGenerationMode(void) const
 {
     return m_tb_gen_mode;
+}
+
+void Meshe::SetNormalesTransf(const Utils::Matrix& p_transf)
+{
+    m_normales_transf = p_transf;
+}
+
+Utils::Matrix Meshe::GetNormalesTransf(void) const
+{
+    return m_normales_transf;
 }

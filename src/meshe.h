@@ -29,6 +29,7 @@
 #include "vertex.h"
 #include "triangle.h"
 #include "vector.h"
+#include "matrix.h"
 
 
 namespace DrawSpace
@@ -75,6 +76,7 @@ protected:
 
     NormalesGenerationMode                      m_n_gen_mode;
     TangentBinormalesGenerationMode             m_tb_gen_mode;
+    Utils::Matrix                               m_normales_transf;
 
     void compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
                         Utils::Vector& p_T, Utils::Vector& p_B, Utils::Vector& p_N );
@@ -126,6 +128,8 @@ public:
     void SetTBGenerationMode(TangentBinormalesGenerationMode p_mode);
     TangentBinormalesGenerationMode GetTBGenerationMode(void) const;
 
+    void SetNormalesTransf(const Utils::Matrix& p_transf);
+    Utils::Matrix GetNormalesTransf( void ) const;
 };
 }
 }

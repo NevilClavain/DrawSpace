@@ -48,6 +48,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "total_mem", &LuaClass_Globals::LUA_totalmem },
     { "log", &LuaClass_Globals::LUA_log },
     { "format_real", &LuaClass_Globals::LUA_formatreal },
+
+    { "round", &LuaClass_Globals::LUA_round },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -86,7 +88,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 
     { "ds_exception", &LuaClass_Globals::LUA_dsexception },
 
-    { "release_assets", &LuaClass_Globals::LUA_ReleaseAssets },
+    { "release_assets", &LuaClass_Globals::LUA_releaseassets },
 
 	{ 0, 0 }
 };
@@ -482,8 +484,22 @@ int LuaClass_Globals::LUA_dsexception(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_Globals::LUA_ReleaseAssets(lua_State* p_L)
+int LuaClass_Globals::LUA_releaseassets(lua_State* p_L)
 {
     MainService::GetInstance()->RequestReleaseAssets();
     return 0;
+}
+
+int LuaClass_Globals::LUA_round(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::round : argument(s) missing");
+    }
+
+    dsreal value = luaL_checknumber(p_L, 1);
+
+    lua_pushinteger(p_L, static_cast<int>(value));
+    return 1;
 }

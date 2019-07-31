@@ -346,6 +346,29 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
             }
         }
 
+        //////////// transformation des normales
+        Matrix n_transf = p_destination->GetNormalesTransf();
+
+        for(long j = 0; j < p_destination->GetVertexListSize(); j++)
+        {
+            DrawSpace::Core::Vertex vertex;
+            p_destination->GetVertex(j, vertex);
+
+            Utils::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
+            Utils::Vector nt;
+
+            n_transf.Transform(&n, &nt);
+
+            vertex.nx = nt[0];
+            vertex.ny = nt[1];
+            vertex.nz = nt[2];
+
+            p_destination->SetVertex(j, vertex);
+        }
+
+
+        //////////////////////////////////
+
         global_index += meshe->mNumVertices;
     }
 }

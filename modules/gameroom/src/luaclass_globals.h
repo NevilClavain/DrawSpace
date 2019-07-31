@@ -90,7 +90,9 @@ public:
 
     int LUA_dsexception( lua_State* p_L );
 
-    int LUA_ReleaseAssets(lua_State* p_L);
+    int LUA_releaseassets(lua_State* p_L);
+
+    int LUA_round(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];

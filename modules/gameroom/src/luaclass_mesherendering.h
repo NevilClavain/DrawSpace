@@ -71,6 +71,7 @@ public:
    
     int LUA_setNormaleGenerationMode(lua_State* p_L);
     int LUA_setTBGenerationMode(lua_State* p_L);
+    int LUA_setNormaleTransformation(lua_State* p_L);
     
     static const char className[];
     static const Luna<LuaClass_MesheRendering>::RegType methods[];
