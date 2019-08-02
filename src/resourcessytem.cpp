@@ -268,6 +268,7 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
         _DSDEBUG(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());        
         _DSDEBUG(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
         _DSDEBUG(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
+        _DSDEBUG(rs_logger, dsstring("meshe NumBones ") << meshe->mNumBones);
         _DSDEBUG(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
 
         _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS END*******************************"));
