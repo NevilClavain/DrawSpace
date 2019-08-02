@@ -194,6 +194,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                             _DSDEBUG(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
                             _DSDEBUG(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
 
+
+                            _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
+
+                            dump_assimp_scene_node(scene->mRootNode, 1);
+
+                            _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
+
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
                             {
@@ -244,6 +251,24 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
     }
 }
 
+void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
+{
+    dsstring spacing(depth, ' ');
+    _DSDEBUG(rs_logger, spacing + dsstring("node : ") << p_ai_node->mName.C_Str() << " nb children : " << p_ai_node->mNumChildren);
+    _DSDEBUG(rs_logger, spacing + dsstring("nb meshes : ") << p_ai_node->mNumMeshes);
+
+    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1);
+    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
+    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
+    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
+
+
+    for( size_t i = 0; i < p_ai_node->mNumChildren; i++)
+    {
+        dump_assimp_scene_node(p_ai_node->mChildren[i], depth+1);
+    }
+}
+
 void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
 {
     dsstring name = p_ai_node->mName.C_Str();
@@ -267,9 +292,24 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
         _DSDEBUG(rs_logger, dsstring("meshe HasFaces ") << meshe->HasFaces());
         _DSDEBUG(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());        
         _DSDEBUG(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
+        _DSDEBUG(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
         _DSDEBUG(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
         _DSDEBUG(rs_logger, dsstring("meshe NumBones ") << meshe->mNumBones);
-        _DSDEBUG(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
+        
+        for(size_t j = 0; j < meshe->mNumBones; j++)
+        {
+            aiBone* bone = meshe->mBones[j];
+
+            _DSDEBUG(rs_logger, dsstring("Bone ") << j);
+            _DSDEBUG(rs_logger, dsstring("  -> name = ") << bone->mName.C_Str());
+            _DSDEBUG(rs_logger, dsstring("  -> offsetMatrx"));
+            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
+            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
+            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
+            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
+
+        }
+
 
         _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS END*******************************"));
         
