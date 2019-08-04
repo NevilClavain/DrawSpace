@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ac3dmeshe.cpp" />
+    <ClCompile Include="src\animationssytem.cpp" />
     <ClCompile Include="src\aspect.cpp" />
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\bodyaspect.cpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="src\quadrenderingaspectimpl.cpp" />
     <ClCompile Include="src\rawtransformaspectimpl.cpp" />
     <ClCompile Include="src\renderingaspect.cpp" />
+    <ClInclude Include="src\animationssystem.h" />
     <ClInclude Include="src\bodyaspect.h" />
     <ClInclude Include="src\bodytransformaspectimpl.h" />
     <ClInclude Include="src\hub.h" />

@@ -339,6 +339,9 @@
     <ClCompile Include="src\resourcessytem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\animationssytem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\chunk.h" />
@@ -687,6 +690,9 @@
       <Filter>aspect</Filter>
     </ClInclude>
     <ClInclude Include="src\resourcessystem.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animationssystem.h">
       <Filter>systems</Filter>
     </ClInclude>
   </ItemGroup>

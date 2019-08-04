@@ -1,5 +1,3 @@
-#pragma once
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,13 +22,19 @@
 */
 /* -*-LIC_END-*- */
 
-#include "aspect.h"
+#include "animationssystem.h"
 
-namespace DrawSpace
+using namespace DrawSpace;
+using namespace DrawSpace::Systems;
+
+AnimationsSystem::AnimationsSystem(void)
 {
-namespace Aspect
-{
-class ResourcesAspect : public Core::Aspect {};
-}
 }
 
+AnimationsSystem::~AnimationsSystem(void)
+{
+}
+
+void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity)
+{
+}

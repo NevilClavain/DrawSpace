@@ -24,13 +24,21 @@
 */
 /* -*-LIC_END-*- */
 
-#include "aspect.h"
+#include "systems.h"
+#include "entitynodegraph.h"
 
 namespace DrawSpace
 {
-namespace Aspect
+namespace Systems
 {
-class ResourcesAspect : public Core::Aspect {};
-}
-}
+class AnimationsSystem : public Interface::System
+{
+public:
+    AnimationsSystem();
+    ~AnimationsSystem();
 
+    dsstring GetSystemId(void) { return "AnimationsSystem"; };
+    void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
+};
+}
+}
