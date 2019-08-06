@@ -31,6 +31,7 @@
 #include "rendersystem.h"
 #include "tracesystem.h"
 #include "resourcessystem.h"
+#include "animationssystem.h"
 
 namespace DrawSpace
 {
@@ -54,6 +55,7 @@ private:
     DrawSpace::Systems::TimeSystem                  m_timeSystem;
     DrawSpace::Systems::TraceSystem                 m_traceSystem;
     DrawSpace::Systems::ResourcesSystem             m_resourcesSystem;
+    DrawSpace::Systems::AnimationsSystem            m_animationsSystem;
 
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;

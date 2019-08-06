@@ -37,6 +37,7 @@ Hub::Hub( void )
     m_systems.push_back( &m_timeSystem );
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
+    m_systems.push_back( &m_animationsSystem );
     m_systems.push_back( &m_renderingSystem );
     m_systems.push_back( &m_traceSystem );
 }

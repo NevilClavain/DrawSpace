@@ -1,5 +1,3 @@
-#pragma once
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,26 +22,4 @@
 */
 /* -*-LIC_END-*- */
 
-#include "systems.h"
-#include "entitynodegraph.h"
-
-namespace DrawSpace
-{
-namespace Systems
-{
-class AnimationsSystem : public Interface::System
-{
-protected:
-
-
-    void run(EntityGraph::EntityNodeGraph* p_entitygraph);
-
-public:
-    AnimationsSystem();
-    ~AnimationsSystem();
-
-    dsstring GetSystemId(void) const { return "AnimationsSystem"; };
-    void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
-};
-}
-}
+#include "animationsaspect.h"

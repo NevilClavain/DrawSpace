@@ -23,9 +23,11 @@
 /* -*-LIC_END-*- */
 
 #include "animationssystem.h"
+#include "animationsaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
+using namespace DrawSpace::Aspect;
 
 AnimationsSystem::AnimationsSystem(void)
 {
@@ -35,6 +37,16 @@ AnimationsSystem::~AnimationsSystem(void)
 {
 }
 
+void AnimationsSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
+{
+    p_entitygraph->AcceptSystemRootToLeaf(this);
+}
+
 void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity)
 {
+    AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+    if (anims_aspect)
+    {
+
+    }
 }
