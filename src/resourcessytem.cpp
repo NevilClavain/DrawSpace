@@ -25,6 +25,8 @@
 #include "resourcessystem.h"
 #include "resourcesaspect.h"
 
+#include "animationsaspect.h"
+
 #include "texture.h"
 #include "shader.h"
 #include "meshe.h"
@@ -154,7 +156,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                     if(Meshe::NORMALES_AUTO == normales_gen_mode || Meshe::NORMALES_FROMLOADER == normales_gen_mode)
                     {
-                        flags |= aiProcess_GenSmoothNormals;
+                        flags |= aiProcess_GenSmoothNormals;						
                     }
 
                     if (Meshe::TB_AUTO == tb_gen_mode || Meshe::TB_FROMLOADER == tb_gen_mode)
@@ -245,10 +247,209 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                     }
                 }
 
-                loaded = true;            
+                loaded = true;
             }
         }   
     }
+
+
+	///////////////PROVISOIRE TESTS////////////////////////
+
+	static bool once = false;
+
+	AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+	if (anims_aspect && !once)
+	{
+	
+		auto bone_thorax = std::make_tuple(dsstring(""), std::vector<dsstring>(),  Utils::Matrix(), Utils::Matrix());
+		auto bone_neck = std::make_tuple(dsstring(""), std::vector<dsstring>(), Utils::Matrix(), Utils::Matrix());
+
+
+		// thorax bone configuration
+		auto& thorax_children = std::get<1>(bone_thorax);
+		thorax_children.push_back("neck");
+
+		Utils::Matrix& thorax_offset = std::get<2>(bone_thorax);
+		thorax_offset.Identity();
+
+		Utils::Matrix& thorax_localetranfo = std::get<3>(bone_thorax);
+		thorax_localetranfo.Identity();
+
+		// neck bone configuration
+		dsstring& neck_parent = std::get<0>(bone_neck);
+		neck_parent = "thorax";
+
+		Utils::Matrix& neck_offset = std::get<2>(bone_neck);
+		neck_offset.Identity();
+
+		Utils::Matrix& neck_localetranfo = std::get<3>(bone_neck);
+		neck_localetranfo.Identity();
+
+		anims_aspect->AddComponent<std::tuple<dsstring, std::vector<dsstring>, Utils::Matrix, Utils::Matrix>>("thorax", bone_thorax);
+		anims_aspect->AddComponent<std::tuple<dsstring, std::vector<dsstring>, Utils::Matrix, Utils::Matrix>>("neck", bone_neck);
+
+
+		// vertices configuration
+		ComponentList<std::tuple<Meshe*, dsstring, dsstring, bool>> meshes_assets;
+		resources_aspect->GetComponentsByType<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshes_assets);
+
+		Meshe* meshe = std::get<0>(meshes_assets[0]->getPurpose());
+
+		Core::Vertex v;
+		
+		// vertices top : affectes a 100% au bone 1
+		meshe->GetVertex(0, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 1.0;
+		v.ta[6] = 1.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(0, v);
+
+		meshe->GetVertex(1, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 1.0;
+		v.ta[6] = 1.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(1, v);
+
+		meshe->GetVertex(2, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 1.0;
+		v.ta[6] = 1.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(2, v);
+
+		meshe->GetVertex(3, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 1.0;
+		v.ta[6] = 1.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(3, v);
+
+
+		// vertices milieu : affectes a 50% au bone 1 et 50% au bone 0
+		meshe->GetVertex(4, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.5;
+		v.tv[7] = 0.5;
+		v.tw[7] = 0.5;
+		v.ta[7] = 0.5;
+		meshe->SetVertex(4, v);
+
+		meshe->GetVertex(5, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.5;
+		v.tv[7] = 0.5;
+		v.tw[7] = 0.5;
+		v.ta[7] = 0.5;
+		meshe->SetVertex(5, v);
+
+		meshe->GetVertex(6, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.5;
+		v.tv[7] = 0.5;
+		v.tw[7] = 0.5;
+		v.ta[7] = 0.5;
+		meshe->SetVertex(6, v);
+
+		meshe->GetVertex(7, v);
+		v.tu[6] = 1.0;
+		v.tv[6] = 1.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.5;
+		v.tv[7] = 0.5;
+		v.tw[7] = 0.5;
+		v.ta[7] = 0.5;
+		meshe->SetVertex(7, v);
+
+		// vertices bottom : affectes a 100% au bone 0
+		meshe->GetVertex(8, v);
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(8, v);
+
+		meshe->GetVertex(9, v);
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(9, v);
+
+		meshe->GetVertex(10, v);
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(10, v);
+
+		meshe->GetVertex(11, v);
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 1.0;
+		v.tv[7] = 1.0;
+		v.tw[7] = 1.0;
+		v.ta[7] = 1.0;
+		meshe->SetVertex(11, v);
+
+		once = true;
+
+	}
+
+	///////////////////////////////////////////////////////
 }
 
 void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
