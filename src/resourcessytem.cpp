@@ -156,8 +156,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                     if(Meshe::NORMALES_AUTO == normales_gen_mode || Meshe::NORMALES_FROMLOADER == normales_gen_mode)
                     {
-                        flags |= aiProcess_GenSmoothNormals;						
+						flags |= aiProcess_GenNormals;
                     }
+					else if (Meshe::NORMALES_AUTO_SMOOTH == normales_gen_mode || Meshe::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
+					{
+						flags |= aiProcess_GenSmoothNormals;
+					}
 
                     if (Meshe::TB_AUTO == tb_gen_mode || Meshe::TB_FROMLOADER == tb_gen_mode)
                     {
@@ -547,7 +551,8 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
                 v_out.tv[0] = texCoord[1];
             }
             
-            if (hasN && (normales_gen_mode == Meshe::NORMALES_AUTO || normales_gen_mode == Meshe::TB_FROMLOADER))
+            if (hasN && (normales_gen_mode == Meshe::NORMALES_AUTO || normales_gen_mode == Meshe::NORMALES_FROMLOADER ||
+						normales_gen_mode == Meshe::NORMALES_AUTO_SMOOTH || normales_gen_mode == Meshe::NORMALES_FROMLOADER_SMOOTH))
             {
                 // model has its own normales, so use it
                 v_out.nx = meshe->mNormals[j][0];
@@ -571,7 +576,8 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
             p_destination->AddVertex( v_out );
         }
 
-        if(normales_gen_mode==Meshe::NORMALES_COMPUTED || (normales_gen_mode == Meshe::NORMALES_AUTO && !hasN) )
+        if(normales_gen_mode==Meshe::NORMALES_COMPUTED || 
+			((normales_gen_mode == Meshe::NORMALES_AUTO || normales_gen_mode == Meshe::NORMALES_AUTO_SMOOTH) && !hasN) )
         {
             p_destination->ComputeNormales();
         }
