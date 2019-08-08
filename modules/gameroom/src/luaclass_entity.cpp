@@ -37,6 +37,7 @@
 #include "timeaspect.h"
 #include "transformaspect.h"
 #include "resourcesaspect.h"
+#include "animationsaspect.h"
 #include "textrenderingaspectimpl.h"
 
 using namespace DrawSpace;
@@ -100,6 +101,7 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
         { TRANSFORM_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<TransformAspect>(); } },
         { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<InfosAspect>(); } },
         { RESOURCES_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<ResourcesAspect>(); } },
+		{ ANIMATION_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<AnimationsAspect>(); } },
     };
 
     aspect_add_aig.at(aspect_type)( m_entity );
@@ -126,6 +128,7 @@ int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
         { TRANSFORM_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<TransformAspect>(); } },
         { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<InfosAspect>(); } },
         { RESOURCES_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<ResourcesAspect>(); } },
+		{ ANIMATION_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<AnimationsAspect>(); } },
     };
 
     aspect_remove_aig.at(aspect_type)( m_entity );

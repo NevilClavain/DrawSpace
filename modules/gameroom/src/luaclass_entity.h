@@ -44,7 +44,8 @@ protected:
         TIME_ASPECT,
         TRANSFORM_ASPECT,
         INFOS_ASPECT,
-        RESOURCES_ASPECT
+        RESOURCES_ASPECT,
+		ANIMATION_ASPECT,
 
     } AspectType;
 
