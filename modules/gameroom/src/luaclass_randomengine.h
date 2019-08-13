@@ -26,6 +26,7 @@
 
 
 #include <random>
+#include <memory>
 #include "luna.h"
 
 class LuaClass_RandomEngine
