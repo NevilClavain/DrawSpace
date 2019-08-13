@@ -189,7 +189,7 @@ void MainService::print_console_content( void )
     {
         for( size_t i = 0; i < m_console_texts.size(); i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 10, 70, 10, m_console_texts[i] );
+            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 170, 170, 170, m_console_texts[i] );
             rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
     }
@@ -197,7 +197,7 @@ void MainService::print_console_content( void )
     {
         for( size_t i = 0; i < m_console_max_lines_display; i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 10, 70, 10, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
+            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 170, 170, 170, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
 
             rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
