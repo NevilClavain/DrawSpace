@@ -26,6 +26,8 @@
 #include "resourcesaspect.h"
 
 #include "animationsaspect.h"
+#include "renderingaspect.h"
+#include "mesherenderingaspectimpl.h"
 
 #include "texture.h"
 #include "shader.h"
@@ -47,6 +49,7 @@ using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
+using namespace DrawSpace::AspectImplementations;
 
 dsstring ResourcesSystem::m_textures_rootpath = ".";
 dsstring ResourcesSystem::m_meshes_rootpath = ".";
@@ -448,6 +451,30 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[7] = 1.0;
 		v.ta[7] = 1.0;
 		meshe->SetVertex(11, v);
+
+
+
+
+		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
+		if (!rendering_aspect)
+		{
+			_DSEXCEPTION("an entity with AnimationsAspect must also have a RenderingAspect");
+		}
+
+		ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
+		rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
+
+		for (auto e : passes)
+		{
+			RenderingNode* rnode = e->getPurpose().GetRenderingNode();
+
+			rnode->AddShaderArrayParameter(0, "bones_0", 31);
+			rnode->AddShaderArrayParameter(0, "bones_1", 124);
+		}
+
+
+
+
 
 		once = true;
 

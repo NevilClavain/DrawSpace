@@ -1620,6 +1620,42 @@ bool D3D9Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawS
 	return false;
 }
 
+bool D3D9Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors)
+{
+	DECLARE_D3D9ASSERT_VARS
+
+	if (p_vectors.size() > NbMaxVectorForShadersBuffers)
+	{
+		_DSEXCEPTION("Too many vectors");
+	}
+
+	long index = 0;
+	for (auto e : p_vectors)
+	{
+		m_shaders_array[index++] = e[0];
+		m_shaders_array[index++] = e[1];
+		m_shaders_array[index++] = e[2];
+		m_shaders_array[index++] = e[3];
+	}
+
+	switch (p_shader_index)
+	{
+		case 0:	
+			hRes = m_lpd3ddevice->SetVertexShaderConstantF(p_register, m_shaders_array, p_vectors.size());
+			D3D9_CHECK(SetVertexShaderConstantF);
+			break;
+
+		case 1:
+			hRes = m_lpd3ddevice->SetPixelShaderConstantF(p_register, m_shaders_array, p_vectors.size());
+			D3D9_CHECK(SetPixelShaderConstantF);
+			break;
+
+		default:
+			return false;
+	}
+	return true;
+}
+
 bool D3D9Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
 {
 	DECLARE_D3D9ASSERT_VARS

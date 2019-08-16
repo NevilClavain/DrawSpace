@@ -24,10 +24,14 @@
 
 #include "animationssystem.h"
 #include "animationsaspect.h"
+#include "renderingaspect.h"
+#include "mesherenderingaspectimpl.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::AspectImplementations;
 
 AnimationsSystem::AnimationsSystem(void)
 {
@@ -47,6 +51,26 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
     {
+		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
+		if (!rendering_aspect)
+		{
+			_DSEXCEPTION("an entity with AnimationsAspect must also have a RenderingAspect");
+		}
 
+		ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
+		rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
+
+		for (auto e : passes)
+		{
+			RenderingNode* rnode = e->getPurpose().GetRenderingNode();
+
+			std::vector<Utils::Vector> bones_0;
+			bones_0.resize(69);
+
+			Utils::Vector test_color(0.0, 0.6999, 0.0, 1.0);
+			bones_0[68] = test_color;
+
+			rnode->SetShaderArrayParameter("bones_0", bones_0);
+		}
     }
 }

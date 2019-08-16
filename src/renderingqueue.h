@@ -35,27 +35,24 @@ namespace Core
 {
 class RenderingQueue
 {
-protected:
+private:
 
-    typedef enum
+    using SortedListType = enum
     {        
-        //FX_LIST,
         SHADERS_LIST,
         RS_LIST,
         MESHE_LIST,
         TEXTURE_LIST
+    };
 
-    } SortedListType;
-
-
-    typedef struct
+    using SortCategory = struct
     {
         SortedListType  type;
         long            stage;  // pour type TEXTURE_LIST
 
-    } SortCategory;
+    };
 
-    typedef enum
+    using OperationType = enum
     {
         SET_TEXTURE,
         SET_VERTEXTEXTURE,
@@ -64,34 +61,34 @@ protected:
         SET_RENDERSTATES_OUT,
         SET_MESHE,
         SET_SHADERS_PARAMS,
+		SET_SHADERS_ARRAY_PARAMS,
         DRAW_NODE,
         UNSET_TEXTURE,
         UNSET_VERTEXTEXTURE,
+    };
 
-    } OperationType;
-
-
-    typedef struct
+    using Operation = struct
     {
         OperationType                                   type;
         void*                                           data;
 
         RenderingNode::ShadersParams*                   shader_params;
+		RenderingNode::ShadersArrayParam*				shader_array_param;
         long                                            texture_stage;
 
         RenderingNode*                                  node;
         dsstring                                        comment; // for debug purpose only
 
-    } Operation;
+    };
 
-    typedef struct
+    using erase_infos = struct
     {
         std::list<RenderingQueue::Operation>::iterator  pos;
         long                                            index;
 
-    } erase_infos;
+    };
 
-    typedef std::vector<erase_infos>                                        OperationsGroup;
+    using OperationsGroup = std::vector<erase_infos>;
  
     std::map<long, std::vector<RenderingNode*>>                             m_renderingorder_nodes;
 

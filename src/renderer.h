@@ -72,12 +72,8 @@ public:
     virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a ) = 0;
     virtual void ClearDepth( dsreal p_value = 1.0 ) = 0;
 
-    //virtual void BeginTarget( DrawSpace::Core::Texture* p_texture ) = 0;
     virtual void BeginTarget( void* p_data ) = 0;
-
-    //virtual void EndTarget( DrawSpace::Core::Texture* p_texture ) = 0;
     virtual void EndTarget( void* p_data ) = 0;
-
 
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data ) = 0;
     virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;    
@@ -108,6 +104,8 @@ public:
 
     virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector ) = 0;
     virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat ) = 0;
+
+	virtual bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors) = 0;
 
 	virtual bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj ) = 0;
 

@@ -1923,6 +1923,45 @@ bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, Draw
 	return false;
 }
 
+bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors)
+{
+	if (p_vectors.size() > NbMaxVectorForShadersBuffers)
+	{
+		_DSEXCEPTION("Too many vectors");
+	}
+
+	long index = p_register;
+
+	switch (p_shader_index)
+	{
+		case 0:
+			for (auto e : p_vectors)
+			{
+				m_vertexshader_legacyargs.vector[index].x = e[0];
+				m_vertexshader_legacyargs.vector[index].y = e[1];
+				m_vertexshader_legacyargs.vector[index].z = e[2];
+				m_vertexshader_legacyargs.vector[index].w = e[3];
+				index++;
+			}
+			break;
+
+		case 1:
+			for (auto e : p_vectors)
+			{
+				m_pixelshader_legacyargs.vector[index].x = e[0];
+				m_pixelshader_legacyargs.vector[index].y = e[1];
+				m_pixelshader_legacyargs.vector[index].z = e[2];
+				m_pixelshader_legacyargs.vector[index].w = e[3];
+				index++;
+			}
+			break;
+
+		default:
+			return false;
+	}
+	return true;
+}
+
 bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
 {
 

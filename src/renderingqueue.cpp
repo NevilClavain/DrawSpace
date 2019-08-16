@@ -173,6 +173,12 @@ void RenderingQueue::Draw( void )
                 }
                 break;
 
+			case SET_SHADERS_ARRAY_PARAMS:
+				{					
+					renderer->SetShaderVectorBuffer(curr_operation.shader_array_param->shader_index, curr_operation.shader_array_param->begin_register, curr_operation.shader_array_param->array);
+				}
+				break;
+
             case DRAW_NODE:
 
                 if( curr_operation.node->m_drawing_enabled )
@@ -872,17 +878,34 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             m_outputqueue.push_back( operation );
         }
 
+		//////Shaders params//////////////
+
         std::map<dsstring, RenderingNode::ShadersParams*> node_shaders_params;
         node->GetShadersParams( node_shaders_params );
 
-        for( auto it = node_shaders_params.begin(); it != node_shaders_params.end(); ++it )
+        for(auto& e : node_shaders_params)
         {
             operation.type = SET_SHADERS_PARAMS;
             
-            operation.shader_params = (*it).second;
-            m_outputqueue.push_back( operation );                
+            operation.shader_params = e.second;
+            m_outputqueue.push_back( operation );
         }
 
+		//////Shaders arrays params//////////////
+
+		std::map<dsstring, RenderingNode::ShadersArrayParam*> node_shaders_array_params;
+		node->GetShadersArrayParams(node_shaders_array_params);
+
+		for (auto& e: node_shaders_array_params)
+		{
+			operation.type = SET_SHADERS_ARRAY_PARAMS;
+
+			operation.shader_array_param = e.second;
+			m_outputqueue.push_back( operation );
+		}
+		
+
+		/////////////////////////////////////////
 
         operation.type = DRAW_NODE;
         operation.node = node;

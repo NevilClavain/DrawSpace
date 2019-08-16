@@ -134,6 +134,8 @@ protected:
 
     } BSCacheEntry;
 
+	static const int NbMaxVectorForShadersBuffers = 512;
+
     typedef std::map<dsstring, RSCacheEntry>                        RSCache;
     typedef std::map<dsstring, BSCacheEntry>                        BSCache;
 
@@ -192,7 +194,6 @@ protected:
 
     dsstring                                                        m_driver_type;
 
-
     void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
     void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
 
@@ -228,11 +229,6 @@ public:
     virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
     virtual void ClearDepth( dsreal p_value = 1.0 );
 
-    /*
-    virtual void BeginTarget( DrawSpace::Core::Texture* p_texture );
-    virtual void EndTarget( DrawSpace::Core::Texture* p_texture );
-    */
-
     virtual void BeginTarget( void* p_data );
     virtual void EndTarget( void* p_data );
 
@@ -266,6 +262,8 @@ public:
 
     virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
     virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat );
+
+	virtual bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors);
 
 	virtual bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
 

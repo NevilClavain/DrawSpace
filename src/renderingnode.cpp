@@ -93,6 +93,42 @@ void RenderingNode::RegisterHandler( BaseCallback<void, RenderingNode*>* p_handl
     m_handler = p_handler;
 }
 
+void RenderingNode::AddShaderArrayParameter(long p_shader_index, const dsstring& p_id, long p_begin_register)
+{
+	ShadersArrayParam* sap = _DRAWSPACE_NEW_(ShadersArrayParam, ShadersArrayParam);
+	sap->begin_register = p_begin_register;
+	sap->shader_index = p_shader_index;
+	m_shaders_array_params[p_id] = sap;
+}
+
+void RenderingNode::SetShaderArrayParameter(const dsstring& p_id, const std::vector<DrawSpace::Utils::Vector>& p_array)
+{
+	if (m_shaders_array_params.count(p_id) > 0)
+	{
+		m_shaders_array_params.at(p_id)->array = p_array;
+	}
+	else
+	{
+		_DSEXCEPTION("Unknown shader array param id")
+	}
+}
+
+void RenderingNode::CleanupShaderArrayParams(void)
+{
+	for (auto& e : m_shaders_array_params)
+	{
+		_DRAWSPACE_DELETE_(e.second);
+	}
+	m_shaders_array_params.clear();
+}
+
+void RenderingNode::GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>& p_outlist)
+{
+	p_outlist = m_shaders_array_params;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderingNode::AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register )
 {
     ShadersParams* sp = _DRAWSPACE_NEW_( ShadersParams, ShadersParams );
@@ -101,7 +137,6 @@ void RenderingNode::AddShaderParameter( long p_shader_index, const dsstring& p_i
     sp->param_register = p_register;
 
     m_shader_params[p_id] = sp;
-
 }
 
 void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )
@@ -114,8 +149,8 @@ void RenderingNode::SetShaderReal( const dsstring& p_id, dsreal p_value )
         vec[2] = 0.0;
         vec[3] = 1.0;
         
-        m_shader_params[p_id]->param_values = vec;
-        m_shader_params[p_id]->vector = true;
+        m_shader_params.at(p_id)->param_values = vec;
+        m_shader_params.at(p_id)->vector = true;
     }
     else
     {
@@ -129,8 +164,8 @@ void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_v
     {
         Vector vec = p_value;
 
-        m_shader_params[p_id]->param_values = vec;
-        m_shader_params[p_id]->vector = true;
+        m_shader_params.at(p_id)->param_values = vec;
+        m_shader_params.at(p_id)->vector = true;
     }
     else
     {
@@ -142,8 +177,8 @@ void RenderingNode::SetShaderRealMatrix( const dsstring& p_id, const Matrix& p_v
 {
     if( m_shader_params.count( p_id ) > 0 )
     {
-        m_shader_params[p_id]->mat = p_value;
-        m_shader_params[p_id]->vector = false;
+        m_shader_params.at(p_id)->mat = p_value;
+        m_shader_params.at(p_id)->vector = false;
     }
     else
     {
@@ -161,8 +196,8 @@ void RenderingNode::SetShaderBool( const dsstring& p_id, bool p_value )
         vec[2] = 0.0;
         vec[3] = 1.0;
         
-        m_shader_params[p_id]->param_values = vec;
-        m_shader_params[p_id]->vector = true;
+        m_shader_params.at(p_id)->param_values = vec;
+        m_shader_params.at(p_id)->vector = true;
     }
     else
     {
@@ -187,10 +222,10 @@ void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outl
 
 void RenderingNode::CleanupShaderParams( void )
 {
-    for( auto it = m_shader_params.begin(); it != m_shader_params.end(); ++it )
-    {
-        _DRAWSPACE_DELETE_( it->second );
-    }
+	for (auto& e : m_shader_params)
+	{
+		_DRAWSPACE_DELETE_(e.second);
+	}
     m_shader_params.clear();
 }
 

@@ -42,34 +42,41 @@ public:
     static const int NeutralOrder = 10000;
     static const int NbMaxTextures = 32;
 
-
-    typedef struct
+    using ShadersParams = struct
     {
-        long            shader_index;
-        long            param_register;
+        long						shader_index;
+        long						param_register;
 
-        bool            vector; // si true, "param_values" est valide, sinon c'est "mat"
-        Utils::Vector   param_values;
-        Utils::Matrix   mat;
+        bool						vector; // si true, "param_values" est valide, sinon c'est "mat"
+        Utils::Vector				param_values;
+        Utils::Matrix				mat;
+    };
 
-    } ShadersParams;
+	using ShadersArrayParam = struct
+	{
+		long						shader_index;
+		long						begin_register;
+		std::vector<Utils::Vector>	array;
+	};
 
-    dsstring                                m_debug_id;
+    dsstring									m_debug_id;
 
 protected:
 
-    Fx*                                     m_fx;
-    Texture*                                m_textures[NbMaxTextures]; // 32 textures stages max
-    Texture*                                m_vertextextures[NbMaxTextures];
-    Meshe*                                  m_meshe;
+    Fx*											m_fx;
+    Texture*									m_textures[NbMaxTextures]; // 32 textures stages max
+    Texture*									m_vertextextures[NbMaxTextures];
+    Meshe*										m_meshe;
 
-    std::map<dsstring, ShadersParams*>      m_shader_params;
+    std::map<dsstring, ShadersParams*>			m_shader_params;
 
-    long                                    m_order;
+	std::map<dsstring, ShadersArrayParam*>		m_shaders_array_params;
 
-    BaseCallback<void, RenderingNode*>*     m_handler;
+    long										m_order;
 
-    bool                                    m_drawing_enabled;
+    BaseCallback<void, RenderingNode*>*			m_handler;
+
+    bool										m_drawing_enabled;
 
 public:
     RenderingNode( void );
@@ -115,10 +122,15 @@ public:
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
     virtual void CleanupShaderParams( void );
 
+	virtual void AddShaderArrayParameter(long p_shader_index, const dsstring& p_id, long p_begin_register);
+	virtual void SetShaderArrayParameter(const dsstring& p_id, const std::vector<Utils::Vector>& p_array);
+	virtual void CleanupShaderArrayParams(void);
 
     virtual void UpdateShaderParams( const dsstring& p_id, ShadersParams& p_params );
 
     virtual void GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist );
+
+	virtual void GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>& p_outlist);
 
     virtual void SetDrawingState( bool p_drawing );
 
