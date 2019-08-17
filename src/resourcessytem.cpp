@@ -268,7 +268,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 	if (anims_aspect && !once)
 	{
 	
-		auto bone_thorax = std::make_tuple(dsstring(""), std::vector<dsstring>(),  Utils::Matrix(), Utils::Matrix());
+		auto bone_thorax = std::make_tuple(dsstring(""), std::vector<dsstring>(), Utils::Matrix(), Utils::Matrix());
 		auto bone_neck = std::make_tuple(dsstring(""), std::vector<dsstring>(), Utils::Matrix(), Utils::Matrix());
 
 
