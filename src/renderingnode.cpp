@@ -227,6 +227,12 @@ void RenderingNode::CleanupShaderParams( void )
 		_DRAWSPACE_DELETE_(e.second);
 	}
     m_shader_params.clear();
+
+	for (auto& e : m_shaders_array_params)
+	{
+		_DRAWSPACE_DELETE_(e.second);
+	}
+	m_shaders_array_params.clear();
 }
 
 void RenderingNode::SetDrawingState( bool p_drawing )
