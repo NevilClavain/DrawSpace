@@ -23,11 +23,11 @@
 /* -*-LIC_END-*- */
 
 #include "animationssystem.h"
-#include "animationsaspect.h"
 #include "renderingaspect.h"
 #include "mesherenderingaspectimpl.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Core;
@@ -46,16 +46,43 @@ void AnimationsSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
     p_entitygraph->AcceptSystemRootToLeaf(this);
 }
 
+void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsAspect::Bone>& p_bones, AnimationsAspect::Bone p_bone_node, const DrawSpace::Utils::Matrix& p_parent_transform)
+{
+	Matrix locale_node_transform = p_bone_node.locale_transform;
+	Matrix global_transformation = locale_node_transform * p_parent_transform;
+
+	for (auto& e : p_bone_node.children)
+	{
+		std::string id = e;
+		AnimationsAspect::Bone child = p_bones.at(id);
+		read_bones_hierarchy(p_bones, child, global_transformation);
+	}
+}
+
 void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity)
 {
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
     {
+
+		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("bones_root")->getPurpose();
+
+		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones")->getPurpose();
+
+		Utils::Matrix mid;
+		mid.Identity();
+		read_bones_hierarchy(bones, bones.at(root_bone_id), mid);
+
+
+		// inject previously computed bones matrixes into each renderingnodes (one for each passes)
+		/*
+
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 		if (!rendering_aspect)
 		{
-			_DSEXCEPTION("an entity with AnimationsAspect must also have a RenderingAspect");
+			_DSEXCEPTION("An entity with AnimationsAspect must also have a RenderingAspect");
 		}
+
 
 		ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
 		rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
@@ -72,5 +99,6 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 
 			rnode->SetShaderArrayParameter("bones_0", bones_0);
 		}
+		*/
     }
 }

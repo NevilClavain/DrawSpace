@@ -267,33 +267,54 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 	AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 	if (anims_aspect && !once)
 	{
-	
-		auto bone_thorax = std::make_tuple(dsstring(""), std::vector<dsstring>(), Utils::Matrix(), Utils::Matrix());
-		auto bone_neck = std::make_tuple(dsstring(""), std::vector<dsstring>(), Utils::Matrix(), Utils::Matrix());
+		////////////////////////////////////////////////////
 
+		// bone inputs (hierarchy)
+		AnimationsAspect::Bone bone_thorax;
+		AnimationsAspect::Bone bone_neck;
 
 		// thorax bone configuration
-		auto& thorax_children = std::get<1>(bone_thorax);
-		thorax_children.push_back("neck");
-
-		Utils::Matrix& thorax_offset = std::get<2>(bone_thorax);
-		thorax_offset.Identity();
-
-		Utils::Matrix& thorax_localetranfo = std::get<3>(bone_thorax);
-		thorax_localetranfo.Identity();
+		bone_thorax.id = "thorax";
+		bone_thorax.children.push_back("neck");
 
 		// neck bone configuration
-		dsstring& neck_parent = std::get<0>(bone_neck);
-		neck_parent = "thorax";
+		bone_neck.id = "neck";
+		bone_neck.parent_id = "thorax";
+		
 
-		Utils::Matrix& neck_offset = std::get<2>(bone_neck);
-		neck_offset.Identity();
+		std::map<dsstring, AnimationsAspect::Bone> bones;
+		bones["thorax"] = bone_thorax;
+		bones["neck"] = bone_neck;
 
-		Utils::Matrix& neck_localetranfo = std::get<3>(bone_neck);
-		neck_localetranfo.Identity();
+		anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone >>("bones", bones);
 
-		anims_aspect->AddComponent<std::tuple<dsstring, std::vector<dsstring>, Utils::Matrix, Utils::Matrix>>("thorax", bone_thorax);
-		anims_aspect->AddComponent<std::tuple<dsstring, std::vector<dsstring>, Utils::Matrix, Utils::Matrix>>("neck", bone_neck);
+
+		// bone root node name
+		anims_aspect->AddComponent<dsstring>("bones_root", "thorax");
+
+		// bones outputs (array)
+		std::vector<AnimationsAspect::BoneOutput> bones_outputs;
+
+		AnimationsAspect::BoneOutput bone_output_thorax;
+		AnimationsAspect::BoneOutput bone_output_neck;
+
+		bones_outputs.push_back(bone_output_thorax);
+		bones_outputs.push_back(bone_output_neck);
+
+		anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
+
+		//bones mapping (joint between hierarchy and array)
+
+		std::map<dsstring, int> bones_mapping;
+
+		bones_mapping["thorax"] = 0;
+		bones_mapping["neck"] = 1;
+
+		anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
+
+		
+
+		////////////////////////////////////////////////////
 
 
 		// vertices configuration

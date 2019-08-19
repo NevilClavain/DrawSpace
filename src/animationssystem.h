@@ -26,6 +26,7 @@
 
 #include "systems.h"
 #include "entitynodegraph.h"
+#include "animationsaspect.h"
 
 namespace DrawSpace
 {
@@ -35,8 +36,10 @@ class AnimationsSystem : public Interface::System
 {
 protected:
 
-
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
+
+	//recursive
+	void read_bones_hierarchy(const std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Bone>& p_bones, DrawSpace::Aspect::AnimationsAspect::Bone p_bone_node, const DrawSpace::Utils::Matrix& p_parent_transform);
 
 public:
     AnimationsSystem();

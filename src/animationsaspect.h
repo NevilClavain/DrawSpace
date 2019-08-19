@@ -25,11 +25,40 @@
 /* -*-LIC_END-*- */
 
 #include "aspect.h"
+#include "matrix.h"
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class AnimationsAspect : public Core::Aspect {};
+class AnimationsAspect : public Core::Aspect 
+{
+public:
+
+struct Bone
+{
+	dsstring				id;
+	dsstring				parent_id;
+	std::vector<dsstring>	children;
+	Utils::Matrix			locale_transform;
+
+	Bone(void)
+	{
+		locale_transform.Identity();
+	}
+};
+
+struct BoneOutput
+{
+	Utils::Matrix offset_matrix;
+	Utils::Matrix final_transformation;
+
+	BoneOutput(void)
+	{
+		offset_matrix.Identity();
+		final_transformation.Identity();
+	}
+};
+};
 }
 }
