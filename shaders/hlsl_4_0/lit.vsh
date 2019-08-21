@@ -35,6 +35,7 @@ cbuffer legacyargs : register(b0)
 //          
 //          .x = 1.0 -> mirror mode activated
 //          .y -> fog intensity
+//          .z = 1.0 -> rigged animation ON (take bones transformations)
 
 struct VS_INPUT
 {
@@ -43,6 +44,8 @@ struct VS_INPUT
     float3 Tangent      : TANGENT;
     float3 Binormale    : BINORMALE;
     float4 TexCoord0    : TEXCOORD0;
+	float4 BoneIds      : TEXCOORD6;
+	float4 Weights      : TEXCOORD7;
 };
 
 struct VS_OUTPUT
@@ -75,12 +78,47 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     /////////////////////////////////////
 
-    VS_OUTPUT Output;
-    float4 pos;
-    pos.xyz = Input.Position;
-    pos.w = 1.0;
+	float4x4 final_transform_from_bones = { { 1.0, 0.0, 0.0, 0.0 },
+								{ 0.0, 1.0, 0.0, 0.0 },
+								{ 0.0, 0.0, 1.0, 0.0 },
+								{ 0.0, 0.0, 0.0, 1.0 }
+							  };
+	if (Flags.z > 0.0)
+	{
+		int4 boneIds;
 
-    if (Flags.x == 1.0)
+		boneIds[0] = (int)Input.BoneIds.x;
+		boneIds[1] = (int)Input.BoneIds.y;
+		boneIds[2] = (int)Input.BoneIds.z;
+		boneIds[3] = (int)Input.BoneIds.w;
+
+		float4 weights = Input.Weights;
+
+		// reconstituer les 4 matrices
+
+		float4x4 mat0 = GetTransformationMatrixForBone(boneIds[0], vec);
+		float4x4 mat1 = GetTransformationMatrixForBone(boneIds[1], vec);
+		float4x4 mat2 = GetTransformationMatrixForBone(boneIds[2], vec);
+		float4x4 mat3 = GetTransformationMatrixForBone(boneIds[3], vec);
+
+		final_transform_from_bones = mat0 * weights[0] +
+										mat1 * weights[1] +
+										mat2 * weights[2] +
+										mat3 * weights[3];
+	}
+
+
+    VS_OUTPUT Output;
+
+	float4 initial_pos;
+
+	initial_pos.xyz = Input.Position;
+	initial_pos.w = 1.0;
+
+    float4 pos;
+    pos = mul(initial_pos, final_transform_from_bones);
+
+    if (Flags.x > 0.0)
     {
         Output.Position = reflectedVertexPos(pos, reflectorPos, reflectorNormal, mat_World, mat_View, mat_Proj);
     }
