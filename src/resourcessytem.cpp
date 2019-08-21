@@ -332,10 +332,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 1.0;
 		v.ta[6] = 1.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(0, v);
 
 		meshe->GetVertex(1, v);
@@ -344,10 +344,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 1.0;
 		v.ta[6] = 1.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(1, v);
 
 		meshe->GetVertex(2, v);
@@ -356,10 +356,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 1.0;
 		v.ta[6] = 1.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(2, v);
 
 		meshe->GetVertex(3, v);
@@ -368,10 +368,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 1.0;
 		v.ta[6] = 1.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(3, v);
 
 
@@ -382,10 +382,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 0.5;
-		v.tv[7] = 0.5;
-		v.tw[7] = 0.5;
-		v.ta[7] = 0.5;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(4, v);
 
 		meshe->GetVertex(5, v);
@@ -394,10 +394,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 0.5;
-		v.tv[7] = 0.5;
-		v.tw[7] = 0.5;
-		v.ta[7] = 0.5;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(5, v);
 
 		meshe->GetVertex(6, v);
@@ -406,10 +406,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 0.5;
-		v.tv[7] = 0.5;
-		v.tw[7] = 0.5;
-		v.ta[7] = 0.5;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(6, v);
 
 		meshe->GetVertex(7, v);
@@ -418,10 +418,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 0.5;
-		v.tv[7] = 0.5;
-		v.tw[7] = 0.5;
-		v.ta[7] = 0.5;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(7, v);
 
 		// vertices bottom : affectes a 100% au bone 0
@@ -431,10 +431,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(8, v);
 
 		meshe->GetVertex(9, v);
@@ -443,10 +443,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(9, v);
 
 		meshe->GetVertex(10, v);
@@ -455,10 +455,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(10, v);
 
 		meshe->GetVertex(11, v);
@@ -467,10 +467,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
-		v.tu[7] = 1.0;
-		v.tv[7] = 1.0;
-		v.tw[7] = 1.0;
-		v.ta[7] = 1.0;
+		v.tu[7] = 0.25;
+		v.tv[7] = 0.25;
+		v.tw[7] = 0.25;
+		v.ta[7] = 0.25;
 		meshe->SetVertex(11, v);
 
 
