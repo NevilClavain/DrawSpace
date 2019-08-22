@@ -59,6 +59,7 @@ public:
 
     int LUA_setshaderreal( lua_State* p_L );
     int LUA_setshaderrealvector( lua_State* p_L );
+	int LUA_setshaderrealinvector(lua_State* p_L);
     int LUA_setshaderrealmatrix( lua_State* p_L );
     int LUA_setshaderbool( lua_State* p_L );
 

@@ -52,6 +52,7 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
     { "unregister_from_rendering", &LuaClass_MesheRendering::LUA_unregisterfromrendering },
     { "set_shaderreal", &LuaClass_MesheRendering::LUA_setshaderreal },
     { "set_shaderrealvector", &LuaClass_MesheRendering::LUA_setshaderrealvector },
+	{ "set_shaderrealinvector", &LuaClass_MesheRendering::LUA_setshaderrealinvector },
     { "set_shaderrealmatrix", &LuaClass_MesheRendering::LUA_setshaderrealmatrix },
     { "set_shaderbool", &LuaClass_MesheRendering::LUA_setshaderbool },
     { "set_passnodetexturefrompass", &LuaClass_MesheRendering::LUA_setpassnodetexturefrompass },
@@ -328,6 +329,34 @@ int LuaClass_MesheRendering::LUA_setshaderrealvector( lua_State* p_L )
         } LUA_CATCH;    
     }
     return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setshaderrealinvector(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 4)
+	{
+		LUA_ERROR("MesheRendering::set_shaderrealinvector : argument(s) missing");
+	}
+
+	dsstring pass_id = luaL_checkstring(p_L, 1);
+	dsstring param_id = luaL_checkstring(p_L, 2);
+	int param_index_in_vector = luaL_checkinteger(p_L, 3);
+	dsreal val = luaL_checknumber(p_L, 4);
+
+	if (0 == m_renderingnodes.count(pass_id))
+	{
+		LUA_ERROR("MesheRendering::set_shaderrealinvector : unknown pass");
+	}
+	else
+	{
+		LUA_TRY
+		{
+			m_renderingnodes[pass_id]->SetShaderRealInVector(param_id, param_index_in_vector, val);
+
+		} LUA_CATCH;
+	}
+	return 0;
 }
 
 int LuaClass_MesheRendering::LUA_setshaderrealmatrix( lua_State* p_L )

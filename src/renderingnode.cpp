@@ -173,6 +173,26 @@ void RenderingNode::SetShaderRealVector( const dsstring& p_id, const Vector& p_v
     }
 }
 
+void RenderingNode::SetShaderRealInVector(const dsstring& p_id, int p_index_in_vector, dsreal p_value)
+{
+	if (m_shader_params.count(p_id) > 0)
+	{
+		if (p_index_in_vector < 4)
+		{
+			m_shader_params.at(p_id)->param_values[p_index_in_vector] = p_value;
+			m_shader_params.at(p_id)->vector = true;
+		}
+		else
+		{
+			_DSEXCEPTION("Bad scalar index in vector")
+		}
+	}
+	else
+	{
+		_DSEXCEPTION("Unknown shader param id")
+	}
+}
+
 void RenderingNode::SetShaderRealMatrix( const dsstring& p_id, const Matrix& p_value )
 {
     if( m_shader_params.count( p_id ) > 0 )

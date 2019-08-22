@@ -118,6 +118,7 @@ public:
     virtual void AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register );
     virtual void SetShaderReal( const dsstring& p_id, dsreal p_value );
     virtual void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
+	virtual void SetShaderRealInVector(const dsstring& p_id, int p_index_in_vector, dsreal p_value );
     virtual void SetShaderRealMatrix( const dsstring& p_id, const Utils::Matrix& p_value );
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
     virtual void CleanupShaderParams( void );
