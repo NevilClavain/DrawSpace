@@ -39,7 +39,10 @@ protected:
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 	//recursive
-	void read_bones_hierarchy(const std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Bone>& p_bones, DrawSpace::Aspect::AnimationsAspect::Bone p_bone_node, const DrawSpace::Utils::Matrix& p_parent_transform);
+	void read_bones_hierarchy(const std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Bone>& p_bones,
+		std::vector<DrawSpace::Aspect::AnimationsAspect::BoneOutput>& p_bones_output,
+		const std::map<dsstring, int>& p_bones_mapping, DrawSpace::Aspect::AnimationsAspect::Bone p_bone_node,
+		const DrawSpace::Utils::Matrix& p_parent_transform);
 
 public:
     AnimationsSystem();

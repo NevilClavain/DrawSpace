@@ -39,6 +39,7 @@
 #include "renderer.h"
 #include "plugin.h"
 #include "file.h"
+#include "maths.h"
 
 DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::GetInstance());
 
@@ -280,13 +281,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		// neck bone configuration
 		bone_neck.id = "neck";
 		bone_neck.parent_id = "thorax";
+
+		bone_neck.locale_transform.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Utils::Maths::DegToRad(38.0));
 		
 
 		std::map<dsstring, AnimationsAspect::Bone> bones;
 		bones["thorax"] = bone_thorax;
 		bones["neck"] = bone_neck;
 
-		anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone >>("bones", bones);
+		anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
 
 
 		// bone root node name
@@ -472,9 +475,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[7] = 0.25;
 		v.ta[7] = 0.25;
 		meshe->SetVertex(11, v);
-
-
-
 
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 		if (!rendering_aspect)

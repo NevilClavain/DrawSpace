@@ -34,7 +34,7 @@ cbuffer legacyargs : register(b0)
 // Flags ->
 //          
 //          .x = 1.0 -> mirror mode activated
-//          .y -> fog intensity
+//          .y = fog intensity
 //          .z = 1.0 -> rigged animation ON (take bones transformations)
 
 struct VS_INPUT
@@ -44,7 +44,7 @@ struct VS_INPUT
     float3 Tangent      : TANGENT;
     float3 Binormale    : BINORMALE;
     float4 TexCoord0    : TEXCOORD0;
-	float4 BoneIds      : TEXCOORD6;
+	float4 Bones        : TEXCOORD6;
 	float4 Weights      : TEXCOORD7;
 };
 
@@ -87,10 +87,10 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	{
 		int4 boneIds;
 
-		boneIds[0] = (int)Input.BoneIds.x;
-		boneIds[1] = (int)Input.BoneIds.y;
-		boneIds[2] = (int)Input.BoneIds.z;
-		boneIds[3] = (int)Input.BoneIds.w;
+		boneIds[0] = (int)Input.Bones.x;
+		boneIds[1] = (int)Input.Bones.y;
+		boneIds[2] = (int)Input.Bones.z;
+		boneIds[3] = (int)Input.Bones.w;
 
 		float4 weights = Input.Weights;
 
@@ -106,7 +106,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 										mat2 * weights[2] +
 										mat3 * weights[3];
 	}
-
 
     VS_OUTPUT Output;
 
