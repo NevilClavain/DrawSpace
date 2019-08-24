@@ -24,7 +24,10 @@
 
 #include "animationssystem.h"
 #include "renderingaspect.h"
+#include "transformaspect.h"
 #include "mesherenderingaspectimpl.h"
+#include "maths.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
@@ -35,6 +38,7 @@ using namespace DrawSpace::AspectImplementations;
 
 AnimationsSystem::AnimationsSystem(void)
 {
+	m_rot_inc = true;
 }
 
 AnimationsSystem::~AnimationsSystem(void)
@@ -79,10 +83,60 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
 		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 
+		//////////// temporaire tests animation
+
+		static bool once = false;
+
+		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+
+		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
+
+		if (!once)
+		{
+			m_rotation = time_aspect->TimeAngleFactory(0.0);
+			once = true;
+		}
+		else
+		{
+			Matrix rot;
+			Matrix trans_arm;
+
+			trans_arm.Translation(0.0, 1.5, 0.0);
+
+			rot.Rotation(Vector(0.0, 0.0, 1.0, 1.0), Utils::Maths::DegToRad(m_rotation.GetValue()));
+
+
+			bones["neck_pivot"].locale_transform = rot;
+
+			bones["neck_arm"].locale_transform = trans_arm;
+
+
+			if (m_rot_inc)
+			{
+				m_rotation.Increase(90.0);
+				if (m_rotation.GetValue() > 40.0 && m_rotation.GetValue() < 180.0)
+				{
+					m_rot_inc = false;
+				}
+			}
+			else
+			{
+				m_rotation.Decrease(90.0);
+				if (m_rotation.GetValue() < 360.0 - 40.0 && m_rotation.GetValue() > 180.0)
+				{
+					m_rot_inc = true;
+				}
+			}
+		}
+
+
+
+		////////////////////////////
+
+
 		Utils::Matrix mid;
 		mid.Identity();
 		read_bones_hierarchy(bones, bones_output, bones_mapping, bones.at(root_bone_id), mid);
-
 
 		// inject previously computed bones matrixes into each renderingnodes (one for" each passes)
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
@@ -91,23 +145,12 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			_DSEXCEPTION("An entity with AnimationsAspect must also have a RenderingAspect");
 		}
 
-
 		ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
 		rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
 
 		for (auto e : passes)
 		{
 			RenderingNode* rnode = e->getPurpose().GetRenderingNode();
-
-			/*
-			std::vector<Utils::Vector> bones_0;
-			bones_0.resize(69);
-
-			Utils::Vector test_color(0.0, 0.6999, 0.0, 1.0);
-			bones_0[68] = test_color;
-
-			rnode->SetShaderArrayParameter("bones_0", bones_0);
-			*/
 
 			// decomposer les matrices en triplet de 3 vectors et stocker
 
@@ -125,6 +168,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 					columns[0] = bones_output[i].final_transformation(0, col);
 					columns[1] = bones_output[i].final_transformation(1, col);
 					columns[2] = bones_output[i].final_transformation(2, col);
+					columns[3] = bones_output[i].final_transformation(3, col);
 
 					if (vec_count <= 68)
 					{

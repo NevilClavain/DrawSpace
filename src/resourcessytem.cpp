@@ -39,7 +39,6 @@
 #include "renderer.h"
 #include "plugin.h"
 #include "file.h"
-#include "maths.h"
 
 DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::GetInstance());
 
@@ -272,22 +271,24 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 		// bone inputs (hierarchy)
 		AnimationsAspect::Bone bone_thorax;
-		AnimationsAspect::Bone bone_neck;
+		AnimationsAspect::Bone bone_neck_pivot;
+		AnimationsAspect::Bone bone_neck_arm;
 
-		// thorax bone configuration
 		bone_thorax.id = "thorax";
-		bone_thorax.children.push_back("neck");
+		bone_thorax.children.push_back("neck_arm");
 
-		// neck bone configuration
-		bone_neck.id = "neck";
-		bone_neck.parent_id = "thorax";
+		bone_neck_arm.id = "neck_arm";
+		bone_neck_arm.parent_id = "thorax";
+		bone_neck_arm.children.push_back("neck_pivot");
 
-		bone_neck.locale_transform.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Utils::Maths::DegToRad(38.0));
-		
+		bone_neck_pivot.id = "neck_pivot";
+		bone_neck_pivot.parent_id = "neck_arm";
+
 
 		std::map<dsstring, AnimationsAspect::Bone> bones;
 		bones["thorax"] = bone_thorax;
-		bones["neck"] = bone_neck;
+		bones["neck_arm"] = bone_neck_arm;
+		bones["neck_pivot"] = bone_neck_pivot;
 
 		anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
 
@@ -299,10 +300,14 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		std::vector<AnimationsAspect::BoneOutput> bones_outputs;
 
 		AnimationsAspect::BoneOutput bone_output_thorax;
-		AnimationsAspect::BoneOutput bone_output_neck;
+		AnimationsAspect::BoneOutput bone_output_neck_arm;
+		AnimationsAspect::BoneOutput bone_output_neck_pivot;
+
+		bone_output_neck_pivot.offset_matrix.Translation(0.0, -1.5, 0.0);
 
 		bones_outputs.push_back(bone_output_thorax);
-		bones_outputs.push_back(bone_output_neck);
+		bones_outputs.push_back(bone_output_neck_arm);
+		bones_outputs.push_back(bone_output_neck_pivot);
 
 		anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
 
@@ -311,11 +316,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		std::map<dsstring, int> bones_mapping;
 
 		bones_mapping["thorax"] = 0;
-		bones_mapping["neck"] = 1;
+		bones_mapping["neck_arm"] = 1;
+		bones_mapping["neck_pivot"] = 2;
 
 		anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
-
-		
 
 		////////////////////////////////////////////////////
 
@@ -328,12 +332,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 		Core::Vertex v;
 		
-		// vertices top : affectes a 100% au bone 1
+		// vertices top : affectes a 100% au bone 2
 		meshe->GetVertex(0, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
-		v.tw[6] = 1.0;
-		v.ta[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
 
 		v.tu[7] = 0.25;
 		v.tv[7] = 0.25;
@@ -342,10 +346,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(0, v);
 
 		meshe->GetVertex(1, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
-		v.tw[6] = 1.0;
-		v.ta[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
 
 		v.tu[7] = 0.25;
 		v.tv[7] = 0.25;
@@ -354,10 +358,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(1, v);
 
 		meshe->GetVertex(2, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
-		v.tw[6] = 1.0;
-		v.ta[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
 
 		v.tu[7] = 0.25;
 		v.tv[7] = 0.25;
@@ -366,10 +370,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(2, v);
 
 		meshe->GetVertex(3, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
-		v.tw[6] = 1.0;
-		v.ta[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
 
 		v.tu[7] = 0.25;
 		v.tv[7] = 0.25;
@@ -378,10 +382,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(3, v);
 
 
-		// vertices milieu : affectes a 50% au bone 1 et 50% au bone 0
+		// vertices milieu : affectes a 50% au bone 2 et 50% au bone 0
 		meshe->GetVertex(4, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
@@ -392,8 +396,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(4, v);
 
 		meshe->GetVertex(5, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
@@ -404,8 +408,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(5, v);
 
 		meshe->GetVertex(6, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 
@@ -416,8 +420,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->SetVertex(6, v);
 
 		meshe->GetVertex(7, v);
-		v.tu[6] = 1.0;
-		v.tv[6] = 1.0;
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
 		v.tw[6] = 0.0;
 		v.ta[6] = 0.0;
 

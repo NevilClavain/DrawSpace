@@ -27,6 +27,7 @@
 #include "systems.h"
 #include "entitynodegraph.h"
 #include "animationsaspect.h"
+#include "timeaspect.h"
 
 namespace DrawSpace
 {
@@ -35,6 +36,9 @@ namespace Systems
 class AnimationsSystem : public Interface::System
 {
 protected:
+
+	Aspect::TimeAspect::TimeAngle m_rotation;
+	bool						  m_rot_inc;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
