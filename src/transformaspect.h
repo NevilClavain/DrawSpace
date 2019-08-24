@@ -28,12 +28,13 @@
 #include "transformaspectimpl.h"
 #include "timemanager.h"
 #include "entity.h"
-#include "timeaspect.h"
+
 
 namespace DrawSpace
 {
 namespace Aspect
 {
+class TimeAspect;
 class TransformAspect : public Core::Aspect
 {
 protected:
@@ -53,9 +54,10 @@ public:
     void SetImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
     void RemoveImplementation( void );
     
-    void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform );
-    void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform );
-    void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform );
+    void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform ) const;
+    void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const;
+    void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform ) const;
+	TimeAspect* GetTimeAspectRef(void) const;
 
     void ComputeTransforms( Core::Entity* p_parent, Core::Entity* p_entity );
     void DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj );

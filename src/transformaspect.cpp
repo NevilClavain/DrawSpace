@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "transformaspect.h"
+#include "timeaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -98,19 +99,24 @@ void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, 
     m_dispatched_projtransform = p_proj;
 }
 
-void TransformAspect::GetWorldTransform( Matrix& p_worldtransform )
+void TransformAspect::GetWorldTransform( Matrix& p_worldtransform ) const
 {
     p_worldtransform = m_worldtransform;
 }
 
-void TransformAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform )
+void TransformAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const
 {
     p_viewtransform = m_dispatched_viewtransform;
 }
 
-void TransformAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform )
+void TransformAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform ) const
 {
     p_projtransform = m_dispatched_projtransform;
+}
+
+TimeAspect* TransformAspect::GetTimeAspectRef(void) const
+{
+	return m_time_aspect;
 }
 
 void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
