@@ -182,3 +182,95 @@ float ComputeExp2Fog(float4 worldViewPos, float density)
    
    // retour a 0.0 -> brouillard au maximum
 }
+
+float4x4 GetTransformationMatrixForBone(int boneid, float4 bones_0[69], float4 bones_1[132])
+{
+	float4x4 bone_transform;
+
+	int matrix_index = boneid * 3;
+
+	float4 col0;
+	float4 col1;
+	float4 col2;
+
+	if (boneid <= 68)
+	{
+		col0 = bones_0[matrix_index];
+		col1 = bones_0[matrix_index + 1];
+		col2 = bones_0[matrix_index + 2];
+	}
+	else
+	{
+		matrix_index -= 69;
+		col0 = bones_1[matrix_index];
+		col1 = bones_1[matrix_index + 1];
+		col2 = bones_1[matrix_index + 2];
+	}
+
+	bone_transform[0][0] = col0[0];
+	bone_transform[1][0] = col0[1];
+	bone_transform[2][0] = col0[2];
+	bone_transform[3][0] = col0[3];
+
+	bone_transform[0][1] = col1[0];
+	bone_transform[1][1] = col1[1];
+	bone_transform[2][1] = col1[2];
+	bone_transform[3][1] = col1[3];
+
+	bone_transform[0][2] = col2[0];
+	bone_transform[1][2] = col2[1];
+	bone_transform[2][2] = col2[2];
+	bone_transform[3][2] = col2[3];
+
+	bone_transform[0][3] = 0.0;
+	bone_transform[1][3] = 0.0;
+	bone_transform[2][3] = 0.0;
+	bone_transform[3][3] = 1.0;
+
+	transpose(bone_transform);
+
+
+	/*
+	int matrix_index = boneid * 3;
+
+	if (boneid <= 68)
+	{
+
+		// 1st set of 69 vectors triplets : from 31 to 99 
+		matrix_index += 31;
+	}
+	else
+	{
+		// 2nd set of 132 vectors triplet : from 124 to 255 
+		matrix_index += 124;
+	}
+
+	float4 col0 = vectors[matrix_index];
+	float4 col1 = vectors[matrix_index + 1];
+	float4 col2 = vectors[matrix_index + 2];
+
+	bone_transform[0][0] = col0[0];
+	bone_transform[1][0] = col0[1];
+	bone_transform[2][0] = col0[2];
+	bone_transform[3][0] = col0[3];
+
+	bone_transform[0][1] = col1[0];
+	bone_transform[1][1] = col1[1];
+	bone_transform[2][1] = col1[2];
+	bone_transform[3][1] = col1[3];
+
+	bone_transform[0][2] = col2[0];
+	bone_transform[1][2] = col2[1];
+	bone_transform[2][2] = col2[2];
+	bone_transform[3][2] = col2[3];
+
+	bone_transform[0][3] = 0.0;
+	bone_transform[1][3] = 0.0;
+	bone_transform[2][3] = 0.0;
+	bone_transform[3][3] = 1.0;
+
+	transpose(bone_transform);
+	*/
+	return bone_transform;
+
+}
