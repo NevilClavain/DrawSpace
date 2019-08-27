@@ -28,13 +28,15 @@
 #include "mesherenderingaspectimpl.h"
 #include "maths.h"
 
-
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::AspectImplementations;
+
+const dsstring AnimationsSystem::bonesBuffer0Id = "bones_0";
+const dsstring AnimationsSystem::bonesBuffer1Id = "bones_1";
 
 AnimationsSystem::AnimationsSystem(void)
 {
@@ -164,13 +166,17 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			{				
 				for (size_t col = 0; col < 3; col++)
 				{
+					if (vec_count >= bonesBuffer0Length + bonesBuffer1Length)
+					{
+						_DSEXCEPTION("Too many bones");
+					}
 					Utils::Vector columns;
 					columns[0] = bones_output[i].final_transformation(0, col);
 					columns[1] = bones_output[i].final_transformation(1, col);
 					columns[2] = bones_output[i].final_transformation(2, col);
 					columns[3] = bones_output[i].final_transformation(3, col);
 
-					if (vec_count <= 68)
+					if (vec_count <= bonesBuffer0Length-1)
 					{
 						bones_0.push_back(columns);
 					}
@@ -183,8 +189,8 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				}		
 			}
 
-			rnode->SetShaderArrayParameter("bones_0", bones_0);
-			rnode->SetShaderArrayParameter("bones_1", bones_1);
+			rnode->SetShaderArrayParameter(bonesBuffer0Id, bones_0);
+			rnode->SetShaderArrayParameter(bonesBuffer1Id, bones_1);
 		}		
     }
 }

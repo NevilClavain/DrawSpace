@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "resourcessystem.h"
+#include "animationssystem.h"
 #include "resourcesaspect.h"
 
 #include "animationsaspect.h"
@@ -493,16 +494,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		{
 			RenderingNode* rnode = e->getPurpose().GetRenderingNode();
 
-			rnode->AddShaderArrayParameter(0, "bones_0", 31);
-			rnode->AddShaderArrayParameter(0, "bones_1", 124);
+			rnode->AddShaderArrayParameter(0, AnimationsSystem::bonesBuffer0Id, AnimationsSystem::bonesBuffer0StartReg);
+			rnode->AddShaderArrayParameter(0, AnimationsSystem::bonesBuffer1Id, AnimationsSystem::bonesBuffer1StartReg);
 		}
 
-
-
-
-
 		once = true;
-
 	}
 
 	///////////////////////////////////////////////////////

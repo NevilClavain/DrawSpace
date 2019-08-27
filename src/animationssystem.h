@@ -35,6 +35,17 @@ namespace Systems
 {
 class AnimationsSystem : public Interface::System
 {
+public:
+
+	static const int		bonesBuffer0StartReg	= 31;
+	static const int		bonesBuffer0Length		= 69;
+
+	static const int		bonesBuffer1StartReg	= 124;
+	static const int		bonesBuffer1Length		= 132;
+
+	static const dsstring	bonesBuffer0Id;
+	static const dsstring	bonesBuffer1Id;
+
 protected:
 
 	Aspect::TimeAspect::TimeAngle m_rotation;
