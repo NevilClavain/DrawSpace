@@ -228,49 +228,6 @@ float4x4 GetTransformationMatrixForBone(int boneid, float4 bones_0[69], float4 b
 	bone_transform[3][3] = 1.0;
 
 	transpose(bone_transform);
-
-
-	/*
-	int matrix_index = boneid * 3;
-
-	if (boneid <= 68)
-	{
-
-		// 1st set of 69 vectors triplets : from 31 to 99 
-		matrix_index += 31;
-	}
-	else
-	{
-		// 2nd set of 132 vectors triplet : from 124 to 255 
-		matrix_index += 124;
-	}
-
-	float4 col0 = vectors[matrix_index];
-	float4 col1 = vectors[matrix_index + 1];
-	float4 col2 = vectors[matrix_index + 2];
-
-	bone_transform[0][0] = col0[0];
-	bone_transform[1][0] = col0[1];
-	bone_transform[2][0] = col0[2];
-	bone_transform[3][0] = col0[3];
-
-	bone_transform[0][1] = col1[0];
-	bone_transform[1][1] = col1[1];
-	bone_transform[2][1] = col1[2];
-	bone_transform[3][1] = col1[3];
-
-	bone_transform[0][2] = col2[0];
-	bone_transform[1][2] = col2[1];
-	bone_transform[2][2] = col2[2];
-	bone_transform[3][2] = col2[3];
-
-	bone_transform[0][3] = 0.0;
-	bone_transform[1][3] = 0.0;
-	bone_transform[2][3] = 0.0;
-	bone_transform[3][3] = 1.0;
-
-	transpose(bone_transform);
-	*/
 	return bone_transform;
 
 }
