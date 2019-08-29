@@ -61,9 +61,11 @@ void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsA
 	Matrix locale_node_transform = p_bone_node.locale_transform;
 	Matrix global_transformation = locale_node_transform * p_parent_transform;
 
-	Matrix final_transformation = p_bones_output.at(p_bones_mapping.at(p_bone_node.id)).offset_matrix * global_transformation;
-
-	p_bones_output.at(p_bones_mapping.at(p_bone_node.id)).final_transformation = final_transformation;
+	if (p_bones_mapping.count(p_bone_node.id))
+	{
+		Matrix final_transformation = p_bones_output.at(p_bones_mapping.at(p_bone_node.id)).offset_matrix * global_transformation;
+		p_bones_output.at(p_bones_mapping.at(p_bone_node.id)).final_transformation = final_transformation;
+	}
 
 	for (auto& e : p_bone_node.children)
 	{
