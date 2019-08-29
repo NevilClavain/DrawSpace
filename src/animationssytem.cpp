@@ -79,16 +79,16 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 {
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
-    {
-
+    {		
 		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("bones_root")->getPurpose();
 
 		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones")->getPurpose();
 		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
 		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 
+		/*
 		//////////// temporaire tests animation
-
+		
 		static bool once = false;
 
 		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
@@ -132,16 +132,16 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				}
 			}
 		}
-
-
-
+		*/
 		////////////////////////////
 
 
 		Utils::Matrix mid;
 		mid.Identity();
-		read_bones_hierarchy(bones, bones_output, bones_mapping, bones.at(root_bone_id), mid);
-
+		if (root_bone_id != "")
+		{
+			read_bones_hierarchy(bones, bones_output, bones_mapping, bones.at(root_bone_id), mid);
+		}
 		// inject previously computed bones matrixes into each renderingnodes (one for" each passes)
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 		if (!rendering_aspect)

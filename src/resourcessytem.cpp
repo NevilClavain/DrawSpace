@@ -214,7 +214,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
                             {
-                                build_meshe(meshe_id, meshe_node, meshes, target_meshe);
+                                build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
                                 m_meshesCache[final_asset_path] = std::make_pair(importer, scene );
 
                             }
@@ -247,7 +247,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                     if(meshe_node)
                     {
-                        build_meshe(meshe_id, meshe_node, meshes, target_meshe);
+                        build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
                     }
                     else
                     {
@@ -260,12 +260,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
         }   
     }
 
+	//
 
-	///////////////PROVISOIRE TESTS////////////////////////
+	//
 
+	//////////// temporaire tests animation
+	/*
 	static bool once = false;
 
-	AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+	
 	if (anims_aspect && !once)
 	{
 		////////////////////////////////////////////////////
@@ -500,7 +503,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 		once = true;
 	}
-
+	*/
 	///////////////////////////////////////////////////////
 }
 
@@ -522,7 +525,7 @@ void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
     }
 }
 
-void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
+void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)
 {
     dsstring name = p_ai_node->mName.C_Str();
 
@@ -663,7 +666,40 @@ void ResourcesSystem::build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMes
         }
 
 
-        //////////////////////////////////
+        //////BONES ////////////////////////////
+
+		AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+		if (anims_aspect)
+		{
+			std::map<dsstring, AnimationsAspect::Bone> bones;
+			std::vector<AnimationsAspect::BoneOutput> bones_outputs;
+			std::map<dsstring, int> bones_mapping;
+
+			anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
+			anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
+			anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
+
+			anims_aspect->AddComponent<dsstring>("bones_root", "");
+
+			RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
+			if (!rendering_aspect)
+			{
+				_DSEXCEPTION("an entity with AnimationsAspect must also have a RenderingAspect");
+			}
+
+			ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
+			rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
+
+			for (auto e : passes)
+			{
+				RenderingNode* rnode = e->getPurpose().GetRenderingNode();
+
+				rnode->AddShaderArrayParameter(0, AnimationsSystem::bonesBuffer0Id, AnimationsSystem::bonesBuffer0StartReg);
+				rnode->AddShaderArrayParameter(0, AnimationsSystem::bonesBuffer1Id, AnimationsSystem::bonesBuffer1StartReg);
+			}
+		}
+
+		//////////////////////////////////
 
         global_index += meshe->mNumVertices;
     }

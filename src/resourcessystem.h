@@ -71,7 +71,7 @@ protected:
     dsstring compute_shaders_final_path(const dsstring& p_path) const;
     dsstring compute_meshes_final_path(const dsstring& p_path) const;
 
-    void build_meshe(const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
+    void build_meshe(Core::Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
     // recursive
     void dump_assimp_scene_node(aiNode* p_ai_node, int depth);
