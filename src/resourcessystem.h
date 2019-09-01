@@ -75,7 +75,7 @@ protected:
     void build_meshe(Core::Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
 	// recusive
-	void load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, Aspect::AnimationsAspect::Bone>& p_node_table);
+	void load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, Aspect::AnimationsAspect::Node>& p_node_table);
 
     // recursive
     void dump_assimp_scene_node(aiNode* p_ai_node, int depth);

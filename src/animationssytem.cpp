@@ -52,26 +52,26 @@ void AnimationsSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
     p_entitygraph->AcceptSystemRootToLeaf(this);
 }
 
-void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsAspect::Bone>& p_bones, 
+void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsAspect::Node>& p_nodes, 
 											std::vector<AnimationsAspect::BoneOutput>& p_bones_output, 
 											const std::map<dsstring, int>& p_bones_mapping, 
-											AnimationsAspect::Bone p_bone_node, 
+											AnimationsAspect::Node p_node,
 											const DrawSpace::Utils::Matrix& p_parent_transform)
 {
-	Matrix locale_node_transform = p_bone_node.locale_transform;
+	Matrix locale_node_transform = p_node.locale_transform;
 	Matrix global_transformation = locale_node_transform * p_parent_transform;
 
-	if (p_bones_mapping.count(p_bone_node.id))
+	if (p_bones_mapping.count(p_node.id))
 	{
-		Matrix final_transformation = p_bones_output.at(p_bones_mapping.at(p_bone_node.id)).offset_matrix * global_transformation;
-		p_bones_output.at(p_bones_mapping.at(p_bone_node.id)).final_transformation = final_transformation;
+		Matrix final_transformation = p_bones_output.at(p_bones_mapping.at(p_node.id)).offset_matrix * global_transformation;
+		p_bones_output.at(p_bones_mapping.at(p_node.id)).final_transformation = final_transformation;
 	}
 
-	for (auto& e : p_bone_node.children)
+	for (auto& e : p_node.children)
 	{
 		std::string id = e;
-		AnimationsAspect::Bone child = p_bones.at(id);
-		read_bones_hierarchy(p_bones, p_bones_output, p_bones_mapping, child, global_transformation);
+		AnimationsAspect::Node child = p_nodes.at(id);
+		read_bones_hierarchy(p_nodes, p_bones_output, p_bones_mapping, child, global_transformation);
 	}
 }
 
@@ -82,7 +82,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     {		
 		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("bones_root")->getPurpose();
 
-		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones")->getPurpose();
+		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
 		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
 		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 

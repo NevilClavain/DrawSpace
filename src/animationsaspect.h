@@ -35,14 +35,14 @@ class AnimationsAspect : public Core::Aspect
 {
 public:
 
-struct Bone
+struct Node
 {
 	dsstring				id;
 	dsstring				parent_id;
 	std::vector<dsstring>	children;
 	Utils::Matrix			locale_transform;
 
-	Bone(void)
+	Node(void)
 	{
 		locale_transform.Identity();
 	}
