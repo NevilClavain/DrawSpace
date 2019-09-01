@@ -218,6 +218,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								std::map<dsstring, AnimationsAspect::Node> scene_nodes;
 								load_scene_nodes_hierachy(root, 1, scene_nodes);
 								anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes", scene_nodes);
+
+								anims_aspect->AddComponent<dsstring>("nodes_root_id", root->mName.C_Str());
 							}
 
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
@@ -729,7 +731,6 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 		AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 		if (anims_aspect)
 		{
-			//std::map<dsstring, AnimationsAspect::Bone> bones;
 			std::vector<AnimationsAspect::BoneOutput> bones_outputs;
 			std::map<dsstring, int> bones_mapping;
 
@@ -743,11 +744,8 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 			//////
 
 
-			//anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
 			anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
 			anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
-
-			anims_aspect->AddComponent<dsstring>("bones_root", "");
 
 			RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 			if (!rendering_aspect)

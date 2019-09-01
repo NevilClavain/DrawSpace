@@ -80,7 +80,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
     {		
-		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("bones_root")->getPurpose();
+		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
 
 		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
 		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
