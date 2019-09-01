@@ -26,6 +26,7 @@
 #include "animationssystem.h"
 #include "resourcesaspect.h"
 
+
 #include "animationsaspect.h"
 #include "renderingaspect.h"
 #include "mesherenderingaspectimpl.h"
@@ -207,9 +208,17 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                             _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
 
-                            dump_assimp_scene_node(scene->mRootNode, 1);
+                            dump_assimp_scene_node(root, 1);
 
                             _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
+
+							AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+							if (anims_aspect)
+							{
+								std::map<dsstring, AnimationsAspect::Bone> bones;
+								load_scene_nodes_hierachy(root, 1, bones);
+								anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
+							}
 
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
@@ -525,6 +534,19 @@ void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
     }
 }
 
+void ResourcesSystem::load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, AnimationsAspect::Bone>& p_node_table)
+{
+	AnimationsAspect::Bone bone;
+
+	bone.id = p_ai_node->mName.C_Str();
+	// to be continued...
+
+	for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
+	{
+		load_scene_nodes_hierachy(p_ai_node->mChildren[i], depth + 1, p_node_table);
+	}
+}
+
 void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)
 {
     dsstring name = p_ai_node->mName.C_Str();
@@ -671,11 +693,21 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 		AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 		if (anims_aspect)
 		{
-			std::map<dsstring, AnimationsAspect::Bone> bones;
+			//std::map<dsstring, AnimationsAspect::Bone> bones;
 			std::vector<AnimationsAspect::BoneOutput> bones_outputs;
 			std::map<dsstring, int> bones_mapping;
 
-			anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
+
+			//////ICI
+
+
+
+
+
+			//////
+
+
+			//anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
 			anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
 			anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
 
