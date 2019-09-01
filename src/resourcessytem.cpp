@@ -539,12 +539,48 @@ void ResourcesSystem::load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, st
 	AnimationsAspect::Bone bone;
 
 	bone.id = p_ai_node->mName.C_Str();
-	// to be continued...
+	if (p_ai_node->mParent)
+	{
+		bone.parent_id = p_ai_node->mParent->mName.C_Str();
+	}
+	
+	ConvertFromAssimpMatrix(p_ai_node->mTransformation, bone.locale_transform);
 
 	for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
 	{
+		bone.children.push_back(p_ai_node->mChildren[i]->mName.C_Str());
 		load_scene_nodes_hierachy(p_ai_node->mChildren[i], depth + 1, p_node_table);
 	}
+
+	if (p_node_table.count(bone.id) > 0)
+	{
+		_DSEXCEPTION("assimp node with same name exists");
+	}
+
+	p_node_table[bone.id] = bone;
+}
+
+void ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat, Utils::Matrix& p_out_mat)
+{
+	p_out_mat(0, 0) = p_in_mat.a1;
+	p_out_mat(0, 1) = p_in_mat.b1;
+	p_out_mat(0, 2) = p_in_mat.c1;
+	p_out_mat(0, 3) = p_in_mat.d1;
+
+	p_out_mat(1, 0) = p_in_mat.a2;
+	p_out_mat(1, 1) = p_in_mat.b2;
+	p_out_mat(1, 2) = p_in_mat.c2;
+	p_out_mat(1, 3) = p_in_mat.d2;
+
+	p_out_mat(2, 0) = p_in_mat.a3;
+	p_out_mat(2, 1) = p_in_mat.b3;
+	p_out_mat(2, 2) = p_in_mat.c3;
+	p_out_mat(2, 3) = p_in_mat.d3;
+
+	p_out_mat(3, 0) = p_in_mat.a4;
+	p_out_mat(3, 1) = p_in_mat.b4;
+	p_out_mat(3, 2) = p_in_mat.c4;
+	p_out_mat(3, 3) = p_in_mat.d4;
 }
 
 void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)

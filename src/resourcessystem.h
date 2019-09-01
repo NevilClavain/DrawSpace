@@ -117,6 +117,8 @@ public:
     void ReleaseAssets( void );
     void ReleaseShaderAsset( const dsstring& p_asset);
 
+	static void ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat, Utils::Matrix& p_out_mat);
+
 
     //////// direct API, useful for non-entity client //////
 
