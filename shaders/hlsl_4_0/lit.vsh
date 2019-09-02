@@ -44,8 +44,8 @@ struct VS_INPUT
     float3 Tangent      : TANGENT;
     float3 Binormale    : BINORMALE;
     float4 TexCoord0    : TEXCOORD0;
-	float4 Bones        : TEXCOORD6;
-	float4 Weights      : TEXCOORD7;
+	float4 Bones        : TEXCOORD4;
+	float4 Weights      : TEXCOORD5;
 };
 
 struct VS_OUTPUT

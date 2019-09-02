@@ -351,150 +351,150 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		
 		// vertices top : affectes a 100% au bone 2
 		meshe->GetVertex(0, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 2.0;
-		v.ta[6] = 2.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(0, v);
 
 		meshe->GetVertex(1, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 2.0;
-		v.ta[6] = 2.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(1, v);
 
 		meshe->GetVertex(2, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 2.0;
-		v.ta[6] = 2.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(2, v);
 
 		meshe->GetVertex(3, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 2.0;
-		v.ta[6] = 2.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(3, v);
 
 
 		// vertices milieu : affectes a 50% au bone 2 et 50% au bone 0
 		meshe->GetVertex(4, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(4, v);
 
 		meshe->GetVertex(5, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(5, v);
 
 		meshe->GetVertex(6, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(6, v);
 
 		meshe->GetVertex(7, v);
-		v.tu[6] = 2.0;
-		v.tv[6] = 2.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 2.0;
+		v.tv[4] = 2.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(7, v);
 
 		// vertices bottom : affectes a 100% au bone 0
 		meshe->GetVertex(8, v);
-		v.tu[6] = 0.0;
-		v.tv[6] = 0.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 0.0;
+		v.tv[4] = 0.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(8, v);
 
 		meshe->GetVertex(9, v);
-		v.tu[6] = 0.0;
-		v.tv[6] = 0.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 0.0;
+		v.tv[4] = 0.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(9, v);
 
 		meshe->GetVertex(10, v);
-		v.tu[6] = 0.0;
-		v.tv[6] = 0.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 0.0;
+		v.tv[4] = 0.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(10, v);
 
 		meshe->GetVertex(11, v);
-		v.tu[6] = 0.0;
-		v.tv[6] = 0.0;
-		v.tw[6] = 0.0;
-		v.ta[6] = 0.0;
+		v.tu[4] = 0.0;
+		v.tv[4] = 0.0;
+		v.tw[4] = 0.0;
+		v.ta[4] = 0.0;
 
-		v.tu[7] = 0.25;
-		v.tv[7] = 0.25;
-		v.tw[7] = 0.25;
-		v.ta[7] = 0.25;
+		v.tu[5] = 0.25;
+		v.tv[5] = 0.25;
+		v.tw[5] = 0.25;
+		v.ta[5] = 0.25;
 		meshe->SetVertex(11, v);
 
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
@@ -662,10 +662,10 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 			if (anims_aspect)
 			{
 				
-				v_out.tu[6] = -1.0;
-				v_out.tv[6] = -1.0;
-				v_out.tw[6] = -1.0;
-				v_out.ta[6] = -1.0;
+				v_out.tu[4] = -1.0;
+				v_out.tv[4] = -1.0;
+				v_out.tw[4] = -1.0;
+				v_out.ta[4] = -1.0;
 				
 			}
 
@@ -767,29 +767,29 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 					DrawSpace::Core::Vertex vertex;
 					p_destination->GetVertex(vert_index, vertex);
 
-					vertex.tu[6] = vertex.tu[6] + 1;					
+					vertex.tu[4] = vertex.tu[4] + 1;					
 
 					
-					if (vertex.tu[6] == -1.0)
+					if (vertex.tu[4] == -1.0)
 					{
-						vertex.tu[6] = j;       // j = bone index
-						vertex.tu[7] = weight;
+						vertex.tu[4] = j;       // j = bone index
+						vertex.tu[5] = weight;
 					}
-					else if (vertex.tv[6] == -1.0)
+					else if (vertex.tv[4] == -1.0)
 					{
-						vertex.tv[6] = j;       // j = bone index
-						vertex.tv[7] = weight;
+						vertex.tv[4] = j;       // j = bone index
+						vertex.tv[5] = weight;
 
 					}
-					else if (vertex.tw[6] == -1.0)
+					else if (vertex.tw[4] == -1.0)
 					{
-						vertex.tw[6] = j;       // j = bone index
-						vertex.tw[7] = weight;
+						vertex.tw[4] = j;       // j = bone index
+						vertex.tw[5] = weight;
 					}
-					else if (vertex.ta[6] == -1.0)
+					else if (vertex.ta[4] == -1.0)
 					{
-						vertex.ta[6] = j;       // j = bone index
-						vertex.ta[7] = weight;
+						vertex.ta[4] = j;       // j = bone index
+						vertex.ta[5] = weight;
 					}
 					else
 					{
