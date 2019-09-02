@@ -86,7 +86,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
 		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 
-		/*
+		
 		//////////// temporaire tests animation
 		
 		static bool once = false;
@@ -132,7 +132,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				}
 			}
 		}
-		*/
+		
 		////////////////////////////
 
 

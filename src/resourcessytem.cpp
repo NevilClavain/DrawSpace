@@ -212,6 +212,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                             _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
 
+							/*
 							AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 							if (anims_aspect)
 							{
@@ -221,6 +222,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 								anims_aspect->AddComponent<dsstring>("nodes_root_id", root->mName.C_Str());
 							}
+							*/
 
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
@@ -276,18 +278,18 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 	//
 
 	//////////// temporaire tests animation
-	/*
+	
 	static bool once = false;
 
-	
+	AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 	if (anims_aspect && !once)
 	{
 		////////////////////////////////////////////////////
 
 		// bone inputs (hierarchy)
-		AnimationsAspect::Bone bone_thorax;
-		AnimationsAspect::Bone bone_neck_pivot;
-		AnimationsAspect::Bone bone_neck_arm;
+		AnimationsAspect::Node bone_thorax;
+		AnimationsAspect::Node bone_neck_pivot;
+		AnimationsAspect::Node bone_neck_arm;
 
 		bone_thorax.id = "thorax";
 		bone_thorax.children.push_back("neck_arm");
@@ -300,16 +302,16 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		bone_neck_pivot.parent_id = "neck_arm";
 
 
-		std::map<dsstring, AnimationsAspect::Bone> bones;
+		std::map<dsstring, AnimationsAspect::Node> bones;
 		bones["thorax"] = bone_thorax;
 		bones["neck_arm"] = bone_neck_arm;
 		bones["neck_pivot"] = bone_neck_pivot;
 
-		anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Bone>>("bones", bones);
+		anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes", bones);
 
 
 		// bone root node name
-		anims_aspect->AddComponent<dsstring>("bones_root", "thorax");
+		anims_aspect->AddComponent<dsstring>("nodes_root_id", "thorax");
 
 		// bones outputs (array)
 		std::vector<AnimationsAspect::BoneOutput> bones_outputs;
@@ -514,7 +516,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 		once = true;
 	}
-	*/
+	
 	///////////////////////////////////////////////////////
 }
 
@@ -587,6 +589,8 @@ void ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat, Utils
 
 void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)
 {
+	AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+
     dsstring name = p_ai_node->mName.C_Str();
 
     Meshe::NormalesGenerationMode normales_gen_mode = p_destination->GetNGenerationMode();
@@ -655,6 +659,16 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 
             DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
 
+			if (anims_aspect)
+			{
+				
+				v_out.tu[6] = -1.0;
+				v_out.tv[6] = -1.0;
+				v_out.tw[6] = -1.0;
+				v_out.ta[6] = -1.0;
+				
+			}
+
             if(meshe->GetNumUVChannels() > 0)
             {
                 aiVector3D texCoord = meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D;            
@@ -663,7 +677,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
             }
             
             if (hasN && (normales_gen_mode == Meshe::NORMALES_AUTO || normales_gen_mode == Meshe::NORMALES_FROMLOADER ||
-						normales_gen_mode == Meshe::NORMALES_AUTO_SMOOTH || normales_gen_mode == Meshe::NORMALES_FROMLOADER_SMOOTH))
+						 normales_gen_mode == Meshe::NORMALES_AUTO_SMOOTH || normales_gen_mode == Meshe::NORMALES_FROMLOADER_SMOOTH))
             {
                 // model has its own normales, so use it
                 v_out.nx = meshe->mNormals[j][0];
@@ -726,26 +740,75 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
         }
 
 
-        //////BONES ////////////////////////////
-
-		AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+        ////// ANIMATION BONES ////////////////////////////
+		
 		if (anims_aspect)
 		{
 			std::vector<AnimationsAspect::BoneOutput> bones_outputs;
 			std::map<dsstring, int> bones_mapping;
 
-
+			
 			//////ICI
+			/*
+			for (size_t j = 0; j < meshe->mNumBones; j++)
+			{
+				aiBone* bone = meshe->mBones[j];
 
+				AnimationsAspect::BoneOutput bone_output;
+				ConvertFromAssimpMatrix(bone->mOffsetMatrix, bone_output.offset_matrix);
 
+				bones_outputs.push_back(bone_output);
 
+				for (size_t k = 0; k < bone->mNumWeights; k++)
+				{
+					float weight = bone->mWeights[k].mWeight;
+					int vert_index = bone->mWeights[k].mVertexId;
 
+					DrawSpace::Core::Vertex vertex;
+					p_destination->GetVertex(vert_index, vertex);
+
+					vertex.tu[6] = vertex.tu[6] + 1;					
+
+					
+					if (vertex.tu[6] == -1.0)
+					{
+						vertex.tu[6] = j;       // j = bone index
+						vertex.tu[7] = weight;
+					}
+					else if (vertex.tv[6] == -1.0)
+					{
+						vertex.tv[6] = j;       // j = bone index
+						vertex.tv[7] = weight;
+
+					}
+					else if (vertex.tw[6] == -1.0)
+					{
+						vertex.tw[6] = j;       // j = bone index
+						vertex.tw[7] = weight;
+					}
+					else if (vertex.ta[6] == -1.0)
+					{
+						vertex.ta[6] = j;       // j = bone index
+						vertex.ta[7] = weight;
+					}
+					else
+					{
+						//_DSEXCEPTION("A vertex cannot reference more than 4 bones");
+
+						_asm nop
+					}
+					
+					// update vertex
+					p_destination->SetVertex(vert_index, vertex);
+				}
+			}
+			*/
 
 			//////
 
 
-			anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
-			anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
+			//anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
+			//anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
 
 			RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 			if (!rendering_aspect)
