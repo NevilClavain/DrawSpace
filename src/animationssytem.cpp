@@ -88,7 +88,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 
 		
 		//////////// temporaire tests animation
-		
+		/*
 		static bool once = false;
 
 		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
@@ -132,7 +132,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				}
 			}
 		}
-		
+		*/
 		////////////////////////////
 
 

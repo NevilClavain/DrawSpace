@@ -48,8 +48,11 @@ struct VS_INPUT
    float3 Tangent       : TANGENT0;
    float3 Binormale     : BINORMAL0;
    float4 TexCoord0     : TEXCOORD0;
-   float4 Bones         : TEXCOORD4;
-   float4 Weights       : TEXCOORD5;
+   float4 BonesId0      : TEXCOORD4;
+   float4 Weights0      : TEXCOORD5;
+   float4 BonesId1      : TEXCOORD6;
+   float4 Weights1      : TEXCOORD7;
+
 };
 
 struct VS_OUTPUT 
@@ -83,26 +86,46 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	if (Flags.z > 0.0)
 	{
-		int4 boneIds;
+		int4 boneId0;
 
-		boneIds[0] = (int)Input.Bones.x;
-		boneIds[1] = (int)Input.Bones.y;
-		boneIds[2] = (int)Input.Bones.z;
-		boneIds[3] = (int)Input.Bones.w;
+		boneId0[0] = (int)Input.BonesId0.x;
+		boneId0[1] = (int)Input.BonesId0.y;
+		boneId0[2] = (int)Input.BonesId0.z;
+		boneId0[3] = (int)Input.BonesId0.w;
 
-		float4 weights = Input.Weights;
+		int4 boneId1;
+
+		boneId1[0] = (int)Input.BonesId1.x;
+		boneId1[1] = (int)Input.BonesId1.y;
+		boneId1[2] = (int)Input.BonesId1.z;
+		boneId1[3] = (int)Input.BonesId1.w;
+
+
+		float4 weights0 = Input.Weights0;
+		float4 weights1 = Input.Weights1;
 
 		// reconstituer les 4 matrices
 
-		float4x4 mat0 = GetTransformationMatrixForBone(boneIds[0], bones_0, bones_1);
-		float4x4 mat1 = GetTransformationMatrixForBone(boneIds[1], bones_0, bones_1);
-		float4x4 mat2 = GetTransformationMatrixForBone(boneIds[2], bones_0, bones_1);
-		float4x4 mat3 = GetTransformationMatrixForBone(boneIds[3], bones_0, bones_1);
+		float4x4 mat0;
+		float4x4 mat1;
+		float4x4 mat2;
+		float4x4 mat3;
 
-		final_transform_from_bones = mat0 * weights[0] +
-			mat1 * weights[1] +
-			mat2 * weights[2] +
-			mat3 * weights[3];
+		float4x4 mat4;
+		float4x4 mat5;
+		float4x4 mat6;
+		float4x4 mat7;
+
+		mat0 = GetTransformationMatrixForBone(boneId0[0], bones_0, bones_1);
+		mat1 = GetTransformationMatrixForBone(boneId0[1], bones_0, bones_1);
+		mat2 = GetTransformationMatrixForBone(boneId0[2], bones_0, bones_1);
+		mat3 = GetTransformationMatrixForBone(boneId0[3], bones_0, bones_1);
+		mat4 = GetTransformationMatrixForBone(boneId1[0], bones_0, bones_1);
+		mat5 = GetTransformationMatrixForBone(boneId1[1], bones_0, bones_1);
+		mat6 = GetTransformationMatrixForBone(boneId1[2], bones_0, bones_1);
+		mat7 = GetTransformationMatrixForBone(boneId1[3], bones_0, bones_1);
+
+		final_transform_from_bones = mat0 * weights0[0] + mat1 * weights0[1] + mat2 * weights0[2] + mat3 * weights0[3] + mat4 * weights1[0] + mat5 * weights1[1] + mat6 * weights1[2] + mat7 * weights1[3];
 	}
 
 	VS_OUTPUT Output;

@@ -193,7 +193,7 @@ float4x4 GetTransformationMatrixForBone(int boneid, float4 bones_0[69], float4 b
 	float4 col1;
 	float4 col2;
 
-	if (boneid <= 68)
+	if (boneid <= 22)
 	{
 		col0 = bones_0[matrix_index];
 		col1 = bones_0[matrix_index + 1];

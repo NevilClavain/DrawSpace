@@ -190,15 +190,16 @@ float4x4 GetTransformationMatrixForBone(int boneid, float4 vectors[512])
 
 	int matrix_index = boneid * 3;
 
-	if (boneid <= 68)
+	if (boneid <= 22)
 	{
-
 		// 1st set of 69 vectors triplets : from 31 to 99 
 		matrix_index += 31;
 	}
 	else
 	{
 		// 2nd set of 132 vectors triplet : from 124 to 255 
+
+		matrix_index -= 69;
 		matrix_index += 124;
 	}
 

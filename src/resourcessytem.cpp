@@ -212,7 +212,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                             _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
 
-							/*
+							
 							AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 							if (anims_aspect)
 							{
@@ -222,7 +222,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 								anims_aspect->AddComponent<dsstring>("nodes_root_id", root->mName.C_Str());
 							}
-							*/
+							
 
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
@@ -278,7 +278,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 	//
 
 	//////////// temporaire tests animation
-	
+	/*
 	static bool once = false;
 
 	AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
@@ -350,16 +350,29 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		Core::Vertex v;
 		
 		// vertices top : affectes a 100% au bone 2
+		
 		meshe->GetVertex(0, v);
 		v.tu[4] = 2.0;
 		v.tv[4] = 2.0;
 		v.tw[4] = 2.0;
 		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+		
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+		
+
 		meshe->SetVertex(0, v);
 
 		meshe->GetVertex(1, v);
@@ -368,10 +381,21 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 2.0;
 		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(1, v);
 
 		meshe->GetVertex(2, v);
@@ -380,10 +404,21 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 2.0;
 		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(2, v);
 
 		meshe->GetVertex(3, v);
@@ -392,10 +427,21 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 2.0;
 		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 2.0;
+		v.tv[6] = 2.0;
+		v.tw[6] = 2.0;
+		v.ta[6] = 2.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(3, v);
 
 
@@ -403,49 +449,93 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		meshe->GetVertex(4, v);
 		v.tu[4] = 2.0;
 		v.tv[4] = 2.0;
-		v.tw[4] = 0.0;
-		v.ta[4] = 0.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(4, v);
 
 		meshe->GetVertex(5, v);
 		v.tu[4] = 2.0;
 		v.tv[4] = 2.0;
-		v.tw[4] = 0.0;
-		v.ta[4] = 0.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(5, v);
 
 		meshe->GetVertex(6, v);
 		v.tu[4] = 2.0;
 		v.tv[4] = 2.0;
-		v.tw[4] = 0.0;
-		v.ta[4] = 0.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(6, v);
 
 		meshe->GetVertex(7, v);
 		v.tu[4] = 2.0;
 		v.tv[4] = 2.0;
-		v.tw[4] = 0.0;
-		v.ta[4] = 0.0;
+		v.tw[4] = 2.0;
+		v.ta[4] = 2.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
+
 		meshe->SetVertex(7, v);
 
 		// vertices bottom : affectes a 100% au bone 0
@@ -455,10 +545,20 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 0.0;
 		v.ta[4] = 0.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
 		meshe->SetVertex(8, v);
 
 		meshe->GetVertex(9, v);
@@ -467,10 +567,20 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 0.0;
 		v.ta[4] = 0.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
 		meshe->SetVertex(9, v);
 
 		meshe->GetVertex(10, v);
@@ -479,10 +589,20 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 0.0;
 		v.ta[4] = 0.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
 		meshe->SetVertex(10, v);
 
 		meshe->GetVertex(11, v);
@@ -491,11 +611,22 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 		v.tw[4] = 0.0;
 		v.ta[4] = 0.0;
 
-		v.tu[5] = 0.25;
-		v.tv[5] = 0.25;
-		v.tw[5] = 0.25;
-		v.ta[5] = 0.25;
+		v.tu[5] = 0.125;
+		v.tv[5] = 0.125;
+		v.tw[5] = 0.125;
+		v.ta[5] = 0.125;
+
+		v.tu[6] = 0.0;
+		v.tv[6] = 0.0;
+		v.tw[6] = 0.0;
+		v.ta[6] = 0.0;
+
+		v.tu[7] = 0.125;
+		v.tv[7] = 0.125;
+		v.tw[7] = 0.125;
+		v.ta[7] = 0.125;
 		meshe->SetVertex(11, v);
+		
 
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 		if (!rendering_aspect)
@@ -516,7 +647,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 		once = true;
 	}
-	
+	*/
 	///////////////////////////////////////////////////////
 }
 
@@ -585,6 +716,7 @@ void ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat, Utils
 	p_out_mat(3, 1) = p_in_mat.b4;
 	p_out_mat(3, 2) = p_in_mat.c4;
 	p_out_mat(3, 3) = p_in_mat.d4;
+
 }
 
 void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)
@@ -658,7 +790,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
             aiVector3D v_in = meshe->mVertices[j];
 
             DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
-
+			
 			if (anims_aspect)
 			{
 				
@@ -666,9 +798,23 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 				v_out.tv[4] = -1.0;
 				v_out.tw[4] = -1.0;
 				v_out.ta[4] = -1.0;
+				v_out.tu[5] = 0.0;
+				v_out.tv[5] = 0.0;
+				v_out.tw[5] = 0.0;
+				v_out.ta[5] = 0.0;
+
+				v_out.tu[6] = -1.0;
+				v_out.tv[6] = -1.0;
+				v_out.tw[6] = -1.0;
+				v_out.ta[6] = -1.0;
+				v_out.tu[7] = 0.0;
+				v_out.tv[7] = 0.0;
+				v_out.tw[7] = 0.0;
+				v_out.ta[7] = 0.0;
+
 				
 			}
-
+			
             if(meshe->GetNumUVChannels() > 0)
             {
                 aiVector3D texCoord = meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D;            
@@ -749,7 +895,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 
 			
 			//////ICI
-			/*
+			
 			for (size_t j = 0; j < meshe->mNumBones; j++)
 			{
 				aiBone* bone = meshe->mBones[j];
@@ -759,6 +905,8 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 
 				bones_outputs.push_back(bone_output);
 
+				bones_mapping[bone->mName.C_Str()] = j;
+
 				for (size_t k = 0; k < bone->mNumWeights; k++)
 				{
 					float weight = bone->mWeights[k].mWeight;
@@ -766,9 +914,6 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 
 					DrawSpace::Core::Vertex vertex;
 					p_destination->GetVertex(vert_index, vertex);
-
-					vertex.tu[4] = vertex.tu[4] + 1;					
-
 					
 					if (vertex.tu[4] == -1.0)
 					{
@@ -780,7 +925,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 						vertex.tv[4] = j;       // j = bone index
 						vertex.tv[5] = weight;
 
-					}
+					}					
 					else if (vertex.tw[4] == -1.0)
 					{
 						vertex.tw[4] = j;       // j = bone index
@@ -791,24 +936,61 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 						vertex.ta[4] = j;       // j = bone index
 						vertex.ta[5] = weight;
 					}
+					
+					else if (vertex.tu[6] == -1.0)
+					{
+						vertex.tu[6] = j;       // j = bone index
+						vertex.tu[7] = weight;
+					}
+					else if (vertex.tv[6] == -1.0)
+					{
+						vertex.tv[6] = j;       // j = bone index
+						vertex.tv[7] = weight;
+					}
+					else if (vertex.tw[6] == -1.0)
+					{
+						vertex.tw[6] = j;       // j = bone index
+						vertex.tw[7] = weight;
+					}
+					else if (vertex.ta[6] == -1.0)
+					{
+						vertex.ta[6] = j;       // j = bone index
+						vertex.ta[7] = weight;
+					}
 					else
 					{
-						//_DSEXCEPTION("A vertex cannot reference more than 4 bones");
-
-						_asm nop
+						_DSEXCEPTION("A vertex cannot reference more than 8 bones");
 					}
 					
 					// update vertex
 					p_destination->SetVertex(vert_index, vertex);
 				}
 			}
-			*/
+			
+			//////
+
+			for (long j = 0; j < p_destination->GetVertexListSize(); j++)
+			{
+				DrawSpace::Core::Vertex vertex;
+				p_destination->GetVertex(j, vertex);
+
+				float sum = vertex.tu[5] + vertex.tv[5] + vertex.tw[5] + vertex.ta[5] +
+							vertex.tu[7] + vertex.tv[7] + vertex.tw[7] + vertex.ta[7];
+
+				if (sum < 0.999)
+				{
+					_DSEXCEPTION("Vertex weights sum must be 1.0");
+				}
+
+
+
+				p_destination->SetVertex(j, vertex);
+			}
 
 			//////
 
-
-			//anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
-			//anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
+			anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
+			anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
 
 			RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 			if (!rendering_aspect)
