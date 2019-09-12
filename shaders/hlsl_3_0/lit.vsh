@@ -129,10 +129,23 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	}
 
 	VS_OUTPUT Output;
+
 	float4 initial_pos;
+	float4 initial_n;
+	float4 initial_t;
+	float4 initial_b;
 
 	initial_pos.xyz = Input.Position;
 	initial_pos.w = 1.0;
+
+	initial_n.xyz = Input.Normal;
+	initial_n.w = 1.0;
+
+	initial_t.xyz = Input.Tangent;
+	initial_t.w = 1.0;
+
+	initial_b.xyz = Input.Binormale;
+	initial_b.w = 1.0;
 
 	float4 pos;
 	pos = mul(initial_pos, final_transform_from_bones);
@@ -146,14 +159,22 @@ VS_OUTPUT vs_main( VS_INPUT Input )
         Output.Position = mul(pos, matWorldViewProjection);
     }
 
-    Output.Normale.xyz = Input.Normal;
-    Output.Normale.w = 1.0;
+	float4x4 final_transform_from_bones_no_translation = final_transform_from_bones;
+	final_transform_from_bones_no_translation[3][0] = 0.0;
+	final_transform_from_bones_no_translation[3][1] = 0.0;
+	final_transform_from_bones_no_translation[3][2] = 0.0;
 
-    Output.Tangent.xyz = Input.Tangent;
-    Output.Tangent.w = 1.0;
+	float3 oNormale = mul(initial_n, final_transform_from_bones_no_translation);
+	Output.Normale.xyz = normalize(oNormale);
+	Output.Normale.w = 1.0;
 
-    Output.Binormale.xyz = Input.Binormale;
-    Output.Binormale.w = 1.0;
+	float3 oTangent = mul(initial_t, final_transform_from_bones_no_translation);
+	Output.Tangent.xyz = normalize(oTangent);
+	Output.Tangent.w = 1.0;
+
+	float3 oBinormale = mul(initial_b, final_transform_from_bones_no_translation);
+	Output.Binormale.xyz = normalize(oBinormale);
+	Output.Binormale.w = 1.0;
     
     Output.TexCoord0 = Input.TexCoord0;
 
