@@ -88,7 +88,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 
 		
 		//////////// temporaire tests animation
-		/*
+		
 		static bool once = false;
 
 		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
@@ -103,36 +103,38 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		else
 		{
 			Matrix rot;
-			Matrix trans_arm;
-
-			trans_arm.Translation(0.0, 1.5, 0.0);
 
 			rot.Rotation(Vector(0.0, 0.0, 1.0, 1.0), Utils::Maths::DegToRad(m_rotation.GetValue()));
 
+			Matrix rot2;
+			rot2.Rotation(Vector(1.0, 0.0, 0.0, 1.0), Utils::Maths::DegToRad(m_rotation.GetValue()));
 
-			bones["neck_pivot"].locale_transform = rot;
 
-			bones["neck_arm"].locale_transform = trans_arm;
+			//bones["neck_pivot"].locale_transform = rot;
+
+			bones["skeleton:jaw_$AssimpFbx$_Rotation"].locale_transform = rot;
+
+			bones["skeleton:neck2_$AssimpFbx$_Rotation"].locale_transform = rot2;
 
 
 			if (m_rot_inc)
 			{
-				m_rotation.Increase(90.0);
-				if (m_rotation.GetValue() > 40.0 && m_rotation.GetValue() < 180.0)
+				m_rotation.Increase(50.0);
+				if (m_rotation.GetValue() > 0.0 && m_rotation.GetValue() < 180.0)
 				{
 					m_rot_inc = false;
 				}
 			}
 			else
 			{
-				m_rotation.Decrease(90.0);
+				m_rotation.Decrease(50.0);
 				if (m_rotation.GetValue() < 360.0 - 40.0 && m_rotation.GetValue() > 180.0)
 				{
 					m_rot_inc = true;
 				}
 			}
 		}
-		*/
+		
 		////////////////////////////
 
 
