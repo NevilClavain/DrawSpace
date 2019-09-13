@@ -40,7 +40,7 @@ const dsstring AnimationsSystem::bonesBuffer1Id = "bones_1";
 
 AnimationsSystem::AnimationsSystem(void)
 {
-	m_rot_inc = true;
+	//m_rot_inc = true;
 }
 
 AnimationsSystem::~AnimationsSystem(void)
@@ -88,7 +88,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 
 		
 		//////////// temporaire tests animation
-		
+		/*
 		static bool once = false;
 
 		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
@@ -134,9 +134,23 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				}
 			}
 		}
-		
-		////////////////////////////
+		*/
+		///////////////////////////////////////////////////////////////////////////////////////////////
+		//// get some eventually forced bones position
 
+		ComponentList<std::pair<dsstring, Matrix>> forced_bones_positions;
+		anims_aspect->GetComponentsByType<std::pair<dsstring, Matrix>>(forced_bones_positions);
+
+		for (auto& e : forced_bones_positions)
+		{
+			std::string bone_id = e->getPurpose().first;
+			Matrix bone_locale_transform = e->getPurpose().second;
+
+			if (bones.count(bone_id))
+			{
+				bones.at(bone_id).locale_transform = bone_locale_transform;
+			}
+		}
 
 		Utils::Matrix mid;
 		mid.Identity();
