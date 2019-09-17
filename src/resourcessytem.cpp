@@ -218,9 +218,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							{
 								std::map<dsstring, AnimationsAspect::Node> scene_nodes;
 								load_scene_nodes_hierachy(root, 1, scene_nodes);
-								anims_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes", scene_nodes);
+								anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose() = scene_nodes;
 
-								anims_aspect->AddComponent<dsstring>("nodes_root_id", root->mName.C_Str());
+
+								anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose() = root->mName.C_Str();
 							}
 							
 
@@ -988,9 +989,8 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 			}
 
 			//////
-
-			anims_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs", bones_outputs);
-			anims_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping", bones_mapping);
+			anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose() = bones_outputs;
+			anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose() = bones_mapping;
 
 			RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 			if (!rendering_aspect)

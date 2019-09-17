@@ -61,6 +61,8 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
+	{ "configure_animationbones", &LuaClass_Entity::LUA_configureanimationbones },
+	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },
     { "setup_info", &LuaClass_Entity::LUA_setupinfo },
     { "release_info", &LuaClass_Entity::LUA_releaseinfo },
 	{ 0, 0 }
@@ -374,6 +376,47 @@ int LuaClass_Entity::LUA_releasecamera( lua_State* p_L )
 
     return 0;
 }
+
+int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
+{
+	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
+	if (NULL == animation_aspect)
+	{
+		LUA_ERROR("Entity::configure_animationbones : animation aspect doesnt exists in this entity!");
+	}
+
+	LUA_TRY
+	{
+		animation_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes");
+		animation_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping");
+		animation_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs");
+		animation_aspect->AddComponent<dsstring>("nodes_root_id");
+
+	} LUA_CATCH;
+
+	return 0;
+}
+
+int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
+{
+	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
+	if (NULL == animation_aspect)
+	{
+		LUA_ERROR("Entity::configure_animationbones : animation aspect doesnt exists in this entity!");
+	}
+
+	LUA_TRY
+	{
+		animation_aspect->RemoveComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes");
+		animation_aspect->RemoveComponent<std::map<dsstring, int>>("bones_mapping");
+		animation_aspect->RemoveComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs");
+		animation_aspect->RemoveComponent<dsstring>("nodes_root_id");
+
+	} LUA_CATCH;
+
+	return 0;
+}
+
 
 int LuaClass_Entity::LUA_setupinfo(lua_State* p_L)
 {
