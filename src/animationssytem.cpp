@@ -138,6 +138,20 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
 
+		auto forced_bones_pos = anims_aspect->GetComponent<std::map<dsstring, Matrix>>("forced_bones_transformations")->getPurpose();
+
+		for (auto& e : forced_bones_pos)
+		{
+			std::string bone_id = e.first;
+			Matrix bone_locale_transform = e.second;
+
+			if (bones.count(bone_id))
+			{
+				bones.at(bone_id).locale_transform = bone_locale_transform;
+			}
+		}
+
+		/*
 		ComponentList<std::pair<dsstring, Matrix>> forced_bones_positions;
 		anims_aspect->GetComponentsByType<std::pair<dsstring, Matrix>>(forced_bones_positions);
 
@@ -151,6 +165,9 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				bones.at(bone_id).locale_transform = bone_locale_transform;
 			}
 		}
+		*/
+
+		///////////////////////////////////////////////////////////////////////////////////////////////
 
 		Utils::Matrix mid;
 		mid.Identity();

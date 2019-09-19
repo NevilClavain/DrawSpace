@@ -83,6 +83,7 @@ public:
     int LUA_releasecamera( lua_State* p_L );
 
 	int LUA_configureanimationbones(lua_State* p_L);
+	int LUA_updatebonelocaltransform(lua_State* p_L);
 	int LUA_releaseanimationbones(lua_State* p_L);
 
     int LUA_setupinfo(lua_State* p_L);

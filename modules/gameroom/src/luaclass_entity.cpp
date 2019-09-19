@@ -25,6 +25,7 @@
 #include "luacontext.h"
 #include "luaclass_entity.h"
 #include "luaclass_renderpassnodegraph.h"
+#include "luaclass_matrix.h"
 #include "renderingaspect.h"
 #include "timeaspect.h"
 
@@ -62,6 +63,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
 	{ "configure_animationbones", &LuaClass_Entity::LUA_configureanimationbones },
+	{ "update_bonelocaltransform", &LuaClass_Entity::LUA_updatebonelocaltransform },
 	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },
     { "setup_info", &LuaClass_Entity::LUA_setupinfo },
     { "release_info", &LuaClass_Entity::LUA_releaseinfo },
@@ -392,7 +394,33 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 		animation_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs");
 		animation_aspect->AddComponent<dsstring>("nodes_root_id");
 
+		animation_aspect->AddComponent<std::map<dsstring, Matrix>>("forced_bones_transformations");
+
 	} LUA_CATCH;
+
+	return 0;
+}
+
+int LuaClass_Entity::LUA_updatebonelocaltransform(lua_State* p_L)
+{
+	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
+	if (NULL == animation_aspect)
+	{
+		LUA_ERROR("Entity::update_bonelocaltransform : animation aspect doesnt exists in this entity!");
+	}
+
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Entity::update_bonelocaltransform : argument(s) missing");
+	}
+
+	dsstring bone_id = luaL_checkstring(p_L, 1);
+	LuaClass_Matrix* mat = Luna<LuaClass_Matrix>::check(p_L, 2);
+
+	auto& forced_pos = animation_aspect->GetComponent<std::map<dsstring, Matrix>>("forced_bones_transformations")->getPurpose();
+
+	forced_pos[bone_id] = mat->GetMatrix();
 
 	return 0;
 }
@@ -411,6 +439,8 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 		animation_aspect->RemoveComponent<std::map<dsstring, int>>("bones_mapping");
 		animation_aspect->RemoveComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs");
 		animation_aspect->RemoveComponent<dsstring>("nodes_root_id");
+
+		animation_aspect->RemoveComponent<std::map<dsstring, Matrix>>("forced_bones_transformations");
 
 	} LUA_CATCH;
 
@@ -432,9 +462,13 @@ int LuaClass_Entity::LUA_setupinfo(lua_State* p_L)
         LUA_ERROR("Entity::setup_infos : infos aspect doesnt exists in this entity!");
     }
 
-    dsstring key_string = luaL_checkstring(p_L, 1);
-    dsstring infos_string = luaL_checkstring(p_L, 2);
-    infos_aspect->AddComponent<dsstring>(key_string, infos_string);
+	LUA_TRY
+	{
+		dsstring key_string = luaL_checkstring(p_L, 1);
+		dsstring infos_string = luaL_checkstring(p_L, 2);
+		infos_aspect->AddComponent<dsstring>(key_string, infos_string);
+
+	} LUA_CATCH;
 
     return 0;
 }
@@ -464,7 +498,6 @@ int LuaClass_Entity::LUA_releaseinfo(lua_State* p_L)
     return 0;
 }
 
-
 int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
@@ -474,17 +507,19 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
 	}
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
+	LUA_TRY
+	{
+		RenderingAspect* rendering_aspect = m_entity.GetAspect<RenderingAspect>();
+		if( rendering_aspect )
+		{
+			rendering_aspect->AddImplementation( &lua_rg->GetPassesRenderAspectImpl(), NULL );
+		}
+		else
+		{
+			LUA_ERROR( "Entity::connect_renderingaspect_rendergraph : entity has no rendering aspect. Call add_renderingaspect() method first" );
+		}
 
-
-    RenderingAspect* rendering_aspect = m_entity.GetAspect<RenderingAspect>();
-    if( rendering_aspect )
-    {
-        rendering_aspect->AddImplementation( &lua_rg->GetPassesRenderAspectImpl(), NULL );
-    }
-    else
-    {
-        LUA_ERROR( "Entity::connect_renderingaspect_rendergraph : entity has no rendering aspect. Call add_renderingaspect() method first" );
-    }
+	} LUA_CATCH;
 
     return 0;
 }
