@@ -35,8 +35,9 @@ const Luna<LuaClass_Quaternion>::RegType LuaClass_Quaternion::methods[] =
 {
 	{ "zero", &LuaClass_Quaternion::LUA_zero },
 	{ "identity", &LuaClass_Quaternion::LUA_identity },
-	{ "rotationaxis", &LuaClass_Quaternion::LUA_rotationaxis },
+	{ "rotation_axis", &LuaClass_Quaternion::LUA_rotationaxis },
 	{ "normalize", &LuaClass_Quaternion::LUA_normalize },
+	{ "store_lerp", &LuaClass_Quaternion::LUA_storelerp },
 	{ 0, 0 }
 };
 
@@ -66,7 +67,7 @@ int LuaClass_Quaternion::LUA_rotationaxis(lua_State* p_L)
 	int argc = lua_gettop(p_L);
 	if (argc < 4)
 	{
-		LUA_ERROR("Quaternion::rotationaxis : argument(s) missing");
+		LUA_ERROR("Quaternion::rotation_axis : argument(s) missing");
 	}
 
 	dsreal x = luaL_checknumber(p_L, 1);
