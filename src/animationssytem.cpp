@@ -40,7 +40,6 @@ const dsstring AnimationsSystem::bonesBuffer1Id = "bones_1";
 
 AnimationsSystem::AnimationsSystem(void)
 {
-	//m_rot_inc = true;
 }
 
 AnimationsSystem::~AnimationsSystem(void)
@@ -86,55 +85,6 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
 		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 
-		
-		//////////// temporaire tests animation
-		/*
-		static bool once = false;
-
-		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-
-		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
-
-		if (!once)
-		{
-			m_rotation = time_aspect->TimeAngleFactory(0.0);
-			once = true;
-		}
-		else
-		{
-			Matrix rot;
-
-			rot.Rotation(Vector(0.0, 0.0, 1.0, 1.0), Utils::Maths::DegToRad(m_rotation.GetValue()));
-
-			Matrix rot2;
-			rot2.Rotation(Vector(1.0, 0.0, 0.0, 1.0), Utils::Maths::DegToRad(m_rotation.GetValue()));
-
-
-			//bones["neck_pivot"].locale_transform = rot;
-
-			bones["skeleton:jaw_$AssimpFbx$_Rotation"].locale_transform = rot;
-
-			bones["skeleton:neck2_$AssimpFbx$_Rotation"].locale_transform = rot2;
-
-
-			if (m_rot_inc)
-			{
-				m_rotation.Increase(50.0);
-				if (m_rotation.GetValue() > 0.0 && m_rotation.GetValue() < 180.0)
-				{
-					m_rot_inc = false;
-				}
-			}
-			else
-			{
-				m_rotation.Decrease(50.0);
-				if (m_rotation.GetValue() < 360.0 - 40.0 && m_rotation.GetValue() > 180.0)
-				{
-					m_rot_inc = true;
-				}
-			}
-		}
-		*/
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
 
@@ -150,22 +100,6 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				bones.at(bone_id).locale_transform = bone_locale_transform;
 			}
 		}
-
-		/*
-		ComponentList<std::pair<dsstring, Matrix>> forced_bones_positions;
-		anims_aspect->GetComponentsByType<std::pair<dsstring, Matrix>>(forced_bones_positions);
-
-		for (auto& e : forced_bones_positions)
-		{
-			std::string bone_id = e->getPurpose().first;
-			Matrix bone_locale_transform = e->getPurpose().second;
-
-			if (bones.count(bone_id))
-			{
-				bones.at(bone_id).locale_transform = bone_locale_transform;
-			}
-		}
-		*/
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 

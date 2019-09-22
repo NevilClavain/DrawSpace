@@ -48,9 +48,6 @@ public:
 
 protected:
 
-	//Aspect::TimeAspect::TimeAngle m_rotation;
-	//bool						  m_rot_inc;
-
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 	//recursive
