@@ -45,6 +45,7 @@
 #include "luaclass_renderlayer.h"
 #include "luaclass_module.h"
 #include "luaclass_matrix.h"
+#include "luaclass_quaternion.h"
 #include "luaclass_vector.h"
 #include "luaclass_body.h"
 #include "luaclass_rendering.h"
@@ -96,6 +97,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RenderLayer>::Register(m_L);
     Luna<LuaClass_Module>::Register( m_L );
     Luna<LuaClass_Matrix>::Register( m_L );
+	Luna<LuaClass_Quaternion>::Register(m_L);
     Luna<LuaClass_Vector>::Register(m_L);
     Luna<LuaClass_TimeManagerRef>::Register(m_L);
     lua_checkstack(m_L, 100);   // pos et valeur trouvees empiriquement

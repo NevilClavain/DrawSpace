@@ -24,6 +24,7 @@
 
 #include "luacontext.h"
 #include "luaclass_matrix.h"
+#include "luaclass_quaternion.h"
 #include "maths.h"
 
 using namespace DrawSpace::Utils;
@@ -39,6 +40,7 @@ const Luna<LuaClass_Matrix>::RegType LuaClass_Matrix::methods[] =
     { "scale", &LuaClass_Matrix::LUA_scale },
     { "clear_translation", &LuaClass_Matrix::LUA_cleartranslation },
     { "rotation", &LuaClass_Matrix::LUA_rotation },
+	{ "rotation_fromquaternion", &LuaClass_Matrix::LUA_rotationfromquaternion },
     { "inverse", &LuaClass_Matrix::LUA_inverse },
     { "set_value", &LuaClass_Matrix::LUA_setvalue },
     { "get_value", &LuaClass_Matrix::LUA_getvalue },
@@ -151,6 +153,20 @@ int LuaClass_Matrix::LUA_inverse( lua_State* p_L )
 {
     m_matrix.Inverse();
     return 0;
+}
+
+int LuaClass_Matrix::LUA_rotationfromquaternion(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Matrix::rotation_fromquaternion : argument(s) missing");
+	}
+
+	LuaClass_Quaternion* lua_quat = Luna<LuaClass_Quaternion>::check(p_L, 1);
+	lua_quat->GetQuaternion().RotationMatFrom(m_matrix);
+
+	return 0;
 }
 
 int LuaClass_Matrix::LUA_setvalue( lua_State* p_L )

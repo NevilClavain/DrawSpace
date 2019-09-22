@@ -108,6 +108,7 @@
     <ClCompile Include="src\luaclass_module.cpp" />
     <ClCompile Include="src\luaclass_nebulaespecificconfig.cpp" />
     <ClCompile Include="src\luaclass_planetspecificconfig.cpp" />
+    <ClCompile Include="src\luaclass_quaternion.cpp" />
     <ClCompile Include="src\luaclass_randomengine.cpp" />
     <ClCompile Include="src\luaclass_rawtransform.cpp" />
     <ClCompile Include="src\luaclass_renderconfig.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="src\luaclass_module.h" />
     <ClInclude Include="src\luaclass_nebulaespecificconfig.h" />
     <ClInclude Include="src\luaclass_planetspecificconfig.h" />
+    <ClInclude Include="src\luaclass_quaternion.h" />
     <ClInclude Include="src\luaclass_randomengine.h" />
     <ClInclude Include="src\luaclass_rawtransform.h" />
     <ClInclude Include="src\luaclass_renderconfig.h" />

@@ -22,28 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 #ifndef _QUATERNION_H_
 #define _QUATERNION_H_
 
@@ -62,22 +40,22 @@ public:
     Quaternion(void);
     virtual ~Quaternion(void);
 
-	dsreal operator[]( int p_index ) const
+	inline dsreal operator[]( int p_index ) const
 	{
 		return m_quat[p_index];
 	};
 
-	dsreal& operator[]( int p_index )
+	inline dsreal& operator[]( int p_index )
 	{
 		return m_quat[p_index];
 	};
 
-	void Zero( void )
+	inline void Zero( void )
 	{
 		m_quat[0] = m_quat[1] = m_quat[2] = m_quat[3] = 0.0;
 	};
 
-	void Identity( void )
+	inline void Identity( void )
 	{
 		m_quat[0] = 0.0;
 		m_quat[1] = 0.0;
@@ -85,7 +63,7 @@ public:
 		m_quat[3] = 1.0;
 	};
 
-	void RotationAxis( Vector& p_axis, dsreal p_angle )
+	inline void RotationAxis( Vector& p_axis, dsreal p_angle )
 	{
 		p_axis.Normalize();
 
@@ -97,7 +75,7 @@ public:
 		m_quat[3] = cos( p_angle / 2.0 );
 	};
 
-	void RotationMatFrom( Matrix& p_mat )
+	inline void RotationMatFrom( Matrix& p_mat ) const
 	{
 		dsreal xx      = m_quat[0] * m_quat[0];
 		dsreal xy      = m_quat[0] * m_quat[1];
@@ -121,6 +99,23 @@ public:
 		p_mat( 3, 0 ) = p_mat( 3, 1 ) = p_mat( 3, 2 ) = p_mat( 0, 3 ) = p_mat( 1, 3 ) = p_mat( 2, 3 ) = 0;
 		p_mat( 3, 3 ) = 1;
 	};
+
+	inline void Normalize(void)
+	{
+		dsreal a = m_quat[0];
+		dsreal b = m_quat[1];
+		dsreal c = m_quat[2];
+		dsreal d = m_quat[3];
+
+		dsreal n = sqrt(a * a + b * b + c * c + d * d);
+
+		m_quat[0] = a / n;
+		m_quat[1] = b / n;
+		m_quat[2] = c / n;
+		m_quat[3] = d / n;
+	}
+
+	static Quaternion Lerp(const Quaternion& p_q1, const Quaternion& p_q2, dsreal p_blend);
 };
 }
 }

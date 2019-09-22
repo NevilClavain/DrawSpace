@@ -47,6 +47,7 @@ public:
     int LUA_cleartranslation( lua_State* p_L );
     int LUA_rotation( lua_State* p_L );
     int LUA_inverse( lua_State* p_L );
+	int LUA_rotationfromquaternion(lua_State* p_L);
 
     int LUA_setvalue( lua_State* p_L );
     int LUA_getvalue( lua_State* p_L );
