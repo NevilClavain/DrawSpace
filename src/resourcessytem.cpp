@@ -212,6 +212,68 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
                             _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
 
+
+							_DSDEBUG(rs_logger, dsstring("************************************Animations list BEGIN***********************************"));
+
+							for (size_t i = 0; i < scene->mNumAnimations; i++)
+							{
+								_DSDEBUG(rs_logger, dsstring("Animation ") << i);
+
+								aiAnimation* animation = scene->mAnimations[i];
+
+								_DSDEBUG(rs_logger, dsstring("Name = ") << animation->mName.C_Str());
+								_DSDEBUG(rs_logger, dsstring("TicksPerSeconds = ") << animation->mTicksPerSecond);
+								_DSDEBUG(rs_logger, dsstring("Duration (ticks) = ") << animation->mDuration);
+								_DSDEBUG(rs_logger, dsstring("Num Channels = ") << animation->mNumChannels);
+								_DSDEBUG(rs_logger, dsstring("Num Mesh Channels = ") << animation->mMeshChannels);
+								_DSDEBUG(rs_logger, dsstring("Num Morph Mesh Channels = ") << animation->mNumMorphMeshChannels);
+
+								/*
+								for (size_t j = 0; j < animation->mNumChannels; j++)
+								{
+									aiNodeAnim* nodeAnim = animation->mChannels[j];
+
+									_DSDEBUG(rs_logger, dsstring("	nodeAnim ") << j);
+
+									_DSDEBUG(rs_logger, dsstring("	nodeAnim Name = ") << nodeAnim->mNodeName.C_Str());
+
+									_DSDEBUG(rs_logger, dsstring("	NumPositionKey = ") << nodeAnim->mNumPositionKeys);
+
+									for (size_t k = 0; k < nodeAnim->mNumPositionKeys; k++)
+									{
+										aiVectorKey key = nodeAnim->mPositionKeys[k];
+
+										_DSDEBUG(rs_logger, dsstring("		pos key ") << k);
+										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
+									}
+
+									_DSDEBUG(rs_logger, dsstring("	NumRotationKey = ") << nodeAnim->mNumRotationKeys);
+
+									for (size_t k = 0; k < nodeAnim->mNumRotationKeys; k++)
+									{
+										aiQuatKey key = nodeAnim->mRotationKeys[k];
+
+										_DSDEBUG(rs_logger, dsstring("		rot key ") << k);
+										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
+
+									}
+
+									_DSDEBUG(rs_logger, dsstring("	NumScalingKey = ") << nodeAnim->mNumScalingKeys);
+
+									for (size_t k = 0; k < nodeAnim->mNumScalingKeys; k++)
+									{
+										aiVectorKey key = nodeAnim->mScalingKeys[k];
+
+										_DSDEBUG(rs_logger, dsstring("		scale key ") << k);
+										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
+									}
+								}
+								*/
+								
+							}
+
+
+							_DSDEBUG(rs_logger, dsstring("************************************Animations list END*************************************"));
 							
 							AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 							if (anims_aspect)
