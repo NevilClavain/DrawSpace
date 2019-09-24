@@ -22,28 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                        
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
-
 #include "vector.h"
 
 using namespace DrawSpace::Utils;
@@ -130,6 +108,18 @@ Vector ProdVec( Vector p_vA, Vector p_vB )
     res[3] = 1.0;
 
     return res;
+}
+
+Vector Vector::Lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend)
+{
+	Vector out;
+
+	out[0] = p_v1[0] + p_blend * (p_v2[0] - p_v1[0]);
+	out[1] = p_v1[1] + p_blend * (p_v2[1] - p_v1[1]);
+	out[2] = p_v1[2] + p_blend * (p_v2[2] - p_v1[2]);
+	out[3] = p_v1[3] + p_blend * (p_v2[3] - p_v1[3]);
+
+	return out;
 }
 
 Vector operator+ ( Vector p_vA, Vector p_vB )
