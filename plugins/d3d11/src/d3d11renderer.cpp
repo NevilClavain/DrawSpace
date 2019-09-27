@@ -134,7 +134,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     UINT createDeviceFlags = 0;
 #ifdef _DEBUG
-    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+    //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 
