@@ -65,6 +65,12 @@ TimeAspect::TimeScalar TimeAspect::TimeScalarFactory( dsreal p_initvalue )
     return TimeScalar( p_initvalue, m_tm, &m_time_factor, &m_freeze );
 }
 
+TimeAspect::TimeMark TimeAspect::TimeMarkFactory(void)
+{
+	get_tm();
+	return TimeMark(m_tm, &m_time_factor, &m_freeze);
+}
+
 dsreal TimeAspect::ConvertUnitPerSecFramePerSec( dsreal p_speed )
 {
     get_tm();

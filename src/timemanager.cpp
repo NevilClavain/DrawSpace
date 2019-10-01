@@ -87,6 +87,7 @@ TimeManager::~TimeManager( void )
 void TimeManager::Reset( void )
 {
     m_last_tick         = 0;
+	m_current_tick		= 0;
     m_fps               = 0;
     m_frame_count       = 0;
     m_ready             = false;
@@ -95,12 +96,11 @@ void TimeManager::Reset( void )
 
 void TimeManager::Update( void )
 {
-    long current_tick;
-    current_tick = GetTickCount();
+    long current_tick = GetTickCount();
 
     if( m_last_tick )
     {
-        if( current_tick - m_last_tick >= 1000 )
+        if(current_tick - m_last_tick >= 1000 )
         {
             m_last_deltatime = current_tick - m_last_tick;
             m_last_tick = current_tick;
@@ -146,10 +146,11 @@ void TimeManager::Update( void )
                 }                
             }
         }
+		m_current_tick = current_tick;
     }
 }
 
-long TimeManager::GetFPS( void )
+long TimeManager::GetFPS( void ) const
 {
     return m_fps;
 }
@@ -161,9 +162,7 @@ void TimeManager::AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
     
     // on veut, a partir de la vitesse en degres/s fixee, trouver
     // la vitesse en degres / frame -> on fait donc (deg/sec)/(frame/sec) 
-    dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps;
-
- 
+    dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps; 
     dsreal angle = *p_angle;
 
     angle += angleSpeedDegPerFrame;
@@ -178,10 +177,7 @@ void TimeManager::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
 
     // on veut, a partir de la vitesse en degres/s fixee, trouver
     // la vitesse en degres / frame -> on fait donc (deg/sec)/(frame/sec) 
-    dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps;
-
-   
-    
+    dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps;      
     dsreal angle = *p_angle;
 
     angle -= angleSpeedDegPerFrame;
@@ -225,14 +221,19 @@ dsreal TimeManager::ConvertUnitPerSecFramePerSec( dsreal p_speed )
     return ( p_speed / m_fps );
 }
 
-bool TimeManager::IsReady( void )
+bool TimeManager::IsReady( void ) const
 {
     return m_ready;
 }
 
-long TimeManager::GetLastDeltaTime( void )
+long TimeManager::GetLastDeltaTime( void ) const
 {
     return m_last_deltatime;
+}
+
+long TimeManager::GetCurrentTick(void) const
+{
+	return m_current_tick;
 }
 
 void TimeManager::RegisterTimer( Timer* p_timer )

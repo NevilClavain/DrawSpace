@@ -65,13 +65,14 @@ class TimeManager
 {
 protected:
 
-    long    m_last_tick;
+    long    m_last_tick;	
     long    m_frame_count;
     long    m_fps;
     bool    m_ready;
     long    m_last_deltatime;
+	long    m_current_tick;
 
-    typedef Core::BaseCallback<void, const dsstring&> TimerHandler;
+    using TimerHandler = Core::BaseCallback<void, const dsstring&>;
 
     std::set<Timer*>    m_timers;
 
@@ -83,8 +84,6 @@ public:
 
     void    Update( void );
 
-    long    GetFPS( void );
-
     //vitesse en degres par seconde
     void    AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed );
     void    AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed );
@@ -94,8 +93,10 @@ public:
 
     dsreal  ConvertUnitPerSecFramePerSec( dsreal p_speed );
 
-    bool    IsReady( void );
-    long    GetLastDeltaTime( void );
+    bool    IsReady( void ) const ;
+    long    GetLastDeltaTime( void ) const ;
+	long    GetCurrentTick(void) const;
+	long    GetFPS(void) const;
 
     void    RegisterTimer( Timer* p_timer );
     void    UnregisterTimer( Timer* p_timer );
