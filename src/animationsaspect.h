@@ -59,6 +59,13 @@ struct BoneOutput
 		final_transformation.Identity();
 	}
 };
+
+struct AnimationRoot
+{
+	dsreal ticksPerSeconds;
+	dsreal duration;
+};
+
 };
 }
 }

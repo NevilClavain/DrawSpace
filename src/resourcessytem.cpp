@@ -282,11 +282,24 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								load_scene_nodes_hierachy(root, 1, scene_nodes);
 								anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose() = scene_nodes;
 
-
 								anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose() = root->mName.C_Str();
+
+
+								/// Loading animations & keyframes infos
+								std::map<dsstring, AnimationsAspect::AnimationRoot>& animations = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+								for (size_t i = 0; i < scene->mNumAnimations; i++)
+								{
+									aiAnimation* ai_animation = scene->mAnimations[i];
+
+									AnimationsAspect::AnimationRoot animation;
+									animation.duration = ai_animation->mDuration;
+									animation.ticksPerSeconds = ai_animation->mTicksPerSecond;
+
+									animations[ai_animation->mName.C_Str()] = animation;
+								}
 							}
 							
-
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
                             if (meshe_node)
                             {
@@ -298,6 +311,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                             {
                                 _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
                             }
+
                             _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
                         }
                         else
@@ -478,8 +492,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
             DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
 			
 			if (anims_aspect)
-			{
-				
+			{				
 				v_out.tu[4] = -1.0;
 				v_out.tv[4] = -1.0;
 				v_out.tw[4] = -1.0;
@@ -496,9 +509,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 				v_out.tu[7] = 0.0;
 				v_out.tv[7] = 0.0;
 				v_out.tw[7] = 0.0;
-				v_out.ta[7] = 0.0;
-
-				
+				v_out.ta[7] = 0.0;				
 			}
 			
             if(meshe->GetNumUVChannels() > 0)
@@ -664,8 +675,6 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 				{
 					_DSEXCEPTION("Vertex weights sum must be 1.0");
 				}
-
-
 
 				p_destination->SetVertex(j, vertex);
 			}

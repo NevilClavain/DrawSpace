@@ -84,12 +84,15 @@ public:
 
 	int LUA_configureanimationbones(lua_State* p_L);
 	int LUA_updatebonelocaltransform(lua_State* p_L);
+	int LUA_readcurrentanimationinfos(lua_State* p_L);
+	int LUA_readanimationsnames(lua_State* p_L);
+	int LUA_setcurrentanimation(lua_State* p_L);
 	int LUA_releaseanimationbones(lua_State* p_L);
 
     int LUA_setupinfo(lua_State* p_L);
     int LUA_releaseinfo(lua_State* p_L);
 
-	//int LUA_configurebonetransformation(lua_State* p_L);
+	
 
 
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );

@@ -82,8 +82,32 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
 
 		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
-		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
-		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		//// if active animation, process it to compute bones matrix result
+
+		/// To be continued....
+
+		if ("" != anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose())
+		{
+			TimeAspect::TimeMark tmk = anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose();
+
+			long tms = tmk.GetTimeMs();
+			dsreal nb_seconds = (dsreal)tms / 1000.0;
+			dsreal nb_ticks = anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() * nb_seconds;
+
+
+			if (nb_ticks < anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose())
+			{
+				anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = nb_seconds;
+				anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = nb_ticks;
+			}
+			else
+			{
+				// animation end
+				anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = "";
+			}
+		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
@@ -102,6 +126,10 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
+		///// Push bones matrix to shader
+
+		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
+		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 
 		Utils::Matrix mid;
 		mid.Identity();
@@ -157,7 +185,6 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 					vec_count++;
 				}		
 			}
-
 			rnode->SetShaderArrayParameter(bonesBuffer0Id, bones_0);
 			rnode->SetShaderArrayParameter(bonesBuffer1Id, bones_1);
 		}		
