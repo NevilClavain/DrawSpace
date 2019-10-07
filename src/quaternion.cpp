@@ -31,6 +31,14 @@ Quaternion::Quaternion(void)
     Zero();
 }
 
+Quaternion::Quaternion(dsreal p_x, dsreal p_y, dsreal p_z, dsreal p_w)
+{
+	m_quat[0] = p_x;
+	m_quat[1] = p_y;
+	m_quat[2] = p_z;
+	m_quat[3] = p_w;
+}
+
 Quaternion::~Quaternion(void)
 {
 }

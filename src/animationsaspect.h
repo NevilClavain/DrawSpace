@@ -26,6 +26,7 @@
 
 #include "aspect.h"
 #include "matrix.h"
+#include "quaternion.h"
 
 namespace DrawSpace
 {
@@ -60,10 +61,32 @@ struct BoneOutput
 	}
 };
 
+struct VectorKey
+{
+
+	dsreal						time_tick;
+	Utils::Vector				value;
+};
+
+struct QuaternionKey
+{
+	dsreal						time_tick;
+	Utils::Quaternion			value;
+};
+
+struct NodeAnimation
+{
+	dsstring					node_name;
+	std::vector<VectorKey>		position_keys;
+	std::vector<VectorKey>		scaling_keys;
+	std::vector<QuaternionKey>	rotations_keys;
+};
+
 struct AnimationRoot
 {
-	dsreal ticksPerSeconds;
-	dsreal duration;
+	dsreal						ticksPerSeconds;
+	dsreal						duration;
+	std::vector<NodeAnimation>	channels;
 };
 
 };

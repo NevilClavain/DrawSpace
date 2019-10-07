@@ -105,6 +105,7 @@ protected:
         p_asset->SetData(p_blobs.at(p_final_asset_path).data, p_blobs.at(p_final_asset_path).size);
     }
 
+	void load_animations(const aiScene* p_scene, Aspect::AnimationsAspect* p_anims_aspect);
 
 public:
 
@@ -117,8 +118,7 @@ public:
     void ReleaseAssets( void );
     void ReleaseShaderAsset( const dsstring& p_asset);
 
-	static void ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat, Utils::Matrix& p_out_mat);
-
+	static Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat);
 
     //////// direct API, useful for non-entity client //////
 

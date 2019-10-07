@@ -272,7 +272,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								
 							}
 
-
 							_DSDEBUG(rs_logger, dsstring("************************************Animations list END*************************************"));
 							
 							AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
@@ -286,18 +285,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 
 								/// Loading animations & keyframes infos
-								std::map<dsstring, AnimationsAspect::AnimationRoot>& animations = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
 
-								for (size_t i = 0; i < scene->mNumAnimations; i++)
-								{
-									aiAnimation* ai_animation = scene->mAnimations[i];
-
-									AnimationsAspect::AnimationRoot animation;
-									animation.duration = ai_animation->mDuration;
-									animation.ticksPerSeconds = ai_animation->mTicksPerSecond;
-
-									animations[ai_animation->mName.C_Str()] = animation;
-								}
+								load_animations(scene, anims_aspect);
 							}
 							
                             aiNode* meshe_node = root->FindNode(meshe_id.c_str());
@@ -351,6 +340,59 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
     }
 }
 
+void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* p_anims_aspect)
+{
+	std::map<dsstring, AnimationsAspect::AnimationRoot>& animations = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+	for (size_t i = 0; i < p_scene->mNumAnimations; i++)
+	{
+		aiAnimation* ai_animation = p_scene->mAnimations[i];
+
+		AnimationsAspect::AnimationRoot animation;
+
+		animation.duration = ai_animation->mDuration;
+		animation.ticksPerSeconds = ai_animation->mTicksPerSecond;
+
+		animations[ai_animation->mName.C_Str()] = animation;
+
+		for (size_t j = 0; j < ai_animation->mNumChannels; j++)
+		{
+			aiNodeAnim* ai_node_anim = ai_animation->mChannels[j];
+			AnimationsAspect::NodeAnimation node_animation;
+
+			node_animation.node_name = ai_node_anim->mNodeName.C_Str();
+
+			for (size_t k = 0; k < ai_node_anim->mNumPositionKeys; k++)
+			{			
+				aiVectorKey ai_key = ai_node_anim->mPositionKeys[k];
+				AnimationsAspect::VectorKey pos_key { ai_key.mTime, { ai_key.mValue[0], ai_key.mValue[1], ai_key.mValue[2], 1.0 } };
+
+				node_animation.position_keys.push_back(pos_key);
+			}
+
+			for (size_t k = 0; k < ai_node_anim->mNumScalingKeys; k++)
+			{
+				aiVectorKey ai_key = ai_node_anim->mScalingKeys[k];
+				AnimationsAspect::VectorKey pos_key { ai_key.mTime, { ai_key.mValue[0], ai_key.mValue[1], ai_key.mValue[2], 1.0 } };
+
+				node_animation.scaling_keys.push_back(pos_key);
+			}
+
+			for (size_t k = 0; k < ai_node_anim->mNumRotationKeys; k++)
+			{
+				aiQuatKey ai_key = ai_node_anim->mRotationKeys[k];
+				AnimationsAspect::QuaternionKey pos_key { ai_key.mTime, { ai_key.mValue.x, ai_key.mValue.y, ai_key.mValue.z, ai_key.mValue.w } };
+
+				node_animation.rotations_keys.push_back(pos_key);
+			}
+
+			animation.channels.push_back(node_animation);
+		}
+
+		animations[ai_animation->mName.C_Str()] = animation;
+	}
+}
+
 void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
 {
     dsstring spacing(depth, ' ');
@@ -361,7 +403,6 @@ void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
     _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
     _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
     _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
-
 
     for( size_t i = 0; i < p_ai_node->mNumChildren; i++)
     {
@@ -379,7 +420,7 @@ void ResourcesSystem::load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, st
 		node.parent_id = p_ai_node->mParent->mName.C_Str();
 	}
 	
-	ConvertFromAssimpMatrix(p_ai_node->mTransformation, node.locale_transform);
+	node.locale_transform = ConvertFromAssimpMatrix(p_ai_node->mTransformation);
 
 	for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
 	{
@@ -395,28 +436,31 @@ void ResourcesSystem::load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, st
 	p_node_table[node.id] = node;
 }
 
-void ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat, Utils::Matrix& p_out_mat)
+Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat)
 {
-	p_out_mat(0, 0) = p_in_mat.a1;
-	p_out_mat(0, 1) = p_in_mat.b1;
-	p_out_mat(0, 2) = p_in_mat.c1;
-	p_out_mat(0, 3) = p_in_mat.d1;
+	Utils::Matrix mat;
 
-	p_out_mat(1, 0) = p_in_mat.a2;
-	p_out_mat(1, 1) = p_in_mat.b2;
-	p_out_mat(1, 2) = p_in_mat.c2;
-	p_out_mat(1, 3) = p_in_mat.d2;
+	mat(0, 0) = p_in_mat.a1;
+	mat(0, 1) = p_in_mat.b1;
+	mat(0, 2) = p_in_mat.c1;
+	mat(0, 3) = p_in_mat.d1;
 
-	p_out_mat(2, 0) = p_in_mat.a3;
-	p_out_mat(2, 1) = p_in_mat.b3;
-	p_out_mat(2, 2) = p_in_mat.c3;
-	p_out_mat(2, 3) = p_in_mat.d3;
+	mat(1, 0) = p_in_mat.a2;
+	mat(1, 1) = p_in_mat.b2;
+	mat(1, 2) = p_in_mat.c2;
+	mat(1, 3) = p_in_mat.d2;
 
-	p_out_mat(3, 0) = p_in_mat.a4;
-	p_out_mat(3, 1) = p_in_mat.b4;
-	p_out_mat(3, 2) = p_in_mat.c4;
-	p_out_mat(3, 3) = p_in_mat.d4;
+	mat(2, 0) = p_in_mat.a3;
+	mat(2, 1) = p_in_mat.b3;
+	mat(2, 2) = p_in_mat.c3;
+	mat(2, 3) = p_in_mat.d3;
 
+	mat(3, 0) = p_in_mat.a4;
+	mat(3, 1) = p_in_mat.b4;
+	mat(3, 2) = p_in_mat.c4;
+	mat(3, 3) = p_in_mat.d4;
+
+	return mat;
 }
 
 void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)
@@ -595,7 +639,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 				aiBone* bone = meshe->mBones[j];
 
 				AnimationsAspect::BoneOutput bone_output;
-				ConvertFromAssimpMatrix(bone->mOffsetMatrix, bone_output.offset_matrix);
+				bone_output.offset_matrix = ConvertFromAssimpMatrix(bone->mOffsetMatrix);
 
 				bones_outputs.push_back(bone_output);
 

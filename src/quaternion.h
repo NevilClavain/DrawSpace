@@ -38,6 +38,8 @@ protected:
 
 public:
     Quaternion(void);
+	Quaternion(dsreal p_x, dsreal p_y, dsreal p_z, dsreal p_w);
+
     virtual ~Quaternion(void);
 
 	inline dsreal operator[]( int p_index ) const
