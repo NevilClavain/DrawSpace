@@ -342,7 +342,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* p_anims_aspect)
 {
-	std::map<dsstring, AnimationsAspect::AnimationRoot>& animations = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+	auto& animations = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
 
 	for (size_t i = 0; i < p_scene->mNumAnimations; i++)
 	{
@@ -386,7 +386,14 @@ void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* 
 				node_animation.rotations_keys.push_back(pos_key);
 			}
 
-			animation.channels.push_back(node_animation);
+			if (animation.channels.count(node_animation.node_name) > 0)
+			{
+				_DSEXCEPTION("animation data load : a node is referenced more than once in animation channels");
+			}
+			else
+			{
+				animation.channels[node_animation.node_name] = node_animation;
+			}
 		}
 
 		animations[ai_animation->mName.C_Str()] = animation;

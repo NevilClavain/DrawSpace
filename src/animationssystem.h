@@ -56,6 +56,8 @@ protected:
 		const std::map<dsstring, int>& p_bones_mapping, DrawSpace::Aspect::AnimationsAspect::Node p_node,
 		const DrawSpace::Utils::Matrix& p_parent_transform);
 
+	void compute_node_animationresult_matrix(const DrawSpace::Aspect::AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const;
+
 public:
     AnimationsSystem();
     ~AnimationsSystem();

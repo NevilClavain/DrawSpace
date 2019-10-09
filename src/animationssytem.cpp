@@ -74,6 +74,108 @@ void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsA
 	}
 }
 
+void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const
+{
+	//////////////////// translations interpolation
+
+	Utils::Matrix translation;
+	translation.Identity();
+
+	if (p_node.position_keys.size() > 0)
+	{
+		Utils::Vector v_interpolated;
+		if (p_node.position_keys.size() < 2)
+		{
+			v_interpolated = p_node.position_keys[0].value;
+		}
+		else
+		{
+			for (size_t i = 0 ; i < p_node.position_keys.size() - 1; i++)
+			{
+				if (p_node.position_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.position_keys[i + 1].time_tick)
+				{
+					AnimationsAspect::VectorKey kA = p_node.position_keys[i];
+					AnimationsAspect::VectorKey kB = p_node.position_keys[i + 1];
+
+					dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
+					v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
+					break;
+				}
+			}
+		}
+		translation.Translation(v_interpolated);
+	}
+
+	//////////////////// rotations interpolation
+
+	Utils::Matrix rotation;
+	rotation.Identity();
+
+	if (p_node.rotations_keys.size() > 0)
+	{
+		Utils::Matrix rot_interpolated;
+		if (p_node.rotations_keys.size() < 2)
+		{
+			p_node.rotations_keys[0].value.RotationMatFrom(rot_interpolated);
+		}
+		else
+		{
+			for (size_t i = 0; i < p_node.rotations_keys.size() - 1; i++)
+			{
+				if (p_node.rotations_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.rotations_keys[i + 1].time_tick)
+				{
+					AnimationsAspect::QuaternionKey kA = p_node.rotations_keys[i];
+					AnimationsAspect::QuaternionKey kB = p_node.rotations_keys[i + 1];
+
+					dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
+
+					Quaternion q_interpolated = Utils::Quaternion::Lerp(kA.value, kB.value, blend);
+					q_interpolated.RotationMatFrom(rot_interpolated);
+					break;
+				}
+			}
+		}
+
+		rotation = rot_interpolated;
+	}
+
+	//////////////////// scaling interpolation
+
+	Utils::Matrix scaling;
+	scaling.Identity();
+
+	if (p_node.scaling_keys.size() > 0)
+	{
+		Utils::Vector v_interpolated;
+		if (p_node.scaling_keys.size() < 2)
+		{
+			v_interpolated = p_node.scaling_keys[0].value;
+		}
+		else
+		{
+			for (size_t i = 0; i < p_node.scaling_keys.size() - 1; i++)
+			{
+				if (p_node.scaling_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.scaling_keys[i + 1].time_tick)
+				{
+					AnimationsAspect::VectorKey kA = p_node.scaling_keys[i];
+					AnimationsAspect::VectorKey kB = p_node.scaling_keys[i + 1];
+
+					dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
+					v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
+					break;
+				}
+			}
+		}
+		scaling.Scale(v_interpolated);
+	}
+
+	///////////////////////
+
+	// final = translation * rotation * scaling
+
+	p_out_matrix = scaling * rotation * translation;
+}
+
 void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity)
 {
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
@@ -86,21 +188,44 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		//// if active animation, process it to compute bones matrix result
 
-		/// To be continued....
+		dsstring current_anim_name = anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
 
-		if ("" != anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose())
+		if ("" != current_anim_name)
 		{
+			auto& animations_data = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+			if (0 == animations_data.count(current_anim_name))
+			{
+				_DSEXCEPTION("Unknown animation name");
+			}
+
+			AnimationsAspect::AnimationRoot current_animation_data = animations_data.at(current_anim_name);
+
 			TimeAspect::TimeMark tmk = anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose();
 
 			long tms = tmk.GetTimeMs();
 			dsreal nb_seconds = (dsreal)tms / 1000.0;
 			dsreal nb_ticks = anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() * nb_seconds;
 
-
 			if (nb_ticks < anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose())
 			{
 				anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = nb_seconds;
 				anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = nb_ticks;
+				
+				for (auto& e : current_animation_data.channels)
+				{
+					Utils::Matrix bone_locale_transform;
+					compute_node_animationresult_matrix(e.second, nb_ticks, bone_locale_transform);
+
+					if (bones.count(e.second.node_name))
+					{
+						bones.at(e.second.node_name).locale_transform = bone_locale_transform;
+					}
+					else
+					{
+						_DSEXCEPTION("invalid node name");
+					}
+				}
 			}
 			else
 			{
