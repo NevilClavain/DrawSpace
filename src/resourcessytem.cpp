@@ -722,7 +722,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
 				float sum = vertex.tu[5] + vertex.tv[5] + vertex.tw[5] + vertex.ta[5] +
 							vertex.tu[7] + vertex.tv[7] + vertex.tw[7] + vertex.ta[7];
 
-				if (sum < 0.999)
+				if (sum < 0.95)
 				{
 					_DSEXCEPTION("Vertex weights sum must be 1.0");
 				}
