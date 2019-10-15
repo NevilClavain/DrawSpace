@@ -313,7 +313,8 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
 int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_State* p_L )
 {
     DrawSpace::Systems::Hub* hub = MainService::GetInstance()->GetHub();
-    Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(hub->GetSystem("ResourcesSystem"));
+    //Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(hub->GetSystem("ResourcesSystem"));
+	Systems::ResourcesSystem& resources_system = hub->GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
 
 	int argc = lua_gettop( p_L );
 	if( argc < 2 )
@@ -357,7 +358,7 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                         bool is_compiled = shader_infos.second;
                         Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
 
-                        resources_system->LoadShader( shader );
+                        resources_system.LoadShader( shader );
 
                         m_passes[pass_id].m_fx.AddShader(shader);
                         m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
@@ -387,7 +388,7 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                         {
                             //bool status;
                             Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-                            resources_system->LoadTexture(texture);
+                            resources_system.LoadTexture(texture);
                             m_passes[pass_id].m_renderpassnode.GetViewportQuad()->SetTexture(texture, i);
                             m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();
                         }

@@ -128,7 +128,7 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////
 
-    create_console_quad(static_cast<DrawSpace::Systems::ResourcesSystem*>(m_systemsHub.GetSystem("ResourcesSystem")));
+	create_console_quad(&m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem"));
 
     /////////////////////////////////////////////////////////////////////////////////
 

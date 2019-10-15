@@ -121,12 +121,9 @@ void MainLoopService::Init( DrawSpace::Logger::Configuration* p_logconf,
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
     m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
 
-    Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(m_systemsHub.GetSystem("ResourcesSystem"));
-    resources_system->LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
-    resources_system->LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
-
-
-
+	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
 
     m_texturepass = m_finalpass.CreateChild( "texture_pass", 0 );
 

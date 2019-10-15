@@ -97,15 +97,3 @@ void Hub::ReleaseAssets(void)
     m_resourcesSystem.ReleaseAssets();
 }
 
-
-Interface::System* Hub::GetSystem(const dsstring& p_id)
-{
-    for( auto& e : m_systems)
-    {
-        if( e->GetSystemId() == p_id)
-        {
-            return e;
-        }
-    }
-    return NULL;
-}

@@ -71,7 +71,25 @@ public:
 
     dsstring GetSystemId(void) const { return "HubSystem"; };
     
-    Interface::System* GetSystem( const dsstring& p_id );
+	template<typename T>
+	T& GetSystem(const dsstring& p_id) const
+	{
+		for (auto& e : m_systems)
+		{
+			if (e->GetSystemId() == p_id)
+			{
+				try
+				{
+					return dynamic_cast<T&>(*e);
+
+				}
+				catch (std::bad_cast& p_bc)
+				{
+					_DSEXCEPTION("bad cast : " << dsstring( p_bc.what() ));
+				}
+			}
+		}		
+	}
 
     void EnableGUI( bool p_state );
 

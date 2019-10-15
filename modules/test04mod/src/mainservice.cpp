@@ -125,9 +125,15 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask.vso", true ) ) );
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask.pso", true ) ) );
 
+	/*
     Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(m_systemsHub.GetSystem("ResourcesSystem"));
     resources_system->LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
     resources_system->LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
+	*/
+
+	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
 
 
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
@@ -160,8 +166,8 @@ bool MainService::Init( void )
     m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.vso", true ) ) );
     m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.pso", true ) ) );
 
-    resources_system->LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(0));
-    resources_system->LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(1));
+    resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(0));
+    resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(1));
 
 
 
