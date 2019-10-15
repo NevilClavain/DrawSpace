@@ -46,7 +46,7 @@ public:
         SYSTEMS_UPDATE_END
     };
 
-    using SystemsUpdateEventHandler = DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent> ;
+    using SystemsUpdateEventHandler = DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>;
     
 private:
     DrawSpace::Systems::RenderingSystem             m_renderingSystem;

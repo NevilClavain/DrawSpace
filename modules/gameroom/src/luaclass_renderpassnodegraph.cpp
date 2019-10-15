@@ -313,7 +313,6 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
 int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_State* p_L )
 {
     DrawSpace::Systems::Hub* hub = MainService::GetInstance()->GetHub();
-    //Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(hub->GetSystem("ResourcesSystem"));
 	Systems::ResourcesSystem& resources_system = hub->GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
 
 	int argc = lua_gettop( p_L );
