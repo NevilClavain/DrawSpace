@@ -37,6 +37,13 @@ class AnimationsSystem : public Interface::System
 {
 public:
 
+	enum AnimationEvent
+	{
+		ANIMATION_END
+	};
+
+	using AnimationEventHandler = DrawSpace::Core::BaseCallback2<void, AnimationEvent, const dsstring&>;
+
 	static const int		bonesBuffer0StartReg	= 31;
 	static const int		bonesBuffer0Length		= 69;
 
@@ -47,6 +54,8 @@ public:
 	static const dsstring	bonesBuffer1Id;
 
 protected:
+
+	std::set<AnimationEventHandler*>            m_evt_handlers;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
@@ -64,6 +73,11 @@ public:
 
     dsstring GetSystemId(void) const { return "AnimationsSystem"; };
     void VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity);
+
+	void RegisterAnimationEvtHandler(AnimationEventHandler* p_handler);
+	void UnregisterAnimationEvtHandler(AnimationEventHandler* p_handler);
+
+
 };
 }
 }

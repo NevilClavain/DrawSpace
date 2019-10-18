@@ -31,6 +31,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Systems;
 
 _DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
 
@@ -48,7 +49,8 @@ m_console_ready( false ),
 m_console_active( false ),
 m_console_current_line( 0 ),
 m_request_lua_reset( false ),
-m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked )
+m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
+m_animation_events_cb( this, &MainService::on_animation_event )
 {
     m_console_texts.push_back( console_welcome );
     m_console_texts.push_back( ">" );
@@ -134,18 +136,13 @@ bool MainService::Init( void )
 
     LuaContext::GetInstance()->Startup();
     buil_lua_prerequisites();
-
-    
-
+   
     /////////////////////////////////////////////////////////////////////////////////
 
+	DrawSpace::Systems::AnimationsSystem& animationsystem = m_systemsHub.GetSystem<DrawSpace::Systems::AnimationsSystem>("AnimationsSystem");
+
+	animationsystem.RegisterAnimationEvtHandler(&m_animation_events_cb);
     
-
-
-
-
-
-    //set_mouse_circular_mode( true );
 
     _DSDEBUG( logger, dsstring("MainService : startup...") );
 
@@ -381,6 +378,11 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
     {
         LuaContext::GetInstance()->CallLuaFunc( it->second, p_layout, p_widget_id );
     }
+}
+
+void MainService::on_animation_event(AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name)
+{
+	_asm nop
 }
 
 void MainService::process_console_command( const dsstring& p_cmd )

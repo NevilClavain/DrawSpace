@@ -231,6 +231,12 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			{
 				// animation end
 				anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = "";
+
+				// animation end event
+				for (auto& e : m_evt_handlers)
+				{
+					(*e)(ANIMATION_END, current_anim_name);
+				}
 			}
 		}
 
@@ -279,7 +285,6 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			// decomposer les matrices en triplet de 3 vectors et stocker
 
 			std::vector<Utils::Vector> bones_0;
-
 			std::vector<Utils::Vector> bones_1;
 
 			int vec_count = 0;
@@ -314,4 +319,14 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			rnode->SetShaderArrayParameter(bonesBuffer1Id, bones_1);
 		}		
     }
+}
+
+void AnimationsSystem::RegisterAnimationEvtHandler(AnimationEventHandler* p_handler)
+{
+	m_evt_handlers.insert(p_handler);
+}
+
+void AnimationsSystem::UnregisterAnimationEvtHandler(AnimationEventHandler* p_handler)
+{
+	m_evt_handlers.erase(p_handler);
 }
