@@ -69,6 +69,10 @@ public:
     int LUA_addmouserightbuttonupcb( lua_State* p_L );
     int LUA_removemouserightbuttonupcb( lua_State* p_L );
 
+	int LUA_addanimationeventcb(lua_State* p_L);
+	int LUA_removeanimationeventcb(lua_State* p_L);
+
+
     int LUA_showmousecursor( lua_State* p_L );
     int LUA_setmousecursorcircularmode( lua_State* p_L );
 

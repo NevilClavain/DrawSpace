@@ -382,7 +382,10 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
 
 void MainService::on_animation_event(AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name)
 {
-	_asm nop
+	for (auto it = m_animationevent_lua_callbacks.begin(); it != m_animationevent_lua_callbacks.end(); ++it)
+	{
+		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_animation_name);
+	}
 }
 
 void MainService::process_console_command( const dsstring& p_cmd )
@@ -707,6 +710,23 @@ int MainService::UnregisterGuiPushButtonClickedCallback( const dsstring& p_id )
     }
     return index;
 }
+
+void MainService::RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex)
+{
+	m_animationevent_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterAnimationEventCallback(const dsstring& p_id)
+{
+	int index = -1;
+	if (m_animationevent_lua_callbacks.count(p_id))
+	{
+		index = m_animationevent_lua_callbacks[p_id];
+		m_animationevent_lua_callbacks.erase(p_id);
+	}
+	return index;
+}
+
 
 DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
 {

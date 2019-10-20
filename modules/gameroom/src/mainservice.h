@@ -82,6 +82,7 @@ protected:
     std::map<dsstring, int>                                                         m_mouserightbuttondown_lua_callbacks;
     std::map<dsstring, int>                                                         m_mouserightbuttonup_lua_callbacks;
     std::map<dsstring, int>                                                         m_guipushbuttonclicked_lua_callbacks;
+	std::map<dsstring, int>                                                         m_animationevent_lua_callbacks;
 
     // list des modules charges
     std::set<DrawSpace::Interface::Module::Root*>                                   m_loaded_modules;
@@ -173,6 +174,10 @@ public:
 
     void RegisterGuiPushButtonClickedCallback( const dsstring& p_id, int p_regindex );
     int UnregisterGuiPushButtonClickedCallback( const dsstring& p_id );
+
+	void RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex);
+	int UnregisterAnimationEventCallback(const dsstring& p_id);
+
 
     DrawSpace::Interface::MesheImport* GetMesheImport( void );
     DrawSpace::Systems::Hub* GetHub( void );
