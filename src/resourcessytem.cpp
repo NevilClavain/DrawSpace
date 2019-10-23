@@ -228,15 +228,31 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								_DSDEBUG(rs_logger, dsstring("Num Mesh Channels = ") << animation->mMeshChannels);
 								_DSDEBUG(rs_logger, dsstring("Num Morph Mesh Channels = ") << animation->mNumMorphMeshChannels);
 
-								/*
+								
 								for (size_t j = 0; j < animation->mNumChannels; j++)
 								{
+									/*
 									aiNodeAnim* nodeAnim = animation->mChannels[j];
 
 									_DSDEBUG(rs_logger, dsstring("	nodeAnim ") << j);
-
 									_DSDEBUG(rs_logger, dsstring("	nodeAnim Name = ") << nodeAnim->mNodeName.C_Str());
 
+									static const std::map <aiAnimBehaviour, dsstring> animBehaviourStrings = {
+
+										{ aiAnimBehaviour_DEFAULT, "aiAnimBehaviour_DEFAULT" },
+										{ aiAnimBehaviour_CONSTANT, "aiAnimBehaviour_CONSTANT" },
+										{ aiAnimBehaviour_LINEAR, "aiAnimBehaviour_LINEAR" },
+										{ aiAnimBehaviour_REPEAT, "aiAnimBehaviour_REPEAT" }
+									};
+
+									dsstring preState = animBehaviourStrings.at(nodeAnim->mPreState);
+									dsstring postState = animBehaviourStrings.at(nodeAnim->mPostState);
+
+									_DSDEBUG(rs_logger, dsstring("		preState =  ") << preState);
+									_DSDEBUG(rs_logger, dsstring("		postState =  ") << postState);
+									*/
+
+									/*
 									_DSDEBUG(rs_logger, dsstring("	NumPositionKey = ") << nodeAnim->mNumPositionKeys);
 
 									for (size_t k = 0; k < nodeAnim->mNumPositionKeys; k++)
@@ -267,9 +283,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 										_DSDEBUG(rs_logger, dsstring("		scale key ") << k);
 										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
 									}
-								}
-								*/
-								
+									*/
+								}								
 							}
 
 							_DSDEBUG(rs_logger, dsstring("************************************Animations list END*************************************"));

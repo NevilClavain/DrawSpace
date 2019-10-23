@@ -183,7 +183,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     {		
 		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
 
-		auto bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+		auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		//// if active animation, process it to compute bones matrix result
