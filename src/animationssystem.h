@@ -36,7 +36,6 @@ namespace Systems
 class AnimationsSystem : public Interface::System
 {
 public:
-
 	enum AnimationEvent
 	{
 		ANIMATION_END
@@ -55,7 +54,8 @@ public:
 
 protected:
 
-	std::set<AnimationEventHandler*>            m_evt_handlers;
+	std::set<AnimationEventHandler*>														m_evt_handlers;
+
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
@@ -64,6 +64,14 @@ protected:
 		std::vector<DrawSpace::Aspect::AnimationsAspect::BoneOutput>& p_bones_output,
 		const std::map<dsstring, int>& p_bones_mapping, DrawSpace::Aspect::AnimationsAspect::Node p_node,
 		const DrawSpace::Utils::Matrix& p_parent_transform);
+
+
+	void run_animations_pool(DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
+								DrawSpace::Aspect::TimeAspect* p_time_aspect, std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes);
+
+	// heart of animation execution
+	bool animation_step(const dsstring& p_animation_id, const DrawSpace::Aspect::AnimationsAspect::AnimationRoot& p_animation, 
+						DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes);
 
 	void compute_node_animationresult_matrix(const DrawSpace::Aspect::AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const;
 

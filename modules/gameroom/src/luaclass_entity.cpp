@@ -66,7 +66,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "update_bonelocaltransform", &LuaClass_Entity::LUA_updatebonelocaltransform },
 	{ "read_currentanimationinfos", &LuaClass_Entity::LUA_readcurrentanimationinfos },
 	{ "read_animationsnames", &LuaClass_Entity::LUA_readanimationsnames },
-	{ "set_currentanimation", &LuaClass_Entity::LUA_setcurrentanimation },
+	{ "push_animation", &LuaClass_Entity::LUA_pushanimation },
 	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },
     { "setup_info", &LuaClass_Entity::LUA_setupinfo },
     { "release_info", &LuaClass_Entity::LUA_releaseinfo },
@@ -401,14 +401,15 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 
 		animation_aspect->AddComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations");
 
+		animation_aspect->AddComponent<AnimationsAspect::AnimationsPool>("animations_pool");
+
 		animation_aspect->AddComponent<dsstring>("current_animation_name");
 		animation_aspect->AddComponent<long>("current_animation_ticks_per_seconds");
 		animation_aspect->AddComponent<dsreal>("current_animation_ticks_progress");
 		animation_aspect->AddComponent<dsreal>("current_animation_seconds_progress");
 
 		animation_aspect->AddComponent<dsreal>("current_animation_ticks_duration");
-		animation_aspect->AddComponent<dsreal>("current_animation_seconds_duration");
-		
+		animation_aspect->AddComponent<dsreal>("current_animation_seconds_duration");		
 		animation_aspect->AddComponent<TimeAspect::TimeMark>("current_animation_timemark");
 
 
@@ -477,7 +478,7 @@ int LuaClass_Entity::LuaClass_Entity::LUA_readanimationsnames(lua_State* p_L)
 	return animations_table.size();
 }
 
-int LuaClass_Entity::LUA_setcurrentanimation(lua_State* p_L)
+int LuaClass_Entity::LUA_pushanimation(lua_State* p_L)
 {
 	int argc = lua_gettop(p_L);
 	if (argc < 1)
@@ -500,14 +501,30 @@ int LuaClass_Entity::LUA_setcurrentanimation(lua_State* p_L)
 	}
 	TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
 
-	auto animations_table = animation_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+	auto& animations_table = animation_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
 
 	if (animations_table.find(animation_name) == animations_table.end())
 	{
 		LUA_ERROR("Entity::set_currentanimation : unknown animation name!");
 	}
 	else
-	{
+	{		
+		if (animations_table.count(animation_name))
+		{
+			// add selected animation in entity animations pool; this shall trig animation execution in animation system
+
+			std::pair<dsstring, DrawSpace::Aspect::AnimationsAspect::AnimationRoot> animation_entry(animation_name, animations_table.at(animation_name));
+			animation_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose().push_back(animation_entry);
+		}
+		else
+		{
+			LUA_ERROR("Entity::set_currentanimation : unknow animation id");
+		}
+
+		
+
+
+		/*
 		if ("" == animation_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose())
 		{
 			animation_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = animation_name;
@@ -527,6 +544,7 @@ int LuaClass_Entity::LUA_setcurrentanimation(lua_State* p_L)
 		{
 			LUA_ERROR("Entity::set_currentanimation : another animation currently running!");
 		}
+		*/
 	}
 	return 0;
 }
@@ -549,6 +567,8 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 		animation_aspect->RemoveComponent<std::map<dsstring, Matrix>>("forced_bones_transformations");
 
 		animation_aspect->RemoveComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations");
+
+		animation_aspect->RemoveComponent<AnimationsAspect::AnimationsPool>("animations_pool");
 
 		animation_aspect->RemoveComponent<dsstring>("current_animation_name");
 		animation_aspect->RemoveComponent<long>("current_animation_ticks_per_seconds");

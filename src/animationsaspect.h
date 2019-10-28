@@ -63,7 +63,6 @@ struct BoneOutput
 
 struct VectorKey
 {
-
 	dsreal								time_tick;
 	Utils::Vector						value;
 };
@@ -88,6 +87,8 @@ struct AnimationRoot
 	dsreal								duration;
 	std::map<dsstring, NodeAnimation>	channels;
 };
+
+using AnimationsPool = std::list<std::pair<dsstring, DrawSpace::Aspect::AnimationsAspect::AnimationRoot>>;
 
 };
 }

@@ -176,6 +176,94 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 	p_out_matrix = scaling * rotation * translation;
 }
 
+bool AnimationsSystem::animation_step(const dsstring& p_animation_id, const AnimationsAspect::AnimationRoot& p_animation, 
+										AnimationsAspect* p_anims_aspect, 
+										std::map<dsstring, AnimationsAspect::Node>& p_nodes)
+{
+	bool status = false;
+	TimeAspect::TimeMark tmk = p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose();
+
+	long tms = tmk.GetTimeMs();
+	dsreal nb_seconds = (dsreal)tms / 1000.0;
+	dsreal nb_ticks = p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() * nb_seconds;
+
+	if (nb_ticks < p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose())
+	{
+		p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = nb_seconds;
+		p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = nb_ticks;
+
+		for (auto& e : p_animation.channels)
+		{
+			Utils::Matrix bone_locale_transform;
+			compute_node_animationresult_matrix(e.second, nb_ticks, bone_locale_transform);
+
+			if (p_nodes.count(e.second.node_name))
+			{
+				p_nodes.at(e.second.node_name).locale_transform = bone_locale_transform;
+			}
+			else
+			{
+				_DSEXCEPTION("invalid node name");
+			}
+		}
+	}
+	else
+	{
+		// animation end
+		status = true;
+
+		//p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = "";
+
+		// animation end event
+		for (auto& e : m_evt_handlers)
+		{
+			(*e)(ANIMATION_END, p_animation_id);
+		}
+	}
+
+	return status;
+}
+
+void AnimationsSystem::run_animations_pool(DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
+											DrawSpace::Aspect::TimeAspect* p_time_aspect,
+											std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes)
+{
+	if(p_animations_pool.size() > 0 )
+	{		
+		const auto& animation = p_animations_pool.front();
+		dsstring anim_id = animation.first;
+
+		auto& current_animation_name = p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
+		if ("" == current_animation_name)
+		{
+			// setup current animation infos components...
+
+			auto& animations_table = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+			p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = anim_id;
+			p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() = animations_table.at(anim_id).ticksPerSeconds;
+
+			p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = 0;
+			p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = 0;
+
+			p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose() = animations_table.at(anim_id).duration;
+			p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_duration")->getPurpose() = animations_table.at(anim_id).duration / animations_table.at(anim_id).ticksPerSeconds;
+
+			p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose() = p_time_aspect->TimeMarkFactory();
+			p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose().Reset();
+		}
+		
+		if (true == animation_step(animation.first, animation.second, p_anims_aspect, p_nodes))
+		{
+			// this animation ended
+			p_animations_pool.pop_front();
+
+			// reset current_animation_name component to force setup next animation infos components next time of AnimationsSystem::run_animations_pool() call
+			current_animation_name = "";
+		}
+	}
+}
+
 void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entity)
 {
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
@@ -184,7 +272,20 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
 
 		auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+		auto& animations_pool = anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
 
+		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+		if (NULL == transform_aspect)
+		{
+			_DSEXCEPTION("Entity must have transformation aspect");
+		}
+		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
+
+
+
+		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
+
+		/*
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		//// if active animation, process it to compute bones matrix result
 
@@ -201,44 +302,9 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 
 			AnimationsAspect::AnimationRoot current_animation_data = animations_data.at(current_anim_name);
 
-			TimeAspect::TimeMark tmk = anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose();
-
-			long tms = tmk.GetTimeMs();
-			dsreal nb_seconds = (dsreal)tms / 1000.0;
-			dsreal nb_ticks = anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() * nb_seconds;
-
-			if (nb_ticks < anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose())
-			{
-				anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = nb_seconds;
-				anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = nb_ticks;
-				
-				for (auto& e : current_animation_data.channels)
-				{
-					Utils::Matrix bone_locale_transform;
-					compute_node_animationresult_matrix(e.second, nb_ticks, bone_locale_transform);
-
-					if (bones.count(e.second.node_name))
-					{
-						bones.at(e.second.node_name).locale_transform = bone_locale_transform;
-					}
-					else
-					{
-						_DSEXCEPTION("invalid node name");
-					}
-				}
-			}
-			else
-			{
-				// animation end
-				anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = "";
-
-				// animation end event
-				for (auto& e : m_evt_handlers)
-				{
-					(*e)(ANIMATION_END, current_anim_name);
-				}
-			}
+			animation_step(current_anim_name, current_animation_data, anims_aspect, bones);
 		}
+		*/
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
