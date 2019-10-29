@@ -520,31 +520,6 @@ int LuaClass_Entity::LUA_pushanimation(lua_State* p_L)
 		{
 			LUA_ERROR("Entity::set_currentanimation : unknow animation id");
 		}
-
-		
-
-
-		/*
-		if ("" == animation_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose())
-		{
-			animation_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = animation_name;
-			animation_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() = animations_table.at(animation_name).ticksPerSeconds;
-
-			animation_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = 0;
-			animation_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = 0;
-
-			animation_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose() = animations_table.at(animation_name).duration;
-			animation_aspect->GetComponent<dsreal>("current_animation_seconds_duration")->getPurpose() = animations_table.at(animation_name).duration / animations_table.at(animation_name).ticksPerSeconds;
-
-			animation_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose() = time_aspect->TimeMarkFactory();
-
-			animation_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose().Reset();
-		}
-		else
-		{
-			LUA_ERROR("Entity::set_currentanimation : another animation currently running!");
-		}
-		*/
 	}
 	return 0;
 }
