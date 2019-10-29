@@ -212,8 +212,6 @@ bool AnimationsSystem::animation_step(const dsstring& p_animation_id, const Anim
 		// animation end
 		status = true;
 
-		//p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = "";
-
 		// animation end event
 		for (auto& e : m_evt_handlers)
 		{
@@ -281,30 +279,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		}
 		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
 
-
-
 		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
-
-		/*
-		////////////////////////////////////////////////////////////////////////////////////////////////
-		//// if active animation, process it to compute bones matrix result
-
-		dsstring current_anim_name = anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
-
-		if ("" != current_anim_name)
-		{
-			auto& animations_data = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
-
-			if (0 == animations_data.count(current_anim_name))
-			{
-				_DSEXCEPTION("Unknown animation name");
-			}
-
-			AnimationsAspect::AnimationRoot current_animation_data = animations_data.at(current_anim_name);
-
-			animation_step(current_anim_name, current_animation_data, anims_aspect, bones);
-		}
-		*/
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
