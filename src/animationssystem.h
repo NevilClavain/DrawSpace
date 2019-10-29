@@ -38,6 +38,7 @@ class AnimationsSystem : public Interface::System
 public:
 	enum AnimationEvent
 	{
+		ANIMATION_BEGIN,
 		ANIMATION_END
 	};
 

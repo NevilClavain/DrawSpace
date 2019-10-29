@@ -226,7 +226,7 @@ void AnimationsSystem::run_animations_pool(DrawSpace::Aspect::AnimationsAspect::
 											DrawSpace::Aspect::TimeAspect* p_time_aspect,
 											std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes)
 {
-	if(p_animations_pool.size() > 0 )
+	if(p_animations_pool.size() > 0)
 	{		
 		const auto& animation = p_animations_pool.front();
 		dsstring anim_id = animation.first;
@@ -278,6 +278,18 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			_DSEXCEPTION("Entity must have transformation aspect");
 		}
 		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
+
+
+		auto& current_animation_name = anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
+		if ("" == current_animation_name && animations_pool.size() > 0)
+		{
+			const auto& animation = animations_pool.front();
+			dsstring anim_id = animation.first;
+			for (auto& e : m_evt_handlers)
+			{
+				(*e)(ANIMATION_BEGIN, anim_id);
+			}
+		}
 
 		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
 
