@@ -44,14 +44,17 @@ public:
 
 	using AnimationEventHandler = DrawSpace::Core::BaseCallback2<void, AnimationEvent, const dsstring&>;
 
-	static const int		bonesBuffer0StartReg	= 31;
-	static const int		bonesBuffer0Length		= 69;
+	static const int		bonesBuffer0StartReg					= 31;
+	static const int		bonesBuffer0Length						= 69;
 
-	static const int		bonesBuffer1StartReg	= 124;
-	static const int		bonesBuffer1Length		= 132;
+	static const int		bonesBuffer1StartReg					= 124;
+	static const int		bonesBuffer1Length						= 132;
 
 	static const dsstring	bonesBuffer0Id;
 	static const dsstring	bonesBuffer1Id;
+
+	static const dsreal     transitionAnimationDurationSeconds;
+	static const dsstring	transitionAnimationDurationId;
 
 protected:
 

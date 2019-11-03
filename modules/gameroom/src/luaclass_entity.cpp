@@ -412,6 +412,8 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 		animation_aspect->AddComponent<dsreal>("current_animation_seconds_duration");		
 		animation_aspect->AddComponent<TimeAspect::TimeMark>("current_animation_timemark");
 
+		animation_aspect->AddComponent<dsstring>("last_animation_name");
+
 
 	} LUA_CATCH;
 
@@ -555,6 +557,8 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 		animation_aspect->RemoveComponent<dsreal>("current_animation_seconds_duration");
 
 		animation_aspect->RemoveComponent<TimeAspect::TimeMark>("current_animation_timemark");
+
+		animation_aspect->RemoveComponent<dsstring>("last_animation_name");
 
 	} LUA_CATCH;
 

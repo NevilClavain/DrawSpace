@@ -37,6 +37,8 @@ using namespace DrawSpace::AspectImplementations;
 
 const dsstring AnimationsSystem::bonesBuffer0Id = "bones_0";
 const dsstring AnimationsSystem::bonesBuffer1Id = "bones_1";
+const dsstring AnimationsSystem::transitionAnimationDurationId = "transition_animation";
+const dsreal   AnimationsSystem::transitionAnimationDurationSeconds = 0.4;
 
 AnimationsSystem::AnimationsSystem(void)
 {
@@ -239,13 +241,13 @@ void AnimationsSystem::run_animations_pool(DrawSpace::Aspect::AnimationsAspect::
 			auto& animations_table = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
 
 			p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = anim_id;
-			p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() = animations_table.at(anim_id).ticksPerSeconds;
+			p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() = animation.second.ticksPerSeconds;
 
 			p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = 0;
 			p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = 0;
 
-			p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose() = animations_table.at(anim_id).duration;
-			p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_duration")->getPurpose() = animations_table.at(anim_id).duration / animations_table.at(anim_id).ticksPerSeconds;
+			p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose() = animation.second.duration;
+			p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_duration")->getPurpose() = animation.second.duration / animation.second.ticksPerSeconds;
 
 			p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose() = p_time_aspect->TimeMarkFactory();
 			p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose().Reset();
@@ -253,6 +255,10 @@ void AnimationsSystem::run_animations_pool(DrawSpace::Aspect::AnimationsAspect::
 		
 		if (true == animation_step(animation.first, animation.second, p_anims_aspect, p_nodes))
 		{
+			// record id of this finished animation (if not transition animation)
+			dsstring& last_animation_name = p_anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
+			last_animation_name = anim_id;
+
 			// this animation ended
 			p_animations_pool.pop_front();
 
@@ -284,11 +290,79 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		if ("" == current_animation_name && animations_pool.size() > 0)
 		{
 			const auto& animation = animations_pool.front();
-			dsstring anim_id = animation.first;
+
+			dsstring next_animation_name = animation.first;
 			for (auto& e : m_evt_handlers)
 			{
-				(*e)(ANIMATION_BEGIN, anim_id);
+				(*e)(ANIMATION_BEGIN, next_animation_name);
 			}
+
+			// here we insert transition animation
+
+			dsstring last_animation_name = anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
+			if (last_animation_name != "" && last_animation_name != transitionAnimationDurationId && last_animation_name != next_animation_name)
+			{
+				auto& animations_table = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+				
+				// recup anim precedente
+				AnimationsAspect::AnimationRoot prev_anim = animations_table.at(last_animation_name);
+
+				// recup prochaine anim a executer
+				AnimationsAspect::AnimationRoot next_anim = animations_table.at(next_animation_name);
+			
+				if (prev_anim.ticksPerSeconds != next_anim.ticksPerSeconds)
+				{
+					_DSEXCEPTION("cannot build transition animation because of incompatible ticksPerSecs")
+				}
+
+				AnimationsAspect::AnimationRoot transition_anim;
+
+				transition_anim.ticksPerSeconds = next_anim.ticksPerSeconds;
+				transition_anim.duration = transitionAnimationDurationSeconds * transition_anim.ticksPerSeconds;
+				transition_anim.transition_animation = true;
+
+				for (auto& e : prev_anim.channels)
+				{
+					if (next_anim.channels.count(e.second.node_name))
+					{
+						AnimationsAspect::NodeAnimation next_anim_node = next_anim.channels.at(e.second.node_name);
+
+
+						// common node between prev_anim and next_anim
+
+						AnimationsAspect::NodeAnimation node_anim;
+
+						node_anim.node_name = e.second.node_name;
+
+						node_anim.position_keys.push_back(e.second.position_keys[e.second.position_keys.size() - 1]);
+						node_anim.position_keys.push_back(next_anim_node.position_keys[0]);
+
+						node_anim.position_keys[0].time_tick = 0;
+						node_anim.position_keys[1].time_tick = transition_anim.duration;
+
+						node_anim.rotations_keys.push_back(e.second.rotations_keys[e.second.rotations_keys.size() - 1]);
+						node_anim.rotations_keys.push_back(next_anim_node.rotations_keys[0]);
+
+						node_anim.rotations_keys[0].time_tick = 0;
+						node_anim.rotations_keys[1].time_tick = transition_anim.duration;
+
+
+						node_anim.scaling_keys.push_back(e.second.scaling_keys[e.second.scaling_keys.size() - 1]);
+						node_anim.scaling_keys.push_back(next_anim_node.scaling_keys[0]);
+
+						node_anim.scaling_keys[0].time_tick = 0;
+						node_anim.scaling_keys[1].time_tick = transition_anim.duration;
+
+
+						transition_anim.channels[e.second.node_name] = node_anim;
+					}
+				}
+
+				std::pair<dsstring, DrawSpace::Aspect::AnimationsAspect::AnimationRoot> animation_transition_entry(transitionAnimationDurationId, transition_anim);
+				animations_pool.push_front(animation_transition_entry);
+			}
+			///////////////////////////////////
+
 		}
 
 		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
