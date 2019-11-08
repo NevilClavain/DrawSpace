@@ -183,9 +183,9 @@ bool AnimationsSystem::animation_step(const dsstring& p_animation_id, const Anim
 										std::map<dsstring, AnimationsAspect::Node>& p_nodes)
 {
 	bool status = false;
-	TimeAspect::TimeMark tmk = p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose();
+	TimeAspect::TimeMark& tmk = p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose();
 
-	long tms = tmk.GetTimeMs();
+	long tms = tmk.ComputeTimeMs();
 	dsreal nb_seconds = (dsreal)tms / 1000.0;
 	dsreal nb_ticks = p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() * nb_seconds;
 

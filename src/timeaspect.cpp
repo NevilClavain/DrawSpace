@@ -443,3 +443,34 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
         m_timer.SetState( true );
     }
 }
+
+
+void TimeAspect::TimeMark::Reset(void)
+{
+	m_freeze_time = 0;
+	if (m_tm->IsReady())
+	{
+		m_start_tick = m_tm->GetCurrentTick();
+	}
+}
+
+long TimeAspect::TimeMark::ComputeTimeMs(void)
+{
+	long ms_result = 0;
+
+	if (m_tm->IsReady())
+	{
+		long last_tick;
+		if (true == *m_freeze)
+		{
+			last_tick = m_previous_tick;
+		}
+		else
+		{
+			last_tick = m_tm->GetCurrentTick();
+			m_previous_tick = last_tick;
+		}
+		ms_result = (last_tick - m_start_tick) * (*m_timefactor);
+	}
+	return ms_result;
+}

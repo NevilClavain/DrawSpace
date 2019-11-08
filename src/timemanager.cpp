@@ -188,8 +188,7 @@ void TimeManager::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
         angle = 360.0 + angle;
     }
 
-    *p_angle = angle;
-    
+    *p_angle = angle;   
 }
 
 void TimeManager::TranslationSpeedInc( dsreal *p_translation, dsreal p_speed )

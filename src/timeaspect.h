@@ -220,6 +220,7 @@ public:
 		bool*					m_freeze;
 		long					m_start_tick;  // 1 tick = 1 ms (see timemanager.h)
 		long                    m_previous_tick; // for freeze case
+		long                    m_freeze_time;
 
 		// seul TimeAspect appelle ce ctor
 		TimeMark(Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze) :			
@@ -227,7 +228,8 @@ public:
 			m_timefactor(p_timefactor),
 			m_freeze(p_freeze),
 			m_start_tick(0),
-			m_previous_tick(0)
+			m_previous_tick(0),
+			m_freeze_time(0)
 		{
 		}
 
@@ -237,39 +239,13 @@ public:
 			m_timefactor(NULL),
 			m_freeze(NULL),
 			m_start_tick(0),
-			m_previous_tick(0)
+			m_previous_tick(0),
+			m_freeze_time(0)
 		{
 		}
 
-		void Reset(void)
-		{
-			if (m_tm->IsReady())
-			{
-				m_start_tick = m_tm->GetCurrentTick();
-			}
-		}
-
-		long GetTimeMs(void)
-		{
-			long ms_result = 0;
-
-			if (m_tm->IsReady())
-			{
-				long last_tick;
-
-				if (true == *m_freeze)
-				{
-					last_tick = m_previous_tick;
-				}
-				else
-				{
-					last_tick = m_tm->GetCurrentTick();
-					m_previous_tick = last_tick;
-				}
-				ms_result = (last_tick - m_start_tick) * (*m_timefactor);
-			}
-			return ms_result;
-		}
+		void Reset(void);
+		long ComputeTimeMs(void);
 
 		friend class TimeAspect;
 	};
