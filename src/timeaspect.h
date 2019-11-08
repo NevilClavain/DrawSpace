@@ -218,18 +218,16 @@ public:
 		Utils::TimeManager*		m_tm;
 		dsreal*					m_timefactor;
 		bool*					m_freeze;
-		long					m_start_tick;  // 1 tick = 1 ms (see timemanager.h)
 		long                    m_previous_tick; // for freeze case
-		long                    m_freeze_time;
+		long					m_timecounter;
 
 		// seul TimeAspect appelle ce ctor
 		TimeMark(Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze) :			
 			m_tm(p_tm),
 			m_timefactor(p_timefactor),
 			m_freeze(p_freeze),
-			m_start_tick(0),
 			m_previous_tick(0),
-			m_freeze_time(0)
+			m_timecounter(0)
 		{
 		}
 
@@ -238,9 +236,8 @@ public:
 			m_tm(NULL),
 			m_timefactor(NULL),
 			m_freeze(NULL),
-			m_start_tick(0),
 			m_previous_tick(0),
-			m_freeze_time(0)
+			m_timecounter(0)
 		{
 		}
 
@@ -258,7 +255,7 @@ protected:
 
     Utils::TimeManager*     m_tm;    
     TimeScale               m_mode;
-    dsreal                  m_time_factor;  // calcul�...
+    dsreal                  m_time_factor;  // calcul...
 
     TimerCb*                m_timercb;
     DrawSpace::Utils::Timer m_timer;

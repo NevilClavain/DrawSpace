@@ -447,11 +447,7 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
 void TimeAspect::TimeMark::Reset(void)
 {
-	m_freeze_time = 0;
-	if (m_tm->IsReady())
-	{
-		m_start_tick = m_tm->GetCurrentTick();
-	}
+	m_previous_tick = 0;
 }
 
 long TimeAspect::TimeMark::ComputeTimeMs(void)
@@ -460,17 +456,17 @@ long TimeAspect::TimeMark::ComputeTimeMs(void)
 
 	if (m_tm->IsReady())
 	{
-		long last_tick;
-		if (true == *m_freeze)
+		long last_tick = m_tm->GetCurrentTick();
+
+		if (m_previous_tick != 0)
 		{
-			last_tick = m_previous_tick;
+			if (false == *m_freeze)
+			{
+				m_timecounter += (*m_timefactor) * (last_tick - m_previous_tick);
+			}			
+			ms_result = m_timecounter;		
 		}
-		else
-		{
-			last_tick = m_tm->GetCurrentTick();
-			m_previous_tick = last_tick;
-		}
-		ms_result = (last_tick - m_start_tick) * (*m_timefactor);
+		m_previous_tick = last_tick;
 	}
 	return ms_result;
 }
