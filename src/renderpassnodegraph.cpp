@@ -84,7 +84,6 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
     }
 }
 
-
 void RenderPassNodeGraph::PushSignal_UpdatedRenderingQueues( void )
 {
     m_signals.push( SIGNAL_UPDATED_RENDERINGQUEUES );
@@ -110,9 +109,24 @@ void RenderPassNodeGraph::ProcessSignals( void )
                     // reset flag
                     it->data()->m_renderingqueue_update_flag = false;
                 }
-            }            
+            }  
+
+			for (auto& it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it)
+			{
+				(**it)(RENDERINGQUEUE_UPDATED);
+			}
         }
 
         m_signals.pop();
     }
+}
+
+void RenderPassNodeGraph::RegisterRenderPassEvtHandler(RenderPassEventHandler* p_handler)
+{
+	m_evt_handlers.insert(p_handler);
+}
+
+void RenderPassNodeGraph::UnregisterRenderPassEvtHandler(RenderPassEventHandler* p_handler)
+{
+	m_evt_handlers.erase(p_handler);
 }

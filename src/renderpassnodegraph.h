@@ -38,16 +38,23 @@ class RenderPassNodeGraph
 public:
     using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;
 
+	using RenderPassEvent = enum
+	{
+		RENDERINGQUEUE_UPDATED
+	};
+
+	using RenderPassEventHandler = DrawSpace::Core::BaseCallback<void, RenderPassEvent>;
+
 private:
 
-    typedef enum
+    using Signals = enum
     {
         SIGNAL_UPDATED_RENDERINGQUEUES
+    };
 
-    } Signals;
-
-    mutable PassDescrTree   m_tree;
-    std::queue<Signals>     m_signals;
+    mutable PassDescrTree				m_tree;
+    std::queue<Signals>					m_signals;
+	std::set<RenderPassEventHandler*>	m_evt_handlers;
 
     void cleanup_treenodes( void );
 
@@ -62,6 +69,10 @@ public:
     void ProcessSignals( void );
 
     void PushSignal_UpdatedRenderingQueues( void );
+
+	void RegisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);
+	void UnregisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);
+
 };
 
 }
