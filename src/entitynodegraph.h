@@ -37,29 +37,27 @@ class System;
 
 namespace EntityGraph
 {
-class EntityNodeGraph sealed
+class EntityNodeGraph
 {
 public:
 	using EntityTree = st_tree::tree<Core::Entity*>;
 
-    typedef enum
+    using CameraEvent = enum
     {
         CAMERA_ACTIVE,
         CAMERA_INACTIVE
+    };
 
-    } CameraEvent;
-
-    typedef DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>                            CameraEventHandler;
+    using CameraEventHandler = DrawSpace::Core::BaseCallback2<void, CameraEvent, Core::Entity*>;
 
 private:
 
-    typedef enum
+    using Signals = enum
     {
         SIGNAL_RENDERSCENE_BEGIN,
         SIGNAL_RENDERSCENE_END,
         SIGNAL_DUMP_TO_TRACE
-
-    } Signals;
+    };
 
 	mutable EntityTree                                          m_tree;
 

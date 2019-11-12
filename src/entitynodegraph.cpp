@@ -230,7 +230,7 @@ Core::Entity* EntityNodeGraph::GetCurrentCameraEntity( void ) const
 
 void EntityNodeGraph::notify_cam_event( CameraEvent p_evt, Entity* p_entity )
 {
-    for( auto it = m_camevt_handlers.begin(); it != m_camevt_handlers.end(); ++it )
+    for( auto& it = m_camevt_handlers.begin(); it != m_camevt_handlers.end(); ++it )
     {
         ( **it )( p_evt, p_entity );
     }
