@@ -35,12 +35,13 @@ class LuaClass_RenderPassNodeGraph
 {
 protected:
 
-    typedef struct 
+    using Passe = struct
     {
         DrawSpace::RenderGraph::RenderPassNode  m_renderpassnode;
         DrawSpace::Core::Fx                     m_fx;
+    };
 
-    } Passe;
+	using RenderPassEventCb           = DrawSpace::Core::CallBack<LuaClass_RenderPassNodeGraph, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent>;
     
     DrawSpace::RenderGraph::RenderPassNodeGraph                             m_rendergraph;
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendus des passes stockees dans m_rendergraph
@@ -48,7 +49,13 @@ protected:
     std::unordered_map<dsstring, Passe>                                     m_passes;
     dsstring                                                                m_id;
 
+	std::map<dsstring, int>                                                 m_renderpassevent_lua_callbacks;
+
+	RenderPassEventCb														m_renderpass_event_cb;
+
     void cleanup_resources( lua_State* p_L, const dsstring& p_passid );
+
+	void on_renderpass_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_event);
 
 public:
 	LuaClass_RenderPassNodeGraph( lua_State* p_L );
@@ -72,6 +79,12 @@ public:
     int LUA_setviewportquadshaderrealvector( lua_State* p_L );
 
     int LUA_updaterenderingqueues( lua_State* p_L );
+
+	int LUA_addrenderpasseventcb(lua_State* p_L);
+	int LUA_removerenderpasseventcb(lua_State* p_L);
+
+	void RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex);
+	int UnregisterAnimationEventCallback(const dsstring& p_id);
 
     DrawSpace::RenderGraph::RenderPassNode& GetNode( const dsstring& p_pass_id );
     

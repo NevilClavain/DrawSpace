@@ -26,6 +26,7 @@
 #define _LUACONTEXT_H_
 
 #include "drawspace_commons.h"
+#include "exceptions.h"
 
 #include "crtp_singleton.h"
 

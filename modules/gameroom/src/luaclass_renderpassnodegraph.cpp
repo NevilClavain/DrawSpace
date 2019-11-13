@@ -55,10 +55,13 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "release_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadresources },
     { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
     { "set_viewportquadshaderrealvector", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector },
+	{ "add_renderpasseventcb", &LuaClass_RenderPassNodeGraph::LUA_addrenderpasseventcb },
+	{ "remove_renderpasseventcb", &LuaClass_RenderPassNodeGraph::LUA_removerenderpasseventcb },
 	{ 0, 0 }
 };
 
-LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L )
+LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L ) :
+m_renderpass_event_cb( this, &LuaClass_RenderPassNodeGraph::on_renderpass_event)
 {
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
@@ -70,11 +73,14 @@ LuaClass_RenderPassNodeGraph::LuaClass_RenderPassNodeGraph( lua_State* p_L )
     m_passes_render.SetRendergraph( &m_rendergraph );
     MainService::GetInstance()->RegisterRenderGraph( id, this );
     m_id = id;
+
+	m_rendergraph.RegisterRenderPassEvtHandler(&m_renderpass_event_cb);
 }
 
 LuaClass_RenderPassNodeGraph::~LuaClass_RenderPassNodeGraph( void )
 {
     MainService::GetInstance()->UnregisterRenderGraph( m_id );
+	m_rendergraph.UnregisterRenderPassEvtHandler(&m_renderpass_event_cb);
 }
 
 DrawSpace::AspectImplementations::PassesRenderingAspectImpl& LuaClass_RenderPassNodeGraph::GetPassesRenderAspectImpl( void )
@@ -468,6 +474,14 @@ void LuaClass_RenderPassNodeGraph::cleanup_resources( lua_State* p_L, const dsst
     }
 }
 
+void LuaClass_RenderPassNodeGraph::on_renderpass_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_event)
+{
+	for (auto& it = m_renderpassevent_lua_callbacks.begin(); it != m_renderpassevent_lua_callbacks.end(); ++it)
+	{
+		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event);
+	}
+}
+
 int LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadresources( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
@@ -526,6 +540,19 @@ int LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector( lua_State
     return 0;
 }
 
+int LuaClass_RenderPassNodeGraph::LUA_addrenderpasseventcb(lua_State* p_L)
+{
+	LuaContext::AddCallback(p_L, [this](const std::string& p_cbid, int p_reffunc) { RegisterAnimationEventCallback(p_cbid, p_reffunc); });
+	return 0;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_removerenderpasseventcb(lua_State* p_L)
+{
+	LuaContext::RemoveCallback(p_L, [this](const std::string& p_cbid)->int { return UnregisterAnimationEventCallback(p_cbid); });
+	return 0;
+}
+
+
 DrawSpace::RenderGraph::RenderPassNode& LuaClass_RenderPassNodeGraph::GetNode( const dsstring& p_pass_id )
 {
     if( 0 == m_passes.count( p_pass_id ) )
@@ -536,4 +563,20 @@ DrawSpace::RenderGraph::RenderPassNode& LuaClass_RenderPassNodeGraph::GetNode( c
     {
         return m_passes[p_pass_id].m_renderpassnode;
     }
+}
+
+void LuaClass_RenderPassNodeGraph::RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex)
+{
+	m_renderpassevent_lua_callbacks[p_id] = p_regindex;
+}
+
+int LuaClass_RenderPassNodeGraph::UnregisterAnimationEventCallback(const dsstring& p_id)
+{
+	int index = -1;
+	if (m_renderpassevent_lua_callbacks.count(p_id))
+	{
+		index = m_renderpassevent_lua_callbacks[p_id];
+		m_renderpassevent_lua_callbacks.erase(p_id);
+	}
+	return index;
 }
