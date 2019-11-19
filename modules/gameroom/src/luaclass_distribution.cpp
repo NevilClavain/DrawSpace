@@ -23,29 +23,7 @@
 /* -*-LIC_END-*- */
 
 
-/* -*-LIC_BEGIN-*- */
-/*
-*
-* DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2018
-*
-* This file is part of DrawSpace.
-*
-*    DrawSpace is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-*
-*    DrawSpace is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.
-*
-*/
-/* -*-LIC_END-*- */
+
 
 #include "luaclass_randomengine.h"
 #include "luacontext.h"
@@ -66,9 +44,9 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
         LUA_ERROR("Distribution::Distribution : argument(s) missing");
     }
 
-    dsstring meshe_distribution_type = luaL_checkstring(p_L, 1);
+    dsstring distribution_type = luaL_checkstring(p_L, 1);
 
-    if("uniform_int_distribution" == meshe_distribution_type)
+    if("uniform_int_distribution" == distribution_type)
     {
         if (argc < 3)
         {
@@ -78,9 +56,9 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
         int min = luaL_checkint(p_L, 2);
         int max = luaL_checkint(p_L, 3);
         m_distribution = std::make_unique<DistributionWrapperImpl<std::uniform_int_distribution<int>>>(min, max);
-        m_distribution_type = meshe_distribution_type;
+        m_distribution_type = distribution_type;
     }
-    else if("uniform_real_distribution" == meshe_distribution_type)
+    else if("uniform_real_distribution" == distribution_type)
     {
         if (argc < 3)
         {
@@ -90,7 +68,7 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
         dsreal min = luaL_checknumber(p_L, 2);
         dsreal max = luaL_checknumber(p_L, 3);
         m_distribution = std::make_unique<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>>(min, max);
-        m_distribution_type = meshe_distribution_type;
+        m_distribution_type = distribution_type;
     }
     else
     {
@@ -115,7 +93,6 @@ int LuaClass_Distribution::LUA_generate(lua_State* p_L)
     if("uniform_int_distribution" == m_distribution_type)
     {
         DistributionWrapper* dw = m_distribution.get();
-        //DistributionWrapper* dw = m_distribution;
         DistributionWrapperImpl<std::uniform_int_distribution<int>>* distribution = static_cast<DistributionWrapperImpl<std::uniform_int_distribution<int>>*>(dw);
 
         int val = distribution->Generate<int>(lua_random_engine->GetRandomEngine());
@@ -125,7 +102,6 @@ int LuaClass_Distribution::LUA_generate(lua_State* p_L)
     else if("uniform_real_distribution" == m_distribution_type)
     {
         DistributionWrapper* dw = m_distribution.get();
-        //DistributionWrapper* dw = m_distribution;
         DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>* distribution = static_cast<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>*>(dw);
 
         dsreal val = distribution->Generate<dsreal>(lua_random_engine->GetRandomEngine());
