@@ -78,7 +78,7 @@ public:
 
         // ajout dans m_components_by_type
 
-        size_t tid = typeid(T).hash_code();
+        const size_t tid = typeid(T).hash_code();
         m_components_by_type[tid].push_back( newcomp );
 
         newcomp->m_uid = m_uid_count++;
@@ -97,7 +97,7 @@ public:
         //logComponent("RemoveComponent : ", p_id, comp);
               
         // suppression dans m_components_by_type
-        size_t tid = typeid(T).hash_code();
+        const size_t tid = typeid(T).hash_code();
         for( auto it = m_components_by_type[tid].begin(); it != m_components_by_type[tid].end(); ++it )
         {
             if( m_components[p_id] == *it )
@@ -120,19 +120,17 @@ public:
             //_DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
             return NULL;
         }
-
-        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
-        
+        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );        
         return comp;
     }
 
     template<typename T>
     inline void GetComponentsByType( ComponentList<T>& p_outlist )
     {
-        size_t tid = typeid(T).hash_code();
+        const size_t tid = typeid(T).hash_code();
         if( m_components_by_type.count( tid ) > 0 )
         {
-            std::vector<BaseComponent*> list = m_components_by_type[tid];
+            const std::vector<BaseComponent*> list = m_components_by_type[tid];
             for( size_t i = 0; i < list.size(); i++ )
             {
                 p_outlist.push_back( static_cast<Component<T>*>( list[i] ) );
