@@ -238,8 +238,6 @@ void AnimationsSystem::run_animations_pool(DrawSpace::Aspect::AnimationsAspect::
 		{
 			// setup current animation infos components...
 
-			auto& animations_table = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
-
 			p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose() = anim_id;
 			p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() = animation.second.ticksPerSeconds;
 
@@ -362,7 +360,6 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 				animations_pool.push_front(animation_transition_entry);
 			}
 			///////////////////////////////////
-
 		}
 
 		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
@@ -381,6 +378,78 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 			{
 				bones.at(bone_id).locale_transform = bone_locale_transform;
 			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////////////////////
+		///// directly apply last key of an animation
+
+		dsstring& apply_animation_last_key = anims_aspect->GetComponent<dsstring>("apply_animation_last_key")->getPurpose();
+		dsstring& last_animation_name = anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
+
+		if (apply_animation_last_key != "" && apply_animation_last_key != last_animation_name)
+		{
+			//apply last key of specified animation
+
+			auto& animations_table = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+			if (0 == animations_table.count(apply_animation_last_key))
+			{
+				_DSEXCEPTION("Unknown animation name for apply_animation_last_key function");
+			}
+
+			
+			for (auto& e : animations_table.at(apply_animation_last_key).channels)
+			{
+				AnimationsAspect::NodeAnimation node_animation = e.second;
+
+				//////////////////// translations
+
+				Utils::Matrix translation;
+				translation.Identity();
+
+				if (node_animation.position_keys.size() > 0)
+				{
+					translation.Translation(node_animation.position_keys[node_animation.position_keys.size() - 1].value);
+				}
+
+				//////////////////// rotations
+
+				Utils::Matrix rotation;
+				rotation.Identity();
+
+				if (node_animation.rotations_keys.size() > 0)
+				{
+					node_animation.rotations_keys[node_animation.rotations_keys.size() - 1].value.RotationMatFrom(rotation);
+				}
+
+				//////////////////// scaling interpolation
+
+				Utils::Matrix scaling;
+				scaling.Identity();
+
+				if (node_animation.scaling_keys.size() > 0)
+				{
+					scaling.Scale(node_animation.scaling_keys[node_animation.scaling_keys.size() -1].value);
+				}
+
+				Utils::Matrix final_mat;
+				final_mat = scaling * rotation * translation;
+
+				if (bones.count(node_animation.node_name))
+				{
+					bones.at(node_animation.node_name).locale_transform = final_mat;
+				}
+				else
+				{
+					_DSEXCEPTION("invalid node name");
+				}
+			}
+
+			// update last_animation_name component
+			last_animation_name = apply_animation_last_key;
+
+			// reset command component
+			apply_animation_last_key = "";
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////

@@ -67,6 +67,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "read_currentanimationinfos", &LuaClass_Entity::LUA_readcurrentanimationinfos },
 	{ "read_animationsnames", &LuaClass_Entity::LUA_readanimationsnames },
 	{ "push_animation", &LuaClass_Entity::LUA_pushanimation },
+	{ "set_animationlastkeypose", &LuaClass_Entity::LUA_setanimationlastkeypose },
 	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },
     { "setup_info", &LuaClass_Entity::LUA_setupinfo },
     { "release_info", &LuaClass_Entity::LUA_releaseinfo },
@@ -398,7 +399,6 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 		animation_aspect->AddComponent<dsstring>("nodes_root_id");
 
 		animation_aspect->AddComponent<std::map<dsstring, Matrix>>("forced_bones_transformations");
-
 		animation_aspect->AddComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations");
 
 		animation_aspect->AddComponent<AnimationsAspect::AnimationsPool>("animations_pool");
@@ -414,6 +414,7 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 
 		animation_aspect->AddComponent<dsstring>("last_animation_name");
 
+		animation_aspect->AddComponent<dsstring>("apply_animation_last_key");
 
 	} LUA_CATCH;
 
@@ -485,7 +486,7 @@ int LuaClass_Entity::LUA_pushanimation(lua_State* p_L)
 	int argc = lua_gettop(p_L);
 	if (argc < 1)
 	{
-		LUA_ERROR("Entity::set_currentanimation : argument(s) missing");
+		LUA_ERROR("Entity::push_animation : argument(s) missing");
 	}
 
 	dsstring animation_name = luaL_checkstring(p_L, 1);
@@ -493,21 +494,14 @@ int LuaClass_Entity::LUA_pushanimation(lua_State* p_L)
 	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
 	if (NULL == animation_aspect)
 	{
-		LUA_ERROR("Entity::set_currentanimation : animation aspect doesnt exists in this entity!");
+		LUA_ERROR("Entity::push_animation : animation aspect doesnt exists in this entity!");
 	}
-
-	TransformAspect* transform_aspect = m_entity.GetAspect<TransformAspect>();
-	if (NULL == transform_aspect)
-	{
-		LUA_ERROR("Entity::configure_animationbones : transformation aspect doesnt exists in this entity!");
-	}
-	TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
 
 	auto& animations_table = animation_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
 
 	if (animations_table.find(animation_name) == animations_table.end())
 	{
-		LUA_ERROR("Entity::set_currentanimation : unknown animation name!");
+		LUA_ERROR("Entity::push_animation : unknown animation name!");
 	}
 	else
 	{		
@@ -520,7 +514,43 @@ int LuaClass_Entity::LUA_pushanimation(lua_State* p_L)
 		}
 		else
 		{
-			LUA_ERROR("Entity::set_currentanimation : unknow animation id");
+			LUA_ERROR("Entity::push_animation : unknow animation id");
+		}
+	}
+	return 0;
+}
+
+int LuaClass_Entity::LUA_setanimationlastkeypose(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::set_animationlastkeypose : argument(s) missing");
+	}
+
+	dsstring animation_name = luaL_checkstring(p_L, 1);
+
+	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
+	if (NULL == animation_aspect)
+	{
+		LUA_ERROR("Entity::set_animationlastkeypose : animation aspect doesnt exists in this entity!");
+	}
+
+	auto& animations_table = animation_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+	if (animations_table.find(animation_name) == animations_table.end())
+	{
+		LUA_ERROR("Entity::set_animationlastkeypose : unknown animation name!");
+	}
+	else
+	{
+		if (animations_table.count(animation_name))
+		{
+			animation_aspect->GetComponent<dsstring>("apply_animation_last_key")->getPurpose() = animation_name;
+		}
+		else
+		{
+			LUA_ERROR("Entity::push_animation : unknow animation id");
 		}
 	}
 	return 0;
@@ -559,6 +589,8 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 		animation_aspect->RemoveComponent<TimeAspect::TimeMark>("current_animation_timemark");
 
 		animation_aspect->RemoveComponent<dsstring>("last_animation_name");
+
+		animation_aspect->RemoveComponent<dsstring>("apply_animation_last_key");
 
 	} LUA_CATCH;
 
