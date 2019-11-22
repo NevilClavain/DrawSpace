@@ -88,7 +88,7 @@ public:
     template<typename T>
     inline void RemoveComponent( const dsstring& p_id )
     {
-        if( 0 == m_components.count( p_id ) )
+        if( 0 == m_components.count(p_id) )
         {
             _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
@@ -98,12 +98,12 @@ public:
               
         // suppression dans m_components_by_type
         const size_t tid = typeid(T).hash_code();
-        for( auto it = m_components_by_type[tid].begin(); it != m_components_by_type[tid].end(); ++it )
+        for( auto it = m_components_by_type.at(tid).begin(); it != m_components_by_type.at(tid).end(); ++it )
         {
-            if( m_components[p_id] == *it )
+            if( m_components.at(p_id) == *it )
             {
                 // on a trouve le composant en question ! suppression...
-                m_components_by_type[tid].erase( it );
+                m_components_by_type.at(tid).erase( it );
                 break;
             }
         }
@@ -113,24 +113,24 @@ public:
     }
     
     template<typename T>
-    inline Component<T>* GetComponent( const dsstring& p_id )
+    inline Component<T>* GetComponent( const dsstring& p_id ) const
     {
         if( 0 == m_components.count( p_id ) )
         {
             //_DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
             return NULL;
         }
-        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );        
+		Component<T>* comp = static_cast<Component<T>*>(m_components.at(p_id));
         return comp;
     }
 
     template<typename T>
-    inline void GetComponentsByType( ComponentList<T>& p_outlist )
+    inline void GetComponentsByType( ComponentList<T>& p_outlist ) const
     {
         const size_t tid = typeid(T).hash_code();
         if( m_components_by_type.count( tid ) > 0 )
         {
-            const std::vector<BaseComponent*> list = m_components_by_type[tid];
+            const std::vector<BaseComponent*> list = m_components_by_type.at(tid);
             for( size_t i = 0; i < list.size(); i++ )
             {
                 p_outlist.push_back( static_cast<Component<T>*>( list[i] ) );
