@@ -23,7 +23,6 @@
 /* -*-LIC_END-*- */
 
 #include "animationssystem.h"
-#include "renderingaspect.h"
 #include "transformaspect.h"
 #include "mesherenderingaspectimpl.h"
 #include "maths.h"
@@ -270,11 +269,8 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 {
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
-    {		
-		dsstring root_bone_id = anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
-
-		auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
-		auto& animations_pool = anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
+    {
+		insert_transition_animation(anims_aspect);
 
 		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 		if (NULL == transform_aspect)
@@ -283,238 +279,266 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		}
 		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
 
-
-		auto& current_animation_name = anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
-		if ("" == current_animation_name && animations_pool.size() > 0)
-		{
-			const auto& animation = animations_pool.front();
-
-			dsstring next_animation_name = animation.first;
-			for (auto& e : m_evt_handlers)
-			{
-				(*e)(ANIMATION_BEGIN, next_animation_name);
-			}
-
-			// here we insert transition animation
-
-			dsstring last_animation_name = anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
-			if (last_animation_name != "" && last_animation_name != transitionAnimationDurationId && last_animation_name != next_animation_name)
-			{
-				auto& animations_table = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
-				
-				// recup anim precedente
-				AnimationsAspect::AnimationRoot prev_anim = animations_table.at(last_animation_name);
-
-				// recup prochaine anim a executer
-				AnimationsAspect::AnimationRoot next_anim = animations_table.at(next_animation_name);
-			
-				if (prev_anim.ticksPerSeconds != next_anim.ticksPerSeconds)
-				{
-					_DSEXCEPTION("cannot build transition animation because of incompatible ticksPerSecs")
-				}
-
-				AnimationsAspect::AnimationRoot transition_anim;
-
-				transition_anim.ticksPerSeconds = next_anim.ticksPerSeconds;
-				transition_anim.duration = transitionAnimationDurationSeconds * transition_anim.ticksPerSeconds;
-				transition_anim.transition_animation = true;
-
-				for (auto& e : prev_anim.channels)
-				{
-					if (next_anim.channels.count(e.second.node_name))
-					{
-						AnimationsAspect::NodeAnimation next_anim_node = next_anim.channels.at(e.second.node_name);
-
-
-						// common node between prev_anim and next_anim
-
-						AnimationsAspect::NodeAnimation node_anim;
-
-						node_anim.node_name = e.second.node_name;
-
-						node_anim.position_keys.push_back(e.second.position_keys[e.second.position_keys.size() - 1]);
-						node_anim.position_keys.push_back(next_anim_node.position_keys[0]);
-
-						node_anim.position_keys[0].time_tick = 0;
-						node_anim.position_keys[1].time_tick = transition_anim.duration;
-
-						node_anim.rotations_keys.push_back(e.second.rotations_keys[e.second.rotations_keys.size() - 1]);
-						node_anim.rotations_keys.push_back(next_anim_node.rotations_keys[0]);
-
-						node_anim.rotations_keys[0].time_tick = 0;
-						node_anim.rotations_keys[1].time_tick = transition_anim.duration;
-
-
-						node_anim.scaling_keys.push_back(e.second.scaling_keys[e.second.scaling_keys.size() - 1]);
-						node_anim.scaling_keys.push_back(next_anim_node.scaling_keys[0]);
-
-						node_anim.scaling_keys[0].time_tick = 0;
-						node_anim.scaling_keys[1].time_tick = transition_anim.duration;
-
-
-						transition_anim.channels[e.second.node_name] = node_anim;
-					}
-				}
-
-				std::pair<dsstring, DrawSpace::Aspect::AnimationsAspect::AnimationRoot> animation_transition_entry(transitionAnimationDurationId, transition_anim);
-				animations_pool.push_front(animation_transition_entry);
-			}
-			///////////////////////////////////
-		}
+		auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+		auto& animations_pool = anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
 
 		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
 
-		auto forced_bones_pos = anims_aspect->GetComponent<std::map<dsstring, Matrix>>("forced_bones_transformations")->getPurpose();
-
-		for (auto& e : forced_bones_pos)
-		{
-			std::string bone_id = e.first;
-			Matrix bone_locale_transform = e.second;
-
-			if (bones.count(bone_id))
-			{
-				bones.at(bone_id).locale_transform = bone_locale_transform;
-			}
-		}
+		apply_forced_bones_pos(anims_aspect);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		///// directly apply last key of an animation
 
-		dsstring& apply_animation_last_key = anims_aspect->GetComponent<dsstring>("apply_animation_last_key")->getPurpose();
-		dsstring& last_animation_name = anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
-
-		if (apply_animation_last_key != "" && apply_animation_last_key != last_animation_name)
-		{
-			//apply last key of specified animation
-
-			auto& animations_table = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
-
-			if (0 == animations_table.count(apply_animation_last_key))
-			{
-				_DSEXCEPTION("Unknown animation name for apply_animation_last_key function");
-			}
-
-			
-			for (auto& e : animations_table.at(apply_animation_last_key).channels)
-			{
-				AnimationsAspect::NodeAnimation node_animation = e.second;
-
-				//////////////////// translations
-
-				Utils::Matrix translation;
-				translation.Identity();
-
-				if (node_animation.position_keys.size() > 0)
-				{
-					translation.Translation(node_animation.position_keys[node_animation.position_keys.size() - 1].value);
-				}
-
-				//////////////////// rotations
-
-				Utils::Matrix rotation;
-				rotation.Identity();
-
-				if (node_animation.rotations_keys.size() > 0)
-				{
-					node_animation.rotations_keys[node_animation.rotations_keys.size() - 1].value.RotationMatFrom(rotation);
-				}
-
-				//////////////////// scaling interpolation
-
-				Utils::Matrix scaling;
-				scaling.Identity();
-
-				if (node_animation.scaling_keys.size() > 0)
-				{
-					scaling.Scale(node_animation.scaling_keys[node_animation.scaling_keys.size() -1].value);
-				}
-
-				Utils::Matrix final_mat;
-				final_mat = scaling * rotation * translation;
-
-				if (bones.count(node_animation.node_name))
-				{
-					bones.at(node_animation.node_name).locale_transform = final_mat;
-				}
-				else
-				{
-					_DSEXCEPTION("invalid node name");
-				}
-			}
-
-			// update last_animation_name component
-			last_animation_name = apply_animation_last_key;
-
-			// reset command component
-			apply_animation_last_key = "";
-		}
+		apply_animation_last_key(anims_aspect);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		///// Push bones matrix to shader
 
-		auto bones_mapping = anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
-		auto bones_output = anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
-
-		Utils::Matrix mid;
-		mid.Identity();
-		if (root_bone_id != "")
-		{
-			read_bones_hierarchy(bones, bones_output, bones_mapping, bones.at(root_bone_id), mid);
-		}
-		// inject previously computed bones matrixes into each renderingnodes (one for" each passes)
 		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
 		if (!rendering_aspect)
 		{
 			_DSEXCEPTION("An entity with AnimationsAspect must also have a RenderingAspect");
 		}
 
-		ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
-		rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
-
-		for (auto e : passes)
-		{
-			RenderingNode* rnode = e->getPurpose().GetRenderingNode();
-
-			// decomposer les matrices en triplet de 3 vectors et stocker
-
-			std::vector<Utils::Vector> bones_0;
-			std::vector<Utils::Vector> bones_1;
-
-			int vec_count = 0;
-
-			for (size_t i = 0; i < bones_output.size(); i++)
-			{				
-				for (size_t col = 0; col < 3; col++)
-				{
-					if (vec_count >= bonesBuffer0Length + bonesBuffer1Length)
-					{
-						_DSEXCEPTION("Too many bones");
-					}
-					Utils::Vector columns;
-					columns[0] = bones_output[i].final_transformation(0, col);
-					columns[1] = bones_output[i].final_transformation(1, col);
-					columns[2] = bones_output[i].final_transformation(2, col);
-					columns[3] = bones_output[i].final_transformation(3, col);
-
-					if (vec_count <= bonesBuffer0Length-1)
-					{
-						bones_0.push_back(columns);
-					}
-					else
-					{
-						bones_1.push_back(columns);
-					}
-					
-					vec_count++;
-				}		
-			}
-			rnode->SetShaderArrayParameter(bonesBuffer0Id, bones_0);
-			rnode->SetShaderArrayParameter(bonesBuffer1Id, bones_1);
-		}		
+		send_bones_to_shaders(anims_aspect, rendering_aspect);
     }
+}
+
+void AnimationsSystem::insert_transition_animation(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect)
+{
+	auto& animations_pool = p_anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
+	auto& current_animation_name = p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
+	if ("" == current_animation_name && animations_pool.size() > 0)
+	{
+		const auto& animation = animations_pool.front();
+
+		dsstring next_animation_name = animation.first;
+		for (auto& e : m_evt_handlers)
+		{
+			(*e)(ANIMATION_BEGIN, next_animation_name);
+		}
+
+		// here we insert transition animation
+
+		dsstring last_animation_name = p_anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
+		if (last_animation_name != "" && last_animation_name != transitionAnimationDurationId && last_animation_name != next_animation_name)
+		{
+			auto& animations_table = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+			// recup anim precedente
+			AnimationsAspect::AnimationRoot prev_anim = animations_table.at(last_animation_name);
+
+			// recup prochaine anim a executer
+			AnimationsAspect::AnimationRoot next_anim = animations_table.at(next_animation_name);
+
+			if (prev_anim.ticksPerSeconds != next_anim.ticksPerSeconds)
+			{
+				_DSEXCEPTION("cannot build transition animation because of incompatible ticksPerSecs")
+			}
+
+			AnimationsAspect::AnimationRoot transition_anim;
+
+			transition_anim.ticksPerSeconds = next_anim.ticksPerSeconds;
+			transition_anim.duration = transitionAnimationDurationSeconds * transition_anim.ticksPerSeconds;
+			transition_anim.transition_animation = true;
+
+			for (auto& e : prev_anim.channels)
+			{
+				if (next_anim.channels.count(e.second.node_name))
+				{
+					AnimationsAspect::NodeAnimation next_anim_node = next_anim.channels.at(e.second.node_name);
+
+
+					// common node between prev_anim and next_anim
+
+					AnimationsAspect::NodeAnimation node_anim;
+
+					node_anim.node_name = e.second.node_name;
+
+					node_anim.position_keys.push_back(e.second.position_keys[e.second.position_keys.size() - 1]);
+					node_anim.position_keys.push_back(next_anim_node.position_keys[0]);
+
+					node_anim.position_keys[0].time_tick = 0;
+					node_anim.position_keys[1].time_tick = transition_anim.duration;
+
+					node_anim.rotations_keys.push_back(e.second.rotations_keys[e.second.rotations_keys.size() - 1]);
+					node_anim.rotations_keys.push_back(next_anim_node.rotations_keys[0]);
+
+					node_anim.rotations_keys[0].time_tick = 0;
+					node_anim.rotations_keys[1].time_tick = transition_anim.duration;
+
+
+					node_anim.scaling_keys.push_back(e.second.scaling_keys[e.second.scaling_keys.size() - 1]);
+					node_anim.scaling_keys.push_back(next_anim_node.scaling_keys[0]);
+
+					node_anim.scaling_keys[0].time_tick = 0;
+					node_anim.scaling_keys[1].time_tick = transition_anim.duration;
+
+
+					transition_anim.channels[e.second.node_name] = node_anim;
+				}
+			}
+
+			std::pair<dsstring, DrawSpace::Aspect::AnimationsAspect::AnimationRoot> animation_transition_entry(transitionAnimationDurationId, transition_anim);
+			animations_pool.push_front(animation_transition_entry);
+		}
+		///////////////////////////////////
+	}
+
+}
+
+void AnimationsSystem::send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect)
+{
+	auto& bones = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+	auto bones_mapping = p_anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose();
+	auto bones_output = p_anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
+	dsstring root_bone_id = p_anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
+
+	Utils::Matrix mid;
+	mid.Identity();
+	if (root_bone_id != "")
+	{
+		read_bones_hierarchy(bones, bones_output, bones_mapping, bones.at(root_bone_id), mid);
+	}
+	// inject previously computed bones matrixes into each renderingnodes (one for" each passes)
+
+
+	ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
+	p_rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
+
+	for (auto e : passes)
+	{
+		RenderingNode* rnode = e->getPurpose().GetRenderingNode();
+
+		// decomposer les matrices en triplet de 3 vectors et stocker
+
+		std::vector<Utils::Vector> bones_0;
+		std::vector<Utils::Vector> bones_1;
+
+		int vec_count = 0;
+
+		for (size_t i = 0; i < bones_output.size(); i++)
+		{
+			for (size_t col = 0; col < 3; col++)
+			{
+				if (vec_count >= bonesBuffer0Length + bonesBuffer1Length)
+				{
+					_DSEXCEPTION("Too many bones");
+				}
+				Utils::Vector columns;
+				columns[0] = bones_output[i].final_transformation(0, col);
+				columns[1] = bones_output[i].final_transformation(1, col);
+				columns[2] = bones_output[i].final_transformation(2, col);
+				columns[3] = bones_output[i].final_transformation(3, col);
+
+				if (vec_count <= bonesBuffer0Length - 1)
+				{
+					bones_0.push_back(columns);
+				}
+				else
+				{
+					bones_1.push_back(columns);
+				}
+
+				vec_count++;
+			}
+		}
+		rnode->SetShaderArrayParameter(bonesBuffer0Id, bones_0);
+		rnode->SetShaderArrayParameter(bonesBuffer1Id, bones_1);
+	}
+}
+
+void AnimationsSystem::apply_animation_last_key(AnimationsAspect* p_anims_aspect)
+{
+	auto& bones = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+
+	dsstring& apply_animation_last_key = p_anims_aspect->GetComponent<dsstring>("apply_animation_last_key")->getPurpose();
+	dsstring& last_animation_name = p_anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
+
+	if (apply_animation_last_key != "" && apply_animation_last_key != last_animation_name)
+	{
+		//apply last key of specified animation
+
+		auto& animations_table = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::AnimationRoot>>("animations")->getPurpose();
+
+		if (0 == animations_table.count(apply_animation_last_key))
+		{
+			_DSEXCEPTION("Unknown animation name for apply_animation_last_key function");
+		}
+
+		for (auto& e : animations_table.at(apply_animation_last_key).channels)
+		{
+			AnimationsAspect::NodeAnimation node_animation = e.second;
+
+			//////////////////// translations
+
+			Utils::Matrix translation;
+			translation.Identity();
+
+			if (node_animation.position_keys.size() > 0)
+			{
+				translation.Translation(node_animation.position_keys[node_animation.position_keys.size() - 1].value);
+			}
+
+			//////////////////// rotations
+
+			Utils::Matrix rotation;
+			rotation.Identity();
+
+			if (node_animation.rotations_keys.size() > 0)
+			{
+				node_animation.rotations_keys[node_animation.rotations_keys.size() - 1].value.RotationMatFrom(rotation);
+			}
+
+			//////////////////// scaling interpolation
+
+			Utils::Matrix scaling;
+			scaling.Identity();
+
+			if (node_animation.scaling_keys.size() > 0)
+			{
+				scaling.Scale(node_animation.scaling_keys[node_animation.scaling_keys.size() - 1].value);
+			}
+
+			Utils::Matrix final_mat;
+			final_mat = scaling * rotation * translation;
+
+			if (bones.count(node_animation.node_name))
+			{
+				bones.at(node_animation.node_name).locale_transform = final_mat;
+			}
+			else
+			{
+				_DSEXCEPTION("invalid node name");
+			}
+		}
+
+		// update last_animation_name component
+		last_animation_name = apply_animation_last_key;
+
+		// reset command component
+		apply_animation_last_key = "";
+	}
+}
+
+void AnimationsSystem::apply_forced_bones_pos(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect)
+{
+	auto& bones = p_anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+	auto forced_bones_pos = p_anims_aspect->GetComponent<std::map<dsstring, Matrix>>("forced_bones_transformations")->getPurpose();
+
+	for (auto& e : forced_bones_pos)
+	{
+		std::string bone_id = e.first;
+		Matrix bone_locale_transform = e.second;
+
+		if (bones.count(bone_id))
+		{
+			bones.at(bone_id).locale_transform = bone_locale_transform;
+		}
+	}
 }
 
 void AnimationsSystem::RegisterAnimationEvtHandler(AnimationEventHandler* p_handler)

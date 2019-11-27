@@ -27,6 +27,7 @@
 #include "systems.h"
 #include "entitynodegraph.h"
 #include "animationsaspect.h"
+#include "renderingaspect.h"
 #include "timeaspect.h"
 
 namespace DrawSpace
@@ -64,7 +65,7 @@ protected:
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
 	//recursive
-	void read_bones_hierarchy(const std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes,
+	static void read_bones_hierarchy(const std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes,
 		std::vector<DrawSpace::Aspect::AnimationsAspect::BoneOutput>& p_bones_output,
 		const std::map<dsstring, int>& p_bones_mapping, DrawSpace::Aspect::AnimationsAspect::Node p_node,
 		const DrawSpace::Utils::Matrix& p_parent_transform);
@@ -78,6 +79,12 @@ protected:
 						DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes);
 
 	void compute_node_animationresult_matrix(const DrawSpace::Aspect::AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const;
+
+
+	static void apply_animation_last_key(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
+	static void apply_forced_bones_pos(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
+	static void send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect);
+	void insert_transition_animation(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
 
 public:
     AnimationsSystem();
