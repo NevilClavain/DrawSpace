@@ -437,15 +437,18 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
             RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( id )->getPurpose().GetRenderingNode();
 
             Fx* fx = rnode->GetFx();
-            for( long i = 0; i < fx->GetShadersListSize(); i++ )
-            {
-                Shader* shader = fx->GetShader( i );
-                dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-                resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(res_id);
+			if (fx)
+			{
+				for (long i = 0; i < fx->GetShadersListSize(); i++)
+				{
+					Shader* shader = fx->GetShader(i);
+					dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+					resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(res_id);
 
-                _DRAWSPACE_DELETE_( shader );
-            }
-            fx->ClearShaders();
+					_DRAWSPACE_DELETE_(shader);
+				}
+				fx->ClearShaders();
+			}
 
             _DRAWSPACE_DELETE_( fx );
 
@@ -503,7 +506,10 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
 
 
             dsstring meshe_res_id = dsstring("meshe_") + id;
-            resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
+			if (resources_aspect->GetComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id))
+			{
+				resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
+			}
         }
         m_renderingnodes.clear();
 
