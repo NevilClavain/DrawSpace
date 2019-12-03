@@ -93,10 +93,12 @@ public:
     int LUA_setupinfo(lua_State* p_L);
     int LUA_releaseinfo(lua_State* p_L);
 
-	
-
+	int LUA_configuremesheresource(lua_State* p_L);
+	int LUA_releasemesheresource(lua_State* p_L);
 
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
+
+	int LUA_readmeshesfiledescription(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Entity>::RegType methods[];

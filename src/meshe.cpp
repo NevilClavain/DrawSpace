@@ -42,7 +42,8 @@ Meshe::Meshe( void ) :
 m_importer( NULL ), 
 m_render_data( NULL ),
 m_n_gen_mode(NORMALES_COMPUTED),
-m_tb_gen_mode(TB_COMPUTED)
+//m_tb_gen_mode(TB_COMPUTED)
+m_tb_gen_mode(TB_DISCARDED)
 {
     m_normales_transf.Identity();
 }

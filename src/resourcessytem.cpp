@@ -135,10 +135,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
-            {               
+            {		
                 dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
                 dsstring meshe_id = std::get<2>(e->getPurpose());
-                
+			                
                 if( m_meshesCache.find(final_asset_path) == m_meshesCache.end() )
                 {
                     Meshe::NormalesGenerationMode normales_gen_mode = target_meshe->GetNGenerationMode();
@@ -185,6 +185,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                         aiNode* root = scene->mRootNode;
                         if (root)
                         {
+							ResourcesAspect::MeshesFileDescription mesheFileDescription;
+							mesheFileDescription.file = std::get<1>(e->getPurpose());
+
                             _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS***********************************"));
                             _DSDEBUG(rs_logger, dsstring("resources = ") << final_asset_path);
                             _DSDEBUG(rs_logger, dsstring("scene HasMeshes ") << scene->HasMeshes() );
@@ -205,6 +208,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                             _DSDEBUG(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
                             _DSDEBUG(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
 
+							mesheFileDescription.has_meshes = scene->HasMeshes();
+							mesheFileDescription.num_meshes = scene->mNumMeshes;
+
+							mesheFileDescription.has_animations = scene->HasAnimations();
+							mesheFileDescription.num_animations = scene->mNumAnimations;
 
                             _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
 
@@ -304,19 +312,24 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								load_animations(scene, anims_aspect);
 							}
 							
-                            aiNode* meshe_node = root->FindNode(meshe_id.c_str());
-                            if (meshe_node)
-                            {
-                                build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
-                                m_meshesCache[final_asset_path] = std::make_pair(importer, scene );
+							if (meshe_id != "")
+							{
+								aiNode* meshe_node = root->FindNode(meshe_id.c_str());
+								if (meshe_node)
+								{
+									build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
+									m_meshesCache[final_asset_path] = std::make_pair(importer, scene);
 
-                            }
-                            else
-                            {
-                                _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
-                            }
+								}
+								else
+								{
+									_DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+								}
+							}
 
                             _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
+
+							resources_aspect->AddMeshesFileDescription(mesheFileDescription);
                         }
                         else
                         {

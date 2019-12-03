@@ -71,6 +71,9 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },
     { "setup_info", &LuaClass_Entity::LUA_setupinfo },
     { "release_info", &LuaClass_Entity::LUA_releaseinfo },
+	{ "configure_mesheresource", &LuaClass_Entity::LUA_configuremesheresource },
+	{ "release_mesheresource", &LuaClass_Entity::LUA_releasemesheresource },
+	{ "read_meshesfiledescription", &LuaClass_Entity::LUA_readmeshesfiledescription },
 	{ 0, 0 }
 };
 
@@ -672,4 +675,75 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
 	} LUA_CATCH;
 
     return 0;
+}
+
+int LuaClass_Entity::LUA_configuremesheresource(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Entity::configure_mesheresource : argument(s) missing");
+	}
+	dsstring filename = luaL_checkstring(p_L, 1);
+	dsstring meshe_id = luaL_checkstring(p_L, 2);
+
+	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
+	if (!resources_aspect)
+	{
+		LUA_ERROR("Entity::configure_mesheresource : attached entity has no resources aspect !");
+	}
+
+	LUA_TRY
+	{
+		resources_aspect->AddComponent<Meshe>("meshe");
+		
+		Meshe* meshe = _DRAWSPACE_NEW_(Meshe, Meshe);
+
+		resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_resource",
+		std::make_tuple(meshe, filename, meshe_id, false));
+
+	} LUA_CATCH
+
+	return 0;
+}
+
+int LuaClass_Entity::LUA_releasemesheresource(lua_State* p_L)
+{
+	return 0;
+}
+
+int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
+	}
+	dsstring filename = luaL_checkstring(p_L, 1);
+	dsstring section = luaL_checkstring(p_L, 2);
+
+	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
+	if (!resources_aspect)
+	{
+		LUA_ERROR("Entity::read_meshesfiledescription : attached entity has no resources aspect !");
+	}
+
+	LUA_TRY
+	{
+		ResourcesAspect::MeshesFileDescription mesheFileDescription = resources_aspect->GetMeshesFileDescription(filename);
+
+		if ("root" == section)
+		{
+			lua_pushstring(p_L, mesheFileDescription.file.c_str());
+			lua_pushinteger(p_L, mesheFileDescription.has_meshes);
+			lua_pushinteger(p_L, mesheFileDescription.num_meshes);
+			lua_pushinteger(p_L, mesheFileDescription.has_animations);
+			lua_pushinteger(p_L, mesheFileDescription.num_animations);
+
+			return 5;
+		}
+
+	} LUA_CATCH
+
+	return 0;
 }

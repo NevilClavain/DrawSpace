@@ -23,3 +23,23 @@
 /* -*-LIC_END-*- */
 
 #include "resourcesaspect.h"
+
+using namespace DrawSpace;
+using namespace DrawSpace::Aspect;
+
+ResourcesAspect::MeshesFileDescription ResourcesAspect::GetMeshesFileDescription(const dsstring& p_filename) const
+{
+	if (m_meshes_file_description.count(p_filename))
+	{
+		return m_meshes_file_description.at(p_filename);
+	}
+	else
+	{
+		_DSEXCEPTION("unknown filename key entry in meshe file description file table")
+	}
+}
+
+void ResourcesAspect::AddMeshesFileDescription(const MeshesFileDescription& p_descr)
+{
+	m_meshes_file_description[p_descr.file] = p_descr;
+}

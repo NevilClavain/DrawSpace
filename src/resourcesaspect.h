@@ -30,7 +30,29 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class ResourcesAspect : public Core::Aspect {};
+class ResourcesAspect : public Core::Aspect 
+{
+public:
+
+	struct MeshesFileDescription
+	{
+		dsstring	file;
+		bool		has_meshes;
+		int			num_meshes;
+
+		bool		has_animations;
+		int			num_animations;
+	};
+
+	void AddMeshesFileDescription(const MeshesFileDescription& p_descr);
+	MeshesFileDescription GetMeshesFileDescription( const dsstring& p_filename ) const;
+
+private:
+	std::map<dsstring, MeshesFileDescription> m_meshes_file_description;
+
+
+
+};
 }
 }
 
