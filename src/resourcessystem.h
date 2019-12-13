@@ -29,6 +29,7 @@
 #include "systems.h"
 #include "entitynodegraph.h"
 #include "animationsaspect.h"
+#include "resourcesaspect.h"
 
 struct aiNode;
 struct aiScene;
@@ -78,7 +79,7 @@ protected:
 	void load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, Aspect::AnimationsAspect::Node>& p_node_table);
 
     // recursive
-    void dump_assimp_scene_node(aiNode* p_ai_node, int depth);
+    void dump_assimp_scene_node(aiNode* p_ai_node, int depth, Aspect::ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names);
 
     template<typename T>
     void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blobs, dsstring p_final_asset_path) const

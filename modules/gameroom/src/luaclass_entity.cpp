@@ -680,12 +680,11 @@ int LuaClass_Entity::LUA_connect_renderingaspect_rendergraph( lua_State* p_L )
 int LuaClass_Entity::LUA_configuremesheresource(lua_State* p_L)
 {
 	int argc = lua_gettop(p_L);
-	if (argc < 2)
+	if (argc < 1)
 	{
 		LUA_ERROR("Entity::configure_mesheresource : argument(s) missing");
 	}
 	dsstring filename = luaL_checkstring(p_L, 1);
-	dsstring meshe_id = luaL_checkstring(p_L, 2);
 
 	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
 	if (!resources_aspect)
@@ -699,8 +698,7 @@ int LuaClass_Entity::LUA_configuremesheresource(lua_State* p_L)
 		
 		Meshe* meshe = _DRAWSPACE_NEW_(Meshe, Meshe);
 
-		resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_resource",
-		std::make_tuple(meshe, filename, meshe_id, false));
+		resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_resource", std::make_tuple(meshe, filename, "", false));
 
 	} LUA_CATCH
 
@@ -742,8 +740,82 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 
 			return 5;
 		}
+		else if ("meshes_list" == section)
+		{
+			for (auto& e : mesheFileDescription.meshes_descriptions)
+			{
+				lua_pushstring(p_L, e.node_id.c_str());
+			}
+
+			return mesheFileDescription.meshes_descriptions.size();
+		}
+		else if ("meshe" == section)
+		{
+			if (argc < 3)
+			{
+				LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
+			}
+
+			int index = luaL_checkint(p_L, 3) - 1; // lua-style index [1 to n]
+
+			if (index >= 0 && index < mesheFileDescription.meshes_descriptions.size())
+			{
+				lua_pushstring(p_L, mesheFileDescription.meshes_descriptions[index].node_id.c_str());
+				lua_pushstring(p_L, mesheFileDescription.meshes_descriptions[index].name.c_str());
+
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].has_positions);
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].has_faces);
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].has_normales);
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].has_tbn);
+
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].num_vertices);
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].num_faces);				
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].num_uvchannels);
+				lua_pushinteger(p_L, mesheFileDescription.meshes_descriptions[index].num_bones);
+
+				return 10;
+			}
+			else
+			{
+				LUA_ERROR("Entity::read_meshesfiledescription : bad anim index !");
+				return 0;
+			}			
+		}
+		else if ("anims_list" == section)
+		{
+			for (auto& e : mesheFileDescription.anims_descriptions)
+			{
+				lua_pushstring(p_L, e.name.c_str());
+			}
+
+			return mesheFileDescription.anims_descriptions.size();
+		}
+		else if ("anim" == section)
+		{
+			if (argc < 3)
+			{
+				LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
+			}
+
+			int index = luaL_checkint(p_L, 3) - 1; // lua-style index [1 to n]
+
+			if (index >= 0 && index < mesheFileDescription.anims_descriptions.size())
+			{
+				lua_pushstring(p_L, mesheFileDescription.anims_descriptions[index].name.c_str());
+				lua_pushnumber(p_L, mesheFileDescription.anims_descriptions[index].ticks_per_seconds);
+				lua_pushnumber(p_L, mesheFileDescription.anims_descriptions[index].duration_seconds);
+				lua_pushinteger(p_L, mesheFileDescription.anims_descriptions[index].num_channels);
+
+				return 4;
+			}
+			else
+			{
+				LUA_ERROR("Entity::read_meshesfiledescription : bad anim index !");
+
+				return 0;
+			}			
+		}
 
 	} LUA_CATCH
-
 	return 0;
 }

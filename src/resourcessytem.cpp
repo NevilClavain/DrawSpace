@@ -24,8 +24,6 @@
 
 #include "resourcessystem.h"
 #include "animationssystem.h"
-#include "resourcesaspect.h"
-
 
 #include "animationsaspect.h"
 #include "renderingaspect.h"
@@ -135,232 +133,199 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
-            {		
+            {
+				ResourcesAspect::MeshesFileDescription mesheFileDescription;
+
                 dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
                 dsstring meshe_id = std::get<2>(e->getPurpose());
-			                
-                if( m_meshesCache.find(final_asset_path) == m_meshesCache.end() )
-                {
-                    Meshe::NormalesGenerationMode normales_gen_mode = target_meshe->GetNGenerationMode();
-                    Meshe::TangentBinormalesGenerationMode tb_gen_mode = target_meshe->GetTBGenerationMode();
+			      
+				aiMesh** meshes;
+				std::vector<dsstring> meshes_node_owner_names; // associé a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node propriétaire du meshes[i]
 
-                    void* data;
-                    long size;
-                    data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
-                    if (!data)
-                    {
-                        _DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
-                    }
+				int nb_meshes;
+				aiNode* root;
+				const aiScene* scene;
 
-                    Assimp::Importer* importer = new Assimp::Importer();
+				if (m_meshesCache.find(final_asset_path) == m_meshesCache.end())
+				{
+					Meshe::NormalesGenerationMode normales_gen_mode = target_meshe->GetNGenerationMode();
+					Meshe::TangentBinormalesGenerationMode tb_gen_mode = target_meshe->GetTBGenerationMode();
 
-                    unsigned int flags = aiProcess_Triangulate |
-                        aiProcess_JoinIdenticalVertices |
-                        aiProcess_FlipUVs |
-                        aiProcess_SortByPType;
+					void* data;
+					long size;
+					data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
+					if (!data)
+					{
+						_DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
+					}
 
-                    if(Meshe::NORMALES_AUTO == normales_gen_mode || Meshe::NORMALES_FROMLOADER == normales_gen_mode)
-                    {
+					Assimp::Importer* importer = new Assimp::Importer();
+
+					unsigned int flags = aiProcess_Triangulate |
+						aiProcess_JoinIdenticalVertices |
+						aiProcess_FlipUVs |
+						aiProcess_SortByPType;
+
+					if (Meshe::NORMALES_AUTO == normales_gen_mode || Meshe::NORMALES_FROMLOADER == normales_gen_mode)
+					{
 						flags |= aiProcess_GenNormals;
-                    }
+					}
 					else if (Meshe::NORMALES_AUTO_SMOOTH == normales_gen_mode || Meshe::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
 					{
 						flags |= aiProcess_GenSmoothNormals;
 					}
 
-                    if (Meshe::TB_AUTO == tb_gen_mode || Meshe::TB_FROMLOADER == tb_gen_mode)
-                    {
-                        flags |= aiProcess_CalcTangentSpace;
-                    }
+					if (Meshe::TB_AUTO == tb_gen_mode || Meshe::TB_FROMLOADER == tb_gen_mode)
+					{
+						flags |= aiProcess_CalcTangentSpace;
+					}
 
-                    const aiScene* scene = importer->ReadFileFromMemory(data, size,flags);
-                    if (scene)
-                    {
-                        if( !scene->HasMeshes() )
-                        {
-                            _DSEXCEPTION("No meshes in file : " + final_asset_path);
-                        }
-                        aiMesh** meshes = scene->mMeshes;
+					scene = importer->ReadFileFromMemory(data, size, flags);
+					if (scene)
+					{
+						if (!scene->HasMeshes())
+						{
+							_DSEXCEPTION("No meshes in file : " + final_asset_path);
+						}
+						meshes = scene->mMeshes;
+						nb_meshes = scene->mNumMeshes;
+						root = scene->mRootNode;	
+						if(!root)
+						{
+							_DSEXCEPTION("No root found in assimp scene");
+						}
+					}
+					else
+					{
+						_DSEXCEPTION("No scene in file : " + final_asset_path);
+					}
 
-                        aiNode* root = scene->mRootNode;
-                        if (root)
-                        {
-							ResourcesAspect::MeshesFileDescription mesheFileDescription;
-							mesheFileDescription.file = std::get<1>(e->getPurpose());
+					m_meshesCache[final_asset_path] = std::make_pair(importer, scene);
+				}
+				else
+				{
+					std::pair<Assimp::Importer*, const aiScene*> entry = m_meshesCache.at(final_asset_path);
 
-                            _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS***********************************"));
-                            _DSDEBUG(rs_logger, dsstring("resources = ") << final_asset_path);
-                            _DSDEBUG(rs_logger, dsstring("scene HasMeshes ") << scene->HasMeshes() );
-                            _DSDEBUG(rs_logger, dsstring("scene num Meshes ") << scene->mNumMeshes);
+					meshes = entry.second->mMeshes;
+					nb_meshes = entry.second->mNumMeshes;
+					root = entry.second->mRootNode;
+					scene = entry.second;
+				}
 
-                            _DSDEBUG(rs_logger, dsstring("scene HasTextures ") << scene->HasTextures());
-                            _DSDEBUG(rs_logger, dsstring("scene num Textures ") << scene->mNumTextures);
+				mesheFileDescription.file = std::get<1>(e->getPurpose());
 
-                            _DSDEBUG(rs_logger, dsstring("scene HasMaterials ") << scene->HasMaterials());
-                            _DSDEBUG(rs_logger, dsstring("scene num Materials ") << scene->mNumMaterials);
+				_DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS***********************************"));
+				_DSDEBUG(rs_logger, dsstring("resources = ") << final_asset_path);
+				_DSDEBUG(rs_logger, dsstring("scene HasMeshes ") << scene->HasMeshes());
+				_DSDEBUG(rs_logger, dsstring("scene num Meshes ") << scene->mNumMeshes);
 
-                            _DSDEBUG(rs_logger, dsstring("scene HasLights ") << scene->HasLights());
-                            _DSDEBUG(rs_logger, dsstring("scene num Lights ") << scene->mNumLights);
+				_DSDEBUG(rs_logger, dsstring("scene HasTextures ") << scene->HasTextures());
+				_DSDEBUG(rs_logger, dsstring("scene num Textures ") << scene->mNumTextures);
 
-                            _DSDEBUG(rs_logger, dsstring("scene HasCameras ") << scene->HasCameras());
-                            _DSDEBUG(rs_logger, dsstring("scene num Cameras ") << scene->mNumCameras);
+				_DSDEBUG(rs_logger, dsstring("scene HasMaterials ") << scene->HasMaterials());
+				_DSDEBUG(rs_logger, dsstring("scene num Materials ") << scene->mNumMaterials);
 
-                            _DSDEBUG(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
-                            _DSDEBUG(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
+				_DSDEBUG(rs_logger, dsstring("scene HasLights ") << scene->HasLights());
+				_DSDEBUG(rs_logger, dsstring("scene num Lights ") << scene->mNumLights);
 
-							mesheFileDescription.has_meshes = scene->HasMeshes();
-							mesheFileDescription.num_meshes = scene->mNumMeshes;
+				_DSDEBUG(rs_logger, dsstring("scene HasCameras ") << scene->HasCameras());
+				_DSDEBUG(rs_logger, dsstring("scene num Cameras ") << scene->mNumCameras);
 
-							mesheFileDescription.has_animations = scene->HasAnimations();
-							mesheFileDescription.num_animations = scene->mNumAnimations;
+				_DSDEBUG(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
+				_DSDEBUG(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
 
-                            _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
+				mesheFileDescription.has_meshes = scene->HasMeshes();
+				mesheFileDescription.num_meshes = scene->mNumMeshes;
 
-                            dump_assimp_scene_node(root, 1);
-
-                            _DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
-
-
-							_DSDEBUG(rs_logger, dsstring("************************************Animations list BEGIN***********************************"));
-
-							for (size_t i = 0; i < scene->mNumAnimations; i++)
-							{
-								_DSDEBUG(rs_logger, dsstring("Animation ") << i);
-
-								aiAnimation* animation = scene->mAnimations[i];
-
-								_DSDEBUG(rs_logger, dsstring("Name = ") << animation->mName.C_Str());
-								_DSDEBUG(rs_logger, dsstring("TicksPerSeconds = ") << animation->mTicksPerSecond);
-								_DSDEBUG(rs_logger, dsstring("Duration (ticks) = ") << animation->mDuration);
-								_DSDEBUG(rs_logger, dsstring("Num Channels = ") << animation->mNumChannels);
-								_DSDEBUG(rs_logger, dsstring("Num Mesh Channels = ") << animation->mMeshChannels);
-								_DSDEBUG(rs_logger, dsstring("Num Morph Mesh Channels = ") << animation->mNumMorphMeshChannels);
-
-								
-								for (size_t j = 0; j < animation->mNumChannels; j++)
-								{
-									/*
-									aiNodeAnim* nodeAnim = animation->mChannels[j];
-
-									_DSDEBUG(rs_logger, dsstring("	nodeAnim ") << j);
-									_DSDEBUG(rs_logger, dsstring("	nodeAnim Name = ") << nodeAnim->mNodeName.C_Str());
-
-									static const std::map <aiAnimBehaviour, dsstring> animBehaviourStrings = {
-
-										{ aiAnimBehaviour_DEFAULT, "aiAnimBehaviour_DEFAULT" },
-										{ aiAnimBehaviour_CONSTANT, "aiAnimBehaviour_CONSTANT" },
-										{ aiAnimBehaviour_LINEAR, "aiAnimBehaviour_LINEAR" },
-										{ aiAnimBehaviour_REPEAT, "aiAnimBehaviour_REPEAT" }
-									};
-
-									dsstring preState = animBehaviourStrings.at(nodeAnim->mPreState);
-									dsstring postState = animBehaviourStrings.at(nodeAnim->mPostState);
-
-									_DSDEBUG(rs_logger, dsstring("		preState =  ") << preState);
-									_DSDEBUG(rs_logger, dsstring("		postState =  ") << postState);
-									*/
-
-									/*
-									_DSDEBUG(rs_logger, dsstring("	NumPositionKey = ") << nodeAnim->mNumPositionKeys);
-
-									for (size_t k = 0; k < nodeAnim->mNumPositionKeys; k++)
-									{
-										aiVectorKey key = nodeAnim->mPositionKeys[k];
-
-										_DSDEBUG(rs_logger, dsstring("		pos key ") << k);
-										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
-									}
-
-									_DSDEBUG(rs_logger, dsstring("	NumRotationKey = ") << nodeAnim->mNumRotationKeys);
-
-									for (size_t k = 0; k < nodeAnim->mNumRotationKeys; k++)
-									{
-										aiQuatKey key = nodeAnim->mRotationKeys[k];
-
-										_DSDEBUG(rs_logger, dsstring("		rot key ") << k);
-										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
-
-									}
-
-									_DSDEBUG(rs_logger, dsstring("	NumScalingKey = ") << nodeAnim->mNumScalingKeys);
-
-									for (size_t k = 0; k < nodeAnim->mNumScalingKeys; k++)
-									{
-										aiVectorKey key = nodeAnim->mScalingKeys[k];
-
-										_DSDEBUG(rs_logger, dsstring("		scale key ") << k);
-										_DSDEBUG(rs_logger, dsstring("		time = ") << key.mTime);
-									}
-									*/
-								}								
-							}
-
-							_DSDEBUG(rs_logger, dsstring("************************************Animations list END*************************************"));
-							
-							AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
-							if (anims_aspect)
-							{
-								std::map<dsstring, AnimationsAspect::Node> scene_nodes;
-								load_scene_nodes_hierachy(root, 1, scene_nodes);
-								anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose() = scene_nodes;
-
-								anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose() = root->mName.C_Str();
+				mesheFileDescription.has_animations = scene->HasAnimations();
+				mesheFileDescription.num_animations = scene->mNumAnimations;
 
 
-								/// Loading animations & keyframes infos
+				meshes_node_owner_names.resize(scene->mNumMeshes);
 
-								load_animations(scene, anims_aspect);
-							}
-							
-							if (meshe_id != "")
-							{
-								aiNode* meshe_node = root->FindNode(meshe_id.c_str());
-								if (meshe_node)
-								{
-									build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
-									m_meshesCache[final_asset_path] = std::make_pair(importer, scene);
+				_DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
 
-								}
-								else
-								{
-									_DSEXCEPTION("cannot locate meshe objet " + meshe_id);
-								}
-							}
+				dump_assimp_scene_node(root, 1, mesheFileDescription, meshes_node_owner_names);
 
-                            _DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
+				_DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
 
-							resources_aspect->AddMeshesFileDescription(mesheFileDescription);
-                        }
-                        else
-                        {
-                            _DSEXCEPTION("No root found in assimp scene description");
-                        }
+				// ICI : remplir les descriptions meshes a partir du tableau aiMesh** meshes;
+				for (int i = 0; i < nb_meshes; i++)
+				{
+					ResourcesAspect::MesheDescription mesheDescription;
+					mesheDescription.node_id = meshes_node_owner_names[i];
+					mesheDescription.name = meshes[i]->mName.C_Str();
+					mesheDescription.has_positions = meshes[i]->HasPositions();
+					mesheDescription.has_faces = meshes[i]->HasFaces();
+					mesheDescription.has_normales = meshes[i]->HasNormals();
+					mesheDescription.has_tbn = meshes[i]->HasTangentsAndBitangents();
+					mesheDescription.num_bones = meshes[i]->mNumBones;
+					mesheDescription.num_vertices = meshes[i]->mNumVertices;
+					mesheDescription.num_faces = meshes[i]->mNumFaces;
+					mesheDescription.num_uvchannels = meshes[i]->GetNumUVChannels();
 
-                        _DRAWSPACE_DELETE_N_(data);
-                    }
-                    else
-                    {
-                        _DSEXCEPTION("Assimp importer cannot load meshe " + final_asset_path);
-                    }
-                }
-                else
-                {
-                    std::pair<Assimp::Importer*, const aiScene*> entry = m_meshesCache.at(final_asset_path);
+					mesheFileDescription.meshes_descriptions.push_back(mesheDescription);
+				}
+				//////
 
-                    aiMesh** meshes = entry.second->mMeshes;
-                    aiNode* root = entry.second->mRootNode;
 
-                    aiNode* meshe_node = root->FindNode(meshe_id.c_str());
 
-                    if(meshe_node)
-                    {
-                        build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
-                    }
-                    else
-                    {
-                        _DSEXCEPTION("cannot locate meshe objet " + meshe_id);
-                    }
-                }
+				_DSDEBUG(rs_logger, dsstring("************************************Animations list BEGIN***********************************"));
+
+				for (size_t i = 0; i < scene->mNumAnimations; i++)
+				{
+					_DSDEBUG(rs_logger, dsstring("Animation ") << i);
+
+					aiAnimation* animation = scene->mAnimations[i];
+
+					_DSDEBUG(rs_logger, dsstring("Name = ") << animation->mName.C_Str());
+					_DSDEBUG(rs_logger, dsstring("TicksPerSeconds = ") << animation->mTicksPerSecond);
+					_DSDEBUG(rs_logger, dsstring("Duration (ticks) = ") << animation->mDuration);
+					_DSDEBUG(rs_logger, dsstring("Num Channels = ") << animation->mNumChannels);
+					_DSDEBUG(rs_logger, dsstring("Num Mesh Channels = ") << animation->mMeshChannels);
+					_DSDEBUG(rs_logger, dsstring("Num Morph Mesh Channels = ") << animation->mNumMorphMeshChannels);
+
+					ResourcesAspect::AnimationDescription animation_description;
+
+					animation_description.name = animation->mName.C_Str();
+					animation_description.ticks_per_seconds = animation->mTicksPerSecond;
+					animation_description.num_channels = animation->mNumChannels;
+					animation_description.duration_seconds = animation->mDuration / animation->mTicksPerSecond;
+
+					mesheFileDescription.anims_descriptions.push_back(animation_description);
+				}
+
+				_DSDEBUG(rs_logger, dsstring("************************************Animations list END*************************************"));
+
+				AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+				if (anims_aspect)
+				{
+					std::map<dsstring, AnimationsAspect::Node> scene_nodes;
+					load_scene_nodes_hierachy(root, 1, scene_nodes);
+					anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose() = scene_nodes;
+
+					anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose() = root->mName.C_Str();
+
+					/// Loading animations & keyframes infos
+					load_animations(scene, anims_aspect);
+				}
+
+				if (meshe_id != "")
+				{
+					aiNode* meshe_node = root->FindNode(meshe_id.c_str());
+					if (meshe_node)
+					{
+						build_meshe(p_entity, meshe_id, meshe_node, meshes, target_meshe);
+					}
+					else
+					{
+						_DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+					}
+				}
+
+				_DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
+
+				resources_aspect->AddMeshesFileDescription(mesheFileDescription);
 
                 loaded = true;
             }
@@ -428,7 +393,7 @@ void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* 
 	}
 }
 
-void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
+void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth, ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names)
 {
     dsstring spacing(depth, ' ');
     _DSDEBUG(rs_logger, spacing + dsstring("node : ") << p_ai_node->mName.C_Str() << " nb children : " << p_ai_node->mNumChildren);
@@ -439,9 +404,19 @@ void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth)
     _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
     _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
 
+	if (p_ai_node->mNumMeshes > 0)
+	{
+		for (unsigned int i = 0; i < p_ai_node->mNumMeshes; i++)
+		{
+			int index = p_ai_node->mMeshes[i];
+
+			p_meshes_node_owner_names[index] = dsstring( p_ai_node->mName.C_Str() );
+		}
+	}
+
     for( size_t i = 0; i < p_ai_node->mNumChildren; i++)
     {
-        dump_assimp_scene_node(p_ai_node->mChildren[i], depth+1);
+        dump_assimp_scene_node(p_ai_node->mChildren[i], depth+1, p_description, p_meshes_node_owner_names);
     }
 }
 
@@ -507,7 +482,6 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
     Meshe::NormalesGenerationMode normales_gen_mode = p_destination->GetNGenerationMode();
     Meshe::TangentBinormalesGenerationMode tb_gen_mode = p_destination->GetTBGenerationMode();
 
-
     unsigned int nb_meshes = p_ai_node->mNumMeshes;
     int global_index = 0;
 
@@ -517,7 +491,7 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
         aiMesh* meshe = p_meshes[indexes[i]];
 
         _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS***********************************"));
-        _DSDEBUG(rs_logger, dsstring("meshe id = ") + p_id);
+        _DSDEBUG(rs_logger, dsstring("owner node id = ") + p_id);
         _DSDEBUG(rs_logger, dsstring("name = ") << dsstring( meshe->mName.C_Str() ));
         _DSDEBUG(rs_logger, dsstring("meshe HasPositions ") << meshe->HasPositions());
         _DSDEBUG(rs_logger, dsstring("meshe HasFaces ") << meshe->HasFaces());

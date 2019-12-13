@@ -34,14 +34,39 @@ class ResourcesAspect : public Core::Aspect
 {
 public:
 
+	struct AnimationDescription
+	{
+		dsstring	name;
+		dsreal		ticks_per_seconds;
+		dsreal		duration_seconds;
+		int			num_channels;
+	};
+
+	struct MesheDescription
+	{
+		dsstring	node_id;
+		dsstring	name;
+		bool		has_positions;
+		bool		has_faces;
+		int         num_vertices;
+		int         num_faces;
+		bool		has_normales;
+		bool		has_tbn;
+		int  		num_bones;
+		int			num_uvchannels;
+	};
+
 	struct MeshesFileDescription
 	{
-		dsstring	file;
-		bool		has_meshes;
-		int			num_meshes;
+		dsstring							file;
+		bool								has_meshes;
+		int									num_meshes;
 
-		bool		has_animations;
-		int			num_animations;
+		bool								has_animations;
+		int									num_animations;
+
+		std::vector<AnimationDescription>	anims_descriptions;
+		std::vector<MesheDescription>		meshes_descriptions;
 	};
 
 	void AddMeshesFileDescription(const MeshesFileDescription& p_descr);
@@ -49,9 +74,6 @@ public:
 
 private:
 	std::map<dsstring, MeshesFileDescription> m_meshes_file_description;
-
-
-
 };
 }
 }
