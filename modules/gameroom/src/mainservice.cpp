@@ -393,7 +393,12 @@ void MainService::process_console_command( const dsstring& p_cmd )
     if( false == LuaContext::GetInstance()->Execute( p_cmd ) )
     {
         dsstring lua_err = LuaContext::GetInstance()->GetLastError();
-        print_console_line( lua_err );
+
+		// cleanup error message : remove CR chars
+		lua_err.erase(std::remove(lua_err.begin(), lua_err.end(), 0x0d), lua_err.end());
+		lua_err.erase(std::remove(lua_err.begin(), lua_err.end(), 0x0a), lua_err.end());
+
+		print_console_line(lua_err);
     }
     else
     {
