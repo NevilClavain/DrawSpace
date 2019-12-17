@@ -749,7 +749,14 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 
 	LUA_TRY
 	{
-		ResourcesAspect::MeshesFileDescription mesheFileDescription = resources_aspect->GetMeshesFileDescription(index - 1);
+		// convert from lua index policy [1 - n]
+		index = index - 1;
+		if (index >= resources_aspect->GetMeshesFileDescriptionSize())
+		{
+			LUA_ERROR("Entity::read_meshesfiledescription : bad meshe file description index !");
+			return 0;
+		}
+		ResourcesAspect::MeshesFileDescription mesheFileDescription = resources_aspect->GetMeshesFileDescription(index);
 
 		if ("root" == section)
 		{
