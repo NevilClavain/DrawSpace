@@ -74,6 +74,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "configure_mesheresource", &LuaClass_Entity::LUA_configuremesheresource },
 	{ "release_mesheresource", &LuaClass_Entity::LUA_releasemesheresource },
 	{ "read_meshesfiledescription", &LuaClass_Entity::LUA_readmeshesfiledescription },
+	{ "read_meshesfiledescriptionssize", &LuaClass_Entity::LUA_readmeshesfiledescriptionssize },
 	{ 0, 0 }
 };
 
@@ -707,7 +708,27 @@ int LuaClass_Entity::LUA_configuremesheresource(lua_State* p_L)
 
 int LuaClass_Entity::LUA_releasemesheresource(lua_State* p_L)
 {
+	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
+	if (!resources_aspect)
+	{
+		LUA_ERROR("Entity::release_mesheresource : attached entity has no resources aspect !");
+	}
+
+	resources_aspect->RemoveComponent <std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe_resource");
 	return 0;
+}
+
+int LuaClass_Entity::LUA_readmeshesfiledescriptionssize(lua_State* p_L)
+{
+	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
+	if (!resources_aspect)
+	{
+		LUA_ERROR("Entity::read_meshesfiledescription : attached entity has no resources aspect !");
+	}
+
+	lua_pushinteger(p_L,resources_aspect->GetMeshesFileDescriptionSize());
+
+	return 1;  
 }
 
 int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
@@ -717,7 +738,7 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 	{
 		LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 	}
-	dsstring filename = luaL_checkstring(p_L, 1);
+	int index = luaL_checkint(p_L, 1);
 	dsstring section = luaL_checkstring(p_L, 2);
 
 	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
@@ -728,7 +749,7 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 
 	LUA_TRY
 	{
-		ResourcesAspect::MeshesFileDescription mesheFileDescription = resources_aspect->GetMeshesFileDescription(filename);
+		ResourcesAspect::MeshesFileDescription mesheFileDescription = resources_aspect->GetMeshesFileDescription(index - 1);
 
 		if ("root" == section)
 		{

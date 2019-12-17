@@ -70,10 +70,14 @@ public:
 	};
 
 	void AddMeshesFileDescription(const MeshesFileDescription& p_descr);
-	MeshesFileDescription GetMeshesFileDescription( const dsstring& p_filename ) const;
+
+	size_t GetMeshesFileDescriptionSize(void) const;
+	MeshesFileDescription GetMeshesFileDescription(int p_index) const;
 
 private:
-	std::map<dsstring, MeshesFileDescription> m_meshes_file_description;
+
+	std::vector<MeshesFileDescription>	m_meshes_file_description;
+	std::set<dsstring>					m_filenames_table;
 };
 }
 }

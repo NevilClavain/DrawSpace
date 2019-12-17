@@ -27,19 +27,21 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Aspect;
 
-ResourcesAspect::MeshesFileDescription ResourcesAspect::GetMeshesFileDescription(const dsstring& p_filename) const
+size_t ResourcesAspect::GetMeshesFileDescriptionSize(void) const
 {
-	if (m_meshes_file_description.count(p_filename))
-	{
-		return m_meshes_file_description.at(p_filename);
-	}
-	else
-	{
-		_DSEXCEPTION("unknown filename key entry in meshe file description file table")
-	}
+	return m_meshes_file_description.size();
+}
+
+ResourcesAspect::MeshesFileDescription ResourcesAspect::GetMeshesFileDescription(int p_index) const
+{
+	return m_meshes_file_description[p_index];
 }
 
 void ResourcesAspect::AddMeshesFileDescription(const MeshesFileDescription& p_descr)
 {
-	m_meshes_file_description[p_descr.file] = p_descr;
+	if (0 == m_filenames_table.count(p_descr.file))
+	{
+		m_meshes_file_description.push_back(p_descr);
+		m_filenames_table.insert(p_descr.file);
+	}
 }

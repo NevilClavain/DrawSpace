@@ -39,6 +39,7 @@ const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[
     { "set_camera", &LuaClass_EntityNodeGraph::LUA_setcamera },
     { "unset_camera", &LuaClass_EntityNodeGraph::LUA_unsetcamera },
     { "dump", &LuaClass_EntityNodeGraph::LUA_dumpcontent },
+	{ "find_entityname", &LuaClass_EntityNodeGraph::LUA_findentityname },
 	{ 0, 0 }
 };
 
@@ -171,4 +172,27 @@ int LuaClass_EntityNodeGraph::LUA_dumpcontent( lua_State* p_L )
 {
     m_entitygraph.PushSignal_DumpToTrace();
     return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_findentityname(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("EntityNodeGraph::find_entityname : argument(s) missing");
+	}
+	LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check(p_L, 1);
+	DrawSpace::Core::Entity& ref_entity = lua_ent->GetEntity();
+
+	const auto entity { std::find_if(m_entities.begin(), m_entities.end(),[&](auto elt) { return(elt.second.GetEntity() == &ref_entity);})};
+	if (entity != m_entities.end())
+	{
+		lua_pushstring(p_L, entity->first.c_str());
+		return 1;
+	}
+	else
+	{
+		LUA_ERROR("EntityNodeGraph::find_entityname : cannot find entity name : unknow entity");
+		return 0;
+	}
 }

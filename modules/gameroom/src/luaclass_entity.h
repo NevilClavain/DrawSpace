@@ -99,6 +99,7 @@ public:
     int LUA_connect_renderingaspect_rendergraph( lua_State* p_L );
 
 	int LUA_readmeshesfiledescription(lua_State* p_L);
+	int LUA_readmeshesfiledescriptionssize(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Entity>::RegType methods[];
