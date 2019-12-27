@@ -200,6 +200,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						_DSEXCEPTION("No scene in file : " + final_asset_path);
 					}
 
+					_DRAWSPACE_DELETE_N_(data);
+
 					m_meshesCache[final_asset_path] = std::make_pair(importer, scene);
 				}
 				else

@@ -407,7 +407,7 @@ void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
         if( fp )
         {
             unsigned long fs = fileSize( fp );
-            ptr = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[fs], fs );
+            ptr = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT( unsigned char, unsigned char[fs], fs, p_file);
             if( ptr )
             {
                 fread( (void *)ptr, fs, 1, fp );	
@@ -432,7 +432,7 @@ void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
         PHYSFS_sint64 file_size = PHYSFS_fileLength( vfile );
 
         unsigned char *vFileBuf;
-        vFileBuf = _DRAWSPACE_NEW_EXPLICIT_SIZE_( unsigned char, unsigned char[file_size], file_size );
+        vFileBuf = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT( unsigned char, unsigned char[file_size], file_size, p_file );
         int length_read = PHYSFS_read( vfile, vFileBuf, 1, file_size );
 
         if( length_read != file_size )
