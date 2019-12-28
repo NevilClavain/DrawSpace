@@ -43,8 +43,8 @@ public:
         {
         }
 
-        int                                     rendering_order;
-        dsstring                                passname;
+		dsstring                                rendercontexname;
+        int                                     rendering_order;        
         std::vector<LuaClass_FxParams::Data>    fxparams;
         std::vector<LuaClass_TexturesSet::Data> textures_sets;
         std::vector<LuaClass_TexturesSet::Data> vertex_textures_sets;

@@ -338,7 +338,7 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
         for (size_t i = 0; i < rcfg_data.render_contexts.size(); i++)
         {
             LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
-            if( render_context.passname == pass_id )
+            if( render_context.rendercontexname == pass_id )
             {        
                 ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
                 if( vpq )

@@ -47,7 +47,7 @@ LuaClass_RenderContext::LuaClass_RenderContext( lua_State* p_L )
         LUA_ERROR( "RenderContext::RenderContext : argument(s) missing" );
 	}
 
-    m_data.passname = luaL_checkstring( p_L, 1 );
+    m_data.rendercontexname = luaL_checkstring( p_L, 1 );
 }
 
 LuaClass_RenderContext::~LuaClass_RenderContext( void )

@@ -52,7 +52,7 @@ const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
     { "register_to_rendering", &LuaClass_Rendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_Rendering::LUA_unregisterfromrendering },
     { "set_shaderrealvector", &LuaClass_Rendering::LUA_setshaderrealvector },
-    
+	{ "set_passforrendercontext", &LuaClass_Rendering::LUA_setPassForRenderContext },    
 	{ 0, 0 }
 };
 
@@ -224,7 +224,14 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 {
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
 
-                    dsstring pass_name = render_context.passname;
+                    //dsstring pass_name = render_context.passname;
+
+					if (m_rcname_to_passes.end() == m_rcname_to_passes.find(render_context.rendercontexname))
+					{
+						cleanup_resources(p_L);
+						LUA_ERROR("Rendering::configure : unknown render context name in m_rcname_to_passes : cannot find corresponding pass");
+					}
+					dsstring pass_name = m_rcname_to_passes.at(render_context.rendercontexname);
                 
                     passes.push_back( pass_name );
                 }          
@@ -236,7 +243,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 for( int i = 0; i < rc_list_size; i++ )
                 {
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-                    dsstring pass_name = render_context.passname;
+                    //dsstring pass_name = render_context.passname;
 
                     int textures_set_size = render_context.textures_sets.size();
 
@@ -275,7 +282,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 for( int i = 0; i < rc_list_size; i++ )
                 {
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-                    dsstring pass_name = render_context.passname;
+                    //dsstring pass_name = render_context.passname;
 
                     if( render_context.fxparams.size() < 1 )
                     {
@@ -308,7 +315,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
 
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-                    dsstring pass_name = render_context.passname;
+                    //dsstring pass_name = render_context.passname;
 
                     for( size_t j = 0; j < render_context.shaders_params.size(); j++ )
                     {
@@ -326,7 +333,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 for( int i = 0; i < rc_list_size; i++ )
                 {
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-                    dsstring pass_name = render_context.passname;
+                    //dsstring pass_name = render_context.passname;
 
                     config_ros.push_back(render_context.rendering_order);
                 }
@@ -571,4 +578,27 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
     } LUA_CATCH;
     
     return 0;
+}
+
+int LuaClass_Rendering::LUA_setPassForRenderContext(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Rendering::set_passforrendercontext : argument(s) missing");
+	}
+
+	dsstring rc_id = luaL_checkstring(p_L, 1);
+	dsstring pass_id = luaL_checkstring(p_L, 2);
+
+	if (m_rcname_to_passes.find(rc_id) == m_rcname_to_passes.end())
+	{
+		m_rcname_to_passes[rc_id] = pass_id;
+	}
+	else
+	{
+		LUA_ERROR("Rendering::set_passforrendercontext : rendercontext name already exists in rcname_to_passes table !");
+	}
+
+	return 0;
 }

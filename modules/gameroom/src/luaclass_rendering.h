@@ -47,6 +47,10 @@ private:
     DrawSpace::Aspect::RenderingAspect*                                 m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                            m_entity;
 
+	// table de traduction RenderContext name -> Passes Name
+	// permet de savoir a quelle passe est attribuée un rendercontext
+	std::map<dsstring, dsstring>										m_rcname_to_passes;
+
     size_t                                                              m_total_mem_allocs;
     DrawSpace::Utils::TimeManager*                                      m_tm;
 
@@ -69,6 +73,8 @@ public:
     int LUA_unregisterfromrendering( lua_State* p_L );
 
     int LUA_setshaderrealvector( lua_State* p_L );
+
+	int LUA_setPassForRenderContext(lua_State* p_L);
 
     inline DrawSpace::Aspect::RenderingAspect* GetRenderingAspect(void) const 
     { 

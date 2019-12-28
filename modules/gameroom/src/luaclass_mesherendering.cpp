@@ -59,6 +59,7 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
     { "set_normalegenerationmode", &LuaClass_MesheRendering::LUA_setNormaleGenerationMode },
     { "set_tbgenerationmode", &LuaClass_MesheRendering::LUA_setTBGenerationMode },
     { "set_setnormaletransformation", &LuaClass_MesheRendering::LUA_setNormaleTransformation },
+	{ "set_passforrendercontext", & LuaClass_MesheRendering::LUA_setPassForRenderContext },
 	{ 0, 0 }
 };
 
@@ -125,7 +126,6 @@ int LuaClass_MesheRendering::LUA_detachfromentity( lua_State* p_L )
     return 0;
 }
 
-
 int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 {
     if (NULL == m_entity)
@@ -158,7 +158,13 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
             for(size_t i = 0; i < rcfg_data.render_contexts.size(); i++)
             {               
                 LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
-                dsstring pass_id = render_context.passname;
+				
+				if (m_rcname_to_passes.end() == m_rcname_to_passes.find(render_context.rendercontexname))
+				{
+					cleanup_resources(p_L);
+					LUA_ERROR("MesheRendering::configure : unknown render context name in m_rcname_to_passes : cannot find corresponding pass");
+				}
+				dsstring pass_id = m_rcname_to_passes.at(render_context.rendercontexname);
 
                 m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
                 RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
@@ -634,4 +640,27 @@ int LuaClass_MesheRendering::LUA_setNormaleTransformation(lua_State* p_L)
 
     m_meshe.SetNormalesTransf(lua_ent->GetMatrix());
     return 0;
+}
+
+int LuaClass_MesheRendering::LUA_setPassForRenderContext(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("MesheRendering::set_passforrendercontext : argument(s) missing");
+	}
+
+	dsstring rc_id = luaL_checkstring(p_L, 1);
+	dsstring pass_id = luaL_checkstring(p_L, 2);
+
+	if (m_rcname_to_passes.find(rc_id) == m_rcname_to_passes.end())
+	{
+		m_rcname_to_passes[rc_id] = pass_id;
+	}
+	else
+	{
+		LUA_ERROR("MesheRendering::set_passforrendercontext : rendercontext name already exists in rcname_to_passes table !");
+	}
+
+	return 0;
 }

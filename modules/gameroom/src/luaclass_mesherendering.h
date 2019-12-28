@@ -39,6 +39,10 @@ private:
     DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                        m_entity;
 
+	// table de traduction RenderContext name -> Passes Name
+	// permet de savoir a quelle passe est attribuée un rendercontext
+	std::map<dsstring, dsstring>									m_rcname_to_passes;
+
     std::map<dsstring, DrawSpace::Core::RenderingNode*>             m_renderingnodes; // classes par passes
 
     // ici stocker les ptr des textures associees a un des renderingnodes mais pas allouees
@@ -73,6 +77,8 @@ public:
     int LUA_setNormaleGenerationMode(lua_State* p_L);
     int LUA_setTBGenerationMode(lua_State* p_L);
     int LUA_setNormaleTransformation(lua_State* p_L);
+
+	int LUA_setPassForRenderContext(lua_State* p_L);
     
     static const char className[];
     static const Luna<LuaClass_MesheRendering>::RegType methods[];
