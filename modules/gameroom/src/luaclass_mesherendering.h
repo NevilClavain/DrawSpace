@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2019                     
+* Emmanuel Chaumont Copyright (c) 2013-2020                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -40,7 +40,7 @@ private:
     DrawSpace::Core::Entity*                                        m_entity;
 
 	// table de traduction RenderContext name -> Passes Name
-	// permet de savoir a quelle passe est attribuée un rendercontext
+	// permet de savoir a quelle passe est attribuï¿½e un rendercontext
 	std::map<dsstring, dsstring>									m_rcname_to_passes;
 
     std::map<dsstring, DrawSpace::Core::RenderingNode*>             m_renderingnodes; // classes par passes

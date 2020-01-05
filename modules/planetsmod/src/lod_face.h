@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2019                     
+* Emmanuel Chaumont Copyright (c) 2013-2020                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -131,10 +131,10 @@ public:
     // appele par Body::UpdateHotPoint()
     void                                    UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
 
-    // appelé par Body::UpdateRelativeAlt()
+    // appelï¿½ par Body::UpdateRelativeAlt()
     void                                    UpdateRelativeAlt(dsreal p_alt);
 
-    // appelé par Body::Compute()
+    // appelï¿½ par Body::Compute()
     void                                    UpdateLODComputationParams(void);
     void                                    UpdateLODComputationResults(void);
     void                                    Compute( void );
