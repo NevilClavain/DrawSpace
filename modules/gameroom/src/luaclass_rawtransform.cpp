@@ -97,6 +97,7 @@ int LuaClass_RawTransform::LUA_release( lua_State* p_L )
 
     m_entity_transform_aspect->RemoveImplementation();
     m_entity_transform_aspect = NULL;
+	m_matrix_ids.clear();
     return 0;
 }
 
