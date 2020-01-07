@@ -139,15 +139,8 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 	}
 
 	dsstring path = luaL_checkstring( p_L, 1 );
-    dsstring lua_err;
+	MainService::GetInstance()->RequestLuaFileExec(path);
 
-    int status = MainService::GetInstance()->RequestLuaFileExec( path, lua_err );
-    if( -2 == status )
-    {
-        // erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas all� au bout)
-        // on prefere arreter toute l'appli...
-        _DSEXCEPTION("Error in executed script " + path + " : " + lua_err );
-    }
     return 0;
 }
 

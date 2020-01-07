@@ -760,21 +760,26 @@ void MainService::RequestConsolePrint( const dsstring& p_msg )
     print_console_line( p_msg );
 }
 
-
-int MainService::RequestLuaFileExec( const dsstring& p_path, dsstring& p_err )
+int MainService::RequestLuaFileExec(const dsstring& p_path)
 {
-    int status = LuaContext::GetInstance()->ExecuteFromFile( p_path );
-    if( -2 == status )
-    {
-        dsstring lua_err = LuaContext::GetInstance()->GetLastError();
-        p_err = lua_err;
-    }
-    else if( -1 == status )
-    {
-        dsstring msg = "cannot open lua script file : " + p_path;
-        print_console_line( msg );
-    }
-    return status;
+	int status = LuaContext::GetInstance()->ExecuteFromFile(p_path);
+	if (-2 == status)
+	{
+		dsstring lua_err = LuaContext::GetInstance()->GetLastError();
+		if (-2 == status)
+		{
+			// erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas alle au bout)
+			// on prefere arreter toute l'appli...
+			_DSEXCEPTION("Error in executed script " + p_path + " : " + lua_err);
+		}
+	}
+	else if (-1 == status)
+	{
+		dsstring msg = "cannot open lua script file : " + p_path;
+		print_console_line(msg);
+	}
+
+	return status;
 }
 
 void MainService::RequestMemAllocDump( void )

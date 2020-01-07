@@ -185,7 +185,7 @@ public:
     void RequestClose( void );
     void RequestClearConsole( void );
     void RequestConsolePrint( const dsstring& p_msg );
-    int RequestLuaFileExec( const dsstring& p_path, dsstring& p_err );
+	int  RequestLuaFileExec(const dsstring& p_path);
 
     void RequestMemAllocDump( void );
 

@@ -57,6 +57,8 @@
 #include "luaclass_nebulaespecificconfig.h"
 #include "luaclass_planetspecificconfig.h"
 
+#include "mainservice.h"
+
 
 LuaContext::LuaContext( void ) :
 m_L( NULL )
@@ -107,7 +109,11 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Distribution>::Register(m_L);       
     Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
     Luna<LuaClass_PlanetSpecificConfig>::Register(m_L);
-    
+
+	//
+
+	lua_pushcfunction(m_L, LuaContext::Include);
+	lua_setglobal(m_L, "include");    
 }
 
 void LuaContext::Shutdown( void )
@@ -223,4 +229,24 @@ void LuaContext::RemoveCallback( lua_State* p_L, const std::function<int(const s
 void LuaContext::SetRootPath( const dsstring& p_path )
 {
     m_rootpath = p_path;
+}
+
+int LuaContext::Include(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Include : argument(s) missing");
+	}
+
+	dsstring path = luaL_checkstring(p_L, 1);
+	int status = MainService::GetInstance()->RequestLuaFileExec(path);
+
+	if (-1 == status)
+	{
+		// pas la peine de continuer...
+		_DSEXCEPTION( "Cannot find file to include : " + path)
+	}
+
+	return 0;
 }

@@ -88,7 +88,6 @@ public:
         int nb_args = sizeof...(Args);
 
         const int a[] = {0, (process_one_type<Args>(p_args), 0)...};
-		static_cast<void>(a);
 
         if( lua_pcall( m_L, nb_args, 0, NULL ) != 0 )
         {
@@ -109,6 +108,7 @@ public:
     static void AddCallback( lua_State* p_L, const std::function<void(const std::string&, int)>& p_register_func );
     static void RemoveCallback( lua_State* p_L, const std::function<int(const std::string&)>& p_unregister_func );
 
+	static int Include(lua_State* p_L);
 
     friend class BaseSingleton<LuaContext>;
 };
