@@ -40,7 +40,8 @@ m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
-m_ready( true )
+m_ready( true ),
+m_status( OK )
 {
 
 
@@ -55,7 +56,8 @@ m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
-m_ready( true )
+m_ready( true ),
+m_status( OK )
 {
 
 
@@ -63,7 +65,6 @@ m_ready( true )
 
 RenderingQueue::~RenderingQueue( void )
 {
-
 }
 
 bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
@@ -75,7 +76,8 @@ void RenderingQueue::Draw( void )
 {
     if( !m_ready )
     {
-        _DSEXCEPTION( "RenderingQueue not ready : call UpdateOutputQueue() or UpdateOutputQueueNoOpt() before trying to draw queue content" )
+		m_status = ERROR_NOTREADY;
+		return;
     }
 
     m_switches_cost = 0;
@@ -197,6 +199,8 @@ void RenderingQueue::Draw( void )
     {
         renderer->EndScreen();
     }
+
+	m_status = OK;
 }
 
 void RenderingQueue::Add( RenderingNode* p_node )

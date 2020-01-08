@@ -88,6 +88,12 @@ private:
 
     };
 
+	using Status = enum
+	{
+		OK,
+		ERROR_NOTREADY,
+	};
+
     using OperationsGroup = std::vector<erase_infos>;
  
     std::map<long, std::vector<RenderingNode*>>                             m_renderingorder_nodes;
@@ -134,6 +140,8 @@ private:
 
     bool                                                                    m_ready;   // true if UpdateOutputQueue() UpdateOutputQueueNoOpt() were called at least once
 
+	Status																	m_status;
+
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
@@ -175,6 +183,8 @@ public:
 
     void UpdateOutputQueue( void );
     void UpdateOutputQueueNoOpt( void );
+
+	inline Status GetStatus(void) const { return m_status; };
 };
 }
 }
