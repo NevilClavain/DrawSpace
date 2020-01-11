@@ -159,115 +159,113 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
             {               
                 LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
 				
-				if (m_rcname_to_passes.end() == m_rcname_to_passes.find(render_context.rendercontexname))
+				if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontexname))
 				{
-					cleanup_resources(p_L);
-					LUA_ERROR("MesheRendering::configure : unknown render context name in m_rcname_to_passes : cannot find corresponding pass");
+					dsstring pass_id = m_rcname_to_passes.at(render_context.rendercontexname);
+
+					m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>(pass_id, pass_id);
+					RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode();
+					m_renderingnodes[pass_id] = rnode;
+
+					//  on a besoin que d'un seul fx....
+					if (render_context.fxparams.size() < 1)
+					{
+						cleanup_resources(p_L);
+						LUA_ERROR("MesheRendering::configure : missing fx parameters description");
+					}
+
+					LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
+
+					DrawSpace::Core::Fx* fx = _DRAWSPACE_NEW_(Fx, Fx);
+					rnode->SetFx(fx);
+
+					///////////////////////// les shaders
+					size_t nb_shaders = fx_params.shaders.size();
+					for (size_t j = 0; j < nb_shaders; j++)
+					{
+						std::pair<dsstring, bool> shader_infos = fx_params.shaders[j];
+
+						dsstring shader_path = shader_infos.first;
+						bool is_compiled = shader_infos.second;
+
+						Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
+
+						dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+						resources_aspect->AddComponent<std::tuple<Shader*, bool>>(res_id, std::make_tuple(shader, false));
+						fx->AddShader(shader);
+					}
+
+					///////////////////////// les rendestates
+
+					DrawSpace::Core::RenderStatesSet& rss = fx_params.rss;
+					fx->SetRenderStates(rss);
+
+
+					///////////////////////// les textures
+
+					size_t nb_textures_set = render_context.textures_sets.size();
+					if (nb_textures_set > 0)
+					{
+						LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
+
+						for (int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++)
+						{
+							dsstring texture_path = textures.textures[j];
+							if (texture_path != "")
+							{
+								Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_path));
+
+								dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+								resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+								rnode->SetTexture(texture, j);
+							}
+						}
+					}
+
+					///////////////////////// les vertex textures
+
+					size_t nb_vtextures_set = render_context.vertex_textures_sets.size();
+					if (nb_vtextures_set > 0)
+					{
+						LuaClass_TexturesSet::Data vtextures = render_context.vertex_textures_sets[0];
+
+						for (int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++)
+						{
+							dsstring texture_path = vtextures.textures[j];
+							if (texture_path != "")
+							{
+								//bool status;
+								Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_path));
+
+								dsstring res_id = dsstring("vtexture_") + std::to_string((int)texture);
+								resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+								rnode->SetVertexTexture(texture, j);
+							}
+						}
+					}
+
+					dsstring meshe_res_id = dsstring("meshe_") + pass_id;
+
+					resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
+						std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
+
+					m_meshe.SetPath(meshe_path);
+
+					rnode->SetMeshe(&m_meshe);
+
+					/// params de shaders
+
+					for (size_t j = 0; j < render_context.shaders_params.size(); j++)
+					{
+						LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
+
+						dsstring param_id = param.first;
+
+						RenderingNode::ShadersParams indexes = param.second;
+						rnode->AddShaderParameter(indexes.shader_index, param_id, indexes.param_register);
+					}
 				}
-				dsstring pass_id = m_rcname_to_passes.at(render_context.rendercontexname);
-
-                m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( pass_id, pass_id );
-                RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( pass_id )->getPurpose().GetRenderingNode();
-                m_renderingnodes[pass_id] = rnode;
-
-                //  on a besoin que d'un seul fx....
-                if( render_context.fxparams.size() < 1 )
-                {
-                    cleanup_resources( p_L );
-                    LUA_ERROR( "MesheRendering::configure : missing fx parameters description" );                
-                }  
-
-                LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
-
-                DrawSpace::Core::Fx* fx = _DRAWSPACE_NEW_( Fx, Fx  );
-                rnode->SetFx( fx );
-
-                ///////////////////////// les shaders
-                size_t nb_shaders = fx_params.shaders.size();
-                for( size_t j = 0; j < nb_shaders; j++ )
-                {
-                    std::pair<dsstring,bool> shader_infos = fx_params.shaders[j];
-
-                    dsstring shader_path = shader_infos.first;
-                    bool is_compiled = shader_infos.second;
-
-                    Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
-
-                    dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-                    resources_aspect->AddComponent<std::tuple<Shader*, bool>>(res_id, std::make_tuple(shader, false));
-                    fx->AddShader(shader);
-                }
-
-                ///////////////////////// les rendestates
-
-                DrawSpace::Core::RenderStatesSet& rss = fx_params.rss;
-                fx->SetRenderStates( rss );
-
-
-                ///////////////////////// les textures
-                    
-                size_t nb_textures_set = render_context.textures_sets.size();
-                if (nb_textures_set > 0)
-                {
-                    LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
-
-                    for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
-                    {
-                        dsstring texture_path = textures.textures[j];
-                        if( texture_path != "" )
-                        {
-                            Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-
-                            dsstring res_id = dsstring( "texture_" ) + std::to_string((int)texture);
-                            resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
-                            rnode->SetTexture(texture, j);
-                        }
-                    }
-                }
-
-                ///////////////////////// les vertex textures
-
-                size_t nb_vtextures_set = render_context.vertex_textures_sets.size();
-                if( nb_vtextures_set > 0 )
-                {
-                    LuaClass_TexturesSet::Data vtextures = render_context.vertex_textures_sets[0];
-
-                    for( int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++ )
-                    {
-                        dsstring texture_path = vtextures.textures[j];
-                        if( texture_path != "" )
-                        {
-                            //bool status;
-                            Texture* texture = _DRAWSPACE_NEW_( Texture, Texture( texture_path ) );
-
-                            dsstring res_id = dsstring("vtexture_") + std::to_string((int)texture);
-                            resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
-                            rnode->SetVertexTexture(texture, j);
-                        }
-                    }
-                }
-
-                dsstring meshe_res_id = dsstring("meshe_") + pass_id;
-                
-                resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
-                    std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
-
-                m_meshe.SetPath(meshe_path);
-
-                rnode->SetMeshe( &m_meshe );
-
-                /// params de shaders
-
-                for( size_t j = 0; j < render_context.shaders_params.size(); j++ )
-                {
-                    LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
-                    
-                    dsstring param_id = param.first;
-
-                    RenderingNode::ShadersParams indexes = param.second;
-                    rnode->AddShaderParameter( indexes.shader_index, param_id, indexes.param_register );                    
-                }
-            }
+            } // for
 
         } LUA_CATCH;
     }

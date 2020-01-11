@@ -224,16 +224,11 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 {
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
 
-                    //dsstring pass_name = render_context.passname;
-
-					if (m_rcname_to_passes.end() == m_rcname_to_passes.find(render_context.rendercontexname))
+					if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontexname))
 					{
-						cleanup_resources(p_L);
-						LUA_ERROR("Rendering::configure : unknown render context name in m_rcname_to_passes : cannot find corresponding pass");
+						dsstring pass_name = m_rcname_to_passes.at(render_context.rendercontexname);
+						passes.push_back(pass_name);
 					}
-					dsstring pass_name = m_rcname_to_passes.at(render_context.rendercontexname);
-                
-                    passes.push_back( pass_name );
                 }          
                 passes_names_layers.push_back(passes);
   
