@@ -82,97 +82,175 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 	Utils::Matrix translation;
 	translation.Identity();
 
+	bool t_computed = false;
+	bool r_computed = false;
+	bool s_computed = false;
+
+	
 	if (p_node.position_keys.size() > 0)
 	{
 		Utils::Vector v_interpolated;
 		if (p_node.position_keys.size() < 2)
 		{
 			v_interpolated = p_node.position_keys[0].value;
+			t_computed = true;
 		}
 		else
 		{
-			for (size_t i = 0 ; i < p_node.position_keys.size() - 1; i++)
+			if( p_current_tick < p_node.position_keys[0].time_tick )
 			{
-				if (p_node.position_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.position_keys[i + 1].time_tick)
+				v_interpolated = p_node.position_keys[0].value;
+				t_computed = true;
+			}
+			else if (p_current_tick >= p_node.position_keys[p_node.position_keys.size() - 1].time_tick)
+			{
+				v_interpolated = p_node.position_keys[p_node.position_keys.size() - 1].value;
+				t_computed = true;
+			}
+			else
+			{
+				for (size_t i = 0; i < p_node.position_keys.size() - 1; i++)
 				{
-					AnimationsAspect::VectorKey kA = p_node.position_keys[i];
-					AnimationsAspect::VectorKey kB = p_node.position_keys[i + 1];
+					if (p_node.position_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.position_keys[i + 1].time_tick)
+					{
+						AnimationsAspect::VectorKey kA = p_node.position_keys[i];
+						AnimationsAspect::VectorKey kB = p_node.position_keys[i + 1];
 
-					dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
-					v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
-					break;
+						dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
+						v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
+						t_computed = true;
+						break;
+					}
 				}
 			}
 		}
+
+		if (!t_computed)
+		{
+			_DSEXCEPTION( "Position interpolation failed !" )
+		}
+
 		translation.Translation(v_interpolated);
 	}
-
+	
 	//////////////////// rotations interpolation
 
 	Utils::Matrix rotation;
 	rotation.Identity();
-
+	
 	if (p_node.rotations_keys.size() > 0)
 	{
 		Utils::Matrix rot_interpolated;
 		if (p_node.rotations_keys.size() < 2)
 		{
 			p_node.rotations_keys[0].value.RotationMatFrom(rot_interpolated);
+			r_computed = true;
 		}
 		else
 		{
-			for (size_t i = 0; i < p_node.rotations_keys.size() - 1; i++)
+			if (p_current_tick < p_node.rotations_keys[0].time_tick)
 			{
-				if (p_node.rotations_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.rotations_keys[i + 1].time_tick)
+				Quaternion q_interpolated = p_node.rotations_keys[0].value;
+				q_interpolated.RotationMatFrom(rot_interpolated);
+
+				r_computed = true;
+			}
+			else if (p_current_tick >= p_node.rotations_keys[p_node.rotations_keys.size() - 1].time_tick)
+			{
+
+				Quaternion q_interpolated = p_node.rotations_keys[p_node.rotations_keys.size() - 1].value;
+				q_interpolated.RotationMatFrom(rot_interpolated);
+
+				r_computed = true;
+			}
+			else
+			{
+				for (size_t i = 0; i < p_node.rotations_keys.size() - 1; i++)
 				{
-					AnimationsAspect::QuaternionKey kA = p_node.rotations_keys[i];
-					AnimationsAspect::QuaternionKey kB = p_node.rotations_keys[i + 1];
+					if (p_node.rotations_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.rotations_keys[i + 1].time_tick)
+					{
+						AnimationsAspect::QuaternionKey kA = p_node.rotations_keys[i];
+						AnimationsAspect::QuaternionKey kB = p_node.rotations_keys[i + 1];
 
-					dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
+						dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
 
-					Quaternion q_interpolated = Utils::Quaternion::Lerp(kA.value, kB.value, blend);
-					q_interpolated.RotationMatFrom(rot_interpolated);
-					break;
+						Quaternion q_interpolated = Utils::Quaternion::Lerp(kA.value, kB.value, blend);
+						q_interpolated.RotationMatFrom(rot_interpolated);
+						r_computed = true;
+						break;
+					}
+
 				}
 			}
 		}
 
+		if (!r_computed)
+		{
+			_DSEXCEPTION("Rotation interpolation failed !")
+		}
+
 		rotation = rot_interpolated;
 	}
-
+	
 	//////////////////// scaling interpolation
 
 	Utils::Matrix scaling;
 	scaling.Identity();
-
+	
 	if (p_node.scaling_keys.size() > 0)
 	{
 		Utils::Vector v_interpolated;
 		if (p_node.scaling_keys.size() < 2)
 		{
 			v_interpolated = p_node.scaling_keys[0].value;
+			s_computed = true;
+
 		}
 		else
 		{
-			for (size_t i = 0; i < p_node.scaling_keys.size() - 1; i++)
+			if (p_current_tick < p_node.scaling_keys[0].time_tick)
 			{
-				if (p_node.scaling_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.scaling_keys[i + 1].time_tick)
-				{
-					AnimationsAspect::VectorKey kA = p_node.scaling_keys[i];
-					AnimationsAspect::VectorKey kB = p_node.scaling_keys[i + 1];
+				s_computed = true;
 
-					dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
-					v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
-					break;
+				v_interpolated = p_node.scaling_keys[0].value;
+			}
+			else if (p_current_tick >= p_node.scaling_keys[p_node.scaling_keys.size() - 1].time_tick)
+			{
+				s_computed = true;
+
+				v_interpolated = p_node.scaling_keys[p_node.scaling_keys.size() - 1].value;
+
+			}
+			else
+			{
+				for (size_t i = 0; i < p_node.scaling_keys.size() - 1; i++)
+				{
+					if (p_node.scaling_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.scaling_keys[i + 1].time_tick)
+					{
+						AnimationsAspect::VectorKey kA = p_node.scaling_keys[i];
+						AnimationsAspect::VectorKey kB = p_node.scaling_keys[i + 1];
+
+						dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
+						v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
+
+						s_computed = true;
+						break;
+					}
+
 				}
 			}
 		}
+
+		if (!s_computed)
+		{
+			_DSEXCEPTION("Scaling interpolation failed !")
+		}
+
 		scaling.Scale(v_interpolated);
 	}
 
 	///////////////////////
-
-	// final = translation * rotation * scaling
+	
 
 	p_out_matrix = scaling * rotation * translation;
 }
@@ -188,7 +266,8 @@ bool AnimationsSystem::animation_step(const dsstring& p_animation_id, const Anim
 	dsreal nb_seconds = (dsreal)tms / 1000.0;
 	dsreal nb_ticks = p_anims_aspect->GetComponent<long>("current_animation_ticks_per_seconds")->getPurpose() * nb_seconds;
 
-	if (nb_ticks < p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose())
+	dsreal current_animation_ticks_duration = p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_duration")->getPurpose();
+	if (nb_ticks < current_animation_ticks_duration)
 	{
 		p_anims_aspect->GetComponent<dsreal>("current_animation_seconds_progress")->getPurpose() = nb_seconds;
 		p_anims_aspect->GetComponent<dsreal>("current_animation_ticks_progress")->getPurpose() = nb_ticks;
@@ -321,8 +400,7 @@ void AnimationsSystem::insert_transition_animation(DrawSpace::Aspect::Animations
 			(*e)(ANIMATION_BEGIN, next_animation_name);
 		}
 
-		// here we insert transition animation
-
+		// here we insert transition animation		
 		dsstring last_animation_name = p_anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
 		if (last_animation_name != "" && last_animation_name != transitionAnimationDurationId && last_animation_name != next_animation_name)
 		{
