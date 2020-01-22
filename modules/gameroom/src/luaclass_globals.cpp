@@ -343,7 +343,7 @@ int LuaClass_Globals::LUA_breakpoint(lua_State* p_L)
 	int argc = lua_gettop(p_L);
 	if (argc > 0)
 	{
-		int data = luaL_checkint(p_L, 1);
+		dsstring dbgstr = luaL_checkstring(p_L, 1);
 		_asm nop
 	}
 	return 0;
