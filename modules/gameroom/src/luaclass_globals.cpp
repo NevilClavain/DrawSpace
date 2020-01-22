@@ -48,6 +48,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "total_mem", &LuaClass_Globals::LUA_totalmem },
     { "log", &LuaClass_Globals::LUA_log },
     { "format_real", &LuaClass_Globals::LUA_formatreal },
+	{ "breakpoint", &LuaClass_Globals::LUA_breakpoint },
 
     { "round", &LuaClass_Globals::LUA_round },
     
@@ -335,6 +336,17 @@ int LuaClass_Globals::LUA_formatreal(lua_State* p_L)
     
     lua_pushstring(p_L, stream.str().c_str());
     return 1;
+}
+
+int LuaClass_Globals::LUA_breakpoint(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc > 0)
+	{
+		int data = luaL_checkint(p_L, 1);
+		_asm nop
+	}
+	return 0;
 }
 
 int LuaClass_Globals::LUA_reset( lua_State* p_L )
