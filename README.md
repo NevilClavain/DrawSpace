@@ -34,6 +34,10 @@ Animated water rendering:
 
 ![alt tag](https://2.bp.blogspot.com/-HnAy0gWSaUU/V9ZWNcaTIGI/AAAAAAAAB2k/0f6tlp99QYQ0iic15LBRxZM1wu6T9OXoQCLcB/s640/water2.jpg)
 
+Bones-based animations execution :
+
+![alt tag](https://1.bp.blogspot.com/-R393UDVXHaA/XioOQcla87I/AAAAAAAADhA/WwpU6mMBuEU_ANKKJgfSprLoc7cCoxzxACLcBGAsYHQ/s1600/anims.jpg)
+
 Material shaders:
 
 ![alt tag](https://1.bp.blogspot.com/-aqQActz5-Cw/W1TiUw-LkHI/AAAAAAAADW0/kPXzccgRmcIDiRSuflPfqITef64f6Lr5ACLcBGAs/s1600/bumpmap.jpg)
