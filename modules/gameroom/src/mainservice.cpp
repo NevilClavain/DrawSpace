@@ -380,7 +380,7 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
     }
 }
 
-void MainService::on_animation_event(AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name)
+void MainService::on_animation_event(DrawSpace::Core::Entity* p_entity, AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name)
 {
 	for (auto it = m_animationevent_lua_callbacks.begin(); it != m_animationevent_lua_callbacks.end(); ++it)
 	{

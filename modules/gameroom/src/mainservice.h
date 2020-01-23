@@ -38,7 +38,7 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 protected:
 
     using GUIWidgetPushButtonClickedCallback	= DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>;
-	using AnimationEventCallback				= DrawSpace::Core::CallBack2<MainService, void, DrawSpace::Systems::AnimationsSystem::AnimationEvent, const dsstring&>;
+	using AnimationEventCallback				= DrawSpace::Core::CallBack3<MainService, void, DrawSpace::Core::Entity*, DrawSpace::Systems::AnimationsSystem::AnimationEvent, const dsstring&>;
 
     GUIWidgetPushButtonClickedCallback                                              m_guiwidgetpushbuttonclicked_cb;
 	AnimationEventCallback															m_animation_events_cb;
@@ -99,7 +99,7 @@ protected:
 
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
-	void on_animation_event(DrawSpace::Systems::AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name);
+	void on_animation_event(DrawSpace::Core::Entity* p_entity, DrawSpace::Systems::AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name);
 
     void set_mouse_circular_mode( bool p_state );
 
