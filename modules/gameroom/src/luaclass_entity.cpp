@@ -64,6 +64,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
 	{ "configure_animationbones", &LuaClass_Entity::LUA_configureanimationbones },
 	{ "update_bonelocaltransform", &LuaClass_Entity::LUA_updatebonelocaltransform },
+	{ "update_animationeventsid", &LuaClass_Entity::LUA_updateanimationeventsid },
 	{ "read_currentanimationinfos", &LuaClass_Entity::LUA_readcurrentanimationinfos },
 	{ "read_animationsnames", &LuaClass_Entity::LUA_readanimationsnames },
 	{ "push_animation", &LuaClass_Entity::LUA_pushanimation },
@@ -397,6 +398,9 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 
 	LUA_TRY
 	{
+		animation_aspect->AddComponent<dsstring>("anim_event_id"); // id unique pour cette entité, passé en arg de callbacks evt animation
+																	// permet de savoir pour quelle entité l'evt animation se produit
+
 		animation_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes");
 		animation_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping");
 		animation_aspect->AddComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs");
@@ -445,6 +449,28 @@ int LuaClass_Entity::LUA_updatebonelocaltransform(lua_State* p_L)
 	auto& forced_pos = animation_aspect->GetComponent<std::map<dsstring, Matrix>>("forced_bones_transformations")->getPurpose();
 
 	forced_pos[bone_id] = mat->GetMatrix();
+
+	return 0;
+}
+
+int LuaClass_Entity::LUA_updateanimationeventsid(lua_State* p_L)
+{
+	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
+	if (NULL == animation_aspect)
+	{
+		LUA_ERROR("Entity::update_animationeventsid : animation aspect doesnt exists in this entity!");
+	}
+
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::update_animationeventsid : argument(s) missing");
+	}
+
+	dsstring events_id = luaL_checkstring(p_L, 1);
+
+	dsstring& id = animation_aspect->GetComponent<dsstring>("anim_event_id")->getPurpose();
+	id = events_id;
 
 	return 0;
 }
@@ -570,6 +596,8 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 
 	LUA_TRY
 	{
+		animation_aspect->RemoveComponent<dsstring>("anim_event_id");
+
 		animation_aspect->RemoveComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes");
 		animation_aspect->RemoveComponent<std::map<dsstring, int>>("bones_mapping");
 		animation_aspect->RemoveComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs");
@@ -594,7 +622,7 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 
 		animation_aspect->RemoveComponent<dsstring>("last_animation_name");
 
-		animation_aspect->RemoveComponent<dsstring>("apply_animation_last_key");
+		animation_aspect->RemoveComponent<dsstring>("apply_animation_last_key");		
 
 	} LUA_CATCH;
 

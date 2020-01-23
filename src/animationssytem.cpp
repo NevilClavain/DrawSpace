@@ -255,7 +255,7 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 	p_out_matrix = scaling * rotation * translation;
 }
 
-bool AnimationsSystem::animation_step(Entity* p_entity, const dsstring& p_animation_id, const AnimationsAspect::AnimationRoot& p_animation,
+bool AnimationsSystem::animation_step(const dsstring& p_animation_id, const AnimationsAspect::AnimationRoot& p_animation,
 										AnimationsAspect* p_anims_aspect, 
 										std::map<dsstring, AnimationsAspect::Node>& p_nodes)
 {
@@ -292,17 +292,19 @@ bool AnimationsSystem::animation_step(Entity* p_entity, const dsstring& p_animat
 		// animation end
 		status = true;
 
+		dsstring event_id = p_anims_aspect->GetComponent<dsstring>("anim_event_id")->getPurpose();
+
 		// animation end event
 		for (auto& e : m_evt_handlers)
 		{
-			(*e)(p_entity, ANIMATION_END, p_animation_id);
+			(*e)(event_id, ANIMATION_END, p_animation_id);
 		}
 	}
 
 	return status;
 }
 
-void AnimationsSystem::run_animations_pool(Entity* p_entity, DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
+void AnimationsSystem::run_animations_pool(DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
 											DrawSpace::Aspect::TimeAspect* p_time_aspect,
 											std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes)
 {
@@ -329,7 +331,7 @@ void AnimationsSystem::run_animations_pool(Entity* p_entity, DrawSpace::Aspect::
 			p_anims_aspect->GetComponent<TimeAspect::TimeMark>("current_animation_timemark")->getPurpose().Reset();
 		}
 		
-		if (true == animation_step(p_entity, animation.first, animation.second, p_anims_aspect, p_nodes))
+		if (true == animation_step(animation.first, animation.second, p_anims_aspect, p_nodes))
 		{
 			// record id of this finished animation (if not transition animation)
 			dsstring& last_animation_name = p_anims_aspect->GetComponent<dsstring>("last_animation_name")->getPurpose();
@@ -349,7 +351,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
     {
-		insert_transition_animation(p_entity, anims_aspect);
+		insert_transition_animation(anims_aspect);
 
 		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 		if (NULL == transform_aspect)
@@ -361,7 +363,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
 		auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
 		auto& animations_pool = anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
 
-		run_animations_pool(p_entity, animations_pool, anims_aspect, time_aspect, bones);
+		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		//// get some eventually forced bones position
@@ -386,7 +388,7 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     }
 }
 
-void AnimationsSystem::insert_transition_animation(Core::Entity* p_entity, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect)
+void AnimationsSystem::insert_transition_animation(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect)
 {
 	auto& animations_pool = p_anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
 	auto& current_animation_name = p_anims_aspect->GetComponent<dsstring>("current_animation_name")->getPurpose();
@@ -395,9 +397,12 @@ void AnimationsSystem::insert_transition_animation(Core::Entity* p_entity, DrawS
 		const auto& animation = animations_pool.front();
 
 		dsstring next_animation_name = animation.first;
+
+		dsstring event_id = p_anims_aspect->GetComponent<dsstring>("anim_event_id")->getPurpose();
+
 		for (auto& e : m_evt_handlers)
 		{
-			(*e)(p_entity, ANIMATION_BEGIN, next_animation_name);
+			(*e)(event_id, ANIMATION_BEGIN, next_animation_name);
 		}
 
 		// here we insert transition animation		

@@ -43,7 +43,7 @@ public:
 		ANIMATION_END
 	};
 
-	using AnimationEventHandler = DrawSpace::Core::BaseCallback3<void, Core::Entity*, AnimationEvent, const dsstring&>;
+	using AnimationEventHandler = DrawSpace::Core::BaseCallback3<void, const dsstring&, AnimationEvent, const dsstring&>;
 
 	static const int		bonesBuffer0StartReg					= 31;
 	static const int		bonesBuffer0Length						= 69;
@@ -71,11 +71,11 @@ protected:
 		const DrawSpace::Utils::Matrix& p_parent_transform);
 
 
-	void run_animations_pool(Core::Entity* p_entity, DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
+	void run_animations_pool(DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
 								DrawSpace::Aspect::TimeAspect* p_time_aspect, std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes);
 
 	// heart of animation execution
-	bool animation_step(Core::Entity* p_entity, const dsstring& p_animation_id, const DrawSpace::Aspect::AnimationsAspect::AnimationRoot& p_animation,
+	bool animation_step(const dsstring& p_animation_id, const DrawSpace::Aspect::AnimationsAspect::AnimationRoot& p_animation,
 						DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes);
 
 	void compute_node_animationresult_matrix(const DrawSpace::Aspect::AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const;
@@ -84,7 +84,7 @@ protected:
 	static void apply_animation_last_key(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
 	static void apply_forced_bones_pos(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
 	static void send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, DrawSpace::Aspect::RenderingAspect* p_rendering_aspect);
-	void insert_transition_animation(Core::Entity* p_entity, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
+	void insert_transition_animation(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);
 
 public:
     AnimationsSystem();
