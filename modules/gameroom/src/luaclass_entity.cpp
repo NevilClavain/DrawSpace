@@ -67,9 +67,10 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "update_animationeventsid", &LuaClass_Entity::LUA_updateanimationeventsid },
 	{ "read_currentanimationinfos", &LuaClass_Entity::LUA_readcurrentanimationinfos },
 	{ "read_animationsnames", &LuaClass_Entity::LUA_readanimationsnames },
+	{ "read_animationpoolsize", &LuaClass_Entity::LUA_readanimationpoolsize },
 	{ "push_animation", &LuaClass_Entity::LUA_pushanimation },
 	{ "set_animationlastkeypose", &LuaClass_Entity::LUA_setanimationlastkeypose },
-	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },
+	{ "release_animationbones", &LuaClass_Entity::LUA_releaseanimationbones },	
     { "setup_info", &LuaClass_Entity::LUA_setupinfo },
     { "release_info", &LuaClass_Entity::LUA_releaseinfo },
 	{ "configure_mesheresource", &LuaClass_Entity::LUA_configuremesheresource },
@@ -509,6 +510,18 @@ int LuaClass_Entity::LuaClass_Entity::LUA_readanimationsnames(lua_State* p_L)
 	}
 
 	return animations_table.size();
+}
+
+int LuaClass_Entity::LuaClass_Entity::LUA_readanimationpoolsize(lua_State* p_L)
+{
+	AnimationsAspect* animation_aspect = m_entity.GetAspect<AnimationsAspect>();
+	if (NULL == animation_aspect)
+	{
+		LUA_ERROR("Entity::read_currentanimationinfos : animation aspect doesnt exists in this entity!");
+	}
+
+	lua_pushinteger(p_L, animation_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose().size() );
+	return 1;
 }
 
 int LuaClass_Entity::LUA_pushanimation(lua_State* p_L)

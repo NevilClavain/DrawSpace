@@ -86,6 +86,7 @@ public:
 	int LUA_updatebonelocaltransform(lua_State* p_L);
 	int LUA_readcurrentanimationinfos(lua_State* p_L);
 	int LUA_readanimationsnames(lua_State* p_L);
+	int LUA_readanimationpoolsize(lua_State* p_L);
 	int LUA_pushanimation(lua_State* p_L);
 	int LUA_setanimationlastkeypose(lua_State* p_L);
 	int LUA_updateanimationeventsid(lua_State* p_L);
