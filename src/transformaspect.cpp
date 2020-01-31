@@ -51,8 +51,11 @@ void TransformAspect::SetImplementation( AspectImplementations::TransformAspectI
 
 void TransformAspect::RemoveImplementation( void )
 {
-    m_impl->SetTimeAspect( NULL );
-    m_impl = NULL;
+	if (m_impl)
+	{
+		m_impl->SetTimeAspect(NULL);
+		m_impl = NULL;
+	}
 }
 
 
