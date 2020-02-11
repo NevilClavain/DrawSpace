@@ -34,7 +34,7 @@ class LuaClass_Entity
 protected:
     DrawSpace::Core::Entity m_entity;
 
-    typedef enum
+    using AspectType = enum
     {
         BODY_ASPECT,
         CAMERA_ASPECT,
@@ -47,9 +47,9 @@ protected:
         RESOURCES_ASPECT,
 		ANIMATION_ASPECT,
 
-    } AspectType;
+    };
 
-    typedef enum
+    using ComponentType = enum
     {
         COMP_INT,
         COMP_LONG,
@@ -58,8 +58,7 @@ protected:
         COMP_DSSTRING,
         COMP_BOOL,
         COMP_TEXTDISPLAY,
-    
-    } ComponentType;
+    };
 
 public:
 	LuaClass_Entity( lua_State* p_L );
@@ -68,6 +67,7 @@ public:
     DrawSpace::Core::Entity& GetEntity( void );
 
     int LUA_addaspect( lua_State* p_L );
+	int LU_hasaspect(lua_State* p_L);
     int LUA_removeaspect( lua_State* p_L );
 
     int LUA_configuretimemmanager( lua_State* p_L );

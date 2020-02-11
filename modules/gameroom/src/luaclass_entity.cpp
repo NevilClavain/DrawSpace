@@ -51,6 +51,7 @@ const char LuaClass_Entity::className[] = "Entity";
 const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 {
     { "add_aspect", &LuaClass_Entity::LUA_addaspect },
+	{ "has_aspect", &LuaClass_Entity::LU_hasaspect },
     { "remove_aspect", &LuaClass_Entity::LUA_removeaspect },
     { "connect_renderingaspect_rendergraph", &LuaClass_Entity::LUA_connect_renderingaspect_rendergraph },
     { "configure_timemanager", &LuaClass_Entity::LUA_configuretimemmanager },
@@ -120,6 +121,38 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
 
     aspect_add_aig.at(aspect_type)( m_entity );
     return 0;
+}
+
+int LuaClass_Entity::LU_hasaspect(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::add_aspect : argument(s) missing");
+	}
+
+	AspectType aspect_type = static_cast<AspectType>(luaL_checkint(p_L, 1));
+
+	bool status;
+
+	static const std::map<AspectType, std::function<void(const DrawSpace::Core::Entity&, bool&)>> aspect_check_aig =
+	{
+		{ BODY_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<BodyAspect>() ? true : false) ; } },
+		{ CAMERA_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<CameraAspect>() ? true : false); } },
+		{ PHYSICS_ASPECT,[](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<PhysicsAspect>() ? true : false); } },
+		{ RENDERING_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<RenderingAspect>() ? true : false); } },
+		{ SERVICE_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<ServiceAspect>() ? true : false); } },
+        { TIME_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<TimeAspect>() ? true : false); } },
+		{ TRANSFORM_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<TransformAspect>() ? true : false); } },
+		{ INFOS_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<InfosAspect>() ? true : false); } },
+		{ RESOURCES_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<ResourcesAspect>() ? true : false); } },
+		{ ANIMATION_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<AnimationsAspect>() ? true : false); } },
+	};
+
+	aspect_check_aig.at(aspect_type)(m_entity, status);
+
+	lua_pushinteger(p_L, status);
+	return 1;
 }
 
 int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
