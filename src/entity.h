@@ -77,7 +77,7 @@ public:
     }
 
     template<typename T>
-    inline T* GetAspect( void )
+    inline T* GetAspect( void ) const
     {
         size_t tid = typeid(T).hash_code();
 
@@ -87,11 +87,11 @@ public:
             return NULL;
         }
         
-        T* aspect = static_cast<T*>( m_aspects[tid] );
+        T* aspect = static_cast<T*>( m_aspects.at(tid) );
         return aspect;
     }
 
-    inline void GetAllAspects( std::vector<Aspect*>& p_list )
+    inline void GetAllAspects( std::vector<Aspect*>& p_list ) const
     {
         for( auto& e: m_aspects)
         {
