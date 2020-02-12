@@ -47,6 +47,7 @@ public:
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
     int LUA_update( lua_State* p_L );
+	int LUA_setpos( lua_State* p_L );
     int LUA_read( lua_State* p_L );
 
     static const char className[];

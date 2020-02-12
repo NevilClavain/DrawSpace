@@ -41,6 +41,7 @@ const Luna<LuaClass_FreeTransform>::RegType LuaClass_FreeTransform::methods[] =
     { "trash_transformimpl", &LuaClass_FreeTransform::LUA_trashTransformationImpl },
     { "configure", &LuaClass_FreeTransform::LUA_configure },
     { "update", &LuaClass_FreeTransform::LUA_update },
+	{ "set_pos", &LuaClass_FreeTransform::LUA_setpos },
     { "read", &LuaClass_FreeTransform::LUA_read },
     { "release", &LuaClass_FreeTransform::LUA_release },
 	{ 0, 0 }
@@ -200,6 +201,32 @@ int LuaClass_FreeTransform::LUA_update( lua_State* p_L )
     } LUA_CATCH;
 
     return 0;
+}
+
+int LuaClass_FreeTransform::LUA_setpos(lua_State* p_L)
+{
+	if (!m_entity_transform_aspect)
+	{
+		LUA_ERROR("FreeTransform::set_pos : no transform aspect");
+	}
+
+	int argc = lua_gettop(p_L);
+	if (argc < 3)
+	{
+		LUA_ERROR("FreeTransform::set_pos : argument(s) missing");
+	}
+
+	dsreal posx = luaL_checknumber(p_L, 1);
+	dsreal posy = luaL_checknumber(p_L, 2);
+	dsreal posz = luaL_checknumber(p_L, 3);
+
+	LUA_TRY
+	{
+		m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(posx, posy, posz, 1.0));
+
+	} LUA_CATCH;
+
+	return 0;
 }
 
 int LuaClass_FreeTransform::LUA_read( lua_State* p_L )
