@@ -60,6 +60,8 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "update_time", &LuaClass_Entity::LUA_updatetime },
     { "release_timemanager", &LuaClass_Entity::LUA_releasetimemmanager },
     { "configure_world", &LuaClass_Entity::LUA_configureworld },
+	{ "update_gravitydirection", &LuaClass_Entity::LUA_updategravitydirection },
+	{ "update_gravitystate", &LuaClass_Entity::LUA_updategravitystate },
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
@@ -313,27 +315,19 @@ int LuaClass_Entity::LUA_releasetimemmanager( lua_State* p_L )
 int LuaClass_Entity::LUA_configureworld( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 )
+	if( argc < 4 )
 	{
         LUA_ERROR( "Entity::configure_world : argument(s) missing" );
 	}
 
     bool gravity = luaL_checkint( p_L, 1 );
-
-    if( gravity && argc < 4 )
-    {
-        LUA_ERROR( "Entity::configure_world : argument(s) missing" );
-    }
     dsreal xg;
     dsreal yg;
     dsreal zg;
 
-    if( argc == 4 )
-    {
-        xg = luaL_checknumber( p_L, 2 );
-        yg = luaL_checknumber( p_L, 3 );
-        zg = luaL_checknumber( p_L, 4 );
-    }
+    xg = luaL_checknumber( p_L, 2 );
+    yg = luaL_checknumber( p_L, 3 );
+    zg = luaL_checknumber( p_L, 4 );
 
     PhysicsAspect* physics_aspect = m_entity.GetAspect<PhysicsAspect>();
     if( NULL == physics_aspect )
@@ -342,13 +336,60 @@ int LuaClass_Entity::LUA_configureworld( lua_State* p_L )
     }
 
     physics_aspect->AddComponent<bool>( "gravity_state", gravity );
-
-    if( gravity )
-    {
-        physics_aspect->AddComponent<Vector>( "gravity", Vector( xg, yg, zg, 1.0 ) );
-    }
+    physics_aspect->AddComponent<Vector>( "gravity", Vector( xg, yg, zg, 1.0 ) );
 
     return 0;
+}
+
+int LuaClass_Entity::LUA_updategravitydirection(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 3)
+	{
+		LUA_ERROR("Entity::update_gravitydirection : argument(s) missing");
+	}
+	dsreal xg;
+	dsreal yg;
+	dsreal zg;
+
+
+	xg = luaL_checknumber(p_L, 1);
+	yg = luaL_checknumber(p_L, 2);
+	zg = luaL_checknumber(p_L, 3);
+
+
+	PhysicsAspect* physics_aspect = m_entity.GetAspect<PhysicsAspect>();
+	if (NULL == physics_aspect)
+	{
+		LUA_ERROR("Entity::update_gravitydirection : physics aspect doesnt exists in this entity!");
+	}
+
+	physics_aspect->GetComponent<Vector>("gravity")->getPurpose()[0] = xg;
+	physics_aspect->GetComponent<Vector>("gravity")->getPurpose()[1] = yg;
+	physics_aspect->GetComponent<Vector>("gravity")->getPurpose()[2] = zg;
+
+	return 0;
+}
+
+int LuaClass_Entity::LUA_updategravitystate(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::update_gravitystate : argument(s) missing");
+	}
+
+	bool gravity = luaL_checkint(p_L, 1);
+
+	PhysicsAspect* physics_aspect = m_entity.GetAspect<PhysicsAspect>();
+	if (NULL == physics_aspect)
+	{
+		LUA_ERROR("Entity::update_gravitystate : physics aspect doesnt exists in this entity!");
+	}
+
+	physics_aspect->GetComponent<bool>("gravity_state")->getPurpose() = gravity;
+
+	return 0;
 }
 
 int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
