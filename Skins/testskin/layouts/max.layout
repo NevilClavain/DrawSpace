@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="AlfiskoSkin/Button" name="Button_Quit" >
+            <Property name="Area" value="{{0,10},{0,25},{0,106},{0,57}}" />
+            <Property name="Text" value="Quit" />
+        </Window>
+    </Window>
+</GUILayout>
