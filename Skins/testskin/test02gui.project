@@ -6,5 +6,6 @@
         <Item path="schemes/AlfiskoSkin.scheme" type="file" />
         <Item path="fonts/DejaVuSans-12.font" type="file" />
         <Item path="layouts/main.layout" type="file" />
+        <Item path="layouts/max.layout" type="file" />
     </Items>
 </Project>
