@@ -1,0 +1,52 @@
+
+	1 - Show model meshe file infos
+		> [modelname].dump.load()
+		> [modelname].dump.show()
+		> [modelname].dump.load()
+
+	2 - Create and remove model instance		
+		> [modelname].view.load(<entity_id>)
+		> [modelname].view.load(<entity_id>, {x = <value>, y = <value>, z = <value>})
+		> [modelname].view.unload(<entity_id>)
+
+        3 - Select model instance target
+		> model.target = <entity_id>
+
+	4 - Move model instance
+		> model.move.posx()
+		> model.move.posy()
+		> model.move.posz()
+		> model.move.rotx()
+		> model.move.roty()
+		> model.move.rotz()
+		> model.move.scalex()
+		> model.move.scaley()
+		> model.move.scalez()
+		> model.move.scalexyz()
+		> model.move.resetpos()
+		> model.move.resetrot()
+		> model.move.resetscale()
+		> model.move.setpos(<entity_id>, <x>, <y>, <z>)
+
+	5 - Model animations
+		> model.anims.dump()
+		> model.anims.run(<anim_index>)
+		> model.anims.runloop(<anim_index>)
+		> model.anims.rand()
+		> model.anims.stop()
+
+	6 - Environnment
+		> model.camera.speed = <speed>
+		> model.env.setgravity(<bool>)
+		> model.env.setgravitydir(<x>, <y>, <z>)
+		> model.env.setbkcolor(<r>, <g>, <b>)
+		> model.env.fog.setdensity(<density>)
+		> model.env.fog.setcolor(<r>, <g>, <b>)
+		> model.env.light.setdir(<x>, <y>, <z>)
+		> model.env.ambientlight.setcolor(<r>, <g>, <b>)
+		> model.env.light.setstate(<bool>)
+		> model.env.light.setcolor(<r>, <g>, <b>)
+
+
+
+

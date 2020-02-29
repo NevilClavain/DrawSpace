@@ -5,8 +5,138 @@
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="AlfiskoSkin/Button" name="Button_Quit" >
-            <Property name="Area" value="{{0,10},{0,25},{0,106},{0,57}}" />
+            <Property name="Area" value="{{0,20},{0,70},{0,130},{0,95}}" />
+            <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Quit" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_PosX" >
+            <Property name="Area" value="{{0,20},{0,105},{0,130},{0,130}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Pos X" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_PosY" >
+            <Property name="Area" value="{{0,20},{0,130},{0,130},{0,155}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Pos Y" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_PosZ" >
+            <Property name="Area" value="{{0,20},{0,155},{0,130},{0,180}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Pos Z" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_RotX" >
+            <Property name="Area" value="{{0,20},{0,190},{0,130},{0,215}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Rot X" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_RotY" >
+            <Property name="Area" value="{{0,20},{0,215},{0,130},{0,240}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Rot Y" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_RotZ" >
+            <Property name="Area" value="{{0,20},{0,240},{0,130},{0,265}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Rot Z" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ScaleX" >
+            <Property name="Area" value="{{0,20},{0,275},{0,130},{0,300}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Scale X" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ScaleY" >
+            <Property name="Area" value="{{0,20},{0,300},{0,130},{0,325}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Scale Y" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ScaleZ" >
+            <Property name="Area" value="{{0,20},{0,325},{0,130},{0,350}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Scale Z" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ScaleXYZ" >
+            <Property name="Area" value="{{0,20},{0,350},{0,130},{0,375}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="ScaleXYZ" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ResestPos" >
+            <Property name="Area" value="{{0,20},{0,385},{0,130},{0,410}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Reset pos" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ResetRot" >
+            <Property name="Area" value="{{0,20},{0,410},{0,130},{0,435}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Reset rot" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ResetScale" >
+            <Property name="Area" value="{{0,20},{0,435},{0,130},{0,460}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Reset scale" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_MesheFileInfos" >
+            <Property name="Area" value="{{0,160},{0,5},{0,319},{0,27}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Help : meshe file infos" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ModelView" >
+            <Property name="Area" value="{{0,320},{0,5},{0,479},{0,27}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Help : model view" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ModelMove" >
+            <Property name="Area" value="{{0,640},{0,5},{0,799},{0,27}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Help : model move" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_ModelAnims" >
+            <Property name="Area" value="{{0,800},{0,5},{0,959},{0,27}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Help : model anims" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_Env" >
+            <Property name="Area" value="{{0,960},{0,5},{0,1119},{0,27}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Help : env" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_TargetSel" >
+            <Property name="Area" value="{{0,480},{0,5},{0,639},{0,27}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Help : target selection" />
+        </Window>
+        <Window type="AlfiskoSkin/Editbox" name="Editbox_AnimIndex" >
+            <Property name="Area" value="{{0,80},{0,500},{0,130},{0,532}}" />
+            <Property name="BlinkCaret" value="true" />
+        </Window>
+        <Window type="AlfiskoSkin/Label" name="Label_AnimIndex" >
+            <Property name="Area" value="{{0,20},{0,500},{0,80},{0,532}}" />
+            <Property name="Text" value="Animation" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_AnimsDump" >
+            <Property name="Area" value="{{0,20},{0,470},{0,130},{0,495}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Dump anims" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_AnimsRun" >
+            <Property name="Area" value="{{0,20},{0,535},{0,130},{0,560}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Run anim" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_AnimsRunLoop" >
+            <Property name="Area" value="{{0,20},{0,560},{0,130},{0,585}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Run anim loop" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_AnimsRand" >
+            <Property name="Area" value="{{0,20},{0,590},{0,130},{0,615}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Rand anim" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_AnimsStop" >
+            <Property name="Area" value="{{0,20},{0,620},{0,130},{0,645}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Stop anim" />
         </Window>
     </Window>
 </GUILayout>
