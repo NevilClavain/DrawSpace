@@ -54,6 +54,9 @@ const Luna<LuaClass_Gui>::RegType LuaClass_Gui::methods[] =
 
     { "add_pushbuttonclickedcb", &LuaClass_Gui::LUA_addpushbuttonclickedcb },
     { "remove_buttonclickedcb", &LuaClass_Gui::LUA_removepushbuttonclickedcb },
+
+	{ "set_widgettext", &LuaClass_Gui::LUA_setwidgettext },
+	{ "get_widgettext", &LuaClass_Gui::LUA_getwidgettext },
     
 	{ 0, 0 }
 };
@@ -281,5 +284,41 @@ int LuaClass_Gui::LUA_removepushbuttonclickedcb( lua_State* p_L )
 {
     LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterGuiPushButtonClickedCallback( p_cbid ); } );
     return 0;
+}
+
+int LuaClass_Gui::LUA_setwidgettext(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 3)
+	{
+		LUA_ERROR("Gui::set_widgettext : argument(s) missing");
+	}
+
+	dsstring layout_name = luaL_checkstring(p_L, 1);
+	dsstring widget_name = luaL_checkstring(p_L, 2);
+	dsstring text = luaL_checkstring(p_L, 3);
+
+	m_renderer->GUI_SetWidgetText(layout_name, widget_name, text);
+
+	return 0;
+}
+
+int LuaClass_Gui::LUA_getwidgettext(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Gui::get_widgettext : argument(s) missing");
+	}
+
+	dsstring layout_name = luaL_checkstring(p_L, 1);
+	dsstring widget_name = luaL_checkstring(p_L, 2);
+
+	dsstring text;
+
+	m_renderer->GUI_GetWidgetText(layout_name, widget_name, text);
+
+	lua_pushstring(p_L, text.c_str());
+	return 1;
 }
 

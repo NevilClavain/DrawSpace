@@ -51,6 +51,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 	{ "breakpoint", &LuaClass_Globals::LUA_breakpoint },
 
     { "round", &LuaClass_Globals::LUA_round },
+	{ "stoi", &LuaClass_Globals::LUA_stoi },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -72,7 +73,6 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "remove_mouserightbuttonupcb", &LuaClass_Globals::LUA_removemouserightbuttonupcb },
 	{ "add_animationeventcb", &LuaClass_Globals::LUA_addanimationeventcb },
 	{ "remove_animationeventcb", &LuaClass_Globals::LUA_removeanimationeventcb },
-
 
     { "show_mousecursor", &LuaClass_Globals::LUA_showmousecursor },
     { "set_mousecursorcircularmode", &LuaClass_Globals::LUA_setmousecursorcircularmode },
@@ -522,4 +522,31 @@ int LuaClass_Globals::LUA_round(lua_State* p_L)
 
     lua_pushinteger(p_L, static_cast<int>(value));
     return 1;
+}
+
+int LuaClass_Globals::LUA_stoi(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Globals::stoi : argument(s) missing");
+	}
+	dsstring svalue = luaL_checkstring(p_L, 1);
+	int value = 0;
+	int error = 0;
+	try
+	{
+		value = std::stoi(svalue);
+	}
+	catch (const std::invalid_argument&)
+	{
+		error = 1;
+	}
+	catch (const std::out_of_range&)
+	{
+		error = 1;
+	}
+	lua_pushinteger(p_L, value);
+	lua_pushinteger(p_L, error);
+	return 2;
 }

@@ -74,6 +74,8 @@ public:
 	int LUA_addanimationeventcb(lua_State* p_L);
 	int LUA_removeanimationeventcb(lua_State* p_L);
 
+	int LUA_stoi(lua_State* p_L);
+
 
     int LUA_showmousecursor( lua_State* p_L );
     int LUA_setmousecursorcircularmode( lua_State* p_L );
