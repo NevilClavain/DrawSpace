@@ -2,7 +2,7 @@
 	1 - Show model meshe file infos
 		> [modelname].dump.load()
 		> [modelname].dump.show()
-		> [modelname].dump.load()
+		> [modelname].dump.unload()
 
 	2 - Create and remove model instance		
 		> [modelname].view.load(<entity_id>)
@@ -46,6 +46,9 @@
 		> model.env.ambientlight.setcolor(<r>, <g>, <b>)
 		> model.env.light.setstate(<bool>)
 		> model.env.light.setcolor(<r>, <g>, <b>)
+
+        7 - Scene content
+		> model.printscenelist()
 
 
 
