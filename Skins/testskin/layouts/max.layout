@@ -5,7 +5,7 @@
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
         <Property name="MaxSize" value="{{1,0},{1,0}}" />
         <Window type="AlfiskoSkin/Button" name="Button_Quit" >
-            <Property name="Area" value="{{0,20},{0,70},{0,130},{0,95}}" />
+            <Property name="Area" value="{{0,20},{0,35},{0,130},{0,60}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Quit" />
         </Window>
@@ -148,6 +148,11 @@
             <Property name="Area" value="{{0,20},{0,670},{0,130},{0,695}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Clear infos" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_SceneContent" >
+            <Property name="Area" value="{{0,20},{0,70},{0,130},{0,95}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Scene content" />
         </Window>
     </Window>
 </GUILayout>
