@@ -95,7 +95,7 @@ protected:
 
     bool                                                                            m_console_newline;
 	dsstring																		m_console_caret_line;
-	size_t																			m_caret_pos;
+	size_t																			m_caret_pos_from_end;
 
     bool                                                                            m_print_from_command;
 

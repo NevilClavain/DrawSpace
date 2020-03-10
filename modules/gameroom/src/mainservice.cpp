@@ -55,7 +55,7 @@ m_animation_events_cb( this, &MainService::on_animation_event )
     m_console_texts.push_back( console_welcome );
     m_console_texts.push_back( ">" );
     m_console_current_line++;
-	m_caret_pos = 0;
+	m_caret_pos_from_end = 0;
 }
 
 MainService::~MainService( void )
@@ -212,8 +212,10 @@ void MainService::print_console_content( void )
 void MainService::build_console_caret_line(void)
 {
 	dsstring padding;
+
+	dsstring current_line = m_console_texts[m_console_current_line];
 	
-	for (size_t i = 0; i < m_caret_pos; i++)
+	for (size_t i = 0; i < current_line.size() - m_caret_pos_from_end; i++)
 	{
 		padding = padding + " ";
 	}
@@ -225,26 +227,43 @@ void MainService::OnKeyPress( long p_key )
 {
     if( m_console_active )
     {
-        return;
     }
-
-    for( auto it = m_keypress_lua_callbacks.begin(); it != m_keypress_lua_callbacks.end(); ++it )
-    {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_key );
-    }
+	else
+	{
+		for (auto it = m_keypress_lua_callbacks.begin(); it != m_keypress_lua_callbacks.end(); ++it)
+		{
+			LuaContext::GetInstance()->CallLuaFunc(it->second, p_key);
+		}
+	}
 }
 
 void MainService::OnEndKeyPress( long p_key )
 {
     if( m_console_active )
     {
-        return;
-    }
-
-    for( auto it = m_endkeypress_lua_callbacks.begin(); it != m_endkeypress_lua_callbacks.end(); ++it )
-    {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_key );
-    }
+		if (VK_LEFT == p_key)
+		{
+			dsstring current_line = m_console_texts[m_console_current_line];
+			if (m_caret_pos_from_end < current_line.size() - 1) // - 1 to ignore '>' first char
+			{
+				m_caret_pos_from_end++;
+			}
+		}
+		else if (VK_RIGHT == p_key)
+		{		
+			if (0 < m_caret_pos_from_end)
+			{
+				m_caret_pos_from_end--;
+			}
+		}
+	}
+	else
+	{
+		for (auto it = m_endkeypress_lua_callbacks.begin(); it != m_endkeypress_lua_callbacks.end(); ++it)
+		{
+			LuaContext::GetInstance()->CallLuaFunc(it->second, p_key);
+		}
+	}
 }
 
 void MainService::OnKeyPulse( long p_key )
