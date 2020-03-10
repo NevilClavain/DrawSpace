@@ -94,6 +94,8 @@ protected:
     int                                                                             m_console_current_line;
 
     bool                                                                            m_console_newline;
+	dsstring																		m_console_caret_line;
+	size_t																			m_caret_pos;
 
     bool                                                                            m_print_from_command;
 
@@ -111,6 +113,7 @@ protected:
     void process_console_command( const dsstring& p_cmd );
     void print_console_line( const dsstring& p_text );
     void print_console_content( void );
+	void build_console_caret_line(void);
 
 
     void execute_lua_run_cbs( void );
