@@ -256,6 +256,15 @@ void MainService::OnEndKeyPress( long p_key )
 				m_caret_pos_from_end--;
 			}
 		}
+		else if (VK_HOME == p_key)
+		{
+			dsstring current_line = m_console_texts[m_console_current_line];
+			m_caret_pos_from_end = current_line.size() - 1; // - 1 to ignore '>' first char
+		}
+		else if (VK_END == p_key)
+		{
+			m_caret_pos_from_end = 0;
+		}
 	}
 	else
 	{
@@ -286,52 +295,48 @@ void MainService::OnChar( long p_char, long p_scan )
         RenderingAspect* rendering_aspect = m_quadEntity.GetAspect<RenderingAspect>();
         rendering_aspect->GetComponent<bool>( "draw" )->getPurpose() = m_console_active;
 
-
         return;
     }
 
     if( m_console_active )
     {
-        if( 8 == p_char )
-        {        
-            if( m_console_texts[m_console_current_line].size() > 1 )
-            {
-                char comment[4096];
+		if (8 == p_char)
+		{
+			if(m_console_texts[m_console_current_line].size() > 1)
+			{ 
+				size_t pos_target = m_console_texts[m_console_current_line].size() - m_caret_pos_from_end;
+				m_console_texts[m_console_current_line].erase(pos_target - 1, 1);
+			}
+		}
+		else if (13 == p_char)
+		{
+			char comment[4096];
 
-                strcpy( comment, m_console_texts[m_console_current_line].c_str() );
-                comment[m_console_texts[m_console_current_line].size()-1] = 0;
+			strcpy(comment, m_console_texts[m_console_current_line].c_str());
+			char* cmd = comment;
+			cmd++; // sauter le '>' 
+			if (strcmp(cmd, ""))
+			{
+				m_print_from_command = true;
+				process_console_command(cmd);
+				m_console_newline = true;
+			}
 
-                m_console_texts[m_console_current_line] = comment;
-            }        
-        }
-        else if( 13 == p_char )
-        {
-            char comment[4096];
+			if (m_console_newline)
+			{
+				m_console_texts.push_back(">");
+				m_console_current_line++;
 
-            strcpy( comment, m_console_texts[m_console_current_line].c_str() );
-            char* cmd = comment;
-            cmd++; // sauter le '>' 
-            if( strcmp( cmd, "" ) )
-            {
-                m_print_from_command = true;
-                process_console_command( cmd );
-                m_console_newline = true;
-            }
+				m_console_newline = false;
+			}
 
-            if( m_console_newline )
-            {
-                m_console_texts.push_back( ">" );
-                m_console_current_line++;
-
-                m_console_newline = false;
-            }
-
-            m_print_from_command = false;
-        }
-        else
-        {
-            m_console_texts[m_console_current_line] += p_char;
-        }
+			m_print_from_command = false;
+		}
+		else
+		{
+			size_t pos_target = m_console_texts[m_console_current_line].size() - m_caret_pos_from_end;
+			m_console_texts[m_console_current_line].insert(pos_target, 1, (char)p_char);
+		}
     }
     else
     {
@@ -479,6 +484,8 @@ void MainService::print_console_line( const dsstring& p_text )
         m_console_texts.push_back( ">" );
         m_console_current_line++;
     }
+
+	m_caret_pos_from_end = 0;
 }
 
 
