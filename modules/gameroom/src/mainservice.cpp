@@ -302,7 +302,7 @@ void MainService::OnChar( long p_char, long p_scan )
     {
 		if (8 == p_char)
 		{
-			if(m_console_texts[m_console_current_line].size() > 1)
+			if(m_caret_pos_from_end < m_console_texts[m_console_current_line].size() - 1) // -1 for the '>'
 			{ 
 				size_t pos_target = m_console_texts[m_console_current_line].size() - m_caret_pos_from_end;
 				m_console_texts[m_console_current_line].erase(pos_target - 1, 1);
