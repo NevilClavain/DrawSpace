@@ -265,6 +265,16 @@ void MainService::OnEndKeyPress( long p_key )
 		{
 			m_caret_pos_from_end = 0;
 		}
+		else if (VK_DELETE == p_key)
+		{
+			size_t pos_target = m_console_texts[m_console_current_line].size() - m_caret_pos_from_end;
+			m_console_texts[m_console_current_line].erase(pos_target, 1);
+
+			if (m_caret_pos_from_end > 0)
+			{
+				m_caret_pos_from_end--;
+			}
+		}
 	}
 	else
 	{
