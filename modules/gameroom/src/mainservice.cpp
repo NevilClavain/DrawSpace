@@ -56,6 +56,7 @@ m_animation_events_cb( this, &MainService::on_animation_event )
     m_console_texts.push_back( ">" );
     m_console_current_line++;
 	m_caret_pos_from_end = 0;
+	m_recall_command_index = 0;
 }
 
 MainService::~MainService( void )
@@ -274,6 +275,28 @@ void MainService::OnEndKeyPress( long p_key )
 				m_caret_pos_from_end--;
 			}
 		}
+		else if (VK_UP == p_key)
+		{			
+			m_caret_pos_from_end = 0;
+
+			if (m_recall_command_index < m_commands_mem.size())
+			{				
+				dsstring command = m_commands_mem[m_commands_mem.size() - m_recall_command_index - 1];
+				m_console_texts[m_console_current_line] = dsstring(">") + command;
+				m_recall_command_index++;
+			}
+		}
+		else if (VK_DOWN == p_key)
+		{
+			m_caret_pos_from_end = 0;
+
+			if (m_recall_command_index > 0)
+			{
+				m_recall_command_index--;
+				dsstring command = m_commands_mem[m_commands_mem.size() - m_recall_command_index - 1];
+				m_console_texts[m_console_current_line] = dsstring(">") + command;
+			}
+		}
 	}
 	else
 	{
@@ -328,6 +351,8 @@ void MainService::OnChar( long p_char, long p_scan )
 			{
 				m_print_from_command = true;
 				process_console_command(cmd);
+				m_commands_mem.push_back(cmd);
+				m_caret_pos_from_end = 0;
 				m_console_newline = true;
 			}
 
@@ -339,9 +364,7 @@ void MainService::OnChar( long p_char, long p_scan )
 				m_console_newline = false;
 			}
 
-			m_print_from_command = false;
-
-			m_caret_pos_from_end = 0;
+			m_print_from_command = false;			
 		}
 		else
 		{

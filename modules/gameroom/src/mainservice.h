@@ -95,7 +95,10 @@ protected:
 
     bool                                                                            m_console_newline;
 	dsstring																		m_console_caret_line;
-	size_t																			m_caret_pos_from_end;
+	size_t																			m_caret_pos_from_end;	
+
+	size_t                                                                          m_recall_command_index;
+	std::vector<dsstring>															m_commands_mem; // store here all typed commands
 
     bool                                                                            m_print_from_command;
 
