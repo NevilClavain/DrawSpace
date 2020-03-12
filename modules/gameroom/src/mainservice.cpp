@@ -212,7 +212,6 @@ void MainService::print_console_content( void )
 void MainService::build_console_caret_line(void)
 {
 	dsstring padding;
-
 	dsstring current_line = m_console_texts[m_console_current_line];
 	
 	for (size_t i = 0; i < current_line.size() - m_caret_pos_from_end; i++)
@@ -341,6 +340,8 @@ void MainService::OnChar( long p_char, long p_scan )
 			}
 
 			m_print_from_command = false;
+
+			m_caret_pos_from_end = 0;
 		}
 		else
 		{
