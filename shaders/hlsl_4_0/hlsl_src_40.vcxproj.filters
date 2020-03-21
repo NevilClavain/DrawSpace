@@ -135,5 +135,11 @@
     <FxCompile Include="nebulae.psh">
       <Filter>pixel_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="raymarch.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="raymarch.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
