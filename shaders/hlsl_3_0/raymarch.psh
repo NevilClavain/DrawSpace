@@ -29,9 +29,10 @@ float4x4 matCam:			register(c116);
 
 sampler2D Texture0;
 
-#define RADIUS		0.5f
-#define STEPS		100.0f
-#define STEP_SIZE	0.1f
+#define RADIUS			4.0f
+#define STEPS			100.0f
+#define STEP_SIZE		0.1f
+#define MIN_DISTANCE	0.001f
 
 struct PS_INTPUT 
 {
@@ -39,23 +40,27 @@ struct PS_INTPUT
    float4 wPosition   : TEXCOORD0;
 };
 
-bool sphereHit(float3 pos, float3 centre)
+float sphereDistance(float3 pos, float3 centre)
 {
-	return distance(pos, centre) < RADIUS;
+	return distance(pos, centre) - RADIUS;
 }
 
 float4 raymarch(float3 position, float3 direction, float3 centre)
 {
-	float4 color = { 1.0, 1.0, 1.0, 1.0 };
+	float4 color = { 0.0, 0.0, 0.0, 1.0 };
 
-	for (int i = 0; i < STEPS; i++)
+	float distance;
+	bool cont = 1;
+
+	for (int i = 0; i < STEPS && cont == 1; i++)
 	{
-		if (sphereHit(position, centre))
+		// distance from sphere surface
+		distance = sphereDistance(position, centre);
+
+		if(distance < MIN_DISTANCE)
 		{
-			color.r = 1.0;
-			color.g = 0.0;
-			color.b = 0.0;
-			color.a = 1.0;
+			color = i / (float)STEPS;	
+			cont = 0;
 		}
 
 		position += direction * STEP_SIZE;
