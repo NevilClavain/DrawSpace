@@ -27,9 +27,7 @@ float4 Color:				register(c0);
 float4x4 matWorld:		    register(c108);
 float4x4 matCam:			register(c116);
 
-sampler2D Texture0;
-
-#define RADIUS			4.0f
+#define RADIUS			0.5f
 #define STEPS			100.0f
 #define STEP_SIZE		0.1f
 #define MIN_DISTANCE	0.001f
@@ -59,7 +57,9 @@ float4 raymarch(float3 position, float3 direction, float3 centre)
 
 		if(distance < MIN_DISTANCE)
 		{
-			color = i / (float)STEPS;	
+			//color = i / (float)STEPS;	
+
+			color.r = 1.0;
 			cont = 0;
 		}
 
@@ -89,6 +89,4 @@ float4 ps_main(PS_INTPUT input) : COLOR0
 	float3 viewDirection = normalize(worldPosition - WorldSpaceCameraPos);
 
 	return raymarch(worldPosition, viewDirection, Center);
-
-   return Color;
 }
