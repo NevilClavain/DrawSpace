@@ -47,6 +47,15 @@ float sphereDistance(float3 pos, float3 centre)
 	return distance(pos, centre) - RADIUS;
 }
 
+float compose(float3 pos, float3 centre)
+{
+	float3 offset = { 0.4, 0.0, 0.0 };
+	float distance1 = sphereDistance(pos, centre + offset);
+	float distance2 = sphereDistance(pos, centre - offset);
+
+	return min(distance1, distance2);
+}
+
 float4 raymarch(float3 position, float3 direction, float3 centre)
 {
 	float4 color = { 0.0, 0.0, 0.0, 1.0 };
@@ -57,7 +66,7 @@ float4 raymarch(float3 position, float3 direction, float3 centre)
 	for (int i = 0; i < STEPS && cont == 1; i++)
 	{
 		// distance from sphere surface
-		distance = sphereDistance(position, centre);
+		distance = compose(position, centre);
 
 		if (distance < MIN_DISTANCE)
 		{
@@ -95,5 +104,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	float3 viewDirection = normalize(worldPosition - WorldSpaceCameraPos);
 
-	return raymarch(worldPosition, viewDirection, Center);
+	float4 color = raymarch(worldPosition, viewDirection, Center);
+	if (color.x == 0.0 && color.y == 0.0 && color.z == 0.0)
+	{
+		clip(-1.0);
+	}
+
+	return color;
 }
