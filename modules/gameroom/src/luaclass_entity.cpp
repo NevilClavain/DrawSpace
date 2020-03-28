@@ -440,8 +440,11 @@ int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
     Matrix proj;
     proj.Perspective( w, h, zn, zf );
     camera_aspect->AddComponent<Matrix>( "camera_proj", proj );
-
     camera_aspect->AddComponent<dsstring>( "camera_name", camera_name );
+
+	Vector camera_params(w, h, zn, zf);
+	camera_aspect->AddComponent<Vector>("camera_params", camera_params);
+
     return 0;
 }
 
