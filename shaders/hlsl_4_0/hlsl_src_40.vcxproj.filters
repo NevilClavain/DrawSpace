@@ -141,5 +141,11 @@
     <FxCompile Include="raymarch.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="transfer.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="transfer.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
