@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 sampler2D Texture0 : register(s0);
+sampler2D Texture1 : register(s1);
 
 struct PS_INTPUT
 {
@@ -33,12 +34,9 @@ struct PS_INTPUT
 float4 ps_main(PS_INTPUT input) : COLOR0
 {
 	float4 color_dest;
-	float4 color_source = tex2D(Texture0, input.TexCoord0);
+	//float4 color_source = tex2D(Texture0, input.TexCoord0);
+	float4 color_source = tex2D(Texture1, input.TexCoord0);
 
-	color_dest.r = color_source.r;
-	color_dest.g = 0.0;
-	color_dest.b = 0.0;
-	color_dest.a = 1.0;
-
+	color_dest = color_source;
 	return color_dest;
 }

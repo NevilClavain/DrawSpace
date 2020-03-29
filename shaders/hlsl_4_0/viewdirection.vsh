@@ -28,26 +28,58 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-Texture2D txDiffuse         : register(t0);
-SamplerState sam            : register(s0);
+#include "mat_input_constants.hlsl"
 
-Texture2D txDiffuse1        : register(t1);
-SamplerState sam1           : register(s1);
-
-struct PS_INTPUT 
+struct VS_INPUT 
 {
-    float4 Position : SV_POSITION;
-	float2 TexCoord0: TEXCOORD0;
+	float3 Position : POSITION;
+	float4 TexCoord0 : TEXCOORD0;
 };
 
-float4 ps_main(PS_INTPUT input) : SV_Target
+struct VS_OUTPUT 
 {
-	float4 color_dest;
+	float4 Position : SV_POSITION;
+	float2 TexCoord0 : TEXCOORD0;
+	float2 TexCoord1 : TEXCOORD1;
+};
 
+VS_OUTPUT vs_main( VS_INPUT Input )
+{
+    VS_OUTPUT Output;
+    float4 pos;
 
-	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
-	//float4 color_source = txDiffuse1.Sample(sam1, input.TexCoord0);
-	color_dest = color_source;
+	float4 camera_params = vec[24];
 
-	return color_dest;
+	float width = camera_params.x;
+	float height = camera_params.y;
+	float zn = camera_params.z;
+    
+    pos.xyz = Input.Position;    
+    pos.w = 1.0;
+
+    Output.Position = mul(pos, mat[matWorldViewProjection]);
+	Output.TexCoord0 = Input.TexCoord0.xy;
+
+	if (Input.TexCoord0.x == 0.0 && Input.TexCoord0.y == 0.0)
+	{
+		Output.TexCoord1.x = -width * 0.5;
+		Output.TexCoord1.y = -height * 0.5;
+	}
+	else if (Input.TexCoord0.x == 1.0 && Input.TexCoord0.y == 0.0)
+	{
+		Output.TexCoord1.x = width;
+		Output.TexCoord1.y = -height * 0.5;
+	}
+	else if (Input.TexCoord0.x == 1.0 && Input.TexCoord0.y == 1.0)
+	{
+		Output.TexCoord1.x = width * 0.5;
+		Output.TexCoord1.y = height * 0.5;
+	}
+	else // (Input.TexCoord0.x == 0.0 && Input.TexCoord0.y == 1.0)
+	{
+		Output.TexCoord1.x = -width * 0.5;
+		Output.TexCoord1.y = height * 0.5;
+	}
+      
+    return( Output );   
 }

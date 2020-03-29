@@ -147,5 +147,11 @@
     <FxCompile Include="transfer.psh">
       <Filter>pixel_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="viewdirection.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="viewdirection.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
