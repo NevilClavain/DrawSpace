@@ -64,6 +64,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "update_gravitystate", &LuaClass_Entity::LUA_updategravitystate },
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
+	{ "read_cameraparams", &LuaClass_Entity::LUA_readcameraparams },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
 	{ "configure_animationbones", &LuaClass_Entity::LUA_configureanimationbones },
 	{ "update_bonelocaltransform", &LuaClass_Entity::LUA_updatebonelocaltransform },
@@ -448,6 +449,23 @@ int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
     return 0;
 }
 
+int LuaClass_Entity::LUA_readcameraparams(lua_State* p_L)
+{
+	CameraAspect* camera_aspect = m_entity.GetAspect<CameraAspect>();
+	if (NULL == camera_aspect)
+	{
+		LUA_ERROR("Entity::read_cameraparams : camera aspect doesnt exists in this entity!");
+	}
+
+	Vector params = camera_aspect->GetComponent<Vector>("camera_params")->getPurpose();
+
+	for (int i = 0; i < 4; i++)
+	{
+		lua_pushnumber(p_L, params[i]);
+	}	
+	return 4;
+}
+
 int LuaClass_Entity::LUA_releasecamera( lua_State* p_L )
 {
     CameraAspect* camera_aspect = m_entity.GetAspect<CameraAspect>();
@@ -460,6 +478,7 @@ int LuaClass_Entity::LUA_releasecamera( lua_State* p_L )
     {
         camera_aspect->RemoveComponent<Matrix>( "camera_proj" );
         camera_aspect->RemoveComponent<dsstring>("camera_name");
+		camera_aspect->RemoveComponent<Vector>("camera_params");
 
     } LUA_CATCH;
 
