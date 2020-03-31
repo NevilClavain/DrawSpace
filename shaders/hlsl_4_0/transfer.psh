@@ -31,23 +31,134 @@ cbuffer legacyargs : register(b0)
 Texture2D txDiffuse         : register(t0);
 SamplerState sam            : register(s0);
 
-Texture2D txDiffuse1        : register(t1);
-SamplerState sam1           : register(s1);
-
 struct PS_INTPUT 
 {
     float4 Position : SV_POSITION;
 	float2 TexCoord0: TEXCOORD0;
 };
 
+#include "mat_input_constants.hlsl"
+
+float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 rayDir)
+{
+	float3 t0;
+	float3 t1;
+	float3 tmin;
+	float3 tmax;
+
+	if (abs(rayDir.x) > 0.0)
+	{
+		t0.x = (boundsMin.x - rayOrigin.x) / rayDir.x;
+		t1.x = (boundsMax.x - rayOrigin.x) / rayDir.x;
+		
+		tmin.x = min(t0.x, t1.x);
+		tmax.x = max(t0.x, t1.x);
+	}
+	else
+	{
+		tmin.x = -2000000000;
+		tmax.x = 2000000000;
+	}
+
+	if (abs(rayDir.y) > 0.0)
+	{
+		t0.y = (boundsMin.y - rayOrigin.y) / rayDir.y;
+		t1.y = (boundsMax.y - rayOrigin.y) / rayDir.y;
+
+		tmin.y = min(t0.y, t1.y);
+		tmax.y = max(t0.y, t1.y);
+	}
+	else
+	{
+		tmin.y = -2000000000;
+		tmax.y = 2000000000;
+	}
+
+	if (abs(rayDir.z) > 0.0)
+	{
+		t0.z = (boundsMin.z - rayOrigin.z) / rayDir.z;
+		t1.z = (boundsMax.z - rayOrigin.z) / rayDir.z;
+
+		tmin.z = min(t0.z, t1.z);
+		tmax.z = max(t0.z, t1.z);
+	}
+	else
+	{
+		tmin.z = -2000000000;
+		tmax.z = 2000000000;
+	}
+
+	float dstA = max(max(tmin.x, tmin.y), tmin.z);
+	float dstB = min(tmax.x, min(tmax.y, tmax.z));
+
+	float dstToBox = max(0, dstA);
+	float dstInsideBox = max(0, dstB - dstToBox);
+
+	return float2(dstToBox, dstInsideBox);
+}
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
 	float4 color_dest;
 
+	// TODO : from shader params
+	float camera_width = 1.0;
+	float camera_height = 0.625;
+	float camera_zn = 1.0;
 
-	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
-	//float4 color_source = txDiffuse1.Sample(sam1, input.TexCoord0);
-	color_dest = color_source;
+
+	float4 ray_origin;
+	//ray_origin = vec[0].xyz;
+
+	Matrix cam = mat[1];
+
+	ray_origin.x = cam[3][0];
+	ray_origin.y = cam[3][1];
+	ray_origin.z = cam[3][2];
+	ray_origin.w = 1.0;
+
+
+	
+
+	cam[3][0] = 0.0;
+	cam[3][1] = 0.0;
+	cam[3][2] = 0.0;
+	
+	
+
+
+	float4 local_rayDir;
+	local_rayDir.x = (input.TexCoord0.x - 0.5) * camera_width;
+	local_rayDir.y = ((1.0 - input.TexCoord0.y) - 0.5) * camera_height;
+	local_rayDir.z = -camera_zn;
+	local_rayDir.w = 1.0;
+
+
+	// compute global ray direction
+	float4 global_rayDir = mul(local_rayDir, cam);
+	
+
+	float3 bounds_min = { -4.5, -4.5, -4.5 };
+	float3 bounds_max = { 4.5, 4.5, 4.5 };
+
+	float2 intersection = rayBoxDst(bounds_min, bounds_max, ray_origin.xyz, global_rayDir.xyz);
+
+
+	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);	
+
+	if (intersection.y > 0.0)
+	{
+		color_dest.r = 1.0;
+		color_dest.g = 1.0;
+		color_dest.b = 1.0;
+		color_dest.a = 1.0;
+	}
+	else
+	{
+		color_dest = color_source;
+	}
+
+	//color_dest = local_rayDir;
 
 	return color_dest;
 }
