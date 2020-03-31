@@ -101,48 +101,36 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {
 	float4 color_dest;
 
-	// TODO : from shader params
-	float camera_width = 1.0;
-	float camera_height = 0.625;
-	float camera_zn = 1.0;
-
+	float4 camera_params = vec[0];
+	float camera_width = camera_params.x;
+	float camera_height = camera_params.y;
+	float camera_zn = camera_params.z;
 
 	float4 ray_origin;
-	//ray_origin = vec[0].xyz;
-
+	
 	Matrix cam = mat[1];
-
 	ray_origin.x = cam[3][0];
 	ray_origin.y = cam[3][1];
 	ray_origin.z = cam[3][2];
 	ray_origin.w = 1.0;
 
-
-	
-
 	cam[3][0] = 0.0;
 	cam[3][1] = 0.0;
 	cam[3][2] = 0.0;
 	
-	
-
-
 	float4 local_rayDir;
 	local_rayDir.x = (input.TexCoord0.x - 0.5) * camera_width;
 	local_rayDir.y = ((1.0 - input.TexCoord0.y) - 0.5) * camera_height;
 	local_rayDir.z = -camera_zn;
 	local_rayDir.w = 1.0;
 
-
 	// compute global ray direction
 	float4 global_rayDir = mul(local_rayDir, cam);
 	
-
 	float3 bounds_min = { -4.5, -4.5, -4.5 };
 	float3 bounds_max = { 4.5, 4.5, 4.5 };
 
 	float2 intersection = rayBoxDst(bounds_min, bounds_max, ray_origin.xyz, global_rayDir.xyz);
-
 
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);	
 
@@ -157,8 +145,5 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	{
 		color_dest = color_source;
 	}
-
-	//color_dest = local_rayDir;
-
 	return color_dest;
 }
