@@ -30,6 +30,7 @@
 #include "luaclass_fxparams.h"
 #include "luaclass_rendercontext.h"
 #include "luaclass_renderconfig.h"
+#include "luaclass_matrix.h"
 #include "mainservice.h"
 #include "renderingaspectimpl.h"
 #include "vector.h"
@@ -55,6 +56,7 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "release_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadresources },
     { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
     { "set_viewportquadshaderrealvector", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector },
+	{ "set_viewportquadshaderrealmatrix", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealmatrix },
 	{ "add_renderpasseventcb", &LuaClass_RenderPassNodeGraph::LUA_addrenderpasseventcb },
 	{ "remove_renderpasseventcb", &LuaClass_RenderPassNodeGraph::LUA_removerenderpasseventcb },
 	{ 0, 0 }
@@ -538,6 +540,46 @@ int LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector( lua_State
         LUA_ERROR( "RenderPassNodeGraph::set_viewportquadshaderrealvector : unknown pass id" );
     }
     return 0;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealmatrix(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 3)
+	{
+		LUA_ERROR("RenderPassNodeGraph::set_viewportquadshaderrealmatrix : argument(s) missing");
+	}
+
+	dsstring pass_id = luaL_checkstring(p_L, 1);
+	dsstring param_id = luaL_checkstring(p_L, 2);
+	LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check(p_L, 3);
+
+	if (m_passes.count(pass_id))
+	{
+		ViewportQuad* vpq = m_passes[pass_id].m_renderpassnode.GetViewportQuad();
+		if (!vpq)
+		{
+			LUA_ERROR("RenderPassNodeGraph::set_viewportquadshaderrealmatrix : no viewportquad created for this pass");
+		}
+		else
+		{
+			LUA_TRY
+			{
+				Matrix mat = lua_mat->GetMatrix();
+				mat.Transpose();
+				vpq->SetShaderRealMatrix(param_id, mat);
+
+			} LUA_CATCH;
+		}
+	}
+	else
+	{
+		LUA_ERROR("RenderPassNodeGraph::set_viewportquadshaderrealvector : unknown pass id");
+	}
+	return 0;
+
+
+	return 0;
 }
 
 int LuaClass_RenderPassNodeGraph::LUA_addrenderpasseventcb(lua_State* p_L)

@@ -25,9 +25,12 @@
 #include "luacontext.h"
 #include "luaclass_matrix.h"
 #include "luaclass_quaternion.h"
+#include "luaclass_entity.h"
 #include "maths.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Aspect;
 
 const char LuaClass_Matrix::className[] = "Matrix";
 const Luna<LuaClass_Matrix>::RegType LuaClass_Matrix::methods[] =
@@ -45,6 +48,7 @@ const Luna<LuaClass_Matrix>::RegType LuaClass_Matrix::methods[] =
     { "set_value", &LuaClass_Matrix::LUA_setvalue },
     { "get_value", &LuaClass_Matrix::LUA_getvalue },
     { "set_product", &LuaClass_Matrix::LUA_storeproduct },
+	{ "store_entitytransformation", &LuaClass_Matrix::LUA_storeentitytransformation },
 	{ 0, 0 }
 };
 
@@ -221,4 +225,44 @@ int LuaClass_Matrix::LUA_storeproduct( lua_State* p_L )
 DrawSpace::Utils::Matrix LuaClass_Matrix::GetMatrix( void ) const
 {
     return m_matrix;
+}
+
+int LuaClass_Matrix::LUA_storeentitytransformation(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Matrix::store_entitytransformation : argument(s) missing");
+	}
+
+	LuaClass_Entity* lua_entity = Luna<LuaClass_Entity>::check(p_L, 1);
+	int type = luaL_checkint(p_L, 2);
+
+	TransformAspect* transform_aspect = lua_entity->GetEntity().GetAspect<TransformAspect>();
+	if (NULL == transform_aspect)
+	{
+		LUA_ERROR("Entity::configure_timemanager : time aspect doesnt exists in this entity!");
+	}
+
+	switch (type)
+	{
+		case 0:    // TRANSFORMATION_WORLD_MATRIX
+		{			
+			transform_aspect->GetWorldTransform(m_matrix);
+		}
+		break;
+
+		case 1:    // TRANSFORMATION_VIEW_MATRIX
+		{
+			transform_aspect->GetViewTransform(m_matrix);
+		}
+		break;
+
+		case 2:    // TRANSFORMATION_PROJ_MATRIX
+		{
+			transform_aspect->GetProjTransform(m_matrix);
+		}
+		break;
+	}
+	return 0;
 }

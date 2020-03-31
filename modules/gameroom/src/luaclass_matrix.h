@@ -56,6 +56,8 @@ public:
 
     DrawSpace::Utils::Matrix GetMatrix( void ) const;
 
+	int LUA_storeentitytransformation(lua_State* p_L);
+
     static const char className[];
     static const Luna<LuaClass_Matrix>::RegType methods[];
 };
