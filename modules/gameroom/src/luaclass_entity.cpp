@@ -51,7 +51,7 @@ const char LuaClass_Entity::className[] = "Entity";
 const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 {
     { "add_aspect", &LuaClass_Entity::LUA_addaspect },
-	{ "has_aspect", &LuaClass_Entity::LU_hasaspect },
+	{ "has_aspect", &LuaClass_Entity::LUA_hasaspect },
     { "remove_aspect", &LuaClass_Entity::LUA_removeaspect },
     { "connect_renderingaspect_rendergraph", &LuaClass_Entity::LUA_connect_renderingaspect_rendergraph },
     { "configure_timemanager", &LuaClass_Entity::LUA_configuretimemmanager },
@@ -126,7 +126,7 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
     return 0;
 }
 
-int LuaClass_Entity::LU_hasaspect(lua_State* p_L)
+int LuaClass_Entity::LUA_hasaspect(lua_State* p_L)
 {
 	int argc = lua_gettop(p_L);
 	if (argc < 1)

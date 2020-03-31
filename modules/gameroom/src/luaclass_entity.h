@@ -67,7 +67,7 @@ public:
     DrawSpace::Core::Entity& GetEntity( void );
 
     int LUA_addaspect( lua_State* p_L );
-	int LU_hasaspect(lua_State* p_L);
+	int LUA_hasaspect(lua_State* p_L);
     int LUA_removeaspect( lua_State* p_L );
 
     int LUA_configuretimemmanager( lua_State* p_L );
