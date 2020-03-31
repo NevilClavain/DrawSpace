@@ -131,7 +131,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 bounds_max = { 4.5, 4.5, 4.5 };
 
 	float2 intersection = rayBoxDst(bounds_min, bounds_max, ray_origin.xyz, global_rayDir.xyz);
-
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);	
 
 	if (intersection.y > 0.0)
