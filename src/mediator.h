@@ -47,11 +47,7 @@
 #ifndef _MEDIATOR_H_
 #define _MEDIATOR_H_
 
-#ifdef WIN32
-#include <typeinfo.h>
-#else
 #include <typeinfo>
-#endif
 
 #include <list>
 #include "drawspace_commons.h"
