@@ -102,42 +102,64 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 color_dest;
 
 	float4 camera_params = vec[0];
+	Matrix mat_cam = mat[1];
+	Matrix mat_pos = mat[5];
+
+
 	float camera_width = camera_params.x;
 	float camera_height = camera_params.y;
 	float camera_zn = camera_params.z;
 
-	float4 ray_origin;
+	float3 ray_origin;
 	
-	Matrix cam = mat[1];
-	ray_origin.x = cam[3][0];
-	ray_origin.y = cam[3][1];
-	ray_origin.z = cam[3][2];
-	ray_origin.w = 1.0;
 
-	cam[3][0] = 0.0;
-	cam[3][1] = 0.0;
-	cam[3][2] = 0.0;
-	
-	float4 local_rayDir;
-	local_rayDir.x = (input.TexCoord0.x - 0.5) * camera_width;
-	local_rayDir.y = ((1.0 - input.TexCoord0.y) - 0.5) * camera_height;
-	local_rayDir.z = -camera_zn;
-	local_rayDir.w = 1.0;
+	Matrix pos_rot = mat_pos;
+	pos_rot[3][0] = 0.0;
+	pos_rot[3][1] = 0.0;
+	pos_rot[3][2] = 0.0;
+	pos_rot = transpose(pos_rot); // inverse rot mat
+
+
+	ray_origin.x = mat_cam[3][0];
+	ray_origin.y = mat_cam[3][1];
+	ray_origin.z = mat_cam[3][2];
+
+
+
+	float3 container_pos;
+	container_pos.x = mat_pos[3][0];
+	container_pos.y = mat_pos[3][1];
+	container_pos.z = mat_pos[3][2];
+
+	float3 localcontainer_rayOrigin = ray_origin - container_pos;
+
+	// compute camera-local ray direction
+	float4 localcam_rayDir;
+	localcam_rayDir.x = (input.TexCoord0.x - 0.5) * camera_width;
+	localcam_rayDir.y = ((1.0 - input.TexCoord0.y) - 0.5) * camera_height;
+	localcam_rayDir.z = -camera_zn;
+	localcam_rayDir.w = 1.0;
 
 	// compute global ray direction
-	float4 global_rayDir = mul(local_rayDir, cam);
+	mat_cam[3][0] = 0.0;
+	mat_cam[3][1] = 0.0;
+	mat_cam[3][2] = 0.0;
+	float4 global_rayDir = mul(localcam_rayDir, mat_cam);
+
+	// compute local container ray direction
+	float4 local_rayDir = mul(global_rayDir, pos_rot);
 	
 	float3 bounds_min = { -4.5, -4.5, -4.5 };
 	float3 bounds_max = { 4.5, 4.5, 4.5 };
 
-	float2 intersection = rayBoxDst(bounds_min, bounds_max, ray_origin.xyz, global_rayDir.xyz);
+	float2 intersection = rayBoxDst(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz);
+	
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);	
-
 	if (intersection.y > 0.0)
 	{
-		color_dest.r = 1.0;
-		color_dest.g = 1.0;
-		color_dest.b = 1.0;
+		color_dest.r = 0.0;
+		color_dest.g = 0.0;
+		color_dest.b = 0.0;
 		color_dest.a = 1.0;
 	}
 	else
