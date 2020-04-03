@@ -22,9 +22,10 @@
 */
 /* -*-LIC_END-*- */
 
-float4    camera_params   : register(c0);
-float4x4  mat_cam         : register(c1);
-float4x4  mat_pos         : register(c5);
+float4    camera_params			: register(c0);
+float4x4  mat_cam				: register(c1);
+float4x4  mat_pos				: register(c5);
+float4    container_half_dims   : register(c9);
 
 sampler2D Texture0 : register(s0);
 
@@ -141,8 +142,8 @@ float4 ps_main(PS_INTPUT input) : COLOR0
 	// compute local container ray direction
 	float4 local_rayDir = mul(global_rayDir, pos_rot);
 
-	float3 bounds_min = { -4.5, -4.5, -4.5 };
-	float3 bounds_max = { 4.5, 4.5, 4.5 };
+	float3 bounds_min = -container_half_dims;
+	float3 bounds_max = container_half_dims;
 
 	float2 intersection = rayBoxDst(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz);
 

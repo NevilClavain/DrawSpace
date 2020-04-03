@@ -104,6 +104,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 camera_params = vec[0];
 	Matrix mat_cam = mat[1];
 	Matrix mat_pos = mat[5];
+	float3 container_half_dims = vec[9];
 
 
 	float camera_width = camera_params.x;
@@ -149,8 +150,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	// compute local container ray direction
 	float4 local_rayDir = mul(global_rayDir, pos_rot);
 	
-	float3 bounds_min = { -4.5, -4.5, -4.5 };
-	float3 bounds_max = { 4.5, 4.5, 4.5 };
+	float3 bounds_min = - container_half_dims;
+	float3 bounds_max = container_half_dims;
 
 	float2 intersection = rayBoxDst(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz);
 	
