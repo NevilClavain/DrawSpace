@@ -27,7 +27,8 @@ float4x4  mat_cam				: register(c1);
 float4x4  mat_pos				: register(c5);
 float4    container_half_dims   : register(c9);
 
-sampler2D Texture0 : register(s0);
+sampler2D Texture0     : register(s0);
+sampler2D TextureZMask : register(s1);
 
 
 struct PS_INTPUT
@@ -148,7 +149,9 @@ float4 ps_main(PS_INTPUT input) : COLOR0
 	float2 intersection = rayBoxDst(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz);
 
 	float4 color_source = tex2D(Texture0, input.TexCoord0.xy);
-	if (intersection.y > 0.0)
+	float4 zmask        = tex2D(TextureZMask, input.TexCoord0.xy);
+
+	if (intersection.y > 0.0 && zmask.x > 0.0)
 	{
 		color_dest.r = 0.0;
 		color_dest.g = 0.0;
