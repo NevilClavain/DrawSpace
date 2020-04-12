@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2016                              
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mountains_amplitude, float p_offset, float p_mountain_offset,
                             float p_plains_seed1, float p_plains_seed2, float p_mix_seed1, float p_mix_seed2 )

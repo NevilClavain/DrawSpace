@@ -22,27 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-/*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2017                            
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
-*
-*/
 
 // genere un vecteur de bump mapping, c a d un vecteur biaise par le relief autour du center_point courant
 float3 compute_terrain_bump_vector(float p_point_alt, int p_texture_resol, Texture2D p_HTMap_Texture, SamplerState p_HTMap_Texture_Sampler, float2 p_tex_coords, float p_vector_bias)
