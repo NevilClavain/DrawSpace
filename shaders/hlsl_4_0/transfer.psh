@@ -101,6 +101,70 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 	return float2(dstToBox, dstInsideBox);
 }
 
+#define STEPS			1000.0f
+#define STEP_SIZE		0.1f
+
+
+bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
+{
+	bool status = false;
+	if (boundsMin.x < position.x && position.x < boundsMax.x)
+	{
+		if (boundsMin.y < position.y && position.y < boundsMax.y)
+		{
+			if (boundsMin.z < position.z && position.z < boundsMax.z)
+			{
+				status = true;
+			}
+		}
+	}
+	return status;
+}
+
+float3 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 direction, float3 color_source, bool zmask)
+{
+	float3 color_res;
+	float3 color_container = { 0.9, 0.9, 0.9 };
+
+	float distance;
+	bool cont = 1;
+	float final_density = 0.0;
+	bool ignore_zmask = false;
+	
+	if (inVolume(boundsMin, boundsMax, position))
+	{
+		ignore_zmask = true;
+	}
+
+	for (int i = 0; i < STEPS && cont == 1; i++)
+	{
+		if (inVolume(boundsMin, boundsMax, position))
+		{
+			final_density = final_density + 0.01;
+		}
+		position += direction * STEP_SIZE;
+	}
+	float3 color_blend = lerp(color_source, color_container, clamp(final_density, 0.0, 1.0));
+
+	if (ignore_zmask)
+	{
+		color_res = color_blend;
+	}
+	else
+	{
+		if (zmask)
+		{
+			color_res = color_blend;
+		}
+		else
+		{
+			color_res = color_source;
+		}		
+	}
+
+	return color_res;
+}
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
 	float4 color_dest;
@@ -108,7 +172,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 camera_params = vec[0];
 	Matrix mat_cam = mat[1];
 	Matrix mat_pos = mat[5];
-	float3 container_half_dims = vec[9];
+	float3 container_half_dims = vec[9].xyz;
 
 
 	float camera_width = camera_params.x;
@@ -158,24 +222,31 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 bounds_max = container_half_dims;
 
 	float2 intersection = rayBoxDst(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz);
+
+	float dstToBox = intersection.x;
+	float dstInsideBox = intersection.y;
 	
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
 	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
 
-	//color_dest = color_source;
-	
-	if (intersection.y > 0.0 && zmask.x > 0.0)
+	//color_dest = color_source;	
+
+	/*
+	if (dstInsideBox > 0.0 && zmask.x > 0.0)
 	{
-		color_dest.r = 0.0;
-		color_dest.g = 0.0;
-		color_dest.b = 0.0;
 		color_dest.a = 1.0;
+		color_dest.rgb = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb);
+
 	}
 	else
 	{
 		color_dest = color_source;
 	}
-	
-	
+	*/
+
+	color_dest.a = 1.0;
+	color_dest.rgb = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x);
+
+		
 	return color_dest;
 }
