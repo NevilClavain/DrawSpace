@@ -95,6 +95,76 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 	return float2(dstToBox, dstInsideBox);
 }
 
+#define STEPS			100.0f
+#define STEP_SIZE		1.0f
+#define DENSITY_WEIGHT  0.1f
+
+
+bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
+{
+	bool status = false;
+	if (boundsMin.x < position.x && position.x < boundsMax.x)
+	{
+		if (boundsMin.y < position.y && position.y < boundsMax.y)
+		{
+			if (boundsMin.z < position.z && position.z < boundsMax.z)
+			{
+				status = true;
+			}
+		}
+	}
+	return status;
+}
+
+float computeLocaleDensity(float3 position)
+{
+	return 1.0;
+}
+
+float3 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 direction, float3 color_source, bool zmask)
+{
+	float3 color_res;
+	float3 color_container = { 0.9, 0.9, 0.9 };
+
+	float distance;
+	bool cont = 1;
+	float final_density = 0.0;
+	bool ignore_zmask = false;
+
+	if (inVolume(boundsMin, boundsMax, position))
+	{
+		ignore_zmask = true;
+	}
+
+	for (int i = 0; i < STEPS && cont == 1; i++)
+	{
+		if (inVolume(boundsMin, boundsMax, position))
+		{
+			float locale_density = computeLocaleDensity(position);
+			final_density = final_density + (DENSITY_WEIGHT * locale_density);
+		}
+		position += direction * STEP_SIZE;
+	}
+	float3 color_blend = lerp(color_source, color_container, clamp(final_density, 0.0, 1.0));
+
+	if (ignore_zmask)
+	{
+		color_res = color_blend;
+	}
+	else
+	{
+		if (zmask)
+		{
+			color_res = color_blend;
+		}
+		else
+		{
+			color_res = color_source;
+		}
+	}
+
+	return color_res;
+}
 
 float4 ps_main(PS_INTPUT input) : COLOR0
 {
@@ -151,18 +221,8 @@ float4 ps_main(PS_INTPUT input) : COLOR0
 	float4 color_source = tex2D(Texture0, input.TexCoord0.xy);
 	float4 zmask        = tex2D(TextureZMask, input.TexCoord0.xy);
 
-	if (intersection.y > 0.0 && zmask.x > 0.0)
-	{
-		color_dest.r = 0.0;
-		color_dest.g = 0.0;
-		color_dest.b = 0.0;
-		color_dest.a = 1.0;
-	}
-	else
-	{
-		color_dest = color_source;
-	}
-
+	color_dest.a = 1.0;
+	color_dest.rgb = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x);
 
 	return color_dest;
 }

@@ -42,6 +42,7 @@ struct PS_INTPUT
 };
 
 #include "mat_input_constants.hlsl"
+#include "fbm.hlsl"
 
 float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 rayDir)
 {
@@ -103,6 +104,7 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 
 #define STEPS			1000.0f
 #define STEP_SIZE		0.1f
+#define DENSITY_WEIGHT  0.005f
 
 
 bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
@@ -119,6 +121,11 @@ bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
 		}
 	}
 	return status;
+}
+
+float computeLocaleDensity(float3 position)
+{	
+	return 1.0;
 }
 
 float3 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 direction, float3 color_source, bool zmask)
@@ -140,7 +147,8 @@ float3 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 dire
 	{
 		if (inVolume(boundsMin, boundsMax, position))
 		{
-			final_density = final_density + 0.01;
+			float locale_density = computeLocaleDensity(position);
+			final_density = final_density + (DENSITY_WEIGHT * locale_density);
 		}
 		position += direction * STEP_SIZE;
 	}
