@@ -103,8 +103,8 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 }
 
 #define STEPS			250.0f
-#define STEP_SIZE		0.1f
-#define STEP_SIZE_INC   0.0034f
+#define STEP_SIZE		0.05f
+#define STEP_SIZE_INC   0.0055f
 
 
 //#define DENSITY_WEIGHT  0.005f
@@ -217,6 +217,10 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 dire
 	float3 scattering = 0.0;
 	float extinction = 1.0; // 1.0 : object total extinction
 
+	float3 scattering_prev = 0.0;
+	float extinction_prev = 1.0;
+
+
 	float scatteringFactor = 1.0;
 	float extinctionFactor = 1.0;
 
@@ -238,8 +242,15 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 dire
 		}
 
 		position += direction * current_step_size;
-
 		current_step_size += STEP_SIZE_INC;
+
+		if (i > 0)
+		{
+			scattering = lerp(scattering_prev, scattering, 0.5);
+			extinction = lerp(extinction_prev, extinction, 0.5);
+		}
+		scattering_prev = scattering;
+		extinction_prev = extinction;
 	}
 
 	if (ignore_zmask)
