@@ -102,9 +102,12 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 	return float2(dstToBox, dstInsideBox);
 }
 
-#define STEPS			1000.0f
+#define STEPS			250.0f
 #define STEP_SIZE		0.1f
-#define DENSITY_WEIGHT  0.005f
+#define STEP_SIZE_INC   0.0034f
+
+
+//#define DENSITY_WEIGHT  0.005f
 
 
 bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
@@ -128,48 +131,135 @@ float computeLocaleDensity(float3 position)
 	return 1.0;
 }
 
-float3 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 direction, float3 color_source, bool zmask)
+#define AMPLITUDE_FACTOR 0.45f //0.707f
+#define FREQUENCY_FACTOR 2.1f //2.5789f
+
+float SampleMediumDensity(float3 position, float seed1, float seed2)
 {
-	float3 color_res;
-	float3 color_container = { 0.9, 0.9, 0.9 };
+	float3 UVW = position * 0.1;  // Let’s start with some low frequency
+	float Amplitude = 1.0;
+	float DensityFactor = 1.0;
+	float DensityBias = 0.0;
+
+	float V = Amplitude * Perlin3D(UVW, seed1, seed2);
+	Amplitude *= AMPLITUDE_FACTOR; 
+	UVW *= FREQUENCY_FACTOR;
+
+	V += Amplitude * Perlin3D(UVW, seed1, seed2);
+	Amplitude *= AMPLITUDE_FACTOR;
+	UVW *= FREQUENCY_FACTOR;
+
+	V += Amplitude * Perlin3D(UVW, seed1, seed2);
+	Amplitude *= AMPLITUDE_FACTOR;
+	UVW *= FREQUENCY_FACTOR;
+
+	V += Amplitude * Perlin3D(UVW, seed1, seed2);
+	Amplitude *= AMPLITUDE_FACTOR;
+	UVW *= FREQUENCY_FACTOR;
+
+	return clamp(DensityFactor * V + DensityBias, 0, 1);
+}
+
+float Ei(float z) 
+{
+	return 0.5772156649015328606065 + log(1e-4 + abs(z)) + z * (1.0 + z * (0.25 + z * ((1.0 / 18.0) + z * ((1.0 / 96.0) + z * (1.0 / 600.0))))); 
+}
+
+float3 computeAmbientColor(float3 position, float extinctionCoeff)
+{
+	float3 container_half_dims = vec[9].xyz;
+
+	float hp = container_half_dims.y - position.y;
+	float hb = position.y - (-container_half_dims.y);
+
+	float a = -extinctionCoeff * hb;
+	float3 isotropicScatteringTop = 0.99 * max(0.0, exp(a) - a * Ei(a));
+	
+	a = -extinctionCoeff * hp;
+	float3 isotropicScatteringBottom = 0.05 * max(0.0, exp(a) - a * Ei(a));
+
+	float3 sum = isotropicScatteringTop + isotropicScatteringBottom;
+
+	return clamp(1.0 - sum * 1.5, 0.0, 1.0);
+}
+
+
+float rayleigh(float3 light_dir, float3 ray_dir)
+{
+	float3 n1 = normalize(-ray_dir);
+	float3 n2 = normalize(-light_dir);
+
+	float costheta = dot(n1, n2);
+
+
+	return 3 * (1 + costheta * costheta) / (16.0 * 3.1415927);
+}
+
+float4 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 direction, float3 color_source, bool zmask)
+{
+	float4 color_res;
+	//float3 color_container = { 0.9, 0.09, 0.9 };
+
+	float3 light_dir = { 1.0, -0.4, 0.0 };
+
+	float current_step_size = STEP_SIZE;
 
 	float distance;
 	bool cont = 1;
 	float final_density = 0.0;
 	bool ignore_zmask = false;
-	
+
 	if (inVolume(boundsMin, boundsMax, position))
 	{
 		ignore_zmask = true;
 	}
 
+	float3 scattering = 0.0;
+	float extinction = 1.0; // 1.0 : object total extinction
+
+	float scatteringFactor = 1.0;
+	float extinctionFactor = 1.0;
+
 	for (int i = 0; i < STEPS && cont == 1; i++)
 	{
 		if (inVolume(boundsMin, boundsMax, position))
 		{
-			float locale_density = computeLocaleDensity(position);
-			final_density = final_density + (DENSITY_WEIGHT * locale_density);
+			float density = SampleMediumDensity(position, 67.3, 4344.8);
+			float scatteringCoeff = scatteringFactor * density;
+			float extinctionCoeff = extinctionFactor * density;
+
+			extinction *= exp(-extinctionCoeff * current_step_size);
+
+			float3 ab = computeAmbientColor(position, extinctionCoeff);
+
+			float3  stepScattering = scatteringCoeff * current_step_size * ab;
+
+			scattering += extinction * stepScattering;
 		}
-		position += direction * STEP_SIZE;
+
+		position += direction * current_step_size;
+
+		current_step_size += STEP_SIZE_INC;
 	}
-	float3 color_blend = lerp(color_source, color_container, clamp(final_density, 0.0, 1.0));
 
 	if (ignore_zmask)
 	{
-		color_res = color_blend;
+		color_res.rgb = scattering;
+		color_res.a = extinction;
 	}
 	else
 	{
 		if (zmask)
 		{
-			color_res = color_blend;
+			color_res.rgb = scattering;
+			color_res.a = extinction;
 		}
 		else
 		{
-			color_res = color_source;
-		}		
+			color_res.rgb = color_source;
+			color_res.a = 1.0;
+		}
 	}
-
 	return color_res;
 }
 
@@ -189,7 +279,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	float3 ray_origin;
 	
-
 	Matrix pos_rot = mat_pos;
 	pos_rot[3][0] = 0.0;
 	pos_rot[3][1] = 0.0;
@@ -202,13 +291,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	ray_origin.z = mat_cam[3][2];
 
 
-
 	float3 container_pos;
 	container_pos.x = mat_pos[3][0];
 	container_pos.y = mat_pos[3][1];
 	container_pos.z = mat_pos[3][2];
 
-	float3 localcontainer_rayOrigin = ray_origin - container_pos;
+	float3 globalcontainer_rayOrigin = ray_origin - container_pos;
+	float3 localcontainer_rayOrigin = mul(globalcontainer_rayOrigin, pos_rot);
+
+
 
 	// compute camera-local ray direction
 	float4 localcam_rayDir;
@@ -237,24 +328,27 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
 	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
 
-	//color_dest = color_source;	
+	
+	float4 raymarch_res = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x);
+	float3 scattering = raymarch_res.rgb;
+	float extinction = raymarch_res.a;
 
+	// extinction = 1.0 -> object total transparency -> show color_source
+
+	color_dest.rgb = lerp(scattering, color_source.rgb, extinction);
+	color_dest.a = 1.0;
+	
+	// flat volume, en cas de besoin...
 	/*
-	if (dstInsideBox > 0.0 && zmask.x > 0.0)
+	if (dstInsideBox > 0)
 	{
-		color_dest.a = 1.0;
-		color_dest.rgb = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb);
-
+		color_dest = 1.0;
 	}
 	else
 	{
 		color_dest = color_source;
 	}
 	*/
-
-	color_dest.a = 1.0;
-	color_dest.rgb = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x);
-
-		
+	
 	return color_dest;
 }
