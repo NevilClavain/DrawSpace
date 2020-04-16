@@ -102,12 +102,8 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 	return float2(dstToBox, dstInsideBox);
 }
 
-#define STEPS			250.0f
-#define STEP_SIZE		0.05f
-#define STEP_SIZE_INC   0.0055f
 
-
-//#define DENSITY_WEIGHT  0.005f
+#define STEP_SIZE		0.5f
 
 
 bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
@@ -195,21 +191,15 @@ float rayleigh(float3 light_dir, float3 ray_dir)
 	return 3 * (1 + costheta * costheta) / (16.0 * 3.1415927);
 }
 
-float4 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 direction, float3 color_source, bool zmask)
+float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direction, float3 color_source, bool zmask, float dstLimit, float dstToBox)
 {
 	float4 color_res;
-	//float3 color_container = { 0.9, 0.09, 0.9 };
-
-	float3 light_dir = { 1.0, -0.4, 0.0 };
-
+	
 	float current_step_size = STEP_SIZE;
 
-	float distance;
-	bool cont = 1;
-	float final_density = 0.0;
 	bool ignore_zmask = false;
 
-	if (inVolume(boundsMin, boundsMax, position))
+	if (inVolume(boundsMin, boundsMax, origin))
 	{
 		ignore_zmask = true;
 	}
@@ -217,40 +207,28 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 dire
 	float3 scattering = 0.0;
 	float extinction = 1.0; // 1.0 : object total extinction
 
-	float3 scattering_prev = 0.0;
-	float extinction_prev = 1.0;
-
-
 	float scatteringFactor = 1.0;
 	float extinctionFactor = 1.0;
 
-	for (int i = 0; i < STEPS && cont == 1; i++)
+	float dstTravelled = 0;
+
+	while (dstTravelled < dstLimit)
 	{
-		if (inVolume(boundsMin, boundsMax, position))
-		{
-			float density = SampleMediumDensity(position, 67.3, 4344.8);
-			float scatteringCoeff = scatteringFactor * density;
-			float extinctionCoeff = extinctionFactor * density;
+		float3 position = origin + direction * (dstToBox + dstTravelled);
 
-			extinction *= exp(-extinctionCoeff * current_step_size);
+		float density = SampleMediumDensity(position, 67.3, 4344.8);
+		float scatteringCoeff = scatteringFactor * density;
+		float extinctionCoeff = extinctionFactor * density;
 
-			float3 ab = computeAmbientColor(position, extinctionCoeff);
+		extinction *= exp(-extinctionCoeff * current_step_size);
 
-			float3  stepScattering = scatteringCoeff * current_step_size * ab;
+		float3 ab = computeAmbientColor(position, extinctionCoeff);
 
-			scattering += extinction * stepScattering;
-		}
+		float3  stepScattering = scatteringCoeff * current_step_size * ab;
 
-		position += direction * current_step_size;
-		current_step_size += STEP_SIZE_INC;
+		scattering += extinction * stepScattering;
 
-		if (i > 0)
-		{
-			scattering = lerp(scattering_prev, scattering, 0.5);
-			extinction = lerp(extinction_prev, extinction, 0.5);
-		}
-		scattering_prev = scattering;
-		extinction_prev = extinction;
+		dstTravelled += current_step_size;
 	}
 
 	if (ignore_zmask)
@@ -277,6 +255,8 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 position, float3 dire
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
 	float4 color_dest;
+
+	float3 light_dir = { 1.0, -0.4, 0.0 };
 
 	float4 camera_params = vec[0];
 	Matrix mat_cam = mat[1];
@@ -327,6 +307,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	// compute local container ray direction
 	float4 local_rayDir = mul(global_rayDir, pos_rot);
+
+	// compute container-local light direction
+	float3 local_light_dir = mul(light_dir, pos_rot);
 	
 	float3 bounds_min = - container_half_dims;
 	float3 bounds_max = container_half_dims;
@@ -340,7 +323,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
 
 	
-	float4 raymarch_res = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x);
+	float4 raymarch_res = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox);
 	float3 scattering = raymarch_res.rgb;
 	float extinction = raymarch_res.a;
 
