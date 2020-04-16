@@ -191,18 +191,11 @@ float rayleigh(float3 light_dir, float3 ray_dir)
 	return 3 * (1 + costheta * costheta) / (16.0 * 3.1415927);
 }
 
-float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direction, float3 color_source, bool zmask, float dstLimit, float dstToBox)
+float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direction, float3 color_source, bool zmask, float dstLimit, float dstToBox, float3 local_lightDir)
 {
 	float4 color_res;
 	
 	float current_step_size = STEP_SIZE;
-
-	bool ignore_zmask = false;
-
-	if (inVolume(boundsMin, boundsMax, origin))
-	{
-		ignore_zmask = true;
-	}
 
 	float3 scattering = 0.0;
 	float extinction = 1.0; // 1.0 : object total extinction
@@ -231,23 +224,15 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direct
 		dstTravelled += current_step_size;
 	}
 
-	if (ignore_zmask)
+	if (inVolume(boundsMin, boundsMax, origin) || zmask)
 	{
 		color_res.rgb = scattering;
 		color_res.a = extinction;
 	}
 	else
 	{
-		if (zmask)
-		{
-			color_res.rgb = scattering;
-			color_res.a = extinction;
-		}
-		else
-		{
-			color_res.rgb = color_source;
-			color_res.a = 1.0;
-		}
+		color_res.rgb = color_source;
+		color_res.a = 1.0;
 	}
 	return color_res;
 }
@@ -323,7 +308,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
 
 	
-	float4 raymarch_res = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox);
+	float4 raymarch_res = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox, light_dir);
 	float3 scattering = raymarch_res.rgb;
 	float extinction = raymarch_res.a;
 
