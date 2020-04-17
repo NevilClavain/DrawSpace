@@ -103,8 +103,7 @@ float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 ra
 }
 
 
-#define STEP_SIZE		0.5f
-
+#define STEP_SIZE			0.5f
 
 bool inVolume(float3 boundsMin, float3 boundsMax, float3 position)
 {
@@ -130,28 +129,46 @@ float computeLocaleDensity(float3 position)
 #define AMPLITUDE_FACTOR 0.45f //0.707f
 #define FREQUENCY_FACTOR 2.1f //2.5789f
 
-float SampleMediumDensity(float3 position, float seed1, float seed2)
+float SampleMediumDensity(float3 position, float seed1, float seed2, bool low)
 {
-	float3 UVW = position * 0.1;  // Let’s start with some low frequency
+	float3 scale;
+
+	scale.x = 0.75;
+	scale.y = 0.75;
+	scale.z = 0.75;
+
+	float3 offset;
+	
+	offset.x = 0.0;
+	offset.y = 0.0;
+	offset.z = 0.0;
+
+	float3 UVW = (scale * position * 0.1) + offset;  // Let’s start with some low frequency
 	float Amplitude = 1.0;
 	float DensityFactor = 1.0;
 	float DensityBias = 0.0;
 
 	float V = Amplitude * Perlin3D(UVW, seed1, seed2);
-	Amplitude *= AMPLITUDE_FACTOR; 
-	UVW *= FREQUENCY_FACTOR;
 
-	V += Amplitude * Perlin3D(UVW, seed1, seed2);
-	Amplitude *= AMPLITUDE_FACTOR;
-	UVW *= FREQUENCY_FACTOR;
+	if (!low)
+	{
+		Amplitude *= AMPLITUDE_FACTOR;
+		UVW *= FREQUENCY_FACTOR;
+		V += Amplitude * Perlin3D(UVW, seed1, seed2);
 
-	V += Amplitude * Perlin3D(UVW, seed1, seed2);
-	Amplitude *= AMPLITUDE_FACTOR;
-	UVW *= FREQUENCY_FACTOR;
+		Amplitude *= AMPLITUDE_FACTOR;
+		UVW *= FREQUENCY_FACTOR;
+		V += Amplitude * Perlin3D(UVW, seed1, seed2);
 
-	V += Amplitude * Perlin3D(UVW, seed1, seed2);
-	Amplitude *= AMPLITUDE_FACTOR;
-	UVW *= FREQUENCY_FACTOR;
+		Amplitude *= AMPLITUDE_FACTOR;
+		UVW *= FREQUENCY_FACTOR;
+		V += Amplitude * Perlin3D(UVW, seed1, seed2);
+
+		Amplitude *= AMPLITUDE_FACTOR;
+		UVW *= FREQUENCY_FACTOR;
+		V += Amplitude * Perlin3D(UVW, seed1, seed2);
+
+	}
 
 	return clamp(DensityFactor * V + DensityBias, 0, 1);
 }
@@ -187,11 +204,11 @@ float rayleigh(float3 light_dir, float3 ray_dir)
 
 	float costheta = dot(n1, n2);
 
-
 	return 3 * (1 + costheta * costheta) / (16.0 * 3.1415927);
 }
 
-float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direction, float3 color_source, bool zmask, float dstLimit, float dstToBox, float3 local_lightDir)
+
+float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direction, float3 color_source, bool zmask, float dstLimit, float dstToBox)
 {
 	float4 color_res;
 	
@@ -204,20 +221,25 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direct
 	float extinctionFactor = 1.0;
 
 	float dstTravelled = 0;
+	float transmittance = 1.0;
 
 	while (dstTravelled < dstLimit)
 	{
 		float3 position = origin + direction * (dstToBox + dstTravelled);
 
-		float density = SampleMediumDensity(position, 67.3, 4344.8);
+		float density = SampleMediumDensity(position, 67.3, 4344.8, false);
+
 		float scatteringCoeff = scatteringFactor * density;
 		float extinctionCoeff = extinctionFactor * density;
 
 		extinction *= exp(-extinctionCoeff * current_step_size);
 
 		float3 ab = computeAmbientColor(position, extinctionCoeff);
-
+			
 		float3  stepScattering = scatteringCoeff * current_step_size * ab;
+
+		float lightAbsorptionThroughCloud = 0.01;
+		transmittance *= exp(-density * current_step_size * lightAbsorptionThroughCloud);
 
 		scattering += extinction * stepScattering;
 
@@ -227,7 +249,7 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direct
 	if (inVolume(boundsMin, boundsMax, origin) || zmask)
 	{
 		color_res.rgb = scattering;
-		color_res.a = extinction;
+		color_res.a = extinction * max(0, transmittance);
 	}
 	else
 	{
@@ -240,8 +262,6 @@ float4 raymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 direct
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
 	float4 color_dest;
-
-	float3 light_dir = { 1.0, -0.4, 0.0 };
 
 	float4 camera_params = vec[0];
 	Matrix mat_cam = mat[1];
@@ -292,9 +312,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	// compute local container ray direction
 	float4 local_rayDir = mul(global_rayDir, pos_rot);
-
-	// compute container-local light direction
-	float3 local_light_dir = mul(light_dir, pos_rot);
 	
 	float3 bounds_min = - container_half_dims;
 	float3 bounds_max = container_half_dims;
@@ -308,7 +325,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
 
 	
-	float4 raymarch_res = raymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox, light_dir);
+	float4 raymarch_res = viewraymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox);
 	float3 scattering = raymarch_res.rgb;
 	float extinction = raymarch_res.a;
 
