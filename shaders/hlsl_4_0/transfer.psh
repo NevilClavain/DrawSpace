@@ -129,20 +129,8 @@ float computeLocaleDensity(float3 position)
 #define AMPLITUDE_FACTOR 0.45f //0.707f
 #define FREQUENCY_FACTOR 2.1f //2.5789f
 
-float SampleMediumDensity(float3 position, float seed1, float seed2, bool low)
+float SampleMediumDensity(float3 position, float seed1, float seed2, bool low, float scale, float offset)
 {
-	float3 scale;
-
-	scale.x = 0.75;
-	scale.y = 0.75;
-	scale.z = 0.75;
-
-	float3 offset;
-	
-	offset.x = 0.0;
-	offset.y = 0.0;
-	offset.z = 0.0;
-
 	float3 UVW = (scale * position * 0.1) + offset;  // Let’s start with some low frequency
 	float Amplitude = 1.0;
 	float DensityFactor = 1.0;
@@ -167,7 +155,6 @@ float SampleMediumDensity(float3 position, float seed1, float seed2, bool low)
 		Amplitude *= AMPLITUDE_FACTOR;
 		UVW *= FREQUENCY_FACTOR;
 		V += Amplitude * Perlin3D(UVW, seed1, seed2);
-
 	}
 
 	return clamp(DensityFactor * V + DensityBias, 0, 1);
@@ -226,8 +213,12 @@ float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 di
 	while (dstTravelled < dstLimit)
 	{
 		float3 position = origin + direction * (dstToBox + dstTravelled);
+		float density = 0.0;
+				
+		density = SampleMediumDensity(position, 67.3, 434.8, false, float3(0.55, 0.55, 0.55), float3(0.4, 0.0, 0.0));
 
-		float density = SampleMediumDensity(position, 67.3, 4344.8, false);
+		
+	
 
 		float scatteringCoeff = scatteringFactor * density;
 		float extinctionCoeff = extinctionFactor * density;
