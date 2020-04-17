@@ -167,20 +167,17 @@ float Ei(float z)
 
 float3 computeAmbientColor(float3 position, float extinctionCoeff)
 {
-	float3 container_half_dims = vec[9].xyz;
+	float3 container_half_dims = 1.0;          // position is now normalized in [-1.0, 1.0] range
 
-	float hp = container_half_dims.y - position.y;
-	float hb = position.y - (-container_half_dims.y);
+	float hb = 10.0 * ( position.y - (-container_half_dims.y) );
 
 	float a = -extinctionCoeff * hb;
 	float3 isotropicScatteringTop = 0.99 * max(0.0, exp(a) - a * Ei(a));
 	
-	a = -extinctionCoeff * hp;
-	float3 isotropicScatteringBottom = 0.05 * max(0.0, exp(a) - a * Ei(a));
 
-	float3 sum = isotropicScatteringTop + isotropicScatteringBottom;
+	float3 sum = isotropicScatteringTop;
 
-	return clamp(1.0 - sum * 1.5, 0.0, 1.0);
+	return clamp(1.0 - sum * 1.05, 0.0, 1.0);
 }
 
 
@@ -213,9 +210,17 @@ float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 di
 	while (dstTravelled < dstLimit)
 	{
 		float3 position = origin + direction * (dstToBox + dstTravelled);
+
+		// normalize position
+
+		// note : boundsMax and boundsMin are equals in absolute value
+
+		position = position / boundsMax;
+
+
 		float density = 0.0;
 				
-		density = SampleMediumDensity(position, 67.3, 434.8, false, float3(0.55, 0.55, 0.55), float3(0.4, 0.0, 0.0));
+		density = SampleMediumDensity(position, 67.3, 434.8, false, float3(7.0, 7.0, 7.0), float3(2000.0, -5.0, 0.0));
 
 		
 	
@@ -229,7 +234,7 @@ float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 di
 			
 		float3  stepScattering = scatteringCoeff * current_step_size * ab;
 
-		float lightAbsorptionThroughCloud = 0.01;
+		float lightAbsorptionThroughCloud = 1.0;
 		transmittance *= exp(-density * current_step_size * lightAbsorptionThroughCloud);
 
 		scattering += extinction * stepScattering;
