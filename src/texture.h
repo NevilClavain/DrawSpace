@@ -36,31 +36,30 @@ class Texture
 {
 public:
 
-    typedef enum
+    using RenderPurpose = enum
     {
         RENDERPURPOSE_COLOR,
         RENDERPURPOSE_FLOAT,
         RENDERPURPOSE_FLOAT32,
         RENDERPURPOSE_FLOATVECTOR,
 
-    } RenderPurpose;
+    };
 
-    typedef enum
+    using RenderTarget = enum
     {
         RENDERTARGET_GPU,  // cas ou la texture resultante va etre bindee a un shader (GPU) (defaut)
         RENDERTARGET_CPU,  // cas ou le contenu de la texture resultante doit etre lue par le CPU
 
-    } RenderTarget;
+    };
 
-
-    typedef enum
+    using Purpose = enum
     {
         PURPOSE_COLORFROMFILE,
         PURPOSE_COLOR,
         PURPOSE_FLOAT32,
         PURPOSE_FLOAT32VECTOR,
 
-    } Purpose;
+    };
 
 protected:
 
