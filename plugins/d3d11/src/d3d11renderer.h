@@ -77,6 +77,10 @@ protected:
 
         ID3D11Texture2D*                                            texture;
         ID3D11Texture2D*                                            texture_clone;
+
+        ID3D11Texture3D*                                            texture3D;
+        ID3D11Texture3D*                                            texture3D_clone;
+
         ID3D11RenderTargetView*                                     rendertextureTargetView;
         ID3D11ShaderResourceView*                                   textureShaderResourceView;
 
@@ -209,6 +213,8 @@ protected:
     bool create_depth_stencil_buffer( int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view );
 
     void fullscreen_autoset_desktop_resolution( int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den );
+
+    bool create2D_rendertarget(DrawSpace::Core::Texture* p_texture, DXGI_FORMAT p_format, TextureInfos* p_texture_infos);
 
 public:
     D3D11Renderer( void );

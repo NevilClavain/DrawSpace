@@ -981,26 +981,124 @@ bool D3D11Renderer::UpdateMesheVerticesFromImpostors( const DrawSpace::Impostors
     return true;
 }
 
+bool D3D11Renderer::create2D_rendertarget(DrawSpace::Core::Texture* p_texture, DXGI_FORMAT p_format, TextureInfos* p_texture_infos)
+{
+    DECLARE_D3D11ASSERT_VARS
+
+    ID3D11Texture2D* d3dt11{ nullptr };
+    ID3D11Texture2D* d3dt11_clone{ nullptr };
+
+    unsigned long rw, rh;
+    p_texture->GetRenderTargetDims(rw, rh);
+
+    D3D11_TEXTURE2D_DESC textureDesc;
+
+    // Initialize the render target texture description.
+    ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+    // Setup the render target texture description.
+
+    textureDesc.Width = rw;
+    textureDesc.Height = rh;
+    textureDesc.MipLevels = 1;
+    textureDesc.ArraySize = 1;
+    textureDesc.Format = p_format;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.SampleDesc.Quality = 0;
+
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    textureDesc.CPUAccessFlags = 0;
+    textureDesc.MiscFlags = 0;
+
+    // Create the render target texture.
+    hRes = m_lpd3ddevice->CreateTexture2D(&textureDesc, NULL, &d3dt11);
+    D3D11_CHECK(CreateTexture2D)
+
+    // creation du render target view
+    D3D11_RENDER_TARGET_VIEW_DESC       renderTargetViewDesc;
+    D3D11_SHADER_RESOURCE_VIEW_DESC     shaderResourceViewDesc;
+
+    ID3D11RenderTargetView* rendertextureTargetView = NULL;
+    ID3D11ShaderResourceView* rendertextureResourceView = NULL;
+
+    ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+
+    renderTargetViewDesc.Format = p_format;
+    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+    hRes = m_lpd3ddevice->CreateRenderTargetView(d3dt11, &renderTargetViewDesc, &rendertextureTargetView);
+    D3D11_CHECK(CreateRenderTargetView)
+
+
+    // creation du shader resource view associé
+    ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+    shaderResourceViewDesc.Format = p_format;
+    shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+    shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+    hRes = m_lpd3ddevice->CreateShaderResourceView(d3dt11, &shaderResourceViewDesc, &rendertextureResourceView);
+    D3D11_CHECK(CreateShaderResourceView)
+
+    /////////////////////// creation texture "clone", pour lire le contenu d'une render target
+
+    if (Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget())
+    {
+        textureDesc.Usage = D3D11_USAGE_STAGING;
+        textureDesc.BindFlags = 0;
+        textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+
+        hRes = m_lpd3ddevice->CreateTexture2D(&textureDesc, NULL, &d3dt11_clone);
+        D3D11_CHECK(CreateTexture2D)
+    }
+    ////////////////////////////////////////////////////////////////////////
+
+    D3D11_TEXTURE2D_DESC descr;
+    d3dt11->GetDesc(&descr);
+
+    dsstring path;
+    p_texture->GetPath(path);
+    
+    p_texture_infos->content_access = (Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget() ? true : false);
+    p_texture_infos->bits = NULL;
+    p_texture_infos->path = path;
+    p_texture_infos->texture_instance = p_texture;
+    p_texture_infos->texture = d3dt11;
+    p_texture_infos->texture_clone = d3dt11_clone;
+    p_texture_infos->descr = descr;
+    p_texture_infos->textureShaderResourceView = rendertextureResourceView;
+    p_texture_infos->rendertextureTargetView = rendertextureTargetView;
+
+    // creation d'un stencil-depth buffer associe
+    create_depth_stencil_buffer(rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &p_texture_infos->stencilDepthBuffer, &p_texture_infos->stencilDepthView);
+
+
+    p_texture_infos->viewport.Width = descr.Width;
+    p_texture_infos->viewport.Height = descr.Height;
+
+    p_texture_infos->viewport.MinDepth = 0.0;
+    p_texture_infos->viewport.MaxDepth = 1.0;
+    p_texture_infos->viewport.TopLeftX = 0.0;
+    p_texture_infos->viewport.TopLeftY = 0.0;
+
+    return true;
+}
+
 bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data )
 {
     DECLARE_D3D11ASSERT_VARS
-    ID3D11Texture2D*	    d3dt11;
-    ID3D11Texture2D*        d3dt11_clone = NULL;
+
     TextureInfos*           texture_infos;
 
-    //dsstring path;
-    //p_texture->GetPath( path );
     dsstring hash;
     p_texture->GetMD5( hash );
 
-    //if( m_textures_base.count( path ) > 0 )
     if( m_textures_base.count( hash ) > 0 )
     {
-        //*p_data = (void*)m_textures_base[path];
         *p_data = (void*)m_textures_base[hash];
     
-        //long width = m_textures_base[path]->descr.Width;
-        //long height = m_textures_base[path]->descr.Height;
         long width = m_textures_base[hash]->descr.Width;
         long height = m_textures_base[hash]->descr.Height;
 
@@ -1036,7 +1134,6 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         }
                
         p_texture->SetFormat( width, height, bpp );
-        //p_texture->SetRenderData( (void*)m_textures_base[path] );
         p_texture->SetRenderData( (void*)m_textures_base[hash] );
         
         return true;
@@ -1046,17 +1143,13 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
     if( p_texture->IsRenderTarget() )
     {
-        unsigned long rw, rh;
-        p_texture->GetRenderTargetDims( rw, rh );
-
         DXGI_FORMAT format;
 
         int bpp = 0;
-        switch( p_texture->GetRenderPurpose() )
+        switch (p_texture->GetRenderPurpose())
         {
             case Texture::RENDERPURPOSE_COLOR:
 
-                //format = DXGI_FORMAT_R8G8B8A8_UNORM;
                 format = DXGI_FORMAT_B8G8R8A8_UNORM;
                 bpp = 4;
                 break;
@@ -1078,128 +1171,34 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
                 format = DXGI_FORMAT_R16G16B16A16_FLOAT;
                 bpp = 8;
                 break;
-        
         }
 
-        D3D11_TEXTURE2D_DESC textureDesc;
+        texture_infos = _DRAWSPACE_NEW_(TextureInfos, TextureInfos);
 
-        // Initialize the render target texture description.
-        ZeroMemory( &textureDesc, sizeof( textureDesc ) );
-
-        // Setup the render target texture description.
-
-        textureDesc.Width = rw;
-        textureDesc.Height = rh;
-        textureDesc.MipLevels = 1;
-        textureDesc.ArraySize = 1;
-        textureDesc.Format = format;
-        textureDesc.SampleDesc.Count = 1;
-        textureDesc.SampleDesc.Quality = 0;
-
-        /*
-        if( Texture::RENDERTARGET_GPU == p_texture->GetRenderTarget() )
+        if (p_texture->Is3DTexture())
         {
-            textureDesc.Usage = D3D11_USAGE_DEFAULT;
-            textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-            textureDesc.CPUAccessFlags = 0;
-
+            //ICI...
         }
-        else // Texture::RENDERTARGET_CPU case
-        {
-            textureDesc.Usage = D3D11_USAGE_STAGING;
-            textureDesc.BindFlags = 0;
-            textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        else
+        { 
+            if (create2D_rendertarget(p_texture, format, texture_infos))
+            {
+                texture_infos->hash = hash;
+                m_targettextures_base[hash] = texture_infos;
+
+                *p_data = (void*)texture_infos;
+            }
+            else
+            {
+                return false;
+            }
         }
-        */
-
-        textureDesc.Usage = D3D11_USAGE_DEFAULT;
-        textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-        textureDesc.CPUAccessFlags = 0;
-        textureDesc.MiscFlags = 0;
-
-        // Create the render target texture.
-        hRes = m_lpd3ddevice->CreateTexture2D( &textureDesc, NULL, &d3dt11 );
-        D3D11_CHECK( CreateTexture2D )
-
-        // creation du render target view
-        D3D11_RENDER_TARGET_VIEW_DESC       renderTargetViewDesc;
-        D3D11_SHADER_RESOURCE_VIEW_DESC     shaderResourceViewDesc;
-
-        ID3D11RenderTargetView*             rendertextureTargetView = NULL;
-        ID3D11ShaderResourceView*           rendertextureResourceView = NULL;
-
-        ZeroMemory( &renderTargetViewDesc, sizeof( renderTargetViewDesc ) );
-
-	    renderTargetViewDesc.Format = format;
-	    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	    renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	    hRes = m_lpd3ddevice->CreateRenderTargetView( d3dt11, &renderTargetViewDesc, &rendertextureTargetView );
-        D3D11_CHECK( CreateRenderTargetView )
-
-
-        // creation du shader resource view associé
-        ZeroMemory( &shaderResourceViewDesc, sizeof( shaderResourceViewDesc ) );
-	    shaderResourceViewDesc.Format = format;
-	    shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	    shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	    shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-	    hRes = m_lpd3ddevice->CreateShaderResourceView( d3dt11, &shaderResourceViewDesc, &rendertextureResourceView );
-        D3D11_CHECK( CreateShaderResourceView )
-
-        /////////////////////// creation texture "clone", pour lire le contenu d'une render target
-
-        if( Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget() )
-        {
-            textureDesc.Usage = D3D11_USAGE_STAGING;
-            textureDesc.BindFlags = 0;
-            textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-
-            hRes = m_lpd3ddevice->CreateTexture2D( &textureDesc, NULL, &d3dt11_clone );
-            D3D11_CHECK( CreateTexture2D )
-        }
-        ////////////////////////////////////////////////////////////////////////
-
-        D3D11_TEXTURE2D_DESC descr;
-        d3dt11->GetDesc( &descr );
-
-        dsstring path;
-        p_texture->GetPath( path );
-
-        texture_infos = _DRAWSPACE_NEW_( TextureInfos, TextureInfos );
-        texture_infos->content_access = ( Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget() ? true : false );
-        texture_infos->bits = NULL;
-        texture_infos->path = path;
-        texture_infos->texture_instance = p_texture;
-        texture_infos->texture = d3dt11;
-        texture_infos->texture_clone = d3dt11_clone;
-        texture_infos->descr = descr;
-        texture_infos->textureShaderResourceView = rendertextureResourceView;
-        texture_infos->rendertextureTargetView = rendertextureTargetView;
-
-        // creation d'un stencil-depth buffer associe
-        create_depth_stencil_buffer( rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &texture_infos->stencilDepthBuffer, &texture_infos->stencilDepthView );
-
-        //m_textures_base[path] = texture_infos;
-        m_textures_base[hash] = texture_infos;
-
-        texture_infos->viewport.Width = descr.Width;
-        texture_infos->viewport.Height = descr.Height;
-
-        texture_infos->viewport.MinDepth = 0.0;
-        texture_infos->viewport.MaxDepth = 1.0;
-        texture_infos->viewport.TopLeftX = 0.0;
-        texture_infos->viewport.TopLeftY = 0.0;  
-
-        texture_infos->hash = hash;
-        //m_targettextures_base[p_texture] = texture_infos;
-        m_targettextures_base[hash] = texture_infos;
-
-        *p_data = (void*)texture_infos;
     }
     else
     {
+        ID3D11Texture2D* d3dt11{ nullptr };
+        ID3D11Texture2D* d3dt11_clone{ nullptr };
+
         if( p_texture->GetPurpose() == Texture::PURPOSE_COLORFROMFILE )
         {
             ID3D11ShaderResourceView*           textureResourceView;

@@ -68,6 +68,8 @@ protected:
     dsstring                        m_path;
     long                            m_width;
     long                            m_height;
+    long                            m_depth;
+
     long                            m_bpp;
     void*                           m_render_data;
 
@@ -99,6 +101,7 @@ public:
     void            GetBasePath(dsstring& p_path) const;
     void            GetRenderTargetDims(unsigned long& p_w, unsigned long& p_h) const;
     void            GetFormat(long& p_width, long& p_height, long& p_bpp) const;
+    long            GetDepth(void) const;
     RenderPurpose   GetRenderPurpose(void) const;
     RenderTarget    GetRenderTarget(void) const;
     Purpose         GetPurpose(void) const;
@@ -107,8 +110,11 @@ public:
     void            GetMD5(dsstring& p_md5) const;
     bool            IsRenderTarget(void) const;
 
+    bool            Is3DTexture(void) const;
+
        
     void            SetFormat( long p_width, long p_height, long p_bpp );
+    void            SetDepth(long p_depth);
     void            SetRenderData( void* p_renderdata );   
     void            SetPurpose( Purpose p_purpose );
 
