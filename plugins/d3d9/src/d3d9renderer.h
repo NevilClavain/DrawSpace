@@ -184,7 +184,7 @@ public:
     virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
     virtual void ClearDepth( dsreal p_value = 1.0 );
 
-    virtual void BeginTarget( void* p_data );
+    virtual void BeginTarget( void* p_data, int p_slice_index );
     virtual void EndTarget( void* p_data );
 
     virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );

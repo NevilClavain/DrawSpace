@@ -622,18 +622,25 @@ void D3D11Renderer::ClearDepth( dsreal p_value )
     m_lpd3ddevcontext->ClearDepthStencilView( m_currentView, D3D11_CLEAR_DEPTH, p_value, 0 );
 }
 
-void D3D11Renderer::BeginTarget( void* p_data )
+void D3D11Renderer::BeginTarget( void* p_data, int p_slice_index)
 {
     TextureInfos* ti = (TextureInfos*)p_data;
     dsstring hash = ti->hash;
 
     if( m_targettextures_base.count( hash ) > 0 )
     {
-        m_currentTarget = m_targettextures_base[hash]->rendertextureTargetViews[0];
+        if (!ti->texture3D && p_slice_index > 0)
+        {
+            _DSEXCEPTION("Unexpected slice number - not a 3D texture !")
+        }
+        else if (p_slice_index > ti->rendertextureTargetViews.size())
+        {
+            _DSEXCEPTION("Unexpected slice number!")
+        }
+        m_currentTarget = m_targettextures_base[hash]->rendertextureTargetViews[p_slice_index];
+       
         m_currentView = m_targettextures_base[hash]->stencilDepthView;
-
         m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
-
         m_lpd3ddevcontext->RSSetViewports( 1, &m_targettextures_base[hash]->viewport );
     }
     else

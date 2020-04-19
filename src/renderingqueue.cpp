@@ -91,7 +91,7 @@ void RenderingQueue::Draw( void )
         {
             _DSEXCEPTION( "target texture not initialised in renderer" )
         }
-        renderer->BeginTarget( texture_render_data );
+        renderer->BeginTarget( texture_render_data, 0 );
     }
     else
     {
