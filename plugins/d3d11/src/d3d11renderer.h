@@ -82,7 +82,8 @@ protected:
         ID3D11Texture3D*                                            texture3D;
         ID3D11Texture3D*                                            texture3D_clone;
 
-        ID3D11RenderTargetView*                                     rendertextureTargetView;
+        std::vector<ID3D11RenderTargetView*>                        rendertextureTargetViews;
+
         ID3D11ShaderResourceView*                                   textureShaderResourceView;
 
         // reserve au textures render target

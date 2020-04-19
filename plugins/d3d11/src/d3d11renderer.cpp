@@ -500,10 +500,11 @@ void D3D11Renderer::Release( void )
             it->second->texture->Release();
         }
 
-        if( it->second->rendertextureTargetView )
+        for (auto& e : it->second->rendertextureTargetViews)
         {
-            it->second->rendertextureTargetView->Release();
+            e->Release();
         }
+        it->second->rendertextureTargetViews.clear();
 
         if( it->second->stencilDepthBuffer )
         {
@@ -628,7 +629,7 @@ void D3D11Renderer::BeginTarget( void* p_data )
 
     if( m_targettextures_base.count( hash ) > 0 )
     {
-        m_currentTarget = m_targettextures_base[hash]->rendertextureTargetView;
+        m_currentTarget = m_targettextures_base[hash]->rendertextureTargetViews[0];
         m_currentView = m_targettextures_base[hash]->stencilDepthView;
 
         m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
@@ -1071,7 +1072,7 @@ bool D3D11Renderer::create2D_rendertarget(DrawSpace::Core::Texture* p_texture, D
     p_texture_infos->texture3D_clone = NULL;
     p_texture_infos->descr = descr;
     p_texture_infos->textureShaderResourceView = rendertextureResourceView;
-    p_texture_infos->rendertextureTargetView = rendertextureTargetView;
+    p_texture_infos->rendertextureTargetViews.push_back(rendertextureTargetView);
 
     // creation d'un stencil-depth buffer associe
     create_depth_stencil_buffer(rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &p_texture_infos->stencilDepthBuffer, &p_texture_infos->stencilDepthView);
@@ -1180,7 +1181,7 @@ bool D3D11Renderer::create3D_rendertarget(DrawSpace::Core::Texture* p_texture, D
     p_texture_infos->texture_clone = NULL;
     p_texture_infos->descr3D = descr;
     p_texture_infos->textureShaderResourceView = rendertextureResourceView;
-    p_texture_infos->rendertextureTargetView = NULL;
+    
 
     // creation d'un stencil-depth buffer associe
     create_depth_stencil_buffer(rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &p_texture_infos->stencilDepthBuffer, &p_texture_infos->stencilDepthView);
@@ -1325,8 +1326,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->texture = NULL;
             texture_infos->texture_clone = NULL;
             texture_infos->texture3D = NULL;
-            texture_infos->texture3D_clone = NULL;
-            texture_infos->rendertextureTargetView = NULL;
+            texture_infos->texture3D_clone = NULL;            
             texture_infos->textureShaderResourceView = textureResourceView;
             texture_infos->stencilDepthBuffer = NULL;
             texture_infos->stencilDepthView = NULL;
@@ -1398,8 +1398,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->texture = d3dt11;
             texture_infos->texture_clone = NULL;
             texture_infos->texture3D = NULL;
-            texture_infos->texture3D_clone = NULL;
-            texture_infos->rendertextureTargetView = NULL;
+            texture_infos->texture3D_clone = NULL;            
             texture_infos->stencilDepthBuffer = NULL;
             texture_infos->stencilDepthView = NULL;
 
@@ -1506,10 +1505,12 @@ void D3D11Renderer::DestroyTexture( void* p_data )
         ti->texture3D_clone->Release();
     }
 
-    if( ti->rendertextureTargetView )
+    for (auto& e : ti->rendertextureTargetViews)
     {
-        ti->rendertextureTargetView->Release();
+        e->Release();
     }
+    ti->rendertextureTargetViews.clear();
+
     if( ti->stencilDepthBuffer )
     {
         ti->stencilDepthBuffer->Release();
@@ -1774,7 +1775,7 @@ bool D3D11Renderer::UpdateTextureContent( void* p_texturedata )
         return false;
     }
 
-    if( ti->rendertextureTargetView )
+    if( ti->rendertextureTargetViews.size() > 0 )
     {
         // vouloir updater une render texture = non sens
         return false;
