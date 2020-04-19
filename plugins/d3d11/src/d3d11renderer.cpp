@@ -1067,6 +1067,8 @@ bool D3D11Renderer::create2D_rendertarget(DrawSpace::Core::Texture* p_texture, D
     p_texture_infos->texture_instance = p_texture;
     p_texture_infos->texture = d3dt11;
     p_texture_infos->texture_clone = d3dt11_clone;
+    p_texture_infos->texture3D = NULL;
+    p_texture_infos->texture3D_clone = NULL;
     p_texture_infos->descr = descr;
     p_texture_infos->textureShaderResourceView = rendertextureResourceView;
     p_texture_infos->rendertextureTargetView = rendertextureTargetView;
@@ -1074,6 +1076,114 @@ bool D3D11Renderer::create2D_rendertarget(DrawSpace::Core::Texture* p_texture, D
     // creation d'un stencil-depth buffer associe
     create_depth_stencil_buffer(rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &p_texture_infos->stencilDepthBuffer, &p_texture_infos->stencilDepthView);
 
+
+    p_texture_infos->viewport.Width = descr.Width;
+    p_texture_infos->viewport.Height = descr.Height;
+
+    p_texture_infos->viewport.MinDepth = 0.0;
+    p_texture_infos->viewport.MaxDepth = 1.0;
+    p_texture_infos->viewport.TopLeftX = 0.0;
+    p_texture_infos->viewport.TopLeftY = 0.0;
+
+    return true;
+}
+
+bool D3D11Renderer::create3D_rendertarget(DrawSpace::Core::Texture* p_texture, DXGI_FORMAT p_format, TextureInfos* p_texture_infos)
+{
+    DECLARE_D3D11ASSERT_VARS
+
+    ID3D11Texture3D* d3dt11_3D{ nullptr };
+    ID3D11Texture3D* d3dt11_3D_clone{ nullptr };
+
+    unsigned long rw, rh, rd;
+    p_texture->GetRenderTargetDims(rw, rh);
+    rd = p_texture->GetDepth();
+
+    D3D11_TEXTURE3D_DESC textureDesc;
+
+    // Initialize the render target texture description.
+    ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+
+    // Setup the render target texture description.
+
+    textureDesc.Width = rw;
+    textureDesc.Height = rh;
+    textureDesc.Depth = rd;
+    textureDesc.MipLevels = 1;
+    textureDesc.Format = p_format;
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    textureDesc.CPUAccessFlags = 0;
+    textureDesc.MiscFlags = 0;
+
+    // Create the render target texture.
+    hRes = m_lpd3ddevice->CreateTexture3D(&textureDesc, NULL, &d3dt11_3D);
+    D3D11_CHECK(CreateTexture3D)
+
+    /*
+    // creation du render target view
+    D3D11_RENDER_TARGET_VIEW_DESC       renderTargetViewDesc;
+    
+    ID3D11RenderTargetView* rendertextureTargetView = NULL;
+    
+
+    ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+
+    renderTargetViewDesc.Format = p_format;
+    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+    renderTargetViewDesc.Texture3D.MipSlice = 0;
+
+    hRes = m_lpd3ddevice->CreateRenderTargetView(d3dt11_3D, &renderTargetViewDesc, &rendertextureTargetView);
+    D3D11_CHECK(CreateRenderTargetView)
+    */
+
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC     shaderResourceViewDesc;
+    ID3D11ShaderResourceView*           rendertextureResourceView = NULL;
+    // creation du shader resource view associé
+    ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+    shaderResourceViewDesc.Format = p_format;
+    shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+    shaderResourceViewDesc.Texture3D.MostDetailedMip = 0;
+    shaderResourceViewDesc.Texture3D.MipLevels = 1;
+
+    hRes = m_lpd3ddevice->CreateShaderResourceView(d3dt11_3D, &shaderResourceViewDesc, &rendertextureResourceView);
+    D3D11_CHECK(CreateShaderResourceView)
+
+    /////////////////////// creation texture "clone", pour lire le contenu d'une render target
+
+    if (Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget())
+    {
+        textureDesc.Usage = D3D11_USAGE_STAGING;
+        textureDesc.BindFlags = 0;
+        textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+
+        hRes = m_lpd3ddevice->CreateTexture3D(&textureDesc, NULL, &d3dt11_3D_clone);
+        D3D11_CHECK(CreateTexture3D)
+    }
+    ////////////////////////////////////////////////////////////////////////
+
+    D3D11_TEXTURE3D_DESC descr;
+    d3dt11_3D->GetDesc(&descr);
+
+    dsstring path;
+    p_texture->GetPath(path);
+
+    p_texture_infos->content_access = (Texture::RENDERTARGET_CPU == p_texture->GetRenderTarget() ? true : false);
+    p_texture_infos->bits = NULL;
+    p_texture_infos->path = path;
+    p_texture_infos->texture_instance = p_texture;
+    p_texture_infos->texture3D = d3dt11_3D;
+    p_texture_infos->texture3D_clone = d3dt11_3D_clone;
+    p_texture_infos->texture = NULL;
+    p_texture_infos->texture_clone = NULL;
+    p_texture_infos->descr3D = descr;
+    p_texture_infos->textureShaderResourceView = rendertextureResourceView;
+    p_texture_infos->rendertextureTargetView = NULL;
+
+    // creation d'un stencil-depth buffer associe
+    create_depth_stencil_buffer(rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &p_texture_infos->stencilDepthBuffer, &p_texture_infos->stencilDepthView);
 
     p_texture_infos->viewport.Width = descr.Width;
     p_texture_infos->viewport.Height = descr.Height;
@@ -1175,24 +1285,19 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
         texture_infos = _DRAWSPACE_NEW_(TextureInfos, TextureInfos);
 
-        if (p_texture->Is3DTexture())
+        bool status = p_texture->Is3DTexture() ? create3D_rendertarget(p_texture, format, texture_infos) : create2D_rendertarget(p_texture, format, texture_infos);
+        if (status)
         {
-            //ICI...
+            texture_infos->hash = hash;
+            m_targettextures_base[hash] = texture_infos;
+
+            *p_data = (void*)texture_infos;
         }
         else
-        { 
-            if (create2D_rendertarget(p_texture, format, texture_infos))
-            {
-                texture_infos->hash = hash;
-                m_targettextures_base[hash] = texture_infos;
-
-                *p_data = (void*)texture_infos;
-            }
-            else
-            {
-                return false;
-            }
+        {
+            return false;
         }
+
     }
     else
     {
@@ -1219,6 +1324,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->texture_instance = p_texture;
             texture_infos->texture = NULL;
             texture_infos->texture_clone = NULL;
+            texture_infos->texture3D = NULL;
+            texture_infos->texture3D_clone = NULL;
             texture_infos->rendertextureTargetView = NULL;
             texture_infos->textureShaderResourceView = textureResourceView;
             texture_infos->stencilDepthBuffer = NULL;
@@ -1290,6 +1397,8 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->texture_instance = p_texture;
             texture_infos->texture = d3dt11;
             texture_infos->texture_clone = NULL;
+            texture_infos->texture3D = NULL;
+            texture_infos->texture3D_clone = NULL;
             texture_infos->rendertextureTargetView = NULL;
             texture_infos->stencilDepthBuffer = NULL;
             texture_infos->stencilDepthView = NULL;
@@ -1385,6 +1494,16 @@ void D3D11Renderer::DestroyTexture( void* p_data )
     if( ti->texture_clone )
     {
         ti->texture_clone->Release();
+    }
+
+    if (ti->texture3D)
+    {
+        ti->texture3D->Release();
+    }
+
+    if (ti->texture3D_clone)
+    {
+        ti->texture3D_clone->Release();
     }
 
     if( ti->rendertextureTargetView )
@@ -1498,7 +1617,8 @@ bool D3D11Renderer::AllocTextureContent( void* p_texturedata )
 
             default:
                 bpp = -1;
-                break;        }
+                break;        
+        }
 
         if( bpp != -1 )
         {

@@ -68,12 +68,13 @@ class D3D11Renderer : public DrawSpace::Interface::Renderer
 protected:
 
 
-    typedef struct
+    using TextureInfos = struct
     {
         dsstring                                                    path;
         DrawSpace::Core::Texture*                                   texture_instance;
 
         D3D11_TEXTURE2D_DESC                                        descr;
+        D3D11_TEXTURE3D_DESC                                        descr3D;
 
         ID3D11Texture2D*                                            texture;
         ID3D11Texture2D*                                            texture_clone;
@@ -94,55 +95,52 @@ protected:
 
         dsstring                                                    hash; // hash des caracteristique class Texture associee
 
-    } TextureInfos;
+    };
 
-    typedef struct
+    using MesheData = struct
     {
 	    ID3D11Buffer*                                               vertex_buffer;
 	    ID3D11Buffer*                                               index_buffer;
         int                                                         nb_vertices;
         int                                                         nb_triangles;
+    };
 
-    } MesheData;
 
-
-    typedef struct
+    using ShadersData = struct
     {
         ID3D11VertexShader*                                         vertex_shader;
         ID3D11PixelShader*                                          pixel_shader;
         ID3D11InputLayout*                                          input_layout;
-
-    } ShadersData;
+    };
     
 
-    typedef struct
+    using ShaderLegacyArg = struct
     {
         XMFLOAT4                                                    vector[512];
         XMMATRIX                                                    matrix[512];
     
-    } ShaderLegacyArg;
+    };
 
     // render states
-    typedef struct
+    using RSCacheEntry = struct
     {
         D3D11_RASTERIZER_DESC   rs_desc;
         ID3D11RasterizerState*  rs_state;
 
-    } RSCacheEntry;
+    };
 
     // blending states
-    typedef struct
+    using BSCacheEntry = struct
     {
         D3D11_BLEND_DESC        bs_desc;
         ID3D11BlendState*       bs_state;
 
-    } BSCacheEntry;
+    };
 
 	static const int NbMaxVectorForShadersBuffers = 512;
 
-    typedef std::map<dsstring, RSCacheEntry>                        RSCache;
-    typedef std::map<dsstring, BSCacheEntry>                        BSCache;
-
+    using RSCache = std::map<dsstring, RSCacheEntry>;
+    using BSCache = std::map<dsstring, BSCacheEntry>;
     HWND                                                            m_hwnd;
 
     Characteristics                                                 m_characteristics;
@@ -166,8 +164,6 @@ protected:
     ID3D11DepthStencilState*                                        m_DSState_DepthTestDisabled;
     ID3D11DepthStencilState*                                        m_DSState_DepthTestEnabled;
 
-    //ID3D11InputLayout*                                              m_inputLayout;
-
     ID3D11RenderTargetView*                                         m_screentarget;
 
     D3D11_RASTERIZER_DESC                                           m_currentRSDesc;
@@ -181,7 +177,6 @@ protected:
     IFW1FontWrapper*                                                m_fontWrapper;
 
     std::map<dsstring, TextureInfos*>                               m_textures_base;
-    //std::map<DrawSpace::Core::Texture*, TextureInfos*>              m_targettextures_base;
     std::map<dsstring, TextureInfos*>                               m_targettextures_base;
 
     std::map<dsstring, MesheData*>                                  m_meshes_base;
@@ -215,6 +210,7 @@ protected:
     void fullscreen_autoset_desktop_resolution( int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den );
 
     bool create2D_rendertarget(DrawSpace::Core::Texture* p_texture, DXGI_FORMAT p_format, TextureInfos* p_texture_infos);
+    bool create3D_rendertarget(DrawSpace::Core::Texture* p_texture, DXGI_FORMAT p_format, TextureInfos* p_texture_infos);
 
 public:
     D3D11Renderer( void );
