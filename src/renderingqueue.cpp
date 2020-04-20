@@ -41,7 +41,8 @@ m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
 m_ready( true ),
-m_status( OK )
+m_status( OK ),
+m_target_slice(0)
 {
 
 
@@ -57,7 +58,8 @@ m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
 m_ready( true ),
-m_status( OK )
+m_status( OK ),
+m_target_slice(0)
 {
 
 
@@ -65,6 +67,11 @@ m_status( OK )
 
 RenderingQueue::~RenderingQueue( void )
 {
+}
+
+void RenderingQueue::SetTargetSlice(int p_target_slice)
+{
+    m_target_slice = p_target_slice;
 }
 
 bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
@@ -91,7 +98,7 @@ void RenderingQueue::Draw( void )
         {
             _DSEXCEPTION( "target texture not initialised in renderer" )
         }
-        renderer->BeginTarget( texture_render_data, 0 );
+        renderer->BeginTarget( texture_render_data, m_target_slice);
     }
     else
     {

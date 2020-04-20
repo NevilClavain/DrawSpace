@@ -47,6 +47,7 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "create_root", &LuaClass_RenderPassNodeGraph::LUA_createroot },
     { "create_child", &LuaClass_RenderPassNodeGraph::LUA_createchild },
     { "remove_pass", &LuaClass_RenderPassNodeGraph::LUA_removepass },
+    { "set_pass_targetslice", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetslice },
     { "set_pass_targetclearcolor", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearcolor },
     { "set_pass_targetclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpasstargetclearstate },
     { "set_pass_depthclearstate", &LuaClass_RenderPassNodeGraph::LUA_setpassdepthclearstate },
@@ -194,6 +195,29 @@ int LuaClass_RenderPassNodeGraph::LUA_removepass( lua_State* p_L )
     {        
         LUA_ERROR( "RenderPassNodeGraph::remove_pass : unknown pass id" );
     }
+    return 0;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_setpasstargetslice(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("RenderPassNodeGraph::set_pass_targetslice : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    int slice = luaL_checkint(p_L, 2);
+
+    if (m_passes.count(pass_id))
+    {
+        m_passes[pass_id].m_renderpassnode.GetRenderingQueue()->SetTargetSlice(slice);
+    }
+    else
+    {
+        LUA_ERROR("RenderPassNodeGraph::set_pass_targetclearcolor : unknown pass id");
+    }
+
     return 0;
 }
 

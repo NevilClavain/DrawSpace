@@ -142,6 +142,8 @@ private:
 
 	Status																	m_status;
 
+    int                                                                     m_target_slice; // quand > 0, on a affaire a une slice de texture3D
+
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
@@ -168,6 +170,8 @@ public:
     RenderingQueue( void );
     RenderingQueue( Texture* p_target );
     ~RenderingQueue( void );
+
+    void SetTargetSlice(int p_target_slice);
 
     long GetTheoricalSwitchesCost(void) const;
     long GetSwitchesCost(void) const;

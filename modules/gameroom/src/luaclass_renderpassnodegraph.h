@@ -67,6 +67,7 @@ public:
     int LUA_createroot( lua_State* p_L );
     int LUA_createchild( lua_State* p_L );
     int LUA_removepass( lua_State* p_L );
+    int LUA_setpasstargetslice(lua_State* p_L);
     int LUA_setpasstargetclearcolor( lua_State* p_L );
     int LUA_setpasstargetclearstate( lua_State* p_L );
     int LUA_setpassdepthclearstate( lua_State* p_L );
