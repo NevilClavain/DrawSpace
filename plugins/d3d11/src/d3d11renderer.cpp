@@ -1129,23 +1129,26 @@ bool D3D11Renderer::create3D_rendertarget(DrawSpace::Core::Texture* p_texture, D
     hRes = m_lpd3ddevice->CreateTexture3D(&textureDesc, NULL, &d3dt11_3D);
     D3D11_CHECK(CreateTexture3D)
 
-    /*
-    // creation du render target view
-    D3D11_RENDER_TARGET_VIEW_DESC       renderTargetViewDesc;
-    
-    ID3D11RenderTargetView* rendertextureTargetView = NULL;
-    
+    for (size_t i = 0; i < rd; i++)
+    {
+        // creation du render target view
+        D3D11_RENDER_TARGET_VIEW_DESC       renderTargetViewDesc;
 
-    ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+        ID3D11RenderTargetView* rendertextureTargetView = NULL;
 
-    renderTargetViewDesc.Format = p_format;
-    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
-    renderTargetViewDesc.Texture3D.MipSlice = 0;
+        ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
 
-    hRes = m_lpd3ddevice->CreateRenderTargetView(d3dt11_3D, &renderTargetViewDesc, &rendertextureTargetView);
-    D3D11_CHECK(CreateRenderTargetView)
-    */
+        renderTargetViewDesc.Format = p_format;
+        renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+        renderTargetViewDesc.Texture2DArray.MipSlice = 0;
+        renderTargetViewDesc.Texture2DArray.ArraySize = 1;
+        renderTargetViewDesc.Texture2DArray.FirstArraySlice = i;
 
+        hRes = m_lpd3ddevice->CreateRenderTargetView(d3dt11_3D, &renderTargetViewDesc, &rendertextureTargetView);
+        D3D11_CHECK(CreateRenderTargetView)
+
+        p_texture_infos->rendertextureTargetViews.push_back(rendertextureTargetView);
+    }   
 
     D3D11_SHADER_RESOURCE_VIEW_DESC     shaderResourceViewDesc;
     ID3D11ShaderResourceView*           rendertextureResourceView = NULL;
