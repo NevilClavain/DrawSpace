@@ -52,7 +52,7 @@ m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL ),
 m_width( 256 ),
 m_height( 256 ),
-m_depth( -1 ),
+m_depth( 0 ),
 m_bpp( 4 ),
 m_dataowner(false)
 {
@@ -72,7 +72,7 @@ m_purpose( PURPOSE_COLORFROMFILE ),
 m_render_data( NULL ),
 m_width( 256 ),
 m_height( 256 ),
-m_depth(-1),
+m_depth(0),
 m_bpp( 4 ),
 m_dataowner(false)
 {
@@ -146,7 +146,7 @@ bool Texture::IsRenderTarget( void ) const
 
 bool Texture::Is3DTexture(void) const
 {
-    return (m_depth != -1);
+    return (m_depth > 0);
 }
 
 void Texture::GetRenderTargetDims( unsigned long& p_w, unsigned long& p_h ) const
