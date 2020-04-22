@@ -72,7 +72,7 @@ public:
     dsstring GetSystemId(void) const { return "HubSystem"; };
     
 	template<typename T>
-	T& GetSystem(const dsstring& p_id) const
+	inline T& GetSystem(const dsstring& p_id) const
 	{
 		for (auto& e : m_systems)
 		{
