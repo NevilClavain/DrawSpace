@@ -85,6 +85,8 @@ public:
 	int LUA_addrenderpasseventcb(lua_State* p_L);
 	int LUA_removerenderpasseventcb(lua_State* p_L);
 
+    int LUA_settargettexturedepth(lua_State* p_L);
+
 	void RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex);
 	int UnregisterAnimationEventCallback(const dsstring& p_id);
 

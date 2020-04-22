@@ -58,6 +58,7 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
     { "set_viewportquadshaderrealvector", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector },
 	{ "set_viewportquadshaderrealmatrix", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealmatrix },
+    { "set_targettexturedepth", &LuaClass_RenderPassNodeGraph::LUA_settargettexturedepth },
 	{ "add_renderpasseventcb", &LuaClass_RenderPassNodeGraph::LUA_addrenderpasseventcb },
 	{ "remove_renderpasseventcb", &LuaClass_RenderPassNodeGraph::LUA_removerenderpasseventcb },
 	{ 0, 0 }
@@ -618,6 +619,36 @@ int LuaClass_RenderPassNodeGraph::LUA_removerenderpasseventcb(lua_State* p_L)
 	return 0;
 }
 
+int LuaClass_RenderPassNodeGraph::LUA_settargettexturedepth(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("RenderPassNodeGraph::set_targettexturedepth : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    int depth = luaL_checkint(p_L, 2);
+
+    if (m_passes.count(pass_id))
+    {
+        Texture* target_texture = m_passes[pass_id].m_renderpassnode.GetTargetTexture();
+        if (target_texture)
+        {
+            // declare this target as a 3D-Texture
+            m_passes[pass_id].m_renderpassnode.GetTargetTexture()->SetDepth(depth);
+        }
+        else
+        {
+            LUA_ERROR("RenderPassNodeGraph::set_targettexturedepth : not an intermediate pass : " << pass_id);
+        }
+    }
+    else
+    {
+        LUA_ERROR("RenderPassNodeGraph::set_targettexturedepth : unknown pass id");
+    }
+    return 0;
+}
 
 DrawSpace::RenderGraph::RenderPassNode& LuaClass_RenderPassNodeGraph::GetNode( const dsstring& p_pass_id )
 {
@@ -630,6 +661,8 @@ DrawSpace::RenderGraph::RenderPassNode& LuaClass_RenderPassNodeGraph::GetNode( c
         return m_passes[p_pass_id].m_renderpassnode;
     }
 }
+
+
 
 void LuaClass_RenderPassNodeGraph::RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex)
 {
