@@ -34,6 +34,10 @@ SamplerState sam            : register(s0);
 Texture2D txZMask           : register(t1);
 SamplerState samZMask       : register(s1);
 
+Texture2D txNoise           : register(t2);
+SamplerState samNoise       : register(s2);
+
+
 
 struct PS_INTPUT 
 {
@@ -319,6 +323,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
 	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
+	float4 color_noise =  txNoise.Sample(samNoise, input.TexCoord0);
 
 	
 	float4 raymarch_res = viewraymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox);
@@ -342,5 +347,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	}
 	*/
 	
-	return color_dest;
+	//return color_dest;
+	return color_noise;
 }

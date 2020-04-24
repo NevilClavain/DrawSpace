@@ -150,5 +150,11 @@
     <FxCompile Include="viewdirection.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="noiser.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="noiser.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
