@@ -1139,10 +1139,10 @@ bool D3D11Renderer::create3D_rendertarget(DrawSpace::Core::Texture* p_texture, D
         ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
 
         renderTargetViewDesc.Format = p_format;
-        renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-        renderTargetViewDesc.Texture2DArray.MipSlice = 0;
-        renderTargetViewDesc.Texture2DArray.ArraySize = 1;
-        renderTargetViewDesc.Texture2DArray.FirstArraySlice = i;
+        renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+        renderTargetViewDesc.Texture3D.MipSlice = 0;
+        renderTargetViewDesc.Texture3D.WSize = 1;
+        renderTargetViewDesc.Texture3D.FirstWSlice = i;
 
         hRes = m_lpd3ddevice->CreateRenderTargetView(d3dt11_3D, &renderTargetViewDesc, &rendertextureTargetView);
         D3D11_CHECK(CreateRenderTargetView)
