@@ -79,7 +79,20 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 {
     for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
+        auto pass_id{ it->data()->m_name };
+
+        for (auto& e : m_evt_handlers)
+        {
+            (*e)(RENDERINGQUEUE_PASS_BEGIN, pass_id);
+        }
+
         bool updated_queue = p_renderingaspectimpl->VisitRenderPassDescr( it->data()->m_name, it->data()->m_renderingqueue );
+
+        for (auto& e : m_evt_handlers)
+        {
+            (*e)(RENDERINGQUEUE_PASS_END, pass_id);
+        }
+
         it->data()->m_renderingqueue_update_flag = it->data()->m_renderingqueue_update_flag | updated_queue;
     }
 }
@@ -111,10 +124,10 @@ void RenderPassNodeGraph::ProcessSignals( void )
                 }
             }  
 
-			for (auto& it = m_evt_handlers.begin(); it != m_evt_handlers.end(); ++it)
-			{
-				(**it)(RENDERINGQUEUE_UPDATED);
-			}
+            for (auto& e : m_evt_handlers)
+            {
+                (*e)(RENDERINGQUEUE_UPDATED, "");
+            }
         }
 
         m_signals.pop();

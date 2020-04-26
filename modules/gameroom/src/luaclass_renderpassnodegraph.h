@@ -41,7 +41,7 @@ protected:
         DrawSpace::Core::Fx                     m_fx;
     };
 
-	using RenderPassEventCb           = DrawSpace::Core::CallBack<LuaClass_RenderPassNodeGraph, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent>;
+	using RenderPassEventCb           = DrawSpace::Core::CallBack2<LuaClass_RenderPassNodeGraph, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
     
     DrawSpace::RenderGraph::RenderPassNodeGraph                             m_rendergraph;
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl             m_passes_render; // le RenderingAspectImpl associe au m_rendergraph et permettant de lancer les rendus des passes stockees dans m_rendergraph
@@ -55,7 +55,7 @@ protected:
 
     void cleanup_resources( lua_State* p_L, const dsstring& p_passid );
 
-	void on_renderpass_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_event);
+	void on_renderpass_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_event, const dsstring&);
 
 public:
 	LuaClass_RenderPassNodeGraph( lua_State* p_L );
@@ -87,8 +87,8 @@ public:
 
     int LUA_settargettexturedepth(lua_State* p_L);
 
-	void RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex);
-	int UnregisterAnimationEventCallback(const dsstring& p_id);
+	void RegisterPassEventCallback(const dsstring& p_id, int p_regindex);
+	int UnregisterPassEventCallback(const dsstring& p_id);
 
     DrawSpace::RenderGraph::RenderPassNode& GetNode( const dsstring& p_pass_id );
     

@@ -40,10 +40,12 @@ public:
 
 	using RenderPassEvent = enum
 	{
-		RENDERINGQUEUE_UPDATED
+		RENDERINGQUEUE_UPDATED,
+        RENDERINGQUEUE_PASS_BEGIN,
+        RENDERINGQUEUE_PASS_END,
 	};
 
-	using RenderPassEventHandler = DrawSpace::Core::BaseCallback<void, RenderPassEvent>;
+	using RenderPassEventHandler = DrawSpace::Core::BaseCallback2<void, RenderPassEvent, const dsstring&>;
 
 private:
 

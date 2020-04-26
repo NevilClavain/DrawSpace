@@ -501,11 +501,11 @@ void LuaClass_RenderPassNodeGraph::cleanup_resources( lua_State* p_L, const dsst
     }
 }
 
-void LuaClass_RenderPassNodeGraph::on_renderpass_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_event)
+void LuaClass_RenderPassNodeGraph::on_renderpass_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_event, const dsstring& p_passname)
 {
 	for (auto& it = m_renderpassevent_lua_callbacks.begin(); it != m_renderpassevent_lua_callbacks.end(); ++it)
 	{
-		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event);
+		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_passname);
 	}
 }
 
@@ -609,13 +609,13 @@ int LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealmatrix(lua_State*
 
 int LuaClass_RenderPassNodeGraph::LUA_addrenderpasseventcb(lua_State* p_L)
 {
-	LuaContext::AddCallback(p_L, [this](const std::string& p_cbid, int p_reffunc) { RegisterAnimationEventCallback(p_cbid, p_reffunc); });
+	LuaContext::AddCallback(p_L, [this](const std::string& p_cbid, int p_reffunc) { RegisterPassEventCallback(p_cbid, p_reffunc); });
 	return 0;
 }
 
 int LuaClass_RenderPassNodeGraph::LUA_removerenderpasseventcb(lua_State* p_L)
 {
-	LuaContext::RemoveCallback(p_L, [this](const std::string& p_cbid)->int { return UnregisterAnimationEventCallback(p_cbid); });
+	LuaContext::RemoveCallback(p_L, [this](const std::string& p_cbid)->int { return UnregisterPassEventCallback(p_cbid); });
 	return 0;
 }
 
@@ -664,12 +664,12 @@ DrawSpace::RenderGraph::RenderPassNode& LuaClass_RenderPassNodeGraph::GetNode( c
 
 
 
-void LuaClass_RenderPassNodeGraph::RegisterAnimationEventCallback(const dsstring& p_id, int p_regindex)
+void LuaClass_RenderPassNodeGraph::RegisterPassEventCallback(const dsstring& p_id, int p_regindex)
 {
 	m_renderpassevent_lua_callbacks[p_id] = p_regindex;
 }
 
-int LuaClass_RenderPassNodeGraph::UnregisterAnimationEventCallback(const dsstring& p_id)
+int LuaClass_RenderPassNodeGraph::UnregisterPassEventCallback(const dsstring& p_id)
 {
 	int index = -1;
 	if (m_renderpassevent_lua_callbacks.count(p_id))
