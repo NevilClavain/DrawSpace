@@ -47,6 +47,7 @@ private:
         DrawSpace::Core::Texture*          m_targettexture;
         dsstring                           m_name;
         bool                               m_renderingqueue_update_flag;
+        bool                               m_enabled;
 
     public:
 
@@ -55,7 +56,8 @@ private:
             m_viewportquad( NULL ),
             m_targettexture( NULL ),
             m_name( p_name ),
-            m_renderingqueue_update_flag( false )
+            m_renderingqueue_update_flag( false ),
+            m_enabled(true)
         {
         };
 

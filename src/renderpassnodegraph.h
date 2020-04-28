@@ -51,11 +51,19 @@ private:
 
     using Signals = enum
     {
-        SIGNAL_UPDATED_RENDERINGQUEUES
+        SIGNAL_UPDATED_RENDERINGQUEUES,
+        SIGNAL_DISABLE_PASS,
+        SIGNAL_ENABLE_PASS,
     };
 
     mutable PassDescrTree				m_tree;
+    
     std::queue<Signals>					m_signals;
+
+    // args for signals
+    dsstring                            m_pass_to_disable;
+    dsstring                            m_pass_to_enable;
+
 	std::set<RenderPassEventHandler*>	m_evt_handlers;
 
     void cleanup_treenodes( void );
@@ -71,6 +79,8 @@ public:
     void ProcessSignals( void );
 
     void PushSignal_UpdatedRenderingQueues( void );
+    void PushSignal_DisablePass(const dsstring& p_pass);
+    void PushSignal_EnablePass(const dsstring& p_pass);
 
 	void RegisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);
 	void UnregisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);

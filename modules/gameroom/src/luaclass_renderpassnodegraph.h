@@ -81,6 +81,8 @@ public:
 	int LUA_setviewportquadshaderrealmatrix(lua_State* p_L);
 
     int LUA_updaterenderingqueues( lua_State* p_L );
+    int LUA_disablepass(lua_State* p_L);
+    int LUA_enablepass(lua_State* p_L);
 
 	int LUA_addrenderpasseventcb(lua_State* p_L);
 	int LUA_removerenderpasseventcb(lua_State* p_L);

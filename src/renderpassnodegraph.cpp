@@ -79,21 +79,26 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 {
     for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
     {
-        auto pass_id{ it->data()->m_name };
+        auto& pass_descr { it->data() };
 
-        for (auto& e : m_evt_handlers)
+        if (pass_descr->m_enabled)
         {
-            (*e)(RENDERINGQUEUE_PASS_BEGIN, pass_id);
-        }
+            const auto pass_id{ pass_descr->m_name };
 
-        bool updated_queue = p_renderingaspectimpl->VisitRenderPassDescr( it->data()->m_name, it->data()->m_renderingqueue );
+            for (auto& e : m_evt_handlers)
+            {
+                (*e)(RENDERINGQUEUE_PASS_BEGIN, pass_id);
+            }
 
-        for (auto& e : m_evt_handlers)
-        {
-            (*e)(RENDERINGQUEUE_PASS_END, pass_id);
-        }
+            bool updated_queue = p_renderingaspectimpl->VisitRenderPassDescr(pass_descr->m_name, pass_descr->m_renderingqueue);
 
-        it->data()->m_renderingqueue_update_flag = it->data()->m_renderingqueue_update_flag | updated_queue;
+            for (auto& e : m_evt_handlers)
+            {
+                (*e)(RENDERINGQUEUE_PASS_END, pass_id);
+            }
+
+            pass_descr->m_renderingqueue_update_flag = pass_descr->m_renderingqueue_update_flag | updated_queue;
+        }        
     }
 }
 
@@ -101,6 +106,19 @@ void RenderPassNodeGraph::PushSignal_UpdatedRenderingQueues( void )
 {
     m_signals.push( SIGNAL_UPDATED_RENDERINGQUEUES );
 }
+
+void RenderPassNodeGraph::PushSignal_DisablePass(const dsstring& p_pass)
+{
+    m_pass_to_disable = p_pass;
+    m_signals.push(SIGNAL_DISABLE_PASS);
+}
+
+void RenderPassNodeGraph::PushSignal_EnablePass(const dsstring& p_pass)
+{
+    m_pass_to_enable = p_pass;
+    m_signals.push(SIGNAL_ENABLE_PASS);
+}
+
 
 void RenderPassNodeGraph::ProcessSignals( void )
 {   
@@ -113,7 +131,6 @@ void RenderPassNodeGraph::ProcessSignals( void )
             /// update all rendering queues
             for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
             {
-                dsstring dbg_name = it->data()->m_name;
                 if( it->data()->m_renderingqueue_update_flag )
                 {
                     // mise a jour buffer renderingqueue
@@ -127,6 +144,28 @@ void RenderPassNodeGraph::ProcessSignals( void )
             for (auto& e : m_evt_handlers)
             {
                 (*e)(RENDERINGQUEUE_UPDATED, "");
+            }
+        }
+        else if (SIGNAL_DISABLE_PASS == sig)
+        {
+            for (auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it)
+            {
+                auto& pass_descr { it->data() };
+                if (pass_descr->m_name == m_pass_to_disable)
+                {
+                    pass_descr->m_enabled = false;
+                }
+            }
+        }
+        else if (SIGNAL_ENABLE_PASS == sig)
+        {
+            for (auto& it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it)
+            {
+                auto& pass_descr{ it->data() };
+                if (pass_descr->m_name == m_pass_to_disable)
+                {
+                    pass_descr->m_enabled = true;
+                }
             }
         }
 
