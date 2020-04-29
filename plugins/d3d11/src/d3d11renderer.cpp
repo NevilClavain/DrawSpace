@@ -633,15 +633,18 @@ void D3D11Renderer::BeginTarget( void* p_data, int p_slice_index)
         {
             _DSEXCEPTION("Unexpected slice number - not a 3D texture !")
         }
-        else if (p_slice_index > ti->rendertextureTargetViews.size())
+        else if (p_slice_index >= ti->rendertextureTargetViews.size())
         {
             _DSEXCEPTION("Unexpected slice number!")
         }
-        m_currentTarget = m_targettextures_base[hash]->rendertextureTargetViews[p_slice_index];
+
+        TextureInfos* ti { m_targettextures_base.at(hash) };
+
+        m_currentTarget = ti->rendertextureTargetViews[p_slice_index];
        
-        m_currentView = m_targettextures_base[hash]->stencilDepthView;
+        m_currentView = ti->stencilDepthView;
         m_lpd3ddevcontext->OMSetRenderTargets( 1, &m_currentTarget, m_currentView );
-        m_lpd3ddevcontext->RSSetViewports( 1, &m_targettextures_base[hash]->viewport );
+        m_lpd3ddevcontext->RSSetViewports( 1, &ti->viewport );
     }
     else
     {
@@ -1100,8 +1103,8 @@ bool D3D11Renderer::create3D_rendertarget(DrawSpace::Core::Texture* p_texture, D
 {
     DECLARE_D3D11ASSERT_VARS
 
-    ID3D11Texture3D* d3dt11_3D{ nullptr };
-    ID3D11Texture3D* d3dt11_3D_clone{ nullptr };
+    ID3D11Texture3D* d3dt11_3D { nullptr };
+    ID3D11Texture3D* d3dt11_3D_clone { nullptr };
 
     unsigned long rw, rh, rd;
     p_texture->GetRenderTargetDims(rw, rh);
@@ -1192,15 +1195,13 @@ bool D3D11Renderer::create3D_rendertarget(DrawSpace::Core::Texture* p_texture, D
     p_texture_infos->descr3D = descr;
     p_texture_infos->textureShaderResourceView = rendertextureResourceView;
     
-
-    // creation d'un stencil-depth buffer associe
-    create_depth_stencil_buffer(rw, rh, DXGI_FORMAT_D24_UNORM_S8_UINT, &p_texture_infos->stencilDepthBuffer, &p_texture_infos->stencilDepthView);
+    p_texture_infos->stencilDepthView = NULL;
 
     p_texture_infos->viewport.Width = descr.Width;
     p_texture_infos->viewport.Height = descr.Height;
 
     p_texture_infos->viewport.MinDepth = 0.0;
-    p_texture_infos->viewport.MaxDepth = 1.0;
+    p_texture_infos->viewport.MaxDepth = 1.0;// rd;
     p_texture_infos->viewport.TopLeftX = 0.0;
     p_texture_infos->viewport.TopLeftY = 0.0;
 
