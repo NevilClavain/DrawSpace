@@ -135,6 +135,7 @@ float computeLocaleDensity(float3 position)
 
 float SampleMediumDensity(float3 position, float seed1, float seed2, bool low, float scale, float offset)
 {
+	/*
 	float3 UVW = (scale * position * 0.1) + offset;  // Let’s start with some low frequency
 	float Amplitude = 1.0;
 	float DensityFactor = 1.0;
@@ -162,6 +163,12 @@ float SampleMediumDensity(float3 position, float seed1, float seed2, bool low, f
 	}
 
 	return clamp(DensityFactor * V + DensityBias, 0, 1);
+	*/
+
+	// 3D position as 3D textures coords : remap from [-1.0, 1.0] to [0.0, 1.0]
+	float3 position2;
+	position2 = 0.5 + (position * 0.5);
+	return txNoise.Sample(samNoise, position2);
 }
 
 float Ei(float z) 
@@ -211,7 +218,7 @@ float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 di
 	float dstTravelled = 0;
 	float transmittance = 1.0;
 
-	while (dstTravelled < dstLimit)
+	[unroll(150)] while (dstTravelled < dstLimit)
 	{
 		float3 position = origin + direction * (dstToBox + dstTravelled);
 
@@ -225,6 +232,7 @@ float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 di
 		float density = 0.0;
 				
 		density = SampleMediumDensity(position, 67.3, 434.8, false, float3(12.0, 12.0, 12.0), float3(200.0, -5.0, 0.0));
+
 
 		
 	
