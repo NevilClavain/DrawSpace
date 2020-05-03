@@ -156,5 +156,11 @@
     <FxCompile Include="noiser.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
+    <FxCompile Include="transfer2.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="transfer2.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

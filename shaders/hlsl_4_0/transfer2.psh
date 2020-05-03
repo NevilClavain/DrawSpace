@@ -1,0 +1,354 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*                                                                          
+* DrawSpace Rendering engine                                               
+* Emmanuel Chaumont Copyright (c) 2013-2020                     
+*                                                                          
+* This file is part of DrawSpace.                                          
+*                                                                          
+*    DrawSpace is free software: you can redistribute it and/or modify     
+*    it under the terms of the GNU General Public License as published by  
+*    the Free Software Foundation, either version 3 of the License, or     
+*    (at your option) any later version.                                   
+*                                                                          
+*    DrawSpace is distributed in the hope that it will be useful,          
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+*    GNU General Public License for more details.                          
+*                                                                          
+*    You should have received a copy of the GNU General Public License     
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+*/
+/* -*-LIC_END-*- */
+
+cbuffer legacyargs : register(b0)
+{
+    float4 vec[512];
+    Matrix mat[512];
+};
+
+Texture2D txDiffuse         : register(t0);
+SamplerState sam            : register(s0);
+
+
+struct PS_INTPUT 
+{
+    float4 Position : SV_POSITION;
+	float2 TexCoord0: TEXCOORD0;
+};
+
+#include "mat_input_constants.hlsl"
+#include "fbm.hlsl"
+
+float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 rayDir)
+{
+	float3 t0;
+	float3 t1;
+	float3 tmin;
+	float3 tmax;
+
+	if (abs(rayDir.x) > 0.0)
+	{
+		t0.x = (boundsMin.x - rayOrigin.x) / rayDir.x;
+		t1.x = (boundsMax.x - rayOrigin.x) / rayDir.x;
+
+		tmin.x = min(t0.x, t1.x);
+		tmax.x = max(t0.x, t1.x);
+	}
+	else
+	{
+		tmin.x = -2000000000;
+		tmax.x = 2000000000;
+	}
+
+	if (abs(rayDir.y) > 0.0)
+	{
+		t0.y = (boundsMin.y - rayOrigin.y) / rayDir.y;
+		t1.y = (boundsMax.y - rayOrigin.y) / rayDir.y;
+
+		tmin.y = min(t0.y, t1.y);
+		tmax.y = max(t0.y, t1.y);
+	}
+	else
+	{
+		tmin.y = -2000000000;
+		tmax.y = 2000000000;
+	}
+
+	if (abs(rayDir.z) > 0.0)
+	{
+		t0.z = (boundsMin.z - rayOrigin.z) / rayDir.z;
+		t1.z = (boundsMax.z - rayOrigin.z) / rayDir.z;
+
+		tmin.z = min(t0.z, t1.z);
+		tmax.z = max(t0.z, t1.z);
+	}
+	else
+	{
+		tmin.z = -2000000000;
+		tmax.z = 2000000000;
+	}
+
+	float dstA = max(max(tmin.x, tmin.y), tmin.z);
+	float dstB = min(tmax.x, min(tmax.y, tmax.z));
+
+	float dstToBox = max(0, dstA);
+	float dstInsideBox = max(0, dstB - dstToBox);
+
+	return float2(dstToBox, dstInsideBox);
+}
+
+
+//Y-axis rotation matrix
+float3 rotateY(float3 p, float t)
+{
+	float cosTheta = cos(t);
+	float sinTheta = sin(t);
+	float3x3 rot = { cosTheta, 0.0, sinTheta,
+				0.0, 1.0, 0.0,
+				-sinTheta, 0.0, cosTheta };
+
+	return mul( rot, p );
+}
+
+bool raycastSphere(float3 ro, float3 rd, out float3 p0, out float3 p1, float3 center, float r)
+{
+	// ajoute par moi : si la sphere est derriere la camera et que la camera est en dehors de la sphere 
+	float r2 = dot(r, r);
+	float d2 = dot(ro - center, ro - center);	
+	if (d2 > r2 && dot(center-ro, rd) < 0.0)
+	{
+		return false;
+	}
+
+	////////////////////////////////////
+	float A = dot(rd, rd);
+	float B = 2.0 * (rd.x * (ro.x - center.x) + rd.y * (ro.y - center.y) + rd.z * (ro.z - center.z));
+	float C = dot(ro - center, ro - center) - (r * r);
+
+	float D = B * B - 4.0 * A * C;
+	if (D < 0.0)
+	{
+		return false;
+	}
+	else
+	{
+		float t0 = (-B - D) / (2.0 * A);
+		float t1 = (-B + D) / (2.0 * A);
+		p0 = ro + rd * t0;
+		p1 = ro + rd * t1;
+		return true;
+	}
+}
+
+#define MAX_STEPS 128
+#define STEP_SIZE 0.05
+
+
+
+float SpiralNoiseC(float3 p)
+{
+	float nudge = 0.739513;	// size of perpendicular vector
+	float normalizer = 1.0 / sqrt(1.0 + nudge * nudge);	// pythagorean theorem on that perpendicular to maintain scale
+
+	float n = 0.0;	// noise amount
+	float iter = 1.0;
+	for (int i = 0; i < 6; i++)
+	{
+		// add sin and cos scaled inverse with the frequency
+		n += -abs(sin(p.y * iter) + cos(p.x * iter)) / iter;	// abs for a ridged look
+		// rotate by adding perpendicular and scaling down
+		p.xy += float2(p.y, -p.x) * nudge;
+		p.xy *= normalizer;
+		// rotate on other axis
+		p.xz += float2(p.z, -p.x) * nudge;
+		p.xz *= normalizer;
+		// increase the frequency
+		iter *= 1.733733;
+	}
+	return n;
+}
+
+//Cornette-Shanks phase function
+float phase(float mu, float g)
+{
+	float g2 = g * g;
+	return (3.0 * (1.0 - g2) * (1.0 + mu * mu)) / (2.0 * (2.0 + g2) * pow(1.0 + g2 - 2.0 * g * mu, 1.5));
+}
+
+//Density distribution function
+float sampleVolume(float3 pos)
+{
+	float _Density = 9.0;
+
+	float3 container_ray = vec[9].x;
+	float rr = dot(pos, pos);
+	rr = sqrt(rr);
+	float f = exp(-rr);
+	float p = f * _Density;
+
+	if (p <= 0.0)
+	{
+		return p;
+	}		
+	p += SpiralNoiseC(512.0 + pos * 8.0) * 0.75;
+	pos = rotateY(pos, pos.y * SpiralNoiseC(pos * 4.0) * 2.0);
+	p += SpiralNoiseC(200.0 + pos * 3.0) * 1.5;
+	p *= rr / container_ray;
+
+	p = max(0.0, p);
+
+	return p;
+}
+
+float4 raymarch(float3 pos, float3 dir, float ds, int s)
+{
+	float3	_Light = float3(1.0, 1.0, 1.0);
+	float3	_LightPos = float3(0.0, 0.0, 0.0);
+	float	_LightIntensity = 0.2;
+	float3  _Emission = float3(0.3, 0.15, 0.0);
+	float3	_Absorption = float3(0.9, 0.7, 0.5);
+	float	_Mie = 0.6;
+	float	_G = 0.2;
+
+	float4 result = float4(0.0, 0.0, 0.0, 1.0);
+
+	int nb_steps = min(s, MAX_STEPS);
+	for (int i = 0; i < nb_steps; i++)
+	{
+		float p = sampleVolume(pos);
+		if (p > 0.0)
+		{
+			
+			float3 r = _LightPos - pos;
+			float atten = _LightIntensity / dot(r, r);
+			float3 ext = max(float3(0.000001, 0.000001, 0.000001), (_Absorption * p) + float3(_Mie * p, _Mie * p, _Mie * p));
+			float3 trans = exp(-ext * ds);
+			float3 lightDir = normalize(r);
+			float mu = dot(lightDir, dir);
+			float phase_res = phase(mu, _G);
+
+			float3 lum = _Emission + _Light * phase_res * (1.0 - _Absorption) * _Mie * p * atten;
+			float3 integral = (lum - (lum * trans)) / ext;
+
+			result.rgb += integral * result.a;
+			float3 div = float3(0.3333333, 0.3333333, 0.3333333);
+
+			result.a *= dot(trans, div);
+
+			if (result.a <= 0.1)
+			{
+				return result;
+			}
+					
+		}
+
+
+		pos += dir * ds;
+	}
+
+	result.rgb = clamp(result.rgb, 0, 1);
+	
+	return result;
+}
+
+float4 ps_main(PS_INTPUT input) : SV_Target
+{
+	float4 color_dest;
+
+	float4 camera_params = vec[0];
+	Matrix mat_cam = mat[1];
+	Matrix mat_pos = mat[5];
+	float3 container_ray = vec[9].x;
+
+	float camera_width = camera_params.x;
+	float camera_height = camera_params.y;
+	float camera_zn = camera_params.z;
+
+	float3 ray_origin;
+	
+	Matrix pos_rot = mat_pos;
+	pos_rot[3][0] = 0.0;
+	pos_rot[3][1] = 0.0;
+	pos_rot[3][2] = 0.0;
+	pos_rot = transpose(pos_rot); // inverse rot mat
+
+
+	ray_origin.x = mat_cam[3][0];
+	ray_origin.y = mat_cam[3][1];
+	ray_origin.z = mat_cam[3][2];
+
+
+	float3 container_pos;
+	container_pos.x = mat_pos[3][0];
+	container_pos.y = mat_pos[3][1];
+	container_pos.z = mat_pos[3][2];
+
+	float3 globalcontainer_rayOrigin = ray_origin - container_pos;
+	float3 localcontainer_rayOrigin = mul(globalcontainer_rayOrigin, pos_rot);
+
+
+
+	// compute camera-local ray direction
+	float4 localcam_rayDir;
+	localcam_rayDir.x = (input.TexCoord0.x - 0.5) * camera_width;
+	localcam_rayDir.y = ((1.0 - input.TexCoord0.y) - 0.5) * camera_height;
+	localcam_rayDir.z = -camera_zn;
+	localcam_rayDir.w = 1.0;
+
+	// compute global ray direction
+	mat_cam[3][0] = 0.0;
+	mat_cam[3][1] = 0.0;
+	mat_cam[3][2] = 0.0;
+	float4 global_rayDir = mul(localcam_rayDir, mat_cam);
+
+	// compute local container ray direction
+	float4 local_rayDir = mul(global_rayDir, pos_rot);
+		
+	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
+
+	float3 p0;
+	float3 p1;
+
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, float3(0.0, 0.0, 0.0), container_ray)==true)
+	{
+		//if (p0.z < localcontainer_rayOrigin.z && p1.z < localcontainer_rayOrigin.z)
+		{
+			if (dot(localcontainer_rayOrigin, localcontainer_rayOrigin) < dot(p0, p0))
+			{
+				//camera a l'exterieur de la sphere
+				p0 = localcontainer_rayOrigin;
+			}
+			//p0 = point origine du rayon
+
+			float dist = length(p1 - p0);
+			int s = int(dist / STEP_SIZE) + 1;
+
+			float4 integral = raymarch(p0, local_rayDir, STEP_SIZE, s);
+
+			color_dest.rgb = lerp(integral.rgb, color_source.rgb, integral.a);
+		}
+		/*
+		else
+		{
+			color_dest.rgb = color_source.rgb;
+			color_dest.a = 1.0;
+
+		}
+		*/
+		
+	}
+	else
+	{
+		color_dest.rgb = color_source.rgb;
+		color_dest.a = 1.0;
+	}
+
+	
+	
+	
+	
+	return color_dest;
+	
+}
