@@ -317,7 +317,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 		{
 			if (dot(localcontainer_rayOrigin, localcontainer_rayOrigin) < dot(p0, p0))
 			{
-				//camera a l'exterieur de la sphere
+				//camera a l'interieur de la sphere
 				p0 = localcontainer_rayOrigin;
 			}
 			//p0 = point origine du rayon
