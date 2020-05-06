@@ -244,7 +244,6 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s)
 					
 		}
 
-
 		pos += dir * ds;
 	}
 
@@ -262,11 +261,19 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	Matrix mat_pos = mat[5];
 	float3 container_ray = vec[9].x;
 
+	float2 resolution = vec[10].xy;
+
 	float camera_width = camera_params.x;
 	float camera_height = camera_params.y;
 	float camera_zn = camera_params.z;
 
 	float3 ray_origin;
+
+	Matrix bayer = { 0.0, 0.5, 0.125, 0.625 ,
+				     0.75, 0.25, 0.875, 0.375,
+					 0.1875, 0.6875, 0.0625, 0.5625,
+					 0.9375, 0.4375, 0.8125, 0.3125
+					};
 	
 	Matrix pos_rot = mat_pos;
 	pos_rot[3][0] = 0.0;
@@ -320,7 +327,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 				//camera a l'interieur de la sphere
 				p0 = localcontainer_rayOrigin;
 			}
-			//p0 = point origine du rayon
+			
+			//Bayer matrix ordered depth jittering
+			float width = (input.TexCoord0.x * resolution.x);
+			float height = (input.TexCoord0.y * resolution.y);
+			width = fmod(width, 4.0);
+			height = fmod(height, 4.0);
+			float offset = bayer[int(width)][int(height)];
+			p0 -= local_rayDir * offset * STEP_SIZE * 2.0;
+
 
 			float dist = length(p1 - p0);
 			int s = int(dist / STEP_SIZE) + 1;
