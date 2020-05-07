@@ -144,7 +144,7 @@ bool raycastSphere(float3 ro, float3 rd, out float3 p0, out float3 p1, float3 ce
 
 #define MAX_STEPS 128
 #define STEP_SIZE 0.05
-#define SPHERE_RAY 1.25
+#define SPHERE_RAY 1.33
 
 
 float SpiralNoiseC(float3 p)
@@ -178,7 +178,7 @@ float phase(float mu, float g)
 }
 
 //Density distribution function
-float sampleVolume(float3 pos)
+float sampleVolume(float3 pos, float seed1, float seed2, bool rotate)
 {
 	float _Density = 9.0;
 
@@ -191,9 +191,11 @@ float sampleVolume(float3 pos)
 	{
 		return p;
 	}		
-	p += SpiralNoiseC(512.0 + pos * 8.0) * 0.75;
-	pos = rotateY(pos, pos.y * SpiralNoiseC(pos * 4.0) * 2.0);
-	p += SpiralNoiseC(200.0 + pos * 3.0) * 1.5;
+	p += SpiralNoiseC(seed1 + pos * 8.0) * 0.75;
+
+	if(rotate) pos = rotateY(pos, pos.y * SpiralNoiseC(pos * 4.0) * 2.0);
+
+	p += SpiralNoiseC(seed2 + pos * 3.0) * 1.5;
 	p *= rr / SPHERE_RAY;
 
 	p = max(0.0, p);
@@ -201,7 +203,7 @@ float sampleVolume(float3 pos)
 	return p;
 }
 
-float4 raymarch(float3 pos, float3 dir, float ds, int s)
+float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed2, bool rotate)
 {
 	float3	_Light = float3(1.0, 1.0, 1.0);
 	float3	_LightPos = float3(0.0, 0.0, 0.0);
@@ -216,7 +218,7 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s)
 	int nb_steps = min(s, MAX_STEPS);
 	for (int i = 0; i < nb_steps; i++)
 	{
-		float p = sampleVolume(pos);
+		float p = sampleVolume(pos, seed1, seed2, rotate);
 		if (p > 0.0)
 		{
 			
@@ -251,7 +253,8 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s)
 	return result;
 }
 
-float3 computePixelColor(float3 current_color, float3 rayOrigin, float4 rayDir, float3 p0, float3 p1, float3 sphere_localpos, float2 resolution, float2 texture_coords)
+float3 computePixelColor(float3 current_color, float3 rayOrigin, float4 rayDir, float3 p0, float3 p1, float3 sphere_localpos, 
+							float2 resolution, float2 texture_coords, float seed1, float seed2, bool rotate)
 {
 	Matrix bayer = 
 	{ 
@@ -287,7 +290,7 @@ float3 computePixelColor(float3 current_color, float3 rayOrigin, float4 rayDir, 
 	float dist = length(p1 - p0);
 	int s = int(dist / STEP_SIZE) + 1;
 
-	float4 integral = raymarch(p0, rayDir, STEP_SIZE, s);
+	float4 integral = raymarch(p0, rayDir, STEP_SIZE, s, seed1, seed2, rotate);
 	
 	updated_color = lerp(integral.rgb, current_color.rgb, integral.a);
 	return updated_color;
@@ -355,23 +358,23 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 p0;
 	float3 p1;
 
-	float3 sphere0_localpos = { 0.0, -0.5, 0.0 };
-	float3 sphere1_localpos = { 0.45, 0.99, 0.0 };
-	float3 sphere2_localpos = { -1.3, -1.2, 0.0 };
+	float3 sphere0_localpos = { 0.0, -0.35, 0.3 };
+	float3 sphere1_localpos = { 0.25, 0.59, 0.2 };
+	float3 sphere2_localpos = { -0.77, -0.7, -0.45 };
 
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, SPHERE_RAY)==true)
 	{		
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, 512.0, 200.0, true);
 	}
 
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, SPHERE_RAY) == true)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0, 344.6, 170.0, true);
 	}
 
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere2_localpos, SPHERE_RAY) == true)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, 1908.0, 2001.0, false);
 	}
 
 	current_color.a = 1.0; //alpha value : whatever
