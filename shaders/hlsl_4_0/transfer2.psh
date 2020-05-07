@@ -144,7 +144,7 @@ bool raycastSphere(float3 ro, float3 rd, out float3 p0, out float3 p1, float3 ce
 
 #define MAX_STEPS 128
 #define STEP_SIZE 0.05
-
+#define SPHERE_RAY 1.25
 
 
 float SpiralNoiseC(float3 p)
@@ -182,7 +182,6 @@ float sampleVolume(float3 pos)
 {
 	float _Density = 9.0;
 
-	float3 container_ray = vec[9].x;
 	float rr = dot(pos, pos);
 	rr = sqrt(rr);
 	float f = exp(-rr);
@@ -195,7 +194,7 @@ float sampleVolume(float3 pos)
 	p += SpiralNoiseC(512.0 + pos * 8.0) * 0.75;
 	pos = rotateY(pos, pos.y * SpiralNoiseC(pos * 4.0) * 2.0);
 	p += SpiralNoiseC(200.0 + pos * 3.0) * 1.5;
-	p *= rr / container_ray;
+	p *= rr / SPHERE_RAY;
 
 	p = max(0.0, p);
 
@@ -301,7 +300,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float4 camera_params = vec[0];
 	Matrix mat_cam = mat[1];
 	Matrix mat_pos = mat[5];
-	float3 container_ray = vec[9].x;
+
+
 
 	float2 resolution = vec[10].xy;
 
@@ -359,17 +359,17 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 sphere1_localpos = { 0.45, 0.99, 0.0 };
 	float3 sphere2_localpos = { -1.3, -1.2, 0.0 };
 
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, container_ray)==true)
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, SPHERE_RAY)==true)
 	{		
 		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0);
 	}
 
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, container_ray) == true)
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, SPHERE_RAY) == true)
 	{
 		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0);
 	}
 
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere2_localpos, container_ray) == true)
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere2_localpos, SPHERE_RAY) == true)
 	{
 		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0);
 	}
