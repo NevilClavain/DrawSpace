@@ -317,42 +317,32 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	float3 p0;
 	float3 p1;
+	float3 sphere_localpos = { 0.0, 0.0, 0.0 };
 
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, float3(0.0, 0.0, 0.0), container_ray)==true)
-	{
-		//if (p0.z < localcontainer_rayOrigin.z && p1.z < localcontainer_rayOrigin.z)
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere_localpos, container_ray)==true)
+	{		
+		if (dot(localcontainer_rayOrigin, localcontainer_rayOrigin) < dot(p0, p0))
 		{
-			if (dot(localcontainer_rayOrigin, localcontainer_rayOrigin) < dot(p0, p0))
-			{
-				//camera a l'interieur de la sphere
-				p0 = localcontainer_rayOrigin;
-			}
-			
-			//Bayer matrix ordered depth jittering
-			float width = (input.TexCoord0.x * resolution.x);
-			float height = (input.TexCoord0.y * resolution.y);
-			width = fmod(width, 4.0);
-			height = fmod(height, 4.0);
-			float offset = bayer[int(width)][int(height)];
-			p0 -= local_rayDir * offset * STEP_SIZE * 2.0;
-
-
-			float dist = length(p1 - p0);
-			int s = int(dist / STEP_SIZE) + 1;
-
-			float4 integral = raymarch(p0, local_rayDir, STEP_SIZE, s);
-
-			color_dest.rgb = lerp(integral.rgb, color_source.rgb, integral.a);
+			//camera a l'interieur de la sphere
+			p0 = localcontainer_rayOrigin;
 		}
-		/*
-		else
-		{
-			color_dest.rgb = color_source.rgb;
-			color_dest.a = 1.0;
-
-		}
-		*/
+				
+		//Bayer matrix ordered depth jittering
+		float width = (input.TexCoord0.x * resolution.x);
+		float height = (input.TexCoord0.y * resolution.y);
+		width = fmod(width, 4.0);
+		height = fmod(height, 4.0);
+		float offset = bayer[int(width)][int(height)];
+		p0 -= local_rayDir * offset * STEP_SIZE * 2.0;
 		
+		p0 -= sphere_localpos;
+
+		float dist = length(p1 - p0);
+		int s = int(dist / STEP_SIZE) + 1;
+
+		float4 integral = raymarch(p0, local_rayDir, STEP_SIZE, s);
+
+		color_dest.rgb = lerp(integral.rgb, color_source.rgb, integral.a);
 	}
 	else
 	{
@@ -360,10 +350,5 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 		color_dest.a = 1.0;
 	}
 
-	
-	
-	
-	
-	return color_dest;
-	
+	return color_dest;	
 }
