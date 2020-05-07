@@ -252,9 +252,46 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s)
 	return result;
 }
 
+float3 computePixelColor(float3 current_color, float3 rayOrigin, float4 rayDir, float3 p0, float3 p1, float3 sphere_localpos, float2 resolution, float2 texture_coords)
+{
+	Matrix bayer = 
+	{ 
+		0.0, 0.5, 0.125, 0.625 ,
+		0.75, 0.25, 0.875, 0.375,
+		0.1875, 0.6875, 0.0625, 0.5625,
+		0.9375, 0.4375, 0.8125, 0.3125
+	};
+
+	float3 updated_color;
+
+	if (dot(rayOrigin, rayOrigin) < dot(p0, p0))
+	{
+		//camera a l'interieur de la sphere
+		p0 = rayOrigin;
+	}
+
+	//Bayer matrix ordered depth jittering
+	float width = (texture_coords.x * resolution.x);
+	float height = (texture_coords.y * resolution.y);
+	width = fmod(width, 4.0);
+	height = fmod(height, 4.0);
+	float offset = bayer[int(width)][int(height)];
+	p0 -= rayDir * offset * STEP_SIZE * 2.0;
+
+	p0 -= sphere_localpos;
+
+	float dist = length(p1 - p0);
+	int s = int(dist / STEP_SIZE) + 1;
+
+	float4 integral = raymarch(p0, rayDir, STEP_SIZE, s);
+	
+	updated_color = lerp(integral.rgb, current_color.rgb, integral.a);
+	return updated_color;
+}
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-	float4 color_dest;
+	float4 current_color;
 
 	float4 camera_params = vec[0];
 	Matrix mat_cam = mat[1];
@@ -269,11 +306,14 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	float3 ray_origin;
 
+	/*
 	Matrix bayer = { 0.0, 0.5, 0.125, 0.625 ,
 				     0.75, 0.25, 0.875, 0.375,
 					 0.1875, 0.6875, 0.0625, 0.5625,
 					 0.9375, 0.4375, 0.8125, 0.3125
 					};
+				*/
+
 	
 	Matrix pos_rot = mat_pos;
 	pos_rot[3][0] = 0.0;
@@ -313,42 +353,25 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	// compute local container ray direction
 	float4 local_rayDir = mul(global_rayDir, pos_rot);
 		
-	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
+	current_color.rgb = txDiffuse.Sample(sam, input.TexCoord0);
 
 	float3 p0;
 	float3 p1;
-	float3 sphere_localpos = { 0.0, 0.0, 0.0 };
 
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere_localpos, container_ray)==true)
+	float3 sphere0_localpos = { 0.0, -0.5, 0.0 };
+
+	float3 sphere1_localpos = { 0.45, 0.99, 0.0 };
+
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, container_ray)==true)
 	{		
-		if (dot(localcontainer_rayOrigin, localcontainer_rayOrigin) < dot(p0, p0))
-		{
-			//camera a l'interieur de la sphere
-			p0 = localcontainer_rayOrigin;
-		}
-				
-		//Bayer matrix ordered depth jittering
-		float width = (input.TexCoord0.x * resolution.x);
-		float height = (input.TexCoord0.y * resolution.y);
-		width = fmod(width, 4.0);
-		height = fmod(height, 4.0);
-		float offset = bayer[int(width)][int(height)];
-		p0 -= local_rayDir * offset * STEP_SIZE * 2.0;
-		
-		p0 -= sphere_localpos;
-
-		float dist = length(p1 - p0);
-		int s = int(dist / STEP_SIZE) + 1;
-
-		float4 integral = raymarch(p0, local_rayDir, STEP_SIZE, s);
-
-		color_dest.rgb = lerp(integral.rgb, color_source.rgb, integral.a);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0);
 	}
-	else
+
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, container_ray) == true)
 	{
-		color_dest.rgb = color_source.rgb;
-		color_dest.a = 1.0;
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0);
 	}
 
-	return color_dest;	
+	current_color.a = 1.0; //alpha value : whatever
+	return current_color;
 }
