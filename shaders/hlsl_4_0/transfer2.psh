@@ -41,64 +41,6 @@ struct PS_INTPUT
 #include "mat_input_constants.hlsl"
 #include "fbm.hlsl"
 
-float2 rayBoxDst(float3 boundsMin, float3 boundsMax, float3 rayOrigin, float3 rayDir)
-{
-	float3 t0;
-	float3 t1;
-	float3 tmin;
-	float3 tmax;
-
-	if (abs(rayDir.x) > 0.0)
-	{
-		t0.x = (boundsMin.x - rayOrigin.x) / rayDir.x;
-		t1.x = (boundsMax.x - rayOrigin.x) / rayDir.x;
-
-		tmin.x = min(t0.x, t1.x);
-		tmax.x = max(t0.x, t1.x);
-	}
-	else
-	{
-		tmin.x = -2000000000;
-		tmax.x = 2000000000;
-	}
-
-	if (abs(rayDir.y) > 0.0)
-	{
-		t0.y = (boundsMin.y - rayOrigin.y) / rayDir.y;
-		t1.y = (boundsMax.y - rayOrigin.y) / rayDir.y;
-
-		tmin.y = min(t0.y, t1.y);
-		tmax.y = max(t0.y, t1.y);
-	}
-	else
-	{
-		tmin.y = -2000000000;
-		tmax.y = 2000000000;
-	}
-
-	if (abs(rayDir.z) > 0.0)
-	{
-		t0.z = (boundsMin.z - rayOrigin.z) / rayDir.z;
-		t1.z = (boundsMax.z - rayOrigin.z) / rayDir.z;
-
-		tmin.z = min(t0.z, t1.z);
-		tmax.z = max(t0.z, t1.z);
-	}
-	else
-	{
-		tmin.z = -2000000000;
-		tmax.z = 2000000000;
-	}
-
-	float dstA = max(max(tmin.x, tmin.y), tmin.z);
-	float dstB = min(tmax.x, min(tmax.y, tmax.z));
-
-	float dstToBox = max(0, dstA);
-	float dstInsideBox = max(0, dstB - dstToBox);
-
-	return float2(dstToBox, dstInsideBox);
-}
-
 
 //Y-axis rotation matrix
 float3 rotateY(float3 p, float t)
@@ -178,14 +120,12 @@ float phase(float mu, float g)
 }
 
 //Density distribution function
-float sampleVolume(float3 pos, float seed1, float seed2, bool rotate)
+float sampleVolume(float3 pos, float seed1, float seed2, bool rotate, float density)
 {
-	float _Density = 9.0;
-
 	float rr = dot(pos, pos);
 	rr = sqrt(rr);
 	float f = exp(-rr);
-	float p = f * _Density;
+	float p = f * density;
 
 	if (p <= 0.0)
 	{
@@ -207,21 +147,23 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed
 {
 	float3	_Light = float3(1.0, 1.0, 1.0);
 	float3	_LightPos = float3(0.0, 0.0, 0.0);
-	float	_LightIntensity = 0.2;
-	float3  _Emission = float3(0.3, 0.15, 0.0);
-	float3	_Absorption = float3(0.9, 0.7, 0.5);
+
 	float	_Mie = 0.6;
 	float	_G = 0.2;
 
+	float	_LightIntensity = 0.2;
+	float3  _Emission = float3(0.3, 0.15, 0.9);
+	float3	_Absorption = float3(0.9, 0.7, 0.45);
+	float   _Density = 11.0;
+	
 	float4 result = float4(0.0, 0.0, 0.0, 1.0);
 
 	int nb_steps = min(s, MAX_STEPS);
 	for (int i = 0; i < nb_steps; i++)
 	{
-		float p = sampleVolume(pos, seed1, seed2, rotate);
+		float p = sampleVolume(pos, seed1, seed2, rotate, _Density);
 		if (p > 0.0)
-		{
-			
+		{			
 			float3 r = _LightPos - pos;
 			float atten = _LightIntensity / dot(r, r);
 			float3 ext = max(float3(0.000001, 0.000001, 0.000001), (_Absorption * p) + float3(_Mie * p, _Mie * p, _Mie * p));
@@ -241,10 +183,8 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed
 			if (result.a <= 0.1)
 			{
 				return result;
-			}
-					
+			}					
 		}
-
 		pos += dir * ds;
 	}
 
@@ -304,9 +244,32 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	Matrix mat_cam = mat[1];
 	Matrix mat_pos = mat[5];
 
-
-
 	float2 resolution = vec[10].xy;
+
+	/////////////////////////////////////////////////////////////////////////////////
+
+	// vec[11] => emission color
+
+	// vec[12] => absorption color
+
+	// vec[13] => .x = number of extra sphere [1-3]
+	//         => .y = sphere0 light intensity	
+
+	// vec[14] => 4 spheres density [8.0 - 14.0]
+
+	// vec[15] => 4 spheres rotatey twist [false - true]
+
+	// vec[16] => seed1 for 4 spheres
+
+	// vec[17] => seed2 for 4 spheres
+
+	// vec[20] => sphere1 local pos
+	// vec[21] => sphere2 local pos
+	// vec[22] => sphere3 local pos
+
+
+
+	/////////////////////////////////////////////////////////////////////////////////
 
 	float camera_width = camera_params.x;
 	float camera_height = camera_params.y;
@@ -358,24 +321,26 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 p0;
 	float3 p1;
 
-	float3 sphere0_localpos = { 0.0, -0.35, 0.3 };
-	float3 sphere1_localpos = { 0.25, 0.59, 0.2 };
-	float3 sphere2_localpos = { -0.77, -0.7, -0.45 };
+	float3 sphere0_localpos = { 0.0, 0.0, 0.0 };
+	float3 sphere1_localpos = { -0.8, -1.1, 0.0 };
+	float3 sphere2_localpos = { 0.0, 0.92, -0.85 };
 
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, SPHERE_RAY)==true)
 	{		
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, 512.0, 200.0, true);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, 512, 200, true);
 	}
-
+	
+	
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, SPHERE_RAY) == true)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0, 344.6, 170.0, true);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0, 128, 887, false);
 	}
-
+	
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere2_localpos, SPHERE_RAY) == true)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, 1908.0, 2001.0, false);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, 655, 100, true);
 	}
+	
 
 	current_color.a = 1.0; //alpha value : whatever
 	return current_color;
