@@ -149,8 +149,107 @@ struct LightParams
 	float3  _Emission;
 	float3	_Absorption;
 	float   _Density;
-
 };
+
+
+struct NebParams
+{
+	int			nbExtraSpheres;
+
+	LightParams lightParams[4];
+
+	bool		sphereRotatey[4];
+
+	float       seed1[4];
+	float       seed2[4];
+
+	float3		 spherePos[3];  // pos pour spheres 1 a 3
+};
+
+/////////////////////////////////////////////////////////////////////////////////
+
+// vec[base] => emission color
+
+// vec[base + 1] => absorption color
+
+// vec[base + 2] => .x = number of extra sphere [1-3]
+//				 => .y = sphere0 light intensity	
+
+// vec[base + 3] => 4 spheres density [8.0 - 14.0]
+
+// vec[base + 4] => 4 spheres rotatey twist [false - true]
+
+// vec[base + 5] => seed1 for 4 spheres
+
+// vec[base + 6] => seed2 for 4 spheres
+
+// vec[base + 7] => sphere1 local pos
+// vec[base + 8] => sphere2 local pos
+// vec[base + 9] => sphere3 local pos
+
+
+NebParams FillNebParams(int offset)
+{
+	NebParams nb;
+
+	nb.nbExtraSpheres = vec[offset + 2].x;
+
+	for (int i = 0; i < nb.nbExtraSpheres; i++)
+	{
+		nb.lightParams[i]._Emission = vec[offset].xyz;
+		nb.lightParams[i]._Absorption = vec[offset + 1].xyz;
+
+		if (i == 0)
+		{
+			// _LightIntensity pour la sphere 0 (sphere centrale) seulement
+
+			nb.lightParams[i]._LightIntensity = vec[offset + 2].y;
+			nb.lightParams[i]._Density = vec[offset + 3].x;
+
+			nb.sphereRotatey[i] = vec[offset + 4].x;
+
+			nb.seed1[i] = vec[offset + 5].x;
+			nb.seed2[i] = vec[offset + 6].x;			
+		}
+		else if(i == 1)
+		{
+			nb.lightParams[i]._LightIntensity = 0.0;
+			nb.lightParams[i]._Density = vec[offset + 3].y;
+
+			nb.sphereRotatey[i] = vec[offset + 4].y;
+
+			nb.seed1[i] = vec[offset + 5].y;
+			nb.seed2[i] = vec[offset + 6].y;
+
+			nb.spherePos[i] = vec[offset + 7];
+		}
+		else if (i == 2)
+		{
+			nb.lightParams[i]._LightIntensity = 0.0;
+			nb.lightParams[i]._Density = vec[offset + 3].z;
+
+			nb.sphereRotatey[i] = vec[offset + 4].z;
+
+			nb.seed1[i] = vec[offset + 5].z;
+			nb.seed2[i] = vec[offset + 6].z;
+
+			nb.spherePos[i] = vec[offset + 8];
+		}
+		else if (i == 3)
+		{
+			nb.lightParams[i]._LightIntensity = 0.0;
+			nb.lightParams[i]._Density = vec[offset + 3].w;
+
+			nb.sphereRotatey[i] = vec[offset + 4].w;
+
+			nb.seed1[i] = vec[offset + 5].w;
+			nb.seed2[i] = vec[offset + 6].w;
+
+			nb.spherePos[i] = vec[offset + 9];
+		}
+	}	
+	return nb;
+}
 
 float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed2, bool rotate, LightParams lightParams)
 {
@@ -159,13 +258,6 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed
 
 	float	_Mie = 0.6;
 	float	_G = 0.2;
-
-	/*
-	float	_LightIntensity = 0.2;
-	float3  _Emission = float3(0.3, 0.15, 0.9);
-	float3	_Absorption = float3(0.9, 0.7, 0.45);
-	float   _Density = 11.0;
-	*/
 	
 	float4 result = float4(0.0, 0.0, 0.0, 1.0);
 
@@ -257,28 +349,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 	float2 resolution = vec[10].xy;
 
-	/////////////////////////////////////////////////////////////////////////////////
-
-	// vec[11] => emission color
-
-	// vec[12] => absorption color
-
-	// vec[13] => .x = number of extra sphere [1-3]
-	//         => .y = sphere0 light intensity	
-
-	// vec[14] => 4 spheres density [8.0 - 14.0]
-
-	// vec[15] => 4 spheres rotatey twist [false - true]
-
-	// vec[16] => seed1 for 4 spheres
-
-	// vec[17] => seed2 for 4 spheres
-
-	// vec[20] => sphere1 local pos
-	// vec[21] => sphere2 local pos
-	// vec[22] => sphere3 local pos
-
-
 
 	/////////////////////////////////////////////////////////////////////////////////
 
@@ -329,8 +399,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 		
 	current_color.rgb = txDiffuse.Sample(sam, input.TexCoord0);
 
+
+
+
 	float3 p0;
 	float3 p1;
+
+	NebParams neb0 = FillNebParams(11);
 
 	float3 sphere0_localpos = { 0.0, 0.0, 0.0 };
 	float3 sphere1_localpos = { 1.2, -0.5, 0.6 };
