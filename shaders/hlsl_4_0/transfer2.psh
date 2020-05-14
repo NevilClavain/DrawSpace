@@ -143,7 +143,16 @@ float sampleVolume(float3 pos, float seed1, float seed2, bool rotate, float dens
 	return p;
 }
 
-float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed2, bool rotate)
+struct LightParams
+{
+	float	_LightIntensity;
+	float3  _Emission;
+	float3	_Absorption;
+	float   _Density;
+
+};
+
+float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed2, bool rotate, LightParams lightParams)
 {
 	float3	_Light = float3(1.0, 1.0, 1.0);
 	float3	_LightPos = float3(0.0, 0.0, 0.0);
@@ -151,28 +160,30 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed
 	float	_Mie = 0.6;
 	float	_G = 0.2;
 
+	/*
 	float	_LightIntensity = 0.2;
 	float3  _Emission = float3(0.3, 0.15, 0.9);
 	float3	_Absorption = float3(0.9, 0.7, 0.45);
 	float   _Density = 11.0;
+	*/
 	
 	float4 result = float4(0.0, 0.0, 0.0, 1.0);
 
 	int nb_steps = min(s, MAX_STEPS);
 	for (int i = 0; i < nb_steps; i++)
 	{
-		float p = sampleVolume(pos, seed1, seed2, rotate, _Density);
+		float p = sampleVolume(pos, seed1, seed2, rotate, lightParams._Density);
 		if (p > 0.0)
 		{			
 			float3 r = _LightPos - pos;
-			float atten = _LightIntensity / dot(r, r);
-			float3 ext = max(float3(0.000001, 0.000001, 0.000001), (_Absorption * p) + float3(_Mie * p, _Mie * p, _Mie * p));
+			float atten = lightParams._LightIntensity / dot(r, r);
+			float3 ext = max(float3(0.000001, 0.000001, 0.000001), (lightParams._Absorption * p) + float3(_Mie * p, _Mie * p, _Mie * p));
 			float3 trans = exp(-ext * ds);
 			float3 lightDir = normalize(r);
 			float mu = dot(lightDir, dir);
 			float phase_res = phase(mu, _G);
 
-			float3 lum = _Emission + _Light * phase_res * (1.0 - _Absorption) * _Mie * p * atten;
+			float3 lum = lightParams._Emission + _Light * phase_res * (1.0 - lightParams._Absorption) * _Mie * p * atten;
 			float3 integral = (lum - (lum * trans)) / ext;
 
 			result.rgb += integral * result.a;
@@ -194,7 +205,7 @@ float4 raymarch(float3 pos, float3 dir, float ds, int s, float seed1, float seed
 }
 
 float3 computePixelColor(float3 current_color, float3 rayOrigin, float4 rayDir, float3 p0, float3 p1, float3 sphere_localpos, 
-							float2 resolution, float2 texture_coords, float seed1, float seed2, bool rotate)
+							float2 resolution, float2 texture_coords, float seed1, float seed2, bool rotate, LightParams lightParams)
 {
 	Matrix bayer = 
 	{ 
@@ -230,7 +241,7 @@ float3 computePixelColor(float3 current_color, float3 rayOrigin, float4 rayDir, 
 	float dist = length(p1 - p0);
 	int s = int(dist / STEP_SIZE) + 1;
 
-	float4 integral = raymarch(p0, rayDir, STEP_SIZE, s, seed1, seed2, rotate);
+	float4 integral = raymarch(p0, rayDir, STEP_SIZE, s, seed1, seed2, rotate, lightParams);
 	
 	updated_color = lerp(integral.rgb, current_color.rgb, integral.a);
 	return updated_color;
@@ -322,23 +333,42 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 p1;
 
 	float3 sphere0_localpos = { 0.0, 0.0, 0.0 };
-	float3 sphere1_localpos = { -0.8, -1.1, 0.0 };
+	float3 sphere1_localpos = { 1.2, -0.5, 0.6 };
 	float3 sphere2_localpos = { 0.0, 0.92, -0.85 };
+
+	LightParams sphere0_lp;
+	sphere0_lp._LightIntensity = 0.1;
+	sphere0_lp._Emission = float3(0.3, 0.15, 0.9);
+	sphere0_lp._Absorption = float3(0.9, 0.7, 0.45);
+	sphere0_lp._Density = 11.0;
+
+	LightParams sphere1_lp;
+	sphere1_lp._LightIntensity = 0.0;
+	sphere1_lp._Emission = float3(0.3, 0.15, 0.9);
+	sphere1_lp._Absorption = float3(0.9, 0.7, 0.45);
+	sphere1_lp._Density = 9.0;
+
+	LightParams sphere2_lp;
+	sphere2_lp._LightIntensity = 0.0;
+	sphere2_lp._Emission = float3(0.3, 0.15, 0.9);
+	sphere2_lp._Absorption = float3(0.9, 0.7, 0.45);
+	sphere2_lp._Density = 8.0;
+
 
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, SPHERE_RAY)==true)
 	{		
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, 512, 200, true);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, 512, 200, true, sphere0_lp);
 	}
 	
 	
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, SPHERE_RAY) == true)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0, 128, 887, false);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0, -98, 887, false, sphere1_lp);
 	}
 	
 	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere2_localpos, SPHERE_RAY) == true)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, 655, 100, true);
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, -456, 100, false, sphere2_lp);
 	}
 	
 
