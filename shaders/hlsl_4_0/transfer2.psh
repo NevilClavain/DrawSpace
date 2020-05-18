@@ -400,13 +400,21 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	current_color.rgb = txDiffuse.Sample(sam, input.TexCoord0);
 
 
-
-
 	float3 p0;
 	float3 p1;
 
+	float3 sphere0_localpos = { 0.0, 0.0, 0.0 };
+
 	NebParams neb0 = FillNebParams(11);
 
+	// render central sphere (sphere0)
+	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, SPHERE_RAY) == true)
+	{
+		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, neb0.seed1[0], neb0.seed2[0], neb0.sphereRotatey[0], neb0.lightParams[0]);
+	}
+
+
+/*
 	float3 sphere0_localpos = { 0.0, 0.0, 0.0 };
 	float3 sphere1_localpos = { 1.2, -0.5, 0.6 };
 	float3 sphere2_localpos = { 0.0, 0.92, -0.85 };
@@ -445,7 +453,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	{
 		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, -456, 100, false, sphere2_lp);
 	}
-	
+*/	
 
 	current_color.a = 1.0; //alpha value : whatever
 	return current_color;
