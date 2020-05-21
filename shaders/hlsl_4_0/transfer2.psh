@@ -155,15 +155,16 @@ struct LightParams
 struct NebParams
 {
 	int			nbExtraSpheres;
-
+	
 	LightParams lightParams[4];
 
 	bool		sphereRotatey[4];
-
+	
 	float       seed1[4];
 	float       seed2[4];
 
 	float3		 spherePos[3];  // pos pour spheres 1 a 3
+	
 };
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -196,6 +197,7 @@ NebParams FillNebParams(int offset)
 
 	for (int i = 0; i < nb.nbExtraSpheres; i++)
 	{
+		
 		nb.lightParams[i]._Emission = vec[offset].xyz;
 		nb.lightParams[i]._Absorption = vec[offset + 1].xyz;
 
@@ -203,51 +205,56 @@ NebParams FillNebParams(int offset)
 		{
 			// _LightIntensity pour la sphere 0 (sphere centrale) seulement
 
-			nb.lightParams[i]._LightIntensity = vec[offset + 2].y;
-			nb.lightParams[i]._Density = vec[offset + 3].x;
+			nb.lightParams[0]._LightIntensity = vec[offset + 2].y;
+			nb.lightParams[0]._Density = vec[offset + 3].x;
 
-			nb.sphereRotatey[i] = vec[offset + 4].x;
+			nb.sphereRotatey[0] = vec[offset + 4].x;
 
-			nb.seed1[i] = vec[offset + 5].x;
-			nb.seed2[i] = vec[offset + 6].x;			
+			nb.seed1[0] = vec[offset + 5].x;
+			nb.seed2[0] = vec[offset + 6].x;
+
+			//nb.spherePos[0] = 0.0;
+			
 		}
 		else if(i == 1)
 		{
-			nb.lightParams[i]._LightIntensity = 0.0;
-			nb.lightParams[i]._Density = vec[offset + 3].y;
+			nb.lightParams[1]._LightIntensity = 0.0;
+			nb.lightParams[1]._Density = vec[offset + 3].y;
 
-			nb.sphereRotatey[i] = vec[offset + 4].y;
+			nb.sphereRotatey[1] = vec[offset + 4].y;
 
-			nb.seed1[i] = vec[offset + 5].y;
-			nb.seed2[i] = vec[offset + 6].y;
+			nb.seed1[1] = vec[offset + 5].y;
+			nb.seed2[1] = vec[offset + 6].y;
 
-			nb.spherePos[i] = vec[offset + 7];
+			nb.spherePos[0] = vec[offset + 7];
 		}
 		else if (i == 2)
 		{
-			nb.lightParams[i]._LightIntensity = 0.0;
-			nb.lightParams[i]._Density = vec[offset + 3].z;
+			nb.lightParams[2]._LightIntensity = 0.0;
+			nb.lightParams[2]._Density = vec[offset + 3].z;
 
-			nb.sphereRotatey[i] = vec[offset + 4].z;
+			nb.sphereRotatey[2] = vec[offset + 4].z;
 
-			nb.seed1[i] = vec[offset + 5].z;
-			nb.seed2[i] = vec[offset + 6].z;
+			nb.seed1[2] = vec[offset + 5].z;
+			nb.seed2[2] = vec[offset + 6].z;
 
-			nb.spherePos[i] = vec[offset + 8];
+			nb.spherePos[1] = vec[offset + 8];
 		}
-		else if (i == 3)
+		else
 		{
-			nb.lightParams[i]._LightIntensity = 0.0;
-			nb.lightParams[i]._Density = vec[offset + 3].w;
+			nb.lightParams[3]._LightIntensity = 0.0;
+			nb.lightParams[3]._Density = vec[offset + 3].w;
 
-			nb.sphereRotatey[i] = vec[offset + 4].w;
+			nb.sphereRotatey[3] = vec[offset + 4].w;
 
-			nb.seed1[i] = vec[offset + 5].w;
-			nb.seed2[i] = vec[offset + 6].w;
+			nb.seed1[3] = vec[offset + 5].w;
+			nb.seed2[3] = vec[offset + 6].w;
 
-			nb.spherePos[i] = vec[offset + 9];
+			nb.spherePos[2] = vec[offset + 9];
 		}
-	}	
+		
+	}
+
 	return nb;
 }
 
@@ -379,8 +386,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float3 globalcontainer_rayOrigin = ray_origin - container_pos;
 	float3 localcontainer_rayOrigin = mul(globalcontainer_rayOrigin, pos_rot);
 
-
-
 	// compute camera-local ray direction
 	float4 localcam_rayDir;
 	localcam_rayDir.x = (input.TexCoord0.x - 0.5) * camera_width;
@@ -399,7 +404,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 		
 	current_color.rgb = txDiffuse.Sample(sam, input.TexCoord0);
 
-
 	float3 p0;
 	float3 p1;
 
@@ -413,47 +417,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, neb0.seed1[0], neb0.seed2[0], neb0.sphereRotatey[0], neb0.lightParams[0]);
 	}
 
-
-/*
-	float3 sphere0_localpos = { 0.0, 0.0, 0.0 };
-	float3 sphere1_localpos = { 1.2, -0.5, 0.6 };
-	float3 sphere2_localpos = { 0.0, 0.92, -0.85 };
-
-	LightParams sphere0_lp;
-	sphere0_lp._LightIntensity = 0.1;
-	sphere0_lp._Emission = float3(0.3, 0.15, 0.9);
-	sphere0_lp._Absorption = float3(0.9, 0.7, 0.45);
-	sphere0_lp._Density = 11.0;
-
-	LightParams sphere1_lp;
-	sphere1_lp._LightIntensity = 0.0;
-	sphere1_lp._Emission = float3(0.3, 0.15, 0.9);
-	sphere1_lp._Absorption = float3(0.9, 0.7, 0.45);
-	sphere1_lp._Density = 9.0;
-
-	LightParams sphere2_lp;
-	sphere2_lp._LightIntensity = 0.0;
-	sphere2_lp._Emission = float3(0.3, 0.15, 0.9);
-	sphere2_lp._Absorption = float3(0.9, 0.7, 0.45);
-	sphere2_lp._Density = 8.0;
-
-
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere0_localpos, SPHERE_RAY)==true)
-	{		
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere0_localpos, resolution, input.TexCoord0, 512, 200, true, sphere0_lp);
-	}
-	
-	
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere1_localpos, SPHERE_RAY) == true)
+	for (int i = 0; i < neb0.nbExtraSpheres; i++)
 	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere1_localpos, resolution, input.TexCoord0, -98, 887, false, sphere1_lp);
+		if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, neb0.spherePos[i], SPHERE_RAY) == true)
+		{
+			current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, neb0.spherePos[i], resolution, input.TexCoord0, neb0.seed1[i+1], neb0.seed2[i+1], neb0.sphereRotatey[i+1], neb0.lightParams[i+1]);
+		}
 	}
-	
-	if (raycastSphere(localcontainer_rayOrigin, local_rayDir.xyz, p0, p1, sphere2_localpos, SPHERE_RAY) == true)
-	{
-		current_color.rgb = computePixelColor(current_color.rgb, localcontainer_rayOrigin, local_rayDir, p0, p1, sphere2_localpos, resolution, input.TexCoord0, -456, 100, false, sphere2_lp);
-	}
-*/	
 
 	current_color.a = 1.0; //alpha value : whatever
 	return current_color;
