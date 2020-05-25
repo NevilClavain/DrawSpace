@@ -401,11 +401,7 @@ int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
         LUA_ERROR( "Entity::release_world : physics aspect doesnt exists in this entity!" );
     }
 
-    if( physics_aspect->GetComponent<bool>( "gravity_state" )->getPurpose() )
-    {
-        physics_aspect->RemoveComponent<Vector>( "gravity" );
-    }
-
+    physics_aspect->RemoveComponent<Vector>( "gravity" );
     physics_aspect->RemoveComponent<bool>( "gravity_state" );
 
     return 0;
