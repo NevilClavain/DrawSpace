@@ -34,8 +34,9 @@ SamplerState sam            : register(s0);
 Texture2D txZMask           : register(t1);
 SamplerState samZMask       : register(s1);
 
-Texture3D txNoise           : register(t2);
-SamplerState samNoise       : register(s2);
+// decommenter pour avoir le rendu de la texture 3D
+//Texture3D txNoise           : register(t2);
+//SamplerState samNoise       : register(s2);
 
 
 
@@ -135,7 +136,7 @@ float computeLocaleDensity(float3 position)
 
 float SampleMediumDensity(float3 position, float seed1, float seed2, bool low, float scale, float offset)
 {
-	/*
+	
 	float3 UVW = (scale * position * 0.1) + offset;  // Let’s start with some low frequency
 	float Amplitude = 1.0;
 	float DensityFactor = 1.0;
@@ -163,12 +164,14 @@ float SampleMediumDensity(float3 position, float seed1, float seed2, bool low, f
 	}
 
 	return clamp(DensityFactor * V + DensityBias, 0, 1);
-	*/
+	
+	// sample 3D texture
+	// decommenter pour avoir le rendu de la texture 3D
 
 	// 3D position as 3D textures coords : remap from [-1.0, 1.0] to [0.0, 1.0]
-	float3 position2;
-	position2 = 0.5 + (position * 0.5);
-	return txNoise.Sample(samNoise, position2);
+	//float3 position2;
+	//position2 = 0.5 + (position * 0.5);
+	//return txNoise.Sample(samNoise, position2);
 }
 
 float Ei(float z) 
@@ -218,7 +221,9 @@ float4 viewraymarch(float3 boundsMin, float3 boundsMax, float3 origin, float3 di
 	float dstTravelled = 0;
 	float transmittance = 1.0;
 
-	[unroll(150)] while (dstTravelled < dstLimit)
+	// decommenter pour avoir le rendu de la texture 3D
+	//[unroll(150)] while (dstTravelled < dstLimit)
+	while (dstTravelled < dstLimit)
 	{
 		float3 position = origin + direction * (dstToBox + dstTravelled);
 
@@ -330,8 +335,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 	float dstInsideBox = intersection.y;
 	
 	float4 color_source = txDiffuse.Sample(sam, input.TexCoord0);
-	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);
-	//float4 color_noise =  txNoise.Sample(samNoise, input.TexCoord0);
+	float4 zmask        = txZMask.Sample(samZMask, input.TexCoord0);	
 
 	
 	float4 raymarch_res = viewraymarch(bounds_min, bounds_max, localcontainer_rayOrigin, local_rayDir.xyz, color_source.rgb, zmask.x, dstInsideBox, dstToBox);

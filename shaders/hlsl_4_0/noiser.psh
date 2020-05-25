@@ -35,6 +35,9 @@ struct PS_INTPUT
     float2 TexCoord0: TEXCOORD0;
 };
 
+
+// generation des slices de la texture 3D....
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float4 color = { 0.05, 0.05, 0.05, 1.0 };
