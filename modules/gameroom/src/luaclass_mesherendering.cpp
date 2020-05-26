@@ -264,6 +264,10 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 						RenderingNode::ShadersParams indexes = param.second;
 						rnode->AddShaderParameter(indexes.shader_index, param_id, indexes.param_register);
 					}
+
+                    /// rendering order
+
+                    rnode->SetOrderNumber(render_context.rendering_order);
 				}
             } // for
 
