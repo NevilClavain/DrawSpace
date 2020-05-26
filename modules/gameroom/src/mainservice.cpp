@@ -845,12 +845,10 @@ int MainService::RequestLuaFileExec(const dsstring& p_path)
 	if (-2 == status)
 	{
 		dsstring lua_err = LuaContext::GetInstance()->GetLastError();
-		if (-2 == status)
-		{
-			// erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas alle au bout)
-			// on prefere arreter toute l'appli...
-			_DSEXCEPTION("Error in executed script " + p_path + " : " + lua_err);
-		}
+
+	    // erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas alle au bout)
+	    // on prefere arreter toute l'appli...
+	    _DSEXCEPTION("Error in executed script " + p_path + " : " + lua_err);
 	}
 	else if (-1 == status)
 	{
