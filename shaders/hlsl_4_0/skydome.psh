@@ -24,36 +24,21 @@
 
 cbuffer legacyargs : register(b0)
 {
-	float4 vec[512];
-	Matrix mat[512];
+    float4 vec[512];
+    Matrix mat[512];
 };
 
-#include "mat_input_constants.hlsl"
 
-struct VS_INPUT
+struct PS_INTPUT
 {
-	float3 Position : POSITION;
+    float4 Position : SV_POSITION;
 };
 
-struct VS_OUTPUT
+float4 ps_main(PS_INTPUT input) : SV_Target
 {
-	float4 wvpPosition : SV_POSITION;
-	float4 wPosition   : TEXCOORD0;
-};
+    float4 final_color = 0;
 
-VS_OUTPUT vs_main(VS_INPUT Input)
-{
-	VS_OUTPUT Output;
-	float4 pos;
+    final_color.y = 1.0;
 
-	Matrix mat_WorldViewProj = mat[matWorldViewProjection];
-	Matrix mat_World = mat[matWorld];
-
-	pos.xyz = Input.Position;
-	pos.w = 1.0;
-
-	Output.wvpPosition = mul(pos, mat_WorldViewProj);
-	Output.wPosition = mul(pos, mat_World);
-
-	return(Output);
+    return final_color;
 }

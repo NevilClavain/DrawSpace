@@ -135,12 +135,6 @@
     <FxCompile Include="nebulae.psh">
       <Filter>pixel_shaders</Filter>
     </FxCompile>
-    <FxCompile Include="raymarch.psh">
-      <Filter>pixel_shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="raymarch.vsh">
-      <Filter>vertex_shaders</Filter>
-    </FxCompile>
     <FxCompile Include="transfer.vsh">
       <Filter>vertex_shaders</Filter>
     </FxCompile>
@@ -160,6 +154,12 @@
       <Filter>vertex_shaders</Filter>
     </FxCompile>
     <FxCompile Include="transfer2.psh">
+      <Filter>pixel_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="skydome.vsh">
+      <Filter>vertex_shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="skydome.psh">
       <Filter>pixel_shaders</Filter>
     </FxCompile>
   </ItemGroup>
