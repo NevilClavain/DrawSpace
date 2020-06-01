@@ -51,6 +51,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 	{ "breakpoint", &LuaClass_Globals::LUA_breakpoint },
 
     { "round", &LuaClass_Globals::LUA_round },
+    { "pow", &LuaClass_Globals::LUA_pow },
 	{ "stoi", &LuaClass_Globals::LUA_stoi },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
@@ -93,6 +94,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "ds_exception", &LuaClass_Globals::LUA_dsexception },
 
     { "release_assets", &LuaClass_Globals::LUA_releaseassets },
+
+
 
 	{ 0, 0 }
 };
@@ -521,6 +524,23 @@ int LuaClass_Globals::LUA_round(lua_State* p_L)
     dsreal value = luaL_checknumber(p_L, 1);
 
     lua_pushinteger(p_L, static_cast<int>(value));
+    return 1;
+}
+
+int LuaClass_Globals::LUA_pow(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Globals::pow : argument(s) missing");
+    }
+
+    dsreal value = luaL_checknumber(p_L, 1);
+    dsreal power = luaL_checknumber(p_L, 2);
+
+    dsreal res = std::pow(value, power);
+
+    lua_pushnumber(p_L, res);
     return 1;
 }
 
