@@ -79,7 +79,7 @@ m_fog_density( p_fog_density )
 	m_atmo_scattering_flags3[0] = m_kr;
 	m_atmo_scattering_flags3[1] = m_km;
 	m_atmo_scattering_flags3[2] = 4.0 * m_kr * 3.1415927;
-	m_atmo_scattering_flags3[3] = 4.0 * m_kr * 3.1415927;
+	m_atmo_scattering_flags3[3] = 4.0 * m_km * 3.1415927;
 
 	m_atmo_scattering_flags4[0] = m_skyfromspace_ESun;
 	m_atmo_scattering_flags4[1] = m_skyfromatmo_ESun;
