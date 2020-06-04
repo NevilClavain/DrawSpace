@@ -52,6 +52,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 
     { "round", &LuaClass_Globals::LUA_round },
     { "pow", &LuaClass_Globals::LUA_pow },
+    { "clamp", &LuaClass_Globals::LUA_clamp },
 	{ "stoi", &LuaClass_Globals::LUA_stoi },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
@@ -541,6 +542,22 @@ int LuaClass_Globals::LUA_pow(lua_State* p_L)
     dsreal res = std::pow(value, power);
 
     lua_pushnumber(p_L, res);
+    return 1;
+}
+
+int LuaClass_Globals::LUA_clamp(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("Globals::clamp : argument(s) missing");
+    }
+
+    dsreal a = luaL_checknumber(p_L, 1);
+    dsreal b = luaL_checknumber(p_L, 2);
+    dsreal x = luaL_checknumber(p_L, 3);
+
+    lua_pushnumber(p_L, Maths::Clamp(a, b, x));
     return 1;
 }
 
