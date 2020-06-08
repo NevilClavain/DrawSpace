@@ -599,7 +599,8 @@ int LuaClass_Globals::LUA_cos(lua_State* p_L)
     }
 
     dsreal a = luaL_checknumber(p_L, 1);
-    lua_pushinteger(p_L, std::cos(a));
+    dsreal cosa = std::cos(a);
+    lua_pushnumber(p_L, cosa);
     return 1;
 }
 
@@ -612,6 +613,7 @@ int LuaClass_Globals::LUA_sin(lua_State* p_L)
     }
 
     dsreal a = luaL_checknumber(p_L, 1);
-    lua_pushinteger(p_L, std::sin(a));
+    dsreal sina = std::sin(a);
+    lua_pushnumber(p_L, sina);
     return 1;
 }
