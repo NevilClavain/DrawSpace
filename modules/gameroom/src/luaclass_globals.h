@@ -77,6 +77,9 @@ public:
 	int LUA_stoi(lua_State* p_L);
     int LUA_clamp(lua_State* p_L);
 
+    int LUA_cos(lua_State* p_L);
+    int LUA_sin(lua_State* p_L);
+
 
     int LUA_showmousecursor( lua_State* p_L );
     int LUA_setmousecursorcircularmode( lua_State* p_L );

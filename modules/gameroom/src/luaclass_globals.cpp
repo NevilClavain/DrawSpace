@@ -54,6 +54,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "pow", &LuaClass_Globals::LUA_pow },
     { "clamp", &LuaClass_Globals::LUA_clamp },
 	{ "stoi", &LuaClass_Globals::LUA_stoi },
+    { "cos", &LuaClass_Globals::LUA_cos },
+    { "sin", &LuaClass_Globals::LUA_sin },
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -586,4 +588,30 @@ int LuaClass_Globals::LUA_stoi(lua_State* p_L)
 	lua_pushinteger(p_L, value);
 	lua_pushinteger(p_L, error);
 	return 2;
+}
+
+int LuaClass_Globals::LUA_cos(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::cos : argument(s) missing");
+    }
+
+    dsreal a = luaL_checknumber(p_L, 1);
+    lua_pushinteger(p_L, std::cos(a));
+    return 1;
+}
+
+int LuaClass_Globals::LUA_sin(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::cos : argument(s) missing");
+    }
+
+    dsreal a = luaL_checknumber(p_L, 1);
+    lua_pushinteger(p_L, std::sin(a));
+    return 1;
 }
