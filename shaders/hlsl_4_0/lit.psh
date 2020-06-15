@@ -67,6 +67,10 @@ struct PS_INTPUT
  
 // (1-em) * (ab * pl) + (em * base_color)
 
+// Flags2 -> 
+//
+//          .x = bump mapping normales input mod; 0.0 : input is heightmap; 1.0 : input is rgb(xyz) map
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float4 final_color = 0.0;
@@ -77,6 +81,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 color = vec[10];
     float4 color_source = vec[11];
     float4 fog_color = vec[12];
+    float4 flags2 = vec[13];
 
     float spec_power = flags.x;
     bool spec_enabled = false;
@@ -148,8 +153,17 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     if (bump_bias > 0.0)
     {
         float4 local_normale;
-        local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, texture_size, bump_bias);
-        local_normale = normalize(local_normale);
+
+        if (flags2.x == 0.0)
+        {
+            local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, texture_size, bump_bias);
+        }
+        else
+        {
+            float3 xyznormal = txBump.Sample(samBump, input.TexCoord0);
+            local_normale.xyz = normalize(xyznormal);
+            local_normale.w = 1.0;
+        }       
         object_normale = mul(tbn_mat, local_normale);
     }
     else
