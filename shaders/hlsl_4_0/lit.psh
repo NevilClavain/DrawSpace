@@ -86,10 +86,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float spec_power = flags.x;
     bool spec_enabled = false;
 
-    bool mask_mode = flags.w;
+    bool spec_mask_mode = flags.w;
 
     /*
-    if( mask_mode )
+    if( spec_mask_mode )
     {
         float4 mask = txMask.Sample(samMask, input.TexCoord0);
 
@@ -123,15 +123,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float spec_intensity = 1.0;
 
     
-    if (mask_mode)
+    if (spec_mask_mode)
     {
         float4 mask = txMask.Sample(samMask, input.TexCoord0);
         spec_intensity = mask.r;
     }
     
-
-
-
     int texture_size = flags.z;
     float bump_bias = flags.y;
 
