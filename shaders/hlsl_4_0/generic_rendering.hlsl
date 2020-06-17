@@ -89,7 +89,7 @@ float4 HalfVectorForLights(float4 p_pos, float4 p_lightdir, float4x4 p_cammat, f
 // compute pixel color combined from base color and light parameters
 float4 computePixelColorFromLight(float4 p_basecolor,
                                     float4 p_ambient_color, bool p_light_enabled, float4 p_light_color, float4 p_light_dir, 
-                                    float4 p_normale, bool p_spec_enabled, float p_spec_power, float4 p_half0)
+                                    float4 p_normale, bool p_spec_enabled, float p_spec_power, float p_spec_power_factor, float4 p_half0)
 {
     float4 final_color = 0.0;
     float3 nNorm = normalize(p_normale);
@@ -105,10 +105,41 @@ float4 computePixelColorFromLight(float4 p_basecolor,
             spec = pow(clamp(dot(nNorm, normalize(p_half0.xyz)), 0.0, 1.0), p_spec_power);
         }
 
-        final_color += max(0.0, diff * p_basecolor * p_light_color) + spec;
+        final_color += max(0.0, diff * p_basecolor * p_light_color) + p_spec_power_factor * spec;
     }
     final_color += p_ambient_color * p_basecolor;
     return saturate(final_color);
+}
+
+
+float4 bump_vector_avg(float2 p_tex_coords, Texture2D p_txBump, SamplerState p_samBump, int p_texture_resol)
+{
+    float texel_size = 1.0 / (float)p_texture_resol;
+
+    float2 left_coords = p_tex_coords;
+    left_coords.x -= texel_size;
+
+    float2 right_coords = p_tex_coords;
+    right_coords.x += texel_size;
+
+    float2 up_coords = p_tex_coords;
+    up_coords.y -= texel_size;
+
+    float2 down_coords = p_tex_coords;
+    down_coords.y += texel_size;
+
+    float4 bump_left = p_txBump.Sample(p_samBump, left_coords);
+    float4 bump_right = p_txBump.Sample(p_samBump, right_coords);
+    float4 bump_up = p_txBump.Sample(p_samBump, up_coords);
+    float4 bump_down = p_txBump.Sample(p_samBump, down_coords);
+
+    float4 bump_center = p_txBump.Sample(p_samBump, p_tex_coords).x;
+
+    float4 res;
+
+    res.xyz = normalize((bump_center.xyz + bump_left.xyz + bump_right.xyz + bump_up.xyz + bump_down.xyz) / 5.0);
+    res.w = 1.0;
+    return res;
 }
 
 float4 bump_bias_vector(float2 p_tex_coords, Texture2D p_txBump, SamplerState p_samBump, int p_texture_resol, float p_vector_bias)
@@ -133,7 +164,7 @@ float4 bump_bias_vector(float2 p_tex_coords, Texture2D p_txBump, SamplerState p_
     float4 bump_up = p_txBump.Sample(p_samBump, up_coords);
     float4 bump_down = p_txBump.Sample(p_samBump, down_coords);
 
-    float bump_center = p_txBump.Sample(p_samBump, down_coords).x;
+    float bump_center = p_txBump.Sample(p_samBump, p_tex_coords).x;
 
     float vector_bias = p_vector_bias;
     float3 vec_left;

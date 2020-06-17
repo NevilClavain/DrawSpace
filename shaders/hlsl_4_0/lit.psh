@@ -88,6 +88,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     bool mask_mode = flags.w;
 
+    /*
     if( mask_mode )
     {
         float4 mask = txMask.Sample(samMask, input.TexCoord0);
@@ -113,6 +114,23 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             spec_enabled = true;
         }        
     }
+    */
+
+    if (spec_power > 0.0)
+    {
+        spec_enabled = true;
+    }
+    float spec_intensity = 1.0;
+
+    
+    if (mask_mode)
+    {
+        float4 mask = txMask.Sample(samMask, input.TexCoord0);
+        spec_intensity = mask.r;
+    }
+    
+
+
 
     int texture_size = flags.z;
     float bump_bias = flags.y;
@@ -160,9 +178,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
         else
         {
-            float3 xyznormal = txBump.Sample(samBump, input.TexCoord0);
-            local_normale.xyz = normalize(xyznormal);
-            local_normale.w = 1.0;
+
+            local_normale = bump_vector_avg(input.TexCoord0, txBump, samBump, texture_size);
         }       
         object_normale = mul(tbn_mat, local_normale);
     }
@@ -178,7 +195,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 pixel_light_color = 0.0;
 
     pixel_light_color += computePixelColorFromLight(base_color, Ambient_Color, (bool) Lights_Enabled.x, Light0_Color,
-                                                Light0_Dir, world_normale, spec_enabled, spec_power, input.Half0);
+                                                Light0_Dir, world_normale, spec_enabled, spec_power, spec_intensity, input.Half0);
 
     final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
 
