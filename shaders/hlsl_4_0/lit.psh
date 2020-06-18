@@ -37,6 +37,9 @@ SamplerState samBump        : register(s1);
 Texture2D txMask            : register(t2);
 SamplerState samMask        : register(s2);
 
+Texture2D txEm              : register(t3);
+SamplerState samEm          : register(s3);
+
 struct PS_INTPUT 
 {
     float4 Position     : SV_POSITION;
@@ -70,6 +73,7 @@ struct PS_INTPUT
 // Flags2 -> 
 //
 //          .x = bump mapping normales input mod; 0.0 : input is heightmap; 1.0 : input is rgb(xyz) map
+
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
@@ -115,6 +119,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }        
     }
     */
+
+    float4 em_intensity = 0.0;
+    if (self_emissive.x > 0.0 || self_emissive.y > 0.0 || self_emissive.z > 0.0)
+    {
+        em_intensity = txEm.Sample(samEm, input.TexCoord0);
+    }
 
     if (spec_power > 0.0)
     {
@@ -194,7 +204,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     pixel_light_color += computePixelColorFromLight(base_color, Ambient_Color, (bool) Lights_Enabled.x, Light0_Color,
                                                 Light0_Dir, world_normale, spec_enabled, spec_power, spec_intensity, input.Half0);
 
-    final_color = ((1.0 - self_emissive) * (absorption * pixel_light_color)) + (self_emissive * base_color);
+    final_color = ((1.0 - em_intensity * self_emissive) * (absorption * pixel_light_color)) + (em_intensity * self_emissive * base_color);
 
     final_color = saturate(lerp(fog_color, final_color, input.Fog));
 
