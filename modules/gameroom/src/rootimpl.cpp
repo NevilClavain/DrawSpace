@@ -38,13 +38,6 @@ using namespace DrawSpace::Interface::Module;
 
 RootImpl::RootImpl( void )
 { 
-    /*
-    Shader::EnableShadersDescrInFinalPath( true );
-    Shader::SetRootPath( "console_data/shaders_bank" );
-    LuaContext::GetInstance()->SetRootPath( "lua_commons" );
-
-    //File::MountVirtualFS( "test_data.bank" );
-    */
 }
 
 RootImpl::~RootImpl( void )
