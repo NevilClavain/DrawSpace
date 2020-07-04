@@ -336,14 +336,14 @@
     <ClCompile Include="src\resourcesaspect.cpp">
       <Filter>aspect</Filter>
     </ClCompile>
-    <ClCompile Include="src\resourcessytem.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animationssytem.cpp">
-      <Filter>systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\animationsaspect.cpp">
       <Filter>aspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animationssystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resourcessystem.cpp">
+      <Filter>systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

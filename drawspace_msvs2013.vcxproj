@@ -13,7 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\ac3dmeshe.cpp" />
     <ClCompile Include="src\animationsaspect.cpp" />
-    <ClCompile Include="src\animationssytem.cpp" />
+    <ClCompile Include="src\animationssystem.cpp" />
     <ClCompile Include="src\aspect.cpp" />
     <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\bodyaspect.cpp" />
@@ -79,7 +79,7 @@
     <ClCompile Include="src\renderstatesset.cpp" />
     <ClCompile Include="src\rendersystem.cpp" />
     <ClCompile Include="src\resourcesaspect.cpp" />
-    <ClCompile Include="src\resourcessytem.cpp" />
+    <ClCompile Include="src\resourcessystem.cpp" />
     <ClCompile Include="src\revolutiontransformaspectimpl.cpp" />
     <ClCompile Include="src\serviceaspect.cpp" />
     <ClCompile Include="src\servicesystem.cpp" />
