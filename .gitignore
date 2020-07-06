@@ -62,6 +62,16 @@ ipch/
 # Guidance Automation Toolkit
 *.gpState
 
+# CMake stuff
+ds_engine.sln
+CMakeCache.txt
+ALL_BUILD.vcxproj*
+*.cmake
+/CMakeFiles/
+/drawspace_core/CMakeFiles/
+/drawspace_core/*.sln
+/drawspace_core/*.vcxproj*
+
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
