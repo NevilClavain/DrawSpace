@@ -31,7 +31,6 @@ link_directories(${jsonjsmn_lib_dir})
 
 link_directories(${physfs_lib_dir})
 
-
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CEGUIWrapper)
 
