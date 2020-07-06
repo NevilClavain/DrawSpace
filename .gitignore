@@ -71,6 +71,9 @@ ALL_BUILD.vcxproj*
 /drawspace_core/CMakeFiles/
 /drawspace_core/*.sln
 /drawspace_core/*.vcxproj*
+/CEGUIWrapper_project/CMakeFiles/
+/CEGUIWrapper_project/*.sln
+/CEGUIWrapper_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

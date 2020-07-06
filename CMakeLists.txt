@@ -15,6 +15,7 @@ set(bullet_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/bullet-2.87/src)
 set(assimp_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/include)
 
 add_subdirectory(drawspace_core)
+add_subdirectory(CEGUIWrapper_project)
 
 
 
