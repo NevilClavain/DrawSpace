@@ -74,6 +74,12 @@ ALL_BUILD.vcxproj*
 /CEGUIWrapper_project/CMakeFiles/
 /CEGUIWrapper_project/*.sln
 /CEGUIWrapper_project/*.vcxproj*
+/plugins/d3d9_project/CMakeFiles/
+/plugins/d3d9_project/*.sln
+/plugins/d3d9_project/*.vcxproj*
+/plugins/d3d11_project/CMakeFiles/
+/plugins/d3d11_project/*.sln
+/plugins/d3d11_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
