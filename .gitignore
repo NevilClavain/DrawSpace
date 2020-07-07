@@ -68,9 +68,9 @@ CMakeCache.txt
 ALL_BUILD.vcxproj*
 *.cmake
 /CMakeFiles/
-/drawspace_core/CMakeFiles/
-/drawspace_core/*.sln
-/drawspace_core/*.vcxproj*
+/drawspacecore_project/CMakeFiles/
+/drawspacecore_project/*.sln
+/drawspacecore_project/*.vcxproj*
 /CEGUIWrapper_project/CMakeFiles/
 /CEGUIWrapper_project/*.sln
 /CEGUIWrapper_project/*.vcxproj*
@@ -86,6 +86,9 @@ ALL_BUILD.vcxproj*
 /vm_project/CMakeFiles/
 /vm_project/*.sln
 /vm_project/*.vcxproj*
+/modules/gameroom_project/CMakeFiles/
+/modules/gameroom_project/*.sln
+/modules/gameroom_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

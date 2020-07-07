@@ -298,4 +298,6 @@ ${CMAKE_SOURCE_DIR}/src/vector.cpp
 ${CMAKE_SOURCE_DIR}/src/vector.h
 )
 
+add_definitions(-DBT_USE_DOUBLE_PRECISION )
+
 add_library(drawspace_core ${source_files})
