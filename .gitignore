@@ -80,6 +80,9 @@ ALL_BUILD.vcxproj*
 /plugins/d3d11_project/CMakeFiles/
 /plugins/d3d11_project/*.sln
 /plugins/d3d11_project/*.vcxproj*
+/rt_project/CMakeFiles/
+/rt_project/*.sln
+/rt_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
