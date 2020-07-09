@@ -22,20 +22,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(skyboxmod)
 
-# include_directories(${lua_include_dir})
-# link_directories(${lua_lib_dir})
 
 include_directories(${physfs_include_dir})
 link_directories(${physfs_lib_dir})
 
 include_directories(${bullet_include_dir})
-# link_directories(${bullet_lib_dir})
 
-# include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
-
-# include_directories(${assimp_include_dir})
-# link_directories(${assimp_lib_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
@@ -48,5 +41,4 @@ file(
 )
 
 add_library(skyboxmod SHARED ${source_files})
-#target_link_libraries(skyboxmod lua physfs jsmn assimp-vc120-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
 target_link_libraries(skyboxmod physfs jsmn drawspace_core)
