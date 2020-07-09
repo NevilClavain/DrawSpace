@@ -20,7 +20,7 @@ DrawSpace currently rely on some 3rd-parts libraries:
 	** RSA Data Security, Inc. MD5 Message-Digest Algorithm
 	** Wombat efficient texture-free procedural noise library for shaders : https://github.com/BrianSharpe/Wombat
 	
-Project Build example (with Visual studio 2019) : 
+Poeject generated with CMake (WIP!); Project Build example (with Visual studio 2019) : 
 cmake -G"Visual Studio 16 2019" -A Win32 
 (Minimum VS version required : VS2017)
 
