@@ -60,6 +60,7 @@ add_subdirectory(rt_project)
 add_subdirectory(vm_project)
 add_subdirectory(modules/gameroom_project)
 add_subdirectory(modules/skyboxmod_project)
+add_subdirectory(modules/mvtmod_project)
 
 
 

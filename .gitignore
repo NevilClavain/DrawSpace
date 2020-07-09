@@ -92,6 +92,9 @@ ALL_BUILD.vcxproj*
 /modules/skyboxmod_project/CMakeFiles/
 /modules/skyboxmod_project/*.sln
 /modules/skyboxmod_project/*.vcxproj*
+/modules/mvtmod_project/CMakeFiles/
+/modules/mvtmod_project/*.sln
+/modules/mvtmod_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
