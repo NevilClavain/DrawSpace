@@ -46,4 +46,4 @@ file(
 )
 
 add_library(drawspaced3d11 SHARED ${source_files})
-target_link_libraries(drawspaced3d11 d3d11 d3dx11 dxgi FW1FontWrapper CEGUIBase-0 CEGUIDirect3D11Renderer-0 jsmn_r physfs ceguiwrapper drawspace_core)
+target_link_libraries(drawspaced3d11 d3d11 d3dx11 dxgi FW1FontWrapper CEGUIBase-0 CEGUIDirect3D11Renderer-0 jsmn physfs ceguiwrapper drawspace_core)

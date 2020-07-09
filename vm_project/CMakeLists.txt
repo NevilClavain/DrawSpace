@@ -43,4 +43,4 @@ file(
 )
 
 add_executable(vm WIN32 ${source_files})
-target_link_libraries(vm physfs jsmn_r drawspace_core)
+target_link_libraries(vm physfs jsmn drawspace_core)
