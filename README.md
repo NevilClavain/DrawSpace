@@ -10,20 +10,19 @@ DrawSpace currently rely on some 3rd-parts libraries:
 
 	** Direct3D 9 SDK : 	      http://www.microsoft.com/en-us/download/details.aspx?id=6812
 	** Direct3D 11 SDK :          https://www.microsoft.com/en-us/download/details.aspx?id=6812
-	** FW1FontWrapper for D3D11 : https://fw1.codeplex.com          
-	** wxWidgets v3.0.2 :	      http://www.wxwidgets.org/
-	** Shiny C/C++/Lua profiler : http://sourceforge.net/projects/shinyprofiler/
-        
+	** FW1FontWrapper for D3D11 : https://fw1.codeplex.com                  
 	** Bullet physics 2.82 :      http://bulletphysics.org/wordpress/
 	** Assimp :                   http://www.assimp.org/
 	** Lua 5.1 :                  http://www.lua.org/
 	** PhysicsFS 2.0.3 :          https://icculus.org/physfs/
 	** CEGUI 0.8.7 :              http://cegui.org.uk/
 	** JSMN JSON parser	      https://github.com/zserge/jsmn
-
 	** RSA Data Security, Inc. MD5 Message-Digest Algorithm
-
 	** Wombat efficient texture-free procedural noise library for shaders : https://github.com/BrianSharpe/Wombat
+	
+Project Build example (with Visual studio 2019) : 
+cmake -G"Visual Studio 16 2019" -A Win32 
+(Minimum VS version required : VS2017)
 
 
 ![alt tag](https://2.bp.blogspot.com/-R6beb0Ym7wY/XJF6boDwcjI/AAAAAAAADZ8/im06Bwg1hxQ6kEWG0X8txeGmMprtuIzUQCLcBGAs/s1600/xf.jpg)
