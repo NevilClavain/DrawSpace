@@ -95,6 +95,9 @@ ALL_BUILD.vcxproj*
 /modules/mvtmod_project/CMakeFiles/
 /modules/mvtmod_project/*.sln
 /modules/mvtmod_project/*.vcxproj*
+/modules/planetsmod_project/CMakeFiles/
+/modules/planetsmod_project/*.sln
+/modules/planetsmod_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
