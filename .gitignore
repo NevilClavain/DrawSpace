@@ -89,6 +89,9 @@ ALL_BUILD.vcxproj*
 /modules/gameroom_project/CMakeFiles/
 /modules/gameroom_project/*.sln
 /modules/gameroom_project/*.vcxproj*
+/modules/skyboxmod_project/CMakeFiles/
+/modules/skyboxmod_project/*.sln
+/modules/skyboxmod_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

@@ -59,6 +59,7 @@ add_subdirectory(Plugins/d3d9_project)
 add_subdirectory(rt_project)
 add_subdirectory(vm_project)
 add_subdirectory(modules/gameroom_project)
+add_subdirectory(modules/skyboxmod_project)
 
 
 
