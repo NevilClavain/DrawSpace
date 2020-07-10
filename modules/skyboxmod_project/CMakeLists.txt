@@ -42,3 +42,4 @@ file(
 
 add_library(skyboxmod SHARED ${source_files})
 target_link_libraries(skyboxmod physfs jsmn drawspace_core)
+install(TARGETS skyboxmod RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)

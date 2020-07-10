@@ -46,3 +46,4 @@ file(
 
 add_library(planetsmod SHARED ${source_files})
 target_link_libraries(planetsmod physfs jsmn assimp-vc120-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
+install(TARGETS planetsmod RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)

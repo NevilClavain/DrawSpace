@@ -14,6 +14,7 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
+apps/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
@@ -63,8 +64,10 @@ ipch/
 *.gpState
 
 # CMake stuff
+install_manifest.txt
 ds_engine.sln
 CMakeCache.txt
+INSTALL.vcxproj*
 ALL_BUILD.vcxproj*
 *.cmake
 /CMakeFiles/

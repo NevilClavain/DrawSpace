@@ -49,3 +49,4 @@ file(
 
 add_library(gameroom SHARED ${source_files})
 target_link_libraries(gameroom lua physfs jsmn assimp-vc120-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
+install(TARGETS gameroom RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)

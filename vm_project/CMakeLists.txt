@@ -44,3 +44,4 @@ file(
 
 add_executable(vm WIN32 ${source_files})
 target_link_libraries(vm physfs jsmn drawspace_core)
+install(TARGETS vm RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)
