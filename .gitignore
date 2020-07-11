@@ -101,6 +101,9 @@ ALL_BUILD.vcxproj*
 /modules/planetsmod_project/CMakeFiles/
 /modules/planetsmod_project/*.sln
 /modules/planetsmod_project/*.vcxproj*
+/hlsl_4_0_project/CMakeFiles/
+/hlsl_4_0_project/*.sln
+/hlsl_4_0_project/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
