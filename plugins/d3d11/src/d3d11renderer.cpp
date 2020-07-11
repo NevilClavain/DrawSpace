@@ -1863,7 +1863,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
             ID3DBlob* pVSBlob = NULL;
             ID3DBlob* pVSErrBlob;
-            hRes = compile_shader_from_file( vertex_shader->GetData(), vertex_shader->GetDataSize(), vshader_path.c_str(), "vs_main", "vs_4_0", &pVSBlob, &pVSErrBlob );
+            hRes = compile_shader_from_mem( vertex_shader->GetData(), vertex_shader->GetDataSize(), vshader_path.c_str(), "vs_main", "vs_4_0", &pVSBlob, &pVSErrBlob );
 
             if( S_OK != hRes )
             {
@@ -1935,7 +1935,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
             ID3DBlob* pPSBlob = NULL;
             ID3DBlob* pPSErrBlob;
-            hRes = compile_shader_from_file( pixel_shader->GetData(), pixel_shader->GetDataSize(), pshader_path.c_str(), "ps_main", "ps_4_0", &pPSBlob, &pPSErrBlob );
+            hRes = compile_shader_from_mem( pixel_shader->GetData(), pixel_shader->GetDataSize(), pshader_path.c_str(), "ps_main", "ps_4_0", &pPSBlob, &pPSErrBlob );
 
             if( S_OK != hRes )
             {
@@ -2607,7 +2607,7 @@ void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace:
 
 
 
-HRESULT D3D11Renderer::compile_shader_from_file( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut )
+HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut )
 {
     HRESULT hr = S_OK;
 
