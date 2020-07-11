@@ -44,4 +44,5 @@ file(
 
 add_library(drawspaced3d9 SHARED ${source_files})
 target_link_libraries(drawspaced3d9 d3d9 d3dx9 CEGUIBase-0 CEGUIDirect3D9Renderer-0 jsmn physfs ceguiwrapper drawspace_core)
-install(TARGETS drawspaced3d9 RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)
+install(TARGETS drawspaced3d9 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS drawspaced3d9 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

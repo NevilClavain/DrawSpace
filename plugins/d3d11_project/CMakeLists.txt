@@ -47,5 +47,6 @@ file(
 
 add_library(drawspaced3d11 SHARED ${source_files})
 target_link_libraries(drawspaced3d11 d3d11 d3dx11 dxgi FW1FontWrapper CEGUIBase-0 CEGUIDirect3D11Renderer-0 jsmn physfs ceguiwrapper drawspace_core)
-install(TARGETS drawspaced3d11 RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)
-install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps)
+install(TARGETS drawspaced3d11 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS drawspaced3d11 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)

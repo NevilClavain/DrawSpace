@@ -45,4 +45,5 @@ file(
 add_executable(rt WIN32 ${source_files})
 target_link_libraries(rt physfs jsmn drawspace_core)
 
-install(TARGETS rt RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)
+install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

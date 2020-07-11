@@ -42,4 +42,5 @@ file(
 
 add_library(mvtmod SHARED ${source_files})
 target_link_libraries(mvtmod physfs jsmn drawspace_core)
-install(TARGETS mvtmod RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps)
+install(TARGETS mvtmod CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS mvtmod CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
