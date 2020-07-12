@@ -85,7 +85,7 @@ public:
 				}
 				catch (std::bad_cast& p_bc)
 				{
-					_DSEXCEPTION("bad cast : " << dsstring( p_bc.what() ));
+					_DSEXCEPTION("bad cast : " << dsstring( p_bc.what() ) << " " << p_id.c_str());
 				}
 			}
 		}		
