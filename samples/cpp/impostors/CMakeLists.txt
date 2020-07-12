@@ -20,31 +20,36 @@
 #
 # -*-LIC_END-*-
 cmake_minimum_required(VERSION 3.0)
-project(rt)
+project(samples_impostors)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-
-include_directories(${jsonjsmn_include_dir})
-link_directories(${jsonjsmn_lib_dir})
-
-include_directories(${assimp_include_dir})
+set(sample_name impostorsdemo)
 
 include_directories(${physfs_include_dir})
 link_directories(${physfs_lib_dir})
 
 include_directories(${bullet_include_dir})
+link_directories(${bullet_lib_dir})
+
+include_directories(${jsonjsmn_include_dir})
+link_directories(${jsonjsmn_lib_dir})
+
+include_directories(${assimp_include_dir})
+link_directories(${assimp_lib_dir})
+
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/rt/src/*.h
-        ${CMAKE_SOURCE_DIR}/rt/src/*.cpp
+		${CMAKE_SOURCE_DIR}/samples/cpp/impostors/src/*.h
+        ${CMAKE_SOURCE_DIR}/samples/cpp/impostors/src/*.cpp
 		
 )
 
-add_executable(rt WIN32 ${source_files})
-target_link_libraries(rt physfs jsmn drawspace_core)
+add_library(${sample_name} SHARED ${source_files})
 
-install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(FILES ${CMAKE_SOURCE_DIR}/config/logging/logrt.conf DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+target_link_libraries(${sample_name} physfs jsmn assimp-vc120-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
+
+install(TARGETS ${sample_name} CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+

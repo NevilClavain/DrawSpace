@@ -104,6 +104,9 @@ ALL_BUILD.vcxproj*
 /hlsl_4_0_project/CMakeFiles/
 /hlsl_4_0_project/*.sln
 /hlsl_4_0_project/*.vcxproj*
+/samples/cpp/impostors/CMakeFiles/
+/samples/cpp/impostors/*.sln
+/samples/cpp/impostors/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

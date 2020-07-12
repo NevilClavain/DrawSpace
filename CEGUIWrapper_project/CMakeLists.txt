@@ -34,3 +34,34 @@ file(
 		
 )
 add_library(ceguiwrapper ${source_files})
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUIBase-0_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUIBase-0.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUICommonDialogs-0_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUICommonDialogs-0.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUICoreWindowRendererSet_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUICoreWindowRendererSet.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUIDirect3D9Renderer-0_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUIDirect3D9Renderer-0.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUIDirect3D11Renderer-0_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUIDirect3D11Renderer-0.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUIFreeImage_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUIFreeImage.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/CEGUIXercesParser_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUIXercesParser.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/FreeImage_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/FreeImage.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/freetype_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/freetype.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
+install(FILES ${cegui_lib_dir}/Debug/xerces-c_3_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/xerces-c_3.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+

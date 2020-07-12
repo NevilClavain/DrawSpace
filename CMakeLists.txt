@@ -62,6 +62,7 @@ add_subdirectory(modules/gameroom_project)
 add_subdirectory(modules/skyboxmod_project)
 add_subdirectory(modules/mvtmod_project)
 add_subdirectory(modules/planetsmod_project)
+add_subdirectory(samples/cpp/impostors)
 add_subdirectory(hlsl_4_0_project)
 
 
