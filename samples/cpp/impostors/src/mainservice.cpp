@@ -36,11 +36,11 @@ _DECLARE_DS_LOGGER( logger, "test_impostors_mainservice", NULL )
 MainService::MainService( void ) :
 m_fps_transformer( NULL )
 {
-    DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("test_data/textures_bank");
-    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("test_data/shaders_bank");
+    DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("impostorsdemo_assets/textures_bank");
+    DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("impostorsdemo_assets/shaders_bank");
     DrawSpace::Systems::ResourcesSystem::EnableShadersDescrInFinalPath(true);
 
-    DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath("test_data/meshes_bank");
+    DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath("impostorsdemo_assets/meshes_bank");
 
     //File::MountVirtualFS("test_data.bank");
 }

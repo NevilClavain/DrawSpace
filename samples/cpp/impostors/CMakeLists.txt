@@ -52,4 +52,6 @@ target_link_libraries(${sample_name} physfs jsmn assimp-vc120-mt BulletDynamics_
 
 install(TARGETS ${sample_name} CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/cpp/impostors/impostorsdemo_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
 
