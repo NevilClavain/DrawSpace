@@ -48,7 +48,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 
         if( !DrawSpace::Utils::PILoad::LoadRendererPlugin( plugin ) )
         {
-            MessageBoxA( NULL, "Cannot load specified plugin" , "DrawSpace", MB_OK | MB_ICONSTOP );
+            dsstring msg{ dsstring("Cannot load specified plugin : ") + plugin };
+            MessageBoxA( NULL, msg.c_str(), "DrawSpace", MB_OK | MB_ICONSTOP );
             return 0;
         }
 
