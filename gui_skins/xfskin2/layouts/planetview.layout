@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,1},{0,0},{1,1},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="Label" >
+            <Property name="Area" value="{{-0.00646745,0},{0.00501551,0},{0.23381,0},{0.0852624,0}}" />
+            <Property name="Text" value="Planet View" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Button" name="Close_Button" >
+            <Property name="Area" value="{{0.0104167,0},{0.900077,0},{0.177083,0},{0.980324,0}}" />
+            <Property name="Text" value="Close" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Renderer" >
+            <Property name="Area" value="{{0.00325477,0},{0.00501551,0},{0.163255,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Mem" >
+            <Property name="Area" value="{{0.335199,0},{0.00501551,0},{0.503949,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_FPS" >
+            <Property name="Area" value="{{0.176866,0},{0.00501551,0},{0.327422,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage" >
+            <Property name="Area" value="{{0.56875,0},{0.0246914,0},{0.759722,0},{0.135802,0}}" />
+            <Property name="Image" value="xfskin/line_h_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="VertFormatting" value="TopAligned" />
+            <Property name="VerticalAlignment" value="Bottom" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_PlanetName" >
+            <Property name="Area" value="{{0.506727,0},{0.00501526,0},{0.749782,0},{0.0852622,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_Relative" >
+            <Property name="Area" value="{{0.802083,0},{0.148148,0},{0.989583,0},{0.187654,0}}" />
+            <Property name="Text" value="Relative" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="NormalTextColour" value="FFFFFFFF" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_Altitude" >
+            <Property name="Area" value="{{0.802083,0},{0.21,0},{0.989583,0},{0.249506,0}}" />
+            <Property name="Text" value="Altitude : XXXX" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="NormalTextColour" value="FFFFFFFF" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_SubPasses" >
+            <Property name="Area" value="{{0.764583,0},{0.282717,0},{1.01042,0},{0.322223,0}}" />
+            <Property name="Text" value="Computing more details..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="NormalTextColour" value="FFFFFFFF" />
+        </Window>
+        <Window type="xfskin/SimpleLabel" name="SimpleLabel_HotParamName" >
+            <Property name="Area" value="{{0.180556,0},{0.919753,0},{0.309722,0},{0.959259,0}}" />
+            <Property name="Text" value="XXXXXXXXXX:" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Editbox" name="Editbox_HotParam" >
+            <Property name="Area" value="{{0.311111,0},{0.885185,0},{0.473611,0},{0.993827,0}}" />
+        </Window>
+        <Window type="xfskin/Checkbox" name="Checkbox_HotParam" >
+            <Property name="Area" value="{{0.627778,0},{0.922222,0},{0.779167,0},{0.961728,0}}" />
+            <Property name="Text" value="XXXXXXXXXXXXX" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_HotParamUpdate" >
+            <Property name="Area" value="{{0.481944,0},{0.896296,0},{0.61875,0},{0.98642,0}}" />
+            <Property name="Text" value="Update" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_HotParamNext" >
+            <Property name="Area" value="{{0.891667,0},{0.895062,0},{0.994444,0},{0.985185,0}}" />
+            <Property name="Text" value="Next" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_HotParamPrev" >
+            <Property name="Area" value="{{0.786111,0},{0.896296,0},{0.888889,0},{0.98642,0}}" />
+            <Property name="Text" value="Prev" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_ResetPlanetTransform" >
+            <Property name="Area" value="{{0.857638,0},{0.753086,0},{0.994444,0},{0.84321,0}}" />
+            <Property name="Text" value="Reset planet matrix" />
+        </Window>
+        <Window type="xfskin/Button" name="Button_ResetAll" >
+            <Property name="Area" value="{{0.857638,0},{0.648148,0},{0.994444,0},{0.738271,0}}" />
+            <Property name="Text" value="Reset all" />
+        </Window>
+    </Window>
+</GUILayout>

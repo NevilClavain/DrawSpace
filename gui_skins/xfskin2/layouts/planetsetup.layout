@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="xfskin/Label" name="Label" >
+            <Property name="Area" value="{{-0.00299523,0},{0.00501551,0},{0.237283,0},{0.0852624,0}}" />
+            <Property name="Text" value="Planet Setup" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            <Property name="HorizontalAlignment" value="Right" />
+        </Window>
+        <Window type="xfskin/Button" name="Quit_Button" >
+            <Property name="Area" value="{{0.00972226,0},{-0.0185186,0},{0.176389,0},{0.0617283,0}}" />
+            <Property name="Text" value="Quit" />
+            <Property name="VerticalAlignment" value="Bottom" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Renderer" >
+            <Property name="Area" value="{{0.00325477,0},{0.00501551,0},{0.18381,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_FPS" >
+            <Property name="Area" value="{{0.194227,0},{0.00501551,0},{0.374783,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Mem" >
+            <Property name="Area" value="{{0.385199,0},{0.00501551,0},{0.565755,0},{0.0852624,0}}" />
+            <Property name="Text" value="..." />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Listbox" name="PlanetSlots_Listbox" >
+            <Property name="Area" value="{{0.593056,0},{0.333333,0},{0.770834,0},{0.711111,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="AddPlanet_Button" >
+            <Property name="Area" value="{{0.590278,0},{0.203703,0},{0.770833,0},{0.28395,0}}" />
+            <Property name="Text" value="Add planet slot" />
+        </Window>
+        <Window type="xfskin/Editbox" name="PlanetName_Editbox" >
+            <Property name="Area" value="{{0.808333,0},{0.203703,0},{0.986111,0},{0.311111,0}}" />
+        </Window>
+        <Window type="xfskin/Label" name="Label_Status" >
+            <Property name="Area" value="{{0.190278,0},{0.9,0},{0.914584,0},{0.980247,0}}" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage22" >
+            <Property name="Area" value="{{0.502778,0},{0.512346,0},{0.592361,0},{0.518519,0}}" />
+            <Property name="Image" value="xfskin/line_h_0" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage222" >
+            <Property name="Area" value="{{0.770833,0},{0.512346,0},{0.809027,0},{0.518519,0}}" />
+            <Property name="Image" value="xfskin/line_h_0" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage2222" >
+            <Property name="Area" value="{{0.770833,0},{0.660494,0},{0.809027,0},{0.666667,0}}" />
+            <Property name="Image" value="xfskin/line_h_0" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage223" >
+            <Property name="Area" value="{{0.770139,0},{0.245679,0},{0.808333,0},{0.251852,0}}" />
+            <Property name="Image" value="xfskin/line_h_0" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage2232" >
+            <Property name="Area" value="{{0.683333,0},{0.282716,0},{0.686806,0},{0.332099,0}}" />
+            <Property name="Image" value="xfskin/line_v_2" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="PlanetView_Button2" >
+            <Property name="Area" value="{{0.808333,0},{0.162963,0},{0.975,0},{0.24321,0}}" />
+            <Property name="Text" value="Simulation View" />
+            <Property name="VerticalAlignment" value="Centre" />
+        </Window>
+        <Window type="xfskin/Button" name="PlanetView_Button" >
+            <Property name="Area" value="{{0.807639,0},{0.0148148,0},{0.974306,0},{0.0950617,0}}" />
+            <Property name="Text" value="Planet View" />
+            <Property name="VerticalAlignment" value="Centre" />
+        </Window>
+        <Window type="xfskin/Button" name="GroundSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.239507,0},{0.481945,0},{0.323458,0}}" />
+            <Property name="Text" value="Ground" />
+        </Window>
+        <Window type="xfskin/Button" name="AtmoSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.554322,0},{0.481945,0},{0.638272,0}}" />
+            <Property name="Text" value="Fog &amp; Atmosphere" />
+        </Window>
+        <Window type="xfskin/Button" name="CloudsSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.660494,0},{0.481945,0},{0.744444,0}}" />
+            <Property name="Text" value="Clouds" />
+        </Window>
+        <Window type="xfskin/Button" name="ResourcesSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.765432,0},{0.481945,0},{0.849383,0}}" />
+            <Property name="Text" value="Resources" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage22322" >
+            <Property name="Area" value="{{0.5,0},{0.134568,0},{0.503472,0},{0.850617,0}}" />
+            <Property name="Image" value="xfskin/line_v_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/StaticImage" name="StaticImage223222" >
+            <Property name="Area" value="{{0.256944,0},{0.134568,0},{0.260416,0},{0.850617,0}}" />
+            <Property name="Image" value="xfskin/line_v_long" />
+            <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        </Window>
+        <Window type="xfskin/Button" name="SeedsSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.134569,0},{0.481945,0},{0.218519,0}}" />
+            <Property name="Text" value="Seeds" />
+        </Window>
+        <Window type="xfskin/Button" name="ClimateSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.344445,0},{0.481945,0},{0.428396,0}}" />
+            <Property name="Text" value="Climate parameters" />
+        </Window>
+        <Window type="xfskin/Button" name="WaterSetup_Button" >
+            <Property name="Area" value="{{0.280556,0},{0.449384,0},{0.481945,0},{0.533334,0}}" />
+            <Property name="Text" value="Water details" />
+        </Window>
+    </Window>
+</GUILayout>

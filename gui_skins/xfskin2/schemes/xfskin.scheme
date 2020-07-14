@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<GUIScheme version="5" name="xfskin">
+
+  <Font filename="Audiowide-Regular-12.font" />
+  
+  
+  <Imageset filename="xfskin.imageset" />
+
+  
+  <LookNFeel filename="xfskin.looknfeel" />
+  
+  <WindowRendererSet filename="CEGUICoreWindowRendererSet" />
+
+  <FalagardMapping windowType="xfskin/Label" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/Label" />
+  <FalagardMapping windowType="xfskin/SimpleLabel" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/SimpleLabel" />
+  <FalagardMapping windowType="xfskin/Button" targetType="CEGUI/PushButton" renderer="Core/Button" lookNFeel="xfskin/Button" />
+  <FalagardMapping windowType="xfskin/ImageButton" targetType="CEGUI/PushButton" renderer="Core/Button" lookNFeel="xfskin/ImageButton" />
+  <FalagardMapping windowType="xfskin/StaticImage" targetType="DefaultWindow" renderer="Core/Default" lookNFeel="xfskin/StaticImage" />
+  <FalagardMapping windowType="xfskin/Editbox" targetType="CEGUI/Editbox" renderer="Core/Editbox" lookNFeel="xfskin/Editbox" />
+  <FalagardMapping windowType="xfskin/Titlebar" targetType="CEGUI/Titlebar" renderer="Core/Titlebar" lookNFeel="xfskin/Titlebar" />
+  <FalagardMapping windowType="xfskin/FrameWindow" targetType="CEGUI/FrameWindow" renderer="Core/FrameWindow" lookNFeel="xfskin/FrameWindow" />
+  <FalagardMapping windowType="xfskin/VerticalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="xfskin/VerticalScrollbarThumb" />
+  <FalagardMapping windowType="xfskin/HorizontalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="xfskin/HorizontalScrollbarThumb" />
+  <FalagardMapping windowType="xfskin/VerticalScrollbar"   targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/VerticalScrollbar" />
+  <FalagardMapping windowType="xfskin/HorizontalScrollbar" targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="xfskin/HorizontalScrollbar" />
+  <FalagardMapping windowType="xfskin/Listbox" targetType="CEGUI/Listbox" renderer="Core/Listbox" lookNFeel="xfskin/Listbox" />
+  <FalagardMapping windowType="xfskin/ComboEditbox"  targetType="CEGUI/Editbox"	 renderer="Core/Editbox" lookNFeel="xfskin/ComboEditbox" />
+  <FalagardMapping windowType="xfskin/ComboDropList" targetType="CEGUI/ComboDropList" renderer="Core/Listbox" lookNFeel="xfskin/ComboDropList" />
+  <FalagardMapping windowType="xfskin/Combobox" targetType="CEGUI/Combobox"	 renderer="Core/Default" lookNFeel="xfskin/Combobox" />
+  <FalagardMapping windowType="xfskin/Checkbox" targetType="CEGUI/ToggleButton" renderer="Core/ToggleButton" lookNFeel="xfskin/Checkbox" />
+  
+</GUIScheme>

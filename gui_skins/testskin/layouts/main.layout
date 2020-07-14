@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="root" >
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="AlfiskoSkin/FrameWindow" name="testWindow" >
+            <Property name="Area" value="{{0,0},{0,0},{0.25,77},{0.25,-5}}" />
+            <Property name="Text" value="Main control" />
+            <AutoWindow namePath="__auto_titlebar__" >
+                <Property name="AlwaysOnTop" value="false" />
+            </AutoWindow>
+            <Window type="AlfiskoSkin/Label" name="FPSInfoLabel" >
+                <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+            </Window>
+            <Window type="AlfiskoSkin/Button" name="Trigger" >
+                <Property name="Area" value="{{0,-2},{0.2,-6},{1,-2},{0.6,-16}}" />
+                <Property name="Text" value="Action" />
+            </Window>
+            <Window type="AlfiskoSkin/Button" name="Quit" >
+                <Property name="Area" value="{{0,0},{0.6,0},{1,0},{1,1}}" />
+                <Property name="Text" value="Leave !!" />
+            </Window>
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_Create" >
+            <Property name="Area" value="{{0,22},{0,343},{0,258},{0,416}}" />
+            <Property name="Text" value="Create" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_Destroy" >
+            <Property name="Area" value="{{0,20},{0,455},{0,256},{0,528}}" />
+            <Property name="Text" value="Destroy" />
+        </Window>
+    </Window>
+</GUILayout>
