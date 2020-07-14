@@ -25,6 +25,7 @@ project(ds_engine)
 # disable ZERO_CHECK project generation
 set(CMAKE_SUPPRESS_REGENERATION true)
 
+# 3rd-parts localisations
 set(physfs_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/physfs-2.0.3/sdk/include)
 set(physfs_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/physfs-2.0.3/sdk/lib/x86)
 
@@ -52,17 +53,25 @@ set(bullet_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/bullet-2.87/sdk/lib/x86)
 set(assimp_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/include)
 set(assimp_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/lib/x86)
 
+# core, plugins and runtimes
 add_subdirectory(drawspacecore_project)
 add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
 add_subdirectory(Plugins/d3d9_project)
 add_subdirectory(rt_project)
 add_subdirectory(vm_project)
+
+# modules
 add_subdirectory(modules/gameroom_project)
 add_subdirectory(modules/skyboxmod_project)
 add_subdirectory(modules/mvtmod_project)
 add_subdirectory(modules/planetsmod_project)
+
+# demos
 add_subdirectory(samples/cpp/impostors)
+add_subdirectory(samples/cpp/water)
+
+# shaders
 add_subdirectory(hlsl_4_0_project)
 
 
