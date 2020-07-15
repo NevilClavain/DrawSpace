@@ -52,3 +52,4 @@ target_link_libraries(gameroom lua physfs jsmn assimp-vc120-mt BulletDynamics_vs
 install(TARGETS gameroom CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS gameroom CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/modules/gameroom/lua_commons DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/gameroom/user.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/lua_commons)
