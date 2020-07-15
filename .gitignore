@@ -69,6 +69,7 @@ ds_engine.sln
 CMakeCache.txt
 INSTALL.vcxproj*
 ALL_BUILD.vcxproj*
+/config_deployment/
 *.cmake
 /CMakeFiles/
 /drawspacecore_project/CMakeFiles/
