@@ -10,11 +10,11 @@ g:enable_shadersdescrinfinalpath(TRUE)
 --g:set_virtualfs("test_data.bank")
 
 run=function()
-	commons.utils.startup('testspace_i.lua')	
+	commons.utils.startup('test1_i.lua')	
 end
 
 stop=function()
-	commons.utils.shutdown('testspace_r.lua')
+	commons.utils.shutdown('test1_r.lua')
 end
 
 -- restart	
