@@ -303,6 +303,6 @@ add_definitions(-DBT_USE_DOUBLE_PRECISION )
 add_library(drawspace_core ${source_files})
 
 install(FILES ${assimp_lib_dir}/$<CONFIGURATION>/assimp-vc120-mt.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-install(FILES ${CMAKE_SOURCE_DIR}/config/renderer/appgraphics.conf DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/renderer/appgraphics.conf OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 

@@ -47,4 +47,4 @@ target_link_libraries(rt physfs jsmn drawspace_core)
 
 install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(FILES ${CMAKE_SOURCE_DIR}/config/logging/logrt.conf DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/logging/logrt.conf OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
