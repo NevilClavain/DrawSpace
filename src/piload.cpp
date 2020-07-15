@@ -34,10 +34,15 @@ using namespace DrawSpace::Utils;
 bool PILoad::LoadRendererPlugin( const dsstring& p_file )
 {
 	dsstring complete_path = p_file;
+
+#ifdef _FROMCMAKE
+    complete_path += ".dll";
+#else
 #ifdef _DEBUG
 	complete_path += ".dll";
 #else
 	complete_path += "_r.dll";
+#endif
 #endif
 
     DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle = NULL;
@@ -62,10 +67,15 @@ bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instan
                             DrawSpace::Interface::Module::Root** p_module_root )
 {
 	dsstring complete_path = p_file;
+
+#ifdef _FROMCMAKE
+    complete_path += ".dll";
+#else
 #ifdef _DEBUG
 	complete_path += ".dll";
 #else
 	complete_path += "_r.dll";
+#endif
 #endif
 
     DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle = NULL;
