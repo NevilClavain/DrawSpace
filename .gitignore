@@ -110,6 +110,9 @@ ALL_BUILD.vcxproj*
 /samples/cpp/water/CMakeFiles/
 /samples/cpp/water/*.sln
 /samples/cpp/water/*.vcxproj*
+/samples/lua/texture/CMakeFiles/
+/samples/lua/texture/*.sln
+/samples/lua/texture/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
