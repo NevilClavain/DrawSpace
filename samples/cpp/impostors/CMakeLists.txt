@@ -52,6 +52,16 @@ target_link_libraries(${sample_name} physfs jsmn assimp-vc120-mt BulletDynamics_
 
 install(TARGETS ${sample_name} CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/cpp/impostors/impostorsdemo_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
+# required shaders for this demo
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/impostorsdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/impostorsdemo_assets/shaders_bank/hlsl_4_0)
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/screenimpostor_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/impostorsdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/screenimpostor_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/impostorsdemo_assets/shaders_bank/hlsl_4_0)
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/spaceimpostor_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/impostorsdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/spaceimpostor_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/impostorsdemo_assets/shaders_bank/hlsl_4_0)
 
