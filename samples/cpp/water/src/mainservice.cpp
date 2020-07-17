@@ -122,8 +122,8 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->SetRenderStates( finalpass_rss );
 
 
-    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask.vso", true ) ) );
-    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask.pso", true ) ) );
+    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask_vs.cso", true ) ) );
+    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask_ps.cso", true ) ) );
 
 	/*
     Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(m_systemsHub.GetSystem("ResourcesSystem"));
@@ -163,8 +163,8 @@ bool MainService::Init( void )
     m_wavespass.CreateViewportQuad();
 
     m_wavespass.GetViewportQuad()->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-    m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.vso", true ) ) );
-    m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves.pso", true ) ) );
+    m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves_vs.cso", true ) ) );
+    m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves_ps.cso", true ) ) );
 
     resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(0));
     resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(1));
@@ -545,8 +545,8 @@ void MainService::create_skybox( void )
 
     Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
 
-    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.vso", true)));
-    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture.pso", true)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.cso", true)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.cso", true)));
 
 
     RenderStatesSet skybox_texturepass_rss;
@@ -557,8 +557,8 @@ void MainService::create_skybox( void )
 
     Fx* skybox_texturemirrorpass_fx = _DRAWSPACE_NEW_(Fx, Fx);
 
-    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror.vso", true)));
-    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror.pso", true)));
+    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror_vs.cso", true)));
+    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror_ps.cso", true)));
 
     RenderStatesSet skybox_texturemirrorpass_rss;
     skybox_texturemirrorpass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -681,8 +681,8 @@ void MainService::create_dynamic_cube( void )
     RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
     cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.cso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.cso", true ) ) );
 
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
 
@@ -707,8 +707,8 @@ void MainService::create_dynamic_cube( void )
     RenderingNode* cube_texturemirrorpass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot" )->getPurpose().GetRenderingNode();
     cube_texturemirrorpass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
-    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_vs.cso", true ) ) );
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_ps.cso", true ) ) );
 
     cube_texturemirrorpass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "mars.jpg" ) ), 0 );
 
@@ -805,8 +805,8 @@ void MainService::create_static_cube( void )
     RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
     cube_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.vso", true ) ) );
-    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture.pso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.cso", true ) ) );
+    cube_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.cso", true ) ) );
 
     cube_texturepass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
 
@@ -829,8 +829,8 @@ void MainService::create_static_cube( void )
     RenderingNode* cube_texturemirrorpass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturemirrorpass_slot" )->getPurpose().GetRenderingNode();
     cube_texturemirrorpass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.vso", true ) ) );
-    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror.pso", true ) ) );
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_vs.cso", true ) ) );
+    cube_texturemirrorpass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_mirror_ps.cso", true ) ) );
 
     cube_texturemirrorpass->SetTexture( _DRAWSPACE_NEW_( Texture, Texture( "002b2su2.jpg" ) ), 0 );
 
@@ -921,8 +921,8 @@ void MainService::create_ground( void )
 
     ////////////////////////////////////////////////////////
 
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.vso", true ) ) );
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color.pso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color_vs.cso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color_ps.cso", true ) ) );
 
 
     ground_texturepass->AddShaderParameter( 1, "color", 0 );
@@ -946,8 +946,8 @@ void MainService::create_ground( void )
     RenderingNode* ground_bumppass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "bumppass_slot" )->getPurpose().GetRenderingNode();
 
     ground_bumppass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
-    ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.vso", true ) ) );
-    ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump.pso", true ) ) );
+    ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump_vs.cso", true ) ) );
+    ground_bumppass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_bump_ps.cso", true ) ) );
 
     RenderStatesSet ground_bumppass_rss;
 

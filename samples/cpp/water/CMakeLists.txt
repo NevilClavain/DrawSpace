@@ -54,6 +54,26 @@ install(TARGETS ${sample_name} CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_
 install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/cpp/water/waterdemo_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
+#CEGUI stuff : gui skin
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
+# required shaders for this demo
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_mirror_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_mirror_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/water_bump_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/water_bump_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/water_mask_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/water_mask_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/water_waves_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/water_waves_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)
 
