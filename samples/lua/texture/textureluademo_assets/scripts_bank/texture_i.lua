@@ -19,8 +19,8 @@ textures = TexturesSet()
 textures:set_texturefiletostage('mars.jpg', 0)
 
 fxparams = FxParams()
-fxparams:add_shaderfile('texture.vso',SHADER_COMPILED)
-fxparams:add_shaderfile('texture.pso',SHADER_COMPILED)
+fxparams:add_shaderfile('texture_vs.cso',SHADER_COMPILED)
+fxparams:add_shaderfile('texture_ps.cso',SHADER_COMPILED)
 fxparams:set_renderstatesset(finalpass_rss)
 
 
