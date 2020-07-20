@@ -71,6 +71,7 @@ add_subdirectory(modules/planetsmod_project)
 add_subdirectory(samples/cpp/impostors)
 add_subdirectory(samples/cpp/water)
 add_subdirectory(samples/lua/texture)
+add_subdirectory(samples/lua/water)
 
 # shaders
 add_subdirectory(hlsl_4_0_project)

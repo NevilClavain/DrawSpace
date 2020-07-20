@@ -99,8 +99,8 @@ commons.init_final_pass_water_mask = function(p_rendergraph, p_passid)
 	local textures = TexturesSet()
 
 	local fxparams = FxParams()
-	fxparams:add_shaderfile('water_mask.vso',SHADER_COMPILED)
-	fxparams:add_shaderfile('water_mask.pso',SHADER_COMPILED)
+	fxparams:add_shaderfile('water_mask_vs.cso',SHADER_COMPILED)
+	fxparams:add_shaderfile('water_mask_ps.cso',SHADER_COMPILED)
 	fxparams:set_renderstatesset(finalpass_rss)
 
 
