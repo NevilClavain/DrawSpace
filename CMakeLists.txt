@@ -73,6 +73,7 @@ add_subdirectory(samples/cpp/water)
 add_subdirectory(samples/lua/texture)
 add_subdirectory(samples/lua/water)
 add_subdirectory(samples/lua/gui)
+add_subdirectory(samples/lua/planet)
 
 # shaders
 add_subdirectory(hlsl_4_0_project)
