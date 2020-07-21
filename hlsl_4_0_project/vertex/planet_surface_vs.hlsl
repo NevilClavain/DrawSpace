@@ -28,7 +28,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include "mat_input_constants.hlsl"
+#include ".\..\common\mat_input_constants.hlsl"
 
 #define v_flag0                     24
 #define v_patch_translation         25

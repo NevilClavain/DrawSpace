@@ -30,7 +30,7 @@ cbuffer legacyargs : register(b0)
 
 
 
-#include "fbm.hlsl"
+#include ".\..\common\fbm.hlsl"
 
 struct PS_INTPUT 
 {

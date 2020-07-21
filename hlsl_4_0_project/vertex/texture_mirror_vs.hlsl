@@ -28,7 +28,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include "mat_input_constants.hlsl"
+#include ".\..\common\mat_input_constants.hlsl"
 
 struct VS_INPUT
 {
@@ -42,7 +42,7 @@ struct VS_OUTPUT
     float2 TexCoord0 : TEXCOORD0;
 };
 
-#include "generic_rendering.hlsl"
+#include ".\..\common\generic_rendering.hlsl"
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {

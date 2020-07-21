@@ -56,8 +56,8 @@ struct PS_INTPUT
     float Fog : FOG;  
 };
 
-#include "spherelod_commons.hlsl"
-#include "landscapes.hlsl"
+#include ".\..\common\spherelod_commons.hlsl"
+#include ".\..\common\landscapes.hlsl"
 
 #define v_flags                     0
 #define v_flags2                    1
