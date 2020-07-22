@@ -74,6 +74,7 @@ add_subdirectory(samples/lua/texture)
 add_subdirectory(samples/lua/water)
 add_subdirectory(samples/lua/gui)
 add_subdirectory(samples/lua/planet)
+add_subdirectory(samples/lua/nebulae)
 
 # shaders
 add_subdirectory(hlsl_4_0_project)

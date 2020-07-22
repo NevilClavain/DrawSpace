@@ -123,6 +123,10 @@ ALL_BUILD.vcxproj*
 /samples/lua/planet/CMakeFiles/
 /samples/lua/planet/*.sln
 /samples/lua/planet/*.vcxproj*
+/samples/lua/nebulae/CMakeFiles/
+/samples/lua/nebulae/*.sln
+/samples/lua/nebulae/*.vcxproj*
+
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
