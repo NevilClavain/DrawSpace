@@ -105,10 +105,15 @@ bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instan
 bool PILoad::UnloadModule( const dsstring& p_file, DrawSpace::Interface::Module::Root* p_module_root )
 {
 	dsstring complete_path = p_file;
+
+#ifdef _FROMCMAKE
+    complete_path += ".dll";
+#else
 #ifdef _DEBUG
 	complete_path += ".dll";
 #else
 	complete_path += "_r.dll";
+#endif
 #endif
 
     p_module_root->Release();
