@@ -126,6 +126,9 @@ ALL_BUILD.vcxproj*
 /samples/lua/nebulae/CMakeFiles/
 /samples/lua/nebulae/*.sln
 /samples/lua/nebulae/*.vcxproj*
+/tools/max/CMakeFiles/
+/tools/max/*.sln
+/tools/max/*.vcxproj*
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

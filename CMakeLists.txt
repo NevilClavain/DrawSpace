@@ -76,6 +76,9 @@ add_subdirectory(samples/lua/gui)
 add_subdirectory(samples/lua/planet)
 add_subdirectory(samples/lua/nebulae)
 
+#tools
+add_subdirectory(tools/max)
+
 # shaders
 add_subdirectory(hlsl_4_0_project)
 
