@@ -44,4 +44,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/transfer2_vs.cso OPTIONAL DES
 
 
 # required lua models for this demo
-install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox_model.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/nebulaeluademo_assets/scripts_bank)
+
+# install spacebox model
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/nebulaeluademo_assets)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/nebulaeluademo_assets)
