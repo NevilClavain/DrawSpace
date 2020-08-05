@@ -41,6 +41,15 @@ install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_vs.cso OPTIONAL DESTI
 # skin needed by max tool#CEGUI stuff : gui skin
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/maxskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
+
+# deploy continent model in max tools assets directory
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/scripts_bank/continent_model.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/meshes_bank/continent.ac OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/meshes_bank)
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/textures_bank/DefaultMaterial_albedo.jpg OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/textures_bank)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
+
 # model raptor scene
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_raptor_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
 
