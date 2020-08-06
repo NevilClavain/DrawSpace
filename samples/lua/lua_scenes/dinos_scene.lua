@@ -4,6 +4,7 @@
 	include('boulder_model.lua')
 	include('spherebump_model.lua')
 	include('metalcube_model.lua')
+	include('spacebox_model.lua')
 
 	max_apprun_cbfunc = function()
 
@@ -96,6 +97,15 @@
 	metalcube.view.load('c', {x = -4010.0, y = skydome.innerRadius + 25.0, z = -2740.0}, metalcube_passes_config, 'root' )
 	
 	
+	spacebox_passes_config = 
+    {
+	   texture_pass = 
+	   {
+		   rendering_id = 'layer0_rendering',
+		   lit_shader_update_func = nil
+	   }
+    }
+    spaceboxmod.view.load('spacebox0', spacebox_passes_config, 'root')
 
 	model.env.setgravity(1)
 	
