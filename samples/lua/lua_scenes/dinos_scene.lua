@@ -3,7 +3,7 @@
 	include('continent_model.lua')
 	include('boulder_model.lua')
 	include('spherebump_model.lua')
-
+	include('metalcube_model.lua')
 
 	max_apprun_cbfunc = function()
 
@@ -83,6 +83,17 @@
 	}
 	spherebump.view.load('s', {x = -4010.0, y = skydome.innerRadius + 135.0, z = -2740.0}, spherebump_passes_config, 'root' )
 	spherebump.view.load('s2', {x = -4010.0, y = skydome.innerRadius + 18.0, z = -2740.0}, spherebump_passes_config, 'root' )
+
+
+	metalcube_passes_config = 
+	{
+		texture_pass = 
+		{
+			rendering_id = 'lit_rendering',
+			lit_shader_update_func = metalcube.update_from_scene_env
+		}
+	}
+	metalcube.view.load('c', {x = -4010.0, y = skydome.innerRadius + 25.0, z = -2740.0}, metalcube_passes_config, 'root' )
 	
 	
 
