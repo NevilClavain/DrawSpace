@@ -150,7 +150,7 @@ continent.update_lit_from_scene_env = function( p_pass_id, p_environment_table, 
 
 end
 
-continent.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id)
+continent.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
   
   local entity
   local renderer
@@ -162,8 +162,13 @@ continent.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_i
   local body=Body()
   body:attach_toentity(entity)
   body:configure_shape(SHAPE_MESHE, 'continent.ac', 'g TerrainMesh')
+
+  local pos_mat = Matrix()
+  pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
+  body:configure_attitude(pos_mat)
   body:configure_mode(COLLIDER_MODE)
 
+  
   p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
@@ -219,7 +224,7 @@ continent.view.unload = function(p_entity_id)
   end
 end
 
-continent.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
+continent.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
 
   local found_id = FALSE
   for k, v in pairs(continent.models) do
@@ -232,7 +237,7 @@ continent.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('continent model', continent.createlitmodelview, p_passes_config, nil, nil, p_entity_id, p_parent_entity_id)
+    model.view.loadbody('continent model', continent.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
   end
 end
 
