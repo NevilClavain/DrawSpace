@@ -30,6 +30,14 @@
 	  boulder.update_lit_from_scene_env('texture_pass', environment, 'rock')
 
 
+	  spherebump.lit_material.light_absorption.r = y0
+	  spherebump.lit_material.light_absorption.g = y0
+	  spherebump.lit_material.light_absorption.b = y0
+
+	  spherebump.update_from_scene_env('texture_pass', environment, 's')
+	  spherebump.update_from_scene_env('texture_pass', environment, 's2')
+
+
     end
 	
 	continent_passes_config = 
