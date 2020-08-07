@@ -51,7 +51,7 @@ add_library(gameroom SHARED ${source_files})
 target_link_libraries(gameroom lua physfs jsmn assimp-vc120-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
 install(TARGETS gameroom CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS gameroom CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/modules/gameroom/console_data DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)
 
