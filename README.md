@@ -20,9 +20,20 @@ DrawSpace currently rely on some 3rd-parts libraries:
 	** RSA Data Security, Inc. MD5 Message-Digest Algorithm
 	** Wombat efficient texture-free procedural noise library for shaders : https://github.com/BrianSharpe/Wombat
 	
-Project generated with CMake (WIP!); Project Build example (with Visual studio 2019) : 
-cmake -G"Visual Studio 16 2019" -A Win32 
-(Minimum VS version required : VS2017)
+
+1/ cmake -G"Visual Studio 16 2019" -A Win32 
+
+2/ duplicate 'config' directory to 'config_deployment'
+
+3/ open project with visual studio : ds_engine.sln
+
+4/ under VS IDE : compile all by right-click -> 'generate' on ALL_BUILD project and/or 'INSTALL' (Debug and/or Release)
+
+5/ right-click on project 'rt' -> 'properties' : go on 'Debugging' section :
+	-> 'Command' : set value to "<drawspace_install>\apps\Debug\rt.exe"
+	-> 'Command args' : set to module to run : gameroom,waterdemo,impostorsdemo,nebulaeluademo,planetluademo,etc... 
+	-> 'Working directory' : set to "<drawspace_install>\apps\Debug"
+
 
 
 ![alt tag](https://2.bp.blogspot.com/-R6beb0Ym7wY/XJF6boDwcjI/AAAAAAAADZ8/im06Bwg1hxQ6kEWG0X8txeGmMprtuIzUQCLcBGAs/s1600/xf.jpg)
