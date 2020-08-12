@@ -38,14 +38,21 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/tools/max/max_assets DESTINATION ${CMAKE_S
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
-# skin needed by max tool#CEGUI stuff : gui skin
+# skin needed by max tool
+
+#CEGUI stuff : gui skin
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/maxskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
+##################################################
+############################ Models installation
+##################################################
+
 
 # install spacebox model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 
-# deploy continent model in max tools assets directory
+# deploy continent model
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/scripts_bank/continent_model.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/meshes_bank/continent.ac OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/meshes_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/textures_bank/DefaultMaterial_albedo.jpg OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/textures_bank)
@@ -83,10 +90,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATI
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
-# model raptor scene
-install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_raptor_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
-
-# deploy raptor model in max tools assets directory
+# deploy raptor model
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/scripts_bank/raptor_model.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/meshes_bank/raptor.fbx OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/meshes_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/textures_bank/raptorDif2.png OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/textures_bank)
@@ -95,23 +99,34 @@ install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/textures_bank/ra
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
-# model trex scene
-install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_trex_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
-
-# deploy trex model in max tools assets directory
+# deploy trex model
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/scripts_bank/trex_model.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/meshes_bank/trex.fbx OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/meshes_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/textures_bank/trex_difuse.png OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/textures_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
-# dinos scene
-install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/dinos_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
-
 # deploy skydome model in max tools assets directory
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/meshes_bank/skydome.ac OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/meshes_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/scripts_bank/skydome_model.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/skydome_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/skydome_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
+
+
+##################################################
+############################ Scenes installation
+##################################################
+
+# model raptor scene
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_raptor_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
+
+# model trex scene
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_trex_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
+
+# dinos scene
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/dinos_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
+
+
 
 
