@@ -1982,6 +1982,13 @@ bool D3D11Renderer::SetShaders( void* p_data )
     return true;
 }
 
+bool D3D11Renderer::CompileShader(const dsstring& p_source, Blob& p_outblob)
+{
+	bool status{ false };
+
+	return status;
+}
+
 bool D3D11Renderer::ApplyRenderStatesIn( void* p_data )
 {
 	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;

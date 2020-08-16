@@ -26,6 +26,7 @@
 #define _RENDERER_H_
 
 #include "drawspace_commons.h"
+#include "memalloc.h"
 #include "matrix.h"
 #include "renderingnode.h"
 #include "impostorsdisplaylist.h"
@@ -39,23 +40,37 @@ class Renderer
 {
 public:
 
-    typedef struct
+	struct Characteristics
     {
         long    width_resol;
         long    height_resol;
         bool    fullscreen;
         dsreal  width_viewport;
         dsreal  height_viewport;
+    };
 
-    } Characteristics;
-
-    typedef struct
+	struct DeviceDescr
     {
         dsstring driver;
         dsstring deviceName;
         dsstring description;
-    
-    } DeviceDescr;
+    };
+
+	struct Blob
+	{
+		void*	data{ nullptr };
+		size_t	data_size{ 0 };
+
+		inline void Release(void)
+		{
+			if (data)
+			{
+				_DRAWSPACE_DELETE_N_(data);
+				data = nullptr;
+				data_size = 0;
+			}
+		}
+	};
 
     virtual void GetDescr( dsstring& p_descr ) = 0;
     virtual void GetShadersDescr( dsstring& p_descr ) = 0;
@@ -96,6 +111,7 @@ public:
 
     virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetShaders( void* p_data ) = 0;
+	virtual bool CompileShader(const dsstring& p_source, Blob& p_outblob) = 0;
 
     virtual bool ApplyRenderStatesIn( void* p_data ) = 0;
     virtual bool ApplyRenderStatesOut( void* p_data ) = 0;
