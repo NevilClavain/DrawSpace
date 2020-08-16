@@ -68,7 +68,7 @@ class D3D11Renderer : public DrawSpace::Interface::Renderer
 protected:
 
 
-    using TextureInfos = struct
+	struct TextureInfos
     {
         dsstring                                                    path;
         DrawSpace::Core::Texture*                                   texture_instance;
@@ -98,7 +98,7 @@ protected:
 
     };
 
-    using MesheData = struct
+	struct MesheData
     {
 	    ID3D11Buffer*                                               vertex_buffer;
 	    ID3D11Buffer*                                               index_buffer;
@@ -107,7 +107,7 @@ protected:
     };
 
 
-    using ShadersData = struct
+	struct ShadersData
     {
         ID3D11VertexShader*                                         vertex_shader;
         ID3D11PixelShader*                                          pixel_shader;
@@ -115,15 +115,14 @@ protected:
     };
     
 
-    using ShaderLegacyArg = struct
+	struct ShaderLegacyArg
     {
         XMFLOAT4                                                    vector[512];
         XMMATRIX                                                    matrix[512];
-    
     };
 
     // render states
-    using RSCacheEntry = struct
+	struct RSCacheEntry
     {
         D3D11_RASTERIZER_DESC   rs_desc;
         ID3D11RasterizerState*  rs_state;
@@ -131,11 +130,10 @@ protected:
     };
 
     // blending states
-    using BSCacheEntry = struct
+	struct BSCacheEntry
     {
         D3D11_BLEND_DESC        bs_desc;
         ID3D11BlendState*       bs_state;
-
     };
 
 	static const int NbMaxVectorForShadersBuffers = 512;
@@ -217,113 +215,113 @@ public:
     D3D11Renderer( void );
     ~D3D11Renderer( void );
 
-    virtual void GetDescr( dsstring& p_descr );
-    virtual void GetShadersDescr( dsstring& p_descr );
+    void GetDescr( dsstring& p_descr );
+    void GetShadersDescr( dsstring& p_descr );
 
-    virtual void DumpMemoryAllocs( void );
+    void DumpMemoryAllocs( void );
 
-    virtual bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf );
-    virtual void Release( void );
+    bool Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p_w_height, DrawSpace::Logger::Configuration* p_logconf );
+    void Release( void );
     
-    virtual void BeginScreen( void );
-    virtual void EndScreen( void );
-    virtual void FlipScreen( void );
+    void BeginScreen( void );
+    void EndScreen( void );
+    void FlipScreen( void );
 
-    virtual void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
-    virtual void ClearDepth( dsreal p_value = 1.0 );
+    void ClearScreen( unsigned char p_r, unsigned char p_g, unsigned char p_b, unsigned char p_a );
+    void ClearDepth( dsreal p_value = 1.0 );
 
-    virtual void BeginTarget( void* p_data, int p_slice_index);
-    virtual void EndTarget( void* p_data );
-
-
-    virtual bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
-    virtual void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );    
-    virtual bool SetMeshe( void* p_data );
-    virtual bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data );
-    virtual bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data );
-    virtual bool UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data );
-
-    virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
-    virtual void DestroyTexture( void* p_data );
-    virtual bool SetTexture( void* p_data, int p_stage );
-    virtual bool SetVertexTexture( void* p_data, int p_stage );
-	virtual bool UnsetTexture( int p_stage );
-    virtual bool UnsetVertexTexture( int p_stage );
-    virtual bool AllocTextureContent( void* p_texturedata );
-    virtual void ReleaseTextureContent( void* p_texturedata );
-    virtual void* GetTextureContentPtr( void* p_texturedata );
-    virtual bool CopyTextureContent( void* p_texturedata );
-    virtual bool UpdateTextureContent( void* p_texturedata );
+    void BeginTarget( void* p_data, int p_slice_index);
+    void EndTarget( void* p_data );
 
 
-    virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
-    virtual bool SetShaders( void* p_data );
-	virtual bool CompileShader(const dsstring& p_source, Blob& p_outblob);
+    bool CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data );
+    void RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data );    
+    bool SetMeshe( void* p_data );
+    bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data );
+    bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data );
+    bool UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data );
 
-    virtual bool ApplyRenderStatesIn( void* p_data );
-    virtual bool ApplyRenderStatesOut( void* p_data );
+    bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
+    void DestroyTexture( void* p_data );
+    bool SetTexture( void* p_data, int p_stage );
+    bool SetVertexTexture( void* p_data, int p_stage );
+	bool UnsetTexture( int p_stage );
+    bool UnsetVertexTexture( int p_stage );
+    bool AllocTextureContent( void* p_texturedata );
+    void ReleaseTextureContent( void* p_texturedata );
+    void* GetTextureContentPtr( void* p_texturedata );
+    bool CopyTextureContent( void* p_texturedata );
+    bool UpdateTextureContent( void* p_texturedata );
 
 
-    virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
-    virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat );
+    bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
+    bool SetShaders( void* p_data );
+	bool CompileShader(const dsstring& p_source, Blob& p_outblob);
 
-	virtual bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors);
+    bool ApplyRenderStatesIn( void* p_data );
+    bool ApplyRenderStatesOut( void* p_data );
 
-	virtual bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
 
-    virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
+    bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
+    bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat );
 
-    virtual void GetRenderCharacteristics( Characteristics& p_characteristics );
+	bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors);
 
-    virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
+	bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
 
-    virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
+    void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 
-    virtual bool GUI_InitSubSystem( void );
-    virtual void GUI_ReleaseSubSystem( void );
-    virtual void GUI_Render( void );
-    virtual void GUI_SetResourcesRootDirectory( const dsstring& p_path );
+    void GetRenderCharacteristics( Characteristics& p_characteristics );
 
-    virtual void GUI_OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy );
-    virtual void GUI_OnMouseLeftButtonDown( void );
-    virtual void GUI_OnMouseLeftButtonUp( void );
-    virtual void GUI_OnMouseRightButtonDown( void );
-    virtual void GUI_OnMouseRightButtonUp( void );
-    virtual void GUI_OnKeyDown( long p_key );
-    virtual void GUI_OnKeyUp( long p_key );
-    virtual void GUI_OnChar( long p_key );
-    virtual void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
-    virtual void GUI_UnloadAllLayouts( void );
-    virtual void GUI_LoadScheme( const dsstring& p_scheme_path );
-    virtual void GUI_UnloadAllSchemes( void );
-    virtual void GUI_SetLayout( const dsstring& p_layoutpath );
-    virtual void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
-    virtual void GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );
-    virtual bool GUI_IsVisible( const dsstring& p_layoutName, const dsstring& p_widgetName );
-    virtual void GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
-    virtual void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );
-    virtual void GUI_AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
-    virtual void GUI_ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName );
-    virtual bool GUI_GetListboxFirstSelectedItemIndex( const dsstring& p_layoutName, const dsstring& p_widgetName, int& p_index, dsstring& p_text );
-    virtual void GUI_AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
-    virtual void GUI_ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName );
-    virtual void GUI_SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state );
-    virtual int  GUI_GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName );
-    virtual bool GUI_IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName );
-    virtual void GUI_SetCheckboxState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );
+    void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
 
-    virtual void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
-    virtual void GUI_RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler );
-    virtual void GUI_SetMouseCursorImage( const dsstring& p_image );
-    virtual void GUI_ShowMouseCursor( bool p_show );
+    void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
-    virtual void GUI_CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName );
-    virtual void GUI_SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos );
-    virtual void GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image );
-    virtual void GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale );
-    virtual void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle );
+    bool GUI_InitSubSystem( void );
+    void GUI_ReleaseSubSystem( void );
+    void GUI_Render( void );
+    void GUI_SetResourcesRootDirectory( const dsstring& p_path );
 
-    virtual void GUI_InitTest( void ); // temporaire
+    void GUI_OnMouseMove( float p_xm, float p_ym, float p_dx, float p_dy );
+    void GUI_OnMouseLeftButtonDown( void );
+    void GUI_OnMouseLeftButtonUp( void );
+    void GUI_OnMouseRightButtonDown( void );
+    void GUI_OnMouseRightButtonUp( void );
+    void GUI_OnKeyDown( long p_key );
+    void GUI_OnKeyUp( long p_key );
+    void GUI_OnChar( long p_key );
+    void GUI_LoadLayout( const dsstring& p_layout_path, const dsstring& p_widgets_path );
+    void GUI_UnloadAllLayouts( void );
+    void GUI_LoadScheme( const dsstring& p_scheme_path );
+    void GUI_UnloadAllSchemes( void );
+    void GUI_SetLayout( const dsstring& p_layoutpath );
+    void GUI_StoreWidget( const dsstring& p_layoutName, const dsstring& p_parentName, const dsstring& p_childName );
+    void GUI_SetVisibleState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );
+    bool GUI_IsVisible( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    void GUI_SetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text );
+    void GUI_GetWidgetText( const dsstring& p_layoutName, const dsstring& p_widgetName, dsstring& p_outtext );
+    void GUI_AddListboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
+    void GUI_ClearListbox( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    bool GUI_GetListboxFirstSelectedItemIndex( const dsstring& p_layoutName, const dsstring& p_widgetName, int& p_index, dsstring& p_text );
+    void GUI_AddComboboxTextItem( const dsstring& p_layoutName, const dsstring& p_widgetName, const dsstring& p_text, unsigned int p_colors, const dsstring& p_brushImage );
+    void GUI_ClearCombobox( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    void GUI_SetComboBoxItemSelectionState( const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index, bool p_state );
+    int  GUI_GetComboBoxSelectionIndex( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    bool GUI_IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName );
+    void GUI_SetCheckboxState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );
+
+    void GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
+    void GUI_RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler );
+    void GUI_SetMouseCursorImage( const dsstring& p_image );
+    void GUI_ShowMouseCursor( bool p_show );
+
+    void GUI_CreateSprite( const dsstring& p_scheme_object, const dsstring& p_spriteName );
+    void GUI_SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos );
+    void GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image );
+    void GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale );
+    void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle );
+
+    void GUI_InitTest( void ); // temporaire
 
 };
 
