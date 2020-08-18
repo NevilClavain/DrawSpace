@@ -111,7 +111,21 @@ public:
 
     virtual bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data ) = 0;
     virtual bool SetShaders( void* p_data ) = 0;
-	virtual bool CompileShader(const dsstring& p_source, Blob& p_outblob) = 0;
+
+	
+	////////////////// shaders compilation from source
+	virtual bool CreateShaderBytes(const dsstring& p_source, int p_shadertype, void** p_data) = 0;
+	
+	virtual bool GetShaderCompilationStatus(void* p_data) = 0;
+	
+	virtual void* GetShaderBytes(void* p_data) = 0;
+	virtual size_t GetShaderBytesLength(void* p_data) = 0;
+	
+	virtual dsstring GetShaderCompilationError(void* p_data) = 0;
+
+	virtual void ReleaseShaderBytes(void* p_data) = 0;
+	/////////////////////////////////////////////////////
+
 
     virtual bool ApplyRenderStatesIn( void* p_data ) = 0;
     virtual bool ApplyRenderStatesOut( void* p_data ) = 0;

@@ -532,7 +532,7 @@ void D3D11Renderer::Release( void )
     m_textures_base.clear();
 
     // nettoyer toutes les resources shaders...
-    for( auto it = m_shaders_bases.begin(); it != m_shaders_bases.end(); ++it )
+    for( auto it = m_shaders_base.begin(); it != m_shaders_base.end(); ++it )
     {
         it->second->vertex_shader->Release();
         it->second->pixel_shader->Release();
@@ -540,7 +540,7 @@ void D3D11Renderer::Release( void )
 
         _DRAWSPACE_DELETE_( it->second );
     }
-    m_shaders_bases.clear();
+    m_shaders_base.clear();
 
     // nettoyer toutes les resources meshes...
     for( auto it = m_meshes_base.begin(); it != m_meshes_base.end(); ++it )
@@ -1829,9 +1829,9 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
     dsstring hash;
     p_fx->GetShadersMD5( hash );
 
-    if( m_shaders_bases.count( hash ) > 0 )
+    if( m_shaders_base.count( hash ) > 0 )
     {
-        *p_data = (void *)m_shaders_bases[hash];
+        *p_data = (void *)m_shaders_base[hash];
         return true;
     }
 
@@ -1880,20 +1880,6 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
             hRes = m_lpd3ddevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
 
-            /*
-            if( NULL == m_inputLayout )
-            {
-                //////////////////////// au premier vshader créé, instancier et setter l'objet inputLayout
-
-                hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_inputLayout );
-                D3D11_CHECK( CreateInputLayout )
-
-                pVSBlob->Release();
-
-                m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );                
-            }
-            */
-
             hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &input_layout );
             D3D11_CHECK( CreateInputLayout )
 
@@ -1903,18 +1889,6 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         {
             hRes = m_lpd3ddevice->CreateVertexShader( vertex_shader->GetData(), vertex_shader->GetDataSize(), NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
-
-            /*
-            if( NULL == m_inputLayout )
-            {
-                //////////////////////// au premier vshader créé, instancier et setter l'objet inputLayout
-
-                hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), vertex_shader->GetData(), vertex_shader->GetDataSize(), &m_inputLayout );
-                D3D11_CHECK( CreateInputLayout )
-
-                m_lpd3ddevcontext->IASetInputLayout( m_inputLayout );                
-            }
-            */
 
             hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), vertex_shader->GetData(), vertex_shader->GetDataSize(), &input_layout );
             D3D11_CHECK( CreateInputLayout )
@@ -1965,7 +1939,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
     *p_data = (void*)sdata;
 
-    m_shaders_bases[hash] = sdata;
+    m_shaders_base[hash] = sdata;
 
     return true;
 
@@ -1982,11 +1956,99 @@ bool D3D11Renderer::SetShaders( void* p_data )
     return true;
 }
 
-bool D3D11Renderer::CompileShader(const dsstring& p_source, Blob& p_outblob)
+
+
+bool D3D11Renderer::CreateShaderBytes(const dsstring& p_source, int p_shadertype, void** p_data)
 {
+	DECLARE_D3D11ASSERT_VARS
+
 	bool status{ false };
 
+	ShaderBytesData* sdata = _DRAWSPACE_NEW_(ShaderBytesData, ShaderBytesData);
+	sdata->blob = nullptr;
+
+	ID3DBlob* pBlob = NULL;
+	ID3DBlob* pErrBlob;
+
+	char* text = new char[p_source.length() + 1];
+
+	memcpy(text, p_source.c_str(), p_source.length());
+	text[p_source.length()] = 0;
+
+	hRes = compile_shader_from_mem(text, p_source.length(), "", (p_shadertype == 0 ? "vs_main" : "ps_main"), "vs_4_0", &pBlob, &pErrBlob);
+
+	if (S_OK != hRes)
+	{
+		if (pErrBlob != NULL)
+		{
+			sdata->blob = pErrBlob;
+		}
+		sdata->compilation_success = false;
+	}
+	else
+	{
+		sdata->blob = pBlob;
+		sdata->compilation_success = true;
+		status = true;
+	}
+
+	*p_data = (void*)sdata;
+
+	delete[] text;
 	return status;
+}
+
+bool D3D11Renderer::GetShaderCompilationStatus(void* p_data)
+{
+	ShaderBytesData* sdata = (ShaderBytesData*)p_data;
+	return sdata->compilation_success;
+}
+
+void* D3D11Renderer::GetShaderBytes(void* p_data)
+{
+	ShaderBytesData* sdata = (ShaderBytesData*)p_data;
+
+	if (sdata->blob)
+	{
+		return sdata->blob->GetBufferPointer();
+	}
+	return NULL;
+}
+
+size_t D3D11Renderer::GetShaderBytesLength(void* p_data)
+{
+	ShaderBytesData* sdata = (ShaderBytesData*)p_data;
+	if (sdata->blob)
+	{
+		return sdata->blob->GetBufferSize();
+	}
+	return 0;
+}
+
+dsstring D3D11Renderer::GetShaderCompilationError(void* p_data)
+{
+	ShaderBytesData* sdata = (ShaderBytesData*)p_data;
+	dsstring error_text;
+
+	if (sdata->blob)
+	{
+		error_text = dsstring((char*)sdata->blob);
+	}
+
+	return error_text;
+}
+
+void D3D11Renderer::ReleaseShaderBytes(void* p_data)
+{
+	ShaderBytesData* sdata = (ShaderBytesData*)p_data;
+
+	if (sdata->blob)
+	{
+		sdata->blob->Release();
+	}
+	_DRAWSPACE_DELETE_(sdata);
+
+	m_shadersbytes_base.erase(sdata);
 }
 
 bool D3D11Renderer::ApplyRenderStatesIn( void* p_data )

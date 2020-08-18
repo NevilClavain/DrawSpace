@@ -113,7 +113,13 @@ protected:
         ID3D11PixelShader*                                          pixel_shader;
         ID3D11InputLayout*                                          input_layout;
     };
-    
+
+	// compiled shaders bytescodes
+	struct ShaderBytesData
+	{
+		bool														compilation_success;
+		ID3DBlob*													blob;
+	};
 
 	struct ShaderLegacyArg
     {
@@ -179,7 +185,10 @@ protected:
     std::map<dsstring, TextureInfos*>                               m_targettextures_base;
 
     std::map<dsstring, MesheData*>                                  m_meshes_base;
-    std::map<dsstring, ShadersData*>                                m_shaders_bases;
+    std::map<dsstring, ShadersData*>                                m_shaders_base;
+	
+	std::set<ShaderBytesData*>										m_shadersbytes_base;
+
     std::map<dsstring, DrawSpace::Core::Fx*>                        m_fx_bases;
 
     ID3D11Buffer*                                                   m_vertexshader_legacyargs_buffer;
@@ -256,7 +265,13 @@ public:
 
     bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
     bool SetShaders( void* p_data );
-	bool CompileShader(const dsstring& p_source, Blob& p_outblob);
+
+	bool CreateShaderBytes(const dsstring& p_source, int p_shadertype, void** p_data);
+	bool GetShaderCompilationStatus(void* p_data);
+	void* GetShaderBytes(void* p_data);
+	size_t GetShaderBytesLength(void* p_data);
+	dsstring GetShaderCompilationError(void* p_data);
+	void ReleaseShaderBytes(void* p_data);
 
     bool ApplyRenderStatesIn( void* p_data );
     bool ApplyRenderStatesOut( void* p_data );
