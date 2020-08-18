@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "renderer.h"
 #include "rendersystem.h"
 #include "renderingaspect.h"
 #include "plugin.h"

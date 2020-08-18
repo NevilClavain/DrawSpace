@@ -27,10 +27,15 @@
 
 #include "systems.h"
 #include "entitynodegraph.h"
-#include "renderer.h"
+
 
 namespace DrawSpace
 {
+namespace Interface
+{
+class Renderer;
+}
+
 namespace Systems
 {
 class RenderingSystem : public Interface::System
