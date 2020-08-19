@@ -295,7 +295,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                         std::pair<dsstring,bool> shader_file_infos = fx_params.shaders[j];
                         Shader* shader = _DRAWSPACE_NEW_( Shader, Shader( shader_file_infos.first, shader_file_infos.second ) );
                         dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-                        resources_aspect->AddComponent<std::tuple<Shader*, bool>>(res_id, std::make_tuple(shader, false));
+                        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
                         fx->AddShader(shader);
                     }
 
@@ -418,7 +418,7 @@ void LuaClass_Rendering::cleanup_resources( lua_State* p_L )
 
                         dsstring id;
                         dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(res_id);
+                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
 
                         _DRAWSPACE_DELETE_(shader);
                     }

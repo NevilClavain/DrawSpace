@@ -621,11 +621,11 @@ void MainService::create_skybox( void )
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
 
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false, 1));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_mirror_vshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_mirror_pshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_mirror_vshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_mirror_pshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(1), false, 1));
 
 
 
@@ -738,13 +738,13 @@ void MainService::create_dynamic_cube( void )
 
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false, 1));
 
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture_mirror", std::make_tuple(cube_texturemirrorpass->GetTexture(0), false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(1), false, 1));
 
     resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
         "object.ac", "box", false));
@@ -860,14 +860,14 @@ void MainService::create_static_cube( void )
 
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false, 1));
 
 
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture_mirror", std::make_tuple(cube_texturemirrorpass->GetTexture(0), false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader_mirror", std::make_tuple(cube_texturemirrorpass->GetFx()->GetShader(1), false, 1));
 
 
     resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
@@ -971,11 +971,11 @@ void MainService::create_ground( void )
 
     ResourcesAspect* resources_aspect = m_groundEntity.AddAspect<ResourcesAspect>();
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false, 1));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader_bumppass", std::make_tuple(ground_bumppass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader_bumppass", std::make_tuple(ground_bumppass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader_bumppass", std::make_tuple(ground_bumppass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader_bumppass", std::make_tuple(ground_bumppass->GetFx()->GetShader(1), false, 1));
 
     resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(ground_texturepass->GetMeshe(),
         "water.ac", "my_flat_mesh", false));

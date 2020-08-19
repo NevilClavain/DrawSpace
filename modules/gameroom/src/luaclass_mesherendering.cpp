@@ -191,7 +191,7 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 						Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
 
 						dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-						resources_aspect->AddComponent<std::tuple<Shader*, bool>>(res_id, std::make_tuple(shader, false));
+						resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
 						fx->AddShader(shader);
 					}
 
@@ -451,7 +451,7 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
 				{
 					Shader* shader = fx->GetShader(i);
 					dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-					resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>(res_id);
+					resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
 
 					_DRAWSPACE_DELETE_(shader);
 				}

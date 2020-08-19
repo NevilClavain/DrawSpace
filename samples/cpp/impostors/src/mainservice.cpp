@@ -359,8 +359,8 @@ void MainService::create_skybox( void )
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false, 1));
 
 
 
@@ -616,8 +616,8 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false, 1));
 
     resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(), 
                                                                                                                 "family_cube.ac", "cube_photos", false));
@@ -682,8 +682,8 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
 
-        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
-        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false, 0));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false, 1));
 
         resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
             "composition.ac", "main_body", false));
@@ -771,8 +771,8 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(cube_texturepass->GetTexture(0), false));
 
-        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false));
-        resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(0), false, 0));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(cube_texturepass->GetFx()->GetShader(1), false, 1));
 
         resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("meshe", std::make_tuple(cube_texturepass->GetMeshe(),
             "composition.ac", "feet", false));
@@ -831,8 +831,8 @@ void MainService::create_ground( void )
     
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("ground_texture", std::make_tuple(ground_texturepass->GetTexture(0), false));
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("ground_pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("ground_vshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(0), false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("ground_pshader", std::make_tuple(ground_texturepass->GetFx()->GetShader(1), false, 1));
 
     resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>("ground_meshe", std::make_tuple(ground_texturepass->GetMeshe(),
                                                                                                                 "water.ac", "my_flat_mesh", false));

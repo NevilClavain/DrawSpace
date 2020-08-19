@@ -434,8 +434,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
     }
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(m_climate_vshader, false));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool>>("pshader", std::make_tuple(m_climate_pshader, false));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(m_climate_vshader, false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(m_climate_pshader, false, 1));
 
     /////////////////
 
@@ -605,8 +605,8 @@ void PlanetsRenderingAspectImpl::release_rendering_objects( void )
 
     ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
 
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>("vshader");
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool>>("pshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("vshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("pshader");
 
     m_drawable.Shutdown();
 }
@@ -809,19 +809,12 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
     p_pass->GetPass()->GetRenderingQueue()->Add(node);
 
 
-    //p_pass->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
 
     ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
     if (!resources_aspect)
     {
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
     }
-
-    //resources_aspect->AddComponent<std::tuple<Shader*, bool>>("vshader", std::make_tuple(m_climate_vshader, false));
-
-
-
-
 
     LOD::SubPass::EntryInfos ei;
     

@@ -44,11 +44,16 @@ class Texture;
 class Shader;
 }
 
+namespace Interface
+{
+class Renderer;
+}
+
 namespace Systems
 {
 class ResourcesSystem : public Interface::System
 {
-protected:
+private:
 
     using Blob = struct
     {
@@ -66,6 +71,8 @@ protected:
     std::map<dsstring, Blob>                                            m_texturesCache;
     std::map<dsstring, Blob>                                            m_shadersCache;
     std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
+
+	DrawSpace::Interface::Renderer*										m_renderer;
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 

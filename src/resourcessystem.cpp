@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "renderer.h"
 #include "resourcessystem.h"
 #include "animationssystem.h"
 
@@ -58,6 +59,7 @@ bool ResourcesSystem::m_addshaderspath = false;
 
 ResourcesSystem::ResourcesSystem(void)
 {
+	m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
 void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
@@ -107,20 +109,49 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             }
         }
 
-        ComponentList<std::tuple<Shader*, bool>> shaders_assets;
-        resources_aspect->GetComponentsByType<std::tuple<Shader*, bool>>(shaders_assets);
+        ComponentList<std::tuple<Shader*, bool, int>> shaders_assets;
+        resources_aspect->GetComponentsByType<std::tuple<Shader*, bool, int>>(shaders_assets);
 
         for (auto& e : shaders_assets)
         {
             bool& loaded = std::get<1>(e->getPurpose());
             if (!loaded)
             {
-                dsstring asset_path;
-                std::get<0>(e->getPurpose())->GetBasePath(asset_path);
-                dsstring final_asset_path = compute_shaders_final_path(asset_path);
+				Shader* shader { std::get<0>(e->getPurpose()) };
 
-                updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
-                loaded = true;
+				dsstring asset_path;
+				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
+				dsstring final_asset_path = compute_shaders_final_path(asset_path);
+
+				updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
+				loaded = true;
+
+				/*
+				if(!shader->IsCompiled())
+				{
+					int shader_type{ std::get<2>(e->getPurpose()) };
+
+					void* bytecode_handle;
+
+					Blob shader_blob{ m_shadersCache.at(final_asset_path) };
+
+					bool comp_status{ m_renderer->CreateShaderBytes((char* )shader_blob.data, shader_blob.size, shader_type, asset_path, &bytecode_handle) };
+
+					if (!comp_status)
+					{
+						dsstring err_text = m_renderer->GetShaderCompilationError(bytecode_handle);
+					}
+					else
+					{
+						size_t bc_length { m_renderer->GetShaderBytesLength(bytecode_handle) };
+
+						void* bc { m_renderer->GetShaderBytes(bytecode_handle) };
+					}
+
+					m_renderer->ReleaseShaderBytes(bytecode_handle);
+					
+				}
+				*/
             }
         }
 
