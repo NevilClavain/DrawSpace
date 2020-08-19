@@ -28,7 +28,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
+#include "mat_input_constants.hlsl"
 
 struct VS_INPUT
 {
@@ -42,15 +42,14 @@ struct VS_OUTPUT
     float2 TexCoord0 : TEXCOORD0;
 };
 
-#include ".\..\common\generic_rendering.hlsl"
-
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
     VS_OUTPUT Output;
     float4 pos;
     pos.xyz = Input.Position;
     pos.w = 1.0;
-    Output.Position = reflectedVertexPos(pos, vec[24], vec[25], mat[matWorld], mat[matView], mat[matProj]);
+
+    Output.Position = mul(pos, mat[matWorldViewProjection]);
     Output.TexCoord0 = Input.TexCoord0.xy;
       
     return (Output);

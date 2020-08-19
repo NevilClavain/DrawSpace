@@ -28,7 +28,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
+#include "mat_input_constants.hlsl"
 
 #define v_flag0                     24
 #define v_patch_translation         25
@@ -56,9 +56,9 @@ struct VS_OUTPUT
 };
 
 
-#include ".\..\common\fbm.hlsl"
-#include ".\..\common\multifbm_height.hlsl"
-#include ".\..\common\spherelod_commons.hlsl"
+#include "fbm.hlsl"
+#include "multifbm_height.hlsl"
+#include "spherelod_commons.hlsl"
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {

@@ -28,16 +28,12 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
+#include "mat_input_constants.hlsl"
 
 struct VS_INPUT
 {
     float3 Position : POSITION;
-    float3 Normales : NORMALE;
     float4 TexCoord0 : TEXCOORD0;
-    float4 Pos : TEXCOORD7;
-    float4 Scale : TEXCOORD8;
-    
 };
 
 struct VS_OUTPUT
@@ -46,75 +42,16 @@ struct VS_OUTPUT
     float2 TexCoord0 : TEXCOORD0;
 };
 
+#include "generic_rendering.hlsl"
+
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
-    float4 globalscale = vec[24];
-
     VS_OUTPUT Output;
-
-    float4 centerpos = 0;
-    centerpos.w = 1;
-    float4 vertexpos;
-
-    vertexpos.z = 0.0;
-    vertexpos.w = 1.0;
-
-    if (Input.Normales.x == 1.0)    
-    {
-        vertexpos.x = -0.5;
-        vertexpos.y = 0.5;
-    }
-    else if (Input.Normales.x == 2.0)
-    {
-        vertexpos.x = 0.5;
-        vertexpos.y = 0.5;
-    }
-    else if (Input.Normales.x == 3.0)
-    {
-        vertexpos.x = 0.5;
-        vertexpos.y = -0.5;
-    }
-    else
-    {
-        vertexpos.x = -0.5;
-        vertexpos.y = -0.5;
-    }
-
-    
-    float4x4 inv = 0;
-
-    inv[0][0] = 1.0;
-    inv[1][1] = 1.0;
-    inv[2][2] = -1.0;
-    inv[3][3] = 1.0;
-
-    float4x4 final_view = mul(mat[matView], inv);
-
-    float4x4 localpos = 0;
-    localpos[0][0] = 1.0;
-    localpos[1][1] = 1.0;
-    localpos[2][2] = 1.0;
-    localpos[3][3] = 1.0;
-    localpos[3][0] = Input.Pos.x;
-    localpos[3][1] = Input.Pos.y;
-    localpos[3][2] = Input.Pos.z;
-
-
-	
-    float4x4 world_view = mul(mul(localpos, mat[matWorld]), final_view);
-
-
-
-
-    float4 vertexpos2 = mul(centerpos, world_view);
-    vertexpos2.x += vertexpos.x * Input.Scale.x * globalscale.x;
-    vertexpos2.y += vertexpos.y * Input.Scale.y * globalscale.y;
-    vertexpos2.z += vertexpos.z;
-    Output.Position = mul(vertexpos2, mat[matProj]);
-    
-
-    //Output.Position = mul(vertexpos, mat[matWorldViewProjection]);
+    float4 pos;
+    pos.xyz = Input.Position;
+    pos.w = 1.0;
+    Output.Position = reflectedVertexPos(pos, vec[24], vec[25], mat[matWorld], mat[matView], mat[matProj]);
     Output.TexCoord0 = Input.TexCoord0.xy;
-
+      
     return (Output);
 }

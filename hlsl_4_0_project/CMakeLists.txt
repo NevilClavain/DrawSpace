@@ -24,20 +24,14 @@ project(hlsl_4_0_shaders)
 
 file(
         GLOB_RECURSE
-        ps_source_files
-		${CMAKE_SOURCE_DIR}/hlsl_4_0_project/pixel/*.hlsl
-)
-
-file(
-        GLOB_RECURSE
         vs_source_files
-		${CMAKE_SOURCE_DIR}/hlsl_4_0_project/vertex/*.hlsl
+		${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/*_vs.hlsl
 )
 
 file(
         GLOB_RECURSE
-        com_source_files
-		${CMAKE_SOURCE_DIR}/hlsl_4_0_project/common/*.hlsl
+        ps_source_files
+		${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/*_ps.hlsl
 )
 
 set_property(SOURCE ${ps_source_files} PROPERTY VS_SHADER_TYPE Pixel)
@@ -52,6 +46,6 @@ set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_DISABLE_OPTIMIZATIONS 
 set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENABLE_DEBUG False)
 set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENTRYPOINT vs_main)
 
-add_custom_target(shadersc SOURCES ${vs_source_files} ${ps_source_files} ${com_source_files})
+add_custom_target(shadersc SOURCES ${vs_source_files} ${ps_source_files})
 
 

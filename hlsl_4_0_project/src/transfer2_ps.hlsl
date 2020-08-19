@@ -38,8 +38,8 @@ struct PS_INTPUT
 	float2 TexCoord0: TEXCOORD0;
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
-#include ".\..\common\fbm.hlsl"
+#include "mat_input_constants.hlsl"
+#include "fbm.hlsl"
 
 
 //Y-axis rotation matrix

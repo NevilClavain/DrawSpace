@@ -28,8 +28,8 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
-#include ".\..\common\generic_rendering.hlsl"
+#include "mat_input_constants.hlsl"
+#include "generic_rendering.hlsl"
 
 // Flags ->
 //          

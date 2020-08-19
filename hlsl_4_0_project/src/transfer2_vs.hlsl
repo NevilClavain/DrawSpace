@@ -28,27 +28,30 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+#include "mat_input_constants.hlsl"
 
-
-#include ".\..\common\fbm.hlsl"
-
-struct PS_INTPUT 
+struct VS_INPUT 
 {
-    float4 Position : SV_POSITION;
-	float2 TexCoord0: TEXCOORD0;
+	float3 Position : POSITION;
+	float4 TexCoord0 : TEXCOORD0;
 };
 
-
-float4 ps_main(PS_INTPUT input) : SV_Target
+struct VS_OUTPUT 
 {
-    float4 color;
+	float4 Position : SV_POSITION;
+	float2 TexCoord0 : TEXCOORD0;
+};
 
-    float3 p;
-    p.x = lerp(0.0, 1200.0, input.TexCoord0.x);
-    p.y = lerp(0.0, 1200.0, input.TexCoord0.y);
-    p.z = vec[0].x;
+VS_OUTPUT vs_main( VS_INPUT Input )
+{
+    VS_OUTPUT Output;
+    float4 pos;
+    
+    pos.xyz = Input.Position;    
+    pos.w = 1.0;
 
-    color = Perlin3D(p, 679.9, 123.5);
-
-    return color;
+    Output.Position = mul(pos, mat[matWorldViewProjection]);
+	Output.TexCoord0 = Input.TexCoord0.xy;
+      
+    return( Output );   
 }

@@ -51,8 +51,8 @@ struct PS_INTPUT
     float  Fog          : FOG;
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
-#include ".\..\common\generic_rendering.hlsl"
+#include "mat_input_constants.hlsl"
+#include "generic_rendering.hlsl"
 
 // Flags ->
 //          

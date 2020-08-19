@@ -73,8 +73,8 @@ struct PS_INTPUT
 #define v_atmo_scattering_flag_5    23
 #define v_atmo_scattering_flag_6    24
 
-#include ".\..\common\spherelod_commons.hlsl"
-#include ".\..\common\atmospheric_scattering.hlsl"
+#include "spherelod_commons.hlsl"
+#include "atmospheric_scattering.hlsl"
 
 
 float4 compute_from_space(float4 p_t0, float4 p_t1, float4 p_ldir)

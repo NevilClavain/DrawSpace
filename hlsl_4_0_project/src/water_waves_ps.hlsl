@@ -28,53 +28,27 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include ".\..\common\mat_input_constants.hlsl"
 
-#define v_viewer_pos                28
 
-struct VS_INPUT
-{
-    float3 Position : POSITION;
-    float4 TexCoord0 : TEXCOORD0;
-};
+#include "fbm.hlsl"
 
-struct VS_OUTPUT
+struct PS_INTPUT 
 {
     float4 Position : SV_POSITION;
-    float4 t0		: TEXCOORD0;
-    float4 t1		: TEXCOORD1;
+	float2 TexCoord0: TEXCOORD0;
 };
 
-VS_OUTPUT vs_main(VS_INPUT Input)
+
+float4 ps_main(PS_INTPUT input) : SV_Target
 {
-    VS_OUTPUT Output;
-    float4 pos;
-    pos.xyz = Input.Position;
-    pos.w = 1.0;
+    float4 color;
 
-    float4x4 mat_Cam = mat[matCam];
+    float3 p;
+    p.x = lerp(0.0, 1200.0, input.TexCoord0.x);
+    p.y = lerp(0.0, 1200.0, input.TexCoord0.y);
+    p.z = vec[0].x;
 
-    float4 viewer_pos;    // view pos relatif au centre de la sphere...
-    viewer_pos.x = mat_Cam[3][0];
-    viewer_pos.y = mat_Cam[3][1];
-    viewer_pos.z = mat_Cam[3][2];
-    viewer_pos.w = 1.0;
+    color = Perlin3D(p, 679.9, 123.5);
 
-    Output.Position = mul(pos, mat[matWorldViewProjection]);
-
-    ////// atmo scattering : calcul vertex pos
-
-    float4x4 matWorldRot = mat[matWorld];
-
-    // clear translations matWorld
-    matWorldRot[3][0] = 0.0;
-    matWorldRot[3][1] = 0.0;
-    matWorldRot[3][2] = 0.0;
-
-    float4 vertex_pos = mul(pos, matWorldRot);
-
-    Output.t0 = vertex_pos;
-    Output.t1 = viewer_pos;
-      
-    return (Output);
+    return color;
 }
