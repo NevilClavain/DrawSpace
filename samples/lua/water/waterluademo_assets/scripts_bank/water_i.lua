@@ -559,6 +559,10 @@ skybox_layer =
 				{
 					{ path='texture_vs.cso',mode=SHADER_COMPILED },
 					{ path='texture_ps.cso',mode=SHADER_COMPILED }
+
+					--{ path='texture_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					--{ path='texture_ps.hlsl',mode=SHADER_NOT_COMPILED }
+
 				},
 				rs_in = 
 				{
