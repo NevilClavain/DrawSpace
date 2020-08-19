@@ -1958,7 +1958,7 @@ bool D3D11Renderer::SetShaders( void* p_data )
 
 
 
-bool D3D11Renderer::CreateShaderBytes(const dsstring& p_source, int p_shadertype, void** p_data)
+bool D3D11Renderer::CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, void** p_data)
 {
 	DECLARE_D3D11ASSERT_VARS
 
@@ -1967,15 +1967,10 @@ bool D3D11Renderer::CreateShaderBytes(const dsstring& p_source, int p_shadertype
 	ShaderBytesData* sdata = _DRAWSPACE_NEW_(ShaderBytesData, ShaderBytesData);
 	sdata->blob = nullptr;
 
-	ID3DBlob* pBlob = NULL;
-	ID3DBlob* pErrBlob;
+	ID3DBlob* pBlob { nullptr };
+	ID3DBlob* pErrBlob{ nullptr };
 
-	char* text = new char[p_source.length() + 1];
-
-	memcpy(text, p_source.c_str(), p_source.length());
-	text[p_source.length()] = 0;
-
-	hRes = compile_shader_from_mem(text, p_source.length(), "", (p_shadertype == 0 ? "vs_main" : "ps_main"), "vs_4_0", &pBlob, &pErrBlob);
+	hRes = compile_shader_from_mem(p_source, p_source_length, p_path.c_str(), (p_shadertype == 0 ? "vs_main" : "ps_main"), (p_shadertype == 0 ? "vs_4_0" : "ps_4_0"), &pBlob, &pErrBlob);
 
 	if (S_OK != hRes)
 	{
@@ -1994,7 +1989,6 @@ bool D3D11Renderer::CreateShaderBytes(const dsstring& p_source, int p_shadertype
 
 	*p_data = (void*)sdata;
 
-	delete[] text;
 	return status;
 }
 
@@ -2032,7 +2026,7 @@ dsstring D3D11Renderer::GetShaderCompilationError(void* p_data)
 
 	if (sdata->blob)
 	{
-		error_text = dsstring((char*)sdata->blob);
+		error_text = dsstring((char*)sdata->blob->GetBufferPointer());
 	}
 
 	return error_text;

@@ -266,7 +266,7 @@ public:
     bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
     bool SetShaders( void* p_data );
 
-	bool CreateShaderBytes(const dsstring& p_source, int p_shadertype, void** p_data);
+	bool CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, void** p_data);
 	bool GetShaderCompilationStatus(void* p_data);
 	void* GetShaderBytes(void* p_data);
 	size_t GetShaderBytesLength(void* p_data);
