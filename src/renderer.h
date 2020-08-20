@@ -114,7 +114,7 @@ public:
 
 	
 	////////////////// shaders compilation from source
-	virtual bool CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, void** p_data) = 0;
+	virtual bool CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, const dsstring& p_includes_path, void** p_data) = 0;
 	
 	virtual bool GetShaderCompilationStatus(void* p_data) = 0;
 	
