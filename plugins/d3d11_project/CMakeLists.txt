@@ -30,7 +30,7 @@ include_directories(${cegui_include_dir})
 link_directories(${cegui_lib_dir})
 include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
-
+include_directories(${physfs_include_dir})
 link_directories(${physfs_lib_dir})
 
 
