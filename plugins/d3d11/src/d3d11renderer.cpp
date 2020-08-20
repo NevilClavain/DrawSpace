@@ -24,6 +24,7 @@
 
 #include "d3d11renderer.h"
 #include "memalloc.h"
+#include "file.h"
 #include "misc_utils.h"
 #include <md5.h>
 #include <d3dcompiler.h>
@@ -36,6 +37,42 @@ using namespace DrawSpace::Utils;
 extern void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str );
 
 _DECLARE_DS_LOGGER( logger, "d3d11", NULL )
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+D3D10Include::D3D10Include(const dsstring& p_basepath) : 
+m_basepath(p_basepath)
+{
+}
+
+HRESULT __stdcall D3D10Include::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+{
+	dsstring final_path { m_basepath + pFileName };
+
+	long size;
+	void* data;
+
+	// load it
+	data = Utils::File::LoadAndAllocBinaryFile(final_path, &size);
+	if (!data)
+	{
+		return S_FALSE;
+	}
+
+	*pBytes = size;
+	*ppData = data;
+
+	return S_OK;
+}
+
+HRESULT __stdcall D3D10Include::Close(LPCVOID pData)
+{
+	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 D3D11Renderer::D3D11Renderer( void ) :
 m_lpd3dswapchain( NULL ),
@@ -1855,6 +1892,10 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
         if( !vertex_shader->IsCompiled() )
         {
+			_DSEXCEPTION("vertex shader shall be compiled !!")
+			return false;
+
+			/*
             if( NULL == vertex_shader->GetData() )
             {
                 _DSFATAL( logger, "no data in vertex shader !" )
@@ -1884,6 +1925,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
             D3D11_CHECK( CreateInputLayout )
 
             pVSBlob->Release();
+			*/
         }
         else
         {
@@ -1900,6 +1942,10 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
 
         if( !pixel_shader->IsCompiled() )
         {
+			_DSEXCEPTION("pixel shader shall be compiled !!")
+			return false;
+
+			/*
             if( NULL == pixel_shader->GetData() )
             {
                 _DSFATAL( logger, "no data in pixel shader !" )
@@ -1927,6 +1973,7 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
             D3D11_CHECK( CreatePixelShader ); 
 
             pPSBlob->Release();
+			*/
         }
         else
         {
@@ -1958,7 +2005,7 @@ bool D3D11Renderer::SetShaders( void* p_data )
 
 
 
-bool D3D11Renderer::CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, void** p_data)
+bool D3D11Renderer::CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, const dsstring& p_includes_path, void** p_data)
 {
 	DECLARE_D3D11ASSERT_VARS
 
@@ -1970,7 +2017,9 @@ bool D3D11Renderer::CreateShaderBytes(char* p_source, int p_source_length, int p
 	ID3DBlob* pBlob { nullptr };
 	ID3DBlob* pErrBlob{ nullptr };
 
-	hRes = compile_shader_from_mem(p_source, p_source_length, p_path.c_str(), (p_shadertype == 0 ? "vs_main" : "ps_main"), (p_shadertype == 0 ? "vs_4_0" : "ps_4_0"), &pBlob, &pErrBlob);
+	D3D10Include include_mgmt(p_includes_path);
+
+	hRes = compile_shader_from_mem(p_source, p_source_length, p_path.c_str(), (p_shadertype == 0 ? "vs_main" : "ps_main"), (p_shadertype == 0 ? "vs_4_0" : "ps_4_0"), &include_mgmt, &pBlob, &pErrBlob);
 
 	if (S_OK != hRes)
 	{
@@ -2667,25 +2716,20 @@ void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace:
     p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );
 }
 
-
-
-
-HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut )
+HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut )
 {
     HRESULT hr = S_OK;
 
-    DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
+	DWORD dwShaderFlags = 0; // D3D10_SHADER_ENABLE_STRICTNESS;
 
-#if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
     // Setting this flag improves the shader debugging experience, but still allows 
     // the shaders to be optimized and to run exactly the way they will run in 
     // the release configuration of this program.
-    dwShaderFlags |= D3DCOMPILE_DEBUG;
-#endif
-    
+    //dwShaderFlags |= D3DCOMPILE_DEBUG;
+
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromMemory( (LPCTSTR)p_data, p_size, szFileName, NULL, NULL, szEntryPoint, szShaderModel, dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
+    hr = D3DX11CompileFromMemory( (LPCTSTR)p_data, p_size, szFileName, NULL, p_include, szEntryPoint, szShaderModel, dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
         if( pErrorBlob != NULL )

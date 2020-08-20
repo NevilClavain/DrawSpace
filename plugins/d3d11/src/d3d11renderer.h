@@ -63,6 +63,19 @@
 
 #define D3D11_RELEASE( p_Obj ) { if( p_Obj ) { p_Obj->Release(); p_Obj = NULL; } }
 
+class D3D10Include : public ID3D10Include
+{
+private:
+	const dsstring m_basepath;
+
+public:
+
+	D3D10Include(const dsstring& p_basepath);
+
+	HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes);
+	HRESULT __stdcall Close(LPCVOID pData);
+};
+
 class D3D11Renderer : public DrawSpace::Interface::Renderer
 {
 protected:
@@ -208,7 +221,7 @@ protected:
     void set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat );
 
 
-    HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut );
+    HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut );
 
     bool set_cache_rs( void );
     bool set_cache_blendstate( void );
@@ -266,7 +279,7 @@ public:
     bool CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data );
     bool SetShaders( void* p_data );
 
-	bool CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, void** p_data);
+	bool CreateShaderBytes(char* p_source, int p_source_length, int p_shadertype, const dsstring& p_path, const dsstring& p_includes_path, void** p_data);
 	bool GetShaderCompilationStatus(void* p_data);
 	void* GetShaderBytes(void* p_data);
 	size_t GetShaderBytesLength(void* p_data);
