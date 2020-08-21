@@ -593,6 +593,19 @@ void D3D11Renderer::Release( void )
     m_meshes_base.clear();
 
 
+	for (auto it = m_shadersbytes_base.begin(); it != m_shadersbytes_base.end(); ++it)
+	{
+		ShaderBytesData* e = *it;
+
+		if (e->blob)
+		{
+			e->blob->Release();
+		}
+		_DRAWSPACE_DELETE_(e);
+	}
+	m_shadersbytes_base.clear();
+
+
 
     D3D11_RELEASE( m_pixelshader_legacyargs_buffer );
     D3D11_RELEASE( m_vertexshader_legacyargs_buffer );
@@ -1932,7 +1945,10 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         }
         else
         {
-            hRes = m_lpd3ddevice->CreateVertexShader( vertex_shader->GetData(), vertex_shader->GetDataSize(), NULL, &vs );
+			void* shader_bc{ vertex_shader->GetData() };
+			size_t shader_bc_length{ vertex_shader->GetDataSize() };
+
+            hRes = m_lpd3ddevice->CreateVertexShader(shader_bc, shader_bc_length, NULL, &vs );
             D3D11_CHECK( CreateVertexShader );
 
             hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), vertex_shader->GetData(), vertex_shader->GetDataSize(), &input_layout );
@@ -1980,7 +1996,10 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         }
         else
         {
-            hRes = m_lpd3ddevice->CreatePixelShader( pixel_shader->GetData(), pixel_shader->GetDataSize(), NULL, &ps );
+			void* shader_bc{ pixel_shader->GetData() };
+			size_t shader_bc_length{ pixel_shader->GetDataSize() };
+
+            hRes = m_lpd3ddevice->CreatePixelShader( shader_bc, shader_bc_length, NULL, &ps );
             D3D11_CHECK( CreatePixelShader );       
         }
 
@@ -2041,6 +2060,8 @@ bool D3D11Renderer::CreateShaderBytes(char* p_source, int p_source_length, int p
 
 	*p_data = (void*)sdata;
 
+	m_shadersbytes_base.insert(sdata);
+
 	return status;
 }
 
@@ -2088,13 +2109,13 @@ void D3D11Renderer::ReleaseShaderBytes(void* p_data)
 {
 	ShaderBytesData* sdata = (ShaderBytesData*)p_data;
 
+	m_shadersbytes_base.erase(sdata);
+
 	if (sdata->blob)
 	{
 		sdata->blob->Release();
 	}
-	_DRAWSPACE_DELETE_(sdata);
-
-	m_shadersbytes_base.erase(sdata);
+	_DRAWSPACE_DELETE_(sdata);	
 }
 
 bool D3D11Renderer::ApplyRenderStatesIn( void* p_data )
@@ -2723,7 +2744,7 @@ HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTST
 {
     HRESULT hr = S_OK;
 
-	DWORD dwShaderFlags = 0; // D3D10_SHADER_ENABLE_STRICTNESS;
+	DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
     // Setting this flag improves the shader debugging experience, but still allows 

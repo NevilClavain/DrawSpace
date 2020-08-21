@@ -117,14 +117,71 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<1>(e->getPurpose());
             if (!loaded)
             {
+				Shader* shader{ std::get<0>(e->getPurpose()) };
+
+				dsstring asset_path;
+				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
+				dsstring final_asset_path = compute_shaders_final_path(asset_path);
+				dsstring final_asset_dir = compute_shaders_final_path("");
+
+				if (shader->IsCompiled())
+				{
+					updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
+					loaded = true;
+				}
+				else
+				{
+					// load shader hlsl source text
+					long size;
+					void* text;
+
+					text = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
+					if (!text)
+					{
+						_DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
+					}
+
+					void* bytecode_handle;
+					int shader_type{ std::get<2>(e->getPurpose()) };
+
+					bool comp_status{ m_renderer->CreateShaderBytes((char*)text, size, shader_type, asset_path, final_asset_dir, &bytecode_handle) };
+					
+					if(!comp_status)
+					{
+						dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
+
+						_DSEXCEPTION("ResourcesSystem : failed to compile " + final_asset_path + dsstring(" : ") + err_compil);
+					}
+
+					size_t bc_length { m_renderer->GetShaderBytesLength(bytecode_handle) };
+					void* bc { m_renderer->GetShaderBytes(bytecode_handle) };
+
+					void* bc2{ (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, final_asset_dir) };
+					memcpy(bc2, bc, bc_length);
+
+					Blob blob{ bc2, bc_length };
+					m_shadersCache[final_asset_path] = blob;
+
+					shader->SetData(bc2, bc_length);
+
+					shader->SetCompilationFlag(true); //now contains compiled shader
+					
+					_DRAWSPACE_DELETE_N_(text);
+					m_renderer->ReleaseShaderBytes(bytecode_handle);
+				}
+
+				/*
 				Shader* shader { std::get<0>(e->getPurpose()) };
 
 				dsstring asset_path;
 				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
 				dsstring final_asset_path = compute_shaders_final_path(asset_path);
+				dsstring final_asset_dir = compute_shaders_final_path("");
 
 				updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
 				loaded = true;
+				*/
+
 
 				/*
 				if(!shader->IsCompiled())
@@ -135,7 +192,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					Blob shader_blob{ m_shadersCache.at(final_asset_path) };
 
-					bool comp_status{ m_renderer->CreateShaderBytes((char* )shader_blob.data, shader_blob.size, shader_type, asset_path, &bytecode_handle) };
+					bool comp_status{ m_renderer->CreateShaderBytes((char* )shader_blob.data, shader_blob.size, shader_type, asset_path, final_asset_dir, &bytecode_handle) };
 
 					if (!comp_status)
 					{
@@ -152,6 +209,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					
 				}
 				*/
+				
             }
         }
 
@@ -830,7 +888,8 @@ void ResourcesSystem::ReleaseAssets(void)
     }
     for (auto& e : m_shadersCache)
     {
-        _DRAWSPACE_DELETE_(e.second.data);
+        //_DRAWSPACE_DELETE_(e.second.data);
+		_DRAWSPACE_DELETE_N_(e.second.data);
     }
     for (auto& e : m_meshesCache)
     {
