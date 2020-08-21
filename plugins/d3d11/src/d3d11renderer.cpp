@@ -69,6 +69,9 @@ HRESULT __stdcall D3D10Include::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileN
 
 HRESULT __stdcall D3D10Include::Close(LPCVOID pData)
 {
+	void* data{ (void*)pData };
+
+	_DRAWSPACE_DELETE_N_(data);
 	return S_OK;
 }
 
