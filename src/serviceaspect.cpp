@@ -55,19 +55,6 @@ void ServiceAspect::RemoveImplementation(DrawSpace::Interface::AspectImplementat
     }
 }
 
-/*
-bool ServiceAspect::Init( void )
-{
-    bool global_status = true;
-
-    for( size_t i = 0; i < m_impls.size(); i++ )
-    {     
-        global_status &= m_impls[i]->Init();
-    }
-
-    return global_status;
-}
-*/
 void ServiceAspect::Run( void )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
@@ -75,15 +62,7 @@ void ServiceAspect::Run( void )
         m_impls[i]->Run();
     }
 }
-/*
-void ServiceAspect::Release( void )
-{
-    for( size_t i = 0; i < m_impls.size(); i++ )
-    {
-        m_impls[i]->Release();
-    }
-}
-*/
+
 void ServiceAspect::OnKeyPress( long p_key )
 {
     for( size_t i = 0; i < m_impls.size(); i++ )
