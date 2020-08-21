@@ -67,6 +67,8 @@ public:
     bool            LoadFromFile( const dsstring& p_filepath, bool p_compiled );
     void	        ReleaseData( void );
 
+	void			SetCompilationFlag(bool p_compiled);
+
     void            SetText( const dsstring& p_text );
     void            SetData(void* p_data, long p_size);
 };

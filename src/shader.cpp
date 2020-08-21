@@ -131,6 +131,10 @@ bool Shader::IsCompiled(void) const
     return m_compiled;
 }
 
+void Shader::SetCompilationFlag(bool p_compiled)
+{
+	m_compiled = p_compiled;
+}
 
 bool Shader::LoadFromFile( const dsstring& p_filepath, bool p_compiled )
 {
