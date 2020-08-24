@@ -25,6 +25,7 @@
 #include "module_root.h"
 #include "hub.h"
 #include "memalloc.h"
+#include <Physfs.h>
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface::Module;
@@ -34,6 +35,13 @@ using namespace DrawSpace::Utils;
 Root::Root(void) : 
 m_hub( NULL )
 {
+	if (PHYSFS_isInit() == 0)
+	{
+		if (PHYSFS_init(NULL) == 0)
+		{
+			_DSEXCEPTION("PHYSFS init failure" + dsstring(PHYSFS_getLastError()));
+		}
+	}
 }
 
 void Root::UpdateRenderer( DrawSpace::Interface::Renderer* p_renderer )

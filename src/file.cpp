@@ -453,7 +453,7 @@ void File::MountVirtualFS( const dsstring& p_virtualFsArchiveName )
 {
     if( m_fsMode != VIRTUALFILESYSTEM )
     {
-        PHYSFS_init( NULL );
+        //PHYSFS_init( NULL );
 
         int status = PHYSFS_mount( p_virtualFsArchiveName.c_str(), NULL, 1 );
         if( !status )
@@ -469,7 +469,7 @@ void File::UnmountVirtualFS( void )
 {
     if( VIRTUALFILESYSTEM == m_fsMode )
     {
-        PHYSFS_deinit();
+        //PHYSFS_deinit();
         m_fsMode = LOCALFILESYSTEM;
     }
 }
