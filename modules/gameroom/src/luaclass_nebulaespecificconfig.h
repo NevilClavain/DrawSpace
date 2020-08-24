@@ -27,7 +27,7 @@
 
 
 #include "luna.h"
-#include "misc_utils.h"
+#include "vector.h"
 
 class LuaClass_NebulaeSpecificConfig
 {
