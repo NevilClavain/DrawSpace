@@ -1910,38 +1910,6 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         {
 			_DSEXCEPTION("vertex shader shall be compiled !!")
 			return false;
-
-			/*
-            if( NULL == vertex_shader->GetData() )
-            {
-                _DSFATAL( logger, "no data in vertex shader !" )
-                return false;
-            }
-
-            ID3DBlob* pVSBlob = NULL;
-            ID3DBlob* pVSErrBlob;
-            hRes = compile_shader_from_mem( vertex_shader->GetData(), vertex_shader->GetDataSize(), vshader_path.c_str(), "vs_main", "vs_4_0", &pVSBlob, &pVSErrBlob );
-
-            if( S_OK != hRes )
-            {
-                if( pVSErrBlob != NULL )
-                {
-					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)pVSErrBlob->GetBufferPointer() )
-                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)pVSErrBlob->GetBufferPointer() ) )
-
-                    pVSErrBlob->Release();
-                }
-                return false;
-            }
-
-            hRes = m_lpd3ddevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &vs );
-            D3D11_CHECK( CreateVertexShader );
-
-            hRes = m_lpd3ddevice->CreateInputLayout( layout, ARRAYSIZE( layout ), pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &input_layout );
-            D3D11_CHECK( CreateInputLayout )
-
-            pVSBlob->Release();
-			*/
         }
         else
         {
@@ -1963,36 +1931,6 @@ bool D3D11Renderer::CreateShaders( DrawSpace::Core::Fx* p_fx, void** p_data )
         {
 			_DSEXCEPTION("pixel shader shall be compiled !!")
 			return false;
-
-			/*
-            if( NULL == pixel_shader->GetData() )
-            {
-                _DSFATAL( logger, "no data in pixel shader !" )
-                return false;
-            }
-
-
-            ID3DBlob* pPSBlob = NULL;
-            ID3DBlob* pPSErrBlob;
-            hRes = compile_shader_from_mem( pixel_shader->GetData(), pixel_shader->GetDataSize(), pshader_path.c_str(), "ps_main", "ps_4_0", &pPSBlob, &pPSErrBlob );
-
-            if( S_OK != hRes )
-            {
-                if( pPSErrBlob != NULL )
-                {
-					_DSFATAL( logger, dsstring( "D3DXCompileShader FAIL : " ) << (char *)pPSErrBlob->GetBufferPointer() )
-                    _DSEXCEPTION( "D3DXCompileShader FAIL (vertex) : " << dsstring( (char *)pPSErrBlob->GetBufferPointer() ) )
-
-                    pPSErrBlob->Release();
-                }
-                return false;  
-            }
-
-            hRes = m_lpd3ddevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &ps );
-            D3D11_CHECK( CreatePixelShader ); 
-
-            pPSBlob->Release();
-			*/
         }
         else
         {
