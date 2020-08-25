@@ -111,8 +111,8 @@ ground_entity_config =
 		{
 			shaders = 
 			{
-				{ path='color_vs.cso',mode=SHADER_COMPILED },
-				{ path='color_ps.cso',mode=SHADER_COMPILED }
+				{ path='color_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='color_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -557,9 +557,6 @@ skybox_layer =
 			{
 				shaders = 
 				{
-					--{ path='texture_vs.cso',mode=SHADER_COMPILED },
-					--{ path='texture_ps.cso',mode=SHADER_COMPILED }
-
 					{ path='texture_vs.hlsl',mode=SHADER_NOT_COMPILED },
 					{ path='texture_ps.hlsl',mode=SHADER_NOT_COMPILED }
 
