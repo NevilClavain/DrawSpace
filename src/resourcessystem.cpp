@@ -40,6 +40,8 @@
 #include "renderer.h"
 #include "plugin.h"
 #include "file.h"
+#include "misc_utils.h"
+#include "md5.h"
 
 DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::GetInstance());
 
@@ -52,10 +54,25 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::AspectImplementations;
 
-dsstring ResourcesSystem::m_textures_rootpath = ".";
-dsstring ResourcesSystem::m_meshes_rootpath = ".";
-dsstring ResourcesSystem::m_shaders_rootpath = ".";
-bool ResourcesSystem::m_addshaderspath = false;
+dsstring ResourcesSystem::m_textures_rootpath { "." };
+dsstring ResourcesSystem::m_meshes_rootpath { "." };
+dsstring ResourcesSystem::m_shaders_rootpath { "." };
+bool ResourcesSystem::m_addshaderspath { false };
+
+const dsstring ResourcesSystem::bcCacheName{ "bc_cache" };
+const dsstring ResourcesSystem::bcMd5FileName{ "bc.md5" };
+const dsstring ResourcesSystem::bcCodeFileName{ "bc.code" };
+
+
+#define CHECK_PHYSFS( __call__ ) \
+{ \
+	int status { __call__ }; \
+	if (status == 0) \
+	{ \
+		dsstring perr{ PHYSFS_getLastError() }; \
+		_DSEXCEPTION(perr); \
+	} \
+}
 
 ResourcesSystem::ResourcesSystem(void)
 {
@@ -131,85 +148,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				}
 				else
 				{
-					// load shader hlsl source text
-					long size;
-					void* text;
-
-					text = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
-					if (!text)
-					{
-						_DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
-					}
-
-					void* bytecode_handle;
 					int shader_type{ std::get<2>(e->getPurpose()) };
 
-					bool comp_status{ m_renderer->CreateShaderBytes((char*)text, size, shader_type, asset_path, final_asset_dir, &bytecode_handle) };
-					
-					if(!comp_status)
-					{
-						dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
-
-						_DSEXCEPTION("ResourcesSystem : failed to compile " + final_asset_path + dsstring(" : ") + err_compil);
-					}
-
-					size_t bc_length { m_renderer->GetShaderBytesLength(bytecode_handle) };
-					void* bc { m_renderer->GetShaderBytes(bytecode_handle) };
-
-					void* bc2{ (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, final_asset_dir) };
-					memcpy(bc2, bc, bc_length);
-
-					Blob blob{ bc2, bc_length };
-					m_shadersCache[final_asset_path] = blob;
-
-					shader->SetData(bc2, bc_length);
-
-					shader->SetCompilationFlag(true); //now contains compiled shader
-					
-					_DRAWSPACE_DELETE_N_(text);
-					m_renderer->ReleaseShaderBytes(bytecode_handle);
-				}
-
-				/*
-				Shader* shader { std::get<0>(e->getPurpose()) };
-
-				dsstring asset_path;
-				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
-				dsstring final_asset_path = compute_shaders_final_path(asset_path);
-				dsstring final_asset_dir = compute_shaders_final_path("");
-
-				updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
-				loaded = true;
-				*/
-
-
-				/*
-				if(!shader->IsCompiled())
-				{
-					int shader_type{ std::get<2>(e->getPurpose()) };
-
-					void* bytecode_handle;
-
-					Blob shader_blob{ m_shadersCache.at(final_asset_path) };
-
-					bool comp_status{ m_renderer->CreateShaderBytes((char* )shader_blob.data, shader_blob.size, shader_type, asset_path, final_asset_dir, &bytecode_handle) };
-
-					if (!comp_status)
-					{
-						dsstring err_text = m_renderer->GetShaderCompilationError(bytecode_handle);
-					}
-					else
-					{
-						size_t bc_length { m_renderer->GetShaderBytesLength(bytecode_handle) };
-
-						void* bc { m_renderer->GetShaderBytes(bytecode_handle) };
-					}
-
-					m_renderer->ReleaseShaderBytes(bytecode_handle);
-					
-				}
-				*/
-				
+					manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);
+				}				
             }
         }
 
@@ -928,3 +870,250 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader)
     dsstring final_asset_path = compute_shaders_final_path(asset_path);
     updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);
 }
+
+void ResourcesSystem::check_bc_cache_presence(void) const
+{
+	CHECK_PHYSFS( PHYSFS_mount(".", NULL, 1) );
+
+	if (PHYSFS_exists(bcCacheName.c_str()))
+	{
+		if(!PHYSFS_isDirectory("bc_cache"))
+		{
+			_DSEXCEPTION("unexpected bc_cache element");
+		}
+	}
+	else
+	{
+		CHECK_PHYSFS( PHYSFS_setWriteDir(".") );
+		CHECK_PHYSFS( PHYSFS_mkdir("bc_cache") );
+	}
+	PHYSFS_removeFromSearchPath(".");
+}
+
+void ResourcesSystem::update_bc_md5file(const dsstring& p_hash)
+{
+	PHYSFS_file* md5vfile{ PHYSFS_openWrite(bcMd5FileName.c_str()) };
+	if (NULL == md5vfile)
+	{
+		_DSEXCEPTION("ResourcesSystem : cannot create .md5 file");
+	}
+	PHYSFS_write(md5vfile, p_hash.c_str(), (PHYSFS_uint32)p_hash.length(), 1);
+	PHYSFS_close(md5vfile);
+}
+
+void ResourcesSystem::update_bc_codefile(void* p_text, int p_text_size, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type, void** p_bc, int& p_size)
+{
+	void* bytecode_handle;
+
+	bool comp_status{ m_renderer->CreateShaderBytes((char*)p_text, p_text_size, p_shader_type, p_asset_path, p_final_asset_dir, &bytecode_handle) };
+	if (!comp_status)
+	{
+		dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
+
+		_DSEXCEPTION("ResourcesSystem : failed to compile " + p_final_asset_path + dsstring(" : ") + err_compil);
+	}
+
+	size_t bc_length{ m_renderer->GetShaderBytesLength(bytecode_handle) };
+	void* bc{ m_renderer->GetShaderBytes(bytecode_handle) };
+
+	PHYSFS_file* codevfile{ PHYSFS_openWrite(bcCodeFileName.c_str()) };
+	if (NULL == codevfile)
+	{
+		_DSEXCEPTION("ResourcesSystem : cannot create .code file");
+	}
+
+	PHYSFS_write(codevfile, bc, (PHYSFS_uint32)bc_length, 1);
+	PHYSFS_close(codevfile);
+
+	void* bc2{ (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, p_final_asset_dir) };
+	memcpy(bc2, bc, bc_length);
+
+	*p_bc = bc2;
+	p_size = bc_length;
+
+	m_renderer->ReleaseShaderBytes(bytecode_handle);
+}
+
+void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type)
+{
+	// create bc_cache dir if not exists
+	check_bc_cache_presence();
+
+	// working only in bc_cache dir
+	CHECK_PHYSFS(PHYSFS_mount(bcCacheName.c_str(), NULL, 1));
+	CHECK_PHYSFS(PHYSFS_setWriteDir(bcCacheName.c_str()));
+
+	// shader bytecode buffer infos...
+	int bc_length;
+	void* bc;
+
+	// load shader hlsl source text
+	long text_size;
+	void* text;
+
+	text = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &text_size);
+	if (!text)
+	{
+		_DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);
+	}
+	//compute source text checksum
+	MD5 md5;
+	dsstring hash_shader{ md5.digestMemory((BYTE*)text, text_size) };
+
+	// shader key id
+	std::vector<dsstring> items;
+	SplitString(p_asset_path, items, '.');
+	dsstring shader_id{ items[0] };
+
+	if (PHYSFS_exists(shader_id.c_str()))
+	{
+		if (!PHYSFS_isDirectory(shader_id.c_str()))
+		{
+			_DSEXCEPTION("ResourcesSystem : expecting directory for bytecode " + shader_id);
+		}
+	
+		CHECK_PHYSFS(PHYSFS_removeFromSearchPath(bcCacheName.c_str()));
+
+		dsstring path{ bcCacheName + dsstring("/") + shader_id.c_str() };
+		CHECK_PHYSFS(PHYSFS_mount(path.c_str(), NULL, 1));
+
+		// check bc code presence...
+		if (!PHYSFS_exists(bcCodeFileName.c_str()))
+		{
+			_DSEXCEPTION("ResourcesSystem : cannot find bytecode for " + shader_id);
+		}
+
+		// check bc md5 presence...
+		if (!PHYSFS_exists(bcMd5FileName.c_str()))
+		{
+			_DSEXCEPTION("ResourcesSystem : cannot find md5 for " + shader_id);
+		}
+
+		///////////////////////////////////
+
+		PHYSFS_file* md5vfile = PHYSFS_openRead(bcMd5FileName.c_str());
+		if (NULL == md5vfile)
+		{
+			_DSEXCEPTION(dsstring("cannot open md5 file for  ") + shader_id);
+		}
+
+		// read md5 file content...
+		PHYSFS_sint64 file_size = PHYSFS_fileLength(md5vfile);
+
+		unsigned char* md5Buf;
+		md5Buf = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[file_size], file_size, shader_id);
+		int length_read = PHYSFS_read(md5vfile, md5Buf, 1, file_size);
+
+		if (length_read != file_size)
+		{
+			_DSEXCEPTION(dsstring("unexpected error while reading md5 file : ") + shader_id);
+		}
+
+		PHYSFS_close(md5vfile);
+
+		dsstring stored_md5((char*)md5Buf, length_read);
+
+		if (stored_md5 == hash_shader)
+		{
+			// OK, can load bc.code file
+
+			PHYSFS_file* codevfile = PHYSFS_openRead(bcCodeFileName.c_str());
+			if (NULL == codevfile)
+			{
+				_DSEXCEPTION(dsstring("cannot open code file for  ") + shader_id);
+			}
+
+			file_size = PHYSFS_fileLength(codevfile);
+
+			bc = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[file_size], file_size, shader_id);
+			bc_length = file_size;
+
+			length_read = PHYSFS_read(codevfile, bc, 1, file_size);
+
+			if (length_read != file_size)
+			{
+				_DSEXCEPTION(dsstring("unexpected error while reading code file : ") + shader_id);
+			}
+
+			PHYSFS_close(codevfile);
+		}
+		else
+		{
+			// crc changed, update all,
+
+			dsstring path{ bcCacheName + dsstring("/") + shader_id.c_str() };
+			CHECK_PHYSFS(PHYSFS_setWriteDir(path.c_str()));
+
+			update_bc_md5file(hash_shader);
+			update_bc_codefile(text, text_size, p_asset_path, p_final_asset_path, p_final_asset_dir, p_shader_type, &bc, bc_length);
+		}
+
+		_DRAWSPACE_DELETE_N_(md5Buf);
+		CHECK_PHYSFS(PHYSFS_removeFromSearchPath(path.c_str()));
+	}
+	else
+	{
+		// shader entry does not exists, create all...
+
+		CHECK_PHYSFS(PHYSFS_mkdir(shader_id.c_str()));
+
+		dsstring path{ bcCacheName + dsstring("/") + shader_id.c_str() };
+		CHECK_PHYSFS(PHYSFS_setWriteDir(path.c_str()));
+
+		update_bc_md5file(hash_shader);
+		update_bc_codefile(text, text_size, p_asset_path, p_final_asset_path, p_final_asset_dir, p_shader_type, &bc, bc_length);
+
+		CHECK_PHYSFS(PHYSFS_removeFromSearchPath(bcCacheName.c_str()));
+	}
+
+	_DRAWSPACE_DELETE_N_(text);
+
+	// update shader & m_shadersCache with bytecode
+
+	Blob blob{ bc, bc_length };
+	m_shadersCache[p_final_asset_path] = blob;
+
+	p_shader->SetData(bc, bc_length);
+
+	p_shader->SetCompilationFlag(true); //shader now contains compiled shader
+}
+
+/*
+// load shader hlsl source text
+long size;
+void* text;
+
+text = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
+if (!text)
+{
+	_DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
+}
+
+void* bytecode_handle;
+int shader_type{ std::get<2>(e->getPurpose()) };
+
+bool comp_status{ m_renderer->CreateShaderBytes((char*)text, size, shader_type, asset_path, final_asset_dir, &bytecode_handle) };
+
+if(!comp_status)
+{
+	dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
+
+	_DSEXCEPTION("ResourcesSystem : failed to compile " + final_asset_path + dsstring(" : ") + err_compil);
+}
+
+size_t bc_length { m_renderer->GetShaderBytesLength(bytecode_handle) };
+void* bc { m_renderer->GetShaderBytes(bytecode_handle) };
+
+void* bc2{ (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, final_asset_dir) };
+memcpy(bc2, bc, bc_length);
+
+Blob blob{ bc2, bc_length };
+m_shadersCache[final_asset_path] = blob;
+
+shader->SetData(bc2, bc_length);
+
+shader->SetCompilationFlag(true); //now contains compiled shader
+
+_DRAWSPACE_DELETE_N_(text);
+m_renderer->ReleaseShaderBytes(bytecode_handle);
+*/

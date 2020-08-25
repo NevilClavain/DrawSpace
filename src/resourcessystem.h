@@ -35,6 +35,12 @@ struct aiNode;
 struct aiScene;
 struct aiMesh;
 
+
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+
+
 namespace DrawSpace
 {
 namespace Core
@@ -49,11 +55,17 @@ namespace Interface
 class Renderer;
 }
 
+
+
 namespace Systems
 {
 class ResourcesSystem : public Interface::System
 {
 private:
+
+	static const dsstring bcCacheName;
+	static const dsstring bcMd5FileName;
+	static const dsstring bcCodeFileName;
 
     using Blob = struct
     {
@@ -114,6 +126,14 @@ private:
     }
 
 	void load_animations(const aiScene* p_scene, Aspect::AnimationsAspect* p_anims_aspect);
+
+	void manage_shader_in_bccache(Core::Shader* p_shader, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type);
+
+	void check_bc_cache_presence(void) const;
+
+	void update_bc_md5file(const dsstring& p_hash);
+
+	void update_bc_codefile(void* p_text, int p_text_size, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type, void** p_bc, int& p_size);
 
 public:
 
