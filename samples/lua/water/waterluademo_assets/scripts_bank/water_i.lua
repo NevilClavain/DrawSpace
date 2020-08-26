@@ -142,8 +142,8 @@ ground_entity_config =
 		{
 			shaders = 
 			{
-				{ path='water_bump_vs.cso',mode=SHADER_COMPILED },
-				{ path='water_bump_ps.cso',mode=SHADER_COMPILED }
+				{ path='water_bump_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='water_bump_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -196,8 +196,8 @@ cube_entity_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -228,8 +228,8 @@ cube_entity_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -317,8 +317,8 @@ sphere_entity_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -349,8 +349,8 @@ sphere_entity_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -440,8 +440,8 @@ land_entity_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -472,8 +472,8 @@ land_entity_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -610,8 +610,8 @@ skybox_layer =
 			{
 				shaders = 
 				{
-					{ path='texture_mirror_vs.cso',mode=SHADER_COMPILED },
-					{ path='texture_mirror_ps.cso',mode=SHADER_COMPILED }
+					{ path='texture_mirror_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='texture_mirror_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
 				{
@@ -893,8 +893,8 @@ add_cube = function()
 			{
 				shaders = 
 				{
-					{ path='lit_vs.cso',mode=SHADER_COMPILED },
-					{ path='lit_ps.cso',mode=SHADER_COMPILED }
+					{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
 				{
@@ -924,8 +924,8 @@ add_cube = function()
 			{
 				shaders = 
 				{
-					{ path='lit_vs.cso',mode=SHADER_COMPILED },
-					{ path='lit_ps.cso',mode=SHADER_COMPILED }
+					{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
 				{
