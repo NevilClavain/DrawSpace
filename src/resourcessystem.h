@@ -133,7 +133,7 @@ private:
 
 	void update_bc_md5file(const dsstring& p_hash);
 
-	void update_bc_codefile(void* p_text, int p_text_size, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type, void** p_bc, int& p_size);
+	void update_bc_codefile(void* p_bc, int p_size);
 
 public:
 

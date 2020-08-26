@@ -901,37 +901,16 @@ void ResourcesSystem::update_bc_md5file(const dsstring& p_hash)
 	PHYSFS_close(md5vfile);
 }
 
-void ResourcesSystem::update_bc_codefile(void* p_text, int p_text_size, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type, void** p_bc, int& p_size)
+void ResourcesSystem::update_bc_codefile(void* p_bc, int p_size)
 {
-	void* bytecode_handle;
-
-	bool comp_status{ m_renderer->CreateShaderBytes((char*)p_text, p_text_size, p_shader_type, p_asset_path, p_final_asset_dir, &bytecode_handle) };
-	if (!comp_status)
-	{
-		dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
-
-		_DSEXCEPTION("ResourcesSystem : failed to compile " + p_final_asset_path + dsstring(" : ") + err_compil);
-	}
-
-	size_t bc_length{ m_renderer->GetShaderBytesLength(bytecode_handle) };
-	void* bc{ m_renderer->GetShaderBytes(bytecode_handle) };
-
 	PHYSFS_file* codevfile{ PHYSFS_openWrite(bcCodeFileName.c_str()) };
 	if (NULL == codevfile)
 	{
 		_DSEXCEPTION("ResourcesSystem : cannot create .code file");
 	}
 
-	PHYSFS_write(codevfile, bc, (PHYSFS_uint32)bc_length, 1);
+	PHYSFS_write(codevfile, p_bc, (PHYSFS_uint32)p_size, 1);
 	PHYSFS_close(codevfile);
-
-	void* bc2{ (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, p_final_asset_dir) };
-	memcpy(bc2, bc, bc_length);
-
-	*p_bc = bc2;
-	p_size = bc_length;
-
-	m_renderer->ReleaseShaderBytes(bytecode_handle);
 }
 
 void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type)
@@ -1041,11 +1020,28 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 		{
 			// crc changed, update all,
 
+			// try to compile...
+			void* bytecode_handle;
+
+			bool comp_status{ m_renderer->CreateShaderBytes((char*)text, text_size, p_shader_type, p_asset_path, p_final_asset_dir, &bytecode_handle) };
+			if (!comp_status)
+			{
+				dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
+				_DSEXCEPTION("ResourcesSystem : failed to compile " + p_final_asset_path + dsstring(" : ") + err_compil);
+			}
+
+			bc_length = m_renderer->GetShaderBytesLength(bytecode_handle);
+
+			bc = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, p_final_asset_dir);
+			memcpy(bc, m_renderer->GetShaderBytes(bytecode_handle), bc_length);
+
+			m_renderer->ReleaseShaderBytes(bytecode_handle);
+
 			dsstring path{ bcCacheName + dsstring("/") + shader_id.c_str() };
 			CHECK_PHYSFS(PHYSFS_setWriteDir(path.c_str()));
 
 			update_bc_md5file(hash_shader);
-			update_bc_codefile(text, text_size, p_asset_path, p_final_asset_path, p_final_asset_dir, p_shader_type, &bc, bc_length);
+			update_bc_codefile(bc, bc_length);
 		}
 
 		_DRAWSPACE_DELETE_N_(md5Buf);
@@ -1055,13 +1051,31 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	{
 		// shader entry does not exists, create all...
 
+		// try to compile...
+		void* bytecode_handle;
+
+		bool comp_status{ m_renderer->CreateShaderBytes((char*)text, text_size, p_shader_type, p_asset_path, p_final_asset_dir, &bytecode_handle) };
+		if (!comp_status)
+		{
+			dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
+			_DSEXCEPTION("ResourcesSystem : failed to compile " + p_final_asset_path + dsstring(" : ") + err_compil);
+		}
+
+		bc_length = m_renderer->GetShaderBytesLength(bytecode_handle);
+
+		bc = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, p_final_asset_dir);
+		memcpy(bc, m_renderer->GetShaderBytes(bytecode_handle), bc_length);
+
+		m_renderer->ReleaseShaderBytes(bytecode_handle);
+
+
 		CHECK_PHYSFS(PHYSFS_mkdir(shader_id.c_str()));
 
 		dsstring path{ bcCacheName + dsstring("/") + shader_id.c_str() };
 		CHECK_PHYSFS(PHYSFS_setWriteDir(path.c_str()));
 
 		update_bc_md5file(hash_shader);
-		update_bc_codefile(text, text_size, p_asset_path, p_final_asset_path, p_final_asset_dir, p_shader_type, &bc, bc_length);
+		update_bc_codefile(bc, bc_length);
 
 		CHECK_PHYSFS(PHYSFS_removeFromSearchPath(bcCacheName.c_str()));
 	}
@@ -1077,43 +1091,3 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 	p_shader->SetCompilationFlag(true); //shader now contains compiled shader
 }
-
-/*
-// load shader hlsl source text
-long size;
-void* text;
-
-text = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
-if (!text)
-{
-	_DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
-}
-
-void* bytecode_handle;
-int shader_type{ std::get<2>(e->getPurpose()) };
-
-bool comp_status{ m_renderer->CreateShaderBytes((char*)text, size, shader_type, asset_path, final_asset_dir, &bytecode_handle) };
-
-if(!comp_status)
-{
-	dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
-
-	_DSEXCEPTION("ResourcesSystem : failed to compile " + final_asset_path + dsstring(" : ") + err_compil);
-}
-
-size_t bc_length { m_renderer->GetShaderBytesLength(bytecode_handle) };
-void* bc { m_renderer->GetShaderBytes(bytecode_handle) };
-
-void* bc2{ (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[bc_length], bc_length, final_asset_dir) };
-memcpy(bc2, bc, bc_length);
-
-Blob blob{ bc2, bc_length };
-m_shadersCache[final_asset_path] = blob;
-
-shader->SetData(bc2, bc_length);
-
-shader->SetCompilationFlag(true); //now contains compiled shader
-
-_DRAWSPACE_DELETE_N_(text);
-m_renderer->ReleaseShaderBytes(bytecode_handle);
-*/
