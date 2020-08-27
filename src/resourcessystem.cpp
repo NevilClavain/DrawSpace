@@ -994,27 +994,39 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 		if (stored_md5 == hash_shader)
 		{
-			// OK, can load bc.code file
-
-			PHYSFS_file* codevfile = PHYSFS_openRead(bcCodeFileName.c_str());
-			if (NULL == codevfile)
+			if (m_shadersCache.find(p_final_asset_path) == m_shadersCache.end())
 			{
-				_DSEXCEPTION(dsstring("cannot open code file for  ") + shader_id);
+
+				// OK, can load bc.code file or get from m_shadersCache
+
+				PHYSFS_file* codevfile = PHYSFS_openRead(bcCodeFileName.c_str());
+				if (NULL == codevfile)
+				{
+					_DSEXCEPTION(dsstring("cannot open code file for  ") + shader_id);
+				}
+
+				file_size = PHYSFS_fileLength(codevfile);
+
+				bc = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[file_size], file_size, shader_id);
+				bc_length = file_size;
+
+				length_read = PHYSFS_read(codevfile, bc, 1, file_size);
+
+				if (length_read != file_size)
+				{
+					_DSEXCEPTION(dsstring("unexpected error while reading code file : ") + shader_id);
+				}
+
+				PHYSFS_close(codevfile);
+
+				Blob blob{ bc, bc_length };
+				m_shadersCache[p_final_asset_path] = blob;
+
 			}
 
-			file_size = PHYSFS_fileLength(codevfile);
+			// update shader & m_shadersCache with bytecode
 
-			bc = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[file_size], file_size, shader_id);
-			bc_length = file_size;
-
-			length_read = PHYSFS_read(codevfile, bc, 1, file_size);
-
-			if (length_read != file_size)
-			{
-				_DSEXCEPTION(dsstring("unexpected error while reading code file : ") + shader_id);
-			}
-
-			PHYSFS_close(codevfile);
+			p_shader->SetData(m_shadersCache.at(p_final_asset_path).data, m_shadersCache.at(p_final_asset_path).size);
 		}
 		else
 		{
@@ -1042,6 +1054,14 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 			update_bc_md5file(hash_shader);
 			update_bc_codefile(bc, bc_length);
+
+
+			// update shader & m_shadersCache with bytecode
+
+			Blob blob{ bc, bc_length };
+			m_shadersCache[p_final_asset_path] = blob;
+
+			p_shader->SetData(bc, bc_length);
 		}
 
 		_DRAWSPACE_DELETE_N_(md5Buf);
@@ -1078,16 +1098,16 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 		update_bc_codefile(bc, bc_length);
 
 		CHECK_PHYSFS(PHYSFS_removeFromSearchPath(bcCacheName.c_str()));
+
+		// update shader & m_shadersCache with bytecode
+
+		Blob blob{ bc, bc_length };
+		m_shadersCache[p_final_asset_path] = blob;
+
+		p_shader->SetData(bc, bc_length);
 	}
 
 	_DRAWSPACE_DELETE_N_(text);
-
-	// update shader & m_shadersCache with bytecode
-
-	Blob blob{ bc, bc_length };
-	m_shadersCache[p_final_asset_path] = blob;
-
-	p_shader->SetData(bc, bc_length);
 
 	p_shader->SetCompilationFlag(true); //shader now contains compiled shader
 }
