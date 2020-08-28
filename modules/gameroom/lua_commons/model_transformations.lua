@@ -43,110 +43,117 @@ transformations_update = function(p_delta)
     return
   end
 
-  local transform_entry = model.transformations[model.target]
+  if model.transformations[model.target] ~= nil then
 
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_POSX then
+	  local transform_entry = model.transformations[model.target]
 
-    local pos_x = transform_entry['pos_mat']:get_value(3,0)
-    pos_x = pos_x + p_delta
-    transform_entry['pos_mat']:set_value(3,0,pos_x) 
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_POSX then
+
+		local pos_x = transform_entry['pos_mat']:get_value(3,0)
+		pos_x = pos_x + p_delta
+		transform_entry['pos_mat']:set_value(3,0,pos_x) 
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_POSY then
+
+		local pos_y = transform_entry['pos_mat']:get_value(3,1)
+		pos_y = pos_y + p_delta
+		transform_entry['pos_mat']:set_value(3,1,pos_y) 
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_POSZ then
+
+		local pos_z = transform_entry['pos_mat']:get_value(3,2)
+		pos_z = pos_z + p_delta
+		transform_entry['pos_mat']:set_value(3,2,pos_z) 
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_ROTX then
+		transform_entry['rotx_deg_angle'] = transform_entry['rotx_deg_angle'] + p_delta
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_ROTY then
+		transform_entry['roty_deg_angle'] = transform_entry['roty_deg_angle'] + p_delta
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_ROTZ then
+		transform_entry['rotz_deg_angle'] = transform_entry['rotz_deg_angle'] + p_delta
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEX then
+
+		local scale_x = transform_entry['scale_mat']:get_value(0,0)
+		scale_x = scale_x + 0.01 * p_delta
+		if scale_x < 0.001 then
+		  scale_x = 0.001
+		end
+		transform_entry['scale_mat']:set_value(0,0,scale_x) 
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEY then
+
+		local scale_y = transform_entry['scale_mat']:get_value(1,1)
+		scale_y = scale_y + 0.01 * p_delta
+		if scale_y < 0.001 then
+		  scale_y = 0.001
+		end
+		transform_entry['scale_mat']:set_value(1,1,scale_y) 
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEZ then
+
+		local scale_z = transform_entry['scale_mat']:get_value(2,2)
+		scale_z = scale_z + 0.01 * p_delta
+		if scale_z < 0.001 then
+		  scale_z = 0.001
+		end
+		transform_entry['scale_mat']:set_value(2,2,scale_z) 
+	  end
+
+	  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEXYZ then
+
+		local scale_x = transform_entry['scale_mat']:get_value(0,0)
+		local scale_y = transform_entry['scale_mat']:get_value(1,1)
+		local scale_z = transform_entry['scale_mat']:get_value(2,2)
+
+		scale_x = scale_x + 0.01 * p_delta
+		scale_y = scale_y + 0.01 * p_delta
+		scale_z = scale_z + 0.01 * p_delta
+
+		if scale_x < 0.001 then
+		  scale_x = 0.001
+		end
+
+		if scale_y < 0.001 then
+		  scale_y = 0.001
+		end
+
+		if scale_z < 0.001 then
+		  scale_z = 0.001
+		end
+
+		transform_entry['scale_mat']:set_value(0,0,scale_x)
+		transform_entry['scale_mat']:set_value(1,1,scale_y) 
+		transform_entry['scale_mat']:set_value(2,2,scale_z)
+
+	  end
+
+	  transform_entry['rotx_mat']:rotation(1.0, 0.0, 0.0, commons.utils.deg_to_rad(transform_entry['rotx_deg_angle']))
+	  transform_entry['roty_mat']:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(transform_entry['roty_deg_angle']))
+	  transform_entry['rotz_mat']:rotation(0.0, 0.0, 1.0, commons.utils.deg_to_rad(transform_entry['rotz_deg_angle']))
+
+	  local transform = transform_entry['transform']
+
+	  transform:update_matrix("pos",transform_entry['pos_mat'])
+	  transform:update_matrix("rotx",transform_entry['rotx_mat'])
+	  transform:update_matrix("roty",transform_entry['roty_mat'])
+	  transform:update_matrix("rotz",transform_entry['rotz_mat'])
+	  transform:update_matrix("scale",transform_entry['scale_mat'])
+
+  else
+     g:print("cannot transform because "..model.target.." is a BODY model");
+
   end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_POSY then
-
-    local pos_y = transform_entry['pos_mat']:get_value(3,1)
-    pos_y = pos_y + p_delta
-    transform_entry['pos_mat']:set_value(3,1,pos_y) 
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_POSZ then
-
-    local pos_z = transform_entry['pos_mat']:get_value(3,2)
-    pos_z = pos_z + p_delta
-    transform_entry['pos_mat']:set_value(3,2,pos_z) 
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_ROTX then
-    transform_entry['rotx_deg_angle'] = transform_entry['rotx_deg_angle'] + p_delta
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_ROTY then
-	transform_entry['roty_deg_angle'] = transform_entry['roty_deg_angle'] + p_delta
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_ROTZ then
-	transform_entry['rotz_deg_angle'] = transform_entry['rotz_deg_angle'] + p_delta
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEX then
-
-    local scale_x = transform_entry['scale_mat']:get_value(0,0)
-    scale_x = scale_x + 0.01 * p_delta
-	if scale_x < 0.001 then
-	  scale_x = 0.001
-	end
-    transform_entry['scale_mat']:set_value(0,0,scale_x) 
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEY then
-
-    local scale_y = transform_entry['scale_mat']:get_value(1,1)
-    scale_y = scale_y + 0.01 * p_delta
-	if scale_y < 0.001 then
-	  scale_y = 0.001
-	end
-    transform_entry['scale_mat']:set_value(1,1,scale_y) 
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEZ then
-
-	local scale_z = transform_entry['scale_mat']:get_value(2,2)
-    scale_z = scale_z + 0.01 * p_delta
-	if scale_z < 0.001 then
-	  scale_z = 0.001
-	end
-    transform_entry['scale_mat']:set_value(2,2,scale_z) 
-  end
-
-  if transform_entry['transformation_input_mode'] == MODEL_TRANSFORMATION_INPUTMODE_SCALEXYZ then
-
-    local scale_x = transform_entry['scale_mat']:get_value(0,0)
-	local scale_y = transform_entry['scale_mat']:get_value(1,1)
-	local scale_z = transform_entry['scale_mat']:get_value(2,2)
-
-    scale_x = scale_x + 0.01 * p_delta
-	scale_y = scale_y + 0.01 * p_delta
-	scale_z = scale_z + 0.01 * p_delta
-
-	if scale_x < 0.001 then
-	  scale_x = 0.001
-	end
-
-	if scale_y < 0.001 then
-	  scale_y = 0.001
-	end
-
-	if scale_z < 0.001 then
-	  scale_z = 0.001
-	end
-
-	transform_entry['scale_mat']:set_value(0,0,scale_x)
-	transform_entry['scale_mat']:set_value(1,1,scale_y) 
-	transform_entry['scale_mat']:set_value(2,2,scale_z)
-
-  end
-
-  transform_entry['rotx_mat']:rotation(1.0, 0.0, 0.0, commons.utils.deg_to_rad(transform_entry['rotx_deg_angle']))
-  transform_entry['roty_mat']:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(transform_entry['roty_deg_angle']))
-  transform_entry['rotz_mat']:rotation(0.0, 0.0, 1.0, commons.utils.deg_to_rad(transform_entry['rotz_deg_angle']))
-
-  local transform = transform_entry['transform']
-
-  transform:update_matrix("pos",transform_entry['pos_mat'])
-  transform:update_matrix("rotx",transform_entry['rotx_mat'])
-  transform:update_matrix("roty",transform_entry['roty_mat'])
-  transform:update_matrix("rotz",transform_entry['rotz_mat'])
-  transform:update_matrix("scale",transform_entry['scale_mat'])
 
 end
 
