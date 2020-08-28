@@ -391,7 +391,7 @@ void BodyAspect::Release( void )
 {
     if( !m_initialized )
     {
-        _DSEXCEPTION( "bodyaspect already released !" )
+        _DSEXCEPTION( "bodyaspect not initialized !" )
     }
 
     //////////// memoriser differentes choses avant de nettoyer...////////////////
