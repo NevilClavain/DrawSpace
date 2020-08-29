@@ -83,8 +83,8 @@ skydome.skyfromatmo_ESun = 70.0
 skydome.groundfromspace_ESun = 24.0
 skydome.groundfromatmo_ESun = 12.0
 
-skydome.atmoThickness = 160000.0
-skydome.outerRadius = 7000000.0
+skydome.atmoThickness = 1600.0
+skydome.outerRadius = 70000.0
 skydome.innerRadius = skydome.outerRadius - skydome.atmoThickness
 
 skydome.waveLength_x = 0.650;
