@@ -14,8 +14,8 @@ skydome.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='skydome_vs.cso',mode=SHADER_COMPILED },
-				{ path='skydome_ps.cso',mode=SHADER_COMPILED }
+				{ path='skydome_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='skydome_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{

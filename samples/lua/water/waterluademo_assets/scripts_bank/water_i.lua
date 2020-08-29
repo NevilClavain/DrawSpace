@@ -93,7 +93,7 @@ model.camera.mvt:set_pos(0.0, 8.0, 30.0)
 
 model.env.light.setstate( TRUE )
 	
-model.env.light.setsphericaldir(0.0,20.0)
+model.env.light.setsphericaldir(0.0,50.0)
 
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
