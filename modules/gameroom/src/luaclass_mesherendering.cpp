@@ -326,7 +326,7 @@ int LuaClass_MesheRendering::LUA_setshaderrealvector( lua_State* p_L )
 
     if( 0 == m_renderingnodes.count( pass_id ) )
     {
-        LUA_ERROR( "MesheRendering::set_shaderrealvector : unknown pass" ) ;
+        LUA_ERROR( dsstring( "MesheRendering::set_shaderrealvector : unknown pass " ) + pass_id) ;
     }
     else
     {
