@@ -99,12 +99,13 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/textures_bank 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
 # deploy skydome model in max tools assets directory
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/skydome_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/skydome_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/skydome_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/skydome_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
 # deploy land model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/land/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
