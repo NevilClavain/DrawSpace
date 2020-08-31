@@ -5,7 +5,7 @@ g:signal_rendersceneend("eg")
 model.releasemaincamera()
 
 land.view.unload('l')
---skydome.view.unload('dome')
+skydome.view.unload('dome')
 
 destroy_all_cubes()
 
