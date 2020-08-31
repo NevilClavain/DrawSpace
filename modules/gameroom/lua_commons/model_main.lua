@@ -34,7 +34,6 @@ environment =
 		b = 0.99, 
 	},
 
-	mirror = 0,
 	reflector_pos = {x = 1.0, y = 0.0, z = 0.0, w = 0.0 },
 	reflector_normale = {x = 1.0, y = 0.0, z = 0.0, w = 0.0 },
 
