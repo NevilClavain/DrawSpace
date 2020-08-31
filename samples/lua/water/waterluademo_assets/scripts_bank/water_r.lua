@@ -5,6 +5,7 @@ g:signal_rendersceneend("eg")
 model.releasemaincamera()
 
 land.view.unload('l')
+--skydome.view.unload('dome')
 
 destroy_all_cubes()
 
@@ -16,6 +17,7 @@ g:remove_appruncb('run')
 
 
 rg:remove_pass('texture_pass')
+rg:remove_pass('texturemirror_pass')
 
 commons.trash.final_pass(rg, 'final_pass')
 

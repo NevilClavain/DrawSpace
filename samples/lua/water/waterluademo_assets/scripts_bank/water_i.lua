@@ -4,6 +4,14 @@ include('land_model.lua')
 include('skydome_model.lua')
 
 
+environment.reflector_pos.x = 0.0
+environment.reflector_pos.y = skydome.innerRadius
+environment.reflector_pos.z = 0.0
+
+environment.reflector_normale.x = 0.0
+environment.reflector_normale.y = 1.0
+environment.reflector_normale.z = 0.0
+
 hmi_mode=FALSE
 
 
@@ -20,7 +28,7 @@ g:print(mvt_mod:get_descr().. ' loaded')
 commons.init_final_pass_water_mask(rg, 'final_pass')
 
 rg:create_child('final_pass', 'texture_pass', 0)
---rg:create_child('final_pass', 'texturemirror_pass', 1)
+rg:create_child('final_pass', 'texturemirror_pass', 1)
 
 
 
@@ -83,8 +91,16 @@ land_passes_config =
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = land.update_from_scene_env
 	}
+	,
+	texturemirror_pass =
+	{
+		rendering_id = 'lit_mirror_rendering',
+		lit_shader_update_func = land.update_from_scene_env_mirror	
+	}	
+
 }
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
+--land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config, 'root')
 
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
@@ -98,6 +114,7 @@ model.env.light.setsphericaldir(0.0,50.0)
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
 model.camera.mvt:set_pos(0.0, skydome.innerRadius + 8.0, 0.0)
+--model.camera.mvt:set_pos(0.0, 8.0, 0.0)
 model.camera.speed = 50.0
 
 

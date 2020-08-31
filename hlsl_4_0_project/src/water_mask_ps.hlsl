@@ -49,6 +49,7 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
+	/*
     float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);
     
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
@@ -58,5 +59,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
        
         scene_color = refrac_color * txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
     }
+	*/
+
+	float4 scene_color = txDiffuseMirror.Sample(SamplerDiffuseMirror, input.TexCoord0);
+	//float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);
+
     return scene_color;
 }
