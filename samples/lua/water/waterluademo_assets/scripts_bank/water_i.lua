@@ -2,6 +2,7 @@
 
 include('land_model.lua')
 include('skydome_model.lua')
+include('waterquad_model.lua')
 
 
 environment.reflector_pos.x = 0.0
@@ -104,6 +105,18 @@ land_passes_config =
 }
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
 --land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config, 'root')
+
+
+waterquad_passes_config = 
+{
+	texture_pass = 
+	{
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = waterquad.update_from_scene_env
+	}
+}
+waterquad.view.load('water', waterquad_passes_config, 'root')
+model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)
 
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)

@@ -6,6 +6,7 @@ model.releasemaincamera()
 
 land.view.unload('l')
 skydome.view.unload('dome')
+waterquad.view.unload('water')
 
 destroy_all_cubes()
 
