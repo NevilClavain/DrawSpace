@@ -79,6 +79,11 @@ skydome_passes_config =
 	{
 		rendering_id = 'main_rendering',
 		lit_shader_update_func = skydome.update_from_scene_env
+	},
+	texturemirror_pass =
+	{
+		rendering_id = 'mirror_rendering',
+		lit_shader_update_func = skydome.update_from_scene_env_mirror	
 	}
 }
 skydome.view.load('dome', skydome_passes_config, 'root')
@@ -90,14 +95,12 @@ land_passes_config =
 	{
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = land.update_from_scene_env
-	}
-	,
+	},
 	texturemirror_pass =
 	{
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = land.update_from_scene_env_mirror	
-	}	
-
+	}
 }
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
 --land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config, 'root')

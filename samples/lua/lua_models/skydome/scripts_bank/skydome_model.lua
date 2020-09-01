@@ -20,7 +20,6 @@ skydome.rendering_config =
 			rs_in = 
 			{
 				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-				--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" },
 				{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
 				{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
 				{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
@@ -31,7 +30,6 @@ skydome.rendering_config =
 			rs_out =
 			{
 				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-				--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" },
 				{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
 				{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
 			}
@@ -45,6 +43,9 @@ skydome.rendering_config =
 		rendering_order = 22,
 		shaders_params = 
 		{ 
+			{ param_name = "flags",                    shader_index = 0, register = 24 },
+			{ param_name = "reflector_pos",            shader_index = 0, register = 25 },
+			{ param_name = "reflector_dir",            shader_index = 0, register = 26 },
 			{ param_name = "v_light0_dir",             shader_index = 1, register = 10 },
 			{ param_name = "v_atmo_scattering_flag_0", shader_index = 1, register = 18 },
 			{ param_name = "v_atmo_scattering_flag_1", shader_index = 1, register = 19 },
@@ -63,6 +64,62 @@ skydome.rendering_config =
 		normale_generation_mode = NORMALES_AUTO_SMOOTH,
 		tb_generation_mode = TB_DISCARDED
 	},
+	mirror_rendering =
+	{
+		fx = 
+		{
+			shaders = 
+			{
+				{ path='skydome_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='skydome_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
+				{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
+				{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+			}
+		},
+		textures =
+		{
+		},
+		vertex_textures =
+		{
+		},
+		rendering_order = 22,
+		shaders_params = 
+		{ 
+			{ param_name = "flags",                    shader_index = 0, register = 24 },
+			{ param_name = "reflector_pos",            shader_index = 0, register = 25 },
+			{ param_name = "reflector_dir",            shader_index = 0, register = 26 },
+			{ param_name = "v_light0_dir",             shader_index = 1, register = 10 },
+			{ param_name = "v_atmo_scattering_flag_0", shader_index = 1, register = 18 },
+			{ param_name = "v_atmo_scattering_flag_1", shader_index = 1, register = 19 },
+			{ param_name = "v_atmo_scattering_flag_2", shader_index = 1, register = 20 },
+			{ param_name = "v_atmo_scattering_flag_3", shader_index = 1, register = 21 },
+			{ param_name = "v_atmo_scattering_flag_4", shader_index = 1, register = 22 },
+		}	
+	},
+	meshes_loader_params =
+	{
+		normale_generation_mode = NORMALES_AUTO_SMOOTH,
+		tb_generation_mode = TB_DISCARDED
+	},
+	meshes_loader_params =
+	{
+		normale_generation_mode = NORMALES_AUTO_SMOOTH,
+		tb_generation_mode = TB_DISCARDED
+	}
 }
 
 skydome.dump.load = function()
@@ -97,6 +154,25 @@ skydome.scaleDepth = 0.25;
 skydome.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 
     local renderer = skydome.models[p_entity_id]['renderer']
+
+	renderer:set_shaderrealvector( p_pass_id, 'flags', 0, 0, 0, 0 )
+
+	renderer:set_shaderrealvector( p_pass_id, 'v_light0_dir', p_environment_table.light0.direction.x, p_environment_table.light0.direction.y, p_environment_table.light0.direction.z, p_environment_table.light0.direction.w )
+
+    renderer:set_shaderrealvector( p_pass_id, 'v_atmo_scattering_flag_0', skydome.outerRadius, skydome.innerRadius, skydome.outerRadius*skydome.outerRadius, skydome.innerRadius*skydome.innerRadius )
+	renderer:set_shaderrealvector( p_pass_id, 'v_atmo_scattering_flag_1', skydome.scaleDepth, 1.0/skydome.scaleDepth, 1.0 / (skydome.outerRadius - skydome.innerRadius), (1.0 / (skydome.outerRadius - skydome.innerRadius) ) / skydome.scaleDepth  )
+	renderer:set_shaderrealvector( p_pass_id, 'v_atmo_scattering_flag_2', 1.0 / g:pow(skydome.waveLength_x, 4.0), 1.0 / g:pow(skydome.waveLength_y, 4.0), 1.0 / g:pow(skydome.waveLength_z, 4.0), 0 )
+	renderer:set_shaderrealvector( p_pass_id, 'v_atmo_scattering_flag_3', skydome.kr, skydome.km, 4.0 * skydome.kr * PI, 4.0 * skydome.km * PI )
+	renderer:set_shaderrealvector( p_pass_id, 'v_atmo_scattering_flag_4', skydome.skyfromspace_ESun, skydome.skyfromatmo_ESun, skydome.groundfromspace_ESun, skydome.groundfromatmo_ESun )
+end
+
+skydome.update_from_scene_env_mirror = function( p_pass_id, p_environment_table, p_entity_id )
+
+    local renderer = skydome.models[p_entity_id]['renderer']
+
+	renderer:set_shaderrealvector( p_pass_id, 'flags', 1, 0, 0, 0 )
+	renderer:set_shaderrealvector( p_pass_id, 'reflector_pos', p_environment_table.reflector_pos.x, p_environment_table.reflector_pos.y, p_environment_table.reflector_pos.z, 1.0 )
+	renderer:set_shaderrealvector( p_pass_id, 'reflector_dir', p_environment_table.reflector_normale.x, p_environment_table.reflector_normale.y, p_environment_table.reflector_normale.z, 1.0 )
 
 	renderer:set_shaderrealvector( p_pass_id, 'v_light0_dir', p_environment_table.light0.direction.x, p_environment_table.light0.direction.y, p_environment_table.light0.direction.z, p_environment_table.light0.direction.w )
 

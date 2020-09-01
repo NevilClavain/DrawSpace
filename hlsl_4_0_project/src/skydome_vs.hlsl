@@ -29,8 +29,9 @@ cbuffer legacyargs : register(b0)
 };
 
 #include "mat_input_constants.hlsl"
+#include "generic_rendering.hlsl"
 
-#define v_viewer_pos                28
+
 
 struct VS_INPUT
 {
@@ -52,6 +53,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     pos.xyz = Input.Position;
     pos.w = 1.0;
 
+    float4x4 mat_World = mat[matWorld];
+    float4x4 mat_View = mat[matView];
+    float4x4 mat_Proj = mat[matProj];
     float4x4 mat_Cam = mat[matCam];
 
     float4 viewer_pos;    // view pos relatif au centre de la sphere...
@@ -60,8 +64,20 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     viewer_pos.z = mat_Cam[3][2];
     viewer_pos.w = 1.0;
 
-    Output.Position = mul(pos, mat[matWorldViewProjection]);
+    float4 Flags = vec[24];
+    float4 reflectorPos = vec[25];
+    float4 reflectorNormal = vec[26];
 
+    if (Flags.x > 0.0)
+    {
+        Output.Position = reflectedVertexPos(pos, reflectorPos, reflectorNormal, mat_World, mat_View, mat_Proj);
+    }
+    else
+    {
+        Output.Position = mul(pos, mat[matWorldViewProjection]);
+    }
+
+    
     ////// atmo scattering : calcul vertex pos
 
     float4x4 matWorldRot = mat[matWorld];
