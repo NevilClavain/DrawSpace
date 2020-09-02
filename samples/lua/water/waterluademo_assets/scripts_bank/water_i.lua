@@ -34,30 +34,30 @@ rg:create_child('final_pass', 'texturemirror_pass', 1)
 
 
 
---rg:create_child('final_pass', 'bump_pass', 2, RENDERPURPOSE_FLOATVECTOR)
---rg:set_pass_depthclearstate('bump_pass', TRUE)
---rg:set_pass_targetclearstate('bump_pass', TRUE)
---rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
+rg:create_child('final_pass', 'bump_pass', 2, RENDERPURPOSE_FLOATVECTOR)
+rg:set_pass_depthclearstate('bump_pass', TRUE)
+rg:set_pass_targetclearstate('bump_pass', TRUE)
+rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
 
 
 
---rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
+rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
 
---rg:create_pass_viewportquad('wave_pass')
+rg:create_pass_viewportquad('wave_pass')
 
---wave_fxparams = FxParams()
---wave_fxparams:add_shaderfile('water_waves_vs.cso',SHADER_COMPILED)
---wave_fxparams:add_shaderfile('water_waves_ps.cso',SHADER_COMPILED)
+wave_fxparams = FxParams()
+wave_fxparams:add_shaderfile('water_waves_vs.cso',SHADER_COMPILED)
+wave_fxparams:add_shaderfile('water_waves_ps.cso',SHADER_COMPILED)
 
---wave_textures = TexturesSet()
---wave_rendercontext = RenderContext('wave_pass')
---wave_rendercontext:add_fxparams(wave_fxparams)
---wave_rendercontext:add_texturesset(wave_textures)
---wave_rendercontext:add_shaderparam("waves", 1, 0)
+wave_textures = TexturesSet()
+wave_rendercontext = RenderContext('wave_pass')
+wave_rendercontext:add_fxparams(wave_fxparams)
+wave_rendercontext:add_texturesset(wave_textures)
+wave_rendercontext:add_shaderparam("waves", 1, 0)
 
---waves_renderconfig=RenderConfig()
---waves_renderconfig:add_rendercontext(wave_rendercontext)
---rg:configure_pass_viewportquad_resources('wave_pass',waves_renderconfig)
+waves_renderconfig=RenderConfig()
+waves_renderconfig:add_rendercontext(wave_rendercontext)
+rg:configure_pass_viewportquad_resources('wave_pass',waves_renderconfig)
 
 root_entity:add_aspect(PHYSICS_ASPECT)
 
@@ -69,6 +69,10 @@ root_entity:configure_world(environment.gravity_state, environment.gravity.x, en
 model.createmaincamera(0.0, 3.0, 0.0, mvt_mod)
 eg:set_camera(model.camera.entity)
 
+waves=SyncAngle()
+waves_inc = TRUE
+
+waves:init_fromtimeaspectof(root_entity,0.0)
 
 text_renderer=TextRendering()
 text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
@@ -104,8 +108,6 @@ land_passes_config =
 	}
 }
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
---land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config, 'root')
-
 
 waterquad_passes_config = 
 {
@@ -113,10 +115,17 @@ waterquad_passes_config =
 	{
 		rendering_id = 'main_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env
+	},
+	bump_pass = 
+	{
+		rendering_id = 'bump_rendering',
+		lit_shader_update_func = waterquad.update_from_scene_env_bump
 	}
 }
 waterquad.view.load('water', waterquad_passes_config, 'root')
 model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)
+
+waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass', 'bump_pass', 0)
 
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
@@ -274,7 +283,23 @@ function()
 	text_renderer:update(520, 30, 255, 0, 0, output_infos)
 
 
+    if waves_inc == TRUE then
 
+        if waves:get_value() < 200.0 then
+            waves:inc( 1.0 )
+        else
+            waves_inc = FALSE
+		end
+    else
+
+        if waves:get_value() > 0.0 then
+            waves:dec( 1.0 )
+        else
+            waves_inc = TRUE
+		end
+	end
+
+	rg:set_viewportquadshaderrealvector('wave_pass', 'waves', waves:get_value(), 0.0, 0.0, 0.0)
 
 end)
 
@@ -333,7 +358,7 @@ end)
 
 
 set_water_bump = function(bias)
-	ground_renderer:set_shaderrealvector('bump_pass', 'bump_bias', bias, 0.0, 0.0, 0.0)
+	waterquad.models['water']['renderer']:set_shaderrealvector('bump_pass', 'bump_bias', bias, 0.0, 0.0, 0.0)
 end
 
 g:signal_renderscenebegin("eg")

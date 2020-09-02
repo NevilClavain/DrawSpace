@@ -39,6 +39,36 @@ waterquad.rendering_config =
 			{ param_name = "color", shader_index = 1, register = 0 }
 		}
 	},
+    bump_rendering = 
+	{
+		fx = 
+		{
+			shaders = 
+			{
+				{ path='water_bump_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='water_bump_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		textures =
+		{
+		},
+		vertex_textures =
+		{
+		},
+		rendering_order = 10000,
+		shaders_params = 
+		{ 
+			{ param_name = 'bump_bias', shader_index = 1, register = 0 }
+		}
+	},
 	meshes_loader_params =
 	{
 		normale_generation_mode = NORMALES_AUTO,
@@ -66,6 +96,12 @@ waterquad.update_from_scene_env = function( p_pass_id, p_environment_table, p_en
 
 end
 
+waterquad.update_from_scene_env_bump = function( p_pass_id, p_environment_table, p_entity_id )
+
+  local renderer = waterquad.models[p_entity_id]['renderer']
+  renderer:set_shaderrealvector( p_pass_id, 'bump_bias', 1.0, 0.0, 0.0, 1.0 )
+
+end
 
 
 waterquad.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id)

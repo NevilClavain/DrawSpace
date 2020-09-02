@@ -15,8 +15,10 @@ text_renderer:release()
 g:remove_appruncb('run')
 
 
-
-
+rg:remove_pass('bump_pass')
+rg:release_pass_viewportquad_resources('wave_pass')
+rg:remove_pass_viewportquad('wave_pass')
+rg:remove_pass('wave_pass')
 rg:remove_pass('texture_pass')
 rg:remove_pass('texturemirror_pass')
 
