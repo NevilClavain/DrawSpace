@@ -3,6 +3,8 @@
 include('land_model.lua')
 include('skydome_model.lua')
 include('waterquad_model.lua')
+include('metalcube_model.lua')
+include('spherebump_model.lua')
 
 
 environment.reflector_pos.x = 0.0
@@ -109,6 +111,40 @@ land_passes_config =
 }
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
 
+
+metalcube_passes_config = 
+{
+	texture_pass = 
+	{
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = metalcube.update_from_scene_env
+	},
+	texturemirror_pass =
+	{
+		rendering_id = 'lit_mirror_rendering',
+		lit_shader_update_func = metalcube.update_from_scene_env_mirror	
+	}
+}
+
+metalcube.view.load('c', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_config, 'root' )
+
+
+spherebump_passes_config = 
+{
+	texture_pass = 
+	{
+	    rendering_id = 'lit_rendering',
+		lit_shader_update_func = spherebump.update_from_scene_env
+	},
+	texturemirror_pass =
+	{
+		rendering_id = 'lit_mirror_rendering',
+		lit_shader_update_func = spherebump.update_from_scene_env_mirror	
+	}
+}
+spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}, spherebump_passes_config, 'root' )
+
+
 waterquad_passes_config = 
 {
 	texture_pass = 
@@ -138,7 +174,7 @@ model.env.light.setsphericaldir(0.0,50.0)
 
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
-model.camera.mvt:set_pos(0.0, skydome.innerRadius + 8.0, 0.0)
+model.camera.mvt:set_pos(0.0, skydome.innerRadius + 8.0, 20.0)
 --model.camera.mvt:set_pos(0.0, 8.0, 0.0)
 model.camera.speed = 50.0
 

@@ -71,7 +71,7 @@ land.rendering_config =
 			rs_in = 
 			{
 				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
-				{ ope=RENDERSTATE_OPE_SETCULLING, value="ccw" },		
+				{ ope=RENDERSTATE_OPE_SETCULLING, value="ccw" },
 			},
 			rs_out =
 			{
