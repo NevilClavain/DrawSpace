@@ -7,7 +7,11 @@ model.releasemaincamera()
 land.view.unload('l')
 skydome.view.unload('dome')
 waterquad.view.unload('water')
-metalcube.view.unload('c')
+
+
+metalcube.view.unload('cube')
+destroy_all_cubes()
+
 spherebump.view.unload('sphere')
 
 destroy_all_cubes()

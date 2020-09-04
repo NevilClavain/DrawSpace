@@ -17,6 +17,8 @@ environment.reflector_normale.z = 0.0
 
 hmi_mode=FALSE
 
+cube_instance=0
+
 
 g:print('Current renderer is '..model.renderer_infos[1]..', '..model.renderer_infos[2]..'x'..model.renderer_infos[3])
 renderer_infos = {renderer:descr()}
@@ -126,7 +128,7 @@ metalcube_passes_config =
 	}
 }
 
-metalcube.view.load('c', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_config, 'root' )
+metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_config, 'root' )
 
 
 spherebump_passes_config = 
@@ -353,21 +355,27 @@ gui:show_gui(TRUE)
 g:show_mousecursor(FALSE)
 g:set_mousecursorcircularmode(TRUE)
 
-y_cube = 1
 
-
-cube_instances = {}
 
 add_cube = function()
 
+  local instance_name = 'cube_'..cube_instance
+  metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_config, 'root' )
 
-	y_cube = y_cube + 1
+  cube_instance = cube_instance + 1
 
 end
 
 
 
 destroy_all_cubes = function()
+
+  j = 0
+  while j < cube_instance do 
+    metalcube.view.unload('cube_'..j)  
+	j = j + 1
+  end
+  cube_instance = 0
 end
 
 
@@ -386,7 +394,7 @@ function( layout, widget )
   elseif layout == 'main.layout' and widget == "Button_Destroy" then
 	
 	destroy_all_cubes()	
-	y_cube = 1
+
 	rg:update_renderingqueues()
 	
   end
