@@ -59,8 +59,6 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/meshes_bank
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/skydome_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/skydome_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
 
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/skydome_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/skydome_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
 
 # deploy metalcube model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/metalcube/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets)
