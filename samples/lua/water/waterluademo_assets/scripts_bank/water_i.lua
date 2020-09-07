@@ -30,7 +30,29 @@ mvt_mod:load()
 g:print(mvt_mod:get_descr().. ' loaded')
 
 
-commons.init_final_pass_water_mask(rg, 'final_pass')
+rg:create_pass_viewportquad('final_pass')
+
+local finalpass_rss=RenderStatesSet()
+
+finalpass_rss:add_renderstate_in(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "point")
+finalpass_rss:add_renderstate_out(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "linear")
+
+local textures = TexturesSet()
+
+local fxparams = FxParams()
+fxparams:add_shaderfile('water_mask_vs.cso',SHADER_COMPILED)
+fxparams:add_shaderfile('water_mask_ps.cso',SHADER_COMPILED)
+fxparams:set_renderstatesset(finalpass_rss)
+
+
+rendercontext = RenderContext('final_pass')
+rendercontext:add_fxparams(fxparams)
+rendercontext:add_texturesset(textures)
+
+renderconfig=RenderConfig()
+renderconfig:add_rendercontext(rendercontext)
+rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
+
 
 rg:create_child('final_pass', 'texture_pass', 0)
 rg:create_child('final_pass', 'texturemirror_pass', 1)

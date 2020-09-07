@@ -87,33 +87,6 @@ commons.init_final_pass = function(p_rendergraph, p_passid)
 
 end
 
-commons.init_final_pass_water_mask = function(p_rendergraph, p_passid)
-
-	p_rendergraph:create_pass_viewportquad(p_passid)
-
-	local finalpass_rss=RenderStatesSet()
-
-	finalpass_rss:add_renderstate_in(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "point")
-	finalpass_rss:add_renderstate_out(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "linear")
-
-	local textures = TexturesSet()
-
-	local fxparams = FxParams()
-	fxparams:add_shaderfile('water_mask_vs.cso',SHADER_COMPILED)
-	fxparams:add_shaderfile('water_mask_ps.cso',SHADER_COMPILED)
-	fxparams:set_renderstatesset(finalpass_rss)
-
-
-	rendercontext = RenderContext(p_passid)
-	rendercontext:add_fxparams(fxparams)
-	rendercontext:add_texturesset(textures)
-
-	renderconfig=RenderConfig()
-	renderconfig:add_rendercontext(rendercontext)
-	p_rendergraph:configure_pass_viewportquad_resources(p_passid,renderconfig)
-
-end
-
 commons.create_static_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewport_height, p_module, p_name)
 
 	local camera_entity=Entity()
