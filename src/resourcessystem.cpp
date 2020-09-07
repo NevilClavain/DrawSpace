@@ -137,13 +137,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				Shader* shader{ std::get<0>(e->getPurpose()) };
 
 				dsstring asset_path;
-				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
+				shader->GetBasePath(asset_path);
 				dsstring final_asset_path = compute_shaders_final_path(asset_path);
 				dsstring final_asset_dir = compute_shaders_final_path("");
 
 				if (shader->IsCompiled())
 				{
-					updateAssetFromCache<Shader>(std::get<0>(e->getPurpose()), m_shadersCache, final_asset_path);
+					updateAssetFromCache<Shader>(shader, m_shadersCache, final_asset_path);
 					loaded = true;
 				}
 				else
@@ -863,12 +863,21 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
     updateAssetFromCache<Texture>(p_texture, m_texturesCache, final_asset_path);
 }
 
-void ResourcesSystem::LoadShader(Core::Shader* p_shader)
+void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 {
-    dsstring asset_path;
-    p_shader->GetBasePath(asset_path);
-    dsstring final_asset_path = compute_shaders_final_path(asset_path);
-    updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);
+	dsstring asset_path;
+	p_shader->GetBasePath(asset_path);
+	dsstring final_asset_path = compute_shaders_final_path(asset_path);
+	dsstring final_asset_dir = compute_shaders_final_path("");
+
+	if (p_shader->IsCompiled())
+	{
+		updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);		
+	}
+	else
+	{
+		manage_shader_in_bccache(p_shader, asset_path, final_asset_path, final_asset_dir, p_shader_type);
+	}
 }
 
 void ResourcesSystem::check_bc_cache_presence(void) const

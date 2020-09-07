@@ -151,7 +151,7 @@ public:
     //////// direct API, useful for non-entity client //////
 
     void LoadTexture(Core::Texture* p_texture);
-    void LoadShader(Core::Shader* p_shader);
+    void LoadShader(Core::Shader* p_shader, int p_shader_type);
 
     ////////////////////////////////////////////////////////
 

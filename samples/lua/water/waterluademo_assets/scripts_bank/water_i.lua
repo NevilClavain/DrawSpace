@@ -50,8 +50,8 @@ rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPUR
 rg:create_pass_viewportquad('wave_pass')
 
 wave_fxparams = FxParams()
-wave_fxparams:add_shaderfile('water_waves_vs.cso',SHADER_COMPILED)
-wave_fxparams:add_shaderfile('water_waves_ps.cso',SHADER_COMPILED)
+wave_fxparams:add_shaderfile('water_waves_vs.hlsl',SHADER_NOT_COMPILED)
+wave_fxparams:add_shaderfile('water_waves_ps.hlsl',SHADER_NOT_COMPILED)
 
 wave_textures = TexturesSet()
 wave_rendercontext = RenderContext('wave_pass')

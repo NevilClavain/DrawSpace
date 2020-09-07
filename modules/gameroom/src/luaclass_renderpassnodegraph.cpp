@@ -393,7 +393,7 @@ int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_St
                         bool is_compiled = shader_infos.second;
                         Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
 
-                        resources_system.LoadShader( shader );
+                        resources_system.LoadShader( shader, i );
 
                         m_passes[pass_id].m_fx.AddShader(shader);
                         m_passes[pass_id].m_renderpassnode.SetRenderingQueueUpdateFlag();

@@ -551,8 +551,8 @@ void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res
     quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color_vs.cso", true ) ) );
     quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color_ps.cso", true ) ) );
 
-    p_res_system->LoadShader(quad_node->GetFx()->GetShader(0));
-    p_res_system->LoadShader(quad_node->GetFx()->GetShader(1));
+    p_res_system->LoadShader(quad_node->GetFx()->GetShader(0), 0);
+    p_res_system->LoadShader(quad_node->GetFx()->GetShader(1), 1);
 
     quad_node->AddShaderParameter( 1, "color", 0 );
     quad_node->SetShaderRealVector( "color", Vector( 0.05, 0.05, 0.85, 0.55 ) );

@@ -116,8 +116,8 @@ bool MainService::Init( void )
 
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
-	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
-	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0), 0);
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1), 1);
 
 
 
@@ -420,8 +420,8 @@ void MainService::create_world_impostor( void )
 
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
-	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(0));
-	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(1));
+	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(0), 0);
+	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(1), 1);
 
 
     impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );
@@ -533,8 +533,8 @@ void MainService::create_screen_impostors( void )
     impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor_ps.cso", true ) ) );
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
-	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(0));
-	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(1));
+	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(0), 0);
+	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(1), 1);
 
 
     impostors_texturepass->AddShaderParameter( 0, "globalscale", 24 );

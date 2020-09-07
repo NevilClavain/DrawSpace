@@ -132,8 +132,8 @@ bool MainService::Init( void )
 	*/
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
-	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
-	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0), 0);
+	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1), 1);
 
 
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
@@ -166,8 +166,8 @@ bool MainService::Init( void )
     m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves_vs.cso", true ) ) );
     m_wavespass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_waves_ps.cso", true ) ) );
 
-    resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(0));
-    resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(1));
+    resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(0), 0);
+    resources_system.LoadShader(m_wavespass.GetViewportQuad()->GetFx()->GetShader(1), 1);
 
 
 
