@@ -40,8 +40,8 @@ finalpass_rss:add_renderstate_out(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "linear"
 local textures = TexturesSet()
 
 local fxparams = FxParams()
-fxparams:add_shaderfile('water_mask_vs.cso',SHADER_COMPILED)
-fxparams:add_shaderfile('water_mask_ps.cso',SHADER_COMPILED)
+fxparams:add_shaderfile('water_mask_vs.hlsl',SHADER_NOT_COMPILED)
+fxparams:add_shaderfile('water_mask_ps.hlsl',SHADER_NOT_COMPILED)
 fxparams:set_renderstatesset(finalpass_rss)
 
 
