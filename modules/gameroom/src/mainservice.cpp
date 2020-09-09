@@ -533,6 +533,9 @@ void MainService::set_mouse_circular_mode( bool p_state )
 
 void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res_system)
 {
+    static const dsstring console_shader_ps("color_ps.hlsl");
+    static const dsstring console_shader_vs("color_vs.hlsl");
+
     // parametrage localisation des shaders pour pouvoir creer la console
     Shader::EnableShadersDescrInFinalPath( true );
     Shader::SetRootPath( "console_data/shaders_bank" ); // temporaire, a supprimer quand tout lua stack utilisera le resource system
@@ -548,8 +551,8 @@ void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res
 
     quad_node->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color_vs.cso", true ) ) );
-    quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "color_ps.cso", true ) ) );
+    quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader(console_shader_vs, false ) ) );
+    quad_node->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader(console_shader_ps, false ) ) );
 
     p_res_system->LoadShader(quad_node->GetFx()->GetShader(0), 0);
     p_res_system->LoadShader(quad_node->GetFx()->GetShader(1), 1);
@@ -592,8 +595,8 @@ void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res
     transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, -0.5, -1.0 );
 
     // shaders quad charges dans le plugin graphique (QuadRenderingAspectImpl::Init()), on a plus besoin des data chargees des shaders : les liberer/retirer du resources system
-    p_res_system->ReleaseShaderAsset("color_vs.cso");
-    p_res_system->ReleaseShaderAsset("color_ps.cso");
+    p_res_system->ReleaseShaderAsset(console_shader_vs);
+    p_res_system->ReleaseShaderAsset(console_shader_ps);
 }
 
 
