@@ -111,8 +111,8 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->SetRenderStates( finalpass_rss );
 
 
-    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.cso", true ) ) );
-    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.cso", true ) ) );
+    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.hlsl", false ) ) );
+    m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.hlsl", false ) ) );
 
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
@@ -313,8 +313,8 @@ void MainService::create_skybox( void )
 
     Fx* skybox_texturepass_fx = _DRAWSPACE_NEW_(Fx, Fx);
 
-    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.cso", true)));
-    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.cso", true)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
+    skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.hlsl", false)));
 
     RenderStatesSet skybox_texturepass_rss;
     skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -415,8 +415,8 @@ void MainService::create_world_impostor( void )
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
 
-    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor_vs.cso", true ) ) );
-    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor_ps.cso", true ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor_vs.hlsl", false ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "spaceimpostor_ps.hlsl", false ) ) );
 
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
@@ -529,8 +529,8 @@ void MainService::create_screen_impostors( void )
 
     impostors_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor_vs.cso", true ) ) );
-    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor_ps.cso", true ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor_vs.hlsl", false ) ) );
+    impostors_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "screenimpostor_ps.hlsl", false ) ) );
 
 	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
 	resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(0), 0);
@@ -595,8 +595,8 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
     RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
     cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
 
-    cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.cso", true)));
-    cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.cso", true)));
+    cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
+    cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.hlsl", false)));
 
     RenderStatesSet cube_texturepass_rss;
     cube_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
@@ -661,8 +661,8 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
         cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
 
-        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.cso", true)));
-        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.cso", true)));
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.hlsl", false)));
 
         RenderStatesSet cube_texturepass_rss;
         cube_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
@@ -750,8 +750,8 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
         cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
 
-        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.cso", true)));
-        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.cso", true)));
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
+        cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.hlsl", false)));
 
         RenderStatesSet cube_texturepass_rss;
         cube_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
@@ -807,8 +807,8 @@ void MainService::create_ground( void )
     RenderingNode* ground_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
     ground_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.cso", true ) ) );
-    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.cso", true ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.hlsl", false ) ) );
+    ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.hlsl", false) ) );
 
     RenderStatesSet ground_texturepass_rss;
     ground_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
