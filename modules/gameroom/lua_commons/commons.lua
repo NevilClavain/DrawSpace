@@ -73,8 +73,8 @@ commons.init_final_pass = function(p_rendergraph, p_passid)
 	local textures = TexturesSet()
 
 	local fxparams = FxParams()
-	fxparams:add_shaderfile('texture_vs.cso',SHADER_COMPILED)
-	fxparams:add_shaderfile('texture_ps.cso',SHADER_COMPILED)
+	fxparams:add_shaderfile('texture_vs.hlsl',SHADER_NOT_COMPILED)
+	fxparams:add_shaderfile('texture_ps.hlsl',SHADER_NOT_COMPILED)
 	fxparams:set_renderstatesset(finalpass_rss)
 
 	local rendercontext = RenderContext(p_passid)

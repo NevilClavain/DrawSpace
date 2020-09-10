@@ -20,8 +20,8 @@ trex.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -69,8 +69,8 @@ trex.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='lit.vso',mode=SHADER_COMPILED },
-				{ path='lit.pso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{

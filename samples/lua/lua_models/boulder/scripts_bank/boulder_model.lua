@@ -15,8 +15,8 @@ boulder.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.cso',mode=SHADER_COMPILED },
-				{ path='lit_ps.cso',mode=SHADER_COMPILED }
+				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -64,8 +64,8 @@ boulder.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='color_vs.cso',mode=SHADER_COMPILED },
-				{ path='color_ps.cso',mode=SHADER_COMPILED }
+				{ path='color_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='color_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{

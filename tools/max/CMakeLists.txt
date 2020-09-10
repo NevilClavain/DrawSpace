@@ -35,8 +35,10 @@ add_custom_target(${tool_name} SOURCES ${source_files})
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/tools/max/max_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 # shaders needed by max tool
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/texture_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
 
 # skin needed by max tool
 
@@ -51,54 +53,76 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/maxskin DESTINATION ${CMAKE_SOUR
 # install spacebox model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spacebox/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
 
 # deploy continent model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/continent/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
+
 
 # deploy boulder model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/boulder/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/boulder/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/boulder/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
 
 # deploy spherebump model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spherebump/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spherebump/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/spherebump/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
 
 # deploy metalcube model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/metalcube/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/metalcube/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/metalcube/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/color_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
 # deploy raptor model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
 # deploy trex model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/trex/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_ps.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/$<CONFIGURATION>/lit_vs.cso OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
 # deploy skydome model in max tools assets directory
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
@@ -106,6 +130,11 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/textures_ba
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/skydome/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/skydome_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/skydome_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/spherelod_commons.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/atmospheric_scattering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
 
 # deploy land model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/land/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
@@ -113,6 +142,8 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/land/textures_bank 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/land/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
 
 ##################################################
