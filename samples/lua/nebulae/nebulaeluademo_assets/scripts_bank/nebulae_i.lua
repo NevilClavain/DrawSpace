@@ -23,8 +23,8 @@ transferpass_rss:add_renderstate_in(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "point
 transferpass_rss:add_renderstate_out(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "linear")
 transfer_textures = TexturesSet()
 transfer_fxparams = FxParams()
-transfer_fxparams:add_shaderfile('transfer2_vs.cso',SHADER_COMPILED)
-transfer_fxparams:add_shaderfile('transfer2_ps.cso',SHADER_COMPILED)
+transfer_fxparams:add_shaderfile('transfer2_vs.hlsl',SHADER_NOT_COMPILED)
+transfer_fxparams:add_shaderfile('transfer2_ps.hlsl',SHADER_NOT_COMPILED)
 transfer_fxparams:set_renderstatesset(transferpass_rss)
 
 transfer_rendercontext = RenderContext('transfer_pass')

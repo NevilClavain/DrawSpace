@@ -37,6 +37,12 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/water/waterluademo_assets DEST
 #CEGUI stuff : gui skin
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
+# required shaders for this demo
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
+
+
 # deploy land model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/land/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/land/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets)
