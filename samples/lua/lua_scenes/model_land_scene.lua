@@ -17,7 +17,7 @@
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	
-	model.camera.mvt:set_pos(0.0, 8.0, 30.0)
+	--model.camera.mvt:set_pos(0.0, 8.0, 30.0)
 
 	model.env.light.setstate( TRUE )
 	
