@@ -1,13 +1,13 @@
 
-boulder = {}
+bellerophon = {}
 
-boulder.dump = {}
-boulder.view = {}
+bellerophon.dump = {}
+bellerophon.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
-boulder.models = {}
+bellerophon.models = {}
 
-boulder.rendering_config = 
+bellerophon.rendering_config = 
 { 
     lit_rendering = 
 	{
@@ -31,7 +31,8 @@ boulder.rendering_config =
 		{
 			[1] = 
 			{
-				{ path='realisticToonRock01Low_Default_BaseColor.png', stage=0 }			
+				{ path='bellerophon.jpg', stage=0},
+				{ path='bellerophon.jpg', stage=1}		
 			}
 		},
 		vertex_textures =
@@ -58,36 +59,6 @@ boulder.rendering_config =
 			{ param_name = "flags2", shader_index = 1, register = 13 }
 		}
 	},
-	flatcolor_rendering =
-	{
-		fx = 
-		{
-			shaders = 
-			{
-				{ path='color_vs.hlsl',mode=SHADER_NOT_COMPILED },
-				{ path='color_ps.hlsl',mode=SHADER_NOT_COMPILED }
-			},
-			rs_in = 
-			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
-			},
-			rs_out =
-			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
-			}
-		},
-		textures =
-		{
-		},
-		vertex_textures =
-		{
-		},
-		rendering_order = 10000,
-		shaders_params = 
-		{ 
-			{ param_name = "color", shader_index = 1, register = 0 },
-		}	
-	},
 	meshes_loader_params =
 	{
 		normale_generation_mode = NORMALES_AUTO_SMOOTH,
@@ -95,30 +66,32 @@ boulder.rendering_config =
 	}
 }
 
-boulder.lit_material =
+bellerophon.lit_material =
 {
+	--specular_power = 500.0,
 	color_source = { r = 1.0, g = 1.0, b = 1.0, a = 1.0 },
-	simple_color = { r = 1.0, g = 1.0, b = 1.0, a = 1.0 },
+	simple_color = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 	light_absorption = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 	self_emissive = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
+	bump_mapping = { texture_size = 1024, bias = 0.045 }
 }
 
-boulder.dump.load = function()
-   boulder.dump.entity = model.dump.load('boulder.dump.entity','rock2.ac')
+bellerophon.dump.load = function()
+   bellerophon.dump.entity = model.dump.load('bellerophon.dump.entity','bellerophon.ac')
 end
 
-boulder.dump.unload = function()
-   boulder.dump.entity = model.dump.unload(boulder.dump.entity)
-   boulder.dump.entity = nil;
+bellerophon.dump.unload = function()
+   bellerophon.dump.entity = model.dump.unload(bellerophon.dump.entity)
+   bellerophon.dump.entity = nil;
 end
 
-boulder.dump.show = function()
-   model.dump.show(boulder.dump.entity)
+bellerophon.dump.show = function()
+   model.dump.show(bellerophon.dump.entity)
 end
 
-boulder.update_lit_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
+bellerophon.update_lit_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 
-    local renderer = boulder.models[p_entity_id]['renderer']
+    local renderer = bellerophon.models[p_entity_id]['renderer']
 
 	renderer:set_shaderrealvector( p_pass_id, 'ambient_color', p_environment_table.ambient_light.r, p_environment_table.ambient_light.g, p_environment_table.ambient_light.b, p_environment_table.ambient_light.a )
 	renderer:set_shaderrealvector( p_pass_id, 'lights_enabled', p_environment_table.lights_enabled.x, p_environment_table.lights_enabled.y, p_environment_table.lights_enabled.z, p_environment_table.lights_enabled.w )
@@ -136,52 +109,47 @@ boulder.update_lit_from_scene_env = function( p_pass_id, p_environment_table, p_
 	renderer:set_shaderrealvector( p_pass_id, 'reflectorPos', p_environment_table.reflector_pos.x, p_environment_table.reflector_pos.y, p_environment_table.reflector_pos.z, 1.0 )
 	renderer:set_shaderrealvector( p_pass_id, 'reflectorNormale', p_environment_table.reflector_normale.x, p_environment_table.reflector_normale.y, p_environment_table.reflector_normale.z, 1.0 )
 
-	commons.apply_material( boulder.lit_material, renderer, p_pass_id)
+	commons.apply_material( bellerophon.lit_material, renderer, p_pass_id)
 
 	-- flag for bump mapping normales inputs
 	renderer:set_shaderrealvector( p_pass_id, 'flags2', 0.0, 0.0, 0.0, 0.0 )
 
 end
 
-boulder.update_flatcolor = function( p_pass_id, p_r, p_g, p_b, p_a, p_entity_id )
 
-    local renderer = boulder.models[p_entity_id]['renderer']
-    renderer:set_shaderrealvector( p_pass_id, 'color', p_r, p_g, p_b, p_a )
-end
-
-boulder.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+bellerophon.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
   
   local entity
   local renderer
 
-  entity, renderer = commons.create_rendered_meshe(boulder.rendering_config, 'rock2.ac', 'wavefront obj', p_passes_bindings)
+  entity, renderer = commons.create_rendered_meshe(bellerophon.rendering_config, 'bellerophon.ac', 'wavefront obj', p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
   
   entity:add_aspect(BODY_ASPECT)
   local body=Body()
   body:attach_toentity(entity)
-  body:configure_shape(SHAPE_MESHE, 'rock2.ac', 'wavefront obj')
+  body:configure_shape(SHAPE_BOX, 110.0, 80.0, 170.0)
 
   local pos_mat = Matrix()
   pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
   body:configure_attitude(pos_mat)
-  body:configure_mode(COLLIDER_MODE)
+  body:configure_mode(BODY_MODE)
  
   p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
 
-  boulder.models[p_entity_id] = pair
+  bellerophon.models[p_entity_id] = pair
 
   return entity
 end
 
-boulder.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
+bellerophon.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
-  local entity = boulder.models[p_entity_id]['entity']
-  local renderer = boulder.models[p_entity_id]['renderer']
+  local entity = bellerophon.models[p_entity_id]['entity']
+  local renderer = bellerophon.models[p_entity_id]['renderer']
 
-  local body = boulder.models[p_entity_id]['body']
+  local body = bellerophon.models[p_entity_id]['body']
 
   body:release()
   body:detach_fromentity(entity)
@@ -191,18 +159,18 @@ boulder.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
 
-  local pair = boulder.models[p_entity_id]
+  local pair = bellerophon.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
   pair['body'] = nil
 
-  boulder.models[p_entity_id] = nil
+  bellerophon.models[p_entity_id] = nil
 end
 
-boulder.view.unload = function(p_entity_id)
+bellerophon.view.unload = function(p_entity_id)
  
   local found_id = FALSE
-  for k, v in pairs(boulder.models) do
+  for k, v in pairs(bellerophon.models) do
 
     if k == p_entity_id then
 	  found_id = TRUE
@@ -210,16 +178,16 @@ boulder.view.unload = function(p_entity_id)
   end
 
   if found_id == TRUE then
-     model.view.unload(boulder.trashmodelview,p_entity_id)
+     model.view.unload(bellerophon.trashmodelview,p_entity_id)
   else
     g:print('Unknown entity '..p_entity_id)
   end
 end
 
-boulder.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
+bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
 
   local found_id = FALSE
-  for k, v in pairs(boulder.models) do
+  for k, v in pairs(bellerophon.models) do
 
     if k == p_entity_id then
 	  found_id = TRUE
@@ -229,6 +197,6 @@ boulder.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_paren
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('boulder model', boulder.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
   end  
 end

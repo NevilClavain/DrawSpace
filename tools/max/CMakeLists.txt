@@ -106,6 +106,17 @@ install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DE
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
 
+# deploy bellerophon model
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/bellerophon/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/bellerophon/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/bellerophon/meshes_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/lit_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/shaders_bank/hlsl_4_0)
+
+
+
 # deploy raptor model
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/scripts_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/lua_models/raptor/textures_bank OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets)
@@ -158,6 +169,9 @@ install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_trex_scene.lua OP
 
 # land model scene
 install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_land_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
+
+# bellerophon model scene
+install(FILES ${CMAKE_SOURCE_DIR}/samples/lua/lua_scenes/model_bellerophon_scene.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/max_assets/scripts_bank)
 
 
 # dinos scene
