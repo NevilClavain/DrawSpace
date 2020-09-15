@@ -1,6 +1,5 @@
 
 spaceboxmod = {}
-spaceboxmod.dump = {}
 spaceboxmod.view = {}
 
 spaceboxmod.module = Module("skyboxmod", "spacebox")
