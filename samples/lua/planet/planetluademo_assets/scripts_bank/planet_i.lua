@@ -1,9 +1,10 @@
 
 include('spacebox_model.lua')
 include('spherebump_model.lua')
+include('bellerophon_model.lua')
 
 
-
+local speed_factor = 90.0
 
 set_camera = function(camera)
 
@@ -120,31 +121,42 @@ function( key )
 
   --Q key
   if key == 81 then 
-    
 
+    if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+	  model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	else
+
+	end
   --W key
   elseif key == 87 then
-    
+
+    --if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+	  model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	--else
+
+	--end    
   
   elseif key == 16 then -- left shift
 
   elseif key == 65 then --'A'
-    ship_body:update_torquestate("roll_left", TRUE)
+
 
   elseif key == 90 then --'Z'
-    ship_body:update_torquestate("roll_right", TRUE)
+
 
   elseif key == 37 then --VK_LEFT
-    ship_body:update_torquestate("yaw_left", TRUE)
+
 
   elseif key == 38 then --VK_UP
-    ship_body:update_torquestate("pitch_down", TRUE)
+
 
   elseif key == 39 then --VK_RIGHT
-    ship_body:update_torquestate("yaw_right", TRUE)
+
 
   elseif key == 40 then --VK_DOWN
-    ship_body:update_torquestate("pitch_up", TRUE)
+
 
   elseif key == 68 then --'D'
     
@@ -175,11 +187,24 @@ function( key )
 
   --Q key
   if key == 81 then
-    
+
+    if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	else
+
+	end    
 
   --W key
   elseif key == 87 then
 
+    if current_cam == free_cam then
+
+      local mvt_info = { model.camera.mvt:read() }
+	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	else
+
+	end    
 
   -- VK_F1
   elseif key == 112 then  
@@ -230,63 +255,7 @@ function( key )
   gui:on_keyup( key )
 end)
 
-g:add_keyupcb( "keyup",
-function( key )  
 
-  --Q key
-  if key == 81 then
-    
-  --W key
-  elseif key == 87 then
-
-  -- VK_F1
-  elseif key == 112 then  
-
-
-  elseif key == 16 then -- left shift
-    
-
-  elseif key == 76 then --'L'
-
-
-  elseif key == 77 then --'M'
-
-
-  elseif key == 65 then --'A'
-
-  elseif key == 90 then --'Z'
-
-  elseif key == 37 then --VK_LEFT
-
-  elseif key == 38 then --VK_UP
-
-  elseif key == 39 then --VK_RIGHT
-
-  elseif key == 40 then --VK_DOWN
-
-  elseif key == 68 then --'D'
-    
-
-  elseif key == 67 then --'C'
-    
-
-  elseif key == 70 then --'F'
-
-
-  elseif key == 71 then --'G'
-
-
-  elseif key == 86 then --'V'
-    
-
-  elseif key == 66 then --'B'
-    
-  else
-    --g:print('key code = '..key) 
-  end
-
-  gui:on_keyup( key )
-end)
 
 g:add_appruncb( "run",
 function()
@@ -329,8 +298,20 @@ spherebump_passes_config =
 		lit_shader_update_func = spherebump.update_from_scene_env
 	}
 }
+
 spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_config, 'root' )
 
+
+bellerophon_passes_config = 
+{
+	texture_pass = 
+	{
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = bellerophon.update_lit_from_scene_env
+	}
+}
+bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_config, 'root')
+		
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
@@ -342,6 +323,7 @@ model.env.light.setstate( TRUE )
 model.env.light.setdir(1.0, -0.4, 0.0)
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 
+model.env.fog.setdensity(0.0)
 
 gui=Gui()
 gui:init()

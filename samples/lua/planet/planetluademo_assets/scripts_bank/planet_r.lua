@@ -3,6 +3,7 @@ g:signal_rendersceneend("eg")
 
 spaceboxmod.view.unload('spacebox0')
 spherebump.view.unload('sphere')
+bellerophon.view.unload('ship')
 
 model.releasemaincamera()
 
