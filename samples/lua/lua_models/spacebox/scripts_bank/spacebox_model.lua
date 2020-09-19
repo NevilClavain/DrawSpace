@@ -96,7 +96,7 @@ spaceboxmod.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
   entity:remove_aspect(TRANSFORM_ASPECT)
 
-  commons.trash.rendering(rg, spaceboxmod.module, entity, renderer)
+  commons.trash.rendering(p_rendergraph, spaceboxmod.module, entity, renderer)
   p_entitygraph:remove(p_entity_id)
 
   local pair = spaceboxmod.models[p_entity_id]
