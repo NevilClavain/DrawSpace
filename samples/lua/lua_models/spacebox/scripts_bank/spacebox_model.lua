@@ -6,7 +6,7 @@ spaceboxmod.module = Module("skyboxmod", "spacebox")
 spaceboxmod.module:load()
 g:print(spaceboxmod.module:get_descr().. ' loaded')
 
--- stockage des instances modeles : paire {entity, renderer, body}
+-- stockage des instances modeles : paire {entity, renderer}
 spaceboxmod.models = {}
 
 spaceboxmod.layers =
@@ -82,7 +82,7 @@ spaceboxmod.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id
 
   entity:add_aspect(TRANSFORM_ASPECT)
 
-  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
+  local pair = { ['entity'] = entity, ['renderer'] = renderer }
   spaceboxmod.models[p_entity_id] = pair
 
   return entity
