@@ -1,7 +1,7 @@
 
 model.view = {}
 
-model.view.load = function(p_modelname, p_modelviewload_function, p_passes_config, p_anims_parameters, p_initial_scale, p_entity_id, p_parent_entity_id)
+model.view.load = function(p_modelname, p_modelviewload_function, p_passes_config, p_anims_parameters, p_initial_scale, p_entity_id, p_parent_entity_id, p_specific_config)
 
   -- ici on reconstitue le tableau de paires 'rendering_id' -> 'pass_id'
   local passes_bindings = {}
@@ -11,7 +11,12 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_confi
     passes_bindings[pass_entry.rendering_id] = pass_id
   end
 
-  local entity = p_modelviewload_function(rg, eg, p_entity_id, passes_bindings, p_parent_entity_id)
+  local entity
+  if p_specific_config == nil then 
+    entity = p_modelviewload_function(rg, eg, p_entity_id, passes_bindings, p_parent_entity_id)
+  else
+    entity = p_modelviewload_function(rg, eg, p_entity_id, passes_bindings, p_parent_entity_id, p_specific_config)
+  end
 
   -- loop pour execution lit_shader_update_func de chaque entree de p_passes_config
   for k, v in pairs(p_passes_config) do
@@ -22,55 +27,61 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_confi
     end
   end
 
-  local rotx_deg_angle = 0.0
-  local roty_deg_angle = 0.0
-  local rotz_deg_angle = 0.0
+  if entity:has_aspect(TRANSFORM_ASPECT) > 0 then
+         
+      -- we fall here if transform aspect has been added from model file
+      local rotx_deg_angle = 0.0
+      local roty_deg_angle = 0.0
+      local rotz_deg_angle = 0.0
 
-  local pos_mat = Matrix()
-  pos_mat:translation( 0.0, 0.0, 0.0 )
+      local pos_mat = Matrix()
+      pos_mat:translation( 0.0, 0.0, 0.0 )
 
-  local scale_mat = Matrix()
+      local scale_mat = Matrix()
 
-  if p_initial_scale ~= nil then
-	scale_mat:scale( p_initial_scale['x'], p_initial_scale['y'], p_initial_scale['z'] )
-  else
-  	scale_mat:scale( 1.0, 1.0, 1.0 )
+      if p_initial_scale ~= nil then
+	    scale_mat:scale( p_initial_scale['x'], p_initial_scale['y'], p_initial_scale['z'] )
+      else
+  	    scale_mat:scale( 1.0, 1.0, 1.0 )
+      end
+
+      local rotx_mat = Matrix()
+      rotx_mat:rotation(1.0, 0.0, 0.0, commons.utils.deg_to_rad(rotx_deg_angle))
+
+      local roty_mat = Matrix()
+      roty_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(roty_deg_angle))
+
+      local rotz_mat = Matrix()
+      rotz_mat:rotation(0.0, 0.0, 1.0, commons.utils.deg_to_rad(rotz_deg_angle))
+
+      local transform = RawTransform()
+
+      transform:configure(entity)
+  
+      transform:add_matrix( "scale", scale_mat )
+      transform:add_matrix( "roty", roty_mat )
+      transform:add_matrix( "rotx", rotx_mat )
+      transform:add_matrix( "rotz", rotz_mat )
+      transform:add_matrix( "pos", pos_mat )
+      
+      local transform_entry = 
+      { 
+  	    ['pos_mat'] = pos_mat,
+  	    ['scale_mat'] = scale_mat,
+	    ['rotx_mat'] = rotx_mat,
+	    ['roty_mat'] = roty_mat,
+	    ['rotz_mat'] = rotz_mat,
+	    ['rotx_deg_angle'] = rotx_deg_angle,
+	    ['roty_deg_angle'] = roty_deg_angle,
+  	    ['rotz_deg_angle'] = rotz_deg_angle,
+	    ['transformation_input_mode'] = MODEL_TRANSFORMATION_INPUTMODE_NONE,
+	    ['transform'] = transform 	
+      }
+  
+      model.transformations[p_entity_id] = transform_entry
+        
   end
 
-  local rotx_mat = Matrix()
-  rotx_mat:rotation(1.0, 0.0, 0.0, commons.utils.deg_to_rad(rotx_deg_angle))
-
-  local roty_mat = Matrix()
-  roty_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(roty_deg_angle))
-
-  local rotz_mat = Matrix()
-  rotz_mat:rotation(0.0, 0.0, 1.0, commons.utils.deg_to_rad(rotz_deg_angle))
-
-  local transform = RawTransform()
-
-  transform:configure(entity)
-  
-  transform:add_matrix( "scale", scale_mat )
-  transform:add_matrix( "roty", roty_mat )
-  transform:add_matrix( "rotx", rotx_mat )
-  transform:add_matrix( "rotz", rotz_mat )
-  transform:add_matrix( "pos", pos_mat )
-      
-  local transform_entry = 
-  { 
-  	['pos_mat'] = pos_mat,
-  	['scale_mat'] = scale_mat,
-	['rotx_mat'] = rotx_mat,
-	['roty_mat'] = roty_mat,
-	['rotz_mat'] = rotz_mat,
-	['rotx_deg_angle'] = rotx_deg_angle,
-	['roty_deg_angle'] = roty_deg_angle,
-  	['rotz_deg_angle'] = rotz_deg_angle,
-	['transformation_input_mode'] = MODEL_TRANSFORMATION_INPUTMODE_NONE,
-	['transform'] = transform 	
-  }
-  
-  model.transformations[p_entity_id] = transform_entry
 
   local passes_shaders_update_func = {}
   for k, v in pairs(p_passes_config) do

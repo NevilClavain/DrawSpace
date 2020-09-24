@@ -2,9 +2,25 @@
 include('spacebox_model.lua')
 include('spherebump_model.lua')
 include('bellerophon_model.lua')
+include('planet_model.lua')
 
 
 local speed_factor = 90.0
+
+
+update_planet_lights = function( p_planet_specific_config )
+
+  p_planet_specific_config:enable_light( 0, TRUE )
+  p_planet_specific_config:set_lightcolor( 0,  environment.ambient_light.r, environment.ambient_light.g, environment.ambient_light.b )
+
+
+  p_planet_specific_config:enable_light( 1, environment.lights_enabled.x )
+  p_planet_specific_config:set_lightcolor( 1, environment.light0.color.r, environment.light0.color.g, environment.light0.color.b )
+  p_planet_specific_config:set_lightdir( 1, environment.light0.direction.x, environment.light0.direction.y, environment.light0.direction.z )
+
+  p_planet_specific_config:updated()
+
+end
 
 set_camera = function(camera)
 
@@ -279,6 +295,7 @@ end)
 
 g:signal_renderscenebegin("eg")
 
+
 spacebox_passes_config = 
 {
 	texture_pass = 
@@ -313,6 +330,66 @@ bellerophon_passes_config =
 bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_config, 'root')
 		
 
+local planet_specific_config_descr =
+{
+	resources_path						= "planetluademo_assets/shaders_bank",
+	climate_vshader						= "planet_ht_vs.cso",
+	climate_pshader						= "planet_ht_ps.cso",
+	planet_ray							= 6500.0,
+	plains_amplitude					= 600.0,
+	mountains_amplitude					= 16000.0,
+	vertical_offset						= 20.0,
+	mountains_offset					= 0.0,
+	plains_seed1						= 8099.0,
+	plains_seed2						= 5662.0,
+	mix_seed1							= 3111.0,
+	mix_seed2							= 498.0,
+	terrainbump_factor					= 16.0,
+	splat_transition_up_relative_alt	= 1.095,
+	splat_transition_down_relative_alt	= 1.0040,
+	splat_texture_resol					= 16,
+	atmo_kr								= 0.0033,
+	fog_alt_limit						= 30000.0,
+	fog_density							= 0.000031,
+	beach_limit							= 25.0,
+	landplace_patch						= FALSE,
+	enable_atmosphere					= TRUE,
+	atmo_thickness                      = 160.0
+}
+
+planet_passes_config = 
+{
+	texture_pass = 
+	{
+		rendering_id = 'surface_rendering',
+		lit_shader_update_func = nil
+	},
+	texture_pass = 
+	{
+		rendering_id = 'atmo_rendering',
+		lit_shader_update_func = nil
+	}
+}
+
+
+planet_name = 'Resurgam'
+planetmod.view.load(planet_name, planet_passes_config, 'root', planet_specific_config_descr)
+
+
+resurgam_planet_entity = planetmod.models[planet_name].entity
+resurgam_planet_config = planetmod.models[planet_name].specific_config
+
+resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)
+
+planet_transform = RawTransform()
+planet_transform:configure(resurgam_planet_entity)
+
+planet_pos_mat = Matrix()
+planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
+planet_transform:add_matrix( "pos", planet_pos_mat )
+
+g:print("Planet creation done...")
+
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
 
@@ -324,6 +401,9 @@ model.env.light.setdir(1.0, -0.4, 0.0)
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 
 model.env.fog.setdensity(0.0)
+
+update_planet_lights( resurgam_planet_config)
+resurgam_planet_config:updated()
 
 gui=Gui()
 gui:init()
