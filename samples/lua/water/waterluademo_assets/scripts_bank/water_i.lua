@@ -187,7 +187,7 @@ waterquad_passes_config =
 	},
 	layer_1 = 
 	{
-		target_pass_id = 'texturemirror_pass',
+		target_pass_id = 'bump_pass',
 		rendering_id = 'bump_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env_bump
 	}
