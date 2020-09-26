@@ -86,6 +86,9 @@ void EntityNode::Erase(void)
     {
         (**it )( EntityNode::REMOVED_FROM_TREE, entity );
     }
+
+    // also signal the removed entity to entity graph
+    m_owner_graph->OnEntityRemoved(entity);
 }
 
 Core::Entity* EntityNode::GetEntity( void ) const

@@ -106,6 +106,8 @@ public:
 
     bool ToDump( void ) const;
     void ResetDumpFlag( void );
+
+    void OnEntityRemoved(Core::Entity* p_entity);
     
     friend class EntityNode;
 };

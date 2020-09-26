@@ -246,3 +246,13 @@ void EntityNodeGraph::ResetDumpFlag( void )
     m_dump_me = false;
 }
 
+void EntityNodeGraph::OnEntityRemoved(Core::Entity* p_entity)
+{
+    // event triggered here : an entity is removed
+
+    if (p_entity == m_curr_entity_camera)
+    {
+        // if removed entity is current camera, set current camera to null
+        SetCurrentCameraEntity( nullptr );
+    }
+}
