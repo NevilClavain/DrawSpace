@@ -106,13 +106,15 @@ text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
 
 skydome_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
 		lit_shader_update_func = skydome.update_from_scene_env
 	},
-	texturemirror_pass =
+	layer_1 =
 	{
+		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'mirror_rendering',
 		lit_shader_update_func = skydome.update_from_scene_env_mirror	
 	}
@@ -122,13 +124,15 @@ model.move.setpos('dome', 0.0, 0.0, 0.0)
 
 land_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+		target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = land.update_from_scene_env
 	},
-	texturemirror_pass =
+	layer_1 =
 	{
+		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = land.update_from_scene_env_mirror	
 	}
@@ -138,13 +142,15 @@ land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_con
 
 metalcube_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+		target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = metalcube.update_from_scene_env
 	},
-	texturemirror_pass =
+	layer_1 =
 	{
+		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = metalcube.update_from_scene_env_mirror	
 	}
@@ -155,13 +161,15 @@ metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, m
 
 spherebump_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+		target_pass_id = 'texture_pass',
 	    rendering_id = 'lit_rendering',
 		lit_shader_update_func = spherebump.update_from_scene_env
 	},
-	texturemirror_pass =
+	layer_1 =
 	{
+		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = spherebump.update_from_scene_env_mirror	
 	}
@@ -171,13 +179,15 @@ spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}
 
 waterquad_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env
 	},
-	bump_pass = 
+	layer_1 = 
 	{
+		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'bump_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env_bump
 	}

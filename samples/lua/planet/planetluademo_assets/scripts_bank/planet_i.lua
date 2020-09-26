@@ -298,8 +298,9 @@ g:signal_renderscenebegin("eg")
 
 spacebox_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+        target_pass_id = 'texture_pass',
 		rendering_id = 'layer0_rendering',
 		lit_shader_update_func = nil
 	}
@@ -309,8 +310,9 @@ spaceboxmod.view.load('spacebox0', spacebox_passes_config, 'root')
 
 spherebump_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+        target_pass_id = 'texture_pass',
 	    rendering_id = 'lit_rendering',
 		lit_shader_update_func = spherebump.update_from_scene_env
 	}
@@ -321,8 +323,9 @@ spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_
 
 bellerophon_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+        target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
 	}
@@ -359,13 +362,15 @@ local planet_specific_config_descr =
 
 planet_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+        target_pass_id = 'texture_pass',
 		rendering_id = 'surface_rendering',
 		lit_shader_update_func = nil
 	},
-	texture_pass = 
+	layer_1 = 
 	{
+        target_pass_id = 'texture_pass',
 		rendering_id = 'atmo_rendering',
 		lit_shader_update_func = nil
 	}

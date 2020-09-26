@@ -67,6 +67,6 @@ model.createmaincamera = function(p_x, p_y, p_z, p_mvt_mod)
 end
 
 model.releasemaincamera = function()
-  commons.trash.camera(model.camera.entity, model.camera.mvt)
   eg:remove('model.camera.entity')
+  commons.trash.camera(model.camera.entity, model.camera.mvt)  
 end

@@ -6,8 +6,9 @@
 	
 	bellerophon_passes_config = 
 	{
-		texture_pass = 
+		layer_0 = 
 		{
+			target_pass_id = 'texture_pass',
 			rendering_id = 'lit_rendering',
 			lit_shader_update_func = bellerophon.update_lit_from_scene_env
 		}

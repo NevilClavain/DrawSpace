@@ -6,8 +6,9 @@
 	
 	land_passes_config = 
 	{
-		texture_pass = 
+		layer_0 = 
 		{
+			target_pass_id = 'texture_pass',
 			rendering_id = 'lit_rendering',
 			lit_shader_update_func = land.update_from_scene_env
 		}

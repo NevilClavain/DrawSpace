@@ -340,8 +340,9 @@ g:signal_renderscenebegin("eg")
 
 spacebox_passes_config = 
 {
-	texture_pass = 
+	layer_0 = 
 	{
+        target_pass_id = 'texture_pass',
 		rendering_id = 'layer0_rendering',
 		lit_shader_update_func = nil
 	}

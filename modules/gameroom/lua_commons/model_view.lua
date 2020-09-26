@@ -6,8 +6,9 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_confi
   -- ici on reconstitue le tableau de paires 'rendering_id' -> 'pass_id'
   local passes_bindings = {}
   for k, v in pairs(p_passes_config) do
-    local pass_id = k
+    --local pass_id = k
     local pass_entry = v
+    local pass_id = pass_entry.target_pass_id
     passes_bindings[pass_entry.rendering_id] = pass_id
   end
 
@@ -20,8 +21,9 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_confi
 
   -- loop pour execution lit_shader_update_func de chaque entree de p_passes_config
   for k, v in pairs(p_passes_config) do
-    pass_entry = v
-    pass_id = k
+    local pass_entry = v
+    --pass_id = k
+    local pass_id = pass_entry.target_pass_id
     if pass_entry.lit_shader_update_func ~= nil then
       pass_entry.lit_shader_update_func( pass_id, environment, p_entity_id)
     end
@@ -85,8 +87,10 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_confi
 
   local passes_shaders_update_func = {}
   for k, v in pairs(p_passes_config) do
-    local pass_id = k
+    --local pass_id = k
+
     local pass_entry = v
+    local pass_id = pass_entry.target_pass_id
     passes_shaders_update_func[pass_id] = pass_entry.lit_shader_update_func
   end
 
@@ -125,8 +129,9 @@ model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_c
   -- ici on reconstitue le tableau de paires 'rendering_id' -> 'pass_id'
   local passes_bindings = {}
   for k, v in pairs(p_passes_config) do
-    local pass_id = k
+    --local pass_id = k
     local pass_entry = v
+    local pass_id = pass_entry.target_pass_id    
     passes_bindings[pass_entry.rendering_id] = pass_id
   end
 
@@ -134,8 +139,9 @@ model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_c
 
   -- loop pour execution lit_shader_update_func de chaque entree de p_passes_config
   for k, v in pairs(p_passes_config) do
-    pass_entry = v
-    pass_id = k
+    local pass_entry = v
+    --local pass_id = k
+    local pass_id = pass_entry.target_pass_id
     if pass_entry.lit_shader_update_func ~= nil then
       pass_entry.lit_shader_update_func( pass_id, environment, p_entity_id)
     end
@@ -143,8 +149,9 @@ model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_c
 
   local passes_shaders_update_func = {}
   for k, v in pairs(p_passes_config) do
-    local pass_id = k
+    --local pass_id = k
     local pass_entry = v
+    local pass_id = pass_entry.target_pass_id
     passes_shaders_update_func[pass_id] = pass_entry.lit_shader_update_func
   end
 

@@ -43,8 +43,9 @@
 	
 	continent_passes_config = 
 	{
-		texture_pass = 
+		layer_0 = 
 		{
+			target_pass_id = 'texture_pass',
 			rendering_id = 'lit_rendering',
 			lit_shader_update_func = continent.update_lit_from_scene_env
 		}
@@ -53,8 +54,9 @@
 	
 	skydome_passes_config = 
 	{
-		texture_pass = 
+		layer_0 = 
 		{
+			target_pass_id = 'texture_pass',
 			rendering_id = 'main_rendering',
 			lit_shader_update_func = skydome.update_from_scene_env
 		}
@@ -65,8 +67,9 @@
 	
 	boulder_passes_config = 
 	{
-	    texture_pass = 
+	    layer_0 = 
 	    {
+			target_pass_id = 'texture_pass',
 			rendering_id = 'lit_rendering',
 			lit_shader_update_func = boulder.update_lit_from_scene_env
 		}
@@ -76,8 +79,9 @@
 
 	spherebump_passes_config = 
 	{
-		texture_pass = 
+		layer_0 = 
 		{
+			target_pass_id = 'texture_pass',
 	        rendering_id = 'lit_rendering',
 			lit_shader_update_func = spherebump.update_from_scene_env
 		}
@@ -88,8 +92,9 @@
 
 	metalcube_passes_config = 
 	{
-		texture_pass = 
+		layer_0 = 
 		{
+			target_pass_id = 'texture_pass',
 			rendering_id = 'lit_rendering',
 			lit_shader_update_func = metalcube.update_from_scene_env
 		}
@@ -99,10 +104,11 @@
 	
 	spacebox_passes_config = 
     {
-	   texture_pass = 
+	   layer_0 = 
 	   {
-		   rendering_id = 'layer0_rendering',
-		   lit_shader_update_func = nil
+			target_pass_id = 'texture_pass',
+			rendering_id = 'layer0_rendering',
+			lit_shader_update_func = nil
 	   }
     }
     spaceboxmod.view.load('spacebox0', spacebox_passes_config, 'root')
