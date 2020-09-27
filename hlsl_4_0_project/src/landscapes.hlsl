@@ -89,6 +89,8 @@ float3 compute_terrain_bump_vector(float p_point_alt, int p_texture_resol, Textu
     return avg;
 }
 
+// commenté provisoirement car il y a du hlsl 3.0 qui traine (sampler2D -> à remplacer par SampleState
+/*
 float3 compute_water_bump_vector(int p_texture_resol, sampler2D p_water_bump_texture, float2 p_tex_coords, float p_vector_bias)
 {
     float3 avg = 0.0;
@@ -197,7 +199,7 @@ float3 compute_clouds_bump_vector(int p_texture_w_resol, int p_texture_h_resol, 
 
     return avg;
 }
-
+*/
 
 float2 compute_sampling_params(float p_param, float p_interval)
 {

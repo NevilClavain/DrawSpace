@@ -98,8 +98,8 @@ planetmod.layers =
 			{
 				shaders = 
 				{
-					{ path='planet_surface_vs.cso',mode=SHADER_COMPILED },
-					{ path='planet_surface_ps.cso',mode=SHADER_COMPILED }
+					{ path='planet_surface_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_surface_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
 				{
@@ -144,8 +144,8 @@ planetmod.layers =
 			{
 				shaders = 
 				{
-					{ path='planet_atmosphere_vs.cso',mode=SHADER_COMPILED },
-					{ path='planet_atmosphere_ps.cso',mode=SHADER_COMPILED }
+					{ path='planet_atmosphere_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_atmosphere_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
 				{

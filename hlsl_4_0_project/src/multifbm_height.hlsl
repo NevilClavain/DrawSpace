@@ -93,6 +93,8 @@ float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mount
     return res;
 }
 
+// commenté provisoirement car il y a du hlsl 3.0 qui traine (sampler2D -> à remplacer par SampleState
+/*
 // retourne un facteur multiplicatif entre 0.0 et 1.0 et non une altitude en metres
 float ComputeRiversFromTexture(sampler2D p_mapSampler, float4 p_vpos, float4 p_uv, float p_uvnoise_seed1, float p_uvnoise_seed2)
 {
@@ -160,3 +162,4 @@ float ComputeCanyonsFromTexture(sampler2D p_mapSampler, float4 p_vpos, float4 p_
 
     return res;
 }
+*/
