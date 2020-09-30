@@ -81,7 +81,7 @@ root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
-model.createmaincamera(0.0, 0.0, 0.0, mvt_mod)
+model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
 
 
 

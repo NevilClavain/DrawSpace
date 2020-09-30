@@ -58,7 +58,7 @@ rg:configure_pass_viewportquad_resources('transfer_pass',transfer_renderconfig)
 rg:create_child('transfer_pass', 'texture_pass', 0)
 
 
-model.createmaincamera(0.0, 0.0, 0.0, mvt_mod)
+model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
 eg:set_camera(model.camera.entity)
 
 

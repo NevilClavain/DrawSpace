@@ -92,7 +92,7 @@ root_entity:configure_world(environment.gravity_state, environment.gravity.x, en
 
 
 
-model.createmaincamera(0.0, 3.0, 0.0, mvt_mod)
+model.createmainfreecamera(0.0, 3.0, 0.0, mvt_mod)
 eg:set_camera(model.camera.entity)
 
 waves=SyncAngle()
