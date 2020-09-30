@@ -367,38 +367,41 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
 }
 
-void PlanetsRenderingAspectImpl::init_rendering_objects( void )
+void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 {
     //// retrieve specific config....
-    
-    dsstring shaders_path = m_owner->GetComponent<dsstring>("resources_path")->getPurpose();
 
-    dsreal planet_ray = m_owner->GetComponent<dsreal>("planet_ray")->getPurpose();
-    dsreal atmo_thickness = m_owner->GetComponent<dsreal>("atmo_thickness")->getPurpose();
-    dsreal plains_amplitude = m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose();
-    dsreal mountains_amplitude = m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose();
-    dsreal vertical_offset = m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose();
-    dsreal mountains_offset = m_owner->GetComponent<dsreal>("mountains_offset")->getPurpose();
-    dsreal plains_seed1 = m_owner->GetComponent<dsreal>("plains_seed1")->getPurpose();
-    dsreal plains_seed2 = m_owner->GetComponent<dsreal>("plains_seed2")->getPurpose();
-    dsreal mix_seed1 = m_owner->GetComponent<dsreal>("mix_seed1")->getPurpose();
-    dsreal mix_seed2 = m_owner->GetComponent<dsreal>("mix_seed2")->getPurpose();
+    dsstring shaders_path{ m_owner->GetComponent<dsstring>("resources_path")->getPurpose() };
 
-    dsreal terrainbump_factor = m_owner->GetComponent<dsreal>("terrainbump_factor")->getPurpose();
-    dsreal splat_transition_up_relative_alt = m_owner->GetComponent<dsreal>("splat_transition_up_relative_alt")->getPurpose();
-    dsreal splat_transition_down_relative_alt = m_owner->GetComponent<dsreal>("splat_transition_down_relative_alt")->getPurpose();
-    int splat_texture_resol = m_owner->GetComponent<int>("splat_texture_resol")->getPurpose();
+    dsreal planet_ray { m_owner->GetComponent<dsreal>("planet_ray")->getPurpose() };
+    dsreal atmo_thickness { m_owner->GetComponent<dsreal>("atmo_thickness")->getPurpose() };
+    dsreal plains_amplitude { m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose() };
+    dsreal mountains_amplitude { m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose() };
+    dsreal vertical_offset { m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose() };
+    dsreal mountains_offset { m_owner->GetComponent<dsreal>("mountains_offset")->getPurpose() };
+    dsreal plains_seed1 { m_owner->GetComponent<dsreal>("plains_seed1")->getPurpose() };
+    dsreal plains_seed2 { m_owner->GetComponent<dsreal>("plains_seed2")->getPurpose() };
+    dsreal mix_seed1 { m_owner->GetComponent<dsreal>("mix_seed1")->getPurpose() };
+    dsreal mix_seed2 { m_owner->GetComponent<dsreal>("mix_seed2")->getPurpose() };
 
-    dsreal atmo_kr = m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose();
-    dsreal fog_alt_limit = m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose();
-    dsreal fog_density = m_owner->GetComponent<dsreal>("fog_density")->getPurpose();
-    dsreal beach_limit = m_owner->GetComponent<dsreal>("beach_limit")->getPurpose();
+    dsreal terrainbump_factor { m_owner->GetComponent<dsreal>("terrainbump_factor")->getPurpose() };
+    dsreal splat_transition_up_relative_alt { m_owner->GetComponent<dsreal>("splat_transition_up_relative_alt")->getPurpose() };
+    dsreal splat_transition_down_relative_alt { m_owner->GetComponent<dsreal>("splat_transition_down_relative_alt")->getPurpose() };
+    int splat_texture_resol { m_owner->GetComponent<int>("splat_texture_resol")->getPurpose() };
 
-    bool enable_landplace_patch = m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose();
-    bool enable_atmosphere = m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose();
+    dsreal atmo_kr { m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose() };
+    dsreal fog_alt_limit { m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose() };
+    dsreal fog_density { m_owner->GetComponent<dsreal>("fog_density")->getPurpose() };
+    dsreal beach_limit { m_owner->GetComponent<dsreal>("beach_limit")->getPurpose() };
 
-    dsstring climate_vshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first;
-    dsstring climate_pshader = m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second;
+    bool enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
+    bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
+
+    dsstring climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
+    dsstring climate_pshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second };
+
+    bool climate_vshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().first };
+    bool climate_pshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().second };
 
     using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
     std::vector<Lights> lights = m_owner->GetComponent<std::vector<Lights>>("lights")->getPurpose();
@@ -408,9 +411,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
         _DSEXCEPTION("Planet lights : 4 entry required")
     }
 
-
     m_planet_ray = planet_ray * 1000.0;
-
 
     std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
     std::vector<std::vector<Fx*>> layers_fx = m_owner->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
@@ -423,8 +424,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     Shader::SetRootPath(shaders_path);
 
-    m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, false));
-    m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, false));
+    m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, climate_vshader_compiled));
+    m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, climate_pshader_compiled));
     
     //////////// Resources ///////////////////////////
 
@@ -436,8 +437,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
     }
 
-    dsstring vshader_name = dsstring("vshader") + climate_vshader + std::to_string((int)m_climate_vshader);
-    dsstring pshader_name = dsstring("pshader") + climate_vshader + std::to_string((int)m_climate_pshader);
+    dsstring vshader_name = dsstring("climate_vshader"); //dsstring("vshader") + climate_vshader + std::to_string((int)m_climate_vshader);
+    dsstring pshader_name = dsstring("climate_pshader"); //dsstring("pshader") + climate_vshader + std::to_string((int)m_climate_pshader);
 
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(vshader_name, std::make_tuple(m_climate_vshader, false, 0));
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(pshader_name, std::make_tuple(m_climate_pshader, false, 1));
@@ -610,8 +611,8 @@ void PlanetsRenderingAspectImpl::release_rendering_objects( void )
 
     ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
 
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("vshader");
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("pshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("climate_vshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("climate_pshader");
 
     m_drawable.Shutdown();
 }

@@ -70,6 +70,9 @@ private:
         dsstring    climate_vshader;
         dsstring    climate_pshader;
 
+        bool        climate_vshader_compiled;
+        bool        climate_pshader_compiled;
+
         bool        enable_landplace_patch;
         bool        enable_atmosphere;
 
@@ -105,6 +108,7 @@ public:
     int LUA_enablelandplacepatch(lua_State* p_L);
     int LUA_enableatmosphere(lua_State* p_L);
     int LUA_setclimateshaders(lua_State* p_L);
+    int LUA_setclimateshaderscompiled(lua_State* p_L);
 
     int LUA_enablelight(lua_State* p_L);
     int LUA_setlightcolor(lua_State* p_L);

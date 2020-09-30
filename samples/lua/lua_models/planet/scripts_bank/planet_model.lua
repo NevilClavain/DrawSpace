@@ -81,10 +81,14 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:enable_atmosphere(config_description['enable_atmosphere'])
 	end
 
-
 	if config_description['climate_vshader'] ~= nil and 
 	   config_description['climate_pshader'] ~= nil then
 		planet_specific_configuration:set_climateshaders(config_description['climate_vshader'], config_description['climate_pshader'])
+	end
+
+	if config_description['climate_vshader_compiled'] ~= nil and 
+	   config_description['climate_pshader_compiled'] ~= nil then
+		planet_specific_configuration:set_climateshaderscompiled(config_description['climate_vshader_compiled'], config_description['climate_pshader_compiled'])
 	end
 end
 

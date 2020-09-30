@@ -47,6 +47,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_terrainbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setterrainbumpfactor },
     { "set_beachlimit", &LuaClass_PlanetSpecificConfig::LUA_setbeachlimit },
     { "set_climateshaders", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaders },
+    { "set_climateshaderscompiled", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaderscompiled },
     { "enable_landplacepatch", &LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch },
     { "enable_atmosphere", &LuaClass_PlanetSpecificConfig::LUA_enableatmosphere },
     { "enable_light", &LuaClass_PlanetSpecificConfig::LUA_enablelight },
@@ -115,6 +116,9 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     std::pair<dsstring, dsstring> climate_shaders(m_planets_details.climate_vshader, m_planets_details.climate_pshader);
     entity_rendering_aspect->AddComponent<std::pair<dsstring,dsstring>>("climate_shaders", climate_shaders);
 
+    std::pair<bool, bool> climate_shaders_compiled(m_planets_details.climate_vshader_compiled, m_planets_details.climate_pshader_compiled);
+    entity_rendering_aspect->AddComponent<std::pair<bool, bool>>("climate_shaders_compiled", climate_shaders_compiled);
+
     std::vector<PlanetDetails::Lights> lights;
     for( int i = 0; i < 4; i++ )
     {
@@ -166,6 +170,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
+    m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("climate_shaders_compiled");
     m_rendering_aspect->RemoveComponent<std::vector<PlanetDetails::Lights>>("lights");
 
 
@@ -366,6 +371,20 @@ int LuaClass_PlanetSpecificConfig::LUA_setclimateshaders(lua_State* p_L)
 
     m_planets_details.climate_vshader = luaL_checkstring(p_L, 1);
     m_planets_details.climate_pshader = luaL_checkstring(p_L, 2);
+
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setclimateshaderscompiled(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_climateshaderscompiled : argument(s) missing");
+    }
+
+    m_planets_details.climate_vshader_compiled = luaL_checkint(p_L, 1);
+    m_planets_details.climate_pshader_compiled = luaL_checkint(p_L, 2);
 
     return 0;
 }
