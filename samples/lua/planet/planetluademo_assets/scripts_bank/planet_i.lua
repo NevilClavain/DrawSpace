@@ -336,8 +336,8 @@ bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_pa
 local planet_specific_config_descr =
 {
 	resources_path						= "planetluademo_assets/shaders_bank",
-	climate_vshader						= "planet_ht_vs.cso",
-	climate_pshader						= "planet_ht_ps.cso",
+	climate_vshader						= "planet_ht_vs.hlsl",
+	climate_pshader						= "planet_ht_ps.hlsl",
 	planet_ray							= 6500.0,
 	plains_amplitude					= 600.0,
 	mountains_amplitude					= 16000.0,

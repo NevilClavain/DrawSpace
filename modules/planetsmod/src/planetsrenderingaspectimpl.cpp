@@ -423,19 +423,24 @@ void PlanetsRenderingAspectImpl::init_rendering_objects( void )
 
     Shader::SetRootPath(shaders_path);
 
-    m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, true));
-    m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, true));
+    m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, false));
+    m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, false));
     
     //////////// Resources ///////////////////////////
 
-    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+    Entity* owner_entity{ m_owner->GetOwnerEntity() };
+
+    ResourcesAspect* resources_aspect = owner_entity->GetAspect<ResourcesAspect>();
     if (!resources_aspect)
     {
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
     }
 
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(m_climate_vshader, false, 0));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(m_climate_pshader, false, 1));
+    dsstring vshader_name = dsstring("vshader") + climate_vshader + std::to_string((int)m_climate_vshader);
+    dsstring pshader_name = dsstring("pshader") + climate_vshader + std::to_string((int)m_climate_pshader);
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(vshader_name, std::make_tuple(m_climate_vshader, false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(pshader_name, std::make_tuple(m_climate_pshader, false, 1));
 
     /////////////////
 
