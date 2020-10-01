@@ -92,7 +92,7 @@ root_entity:configure_world(environment.gravity_state, environment.gravity.x, en
 
 
 
-model.createmainfreecamera(0.0, 3.0, 0.0, mvt_mod)
+model.createmainfpscamera(0.0, skydome.innerRadius + 8.0, 20.0, mvt_mod)
 eg:set_camera(model.camera.entity)
 
 waves=SyncAngle()
@@ -200,7 +200,7 @@ waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	
-model.camera.mvt:set_pos(0.0, 8.0, 30.0)
+--model.camera.mvt:set_pos(0.0, 8.0, 30.0)
 
 model.env.light.setstate( TRUE )
 	
@@ -208,13 +208,20 @@ model.env.light.setsphericaldir(0.0,50.0)
 
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
-model.camera.mvt:set_pos(0.0, skydome.innerRadius + 8.0, 20.0)
+--model.camera.mvt:set_pos(0.0, skydome.innerRadius + 8.0, 20.0)
 --model.camera.mvt:set_pos(0.0, 8.0, 0.0)
+
+
 model.camera.speed = 50.0
 
 
 model.env.setgravity(1)
 
+
+fps_yaw=SyncAngle()
+fps_pitch=SyncAngle()
+fps_yaw:init_fromtimeaspectof(root_entity, 0.0)
+fps_pitch:init_fromtimeaspectof(root_entity,0.0)
 
 
 
@@ -236,11 +243,11 @@ function( xm, ym, dx, dy )
 		gui:on_mousemove( xm, ym, dx, dy )
 	else
       local mvt_info = { model.camera.mvt:read() }
-	  if mouse_right == FALSE then
-  	    model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],-dy / 4.0,-dx / 4.0, 0)
-      else
-	    model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,-dx)
-      end
+
+	  fps_yaw:inc(-dx / 1.0)
+	  fps_pitch:inc(-dy / 1.0)
+
+	  model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], mvt_info[9])
 	end
 end)
 
@@ -285,7 +292,7 @@ function( key )
 
     if hmi_mode == FALSE then
       local mvt_info = { model.camera.mvt:read() }
-	  model.camera.mvt:update(5.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	  model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], 12.0) 
  	end
   
       
@@ -294,7 +301,7 @@ function( key )
 
     if hmi_mode == FALSE then
       local mvt_info = { model.camera.mvt:read() }
-	  model.camera.mvt:update(-5.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	  model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], -12.0) 
 	end
 
   end
@@ -311,15 +318,15 @@ function( key )
 
     if hmi_mode==FALSE then
       local mvt_info = { model.camera.mvt:read() }
-	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	  model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], 0.0) 
     end
     
   --W key
   elseif key == 87 then
 
     if hmi_mode == FALSE then
-      local mvt_info = { model.camera.mvt:read() }
-	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      local mvt_info = { model.camera.mvt:read() }	  
+	  model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], 0.0) 
 	end
   -- VK_F1
   elseif key == 112 then
@@ -345,7 +352,10 @@ g:add_appruncb( "run",
 function()  
 
     local mvt_info = { model.camera.mvt:read() }
-    model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+
+    --model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	--model.camera.mvt:update(mvt_info[1],mvt_info[2],mvt_info[3],mvt_info[4],mvt_info[5])
 
 	time_infos = { root_entity:read_timemanager() }
 	output_infos = renderer:descr() .." "..time_infos[3].. " fps"
