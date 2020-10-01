@@ -11,9 +11,20 @@ planetmod.view.unload(planet_name)
 
 spaceboxmod.view.unload('spacebox0')
 spherebump.view.unload('sphere')
+
+
+camera2_entity:release_info("referent_body")
+eg:remove('camera2_entity')
+commons.trash.camera( camera2_entity, camera2_pos)
+
+bellerophon_entity:release_info("entity_name")
+bellerophon_entity:remove_aspect(INFOS_ASPECT)
 bellerophon.view.unload('ship')
 
 model.releasemaincamera()
+
+
+
 
 text_renderer:release()
 text2_renderer:release()

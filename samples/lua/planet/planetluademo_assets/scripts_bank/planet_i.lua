@@ -32,19 +32,17 @@ set_camera = function(camera)
 
   elseif camera == ship_cam then
 
-  
-
-    --eg:set_camera(camera2_entity)
-    --gui:show_mousecursor(TRUE)
-	--g:set_mousecursorcircularmode(FALSE)
+    eg:set_camera(camera2_entity)
+    gui:show_mousecursor(TRUE)
+	g:set_mousecursorcircularmode(FALSE)
   end
 end
 
 free_cam = 0
 ship_cam = 1
 
-current_cam = free_cam
--- current_cam = ship_cam
+--current_cam = free_cam
+current_cam = ship_cam
 
 
 
@@ -147,12 +145,12 @@ function( key )
   --W key
   elseif key == 87 then
 
-    --if current_cam == free_cam then
+    if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
-	--else
+	else
 
-	--end    
+	end    
   
   elseif key == 16 then -- left shift
 
@@ -224,6 +222,13 @@ function( key )
 
   -- VK_F1
   elseif key == 112 then  
+
+    current_cam = current_cam + 1
+	if current_cam == 2 then
+	  current_cam = 0
+	end
+
+	set_camera(current_cam)
 
 
   elseif key == 16 then -- left shift
@@ -331,7 +336,10 @@ bellerophon_passes_config =
 	}
 }
 bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_config, 'root')
-		
+
+bellerophon_entity = bellerophon.models['ship'].entity
+bellerophon_entity:add_aspect(INFOS_ASPECT)
+bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
 
 local planet_specific_config_descr =
 {
@@ -397,6 +405,12 @@ planet_transform:add_matrix( "pos", planet_pos_mat )
 
 g:print("Planet creation done...")
 
+renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
+
+camera2_entity, camera2_pos=commons.create_static_camera(0.0, 110.0, 300.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+camera2_entity:setup_info( "referent_body", "Bellorophon" )
+eg:add_child('ship','camera2_entity',camera2_entity)
+
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
 
@@ -420,8 +434,8 @@ gui:load_layout("timecontrol.layout","xfskin2/layouts/timecontrol_widgets.conf")
 gui:set_layout("timecontrol.layout")
 gui:show_gui(TRUE)
 
+gui:set_mousecursorimage("xfskin/MouseCursor")
 
 g:show_mousecursor(FALSE)
-g:set_mousecursorcircularmode(TRUE)
 
 set_camera(current_cam)
