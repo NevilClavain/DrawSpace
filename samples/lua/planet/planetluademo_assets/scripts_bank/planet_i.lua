@@ -140,7 +140,7 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-
+      bellerophon_body:update_forcestate("main prop", TRUE)
 	end
   --W key
   elseif key == 87 then
@@ -149,28 +149,28 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-
+      bellerophon_body:update_forcestate("reverse prop", TRUE)
 	end    
   
   elseif key == 16 then -- left shift
 
   elseif key == 65 then --'A'
-
+    bellerophon_body:update_torquestate("roll_left", TRUE)
 
   elseif key == 90 then --'Z'
-
+    bellerophon_body:update_torquestate("roll_right", TRUE)
 
   elseif key == 37 then --VK_LEFT
-
+    bellerophon_body:update_torquestate("yaw_left", TRUE)
 
   elseif key == 38 then --VK_UP
-
+    bellerophon_body:update_torquestate("pitch_down", TRUE)
 
   elseif key == 39 then --VK_RIGHT
-
+    bellerophon_body:update_torquestate("yaw_right", TRUE)
 
   elseif key == 40 then --VK_DOWN
-
+    bellerophon_body:update_torquestate("pitch_up", TRUE)
 
   elseif key == 68 then --'D'
     
@@ -206,7 +206,7 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-
+      bellerophon_body:update_forcestate("main prop", FALSE)
 	end    
 
   --W key
@@ -217,7 +217,7 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-
+      bellerophon_body:update_forcestate("reverse prop", FALSE)
 	end    
 
   -- VK_F1
@@ -236,21 +236,30 @@ function( key )
 
   elseif key == 76 then --'L'
 
+    bellerophon_body:zero_speed()
 
   elseif key == 77 then --'M'
 
+    bellerophon_body:zero_angularespeed()
+
 
   elseif key == 65 then --'A'
+    bellerophon_body:update_torquestate("roll_left", FALSE)
 
   elseif key == 90 then --'Z'
+    bellerophon_body:update_torquestate("roll_right", FALSE)
 
   elseif key == 37 then --VK_LEFT
+    bellerophon_body:update_torquestate("yaw_left", FALSE)
 
   elseif key == 38 then --VK_UP
+    bellerophon_body:update_torquestate("pitch_down", FALSE)
 
   elseif key == 39 then --VK_RIGHT
+    bellerophon_body:update_torquestate("yaw_right", FALSE)
 
   elseif key == 40 then --VK_DOWN
+    bellerophon_body:update_torquestate("pitch_up", FALSE)
 
   elseif key == 68 then --'D'
     
@@ -281,8 +290,6 @@ end)
 g:add_appruncb( "run",
 function()
 
-  local mvt_info = { model.camera.mvt:read() }
-  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 
   local time_infos = { root_entity:read_timemanager() }
   output_infos = renderer:descr() .." "..time_infos[3].. " fps "
@@ -295,10 +302,57 @@ function()
 
   text3_renderer:update(10, 110, 255, 0, 0, timescale)
 
+  -- display planet infos 
+
+  local planet_infos = commons.procedural.planet.read_infos(resurgam_planet_config)
+
+  local current_cam_id
+
+  if current_cam == free_cam then
+    current_cam_id = "model.camera"
+  else
+    current_cam_id = "ship_camera"
+  end
+
+  local relative_state
+  
+  local is_relative = planet_infos['viewsInfos']['ship_camera']['relative']
+
+  if is_relative ~= 0 then
+    
+    local altitude = planet_infos["viewsInfos"][current_cam_id]["altitude"]
+	local display_altitude
+	local altitude_units
+
+	if altitude > 5000.0 then
+	  display_altitude = g:format_real(altitude / 1000.0,2)
+	  altitude_unit = " km"
+	else
+	  display_altitude = g:format_real(altitude,1)
+	  altitude_unit = " m"
+	end
+
+    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit
+
+  else
+    relative_state = ""
+  end
+
+  text4_renderer:update(300, 70, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
+                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"] )
+
+  local mvt_info = { model.camera.mvt:read() }
+  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 
 end)
 
 g:signal_renderscenebegin("eg")
+
+
+atmo = function( state )
+	resurgam_planet_config:enable_atmosphere( state )
+	resurgam_planet_config:updated()
+end
 
 
 spacebox_passes_config = 
@@ -340,6 +394,24 @@ bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_pa
 bellerophon_entity = bellerophon.models['ship'].entity
 bellerophon_entity:add_aspect(INFOS_ASPECT)
 bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
+
+
+bellerophon_body = bellerophon.models['ship'].body
+
+bellerophon_body:configure_mass(50.0)
+
+bellerophon_body:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_body:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_body:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_body:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_body:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_body:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_body:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_body:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
 
 local planet_specific_config_descr =
 {
@@ -393,6 +465,7 @@ planetmod.view.load(planet_name, planet_passes_config, 'root', planet_specific_c
 
 resurgam_planet_entity = planetmod.models[planet_name].entity
 resurgam_planet_config = planetmod.models[planet_name].specific_config
+
 
 resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)
 
