@@ -339,7 +339,7 @@ function()
   end
 
   text4_renderer:update(300, 70, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
-                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"] )
+                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state)
 
   local mvt_info = { model.camera.mvt:read() }
   model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
@@ -506,6 +506,48 @@ gui:load_scheme("xfskin.scheme")
 gui:load_layout("timecontrol.layout","xfskin2/layouts/timecontrol_widgets.conf")
 gui:set_layout("timecontrol.layout")
 gui:show_gui(TRUE)
+
+
+gui:add_pushbuttonclickedcb( "onpushbutton",
+function( layout, widget )
+  
+  if widget == "Button_Pause" then
+
+	root_entity:update_timescale(FREEZE)
+
+  elseif widget == "Button_x1" then
+
+	root_entity:update_timescale(NORMAL_TIME)
+
+  elseif widget == "Button_x10" then
+
+	root_entity:update_timescale(MUL10_TIME)
+
+  elseif widget == "Button_x100" then
+
+	root_entity:update_timescale(MUL100_TIME)
+
+  elseif widget == "Button_1sec_1day" then
+
+	root_entity:update_timescale(SEC_1DAY_TIME)
+
+  elseif widget == "Button_1sec_1hour" then
+
+	root_entity:update_timescale(SEC_1HOUR_TIME)
+
+  elseif widget == "Button_0Rots" then
+
+    bellerophon_body:zero_angularespeed()
+
+  elseif widget == "Button_0Transl" then
+    
+	bellerophon_body:zero_speed()
+
+  end
+
+  
+
+end)
 
 gui:set_mousecursorimage("xfskin/MouseCursor")
 
