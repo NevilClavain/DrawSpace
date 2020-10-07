@@ -74,6 +74,9 @@ public:
 	int LUA_addanimationeventcb(lua_State* p_L);
 	int LUA_removeanimationeventcb(lua_State* p_L);
 
+    int LUA_addresourceeventcb(lua_State* p_L);
+    int LUA_removeresourceeventcb(lua_State* p_L);
+
 	int LUA_stoi(lua_State* p_L);
     int LUA_clamp(lua_State* p_L);
 

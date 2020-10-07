@@ -50,7 +50,8 @@ m_console_active( false ),
 m_console_current_line( 0 ),
 m_request_lua_reset( false ),
 m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
-m_animation_events_cb( this, &MainService::on_animation_event )
+m_animation_events_cb( this, &MainService::on_animation_event ),
+m_resource_events_cb( this, &MainService::on_resource_event )
 {
     m_console_texts.push_back( console_welcome );
     m_console_texts.push_back( ">" );
@@ -141,9 +142,12 @@ bool MainService::Init( void )
    
     /////////////////////////////////////////////////////////////////////////////////
 
-	DrawSpace::Systems::AnimationsSystem& animationsystem = m_systemsHub.GetSystem<DrawSpace::Systems::AnimationsSystem>("AnimationsSystem");
-
+    auto& animationsystem{ m_systemsHub.GetSystem<DrawSpace::Systems::AnimationsSystem>("AnimationsSystem") };
 	animationsystem.RegisterAnimationEvtHandler(&m_animation_events_cb);
+
+    auto& resourcesystem{ m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem") };
+    resourcesystem.RegisterEventHandler(&m_resource_events_cb);
+
     
 
     _DSDEBUG( logger, dsstring("MainService : startup...") );
@@ -463,6 +467,14 @@ void MainService::on_animation_event(const dsstring& p_event_id, AnimationsSyste
 	{
 		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event_id, p_event, p_animation_name);
 	}
+}
+
+void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
+{
+    for (auto it = m_resourceevent_lua_callbacks.begin(); it != m_resourceevent_lua_callbacks.end(); ++it)
+    {
+        LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_resource);
+    }
 }
 
 void MainService::process_console_command( const dsstring& p_cmd )
@@ -814,6 +826,21 @@ int MainService::UnregisterAnimationEventCallback(const dsstring& p_id)
 	return index;
 }
 
+void MainService::RegisterResourceEventCallback(const dsstring& p_id, int p_regindex)
+{
+    m_resourceevent_lua_callbacks[p_id] = p_regindex;
+}
+
+int MainService::UnregisterResourceEventCallback(const dsstring& p_id)
+{
+    int index = -1;
+    if (m_resourceevent_lua_callbacks.count(p_id))
+    {
+        index = m_resourceevent_lua_callbacks[p_id];
+        m_resourceevent_lua_callbacks.erase(p_id);
+    }
+    return index;
+}
 
 DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
 {

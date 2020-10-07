@@ -77,6 +77,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "remove_mouserightbuttonupcb", &LuaClass_Globals::LUA_removemouserightbuttonupcb },
 	{ "add_animationeventcb", &LuaClass_Globals::LUA_addanimationeventcb },
 	{ "remove_animationeventcb", &LuaClass_Globals::LUA_removeanimationeventcb },
+    { "add_resourceeventcb", &LuaClass_Globals::LUA_addresourceeventcb },
+    { "remove_resourceeventcb", &LuaClass_Globals::LUA_removeresourceeventcb },
 
     { "show_mousecursor", &LuaClass_Globals::LUA_showmousecursor },
     { "set_mousecursorcircularmode", &LuaClass_Globals::LUA_setmousecursorcircularmode },
@@ -276,6 +278,18 @@ int LuaClass_Globals::LUA_removeanimationeventcb(lua_State* p_L)
 {
 	LuaContext::RemoveCallback(p_L, [](const std::string& p_cbid)->int { return MainService::GetInstance()->UnregisterAnimationEventCallback(p_cbid); });
 	return 0;
+}
+
+int LuaClass_Globals::LUA_addresourceeventcb(lua_State* p_L)
+{
+    LuaContext::AddCallback(p_L, [](const std::string& p_cbid, int p_reffunc) { MainService::GetInstance()->RegisterResourceEventCallback(p_cbid, p_reffunc); });
+    return 0;
+}
+
+int LuaClass_Globals::LUA_removeresourceeventcb(lua_State* p_L)
+{
+    LuaContext::RemoveCallback(p_L, [](const std::string& p_cbid)->int { return MainService::GetInstance()->UnregisterResourceEventCallback(p_cbid); });
+    return 0;
 }
 
 int LuaClass_Globals::LUA_showmousecursor( lua_State* p_L )

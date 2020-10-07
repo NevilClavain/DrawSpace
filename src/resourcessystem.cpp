@@ -79,6 +79,24 @@ ResourcesSystem::ResourcesSystem(void)
 	m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
 
+void ResourcesSystem::RegisterEventHandler(ResourceEventHandler* p_handler)
+{
+	m_evt_handlers.insert(p_handler);
+}
+
+void ResourcesSystem::UnregisterEventHandler(ResourceEventHandler* p_handler)
+{
+	m_evt_handlers.erase(p_handler);
+}
+
+void ResourcesSystem::notify_event(ResourceEvent p_event, const dsstring& p_path) const
+{
+	for (auto& e : m_evt_handlers)
+	{
+		(*e)(p_event, p_path);
+	}
+}
+
 void ResourcesSystem::EnableShadersDescrInFinalPath(bool p_state)
 {
     m_addshaderspath = p_state;

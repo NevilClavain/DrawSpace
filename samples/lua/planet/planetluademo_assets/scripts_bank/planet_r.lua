@@ -30,6 +30,7 @@ text_renderer:release()
 text2_renderer:release()
 text3_renderer:release()
 text4_renderer:release()
+text5_renderer:release()
 
 g:remove_appruncb('run')
 
@@ -45,6 +46,8 @@ g:release_assets()
 g:remove_mousemovecb("onmousemove")
 g:remove_keydowncb("keydown")
 g:remove_keyupcb("keyup")
+
+g:remove_resourceeventcb("onresourceevent")
 
 
 gui:show_gui(FALSE)

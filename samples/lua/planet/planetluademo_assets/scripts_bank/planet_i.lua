@@ -7,6 +7,32 @@ include('planet_model.lua')
 
 local speed_factor = 90.0
 
+resources_event = "..."
+
+
+g:add_resourceeventcb( "onresourceevent",
+function( event, resource_path )
+
+    local evt_out
+
+    if event == BLOB_LOAD then
+       evt_out = "loading :"..resource_path
+    elseif event == BLOB_LOADED then
+       evt_out = "loaded :"..resource_path
+    elseif event == ASSET_SETLOADEDBLOB then
+       evt_out = "set :"..resource_path
+    elseif event == SHADERCACHE_CREATION then
+       evt_out = "shader cache creation"
+    elseif event == SHADER_COMPILATION then
+       evt_out = "compiling :"..resource_path
+    elseif event == SHADER_COMPILED then
+       evt_out = "compilation done :"..resource_path
+    else
+       evt_out = "? : "..event
+    end
+    resources_event = evt_out
+end)
+
 
 update_planet_lights = function( p_planet_specific_config )
 
@@ -74,6 +100,10 @@ text3_renderer:configure(root_entity, "timescale", 320, 110, 255, 0, 255, "xxxxx
 
 text4_renderer=TextRendering()
 text4_renderer:configure(root_entity, "planets_infos", 450, 70, 255, 0, 255, "xxxxxxx")
+
+text5_renderer=TextRendering()
+text5_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
+
 
 root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
@@ -301,6 +331,8 @@ function()
   local timescale = commons.print_timescale(time_infos[1])
 
   text3_renderer:update(10, 110, 255, 0, 0, timescale)
+
+  text5_renderer:update(10, 150, 255, 0, 0, resources_event)
 
   -- display planet infos 
 

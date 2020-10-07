@@ -55,13 +55,27 @@ namespace Interface
 class Renderer;
 }
 
-
-
 namespace Systems
 {
 class ResourcesSystem : public Interface::System
 {
+public:
+
+    enum ResourceEvent
+    {
+        BLOB_LOAD,
+        BLOB_LOADED,
+        ASSET_SETLOADEDBLOB,
+        SHADERCACHE_CREATION,
+        SHADER_COMPILATION,
+        SHADER_COMPILED,
+    };
+
+    using ResourceEventHandler = DrawSpace::Core::BaseCallback2<void, ResourceEvent, const dsstring&>;
+
 private:
+
+    std::set<ResourceEventHandler*>					                    m_evt_handlers;
 
 	static const dsstring bcCacheName;
 	static const dsstring bcMd5FileName;
@@ -110,6 +124,7 @@ private:
             void* data;
 
             // load it
+            notify_event(BLOB_LOAD, p_final_asset_path);
             data = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &size);
             if (!data)
             {
@@ -117,8 +132,10 @@ private:
             }
             blob.data = data;
             blob.size = size;
+            notify_event(BLOB_LOADED, p_final_asset_path);
 
             p_blobs[p_final_asset_path] = blob;
+            notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
         }
 
         // update asset
@@ -135,9 +152,14 @@ private:
 
 	void update_bc_codefile(void* p_bc, int p_size);
 
+    void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
+
 public:
 
     ResourcesSystem( void );
+
+    void RegisterEventHandler(ResourceEventHandler* p_handler);
+    void UnregisterEventHandler(ResourceEventHandler* p_handler);
 
     dsstring GetSystemId(void) const { return "ResourcesSystem"; };
 
