@@ -91,6 +91,21 @@ void ResourcesSystem::UnregisterEventHandler(ResourceEventHandler* p_handler)
 
 void ResourcesSystem::notify_event(ResourceEvent p_event, const dsstring& p_path) const
 {
+	static const std::map<ResourceEvent, dsstring> event_to_string 
+	{
+		{ BLOB_LOAD, "BLOB_LOAD"},
+		{ BLOB_LOADED, "BLOB_LOADED"},
+		{ ASSET_SETLOADEDBLOB, "ASSET_SETLOADEDBLOB"},
+		{ SHADERCACHE_CREATION, "SHADERCACHE_CREATION"},
+		{ SHADER_COMPILATION, "SHADER_COMPILATION"},
+		{ SHADER_COMPILED, "SHADER_COMPILED"},
+	};
+
+	dsstring event_str{ event_to_string.at(p_event) };
+	dsstring resource{ p_path };
+
+	_DSDEBUG(rs_logger, dsstring("resources => ") << event_str << dsstring( " " ) << resource);
+
 	for (auto& e : m_evt_handlers)
 	{
 		(*e)(p_event, p_path);
@@ -200,6 +215,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					Meshe::NormalesGenerationMode normales_gen_mode = target_meshe->GetNGenerationMode();
 					Meshe::TangentBinormalesGenerationMode tb_gen_mode = target_meshe->GetTBGenerationMode();
 
+					notify_event(BLOB_LOAD, final_asset_path);
 					void* data;
 					long size;
 					data = Utils::File::LoadAndAllocBinaryFile(final_asset_path, &size);
@@ -207,7 +223,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						_DSEXCEPTION("ResourcesSystem : failed to load " + final_asset_path);
 					}
-
+					
 					Assimp::Importer* importer = new Assimp::Importer();
 
 					unsigned int flags = aiProcess_Triangulate |
@@ -251,7 +267,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					_DRAWSPACE_DELETE_N_(data);
 
-					m_meshesCache[final_asset_path] = std::make_pair(importer, scene);
+					notify_event(BLOB_LOADED, final_asset_path);
+					
+					m_meshesCache[final_asset_path] = std::make_pair(importer, scene);					
 				}
 				else
 				{
@@ -265,25 +283,25 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 				mesheFileDescription.file = std::get<1>(e->getPurpose());
 
-				_DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS***********************************"));
-				_DSDEBUG(rs_logger, dsstring("resources = ") << final_asset_path);
-				_DSDEBUG(rs_logger, dsstring("scene HasMeshes ") << scene->HasMeshes());
-				_DSDEBUG(rs_logger, dsstring("scene num Meshes ") << scene->mNumMeshes);
+				_DSTRACE(rs_logger, dsstring("************************************SCENE INFOS***********************************"));
+				_DSTRACE(rs_logger, dsstring("resources = ") << final_asset_path);
+				_DSTRACE(rs_logger, dsstring("scene HasMeshes ") << scene->HasMeshes());
+				_DSTRACE(rs_logger, dsstring("scene num Meshes ") << scene->mNumMeshes);
 
-				_DSDEBUG(rs_logger, dsstring("scene HasTextures ") << scene->HasTextures());
-				_DSDEBUG(rs_logger, dsstring("scene num Textures ") << scene->mNumTextures);
+				_DSTRACE(rs_logger, dsstring("scene HasTextures ") << scene->HasTextures());
+				_DSTRACE(rs_logger, dsstring("scene num Textures ") << scene->mNumTextures);
 
-				_DSDEBUG(rs_logger, dsstring("scene HasMaterials ") << scene->HasMaterials());
-				_DSDEBUG(rs_logger, dsstring("scene num Materials ") << scene->mNumMaterials);
+				_DSTRACE(rs_logger, dsstring("scene HasMaterials ") << scene->HasMaterials());
+				_DSTRACE(rs_logger, dsstring("scene num Materials ") << scene->mNumMaterials);
 
-				_DSDEBUG(rs_logger, dsstring("scene HasLights ") << scene->HasLights());
-				_DSDEBUG(rs_logger, dsstring("scene num Lights ") << scene->mNumLights);
+				_DSTRACE(rs_logger, dsstring("scene HasLights ") << scene->HasLights());
+				_DSTRACE(rs_logger, dsstring("scene num Lights ") << scene->mNumLights);
 
-				_DSDEBUG(rs_logger, dsstring("scene HasCameras ") << scene->HasCameras());
-				_DSDEBUG(rs_logger, dsstring("scene num Cameras ") << scene->mNumCameras);
+				_DSTRACE(rs_logger, dsstring("scene HasCameras ") << scene->HasCameras());
+				_DSTRACE(rs_logger, dsstring("scene num Cameras ") << scene->mNumCameras);
 
-				_DSDEBUG(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
-				_DSDEBUG(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
+				_DSTRACE(rs_logger, dsstring("scene HasAnimations ") << scene->HasAnimations());
+				_DSTRACE(rs_logger, dsstring("scene num Animations ") << scene->mNumAnimations);
 
 				mesheFileDescription.has_meshes = scene->HasMeshes();
 				mesheFileDescription.num_meshes = scene->mNumMeshes;
@@ -294,11 +312,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 				meshes_node_owner_names.resize(scene->mNumMeshes);
 
-				_DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
+				_DSTRACE(rs_logger, dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
 
 				dump_assimp_scene_node(root, 1, mesheFileDescription, meshes_node_owner_names);
 
-				_DSDEBUG(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
+				_DSTRACE(rs_logger, dsstring("************************************NODE HIERARCHY END*************************************"));
 
 				// ICI : remplir les descriptions meshes a partir du tableau aiMesh** meshes;
 				for (int i = 0; i < nb_meshes; i++)
@@ -321,20 +339,20 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 
 
-				_DSDEBUG(rs_logger, dsstring("************************************Animations list BEGIN***********************************"));
+				_DSTRACE(rs_logger, dsstring("************************************Animations list BEGIN***********************************"));
 
 				for (size_t i = 0; i < scene->mNumAnimations; i++)
 				{
-					_DSDEBUG(rs_logger, dsstring("Animation ") << i);
+					_DSTRACE(rs_logger, dsstring("Animation ") << i);
 
 					aiAnimation* animation = scene->mAnimations[i];
 
-					_DSDEBUG(rs_logger, dsstring("Name = ") << animation->mName.C_Str());
-					_DSDEBUG(rs_logger, dsstring("TicksPerSeconds = ") << animation->mTicksPerSecond);
-					_DSDEBUG(rs_logger, dsstring("Duration (ticks) = ") << animation->mDuration);
-					_DSDEBUG(rs_logger, dsstring("Num Channels = ") << animation->mNumChannels);
-					_DSDEBUG(rs_logger, dsstring("Num Mesh Channels = ") << animation->mMeshChannels);
-					_DSDEBUG(rs_logger, dsstring("Num Morph Mesh Channels = ") << animation->mNumMorphMeshChannels);
+					_DSTRACE(rs_logger, dsstring("Name = ") << animation->mName.C_Str());
+					_DSTRACE(rs_logger, dsstring("TicksPerSeconds = ") << animation->mTicksPerSecond);
+					_DSTRACE(rs_logger, dsstring("Duration (ticks) = ") << animation->mDuration);
+					_DSTRACE(rs_logger, dsstring("Num Channels = ") << animation->mNumChannels);
+					_DSTRACE(rs_logger, dsstring("Num Mesh Channels = ") << animation->mMeshChannels);
+					_DSTRACE(rs_logger, dsstring("Num Morph Mesh Channels = ") << animation->mNumMorphMeshChannels);
 
 					ResourcesAspect::AnimationDescription animation_description;
 
@@ -346,7 +364,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					mesheFileDescription.anims_descriptions.push_back(animation_description);
 				}
 
-				_DSDEBUG(rs_logger, dsstring("************************************Animations list END*************************************"));
+				_DSTRACE(rs_logger, dsstring("************************************Animations list END*************************************"));
 
 				AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 				if (anims_aspect)
@@ -374,11 +392,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					}
 				}
 
-				_DSDEBUG(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
+				_DSTRACE(rs_logger, dsstring("************************************SCENE INFOS END*******************************"));
 
 				resources_aspect->AddMeshesFileDescription(mesheFileDescription);
 
                 loaded = true;
+
+				notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
             }
         }   
     }
@@ -447,13 +467,13 @@ void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* 
 void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth, ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names)
 {
     dsstring spacing(depth, ' ');
-    _DSDEBUG(rs_logger, spacing + dsstring("node : ") << p_ai_node->mName.C_Str() << " nb children : " << p_ai_node->mNumChildren);
-    _DSDEBUG(rs_logger, spacing + dsstring("nb meshes : ") << p_ai_node->mNumMeshes);
+    _DSTRACE(rs_logger, spacing + dsstring("node : ") << p_ai_node->mName.C_Str() << " nb children : " << p_ai_node->mNumChildren);
+    _DSTRACE(rs_logger, spacing + dsstring("nb meshes : ") << p_ai_node->mNumMeshes);
 
-    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1);
-    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
-    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
-    _DSDEBUG(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
+    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1);
+    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
+    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
+    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
 
 	if (p_ai_node->mNumMeshes > 0)
 	{
@@ -541,33 +561,33 @@ void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode
     {
         aiMesh* meshe = p_meshes[indexes[i]];
 
-        _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS***********************************"));
-        _DSDEBUG(rs_logger, dsstring("owner node id = ") + p_id);
-        _DSDEBUG(rs_logger, dsstring("name = ") << dsstring( meshe->mName.C_Str() ));
-        _DSDEBUG(rs_logger, dsstring("meshe HasPositions ") << meshe->HasPositions());
-        _DSDEBUG(rs_logger, dsstring("meshe HasFaces ") << meshe->HasFaces());
-        _DSDEBUG(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());        
-        _DSDEBUG(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
-        _DSDEBUG(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
-        _DSDEBUG(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
-        _DSDEBUG(rs_logger, dsstring("meshe NumBones ") << meshe->mNumBones);
+        _DSTRACE(rs_logger, dsstring("************************************MESHE INFOS***********************************"));
+        _DSTRACE(rs_logger, dsstring("owner node id = ") + p_id);
+        _DSTRACE(rs_logger, dsstring("name = ") << dsstring( meshe->mName.C_Str() ));
+        _DSTRACE(rs_logger, dsstring("meshe HasPositions ") << meshe->HasPositions());
+        _DSTRACE(rs_logger, dsstring("meshe HasFaces ") << meshe->HasFaces());
+        _DSTRACE(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());        
+        _DSTRACE(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
+        _DSTRACE(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
+        _DSTRACE(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
+        _DSTRACE(rs_logger, dsstring("meshe NumBones ") << meshe->mNumBones);
         
         for(size_t j = 0; j < meshe->mNumBones; j++)
         {
             aiBone* bone = meshe->mBones[j];
 
-            _DSDEBUG(rs_logger, dsstring("Bone ") << j);
-            _DSDEBUG(rs_logger, dsstring("  -> name = ") << bone->mName.C_Str());
-            _DSDEBUG(rs_logger, dsstring("  -> offsetMatrx"));
-            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
-            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
-            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
-            _DSDEBUG(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
+            _DSTRACE(rs_logger, dsstring("Bone ") << j);
+            _DSTRACE(rs_logger, dsstring("  -> name = ") << bone->mName.C_Str());
+            _DSTRACE(rs_logger, dsstring("  -> offsetMatrx"));
+            _DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
+            _DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
+            _DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
+            _DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
 
         }
 
 
-        _DSDEBUG(rs_logger, dsstring("************************************MESHE INFOS END*******************************"));
+        _DSTRACE(rs_logger, dsstring("************************************MESHE INFOS END*******************************"));
         
         for( size_t j = 0; j < meshe->mNumFaces; j++)
         {
@@ -911,8 +931,9 @@ void ResourcesSystem::check_bc_cache_presence(void) const
 	}
 	else
 	{
+		notify_event(SHADERCACHE_CREATION, "");
 		CHECK_PHYSFS( PHYSFS_setWriteDir(".") );
-		CHECK_PHYSFS( PHYSFS_mkdir("bc_cache") );
+		CHECK_PHYSFS( PHYSFS_mkdir("bc_cache") );		
 	}
 	PHYSFS_removeFromSearchPath(".");
 }
@@ -1026,6 +1047,8 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 				// OK, can load bc.code file or get from m_shadersCache
 
+				notify_event(BLOB_LOAD, p_final_asset_path);
+
 				PHYSFS_file* codevfile = PHYSFS_openRead(bcCodeFileName.c_str());
 				if (NULL == codevfile)
 				{
@@ -1036,7 +1059,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 				bc = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[file_size], file_size, shader_id);
 				bc_length = file_size;
-
+				
 				length_read = PHYSFS_read(codevfile, bc, 1, file_size);
 
 				if (length_read != file_size)
@@ -1046,8 +1069,11 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 				PHYSFS_close(codevfile);
 
+				notify_event(BLOB_LOADED, p_final_asset_path);
+
 				Blob blob{ bc, bc_length };
 				m_shadersCache[p_final_asset_path] = blob;
+				notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
 
 			}
 
@@ -1058,6 +1084,8 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 		else
 		{
 			// crc changed, update all,
+
+			notify_event(SHADER_COMPILATION, p_final_asset_path);
 
 			// try to compile...
 			void* bytecode_handle;
@@ -1082,11 +1110,13 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 			update_bc_md5file(hash_shader);
 			update_bc_codefile(bc, bc_length);
 
+			notify_event(SHADER_COMPILED, p_final_asset_path);
 
 			// update shader & m_shadersCache with bytecode
 
 			Blob blob{ bc, bc_length };
 			m_shadersCache[p_final_asset_path] = blob;
+			notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
 
 			p_shader->SetData(bc, bc_length);
 		}
@@ -1097,6 +1127,8 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	else
 	{
 		// shader entry does not exists, create all...
+
+		notify_event(SHADER_COMPILATION, p_final_asset_path);
 
 		// try to compile...
 		void* bytecode_handle;
@@ -1126,10 +1158,13 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 		CHECK_PHYSFS(PHYSFS_removeFromSearchPath(bcCacheName.c_str()));
 
+		notify_event(SHADER_COMPILED, p_final_asset_path);
+
 		// update shader & m_shadersCache with bytecode
 
 		Blob blob{ bc, bc_length };
 		m_shadersCache[p_final_asset_path] = blob;
+		notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
 
 		p_shader->SetData(bc, bc_length);
 	}
