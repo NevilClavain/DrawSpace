@@ -116,7 +116,7 @@ FinalPass::~FinalPass( void )
 
 bool FinalPass::Initialize( void )
 {
-    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue );
+    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue(m_name) );
     m_initialized = true;
     return true;
 }
@@ -199,7 +199,7 @@ bool IntermediatePass::Initialize( void )
     }
 
     m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( m_name + dsstring( "/target" ), true, w_resol, h_resol, m_renderpurpose, m_rendertarget ) );
-    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue( m_targettexture ) );
+    m_renderingqueue = _DRAWSPACE_NEW_( RenderingQueue, RenderingQueue(m_name, m_targettexture ) );
 
     m_initialized = true;
     return true;

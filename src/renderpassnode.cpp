@@ -71,7 +71,7 @@ RenderPassNode RenderPassNode::CreateChild( const dsstring& p_name, int p_target
 
     descr->m_targettexture = _DRAWSPACE_NEW_( Texture, Texture( p_name + dsstring( "/target" ), true, w_resol, h_resol, p_renderpurpose, p_rendertarget ) );
 
-    auto renderingqueue{ _DRAWSPACE_NEW_(Core::RenderingQueue, Core::RenderingQueue(descr->m_targettexture)) };
+    auto renderingqueue{ _DRAWSPACE_NEW_(Core::RenderingQueue, Core::RenderingQueue(p_name, descr->m_targettexture)) };
     descr->m_renderingqueue = renderingqueue;
 
     auto it { m_tree_node->insert(descr) };

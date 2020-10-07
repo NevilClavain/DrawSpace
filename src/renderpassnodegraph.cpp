@@ -56,7 +56,7 @@ RenderPassNode RenderPassNodeGraph::CreateRoot( const dsstring& p_name )
 {
     // Creer PassDescr dont la cible rendu est l'ecran (final pass)
 
-    Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue );
+    Core::RenderingQueue* renderingqueue = _DRAWSPACE_NEW_( Core::RenderingQueue, Core::RenderingQueue(p_name) );
 
 
     RenderPassNode::PassDescr* descr = _DRAWSPACE_NEW_( RenderPassNode::PassDescr, RenderPassNode::PassDescr( p_name ) );

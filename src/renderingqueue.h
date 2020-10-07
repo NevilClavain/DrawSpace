@@ -144,6 +144,8 @@ private:
 
     int                                                                     m_target_slice; // quand > 0, on a affaire a une slice de texture3D
 
+    dsstring                                                                m_id;
+
 
     static bool nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 );
 
@@ -167,8 +169,8 @@ private:
     
 
 public:
-    RenderingQueue( void );
-    RenderingQueue( Texture* p_target );
+    RenderingQueue( const dsstring& p_id );
+    RenderingQueue(const dsstring& p_id, Texture* p_target );
     ~RenderingQueue( void );
 
     void SetTargetSlice(int p_target_slice);

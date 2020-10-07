@@ -33,7 +33,7 @@ using namespace DrawSpace::Interface;
 
 DrawSpace::Logger::Sink rd_logger("RenderingQueue", DrawSpace::Logger::Configuration::GetInstance());
 
-RenderingQueue::RenderingQueue( void ) : 
+RenderingQueue::RenderingQueue(const dsstring& p_id) :
 m_target( NULL ),
 m_clear_depth( false ),
 m_clear_target( false ),
@@ -44,13 +44,14 @@ m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
 m_ready( true ),
 m_status( OK ),
-m_target_slice(0)
+m_target_slice(0),
+m_id( p_id)
 {
 
 
 }
 
-RenderingQueue::RenderingQueue( Texture* p_target ) : 
+RenderingQueue::RenderingQueue(const dsstring& p_id, Texture* p_target ) :
 m_target( p_target ),
 m_clear_depth( false ),
 m_clear_target( false ),
@@ -61,7 +62,8 @@ m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
 m_ready( true ),
 m_status( OK ),
-m_target_slice(0)
+m_target_slice(0),
+m_id(p_id)
 {
 
 
@@ -260,7 +262,7 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
 
 void RenderingQueue::UpdateOutputQueue( void )
 {
-    _DSDEBUG(rd_logger, dsstring("UpdateOutputQueue Begin"));
+    _DSDEBUG(rd_logger, dsstring("Begin : " << m_id));
 
     m_nodes.clear();
     m_fx_bases.clear();
@@ -299,11 +301,13 @@ void RenderingQueue::UpdateOutputQueue( void )
 
     m_ready = true;
 
-    _DSDEBUG(rd_logger, dsstring("UpdateOutputQueue End"));
+    _DSDEBUG(rd_logger, dsstring("End : " << m_id));
 }
 
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
 {
+    _DSDEBUG(rd_logger, dsstring("Begin : " << m_id));
+
     m_nodes.clear();
     m_fx_bases.clear();
 
@@ -335,6 +339,8 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
 
     cleanup_output_list();
     m_ready = true;
+
+    _DSDEBUG(rd_logger, dsstring("End : " << m_id));
 }
 
 double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists )
