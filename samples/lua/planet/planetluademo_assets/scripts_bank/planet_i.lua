@@ -30,7 +30,7 @@ function( event, resource_path )
     else
        evt_out = "? : "..event
     end
-    resources_event = evt_out
+    --resources_event = evt_out
 end)
 
 
