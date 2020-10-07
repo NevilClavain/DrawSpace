@@ -43,6 +43,7 @@ static const dsstring console_welcome = "Console: input ready (release build)";
 
 extern DrawSpace::Logger::Sink aspect_logger;
 extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
+extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
 
 MainService::MainService( void ) :
 m_console_ready( false ),
@@ -104,9 +105,12 @@ bool MainService::Init( void )
     logconf->RegisterSink(&rs_logger);
     rs_logger.SetConfiguration(logconf);
 
-
     logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
+
+    logconf->RegisterSink(&rd_logger);
+    rd_logger.SetConfiguration(logconf);
+
 
     m_systemsHub.SetLogConf( logconf );
 

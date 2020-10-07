@@ -31,6 +31,8 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 
+DrawSpace::Logger::Sink rd_logger("RenderingQueue", DrawSpace::Logger::Configuration::GetInstance());
+
 RenderingQueue::RenderingQueue( void ) : 
 m_target( NULL ),
 m_clear_depth( false ),
@@ -257,7 +259,9 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
 }
 
 void RenderingQueue::UpdateOutputQueue( void )
-{     
+{
+    _DSDEBUG(rd_logger, dsstring("UpdateOutputQueue Begin"));
+
     m_nodes.clear();
     m_fx_bases.clear();
 
@@ -294,6 +298,8 @@ void RenderingQueue::UpdateOutputQueue( void )
     cleanup_output_list();
 
     m_ready = true;
+
+    _DSDEBUG(rd_logger, dsstring("UpdateOutputQueue End"));
 }
 
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
