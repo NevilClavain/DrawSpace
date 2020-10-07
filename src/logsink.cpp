@@ -91,7 +91,8 @@ void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
 
         if( m_conf )
         {
-            sprintf( timestamp, "%.10d", m_conf->GetLastTick() );
+            double timestamp_in_second = m_conf->GetLastTick() / 1000000.0;
+            sprintf(timestamp, "%.6f", timestamp_in_second);
         }
         else
         {
@@ -113,7 +114,7 @@ void Logger::Sink::RegisterOutput( Logger::Output* p_output )
     m_output = p_output;
 }
 
-void Logger::Sink::GetName( dsstring& p_name )
+void Logger::Sink::GetName( dsstring& p_name ) const
 {
     p_name = m_name;
 }

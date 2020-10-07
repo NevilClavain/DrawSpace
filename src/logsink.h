@@ -72,7 +72,7 @@ public:
 
     void RegisterOutput( Output* p_output );
 
-    void GetName( dsstring& p_name );
+    void GetName( dsstring& p_name ) const;
     void SetConfiguration( Logger::Configuration* p_conf );
       
 };
