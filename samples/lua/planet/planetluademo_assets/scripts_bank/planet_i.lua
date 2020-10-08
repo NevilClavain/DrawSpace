@@ -531,6 +531,8 @@ model.env.fog.setdensity(0.0)
 update_planet_lights( resurgam_planet_config)
 resurgam_planet_config:updated()
 
+rg:update_renderingqueues()
+
 gui=Gui()
 gui:init()
 gui:set_resourcespath("./xfskin2")

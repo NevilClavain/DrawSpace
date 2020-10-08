@@ -121,7 +121,7 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_confi
     
   end
 
-  rg:update_renderingqueues()
+  --rg:update_renderingqueues()
 end
 
 model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_config, p_anims_parameters, p_entity_id, p_bodyinitialpos, p_parent_entity_id)
@@ -182,7 +182,7 @@ model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_c
     
   end
 
-  rg:update_renderingqueues()
+  --rg:update_renderingqueues()
 end
 
 
@@ -207,7 +207,7 @@ model.view.unload = function(p_modelunload_function,p_entity_id)
   end
 
   p_modelunload_function(rg, eg, p_entity_id)
-  rg:update_renderingqueues()
+  --rg:update_renderingqueues()
 
   local entity_properties_entry = model.entities[p_entity_id]
   entity_properties_entry['entity'] = nil
