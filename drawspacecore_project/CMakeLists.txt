@@ -211,28 +211,7 @@ ${CMAKE_SOURCE_DIR}/src/renderpassnodegraph.cpp
 ${CMAKE_SOURCE_DIR}/src/renderpassnodegraph.h
 )
 
-source_group(sphericalLOD FILES
-${CMAKE_SOURCE_DIR}/src/spherelod_binder.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_binder.h
-${CMAKE_SOURCE_DIR}/src/spherelod_body.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_body.h
-${CMAKE_SOURCE_DIR}/src/spherelod_collisions.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_collisions.h
-${CMAKE_SOURCE_DIR}/src/spherelod_config.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_config.h
-${CMAKE_SOURCE_DIR}/src/spherelod_drawing.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_drawing.h
-${CMAKE_SOURCE_DIR}/src/spherelod_face.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_face.h
-${CMAKE_SOURCE_DIR}/src/spherelod_layer.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_layer.h
-${CMAKE_SOURCE_DIR}/src/spherelod_patch.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_patch.h
-${CMAKE_SOURCE_DIR}/src/spherelod_root.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_root.h
-${CMAKE_SOURCE_DIR}/src/spherelod_subpass.cpp
-${CMAKE_SOURCE_DIR}/src/spherelod_subpass.h
-)
+
 
 source_group(systems FILES
 ${CMAKE_SOURCE_DIR}/src/animationssystem.cpp
@@ -256,11 +235,6 @@ ${CMAKE_SOURCE_DIR}/src/transformsystem.h
 )
 
 source_group(threading FILES
-${CMAKE_SOURCE_DIR}/src/mediator.cpp
-${CMAKE_SOURCE_DIR}/src/mediator.h
-${CMAKE_SOURCE_DIR}/src/runner.cpp
-${CMAKE_SOURCE_DIR}/src/runner.h
-${CMAKE_SOURCE_DIR}/src/task.h
 )
 
 source_group(utils FILES
@@ -280,8 +254,6 @@ ${CMAKE_SOURCE_DIR}/src/memalloc.cpp
 ${CMAKE_SOURCE_DIR}/src/memalloc.h
 ${CMAKE_SOURCE_DIR}/src/misc_utils.cpp
 ${CMAKE_SOURCE_DIR}/src/misc_utils.h
-${CMAKE_SOURCE_DIR}/src/mutex.cpp
-${CMAKE_SOURCE_DIR}/src/mutex.h
 ${CMAKE_SOURCE_DIR}/src/parser.cpp
 ${CMAKE_SOURCE_DIR}/src/parser.h
 ${CMAKE_SOURCE_DIR}/src/piload.cpp
