@@ -27,6 +27,7 @@
 
 #include "tracedefs.h"
 #include "exceptions.h"
+#include "crtp_singleton.h"
 #include "maths.h"
 #include "parser.h"
 #include "vector.h"
@@ -119,5 +120,9 @@
 #include "hub.h"
 
 #include "tracesystem.h"
+
+#include "task.h"
+#include "mailbox.h"
+#include "runner.h"
 
 #endif

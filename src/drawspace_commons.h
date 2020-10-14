@@ -39,6 +39,7 @@
 #include <array>
 #include <sstream>
 #include <iterator>
+#include <mutex>
 
 #include "flags.h"
 

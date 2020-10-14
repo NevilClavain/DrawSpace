@@ -238,6 +238,7 @@ source_group(threading FILES
 ${CMAKE_SOURCE_DIR}/src/task.h
 ${CMAKE_SOURCE_DIR}/src/mailbox.h
 ${CMAKE_SOURCE_DIR}/src/runner.h
+${CMAKE_SOURCE_DIR}/src/runner.cpp
 )
 
 source_group(utils FILES
