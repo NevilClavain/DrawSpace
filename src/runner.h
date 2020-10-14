@@ -42,6 +42,8 @@ private:
 
 	static void mainloop(void);
 
+	static const unsigned int idle_duration_ms{ 50 };
+
 public:
 
 	void Startup(Mailbox<Interface::ITask*>* p_mailbox_in, Mailbox<dsstring>* p_mailbox_out);

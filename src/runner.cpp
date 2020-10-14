@@ -65,7 +65,7 @@ void Runner::mainloop(void)
 		else
 		{
 			// idle for a little time...
-			Sleep(50);
+			Sleep(idle_duration_ms);
 		}
 
 	} while (Runner::GetInstance()->m_cont);
