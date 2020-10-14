@@ -27,6 +27,11 @@
 #ifndef _CRTP_SINGLETON_H_
 #define _CRTP_SINGLETON_H_
 
+namespace DrawSpace
+{
+namespace Utils
+{
+
 template<class T>
 class BaseSingleton
 {
@@ -34,9 +39,9 @@ protected:
     static T* m_instance;
 
 public:
-    static T* GetInstance( void )
+    static T* GetInstance(void)
     {
-        if( !m_instance )
+        if (!m_instance)
         {
             //static T t;
             //m_instance = &t;
@@ -45,8 +50,10 @@ public:
         return m_instance;
     };
 };
+}
+}
 
 template <class T>
-T* BaseSingleton<T>::m_instance;
+T* DrawSpace::Utils::BaseSingleton<T>::m_instance;
 
 #endif

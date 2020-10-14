@@ -33,7 +33,7 @@
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_entity.h"
 
-class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public BaseSingleton<MainService>
+class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public DrawSpace::Utils::BaseSingleton<MainService>
 {
 protected:
 
@@ -220,7 +220,7 @@ public:
     void RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
     void UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
   
-    friend class BaseSingleton<MainService>;
+    friend class DrawSpace::Utils::BaseSingleton<MainService>;
 };
 
 #endif

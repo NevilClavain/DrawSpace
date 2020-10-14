@@ -48,7 +48,7 @@ extern "C" {
                 LUA_ERROR( dsstring( msgexcp ) );\
             }
 
-class LuaContext : public BaseSingleton<LuaContext>
+class LuaContext : public DrawSpace::Utils::BaseSingleton<LuaContext>
 {
 protected:
 	LuaContext( void );
@@ -110,7 +110,7 @@ public:
 
 	static int Include(lua_State* p_L);
 
-    friend class BaseSingleton<LuaContext>;
+    friend class DrawSpace::Utils::BaseSingleton<LuaContext>;
 };
 
 #endif
