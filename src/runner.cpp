@@ -43,8 +43,8 @@ void Runner::mainloop(void)
 
 	do
 	{
-		Mailbox<ITask*>* mb_in = Runner::GetInstance()->m_mailbox_in;
-		Mailbox<dsstring>* mb_out = Runner::GetInstance()->m_mailbox_out;
+		Mailbox<ITask*>* mb_in{ Runner::GetInstance()->m_mailbox_in };
+		Mailbox<dsstring>* mb_out{ Runner::GetInstance()->m_mailbox_out };
 		int mbsize{ mb_in->GetBoxSize() };
 
 		if (mbsize > 0)
