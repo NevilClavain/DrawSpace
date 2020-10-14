@@ -30,15 +30,15 @@
 
 namespace DrawSpace
 {
-namespace Utils
+namespace Threading
 {
 struct Runner : public DrawSpace::Utils::BaseSingleton<Runner>
 {
 private:
 	Mailbox<Interface::ITask*>* m_mailbox_in{ nullptr };
-	Mailbox<dsstring>* m_mailbox_out{ nullptr };
-	mutable std::thread* m_thread{ nullptr };
-	bool m_cont;
+	Mailbox<dsstring>*			m_mailbox_out{ nullptr };
+	mutable std::thread*		m_thread{ nullptr };
+	bool						m_cont;
 
 	static void mainloop(void);
 

@@ -45,7 +45,7 @@
 
 namespace DrawSpace
 {
-namespace Utils
+namespace Threading
 {
 
 template<typename T>

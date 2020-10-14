@@ -33,6 +33,9 @@
 #include "resourcessystem.h"
 #include "animationssystem.h"
 
+#include "task.h"
+#include "mailbox.h"
+
 namespace DrawSpace
 {
 namespace Systems
@@ -49,16 +52,21 @@ public:
     using SystemsUpdateEventHandler = DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>;
     
 private:
-    DrawSpace::Systems::RenderingSystem             m_renderingSystem;
-    DrawSpace::Systems::TransformSystem             m_transformSystem;
-    DrawSpace::Systems::PhysicsSystem               m_physicsSystem;
-    DrawSpace::Systems::TimeSystem                  m_timeSystem;
-    DrawSpace::Systems::TraceSystem                 m_traceSystem;
-    DrawSpace::Systems::ResourcesSystem             m_resourcesSystem;
-    DrawSpace::Systems::AnimationsSystem            m_animationsSystem;
+    Systems::RenderingSystem                        m_renderingSystem;
+    Systems::TransformSystem                        m_transformSystem;
+    Systems::PhysicsSystem                          m_physicsSystem;
+    Systems::TimeSystem                             m_timeSystem;
+    Systems::TraceSystem                            m_traceSystem;
+    Systems::ResourcesSystem                        m_resourcesSystem;
+    Systems::AnimationsSystem                       m_animationsSystem;
 
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
+
+    Threading::Mailbox<Interface::ITask*>           m_mb_in;
+    Threading::Mailbox<dsstring>                    m_mb_out;
+
+    
 
 protected:
 
@@ -98,7 +106,10 @@ public:
 
     std::vector<DrawSpace::Interface::System*> GetSystems( void ) const;
 
-    void ReleaseAssets( void );    
+    void ReleaseAssets( void );  
+
+    void StartupRunner(void);
+    void ShutdownRunner(void);
 };
 }
 }

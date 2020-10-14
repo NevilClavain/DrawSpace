@@ -24,14 +24,23 @@
 /* -*-LIC_END-*- */
 
 #include "runner.h"
+#include "logsink.h"
+#include "logconf.h"
+#include "logoutput.h"
+#include "tracedefs.h"
+
+DrawSpace::Logger::Sink runner_logger("Runner", DrawSpace::Logger::Configuration::GetInstance());
 
 using namespace DrawSpace;
-using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
+using namespace DrawSpace::Threading;
 
 void Runner::mainloop(void)
 {
 	Runner::GetInstance()->m_cont = true;
+
+	_DSDEBUG(runner_logger, dsstring("<<< Runner begin >>>"));
+
 	do
 	{
 		Mailbox<ITask*>* mb_in = Runner::GetInstance()->m_mailbox_in;
@@ -61,6 +70,7 @@ void Runner::mainloop(void)
 
 	} while (Runner::GetInstance()->m_cont);
 
+	_DSDEBUG(runner_logger, dsstring("<<< Runner end >>>"));
 }
 
 void Runner::Startup(Mailbox<ITask*>* p_mailbox_in, Mailbox<dsstring>* p_mailbox_out)

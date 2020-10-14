@@ -45,6 +45,8 @@ extern DrawSpace::Logger::Sink aspect_logger;
 extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
 extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
 
+extern DrawSpace::Logger::Sink runner_logger;
+
 MainService::MainService( void ) :
 m_console_ready( false ),
 m_console_active( false ),
@@ -111,6 +113,10 @@ bool MainService::Init( void )
     logconf->RegisterSink(&rd_logger);
     rd_logger.SetConfiguration(logconf);
 
+    logconf->RegisterSink(&runner_logger);
+    runner_logger.SetConfiguration(logconf);
+
+
 
     m_systemsHub.SetLogConf( logconf );
 
@@ -152,7 +158,7 @@ bool MainService::Init( void )
     auto& resourcesystem{ m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem") };
     resourcesystem.RegisterEventHandler(&m_resource_events_cb);
 
-    
+    m_systemsHub.StartupRunner();
 
     _DSDEBUG( logger, dsstring("MainService : startup...") );
 
@@ -182,6 +188,7 @@ void MainService::Run( void )
 void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
+    m_systemsHub.ShutdownRunner();
     LuaContext::GetInstance()->Shutdown();
     m_systemsHub.ReleaseAssets();
 }

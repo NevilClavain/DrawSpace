@@ -23,11 +23,13 @@
 /* -*-LIC_END-*- */
 
 #include "hub.h"
+#include "runner.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Threading;
 
 Hub::Hub( void )
 {
@@ -39,7 +41,7 @@ Hub::Hub( void )
     m_systems.push_back( &m_transformSystem );
     m_systems.push_back( &m_animationsSystem );
     m_systems.push_back( &m_renderingSystem );
-    m_systems.push_back( &m_traceSystem );
+    m_systems.push_back( &m_traceSystem );    
 }
 
 void Hub::run( EntityGraph::EntityNodeGraph* p_entitygraph )
@@ -95,5 +97,18 @@ std::vector<DrawSpace::Interface::System*> Hub::GetSystems(void) const
 void Hub::ReleaseAssets(void)
 {
     m_resourcesSystem.ReleaseAssets();
+}
+
+void Hub::StartupRunner(void)
+{
+    //startup runner thread
+    Runner::GetInstance()->Startup(&m_mb_in, &m_mb_out);
+}
+
+void Hub::ShutdownRunner(void)
+{
+    // stop and join runner
+    m_mb_in.Push<Interface::ITask*>(&RunnerKiller());
+    Runner::GetInstance()->Join();
 }
 
