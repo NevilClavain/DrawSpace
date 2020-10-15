@@ -176,15 +176,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 				if (shader->IsCompiled())
 				{
-					updateAssetFromCache<Shader>(shader, m_shadersCache, final_asset_path);
-					loaded = true;
+					updateAssetFromCache<Shader>(shader, m_shadersCache, final_asset_path);					
 				}
 				else
 				{
 					int shader_type{ std::get<2>(e->getPurpose()) };
 
 					manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);
-				}				
+				}
+				loaded = true;
             }
         }
 
