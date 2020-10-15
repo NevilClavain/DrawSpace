@@ -34,9 +34,9 @@ using namespace DrawSpace::Threading;
 Hub::Hub( void )
 {
     // attention ! l'ordre est important ! ( par ex. time system doit etre execute avant tt les autres!)
-
-    m_systems.push_back( &m_resourcesSystem );
+    
     m_systems.push_back( &m_timeSystem );
+    m_systems.push_back( &m_resourcesSystem );
     m_systems.push_back( &m_physicsSystem );
     m_systems.push_back( &m_transformSystem );
     m_systems.push_back( &m_animationsSystem );
