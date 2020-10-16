@@ -27,8 +27,10 @@ function( event, resource_path )
        evt_out = "compiling :"..resource_path
     elseif event == SHADER_COMPILED then
        evt_out = "compilation done :"..resource_path
+    elseif event == ALL_ASSETS_LOADED then
+       evt_out = "All assets loaded !"
     else
-       evt_out = "? : "..event
+       evt_out = "? : "..event       
     end
     --resources_event = evt_out
 end)

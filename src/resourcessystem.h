@@ -69,6 +69,7 @@ public:
         SHADERCACHE_CREATION,
         SHADER_COMPILATION,
         SHADER_COMPILED,
+        ALL_ASSETS_LOADED,
     };
 
     using ResourceEventHandler = DrawSpace::Core::BaseCallback2<void, ResourceEvent, const dsstring&>;
@@ -97,6 +98,9 @@ private:
     std::map<dsstring, Blob>                                            m_texturesCache;
     std::map<dsstring, Blob>                                            m_shadersCache;
     std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
+
+    bool                                                                m_new_asset;
+    std::map<dsstring, bool>                                            m_asset_loading_state;
 
 	DrawSpace::Interface::Renderer*										m_renderer;
 
@@ -153,6 +157,8 @@ private:
 	void update_bc_codefile(void* p_bc, int p_size);
 
     void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
+
+    void check_all_assets_loaded(void);
 
 public:
 

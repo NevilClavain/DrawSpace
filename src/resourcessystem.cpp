@@ -74,7 +74,8 @@ const dsstring ResourcesSystem::bcCodeFileName{ "bc.code" };
 	} \
 }
 
-ResourcesSystem::ResourcesSystem(void)
+ResourcesSystem::ResourcesSystem(void) :
+m_new_asset(false)
 {
 	m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
 }
@@ -99,6 +100,7 @@ void ResourcesSystem::notify_event(ResourceEvent p_event, const dsstring& p_path
 		{ SHADERCACHE_CREATION, "SHADERCACHE_CREATION"},
 		{ SHADER_COMPILATION, "SHADER_COMPILATION"},
 		{ SHADER_COMPILED, "SHADER_COMPILED"},
+		{ ALL_ASSETS_LOADED, "ALL_ASSETS_LOADED"},
 	};
 
 	dsstring event_str{ event_to_string.at(p_event) };
@@ -154,8 +156,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 std::get<0>(e->getPurpose())->GetBasePath(asset_path);
                 dsstring final_asset_path = compute_textures_final_path(asset_path);
 
+				m_asset_loading_state[final_asset_path] = false;
+				m_new_asset = true;
+
                 updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesCache, final_asset_path);
+
                 loaded = true;
+				m_asset_loading_state.at(final_asset_path) = true;
             }
         }
 
@@ -174,6 +181,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				dsstring final_asset_path = compute_shaders_final_path(asset_path);
 				dsstring final_asset_dir = compute_shaders_final_path("");
 
+				m_asset_loading_state[final_asset_path] = false;
+				m_new_asset = true;
+
 				if (shader->IsCompiled())
 				{
 					updateAssetFromCache<Shader>(shader, m_shadersCache, final_asset_path);					
@@ -184,6 +194,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);
 				}
+
+				m_asset_loading_state.at(final_asset_path) = true;
 				loaded = true;
             }
         }
@@ -269,7 +281,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					notify_event(BLOB_LOADED, final_asset_path);
 					
-					m_meshesCache[final_asset_path] = std::make_pair(importer, scene);					
+					m_asset_loading_state[final_asset_path] = false;
+					m_new_asset = true;
+
+					m_meshesCache[final_asset_path] = std::make_pair(importer, scene);
+					m_asset_loading_state.at(final_asset_path) = true;
+
 				}
 				else
 				{
@@ -402,6 +419,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             }
         }   
     }
+
+	check_all_assets_loaded();
 }
 
 void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* p_anims_aspect)
@@ -877,9 +896,12 @@ void ResourcesSystem::ReleaseAssets(void)
         _DRAWSPACE_DELETE_(e.second.first);
     }
 
+	// reset all
     m_shadersCache.clear();
     m_meshesCache.clear();
     m_texturesCache.clear();
+	m_asset_loading_state.clear();
+	m_new_asset = false;
 }
 
 void ResourcesSystem::ReleaseShaderAsset(const dsstring& p_asset)
@@ -898,7 +920,12 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
     dsstring asset_path;
     p_texture->GetBasePath(asset_path);
     dsstring final_asset_path = compute_textures_final_path(asset_path);
+
+
+	m_asset_loading_state[final_asset_path] = false;
+	m_new_asset = true;
     updateAssetFromCache<Texture>(p_texture, m_texturesCache, final_asset_path);
+	m_asset_loading_state.at(final_asset_path) = true;
 }
 
 void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
@@ -908,6 +935,8 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	dsstring final_asset_path = compute_shaders_final_path(asset_path);
 	dsstring final_asset_dir = compute_shaders_final_path("");
 
+	m_asset_loading_state[final_asset_path] = false;
+	m_new_asset = true;
 	if (p_shader->IsCompiled())
 	{
 		updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);		
@@ -916,6 +945,7 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	{
 		manage_shader_in_bccache(p_shader, asset_path, final_asset_path, final_asset_dir, p_shader_type);
 	}
+	m_asset_loading_state.at(final_asset_path) = true;
 }
 
 void ResourcesSystem::check_bc_cache_presence(void) const
@@ -1172,4 +1202,31 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	_DRAWSPACE_DELETE_N_(text);
 
 	p_shader->SetCompilationFlag(true); //shader now contains compiled shader
+}
+
+void ResourcesSystem::check_all_assets_loaded(void)
+{
+	// check if all is loaded
+	bool all_asset_loaded{ true };
+
+	for (auto& e : m_asset_loading_state)
+	{
+		const auto id{ e.first };
+		const bool status{ e.second };
+
+		if (!status)
+		{
+			all_asset_loaded = false;
+		}
+	}
+
+	if (all_asset_loaded && m_new_asset)
+	{
+		// send event -> all asset properly loaded
+
+		notify_event(ALL_ASSETS_LOADED, "");
+
+		// reset flag
+		m_new_asset = false;
+	}
 }
