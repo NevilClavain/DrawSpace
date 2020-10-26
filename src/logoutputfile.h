@@ -41,6 +41,7 @@ protected:
     DrawSpace::Utils::File* m_file;
     long                    m_flush_period;
     long                    m_period_count;
+    std::mutex	            m_mutex;
 
 public:
 

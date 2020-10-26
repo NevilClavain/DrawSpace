@@ -42,24 +42,35 @@ Logger::OutputFile::~OutputFile( void )
 
 void Logger::OutputFile::LogIt( const dsstring& p_trace )
 {
+    m_mutex.lock();
+
     m_file->Puts( p_trace );
 
     if( m_period_count == m_flush_period )
     {
-        Flush();
+        m_file->Flush();
         m_period_count = 0;
-        return;
+       
     }
-    m_period_count++;
+    else
+    {
+        m_period_count++;
+    }
+
+    m_mutex.unlock();
 }
 
 void Logger::OutputFile::Flush( void )
 {
+    m_mutex.lock();
     m_file->Flush();
+    m_mutex.unlock();
 }
 
 void Logger::OutputFile::SetFlushPeriod( long p_period )
 {
+    m_mutex.lock();
     m_flush_period = p_period;
+    m_mutex.unlock();
 }
 
