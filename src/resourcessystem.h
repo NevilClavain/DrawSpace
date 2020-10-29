@@ -184,7 +184,7 @@ private:
     void dump_assimp_scene_node(aiNode* p_ai_node, int depth, Aspect::ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names);
 
     template<typename T>
-    void launchAssetLoadingInRunner(T* p_asset, std::map<dsstring, Blob>& p_blobs, const dsstring& p_final_asset_path)
+    void launchAssetLoadingInRunner(const dsstring& p_final_asset_path)
     {
         const dsstring task_id{ p_final_asset_path };
 

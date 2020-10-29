@@ -145,8 +145,6 @@ void ResourcesSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 
 void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 {
-
-
     ResourcesAspect* resources_aspect = p_entity->GetAspect<ResourcesAspect>();
     if (resources_aspect)
     {
@@ -169,7 +167,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_asset_loading_state[final_asset_path] = false;
 						m_new_asset = true;
 
-						launchAssetLoadingInRunner<Texture>(std::get<0>(e->getPurpose()), m_texturesCache, final_asset_path);
+						launchAssetLoadingInRunner<Texture>(final_asset_path);
 					}
 					else
 					{
@@ -203,8 +201,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						Blob blob;
 						long size = m_currenttasks.at(final_asset_path).GetSize();
 						void* data = m_currenttasks.at(final_asset_path).GetData();
+						blob.data = data;
+						blob.size = size;
 
-						m_texturesCache.at(final_asset_path) = blob;
+
+						m_texturesCache[final_asset_path] = blob;
 						notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
 
 						// update asset with blob infos
@@ -239,17 +240,20 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_asset_loading_state[final_asset_path] = false;
 						m_new_asset = true;
 
+						launchAssetLoadingInRunner<Shader>(final_asset_path);
+
+						/*
 						if (shader->IsCompiled())
 						{
-							launchAssetLoadingInRunner<Shader>(shader, m_shadersCache, final_asset_path);
+							launchAssetLoadingInRunner<Shader>(final_asset_path);
 						}
 						else
 						{
-							/*
-							int shader_type{ std::get<2>(e->getPurpose()) };
-							manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);
-							*/
+							
+							//int shader_type{ std::get<2>(e->getPurpose()) };
+							//manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);							
 						}
+						*/
 					}
 					else
 					{
@@ -283,8 +287,14 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						Blob blob;
 						long size = m_currenttasks.at(final_asset_path).GetSize();
 						void* data = m_currenttasks.at(final_asset_path).GetData();
+						
+						blob.data = data;
+						blob.size = size;
 
-						m_shadersCache.at(final_asset_path) = blob;
+
+						_asm nop
+
+						m_shadersCache[final_asset_path] = blob;
 						notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
 
 						// update asset with blob infos
@@ -1022,7 +1032,7 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
 
 	m_asset_loading_state[final_asset_path] = false;
 	m_new_asset = true;
-    launchAssetLoadingInRunner<Texture>(p_texture, m_texturesCache, final_asset_path);
+    launchAssetLoadingInRunner<Texture>(final_asset_path);
 	m_asset_loading_state.at(final_asset_path) = true;
 }
 
@@ -1037,7 +1047,7 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	m_new_asset = true;
 	if (p_shader->IsCompiled())
 	{
-		launchAssetLoadingInRunner<Shader>(p_shader, m_shadersCache, final_asset_path);
+		launchAssetLoadingInRunner<Shader>(final_asset_path);
 	}
 	else
 	{
