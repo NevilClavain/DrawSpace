@@ -298,7 +298,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
 
 						// update asset with blob infos
-						std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
+						std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
 
 						m_finishedtasks.erase(final_asset_path);
 						m_currenttasks.erase(final_asset_path);
