@@ -30,6 +30,9 @@
 #include "entitynodegraph.h"
 #include "animationsaspect.h"
 #include "resourcesaspect.h"
+#include "task.h"
+#include "file.h"
+#include "runner.h"
 
 struct aiNode;
 struct aiScene;
@@ -75,7 +78,6 @@ public:
     using ResourceEventHandler = DrawSpace::Core::BaseCallback2<void, ResourceEvent, const dsstring&>;
 
 private:
-
     std::set<ResourceEventHandler*>					                    m_evt_handlers;
 
 	static const dsstring bcCacheName;
@@ -87,6 +89,66 @@ private:
         void*   data;
         int     size;
     };
+
+    struct LoadBinaryFileTask : public Interface::ITask
+    {
+    private:
+        // execution data
+        long        m_size{ 0 };
+        void*       m_data{ nullptr };
+        bool        m_failure;
+
+        dsstring    m_final_asset_path;
+        
+    public:
+
+        LoadBinaryFileTask() :            
+        ITask("LoadBinaryFileTask")
+        {
+        }
+
+        void Execute(void)
+        {
+            long size;
+            void* data = Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size);
+            if (data)
+            {
+                m_data = data;
+                m_size = size;
+                m_failure = false;
+            }
+            else
+            {
+                m_failure = true;
+            }
+        }
+        
+        inline void SetId(const dsstring& p_id)
+        {
+            m_id = p_id;
+        }
+
+        inline void SetFinalAssetPath(const dsstring& p_final_asset_path)
+        {
+            m_final_asset_path = p_final_asset_path;
+        }
+
+        inline bool Failed(void) const
+        {
+            return m_failure;
+        }
+
+        inline long GetSize(void) const
+        {
+            return m_size;
+        }
+
+        inline void* GetData(void) const
+        {
+            return m_data;
+        }
+    };
+
 
     static dsstring                                                     m_textures_rootpath;
 
@@ -104,6 +166,9 @@ private:
 
 	DrawSpace::Interface::Renderer*										m_renderer;
 
+    std::map<dsstring, LoadBinaryFileTask>                              m_currenttasks;
+    std::set<dsstring>                                                  m_finishedtasks;
+
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     dsstring compute_textures_final_path(const dsstring& p_path) const;
@@ -119,8 +184,22 @@ private:
     void dump_assimp_scene_node(aiNode* p_ai_node, int depth, Aspect::ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names);
 
     template<typename T>
-    void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blobs, dsstring p_final_asset_path) const
-    {       
+    void launchAssetLoadingInRunner(T* p_asset, std::map<dsstring, Blob>& p_blobs, const dsstring& p_final_asset_path)
+    {
+        const dsstring task_id{ p_final_asset_path };
+
+        LoadBinaryFileTask task;
+        task.SetId(task_id);
+        task.SetFinalAssetPath(p_final_asset_path);
+
+        m_currenttasks[p_final_asset_path] = task;
+
+        Threading::Runner* runner{ Threading::Runner::GetInstance() };
+        notify_event(BLOB_LOAD, p_final_asset_path);
+        runner->m_mailbox_in.Push<ITask*>(&m_currenttasks.at(p_final_asset_path));
+
+
+        /*
         if (p_blobs.find(p_final_asset_path) == p_blobs.end())
         {
             Blob blob;
@@ -144,6 +223,7 @@ private:
 
         // update asset
         p_asset->SetData(p_blobs.at(p_final_asset_path).data, p_blobs.at(p_final_asset_path).size);
+        */
     }
 
 	void load_animations(const aiScene* p_scene, Aspect::AnimationsAspect* p_anims_aspect);
@@ -159,6 +239,8 @@ private:
     void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
 
     void check_all_assets_loaded(void);
+
+    void check_finished_tasks(void);
 
 public:
 

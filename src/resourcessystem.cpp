@@ -136,11 +136,17 @@ void ResourcesSystem::SetMeshesRootPath(const dsstring& p_path)
 
 void ResourcesSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 {
+	check_finished_tasks();
+
     p_entitygraph->AcceptSystemRootToLeaf( this );
+
+	check_all_assets_loaded();
 }
 
 void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 {
+
+
     ResourcesAspect* resources_aspect = p_entity->GetAspect<ResourcesAspect>();
     if (resources_aspect)
     {
@@ -152,17 +158,62 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<1>( e->getPurpose() );
             if( !loaded )
             {
-                dsstring asset_path;
-                std::get<0>(e->getPurpose())->GetBasePath(asset_path);
-                dsstring final_asset_path = compute_textures_final_path(asset_path);
+				dsstring asset_path;
+				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
+				dsstring final_asset_path = compute_textures_final_path(asset_path);
 
-				m_asset_loading_state[final_asset_path] = false;
-				m_new_asset = true;
+				if (0 == m_currenttasks.count(final_asset_path))
+				{
+					if (m_asset_loading_state.count(final_asset_path) == 0)
+					{
+						m_asset_loading_state[final_asset_path] = false;
+						m_new_asset = true;
 
-                updateAssetFromCache<Texture>(std::get<0>(e->getPurpose()), m_texturesCache, final_asset_path);
+						launchAssetLoadingInRunner<Texture>(std::get<0>(e->getPurpose()), m_texturesCache, final_asset_path);
+					}
+					else
+					{
+						// not in current tasks but entry present in m_asset_loading_state : loading already done (entry shall be TRUE)
 
-                loaded = true;
-				m_asset_loading_state.at(final_asset_path) = true;
+						if (m_asset_loading_state.at(final_asset_path))
+						{
+							// already loaded, just set blob infos to asset
+							std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
+						}
+						else
+						{
+							// we shall not fall here
+							_DSEXCEPTION("Inconsistent state for asset : " + final_asset_path);
+						}
+					}
+				}
+				else
+				{
+					// this asset is currently loaded by Runner thread (task)
+					// check if task done
+
+					if (m_finishedtasks.count(final_asset_path))
+					{
+						// task done by Runner thread, finalize asset
+
+						loaded = true;
+						notify_event(BLOB_LOADED, final_asset_path);
+						m_asset_loading_state.at(final_asset_path) = true;
+
+						Blob blob;
+						long size = m_currenttasks.at(final_asset_path).GetSize();
+						void* data = m_currenttasks.at(final_asset_path).GetData();
+
+						m_texturesCache.at(final_asset_path) = blob;
+						notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
+
+						// update asset with blob infos
+						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
+
+						m_finishedtasks.erase(final_asset_path);
+						m_currenttasks.erase(final_asset_path);
+					}
+				}
             }
         }
 
@@ -181,22 +232,68 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				dsstring final_asset_path = compute_shaders_final_path(asset_path);
 				dsstring final_asset_dir = compute_shaders_final_path("");
 
-				m_asset_loading_state[final_asset_path] = false;
-				m_new_asset = true;
-
-				if (shader->IsCompiled())
+				if (0 == m_currenttasks.count(final_asset_path))
 				{
-					updateAssetFromCache<Shader>(shader, m_shadersCache, final_asset_path);					
+					if (m_asset_loading_state.count(final_asset_path) == 0)
+					{
+						m_asset_loading_state[final_asset_path] = false;
+						m_new_asset = true;
+
+						if (shader->IsCompiled())
+						{
+							launchAssetLoadingInRunner<Shader>(shader, m_shadersCache, final_asset_path);
+						}
+						else
+						{
+							/*
+							int shader_type{ std::get<2>(e->getPurpose()) };
+							manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);
+							*/
+						}
+					}
+					else
+					{
+						// not in current tasks but entry present in m_asset_loading_state : loading already done (entry shall be TRUE)
+
+						if (m_asset_loading_state.at(final_asset_path))
+						{
+							// already loaded, just set blob infos to asset
+							std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
+						}
+						else
+						{
+							// we shall not fall here
+							_DSEXCEPTION("Inconsistent state for asset : " + final_asset_path);
+						}
+					}
 				}
 				else
 				{
-					int shader_type{ std::get<2>(e->getPurpose()) };
+					// this asset is currently loaded by Runner thread (task)
+					// check if task done
 
-					manage_shader_in_bccache(shader, asset_path, final_asset_path, final_asset_dir, shader_type);
+					if (m_finishedtasks.count(final_asset_path))
+					{
+						// task done by Runner thread, finalize asset
+
+						loaded = true;
+						notify_event(BLOB_LOADED, final_asset_path);
+						m_asset_loading_state.at(final_asset_path) = true;
+
+						Blob blob;
+						long size = m_currenttasks.at(final_asset_path).GetSize();
+						void* data = m_currenttasks.at(final_asset_path).GetData();
+
+						m_shadersCache.at(final_asset_path) = blob;
+						notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
+
+						// update asset with blob infos
+						std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
+
+						m_finishedtasks.erase(final_asset_path);
+						m_currenttasks.erase(final_asset_path);
+					}
 				}
-
-				m_asset_loading_state.at(final_asset_path) = true;
-				loaded = true;
             }
         }
 
@@ -210,6 +307,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {
+				/*
 				ResourcesAspect::MeshesFileDescription mesheFileDescription;
 
                 dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
@@ -416,12 +514,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 loaded = true;
 
 				notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
+				*/
             }
         }   
-    }
-
-	check_all_assets_loaded();
+    }	
 }
+
 
 void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* p_anims_aspect)
 {
@@ -924,7 +1022,7 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
 
 	m_asset_loading_state[final_asset_path] = false;
 	m_new_asset = true;
-    updateAssetFromCache<Texture>(p_texture, m_texturesCache, final_asset_path);
+    launchAssetLoadingInRunner<Texture>(p_texture, m_texturesCache, final_asset_path);
 	m_asset_loading_state.at(final_asset_path) = true;
 }
 
@@ -939,7 +1037,7 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	m_new_asset = true;
 	if (p_shader->IsCompiled())
 	{
-		updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);		
+		launchAssetLoadingInRunner<Shader>(p_shader, m_shadersCache, final_asset_path);
 	}
 	else
 	{
@@ -1228,5 +1326,21 @@ void ResourcesSystem::check_all_assets_loaded(void)
 
 		// reset flag
 		m_new_asset = false;
+	}
+}
+
+void ResourcesSystem::check_finished_tasks(void)
+{
+	Threading::Runner* runner{ Threading::Runner::GetInstance() };
+
+	int nb_tasks_done{ runner->m_mailbox_out.GetBoxSize() };
+	
+	for (int i = 0; i < nb_tasks_done; ++i)
+	{
+		dsstring task_id{ runner->m_mailbox_out.PopNext<std::string>("") };
+
+		_DSDEBUG(rs_logger, "receiving task done ID: " << task_id);
+
+		m_finishedtasks.insert(task_id);
 	}
 }

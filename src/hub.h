@@ -63,11 +63,8 @@ private:
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
 
-    Threading::Mailbox<Interface::ITask*>           m_mb_in;
-    Threading::Mailbox<dsstring>                    m_mb_out;
 
-    
-
+   
 protected:
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);

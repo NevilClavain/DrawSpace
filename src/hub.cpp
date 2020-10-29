@@ -102,13 +102,15 @@ void Hub::ReleaseAssets(void)
 void Hub::StartupRunner(void)
 {
     //startup runner thread
-    Runner::GetInstance()->Startup(&m_mb_in, &m_mb_out);
+    Runner::GetInstance()->Startup();
 }
 
 void Hub::ShutdownRunner(void)
 {
     // stop and join runner
-    m_mb_in.Push<Interface::ITask*>(&RunnerKiller());
-    Runner::GetInstance()->Join();
+    Runner* runner{ Runner::GetInstance() };
+
+    runner->m_mailbox_in.Push<Interface::ITask*>(&RunnerKiller());
+    runner->Join();
 }
 

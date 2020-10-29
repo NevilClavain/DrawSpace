@@ -38,7 +38,7 @@ public:
 	m_id(p_id)
 	{
 	};
-	virtual void Execute(void) const = 0;
+	virtual void Execute(void) = 0;
 	dsstring GetId(void) const
 	{
 		return m_id;

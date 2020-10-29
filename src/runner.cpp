@@ -43,8 +43,8 @@ void Runner::mainloop(void)
 
 	do
 	{
-		Mailbox<ITask*>* mb_in{ Runner::GetInstance()->m_mailbox_in };
-		Mailbox<dsstring>* mb_out{ Runner::GetInstance()->m_mailbox_out };
+		Mailbox<ITask*>* mb_in{ &Runner::GetInstance()->m_mailbox_in };
+		Mailbox<dsstring>* mb_out{ &Runner::GetInstance()->m_mailbox_out };
 		int mbsize{ mb_in->GetBoxSize() };
 
 		if (mbsize > 0)
@@ -56,7 +56,10 @@ void Runner::mainloop(void)
 				if (current)
 				{
 					auto task_id{ current->GetId() };
+					dsstring exec_trace = dsstring("<<< Runner executing : ") + task_id + dsstring(" >>>");
+					_DSDEBUG(runner_logger, exec_trace);
 					current->Execute();
+					_DSDEBUG(runner_logger, dsstring("<<< Task execution done >>>"));
 					mb_out->Push<dsstring>(task_id);
 				}
 
@@ -73,10 +76,8 @@ void Runner::mainloop(void)
 	_DSDEBUG(runner_logger, dsstring("<<< Runner end >>>"));
 }
 
-void Runner::Startup(Mailbox<ITask*>* p_mailbox_in, Mailbox<dsstring>* p_mailbox_out)
+void Runner::Startup(void)
 {
-	m_mailbox_in = p_mailbox_in;
-	m_mailbox_out = p_mailbox_out;
 	m_thread = new std::thread(Runner::mainloop);
 };
 
