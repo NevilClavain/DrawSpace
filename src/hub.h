@@ -32,6 +32,7 @@
 #include "tracesystem.h"
 #include "resourcessystem.h"
 #include "animationssystem.h"
+#include "runnersystem.h"
 
 #include "task.h"
 #include "mailbox.h"
@@ -59,11 +60,10 @@ private:
     Systems::TraceSystem                            m_traceSystem;
     Systems::ResourcesSystem                        m_resourcesSystem;
     Systems::AnimationsSystem                       m_animationsSystem;
+    Systems::RunnerSystem                           m_runnerSystem;
 
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
-
-
    
 protected:
 

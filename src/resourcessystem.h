@@ -32,7 +32,10 @@
 #include "resourcesaspect.h"
 #include "task.h"
 #include "file.h"
+#include "filesystem.h"
+#include "componentcontainer.h"
 #include "runner.h"
+
 
 struct aiNode;
 struct aiScene;
@@ -43,6 +46,16 @@ struct aiMesh;
 #include <algorithm>
 #include <iterator>
 
+
+#define CHECK_PHYSFS( __call__ ) \
+{ \
+	int status { __call__ }; \
+	if (status == 0) \
+	{ \
+		dsstring perr{ PHYSFS_getLastError() }; \
+		_DSEXCEPTION(perr); \
+	} \
+}
 
 namespace DrawSpace
 {
@@ -60,6 +73,10 @@ class Renderer;
 
 namespace Systems
 {
+
+//fwd decl
+class RunnerSystem;
+
 class ResourcesSystem : public Interface::System
 {
 public:
@@ -90,7 +107,7 @@ private:
         int     size;
     };
 
-    struct LoadBinaryFileTask : public Interface::ITask
+    struct LoadFileTask : public Interface::ITask
     {
     private:
         // execution data
@@ -102,8 +119,8 @@ private:
         
     public:
 
-        LoadBinaryFileTask() :            
-        ITask("LoadBinaryFileTask")
+        LoadFileTask() :            
+        ITask("", "")
         {
         }
 
@@ -123,11 +140,6 @@ private:
             }
         }
         
-        inline void SetId(const dsstring& p_id)
-        {
-            m_id = p_id;
-        }
-
         inline void SetFinalAssetPath(const dsstring& p_final_asset_path)
         {
             m_final_asset_path = p_final_asset_path;
@@ -150,6 +162,71 @@ private:
     };
 
 
+    struct ReadShaderMD5Task : public Interface::ITask
+    {
+    private:
+        // execution data
+        dsstring        m_shader_id;
+        dsstring        m_filepath;
+        dsstring        m_error;
+
+        dsstring        m_compare_md5;
+
+        dsstring        m_loaded_md5;
+
+        bool            m_md5_are_equals;
+
+    public:
+
+        ReadShaderMD5Task() :
+            ITask("READMD5SHADERFILE", "")
+        {
+        }
+
+        void Execute(void)
+        {
+            m_error = "";
+                        
+            dsstring path{ bcCacheName + dsstring("/") + m_shader_id.c_str() };
+
+            long md5filesize;
+            unsigned char* md5Buf = { static_cast<unsigned char*>(Utils::FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize)) };
+
+            dsstring stored_md5((char*)md5Buf, md5filesize);
+
+            _DRAWSPACE_DELETE_N_(md5Buf);
+
+            m_loaded_md5 = stored_md5;
+        }
+
+        void SetShaderId(const dsstring& p_shader_id)
+        {
+            m_shader_id = p_shader_id;
+        }
+
+        void SetFilePath(const dsstring& p_filepath)
+        {
+            m_filepath = p_filepath;
+        }
+
+        void SetCompareMD5(const dsstring& p_md5)
+        {
+            m_compare_md5 = p_md5;
+        }
+
+        bool MD5AreEquals(void) const
+        {
+            return (m_compare_md5 == m_loaded_md5);
+        }
+
+        dsstring GetError(void) const
+        {
+            return m_error;
+        }
+    };
+
+
+
     static dsstring                                                     m_textures_rootpath;
 
     static dsstring                                                     m_shaders_rootpath;
@@ -166,8 +243,18 @@ private:
 
 	DrawSpace::Interface::Renderer*										m_renderer;
 
-    std::map<dsstring, LoadBinaryFileTask>                              m_currenttasks;
-    std::set<dsstring>                                                  m_finishedtasks;
+    
+    // list with all type of tasks
+    std::set<dsstring>                                                  m_currenttasks;
+
+    std::map<dsstring, LoadFileTask>                                    m_loadFile_tasks;
+    std::map<dsstring, ReadShaderMD5Task>                               m_readShaderMD5_tasks;
+
+    std::set<dsstring>                                                  m_finishedtasks_target;
+    std::map<dsstring, dsstring>                                        m_finishedtasks_action;
+
+    RunnerSystem&                                                       m_runner_system;
+    
 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
@@ -183,48 +270,25 @@ private:
     // recursive
     void dump_assimp_scene_node(aiNode* p_ai_node, int depth, Aspect::ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names);
 
+    
     template<typename T>
     void launchAssetLoadingInRunner(const dsstring& p_final_asset_path)
     {
         const dsstring task_id{ p_final_asset_path };
 
-        LoadBinaryFileTask task;
-        task.SetId(task_id);
+        LoadFileTask task;
+        task.SetTargetDescr(task_id);
+        task.SetActionDescr("LOADASSETFILE");
         task.SetFinalAssetPath(p_final_asset_path);
 
-        m_currenttasks[p_final_asset_path] = task;
+        m_loadFile_tasks[p_final_asset_path] = task;
+        m_currenttasks.insert(p_final_asset_path);
 
         Threading::Runner* runner{ Threading::Runner::GetInstance() };
         notify_event(BLOB_LOAD, p_final_asset_path);
-        runner->m_mailbox_in.Push<ITask*>(&m_currenttasks.at(p_final_asset_path));
-
-
-        /*
-        if (p_blobs.find(p_final_asset_path) == p_blobs.end())
-        {
-            Blob blob;
-            long size;
-            void* data;
-
-            // load it
-            notify_event(BLOB_LOAD, p_final_asset_path);
-            data = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &size);
-            if (!data)
-            {
-                _DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);
-            }
-            blob.data = data;
-            blob.size = size;
-            notify_event(BLOB_LOADED, p_final_asset_path);
-
-            p_blobs[p_final_asset_path] = blob;
-            notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
-        }
-
-        // update asset
-        p_asset->SetData(p_blobs.at(p_final_asset_path).data, p_blobs.at(p_final_asset_path).size);
-        */
+        runner->m_mailbox_in.Push<ITask*>(&m_loadFile_tasks.at(p_final_asset_path));
     }
+    
 
 	void load_animations(const aiScene* p_scene, Aspect::AnimationsAspect* p_anims_aspect);
 
@@ -232,19 +296,19 @@ private:
 
 	void check_bc_cache_presence(void) const;
 
-	void update_bc_md5file(const dsstring& p_hash);
+	void update_bc_md5file(const dsstring& p_path, const dsstring& p_hash);
 
-	void update_bc_codefile(void* p_bc, int p_size);
+	void update_bc_codefile(const dsstring& p_path, void* p_bc, int p_size);
 
     void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
 
     void check_all_assets_loaded(void);
 
-    void check_finished_tasks(void);
+    //void check_finished_tasks(void);
 
 public:
 
-    ResourcesSystem( void );
+    ResourcesSystem(RunnerSystem& p_runner);
 
     void RegisterEventHandler(ResourceEventHandler* p_handler);
     void UnregisterEventHandler(ResourceEventHandler* p_handler);
@@ -255,6 +319,8 @@ public:
 
     void ReleaseAssets( void );
     void ReleaseShaderAsset( const dsstring& p_asset);
+
+    void NotifyEvent(ResourceEvent p_event, const dsstring& p_path) const;
 
 	static Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat);
 
@@ -269,6 +335,8 @@ public:
     static void EnableShadersDescrInFinalPath(bool p_state);
     static void SetShadersRootPath(const dsstring& p_path);
     static void SetMeshesRootPath(const dsstring& p_path);
+
+
 
 
 };

@@ -23,15 +23,16 @@
 /* -*-LIC_END-*- */
 
 #include "hub.h"
-#include "runner.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
-using namespace DrawSpace::Threading;
 
-Hub::Hub( void )
+
+Hub::Hub( void ) :
+m_resourcesSystem(m_runnerSystem)
 {
     // attention ! l'ordre est important ! ( par ex. time system doit etre execute avant tt les autres!)
     
@@ -41,6 +42,7 @@ Hub::Hub( void )
     m_systems.push_back( &m_transformSystem );
     m_systems.push_back( &m_animationsSystem );
     m_systems.push_back( &m_renderingSystem );
+    m_systems.push_back( &m_runnerSystem );
     m_systems.push_back( &m_traceSystem );    
 }
 
@@ -101,16 +103,11 @@ void Hub::ReleaseAssets(void)
 
 void Hub::StartupRunner(void)
 {
-    //startup runner thread
-    Runner::GetInstance()->Startup();
+    m_runnerSystem.StartupRunner();
 }
 
 void Hub::ShutdownRunner(void)
 {
-    // stop and join runner
-    Runner* runner{ Runner::GetInstance() };
-
-    runner->m_mailbox_in.Push<Interface::ITask*>(&RunnerKiller());
-    runner->Join();
+    m_runnerSystem.ShutdownRunner();
 }
 

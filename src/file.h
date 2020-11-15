@@ -90,6 +90,7 @@ public:
     size_t Tell() const;
 
     static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
+
 };
 }
 }

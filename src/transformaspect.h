@@ -35,7 +35,7 @@ namespace DrawSpace
 namespace Aspect
 {
 class TimeAspect;
-class TransformAspect : public Core::Aspect
+class TransformAspect : public Core::ComponentContainer
 {
 protected:
     DrawSpace::Utils::Matrix                                                        m_worldtransform;

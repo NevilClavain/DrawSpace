@@ -90,8 +90,8 @@ ${CMAKE_SOURCE_DIR}/src/textrenderingaspectimpl.h
 )
 
 source_group(core FILES
-${CMAKE_SOURCE_DIR}/src/aspect.cpp
-${CMAKE_SOURCE_DIR}/src/aspect.h
+${CMAKE_SOURCE_DIR}/src/componentcontainer.cpp
+${CMAKE_SOURCE_DIR}/src/componentcontainer.h
 ${CMAKE_SOURCE_DIR}/src/callback.h
 ${CMAKE_SOURCE_DIR}/src/circularmovement.cpp
 ${CMAKE_SOURCE_DIR}/src/circularmovement.h
@@ -232,6 +232,8 @@ ${CMAKE_SOURCE_DIR}/src/tracesystem.cpp
 ${CMAKE_SOURCE_DIR}/src/tracesystem.h
 ${CMAKE_SOURCE_DIR}/src/transformsystem.cpp
 ${CMAKE_SOURCE_DIR}/src/transformsystem.h
+${CMAKE_SOURCE_DIR}/src/runnersystem.cpp
+${CMAKE_SOURCE_DIR}/src/runnersystem.h
 )
 
 source_group(threading FILES
@@ -247,6 +249,8 @@ ${CMAKE_SOURCE_DIR}/src/ac3dmeshe.h
 ${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/file.cpp
 ${CMAKE_SOURCE_DIR}/src/file.h
+${CMAKE_SOURCE_DIR}/src/filesystem.cpp
+${CMAKE_SOURCE_DIR}/src/filesystem.h
 ${CMAKE_SOURCE_DIR}/src/jsonparser.cpp
 ${CMAKE_SOURCE_DIR}/src/jsonparser.h
 ${CMAKE_SOURCE_DIR}/src/maths.cpp

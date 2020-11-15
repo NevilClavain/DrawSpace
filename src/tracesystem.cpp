@@ -91,7 +91,7 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
         _DSDEBUG( logger, dsstring ( " -------------------->>>>> child of : " ) << p_parent )
     }
 
-    std::vector<Core::Aspect*> aspects;
+    std::vector<Core::ComponentContainer*> aspects;
     p_entity->GetAllAspects( aspects );
 
     _DSDEBUG( logger, dsstring ( " has " ) << aspects.size() << dsstring( " aspect(s)" ) )
@@ -99,12 +99,12 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
     for( size_t i = 0; i < aspects.size(); i++ )
     {
         // find aspect's name to dump it on trace...
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::BodyAspect>( aspects[i] );
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::CameraAspect>( aspects[i] );
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::PhysicsAspect>( aspects[i] );
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::RenderingAspect>( aspects[i] );
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::TimeAspect>( aspects[i] );
-        ClassDump::Dump<DrawSpace::Core::Aspect, Aspect::TransformAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::BodyAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::CameraAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::PhysicsAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::RenderingAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::TimeAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::TransformAspect>( aspects[i] );
 
         _DSDEBUG( logger, dsstring ( " aspect " ) << i << dsstring( " is " ) << ClassDump::m_text )
        

@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#include "aspect.h"
+#include "componentcontainer.h"
 
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
@@ -34,7 +34,7 @@ namespace Core
 class Entity
 {
 private:
-    std::unordered_map<size_t, Aspect*> m_aspects;
+    std::unordered_map<size_t, ComponentContainer*> m_aspects;
 
 public:
 
@@ -91,7 +91,7 @@ public:
         return aspect;
     }
 
-    inline void GetAllAspects( std::vector<Aspect*>& p_list ) const
+    inline void GetAllAspects( std::vector<ComponentContainer*>& p_list ) const
     {
         for( auto& e: m_aspects)
         {

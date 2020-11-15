@@ -24,13 +24,13 @@
 
 #pragma once
 
-#include "aspect.h"
+#include "componentcontainer.h"
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class ResourcesAspect : public Core::Aspect 
+class ResourcesAspect : public Core::ComponentContainer
 {
 public:
 

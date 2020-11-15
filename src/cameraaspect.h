@@ -25,13 +25,13 @@
 #ifndef _CAMERAASPECT_H_
 #define _CAMERAASPECT_H_
 
-#include "aspect.h"
+#include "componentcontainer.h"
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class CameraAspect : public Core::Aspect {};
+class CameraAspect : public Core::ComponentContainer {};
 }
 }
 

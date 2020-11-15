@@ -27,7 +27,7 @@
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "entity.h"
 #include "bodyaspect.h"
 #include "timeaspect.h"
@@ -36,7 +36,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class PhysicsAspect : public Core::Aspect
+class PhysicsAspect : public Core::ComponentContainer
 {
 protected:
 

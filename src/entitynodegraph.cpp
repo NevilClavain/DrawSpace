@@ -165,7 +165,7 @@ void EntityNodeGraph::ProcessSignals( void )
                 {
                     Entity* ent = it->data();
 
-                    std::vector<Core::Aspect*> aspects;
+                    std::vector<Core::ComponentContainer*> aspects;
                     ent->GetAllAspects( aspects );
 
                     for( size_t i = 0; i < aspects.size(); ++i )
@@ -186,7 +186,7 @@ void EntityNodeGraph::ProcessSignals( void )
                 {
                     Entity* ent = it->data();
 
-                    std::vector<Core::Aspect*> aspects;
+                    std::vector<Core::ComponentContainer*> aspects;
                     ent->GetAllAspects( aspects );
 
                     for( size_t i = 0; i < aspects.size(); ++i )

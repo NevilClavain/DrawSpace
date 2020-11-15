@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "matrix.h"
 #include "quaternion.h"
 
@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class AnimationsAspect : public Core::Aspect 
+class AnimationsAspect : public Core::ComponentContainer 
 {
 public:
 

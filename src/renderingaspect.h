@@ -25,7 +25,7 @@
 #ifndef _RENDERINGASPECT_H_
 #define _RENDERINGASPECT_H_
 
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "renderingaspectimpl.h"
 
 namespace DrawSpace
@@ -37,7 +37,7 @@ class TimeManager;
 
 namespace Aspect
 {
-class RenderingAspect : public Core::Aspect
+class RenderingAspect : public Core::ComponentContainer
 {
 protected:
     std::vector<DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*>   m_impls;

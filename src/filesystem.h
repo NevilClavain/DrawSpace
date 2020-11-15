@@ -23,44 +23,23 @@
 /* -*-LIC_END-*- */
 
 #pragma once
+
 #include "drawspace_commons.h"
 
 namespace DrawSpace
 {
-namespace Interface
+namespace Utils
 {
-struct ITask
+namespace FileSystem
 {
-protected:
-	dsstring	m_action_descr;
-	dsstring	m_target_descr;
-public:
-	ITask(const dsstring& p_action_descr, const dsstring& p_target_descr) :
-	m_action_descr(p_action_descr),
-	m_target_descr(p_target_descr)
-	{
-	};
-	virtual void Execute(void) = 0;
+    bool Exists(const dsstring& p_path);
+    bool IsDirectory(const dsstring& p_path);
+    void CreateDirectory(const dsstring& p_path);
+    long FileSize(FILE* p_fp);
 
-	dsstring GetTargetDescr(void) const
-	{
-		return m_target_descr;
-	};
-
-	dsstring GetActionDescr(void) const
-	{
-		return m_action_descr;
-	};
-
-	inline void SetTargetDescr(const dsstring& p_target_descr)
-	{
-		m_target_descr = p_target_descr;
-	}
-
-	inline void SetActionDescr(const dsstring& p_action_descr)
-	{
-		m_action_descr = p_action_descr;
-	}
-};
+    void* LoadAndAllocFile(const dsstring& p_file, long* p_size);
+    void WriteFile(const dsstring& p_file, void* p_data, long p_size);
+    
+}
 }
 }

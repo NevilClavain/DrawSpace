@@ -22,17 +22,17 @@
 */
 /* -*-LIC_END-*- */
 
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "tracedefs.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-int Aspect::m_uid_count;
+int ComponentContainer::m_uid_count;
 
-DrawSpace::Logger::Sink aspect_logger("Aspect", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink aspect_logger("ComponentContainer", DrawSpace::Logger::Configuration::GetInstance());
 
-void Aspect::logComponent(const dsstring& p_comment, const dsstring& p_id, BaseComponent* p_instance) const
+void ComponentContainer::logComponent(const dsstring& p_comment, const dsstring& p_id, BaseComponent* p_instance) const
 {
     _DSDEBUG(aspect_logger, p_comment.c_str() << dsstring(" id :") << p_id.c_str() << dsstring( " " ) << p_instance << dsstring( " " ) << p_instance->m_uid)
 }

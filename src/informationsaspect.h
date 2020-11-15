@@ -48,12 +48,12 @@
 */
 /* -*-LIC_END-*- */
 
-#include "aspect.h"
+#include "componentcontainer.h"
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class InfosAspect : public Core::Aspect {};
+class InfosAspect : public Core::ComponentContainer {};
 }
 }

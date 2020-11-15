@@ -25,14 +25,14 @@
 #ifndef _SERVICEASPECT_H_
 #define _SERVICEASPECT_H_
 
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "serviceaspectimpl.h"
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class ServiceAspect : public Core::Aspect
+class ServiceAspect : public Core::ComponentContainer
 {
 protected:
     std::vector<DrawSpace::Interface::AspectImplementations::ServiceAspectImpl*>   m_impls;

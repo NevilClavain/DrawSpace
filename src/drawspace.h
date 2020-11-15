@@ -37,6 +37,7 @@
 #include "triangle.h"
 #include "meshe.h"
 #include "file.h"
+#include "filesystem.h"
 #include "md5.h"
 #include "transformation.h"
 #include "timemanager.h"

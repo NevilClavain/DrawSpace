@@ -27,7 +27,7 @@
 
 #include "entity.h"
 #include "luna.h"
-#include "aspect.h"
+#include "componentcontainer.h"
 
 class LuaClass_Entity
 {

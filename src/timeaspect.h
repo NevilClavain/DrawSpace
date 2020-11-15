@@ -25,14 +25,14 @@
 #ifndef _TIMEASPECT_H_
 #define _TIMEASPECT_H_
 
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "timemanager.h"
 
 namespace DrawSpace
 {
 namespace Aspect
 {
-class TimeAspect : public Core::Aspect 
+class TimeAspect : public Core::ComponentContainer
 {
 public:
 

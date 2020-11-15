@@ -27,7 +27,7 @@
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#include "aspect.h"
+#include "componentcontainer.h"
 #include "bodytransformaspectimpl.h"
 
 #include "matrix.h"
@@ -43,7 +43,7 @@ namespace Aspect
 {
 class PhysicsAspect;
 
-class BodyAspect : public Core::Aspect 
+class BodyAspect : public Core::ComponentContainer
 {
 public:
 
