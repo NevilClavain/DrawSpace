@@ -60,6 +60,10 @@ void RunnerSequenceStep::run(RunnerSequence& p_sequence)
             {
                 m_state = State::COMPLETED;
                 m_stepcompleted_handler(*this, p_sequence);
+
+                RunnerSystem::m_finished_tasks.erase(std::make_pair(e.first, e.second));
+
+                break;
             }
         }
     }
@@ -83,6 +87,11 @@ void RunnerSequenceStep::SetStepCompletedHandler(const std::function<void(Runner
 void RunnerSequenceStep::SetTask(Interface::ITask* p_task)
 {
     m_task = p_task;
+}
+
+Interface::ITask* RunnerSequenceStep::GetTask(void) const
+{
+    return m_task;
 }
 
 

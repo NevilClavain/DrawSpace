@@ -175,6 +175,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					rss.AddComponent< bool* >("&m_new_asset", &m_new_asset);
 					rss.AddComponent<dsstring>("final_asset_path", final_asset_path);
 					rss.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
+					rss.AddComponent<std::map<dsstring, Blob>*>("&m_texturesCache", &m_texturesCache);
 
 					rss.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
@@ -200,9 +201,19 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					rss.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
-						// task done by Runner thread, finalize asset
+						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						auto texturesCache{ p_step.GetComponent < std::map<dsstring, Blob>*>("&m_texturesCache")->getPurpose() };
+						LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
 
+						Blob blob;
+						long size = task->GetSize();
+						void* data = task->GetData();
+						blob.data = data;
+						blob.size = size;
 
+						(*texturesCache)[final_asset_path] = blob;
+						
+						_DRAWSPACE_DELETE_(task);
 
 						p_seq.DeclareCompleted();
 					});
@@ -220,83 +231,16 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
-						//m_runner_system.RemoveSequence(final_asset_path);
-
-						loaded = true;
-					}
-				}
-
-
-
-
-
-
-
-
-
-/*
-				dsstring asset_path;
-				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
-				dsstring final_asset_path = compute_textures_final_path(asset_path);
-
-				if (0 == m_currenttasks.count(final_asset_path))
-				{
-					if (m_asset_loading_state.count(final_asset_path) == 0)
-					{
-						m_asset_loading_state[final_asset_path] = false;
-						m_new_asset = true;
-
-						launchAssetLoadingInRunner<Texture>(final_asset_path);
-					}
-					else
-					{
-						// not in current tasks but entry present in m_asset_loading_state : loading already done (entry shall be TRUE)
-
-						if (m_asset_loading_state.at(final_asset_path))
-						{
-							// already loaded, just set blob infos to asset
-							std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
-						}
-						else
-						{
-							// we shall not fall here
-							_DSEXCEPTION("Inconsistent state for asset : " + final_asset_path);
-						}
-					}
-				}
-				else
-				{
-					// this asset is currently loaded by Runner thread (task)
-					// check if task done
-
-					if (m_finishedtasks_target.count(final_asset_path) && m_finishedtasks_action.at(final_asset_path) == "LOADASSETFILE")
-					{
-						// task done by Runner thread, finalize asset
-
 						loaded = true;
 						notify_event(BLOB_LOADED, final_asset_path);
 						m_asset_loading_state.at(final_asset_path) = true;
-
-						Blob blob;
-						long size = m_loadFile_tasks.at(final_asset_path).GetSize();
-						void* data = m_loadFile_tasks.at(final_asset_path).GetData();
-						blob.data = data;
-						blob.size = size;
-
-						m_loadFile_tasks.erase(final_asset_path);
-
-						m_texturesCache[final_asset_path] = blob;
-						notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
-
-						// update asset with blob infos
+						
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
 
-						m_finishedtasks_target.erase(final_asset_path);
-						m_finishedtasks_action.erase(final_asset_path);
-						m_currenttasks.erase(final_asset_path);
+						m_runner_system.RemoveSequence(final_asset_path);						
 					}
 				}
-				*/
+
             }
         }
 

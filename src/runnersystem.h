@@ -66,6 +66,7 @@ public:
     void  SetRunHandler(const std::function<void(RunnerSequenceStep&, RunnerSequence&)>& p_run_handler);
     void  SetStepCompletedHandler(const std::function<void(RunnerSequenceStep&, RunnerSequence&)>& p_stepcompleted_handler);
     void  SetTask(Interface::ITask* p_task);
+    Interface::ITask* RunnerSequenceStep::GetTask(void) const;
 
     friend class RunnerSequence;
 };
