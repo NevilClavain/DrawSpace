@@ -166,18 +166,17 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 				if (!m_runner_system.HasSequence(final_asset_path))
 				{
-
-					RunnerSequenceStep rss;
+					RunnerSequenceStep load_texture_step;
 
 					std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
 
-					rss.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
-					rss.AddComponent< bool* >("&m_new_asset", &m_new_asset);
-					rss.AddComponent<dsstring>("final_asset_path", final_asset_path);
-					rss.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
-					rss.AddComponent<std::map<dsstring, Blob>*>("&m_texturesCache", &m_texturesCache);
+					load_texture_step.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
+					load_texture_step.AddComponent< bool* >("&m_new_asset", &m_new_asset);
+					load_texture_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+					load_texture_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
+					load_texture_step.AddComponent<std::map<dsstring, Blob>*>("&m_texturesCache", &m_texturesCache);
 
-					rss.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+					load_texture_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 						auto new_asset{ p_step.GetComponent<bool*>("&m_new_asset")->getPurpose() };
@@ -198,12 +197,16 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
 					});
 
-
-					rss.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+					load_texture_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 						auto texturesCache{ p_step.GetComponent < std::map<dsstring, Blob>*>("&m_texturesCache")->getPurpose() };
 						LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
+
+						if (task->Failed())
+						{
+							_DSEXCEPTION("LoadFileTask Failed for texture : " + final_asset_path);
+						}
 
 						Blob blob;
 						long size = task->GetSize();
@@ -219,11 +222,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					});
 
 					RunnerSequence sequence;
-					sequence.RegisterStep(dsstring("loadTextureStep ") + final_asset_path, rss);
+					sequence.RegisterStep(dsstring("loadTextureStep ") + final_asset_path, load_texture_step);
 					sequence.SetCurrentStep(dsstring("loadTextureStep ") + final_asset_path);
 
-					m_runner_system.RegisterSequence(final_asset_path, sequence);
-									
+					m_runner_system.RegisterSequence(final_asset_path, sequence);									
 				}
 				else
 				{
@@ -237,10 +239,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
 
-						m_runner_system.RemoveSequence(final_asset_path);						
+						m_runner_system.RemoveSequence(final_asset_path);
 					}
 				}
-
             }
         }
 
@@ -253,208 +254,256 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             if (!loaded)
             {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#ifdef AUTH
+				dsstring asset_path;
+				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
+				dsstring final_asset_path = compute_shaders_final_path(asset_path);
 				Shader* shader{ std::get<0>(e->getPurpose()) };
 
-				dsstring asset_path;
-				shader->GetBasePath(asset_path);
-				dsstring final_asset_path = compute_shaders_final_path(asset_path);
-				dsstring final_asset_dir = compute_shaders_final_path("");
 
 				// shader key id
 				std::vector<dsstring> items;
 				SplitString(asset_path, items, '.');
 				dsstring shader_id{ items[0] };
 
-				dsstring shaderInfos_path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
-				dsstring bcMd5FileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcMd5FileName };
-				dsstring bcCodeFileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcCodeFileName };
-
-
-				if (0 == m_currenttasks.count(final_asset_path))
+				if (!m_runner_system.HasSequence(final_asset_path))
 				{
-					if (m_asset_loading_state.count(final_asset_path) == 0)
+
+					// check if already in cache
+					
+					if (m_shadersCache.find(final_asset_path) == m_shadersCache.end())
 					{
-						m_asset_loading_state[final_asset_path] = false;
-						m_new_asset = true;
+						// if not, setup a new sequence
 
-						launchAssetLoadingInRunner<Shader>(final_asset_path);
-					}
-					else
-					{
-						// not in current tasks but entry present in m_asset_loading_state : loading already done (entry shall be TRUE)
+						RunnerSequenceStep load_shader_step;
+						RunnerSequenceStep read_shader_md5_step;
+						RunnerSequenceStep load_shaderbc_step;
 
-						if (m_asset_loading_state.at(final_asset_path))
+						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
+
+
+						load_shader_step.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
+						load_shader_step.AddComponent< bool* >("&m_new_asset", &m_new_asset);
+						load_shader_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						load_shader_step.AddComponent<dsstring>("shader_id", shader_id);
+						load_shader_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
+						load_shader_step.AddComponent<std::map<dsstring, Blob>*>("&m_shadersCache", &m_shadersCache);
+						load_shader_step.AddComponent<Shader*>("shader", shader);
+
+						load_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							// already loaded, just set blob infos to asset
-							std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
-						}
-						else
-						{
-							// we shall not fall here
-							//_DSEXCEPTION("Inconsistent state for asset : " + final_asset_path);
-						}
-					}
-				}
-				else
-				{
-					// this asset is currently loaded by Runner thread (task)
-					// check if task done
+							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto new_asset{ p_step.GetComponent<bool*>("&m_new_asset")->getPurpose() };
+							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
+							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-					if (m_finishedtasks_target.count(final_asset_path) )
-					{
-						m_currenttasks.erase(final_asset_path);
+							(*asset_loading_state)[final_asset_path] = false;
+							*new_asset = true;
 
-						if (m_finishedtasks_action.at(final_asset_path) == "LOADASSETFILE")
+							const dsstring task_id{ final_asset_path };
+
+							LoadFileTask* task = _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask);
+							task->SetTargetDescr(task_id);
+							task->SetActionDescr("LOADASSETFILE");
+							task->SetFinalAssetPath(final_asset_path);
+							p_step.SetTask(task);
+
+							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
+						});
+
+						load_shader_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							//loaded = true;
-							notify_event(BLOB_LOADED, final_asset_path);
-							//m_asset_loading_state.at(final_asset_path) = true;
-							
-							long size = m_loadFile_tasks.at(final_asset_path).GetSize();
-							void* data = m_loadFile_tasks.at(final_asset_path).GetData();
-							
-							// update asset with blob infos
-							//std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
-							
+							Shader* shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
+							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+
+							LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
+
+							if (task->Failed())
+							{
+								_DSEXCEPTION("LoadFileTask Failed for shader : " + final_asset_path);
+							}
+
+							long size = task->GetSize();
+							void* data = task->GetData();
+
+							_DRAWSPACE_DELETE_(task);
+
 							if (shader->IsCompiled())
 							{
+								auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
+
 								Blob blob;
 								blob.data = data;
 								blob.size = size;
 
-								m_shadersCache[final_asset_path] = blob;
-								notify_event(ASSET_SETLOADEDBLOB, final_asset_path);
-								std::get<0>(e->getPurpose())->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
+								(*shadersCache)[final_asset_path] = blob;
 
-								m_loadFile_tasks.erase(final_asset_path);
+								p_seq.DeclareCompleted();
 							}
 							else
-							{							
-								//compute source text checksum
+							{
 								MD5 md5;
 								dsstring hash_shader{ md5.digestMemory((BYTE*)data, size) };
-							
+								dsstring shaderInfos_path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
+
 								if (FileSystem::Exists(shaderInfos_path))
 								{
-									// Compiled shader exists in bc cache...
-
-									if (!FileSystem::IsDirectory(shader_id.c_str()))
-									{
-										_DSEXCEPTION("ResourcesSystem : expecting directory for bytecode " + shader_id);
-									}
-
-									// check bc code presence...
-									if (!FileSystem::Exists(bcCodeFileName_path))
-									{
-										_DSEXCEPTION("ResourcesSystem : cannot find bytecode for " + shader_id);
-									}
-
-									// check bc md5 presence...
-									if (!FileSystem::Exists(bcMd5FileName_path))
-									{
-										_DSEXCEPTION("ResourcesSystem : cannot find md5 for " + shader_id);
-									}
-
 									// read md5 file content...
 
-									ReadShaderMD5Task task;
-									task.SetShaderId(shader_id);
-									task.SetFilePath(bcMd5FileName_path);
-									task.SetTargetDescr(bcMd5FileName_path);
-									task.SetCompareMD5(hash_shader);
+									// provide loaded shader hash to next step...
+									p_seq.GetStep("readShaderMD5Step").AddComponent<dsstring>("hash_shader", hash_shader);
 
-									m_readShaderMD5_tasks[bcMd5FileName_path] = task;
-
-									m_currenttasks.insert(bcMd5FileName_path);
-
-									runner->m_mailbox_in.Push<ITask*>(&m_readShaderMD5_tasks.at(bcMd5FileName_path));
-
-
+									p_seq.SetCurrentStep("readShaderMD5Step");
 								}
 								else
 								{
 									// shader entry does not exists, create all...
+
+									// TODO TODO TODO TODO TODO
 								}
 							}
-						}
-						/*
-						else if (m_finishedtasks_action.at(final_asset_path) == "READMD5SHADERFILE")
+
+						});
+
+						dsstring bcMd5FileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcMd5FileName };
+						dsstring bcCodeFileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcCodeFileName };
+
+						read_shader_md5_step.AddComponent<dsstring>("shader_id", shader_id);
+						read_shader_md5_step.AddComponent<dsstring>("bcMd5FileName_path", bcMd5FileName_path);
+						read_shader_md5_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						read_shader_md5_step.AddComponent<std::map<dsstring, Blob>*>("&m_shadersCache", &m_shadersCache);
+						read_shader_md5_step.AddComponent<Shader*>("shader", shader);
+
+						read_shader_md5_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							if (m_readShaderMD5_tasks.at(final_asset_path).MD5AreEquals())
+							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							dsstring bcMd5FileName_path{ p_step.GetComponent<dsstring>("bcMd5FileName_path")->getPurpose() };
+							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+
+							ReadShaderMD5Task* task = _DRAWSPACE_NEW_(ReadShaderMD5Task, ReadShaderMD5Task);
+
+							task->SetShaderId(shader_id);
+							task->SetFilePath(bcMd5FileName_path);
+							task->SetTargetDescr(bcMd5FileName_path);
+							task->SetCompareMD5(hash_shader);
+
+							p_step.SetTask(task);
+
+						});
+
+						read_shader_md5_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							Shader* shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
+
+							ReadShaderMD5Task* task{ static_cast<ReadShaderMD5Task*>(p_step.GetTask()) };
+
+							if (task->Failed())
 							{
-								if (m_shadersCache.find(final_asset_path) == m_shadersCache.end())
-								{
-									// can load bc.code file
+								_DSEXCEPTION("ReadShaderMD5Task Failed for shader : " + final_asset_path);
+							}
 
-									dsstring path{ bcCodeFileName + dsstring("\\") + shader_id.c_str() };
+							bool md5_equals{ task->MD5AreEquals() };
+							_DRAWSPACE_DELETE_(task);
 
-									LoadFileTask task;
-									task.SetTargetDescr(path);
-									task.SetActionDescr("LOADBCSHADERFILE");
-									task.SetFinalAssetPath(path);
+							if (md5_equals)
+							{
+								// crc identical, can directly load bc code file...
 
-									m_loadFile_tasks[path] = task;
-									m_currenttasks.insert(path);
-									notify_event(BLOB_LOAD, path);
-									runner->m_mailbox_in.Push<ITask*>(&m_loadFile_tasks.at(path));
-
-								}
-								else
-								{
-									//get from m_shadersCache
-
-									shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
-								}
+								p_seq.SetCurrentStep("loadShaderbcStep");
 							}
 							else
 							{
 								// crc changed, update all,
 
-								notify_event(SHADER_COMPILATION, final_asset_path);
-
+								// TODO TODO TODO TODO TODO
 
 							}
+						});
 
 
-							m_readShaderMD5_tasks.erase(final_asset_path);
-						}
-						else if (m_finishedtasks_action.at(final_asset_path) == "LOADBCSHADERFILE")
+						load_shaderbc_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						load_shaderbc_step.AddComponent<dsstring>("bcCodeFileName_path", bcCodeFileName_path);
+						load_shaderbc_step.AddComponent<std::map<dsstring, Blob>*>("&m_shadersCache", &m_shadersCache);
+
+						load_shaderbc_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							notify_event(BLOB_LOADED, final_asset_path);
+							dsstring bcCodeFileName_path{ p_step.GetComponent<dsstring>("bcCodeFileName_path")->getPurpose() };
 
-						}
-						*/
+							LoadFileTask* task = _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask);
+							task->SetTargetDescr(bcCodeFileName_path);
+							task->SetActionDescr("LOADBCSHADERFILE");
+							task->SetFinalAssetPath(bcCodeFileName_path);
 
-						m_finishedtasks_target.erase(final_asset_path);
-						m_finishedtasks_action.erase(final_asset_path);
+							p_step.SetTask(task);
+
+						});
+
+						load_shaderbc_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
+
+							LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
+
+							if (task->Failed())
+							{
+								_DSEXCEPTION("LoadFileTask Failed for shader : " + final_asset_path);
+							}
+
+							Blob blob;
+							long size = task->GetSize();
+							void* data = task->GetData();
+							blob.data = data;
+							blob.size = size;
+
+							// update cache
+							(*shadersCache)[final_asset_path] = blob;
+
+							_DRAWSPACE_DELETE_(task);
+							p_seq.DeclareCompleted(); // end of sequence :)
+
+						});
+
+
+
+
+						RunnerSequence sequence;
+
+						sequence.RegisterStep(dsstring("loadShaderStep"), load_shader_step);
+						sequence.RegisterStep(dsstring("readShaderMD5Step"), read_shader_md5_step);
+						sequence.RegisterStep(dsstring("loadShaderbcStep"), load_shaderbc_step);
+
+						sequence.SetCurrentStep(dsstring("loadShaderStep"));
+
+						m_runner_system.RegisterSequence(final_asset_path, sequence);
+
+					}
+					else
+					{
+						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
+						loaded = true;
 					}
 
-					else if (m_finishedtasks_target.count(bcMd5FileName_path))
-					{
-						m_finishedtasks_target.erase(bcMd5FileName_path);
-						m_finishedtasks_action.erase(bcMd5FileName_path);
+				}
+				else
+				{
+					// sequence 'final_asset_path' is running
 
+					// Check if sequence completed
+
+					if (m_runner_system.IsSequenceCompleted(final_asset_path))
+					{
+						loaded = true;
+						notify_event(BLOB_LOADED, final_asset_path);
+						m_asset_loading_state.at(final_asset_path) = true;
+
+						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
+
+						m_runner_system.RemoveSequence(final_asset_path);
 					}
 				}
-#endif
             }
         }
 
@@ -468,6 +517,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {
+
+
 
 
 

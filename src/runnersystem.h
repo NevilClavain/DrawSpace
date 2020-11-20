@@ -99,6 +99,8 @@ public:
 
     bool IsCompleted(void);
 
+    RunnerSequenceStep& GetStep(const dsstring& p_stepid);
+
     friend class RunnerSystem;
 };
 

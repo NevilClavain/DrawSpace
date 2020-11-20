@@ -96,9 +96,6 @@ Interface::ITask* RunnerSequenceStep::GetTask(void) const
 
 
 
-
-
-
 void RunnerSequence::run(void)
 {
     if (State::RUNNING == m_state)
@@ -133,6 +130,18 @@ void RunnerSequence::DeclareCompleted(void)
 bool RunnerSequence::IsCompleted(void)
 {
     return (m_state == State::COMPLETED);
+}
+
+RunnerSequenceStep& RunnerSequence::GetStep(const dsstring& p_stepid)
+{
+    if (m_steps.count(p_stepid))
+    {
+        return m_steps.at(p_stepid);
+    }
+    else
+    {
+        _DSEXCEPTION("Unknown step id : " + p_stepid);
+    }
 }
 
 

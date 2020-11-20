@@ -168,7 +168,8 @@ private:
         // execution data
         dsstring        m_shader_id;
         dsstring        m_filepath;
-        dsstring        m_error;
+
+        bool        m_failure;
 
         dsstring        m_compare_md5;
 
@@ -185,18 +186,24 @@ private:
 
         void Execute(void)
         {
-            m_error = "";
+            m_failure = false;
                         
             dsstring path{ bcCacheName + dsstring("/") + m_shader_id.c_str() };
 
             long md5filesize;
             unsigned char* md5Buf = { static_cast<unsigned char*>(Utils::FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize)) };
 
-            dsstring stored_md5((char*)md5Buf, md5filesize);
+            if (md5Buf)
+            {
+                dsstring stored_md5((char*)md5Buf, md5filesize);
+                _DRAWSPACE_DELETE_N_(md5Buf);
+                m_loaded_md5 = stored_md5;
 
-            _DRAWSPACE_DELETE_N_(md5Buf);
-
-            m_loaded_md5 = stored_md5;
+            }
+            else
+            {
+                m_failure = true;
+            }
         }
 
         void SetShaderId(const dsstring& p_shader_id)
@@ -219,10 +226,11 @@ private:
             return (m_compare_md5 == m_loaded_md5);
         }
 
-        dsstring GetError(void) const
+        inline bool Failed(void) const
         {
-            return m_error;
+            return m_failure;
         }
+
     };
 
 

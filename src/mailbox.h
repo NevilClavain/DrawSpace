@@ -98,13 +98,10 @@ public:
 	inline int GetBoxSize(void) const
 	{
 		int size = -1;
-		if (m_mutex.try_lock())
-		{
-			size = m_messages.size();
-			m_mutex.unlock();
-		}
+		m_mutex.lock();
+		size = m_messages.size();
+		m_mutex.unlock();
 		return size;
-
 	}
 };
 
