@@ -50,8 +50,8 @@ install(FILES ${cegui_lib_dir}/Release/CEGUIDirect3D9Renderer-0.dll DESTINATION 
 install(FILES ${cegui_lib_dir}/Debug/CEGUIDirect3D11Renderer-0_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(FILES ${cegui_lib_dir}/Release/CEGUIDirect3D11Renderer-0.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 
-install(FILES ${cegui_lib_dir}/Debug/CEGUIFreeImage_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(FILES ${cegui_lib_dir}/Release/CEGUIFreeImage.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(FILES ${cegui_lib_dir}/Debug/CEGUIFreeImageImageCodec_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${cegui_lib_dir}/Release/CEGUIFreeImageImageCodec.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 
 install(FILES ${cegui_lib_dir}/Debug/CEGUIXercesParser_d.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(FILES ${cegui_lib_dir}/Release/CEGUIXercesParser.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
