@@ -36,6 +36,8 @@
 #include "componentcontainer.h"
 #include "runner.h"
 
+#include "renderer.h"
+
 
 struct aiNode;
 struct aiScene;
@@ -66,10 +68,7 @@ class Texture;
 class Shader;
 }
 
-namespace Interface
-{
-class Renderer;
-}
+
 
 namespace Systems
 {
@@ -119,8 +118,7 @@ private:
         
     public:
 
-        LoadFileTask() :            
-        ITask("", "")
+        LoadFileTask() : ITask("", "")
         {
         }
 
@@ -169,7 +167,7 @@ private:
         dsstring        m_shader_id;
         dsstring        m_filepath;
 
-        bool        m_failure;
+        bool            m_failure;
 
         dsstring        m_compare_md5;
 
@@ -179,8 +177,7 @@ private:
 
     public:
 
-        ReadShaderMD5Task() :
-            ITask("READMD5SHADERFILE", "")
+        ReadShaderMD5Task() : ITask("READMD5SHADERFILE", "")
         {
         }
 
@@ -206,22 +203,22 @@ private:
             }
         }
 
-        void SetShaderId(const dsstring& p_shader_id)
+        inline void SetShaderId(const dsstring& p_shader_id)
         {
             m_shader_id = p_shader_id;
         }
 
-        void SetFilePath(const dsstring& p_filepath)
+        inline void SetFilePath(const dsstring& p_filepath)
         {
             m_filepath = p_filepath;
         }
 
-        void SetCompareMD5(const dsstring& p_md5)
+        inline void SetCompareMD5(const dsstring& p_md5)
         {
             m_compare_md5 = p_md5;
         }
 
-        bool MD5AreEquals(void) const
+        inline bool MD5AreEquals(void) const
         {
             return (m_compare_md5 == m_loaded_md5);
         }
@@ -229,6 +226,141 @@ private:
         inline bool Failed(void) const
         {
             return m_failure;
+        }
+
+    };
+
+
+    struct CompileShaderTask : public Interface::ITask
+    {
+    private:
+
+        bool                            m_failure;
+        dsstring                        m_err_compil;
+
+        DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+
+        long                            m_text_size;
+        void*                           m_text{ nullptr };
+        int                             m_shadertype;
+
+        dsstring                        m_final_asset_dir;
+        dsstring                        m_asset_path;
+
+        // shader bytecode buffer infos...
+        long                            m_bc_length;
+        void*                           m_bc{ nullptr };
+
+    public:
+
+        CompileShaderTask() : ITask("COMPILESHADER", "")
+        {
+        }
+
+        inline void Execute(void)
+        {
+            m_failure = false;
+
+            void* bytecode_handle;
+
+            bool comp_status{ m_renderer->CreateShaderBytes((char*)m_text, m_text_size, m_shadertype, m_asset_path, m_final_asset_dir, &bytecode_handle) };
+            if (!comp_status)
+            {
+                dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
+
+                m_failure = true;
+                m_err_compil = err_compil;
+            }
+            else
+            {
+                m_bc_length = m_renderer->GetShaderBytesLength(bytecode_handle);
+
+                m_bc = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[m_bc_length], m_bc_length, m_final_asset_dir);
+                memcpy(m_bc, m_renderer->GetShaderBytes(bytecode_handle), m_bc_length);
+
+                m_renderer->ReleaseShaderBytes(bytecode_handle);
+            }
+        }
+
+        inline void SetShaderText(void* p_text, long p_text_size, int p_shadertype)
+        {
+            m_text_size     = p_text_size;
+            m_text          = p_text;
+            m_shadertype    = p_shadertype;
+        }
+
+        inline void SetShaderDirs(const dsstring& p_final_asset_dir, const dsstring& p_asset_path)
+        {
+            m_final_asset_dir   = p_final_asset_dir;
+            m_asset_path        = p_asset_path;
+        }
+
+        inline void SetRenderer(DrawSpace::Interface::Renderer* p_renderer)
+        {
+            m_renderer = p_renderer;
+        }
+
+        inline bool Failed(void) const
+        {
+            return m_failure;
+        }
+
+        inline dsstring GetCompilationError(void) const
+        {
+            return m_err_compil;
+        }
+
+        inline void* GetShaderByteCode(void) const
+        {
+            return m_bc;
+        }
+
+        inline long GetShaderByteCodeLength(void) const
+        {
+            return m_bc_length;
+        }
+    };
+
+
+    struct UpdateBCFilesTask : public Interface::ITask
+    {
+    private:
+        // execution data
+        dsstring    m_shader_id;
+
+        dsstring    m_hash;
+
+        long        m_bc_length{ 0 };
+        void*       m_bc{ nullptr };
+
+    public:
+
+        UpdateBCFilesTask() : ITask("UPDATEBCFILES", "")
+        {
+        }
+
+        inline void Execute(void)
+        {
+            dsstring path{ bcCacheName + dsstring("/") + m_shader_id.c_str() };
+
+            DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcMd5FileName, (void*)m_hash.c_str(), m_hash.length());
+            DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcCodeFileName, m_bc, m_bc_length);
+        }
+
+        inline void SetBC(void* p_bc, long p_bc_length)
+        {
+            m_bc = p_bc;
+            m_bc_length = p_bc_length;
+        }
+
+        inline void SetHash(const dsstring& p_hash)
+        {
+            m_hash = p_hash;
+        }
+
+        inline void SetShaderId(const dsstring& p_shader_id)
+        {
+            m_shader_id = p_shader_id;
         }
 
     };

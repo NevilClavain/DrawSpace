@@ -270,8 +270,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				dsstring asset_path;
 				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
 				dsstring final_asset_path = compute_shaders_final_path(asset_path);
+				dsstring final_asset_dir = compute_shaders_final_path("");
 				Shader* shader{ std::get<0>(e->getPurpose()) };
-
+				int shader_type{ std::get<2>(e->getPurpose()) };
 
 				// shader key id
 				std::vector<dsstring> items;
@@ -289,6 +290,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						RunnerSequenceStep load_shader_step;
 						RunnerSequenceStep read_shader_md5_step;
 						RunnerSequenceStep load_shaderbc_step;
+						RunnerSequenceStep compile_shader_forupdate_step;
+						RunnerSequenceStep update_shaderbc_step;
 
 						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
 
@@ -365,6 +368,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 									// provide loaded shader hash to next step...
 									p_seq.GetStep("readShaderMD5Step").AddComponent<dsstring>("hash_shader", hash_shader);
 
+									// provide shader source text to next step...
+									p_seq.GetStep("readShaderMD5Step").AddComponent<void*>("text", data);
+									p_seq.GetStep("readShaderMD5Step").AddComponent<long>("text_size", size);
+
 									p_seq.SetCurrentStep("readShaderMD5Step");
 								}
 								else
@@ -407,6 +414,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						{
 							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
 							Shader* shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
 
 							ReadShaderMD5Task* task{ static_cast<ReadShaderMD5Task*>(p_step.GetTask()) };
@@ -429,8 +437,16 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							{
 								// crc changed, update all,
 
-								// TODO TODO TODO TODO TODO
+								// forward shader source text to next step....
 
+								void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
+								long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+
+								p_seq.GetStep("compileShaderForUpdateStep").AddComponent<void*>("text", text);
+								p_seq.GetStep("compileShaderForUpdateStep").AddComponent<long>("text_size", text_size);
+								p_seq.GetStep("compileShaderForUpdateStep").AddComponent<dsstring>("hash_shader", hash_shader);
+
+								p_seq.SetCurrentStep("compileShaderForUpdateStep");
 							}
 						});
 
@@ -461,12 +477,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							if (task->Failed())
 							{
-								_DSEXCEPTION("LoadFileTask Failed for shader : " + final_asset_path);
+								_DSEXCEPTION("load_shaderbc_step Failed for shader : " + final_asset_path);
 							}
 
 							Blob blob;
-							long size = task->GetSize();
-							void* data = task->GetData();
+							long size{ task->GetSize() };
+							void* data{ task->GetData() };
 							blob.data = data;
 							blob.size = size;
 
@@ -480,12 +496,121 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 
 
+						compile_shader_forupdate_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
+						compile_shader_forupdate_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						compile_shader_forupdate_step.AddComponent<dsstring>("final_asset_dir", final_asset_dir);
+						compile_shader_forupdate_step.AddComponent<dsstring>("asset_path", asset_path);
+						compile_shader_forupdate_step.AddComponent<int>("shader_type", shader_type);
+						compile_shader_forupdate_step.AddComponent<DrawSpace::Interface::Renderer*>("Renderer", m_renderer);
+
+						compile_shader_forupdate_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+
+							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+							int shader_type{ p_step.GetComponent<int>("shader_type")->getPurpose() };
+
+							DrawSpace::Interface::Renderer* renderer{ p_step.GetComponent<DrawSpace::Interface::Renderer*>("Renderer")->getPurpose() };
+
+							dsstring final_asset_dir{ p_step.GetComponent<dsstring>("final_asset_dir")->getPurpose() };
+							dsstring asset_path{ p_step.GetComponent<dsstring>("asset_path")->getPurpose() };
+
+							resource_system->NotifyEvent(SHADER_COMPILATION, final_asset_path);
+
+							const dsstring task_id{ final_asset_path };
+
+							CompileShaderTask* task = _DRAWSPACE_NEW_(CompileShaderTask, CompileShaderTask);
+
+							task->SetTargetDescr(task_id);
+							task->SetShaderText(text, text_size, shader_type);
+							task->SetShaderDirs(final_asset_dir, asset_path);
+							task->SetRenderer(renderer);
+
+							p_step.SetTask(task);
+						});
+
+						compile_shader_forupdate_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+
+							CompileShaderTask* task{ static_cast<CompileShaderTask*>(p_step.GetTask()) };
+							if (task->Failed())
+							{
+								_DSEXCEPTION("compile_shader_forupdate_step Failed for shader : " + final_asset_path + dsstring(" reason : ") + task->GetCompilationError());
+							}
+
+							// get blob
+							long bc_length{ task->GetShaderByteCodeLength() };
+							void* bc{ task->GetShaderByteCode() };
+
+							_DRAWSPACE_DELETE_(task);
+
+							p_seq.GetStep("updateShaderStep").AddComponent<void*>("bc", bc);
+							p_seq.GetStep("updateShaderStep").AddComponent<long>("bc_length", bc_length);
+
+							dsstring hash_shader { p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+
+
+							p_seq.GetStep("updateShaderStep").AddComponent<dsstring>("hash_shader", hash_shader);
+
+							p_seq.SetCurrentStep("updateShaderStep");
+						});
+
+
+						update_shaderbc_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						update_shaderbc_step.AddComponent<dsstring>("shader_id", shader_id);
+						update_shaderbc_step.AddComponent<std::map<dsstring, Blob>*>("&m_shadersCache", &m_shadersCache);
+
+						update_shaderbc_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+
+							long bc_length{ p_step.GetComponent<long>("bc_length")->getPurpose() };
+							void* bc{ p_step.GetComponent<void*>("bc")->getPurpose() };
+
+							const dsstring task_id{ final_asset_path };
+
+							UpdateBCFilesTask* task = _DRAWSPACE_NEW_(UpdateBCFilesTask, UpdateBCFilesTask);
+
+							task->SetTargetDescr(task_id);
+							task->SetShaderId(shader_id);
+							task->SetHash(hash_shader);
+							task->SetBC(bc, bc_length);
+
+							p_step.SetTask(task);
+						});
+
+						update_shaderbc_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
+							UpdateBCFilesTask* task{ static_cast<UpdateBCFilesTask*>(p_step.GetTask()) };
+
+							Blob blob;
+							long size = { p_step.GetComponent<long>("bc_length")->getPurpose() };
+							void* data = { p_step.GetComponent<void*>("bc")->getPurpose() };
+							blob.data = data;
+							blob.size = size;
+
+							// update cache
+							(*shadersCache)[final_asset_path] = blob;
+
+							_DRAWSPACE_DELETE_(task);
+							p_seq.DeclareCompleted(); // end of sequence :)
+						});
+
 
 						RunnerSequence sequence;
 
 						sequence.RegisterStep(dsstring("loadShaderStep"), load_shader_step);
 						sequence.RegisterStep(dsstring("readShaderMD5Step"), read_shader_md5_step);
 						sequence.RegisterStep(dsstring("loadShaderbcStep"), load_shaderbc_step);
+						sequence.RegisterStep(dsstring("compileShaderForUpdateStep"), compile_shader_forupdate_step);
+						sequence.RegisterStep(dsstring("updateShaderStep"), update_shaderbc_step);
 
 						sequence.SetCurrentStep(dsstring("loadShaderStep"));
 
