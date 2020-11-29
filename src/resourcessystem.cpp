@@ -92,7 +92,6 @@ void ResourcesSystem::notify_event(ResourceEvent p_event, const dsstring& p_path
 	{
 		{ BLOB_LOAD, "BLOB_LOAD"},
 		{ BLOB_LOADED, "BLOB_LOADED"},
-		{ ASSET_SETLOADEDBLOB, "ASSET_SETLOADEDBLOB"},
 		{ SHADERCACHE_CREATION, "SHADERCACHE_CREATION"},
 		{ SHADER_COMPILATION, "SHADER_COMPILATION"},
 		{ SHADER_COMPILED, "SHADER_COMPILED"},
@@ -512,6 +511,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						compile_shader_step.AddComponent<dsstring>("asset_path", asset_path);
 						compile_shader_step.AddComponent<int>("shader_type", shader_type);
 						compile_shader_step.AddComponent<DrawSpace::Interface::Renderer*>("Renderer", m_renderer);
+						
 
 						compile_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
@@ -544,6 +544,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						compile_shader_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
 							CompileShaderTask* task{ static_cast<CompileShaderTask*>(p_step.GetTask()) };
 							if (task->Failed())
@@ -557,6 +558,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							_DRAWSPACE_DELETE_(task);
 
+							resource_system->NotifyEvent(SHADER_COMPILED, final_asset_path);
+
 							p_seq.GetStep("updateShaderStep").AddComponent<void*>("bc", bc);
 							p_seq.GetStep("updateShaderStep").AddComponent<long>("bc_length", bc_length);
 
@@ -566,6 +569,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							p_seq.GetStep("updateShaderStep").AddComponent<dsstring>("hash_shader", hash_shader);
 
 							p_seq.SetCurrentStep("updateShaderStep");
+							
 						});
 
 
@@ -1540,7 +1544,6 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 				Blob blob{ bc, bc_length };
 				m_shadersCache[p_final_asset_path] = blob;
-				notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
 			
 			}
 
@@ -1580,7 +1583,6 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 			Blob blob{ bc, bc_length };
 			m_shadersCache[p_final_asset_path] = blob;
-			notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
 
 			p_shader->SetData(bc, bc_length);
 
@@ -1622,7 +1624,6 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 		Blob blob{ bc, bc_length };
 		m_shadersCache[p_final_asset_path] = blob;
-		notify_event(ASSET_SETLOADEDBLOB, p_final_asset_path);
 
 		p_shader->SetData(bc, bc_length);
 	}

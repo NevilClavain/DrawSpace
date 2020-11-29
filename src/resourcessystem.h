@@ -84,7 +84,6 @@ public:
     {
         BLOB_LOAD,
         BLOB_LOADED,
-        ASSET_SETLOADEDBLOB,
         SHADERCACHE_CREATION,
         SHADER_COMPILATION,
         SHADER_COMPILED,
