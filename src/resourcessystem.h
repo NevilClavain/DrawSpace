@@ -365,6 +365,30 @@ private:
 
     };
 
+    struct CreateDirectoryTask : public Interface::ITask
+    {
+    private:
+
+        dsstring m_shader_id;
+
+    public:
+
+        CreateDirectoryTask() : ITask("CREATEDIRECTORY", "")
+        {
+        }
+
+        inline void Execute(void)
+        {
+            dsstring path{ bcCacheName + dsstring("\\") + m_shader_id.c_str() };
+            DrawSpace::Utils::FileSystem::CreateDirectory(path);
+        }
+
+        inline void SetShaderId(const dsstring& p_shader_id)
+        {
+            m_shader_id = p_shader_id;
+        }
+    };
+
 
 
     static dsstring                                                     m_textures_rootpath;
