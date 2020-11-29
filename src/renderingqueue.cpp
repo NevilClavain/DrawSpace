@@ -85,11 +85,13 @@ bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
 
 void RenderingQueue::Draw( void )
 {
+    /*
     if( !m_ready )
     {
 		m_status = ERROR_NOTREADY;
 		return;
     }
+    */
 
     m_switches_cost = 0;
 
@@ -97,6 +99,12 @@ void RenderingQueue::Draw( void )
 
     if( m_target )
     {
+        if (!m_ready)
+        {
+            m_status = ERROR_NOTREADY;
+            return;
+        }
+
         void* texture_render_data = m_target->GetRenderData();
         if( NULL == texture_render_data )
         {
@@ -118,87 +126,97 @@ void RenderingQueue::Draw( void )
         renderer->ClearScreen( m_target_clear_color_r, m_target_clear_color_g, m_target_clear_color_b, m_target_clear_color_a );
     }
 
-    for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
+    if (!m_ready)
     {
-        Operation curr_operation = (*it);
+        m_status = ERROR_NOTREADY;
+        return;
+    }
+    else
+    {
 
-        switch( curr_operation.type )
+
+        for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
         {
-            case SET_TEXTURE:
+            Operation curr_operation = (*it);
 
-                renderer->SetTexture( curr_operation.data, curr_operation.texture_stage );
-                m_switches_cost++;
-                break;
+            switch( curr_operation.type )
+            {
+                case SET_TEXTURE:
 
-            case UNSET_TEXTURE:
+                    renderer->SetTexture( curr_operation.data, curr_operation.texture_stage );
+                    m_switches_cost++;
+                    break;
 
-                renderer->UnsetTexture( curr_operation.texture_stage );
-                m_switches_cost++;
-                break;
+                case UNSET_TEXTURE:
+
+                    renderer->UnsetTexture( curr_operation.texture_stage );
+                    m_switches_cost++;
+                    break;
 
 
-            case SET_VERTEXTEXTURE:
+                case SET_VERTEXTEXTURE:
 
-                renderer->SetVertexTexture( curr_operation.data, curr_operation.texture_stage );
-                m_switches_cost++;
-                break;
+                    renderer->SetVertexTexture( curr_operation.data, curr_operation.texture_stage );
+                    m_switches_cost++;
+                    break;
 
-            case UNSET_VERTEXTEXTURE:
+                case UNSET_VERTEXTEXTURE:
 
-                renderer->UnsetVertexTexture( curr_operation.texture_stage );
-                m_switches_cost++;
-                break;
+                    renderer->UnsetVertexTexture( curr_operation.texture_stage );
+                    m_switches_cost++;
+                    break;
 
-            case SET_SHADERS:
+                case SET_SHADERS:
 
-                renderer->SetShaders( curr_operation.data );
-                m_switches_cost++;
-                break;
+                    renderer->SetShaders( curr_operation.data );
+                    m_switches_cost++;
+                    break;
 
-            case SET_RENDERSTATES_IN:
+                case SET_RENDERSTATES_IN:
 
-                renderer->ApplyRenderStatesIn( curr_operation.data );
-                m_switches_cost++;
-                break;
+                    renderer->ApplyRenderStatesIn( curr_operation.data );
+                    m_switches_cost++;
+                    break;
 
-            case SET_RENDERSTATES_OUT:
+                case SET_RENDERSTATES_OUT:
 
-                renderer->ApplyRenderStatesOut( curr_operation.data );
-                m_switches_cost++;
-                break;
+                    renderer->ApplyRenderStatesOut( curr_operation.data );
+                    m_switches_cost++;
+                    break;
 
-            case SET_MESHE:
+                case SET_MESHE:
 
-                renderer->SetMeshe( curr_operation.data );
-                m_switches_cost++;
-                break;
+                    renderer->SetMeshe( curr_operation.data );
+                    m_switches_cost++;
+                    break;
 
-            case SET_SHADERS_PARAMS:
-                {
-                    if( curr_operation.shader_params->vector )
+                case SET_SHADERS_PARAMS:
                     {
-                        renderer->SetFxShaderParams( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->param_values );
+                        if( curr_operation.shader_params->vector )
+                        {
+                            renderer->SetFxShaderParams( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->param_values );
+                        }
+                        else
+                        {
+                            renderer->SetFxShaderMatrix( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->mat );
+                        }
                     }
-                    else
+                    break;
+
+			    case SET_SHADERS_ARRAY_PARAMS:
+				    {					
+					    renderer->SetShaderVectorBuffer(curr_operation.shader_array_param->shader_index, curr_operation.shader_array_param->begin_register, curr_operation.shader_array_param->array);
+				    }
+				    break;
+
+                case DRAW_NODE:
+
+                    if( curr_operation.node->m_drawing_enabled )
                     {
-                        renderer->SetFxShaderMatrix( curr_operation.shader_params->shader_index, curr_operation.shader_params->param_register, curr_operation.shader_params->mat );
+                        curr_operation.node->OnDraw();
                     }
-                }
-                break;
-
-			case SET_SHADERS_ARRAY_PARAMS:
-				{					
-					renderer->SetShaderVectorBuffer(curr_operation.shader_array_param->shader_index, curr_operation.shader_array_param->begin_register, curr_operation.shader_array_param->array);
-				}
-				break;
-
-            case DRAW_NODE:
-
-                if( curr_operation.node->m_drawing_enabled )
-                {
-                    curr_operation.node->OnDraw();
-                }
-                break;
+                    break;
+            }
         }
     }
 
