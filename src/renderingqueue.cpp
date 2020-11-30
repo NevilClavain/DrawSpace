@@ -85,14 +85,6 @@ bool RenderingQueue::nodes_comp( RenderingNode* p_n1, RenderingNode* p_n2 )
 
 void RenderingQueue::Draw( void )
 {
-    /*
-    if( !m_ready )
-    {
-		m_status = ERROR_NOTREADY;
-		return;
-    }
-    */
-
     m_switches_cost = 0;
 
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
@@ -133,8 +125,6 @@ void RenderingQueue::Draw( void )
     }
     else
     {
-
-
         for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
         {
             Operation curr_operation = (*it);
