@@ -25,6 +25,9 @@
 #pragma once
 
 #include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+
 
 #include "systems.h"
 #include "entitynodegraph.h"
@@ -157,6 +160,143 @@ private:
             return m_data;
         }
     };
+
+
+    struct LoadFileToAssimpTask : public Interface::ITask
+    {
+    private:
+
+        bool                                m_failure;
+        dsstring                            m_err_descr;
+
+        dsstring                            m_final_asset_path;
+
+        DrawSpace::Core::Meshe*             m_target_meshe;
+        const aiScene*                      m_scene{ nullptr };
+        aiMesh**                            m_meshes{ nullptr };
+        int                                 m_nb_meshes{ 0 };
+        aiNode*                             m_root{ nullptr };
+
+    public:
+
+        LoadFileToAssimpTask() : ITask("LOADFILETOASSIMP", "")
+        {
+        }
+
+        void Execute(void)
+        {
+            long size;
+            void* data = Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size);
+            if (data)
+            {
+                m_failure = false;
+
+                Assimp::Importer* importer = new Assimp::Importer();
+                
+                unsigned int flags = aiProcess_Triangulate |
+                    aiProcess_JoinIdenticalVertices |
+                    aiProcess_FlipUVs |
+                    aiProcess_SortByPType;
+
+                DrawSpace::Core::Meshe::NormalesGenerationMode normales_gen_mode = m_target_meshe->GetNGenerationMode();
+                DrawSpace::Core::Meshe::TangentBinormalesGenerationMode tb_gen_mode = m_target_meshe->GetTBGenerationMode();
+                    
+                if (DrawSpace::Core::Meshe::NORMALES_AUTO == normales_gen_mode || DrawSpace::Core::Meshe::NORMALES_FROMLOADER == normales_gen_mode)
+                {
+                    flags |= aiProcess_GenNormals;
+                }
+                else if (DrawSpace::Core::Meshe::NORMALES_AUTO_SMOOTH == normales_gen_mode || DrawSpace::Core::Meshe::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
+                {
+                    flags |= aiProcess_GenSmoothNormals;
+                }
+
+                if (DrawSpace::Core::Meshe::TB_AUTO == tb_gen_mode || DrawSpace::Core::Meshe::TB_FROMLOADER == tb_gen_mode)
+                {
+                    flags |= aiProcess_CalcTangentSpace;
+                }
+
+                const aiScene* scene = importer->ReadFileFromMemory(data, size, flags);
+                if (scene)
+                {
+                    if (!scene->HasMeshes())
+                    {
+                        m_failure = true;
+                        m_err_descr = dsstring("scene has no meshes : ") + m_final_asset_path;
+                    }
+
+                    aiMesh** meshes;
+
+                    int nb_meshes;
+                    aiNode* root;
+
+                    meshes = scene->mMeshes;
+                    nb_meshes = scene->mNumMeshes;
+                    root = scene->mRootNode;
+
+                    if (!root)
+                    {
+                        m_failure = true;
+                        m_err_descr = dsstring("No root found in assimp scene : ") + m_final_asset_path;
+                    }
+
+                    m_meshes = meshes;
+                    m_scene = scene;
+                    m_root = root;
+                    m_nb_meshes = nb_meshes;
+                }
+                else
+                {
+                    m_failure = true;
+                    m_err_descr = dsstring("No scene in file : ") + m_final_asset_path;
+                }
+
+                _DRAWSPACE_DELETE_N_(data);
+                delete importer;
+
+            }
+            else
+            {
+                m_failure = true;
+                m_err_descr = dsstring("LoadAndAllocBinaryFile failure : ") + m_final_asset_path;
+            }
+        }
+
+        inline void SetFinalAssetPath(const dsstring& p_final_asset_path)
+        {
+            m_final_asset_path = p_final_asset_path;
+        }
+
+        inline void SetTargetMeshe(DrawSpace::Core::Meshe* p_meshe)
+        {
+            m_target_meshe = p_meshe;
+        }
+
+        inline bool Failed(void) const
+        {
+            return m_failure;
+        }
+
+        inline const aiScene* GetScene(void) const
+        {
+            return m_scene;
+        }
+
+        inline aiMesh** GetMeshes(void) const
+        {
+            return m_meshes;
+        }
+
+        inline int GetNbMeshes(void) const
+        {
+            return m_nb_meshes;
+        }
+
+        inline aiNode* GetRootNode(void) const
+        {
+            return m_root;
+        }
+    };
+
 
 
     struct ReadShaderMD5Task : public Interface::ITask

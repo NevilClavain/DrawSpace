@@ -34,8 +34,6 @@
 #include "shader.h"
 #include "meshe.h"
 
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
 
 #include "renderer.h"
 #include "plugin.h"
@@ -694,14 +692,88 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {
+				ResourcesAspect::MeshesFileDescription mesheFileDescription;
 
+				dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
+				dsstring meshe_id = std::get<2>(e->getPurpose());
 
+				aiMesh** meshes;
+				std::vector<dsstring> meshes_node_owner_names; // associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
 
+				int nb_meshes;
+				aiNode* root;
+				const aiScene* scene;
 
+				if (!m_runner_system.HasSequence(final_asset_path))
+				{
+					// check if already in cache
+					if (m_meshesCache.find(final_asset_path) == m_meshesCache.end())
+					{
+						// if not, setup a new sequence
 
+						RunnerSequenceStep load_meshes_step;
 
+						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
 
+						load_meshes_step.AddComponent<std::map<dsstring, bool>*>("&m_asset_loading_state", asset_loading_state);
+						load_meshes_step.AddComponent<bool*>("&m_new_asset", &m_new_asset);
+						load_meshes_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						load_meshes_step.AddComponent<Meshe*>("target_meshe", target_meshe);
+						load_meshes_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
 
+						load_meshes_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto new_asset{ p_step.GetComponent<bool*>("&m_new_asset")->getPurpose() };
+							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
+							auto target_meshe{ p_step.GetComponent<Meshe*>("target_meshe")->getPurpose() };
+							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+
+							(*asset_loading_state)[final_asset_path] = false;
+							*new_asset = true;
+
+							const dsstring task_id{ final_asset_path };
+
+							LoadFileToAssimpTask* task =_DRAWSPACE_NEW_(LoadFileToAssimpTask, LoadFileToAssimpTask);
+							task->SetTargetDescr(task_id);
+							task->SetFinalAssetPath(final_asset_path);
+							task->SetTargetMeshe(target_meshe);
+							p_step.SetTask(task);
+
+							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
+
+						});
+
+						load_meshes_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+						{
+							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							
+							resource_system->NotifyEvent(BLOB_LOADED, final_asset_path);
+						});
+
+						RunnerSequence sequence;
+
+						sequence.RegisterStep(dsstring("loadMeshesStep"), load_meshes_step);
+
+						sequence.SetCurrentStep(dsstring("loadMeshesStep"));
+						m_runner_system.RegisterSequence(final_asset_path, sequence);
+					}
+					else
+					{
+
+					}
+
+				}
+				else
+				{
+					// Check if sequence completed
+
+					if (m_runner_system.IsSequenceCompleted(final_asset_path))
+					{
+
+					}
+				}
 
 
 
@@ -717,7 +789,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
                 dsstring meshe_id = std::get<2>(e->getPurpose());
 			      
 				aiMesh** meshes;
-				std::vector<dsstring> meshes_node_owner_names; // associ� a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node propri�taire du meshes[i]
+				std::vector<dsstring> meshes_node_owner_names; // associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
 
 				int nb_meshes;
 				aiNode* root;
