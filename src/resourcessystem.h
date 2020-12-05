@@ -173,9 +173,7 @@ private:
 
         DrawSpace::Core::Meshe*             m_target_meshe;
         const aiScene*                      m_scene{ nullptr };
-        aiMesh**                            m_meshes{ nullptr };
-        int                                 m_nb_meshes{ 0 };
-        aiNode*                             m_root{ nullptr };
+        Assimp::Importer*                   m_importer{ nullptr };
 
     public:
 
@@ -239,10 +237,7 @@ private:
                         m_err_descr = dsstring("No root found in assimp scene : ") + m_final_asset_path;
                     }
 
-                    m_meshes = meshes;
                     m_scene = scene;
-                    m_root = root;
-                    m_nb_meshes = nb_meshes;
                 }
                 else
                 {
@@ -250,8 +245,8 @@ private:
                     m_err_descr = dsstring("No scene in file : ") + m_final_asset_path;
                 }
 
-                _DRAWSPACE_DELETE_N_(data);
-                delete importer;
+                _DRAWSPACE_DELETE_N_(data);                
+                m_importer = importer;
 
             }
             else
@@ -281,19 +276,9 @@ private:
             return m_scene;
         }
 
-        inline aiMesh** GetMeshes(void) const
+        inline Assimp::Importer* GetImporter(void) const
         {
-            return m_meshes;
-        }
-
-        inline int GetNbMeshes(void) const
-        {
-            return m_nb_meshes;
-        }
-
-        inline aiNode* GetRootNode(void) const
-        {
-            return m_root;
+            return m_importer;
         }
     };
 
@@ -529,6 +514,61 @@ private:
     };
 
 
+    struct FillMeshesOwnerNamesTask : public Interface::ITask
+    {
+    private:
+
+        aiNode*                 m_root{ nullptr };
+        std::vector<dsstring>   m_meshes_node_owner_names;
+        int                     m_nb_meshes;
+
+
+        void fill_scene_node(aiNode* p_ai_node)
+        {
+            if (p_ai_node->mNumMeshes > 0)
+            {
+                for (unsigned int i = 0; i < p_ai_node->mNumMeshes; i++)
+                {
+                    int index = p_ai_node->mMeshes[i];
+                    m_meshes_node_owner_names[index] = dsstring(p_ai_node->mName.C_Str());
+                }
+            }
+
+            for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
+            {
+                fill_scene_node(p_ai_node->mChildren[i]);
+            }
+        }
+       
+    public:
+
+        FillMeshesOwnerNamesTask() : ITask("FILLMESHESOWNERNAMES", "")
+        {
+        }
+
+        inline void Execute(void)
+        {
+            m_meshes_node_owner_names.resize(m_nb_meshes);
+            fill_scene_node(m_root);
+        }
+
+        void SetNbMeshes(int p_nb_meshes)
+        {
+            m_nb_meshes = p_nb_meshes;
+        }
+
+        void SetRoot(aiNode* p_root)
+        {
+            m_root = p_root;
+        }
+
+        std::vector<dsstring> GetNodesNamesList(void) const
+        {
+            return m_meshes_node_owner_names;
+        }
+    };
+
+
 
     static dsstring                                                     m_textures_rootpath;
 
@@ -569,10 +609,6 @@ private:
 
 	// recusive
 	void load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, Aspect::AnimationsAspect::Node>& p_node_table);
-
-    // recursive
-    void dump_assimp_scene_node(aiNode* p_ai_node, int depth, Aspect::ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names);
-
     
     template<typename T>
     void launchAssetLoadingInRunner(const dsstring& p_final_asset_path)
@@ -639,6 +675,8 @@ public:
     static void SetShadersRootPath(const dsstring& p_path);
     static void SetMeshesRootPath(const dsstring& p_path);
 
+    // recursive
+    static void DumpAssimpSceneNode(aiNode* p_ai_node, int depth, DrawSpace::Logger::Sink* p_rs_logger);
 
 
 

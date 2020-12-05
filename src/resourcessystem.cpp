@@ -697,15 +697,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
 				dsstring meshe_id = std::get<2>(e->getPurpose());
 
-				aiMesh** meshes;
-				std::vector<dsstring> meshes_node_owner_names; // associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
-
-				int nb_meshes;
-				aiNode* root;
-				const aiScene* scene;
-
+				
+			
 				if (!m_runner_system.HasSequence(final_asset_path))
 				{
+					RunnerSequence sequence;
+
 					// check if already in cache
 					if (m_meshesCache.find(final_asset_path) == m_meshesCache.end())
 					{
@@ -720,6 +717,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_meshes_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_meshes_step.AddComponent<Meshe*>("target_meshe", target_meshe);
 						load_meshes_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
+						load_meshes_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
 
 						load_meshes_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
@@ -741,33 +739,164 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							p_step.SetTask(task);
 
 							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
-
+							
 						});
 
 						load_meshes_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+
+							auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
 							
+							LoadFileToAssimpTask* task{ static_cast<LoadFileToAssimpTask*>(p_step.GetTask()) };
+
+							(*meshesCache)[final_asset_path] = std::make_pair(task->GetImporter(), task->GetScene());
+							
+							_DRAWSPACE_DELETE_(task);
+
 							resource_system->NotifyEvent(BLOB_LOADED, final_asset_path);
+
+							p_seq.SetCurrentStep("fillMeshesDescriptionStep");
 						});
 
-						RunnerSequence sequence;
-
+						
 						sequence.RegisterStep(dsstring("loadMeshesStep"), load_meshes_step);
-
 						sequence.SetCurrentStep(dsstring("loadMeshesStep"));
-						m_runner_system.RegisterSequence(final_asset_path, sequence);
+						
 					}
 					else
 					{
-
+						sequence.SetCurrentStep(dsstring("fillMeshesDescriptionStep"));
 					}
 
+					//register next sequence
+
+					RunnerSequenceStep fill_meshes_description_step;
+
+					fill_meshes_description_step.AddComponent<dsstring>("filename", std::get<1>(e->getPurpose()));
+					fill_meshes_description_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
+					fill_meshes_description_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+					fill_meshes_description_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
+					
+					fill_meshes_description_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+					{
+						ResourcesAspect::MeshesFileDescription mesheFileDescription;
+
+						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
+						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+
+						const aiScene* scene{ (*meshesCache).at(final_asset_path).second };
+						
+
+						_DSTRACE((*rs_logger), dsstring("************************************SCENE INFOS***********************************"));
+						_DSTRACE((*rs_logger), dsstring("resources = ") << final_asset_path);
+						
+						_DSTRACE((*rs_logger), dsstring("scene HasMeshes ") << scene->HasMeshes());
+						_DSTRACE((*rs_logger), dsstring("scene num Meshes ") << scene->mNumMeshes);
+
+						_DSTRACE((*rs_logger), dsstring("scene HasTextures ") << scene->HasTextures());
+						_DSTRACE((*rs_logger), dsstring("scene num Textures ") << scene->mNumTextures);
+
+						_DSTRACE((*rs_logger), dsstring("scene HasMaterials ") << scene->HasMaterials());
+						_DSTRACE((*rs_logger), dsstring("scene num Materials ") << scene->mNumMaterials);
+
+						_DSTRACE((*rs_logger), dsstring("scene HasLights ") << scene->HasLights());
+						_DSTRACE((*rs_logger), dsstring("scene num Lights ") << scene->mNumLights);
+
+						_DSTRACE((*rs_logger), dsstring("scene HasCameras ") << scene->HasCameras());
+						_DSTRACE((*rs_logger), dsstring("scene num Cameras ") << scene->mNumCameras);
+
+						_DSTRACE((*rs_logger), dsstring("scene HasAnimations ") << scene->HasAnimations());
+						_DSTRACE((*rs_logger), dsstring("scene num Animations ") << scene->mNumAnimations);
+						
+						mesheFileDescription.file = p_step.GetComponent<dsstring>("filename")->getPurpose();
+						mesheFileDescription.has_meshes = scene->HasMeshes();
+						mesheFileDescription.num_meshes = scene->mNumMeshes;
+
+						mesheFileDescription.has_animations = scene->HasAnimations();
+						mesheFileDescription.num_animations = scene->mNumAnimations;
+
+						p_seq.AddComponent<ResourcesAspect::MeshesFileDescription>("mesheFileDescription", mesheFileDescription);
+
+						aiNode* root{ scene->mRootNode };
+
+						_DSTRACE((*rs_logger), dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
+
+						ResourcesSystem::DumpAssimpSceneNode(root, 1, rs_logger);
+
+						_DSTRACE((*rs_logger), dsstring("************************************NODE HIERARCHY END*************************************"));
+
+						const dsstring task_id{ final_asset_path };
+
+						FillMeshesOwnerNamesTask* task = _DRAWSPACE_NEW_(FillMeshesOwnerNamesTask, FillMeshesOwnerNamesTask);
+
+						task->SetTargetDescr(task_id);
+						task->SetNbMeshes(scene->mNumMeshes);
+						task->SetRoot(root);
+
+						p_step.SetTask(task);
+
+					});
+
+					fill_meshes_description_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+					{
+						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+
+						FillMeshesOwnerNamesTask* task{ static_cast<FillMeshesOwnerNamesTask*>(p_step.GetTask()) };
+
+						const aiScene* scene{ (*meshesCache).at(final_asset_path).second };
+
+						// associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
+						std::vector<dsstring> meshes_node_owner_names{ task->GetNodesNamesList() };
+
+						//p_seq.GetComponent< ResourcesAspect::MeshesFileDescription>("mesheFileDescription").getPurpose().
+
+						aiMesh** meshes{ scene->mMeshes };
+
+						// ICI : remplir les descriptions meshes a partir du tableau aiMesh** meshes;
+						for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+						{
+							ResourcesAspect::MesheDescription mesheDescription;
+							mesheDescription.node_id = meshes_node_owner_names[i];
+							mesheDescription.name = meshes[i]->mName.C_Str();
+							mesheDescription.has_positions = meshes[i]->HasPositions();
+							mesheDescription.has_faces = meshes[i]->HasFaces();
+							mesheDescription.has_normales = meshes[i]->HasNormals();
+							mesheDescription.has_tbn = meshes[i]->HasTangentsAndBitangents();
+							mesheDescription.num_bones = meshes[i]->mNumBones;
+							mesheDescription.num_vertices = meshes[i]->mNumVertices;
+							mesheDescription.num_faces = meshes[i]->mNumFaces;
+							mesheDescription.num_uvchannels = meshes[i]->GetNumUVChannels();
+
+							p_seq.GetComponent< ResourcesAspect::MeshesFileDescription>("mesheFileDescription")->getPurpose().meshes_descriptions.push_back(mesheDescription);
+						}
+						
+						_DRAWSPACE_DELETE_(task);
+
+					});
+
+					sequence.RegisterStep(dsstring("fillMeshesDescriptionStep"), fill_meshes_description_step);
+
+
+
+
+
+
+
+
+
+
+
+					m_runner_system.RegisterSequence(final_asset_path, sequence);
 				}
 				else
 				{
 					// Check if sequence completed
+
+					_asm nop
 
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
@@ -1056,30 +1185,21 @@ void ResourcesSystem::load_animations(const aiScene* p_scene, AnimationsAspect* 
 	}
 }
 
-void ResourcesSystem::dump_assimp_scene_node(aiNode* p_ai_node, int depth, ResourcesAspect::MeshesFileDescription& p_description, std::vector<dsstring>& p_meshes_node_owner_names)
+void ResourcesSystem::DumpAssimpSceneNode(aiNode* p_ai_node, int depth, DrawSpace::Logger::Sink* p_rs_logger)
 {
     dsstring spacing(depth, ' ');
-    _DSTRACE(rs_logger, spacing + dsstring("node : ") << p_ai_node->mName.C_Str() << " nb children : " << p_ai_node->mNumChildren);
-    _DSTRACE(rs_logger, spacing + dsstring("nb meshes : ") << p_ai_node->mNumMeshes);
+    _DSTRACE((*p_rs_logger), spacing + dsstring("node : ") << p_ai_node->mName.C_Str() << " nb children : " << p_ai_node->mNumChildren);
+    _DSTRACE((*p_rs_logger), spacing + dsstring("nb meshes : ") << p_ai_node->mNumMeshes);
 
-    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1);
-    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
-    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
-    _DSTRACE(rs_logger, spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
+    _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1);
+    _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
+    _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
+    _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
 
-	if (p_ai_node->mNumMeshes > 0)
-	{
-		for (unsigned int i = 0; i < p_ai_node->mNumMeshes; i++)
-		{
-			int index = p_ai_node->mMeshes[i];
-
-			p_meshes_node_owner_names[index] = dsstring( p_ai_node->mName.C_Str() );
-		}
-	}
 
     for( size_t i = 0; i < p_ai_node->mNumChildren; i++)
     {
-        dump_assimp_scene_node(p_ai_node->mChildren[i], depth+1, p_description, p_meshes_node_owner_names);
+		DumpAssimpSceneNode(p_ai_node->mChildren[i], depth+1, p_rs_logger);
     }
 }
 

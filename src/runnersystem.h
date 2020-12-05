@@ -72,7 +72,7 @@ public:
 };
 
 
-class RunnerSequence
+class RunnerSequence : public Core::ComponentContainer
 {
 public:
     enum class State
