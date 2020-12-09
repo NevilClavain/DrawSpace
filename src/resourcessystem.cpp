@@ -62,7 +62,6 @@ const dsstring ResourcesSystem::bcCodeFileName{ "bc.code" };
 
 
 ResourcesSystem::ResourcesSystem(RunnerSystem& p_runner) :
-m_new_asset(false),
 m_runner_system(p_runner)
 {
 	m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -172,7 +171,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
 
 						load_texture_step.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
-						load_texture_step.AddComponent< bool* >("&m_new_asset", &m_new_asset);
 						load_texture_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_texture_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
 						load_texture_step.AddComponent<std::map<dsstring, Blob>*>("&m_texturesCache", &m_texturesCache);
@@ -180,12 +178,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_texture_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto new_asset{ p_step.GetComponent<bool*>("&m_new_asset")->getPurpose() };
 							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
 							(*asset_loading_state)[final_asset_path] = false;
-							*new_asset = true;
 
 							const dsstring task_id{ final_asset_path };
 
@@ -293,7 +289,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 
 						load_shader_step.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
-						load_shader_step.AddComponent< bool* >("&m_new_asset", &m_new_asset);
 						load_shader_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_shader_step.AddComponent<dsstring>("shader_id", shader_id);
 						load_shader_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
@@ -303,12 +298,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto new_asset{ p_step.GetComponent<bool*>("&m_new_asset")->getPurpose() };
 							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
 							(*asset_loading_state)[final_asset_path] = false;
-							*new_asset = true;
 
 							const dsstring task_id{ final_asset_path };
 
@@ -710,7 +703,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
 
 						load_meshes_step.AddComponent<std::map<dsstring, bool>*>("&m_asset_loading_state", asset_loading_state);
-						load_meshes_step.AddComponent<bool*>("&m_new_asset", &m_new_asset);
 						load_meshes_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_meshes_step.AddComponent<Meshe*>("target_meshe", target_meshe);
 						load_meshes_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
@@ -719,13 +711,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_meshes_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto new_asset{ p_step.GetComponent<bool*>("&m_new_asset")->getPurpose() };
 							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
 							auto target_meshe{ p_step.GetComponent<Meshe*>("target_meshe")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
 							(*asset_loading_state)[final_asset_path] = false;
-							*new_asset = true;
 
 							const dsstring task_id{ final_asset_path };
 
@@ -1506,7 +1496,6 @@ void ResourcesSystem::ReleaseAssets(void)
     m_meshesCache.clear();
     m_texturesCache.clear();
 	m_asset_loading_state.clear();
-	m_new_asset = false;
 }
 
 void ResourcesSystem::ReleaseShaderAsset(const dsstring& p_asset)
@@ -1526,13 +1515,7 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
     p_texture->GetBasePath(asset_path);
     dsstring final_asset_path = compute_textures_final_path(asset_path);
 
-
-	//m_asset_loading_state[final_asset_path] = false;	
-	//m_new_asset = true;
-
     launchAssetLoadingInRunner<Texture>(final_asset_path);
-
-	//m_asset_loading_state.at(final_asset_path) = true;
 }
 
 void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
@@ -1542,8 +1525,6 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	dsstring final_asset_path = compute_shaders_final_path(asset_path);
 	dsstring final_asset_dir = compute_shaders_final_path("");
 
-	//m_asset_loading_state[final_asset_path] = false;
-	//m_new_asset = true;
 	if (p_shader->IsCompiled())
 	{
 		launchAssetLoadingInRunner<Shader>(final_asset_path);
@@ -1552,7 +1533,6 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	{
 		manage_shader_in_bccache(p_shader, asset_path, final_asset_path, final_asset_dir, p_shader_type);
 	}
-	//m_asset_loading_state.at(final_asset_path) = true;
 }
 
 void ResourcesSystem::check_bc_cache_presence(void) const
@@ -1740,6 +1720,11 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 void ResourcesSystem::check_all_assets_loaded(void)
 {
+	if (0 == m_asset_loading_state.size())
+	{
+		return;
+	}
+
 	// check if all is loaded
 	bool all_asset_loaded{ true };
 
@@ -1754,14 +1739,13 @@ void ResourcesSystem::check_all_assets_loaded(void)
 		}
 	}
 
-	if (all_asset_loaded && m_new_asset)
+	if (all_asset_loaded)
 	{
 		// send event -> all asset properly loaded
 
 		notify_event(ALL_ASSETS_LOADED, "");
 
 		// reset flag
-		m_new_asset = false;
 
 		m_asset_loading_state.clear();
 	}

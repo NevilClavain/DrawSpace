@@ -1010,7 +1010,7 @@ private:
     std::map<dsstring, Blob>                                            m_shadersCache;
     std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
 
-    bool                                                                m_new_asset;
+
     std::map<dsstring, bool>                                            m_asset_loading_state;
 
 	DrawSpace::Interface::Renderer*										m_renderer;
