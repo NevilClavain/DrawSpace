@@ -29,6 +29,7 @@ function( event, resource_path )
        evt_out = "compilation done :"..resource_path
     elseif event == ALL_ASSETS_LOADED then
        evt_out = "All assets loaded !"
+       rg:update_renderingqueues()
     else
        evt_out = "? : "..event       
     end

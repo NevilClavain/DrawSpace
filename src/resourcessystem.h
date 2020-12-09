@@ -1015,15 +1015,10 @@ private:
 
 	DrawSpace::Interface::Renderer*										m_renderer;
 
-    
+
     // list with all type of tasks
     std::set<dsstring>                                                  m_currenttasks;
-
     std::map<dsstring, LoadFileTask>                                    m_loadFile_tasks;
-    std::map<dsstring, ReadShaderMD5Task>                               m_readShaderMD5_tasks;
-
-    std::set<dsstring>                                                  m_finishedtasks_target;
-    std::map<dsstring, dsstring>                                        m_finishedtasks_action;
 
     RunnerSystem&                                                       m_runner_system;
     

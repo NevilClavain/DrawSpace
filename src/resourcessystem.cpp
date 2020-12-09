@@ -658,6 +658,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
 						loaded = true;
+
+						shader->SetCompilationFlag(true); //if shader was already in cache, its mandatory compiled
 					}
 				}
 				else
@@ -673,6 +675,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_asset_loading_state.at(final_asset_path) = true;
 
 						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
+						shader->SetCompilationFlag(true); //shader now contains compiled shader
 
 						m_runner_system.RemoveSequence(final_asset_path);
 					}
@@ -1524,10 +1527,12 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
     dsstring final_asset_path = compute_textures_final_path(asset_path);
 
 
-	m_asset_loading_state[final_asset_path] = false;
-	m_new_asset = true;
+	//m_asset_loading_state[final_asset_path] = false;	
+	//m_new_asset = true;
+
     launchAssetLoadingInRunner<Texture>(final_asset_path);
-	m_asset_loading_state.at(final_asset_path) = true;
+
+	//m_asset_loading_state.at(final_asset_path) = true;
 }
 
 void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
@@ -1537,8 +1542,8 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	dsstring final_asset_path = compute_shaders_final_path(asset_path);
 	dsstring final_asset_dir = compute_shaders_final_path("");
 
-	m_asset_loading_state[final_asset_path] = false;
-	m_new_asset = true;
+	//m_asset_loading_state[final_asset_path] = false;
+	//m_new_asset = true;
 	if (p_shader->IsCompiled())
 	{
 		launchAssetLoadingInRunner<Shader>(final_asset_path);
@@ -1547,7 +1552,7 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 	{
 		manage_shader_in_bccache(p_shader, asset_path, final_asset_path, final_asset_dir, p_shader_type);
 	}
-	m_asset_loading_state.at(final_asset_path) = true;
+	//m_asset_loading_state.at(final_asset_path) = true;
 }
 
 void ResourcesSystem::check_bc_cache_presence(void) const
@@ -1757,25 +1762,7 @@ void ResourcesSystem::check_all_assets_loaded(void)
 
 		// reset flag
 		m_new_asset = false;
+
+		m_asset_loading_state.clear();
 	}
 }
-
-/*
-void ResourcesSystem::check_finished_tasks(void)
-{
-	Threading::Runner* runner{ Threading::Runner::GetInstance() };
-
-	int nb_tasks_done{ runner->m_mailbox_out.GetBoxSize() };
-	
-	for (int i = 0; i < nb_tasks_done; ++i)
-	{
-
-		auto task_descr{ runner->m_mailbox_out.PopNext<std::pair<std::string, std::string>>(std::make_pair<dsstring, dsstring>("","")) };
-		_DSDEBUG(rs_logger, "receiving task done descriptions: " << task_descr.first << " " << task_descr.second );
-
-		m_finishedtasks_action[task_descr.second] = task_descr.first;
-		m_finishedtasks_target.insert(task_descr.second);
-
-	}
-}
-*/
