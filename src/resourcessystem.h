@@ -113,6 +113,7 @@ private:
         int     size;
     };
 
+    /*
     struct LoadFileTask : public Interface::ITask
     {
     private:
@@ -165,7 +166,7 @@ private:
             return m_data;
         }
     };
-
+    */
 
     struct LoadFileToAssimpTask : public Interface::ITask
     {
@@ -1018,7 +1019,7 @@ private:
 
     // list with all type of tasks
     std::set<dsstring>                                                  m_currenttasks;
-    std::map<dsstring, LoadFileTask>                                    m_loadFile_tasks;
+
 
     RunnerSystem&                                                       m_runner_system;
     
@@ -1034,22 +1035,30 @@ private:
 	// recusive
 	void load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, Aspect::AnimationsAspect::Node>& p_node_table);
     
+
     template<typename T>
-    void launchAssetLoadingInRunner(const dsstring& p_final_asset_path)
+    void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blobs, dsstring p_final_asset_path) const
     {
-        const dsstring task_id{ p_final_asset_path };
+        if (p_blobs.find(p_final_asset_path) == p_blobs.end())
+        {
+            Blob blob;
+            long size;
+            void* data;
 
-        LoadFileTask task;
-        task.SetTargetDescr(task_id);
-        task.SetActionDescr("LOADASSETFILE");
-        task.SetFinalAssetPath(p_final_asset_path);
+            // load it
+            data = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &size);
+            if (!data)
+            {
+                _DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);
+            }
+            blob.data = data;
+            blob.size = size;
 
-        m_loadFile_tasks[p_final_asset_path] = task;
-        m_currenttasks.insert(p_final_asset_path);
+            p_blobs[p_final_asset_path] = blob;
+        }
 
-        Threading::Runner* runner{ Threading::Runner::GetInstance() };
-        notify_event(BLOB_LOAD, p_final_asset_path);
-        runner->m_mailbox_in.Push<ITask*>(&m_loadFile_tasks.at(p_final_asset_path));
+        // update asset
+        p_asset->SetData(p_blobs.at(p_final_asset_path).data, p_blobs.at(p_final_asset_path).size);
     }
     
 

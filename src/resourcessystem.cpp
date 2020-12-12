@@ -38,6 +38,8 @@
 #include "misc_utils.h"
 #include "md5.h"
 
+#include "loadfiletask.h"
+
 #include "runnersystem.h"
 
 DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::GetInstance());
@@ -1515,7 +1517,7 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
     p_texture->GetBasePath(asset_path);
     dsstring final_asset_path = compute_textures_final_path(asset_path);
 
-    launchAssetLoadingInRunner<Texture>(final_asset_path);
+	updateAssetFromCache<Texture>(p_texture, m_texturesCache, final_asset_path);
 }
 
 void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
@@ -1527,7 +1529,7 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 
 	if (p_shader->IsCompiled())
 	{
-		launchAssetLoadingInRunner<Shader>(final_asset_path);
+		updateAssetFromCache<Shader>(p_shader, m_shadersCache, final_asset_path);
 	}
 	else
 	{
