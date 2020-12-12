@@ -211,8 +211,6 @@ ${CMAKE_SOURCE_DIR}/src/renderpassnodegraph.cpp
 ${CMAKE_SOURCE_DIR}/src/renderpassnodegraph.h
 )
 
-
-
 source_group(systems FILES
 ${CMAKE_SOURCE_DIR}/src/animationssystem.cpp
 ${CMAKE_SOURCE_DIR}/src/animationssystem.h
@@ -234,6 +232,8 @@ ${CMAKE_SOURCE_DIR}/src/transformsystem.cpp
 ${CMAKE_SOURCE_DIR}/src/transformsystem.h
 ${CMAKE_SOURCE_DIR}/src/runnersystem.cpp
 ${CMAKE_SOURCE_DIR}/src/runnersystem.h
+${CMAKE_SOURCE_DIR}/src/loadfiletask.cpp
+${CMAKE_SOURCE_DIR}/src/loadfiletask.h
 )
 
 source_group(threading FILES
