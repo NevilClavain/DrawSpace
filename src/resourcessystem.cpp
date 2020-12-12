@@ -608,18 +608,25 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							p_seq.DeclareCompleted(); // end of sequence :)
 						});
 
+
+						create_directory_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						create_directory_step.AddComponent<dsstring>("shader_id", shader_id);
 
 						create_directory_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };							
+							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+
+							const dsstring task_id{ final_asset_path };
 							CreateDirectoryTask* task = _DRAWSPACE_NEW_(CreateDirectoryTask, CreateDirectoryTask);
+							task->SetTargetDescr(task_id);
 							task->SetShaderId(shader_id);
 							p_step.SetTask(task);
 						});
 
 						create_directory_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
+							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
 							CreateDirectoryTask* task{ static_cast<CreateDirectoryTask*>(p_step.GetTask()) };
 							_DRAWSPACE_DELETE_(task);
 
