@@ -39,6 +39,7 @@
 #include "md5.h"
 
 #include "loadfiletask.h"
+#include "loadfiletoassimptask.h"
 
 #include "runnersystem.h"
 

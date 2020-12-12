@@ -234,6 +234,8 @@ ${CMAKE_SOURCE_DIR}/src/runnersystem.cpp
 ${CMAKE_SOURCE_DIR}/src/runnersystem.h
 ${CMAKE_SOURCE_DIR}/src/loadfiletask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadfiletask.h
+${CMAKE_SOURCE_DIR}/src/loadfiletoassimptask.cpp
+${CMAKE_SOURCE_DIR}/src/loadfiletoassimptask.h
 )
 
 source_group(threading FILES
