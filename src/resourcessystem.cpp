@@ -40,6 +40,10 @@
 
 #include "loadfiletask.h"
 #include "loadfiletoassimptask.h"
+#include "readshadermd5task.h"
+#include "compileshadertask.h"
+#include "createdirectorytask.h"
+#include "updatebcfilestask.h"
 
 #include "runnersystem.h"
 

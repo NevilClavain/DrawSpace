@@ -236,6 +236,14 @@ ${CMAKE_SOURCE_DIR}/src/loadfiletask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadfiletask.h
 ${CMAKE_SOURCE_DIR}/src/loadfiletoassimptask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadfiletoassimptask.h
+${CMAKE_SOURCE_DIR}/src/readshadermd5task.cpp
+${CMAKE_SOURCE_DIR}/src/readshadermd5task.h
+${CMAKE_SOURCE_DIR}/src/compileshadertask.cpp
+${CMAKE_SOURCE_DIR}/src/compileshadertask.h
+${CMAKE_SOURCE_DIR}/src/createdirectorytask.cpp
+${CMAKE_SOURCE_DIR}/src/createdirectorytask.h
+${CMAKE_SOURCE_DIR}/src/updatebcfilestask.cpp
+${CMAKE_SOURCE_DIR}/src/updatebcfilestask.h
 )
 
 source_group(threading FILES
