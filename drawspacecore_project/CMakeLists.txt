@@ -244,6 +244,8 @@ ${CMAKE_SOURCE_DIR}/src/createdirectorytask.cpp
 ${CMAKE_SOURCE_DIR}/src/createdirectorytask.h
 ${CMAKE_SOURCE_DIR}/src/updatebcfilestask.cpp
 ${CMAKE_SOURCE_DIR}/src/updatebcfilestask.h
+${CMAKE_SOURCE_DIR}/src/fillmeshesownernamestask.cpp
+${CMAKE_SOURCE_DIR}/src/fillmeshesownernamestask.h
 )
 
 source_group(threading FILES

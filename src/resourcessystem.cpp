@@ -44,6 +44,7 @@
 #include "compileshadertask.h"
 #include "createdirectorytask.h"
 #include "updatebcfilestask.h"
+#include "fillmeshesownernamestask.h"
 
 #include "runnersystem.h"
 

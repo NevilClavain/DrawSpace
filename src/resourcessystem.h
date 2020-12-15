@@ -113,60 +113,6 @@ private:
         int     size;
     };
 
-    struct FillMeshesOwnerNamesTask : public Interface::ITask
-    {
-    private:
-
-        aiNode*                 m_root{ nullptr };
-        std::vector<dsstring>   m_meshes_node_owner_names;
-        int                     m_nb_meshes;
-
-
-        inline void fill_scene_node(aiNode* p_ai_node)
-        {
-            if (p_ai_node->mNumMeshes > 0)
-            {
-                for (unsigned int i = 0; i < p_ai_node->mNumMeshes; i++)
-                {
-                    int index = p_ai_node->mMeshes[i];
-                    m_meshes_node_owner_names[index] = dsstring(p_ai_node->mName.C_Str());
-                }
-            }
-
-            for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
-            {
-                fill_scene_node(p_ai_node->mChildren[i]);
-            }
-        }
-       
-    public:
-
-        FillMeshesOwnerNamesTask() : ITask("FILLMESHESOWNERNAMES", "")
-        {
-        }
-
-        inline void Execute(void)
-        {
-            m_meshes_node_owner_names.resize(m_nb_meshes);
-            fill_scene_node(m_root);
-        }
-
-        inline void SetNbMeshes(int p_nb_meshes)
-        {
-            m_nb_meshes = p_nb_meshes;
-        }
-
-        inline void SetRoot(aiNode* p_root)
-        {
-            m_root = p_root;
-        }
-
-        inline std::vector<dsstring> GetNodesNamesList(void) const
-        {
-            return m_meshes_node_owner_names;
-        }
-    };
-
     struct LoadAnimationsTask : public Interface::ITask
     {
     private:
