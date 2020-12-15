@@ -969,9 +969,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					build_meshe_step.AddComponent<ResourcesAspect*>("resources_aspect", resources_aspect);
 
 					build_meshe_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
+					build_meshe_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
 
 					build_meshe_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
+						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
 						Entity* entity{ p_step.GetComponent<Entity*>("entity")->getPurpose() };
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
@@ -988,6 +990,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						{
 							_DSEXCEPTION("cannot locate meshe objet " + meshe_id);
 						}
+
+						ResourcesSystem::DumpMeshe(meshe_node, meshes, rs_logger);
 
 						const dsstring task_id{ final_asset_path };
 
@@ -1169,6 +1173,50 @@ Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_m
 	mat(3, 3) = p_in_mat.d4;
 
 	return mat;
+}
+
+void ResourcesSystem::DumpMeshe(aiNode* p_ai_node, aiMesh** p_meshes, DrawSpace::Logger::Sink* p_rs_logger)
+{
+	unsigned int nb_meshes = p_ai_node->mNumMeshes;
+
+	_DSTRACE((*p_rs_logger), dsstring("************************************MESHE INFOS***********************************"));
+	dsstring name = p_ai_node->mName.C_Str();
+	_DSTRACE((*p_rs_logger), dsstring("owner node = ") + name);
+	_DSTRACE((*p_rs_logger), dsstring("nb_meshes = ") << nb_meshes);
+	
+	unsigned int* indexes = p_ai_node->mMeshes;
+	for (unsigned int i = 0; i < nb_meshes; i++)
+	{
+		aiMesh* meshe = p_meshes[indexes[i]];
+
+		_DSTRACE(rs_logger, dsstring(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MESHE ") << i );		
+		_DSTRACE(rs_logger, dsstring("name = ") << dsstring(meshe->mName.C_Str()));
+		_DSTRACE(rs_logger, dsstring("meshe HasPositions ") << meshe->HasPositions());
+		_DSTRACE(rs_logger, dsstring("meshe HasFaces ") << meshe->HasFaces());
+		_DSTRACE(rs_logger, dsstring("meshe HasNormals ") << meshe->HasNormals());
+		_DSTRACE(rs_logger, dsstring("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
+		_DSTRACE(rs_logger, dsstring("meshe NumUVChannels ") << meshe->GetNumUVChannels());
+		_DSTRACE(rs_logger, dsstring("meshe HasBones ") << meshe->HasBones());
+		_DSTRACE(rs_logger, dsstring("meshe NumBones ") << meshe->mNumBones);
+		_DSTRACE(rs_logger, dsstring("meshe NumFaces ") << meshe->mNumFaces);
+		_DSTRACE(rs_logger, dsstring("meshe NumVertices ") << meshe->mNumVertices);
+
+		for (size_t j = 0; j < meshe->mNumBones; j++)
+		{
+			aiBone* bone = meshe->mBones[j];
+
+			_DSTRACE(rs_logger, dsstring("Bone ") << j);
+			_DSTRACE(rs_logger, dsstring("  -> name = ") << bone->mName.C_Str());
+			_DSTRACE(rs_logger, dsstring("  -> offsetMatrx"));
+			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
+			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
+			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
+			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
+
+		}
+	}
+
+	_DSTRACE((*p_rs_logger), dsstring("************************************MESHE INFOS END*******************************"));
 }
 
 void ResourcesSystem::build_meshe(Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Meshe* p_destination)

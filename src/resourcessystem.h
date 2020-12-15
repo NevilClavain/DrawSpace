@@ -704,6 +704,7 @@ public:
 
     // recursive
     static void DumpAssimpSceneNode(aiNode* p_ai_node, int depth, DrawSpace::Logger::Sink* p_rs_logger);
+    static void DumpMeshe(aiNode* p_ai_node, aiMesh** p_meshes, DrawSpace::Logger::Sink* p_rs_logger);
 
 
 
