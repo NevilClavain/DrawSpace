@@ -45,6 +45,7 @@
 #include "createdirectorytask.h"
 #include "updatebcfilestask.h"
 #include "fillmeshesownernamestask.h"
+#include "loadanimationstask.h"
 
 #include "runnersystem.h"
 

@@ -246,6 +246,8 @@ ${CMAKE_SOURCE_DIR}/src/updatebcfilestask.cpp
 ${CMAKE_SOURCE_DIR}/src/updatebcfilestask.h
 ${CMAKE_SOURCE_DIR}/src/fillmeshesownernamestask.cpp
 ${CMAKE_SOURCE_DIR}/src/fillmeshesownernamestask.h
+${CMAKE_SOURCE_DIR}/src/loadanimationstask.cpp
+${CMAKE_SOURCE_DIR}/src/loadanimationstask.h
 )
 
 source_group(threading FILES
