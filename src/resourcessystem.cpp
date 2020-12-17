@@ -46,6 +46,7 @@
 #include "updatebcfilestask.h"
 #include "fillmeshesownernamestask.h"
 #include "loadanimationstask.h"
+#include "buildemeshetask.h"
 
 #include "runnersystem.h"
 

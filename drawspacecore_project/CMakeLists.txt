@@ -248,6 +248,8 @@ ${CMAKE_SOURCE_DIR}/src/fillmeshesownernamestask.cpp
 ${CMAKE_SOURCE_DIR}/src/fillmeshesownernamestask.h
 ${CMAKE_SOURCE_DIR}/src/loadanimationstask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadanimationstask.h
+${CMAKE_SOURCE_DIR}/src/buildemeshetask.cpp
+${CMAKE_SOURCE_DIR}/src/buildemeshetask.h
 )
 
 source_group(threading FILES
