@@ -136,12 +136,6 @@ private:
     dsstring compute_shaders_final_path(const dsstring& p_path) const;
     dsstring compute_meshes_final_path(const dsstring& p_path) const;
 
-    void build_meshe(Core::Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
-
-	// recusive
-	void load_scene_nodes_hierachy(aiNode* p_ai_node, int depth, std::map<dsstring, Aspect::AnimationsAspect::Node>& p_node_table);
-    
-
     template<typename T>
     void updateAssetFromCache(T* p_asset, std::map<dsstring, Blob>& p_blobs, dsstring p_final_asset_path) const
     {
@@ -167,22 +161,13 @@ private:
         p_asset->SetData(p_blobs.at(p_final_asset_path).data, p_blobs.at(p_final_asset_path).size);
     }
     
-
-	void load_animations(const aiScene* p_scene, Aspect::AnimationsAspect* p_anims_aspect);
-
 	void manage_shader_in_bccache(Core::Shader* p_shader, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type);
-
 	void check_bc_cache_presence(void) const;
-
 	void update_bc_md5file(const dsstring& p_path, const dsstring& p_hash);
-
 	void update_bc_codefile(const dsstring& p_path, void* p_bc, int p_size);
-
     void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
-
     void check_all_assets_loaded(void);
 
-    //void check_finished_tasks(void);
 
 public:
 
