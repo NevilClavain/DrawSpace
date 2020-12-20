@@ -142,10 +142,7 @@ void ResourcesSystem::SetMeshesRootPath(const dsstring& p_path)
 
 void ResourcesSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 {
-	//check_finished_tasks();
-
     p_entitygraph->AcceptSystemRootToLeaf( this );
-
 	check_all_assets_loaded();
 }
 
