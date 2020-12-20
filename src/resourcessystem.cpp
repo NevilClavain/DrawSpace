@@ -437,6 +437,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								// crc identical, can directly load bc code file...
 
 								p_seq.SetCurrentStep("loadShaderbcStep");
+
+								// and release shader source code...
+								void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
+								_DRAWSPACE_DELETE_N_(text);
 							}
 							else
 							{
@@ -565,6 +569,10 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							p_seq.GetStep("updateShaderStep").AddComponent<dsstring>("hash_shader", hash_shader);
 
 							p_seq.SetCurrentStep("updateShaderStep");
+
+							// and release shader source code...
+							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							_DRAWSPACE_DELETE_N_(text);
 							
 						});
 
