@@ -97,7 +97,8 @@ public:
 
     void DeclareCompleted(void);
 
-    bool IsCompleted(void);
+    bool IsCompleted(void) const;
+    bool HasStep(const dsstring& p_stepid) const;
 
     RunnerSequenceStep& GetStep(const dsstring& p_stepid);
 
@@ -125,8 +126,10 @@ public:
     void RegisterSequence(const dsstring& p_sequenceid, RunnerSequence& p_sequence);
     void RemoveSequence(const dsstring& p_sequenceid);
 
-    bool HasSequence(const dsstring& p_sequenceid);
-    bool IsSequenceCompleted(const dsstring& p_sequenceid);
+    RunnerSequence& GetSequence(const dsstring& p_sequenceid);
+
+    bool HasSequence(const dsstring& p_sequenceid) const;
+    bool IsSequenceCompleted(const dsstring& p_sequenceid) const;
 
     void StartupRunner(void);
     void ShutdownRunner(void);

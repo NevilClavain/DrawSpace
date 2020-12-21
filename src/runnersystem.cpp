@@ -127,9 +127,14 @@ void RunnerSequence::DeclareCompleted(void)
     m_state = State::COMPLETED;
 }
 
-bool RunnerSequence::IsCompleted(void)
+bool RunnerSequence::IsCompleted(void) const
 {
     return (m_state == State::COMPLETED);
+}
+
+bool RunnerSequence::HasStep(const dsstring& p_stepid) const
+{
+    return (m_steps.count(p_stepid) > 0 ? true : false);
 }
 
 RunnerSequenceStep& RunnerSequence::GetStep(const dsstring& p_stepid)
@@ -203,12 +208,24 @@ void RunnerSystem::RemoveSequence(const dsstring& p_sequenceid)
     }
 }
 
-bool RunnerSystem::HasSequence(const dsstring& p_sequenceid)
+RunnerSequence& RunnerSystem::GetSequence(const dsstring& p_sequenceid)
+{
+    if (m_sequences.count(p_sequenceid))
+    {
+        return m_sequences.at(p_sequenceid);
+    }
+    else
+    {
+        _DSEXCEPTION("Unknown sequence id : " + p_sequenceid);
+    }
+}
+
+bool RunnerSystem::HasSequence(const dsstring& p_sequenceid) const
 {
     return (m_sequences.find(p_sequenceid) != m_sequences.end());
 }
 
-bool RunnerSystem::IsSequenceCompleted(const dsstring& p_sequenceid)
+bool RunnerSystem::IsSequenceCompleted(const dsstring& p_sequenceid) const
 {
     if (m_sequences.count(p_sequenceid))
     {

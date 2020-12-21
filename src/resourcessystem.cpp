@@ -226,8 +226,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						});
 
 						RunnerSequence sequence;
-						sequence.RegisterStep(dsstring("loadTextureStep ") + final_asset_path, load_texture_step);
-						sequence.SetCurrentStep(dsstring("loadTextureStep ") + final_asset_path);
+						sequence.RegisterStep(dsstring("loadTextureStep"), load_texture_step);
+						sequence.SetCurrentStep(dsstring("loadTextureStep"));
 
 						m_runner_system.RegisterSequence(final_asset_path, sequence);
 					}
@@ -249,6 +249,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_asset_loading_state.at(final_asset_path) = true;
 						
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
+
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<std::map<dsstring, bool>*>("&m_asset_loading_state");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<dsstring>("final_asset_path");						
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_texturesCache");
 
 						m_runner_system.RemoveSequence(final_asset_path);
 					}
@@ -692,6 +698,69 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
 						shader->SetCompilationFlag(true); //shader now contains compiled shader
 
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent< std::map<dsstring, bool>* >("&m_asset_loading_state");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("shader_id");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_shadersCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<Shader*>("shader");
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<dsstring>("shader_id");
+						m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<dsstring>("bcMd5FileName_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<std::map<dsstring, Blob>*>("&m_shadersCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<Shader*>("shader");
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").GetComponent<dsstring>("hash_shader"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<dsstring>("hash_shader");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").GetComponent<void*>("text"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<void*>("text");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").GetComponent<long>("text_size"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<long>("text_size");
+						}
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderbcStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderbcStep").RemoveComponent<dsstring>("bcCodeFileName_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderbcStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_shadersCache");
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
+						m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<dsstring>("final_asset_dir");
+						m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<dsstring>("asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<int>("shader_type");
+						m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<DrawSpace::Interface::Renderer*>("Renderer");
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<dsstring>("shader_id");
+						m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_shadersCache");
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<dsstring>("shader_id");
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").GetComponent<dsstring>("hash_shader"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<dsstring>("hash_shader");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").GetComponent<void*>("text"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<void*>("text");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").GetComponent<long>("text_size"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<long>("text_size");
+						}
+
+
 						m_runner_system.RemoveSequence(final_asset_path);
 					}
 				}
@@ -866,8 +935,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						// associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
 						std::vector<dsstring> meshes_node_owner_names{ task->GetNodesNamesList() };
 
-						//p_seq.GetComponent< ResourcesAspect::MeshesFileDescription>("mesheFileDescription").getPurpose().
-
 						aiMesh** meshes{ scene->mMeshes };
 
 						// ICI : remplir les descriptions meshes a partir du tableau aiMesh** meshes;
@@ -905,8 +972,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					fill_meshes_animations_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
 					fill_meshes_animations_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
-					fill_meshes_animations_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
-					
+					fill_meshes_animations_step.AddComponent<dsstring>("final_asset_path", final_asset_path);					
 					fill_meshes_animations_step.AddComponent<AnimationsAspect*>("anims_aspect", anims_aspect);
 
 					fill_meshes_animations_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
@@ -975,7 +1041,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					build_meshe_step.AddComponent<Core::Meshe*>("target_meshe", target_meshe);
 					build_meshe_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 					build_meshe_step.AddComponent<ResourcesAspect*>("resources_aspect", resources_aspect);
-
 					build_meshe_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
 					build_meshe_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
 
@@ -1042,6 +1107,40 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						loaded = true;
 						m_asset_loading_state.at(final_asset_path) = true;
+
+
+						if (m_runner_system.GetSequence(final_asset_path).HasStep("loadMeshesStep"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<std::map<dsstring, bool>*>("&m_asset_loading_state");
+							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<dsstring>("final_asset_path");
+							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<Meshe*>("target_meshe");
+							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
+							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						}
+						
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<dsstring>("filename");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<AnimationsAspect*>("anims_aspect");
+						
+						if (m_runner_system.GetSequence(final_asset_path).GetComponent<ResourcesAspect::MeshesFileDescription>("mesheFileDescription"))
+						{
+							m_runner_system.GetSequence(final_asset_path).RemoveComponent<ResourcesAspect::MeshesFileDescription>("mesheFileDescription");
+						}
+						
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<AnimationsAspect*>("anims_aspect");
+
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Entity*>("entity");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("meshe_id");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Core::Meshe*>("target_meshe");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<ResourcesAspect*>("resources_aspect");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
 
 						m_runner_system.RemoveSequence(final_asset_path);
 					}
