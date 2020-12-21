@@ -52,8 +52,7 @@ g:remove_resourceeventcb("onresourceevent")
 
 gui:show_gui(FALSE)
 gui:unload_alllayouts()
---gui:unload_allschemes()
---gui:release()
+
 
 
 
