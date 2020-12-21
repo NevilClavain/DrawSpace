@@ -541,10 +541,11 @@ model.env.fog.setdensity(0.0)
 
 --rg:update_renderingqueues()
 
-gui=Gui()
-gui:init()
-gui:set_resourcespath("./xfskin2")
-gui:load_scheme("xfskin.scheme")
+
+--gui=Gui()
+--gui:init()
+--gui:set_resourcespath("./xfskin2")
+--gui:load_scheme("xfskin.scheme")
 gui:load_layout("timecontrol.layout","xfskin2/layouts/timecontrol_widgets.conf")
 gui:set_layout("timecontrol.layout")
 gui:show_gui(TRUE)

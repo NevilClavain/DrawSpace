@@ -142,6 +142,13 @@ TRANSFORMATION_VIEW_MATRIX = 1
 TRANSFORMATION_PROJ_MATRIX = 2
 
 
+gui=Gui()
+gui:init()
+gui:set_resourcespath("./xfskin2")
+gui:load_scheme("xfskin.scheme")
+
+
+
 print_memsize=function() 
 	g:print('Total mem = '..g:total_mem()..' byte(s)') 
 end
