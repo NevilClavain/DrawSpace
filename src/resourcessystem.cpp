@@ -791,9 +791,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						RunnerSequenceStep load_meshes_step;
 
-						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
-
-						load_meshes_step.AddComponent<std::map<dsstring, bool>*>("&m_asset_loading_state", asset_loading_state);
 						load_meshes_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_meshes_step.AddComponent<Meshe*>("target_meshe", target_meshe);
 						load_meshes_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
@@ -802,11 +799,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_meshes_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
+							
 							auto target_meshe{ p_step.GetComponent<Meshe*>("target_meshe")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
-
-							(*asset_loading_state)[final_asset_path] = false;
 
 							const dsstring task_id{ final_asset_path };
 
@@ -1035,9 +1030,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					RunnerSequenceStep build_meshe_step;
 
+					std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
 
 					build_meshe_step.AddComponent<Entity*>("entity", p_entity);
-					build_meshe_step.AddComponent<dsstring>("meshe_id", meshe_id);					
+					build_meshe_step.AddComponent<std::map<dsstring, bool>*>("&m_asset_loading_state", asset_loading_state);
+					build_meshe_step.AddComponent<dsstring>("meshe_id", meshe_id);
 					build_meshe_step.AddComponent<Core::Meshe*>("target_meshe", target_meshe);
 					build_meshe_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 					build_meshe_step.AddComponent<ResourcesAspect*>("resources_aspect", resources_aspect);
@@ -1066,6 +1063,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						ResourcesSystem::DumpMeshe(meshe_node, meshes, rs_logger);
 
+
+						auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
+
+						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
+						(*asset_loading_state)[meshe_unique_id] = false;
+
 						const dsstring task_id{ final_asset_path };
 
 						BuildMesheTask* task = _DRAWSPACE_NEW_(BuildMesheTask, BuildMesheTask);
@@ -1091,8 +1094,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						p_seq.DeclareCompleted(); // end of sequence :)
 					});
 
-
-
 					sequence.RegisterStep(dsstring("fillMeshesDescriptionStep"), fill_meshes_description_step);
 					sequence.RegisterStep(dsstring("fillMeshesAnimationsStep"), fill_meshes_animations_step);
 					sequence.RegisterStep(dsstring("buildMesheStep"), build_meshe_step);
@@ -1106,12 +1107,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
 						loaded = true;
-						m_asset_loading_state.at(final_asset_path) = true;
-
+						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
+						m_asset_loading_state.at(meshe_unique_id) = true;
 
 						if (m_runner_system.GetSequence(final_asset_path).HasStep("loadMeshesStep"))
 						{
-							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<std::map<dsstring, bool>*>("&m_asset_loading_state");
 							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<dsstring>("final_asset_path");
 							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<Meshe*>("target_meshe");
 							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
@@ -1135,6 +1135,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<AnimationsAspect*>("anims_aspect");
 
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Entity*>("entity");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<std::map<dsstring, bool>*>("&m_asset_loading_state");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("meshe_id");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Core::Meshe*>("target_meshe");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("final_asset_path");
