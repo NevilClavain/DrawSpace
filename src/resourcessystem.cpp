@@ -1072,7 +1072,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						task->SetTargetDescr(task_id);
 
 						task->SetEntity(entity);
-						task->SetMeshesIOInfos(meshe_id, meshes, target_meshe, meshe_node);
+						task->SetMeshesIOInfos(meshes, target_meshe, meshe_node);
 
 						p_step.SetTask(task);
 

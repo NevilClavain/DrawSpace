@@ -38,13 +38,13 @@ struct BuildMesheTask : public Interface::ITask
 {
 private:
 
-    Core::Entity* m_entity;
+    Core::Entity*   m_entity;
     dsstring        m_meshe_id;
-    aiNode* m_meshe_node;
-    aiMesh** m_meshes;
-    Core::Meshe* m_target_meshe;
+    aiNode*         m_meshe_node;
+    aiMesh**        m_meshes;
+    Core::Meshe*    m_target_meshe;
 
-    void build_meshe(Core::Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
+    void build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
 public:
 
@@ -52,7 +52,7 @@ public:
 
     void Execute(void);
     void SetEntity(Core::Entity* p_entity);
-    void SetMeshesIOInfos(const dsstring& p_meshe_id, aiMesh** m_source_meshes, Core::Meshe* p_target_meshe, aiNode* p_meshe_node);
+    void SetMeshesIOInfos(aiMesh** m_source_meshes, Core::Meshe* p_target_meshe, aiNode* p_meshe_node);
 
 };
 

@@ -34,7 +34,7 @@ BuildMesheTask::BuildMesheTask() : ITask("BUILDMESHE", "")
 
 void BuildMesheTask::Execute(void)
 {
-    build_meshe(m_entity, m_meshe_id, m_meshe_node, m_meshes, m_target_meshe);
+    build_meshe(m_entity, m_meshe_node, m_meshes, m_target_meshe);
 }
 
 void BuildMesheTask::SetEntity(Core::Entity* p_entity)
@@ -42,15 +42,14 @@ void BuildMesheTask::SetEntity(Core::Entity* p_entity)
     m_entity = p_entity;
 }
 
-void BuildMesheTask::SetMeshesIOInfos(const dsstring& p_meshe_id, aiMesh** m_source_meshes, Core::Meshe* p_target_meshe, aiNode* p_meshe_node)
+void BuildMesheTask::SetMeshesIOInfos(aiMesh** m_source_meshes, Core::Meshe* p_target_meshe, aiNode* p_meshe_node)
 {
-    m_meshe_id = p_meshe_id;
     m_target_meshe = p_target_meshe;
     m_meshes = m_source_meshes;
     m_meshe_node = p_meshe_node;
 }
 
-void BuildMesheTask::build_meshe(Core::Entity* p_entity, const dsstring& p_id, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
+void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
 {
     Aspect::AnimationsAspect* anims_aspect = p_entity->GetAspect<Aspect::AnimationsAspect>();
 
