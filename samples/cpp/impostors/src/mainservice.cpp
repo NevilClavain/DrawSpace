@@ -33,8 +33,16 @@ using namespace DrawSpace::Utils;
 
 _DECLARE_DS_LOGGER( logger, "test_impostors_mainservice", NULL )
 
+
+extern DrawSpace::Logger::Sink aspect_logger;
+extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
+extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
+
+extern DrawSpace::Logger::Sink runner_logger;
+
 MainService::MainService( void ) :
-m_fps_transformer( NULL )
+m_fps_transformer( NULL ),
+m_resource_events_cb(this, &MainService::on_resource_event)
 {
     DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("impostorsdemo_assets/textures_bank");
     DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("impostorsdemo_assets/shaders_bank");
@@ -79,8 +87,20 @@ bool MainService::Init( void )
     logconf->RegisterSink( &logger );
     logger.SetConfiguration( logconf );
 
+    logconf->RegisterSink(&aspect_logger);
+    aspect_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&rs_logger);
+    rs_logger.SetConfiguration(logconf);
+
     logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
+
+    logconf->RegisterSink(&rd_logger);
+    rd_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&runner_logger);
+    runner_logger.SetConfiguration(logconf);
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -94,6 +114,15 @@ bool MainService::Init( void )
 
 
     m_meshe_import = _DRAWSPACE_NEW_( DrawSpace::Utils::AC3DMesheImport, DrawSpace::Utils::AC3DMesheImport );
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    m_systemsHub.StartupRunner();
+
+    Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
+    resources_system.RegisterEventHandler(&m_resource_events_cb);
+
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -115,14 +144,18 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_ps.hlsl", false ) ) );
 
 
-	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
+
+
 	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0), 0);
 	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1), 1);
 
 
 
     m_finalpass.GetRenderingQueue()->EnableDepthClearing( false );
-    m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
+    //m_finalpass.GetRenderingQueue()->EnableTargetClearing( false );
+    m_finalpass.GetRenderingQueue()->EnableTargetClearing(true);
+    m_finalpass.GetRenderingQueue()->SetTargetClearingColor(25, 25, 25, 255);
+
 
 
     m_texturepass = m_finalpass.CreateChild( "texture_pass", 0 );    
@@ -234,7 +267,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueues();
+    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     set_mouse_circular_mode( true );
@@ -262,6 +295,8 @@ void MainService::Run( void )
 void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
+
+    m_systemsHub.ShutdownRunner();
 
     m_systemsHub.ReleaseAssets();
 }
@@ -968,8 +1003,9 @@ void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-
-
+void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
+{
+}
 
 void MainService::set_mouse_circular_mode( bool p_state )
 {

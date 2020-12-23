@@ -32,6 +32,8 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
+    using ResourceEventCallback = DrawSpace::Core::CallBack2<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&>;
+
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
@@ -111,6 +113,8 @@ protected:
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_yaw;
     DrawSpace::Aspect::TimeAspect::TimeAngle                                        m_fps_pitch;
 
+    ResourceEventCallback                                                           m_resource_events_cb;
+
 
     void set_mouse_circular_mode( bool p_state );
 
@@ -130,6 +134,8 @@ protected:
     void create_camera( void );
     void create_screen_impostors( void );
     void create_world_impostor( void );
+
+    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource);
 
 
 public:
