@@ -219,6 +219,9 @@ public:
 
     void RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
     void UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
+
+    void ActivateResourcesSystem(void);
+    void DeactivateResourcesSystem(void);
   
     friend class DrawSpace::Utils::BaseSingleton<MainService>;
 };

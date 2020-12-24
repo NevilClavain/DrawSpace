@@ -29,6 +29,7 @@ function( event, resource_path )
        evt_out = "compilation done :"..resource_path
     elseif event == ALL_ASSETS_LOADED then
        evt_out = "All assets loaded !"
+       g:deactivate_resourcessystem();
        rg:update_renderingqueues()
     else
        evt_out = "? : "..event       
@@ -594,3 +595,5 @@ gui:set_mousecursorimage("xfskin/MouseCursor")
 g:show_mousecursor(FALSE)
 
 set_camera(current_cam)
+
+g:activate_resourcessystem();

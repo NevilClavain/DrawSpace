@@ -1046,3 +1046,13 @@ void MainService::UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_
         // exception
     }
 }
+
+void MainService::ActivateResourcesSystem(void)
+{
+    m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem").Activate();
+}
+
+void MainService::DeactivateResourcesSystem(void)
+{
+    m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
+}

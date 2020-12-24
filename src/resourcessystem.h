@@ -124,12 +124,14 @@ private:
     std::map<dsstring, Blob>                                            m_shadersCache;
     std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
 
-    std::map<dsstring, bool>                                            m_asset_loading_state;
-
 	DrawSpace::Interface::Renderer*										m_renderer;
 
     RunnerSystem&                                                       m_runner_system;
-    
+
+    bool                                                                m_all_asset_loaded{ false };
+
+    bool                                                                m_active{ false };
+ 
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     dsstring compute_textures_final_path(const dsstring& p_path) const;
@@ -166,12 +168,15 @@ private:
 	void update_bc_md5file(const dsstring& p_path, const dsstring& p_hash);
 	void update_bc_codefile(const dsstring& p_path, void* p_bc, int p_size);
     void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
-    void check_all_assets_loaded(void);
+    //void check_all_assets_loaded(Core::Entity* p_entity);
 
 
 public:
 
     ResourcesSystem(RunnerSystem& p_runner);
+
+    void Activate(void);
+    void Deactivate(void);
 
     void RegisterEventHandler(ResourceEventHandler* p_handler);
     void UnregisterEventHandler(ResourceEventHandler* p_handler);

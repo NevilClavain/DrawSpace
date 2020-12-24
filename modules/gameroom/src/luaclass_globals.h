@@ -110,6 +110,9 @@ public:
     int LUA_round(lua_State* p_L);
     int LUA_pow(lua_State* p_L);
 
+    int LUA_ActivateResourcesSystem(lua_State* p_L);
+    int LUA_DeactivateResourcesSystem(lua_State* p_L);
+
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];
 };

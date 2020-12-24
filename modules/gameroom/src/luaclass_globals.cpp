@@ -100,7 +100,8 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 
     { "release_assets", &LuaClass_Globals::LUA_releaseassets },
 
-
+    { "activate_resourcessystem", &LuaClass_Globals::LUA_ActivateResourcesSystem },
+    { "deactivate_resourcessystem", &LuaClass_Globals::LUA_DeactivateResourcesSystem },
 
 	{ 0, 0 }
 };
@@ -630,4 +631,16 @@ int LuaClass_Globals::LUA_sin(lua_State* p_L)
     dsreal sina = std::sin(a);
     lua_pushnumber(p_L, sina);
     return 1;
+}
+
+int LuaClass_Globals::LUA_ActivateResourcesSystem(lua_State* p_L)
+{
+    MainService::GetInstance()->ActivateResourcesSystem();
+    return 0;
+}
+
+int LuaClass_Globals::LUA_DeactivateResourcesSystem(lua_State* p_L)
+{
+    MainService::GetInstance()->DeactivateResourcesSystem();
+    return 0;
 }

@@ -81,6 +81,16 @@ m_runner_system(p_runner)
 
 }
 
+void ResourcesSystem::Activate(void)
+{
+	m_active = true;
+}
+
+void ResourcesSystem::Deactivate(void)
+{
+	m_active = false;
+}
+
 void ResourcesSystem::RegisterEventHandler(ResourceEventHandler* p_handler)
 {
 	m_evt_handlers.insert(p_handler);
@@ -142,14 +152,20 @@ void ResourcesSystem::SetMeshesRootPath(const dsstring& p_path)
 
 void ResourcesSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 {
-    p_entitygraph->AcceptSystemRootToLeaf( this );
-	check_all_assets_loaded();
+	if (m_active)
+	{
+		m_all_asset_loaded = true;
+		p_entitygraph->AcceptSystemRootToLeaf(this);
+
+		if (m_all_asset_loaded)
+		{
+			notify_event(ALL_ASSETS_LOADED, "");
+		}
+	}
 }
 
 void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 {
-	//Threading::Runner* runner{ Threading::Runner::GetInstance() };
-
     ResourcesAspect* resources_aspect = p_entity->GetAspect<ResourcesAspect>();
     if (resources_aspect)
     {
@@ -160,24 +176,23 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
         {
             bool& loaded = std::get<1>( e->getPurpose() );
             if( !loaded )
-            {				
+            {	
+				m_all_asset_loaded = false;
+
 				dsstring asset_path;
 				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
 				dsstring final_asset_path = compute_textures_final_path(asset_path);
+
 
 				if (!m_runner_system.HasSequence(final_asset_path))
 				{
 					// check if already in cache
 					if (m_texturesCache.find(final_asset_path) == m_texturesCache.end())
-					{
-
+					{						
 						// if not, setup a new sequence
 
 						RunnerSequenceStep load_texture_step;
 
-						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
-
-						load_texture_step.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
 						load_texture_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_texture_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
 						load_texture_step.AddComponent<std::map<dsstring, Blob>*>("&m_texturesCache", &m_texturesCache);
@@ -185,10 +200,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_texture_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							(*asset_loading_state)[final_asset_path] = false;
+							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
 							const dsstring task_id{ final_asset_path };
 
@@ -235,6 +248,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
 						loaded = true;
+
+
 					}
 
 				}
@@ -245,13 +260,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
 						loaded = true;
+
 						notify_event(BLOB_LOADED, final_asset_path);
-						m_asset_loading_state.at(final_asset_path) = true;
 						
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
 
 
-						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<std::map<dsstring, bool>*>("&m_asset_loading_state");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<dsstring>("final_asset_path");						
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_texturesCache");
@@ -270,6 +284,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
             bool& loaded = std::get<1>(e->getPurpose());
             if (!loaded)
             {
+				m_all_asset_loaded = false;
 
 				dsstring asset_path;
 				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
@@ -298,10 +313,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						RunnerSequenceStep update_shaderbc_step;
 						RunnerSequenceStep create_directory_step;
 
-						std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
-
-
-						load_shader_step.AddComponent< std::map<dsstring, bool>* >("&m_asset_loading_state", asset_loading_state);
 						load_shader_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_shader_step.AddComponent<dsstring>("shader_id", shader_id);
 						load_shader_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
@@ -311,10 +322,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
-
-							(*asset_loading_state)[final_asset_path] = false;
 
 							const dsstring task_id{ final_asset_path };
 
@@ -693,13 +701,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						loaded = true;
 						notify_event(BLOB_LOADED, final_asset_path);
-						m_asset_loading_state.at(final_asset_path) = true;
 
 						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
 						shader->SetCompilationFlag(true); //shader now contains compiled shader
 
 
-						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent< std::map<dsstring, bool>* >("&m_asset_loading_state");
+
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("final_asset_path");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("shader_id");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
@@ -776,7 +783,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
-            {				
+            {
+				m_all_asset_loaded = false;
+
 				dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
 				dsstring meshe_id = std::get<2>(e->getPurpose());
 						
@@ -1030,10 +1039,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					RunnerSequenceStep build_meshe_step;
 
-					std::map<dsstring, bool>* asset_loading_state{ &m_asset_loading_state };
+
 
 					build_meshe_step.AddComponent<Entity*>("entity", p_entity);
-					build_meshe_step.AddComponent<std::map<dsstring, bool>*>("&m_asset_loading_state", asset_loading_state);
 					build_meshe_step.AddComponent<dsstring>("meshe_id", meshe_id);
 					build_meshe_step.AddComponent<Core::Meshe*>("target_meshe", target_meshe);
 					build_meshe_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
@@ -1064,10 +1072,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						ResourcesSystem::DumpMeshe(meshe_node, meshes, rs_logger);
 
 
-						auto asset_loading_state{ p_step.GetComponent<std::map<dsstring, bool>*>("&m_asset_loading_state")->getPurpose() };
 
 						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
-						(*asset_loading_state)[meshe_unique_id] = false;
 
 						const dsstring task_id{ final_asset_path };
 
@@ -1108,7 +1114,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						loaded = true;
 						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
-						m_asset_loading_state.at(meshe_unique_id) = true;
 
 						if (m_runner_system.GetSequence(final_asset_path).HasStep("loadMeshesStep"))
 						{
@@ -1135,7 +1140,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<AnimationsAspect*>("anims_aspect");
 
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Entity*>("entity");
-						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<std::map<dsstring, bool>*>("&m_asset_loading_state");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("meshe_id");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Core::Meshe*>("target_meshe");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("final_asset_path");
@@ -1291,7 +1295,6 @@ void ResourcesSystem::ReleaseAssets(void)
     m_shadersCache.clear();
     m_meshesCache.clear();
     m_texturesCache.clear();
-	m_asset_loading_state.clear();
 }
 
 void ResourcesSystem::ReleaseShaderAsset(const dsstring& p_asset)
@@ -1514,8 +1517,11 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	p_shader->SetCompilationFlag(true); //shader now contains compiled shader
 }
 
-void ResourcesSystem::check_all_assets_loaded(void)
+/*
+void ResourcesSystem::check_all_assets_loaded(Core::Entity* p_entity)
 {
+
+	
 	if (0 == m_asset_loading_state.size())
 	{
 		return;
@@ -1545,4 +1551,7 @@ void ResourcesSystem::check_all_assets_loaded(void)
 
 		m_asset_loading_state.clear();
 	}
+	
 }
+
+*/

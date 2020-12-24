@@ -264,6 +264,7 @@ bool MainService::Init( void )
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
     
+    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate();
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -1005,6 +1006,11 @@ void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 
 void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
 {
+    if (p_event == DrawSpace::Systems::ResourcesSystem::ResourceEvent::ALL_ASSETS_LOADED)
+    {
+        m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
+        m_rendergraph.PushSignal_UpdatedRenderingQueues();
+    }
 }
 
 void MainService::set_mouse_circular_mode( bool p_state )
