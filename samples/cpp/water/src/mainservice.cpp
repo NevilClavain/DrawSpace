@@ -33,6 +33,12 @@ using namespace DrawSpace::Utils;
 
 _DECLARE_DS_LOGGER( logger, "test04mainloopservice", NULL )
 
+extern DrawSpace::Logger::Sink aspect_logger;
+extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
+extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
+
+extern DrawSpace::Logger::Sink runner_logger;
+
 MainService::MainService( void ) :
 m_waves_inc( true ),
 m_hmi_mode( true ),
@@ -85,9 +91,20 @@ bool MainService::Init( void )
     logconf->RegisterSink( &logger );
     logger.SetConfiguration( logconf );
 
+    logconf->RegisterSink(&aspect_logger);
+    aspect_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&rs_logger);
+    rs_logger.SetConfiguration(logconf);
+
     logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
 
+    logconf->RegisterSink(&rd_logger);
+    rd_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&runner_logger);
+    runner_logger.SetConfiguration(logconf);
 
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -311,9 +328,8 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    //m_systemsHub.Init( &m_entitygraph );
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueues();
+    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     m_systemsHub.EnableGUI( true );
