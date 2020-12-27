@@ -51,7 +51,7 @@ struct Node
 
 struct BoneOutput
 {
-	Utils::Matrix offset_matrix;
+	Utils::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
 	Utils::Matrix final_transformation;
 
 	BoneOutput(void)
