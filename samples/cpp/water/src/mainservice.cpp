@@ -44,7 +44,8 @@ m_waves_inc( true ),
 m_hmi_mode( true ),
 m_guiwidgetpushbuttonclicked_cb( this, &MainService::on_guipushbutton_clicked ),
 m_systems_update_evt_cb( this, &MainService::on_systems_update_evt ),
-m_fps_transformer( NULL )
+m_fps_transformer( NULL ),
+m_resource_events_cb(this, &MainService::on_resource_event)
 {
     DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("waterdemo_assets/textures_bank");
     DrawSpace::Systems::ResourcesSystem::SetShadersRootPath("waterdemo_assets/shaders_bank");
@@ -124,6 +125,14 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
+    m_systemsHub.StartupRunner();
+
+    Systems::ResourcesSystem& resources_system{ m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem") };
+    resources_system.RegisterEventHandler(&m_resource_events_cb);
+
+
+
+
     m_finalpass = m_rendergraph.CreateRoot( "final_pass" );
 
     m_finalpass.CreateViewportQuad();
@@ -142,13 +151,8 @@ bool MainService::Init( void )
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask_vs.hlsl", false ) ) );
     m_finalpass.GetViewportQuad()->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "water_mask_ps.hlsl", false ) ) );
 
-	/*
-    Systems::ResourcesSystem* resources_system = static_cast<Systems::ResourcesSystem*>(m_systemsHub.GetSystem("ResourcesSystem"));
-    resources_system->LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0));
-    resources_system->LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1));
-	*/
 
-	Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
+
 	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(0), 0);
 	resources_system.LoadShader(m_finalpass.GetViewportQuad()->GetFx()->GetShader(1), 1);
 
@@ -328,8 +332,8 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
+    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate();
 
-    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     m_systemsHub.EnableGUI( true );
@@ -386,6 +390,8 @@ void MainService::Release( void )
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
 
     //m_systemsHub.Release( &m_entitygraph );
+    m_systemsHub.ReleaseAssets();
+    m_systemsHub.ShutdownRunner();
 }
 
 void MainService::OnKeyPress( long p_key )
@@ -805,7 +811,9 @@ void MainService::create_dynamic_cube( void )
 
     m_dynamic_cubes.push_back( cube );
 
-    m_rendergraph.PushSignal_UpdatedRenderingQueues();
+    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate();
+
+    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
 }
 
 void MainService::create_static_cube( void )
@@ -1060,4 +1068,13 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
 
 void MainService::on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt )
 {
+}
+
+void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
+{
+    if (p_event == DrawSpace::Systems::ResourcesSystem::ResourceEvent::ALL_ASSETS_LOADED)
+    {
+        m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
+        m_rendergraph.PushSignal_UpdatedRenderingQueues();
+    }
 }

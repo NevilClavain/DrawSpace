@@ -120,7 +120,7 @@ bool MainService::Init( void )
 
     m_systemsHub.StartupRunner();
 
-    Systems::ResourcesSystem& resources_system = m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
+    Systems::ResourcesSystem& resources_system{ m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem") };
     resources_system.RegisterEventHandler(&m_resource_events_cb);
 
 
@@ -268,7 +268,6 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
     m_entitygraph.PushSignal_RenderSceneBegin();
 
     set_mouse_circular_mode( true );
