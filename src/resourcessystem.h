@@ -100,6 +100,18 @@ public:
 
     using ResourceEventHandler = DrawSpace::Core::BaseCallback2<void, ResourceEvent, const dsstring&>;
 
+    struct MesheCacheEntry
+    {
+        MesheCacheEntry(void) {};
+        MesheCacheEntry(Assimp::Importer* p_importer, const aiScene* p_scene) :
+        m_assimp_importer(p_importer),
+        m_assimp_scene(p_scene)
+        {};
+
+        Assimp::Importer*   m_assimp_importer{ nullptr };
+        const aiScene*      m_assimp_scene{ nullptr };
+    };
+
 private:
     std::set<ResourceEventHandler*>					                    m_evt_handlers;
 
@@ -122,7 +134,10 @@ private:
 
     std::map<dsstring, Blob>                                            m_texturesCache;
     std::map<dsstring, Blob>                                            m_shadersCache;
-    std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
+    //std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
+
+    std::map<dsstring, MesheCacheEntry>                                 m_meshesCache;
+
 
 	DrawSpace::Interface::Renderer*										m_renderer;
 

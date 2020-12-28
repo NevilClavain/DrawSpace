@@ -803,7 +803,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_meshes_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 						load_meshes_step.AddComponent<Meshe*>("target_meshe", target_meshe);
 						load_meshes_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
-						load_meshes_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
+						load_meshes_step.AddComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache", &m_meshesCache);
 
 						load_meshes_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
@@ -829,11 +829,14 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+							auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 							
 							LoadFileToAssimpTask* task{ static_cast<LoadFileToAssimpTask*>(p_step.GetTask()) };
 
-							(*meshesCache)[final_asset_path] = std::make_pair(task->GetImporter(), task->GetScene());
+							MesheCacheEntry mesheCacheEntry(task->GetImporter(), task->GetScene());
+							//(*meshesCache)[final_asset_path] = std::make_pair(task->GetImporter(), task->GetScene());
+
+							(*meshesCache)[final_asset_path] = mesheCacheEntry;
 							
 							_DRAWSPACE_DELETE_(task);
 
@@ -862,7 +865,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					fill_meshes_description_step.AddComponent<dsstring>("filename", std::get<1>(e->getPurpose()));
 					fill_meshes_description_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
 					fill_meshes_description_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
-					fill_meshes_description_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
+					fill_meshes_description_step.AddComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache", &m_meshesCache);
 					fill_meshes_description_step.AddComponent<AnimationsAspect*>("anims_aspect", anims_aspect);
 					
 					fill_meshes_description_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
@@ -871,9 +874,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).second };
+						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
 						
 
 						_DSTRACE((*rs_logger), dsstring("************************************SCENE INFOS***********************************"));
@@ -929,12 +932,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					fill_meshes_description_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 						AnimationsAspect* anims_aspect{ p_step.GetComponent<AnimationsAspect*>("anims_aspect")->getPurpose() };
 
 						FillMeshesOwnerNamesTask* task{ static_cast<FillMeshesOwnerNamesTask*>(p_step.GetTask()) };
 
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).second };
+						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
 
 						// associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
 						std::vector<dsstring> meshes_node_owner_names{ task->GetNodesNamesList() };
@@ -975,16 +978,16 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					RunnerSequenceStep fill_meshes_animations_step;
 
 					fill_meshes_animations_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
-					fill_meshes_animations_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
+					fill_meshes_animations_step.AddComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache", &m_meshesCache);
 					fill_meshes_animations_step.AddComponent<dsstring>("final_asset_path", final_asset_path);					
 					fill_meshes_animations_step.AddComponent<AnimationsAspect*>("anims_aspect", anims_aspect);
 
 					fill_meshes_animations_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
 						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).second };
+						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
 						AnimationsAspect* anims_aspect{ p_step.GetComponent<AnimationsAspect*>("anims_aspect")->getPurpose() };
 
 
@@ -1046,7 +1049,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					build_meshe_step.AddComponent<Core::Meshe*>("target_meshe", target_meshe);
 					build_meshe_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
 					build_meshe_step.AddComponent<ResourcesAspect*>("resources_aspect", resources_aspect);
-					build_meshe_step.AddComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache", &m_meshesCache);
+					build_meshe_step.AddComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache", &m_meshesCache);
 					build_meshe_step.AddComponent<DrawSpace::Logger::Sink*>("&rs_logger", &rs_logger);
 
 					build_meshe_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
@@ -1054,11 +1057,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
 						Entity* entity{ p_step.GetComponent<Entity*>("entity")->getPurpose() };
 						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache")->getPurpose() };
+						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 						dsstring meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
 						Core::Meshe* target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
 						
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).second };
+						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
 						aiNode* root{ scene->mRootNode };
 
 						aiMesh** meshes{ scene->mMeshes };
@@ -1070,8 +1073,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						}
 
 						ResourcesSystem::DumpMeshe(meshe_node, meshes, rs_logger);
-
-
 
 						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
 
@@ -1120,13 +1121,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<dsstring>("final_asset_path");
 							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<Meshe*>("target_meshe");
 							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
-							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+							m_runner_system.GetSequence(final_asset_path).GetStep("loadMeshesStep").RemoveComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache");
 						}
 						
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<dsstring>("filename");
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<dsstring>("final_asset_path");
-						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache");
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesDescriptionStep").RemoveComponent<AnimationsAspect*>("anims_aspect");
 						
 						if (m_runner_system.GetSequence(final_asset_path).GetComponent<ResourcesAspect::MeshesFileDescription>("mesheFileDescription"))
@@ -1135,7 +1136,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						}
 						
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
-						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache");
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<dsstring>("final_asset_path");
 						m_runner_system.GetSequence(final_asset_path).GetStep("fillMeshesAnimationsStep").RemoveComponent<AnimationsAspect*>("anims_aspect");
 
@@ -1144,7 +1145,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<Core::Meshe*>("target_meshe");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<dsstring>("final_asset_path");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<ResourcesAspect*>("resources_aspect");
-						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>*>("&m_meshesCache");
+						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache");
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
 
 						m_runner_system.RemoveSequence(final_asset_path);
@@ -1279,16 +1280,16 @@ void ResourcesSystem::ReleaseAssets(void)
     {
         _DRAWSPACE_DELETE_N_(e.second.data);
     }
+
     for (auto& e : m_shadersCache)
-    {
-        //_DRAWSPACE_DELETE_(e.second.data);
+    {        
 		_DRAWSPACE_DELETE_N_(e.second.data);
     }
+
     for (auto& e : m_meshesCache)
     {
-        e.second.first->FreeScene();
-        //_DRAWSPACE_DELETE_(e.second.first);
-		delete e.second.first;
+		e.second.m_assimp_importer->FreeScene();
+		delete e.second.m_assimp_importer;
     }
 
 	// reset all
@@ -1516,42 +1517,3 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	_DRAWSPACE_DELETE_N_(text);
 	p_shader->SetCompilationFlag(true); //shader now contains compiled shader
 }
-
-/*
-void ResourcesSystem::check_all_assets_loaded(Core::Entity* p_entity)
-{
-
-	
-	if (0 == m_asset_loading_state.size())
-	{
-		return;
-	}
-
-	// check if all is loaded
-	bool all_asset_loaded{ true };
-
-	for (auto& e : m_asset_loading_state)
-	{
-		const auto id{ e.first };
-		const bool status{ e.second };
-
-		if (!status)
-		{
-			all_asset_loaded = false;
-		}
-	}
-
-	if (all_asset_loaded)
-	{
-		// send event -> all asset properly loaded
-
-		notify_event(ALL_ASSETS_LOADED, "");
-
-		// reset flag
-
-		m_asset_loading_state.clear();
-	}
-	
-}
-
-*/
