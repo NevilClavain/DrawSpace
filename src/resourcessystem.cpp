@@ -1060,8 +1060,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 						dsstring meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
 						Core::Meshe* target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
+						MesheCacheEntry& cacheEntry{ (*meshesCache).at(final_asset_path) };
 						
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
+						const aiScene* scene{ cacheEntry.m_assimp_scene };
 						aiNode* root{ scene->mRootNode };
 
 						aiMesh** meshes{ scene->mMeshes };
@@ -1074,18 +1075,24 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						ResourcesSystem::DumpMeshe(meshe_node, meshes, rs_logger);
 
-						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
+						if (0 == cacheEntry.m_meshes_data.count(meshe_id))
+						{
+							// no data found in cache
 
-						const dsstring task_id{ final_asset_path };
+							const dsstring task_id{ final_asset_path };
+							BuildMesheTask* task = _DRAWSPACE_NEW_(BuildMesheTask, BuildMesheTask);
+							task->SetTargetDescr(task_id);
 
-						BuildMesheTask* task = _DRAWSPACE_NEW_(BuildMesheTask, BuildMesheTask);
-						task->SetTargetDescr(task_id);
-
-						task->SetEntity(entity);
-						task->SetMeshesIOInfos(meshes, target_meshe, meshe_node);
-
-						p_step.SetTask(task);
-
+							task->SetEntity(entity);
+							task->SetMeshesIOInfos(meshes, target_meshe, meshe_node);
+							p_step.SetTask(task);
+						}
+						else
+						{
+							// data found in cache for this meshe id, use it
+							target_meshe->SetVertices(cacheEntry.m_meshes_data.at(meshe_id).m_vertices);
+							target_meshe->SetTriangles(cacheEntry.m_meshes_data.at(meshe_id).m_triangles);
+						}
 					});
 
 					build_meshe_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
@@ -1102,8 +1109,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						ResourcesAspect::MeshesFileDescription mesheFileDescription{ p_seq.GetComponent< ResourcesAspect::MeshesFileDescription>("mesheFileDescription")->getPurpose() };
 						resource_aspect->AddMeshesFileDescription(mesheFileDescription);
 
-						// store triangles/vertices data in cache if not already present
 						MesheCacheEntry& cacheEntry{ (*meshesCache).at(final_asset_path) };
+
+						// store triangles/vertices data in cache if not already present						
 						if (0 == cacheEntry.m_meshes_data.count(meshe_id))
 						{
 							cacheEntry.m_meshes_data[meshe_id].m_vertices = target_meshe->GetVertices();

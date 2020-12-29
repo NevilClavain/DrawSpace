@@ -102,6 +102,16 @@ std::vector<Triangle> Meshe::GetTriangles(void) const
     return m_triangles;
 }
 
+void Meshe::SetVertices(const std::vector<Vertex>& p_vertices)
+{
+    m_vertices = p_vertices;
+}
+
+void Meshe::SetTriangles(const std::vector<Triangle>& p_triangles)
+{
+    m_triangles = p_triangles;
+}
+
 void Meshe::AddVertex( const Vertex& p_vertex )
 {
     m_vertices.push_back( p_vertex );

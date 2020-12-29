@@ -103,6 +103,9 @@ public:
     std::vector<Vertex> GetVertices(void) const;
     std::vector<Triangle> GetTriangles(void) const;
 
+    void SetVertices(const std::vector<Vertex>& p_vertices);
+    void SetTriangles(const std::vector<Triangle>& p_triangles);
+
 
     void AddVertex( const Vertex& p_vertex );
     void SetVertex( long p_index, const Vertex& p_vertex );
