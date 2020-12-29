@@ -31,7 +31,7 @@ namespace DrawSpace
 {
 namespace Core
 {
-class Vertex
+struct Vertex
 {
 private:
     void init_text_coords( void )

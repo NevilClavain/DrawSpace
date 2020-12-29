@@ -32,7 +32,7 @@ namespace DrawSpace
 namespace Core
 {
 
-class Triangle
+struct Triangle
 {
 public:
     long vertex1;
