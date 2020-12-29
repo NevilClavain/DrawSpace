@@ -798,6 +798,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						// if not, setup a new sequence
 
+						_DSDEBUG(rs_logger, dsstring("No entry in m_meshesCache for ") << final_asset_path << dsstring(", loading it with ASSIMP") );
+
 						RunnerSequenceStep load_meshes_step;
 
 						load_meshes_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
@@ -834,7 +836,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							LoadFileToAssimpTask* task{ static_cast<LoadFileToAssimpTask*>(p_step.GetTask()) };
 
 							MesheCacheEntry mesheCacheEntry(task->GetImporter(), task->GetScene());
-							//(*meshesCache)[final_asset_path] = std::make_pair(task->GetImporter(), task->GetScene());
 
 							(*meshesCache)[final_asset_path] = mesheCacheEntry;
 							
@@ -844,17 +845,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							p_seq.SetCurrentStep("fillMeshesDescriptionStep");
 						});
-
 						
 						sequence.RegisterStep(dsstring("loadMeshesStep"), load_meshes_step);
-						sequence.SetCurrentStep(dsstring("loadMeshesStep"));
-						
+						sequence.SetCurrentStep(dsstring("loadMeshesStep"));						
 					}
 					else
 					{
+						_DSDEBUG(rs_logger, dsstring("Entry found in m_meshesCache for ") << final_asset_path);
 						sequence.SetCurrentStep(dsstring("fillMeshesDescriptionStep"));
 					}
-
 
 					AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
 
@@ -966,10 +965,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					
 						if (anims_aspect)
 						{
+							_DSDEBUG(rs_logger, dsstring("Animation aspect detected for ") << final_asset_path);
 							p_seq.SetCurrentStep("fillMeshesAnimationsStep");
 						}
 						else
 						{
+							_DSDEBUG(rs_logger, dsstring("No animation aspect for ") << final_asset_path << dsstring(", building meshe..."));
 							p_seq.SetCurrentStep("buildMesheStep");
 						}						
 					});
@@ -1077,6 +1078,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						if (0 == cacheEntry.m_meshes_data.count(meshe_id))
 						{
+							_DSDEBUG((*rs_logger), dsstring("No vertices/triangles found in cache for ") << final_asset_path << dsstring(" meshe ") << meshe_id  );
 							// no data found in cache
 
 							const dsstring task_id{ final_asset_path };
@@ -1089,6 +1091,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						}
 						else
 						{
+							_DSDEBUG((*rs_logger), dsstring("Vertices/triangles data found in cache for ") << final_asset_path << dsstring(" meshe ") << meshe_id);
 							// data found in cache for this meshe id, use it
 							target_meshe->SetVertices(cacheEntry.m_meshes_data.at(meshe_id).m_vertices);
 							target_meshe->SetTriangles(cacheEntry.m_meshes_data.at(meshe_id).m_triangles);
