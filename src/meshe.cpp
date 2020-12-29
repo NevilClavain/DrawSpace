@@ -92,6 +92,16 @@ void Meshe::GetTriangles( long p_index, Triangle& p_triangle )
     p_triangle = m_triangles[p_index];
 }
 
+std::vector<Vertex> Meshe::GetVertices(void) const
+{
+    return m_vertices;
+}
+
+std::vector<Triangle> Meshe::GetTriangles(void) const
+{
+    return m_triangles;
+}
+
 void Meshe::AddVertex( const Vertex& p_vertex )
 {
     m_vertices.push_back( p_vertex );

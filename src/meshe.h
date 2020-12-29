@@ -100,6 +100,10 @@ public:
     void GetVertex( long p_index, Vertex& p_vertex );
     void GetTriangles( long p_index, Triangle& p_triangle );
 
+    std::vector<Vertex> GetVertices(void) const;
+    std::vector<Triangle> GetTriangles(void) const;
+
+
     void AddVertex( const Vertex& p_vertex );
     void SetVertex( long p_index, const Vertex& p_vertex );
     void AddTriangle( const Triangle& p_triangle, bool p_fastmode = false );
@@ -132,6 +136,7 @@ public:
 
     void SetNormalesTransf(const Utils::Matrix& p_transf);
     Utils::Matrix GetNormalesTransf( void ) const;
+
 };
 }
 }

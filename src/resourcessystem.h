@@ -45,6 +45,8 @@
 #include "animationssystem.h"
 
 #include "mesherenderingaspectimpl.h"
+#include "vertex.h"
+#include "triangle.h"
 
 
 struct aiNode;
@@ -71,9 +73,9 @@ namespace DrawSpace
 {
 namespace Core
 {
-class Meshe;
-class Texture;
-class Shader;
+class   Meshe;
+class   Texture;
+class   Shader;
 }
 
 
@@ -110,6 +112,14 @@ public:
 
         Assimp::Importer*   m_assimp_importer{ nullptr };
         const aiScene*      m_assimp_scene{ nullptr };
+
+        struct MesheData
+        {
+            std::vector<Core::Vertex>                         m_vertices;
+            std::vector<Core::Triangle>                       m_triangles;
+        };
+
+        std::map<dsstring, MesheData> m_meshes_data;
     };
 
 private:
@@ -134,8 +144,6 @@ private:
 
     std::map<dsstring, Blob>                                            m_texturesCache;
     std::map<dsstring, Blob>                                            m_shadersCache;
-    //std::map<dsstring, std::pair<Assimp::Importer*, const aiScene*>>    m_meshesCache;
-
     std::map<dsstring, MesheCacheEntry>                                 m_meshesCache;
 
 
@@ -183,7 +191,6 @@ private:
 	void update_bc_md5file(const dsstring& p_path, const dsstring& p_hash);
 	void update_bc_codefile(const dsstring& p_path, void* p_bc, int p_size);
     void notify_event(ResourceEvent p_event, const dsstring& p_path) const;
-    //void check_all_assets_loaded(Core::Entity* p_entity);
 
 
 public:

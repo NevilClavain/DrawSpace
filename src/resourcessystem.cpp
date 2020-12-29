@@ -1090,13 +1090,25 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					build_meshe_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
-						ResourcesAspect* resource_aspect{ p_step.GetComponent<ResourcesAspect*>("resources_aspect")->getPurpose() };
+						auto				final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						ResourcesAspect*	resource_aspect{ p_step.GetComponent<ResourcesAspect*>("resources_aspect")->getPurpose() };
+						Core::Meshe*		target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
+						auto				meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+						dsstring			meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
 
 						BuildMesheTask* task{ static_cast<BuildMesheTask*>(p_step.GetTask()) };
 						_DRAWSPACE_DELETE_(task);
 
 						ResourcesAspect::MeshesFileDescription mesheFileDescription{ p_seq.GetComponent< ResourcesAspect::MeshesFileDescription>("mesheFileDescription")->getPurpose() };
 						resource_aspect->AddMeshesFileDescription(mesheFileDescription);
+
+						// store triangles/vertices data in cache if not already present
+						MesheCacheEntry& cacheEntry{ (*meshesCache).at(final_asset_path) };
+						if (0 == cacheEntry.m_meshes_data.count(meshe_id))
+						{
+							cacheEntry.m_meshes_data[meshe_id].m_vertices = target_meshe->GetVertices();
+							cacheEntry.m_meshes_data[meshe_id].m_triangles = target_meshe->GetTriangles();
+						}
 
 						p_seq.DeclareCompleted(); // end of sequence :)
 					});
