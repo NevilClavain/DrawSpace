@@ -250,7 +250,6 @@ neb_update()
 container_angle_y_deg = 0.0
 container_angle_x_deg = 0.0
 
---rg:update_renderingqueues()
 
 g:activate_resourcessystem();
 
