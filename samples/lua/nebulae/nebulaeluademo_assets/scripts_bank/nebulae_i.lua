@@ -3,6 +3,40 @@ include('spacebox_model.lua')
 
 ctrl_key = FALSE
 
+
+resources_event = "..."
+
+
+g:add_resourceeventcb( "onresourceevent",
+function( event, resource_path )
+
+    local evt_out
+
+    if event == BLOB_LOAD then
+       evt_out = "loading :"..resource_path
+    elseif event == BLOB_LOADED then
+       evt_out = "loaded :"..resource_path
+    elseif event == ASSET_SETLOADEDBLOB then
+       evt_out = "set :"..resource_path
+    elseif event == SHADERCACHE_CREATION then
+       evt_out = "shader cache creation"
+    elseif event == SHADER_COMPILATION then
+       evt_out = "compiling :"..resource_path
+    elseif event == SHADER_COMPILED then
+       evt_out = "compilation done :"..resource_path
+    elseif event == ALL_ASSETS_LOADED then
+       evt_out = "All assets loaded !"
+       g:deactivate_resourcessystem();
+       rg:update_renderingqueues()
+    else
+       evt_out = "? : "..event       
+    end
+    resources_event = evt_out
+end)
+
+
+
+
 g:print('Current renderer is '..model.renderer_infos[1]..', '..model.renderer_infos[2]..'x'..model.renderer_infos[3])
 renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
@@ -67,6 +101,13 @@ camera_width, camera_height, zn, zf = model.camera.entity:read_cameraparams()
 g:print('camera params = '..camera_width..' '..camera_height..' '..zn..' '..zf )
 rg:set_viewportquadshaderrealvector('transfer_pass', 'camera_params', camera_width, camera_height, zn, zf)
 rg:set_viewportquadshaderrealvector('transfer_pass', 'resol', renderer_infos[2], renderer_infos[3], 0.0, 0.0)
+
+
+text_renderer=TextRendering()
+text_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
+
+
+
 
 -- nebulae params set
 neb_params = 
@@ -209,7 +250,9 @@ neb_update()
 container_angle_y_deg = 0.0
 container_angle_x_deg = 0.0
 
-rg:update_renderingqueues()
+--rg:update_renderingqueues()
+
+g:activate_resourcessystem();
 
 mouse_right = FALSE
 
@@ -245,6 +288,8 @@ end)
 
 g:add_appruncb( "run",
 function()
+
+  text_renderer:update(10, 150, 255, 0, 0, resources_event)
 
   local mvt_info = { model.camera.mvt:read() }
   model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)

@@ -19,6 +19,8 @@ rg:remove_pass('transfer_pass')
 
 commons.trash.final_pass(rg, 'final_pass')
 
+text_renderer:release()
+
 rg:update_renderingqueues()
 g:release_assets()
 
