@@ -286,52 +286,6 @@ btRigidBody* BodyAspect::Init( void )
         }
     }
 
-    /*
-    if( boxcollision_shapes.size() )
-    {
-        DrawSpace::Utils::Vector box_dims;
-        box_dims = boxcollision_shapes[0]->getPurpose().m_box;
-
-        btBoxShape* shape = _DRAWSPACE_NEW_( btBoxShape, btBoxShape( btVector3( box_dims[0], box_dims[1], box_dims[2] ) ) );
-        m_collisionShape = shape;
-    }
-    else if( spherecollision_shapes.size() )
-    {
-        dsreal sphere_radius = spherecollision_shapes[0]->getPurpose().m_ray;
-        m_collisionShape = _DRAWSPACE_NEW_( btSphereShape, btSphereShape( sphere_radius ) );
-    }
-    else if( meshecollision_shapes.size() )
-    {
-        if( COLLIDER != m_mode && ATTRACTOR_COLLIDER != m_mode)
-        {
-            _DSEXCEPTION( "Meshe collision shape is for colliders only !! (see bullet source code)" );        
-        }
-        Meshe meshe = meshecollision_shapes[0]->getPurpose().m_meshe;
-
-        m_mesh = _DRAWSPACE_NEW_( btTriangleMesh, btTriangleMesh );
-
-        for( long i = 0; i < meshe.GetTrianglesListSize(); i++ )
-        {
-            Triangle curr_triangle;
-            meshe.GetTriangles( i, curr_triangle );
-
-            Vertex v1, v2, v3;
-
-            meshe.GetVertex( curr_triangle.vertex1, v1 );
-            meshe.GetVertex( curr_triangle.vertex2, v2 );
-            meshe.GetVertex( curr_triangle.vertex3, v3 );
-
-            btVector3 a( v1.x, v1.y, v1.z );
-            btVector3 b( v2.x, v2.y, v2.z );
-            btVector3 c( v3.x, v3.y, v3.z );
-
-            m_mesh->addTriangle( a, b, c, false );
-        }
-
-        m_collisionShape = _DRAWSPACE_NEW_( btBvhTriangleMeshShape, btBvhTriangleMeshShape( m_mesh, true, true ) );
-    }
-    */
-
     ///////////////////////////////////////////////////////////////////////////
 
     m_motionState = _DRAWSPACE_NEW_( btDefaultMotionState, btDefaultMotionState( bt_transform ) );
