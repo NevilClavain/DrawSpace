@@ -480,11 +480,11 @@ void MainService::on_animation_event(const dsstring& p_event_id, AnimationsSyste
 	}
 }
 
-void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
+void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context)
 {
     for (auto it = m_resourceevent_lua_callbacks.begin(); it != m_resourceevent_lua_callbacks.end(); ++it)
     {
-        LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_resource);
+        LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_resource, p_context);
     }
 }
 
@@ -1047,9 +1047,9 @@ void MainService::UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_
     }
 }
 
-void MainService::ActivateResourcesSystem(void)
+void MainService::ActivateResourcesSystem(const dsstring& p_context)
 {
-    m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem").Activate();
+    m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem").Activate(p_context);
 }
 
 void MainService::DeactivateResourcesSystem(void)

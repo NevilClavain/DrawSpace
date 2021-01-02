@@ -32,7 +32,7 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
-    using ResourceEventCallback = DrawSpace::Core::CallBack2<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&>;
+    using ResourceEventCallback = DrawSpace::Core::CallBack3<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&, const dsstring&>;
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
@@ -135,7 +135,7 @@ protected:
     void create_screen_impostors( void );
     void create_world_impostor( void );
 
-    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource);
+    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context);
 
 
 public:

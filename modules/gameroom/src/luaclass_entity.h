@@ -79,6 +79,7 @@ public:
     int LUA_configureworld( lua_State* p_L );
 	int LUA_updategravitydirection(lua_State* p_L);
 	int LUA_updategravitystate(lua_State* p_L);
+    int LUA_registerrigidbody(lua_State* p_L);
     int LUA_releaseworld( lua_State* p_L );
 
     int LUA_configurecamera( lua_State* p_L );

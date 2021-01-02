@@ -100,7 +100,7 @@ public:
         ALL_ASSETS_LOADED,
     };
 
-    using ResourceEventHandler = DrawSpace::Core::BaseCallback2<void, ResourceEvent, const dsstring&>;
+    using ResourceEventHandler = DrawSpace::Core::BaseCallback3<void, ResourceEvent, const dsstring&, const dsstring&>;
 
     struct MesheCacheEntry
     {
@@ -154,6 +154,8 @@ private:
     bool                                                                m_all_asset_loaded{ false };
 
     bool                                                                m_active{ false };
+
+    dsstring                                                            m_current_context;
  
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
@@ -197,7 +199,7 @@ public:
 
     ResourcesSystem(RunnerSystem& p_runner);
 
-    void Activate(void);
+    void Activate(const dsstring& p_context);
     void Deactivate(void);
 
     void RegisterEventHandler(ResourceEventHandler* p_handler);

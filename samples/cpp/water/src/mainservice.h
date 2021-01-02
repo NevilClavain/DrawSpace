@@ -32,9 +32,9 @@ class MainService : public DrawSpace::Interface::AspectImplementations::ServiceA
 {
 protected:
 
-    using GUIWidgetPushButtonClickedCallback    = DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>                     ;
+    using GUIWidgetPushButtonClickedCallback    = DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>;
     using SystemsUpdateEvtCb                    = DrawSpace::Core::CallBack<MainService, void, DrawSpace::Systems::Hub::SystemsUpdateEvent>;
-    using ResourceEventCallback                 = DrawSpace::Core::CallBack2<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&>;
+    using ResourceEventCallback                 = DrawSpace::Core::CallBack3<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&, const dsstring&>;
 
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
@@ -114,7 +114,7 @@ protected:
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
     void on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateEvent p_evt );
-    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource);
+    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context);
 
     void create_skybox( void );
     void create_ground( void );

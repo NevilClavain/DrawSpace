@@ -33,7 +33,6 @@ using namespace DrawSpace::Utils;
 
 PhysicsAspect::PhysicsAspect( void ) :
 m_gravity_applied( false ),
-//m_tm( NULL )
 m_time_aspect( NULL )
 {
     m_collisionConfiguration            = _DRAWSPACE_NEW_( btDefaultCollisionConfiguration, btDefaultCollisionConfiguration );
@@ -54,6 +53,33 @@ PhysicsAspect::~PhysicsAspect( void )
     _DRAWSPACE_DELETE_( m_sequentialImpulseConstraintSolver );
 }
 
+void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
+{
+    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+
+    if (!body_aspect)
+    {
+        _DSEXCEPTION("Entity has no body aspect")
+    }
+
+    btRigidBody* bd = body_aspect->Init();
+
+    m_bodies[bd] = p_entity;
+    body_aspect->RegisterPhysicalAspect(this);
+}
+
+
+void PhysicsAspect::UnregisterRigidBody( btRigidBody* p_rigidbody )
+{
+    if( m_bodies.count( p_rigidbody ) )
+    {
+        //m_bodies_set.erase( m_bodies[p_rigidbody] );
+        m_bodies.erase( p_rigidbody );
+    }
+}
+
+
+/*
 void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
 {
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
@@ -78,6 +104,7 @@ void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
         }
     }
 }
+
 
 void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
 {    
@@ -114,7 +141,7 @@ void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
         m_bodies_set.erase( to_remove[i] );
     }
 }
-
+*/
 
 void PhysicsAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 {
@@ -270,11 +297,4 @@ btDiscreteDynamicsWorld* PhysicsAspect::GetWorld( void ) const
     return m_world;
 }
 
-void PhysicsAspect::UnregisterRigidBody( btRigidBody* p_rigidbody )
-{
-    if( m_bodies.count( p_rigidbody ) )
-    {
-        m_bodies_set.erase( m_bodies[p_rigidbody] );
-        m_bodies.erase( p_rigidbody );
-    }
-}
+

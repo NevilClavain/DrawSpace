@@ -39,7 +39,7 @@ protected:
 
     using GUIWidgetPushButtonClickedCallback	= DrawSpace::Core::CallBack2<MainService, void, const dsstring&, const dsstring&>;
 	using AnimationEventCallback				= DrawSpace::Core::CallBack3<MainService, void, const dsstring&, DrawSpace::Systems::AnimationsSystem::AnimationEvent, const dsstring&>;
-    using ResourceEventCallback                 = DrawSpace::Core::CallBack2<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&>;
+    using ResourceEventCallback                 = DrawSpace::Core::CallBack3<MainService, void, DrawSpace::Systems::ResourcesSystem::ResourceEvent, const dsstring&, const dsstring&>;
 
     GUIWidgetPushButtonClickedCallback                                              m_guiwidgetpushbuttonclicked_cb;
 	AnimationEventCallback															m_animation_events_cb;
@@ -108,7 +108,7 @@ protected:
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 	void on_animation_event(const dsstring& p_event_id, DrawSpace::Systems::AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name);
-    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource);
+    void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context);
 
     void set_mouse_circular_mode( bool p_state );
 
@@ -220,7 +220,7 @@ public:
     void RegisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
     void UnregisterNewModule(DrawSpace::Interface::Module::Root* p_mod_root);
 
-    void ActivateResourcesSystem(void);
+    void ActivateResourcesSystem(const dsstring& p_context);
     void DeactivateResourcesSystem(void);
   
     friend class DrawSpace::Utils::BaseSingleton<MainService>;

@@ -50,24 +50,28 @@ protected:
 
     TimeAspect*                                                     m_time_aspect;
 
-    std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies;
-    std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
+    std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies; // entites gerées "sous" l'entite-world physique possedant cet aspect
 
-    void                on_added_bodyentity( DrawSpace::Core::Entity* p_entity );
-    void                on_removed_bodyentity( DrawSpace::Core::Entity* p_entity );
+    //std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
+
+    //void                on_added_bodyentity( DrawSpace::Core::Entity* p_entity );
+    //void                on_removed_bodyentity( DrawSpace::Core::Entity* p_entity );
 
 public:
 
     PhysicsAspect( void );
     ~PhysicsAspect( void );
     void StepSimulation( void );
-    void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
+    //void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
 
-    void UnregisterRigidBody( btRigidBody* p_rigidbody );
+    
 
     btDiscreteDynamicsWorld* GetWorld( void ) const;
+
+    void RegisterRigidBody(DrawSpace::Core::Entity* p_entity);
+    void UnregisterRigidBody( btRigidBody* p_rigidbody );
 };
 }
 }

@@ -4,7 +4,7 @@
 
 
 g:add_resourceeventcb( "onresourceevent",
-function( event, resource_path )
+function( event, resource_path, context )
 
     if event == ALL_ASSETS_LOADED then
        g:deactivate_resourcessystem();
@@ -57,4 +57,4 @@ function()
 
 end)
 
-g:activate_resourcessystem();
+g:activate_resourcessystem("init");

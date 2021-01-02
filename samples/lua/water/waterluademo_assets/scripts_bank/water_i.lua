@@ -20,6 +20,48 @@ hmi_mode=FALSE
 cube_instance=0
 
 
+resources_event = "..."
+
+g:add_resourceeventcb( "onresourceevent",
+function( event, resource_path, context )
+
+    local evt_out
+
+    if event == BLOB_LOAD then
+       evt_out = "loading :"..resource_path
+    elseif event == BLOB_LOADED then
+       evt_out = "loaded :"..resource_path
+    elseif event == ASSET_SETLOADEDBLOB then
+       evt_out = "set :"..resource_path
+    elseif event == SHADERCACHE_CREATION then
+       evt_out = "shader cache creation"
+    elseif event == SHADER_COMPILATION then
+       evt_out = "compiling :"..resource_path
+    elseif event == SHADER_COMPILED then
+       evt_out = "compilation done :"..resource_path
+    elseif event == ALL_ASSETS_LOADED then
+       evt_out = "All assets loaded !"
+       g:deactivate_resourcessystem()
+       rg:update_renderingqueues()
+
+       if context == "init" then
+         root_entity:register_rigidbody(land.models['l'].entity)
+		 root_entity:register_rigidbody(metalcube.models['cube'].entity)
+		 root_entity:register_rigidbody(spherebump.models['sphere'].entity)
+
+	   else
+	    
+		 -- here, context = cube entity instance name 
+	     root_entity:register_rigidbody(metalcube.models[context].entity)
+
+       end
+    else
+       evt_out = "? : "..event       
+    end
+    resources_event = evt_out
+end)
+
+
 g:print('Current renderer is '..model.renderer_infos[1]..', '..model.renderer_infos[2]..'x'..model.renderer_infos[3])
 renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
@@ -102,6 +144,10 @@ waves:init_fromtimeaspectof(root_entity,0.0)
 
 text_renderer=TextRendering()
 text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
+
+
+text2_renderer=TextRendering()
+text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 
 skydome_passes_config = 
@@ -230,7 +276,7 @@ fps_pitch:init_fromtimeaspectof(root_entity,0.0)
 
 
 
-rg:update_renderingqueues()
+-- rg:update_renderingqueues()
 
 mouse_right = FALSE
 
@@ -362,6 +408,8 @@ function()
 
 	text_renderer:update(520, 30, 255, 0, 0, output_infos)
 
+	text2_renderer:update(10, 150, 255, 0, 0, resources_event)
+
 
     if waves_inc == TRUE then
 
@@ -385,10 +433,6 @@ end)
 
 
 
-gui=Gui()
-gui:init()
-gui:set_resourcespath("./testskin")
-gui:load_scheme("AlfiskoSkin.scheme")
 gui:load_layout("main.layout","testskin/layouts/main_widgets.conf")
 gui:set_layout("main.layout")
 gui:show_gui(TRUE)
@@ -405,6 +449,9 @@ add_cube = function()
   metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_config, 'root' )
 
   cube_instance = cube_instance + 1
+
+  -- here, context = cube entity instance name
+  g:activate_resourcessystem(instance_name)
 
 end
 
@@ -431,7 +478,7 @@ function( layout, widget )
   elseif layout == 'main.layout' and widget == "Button_Create" then
 
 	add_cube()	
-	rg:update_renderingqueues()
+	
 
   elseif layout == 'main.layout' and widget == "Button_Destroy" then
 	
@@ -448,4 +495,6 @@ set_water_bump = function(bias)
 end
 
 g:signal_renderscenebegin("eg")
+
+g:activate_resourcessystem("init")
 

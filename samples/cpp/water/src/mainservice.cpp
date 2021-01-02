@@ -332,7 +332,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate();
+    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate("INIT");
 
     m_entitygraph.PushSignal_RenderSceneBegin();
 
@@ -811,9 +811,8 @@ void MainService::create_dynamic_cube( void )
 
     m_dynamic_cubes.push_back( cube );
 
-    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate();
+    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate("NEW CUBE");
 
-    //m_rendergraph.PushSignal_UpdatedRenderingQueues();
 }
 
 void MainService::create_static_cube( void )
@@ -1070,11 +1069,23 @@ void MainService::on_systems_update_evt( DrawSpace::Systems::Hub::SystemsUpdateE
 {
 }
 
-void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
+void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context)
 {
     if (p_event == DrawSpace::Systems::ResourcesSystem::ResourceEvent::ALL_ASSETS_LOADED)
     {
         m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
         m_rendergraph.PushSignal_UpdatedRenderingQueues();
+
+        PhysicsAspect* physic_aspect{ m_world1Entity.GetAspect<PhysicsAspect>() };
+
+        if ("INIT" == p_context)
+        {            
+            physic_aspect->RegisterRigidBody(&m_groundEntity);
+            physic_aspect->RegisterRigidBody(&m_staticCubeEntity);
+        }
+        else
+        {
+            physic_aspect->RegisterRigidBody(m_dynamic_cubes.back().dynCubeEntity);
+        }
     }
 }

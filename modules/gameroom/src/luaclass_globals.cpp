@@ -635,7 +635,15 @@ int LuaClass_Globals::LUA_sin(lua_State* p_L)
 
 int LuaClass_Globals::LUA_ActivateResourcesSystem(lua_State* p_L)
 {
-    MainService::GetInstance()->ActivateResourcesSystem();
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::activate_resourcessystem : argument(s) missing");
+    }
+
+    dsstring contextid = luaL_checkstring(p_L, 1);
+
+    MainService::GetInstance()->ActivateResourcesSystem(contextid);
     return 0;
 }
 

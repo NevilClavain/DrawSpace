@@ -43,7 +43,7 @@ PhysicsSystem::~PhysicsSystem( void )
 
 void PhysicsSystem::run( EntityNodeGraph* p_entitygraph )
 {
-    m_world_bodies_list.clear(); // clear list of entities with body aspect
+    //m_world_bodies_list.clear(); // clear list of entities with body aspect
     m_current_graph = p_entitygraph;
     m_current_graph->AcceptSystemLeafToRoot( this );
 }
@@ -54,18 +54,18 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     if( physics_aspect )
     {
         // submit current Body entities list to physic aspect
-        physics_aspect->UpdateBodiesList( m_world_bodies_list );
+        //physics_aspect->UpdateBodiesList( m_world_bodies_list );
 
         physics_aspect->StepSimulation();
 
-        m_world_bodies_list.clear(); // clear list for next entity with Physics aspect (if exists)
+        //m_world_bodies_list.clear(); // clear list for next entity with Physics aspect (if exists)
     }
     else
     {
         BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
         if( body_aspect )
         {
-            m_world_bodies_list.insert( p_entity ); // memorize this entity with Body aspect
+            //m_world_bodies_list.insert( p_entity ); // memorize this entity with Body aspect
 
             //////////////////////////////////////////////////////////////////////////////////////////
 

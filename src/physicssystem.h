@@ -38,7 +38,7 @@ class PhysicsSystem : public Interface::System
 protected:
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
-    std::set<Core::Entity*>             m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)
+    //std::set<Core::Entity*>             m_world_bodies_list; // pour chaque entitee comportant un aspect "Physics", liste des Entites comportant un aspect "Body" trouvees "sous" celle ci (entites filles et sous filles)
     EntityGraph::EntityNodeGraph*       m_current_graph;
 
 public:

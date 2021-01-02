@@ -81,9 +81,10 @@ m_runner_system(p_runner)
 
 }
 
-void ResourcesSystem::Activate(void)
+void ResourcesSystem::Activate(const dsstring& p_context)
 {
 	m_active = true;
+	m_current_context = p_context; // then provided in resource event callbacks arguments
 }
 
 void ResourcesSystem::Deactivate(void)
@@ -120,7 +121,7 @@ void ResourcesSystem::notify_event(ResourceEvent p_event, const dsstring& p_path
 
 	for (auto& e : m_evt_handlers)
 	{
-		(*e)(p_event, p_path);
+		(*e)(p_event, p_path, m_current_context);
 	}
 }
 

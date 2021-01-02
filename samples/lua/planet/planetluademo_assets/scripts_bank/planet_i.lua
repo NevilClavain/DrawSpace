@@ -11,7 +11,7 @@ resources_event = "..."
 
 
 g:add_resourceeventcb( "onresourceevent",
-function( event, resource_path )
+function( event, resource_path, context )
 
     local evt_out
 
@@ -29,8 +29,13 @@ function( event, resource_path )
        evt_out = "compilation done :"..resource_path
     elseif event == ALL_ASSETS_LOADED then
        evt_out = "All assets loaded !"
-       g:deactivate_resourcessystem();
+       g:deactivate_resourcessystem()
        rg:update_renderingqueues()
+
+       if context == "init" then
+         root_entity:register_rigidbody(bellerophon_entity)
+         root_entity:register_rigidbody(spherebump.models['sphere'].entity)
+       end
     else
        evt_out = "? : "..event       
     end
@@ -596,4 +601,4 @@ g:show_mousecursor(FALSE)
 
 set_camera(current_cam)
 
-g:activate_resourcessystem();
+g:activate_resourcessystem("init")

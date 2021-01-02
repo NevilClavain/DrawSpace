@@ -17,6 +17,7 @@ spherebump.view.unload('sphere')
 destroy_all_cubes()
 
 text_renderer:release()
+text2_renderer:release()
 
 g:remove_appruncb('run')
 
@@ -41,8 +42,6 @@ g:remove_keyupcb("keyup")
 
 gui:show_gui(FALSE)
 gui:unload_alllayouts()
-gui:unload_allschemes()
-gui:release()
 
 g:show_mousecursor(TRUE)
 g:set_mousecursorcircularmode(FALSE)
@@ -52,7 +51,7 @@ root_entity:release_world()
 root_entity:remove_aspect(PHYSICS_ASPECT)
 
 
-gui = nil
+
 
 y_cube = nil
 

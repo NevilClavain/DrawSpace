@@ -264,7 +264,7 @@ bool MainService::Init( void )
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
     
-    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate();
+    m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate("INIT");
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -1003,12 +1003,21 @@ void MainService::OnAppEvent( WPARAM p_wParam, LPARAM p_lParam )
 {
 }
 
-void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource)
+void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context)
 {
     if (p_event == DrawSpace::Systems::ResourcesSystem::ResourceEvent::ALL_ASSETS_LOADED)
     {
         m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
         m_rendergraph.PushSignal_UpdatedRenderingQueues();
+
+        if ("INIT" == p_context)
+        {
+            PhysicsAspect* physic_aspect{ m_world1Entity.GetAspect<PhysicsAspect>() };
+            physic_aspect->RegisterRigidBody(&m_groundEntity);
+            physic_aspect->RegisterRigidBody(&m_cubeEntity);
+            physic_aspect->RegisterRigidBody(&m_cube2Entity);
+            physic_aspect->RegisterRigidBody(&m_mainBodyEntity);            
+        }
     }
 }
 

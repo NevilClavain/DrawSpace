@@ -8,7 +8,7 @@ resources_event = "..."
 
 
 g:add_resourceeventcb( "onresourceevent",
-function( event, resource_path )
+function( event, resource_path, context )
 
     local evt_out
 
@@ -251,7 +251,7 @@ container_angle_y_deg = 0.0
 container_angle_x_deg = 0.0
 
 
-g:activate_resourcessystem();
+g:activate_resourcessystem("init");
 
 mouse_right = FALSE
 

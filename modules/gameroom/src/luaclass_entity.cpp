@@ -62,6 +62,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
     { "configure_world", &LuaClass_Entity::LUA_configureworld },
 	{ "update_gravitydirection", &LuaClass_Entity::LUA_updategravitydirection },
 	{ "update_gravitystate", &LuaClass_Entity::LUA_updategravitystate },
+	{ "register_rigidbody", &LuaClass_Entity::LUA_registerrigidbody },
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
 	{ "read_cameraparams", &LuaClass_Entity::LUA_readcameraparams },
@@ -389,6 +390,28 @@ int LuaClass_Entity::LUA_updategravitystate(lua_State* p_L)
 	}
 
 	physics_aspect->GetComponent<bool>("gravity_state")->getPurpose() = gravity;
+
+	return 0;
+}
+
+
+int LuaClass_Entity::LUA_registerrigidbody(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::register_rigidbody : argument(s) missing");
+	}
+
+	LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+
+	PhysicsAspect* physics_aspect{ m_entity.GetAspect<PhysicsAspect>() };
+	if (NULL == physics_aspect)
+	{
+		LUA_ERROR("Entity::register_rigidbody : physics aspect doesnt exists in this entity!");
+	}
+
+	physics_aspect->RegisterRigidBody(&lua_ent->GetEntity());
 
 	return 0;
 }
