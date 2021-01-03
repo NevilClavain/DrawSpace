@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
+* Emmanuel Chaumont Copyright (c) 2013-2021                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -514,8 +514,8 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 
 	LUA_TRY
 	{
-		animation_aspect->AddComponent<dsstring>("anim_event_id"); // id unique pour cette entité, passé en arg de callbacks evt animation
-																	// permet de savoir pour quelle entité l'evt animation se produit
+		animation_aspect->AddComponent<dsstring>("anim_event_id"); // id unique pour cette entitï¿½, passï¿½ en arg de callbacks evt animation
+																	// permet de savoir pour quelle entitï¿½ l'evt animation se produit
 
 		animation_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes");
 		animation_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping");
