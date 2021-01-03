@@ -322,11 +322,11 @@ bool MainService::Init( void )
 
 
     m_renderer->GUI_InitSubSystem();
-    m_renderer->GUI_SetResourcesRootDirectory( "./testskin" );
+    m_renderer->GUI_SetResourcesRootDirectory( "./guiskins" );
     
     m_renderer->GUI_LoadScheme( "AlfiskoSkin.scheme" );
 
-    m_renderer->GUI_LoadLayout( "main.layout", "testskin/layouts/main_widgets.conf" );
+    m_renderer->GUI_LoadLayout( "main.layout", "guiskins/layouts/main_widgets.conf" );
 
     m_renderer->GUI_SetLayout( "main.layout" );
 

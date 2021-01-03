@@ -55,7 +55,14 @@ install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAK
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/cpp/water/waterdemo_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 #CEGUI stuff : gui skin
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+# install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/imagesets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/layouts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/looknfeel DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/schemes DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/xml_schemas DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+
 
 # required shaders for this demo
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterdemo_assets/shaders_bank/hlsl_4_0)

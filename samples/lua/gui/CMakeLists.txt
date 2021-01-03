@@ -35,4 +35,10 @@ add_custom_target(${sample_name} SOURCES ${source_files})
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/gui/guiluademo_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 #CEGUI stuff : gui skin
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2 DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+# install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2 DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2/imagesets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2/layouts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2/looknfeel DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2/schemes DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/xfskin2/xml_schemas DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)

@@ -549,7 +549,8 @@ model.env.fog.setdensity(0.0)
 
 
 
-gui:load_layout("timecontrol.layout","xfskin2/layouts/timecontrol_widgets.conf")
+--gui:load_layout("timecontrol.layout","xfskin2/layouts/timecontrol_widgets.conf")
+gui:load_layout("timecontrol.layout","guiskins/layouts/timecontrol_widgets.conf")
 gui:set_layout("timecontrol.layout")
 gui:show_gui(TRUE)
 

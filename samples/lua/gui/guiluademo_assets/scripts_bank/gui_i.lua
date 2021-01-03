@@ -1,21 +1,9 @@
 
 
-gui=Gui()
 
-gui:init()
 
---[[
-gui:set_resourcespath("./testskin")
-gui:load_scheme("AlfiskoSkin.scheme")
-gui:load_layout("main.layout","testskin/layouts/main_widgets.conf")
-gui:set_layout("main.layout")
---]]
-
-gui:set_resourcespath("./xfskin2")
-gui:load_scheme("xfskin.scheme")
-gui:load_layout("planetsetup.layout","xfskin2/layouts/planetsetup_widgets.conf")
-gui:load_layout("planetseedssetup.layout","xfskin2/layouts/planetseedssetup_widgets.conf")
-
+gui:load_layout("planetsetup.layout","guiskins/layouts/planetsetup_widgets.conf")
+gui:load_layout("planetseedssetup.layout","guiskins/layouts/planetseedssetup_widgets.conf")
 
 gui:set_layout("planetsetup.layout")
 

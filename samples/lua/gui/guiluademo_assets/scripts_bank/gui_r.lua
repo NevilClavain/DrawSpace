@@ -6,8 +6,6 @@ dbg_text_renderer:release()
 gui:show_mousecursor(FALSE)
 gui:show_gui(FALSE)
 gui:unload_alllayouts()
-gui:unload_allschemes()
-gui:release()
 
 
 g:remove_keydowncb("keydown")

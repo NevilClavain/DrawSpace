@@ -433,7 +433,7 @@ end)
 
 
 
-gui:load_layout("main.layout","testskin/layouts/main_widgets.conf")
+gui:load_layout("main.layout","guiskins/layouts/main_widgets.conf")
 gui:set_layout("main.layout")
 gui:show_gui(TRUE)
 
