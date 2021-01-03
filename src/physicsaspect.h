@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
+* Emmanuel Chaumont Copyright (c) 2013-2021                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -50,7 +50,7 @@ protected:
 
     TimeAspect*                                                     m_time_aspect;
 
-    std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies; // entites gerées "sous" l'entite-world physique possedant cet aspect
+    std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies; // entites gerï¿½es "sous" l'entite-world physique possedant cet aspect
 
     //std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
 

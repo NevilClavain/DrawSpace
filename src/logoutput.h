@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
+* Emmanuel Chaumont Copyright (c) 2013-2021                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -21,8 +21,6 @@
 *
 */
 /* -*-LIC_END-*- */
-
-
 
 #ifndef _LOGOUTPUT_H_
 #define _LOGOUTPUT_H_
