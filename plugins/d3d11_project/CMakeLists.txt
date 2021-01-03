@@ -1,7 +1,7 @@
 # -*-LIC_BEGIN-*-
 #                                                                          
 # DrawSpace Rendering engine                                               
-# Emmanuel Chaumont Copyright (c) 2013-2020                     
+# Emmanuel Chaumont Copyright (c) 2013-2021                     
 #                                                                          
 # This file is part of DrawSpace.                                          
 #                                                                          
@@ -19,6 +19,7 @@
 #    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
 #
 # -*-LIC_END-*-
+
 cmake_minimum_required(VERSION 3.0)
 project(d3d11)
 
