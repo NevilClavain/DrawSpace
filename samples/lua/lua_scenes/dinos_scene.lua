@@ -6,6 +6,21 @@
 	include('metalcube_model.lua')
 	include('spacebox_model.lua')
 
+
+	g:add_resourceeventcb( "onresourceevent_dinoscene",
+	function( event, resource_path, context )
+
+      if event == ALL_ASSETS_LOADED then
+         root_entity:register_rigidbody(continent.models['continent'].entity)
+		 root_entity:register_rigidbody(boulder.models['rock'].entity)
+		 root_entity:register_rigidbody(spherebump.models['s'].entity)
+		 root_entity:register_rigidbody(spherebump.models['s2'].entity)
+		 root_entity:register_rigidbody(metalcube.models['c'].entity)
+
+
+      end
+    end)
+
 	max_apprun_cbfunc = function()
 
       local normalized_light_dir = Vector(environment.light0.direction.x, environment.light0.direction.y, environment.light0.direction.z, 0.0)
