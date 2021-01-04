@@ -1173,6 +1173,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_runner_system.GetSequence(final_asset_path).GetStep("buildMesheStep").RemoveComponent<DrawSpace::Logger::Sink*>("&rs_logger");
 
 						m_runner_system.RemoveSequence(final_asset_path);
+
+						AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+						if (anims_aspect)
+						{
+							anims_aspect->GetComponent<bool>("ready")->getPurpose() = true;
+						}											
 					}
 				}
             }

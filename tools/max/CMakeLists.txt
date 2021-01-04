@@ -44,7 +44,12 @@ install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl 
 # skin needed by max tool
 
 #CEGUI stuff : gui skin
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/maxskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/imagesets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/layouts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/looknfeel DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/schemes DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/xml_schemas DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
 
 ##################################################
 ############################ Models installation

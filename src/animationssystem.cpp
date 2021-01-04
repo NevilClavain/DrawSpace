@@ -351,40 +351,46 @@ void AnimationsSystem::VisitEntity(Core::Entity* p_parent, Core::Entity* p_entit
     AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
     if (anims_aspect)
     {
-		insert_transition_animation(anims_aspect);
+		// if animation is loaded, configured ready to use
+		bool ready = anims_aspect->GetComponent<bool>("ready")->getPurpose();
 
-		TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-		if (NULL == transform_aspect)
+		if (ready)
 		{
-			_DSEXCEPTION("Entity must have transformation aspect");
+			insert_transition_animation(anims_aspect);
+
+			TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+			if (NULL == transform_aspect)
+			{
+				_DSEXCEPTION("Entity must have transformation aspect");
+			}
+			TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
+
+			auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
+			auto& animations_pool = anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
+
+			run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			//// get some eventually forced bones position
+
+			apply_forced_bones_pos(anims_aspect);
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			///// directly apply last key of an animation
+
+			apply_animation_last_key(anims_aspect);
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			///// Push bones matrix to shader
+
+			RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
+			if (!rendering_aspect)
+			{
+				_DSEXCEPTION("An entity with AnimationsAspect must also have a RenderingAspect");
+			}
+
+			send_bones_to_shaders(anims_aspect, rendering_aspect);
 		}
-		TimeAspect* time_aspect = transform_aspect->GetTimeAspectRef();
-
-		auto& bones = anims_aspect->GetComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes")->getPurpose();
-		auto& animations_pool = anims_aspect->GetComponent<AnimationsAspect::AnimationsPool>("animations_pool")->getPurpose();
-
-		run_animations_pool(animations_pool, anims_aspect, time_aspect, bones);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		//// get some eventually forced bones position
-
-		apply_forced_bones_pos(anims_aspect);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		///// directly apply last key of an animation
-
-		apply_animation_last_key(anims_aspect);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		///// Push bones matrix to shader
-
-		RenderingAspect* rendering_aspect = p_entity->GetAspect <RenderingAspect>();
-		if (!rendering_aspect)
-		{
-			_DSEXCEPTION("An entity with AnimationsAspect must also have a RenderingAspect");
-		}
-
-		send_bones_to_shaders(anims_aspect, rendering_aspect);
     }
 }
 

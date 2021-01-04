@@ -12,6 +12,16 @@ mouse_right = FALSE
 mouse_left = FALSE
 
 
+g:add_resourceeventcb( "onresourceevent",
+function( event, resource_path, context )
+
+    if event == ALL_ASSETS_LOADED then
+       g:deactivate_resourcessystem()
+       rg:update_renderingqueues()
+    end
+end)
+
+
 mvt_mod = Module("mvtmod", "mvts")
 mvt_mod:load()
 g:print(mvt_mod:get_descr().. ' loaded')
@@ -51,7 +61,7 @@ eg:set_camera(model.camera.entity)
 
 
 
-rg:update_renderingqueues()
+--rg:update_renderingqueues()
 
 
 light_theta = SyncAngle()
@@ -334,11 +344,8 @@ end)
 
 root_entity:configure_world(environment.gravity_state, environment.gravity.x, environment.gravity.y, environment.gravity.z )
 
-gui=Gui()
-gui:init()
-gui:set_resourcespath("./maxskin")
-gui:load_scheme("AlfiskoSkin.scheme")
-gui:load_layout("max.layout","maxskin/layouts/max_widgets.conf")
+
+gui:load_layout("max.layout","guiskins/layouts/max_widgets.conf")
 gui:set_layout("max.layout")
 gui:show_gui(TRUE)
 
@@ -555,3 +562,4 @@ if max_init_cbfunc ~= nil then
 end
 
 g:signal_renderscenebegin("eg")
+g:activate_resourcessystem("init")

@@ -514,8 +514,8 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 
 	LUA_TRY
 	{
-		animation_aspect->AddComponent<dsstring>("anim_event_id"); // id unique pour cette entit�, pass� en arg de callbacks evt animation
-																	// permet de savoir pour quelle entit� l'evt animation se produit
+		animation_aspect->AddComponent<dsstring>("anim_event_id"); // id unique pour cette entité, passée en arg de callbacks evt animation
+																	// permet de savoir pour quelle entité l'evt animation se produit
 
 		animation_aspect->AddComponent<std::map<dsstring, AnimationsAspect::Node>>("nodes");
 		animation_aspect->AddComponent<std::map<dsstring, int>>("bones_mapping");
@@ -539,6 +539,8 @@ int LuaClass_Entity::LUA_configureanimationbones(lua_State* p_L)
 		animation_aspect->AddComponent<dsstring>("last_animation_name");
 
 		animation_aspect->AddComponent<dsstring>("apply_animation_last_key");
+
+		animation_aspect->AddComponent<bool>("ready", false);
 
 	} LUA_CATCH;
 
@@ -750,7 +752,10 @@ int LuaClass_Entity::LUA_releaseanimationbones(lua_State* p_L)
 
 		animation_aspect->RemoveComponent<dsstring>("last_animation_name");
 
-		animation_aspect->RemoveComponent<dsstring>("apply_animation_last_key");		
+		animation_aspect->RemoveComponent<dsstring>("apply_animation_last_key");
+
+		animation_aspect->RemoveComponent<bool>("ready");
+
 
 	} LUA_CATCH;
 

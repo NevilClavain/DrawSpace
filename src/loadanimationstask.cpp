@@ -41,6 +41,7 @@ void LoadAnimationsTask::Execute(void)
     load_scene_nodes_hierachy(root, scene_nodes);
 
     m_anims_aspect->GetComponent<std::map<dsstring, Aspect::AnimationsAspect::Node>>("nodes")->getPurpose() = scene_nodes;
+    m_anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose() = root->mName.C_Str();
 
     /// Loading animations & keyframes infos
     load_animations(m_scene, m_anims_aspect);

@@ -36,7 +36,6 @@ add_custom_target(${sample_name} SOURCES ${source_files})
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/water/waterluademo_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 #CEGUI stuff : gui skin
-# install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/gui_skins/testskin/imagesets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/guiskins)
