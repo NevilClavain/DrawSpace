@@ -120,6 +120,7 @@ public:
     bool IsCheckBoxChecked( const dsstring& p_layoutName, const dsstring& p_widgetName );
     void SetCheckboxState( const dsstring& p_layoutName, const dsstring& p_widgetName, bool p_state );
 
+    void SetMultiLineEditboxCaretIndex(const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index);
     
     void RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler );
     void RegisterCheckboxEventStateChangedHandler( DrawSpace::Core::BaseCallback3<void, const dsstring&, const dsstring&, bool>* p_handler );

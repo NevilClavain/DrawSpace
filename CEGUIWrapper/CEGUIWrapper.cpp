@@ -222,7 +222,6 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path, const dsstring& p_
     JSONParser parser;
     int token_index = 1;
 
-    //parser.ParseFromFile( "testskin/layouts/main_widgets.conf" );
     parser.ParseFromFile( p_widgets_path );
 
     if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
@@ -658,6 +657,35 @@ void CEGUIWrapper::GetText( const dsstring& p_layoutName, const dsstring& p_widg
     else
     {
          _DSEXCEPTION( "unregistered CEGUI layout" );
+    }
+}
+
+void CEGUIWrapper::SetMultiLineEditboxCaretIndex(const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index)
+{
+    if (m_layoutNamesTable.count(p_layoutName) > 0)
+    {
+        WidgetsTable& wt = m_layoutsTable[m_layoutNamesTable[p_layoutName]];
+
+        if (wt.count(p_widgetName) > 0)
+        {
+            Window* widget = wt[p_widgetName];
+
+            CEGUI::MultiLineEditbox* eb = dynamic_cast<CEGUI::MultiLineEditbox*>(widget);
+            if (!eb)
+            {
+                _DSEXCEPTION("Widget with corresponding ID is not a CEGUI::MultiLineEditbox");
+            }
+
+            //eb->setCaretIndex(p_index);
+        }
+        else
+        {
+            _DSEXCEPTION("unregistered CEGUI window ID");
+        }
+    }
+    else
+    {
+        _DSEXCEPTION("unregistered CEGUI layout");
     }
 }
 

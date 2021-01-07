@@ -15,9 +15,34 @@ mouse_left = FALSE
 g:add_resourceeventcb( "onresourceevent",
 function( event, resource_path, context )
 
-    if event == ALL_ASSETS_LOADED then
-       g:deactivate_resourcessystem()
-       rg:update_renderingqueues()
+    if context == "init" then
+
+      local evt_out = ""
+
+      if event == BLOB_LOADED then
+        evt_out = "loaded :"..resource_path
+      elseif event == ASSET_SETLOADEDBLOB then
+        evt_out = "set :"..resource_path
+      elseif event == SHADERCACHE_CREATION then
+        evt_out = "shader cache creation"
+      elseif event == SHADER_COMPILATION then
+        evt_out = "compiling :"..resource_path
+      elseif event == SHADER_COMPILED then
+        evt_out = "compilation done :"..resource_path
+      elseif event == ALL_ASSETS_LOADED then
+        evt_out = "All assets loaded !"
+        g:deactivate_resourcessystem()
+        rg:update_renderingqueues()
+
+      --else
+        --evt_out = "? : "..event
+       end
+
+      if evt_out ~= "" then
+        local content = gui:get_widgettext("max.layout", "Label_resources")
+        gui:set_widgettext("max.layout", "Label_resources", content.."\n"..evt_out)
+      end
+
     end
 end)
 
@@ -563,3 +588,6 @@ end
 
 g:signal_renderscenebegin("eg")
 g:activate_resourcessystem("init")
+
+
+--gui:set_widgettext("max.layout", "Label_resources", "hello\nwhazup?")

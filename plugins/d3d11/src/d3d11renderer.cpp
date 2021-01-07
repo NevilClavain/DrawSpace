@@ -2892,6 +2892,11 @@ void D3D11Renderer::GUI_SetCheckboxState( const dsstring& p_layoutName, const ds
     m_guisubsystem.SetCheckboxState( p_layoutName, p_widgetName, p_state );
 }
 
+void D3D11Renderer::GUI_SetMultiLineEditboxCaretIndex(const dsstring& p_layoutName, const dsstring& p_widgetName, int p_index)
+{
+    m_guisubsystem.SetMultiLineEditboxCaretIndex(p_layoutName, p_widgetName, p_index);
+}
+
 void D3D11Renderer::GUI_RegisterPushButtonEventClickedHandler( DrawSpace::Core::BaseCallback2<void, const dsstring&, const dsstring&>* p_handler )
 {
     m_guisubsystem.RegisterPushButtonEventClickedHandler( p_handler );

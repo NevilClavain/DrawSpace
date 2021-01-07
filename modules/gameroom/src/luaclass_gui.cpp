@@ -57,6 +57,7 @@ const Luna<LuaClass_Gui>::RegType LuaClass_Gui::methods[] =
 
 	{ "set_widgettext", &LuaClass_Gui::LUA_setwidgettext },
 	{ "get_widgettext", &LuaClass_Gui::LUA_getwidgettext },
+    { "set_multilineeditboxcaretindex", &LuaClass_Gui::LUA_setmultilineeditboxcaretindex },
     
 	{ 0, 0 }
 };
@@ -320,5 +321,22 @@ int LuaClass_Gui::LUA_getwidgettext(lua_State* p_L)
 
 	lua_pushstring(p_L, text.c_str());
 	return 1;
+}
+
+int LuaClass_Gui::LUA_setmultilineeditboxcaretindex(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("Gui::set_multilineeditboxcaretindex : argument(s) missing");
+    }
+
+    dsstring layout_name = luaL_checkstring(p_L, 1);
+    dsstring widget_name = luaL_checkstring(p_L, 2);
+    int index = luaL_checkint(p_L, 3);
+
+    m_renderer->GUI_SetMultiLineEditboxCaretIndex(layout_name, widget_name, index);
+
+    return 0;
 }
 

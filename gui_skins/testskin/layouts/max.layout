@@ -154,5 +154,20 @@
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Scene content" />
         </Window>
+        <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_resources" >
+            <Property name="Area" value="{{0,800},{0,28},{0.3,719},{0.3,281}}" />
+            <Property name="Text" value="Resources events" />
+            <Property name="Alpha" value="0.8" />
+            <Property name="CloseButtonEnabled" value="false" />
+            <AutoWindow namePath="__auto_titlebar__" >
+                <Property name="AlwaysOnTop" value="false" />
+            </AutoWindow>
+            <Window type="AlfiskoSkin/Label" name="Label_resources" >
+                <Property name="Area" value="{{0,0},{0,-1},{0,477},{0,370}}" />
+                <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzFormatting" value="WordWrapLeftAligned" />
+                <Property name="VertFormatting" value="TopAligned" />
+            </Window>
+        </Window>
     </Window>
 </GUILayout>

@@ -65,6 +65,7 @@ public:
 
 	int LUA_setwidgettext(lua_State* p_L);
 	int LUA_getwidgettext(lua_State* p_L);
+    int LUA_setmultilineeditboxcaretindex(lua_State* p_L);
 
 
     static const char className[];
