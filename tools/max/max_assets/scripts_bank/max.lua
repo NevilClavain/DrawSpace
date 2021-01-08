@@ -207,7 +207,7 @@ function( key )
     if key == 112 then -- VK_F1
       if hmi_mode==TRUE then
         hmi_mode=FALSE
-        g:show_mousecursor(FALSE)
+        gui:show_mousecursor(FALSE)
         g:set_mousecursorcircularmode(TRUE)
       end 
 	else
@@ -234,7 +234,7 @@ function( key )
 
       if hmi_mode == FALSE then
         hmi_mode = TRUE
-        g:show_mousecursor(TRUE)
+        gui:show_mousecursor(TRUE)
         g:set_mousecursorcircularmode(FALSE)
 	  end   
     end
@@ -565,8 +565,10 @@ function( layout, widget )
 
 end)
 
-g:show_mousecursor(FALSE)
+gui:set_mousecursorimage("AlfiskoSkin/MouseArrow")
 g:set_mousecursorcircularmode(TRUE)
+g:show_mousecursor(FALSE)
+
 
 if modelscenefile ~= "" then
   g:print('Loading scene file : '..modelscenefile)
@@ -590,4 +592,4 @@ g:signal_renderscenebegin("eg")
 g:activate_resourcessystem("init")
 
 
---gui:set_widgettext("max.layout", "Label_resources", "hello\nwhazup?")
+
