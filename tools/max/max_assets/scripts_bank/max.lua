@@ -56,8 +56,8 @@ rg:create_child('final_pass', 'texture_pass', 0)
 
 rg:set_pass_targetclearcolor('texture_pass', 80, 80, 80)
 
-text_renderer=TextRendering()
-text_renderer:configure(root_entity, "fps", 80, 40, 255, 0, 255, "??? fps")
+--text_renderer=TextRendering()
+--text_renderer:configure(root_entity, "fps", 80, 40, 255, 0, 255, "??? fps")
 
 move_renderer=TextRendering()
 move_renderer:configure(root_entity, "move", 80, 60, 255, 0, 255, "...")
@@ -255,7 +255,8 @@ function()
   local timescale = commons.print_timescale(time_infos[1])
 
   local output_infos = "[MODEL VIEWER]    " ..renderer:descr() .." "..time_infos[3].. " fps "..time_infos[2].." timescale = "..timescale
-  text_renderer:update(text_x_position, 30, 255, 0, 0, output_infos)
+  --text_renderer:update(text_x_position, 30, 255, 0, 0, output_infos)
+  gui:set_widgettext("max.layout", "Label_infos", output_infos)
 
   local target_infos = ""
   local target_anims_infos = ""
@@ -581,7 +582,9 @@ end
 --define how to show dump infos
 model.dump.showcontentfunc = function()
   
-  gui:set_widgettext("max.layout", "Label_Text", model.text)
+  --gui:set_widgettext("max.layout", "Label_Text", model.text)
+  gui:set_widgettext("max.layout", "Label_help", model.text)
+
 end
 
 if max_init_cbfunc ~= nil then

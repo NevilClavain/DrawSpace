@@ -75,32 +75,32 @@
             <Property name="Text" value="Reset scale" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="Button_MesheFileInfos" >
-            <Property name="Area" value="{{0,160},{0,5},{0,319},{0,27}}" />
+            <Property name="Area" value="{{0,135},{0,5},{0,294},{0,27}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Help : meshe file infos" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="Button_ModelView" >
-            <Property name="Area" value="{{0,320},{0,5},{0,479},{0,27}}" />
+            <Property name="Area" value="{{0,295},{0,5},{0,454},{0,27}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Help : model view" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="Button_ModelMove" >
-            <Property name="Area" value="{{0,640},{0,5},{0,799},{0,27}}" />
+            <Property name="Area" value="{{0,615},{0,5},{0,774},{0,27}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Help : model move" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="Button_ModelAnims" >
-            <Property name="Area" value="{{0,800},{0,5},{0,959},{0,27}}" />
+            <Property name="Area" value="{{0,775},{0,5},{0,934},{0,27}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Help : model anims" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="Button_Env" >
-            <Property name="Area" value="{{0,960},{0,5},{0,1119},{0,27}}" />
+            <Property name="Area" value="{{0,935},{0,5},{0,1094},{0,27}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Help : env" />
         </Window>
         <Window type="AlfiskoSkin/Button" name="Button_TargetSel" >
-            <Property name="Area" value="{{0,480},{0,5},{0,639},{0,27}}" />
+            <Property name="Area" value="{{0,455},{0,5},{0,614},{0,27}}" />
             <Property name="Font" value="DejaVuSans-12" />
             <Property name="Text" value="Help : target selection" />
         </Window>
@@ -155,7 +155,7 @@
             <Property name="Text" value="Scene content" />
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_resources" >
-            <Property name="Area" value="{{0,795},{0,30},{0.3,699},{0.3,283}}" />
+            <Property name="Area" value="{{0,1065},{0,30},{0.3,969},{0.3,283}}" />
             <Property name="Text" value="Resources events" />
             <Property name="Alpha" value="0.8" />
             <Property name="CloseButtonEnabled" value="false" />
@@ -163,14 +163,14 @@
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="AlfiskoSkin/Label" name="Label_resources" >
-                <Property name="Area" value="{{0,0},{0,0},{0,477},{0,545}}" />
+                <Property name="Area" value="{{0,0},{0,0},{0,462},{0,536}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
                 <Property name="HorzFormatting" value="WordWrapLeftAligned" />
                 <Property name="VertFormatting" value="TopAligned" />
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_help" >
-            <Property name="Area" value="{{0,1120},{0,0},{0.3,964},{0.3,-99}}" />
+            <Property name="Area" value="{{0,640},{0,30},{0.3,654},{0.3,-14}}" />
             <Property name="Text" value="Help" />
             <Property name="Alpha" value="0.8" />
             <Property name="CloseButtonEnabled" value="false" />
@@ -178,12 +178,14 @@
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="AlfiskoSkin/Label" name="Label_help" >
-                <Property name="Area" value="{{0,0},{0,0},{0,410},{0,190}}" />
+                <Property name="Area" value="{{0,0},{0,0},{0,594},{0,248}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzFormatting" value="WordWrapLeftAligned" />
+                <Property name="VertFormatting" value="TopAligned" />
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_scene" >
-            <Property name="Area" value="{{0,1120},{0,230},{0.3,964},{0.3,186}}" />
+            <Property name="Area" value="{{0,135},{0,30},{0.3,-21},{0.3,-14}}" />
             <Property name="Text" value="Scene" />
             <Property name="Alpha" value="0.8" />
             <Property name="CloseButtonEnabled" value="false" />
@@ -191,7 +193,7 @@
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="AlfiskoSkin/Label" name="Label_scene" >
-                <Property name="Area" value="{{0,0},{0,0},{0,405},{0,245}}" />
+                <Property name="Area" value="{{0,0},{0,-2},{0,405},{0,243}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
             </Window>
         </Window>
@@ -206,10 +208,12 @@
             <Window type="AlfiskoSkin/Label" name="Label_infos" >
                 <Property name="Area" value="{{0,0},{0,0},{0,654},{0,130}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzFormatting" value="WordWrapLeftAligned" />
+                <Property name="VertFormatting" value="TopAligned" />
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_model" >
-            <Property name="Area" value="{{0,1125},{0,515},{0.3,964},{0.3,471}}" />
+            <Property name="Area" value="{{0,390},{0,30},{0.3,229},{0.3,-14}}" />
             <Property name="Text" value="Model" />
             <Property name="Alpha" value="0.8" />
             <Property name="CloseButtonEnabled" value="false" />
