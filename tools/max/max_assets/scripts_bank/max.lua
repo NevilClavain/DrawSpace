@@ -384,11 +384,6 @@ function( layout, widget )
     g:quit()
   end
 
-  if widget == "Button_ClearInfos" then
-    model.text = ""
-    gui:set_widgettext("max.layout", "Label_Text", model.text)
-  end
-
   if widget == "Button_AnimsDump" and model.target ~= "" and model.entities[model.target].entity:has_aspect(ANIMATION_ASPECT) == TRUE then
     model.anims.dump()
   end

@@ -144,11 +144,6 @@
             <Property name="HorzFormatting" value="WordWrapLeftAligned" />
             <Property name="VertFormatting" value="TopAligned" />
         </Window>
-        <Window type="AlfiskoSkin/Button" name="Button_ClearInfos" >
-            <Property name="Area" value="{{0,20},{0,670},{0,130},{0,695}}" />
-            <Property name="Font" value="DejaVuSans-12" />
-            <Property name="Text" value="Clear infos" />
-        </Window>
         <Window type="AlfiskoSkin/Button" name="Button_SceneContent" >
             <Property name="Area" value="{{0,20},{0,70},{0,130},{0,95}}" />
             <Property name="Font" value="DejaVuSans-12" />
