@@ -48,15 +48,13 @@ include("model_anims.lua")
 include("model_env.lua")
 
 model.printscenelist = function()
-  model.text = ""
+  local text = ""
   local i = 1
   for k, v in pairs(model.entities) do
-	model.text=model.text..i..' - {'..k..'}'..v.model_classname.."\n"
+	text=text..i..' - {'..k..'}'..v.model_classname.."\n"
 	i = i + 1
   end
-  if model.dump.showcontentfunc ~= nil then
-    model.dump.showcontentfunc()
-  end
+  return text
 end
 
 model.createmainfreecamera = function(p_x, p_y, p_z, p_mvt_mod)

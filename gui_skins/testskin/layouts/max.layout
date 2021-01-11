@@ -144,11 +144,6 @@
             <Property name="HorzFormatting" value="WordWrapLeftAligned" />
             <Property name="VertFormatting" value="TopAligned" />
         </Window>
-        <Window type="AlfiskoSkin/Button" name="Button_SceneContent" >
-            <Property name="Area" value="{{0,20},{0,70},{0,130},{0,95}}" />
-            <Property name="Font" value="DejaVuSans-12" />
-            <Property name="Text" value="Scene content" />
-        </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_resources" >
             <Property name="Area" value="{{0,1065},{0,30},{0.3,969},{0.3,283}}" />
             <Property name="Text" value="Resources events" />
@@ -190,6 +185,8 @@
             <Window type="AlfiskoSkin/Label" name="Label_scene" >
                 <Property name="Area" value="{{0,0},{0,-2},{0,405},{0,243}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzFormatting" value="WordWrapLeftAligned" />
+                <Property name="VertFormatting" value="TopAligned" />
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_infos" >

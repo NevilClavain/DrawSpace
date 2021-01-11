@@ -261,6 +261,9 @@ function()
   --text_renderer:update(text_x_position, 30, 255, 0, 0, output_infos)
   gui:set_widgettext("max.layout", "Label_infos", output_infos)
 
+  model.printscenelist()
+  gui:set_widgettext("max.layout", "Label_scene", model.printscenelist())
+
   local target_infos = ""
   local target_anims_infos = ""
 
@@ -417,9 +420,12 @@ function( layout, widget )
     model.anims.stop()
   end
 
+  --[[
   if widget == "Button_SceneContent" then
     model.printscenelist()
+    gui:set_widgettext("max.layout", "Label_scene", model.printscenelist())
   end
+  ]]
 
   if widget == "Button_ResestPos" then
     model.move.resetpos()
@@ -496,8 +502,7 @@ function( layout, widget )
 
   if widget == "Button_TargetSel" then
     help_text = ""
-	help_text = help_text..'model.target = <entity_id>\n'
-	help_text = help_text..'model.printscenelist()\n'
+	help_text = help_text..'model.target = <entity_id>\n'	
     gui:set_widgettext("max.layout", "Label_help", help_text)
 
   end
