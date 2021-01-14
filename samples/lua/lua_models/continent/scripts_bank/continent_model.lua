@@ -2,7 +2,6 @@
 
 continent = {}
 
-continent.dump = {}
 continent.view = {}
 
 continent.view.lit = {}
@@ -109,19 +108,6 @@ continent.lit_material =
 	light_absorption = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 	self_emissive = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 }
-
-continent.dump.load = function()
-   continent.dump.entity = model.dump.load('continent.dump.entity','continent.ac')
-end
-
-continent.dump.unload = function()
-   continent.dump.entity = model.dump.unload(continent.dump.entity)
-   continent.dump.entity = nil;
-end
-
-continent.dump.show = function()
-   model.dump.show(continent.dump.entity)
-end
 
 continent.update_lit_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

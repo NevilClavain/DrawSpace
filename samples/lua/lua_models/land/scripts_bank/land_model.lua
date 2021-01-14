@@ -1,6 +1,5 @@
 
 land = {}
-land.dump = {}
 land.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer, body}
@@ -126,19 +125,6 @@ land.lit_material =
 	self_emissive = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 	bump_mapping = { texture_size = 1024, bias = 0.333 }
 }
-
-land.dump.load = function()
-   land.dump.entity = model.dump.load('land.dump.entity','land2.ac')
-end
-
-land.dump.unload = function()
-   land.dump.entity = model.dump.unload(land.dump.entity)
-   land.dump.entity = nil;
-end
-
-land.dump.show = function()
-   model.dump.show(land.dump.entity)
-end
 
 land.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

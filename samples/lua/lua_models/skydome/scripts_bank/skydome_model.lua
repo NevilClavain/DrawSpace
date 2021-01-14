@@ -1,6 +1,5 @@
 skydome = {}
 
-skydome.dump = {}
 skydome.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
@@ -121,19 +120,6 @@ skydome.rendering_config =
 		tb_generation_mode = TB_DISCARDED
 	}
 }
-
-skydome.dump.load = function()
-   skydome.dump.entity = model.dump.load('skydome.dump.entity','skydome.ac')
-end
-
-skydome.dump.unload = function()
-   skydome.dump.entity = model.dump.unload(skydome.dump.entity)
-   skydome.dump.entity = nil;
-end
-
-skydome.dump.show = function()
-   model.dump.show(skydome.dump.entity)
-end
 
 skydome.skyfromspace_ESun = 8.7
 skydome.skyfromatmo_ESun = 70.0

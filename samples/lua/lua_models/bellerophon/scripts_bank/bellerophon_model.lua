@@ -1,7 +1,6 @@
 
 bellerophon = {}
 
-bellerophon.dump = {}
 bellerophon.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
@@ -76,18 +75,6 @@ bellerophon.lit_material =
 	bump_mapping = { texture_size = 1024, bias = 0.045 }
 }
 
-bellerophon.dump.load = function()
-   bellerophon.dump.entity = model.dump.load('bellerophon.dump.entity','bellerophon.ac')
-end
-
-bellerophon.dump.unload = function()
-   bellerophon.dump.entity = model.dump.unload(bellerophon.dump.entity)
-   bellerophon.dump.entity = nil;
-end
-
-bellerophon.dump.show = function()
-   model.dump.show(bellerophon.dump.entity)
-end
 
 bellerophon.update_lit_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

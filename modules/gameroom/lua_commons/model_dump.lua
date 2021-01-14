@@ -24,34 +24,31 @@ end
 
 model.dump.show = function(entity)
 
-  model.text = ""
+  text = ""
   local list_size = entity:read_meshesfiledescriptionssize()   	
   for i = 1, list_size do
     local model_root_infos = { entity:read_meshesfiledescription(i, 'root') }
-	model.text = model.text..i..' - model file = '..model_root_infos[1]..' num_meshes = '..model_root_infos[3]..' num_animations = '..model_root_infos[5].."\n"
+	text = text..i..' - model file = '..model_root_infos[1]..' num_meshes = '..model_root_infos[3]..' num_animations = '..model_root_infos[5].."\n"
 	
-	model.text = model.text..'Meshes : \n'
+	text = text..'Meshes : \n'
 
     local meshes_id_list = { entity:read_meshesfiledescription(i, 'meshes_list') }
 	for k, v in pairs(meshes_id_list) do
-	  model.text = model.text..k.. ' - ' ..v.."\n"
+	  text = text..k.. ' - ' ..v.."\n"
 
       local meshe_infos = { entity:read_meshesfiledescription(i, 'meshe', k) }
-	  model.text = model.text..'node id = '..meshe_infos[1].. ' name = ['..meshe_infos[2]..']'.."\n"	 
-	  model.text = model.text..'has positions = '..meshe_infos[3]..' has faces = '..meshe_infos[4]..' has normales = '..meshe_infos[5]..' has tbn = '..meshe_infos[6].."\n"
-	  model.text = model.text..'num vertices = '..meshe_infos[7]..' num faces = '..meshe_infos[8]..' num uvchannels = '..meshe_infos[9]..' num bones = '..meshe_infos[10].."\n"
+	  text = text..'node id = '..meshe_infos[1].. ' name = ['..meshe_infos[2]..']'.."\n"	 
+	  text = text..'has positions = '..meshe_infos[3]..' has faces = '..meshe_infos[4]..' has normales = '..meshe_infos[5]..' has tbn = '..meshe_infos[6].."\n"
+	  text = text..'num vertices = '..meshe_infos[7]..' num faces = '..meshe_infos[8]..' num uvchannels = '..meshe_infos[9]..' num bones = '..meshe_infos[10].."\n"
 	end
 
-	model.text = model.text..'Animations : \n'
+	text = text..'Animations : \n'
     local anims_id_list = { entity:read_meshesfiledescription(i, 'anims_list') }
 	for k, v in pairs(anims_id_list) do	 
       local anim_infos = { entity:read_meshesfiledescription(i, 'anim', k) }
-	  model.text = model.text..k.. ' - ' ..v..' name = '..anim_infos[1]..' ticks/sec = '..anim_infos[2]..' duration = '..anim_infos[3]..'s number of channels = '..anim_infos[4].."\n"
+	  text = text..k.. ' - ' ..v..' name = '..anim_infos[1]..' ticks/sec = '..anim_infos[2]..' duration = '..anim_infos[3]..'s number of channels = '..anim_infos[4].."\n"
 	end
   end
 
-  if model.dump.showcontentfunc ~= nil then
-    model.dump.showcontentfunc()
-  end
-
+  return text
 end

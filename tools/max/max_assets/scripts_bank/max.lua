@@ -576,14 +576,6 @@ else
 end
 
 
---define how to show dump infos
-model.dump.showcontentfunc = function()
-  
-  gui:set_widgettext("max.layout", "Label_Text", model.text)
-  
-
-end
-
 if max_init_cbfunc ~= nil then
   max_init_cbfunc()
 end

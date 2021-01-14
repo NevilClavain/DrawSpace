@@ -1,7 +1,6 @@
 
 trex = {}
 
-trex.dump = {}
 trex.view = {}
 
 trex.view.lit = {}
@@ -148,19 +147,6 @@ trex.scale =
 {
 	x = 0.06, y = 0.06, z = 0.06
 }
-
-trex.dump.load = function()
-   trex.dump.entity = model.dump.load('trex.dump.entity','Trex.fbx')
-end
-
-trex.dump.unload = function()
-   trex.dump.entity = model.dump.unload(trex.dump.entity)
-   trex.dump.entity = nil;
-end
-
-trex.dump.show = function()
-   model.dump.show(trex.dump.entity)
-end
 
 trex.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

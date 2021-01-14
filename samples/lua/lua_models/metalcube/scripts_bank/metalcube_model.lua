@@ -1,6 +1,6 @@
 
 metalcube = {}
-metalcube.dump = {}
+
 metalcube.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer, body}
@@ -162,19 +162,6 @@ metalcube.lit_material =
 	self_emissive = { r = 1.0, g = 0.0, b = 0.0, a = 0.0 },
 	bump_mapping = { texture_size = 2800, bias = 0.1 }
 }
-
-metalcube.dump.load = function()
-   metalcube.dump.entity = model.dump.load('metalcube.dump.entity','tech.ac')
-end
-
-metalcube.dump.unload = function()
-   metalcube.dump.entity = model.dump.unload(metalcube.dump.entity)
-   metalcube.dump.entity = nil;
-end
-
-metalcube.dump.show = function()
-   model.dump.show(metalcube.dump.entity)
-end
 
 metalcube.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

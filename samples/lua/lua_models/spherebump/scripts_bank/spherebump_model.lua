@@ -1,6 +1,6 @@
 
 spherebump = {}
-spherebump.dump = {}
+
 spherebump.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer, body}
@@ -157,19 +157,6 @@ spherebump.lit_material =
 	self_emissive = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 	bump_mapping = { texture_size = 512, bias = 0.45 }
 }
-
-spherebump.dump.load = function()
-   spherebump.dump.entity = model.dump.load('spherebump.dump.entity','sphere.ac')
-end
-
-spherebump.dump.unload = function()
-   spherebump.dump.entity = model.dump.unload(spherebump.dump.entity)
-   spherebump.dump.entity = nil;
-end
-
-spherebump.dump.show = function()
-   model.dump.show(spherebump.dump.entity)
-end
 
 spherebump.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

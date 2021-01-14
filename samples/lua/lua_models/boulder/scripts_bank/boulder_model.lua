@@ -1,7 +1,6 @@
 
 boulder = {}
 
-boulder.dump = {}
 boulder.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
@@ -103,18 +102,7 @@ boulder.lit_material =
 	self_emissive = { r = 0.0, g = 0.0, b = 0.0, a = 0.0 },
 }
 
-boulder.dump.load = function()
-   boulder.dump.entity = model.dump.load('boulder.dump.entity','rock2.ac')
-end
 
-boulder.dump.unload = function()
-   boulder.dump.entity = model.dump.unload(boulder.dump.entity)
-   boulder.dump.entity = nil;
-end
-
-boulder.dump.show = function()
-   model.dump.show(boulder.dump.entity)
-end
 
 boulder.update_lit_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

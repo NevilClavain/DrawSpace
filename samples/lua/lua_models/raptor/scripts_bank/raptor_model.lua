@@ -2,7 +2,6 @@
 
 raptor = {}
 
-raptor.dump = {}
 raptor.view = {}
 
 raptor.view.lit = {}
@@ -147,19 +146,6 @@ raptor.scale =
 	x = 0.06, y = 0.06, z = 0.06
 }
 
-
-raptor.dump.load = function()
-   raptor.dump.entity = model.dump.load('raptor.dump.entity','raptor.fbx')
-end
-
-raptor.dump.unload = function()
-   raptor.dump.entity = model.dump.unload(raptor.dump.entity)
-   raptor.dump.entity = nil;
-end
-
-raptor.dump.show = function()
-   model.dump.show(raptor.dump.entity)
-end
 
 raptor.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 

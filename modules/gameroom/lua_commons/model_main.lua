@@ -8,8 +8,6 @@ model.camera = {}
 
 model.camera.speed = 50.0
 
-model.text = ""
-
 model.target = ""
 model.current_operation = ""
 

@@ -1,6 +1,6 @@
 
 waterquad = {}
-waterquad.dump = {}
+
 waterquad.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer, body}
@@ -75,19 +75,6 @@ waterquad.rendering_config =
 		tb_generation_mode = TB_AUTO
 	}
 }
-
-waterquad.dump.load = function()
-   waterquad.dump.entity = model.dump.load('waterquad.dump.entity','water.ac')
-end
-
-waterquad.dump.unload = function()
-   waterquad.dump.entity = model.dump.unload(waterquad.dump.entity)
-   waterquad.dump.entity = nil;
-end
-
-waterquad.dump.show = function()
-   model.dump.show(waterquad.dump.entity)
-end
 
 waterquad.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 
