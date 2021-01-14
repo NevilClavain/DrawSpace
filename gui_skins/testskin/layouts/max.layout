@@ -147,7 +147,7 @@
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_resources" >
             <Property name="Area" value="{{0,1065},{0,30},{0.3,969},{0.3,283}}" />
             <Property name="Text" value="Resources events" />
-            <Property name="Alpha" value="0.8" />
+            <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
@@ -162,7 +162,7 @@
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_help" >
             <Property name="Area" value="{{0,640},{0,30},{0.3,654},{0.3,-14}}" />
             <Property name="Text" value="Help" />
-            <Property name="Alpha" value="0.8" />
+            <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
@@ -175,15 +175,15 @@
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_scene" >
-            <Property name="Area" value="{{0,135},{0,30},{0.3,-21},{0.3,-14}}" />
+            <Property name="Area" value="{{0,135},{0,30},{0.3,-21},{0.3,131}}" />
             <Property name="Text" value="Scene" />
-            <Property name="Alpha" value="0.8" />
+            <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="AlfiskoSkin/Label" name="Label_scene" >
-                <Property name="Area" value="{{0,0},{0,-2},{0,405},{0,243}}" />
+                <Property name="Area" value="{{0,0},{0,-2},{0,405},{0,395}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
                 <Property name="HorzFormatting" value="WordWrapLeftAligned" />
                 <Property name="VertFormatting" value="TopAligned" />
@@ -192,7 +192,7 @@
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_infos" >
             <Property name="Area" value="{{0,145},{0,705},{0.3,239},{0.3,546}}" />
             <Property name="Text" value="Infos" />
-            <Property name="Alpha" value="0.8" />
+            <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
@@ -205,9 +205,9 @@
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_model" >
-            <Property name="Area" value="{{0,390},{0,30},{0.3,229},{0.3,-14}}" />
+            <Property name="Area" value="{{0,390},{0,30},{0.3,229},{0.3,131}}" />
             <Property name="Text" value="Model" />
-            <Property name="Alpha" value="0.8" />
+            <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
             <AutoWindow namePath="__auto_titlebar__" >
                 <Property name="AlwaysOnTop" value="false" />
@@ -215,6 +215,8 @@
             <Window type="AlfiskoSkin/Label" name="Label_model" >
                 <Property name="Area" value="{{0,0},{0,0},{0,400},{0,240}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
+                <Property name="HorzFormatting" value="WordWrapLeftAligned" />
+                <Property name="VertFormatting" value="TopAligned" />
             </Window>
         </Window>
     </Window>

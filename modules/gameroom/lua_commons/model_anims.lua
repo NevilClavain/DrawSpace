@@ -54,20 +54,21 @@ model.anims.stop = function()
 	model.entities[model.target]['current_animation_loop'] = -1
 end
 
-model.anims.dump = function()
+model.anims.dump = function(entity)
 
-  model.text = ""
-  local entity_properties_entry = model.entities[model.target]
+  local text = ""
+
+  --[[
+  local entity_properties_entry = model.entities[ent]
   local entity = entity_properties_entry['entity']
+  ]]
+
   animations_names = {entity:read_animationsnames()}
 
   for k, v in pairs(animations_names) do
-	--g:print('animation '..k..' ->'..v)
-    model.text = model.text..'animation '..k..' ->'..v.."\n"
+    text = text..'animation '..k..' ->'..v.."\n"
   end
 
-  if model.dump.showcontentfunc ~= nil then
-    model.dump.showcontentfunc()
-  end
+  return text
 end
 

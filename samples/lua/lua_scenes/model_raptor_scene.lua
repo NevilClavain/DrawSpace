@@ -13,8 +13,8 @@
 			lit_shader_update_func = raptor.update_from_scene_env
 		}
 	}
-	raptor.view.load('r', raptor_passes_config, 'root')
-	model.move.setpos('r', 0.0, 0.0, 0.0)
+	raptor.view.load('my_raptor', raptor_passes_config, 'root')
+	model.move.setpos('my_raptor', 0.0, 0.0, 0.0)
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	
@@ -27,4 +27,6 @@
 	model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
 	model.camera.speed = 50.0
+
+	model.target = 'my_raptor' -- select model
 

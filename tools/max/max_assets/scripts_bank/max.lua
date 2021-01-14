@@ -14,6 +14,8 @@ mouse_left = FALSE
 
 help_text = ""
 
+all_assets_loaded = false
+
 
 g:add_resourceeventcb( "onresourceevent",
 function( event, resource_path, context )
@@ -36,7 +38,7 @@ function( event, resource_path, context )
         evt_out = "All assets loaded !"
         g:deactivate_resourcessystem()
         rg:update_renderingqueues()
-
+        all_assets_loaded = true
       --else
         --evt_out = "? : "..event
        end
@@ -62,11 +64,11 @@ rg:set_pass_targetclearcolor('texture_pass', 80, 80, 80)
 --text_renderer=TextRendering()
 --text_renderer:configure(root_entity, "fps", 80, 40, 255, 0, 255, "??? fps")
 
-move_renderer=TextRendering()
-move_renderer:configure(root_entity, "move", 80, 60, 255, 0, 255, "...")
+--move_renderer=TextRendering()
+--move_renderer:configure(root_entity, "move", 80, 60, 255, 0, 255, "...")
 
-animsinfos_renderer=TextRendering()
-animsinfos_renderer:configure(root_entity, "anims", 80, 80, 255, 0, 255, "...")
+--animsinfos_renderer=TextRendering()
+--animsinfos_renderer:configure(root_entity, "anims", 80, 80, 255, 0, 255, "...")
 
 operation_renderer=TextRendering()
 operation_renderer:configure(root_entity, "current_operation", 80, 100, 255, 0, 255, "")
@@ -265,18 +267,18 @@ function()
   gui:set_widgettext("max.layout", "Label_scene", model.printscenelist())
 
   local target_infos = ""
-  local target_anims_infos = ""
+  
 
   if model.target ~= nil then
 
     if model.target ~= "" then
 	  if model.entities[model.target] ~= nil then
 
-	    target_infos = "selection = ["..model.target.."] ("..model.entities[model.target].model_classname..")"
+	    target_infos = "selection = ["..model.target.."] ("..model.entities[model.target].model_classname..")\n"
 
         if model.entities[model.target].entity:has_aspect(BODY_ASPECT) == TRUE then
 
-	      target_infos = target_infos.. " (is body)"
+	      target_infos = target_infos.. " (is body)\n"
 
 	    else
 
@@ -294,13 +296,15 @@ function()
 	      local rot_y = transform_entry['roty_deg_angle']
 	      local rot_z = transform_entry['rotz_deg_angle']
 
-	      target_infos = target_infos.. " rot = "..rot_x.. " "..rot_y.." "..rot_z.." pos = "..pos_x.." "..pos_y.." "..pos_z.." scale = "..scale_x.. " "..scale_y.." "..scale_z
+	      target_infos = target_infos.. " rot = "..rot_x.. " "..rot_y.." "..rot_z.."\npos = "..pos_x.." "..pos_y.." "..pos_z.."\nscale = "..scale_x.. " "..scale_y.." "..scale_z.."\n"
 
 	    end
 		
-		if model.entities[model.target].entity:has_aspect(ANIMATION_ASPECT) == TRUE then
-		   target_anims_infos = "ANIMATED : "
+		if all_assets_loaded and model.entities[model.target].entity:has_aspect(ANIMATION_ASPECT) == TRUE then
+		   target_infos = target_infos.."ANIMATED\n"
 
+           target_infos = target_infos..model.anims.dump( model.entities[model.target].entity).."\n"
+  
            local current_animation_name
            local current_animation_ticks_per_seconds
 		   local current_animation_ticks_duration
@@ -316,7 +320,7 @@ function()
            current_animation_ticks_progress, 
            current_animation_seconds_progress = model.entities[model.target].entity:read_currentanimationinfos()
 
-		   target_anims_infos = target_anims_infos.."anim="..current_animation_name
+		   target_infos = target_infos.."anim="..current_animation_name
 												--[[
 													.." ticks/s = "..current_animation_ticks_per_seconds..
 													" "..current_animation_ticks_progress.."/"..current_animation_ticks_duration.." ticks "..
@@ -332,8 +336,10 @@ function()
     target_infos = target_infos.. " UNKNOWN"
   end
 
-  move_renderer:update(text_x_position, 70, 255, 255, 255, target_infos)
-  animsinfos_renderer:update(text_x_position, 90, 255, 255, 255, target_anims_infos)
+  --move_renderer:update(text_x_position, 70, 255, 255, 255, target_infos)
+  gui:set_widgettext("max.layout", "Label_model",target_infos)
+
+  --animsinfos_renderer:update(text_x_position, 90, 255, 255, 255, target_anims_infos)
 
   operation_renderer:update(text_x_position, 120, 255, 255, 255, model.current_operation)
 
