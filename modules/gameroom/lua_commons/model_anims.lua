@@ -57,18 +57,10 @@ end
 model.anims.dump = function(entity)
 
   local text = ""
-
-  --[[
-  local entity_properties_entry = model.entities[ent]
-  local entity = entity_properties_entry['entity']
-  ]]
-
   animations_names = {entity:read_animationsnames()}
-
   for k, v in pairs(animations_names) do
     text = text..'animation '..k..' ->'..v.."\n"
   end
-
   return text
 end
 
