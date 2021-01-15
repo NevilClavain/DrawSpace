@@ -11,9 +11,6 @@ last_key = 0
 mouse_right = FALSE
 mouse_left = FALSE
 
-
-help_text = ""
-
 all_assets_loaded = false
 
 
@@ -483,82 +480,6 @@ function( layout, widget )
 
   if widget == "Button_ScaleXYZ" then
     model.move.scalexyz()
-  end
-
-
-  if widget == "Button_MesheFileInfos" then
-
-    help_text = ""
-	help_text = help_text..'<modelname>.dump.load()\n'
-	help_text = help_text..'<modelname>.dump.show()\n'
-	help_text = help_text..'<modelname>.dump.unload()\n'
-    gui:set_widgettext("max.layout", "Label_help", help_text)
-
-  end
-
-  if widget == "Button_ModelView" then
-
-    help_text = ""
-	help_text = help_text..'<modelname>.view.load(<entity_id>)\n'
-	help_text = help_text..'<modelname>.view.load(<entity_id>, {x = <value>, y = <value>, z = <value>})\n'
-	help_text = help_text..'<modelname>.view.unload(<entity_id>)\n'
-    gui:set_widgettext("max.layout", "Label_help", help_text)
-
-  end
-
-  if widget == "Button_TargetSel" then
-    help_text = ""
-	help_text = help_text..'model.target = <entity_id>\n'	
-    gui:set_widgettext("max.layout", "Label_help", help_text)
-
-  end
-
-  if widget == "Button_ModelMove" then
-    help_text = ""
-	help_text = help_text..'model.move.posx()\n'
-	help_text = help_text..'model.move.posy()\n'
-	help_text = help_text..'model.move.posz()\n'
-	help_text = help_text..'model.move.rotx()\n'
-	help_text = help_text..'model.move.roty()\n'
-	help_text = help_text..'model.move.rotz()\n'
-	help_text = help_text..'model.move.scalex()\n'
-	help_text = help_text..'model.move.scaley()\n'
-	help_text = help_text..'model.move.scalez()\n'
-	help_text = help_text..'model.move.scalexyz()\n'
-	help_text = help_text..'model.move.resetpos()\n'
-	help_text = help_text..'model.move.resetrot()\n'
-	help_text = help_text..'model.move.resetscale()\n'
-	help_text = help_text..'model.move.setpos(<entity_id>, <x>, <y>, <z>)\n'
-    gui:set_widgettext("max.layout", "Label_help", help_text)
-
-  end
-
-  if widget == "Button_ModelAnims" then
-    help_text = ""
-	help_text = help_text..'model.anims.dump()\n'
-	help_text = help_text..'model.anims.run(<anim_index>)\n'
-	help_text = help_text..'model.anims.runloop(<anim_index>)\n'
-	help_text = help_text..'model.anims.rand()\n'
-	help_text = help_text..'model.anims.stop()\n'
-    gui:set_widgettext("max.layout", "Label_help", help_text)
-
-  end
-
-  if widget == "Button_Env" then
-    help_text = ""
-	help_text = help_text..'model.camera.speed = <speed>\n'
-	help_text = help_text..'model.env.setgravity(<bool>)\n'
-	help_text = help_text..'model.env.setgravitydir(<x>, <y>, <z>)\n'
-	help_text = help_text..'model.env.setbkcolor(<pass_id>, <r>, <g>, <b>)\n'
-	help_text = help_text..'model.env.fog.setdensity(<density>)\n'
-	help_text = help_text..'model.env.fog.setcolor(<r>, <g>, <b>)\n'
-	help_text = help_text..'model.env.light.setdir(<x>, <y>, <z>)\n'
-    help_text = help_text..'model.env.light.setsphericaldir(<theta>, <phi>)\n'
-	help_text = help_text..'model.env.ambientlight.setcolor(<r>, <g>, <b>)\n'
-	help_text = help_text..'model.env.light.setstate(<bool>)\n'
-	help_text = help_text..'model.env.light.setcolor(<r>, <g>, <b>)\n'
-    gui:set_widgettext("max.layout", "Label_help", help_text)
-
   end
 
 end)
