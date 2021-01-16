@@ -58,8 +58,6 @@ rg:create_child('final_pass', 'texture_pass', 0)
 
 rg:set_pass_targetclearcolor('texture_pass', 80, 80, 80)
 
-operation_renderer=TextRendering()
-operation_renderer:configure(root_entity, "current_operation", 80, 100, 255, 0, 255, "")
 
 dbg_renderer=TextRendering()
 dbg_renderer:configure(root_entity, "debug", 80, 100, 255, 0, 255, "...")
@@ -242,6 +240,7 @@ function()
   local timescale = commons.print_timescale(time_infos[1])
 
   local output_infos = "[MODEL VIEWER]    " ..renderer:descr() .." "..time_infos[3].. " fps "..time_infos[2].." timescale = "..timescale
+  output_infos = output_infos.."\n"..model.current_operation.."\n"
   
   gui:set_widgettext("max.layout", "Label_infos", output_infos)
 
@@ -257,8 +256,7 @@ function()
 	  if model.entities[model.target] ~= nil then
 
 	    target_infos = "selection = ["..model.target.."] ("..model.entities[model.target].model_classname..")\n"
-
-         target_infos = target_infos.. model.dump(model.entities[model.target].entity).."\n"
+        target_infos = target_infos.. model.dump(model.entities[model.target].entity).."\n"
 
         if model.entities[model.target].entity:has_aspect(BODY_ASPECT) == TRUE then
 
@@ -320,8 +318,6 @@ function()
   end
 
   gui:set_widgettext("max.layout", "Label_model",target_infos)
-
-  operation_renderer:update(text_x_position, 120, 255, 255, 255, model.current_operation)
 
   dbg_renderer:update(text_x_position, 150, 0, 255, 0, dbg_string)
 

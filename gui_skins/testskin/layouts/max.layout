@@ -83,11 +83,6 @@
             <Property name="Text" value="Animation" />
             <Property name="MaxSize" value="{{1,0},{1,0}}" />
         </Window>
-        <Window type="AlfiskoSkin/Button" name="Button_AnimsDump" >
-            <Property name="Area" value="{{0,20},{0,470},{0,130},{0,495}}" />
-            <Property name="Font" value="DejaVuSans-12" />
-            <Property name="Text" value="Dump anims" />
-        </Window>
         <Window type="AlfiskoSkin/Button" name="Button_AnimsRun" >
             <Property name="Area" value="{{0,20},{0,535},{0,130},{0,560}}" />
             <Property name="Font" value="DejaVuSans-12" />
