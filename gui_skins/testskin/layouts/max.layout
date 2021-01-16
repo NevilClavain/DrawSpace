@@ -160,7 +160,7 @@
             </Window>
         </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_model" >
-            <Property name="Area" value="{{0,390},{0,5},{0.3,449},{0.3,131}}" />
+            <Property name="Area" value="{{0,390},{0,4},{0.3,611},{0.3,130}}" />
             <Property name="Text" value="Model" />
             <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />

@@ -1,28 +1,8 @@
 
-model.dump = {}
 
 
-model.dump.load = function(entity_name, model_file_path)
 
-  local meshe_entity=Entity()
-
-  meshe_entity:add_aspect(RESOURCES_ASPECT)
-  meshe_entity:configure_mesheresource(model_file_path)
-  
-  eg:add_child('root', entity_name, meshe_entity)
-  return meshe_entity
-end
-
-model.dump.unload = function(meshe_entity)
-
-  local entity_name = eg:find_entityname(meshe_entity)
-  meshe_entity:release_mesheresource()
-  meshe_entity:remove_aspect(RESOURCES_ASPECT)
-
-  eg:remove(entity_name)
-end
-
-model.dump.show = function(entity)
+model.dump = function(entity)
 
   text = ""
   local list_size = entity:read_meshesfiledescriptionssize()   	
@@ -42,12 +22,14 @@ model.dump.show = function(entity)
 	  text = text..'num vertices = '..meshe_infos[7]..' num faces = '..meshe_infos[8]..' num uvchannels = '..meshe_infos[9]..' num bones = '..meshe_infos[10].."\n"
 	end
 
+	--[[
 	text = text..'Animations : \n'
     local anims_id_list = { entity:read_meshesfiledescription(i, 'anims_list') }
 	for k, v in pairs(anims_id_list) do	 
       local anim_infos = { entity:read_meshesfiledescription(i, 'anim', k) }
 	  text = text..k.. ' - ' ..v..' name = '..anim_infos[1]..' ticks/sec = '..anim_infos[2]..' duration = '..anim_infos[3]..'s number of channels = '..anim_infos[4].."\n"
 	end
+	]]
   end
 
   return text

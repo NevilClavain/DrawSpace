@@ -58,15 +58,6 @@ rg:create_child('final_pass', 'texture_pass', 0)
 
 rg:set_pass_targetclearcolor('texture_pass', 80, 80, 80)
 
---text_renderer=TextRendering()
---text_renderer:configure(root_entity, "fps", 80, 40, 255, 0, 255, "??? fps")
-
---move_renderer=TextRendering()
---move_renderer:configure(root_entity, "move", 80, 60, 255, 0, 255, "...")
-
---animsinfos_renderer=TextRendering()
---animsinfos_renderer:configure(root_entity, "anims", 80, 80, 255, 0, 255, "...")
-
 operation_renderer=TextRendering()
 operation_renderer:configure(root_entity, "current_operation", 80, 100, 255, 0, 255, "")
 
@@ -83,12 +74,6 @@ model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
 -- ///////////////////////////////
 
 eg:set_camera(model.camera.entity)
-
-
-
-
-
---rg:update_renderingqueues()
 
 
 light_theta = SyncAngle()
@@ -257,7 +242,7 @@ function()
   local timescale = commons.print_timescale(time_infos[1])
 
   local output_infos = "[MODEL VIEWER]    " ..renderer:descr() .." "..time_infos[3].. " fps "..time_infos[2].." timescale = "..timescale
-  --text_renderer:update(text_x_position, 30, 255, 0, 0, output_infos)
+  
   gui:set_widgettext("max.layout", "Label_infos", output_infos)
 
   model.printscenelist()
@@ -272,6 +257,8 @@ function()
 	  if model.entities[model.target] ~= nil then
 
 	    target_infos = "selection = ["..model.target.."] ("..model.entities[model.target].model_classname..")\n"
+
+         target_infos = target_infos.. model.dump(model.entities[model.target].entity).."\n"
 
         if model.entities[model.target].entity:has_aspect(BODY_ASPECT) == TRUE then
 
@@ -299,8 +286,7 @@ function()
 		
 		if all_assets_loaded and model.entities[model.target].entity:has_aspect(ANIMATION_ASPECT) == TRUE then
 		   target_infos = target_infos.."ANIMATED\n"
-
-           target_infos = target_infos..model.anims.dump( model.entities[model.target].entity).."\n"
+           target_infos = target_infos..model.anims.dump(model.entities[model.target].entity).."\n"
   
            local current_animation_name
            local current_animation_ticks_per_seconds
@@ -333,10 +319,7 @@ function()
     target_infos = target_infos.. " UNKNOWN"
   end
 
-  --move_renderer:update(text_x_position, 70, 255, 255, 255, target_infos)
   gui:set_widgettext("max.layout", "Label_model",target_infos)
-
-  --animsinfos_renderer:update(text_x_position, 90, 255, 255, 255, target_anims_infos)
 
   operation_renderer:update(text_x_position, 120, 255, 255, 255, model.current_operation)
 
@@ -422,13 +405,6 @@ function( layout, widget )
   if widget == "Button_AnimsStop" and model.target ~= "" and model.entities[model.target].entity:has_aspect(ANIMATION_ASPECT) == TRUE then
     model.anims.stop()
   end
-
-  --[[
-  if widget == "Button_SceneContent" then
-    model.printscenelist()
-    gui:set_widgettext("max.layout", "Label_scene", model.printscenelist())
-  end
-  ]]
 
   if widget == "Button_ResestPos" then
     model.move.resetpos()
