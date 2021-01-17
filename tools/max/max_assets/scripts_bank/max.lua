@@ -241,6 +241,10 @@ function()
 
   local output_infos = "[MODEL VIEWER]    " ..renderer:descr() .." "..time_infos[3].. " fps "..time_infos[2].." timescale = "..timescale
   output_infos = output_infos.."\n"..model.current_operation.."\n"
+
+  if camera_control == TRUE then
+    output_infos = output_infos.."\nCAMERA CONTROL\n"
+  end
   
   gui:set_widgettext("max.layout", "Label_infos", output_infos)
   
