@@ -3,7 +3,7 @@ max_init_cbfunc = nil
 max_apprun_cbfunc = nil
 
 text_x_position = 140
-hmi_mode=FALSE
+hmi_mode=TRUE
 
 ctrl_key = FALSE
 last_key = 0
@@ -457,8 +457,15 @@ function( layout, widget )
 end)
 
 gui:set_mousecursorimage("AlfiskoSkin/MouseArrow")
-g:set_mousecursorcircularmode(TRUE)
 g:show_mousecursor(FALSE)
+
+if hmi_mode == FALSE then
+  g:set_mousecursorcircularmode(TRUE)
+  gui:show_mousecursor(FALSE)
+else
+  g:set_mousecursorcircularmode(FALSE)
+  gui:show_mousecursor(TRUE)
+end
 
 
 if modelscenefile ~= "" then
