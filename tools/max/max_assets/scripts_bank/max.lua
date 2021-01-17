@@ -243,8 +243,7 @@ function()
   output_infos = output_infos.."\n"..model.current_operation.."\n"
   
   gui:set_widgettext("max.layout", "Label_infos", output_infos)
-
-  model.printscenelist()
+  
   gui:set_widgettext("max.layout", "Label_scene", model.printscenelist())
 
   local target_infos = ""
