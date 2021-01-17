@@ -3,7 +3,7 @@ max_init_cbfunc = nil
 max_apprun_cbfunc = nil
 
 text_x_position = 140
-hmi_mode=TRUE
+camera_control=FALSE
 
 ctrl_key = FALSE
 last_key = 0
@@ -92,7 +92,7 @@ end
 
 g:add_mousemovecb( "onmousemove",function( xm, ym, dx, dy )  
 
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     if mouse_left == TRUE and mouse_right == FALSE then
       transformations_update( dx )
 
@@ -127,7 +127,7 @@ g:add_mouserightbuttondowncb( "onmouserightbuttondown",
 function( xm, ym )
 
   mouse_right = TRUE
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     gui:on_mouserightbuttondown()    
   end
 
@@ -137,7 +137,7 @@ g:add_mouserightbuttonupcb( "onmouserightbuttonup",
 function( xm, ym )
 
   mouse_right = FALSE
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     gui:on_mouserightbuttonup()    
   end
 end)
@@ -146,7 +146,7 @@ g:add_mouseleftbuttondowncb( "onmouseleftbuttondown",
 function( xm, ym )
 
   mouse_left = TRUE
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     gui:on_mouseleftbuttondown()  
   end
 end)
@@ -155,7 +155,7 @@ g:add_mouseleftbuttonupcb( "onmouseleftbuttonup",
 function( xm, ym )
 
   mouse_left = FALSE
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     gui:on_mouseleftbuttonup()
   end
 end)
@@ -163,7 +163,7 @@ end)
 g:add_keydowncb( "keydown",
 function( key )
 
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     gui:on_keydown( key )
   else
 
@@ -188,13 +188,13 @@ end)
 g:add_keyupcb( "keyup",
 function( key )  
 
-  if hmi_mode == TRUE then
+  if camera_control == FALSE then
     if key == 112 then -- VK_F1
-      if hmi_mode==TRUE then
-        hmi_mode=FALSE
-        gui:show_mousecursor(FALSE)
-        g:set_mousecursorcircularmode(TRUE)
-      end 
+
+      camera_control=TRUE
+      gui:show_mousecursor(FALSE)
+      g:set_mousecursorcircularmode(TRUE)
+
 	else
 	  gui:on_keyup( key )
 	end    
@@ -217,8 +217,8 @@ function( key )
     -- VK_F1
     elseif key == 112 then
 
-      if hmi_mode == FALSE then
-        hmi_mode = TRUE
+      if camera_control == TRUE then
+        camera_control = FALSE
         gui:show_mousecursor(TRUE)
         g:set_mousecursorcircularmode(FALSE)
 	  end   
@@ -459,7 +459,7 @@ end)
 gui:set_mousecursorimage("AlfiskoSkin/MouseArrow")
 g:show_mousecursor(FALSE)
 
-if hmi_mode == FALSE then
+if camera_control == TRUE then
   g:set_mousecursorcircularmode(TRUE)
   gui:show_mousecursor(FALSE)
 else
