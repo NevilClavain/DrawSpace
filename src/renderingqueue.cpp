@@ -45,7 +45,9 @@ m_switches_cost( 0 ),
 m_ready( true ),
 m_status( OK ),
 m_target_slice(0),
-m_id( p_id)
+m_id( p_id),
+m_current_outputqueue(&m_outputqueue_0),
+m_back_outputqueue(&m_outputqueue_1)
 {
 
 
@@ -63,10 +65,26 @@ m_switches_cost( 0 ),
 m_ready( true ),
 m_status( OK ),
 m_target_slice(0),
-m_id(p_id)
+m_id(p_id),
+m_current_outputqueue(&m_outputqueue_0),
+m_back_outputqueue(&m_outputqueue_1)
 {
 
 
+}
+
+void RenderingQueue::FlipOutputQueues(void)
+{
+    if (m_current_outputqueue == &m_outputqueue_0)
+    {
+        m_current_outputqueue = &m_outputqueue_1;
+        m_back_outputqueue = &m_outputqueue_0;
+    }
+    else
+    {
+        m_current_outputqueue = &m_outputqueue_0;
+        m_back_outputqueue = &m_outputqueue_1;
+    }
 }
 
 RenderingQueue::~RenderingQueue( void )
@@ -125,10 +143,8 @@ void RenderingQueue::Draw( void )
     }
     else
     {
-        for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it )
+        for( auto& curr_operation : *m_current_outputqueue)
         {
-            Operation curr_operation = (*it);
-
             switch( curr_operation.type )
             {
                 case SET_TEXTURE:
@@ -843,7 +859,8 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         }
     }
 
-    m_outputqueue.clear();
+    //m_outputqueue.clear();
+    m_back_outputqueue->clear();
 
     for( size_t i = 0; i < p_input_list.size(); i++ )
     {
@@ -855,14 +872,14 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             operation.type = SET_SHADERS;
             operation.data = m_sh_datas[node].first;
             operation.comment = m_sh_datas[node].second;
-            m_outputqueue.push_back( operation );
+            m_back_outputqueue->push_back( operation );
         }
 
         if( m_rs_datas.count( node ) )
         {
             operation.type = SET_RENDERSTATES_IN;
             operation.data = m_rs_datas[node];
-            m_outputqueue.push_back( operation );
+            m_back_outputqueue->push_back( operation );
         }
 
         if( m_tx_datas.count( node ) )
@@ -878,7 +895,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
                 if( operation.data != NULL )
                 {
-                    m_outputqueue.push_back( operation );
+                    m_back_outputqueue->push_back( operation );
                 }
             }
         }
@@ -895,7 +912,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
                 if( operation.data != NULL )
                 {
-                    m_outputqueue.push_back( operation );
+                    m_back_outputqueue->push_back( operation );
                 }
             }
         }
@@ -906,7 +923,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             operation.type = SET_MESHE;
             operation.data = m_meshe_datas[node].first;
             operation.comment = m_meshe_datas[node].second;
-            m_outputqueue.push_back( operation );
+            m_back_outputqueue->push_back( operation );
         }
 
 		//////Shaders params//////////////
@@ -919,7 +936,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             operation.type = SET_SHADERS_PARAMS;
             
             operation.shader_params = e.second;
-            m_outputqueue.push_back( operation );
+            m_back_outputqueue->push_back( operation );
         }
 
 		//////Shaders arrays params//////////////
@@ -932,7 +949,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 			operation.type = SET_SHADERS_ARRAY_PARAMS;
 
 			operation.shader_array_param = e.second;
-			m_outputqueue.push_back( operation );
+            m_back_outputqueue->push_back( operation );
 		}
 		
 
@@ -941,7 +958,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         operation.type = DRAW_NODE;
         operation.node = node;
         operation.comment = node->m_debug_id;
-        m_outputqueue.push_back( operation );
+        m_back_outputqueue->push_back( operation );
 
         if( m_tx_datas.count( node ) )
         {
@@ -955,7 +972,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
                 if( operation.data != NULL )
                 {
-                    m_outputqueue.push_back( operation );
+                    m_back_outputqueue->push_back( operation );
                 }
             }
         }
@@ -972,7 +989,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
                 if( operation.data != NULL )
                 {
-                    m_outputqueue.push_back( operation );
+                    m_back_outputqueue->push_back( operation );
                 }
             }
         }
@@ -981,21 +998,20 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             operation.type = SET_RENDERSTATES_OUT;
             operation.data = m_rs_datas[node];
-            m_outputqueue.push_back( operation );
+            m_back_outputqueue->push_back( operation );
         }
     }
 }
 
 void RenderingQueue::search_op_textures_groups( OperationType p_type, int p_stage, std::vector<OperationsGroup>& p_groups )
 {
-    void* curr_data = NULL;
-
+    void* curr_data{ NULL };
     OperationsGroup group;
+    long index{ 0 };
 
-    long index = 0;
-    for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    for( auto it = m_back_outputqueue->begin(); it != m_back_outputqueue->end(); ++it, index++ )
     {
-        Operation curr_operation = (*it);
+        Operation curr_operation{ *it };
 
         if( p_type == curr_operation.type && p_stage == curr_operation.texture_stage )
         {
@@ -1051,7 +1067,7 @@ void RenderingQueue::search_op_groups( OperationType p_type, std::vector<Operati
     OperationsGroup group;
 
     long index = 0;
-    for( auto it = m_outputqueue.begin(); it != m_outputqueue.end(); ++it, index++ )
+    for( auto it = m_back_outputqueue->begin(); it != m_back_outputqueue->end(); ++it, index++ )
     {
         Operation curr_operation = (*it);
 
@@ -1131,7 +1147,7 @@ void RenderingQueue::cleanup_output_list( void )
         {
             for( size_t j = 1; j < m_setmeshe_groups[i].size(); j++ )
             {
-                m_outputqueue.erase( m_setmeshe_groups[i][j].pos );
+                m_back_outputqueue->erase( m_setmeshe_groups[i][j].pos );
             }
         }
     }
@@ -1143,7 +1159,7 @@ void RenderingQueue::cleanup_output_list( void )
         {
             for( size_t j = 1; j < m_setshaders_groups[i].size(); j++ )
             {
-                m_outputqueue.erase( m_setshaders_groups[i][j].pos );
+                m_back_outputqueue->erase( m_setshaders_groups[i][j].pos );
             }
         }
     }
@@ -1155,7 +1171,7 @@ void RenderingQueue::cleanup_output_list( void )
         {
             for( size_t j = 1; j < m_setrsin_groups[i].size(); j++ )
             {
-                m_outputqueue.erase( m_setrsin_groups[i][j].pos );
+                m_back_outputqueue->erase( m_setrsin_groups[i][j].pos );
             }
         }
     }
@@ -1167,7 +1183,7 @@ void RenderingQueue::cleanup_output_list( void )
         {
             for( size_t j = 0; j < m_setrsout_groups[i].size() - 1; j++ )
             {
-                m_outputqueue.erase( m_setrsout_groups[i][j].pos );
+                m_back_outputqueue->erase( m_setrsout_groups[i][j].pos );
             }
         }
     }
@@ -1182,7 +1198,7 @@ void RenderingQueue::cleanup_output_list( void )
             {
                 for( size_t j = 1; j < m_settexture_groups[i0][i].size(); j++ )
                 {
-                    m_outputqueue.erase( m_settexture_groups[i0][i][j].pos );
+                    m_back_outputqueue->erase( m_settexture_groups[i0][i][j].pos );
                 }
             }
         }  
@@ -1194,7 +1210,7 @@ void RenderingQueue::cleanup_output_list( void )
             {
                 for( size_t j = 0; j < m_unsettexture_groups[i0][i].size() - 1; j++ )
                 {
-                    m_outputqueue.erase( m_unsettexture_groups[i0][i][j].pos );
+                    m_back_outputqueue->erase( m_unsettexture_groups[i0][i][j].pos );
                 }
             }
         }
@@ -1207,7 +1223,7 @@ void RenderingQueue::cleanup_output_list( void )
             {
                 for( size_t j = 1; j < m_setvtexture_groups[i0][i].size(); j++ )
                 {
-                    m_outputqueue.erase( m_setvtexture_groups[i0][i][j].pos );
+                    m_back_outputqueue->erase( m_setvtexture_groups[i0][i][j].pos );
                 }
             }
         }  
@@ -1219,7 +1235,7 @@ void RenderingQueue::cleanup_output_list( void )
             {
                 for( size_t j = 0; j < m_unsetvtexture_groups[i0][i].size() - 1; j++ )
                 {
-                    m_outputqueue.erase( m_unsetvtexture_groups[i0][i][j].pos );
+                    m_back_outputqueue->erase( m_unsetvtexture_groups[i0][i][j].pos );
                 }
             }
         }

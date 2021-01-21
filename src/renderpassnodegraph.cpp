@@ -135,6 +135,7 @@ void RenderPassNodeGraph::ProcessSignals( void )
                 {
                     // mise a jour buffer renderingqueue
                     it->data()->m_renderingqueue->UpdateOutputQueue();
+                    it->data()->m_renderingqueue->FlipOutputQueues();
 
                     // reset flag
                     it->data()->m_renderingqueue_update_flag = false;
