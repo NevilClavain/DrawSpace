@@ -125,6 +125,8 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
+    m_rendergraph.SetSystemsHub(&m_systemsHub);
+
     m_systemsHub.StartupRunner();
 
     Systems::ResourcesSystem& resources_system{ m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem") };

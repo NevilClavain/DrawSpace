@@ -79,6 +79,8 @@ m_renderpass_event_cb( this, &LuaClass_RenderPassNodeGraph::on_renderpass_event)
     dsstring id = luaL_checkstring( p_L, 1 );
     m_passes_render.SetRendergraph( &m_rendergraph );
     MainService::GetInstance()->RegisterRenderGraph( id, this );
+    m_rendergraph.SetSystemsHub(MainService::GetInstance()->GetHub());
+
     m_id = id;
 
 	m_rendergraph.RegisterRenderPassEvtHandler(&m_renderpass_event_cb);

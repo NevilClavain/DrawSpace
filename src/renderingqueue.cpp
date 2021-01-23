@@ -118,7 +118,10 @@ void RenderingQueue::Draw( void )
         void* texture_render_data = m_target->GetRenderData();
         if( NULL == texture_render_data )
         {
-            _DSEXCEPTION( "target texture not initialised in renderer" )
+            //_DSEXCEPTION( "target texture not initialised in renderer" )
+            m_status = ERROR_NOTARGET;
+            return;
+
         }
         renderer->BeginTarget( texture_render_data, m_target_slice);
     }
@@ -776,8 +779,8 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         m_rs_datas[node] = rs_data;
         /////////////////////////////////////////////
 
-
-        for( long j = 0; j < node->GetTextureListSize(); j++ )
+        long texture_list_size{ node->GetTextureListSize() };
+        for( long j = 0; j < texture_list_size; j++ )
         {
             Texture* current_tx = node->GetTexture( j );
 

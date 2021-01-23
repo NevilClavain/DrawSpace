@@ -92,6 +92,7 @@ private:
 	{
 		OK,
 		ERROR_NOTREADY,
+        ERROR_NOTARGET,
 	};
 
     using OperationsGroup = std::vector<erase_infos>;

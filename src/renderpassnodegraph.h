@@ -31,6 +31,11 @@
 
 namespace DrawSpace
 {
+namespace Systems
+{
+class Hub;
+}
+
 namespace RenderGraph
 {
 class RenderPassNodeGraph
@@ -66,10 +71,12 @@ private:
 
 	std::set<RenderPassEventHandler*>	m_evt_handlers;
 
+    Systems::Hub*                       m_hub{ nullptr };
+
     void cleanup_treenodes( void );
 
 public:
-    RenderPassNodeGraph( void );
+    RenderPassNodeGraph(void);
     ~RenderPassNodeGraph( void );
 
     RenderPassNode CreateRoot( const dsstring& p_name );
@@ -85,6 +92,7 @@ public:
 	void RegisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);
 	void UnregisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);
 
+    void SetSystemsHub(Systems::Hub* p_hub);
 };
 
 }

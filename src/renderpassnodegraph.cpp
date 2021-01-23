@@ -28,13 +28,17 @@
 #include "plugin.h"
 #include "rendersystem.h"
 #include "passesrenderingaspectimpl.h"
+#include "runnersystem.h"
+#include "hub.h"
+#include "updatequeuetask.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Interface::AspectImplementations;
+using namespace DrawSpace::Systems;
 
-RenderPassNodeGraph::RenderPassNodeGraph( void )
+RenderPassNodeGraph::RenderPassNodeGraph()
 {
 }
 
@@ -50,6 +54,11 @@ void RenderPassNodeGraph::cleanup_treenodes( void )
         it->data()->CleanUp();
         _DRAWSPACE_DELETE_( it->data() );
     }
+}
+
+void RenderPassNodeGraph::SetSystemsHub(Systems::Hub* p_hub)
+{
+    m_hub = p_hub;
 }
 
 RenderPassNode RenderPassNodeGraph::CreateRoot( const dsstring& p_name )
@@ -128,19 +137,99 @@ void RenderPassNodeGraph::ProcessSignals( void )
 
         if( SIGNAL_UPDATED_RENDERINGQUEUES == sig )
         {
+            if (!m_hub)
+            {
+                _DSEXCEPTION("systems hub has not been set in rendergraph ! ");
+            }
+
+            RunnerSystem& runner_system{ m_hub->GetSystem<RunnerSystem>("RunnerSystem") };
+
+            RunnerSequenceStep update_queue_step;
+
+            dsstring sequence_id = std::to_string(GetTickCount()) + dsstring("/");
+            std::vector<RenderPassNode::PassDescr*> passes_descr;
+
+
+            for (auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it)
+            {
+                if (it->data()->m_renderingqueue_update_flag)
+                {
+                    RenderPassNode::PassDescr* passdescr{ it->data() };
+                    sequence_id = sequence_id + passdescr->m_name + dsstring("/");
+
+                    passes_descr.push_back(passdescr);
+                }
+            }
+
+            update_queue_step.AddComponent<std::vector<RenderPassNode::PassDescr*>>("passes_descr", passes_descr);
+            update_queue_step.AddComponent<dsstring>("sequence_id", sequence_id);
+
+            update_queue_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+            {
+                UpdateQueueTask* task{ _DRAWSPACE_NEW_(UpdateQueueTask, UpdateQueueTask) };
+
+                auto passes_descr{ p_step.GetComponent<std::vector<RenderPassNode::PassDescr*>>("passes_descr")->getPurpose() };
+                auto sequence_id{ p_step.GetComponent<dsstring>("sequence_id")->getPurpose() };
+
+                std::vector<DrawSpace::Core::RenderingQueue*> queues;
+                for (auto& pass : passes_descr)
+                {
+                    queues.push_back(pass->m_renderingqueue);
+                }
+
+                task->SetTargetDescr(sequence_id);
+                task->SetActionDescr("UPDATEQUEUES");
+                task->SetRenderingQueue(queues);
+                
+                p_step.SetTask(task);
+            });
+
+            update_queue_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+            {
+                auto passes_descr{ p_step.GetComponent<std::vector<RenderPassNode::PassDescr*>>("passes_descr")->getPurpose() };
+
+                UpdateQueueTask* task{ static_cast<UpdateQueueTask*>(p_step.GetTask()) };
+
+                for (auto& pass : passes_descr)
+                {
+                    // flip output buffers
+                    pass->m_renderingqueue->FlipOutputQueues();
+
+                    // reset flag
+                    pass->m_renderingqueue_update_flag = false;
+                }
+
+                _DRAWSPACE_DELETE_(task);
+                p_seq.DeclareCompleted();
+            });
+
+
+
+
+            RunnerSequence sequence;
+            sequence.RegisterStep(dsstring("updateQueueStep"), update_queue_step);
+            sequence.SetCurrentStep(dsstring("updateQueueStep"));
+
+            runner_system.RegisterSequence(sequence_id, sequence);
+
+
+            /*
             /// update all rendering queues
             for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
             {
                 if( it->data()->m_renderingqueue_update_flag )
-                {
+                {                    
+                    RenderPassNode::PassDescr* passdescr{ it->data() };
+                                        
                     // mise a jour buffer renderingqueue
-                    it->data()->m_renderingqueue->UpdateOutputQueue();
-                    it->data()->m_renderingqueue->FlipOutputQueues();
-
+                    passdescr->m_renderingqueue->UpdateOutputQueue();
+                    passdescr->m_renderingqueue->FlipOutputQueues();
                     // reset flag
-                    it->data()->m_renderingqueue_update_flag = false;
+                    passdescr->m_renderingqueue_update_flag = false;
+                    
                 }
-            }  
+            }
+            */
 
             for (auto& e : m_evt_handlers)
             {
