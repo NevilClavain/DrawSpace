@@ -202,6 +202,9 @@ void RenderPassNodeGraph::ProcessSignals( void )
 
                 _DRAWSPACE_DELETE_(task);
                 p_seq.DeclareCompleted();
+
+                p_step.RemoveComponent<std::vector<RenderPassNode::PassDescr*>>("passes_descr");
+                p_step.RemoveComponent<dsstring>("sequence_id");
             });
 
 
