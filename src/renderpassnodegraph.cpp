@@ -194,6 +194,7 @@ void RenderPassNodeGraph::ProcessSignals( void )
                 {
                     // flip output buffers
                     pass->m_renderingqueue->FlipOutputQueues();
+                    pass->m_renderingqueue->DeclareReady();
 
                     // reset flag
                     pass->m_renderingqueue_update_flag = false;
@@ -211,25 +212,6 @@ void RenderPassNodeGraph::ProcessSignals( void )
             sequence.SetCurrentStep(dsstring("updateQueueStep"));
 
             runner_system.RegisterSequence(sequence_id, sequence);
-
-
-            /*
-            /// update all rendering queues
-            for( auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it )
-            {
-                if( it->data()->m_renderingqueue_update_flag )
-                {                    
-                    RenderPassNode::PassDescr* passdescr{ it->data() };
-                                        
-                    // mise a jour buffer renderingqueue
-                    passdescr->m_renderingqueue->UpdateOutputQueue();
-                    passdescr->m_renderingqueue->FlipOutputQueues();
-                    // reset flag
-                    passdescr->m_renderingqueue_update_flag = false;
-                    
-                }
-            }
-            */
 
             for (auto& e : m_evt_handlers)
             {

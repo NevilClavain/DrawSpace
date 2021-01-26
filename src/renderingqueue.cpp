@@ -42,7 +42,7 @@ m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
-m_ready( true ),
+m_ready( false ),
 m_status( OK ),
 m_target_slice(0),
 m_id( p_id),
@@ -62,7 +62,7 @@ m_target_clear_color_g( 0 ),
 m_target_clear_color_b( 0 ),
 m_target_clear_color_a( 0 ),
 m_switches_cost( 0 ),
-m_ready( true ),
+m_ready( false ),
 m_status( OK ),
 m_target_slice(0),
 m_id(p_id),
@@ -262,11 +262,18 @@ void RenderingQueue::Remove( RenderingNode* p_node )
             break;
         }
     }
+
+    m_ready = false;
 }
 
 bool RenderingQueue::IsReady(void) const
 {
     return m_ready;
+}
+
+void RenderingQueue::DeclareReady(void)
+{
+    m_ready = true;
 }
 
 void RenderingQueue::EnableDepthClearing( bool p_enable )
@@ -326,8 +333,6 @@ void RenderingQueue::UpdateOutputQueue( void )
 
     cleanup_output_list();
 
-    m_ready = true;
-
     _DSDEBUG(rd_logger, dsstring("End : " << m_id));
 }
 
@@ -365,7 +370,6 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
     }
 
     cleanup_output_list();
-    m_ready = true;
 
     _DSDEBUG(rd_logger, dsstring("End : " << m_id));
 }
