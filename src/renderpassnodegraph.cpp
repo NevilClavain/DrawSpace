@@ -125,9 +125,13 @@ void RenderPassNodeGraph::PushSignal_DisablePass(const dsstring& p_pass)
 void RenderPassNodeGraph::PushSignal_EnablePass(const dsstring& p_pass)
 {
     m_pass_to_enable = p_pass;
-    m_signals.push(SIGNAL_ENABLE_PASS);
+    m_signals.push(SIGNAL_ENABLE_PASS);    
 }
 
+void RenderPassNodeGraph::PushSignal_CleanupRenderingQueues(void)
+{
+    m_signals.push(SIGNAL_CLEANUP_RENDERINGQUEUES);
+}
 
 void RenderPassNodeGraph::ProcessSignals( void )
 {   
@@ -135,7 +139,15 @@ void RenderPassNodeGraph::ProcessSignals( void )
     {
         Signals sig = m_signals.front();
 
-        if( SIGNAL_UPDATED_RENDERINGQUEUES == sig )
+        if (SIGNAL_CLEANUP_RENDERINGQUEUES == sig)
+        {
+            for (auto it = m_tree.df_post_begin(); it != m_tree.df_post_end(); ++it)
+            {
+                RenderPassNode::PassDescr* passdescr{ it->data() };
+                passdescr->m_renderingqueue->EraseOutputQueue();
+            }
+        }
+        else if( SIGNAL_UPDATED_RENDERINGQUEUES == sig )
         {
             if (!m_hub)
             {

@@ -55,10 +55,10 @@ const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::
     { "remove_pass_viewportquad", &LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad },
     { "configure_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources },
     { "release_pass_viewportquad_resources", &LuaClass_RenderPassNodeGraph::LUA_releasepassviewportquadresources },
-    { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
+    { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },    
     { "enable_pass", &LuaClass_RenderPassNodeGraph::LUA_enablepass },
     { "disable_pass", &LuaClass_RenderPassNodeGraph::LUA_disablepass },
-    { "update_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_updaterenderingqueues },
+    { "cleanup_renderingqueues", &LuaClass_RenderPassNodeGraph::LUA_cleanuprenderingqueues },
     { "set_viewportquadshaderrealvector", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealvector },
 	{ "set_viewportquadshaderrealmatrix", &LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealmatrix },
     { "set_targettexturedepth", &LuaClass_RenderPassNodeGraph::LUA_settargettexturedepth },
@@ -559,6 +559,12 @@ int LuaClass_RenderPassNodeGraph::LUA_enablepass(lua_State* p_L)
     dsstring pass_id = luaL_checkstring(p_L, 1);
     m_rendergraph.PushSignal_EnablePass(pass_id);
 
+    return 0;
+}
+
+int LuaClass_RenderPassNodeGraph::LUA_cleanuprenderingqueues(lua_State* p_L)
+{
+    m_rendergraph.PushSignal_CleanupRenderingQueues();
     return 0;
 }
 

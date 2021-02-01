@@ -104,8 +104,8 @@ private:
     std::list<Operation>                                                    m_outputqueue_0;
     std::list<Operation>                                                    m_outputqueue_1;
 
-    std::list<Operation>*                                                   m_current_outputqueue;
-    std::list<Operation>*                                                   m_back_outputqueue;
+    std::list<Operation>*                                                   m_current_outputqueue; // rendered output queue
+    std::list<Operation>*                                                   m_back_outputqueue;    // prepared output queue 
 
     Texture*                                                                m_target;
     bool                                                                    m_clear_depth;
@@ -195,6 +195,7 @@ public:
 
     void UpdateOutputQueue( void );
     void UpdateOutputQueueNoOpt( void );
+    void EraseOutputQueue(void);
     void FlipOutputQueues(void);
 
 	inline Status GetStatus(void) const { return m_status; };

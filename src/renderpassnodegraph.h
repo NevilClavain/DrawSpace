@@ -59,6 +59,7 @@ private:
         SIGNAL_UPDATED_RENDERINGQUEUES,
         SIGNAL_DISABLE_PASS,
         SIGNAL_ENABLE_PASS,
+        SIGNAL_CLEANUP_RENDERINGQUEUES,
     };
 
     mutable PassDescrTree				m_tree;
@@ -88,6 +89,7 @@ public:
     void PushSignal_UpdatedRenderingQueues( void );
     void PushSignal_DisablePass(const dsstring& p_pass);
     void PushSignal_EnablePass(const dsstring& p_pass);
+    void PushSignal_CleanupRenderingQueues(void);
 
 	void RegisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);
 	void UnregisterRenderPassEvtHandler(RenderPassEventHandler* p_handler);

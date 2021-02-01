@@ -21,7 +21,7 @@ commons.trash.final_pass(rg, 'final_pass')
 
 text_renderer:release()
 
-rg:update_renderingqueues()
+rg:cleanup_renderingqueues()
 g:release_assets()
 
 

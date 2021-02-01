@@ -294,6 +294,11 @@ void RenderingQueue::SetTargetClearingColor( unsigned char p_r, unsigned char p_
     m_target_clear_color_a = p_a;
 }
 
+void RenderingQueue::EraseOutputQueue(void)
+{
+    m_back_outputqueue->clear();
+}
+
 void RenderingQueue::UpdateOutputQueue( void )
 {
     _DSDEBUG(rd_logger, dsstring("Begin : " << m_id));
@@ -866,7 +871,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         }
     }
 
-    //m_outputqueue.clear();
     m_back_outputqueue->clear();
 
     for( size_t i = 0; i < p_input_list.size(); i++ )

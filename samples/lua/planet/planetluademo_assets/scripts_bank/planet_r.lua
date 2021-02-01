@@ -37,9 +37,8 @@ g:remove_appruncb('run')
 rg:remove_pass('texture_pass')
 commons.trash.final_pass(rg, 'final_pass')
 
---eg:unset_camera()
 
-rg:update_renderingqueues()
+rg:cleanup_renderingqueues()
 g:release_assets()
 
 
@@ -52,9 +51,6 @@ g:remove_resourceeventcb("onresourceevent")
 
 gui:show_gui(FALSE)
 gui:unload_alllayouts()
-
-
-
 
 g:show_mousecursor(TRUE)
 g:set_mousecursorcircularmode(FALSE)
