@@ -457,6 +457,28 @@ function( layout, widget )
     model.move.scalexyz()
   end
 
+  if widget == "Button_Pause" then
+    root_entity:update_timescale(FREEZE)
+  end
+  if widget == "Button_x1" then
+    root_entity:update_timescale(NORMAL_TIME)
+  end
+  if widget == "Button_x2" then
+    root_entity:update_timescale(MUL2_TIME)
+  end
+  if widget == "Button_x4" then
+    root_entity:update_timescale(MUL4_TIME)
+  end
+  if widget == "Button_x1_2" then
+    root_entity:update_timescale(DIV2_TIME)
+  end
+  if widget == "Button_x1_4" then
+    root_entity:update_timescale(DIV4_TIME)
+  end
+  if widget == "Button_x1_10" then
+    root_entity:update_timescale(DIV10_TIME)
+  end
+
 end)
 
 gui:set_mousecursorimage("AlfiskoSkin/MouseArrow")

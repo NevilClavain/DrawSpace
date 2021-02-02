@@ -123,9 +123,9 @@
                 <Property name="HorzFormatting" value="WordWrapLeftAligned" />
                 <Property name="VertFormatting" value="TopAligned" />
             </Window>
-        </Window>		
+        </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_model" >
-            <Property name="Area" value="{{0,540},{0,5},{0,940},{0.0,400}}" />
+            <Property name="Area" value="{{0,540},{0,5},{0,940},{0,400}}" />
             <Property name="Text" value="Model" />
             <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
@@ -138,7 +138,7 @@
                 <Property name="HorzFormatting" value="WordWrapLeftAligned" />
                 <Property name="VertFormatting" value="TopAligned" />
             </Window>
-        </Window>		
+        </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_resources" >
             <Property name="Area" value="{{0,945},{0,5},{0,1345},{0,700}}" />
             <Property name="Text" value="Resources events" />
@@ -148,14 +148,14 @@
                 <Property name="AlwaysOnTop" value="false" />
             </AutoWindow>
             <Window type="AlfiskoSkin/Label" name="Label_resources" >
-                <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}}" />
+                <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
                 <Property name="MaxSize" value="{{1,0},{1,0}}" />
                 <Property name="HorzFormatting" value="WordWrapLeftAligned" />
                 <Property name="VertFormatting" value="TopAligned" />
             </Window>
-        </Window>		
+        </Window>
         <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow_infos" >
-            <Property name="Area" value="{{0,135},{0,705},{0.0,650},{0.0,805}}" />
+            <Property name="Area" value="{{0,135},{0,705},{0,650},{0,805}}" />
             <Property name="Text" value="Infos" />
             <Property name="Alpha" value="0.3" />
             <Property name="CloseButtonEnabled" value="false" />
@@ -168,6 +168,41 @@
                 <Property name="HorzFormatting" value="WordWrapLeftAligned" />
                 <Property name="VertFormatting" value="TopAligned" />
             </Window>
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_Pause" >
+            <Property name="Area" value="{{0,20},{0,675},{0,130},{0,700}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="Pause" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_x2" >
+            <Property name="Area" value="{{0,20},{0,725},{0,130},{0,750}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="x2" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_x4" >
+            <Property name="Area" value="{{0,20},{0,750},{0,130},{0,775}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="x4" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_x1" >
+            <Property name="Area" value="{{0,20},{0,700},{0,130},{0,725}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="x1" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_x1_2" >
+            <Property name="Area" value="{{0,20},{0,775},{0,130},{0,800}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="x1/2" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_x1_4" >
+            <Property name="Area" value="{{0,20},{0,800},{0,130},{0,825}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="x1/4" />
+        </Window>
+        <Window type="AlfiskoSkin/Button" name="Button_x1_10" >
+            <Property name="Area" value="{{0,20},{0,825},{0,130},{0,850}}" />
+            <Property name="Font" value="DejaVuSans-12" />
+            <Property name="Text" value="x1/10" />
         </Window>
     </Window>
 </GUILayout>
