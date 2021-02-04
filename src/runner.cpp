@@ -79,14 +79,13 @@ void Runner::mainloop(void)
 }
 
 void Runner::Startup(void)
-{
-	m_thread = new std::thread(Runner::mainloop);
+{	m_thread = std::make_unique<std::thread>(Runner::mainloop);
 };
 
 void Runner::Join(void) const
 {
-	if (m_thread)
+	if (m_thread.get())
 	{
 		m_thread->join();
-	}
+	}	
 }

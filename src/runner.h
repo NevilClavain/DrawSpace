@@ -38,8 +38,8 @@ public:
 	Mailbox<Interface::ITask*>						m_mailbox_in;
 	Mailbox<std::pair<dsstring, dsstring>>			m_mailbox_out;
 private:
-	mutable std::thread*		m_thread{ nullptr };
-	bool						m_cont;
+	mutable std::unique_ptr<std::thread>			m_thread;
+	bool											m_cont;
 
 	static void mainloop(void);
 
