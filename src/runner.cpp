@@ -79,7 +79,8 @@ void Runner::mainloop(void)
 }
 
 void Runner::Startup(void)
-{	m_thread = std::make_unique<std::thread>(Runner::mainloop);
+{	
+	m_thread = std::make_unique<std::thread>(Runner::mainloop);
 };
 
 void Runner::Join(void) const
