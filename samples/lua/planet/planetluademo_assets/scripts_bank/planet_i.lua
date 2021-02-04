@@ -525,7 +525,7 @@ g:print("Planet creation done...")
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 
-camera2_entity, camera2_pos=commons.create_static_camera(0.0, 110.0, 300.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+camera2_entity, camera2_pos=commons.create_static_camera(0.0, 70.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
 camera2_entity:setup_info( "referent_body", "Bellorophon" )
 eg:add_child('ship','camera2_entity',camera2_entity)
 
@@ -545,11 +545,8 @@ model.env.fog.setdensity(0.0)
 --resurgam_planet_config:updated()
 
 
---rg:update_renderingqueues()
 
 
-
---gui:load_layout("timecontrol.layout","xfskin2/layouts/timecontrol_widgets.conf")
 gui:load_layout("timecontrol.layout","guiskins/layouts/timecontrol_widgets.conf")
 gui:set_layout("timecontrol.layout")
 gui:show_gui(TRUE)
