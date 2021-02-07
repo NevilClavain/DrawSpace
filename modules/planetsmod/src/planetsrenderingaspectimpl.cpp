@@ -247,8 +247,11 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     ////////////////////////////////////////////////////////
 
-    draw_sub_passes();
-
+    if (m_owner->GetComponent<bool>("resources_ready")->getPurpose())
+    {
+        draw_sub_passes();
+    }
+    
     ///// Update OUT parameters in specific config
 
     m_owner->GetComponent<int>("OUT_delayedSingleSubPassQueueSize")->getPurpose() = m_singleshot_subpasses_stack.size();
@@ -772,7 +775,7 @@ void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
 }
 
 void PlanetsRenderingAspectImpl::draw_sub_passes(void)
-{
+{    
     if (m_singleshot_subpasses_stack.size() > 0)
     {
         LOD::SubPass* sp = m_singleshot_subpasses_stack.back();
@@ -780,11 +783,14 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         {
             m_singleshot_subpasses_stack.pop_back();
 
+            
             if( !sp->GetPass()->GetRenderingQueue()->IsReady() )
             {
                 sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+                sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
+                sp->GetPass()->GetRenderingQueue()->DeclareReady();
             }
-
+            
             sp->DrawSubPass();
             sp->SubPassDone();
         }
@@ -794,15 +800,19 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
     {
         LOD::SubPass* sp = e;
 
+        
         if (!sp->GetPass()->GetRenderingQueue()->IsReady())
         {
             sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+            sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
+            sp->GetPass()->GetRenderingQueue()->DeclareReady();
         }
-
+        
         sp->DrawSubPass();
         sp->SubPassDone();
     }
     m_singleshot_subpasses.clear();
+    
 }
 
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)

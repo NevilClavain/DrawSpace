@@ -35,6 +35,10 @@ function( event, resource_path, context )
        if context == "init" then
          root_entity:register_rigidbody(bellerophon_entity)
          root_entity:register_rigidbody(spherebump.models['sphere'].entity)
+
+         resurgam_planet_config:set_resourcesready( TRUE )
+         resurgam_planet_config:updated()
+
        end
     else
        evt_out = "? : "..event       
@@ -345,7 +349,7 @@ function()
 
   -- display planet infos 
 
-  --local planet_infos = commons.procedural.planet.read_infos(resurgam_planet_config)
+  local planet_infos = commons.procedural.planet.read_infos(resurgam_planet_config)
 
   local current_cam_id
 
@@ -356,7 +360,7 @@ function()
   end
 
   local relative_state
-  --[[
+  
   local is_relative = planet_infos['viewsInfos']['ship_camera']['relative']
 
   if is_relative ~= 0 then
@@ -378,12 +382,12 @@ function()
   else
     relative_state = ""
   end
-  ]]
+  
 
-  --[[
+  
   text4_renderer:update(300, 70, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
                                             ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state)
-                                            ]]
+                                            
 
   local mvt_info = { model.camera.mvt:read() }
   model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
@@ -502,7 +506,7 @@ planet_passes_config =
 	}
 }
 
---[[
+
 planet_name = 'Resurgam'
 planetmod.view.load(planet_name, planet_passes_config, 'root', planet_specific_config_descr)
 
@@ -521,7 +525,7 @@ planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
 
 g:print("Planet creation done...")
-]]
+
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 
@@ -541,8 +545,7 @@ model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 
 model.env.fog.setdensity(0.0)
 
---update_planet_lights( resurgam_planet_config)
---resurgam_planet_config:updated()
+update_planet_lights(resurgam_planet_config)
 
 
 

@@ -48,6 +48,7 @@ private:
         using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
 
         dsstring    resources_path;
+        bool        resources_ready;
         dsreal      planet_ray; 
         dsreal      atmo_thickness;
         dsreal      plains_amplitude;
@@ -96,6 +97,7 @@ public:
     int LUA_updated(lua_State* p_L);
 
     int LUA_setresourcespath(lua_State* p_L);
+    int LUA_setresourcesready(lua_State* p_L);
     int LUA_setplanetray(lua_State* p_L);
     int LUA_setatmothickness(lua_State* p_L);
     int LUA_setamplitudes(lua_State* p_L);

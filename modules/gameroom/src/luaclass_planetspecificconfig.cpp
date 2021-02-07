@@ -37,6 +37,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "cleanup", &LuaClass_PlanetSpecificConfig::LUA_cleanup },
     { "updated", &LuaClass_PlanetSpecificConfig::LUA_updated },
     { "set_resourcespath", &LuaClass_PlanetSpecificConfig::LUA_setresourcespath },
+    { "set_resourcesready", &LuaClass_PlanetSpecificConfig::LUA_setresourcesready },    
     { "set_planetray", &LuaClass_PlanetSpecificConfig::LUA_setplanetray },
     { "set_atmothickness", &LuaClass_PlanetSpecificConfig::LUA_setatmothickness },
     { "set_amplitudes", &LuaClass_PlanetSpecificConfig::LUA_setamplitudes },
@@ -63,6 +64,7 @@ m_rendering_aspect( NULL )
 {
     m_planets_details.enable_landplace_patch = false;
     m_planets_details.enable_atmosphere = false;
+    m_planets_details.resources_ready = false;
 
     // prepare lights tuple
     for( int i = 0; i < 4; i++ )
@@ -89,6 +91,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
 
     entity_rendering_aspect->AddComponent<dsstring>("resources_path", m_planets_details.resources_path);
+    entity_rendering_aspect->AddComponent<bool>("resources_ready", m_planets_details.resources_ready);
     entity_rendering_aspect->AddComponent<dsreal>("planet_ray", m_planets_details.planet_ray);
     entity_rendering_aspect->AddComponent<dsreal>("atmo_thickness", m_planets_details.atmo_thickness);
     entity_rendering_aspect->AddComponent<dsreal>("plains_amplitude", m_planets_details.plains_amplitude);
@@ -149,6 +152,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     }
 
     m_rendering_aspect->RemoveComponent<dsstring>("resources_path");
+    m_rendering_aspect->RemoveComponent<bool>("resources_ready");
     m_rendering_aspect->RemoveComponent<dsreal>("planet_ray");
     m_rendering_aspect->RemoveComponent<dsreal>("atmo_thickness");
     m_rendering_aspect->RemoveComponent<dsreal>("plains_amplitude");
@@ -193,9 +197,8 @@ int LuaClass_PlanetSpecificConfig::LUA_updated(lua_State* p_L)
         lights.push_back(m_planets_details.lights[i]);
     }
     m_rendering_aspect->GetComponent<std::vector<PlanetDetails::Lights>>("lights")->getPurpose() = lights;
-
-
     m_rendering_aspect->GetComponent<bool>("enable_atmosphere")->getPurpose() = m_planets_details.enable_atmosphere;
+    m_rendering_aspect->GetComponent<bool>("resources_ready")->getPurpose() = m_planets_details.resources_ready;
 
     // signaler le chgt d'un ou plusieurs components...
     m_rendering_aspect->ComponentsUpdated();
@@ -211,6 +214,19 @@ int LuaClass_PlanetSpecificConfig::LUA_setresourcespath(lua_State* p_L)
     }
 
     m_planets_details.resources_path = luaL_checkstring(p_L, 1);
+
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setresourcesready(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_resourcesready : argument(s) missing");
+    }
+
+    m_planets_details.resources_ready = luaL_checkint(p_L, 1);
 
     return 0;
 }
