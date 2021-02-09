@@ -783,12 +783,13 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         {
             m_singleshot_subpasses_stack.pop_back();
 
+            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
             
-            if( !sp->GetPass()->GetRenderingQueue()->IsReady() )
+            if( !rendering_queue->IsReady() )
             {
-                sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
-                sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
-                sp->GetPass()->GetRenderingQueue()->DeclareReady();
+                rendering_queue->UpdateOutputQueueNoOpt();
+                rendering_queue->FlipOutputQueues();
+                rendering_queue->DeclareReady();
             }
             
             sp->DrawSubPass();
@@ -800,12 +801,13 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
     {
         LOD::SubPass* sp = e;
 
+        RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
         
-        if (!sp->GetPass()->GetRenderingQueue()->IsReady())
+        if (!rendering_queue->IsReady())
         {
-            sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
-            sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
-            sp->GetPass()->GetRenderingQueue()->DeclareReady();
+            rendering_queue->UpdateOutputQueueNoOpt();
+            rendering_queue->FlipOutputQueues();
+            rendering_queue->DeclareReady();
         }
         
         sp->DrawSubPass();
