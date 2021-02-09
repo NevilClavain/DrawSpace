@@ -198,6 +198,8 @@ public:
     void EraseOutputQueue(void);
     void FlipOutputQueues(void);
 
+    dsstring GetId(void) const;
+
 	inline Status GetStatus(void) const { return m_status; };
 };
 }

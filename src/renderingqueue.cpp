@@ -1287,3 +1287,8 @@ long RenderingQueue::GetTheoricalSwitchesCost( void ) const
     }
     return cost;
 }
+
+dsstring RenderingQueue::GetId(void) const
+{
+    return m_id;
+}
