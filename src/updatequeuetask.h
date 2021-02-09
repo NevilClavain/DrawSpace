@@ -36,15 +36,16 @@ struct UpdateQueueTask : public Interface::ITask
 {
 private:
     // execution data
-    //DrawSpace::Core::RenderingQueue* m_renderingqueue{ nullptr };
-
     std::vector<DrawSpace::Core::RenderingQueue*> m_renderingqueues;
+    bool                                          m_disable_opt{ false };
+
 public:
 
     UpdateQueueTask( void );
     void Execute(void);
 
     void SetRenderingQueue(const std::vector<DrawSpace::Core::RenderingQueue*> p_renderingqueues);
+    void DisableOpt(bool p_disable);
 };
 
 }

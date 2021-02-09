@@ -37,11 +37,24 @@ void UpdateQueueTask::Execute(void)
 {
 	for (auto& queue : m_renderingqueues)
 	{
-		queue->UpdateOutputQueue();
+		if (m_disable_opt)
+		{
+			queue->UpdateOutputQueueNoOpt();
+		}
+		else
+		{
+			queue->UpdateOutputQueue();
+		}
+		
 	}
 }
 
 void UpdateQueueTask::SetRenderingQueue(const std::vector<DrawSpace::Core::RenderingQueue*> p_renderingqueues)
 {
 	m_renderingqueues = p_renderingqueues;
+}
+
+void UpdateQueueTask::DisableOpt(bool p_disable)
+{
+	m_disable_opt = p_disable;
 }
