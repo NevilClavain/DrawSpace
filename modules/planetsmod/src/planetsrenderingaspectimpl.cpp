@@ -32,6 +32,8 @@
 #include "resourcesaspect.h"
 #include "maths.h"
 #include "hub.h"
+#include "runnersystem.h"
+#include "updatequeuetask.h"
 
 #include "planetdetailsbinder.h"
 #include "planetclimatebinder.h"
@@ -46,6 +48,7 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Systems;
 
 
 //Root::on_camera_event : 
@@ -775,7 +778,9 @@ void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
 }
 
 void PlanetsRenderingAspectImpl::draw_sub_passes(void)
-{    
+{
+    RunnerSystem& runner_system{ m_hub->GetSystem<RunnerSystem>("RunnerSystem") };
+
     if (m_singleshot_subpasses_stack.size() > 0)
     {
         LOD::SubPass* sp = m_singleshot_subpasses_stack.back();
@@ -783,38 +788,129 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         {
             m_singleshot_subpasses_stack.pop_back();
 
-            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
-            
-            if( !rendering_queue->IsReady() )
-            {
-                rendering_queue->UpdateOutputQueueNoOpt();
-                rendering_queue->FlipOutputQueues();
-                rendering_queue->DeclareReady();
-            }
+            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };            
+            rendering_queue->UpdateOutputQueueNoOpt();
+            rendering_queue->FlipOutputQueues();
+            rendering_queue->DeclareReady();
             
             sp->DrawSubPass();
             sp->SubPassDone();
         }
     }
 
-    for( auto& e : m_singleshot_subpasses)
-    {
-        LOD::SubPass* sp = e;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
-        
-        if (!rendering_queue->IsReady())
+    if (m_singleshot_subpasses.size() > 0)
+    {
+        RunnerSequenceStep singleshot_subpasses_sequence_step;
+
+        dsstring singleshot_subpasses_sequence_id{ std::to_string(GetTickCount()) + dsstring("/") };
+
+        for (auto& e : m_singleshot_subpasses)
         {
-            rendering_queue->UpdateOutputQueueNoOpt();
-            rendering_queue->FlipOutputQueues();
-            rendering_queue->DeclareReady();
+            LOD::SubPass* sp = e;
+            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+
+            singleshot_subpasses_sequence_id = singleshot_subpasses_sequence_id + rendering_queue->GetId() + dsstring("/");
         }
         
-        sp->DrawSubPass();
-        sp->SubPassDone();
+        singleshot_subpasses_sequence_step.AddComponent<LOD::SubPass::singleshot_subpasses>("singleshot_subpasses_queues", m_singleshot_subpasses);
+        singleshot_subpasses_sequence_step.AddComponent<dsstring>("sequence_id", singleshot_subpasses_sequence_id);
+
+        m_singleshot_subpasses.clear();
+
+        singleshot_subpasses_sequence_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+        {
+            auto singleshot_subpasses{ p_step.GetComponent<LOD::SubPass::singleshot_subpasses>("singleshot_subpasses_queues")->getPurpose() };
+            auto sequence_id{ p_step.GetComponent<dsstring>("sequence_id")->getPurpose() };
+
+            UpdateQueueTask* task{ _DRAWSPACE_NEW_(UpdateQueueTask, UpdateQueueTask) };
+
+            std::vector<DrawSpace::Core::RenderingQueue*> queues;
+
+            for (auto& e : singleshot_subpasses)
+            {
+                LOD::SubPass* sp = e;
+                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+
+                queues.push_back(rendering_queue);
+            }
+
+            task->SetTargetDescr(sequence_id);
+            task->SetActionDescr("UPDATE_SINGLESHOT_SUBPASS_QUEUES");
+            task->SetRenderingQueue(queues);
+            task->DisableOpt(true);
+
+            p_step.SetTask(task);
+        });
+
+
+        singleshot_subpasses_sequence_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+        {
+            auto singleshot_subpasses{ p_step.GetComponent<LOD::SubPass::singleshot_subpasses>("singleshot_subpasses_queues")->getPurpose() };
+
+            for (auto& e : singleshot_subpasses)
+            {
+                LOD::SubPass* sp = e;
+                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+
+                rendering_queue->FlipOutputQueues();
+                rendering_queue->DeclareReady();
+
+                sp->DrawSubPass();
+                sp->SubPassDone();
+            }
+
+            UpdateQueueTask* task{ static_cast<UpdateQueueTask*>(p_step.GetTask()) };
+
+            _DRAWSPACE_DELETE_(task);
+            p_seq.DeclareCompleted();
+
+            p_step.RemoveComponent<LOD::SubPass::singleshot_subpasses>("singleshot_subpasses_queues");
+            p_step.RemoveComponent<dsstring>("sequence_id");
+        });
+
+        RunnerSequence singleshot_subpasses_sequence;
+        singleshot_subpasses_sequence.RegisterStep(dsstring("singleshot_subpasses_sequence_step"), singleshot_subpasses_sequence_step);
+        singleshot_subpasses_sequence.SetCurrentStep(dsstring("singleshot_subpasses_sequence_step"));
+        runner_system.RegisterSequence(singleshot_subpasses_sequence_id, singleshot_subpasses_sequence);
     }
-    m_singleshot_subpasses.clear();
-    
+
+
+
+
+    /*
+
+    RunnerSequenceStep singleshot_subpasses_sequence_step;
+
+    singleshot_subpasses_sequence_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+    {
+        UpdateQueueTask* task{ _DRAWSPACE_NEW_(UpdateQueueTask, UpdateQueueTask) };
+    });
+
+    singleshot_subpasses_sequence_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
+    {
+        UpdateQueueTask* task{ static_cast<UpdateQueueTask*>(p_step.GetTask()) };
+
+        _DRAWSPACE_DELETE_(task);
+        p_seq.DeclareCompleted();
+
+    });
+
+    dsstring singleshot_subpasses_sequence_id{ std::to_string(GetTickCount()) + dsstring("/") };
+    for (auto& e : m_singleshot_subpasses)
+    {
+        LOD::SubPass* sp = e;
+        RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+
+        singleshot_subpasses_sequence_id = singleshot_subpasses_sequence_id + rendering_queue->GetId() + dsstring("/");
+    }
+
+    RunnerSequence singleshot_subpasses_sequence;
+    singleshot_subpasses_sequence.RegisterStep(dsstring("singleshot_subpasses_sequence_step"), singleshot_subpasses_sequence_step);
+    runner_system.RegisterSequence(singleshot_subpasses_sequence_id, singleshot_subpasses_sequence);
+    */
+
 }
 
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
