@@ -158,7 +158,7 @@ void RenderPassNodeGraph::ProcessSignals( void )
 
             RunnerSequenceStep update_queue_step;
 
-            dsstring sequence_id = std::to_string(GetTickCount()) + dsstring("/");
+            dsstring sequence_id{ std::to_string(GetTickCount()) + dsstring("/") };
             std::vector<RenderPassNode::PassDescr*> passes_descr;
 
 
