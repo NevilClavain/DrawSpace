@@ -199,21 +199,27 @@ function( key )
 
   elseif key == 65 then --'A'
     bellerophon_body:update_torquestate("roll_left", TRUE)
+    root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 90 then --'Z'
     bellerophon_body:update_torquestate("roll_right", TRUE)
+    root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 37 then --VK_LEFT
     bellerophon_body:update_torquestate("yaw_left", TRUE)
+    root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 38 then --VK_UP
     bellerophon_body:update_torquestate("pitch_down", TRUE)
+    root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 39 then --VK_RIGHT
     bellerophon_body:update_torquestate("yaw_right", TRUE)
+    root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 40 then --VK_DOWN
     bellerophon_body:update_torquestate("pitch_up", TRUE)
+    root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 68 then --'D'
     
@@ -278,31 +284,29 @@ function( key )
     
 
   elseif key == 76 then --'L'
-
     bellerophon_body:zero_speed()
 
   elseif key == 77 then --'M'
-
     bellerophon_body:zero_angularespeed()
-
 
   elseif key == 65 then --'A'
     bellerophon_body:update_torquestate("roll_left", FALSE)
-
+    
   elseif key == 90 then --'Z'
     bellerophon_body:update_torquestate("roll_right", FALSE)
-
+    
   elseif key == 37 then --VK_LEFT
     bellerophon_body:update_torquestate("yaw_left", FALSE)
-
+    
   elseif key == 38 then --VK_UP
     bellerophon_body:update_torquestate("pitch_down", FALSE)
-
+    
   elseif key == 39 then --VK_RIGHT
     bellerophon_body:update_torquestate("yaw_right", FALSE)
-
+    
   elseif key == 40 then --VK_DOWN
     bellerophon_body:update_torquestate("pitch_up", FALSE)
+    
 
   elseif key == 68 then --'D'
     
