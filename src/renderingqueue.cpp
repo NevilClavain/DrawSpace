@@ -301,8 +301,6 @@ void RenderingQueue::EraseOutputQueue(void)
 
 void RenderingQueue::UpdateOutputQueue( void )
 {
-    _DSDEBUG(rd_logger, dsstring("Begin : " << m_id));
-
     m_nodes.clear();
     m_fx_bases.clear();
 
@@ -337,14 +335,10 @@ void RenderingQueue::UpdateOutputQueue( void )
     }
 
     cleanup_output_list();
-
-    _DSDEBUG(rd_logger, dsstring("End : " << m_id));
 }
 
 void RenderingQueue::UpdateOutputQueueNoOpt( void )
 {
-    _DSDEBUG(rd_logger, dsstring("Begin : " << m_id));
-
     m_nodes.clear();
     m_fx_bases.clear();
 
@@ -375,8 +369,6 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
     }
 
     cleanup_output_list();
-
-    _DSDEBUG(rd_logger, dsstring("End : " << m_id));
 }
 
 double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode*>>& p_lists )
