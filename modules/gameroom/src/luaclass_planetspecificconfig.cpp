@@ -44,6 +44,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_offsets", &LuaClass_PlanetSpecificConfig::LUA_setoffsets },
     { "set_seeds", &LuaClass_PlanetSpecificConfig::LUA_setseeds },
     { "set_splattingparams", &LuaClass_PlanetSpecificConfig::LUA_setsplattingparams },
+    { "set_zbufferactivationrelalt", &LuaClass_PlanetSpecificConfig::LUA_setzbufferactivationrelalt },
     { "set_fogandatmoparams", &LuaClass_PlanetSpecificConfig::LUA_setfogandatmoparams },
     { "set_terrainbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setterrainbumpfactor },
     { "set_beachlimit", &LuaClass_PlanetSpecificConfig::LUA_setbeachlimit },
@@ -107,6 +108,8 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("splat_transition_up_relative_alt", m_planets_details.splat_transition_up_relative_alt);
     entity_rendering_aspect->AddComponent<dsreal>("splat_transition_down_relative_alt", m_planets_details.splat_transition_down_relative_alt);
 
+    entity_rendering_aspect->AddComponent<dsreal>("zbufferactivationrelalt", m_planets_details.zbuffer_activation_relative_alt);
+
     entity_rendering_aspect->AddComponent<int>("splat_texture_resol", m_planets_details.splat_texture_resol);
 
     entity_rendering_aspect->AddComponent<dsreal>("atmo_kr", m_planets_details.atmo_kr);
@@ -166,6 +169,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("terrainbump_factor");
     m_rendering_aspect->RemoveComponent<dsreal>("splat_transition_up_relative_alt");
     m_rendering_aspect->RemoveComponent<dsreal>("splat_transition_down_relative_alt");
+    m_rendering_aspect->RemoveComponent<dsreal>("zbufferactivationrelalt");
     m_rendering_aspect->RemoveComponent<int>("splat_texture_resol");
     m_rendering_aspect->RemoveComponent<dsreal>("atmo_kr");
     m_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
@@ -310,6 +314,19 @@ int LuaClass_PlanetSpecificConfig::LUA_setsplattingparams(lua_State* p_L)
     m_planets_details.splat_transition_up_relative_alt = luaL_checknumber(p_L, 1);
     m_planets_details.splat_transition_down_relative_alt = luaL_checknumber(p_L, 2);
     m_planets_details.splat_texture_resol = luaL_checknumber(p_L, 3);
+
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setzbufferactivationrelalt(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_zbufferactivationrelalt : argument(s) missing");
+    }
+
+    m_planets_details.zbuffer_activation_relative_alt = luaL_checknumber(p_L, 1);
 
     return 0;
 }

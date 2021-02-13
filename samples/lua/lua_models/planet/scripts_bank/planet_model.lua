@@ -59,6 +59,11 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 	end
 
+	if config_description['zbuffer_activation_relative_alt'] ~= nil then
+		planet_specific_configuration:set_zbufferactivationrelalt(config_description['zbuffer_activation_relative_alt'])
+	end
+
+
 	if config_description['atmo_kr'] ~= nil and 
 	   config_description['fog_alt_limit'] ~= nil and
 	   config_description['fog_density'] ~= nil then

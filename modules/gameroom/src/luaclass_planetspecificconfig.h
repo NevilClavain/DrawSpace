@@ -62,6 +62,7 @@ private:
         dsreal      terrainbump_factor;
         dsreal      splat_transition_up_relative_alt; 
         dsreal      splat_transition_down_relative_alt;
+        dsreal      zbuffer_activation_relative_alt;
         int         splat_texture_resol;
         dsreal      atmo_kr; 
         dsreal      fog_alt_limit; 
@@ -104,6 +105,7 @@ public:
     int LUA_setoffsets(lua_State* p_L);
     int LUA_setseeds(lua_State* p_L);
     int LUA_setsplattingparams(lua_State* p_L);
+    int LUA_setzbufferactivationrelalt(lua_State* p_L);
     int LUA_setfogandatmoparams(lua_State* p_L);
     int LUA_setterrainbumpfactor(lua_State* p_L);
     int LUA_setbeachlimit(lua_State* p_L);

@@ -59,6 +59,12 @@ FaceDrawingNode::~FaceDrawingNode( void )
 {
 }
 
+
+void FaceDrawingNode::EnableZBuffer(bool p_zbuffer)
+{
+    m_zbuffer_on = p_zbuffer;
+}
+
 void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
     m_display_list = p_list;
@@ -301,6 +307,11 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             current_texture = refpatchtexture;
         }
 
+        if (m_zbuffer_on)
+        {
+            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
+        }
+
         if( DRAW_ALL == m_drawpatch_mode )
         {
             draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
@@ -327,6 +338,11 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
                 }
             }
+        }
+
+        if (m_zbuffer_on)
+        {
+            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
         }
     }
 
@@ -690,11 +706,22 @@ Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void ) co
 
 void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state )
 {  
-    for( size_t i = 0; i < m_facedrawingnodes.size(); i++ )
+    for (auto& e : m_facedrawingnodes)
     {
-        if( p_layer_index == m_facedrawingnodes[i]->GetLayerIndex() )
+        if( p_layer_index == e->GetLayerIndex() )
         {
-            m_facedrawingnodes[i]->SetDrawingState( p_drawing_state );
+            e->SetDrawingState( p_drawing_state );
+        }
+    }
+}
+
+void Drawing::EnableZBufferForLayer(int p_layer_index, bool p_zbuffer)
+{
+    for (auto& e : m_facedrawingnodes)
+    {
+        if (p_layer_index == e->GetLayerIndex())
+        {
+            e->EnableZBuffer(p_zbuffer);
         }
     }
 }

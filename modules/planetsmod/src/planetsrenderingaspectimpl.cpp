@@ -250,6 +250,10 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     ////////////////////////////////////////////////////////
 
+    zbuffer_control_from_viewer_alt();
+
+    ////////////////////////////////////////////////////////
+
     if (m_owner->GetComponent<bool>("resources_ready")->getPurpose())
     {
         draw_sub_passes();
@@ -659,6 +663,8 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
     {
         if (m_registered_camerapoints.count(cam_name) > 0)
         {
+            m_current_camera = &m_registered_camerapoints.at(cam_name);
+
             std::vector<LOD::Body*> planet_bodies;
 
             for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
@@ -1090,3 +1096,23 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 
     }
 }
+
+void PlanetsRenderingAspectImpl::zbuffer_control_from_viewer_alt(void)
+{
+    if (m_current_camera && m_current_camera->relative_alt_valid)
+    {        
+        dsreal view_rel_alt{ m_current_camera->relative_alt };
+        
+        dsreal zbuffer_activation_rel_alt{ m_owner->GetComponent<dsreal>("zbufferactivationrelalt")->getPurpose() };
+
+        if (view_rel_alt < zbuffer_activation_rel_alt)
+        {
+            m_drawable.EnableZBufferForLayer(DetailsLayer, true);
+        }
+        else
+        {
+            m_drawable.EnableZBufferForLayer(DetailsLayer, false);
+        }
+    }
+}
+

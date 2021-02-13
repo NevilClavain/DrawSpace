@@ -121,6 +121,8 @@ protected:
     std::map<DrawSpace::Core::Entity*, RegisteredBody>              m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
 
+    RegisteredCamera*                                               m_current_camera{ nullptr };
+
 
     std::map<dsstring, DrawSpace::Core::Entity*>                    m_entities;  // stockage de toutes les entities du graph
 
@@ -166,6 +168,8 @@ protected:
 
     void                        manage_camerapoints(void);
     void                        manage_bodies(void);
+
+    void                        zbuffer_control_from_viewer_alt(void);
    
 public:
     PlanetsRenderingAspectImpl( void );
