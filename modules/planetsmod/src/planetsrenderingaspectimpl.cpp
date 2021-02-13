@@ -371,6 +371,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
+    m_drawable.SetLayerNodeDrawingState(AtmosphereLayer, enable_atmosphere);
+
 }
 
 void PlanetsRenderingAspectImpl::init_rendering_objects(void)
