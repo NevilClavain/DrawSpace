@@ -129,7 +129,7 @@ model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_c
   -- ici on reconstitue le tableau de paires 'rendering_id' -> 'pass_id'
   local passes_bindings = {}
   for k, v in pairs(p_passes_config) do
-    --local pass_id = k
+
     local pass_entry = v
     local pass_id = pass_entry.target_pass_id    
     passes_bindings[pass_entry.rendering_id] = pass_id
