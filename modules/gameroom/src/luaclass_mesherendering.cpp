@@ -658,16 +658,5 @@ int LuaClass_MesheRendering::LUA_setPassForRenderContext(lua_State* p_L)
 
     m_rcname_to_passes[rc_id].push_back(pass_id);
 
-    /*
-	if (m_rcname_to_passes.find(rc_id) == m_rcname_to_passes.end())
-	{
-		m_rcname_to_passes[rc_id].push_back(pass_id);
-	}
-	else
-	{
-		LUA_ERROR("MesheRendering::set_passforrendercontext : rendercontext name already exists in rcname_to_passes table !");
-	}
-    */
-
 	return 0;
 }
