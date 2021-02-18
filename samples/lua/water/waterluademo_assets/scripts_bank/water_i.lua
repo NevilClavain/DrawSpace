@@ -108,6 +108,8 @@ rg:set_pass_targetclearstate('bump_pass', TRUE)
 rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
 
 
+rg:create_child('final_pass', 'texturerefrac_pass', 3)
+
 
 rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
 
@@ -181,7 +183,14 @@ land_passes_config =
 		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = land.update_from_scene_env_mirror	
+	},
+	layer_2 =
+	{
+		target_pass_id = 'texturerefrac_pass',
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = land.update_from_scene_env
 	}
+
 }
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
 

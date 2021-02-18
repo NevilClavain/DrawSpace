@@ -226,8 +226,10 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
 					if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontexname))
 					{
-						dsstring pass_name = m_rcname_to_passes.at(render_context.rendercontexname);
-						passes.push_back(pass_name);
+                        for (auto& pass_name : m_rcname_to_passes.at(render_context.rendercontexname))
+                        {
+                            passes.push_back(pass_name);
+                        }						
 					}
                 }          
                 passes_names_layers.push_back(passes);
@@ -238,7 +240,7 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                 for( int i = 0; i < rc_list_size; i++ )
                 {
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-                    //dsstring pass_name = render_context.passname;
+
 
                     int textures_set_size = render_context.textures_sets.size();
 
@@ -310,7 +312,6 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
 
                     LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-                    //dsstring pass_name = render_context.passname;
 
                     for( size_t j = 0; j < render_context.shaders_params.size(); j++ )
                     {
@@ -532,43 +533,45 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
 
         // find passe index
         size_t pass_index;
-        bool pass_found = false;
+        std::vector<size_t> pass_indexes;
+        
         for( pass_index = 0; pass_index < passes_names.size(); pass_index++ )
         {
             if(passes_names[pass_index] == pass_id)
             {
-                pass_found = true;
-                break;
+                pass_indexes.push_back(pass_index);
             }        
         }
 
-        if( !pass_found )
+        if( 0 == pass_indexes.size())
         {
             LUA_ERROR("Rendering::set_shaderrealvector : unknown pass id");
         }
 
-        std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> layers_shaders_params =
-            m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose();
-
-
-        std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = layers_shaders_params[rendering_layer_index][pass_index];
-
-        
-        for( auto it = pass_shaders_params.begin(); it != pass_shaders_params.end(); ++it )
+        for (size_t curr_pass_index : pass_indexes)
         {
-            if( it->first == param_id )
+            std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>> layers_shaders_params =
+                m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose();
+
+            std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> pass_shaders_params = layers_shaders_params[rendering_layer_index][curr_pass_index];
+
+            for (auto it = pass_shaders_params.begin(); it != pass_shaders_params.end(); ++it)
             {
-                it->second.vector = true;
-                it->second.param_values[0] = valx;
-                it->second.param_values[1] = valy;
-                it->second.param_values[2] = valz;
-                it->second.param_values[3] = valw;
+                if (it->first == param_id)
+                {
+                    it->second.vector = true;
+                    it->second.param_values[0] = valx;
+                    it->second.param_values[1] = valy;
+                    it->second.param_values[2] = valz;
+                    it->second.param_values[3] = valw;
 
-                m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose()[rendering_layer_index][pass_index] = pass_shaders_params;
+                    m_entity_rendering_aspect->GetComponent< std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose()[rendering_layer_index][curr_pass_index] = pass_shaders_params;
 
-                break;
+                    break;
+                }
             }
         }
+
         
     } LUA_CATCH;
     
@@ -588,7 +591,7 @@ int LuaClass_Rendering::LUA_setPassForRenderContext(lua_State* p_L)
 
 	if (m_rcname_to_passes.find(rc_id) == m_rcname_to_passes.end())
 	{
-		m_rcname_to_passes[rc_id] = pass_id;
+		m_rcname_to_passes[rc_id].push_back(pass_id);
 	}
 	else
 	{

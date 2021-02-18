@@ -35,9 +35,11 @@ SamplerState SamplerDiffuse         : register(s0);
 Texture2D txDiffuseMirror           : register(t1);
 SamplerState SamplerDiffuseMirror   : register(s1);
 
-
 Texture2D txBump                    : register(t2);
 SamplerState SamplerBump            : register(s2);
+
+Texture2D txDiffuseRefrac           : register(t3);
+SamplerState SamplerDiffuseRefrac   : register(s3);
 
 
 struct PS_INTPUT 
@@ -51,13 +53,20 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {   
 	
     float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);
-    
+
+          
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {
-        float2 mt = input.TexCoord0.xy +txBump.Sample(SamplerBump, input.TexCoord0).xy;
-        float4 refrac_color = { 0.55, 0.65, 0.78, 1.0 };
-       
-        scene_color = refrac_color * txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
-    }
+        float2 mt = input.TexCoord0.xy + txBump.Sample(SamplerBump, input.TexCoord0).xy;
+        float2 mt2 = input.TexCoord0.xy + 0.05 * txBump.Sample(SamplerBump, input.TexCoord0).xy;
+
+        //float4 refrac_color = { 0.55, 0.65, 0.78, 1.0 };       
+        //scene_color = refrac_color * txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
+
+        float4 refrac = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, mt2);
+        float4 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
+        
+        scene_color = lerp(refrac, mirror, 0.66);
+    }    
     return scene_color;
 }

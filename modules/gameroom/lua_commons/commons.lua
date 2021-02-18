@@ -156,13 +156,10 @@ commons.create_rendering_from_module = function(p_layers, p_module, p_rendering_
 	
 	for k0, v0 in pairs(p_layers) do
 
-		--g:print(k0)
-
 		local renderconfig=RenderConfig()
 
 		for k, v in pairs(v0) do
 
-			--g:print(k)
 			local rendercontext = RenderContext(k)
 
 			local fxparams = FxParams()
@@ -238,8 +235,14 @@ commons.create_rendering_from_module = function(p_layers, p_module, p_rendering_
 
 	local rendering=Rendering(TimeManagerRef(root_entity))
 
-    for k, v in pairs(rendering_passes_array) do
-	  rendering:set_passforrendercontext(k, v)
+	for k, v in pairs(rendering_passes_array) do
+
+		local layer_entry = v
+
+		local pass_id = layer_entry.target_pass_id
+		local rendering_id = layer_entry.rendering_id
+
+		rendering:set_passforrendercontext(rendering_id, pass_id)
 	end
 
 	rendering:instanciate_renderingimpl(p_module,p_rendering_impl_id)
@@ -261,9 +264,17 @@ commons.create_rendered_meshe = function(p_config, p_meshefile, p_meshe_name, re
 	local renderer=MesheRendering()
 	renderer:attach_toentity(meshe_entity)
 
-    for k, v in pairs(rendering_passes_array) do
-	  renderer:set_passforrendercontext(k, v)
+
+	for k, v in pairs(rendering_passes_array) do
+
+		local layer_entry = v
+
+		local pass_id = layer_entry.target_pass_id
+		local rendering_id = layer_entry.rendering_id
+
+		renderer:set_passforrendercontext(rendering_id, pass_id)
 	end
+
 
 	for k, v in pairs(p_config) do
 		--g:print(k)
