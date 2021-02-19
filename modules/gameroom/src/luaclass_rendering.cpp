@@ -589,14 +589,7 @@ int LuaClass_Rendering::LUA_setPassForRenderContext(lua_State* p_L)
 	dsstring rc_id = luaL_checkstring(p_L, 1);
 	dsstring pass_id = luaL_checkstring(p_L, 2);
 
-	if (m_rcname_to_passes.find(rc_id) == m_rcname_to_passes.end())
-	{
-		m_rcname_to_passes[rc_id].push_back(pass_id);
-	}
-	else
-	{
-		LUA_ERROR("Rendering::set_passforrendercontext : rendercontext name already exists in rcname_to_passes table !");
-	}
+    m_rcname_to_passes[rc_id].push_back(pass_id);
 
 	return 0;
 }
