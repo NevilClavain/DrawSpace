@@ -382,16 +382,16 @@ g:set_mousecursorcircularmode(TRUE)
 
 g:signal_renderscenebegin("eg")
 
-spacebox_passes_config = 
+spacebox_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'layer0_rendering',
 		lit_shader_update_func = nil
 	}
 }
-spaceboxmod.view.load('spacebox0', spacebox_passes_config, 'root')
+spaceboxmod.view.load('spacebox0', spacebox_passes_bindings, 'root')
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)

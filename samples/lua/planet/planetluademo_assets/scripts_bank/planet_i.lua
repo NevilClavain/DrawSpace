@@ -407,21 +407,21 @@ atmo = function( state )
 end
 
 
-spacebox_passes_config = 
+spacebox_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'layer0_rendering',
 		lit_shader_update_func = nil
 	}
 }
-spaceboxmod.view.load('spacebox0', spacebox_passes_config, 'root')
+spaceboxmod.view.load('spacebox0', spacebox_passes_bindings, 'root')
 
 
-spherebump_passes_config = 
+spherebump_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 	    rendering_id = 'lit_rendering',
@@ -429,19 +429,19 @@ spherebump_passes_config =
 	}
 }
 
-spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_config, 'root' )
+spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_bindings, 'root' )
 
 
-bellerophon_passes_config = 
+bellerophon_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
 	}
 }
-bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_config, 'root')
+bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings, 'root')
 
 bellerophon_entity = bellerophon.models['ship'].entity
 bellerophon_entity:add_aspect(INFOS_ASPECT)
@@ -495,15 +495,15 @@ local planet_specific_config_descr =
 	atmo_thickness                      = 160.0
 }
 
-planet_passes_config = 
+planet_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'surface_rendering',
 		lit_shader_update_func = nil
 	},
-	layer_1 = 
+	binding_1 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'atmo_rendering',
@@ -513,7 +513,7 @@ planet_passes_config =
 
 
 planet_name = 'Resurgam'
-planetmod.view.load(planet_name, planet_passes_config, 'root', planet_specific_config_descr)
+planetmod.view.load(planet_name, planet_passes_bindings, 'root', planet_specific_config_descr)
 
 
 resurgam_planet_entity = planetmod.models[planet_name].entity

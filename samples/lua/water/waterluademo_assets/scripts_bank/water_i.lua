@@ -152,39 +152,39 @@ text2_renderer=TextRendering()
 text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 
-skydome_passes_config = 
+skydome_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
 		lit_shader_update_func = skydome.update_from_scene_env
 	},
-	layer_1 =
+	binding_1 =
 	{
 		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'mirror_rendering',
 		lit_shader_update_func = skydome.update_from_scene_env_mirror	
 	}
 }
-skydome.view.load('dome', skydome_passes_config, 'root')
+skydome.view.load('dome', skydome_passes_bindings, 'root')
 model.move.setpos('dome', 0.0, 0.0, 0.0)
 
-land_passes_config = 
+land_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = land.update_from_scene_env
 	},
-	layer_1 =
+	binding_1 =
 	{
 		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = land.update_from_scene_env_mirror	
 	},
-	layer_2 =
+	binding_2 =
 	{
 		target_pass_id = 'texturerefrac_pass',
 		rendering_id = 'lit_rendering',
@@ -192,18 +192,18 @@ land_passes_config =
 	}
 
 }
-land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_config, 'root')
+land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_bindings, 'root')
 
 
-metalcube_passes_config = 
+metalcube_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = metalcube.update_from_scene_env
 	},
-	layer_1 =
+	binding_1 =
 	{
 		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
@@ -211,43 +211,43 @@ metalcube_passes_config =
 	}
 }
 
-metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_config, 'root' )
+metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_bindings, 'root' )
 
 
-spherebump_passes_config = 
+spherebump_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 	    rendering_id = 'lit_rendering',
 		lit_shader_update_func = spherebump.update_from_scene_env
 	},
-	layer_1 =
+	binding_1 =
 	{
 		target_pass_id = 'texturemirror_pass',
 		rendering_id = 'lit_mirror_rendering',
 		lit_shader_update_func = spherebump.update_from_scene_env_mirror	
 	}
 }
-spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}, spherebump_passes_config, 'root' )
+spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}, spherebump_passes_bindings, 'root' )
 
 
-waterquad_passes_config = 
+waterquad_passes_bindings = 
 {
-	layer_0 = 
+	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env
 	},
-	layer_1 = 
+	binding_1 = 
 	{
 		target_pass_id = 'bump_pass',
 		rendering_id = 'bump_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env_bump
 	}
 }
-waterquad.view.load('water', waterquad_passes_config, 'root')
+waterquad.view.load('water', waterquad_passes_bindings, 'root')
 model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)
 
 waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass', 'bump_pass', 0)
