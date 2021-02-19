@@ -150,7 +150,7 @@ waterquad.view.unload = function(p_entity_id)
   end
 end
 
-waterquad.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
+waterquad.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
 
   found_id = FALSE
   for k, v in pairs(waterquad.models) do
@@ -163,6 +163,6 @@ waterquad.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('waterquad model', waterquad.createmodelview, p_passes_config, nil, nil, p_entity_id, p_parent_entity_id)
+    model.view.load('waterquad model', waterquad.createmodelview, p_passes_bindings, nil, nil, p_entity_id, p_parent_entity_id)
   end  
 end

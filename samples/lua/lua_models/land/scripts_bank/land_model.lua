@@ -256,7 +256,7 @@ land.view.unload = function(p_entity_id)
   end
 end
 
-land.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
+land.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
 
   found_id = FALSE
   for k, v in pairs(land.models) do
@@ -269,6 +269,6 @@ land.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_e
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('land model', land.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('land model', land.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
   end  
 end

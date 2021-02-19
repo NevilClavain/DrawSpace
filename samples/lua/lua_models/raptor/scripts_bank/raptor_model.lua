@@ -260,7 +260,7 @@ raptor.anims.parameters = function()
   return random_anims, idle_anim, do_something, dino_action
 end
 
-raptor.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
+raptor.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
 
   local found_id = FALSE
   for k, v in pairs(raptor.models) do
@@ -273,7 +273,7 @@ raptor.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('raptor model', raptor.createlitmodelview, p_passes_config, raptor.anims.parameters, raptor.scale, p_entity_id, p_parent_entity_id)
+    model.view.load('raptor model', raptor.createlitmodelview, p_passes_bindings, raptor.anims.parameters, raptor.scale, p_entity_id, p_parent_entity_id)
   end
 end
 

@@ -171,7 +171,7 @@ bellerophon.view.unload = function(p_entity_id)
   end
 end
 
-bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
+bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
 
   local found_id = FALSE
   for k, v in pairs(bellerophon.models) do
@@ -184,6 +184,6 @@ bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_p
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
   end  
 end

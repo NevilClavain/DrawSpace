@@ -261,7 +261,7 @@ trex.anims.parameters = function()
 
 end
 
-trex.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
+trex.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
 
   local found_id = FALSE
   for k, v in pairs(trex.models) do
@@ -274,6 +274,6 @@ trex.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('trex model', trex.createlitmodelview, p_passes_config, trex.anims.parameters, trex.scale, p_entity_id, p_parent_entity_id)
+    model.view.load('trex model', trex.createlitmodelview, p_passes_bindings, trex.anims.parameters, trex.scale, p_entity_id, p_parent_entity_id)
   end  
 end

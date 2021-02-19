@@ -226,7 +226,7 @@ skydome.scale =
 	x = skydome.outerRadius, y = skydome.outerRadius, z = skydome.outerRadius
 }
 
-skydome.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
+skydome.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
 
   local found_id = FALSE
   for k, v in pairs(skydome.models) do
@@ -239,6 +239,6 @@ skydome.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('skydome model', skydome.createmodelview, p_passes_config, nil, skydome.scale, p_entity_id, p_parent_entity_id)
+    model.view.load('skydome model', skydome.createmodelview, p_passes_bindings, nil, skydome.scale, p_entity_id, p_parent_entity_id)
   end
 end

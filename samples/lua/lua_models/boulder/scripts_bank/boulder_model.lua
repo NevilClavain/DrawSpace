@@ -204,7 +204,7 @@ boulder.view.unload = function(p_entity_id)
   end
 end
 
-boulder.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
+boulder.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
 
   local found_id = FALSE
   for k, v in pairs(boulder.models) do
@@ -217,6 +217,6 @@ boulder.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_paren
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('boulder model', boulder.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('boulder model', boulder.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
   end  
 end

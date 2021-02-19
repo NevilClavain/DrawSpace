@@ -299,7 +299,7 @@ metalcube.view.unload = function(p_entity_id)
   end
 end
 
-metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_parent_entity_id)
+metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
 
   found_id = FALSE
   for k, v in pairs(metalcube.models) do
@@ -312,6 +312,6 @@ metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_config, p_par
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('metalcube model', metalcube.createlitmodelview, p_passes_config, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('metalcube model', metalcube.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
   end  
 end

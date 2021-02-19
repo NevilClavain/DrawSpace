@@ -250,7 +250,7 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id, p_planet_specific_config_descr)
+planetmod.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id, p_planet_specific_config_descr)
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do
@@ -263,7 +263,7 @@ planetmod.view.load = function(p_entity_id, p_passes_config, p_parent_entity_id,
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('planet model', planetmod.createmodelview, p_passes_config, nil, nil, p_entity_id, p_parent_entity_id, p_planet_specific_config_descr)
+    model.view.load('planet model', planetmod.createmodelview, p_passes_bindings, nil, nil, p_entity_id, p_parent_entity_id, p_planet_specific_config_descr)
   end  
 
 end
