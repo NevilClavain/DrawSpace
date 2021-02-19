@@ -242,7 +242,7 @@ commons.create_rendering_from_module = function(p_layers, p_module, p_rendering_
 		local pass_id = layer_entry.target_pass_id
 		local rendering_id = layer_entry.rendering_id
 
-		rendering:set_passforrendercontext(rendering_id, pass_id)
+		rendering:set_passforrenderid(rendering_id, pass_id)
 	end
 
 	rendering:instanciate_renderingimpl(p_module,p_rendering_impl_id)
@@ -272,7 +272,7 @@ commons.create_rendered_meshe = function(p_config, p_meshefile, p_meshe_name, re
 		local pass_id = layer_entry.target_pass_id
 		local rendering_id = layer_entry.rendering_id
 
-		renderer:set_passforrendercontext(rendering_id, pass_id)
+		renderer:set_passforrenderid(rendering_id, pass_id)
 	end
 
 

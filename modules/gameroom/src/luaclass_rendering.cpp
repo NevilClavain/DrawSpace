@@ -52,7 +52,7 @@ const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
     { "register_to_rendering", &LuaClass_Rendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_Rendering::LUA_unregisterfromrendering },
     //{ "set_shaderrealvector", &LuaClass_Rendering::LUA_setshaderrealvector },
-	{ "set_passforrendercontext", &LuaClass_Rendering::LUA_setPassForRenderContext },    
+	{ "set_passforrenderid", &LuaClass_Rendering::LUA_setPassForRenderId },    
 	{ 0, 0 }
 };
 
@@ -580,12 +580,12 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
 }
 */
 
-int LuaClass_Rendering::LUA_setPassForRenderContext(lua_State* p_L)
+int LuaClass_Rendering::LUA_setPassForRenderId(lua_State* p_L)
 {
 	int argc = lua_gettop(p_L);
 	if (argc < 2)
 	{
-		LUA_ERROR("Rendering::set_passforrendercontext : argument(s) missing");
+		LUA_ERROR("Rendering::set_passforrenderid : argument(s) missing");
 	}
 
 	dsstring rc_id = luaL_checkstring(p_L, 1);

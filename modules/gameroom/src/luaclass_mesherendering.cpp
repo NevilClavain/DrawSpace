@@ -59,7 +59,7 @@ const Luna<LuaClass_MesheRendering>::RegType LuaClass_MesheRendering::methods[] 
     { "set_normalegenerationmode", &LuaClass_MesheRendering::LUA_setNormaleGenerationMode },
     { "set_tbgenerationmode", &LuaClass_MesheRendering::LUA_setTBGenerationMode },
     { "set_setnormaletransformation", &LuaClass_MesheRendering::LUA_setNormaleTransformation },
-	{ "set_passforrendercontext", & LuaClass_MesheRendering::LUA_setPassForRenderContext },
+	{ "set_passforrenderid", & LuaClass_MesheRendering::LUA_setPassForRenderId },
 	{ 0, 0 }
 };
 
@@ -645,12 +645,12 @@ int LuaClass_MesheRendering::LUA_setNormaleTransformation(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_MesheRendering::LUA_setPassForRenderContext(lua_State* p_L)
+int LuaClass_MesheRendering::LUA_setPassForRenderId(lua_State* p_L)
 {
 	int argc = lua_gettop(p_L);
 	if (argc < 2)
 	{
-		LUA_ERROR("MesheRendering::set_passforrendercontext : argument(s) missing");
+		LUA_ERROR("MesheRendering::set_passforrenderid : argument(s) missing");
 	}
 
 	dsstring rc_id = luaL_checkstring(p_L, 1);

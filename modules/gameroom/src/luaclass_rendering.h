@@ -75,7 +75,7 @@ public:
 
     //int LUA_setshaderrealvector( lua_State* p_L );
 
-	int LUA_setPassForRenderContext(lua_State* p_L);
+	int LUA_setPassForRenderId(lua_State* p_L);
 
     inline DrawSpace::Aspect::RenderingAspect* GetRenderingAspect(void) const 
     { 
