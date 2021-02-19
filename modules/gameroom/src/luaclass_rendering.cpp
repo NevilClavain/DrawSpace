@@ -51,7 +51,7 @@ const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
     { "release", &LuaClass_Rendering::LUA_release },
     { "register_to_rendering", &LuaClass_Rendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_Rendering::LUA_unregisterfromrendering },
-    { "set_shaderrealvector", &LuaClass_Rendering::LUA_setshaderrealvector },
+    //{ "set_shaderrealvector", &LuaClass_Rendering::LUA_setshaderrealvector },
 	{ "set_passforrendercontext", &LuaClass_Rendering::LUA_setPassForRenderContext },    
 	{ 0, 0 }
 };
@@ -508,6 +508,7 @@ int LuaClass_Rendering::LUA_unregisterfromrendering( lua_State* p_L )
     return 0;
 }
 
+/*
 int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
 {   
 	int argc = lua_gettop( p_L );
@@ -577,6 +578,7 @@ int LuaClass_Rendering::LUA_setshaderrealvector( lua_State* p_L )
     
     return 0;
 }
+*/
 
 int LuaClass_Rendering::LUA_setPassForRenderContext(lua_State* p_L)
 {
