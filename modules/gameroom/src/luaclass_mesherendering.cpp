@@ -159,9 +159,9 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
             {               
                 LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
 				
-				if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontexname))
+				if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontextname))
 				{
-                    for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontexname))
+                    for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontextname))
                     {
                         m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>(pass_id, pass_id);
                         RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode();
