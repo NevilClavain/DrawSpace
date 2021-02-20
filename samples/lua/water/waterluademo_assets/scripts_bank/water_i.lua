@@ -455,7 +455,7 @@ g:set_mousecursorcircularmode(TRUE)
 add_cube = function()
 
   local instance_name = 'cube_'..cube_instance
-  metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_config, 'root' )
+  metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_bindings, 'root' )
 
   cube_instance = cube_instance + 1
 
