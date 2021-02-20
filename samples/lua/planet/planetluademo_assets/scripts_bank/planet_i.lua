@@ -412,7 +412,7 @@ spacebox_passes_bindings =
 	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
-		rendering_id = 'layer0_rendering',
+		rendering_id = 'spacebox_rendering',
 		lit_shader_update_func = nil
 	}
 }

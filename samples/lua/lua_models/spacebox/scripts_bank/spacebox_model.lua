@@ -11,9 +11,9 @@ spaceboxmod.models = {}
 
 spaceboxmod.layers =
 {
-	layer_0 = 
+	spacebox_config = 
 	{
-		layer0_rendering =	
+		spacebox_rendering =	
 		{
 			fx =
 			{
