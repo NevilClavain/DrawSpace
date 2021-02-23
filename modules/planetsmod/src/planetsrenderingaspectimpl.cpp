@@ -425,15 +425,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_planet_ray = planet_ray * 1000.0;
 
-    std::vector<std::vector<dsstring>> passes_names_layers = m_owner->GetComponent<std::vector<std::vector<dsstring>>>("passes")->getPurpose();
-    std::vector<std::vector<Fx*>> layers_fx = m_owner->GetComponent<std::vector<std::vector<Fx*>>>("layers_fx")->getPurpose();
-    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = m_owner->GetComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose();
-    std::vector<std::vector<int>> layers_ro = m_owner->GetComponent<std::vector<std::vector<int>>>("layers_ro")->getPurpose();
+    auto rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes")->getPurpose() };
+    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index")->getPurpose() };
 
-    size_t nb_layers = passes_names_layers.size();
+    auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("layers_fx")->getPurpose() };
+    auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose() };    
+    auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("layers_ro")->getPurpose() };
 
-    // setup patch texture fx (subpass) for layer 0 
-
+        
     Shader::SetRootPath(shaders_path);
 
     m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, climate_vshader_compiled));
@@ -475,11 +474,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     m_config.m_nbLODRanges_inertBodies = 15;
     m_config.m_nbLODRanges_freeCameras = 14;
 
-    for( size_t i = 0; i < nb_layers; i++ )
+    for (auto& rcp : rcname_to_passes)
     {
+        dsstring rendercontextname{ rcp.first };
+
+        int layer{ rcname_to_layer_index[rendercontextname] };
         LOD::Config::LayerDescriptor ld;
 
-        switch( i )
+        switch (layer)
         {
             case DetailsLayer:
 
@@ -503,7 +505,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     m_planet_climate_binder[i] = binder;
                 }
 
-                m_config.m_layers_descr.push_back( ld );
+                m_config.m_layers_descr[layer] = ld;
                 break;
 
             case AtmosphereLayer:
@@ -519,43 +521,34 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     ld.patchTexturesBinder[i] = NULL;
                 }
 
-                m_config.m_layers_descr.push_back(ld);
+                m_config.m_layers_descr[layer] = ld;
                 break;
 
             case FlatCloudsLayer:
                 // pour plus tard...
-                break;               
+                break;
         }
 
-        ///////////////////////////
 
-        std::vector<dsstring> layer_passes = passes_names_layers[i];
-        std::vector<Fx*> fxs = layers_fx[i];
+        auto    ros_map{ layers_ro[rcname_to_layer_index[rendercontextname]] };
+        auto    fxs_map{ layers_fx[rcname_to_layer_index[rendercontextname]] };
+        auto    textures_map{ layers_textures[rcname_to_layer_index[rendercontextname]] };
 
-        std::vector<int> ros = layers_ro[i];
+        int     ro{ ros_map.at(rendercontextname) };
+        Fx*     fx{ fxs_map.at(rendercontextname) };
+        auto    textures{ textures_map.at(rendercontextname) };
 
-        std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> textures_set = layers_textures[i];
-
-        for (size_t j = 0; j < layer_passes.size(); j++)
+        std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
+        if (textures.size() > 0)
         {
-            dsstring pass_id = layer_passes[j];
-            m_passes.insert( pass_id );
+            pass_textures = textures[0];
+        }
+       
+        for (auto& pass_id : rcp.second)
+        {
+            m_passes.insert(pass_id);
 
-            Fx* fx = fxs[j];
-            int ro = ros[j];
-
-            std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> pass_textures_set = textures_set[j];
-
-            //std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures = pass_textures_set[0];
-
-            std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
-            
-            if(pass_textures_set.size() > 0 )
-            {
-                pass_textures = pass_textures_set[0];
-            }
-            
-            if(DetailsLayer == i)
+            if (DetailsLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> details_binders;
 
@@ -576,13 +569,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                     binder->EnableAtmoRender(enable_atmosphere);
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);                    
+                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
                     details_binders[orientation] = binder;
                 }
 
                 m_planet_detail_binder[pass_id] = details_binders;
+
             }
-            else if(AtmosphereLayer == i)
+            else if (AtmosphereLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> atmo_binders;
 
@@ -602,9 +596,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 }
 
                 m_planet_atmosphere_binder[pass_id] = atmo_binders;
-
             }
-            else if(FlatCloudsLayer == i)
+            else if (FlatCloudsLayer == layer)
             {
                 // pour plus tard...
             }
@@ -714,9 +707,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
 
                     layer->SetHotState(false);
                     m_layers_list.push_back(layer);
-                    reg_body.layers.push_back(layer);
-
-                    
+                    reg_body.layers.push_back(layer);                    
                 }
 
                 //...

@@ -53,7 +53,9 @@ public:
     int                             m_nbLODRanges_freeCameras;
     int                             m_nbLODRanges_inertBodies;
 
-    std::vector<LayerDescriptor>    m_layers_descr;
+    //std::vector<LayerDescriptor>    m_layers_descr;
+
+    std::map<int,LayerDescriptor>   m_layers_descr;
 
 
     bool                            m_landplace_patch;

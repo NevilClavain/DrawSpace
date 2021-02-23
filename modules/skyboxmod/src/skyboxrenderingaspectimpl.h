@@ -80,7 +80,8 @@ public:
 
 protected:
 
-    std::vector<PassSlot*>  m_pass_slots;
+    //std::vector<PassSlot*>  m_pass_slots;
+    std::map<dsstring, PassSlot*>  m_pass_slots;
 
     bool                    m_add_in_rendergraph;
 
