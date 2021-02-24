@@ -115,17 +115,51 @@ planetmod.layers =
 					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
 					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
 					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="linear" }
-						
-					--,{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
-						
+												
 				},
 				rs_out =
 				{
 					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
 					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
-					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="none" }
+					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="none" }						
+				}		
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{ path='earth_th_pixels_16.jpg', stage=0 },
+					{ path='earth_th_splatting_16.jpg', stage=1 },
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 5000
+		},
+
+		surface_wireframe_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_surface_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_surface_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },						
+					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
 						
-					--,{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},						
+					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
 				}		
 			},
 			textures =
