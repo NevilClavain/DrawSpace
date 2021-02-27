@@ -109,6 +109,7 @@ rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
 
 
 rg:create_child('final_pass', 'texturerefrac_pass', 3)
+rg:create_child('final_pass', 'waternormales_pass', 4)
 
 
 rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
@@ -245,6 +246,12 @@ waterquad_passes_bindings =
 		target_pass_id = 'bump_pass',
 		rendering_id = 'bump_rendering',
 		lit_shader_update_func = waterquad.update_from_scene_env_bump
+	},
+	binding_2 = 
+	{
+		target_pass_id = 'waternormales_pass',
+		rendering_id = 'normales_rendering',
+		lit_shader_update_func = waterquad.update_from_scene_env
 	}
 }
 waterquad.view.load('water', waterquad_passes_bindings, 'root')

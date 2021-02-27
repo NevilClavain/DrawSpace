@@ -39,6 +39,36 @@ waterquad.rendering_config =
 			{ param_name = "color", shader_index = 1, register = 0 }
 		}
 	},
+	normales_rendering = 
+	{
+		fx = 
+		{
+			shaders = 
+			{
+				{ path='water_normales_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='water_normales_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		textures =
+		{
+		},
+		vertex_textures =
+		{
+		},
+		rendering_order = 10000,
+		shaders_params = 
+		{ 
+			{ param_name = "color", shader_index = 1, register = 0 }
+		}
+	},
     bump_rendering = 
 	{
 		fx = 

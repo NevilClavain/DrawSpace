@@ -29,6 +29,7 @@ rg:remove_pass('wave_pass')
 rg:remove_pass('texture_pass')
 rg:remove_pass('texturemirror_pass')
 rg:remove_pass('texturerefrac_pass')
+rg:remove_pass('waternormales_pass')
 
 commons.trash.final_pass(rg, 'final_pass')
 
