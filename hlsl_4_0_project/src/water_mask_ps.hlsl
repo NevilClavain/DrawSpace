@@ -67,7 +67,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float4 refrac = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, mt2);
         float4 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
         
-        scene_color = color_mod * lerp(mirror, refrac, lerp(0.4, 0.75, reflex_refrac_factor));
+        scene_color = color_mod * lerp(mirror, refrac, lerp(0.4, 0.99, reflex_refrac_factor));
     }    
     return scene_color;
         
