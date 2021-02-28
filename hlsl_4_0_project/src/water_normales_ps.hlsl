@@ -32,22 +32,14 @@ cbuffer legacyargs : register(b0)
 struct PS_INTPUT 
 {
     float4 Position     : SV_POSITION;
-    float4 Normale      : TEXCOORD1;
+    float4 delta_cam    : TEXCOORD1;
 };
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-
-    //return vec[0];
-
     float4 color;
-
     color.a = 1.0;
-    color.r = 0.0;
-    color.g = 0.0;
-
-    color.b = abs(input.Normale.z);
-
+    color.rgb = input.delta_cam.xyz;
 
     return color;
 }

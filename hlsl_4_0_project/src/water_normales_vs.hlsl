@@ -32,21 +32,23 @@ cbuffer legacyargs : register(b0)
 
 struct VS_INPUT 
 {
-   float3 Position      : POSITION;
-   float3 Normal        : NORMALE;
+   float3 Position      : POSITION;   
 };
 
 struct VS_OUTPUT 
 {
    float4 Position      : SV_POSITION;
-   float4 Normale       : TEXCOORD1;
+   float4 delta_cam     : TEXCOORD1;     // vertex pos in camera space (-> world x view)
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
+    
     VS_OUTPUT Output;
     float4 pos;
+    float4 pos2;
 
+    /*
     float4x4 mat_WorldView_notransl = mat[matWorldView];
 
     mat_WorldView_notransl[3][0] = 0.0;
@@ -60,15 +62,35 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     float3 oNormale = mul(initial_n, mat_WorldView_notransl);
     Output.Normale.xyz = normalize(oNormale);
     Output.Normale.w = 1.0;
-
-
-
-
+    */
     
     pos.xyz = Input.Position;    
     pos.w = 1.0;
-
     Output.Position = mul(pos, mat[matWorldViewProjection]);
+
+    
+    float4x4 mat_Cam = mat[matCam];
+
+    float3 viewer_pos;    // view pos relatif au centre de la sphere...
+    viewer_pos.x = mat_Cam[3][0];
+    viewer_pos.y = mat_Cam[3][1];
+    viewer_pos.z = mat_Cam[3][2];
+    
+
+    pos.xyz = Input.Position;
+    pos.w = 1.0;
+    pos2 = mul(pos, mat[matWorld]);
+
+    float3 delta_cam;
+    delta_cam.xyz = pos2.xyz - viewer_pos.xyz;
+
+    //Output.delta_cam.xyz = normalize(delta_cam);
+
+    float3 surface_normale = { 0.0, 1.0, 0.0 };
+
+    Output.delta_cam.x = 0;
+    Output.delta_cam.y = 0;
+    Output.delta_cam.z = dot(normalize(-delta_cam), surface_normale);
       
     return( Output );   
 }

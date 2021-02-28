@@ -53,23 +53,21 @@ struct PS_INTPUT
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
-{   
-    float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
-    float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);
-    
-    float4 color_mod = vec[0];
-          
+{    
+    float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);                 
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {
+        float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
+
         float2 mt = input.TexCoord0.xy + txBump.Sample(SamplerBump, input.TexCoord0).xy;
         float2 mt2 = input.TexCoord0.xy + 0.05 * txBump.Sample(SamplerBump, input.TexCoord0).xy;
 
         float4 refrac = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, mt2);
         float4 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
+
+        float4 color_mod = vec[0];        
+        scene_color = color_mod * lerp(mirror, refrac, lerp(0.0, 0.99, reflex_refrac_factor));
         
-        scene_color = color_mod * lerp(mirror, refrac, lerp(0.4, 0.99, reflex_refrac_factor));
-    }    
-    //return scene_color;
-    return txNormales.Sample(SamplerNormales, input.TexCoord0);
-        
+    }   
+    return scene_color;           
 }
