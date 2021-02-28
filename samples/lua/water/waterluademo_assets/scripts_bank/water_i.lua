@@ -90,10 +90,12 @@ fxparams:set_renderstatesset(finalpass_rss)
 rendercontext = RenderContext('final_pass')
 rendercontext:add_fxparams(fxparams)
 rendercontext:add_texturesset(textures)
+rendercontext:add_shaderparam("water_color", 1, 0)
 
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
 rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
+rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 0.5, 0.68, 0.95, 1.0)
 
 
 rg:create_child('final_pass', 'texture_pass', 0)
@@ -419,6 +421,7 @@ function()
     --model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	--model.camera.mvt:update(mvt_info[1],mvt_info[2],mvt_info[3],mvt_info[4],mvt_info[5])
 
+	
 	time_infos = { root_entity:read_timemanager() }
 	output_infos = renderer:descr() .." "..time_infos[3].. " fps"
 

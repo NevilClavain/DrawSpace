@@ -56,8 +56,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {   
     float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
     float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);
-
-    float4 color_mod = { 0.5, 0.68, 0.95, 1.0 };
+    
+    float4 color_mod = vec[0];
           
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {
@@ -69,6 +69,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         
         scene_color = color_mod * lerp(mirror, refrac, lerp(0.4, 0.99, reflex_refrac_factor));
     }    
-    return scene_color;
+    //return scene_color;
+    return txNormales.Sample(SamplerNormales, input.TexCoord0);
         
 }
