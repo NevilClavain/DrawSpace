@@ -258,7 +258,7 @@ waterquad_passes_bindings =
 	{
 		target_pass_id = 'waternormales_pass',
 		rendering_id = 'normales_rendering',
-		lit_shader_update_func = waterquad.update_from_scene_env
+		lit_shader_update_func = waterquad.update_normales_from_scene_env
 	}
 }
 waterquad.view.load('water', waterquad_passes_bindings, 'root')

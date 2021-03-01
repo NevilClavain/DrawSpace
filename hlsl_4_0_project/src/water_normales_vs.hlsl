@@ -42,27 +42,10 @@ struct VS_OUTPUT
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
-{
-    
+{    
     VS_OUTPUT Output;
     float4 pos;
     float4 pos2;
-
-    /*
-    float4x4 mat_WorldView_notransl = mat[matWorldView];
-
-    mat_WorldView_notransl[3][0] = 0.0;
-    mat_WorldView_notransl[3][1] = 0.0;
-    mat_WorldView_notransl[3][2] = 0.0;
-
-    float4 initial_n;
-    initial_n.xyz = Input.Normal;
-    initial_n.w = 1.0;
-
-    float3 oNormale = mul(initial_n, mat_WorldView_notransl);
-    Output.Normale.xyz = normalize(oNormale);
-    Output.Normale.w = 1.0;
-    */
     
     pos.xyz = Input.Position;    
     pos.w = 1.0;
@@ -84,13 +67,11 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     float3 delta_cam;
     delta_cam.xyz = pos2.xyz - viewer_pos.xyz;
 
-    //Output.delta_cam.xyz = normalize(delta_cam);
-
-    float3 surface_normale = { 0.0, 1.0, 0.0 };
+    float4 surface_normale = vec[10];
 
     Output.delta_cam.x = 0;
     Output.delta_cam.y = 0;
-    Output.delta_cam.z = dot(normalize(-delta_cam), surface_normale);
+    Output.delta_cam.z = dot(normalize(-delta_cam), surface_normale.xyz);
       
     return( Output );   
 }

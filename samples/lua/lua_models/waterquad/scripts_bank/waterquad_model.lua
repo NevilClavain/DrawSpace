@@ -66,7 +66,7 @@ waterquad.rendering_config =
 		rendering_order = 10000,
 		shaders_params = 
 		{ 
-			{ param_name = "color", shader_index = 1, register = 0 }
+			{ param_name = "water_normale", shader_index = 0, register = 10 }
 		}
 	},
     bump_rendering = 
@@ -110,6 +110,13 @@ waterquad.update_from_scene_env = function( p_pass_id, p_environment_table, p_en
 
   local renderer = waterquad.models[p_entity_id]['renderer']
   renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 0.0, 1.0, 1.0 )
+
+end
+
+waterquad.update_normales_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
+
+  local renderer = waterquad.models[p_entity_id]['renderer']
+  renderer:set_shaderrealvector( p_pass_id, 'water_normale', p_environment_table.reflector_normale.x, p_environment_table.reflector_normale.y, p_environment_table.reflector_normale.z, 1.0 )
 
 end
 
