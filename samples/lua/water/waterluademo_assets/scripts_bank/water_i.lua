@@ -95,7 +95,8 @@ rendercontext:add_shaderparam("water_color", 1, 0)
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
 rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
-rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 0.5, 0.68, 0.95, 1.0)
+--rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 0.5, 0.68, 0.95, 1.0)
+rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
 
 
 rg:create_child('final_pass', 'texture_pass', 0)
@@ -111,6 +112,10 @@ rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
 
 
 rg:create_child('final_pass', 'texturerefrac_pass', 3)
+rg:set_pass_targetclearstate('texturerefrac_pass', TRUE)
+rg:set_pass_targetclearcolor('texturerefrac_pass', 0, 56, 67, 0)
+
+
 rg:create_child('final_pass', 'waternormales_pass', 4)
 
 
@@ -513,7 +518,12 @@ set_water_bump = function(bias)
 	waterquad.models['water']['renderer']:set_shaderrealvector('bump_pass', 'bump_bias', bias, 0.0, 0.0, 0.0)
 end
 
+set_water_color = function(r, g, b)
+	rg:set_viewportquadshaderrealvector('final_pass', 'water_color', r, g, b, 1.0)
+end
+
 g:signal_renderscenebegin("eg")
 
 g:activate_resourcessystem("init")
+
 
