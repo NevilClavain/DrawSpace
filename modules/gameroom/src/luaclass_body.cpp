@@ -110,7 +110,8 @@ int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
     m_entity = &entity;
 
     // bind transfo and body aspects
-    m_entity_transform_aspect->SetImplementation( m_entity_body_aspect->GetTransformAspectImpl() );
+    //m_entity_transform_aspect->SetImplementation( m_entity_body_aspect->GetTransformAspectImpl() );
+    m_entity_transform_aspect->AddImplementation(m_entity_body_aspect->GetTransformAspectImpl());
 
     // add bool component for contact state
     m_entity_body_aspect->AddComponent<bool>( "contact_state", false );
@@ -136,7 +137,7 @@ int LuaClass_Body::LUA_detachfromentity( lua_State* p_L )
     m_entity_body_aspect->RemoveComponent<bool>("stop_linear_speed");
     m_entity_body_aspect->RemoveComponent<bool>("stop_angular_speed");
 
-    m_entity_transform_aspect->RemoveImplementation();
+    m_entity_transform_aspect->RemoveAllImplementations();
 
     m_entity_body_aspect = NULL;
     m_entity_transform_aspect = NULL;

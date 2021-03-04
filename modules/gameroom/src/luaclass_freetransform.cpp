@@ -105,7 +105,7 @@ int LuaClass_FreeTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if (transform_aspect)
     {
-        transform_aspect->SetImplementation(m_free_transformer);
+        transform_aspect->AddImplementation(m_free_transformer);
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY
@@ -153,7 +153,8 @@ int LuaClass_FreeTransform::LUA_release( lua_State* p_L )
             m_entity_transform_aspect->RemoveComponent<Matrix>("pos");
             m_entity_transform_aspect->RemoveComponent<Quaternion>("quat");
 
-            m_entity_transform_aspect->RemoveImplementation();
+            //m_entity_transform_aspect->RemoveImplementation();
+            m_entity_transform_aspect->RemoveAllImplementations();
 
         } LUA_CATCH;
 

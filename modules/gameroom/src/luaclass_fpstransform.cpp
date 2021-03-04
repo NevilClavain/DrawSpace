@@ -105,7 +105,8 @@ int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if( transform_aspect )
     {
-        transform_aspect->SetImplementation( m_fps_transformer );
+        //transform_aspect->SetImplementation( m_fps_transformer );
+        transform_aspect->AddImplementation(m_fps_transformer);
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY
@@ -145,7 +146,7 @@ int LuaClass_FPSTransform::LUA_release( lua_State* p_L )
 
             m_entity_transform_aspect->RemoveComponent<bool>( "ymvt" );  
             
-            m_entity_transform_aspect->RemoveImplementation();
+            m_entity_transform_aspect->RemoveAllImplementations();
 
         } LUA_CATCH;
     

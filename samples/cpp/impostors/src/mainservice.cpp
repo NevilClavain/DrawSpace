@@ -319,8 +319,10 @@ void MainService::create_skybox( void )
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
     rendering_aspect->AddImplementation( m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
 
-    ////////////// noms des passes
-    std::vector<std::vector<dsstring>>                                                          passes_names_layers = { {"texture_pass"} };
+    std::map<dsstring, int>                                 rcname_to_layer_index   = { { "main_rendering", 0 } };
+    std::map<dsstring, std::vector<dsstring>>               rcname_to_passes        = { { "main_rendering", { { "texture_pass" } } } };
+
+
 
     ////////////// 6 jeux de 32 textures stages
 
@@ -343,7 +345,7 @@ void MainService::create_skybox( void )
         skybox_textures.push_back(textures[i]);
     }
 
-    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { {skybox_textures} };
+    std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { { { "main_rendering", skybox_textures } } };
 
 
     /////////////// les FX pour chaque passes
@@ -359,29 +361,30 @@ void MainService::create_skybox( void )
 
     skybox_texturepass_fx->SetRenderStates(skybox_texturepass_rss);
 
-   
-    std::vector<std::vector<Fx*>>                                                               layers_fx = { { skybox_texturepass_fx } };
+    std::vector<std::map<dsstring, Fx*>>                                                               layers_fx = { { { "main_rendering", skybox_texturepass_fx } }  };
 
 
     /////////// params shaders
 
-    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = {
-                                                                                                                            {
-                                                                                                                              {}
-                                                                                                                            }
-    };
+    std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = { { { "main_rendering", {} }} };
 
     //////////////// valeur du rendering order pour chaque slot pass
 
-    std::vector<std::vector<int>>                                                               layers_ro = { {-1000} };
+    //std::vector<std::vector<int>>                                                               layers_ro = { {-1000} };
+
+    std::vector<std::map<dsstring, int>>                                                               layers_ro = { { { "main_rendering", -1000 } } };
 
 
+    rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes", rcname_to_passes);
 
-    rendering_aspect->AddComponent<std::vector<std::vector<dsstring>>>("passes", passes_names_layers);
-    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
-    rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
-    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
-    rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
+    rendering_aspect->AddComponent<std::map<dsstring, int>>("rcname_to_layer_index", rcname_to_layer_index);
+
+
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx", layers_fx);
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, int>>>("layers_ro", layers_ro);
+
 
 
 
@@ -404,7 +407,7 @@ void MainService::create_skybox( void )
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_skybox_transformer );
+    transform_aspect->AddImplementation( &m_skybox_transformer );
 
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
@@ -488,7 +491,7 @@ void MainService::create_world_impostor( void )
 
     TransformAspect* transform_aspect = m_worldImpostorsEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_impostors_transformer );
+    transform_aspect->AddImplementation( &m_impostors_transformer );
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
@@ -613,7 +616,7 @@ void MainService::create_screen_impostors( void )
 
     TransformAspect* transform_aspect = m_impostorsEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_impostors_transformer );
+    transform_aspect->AddImplementation( &m_impostors_transformer );
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
@@ -676,7 +679,7 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 
     body_aspect->AddComponent<bool>("contact_state", false);
 
-    transform_aspect->SetImplementation(body_aspect->GetTransformAspectImpl());
+    transform_aspect->AddImplementation(body_aspect->GetTransformAspectImpl());
 
 }
 
@@ -770,7 +773,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         body_aspect->AddComponent<bool>("contact_state", false);
 
-        transform_aspect->SetImplementation(body_aspect->GetTransformAspectImpl());
+        transform_aspect->AddImplementation(body_aspect->GetTransformAspectImpl());
 
 
     }
@@ -820,7 +823,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         
         TransformAspect* transform_aspect = p_entity_2.AddAspect<TransformAspect>();
 
-        transform_aspect->SetImplementation(&p_transform_impl);
+        transform_aspect->AddImplementation(&p_transform_impl);
 
         transform_aspect->AddComponent<Matrix>("pos");
         transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
@@ -890,7 +893,7 @@ void MainService::create_ground( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
 
 }
 
@@ -907,7 +910,7 @@ void MainService::create_camera( void )
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( m_fps_transformer );
+    transform_aspect->AddImplementation( m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 

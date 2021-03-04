@@ -267,7 +267,7 @@ bool MainService::Init( void )
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( m_fps_transformer );
+    transform_aspect->AddImplementation( m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
@@ -527,26 +527,28 @@ void MainService::create_skybox( void )
 {    
     DrawSpace::Interface::Module::Root* sbmod_root;
 
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &sbmod_root ) )
+    if (!DrawSpace::Utils::PILoad::LoadModule("skyboxmod", "skybox", &sbmod_root))
     {
-        _DSEXCEPTION( "fail to load skyboxmod module root" )
+        _DSEXCEPTION("fail to load skyboxmod module root")
     }
-    m_skyboxRender = sbmod_root->InstanciateRenderingAspectImpls( "skyboxRender" );
+    m_skyboxRender = sbmod_root->InstanciateRenderingAspectImpls("skyboxRender");
 
 
     RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
-    
-    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
-    rendering_aspect->AddImplementation( m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
 
-    ////////////// noms des passes
-    std::vector<std::vector<dsstring>>                                                          passes_names_layers = { {"texture_pass", "texturemirror_pass"} };
+    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
+    rendering_aspect->AddImplementation(m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+
+    std::map<dsstring, int>                                 rcname_to_layer_index = { { "main_rendering", 0 } };
+    std::map<dsstring, std::vector<dsstring>>               rcname_to_passes = { { "main_rendering", { { "texture_pass" } } } };
+
+
 
     ////////////// 6 jeux de 32 textures stages
-    
+
 
     ///////////////// jeux de textures pour chaque passes
-    //std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
+
 
     std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> skybox_textures;
 
@@ -563,7 +565,8 @@ void MainService::create_skybox( void )
         skybox_textures.push_back(textures[i]);
     }
 
-    std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = {{skybox_textures,skybox_textures}};
+    std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>   layers_textures = { { { "main_rendering", skybox_textures } } };
+
 
     /////////////// les FX pour chaque passes
 
@@ -572,65 +575,37 @@ void MainService::create_skybox( void )
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
     skybox_texturepass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_ps.hlsl", false)));
 
-
     RenderStatesSet skybox_texturepass_rss;
     skybox_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
     skybox_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
 
     skybox_texturepass_fx->SetRenderStates(skybox_texturepass_rss);
 
-    Fx* skybox_texturemirrorpass_fx = _DRAWSPACE_NEW_(Fx, Fx);
-
-    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror_vs.hlsl", false)));
-    skybox_texturemirrorpass_fx->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_mirror_ps.hlsl", false)));
-
-    RenderStatesSet skybox_texturemirrorpass_rss;
-    skybox_texturemirrorpass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
-    skybox_texturemirrorpass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "ccw"));
-    skybox_texturemirrorpass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
-    skybox_texturemirrorpass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"));
-
-    skybox_texturemirrorpass_fx->SetRenderStates(skybox_texturemirrorpass_rss);
-
-
-    std::vector<std::vector<Fx*>>                                                               layers_fx = {{ skybox_texturepass_fx, skybox_texturemirrorpass_fx}};
+    std::vector<std::map<dsstring, Fx*>>                                                               layers_fx = { { { "main_rendering", skybox_texturepass_fx } } };
 
 
     /////////// params shaders
 
-    std::pair<dsstring, RenderingNode::ShadersParams> reflector_pos;
-    reflector_pos.first = "reflector_pos";
-    reflector_pos.second.shader_index = 0;
-    reflector_pos.second.param_register = 24;
-    reflector_pos.second.vector = true;
-    reflector_pos.second.param_values = Vector(0.0, -4.0, 0.0, 1.0);
-
-
-    std::pair<dsstring, RenderingNode::ShadersParams> reflector_normale;
-    reflector_normale.first = "reflector_normale";
-    reflector_normale.second.shader_index = 0;
-    reflector_normale.second.param_register = 25;
-    reflector_normale.second.vector = true;
-    reflector_normale.second.param_values = Vector(0.0, 1.0, 0.0, 1.0);
-
-    std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = { 
-                                                                                                                            { 
-                                                                                                                              {},
-                                                                                                                              {reflector_pos,reflector_normale} 
-                                                                                                                            }
-                                                                                                                        };
+    std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>    layers_shaders_params = { { { "main_rendering", {} }} };
 
     //////////////// valeur du rendering order pour chaque slot pass
 
-    std::vector<std::vector<int>>                                                               layers_ro = {{-1000, -1000}};
+    //std::vector<std::vector<int>>                                                               layers_ro = { {-1000} };
+
+    std::vector<std::map<dsstring, int>>                                                               layers_ro = { { { "main_rendering", -1000 } } };
 
 
+    rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes", rcname_to_passes);
 
-    rendering_aspect->AddComponent<std::vector<std::vector<dsstring>>>("passes", passes_names_layers);
-    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
-    rendering_aspect->AddComponent<std::vector<std::vector<Fx*>>>("layers_fx", layers_fx);
-    rendering_aspect->AddComponent<std::vector<std::vector<std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
-    rendering_aspect->AddComponent<std::vector<std::vector<int>>>("layers_ro", layers_ro);
+    rendering_aspect->AddComponent<std::map<dsstring, int>>("rcname_to_layer_index", rcname_to_layer_index);
+
+
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx", layers_fx);
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
+    rendering_aspect->AddComponent<std::vector<std::map<dsstring, int>>>("layers_ro", layers_ro);
+
+
 
 
     /////////// resources ////////////////////////////////
@@ -644,24 +619,19 @@ void MainService::create_skybox( void )
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_4", std::make_tuple(textures[4][0], false));
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("skybox_texture_5", std::make_tuple(textures[5][0], false));
 
-
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_vshader", std::make_tuple(skybox_texturepass_fx->GetShader(0), false, 0));
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_pshader", std::make_tuple(skybox_texturepass_fx->GetShader(1), false, 1));
-
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_mirror_vshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(0), false, 0));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("skybox_mirror_pshader", std::make_tuple(skybox_texturemirrorpass_fx->GetShader(1), false, 1));
-
 
 
 
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( &m_skybox_transformer );
+    transform_aspect->AddImplementation(&m_skybox_transformer);
 
-    transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
+    transform_aspect->AddComponent<Matrix>("skybox_scaling");
 
-    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
+    transform_aspect->GetComponent<Matrix>("skybox_scaling")->getPurpose().Scale(100.0, 100.0, 100.0);
     
 }
 
@@ -799,7 +769,7 @@ void MainService::create_dynamic_cube( void )
 
     TransformAspect* transform_aspect = cube.dynCubeEntity->AddAspect<TransformAspect>();
 
-    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
 
 
     cube.dynCubeBodyAspect = body_aspect;
@@ -923,7 +893,7 @@ void MainService::create_static_cube( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
 
 
 }
@@ -1031,7 +1001,7 @@ void MainService::create_ground( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->SetImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
 
 
 }

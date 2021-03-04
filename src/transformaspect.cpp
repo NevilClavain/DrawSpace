@@ -32,7 +32,6 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
 TransformAspect::TransformAspect( void ) :
-m_impl( NULL ),
 m_time_aspect( NULL )
 {
     m_worldtransform.Identity();
@@ -40,22 +39,22 @@ m_time_aspect( NULL )
     m_dispatched_projtransform.Identity();
 }
 
-void TransformAspect::SetImplementation( AspectImplementations::TransformAspectImpl* p_impl )
+void TransformAspect::AddImplementation(DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl)
 {
-    m_impl = p_impl;
-    if( m_time_aspect )
+    if (m_time_aspect)
     {
-        m_impl->SetTimeAspect( m_time_aspect );
+        p_impl->SetTimeAspect(m_time_aspect);
     }
+    m_impls_list.push_back(p_impl);
 }
 
-void TransformAspect::RemoveImplementation( void )
+void TransformAspect::RemoveAllImplementations(void)
 {
-	if (m_impl)
-	{
-		m_impl->SetTimeAspect(NULL);
-		m_impl = NULL;
-	}
+    for (auto& e : m_impls_list)
+    {
+        e->SetTimeAspect(nullptr);
+    }
+    m_impls_list.clear();
 }
 
 
@@ -68,10 +67,24 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 
     bool ignore_parent_transform = false;
 
-    if( m_impl )
+    // operation : pour une liste de N matrices
+    // [N] * [N-1] * [N - 2] * ..... * [2] * [1] * [0]
+
+    // la 1ERE matrice appliquee est la matrice N
+
+    for (auto& e : m_impls_list)
     {
-        m_impl->GetLocaleTransform( this, locale_mat );
-        ignore_parent_transform = m_impl->IgnoreParentTransformation();
+        Matrix res, current;
+
+        e->GetLocaleTransform(this, current);
+
+        Matrix::MatrixMult(&current, &locale_mat, &res);
+        locale_mat = res;
+
+        if (e->IgnoreParentTransformation())
+        {
+            ignore_parent_transform = true;
+        }
     }
 
     if( p_parent )
@@ -125,8 +138,9 @@ TimeAspect* TransformAspect::GetTimeAspectRef(void) const
 void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 {
     m_time_aspect = p_time_aspect;
-    if( m_impl )
+   
+    for (auto& e : m_impls_list)
     {
-        m_impl->SetTimeAspect( p_time_aspect );
+        e->SetTimeAspect(p_time_aspect);
     }
 }

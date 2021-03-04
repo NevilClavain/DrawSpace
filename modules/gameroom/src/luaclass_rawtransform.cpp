@@ -66,7 +66,8 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if( transform_aspect )
     {
-        transform_aspect->SetImplementation( &m_raw_transformer );
+        //transform_aspect->SetImplementation( &m_raw_transformer );
+        transform_aspect->AddImplementation(&m_raw_transformer);
         m_entity_transform_aspect = transform_aspect;
     }
     else
@@ -95,7 +96,8 @@ int LuaClass_RawTransform::LUA_release( lua_State* p_L )
         } LUA_CATCH;
     }
 
-    m_entity_transform_aspect->RemoveImplementation();
+    //m_entity_transform_aspect->RemoveImplementation();
+    m_entity_transform_aspect->RemoveAllImplementations();
     m_entity_transform_aspect = NULL;
 	m_matrix_ids.clear();
     return 0;
