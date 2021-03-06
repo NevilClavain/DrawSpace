@@ -525,6 +525,12 @@ resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)
 planet_transform = RawTransform()
 planet_transform:configure(resurgam_planet_entity)
 
+
+planet_revol = RevolutionTransform()
+planet_revol:configure(resurgam_planet_entity, 1.0)
+
+
+
 planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
@@ -536,7 +542,7 @@ renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_w
 
 camera2_entity, camera2_pos=commons.create_static_camera(0.0, 70.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
 camera2_entity:setup_info( "referent_body", "Bellorophon" )
-eg:add_child('ship','camera2_entity',camera2_entity)
+eg:add_child('ship','camera2_entity', camera2_entity)
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
@@ -608,3 +614,5 @@ g:show_mousecursor(FALSE)
 set_camera(current_cam)
 
 g:activate_resourcessystem("init")
+
+root_entity:update_time(120)   -- 1970 + 120 years

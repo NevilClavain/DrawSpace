@@ -34,6 +34,7 @@
 #include "luaclass_fpstransform.h"
 #include "luaclass_freetransform.h"
 #include "luaclass_rawtransform.h"
+#include "luaclass_revolutiontransform.h"
 #include "luaclass_textrendering.h"
 #include "luaclass_mesherendering.h"
 #include "luaclass_syncangle.h"
@@ -109,6 +110,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Distribution>::Register(m_L);       
     Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
     Luna<LuaClass_PlanetSpecificConfig>::Register(m_L);
+    Luna<LuaClass_RevolutionTransform>::Register(m_L);
 
 	//
 

@@ -2,6 +2,7 @@
 g:signal_rendersceneend("eg")
 
 
+planet_revol:release()
 planet_transform:release()
 resurgam_planet_config:cleanup()
 
