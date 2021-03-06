@@ -615,4 +615,4 @@ set_camera(current_cam)
 
 g:activate_resourcessystem("init")
 
-root_entity:update_time(120)   -- 1970 + 120 years
+root_entity:update_time(2128)

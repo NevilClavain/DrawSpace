@@ -284,7 +284,7 @@ int LuaClass_Entity::LUA_updatetime(lua_State* p_L)
 
     LUA_TRY
     {
-        dstime time = yearval * (dstime)31536000;
+        dstime time = (yearval - 1970) * (dstime)31536000;
         time_aspect->GetComponent<dstime>("time")->getPurpose() = time;
 
     } LUA_CATCH;
