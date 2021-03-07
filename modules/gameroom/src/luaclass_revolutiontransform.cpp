@@ -87,13 +87,11 @@ int LuaClass_RevolutionTransform::LUA_release( lua_State* p_L )
         LUA_ERROR( "RevolutionTransform::release : no transform aspect" );
     }
    
-    m_entity_transform_aspect->RemoveAllImplementations();
-    m_entity_transform_aspect = NULL;
-
     m_entity_transform_aspect->RemoveComponent<dsreal>("angle");
     m_entity_transform_aspect->RemoveComponent<dsreal>("revol_duration");
 
-
+    m_entity_transform_aspect->RemoveAllImplementations();
+    m_entity_transform_aspect = NULL;
     return 0;
 }
 
