@@ -59,7 +59,7 @@ public:
     Layer( Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
 
     Body* GetBody(void) const;
-    bool  GetHostState(void) const;
+    bool  GetHotState(void) const;
     Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
     int GetCurrentLOD(void) const;
     

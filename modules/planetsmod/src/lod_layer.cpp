@@ -47,7 +47,7 @@ Body* Layer::GetBody(void) const
     return m_body;
 }
 
-bool Layer::GetHostState(void) const
+bool Layer::GetHotState(void) const
 {
     return m_hot;
 }

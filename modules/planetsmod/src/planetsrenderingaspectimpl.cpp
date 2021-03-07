@@ -267,7 +267,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     for(auto& e : m_registered_camerapoints)
     {
         int currentLOD = e.second.layers[0]->GetCurrentLOD();
-        bool relative = e.second.layers[0]->GetHostState();
+        bool relative = e.second.layers[0]->GetHotState();
         dsreal rel_alt = 0.0;
         rel_alt = e.second.relative_alt;
         dsreal altitude = e.second.layers[0]->GetBody()->GetHotPointAltitud();
@@ -974,6 +974,16 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
     planetbodypos[1] = planet_world(3, 1);
     planetbodypos[2] = planet_world(3, 2);
 
+    // clear translations
+    planet_world(3, 0) = 0.0;
+    planet_world(3, 1) = 0.0;
+    planet_world(3, 2) = 0.0;
+
+    Matrix planet_world_inv = planet_world;
+
+    // matrix inversion
+    planet_world_inv.Inverse();
+
     for (auto& body : m_registered_bodies)
     {
         LOD::Layer* layer = body.second.layers[0];
@@ -1002,15 +1012,19 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
         delta[2] = body_pos[2] - planetbodypos[2];
         delta[3] = 1.0;
 
-        dsreal rel_alt = delta.Length() / m_planet_ray;
+        // compute delta vector local to planet transform (rotation)
+        Vector local_delta;
+        planet_world_inv.Transform(&delta, &local_delta);
+
+        dsreal rel_alt = local_delta.Length() / m_planet_ray;
 
         body.second.relative_alt_valid = true;
         body.second.relative_alt = rel_alt;
 
         layer->UpdateRelativeAlt(rel_alt);
         layer->UpdateInvariantViewerPos(delta);
-
-        if (!layer->GetHostState())
+        
+        if (!layer->GetHotState())
         {
             if (rel_alt < LOD::cst::hotRelativeAlt)
             {
@@ -1019,7 +1033,7 @@ void PlanetsRenderingAspectImpl::manage_bodies(void)
         }
         else
         {
-            layer->UpdateHotPoint(delta);
+            layer->UpdateHotPoint(local_delta);
             layer->Compute();
 
             if (rel_alt >= LOD::cst::hotRelativeAlt)
@@ -1043,6 +1057,16 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
         _DSEXCEPTION("Planet must have transform aspect!!!")
     }
 
+    Matrix planet_world_inv = planet_world;
+
+    // clear translations
+    planet_world_inv(3, 0) = 0.0;
+    planet_world_inv(3, 1) = 0.0;
+    planet_world_inv(3, 2) = 0.0;
+
+    // matrix inversion
+    planet_world_inv.Inverse();
+
     for(auto& camera: m_registered_camerapoints)
     {
         // process all type of cameras 
@@ -1060,7 +1084,12 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             camera_pos_from_planet[2] = camera_world(3, 2) - planet_world(3, 2);
             camera_pos_from_planet[3] = 1.0;
 
-            dsreal rel_alt = (camera_pos_from_planet.Length() / m_planet_ray);
+
+            DrawSpace::Utils::Vector locale_camera_pos_from_planet;
+
+            planet_world_inv.Transform(&camera_pos_from_planet, &locale_camera_pos_from_planet);
+
+            dsreal rel_alt = (locale_camera_pos_from_planet.Length() / m_planet_ray);
 
             camera.second.relative_alt_valid = true;
             camera.second.relative_alt = rel_alt;
@@ -1070,12 +1099,9 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                 camera_layer->UpdateRelativeAlt( rel_alt );
                 camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
 
-
-                if (camera_layer->GetHostState())
+                if (camera_layer->GetHotState())
                 {
-                    // si hot, c'est une camera de type FREE_ON_PLANET
-                    // donc faire un UpdateHotPoint
-                    camera_layer->UpdateHotPoint(camera_pos_from_planet);
+                    camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
                     camera_layer->Compute();
                 }
             }
