@@ -13,7 +13,9 @@
 			lit_shader_update_func = raptor.update_from_scene_env
 		}
 	}
-	raptor.view.load('my_raptor', raptor_passes_config, 'root')
+	raptor.view.load('my_raptor', raptor_passes_config)
+	eg:add_child('root', 'my_raptor', raptor.models['my_raptor'].entity)
+
 	model.move.setpos('my_raptor', 0.0, 0.0, 0.0)
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)

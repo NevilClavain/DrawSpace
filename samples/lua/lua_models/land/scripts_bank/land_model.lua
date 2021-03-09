@@ -179,7 +179,7 @@ land.update_from_scene_env_mirror = function( p_pass_id, p_environment_table, p_
 end
 
 
-land.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+land.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
   
   local entity
   local renderer
@@ -199,7 +199,7 @@ land.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_
   body:configure_attitude(pos_mat)
   body:configure_mode(COLLIDER_MODE)
 
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = {}
   pair['entity'] = entity
@@ -256,7 +256,7 @@ land.view.unload = function(p_entity_id)
   end
 end
 
-land.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+land.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
 
   found_id = FALSE
   for k, v in pairs(land.models) do
@@ -269,6 +269,6 @@ land.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('land model', land.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('land model', land.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
   end  
 end

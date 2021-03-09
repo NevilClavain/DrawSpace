@@ -221,7 +221,7 @@ metalcube.update_flatcolor = function( p_pass_id, p_r, p_g, p_b, p_a, p_entity_i
     renderer:set_shaderrealvector( p_pass_id, 'color', p_r, p_g, p_b, p_a )
 end
 
-metalcube.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+metalcube.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
   
   local entity
   local renderer
@@ -242,7 +242,7 @@ metalcube.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_i
   cube_body:configure_mass(7.0)
   cube_body:configure_mode(BODY_MODE)
 
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = {}
   pair['entity'] = entity
@@ -299,7 +299,7 @@ metalcube.view.unload = function(p_entity_id)
   end
 end
 
-metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
 
   found_id = FALSE
   for k, v in pairs(metalcube.models) do
@@ -312,6 +312,6 @@ metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_p
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('metalcube model', metalcube.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('metalcube model', metalcube.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
   end  
 end

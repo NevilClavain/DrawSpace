@@ -221,7 +221,7 @@ planetmod.layers =
 	}
 }
 
-planetmod.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id, p_planet_specific_config_descr)
+planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings, p_planet_specific_config_descr)
 
   local entity
   local renderer
@@ -238,7 +238,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, 
   entity:add_aspect(INFOS_ASPECT)
   entity:setup_info( "entity_name", p_entity_id )
   
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['specific_config'] = specific_config }
   planetmod.models[p_entity_id] = pair
@@ -286,7 +286,7 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id, p_planet_specific_config_descr)
+planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific_config_descr)
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do
@@ -299,7 +299,7 @@ planetmod.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_i
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('planet model', planetmod.createmodelview, p_passes_bindings, nil, nil, p_entity_id, p_parent_entity_id, p_planet_specific_config_descr)
+    model.view.load('planet model', planetmod.createmodelview, p_passes_bindings, nil, nil, p_entity_id, p_planet_specific_config_descr)
   end  
 
 end

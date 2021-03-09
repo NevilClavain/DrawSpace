@@ -137,7 +137,7 @@ boulder.update_flatcolor = function( p_pass_id, p_r, p_g, p_b, p_a, p_entity_id 
     renderer:set_shaderrealvector( p_pass_id, 'color', p_r, p_g, p_b, p_a )
 end
 
-boulder.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+boulder.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
   
   local entity
   local renderer
@@ -155,7 +155,7 @@ boulder.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id,
   body:configure_attitude(pos_mat)
   body:configure_mode(COLLIDER_MODE)
  
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
 
@@ -204,7 +204,7 @@ boulder.view.unload = function(p_entity_id)
   end
 end
 
-boulder.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+boulder.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(boulder.models) do
@@ -217,6 +217,6 @@ boulder.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_par
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('boulder model', boulder.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('boulder model', boulder.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
   end  
 end

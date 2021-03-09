@@ -13,7 +13,9 @@
 			lit_shader_update_func = trex.update_from_scene_env
 		}
 	}
-	trex.view.load('t', trex_passes_config, 'root')
+	trex.view.load('t', trex_passes_config)
+	eg:add_child('root', 't', trex.models['t'].entity)
+
 	model.move.setpos('t', 0.0, 0.0, 0.0)
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)

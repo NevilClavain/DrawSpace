@@ -175,7 +175,9 @@ skydome_passes_bindings =
 		lit_shader_update_func = skydome.update_from_scene_env_mirror	
 	}
 }
-skydome.view.load('dome', skydome_passes_bindings, 'root')
+skydome.view.load('dome', skydome_passes_bindings)
+eg:add_child('root', 'dome', skydome.models['dome'].entity)
+
 model.move.setpos('dome', 0.0, 0.0, 0.0)
 
 land_passes_bindings = 
@@ -200,8 +202,8 @@ land_passes_bindings =
 	}
 
 }
-land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_bindings, 'root')
-
+land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_bindings)
+eg:add_child('root', 'l', land.models['l'].entity)
 
 metalcube_passes_bindings = 
 {
@@ -219,7 +221,8 @@ metalcube_passes_bindings =
 	}
 }
 
-metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_bindings, 'root' )
+metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_bindings)
+eg:add_child('root', 'cube', metalcube.models['cube'].entity)
 
 
 spherebump_passes_bindings = 
@@ -237,8 +240,8 @@ spherebump_passes_bindings =
 		lit_shader_update_func = spherebump.update_from_scene_env_mirror	
 	}
 }
-spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}, spherebump_passes_bindings, 'root' )
-
+spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}, spherebump_passes_bindings)
+eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 
 waterquad_passes_bindings = 
 {
@@ -261,7 +264,9 @@ waterquad_passes_bindings =
 		lit_shader_update_func = waterquad.update_normales_from_scene_env
 	}
 }
-waterquad.view.load('water', waterquad_passes_bindings, 'root')
+waterquad.view.load('water', waterquad_passes_bindings)
+eg:add_child('root', 'water', waterquad.models['water'].entity)
+
 model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)
 
 waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass', 'bump_pass', 0)
@@ -470,7 +475,8 @@ g:set_mousecursorcircularmode(TRUE)
 add_cube = function()
 
   local instance_name = 'cube_'..cube_instance
-  metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_bindings, 'root' )
+  metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_bindings)
+  eg:add_child('root', instance_name, metalcube.models[instance_name].entity)
 
   cube_instance = cube_instance + 1
 

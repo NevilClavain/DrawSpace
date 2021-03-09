@@ -13,7 +13,8 @@
 			lit_shader_update_func = bellerophon.update_lit_from_scene_env
 		}
 	}
-	bellerophon.view.load('b', {x = 0.0, y = 0.0, z = 0.0 }, bellerophon_passes_config, 'root')
+	bellerophon.view.load('b', {x = 0.0, y = 0.0, z = 0.0 }, bellerophon_passes_config)
+	eg:add_child('root', 'b', bellerophon.models['b'].entity)
 		
 	model.env.setbkcolor('texture_pass', 0.0,0.0,1.0)
 	

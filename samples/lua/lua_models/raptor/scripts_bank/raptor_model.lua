@@ -178,7 +178,7 @@ end
 
 
 
-raptor.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id)
+raptor.createlitmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
   
   local entity
   local renderer
@@ -190,7 +190,7 @@ raptor.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, 
   entity:configure_animationbones()
   entity:update_animationeventsid(p_entity_id)
 
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = {}
   pair['entity'] = entity
@@ -260,7 +260,7 @@ raptor.anims.parameters = function()
   return random_anims, idle_anim, do_something, dino_action
 end
 
-raptor.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
+raptor.view.load = function(p_entity_id, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(raptor.models) do
@@ -273,7 +273,7 @@ raptor.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('raptor model', raptor.createlitmodelview, p_passes_bindings, raptor.anims.parameters, raptor.scale, p_entity_id, p_parent_entity_id)
+    model.view.load('raptor model', raptor.createlitmodelview, p_passes_bindings, raptor.anims.parameters, raptor.scale, p_entity_id)
   end
 end
 

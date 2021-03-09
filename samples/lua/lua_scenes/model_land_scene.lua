@@ -13,7 +13,8 @@
 			lit_shader_update_func = land.update_from_scene_env
 		}
 	}
-	land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config, 'root')
+	land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config)
+	eg:add_child('root', 'l', land.models['l'].entity)
 	
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)

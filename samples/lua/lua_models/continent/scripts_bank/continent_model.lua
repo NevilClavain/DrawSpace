@@ -136,7 +136,7 @@ continent.update_lit_from_scene_env = function( p_pass_id, p_environment_table, 
 
 end
 
-continent.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+continent.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
   
   local entity
   local renderer
@@ -155,7 +155,7 @@ continent.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_i
   body:configure_mode(COLLIDER_MODE)
 
   
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
 
@@ -210,7 +210,7 @@ continent.view.unload = function(p_entity_id)
   end
 end
 
-continent.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+continent.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(continent.models) do
@@ -223,7 +223,7 @@ continent.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_p
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('continent model', continent.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('continent model', continent.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
   end
 end
 

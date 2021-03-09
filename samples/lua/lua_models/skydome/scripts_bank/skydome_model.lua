@@ -169,7 +169,7 @@ skydome.update_from_scene_env_mirror = function( p_pass_id, p_environment_table,
 	renderer:set_shaderrealvector( p_pass_id, 'v_atmo_scattering_flag_4', skydome.skyfromspace_ESun, skydome.skyfromatmo_ESun, skydome.groundfromspace_ESun, skydome.groundfromatmo_ESun )
 end
 
-skydome.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id)
+skydome.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
  
   local entity
   local renderer
@@ -178,7 +178,7 @@ skydome.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_
   renderer:register_to_rendering(p_rendergraph)
   
  
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer }
 
@@ -226,7 +226,7 @@ skydome.scale =
 	x = skydome.outerRadius, y = skydome.outerRadius, z = skydome.outerRadius
 }
 
-skydome.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
+skydome.view.load = function(p_entity_id, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(skydome.models) do
@@ -239,6 +239,6 @@ skydome.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('skydome model', skydome.createmodelview, p_passes_bindings, nil, skydome.scale, p_entity_id, p_parent_entity_id)
+    model.view.load('skydome model', skydome.createmodelview, p_passes_bindings, nil, skydome.scale, p_entity_id)
   end
 end

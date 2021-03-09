@@ -177,7 +177,7 @@ trex.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_
 
 end
 
-trex.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id)
+trex.createlitmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
   
   local entity
   local renderer
@@ -190,7 +190,7 @@ trex.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_
   entity:configure_animationbones()
   entity:update_animationeventsid(p_entity_id)
 
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   for k, v in pairs(p_passes_bindings) do
     
@@ -261,7 +261,7 @@ trex.anims.parameters = function()
 
 end
 
-trex.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
+trex.view.load = function(p_entity_id, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(trex.models) do
@@ -274,6 +274,6 @@ trex.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('trex model', trex.createlitmodelview, p_passes_bindings, trex.anims.parameters, trex.scale, p_entity_id, p_parent_entity_id)
+    model.view.load('trex model', trex.createlitmodelview, p_passes_bindings, trex.anims.parameters, trex.scale, p_entity_id)
   end  
 end

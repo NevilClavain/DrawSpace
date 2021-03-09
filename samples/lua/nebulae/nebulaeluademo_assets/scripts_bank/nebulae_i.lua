@@ -391,8 +391,9 @@ spacebox_passes_bindings =
 		lit_shader_update_func = nil
 	}
 }
-spaceboxmod.view.load('spacebox0', spacebox_passes_bindings, 'root')
+spaceboxmod.view.load('spacebox0', spacebox_passes_bindings)
 
+eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
 

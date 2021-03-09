@@ -416,7 +416,9 @@ spacebox_passes_bindings =
 		lit_shader_update_func = nil
 	}
 }
-spaceboxmod.view.load('spacebox0', spacebox_passes_bindings, 'root')
+spaceboxmod.view.load('spacebox0', spacebox_passes_bindings)
+
+eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
 
 spherebump_passes_bindings = 
@@ -429,7 +431,9 @@ spherebump_passes_bindings =
 	}
 }
 
-spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_bindings, 'root' )
+spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_bindings)
+
+eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 
 
 bellerophon_passes_bindings = 
@@ -441,9 +445,12 @@ bellerophon_passes_bindings =
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
 	}
 }
-bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings, 'root')
+bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings)
 
 bellerophon_entity = bellerophon.models['ship'].entity
+
+eg:add_child('root', 'ship', bellerophon_entity)
+
 bellerophon_entity:add_aspect(INFOS_ASPECT)
 bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
 
@@ -513,11 +520,13 @@ planet_passes_bindings =
 
 
 planet_name = 'Resurgam'
-planetmod.view.load(planet_name, planet_passes_bindings, 'root', planet_specific_config_descr)
+planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr)
 
 
 resurgam_planet_entity = planetmod.models[planet_name].entity
 resurgam_planet_config = planetmod.models[planet_name].specific_config
+
+eg:add_child('root', planet_name, resurgam_planet_entity)
 
 
 resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)

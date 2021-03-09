@@ -1,13 +1,13 @@
 
 model.view = {}
 
-model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_initial_scale, p_entity_id, p_parent_entity_id, p_specific_config)
+model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_initial_scale, p_entity_id, p_specific_config)
 
   local entity
   if p_specific_config == nil then 
-    entity = p_modelviewload_function(rg, eg, p_entity_id, p_passes_bindings, p_parent_entity_id)
+    entity = p_modelviewload_function(rg, p_entity_id, p_passes_bindings)
   else
-    entity = p_modelviewload_function(rg, eg, p_entity_id, p_passes_bindings, p_parent_entity_id, p_specific_config)
+    entity = p_modelviewload_function(rg, p_entity_id, p_passes_bindings, p_specific_config)
   end
 
 
@@ -115,9 +115,9 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindi
 
 end
 
-model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_entity_id, p_bodyinitialpos, p_parent_entity_id)
+model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_entity_id, p_bodyinitialpos)
 
-  local entity = p_modelviewload_function(rg, eg, p_entity_id, p_bodyinitialpos, p_passes_bindings, p_parent_entity_id)
+  local entity = p_modelviewload_function(rg, p_entity_id, p_bodyinitialpos, p_passes_bindings)
 
   -- loop pour execution lit_shader_update_func de chaque entree de p_passes_bindings
   for k, v in pairs(p_passes_bindings) do

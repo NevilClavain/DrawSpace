@@ -104,7 +104,7 @@ bellerophon.update_lit_from_scene_env = function( p_pass_id, p_environment_table
 end
 
 
-bellerophon.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
   
   local entity
   local renderer
@@ -122,7 +122,7 @@ bellerophon.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity
   body:configure_attitude(pos_mat)
   body:configure_mode(BODY_MODE)
  
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
 
@@ -171,7 +171,7 @@ bellerophon.view.unload = function(p_entity_id)
   end
 end
 
-bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(bellerophon.models) do
@@ -184,6 +184,6 @@ bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
   end  
 end

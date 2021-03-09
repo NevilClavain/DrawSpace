@@ -218,7 +218,7 @@ spherebump.update_flatcolor = function( p_pass_id, p_r, p_g, p_b, p_a, p_entity_
     renderer:set_shaderrealvector( p_pass_id, 'color', p_r, p_g, p_b, p_a )
 end
 
-spherebump.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+spherebump.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
   
   local entity
   local renderer
@@ -239,7 +239,7 @@ spherebump.createlitmodelview = function(p_rendergraph, p_entitygraph, p_entity_
   sphere_body:configure_mass(35.0)
   sphere_body:configure_mode(BODY_MODE)
 
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = {}
   pair['entity'] = entity
@@ -296,7 +296,7 @@ spherebump.view.unload = function(p_entity_id)
   end
 end
 
-spherebump.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_parent_entity_id)
+spherebump.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(spherebump.models) do
@@ -309,6 +309,6 @@ spherebump.view.load = function(p_entity_id, p_initialpos, p_passes_bindings, p_
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('spherebump model', spherebump.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos, p_parent_entity_id)
+    model.view.loadbody('spherebump model', spherebump.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
   end  
 end

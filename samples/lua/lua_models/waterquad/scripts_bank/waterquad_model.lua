@@ -128,7 +128,7 @@ waterquad.update_from_scene_env_bump = function( p_pass_id, p_environment_table,
 end
 
 
-waterquad.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, p_passes_bindings, p_parent_entity_id)
+waterquad.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
   
   local entity
   local renderer
@@ -137,7 +137,7 @@ waterquad.createmodelview = function(p_rendergraph, p_entitygraph, p_entity_id, 
   renderer:register_to_rendering(p_rendergraph)
 
 
-  p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  -- p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = {}
   pair['entity'] = entity
@@ -187,7 +187,7 @@ waterquad.view.unload = function(p_entity_id)
   end
 end
 
-waterquad.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_id)
+waterquad.view.load = function(p_entity_id, p_passes_bindings)
 
   found_id = FALSE
   for k, v in pairs(waterquad.models) do
@@ -200,6 +200,6 @@ waterquad.view.load = function(p_entity_id, p_passes_bindings, p_parent_entity_i
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('waterquad model', waterquad.createmodelview, p_passes_bindings, nil, nil, p_entity_id, p_parent_entity_id)
+    model.view.load('waterquad model', waterquad.createmodelview, p_passes_bindings, nil, nil, p_entity_id)
   end  
 end
