@@ -122,8 +122,6 @@ bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialp
   body:configure_attitude(pos_mat)
   body:configure_mode(BODY_MODE)
  
-  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
-
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
 
   bellerophon.models[p_entity_id] = pair
