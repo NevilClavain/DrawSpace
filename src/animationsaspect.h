@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class AnimationsAspect : public Core::ComponentContainer 
+struct AnimationsAspect : public Core::ComponentContainer 
 {
 public:
 

@@ -44,8 +44,6 @@ protected:
     DrawSpace::Utils::Matrix                                                            m_dispatched_viewtransform;
     DrawSpace::Utils::Matrix                                                            m_dispatched_projtransform;
 
-    //std::vector< DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> m_impls_list;
-
     std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>    m_impls_list;
 
     TimeAspect*                                                                         m_time_aspect;

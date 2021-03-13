@@ -31,7 +31,7 @@ namespace DrawSpace
 {
 namespace Aspect
 {
-class CameraAspect : public Core::ComponentContainer {};
+struct CameraAspect : public Core::ComponentContainer {};
 }
 }
 
