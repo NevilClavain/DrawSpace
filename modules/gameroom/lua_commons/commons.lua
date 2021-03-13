@@ -102,7 +102,7 @@ commons.create_static_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewp
 	pos:translation(p_x, p_y, p_z)
 
 	local cam_transform = RawTransform()
-	cam_transform:configure(camera_entity)
+	cam_transform:configure(camera_entity,0)
 	cam_transform:add_matrix("pos",pos)
 
 	return camera_entity, cam_transform
@@ -123,7 +123,7 @@ commons.create_fps_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewport
 
 	local fps_transfo=FPSTransform()
 	fps_transfo:instanciate_transformimpl(p_module)
-	fps_transfo:configure(camera_entity,0,0,p_x,p_y,p_z,TRUE)
+	fps_transfo:configure(camera_entity,0,0,p_x,p_y,p_z,TRUE,0)
 
 	return camera_entity, fps_transfo
 end
@@ -141,7 +141,7 @@ commons.create_free_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewpor
 
 	local free_transfo=FreeTransform()
 	free_transfo:instanciate_transformimpl(p_module)
-	free_transfo:configure(camera_entity,0,p_x, p_y, p_z)
+	free_transfo:configure(camera_entity,0,p_x, p_y, p_z,0)
 
 	return camera_entity, free_transfo
 end

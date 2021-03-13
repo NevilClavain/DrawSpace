@@ -84,12 +84,13 @@ LuaClass_Body::~LuaClass_Body( void )
 int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 )
+	if( argc < 2 )
 	{		
         LUA_ERROR( "Body::attach_toentity : argument(s) missing" );
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    int transfoimpl_order = luaL_checkint(p_L, 2);
 
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
 
@@ -111,7 +112,7 @@ int LuaClass_Body::LUA_attachtoentity( lua_State* p_L )
 
     // bind transfo and body aspects
     //m_entity_transform_aspect->SetImplementation( m_entity_body_aspect->GetTransformAspectImpl() );
-    m_entity_transform_aspect->AddImplementation(m_entity_body_aspect->GetTransformAspectImpl());
+    m_entity_transform_aspect->AddImplementation(transfoimpl_order, m_entity_body_aspect->GetTransformAspectImpl());
 
     // add bool component for contact state
     m_entity_body_aspect->AddComponent<bool>( "contact_state", false );

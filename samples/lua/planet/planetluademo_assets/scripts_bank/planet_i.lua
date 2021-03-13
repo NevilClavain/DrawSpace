@@ -532,11 +532,11 @@ eg:add_child('root', planet_name, resurgam_planet_entity)
 resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)
 
 planet_transform = RawTransform()
-planet_transform:configure(resurgam_planet_entity)
+planet_transform:configure(resurgam_planet_entity,0)
 
 
 planet_revol = RevolutionTransform()
-planet_revol:configure(resurgam_planet_entity, 1.0)
+planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 
 
 

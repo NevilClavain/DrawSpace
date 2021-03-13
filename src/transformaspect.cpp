@@ -39,20 +39,21 @@ m_time_aspect( NULL )
     m_dispatched_projtransform.Identity();
 }
 
-void TransformAspect::AddImplementation(DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl)
+void TransformAspect::AddImplementation(int p_order, DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl)
 {
     if (m_time_aspect)
     {
         p_impl->SetTimeAspect(m_time_aspect);
     }
-    m_impls_list.push_back(p_impl);
+
+    m_impls_list[p_order] = p_impl;
 }
 
 void TransformAspect::RemoveAllImplementations(void)
 {
     for (auto& e : m_impls_list)
     {
-        e->SetTimeAspect(nullptr);
+        e.second->SetTimeAspect(nullptr);
     }
     m_impls_list.clear();
 }
@@ -76,12 +77,12 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     {
         Matrix res, current;
 
-        e->GetLocaleTransform(this, current);
+        e.second->GetLocaleTransform(this, current);
 
         Matrix::MatrixMult(&current, &locale_mat, &res);
         locale_mat = res;
 
-        if (e->IgnoreParentTransformation())
+        if (e.second->IgnoreParentTransformation())
         {
             ignore_parent_transform = true;
         }
@@ -141,6 +142,6 @@ void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
    
     for (auto& e : m_impls_list)
     {
-        e->SetTimeAspect(p_time_aspect);
+        e.second->SetTimeAspect(p_time_aspect);
     }
 }

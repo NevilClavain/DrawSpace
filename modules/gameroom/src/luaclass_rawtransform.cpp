@@ -53,12 +53,13 @@ LuaClass_RawTransform::~LuaClass_RawTransform( void )
 int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 1 )
+	if( argc < 2 )
 	{
         LUA_ERROR( "RawTransform::configure : argument(s) missing" );
 	}
 
     LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    int transfoimpl_order = luaL_checkint(p_L, 2);
 
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
 
@@ -66,8 +67,7 @@ int LuaClass_RawTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if( transform_aspect )
     {
-        //transform_aspect->SetImplementation( &m_raw_transformer );
-        transform_aspect->AddImplementation(&m_raw_transformer);
+        transform_aspect->AddImplementation(transfoimpl_order, &m_raw_transformer);
         m_entity_transform_aspect = transform_aspect;
     }
     else

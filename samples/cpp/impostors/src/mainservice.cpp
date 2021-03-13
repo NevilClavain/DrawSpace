@@ -407,7 +407,7 @@ void MainService::create_skybox( void )
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_skybox_transformer );
+    transform_aspect->AddImplementation( 0, &m_skybox_transformer );
 
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
@@ -491,7 +491,7 @@ void MainService::create_world_impostor( void )
 
     TransformAspect* transform_aspect = m_worldImpostorsEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_impostors_transformer );
+    transform_aspect->AddImplementation( 0, &m_impostors_transformer );
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
@@ -616,7 +616,7 @@ void MainService::create_screen_impostors( void )
 
     TransformAspect* transform_aspect = m_impostorsEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( &m_impostors_transformer );
+    transform_aspect->AddImplementation( 0, &m_impostors_transformer );
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
@@ -679,7 +679,7 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 
     body_aspect->AddComponent<bool>("contact_state", false);
 
-    transform_aspect->AddImplementation(body_aspect->GetTransformAspectImpl());
+    transform_aspect->AddImplementation(0, body_aspect->GetTransformAspectImpl());
 
 }
 
@@ -773,7 +773,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         body_aspect->AddComponent<bool>("contact_state", false);
 
-        transform_aspect->AddImplementation(body_aspect->GetTransformAspectImpl());
+        transform_aspect->AddImplementation(0, body_aspect->GetTransformAspectImpl());
 
 
     }
@@ -823,7 +823,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         
         TransformAspect* transform_aspect = p_entity_2.AddAspect<TransformAspect>();
 
-        transform_aspect->AddImplementation(&p_transform_impl);
+        transform_aspect->AddImplementation(0, &p_transform_impl);
 
         transform_aspect->AddComponent<Matrix>("pos");
         transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
@@ -893,7 +893,7 @@ void MainService::create_ground( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
 
 }
 
@@ -910,7 +910,7 @@ void MainService::create_camera( void )
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( m_fps_transformer );
+    transform_aspect->AddImplementation( 0, m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 

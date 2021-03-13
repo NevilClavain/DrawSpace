@@ -83,7 +83,7 @@ int LuaClass_FPSTransform::LUA_trashTransformationImpl(lua_State* p_L)
 int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
 {
 	int argc = lua_gettop( p_L );
-	if( argc < 7 )
+	if( argc < 8 )
 	{
         LUA_ERROR( "FPSTransform::configure : argument(s) missing" );
 	}
@@ -99,6 +99,8 @@ int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
 
     bool ymvt = luaL_checkint( p_L, 7 );
 
+    int transfoimpl_order = luaL_checkint(p_L, 8);
+
     DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
 
     // recupere l'aspect transfo s'il existe pour cette entitee
@@ -106,7 +108,7 @@ int LuaClass_FPSTransform::LUA_configure( lua_State* p_L )
     if( transform_aspect )
     {
         //transform_aspect->SetImplementation( m_fps_transformer );
-        transform_aspect->AddImplementation(m_fps_transformer);
+        transform_aspect->AddImplementation(transfoimpl_order, m_fps_transformer);
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY

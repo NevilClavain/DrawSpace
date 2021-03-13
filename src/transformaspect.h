@@ -38,27 +38,22 @@ class TimeAspect;
 class TransformAspect : public Core::ComponentContainer
 {
 protected:
-    DrawSpace::Utils::Matrix                                                        m_worldtransform;
+    DrawSpace::Utils::Matrix                                                            m_worldtransform;
 
     // transfos view et proj "distribuees" par le worldsystem
-    DrawSpace::Utils::Matrix                                                        m_dispatched_viewtransform;
-    DrawSpace::Utils::Matrix                                                        m_dispatched_projtransform;
+    DrawSpace::Utils::Matrix                                                            m_dispatched_viewtransform;
+    DrawSpace::Utils::Matrix                                                            m_dispatched_projtransform;
 
-    //DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_impl;
+    //std::vector< DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> m_impls_list;
 
-    std::vector< DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> m_impls_list;
+    std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>    m_impls_list;
 
-    TimeAspect*                                                                     m_time_aspect;
-
+    TimeAspect*                                                                         m_time_aspect;
 
 public:
     TransformAspect( void );
 
-    //void SetImplementation( DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl );
-    void AddImplementation(DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl);
-    
-    //void RemoveImplementation( void );
-
+    void AddImplementation(int p_order, DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl);   
     void RemoveAllImplementations(void);
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform ) const;

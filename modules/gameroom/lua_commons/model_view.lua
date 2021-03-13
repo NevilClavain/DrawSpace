@@ -50,7 +50,7 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindi
 
       local transform = RawTransform()
 
-      transform:configure(entity)
+      transform:configure(entity,0)
   
       transform:add_matrix( "scale", scale_mat )
       transform:add_matrix( "roty", roty_mat )

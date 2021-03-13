@@ -85,7 +85,7 @@ int LuaClass_FreeTransform::LUA_trashTransformationImpl(lua_State* p_L)
 int LuaClass_FreeTransform::LUA_configure( lua_State* p_L )
 {
     int argc = lua_gettop(p_L);
-    if (argc < 5)
+    if (argc < 6)
     {
         LUA_ERROR("FreeTransform::configure : argument(s) missing");
     }
@@ -95,7 +95,7 @@ int LuaClass_FreeTransform::LUA_configure( lua_State* p_L )
     dsreal initial_posx = luaL_checknumber(p_L, 3);
     dsreal initial_posy = luaL_checknumber(p_L, 4);
     dsreal initial_posz = luaL_checknumber(p_L, 5);
-
+    int transfoimpl_order = luaL_checkint(p_L, 6);
 
     // extract args
 
@@ -105,7 +105,7 @@ int LuaClass_FreeTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if (transform_aspect)
     {
-        transform_aspect->AddImplementation(m_free_transformer);
+        transform_aspect->AddImplementation(transfoimpl_order, m_free_transformer);
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY

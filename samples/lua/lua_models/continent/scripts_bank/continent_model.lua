@@ -146,7 +146,7 @@ continent.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos
 
   entity:add_aspect(BODY_ASPECT)
   local body=Body()
-  body:attach_toentity(entity)
+  body:attach_toentity(entity,0)
   body:configure_shape(SHAPE_MESHE, 'continent.ac', 'g TerrainMesh')
 
   local pos_mat = Matrix()

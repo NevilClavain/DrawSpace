@@ -230,7 +230,7 @@ spherebump.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpo
 
   local sphere_body=Body()
 
-  sphere_body:attach_toentity(entity)
+  sphere_body:attach_toentity(entity,0)
   sphere_body:configure_shape( SHAPE_SPHERE, 1.0)
 
   local sphere_pos_mat = Matrix()

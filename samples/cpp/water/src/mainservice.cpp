@@ -267,7 +267,7 @@ bool MainService::Init( void )
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( m_fps_transformer );
+    transform_aspect->AddImplementation( 0, m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
@@ -627,7 +627,7 @@ void MainService::create_skybox( void )
 
     TransformAspect* transform_aspect = m_skyboxEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation(&m_skybox_transformer);
+    transform_aspect->AddImplementation(0, &m_skybox_transformer);
 
     transform_aspect->AddComponent<Matrix>("skybox_scaling");
 
@@ -769,7 +769,7 @@ void MainService::create_dynamic_cube( void )
 
     TransformAspect* transform_aspect = cube.dynCubeEntity->AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
 
 
     cube.dynCubeBodyAspect = body_aspect;
@@ -893,7 +893,7 @@ void MainService::create_static_cube( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
 
 
 }
@@ -1001,7 +1001,7 @@ void MainService::create_ground( void )
 
     body_aspect->AddComponent<bool>( "contact_state", false );
 
-    transform_aspect->AddImplementation( body_aspect->GetTransformAspectImpl() );
+    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
 
 
 }

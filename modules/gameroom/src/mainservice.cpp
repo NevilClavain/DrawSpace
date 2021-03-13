@@ -608,7 +608,7 @@ void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res
     TransformAspect* transform_aspect = m_quadEntity.AddAspect<TransformAspect>();
 
     //transform_aspect->SetImplementation( &m_quadTransformer );
-    transform_aspect->AddImplementation(&m_quadTransformer);
+    transform_aspect->AddImplementation(0, &m_quadTransformer);
 
     
     transform_aspect->AddComponent<Matrix>( "quad_scaling" );

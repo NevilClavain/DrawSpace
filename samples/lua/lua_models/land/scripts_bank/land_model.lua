@@ -191,7 +191,7 @@ land.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_p
 
   local body=Body()
 
-  body:attach_toentity(entity)
+  body:attach_toentity(entity,0)
   body:configure_shape(SHAPE_MESHE, 'land2.ac', 'wavefront obj')
 
   local pos_mat = Matrix()
