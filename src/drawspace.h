@@ -106,6 +106,7 @@
 #include "serviceaspectimpl.h"
 
 #include "cameraaspect.h"
+#include "collisionaspect.h"
 #include "bodyaspect.h"
 #include "physicsaspect.h"
 #include "timeaspect.h"

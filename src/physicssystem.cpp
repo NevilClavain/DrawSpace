@@ -25,6 +25,7 @@
 #include "physicssystem.h"
 #include "physicsaspect.h"
 #include "bodyaspect.h"
+#include "collisionaspect.h"
 #include "exceptions.h"
 
 using namespace DrawSpace;
@@ -54,19 +55,14 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     if( physics_aspect )
     {
         // submit current Body entities list to physic aspect
-        //physics_aspect->UpdateBodiesList( m_world_bodies_list );
 
         physics_aspect->StepSimulation();
-
-        //m_world_bodies_list.clear(); // clear list for next entity with Physics aspect (if exists)
     }
     else
     {
         BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
         if( body_aspect )
         {
-            //m_world_bodies_list.insert( p_entity ); // memorize this entity with Body aspect
-
             //////////////////////////////////////////////////////////////////////////////////////////
 
             // recup liste de tout les noeuds entity ancetre de cet entity
@@ -94,6 +90,11 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
             //////////////////////////////////////////////////////////////////////////////////////////
 
             body_aspect->Update();
+        }
+        CollisionAspect* collision_aspect = p_entity->GetAspect<CollisionAspect>();
+        if (collision_aspect)
+        {
+            collision_aspect->Update(p_entity);
         }
     }
 }

@@ -39,6 +39,7 @@
 #include "transformaspect.h"
 #include "resourcesaspect.h"
 #include "animationsaspect.h"
+#include "collisionaspect.h"
 #include "textrenderingaspectimpl.h"
 
 using namespace DrawSpace;
@@ -121,6 +122,7 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
         { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<InfosAspect>(); } },
         { RESOURCES_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<ResourcesAspect>(); } },
 		{ ANIMATION_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<AnimationsAspect>(); } },
+		{ COLLISION_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.AddAspect<CollisionAspect>(); } },
     };
 
     aspect_add_aig.at(aspect_type)( m_entity );
@@ -151,6 +153,7 @@ int LuaClass_Entity::LUA_hasaspect(lua_State* p_L)
 		{ INFOS_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<InfosAspect>() ? true : false); } },
 		{ RESOURCES_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<ResourcesAspect>() ? true : false); } },
 		{ ANIMATION_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<AnimationsAspect>() ? true : false); } },
+		{ COLLISION_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<CollisionAspect>() ? true : false); } },
 	};
 
 	aspect_check_aig.at(aspect_type)(m_entity, status);
@@ -180,6 +183,7 @@ int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
         { INFOS_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<InfosAspect>(); } },
         { RESOURCES_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<ResourcesAspect>(); } },
 		{ ANIMATION_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<AnimationsAspect>(); } },
+		{ COLLISION_ASPECT, [](DrawSpace::Core::Entity& p_entity) { p_entity.RemoveAspect<CollisionAspect>(); } },
     };
 
     aspect_remove_aig.at(aspect_type)( m_entity );

@@ -54,6 +54,8 @@ ${CMAKE_SOURCE_DIR}/src/bodyaspect.cpp
 ${CMAKE_SOURCE_DIR}/src/bodyaspect.h
 ${CMAKE_SOURCE_DIR}/src/cameraaspect.cpp 
 ${CMAKE_SOURCE_DIR}/src/cameraaspect.h
+${CMAKE_SOURCE_DIR}/src/collisionaspect.cpp 
+${CMAKE_SOURCE_DIR}/src/collisionaspect.h
 ${CMAKE_SOURCE_DIR}/src/informationsaspect.h
 ${CMAKE_SOURCE_DIR}/src/physicsaspect.cpp 
 ${CMAKE_SOURCE_DIR}/src/physicsaspect.h

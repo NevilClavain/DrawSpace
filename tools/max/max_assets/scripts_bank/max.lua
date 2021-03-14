@@ -265,6 +265,9 @@ function()
 
 	      target_infos = target_infos.. " (is body)\n"
 
+        elseif model.entities[model.target].entity:has_aspect(COLLISION_ASPECT) == TRUE then
+
+          target_infos = target_infos.. " (is collider)\n"
 	    else
 
           local transform_entry = model.transformations[model.target]

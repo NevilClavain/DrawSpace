@@ -46,7 +46,7 @@ protected:
         INFOS_ASPECT,
         RESOURCES_ASPECT,
 		ANIMATION_ASPECT,
-
+        COLLISION_ASPECT,
     };
 
     using ComponentType = enum
