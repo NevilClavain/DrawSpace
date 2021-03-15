@@ -87,7 +87,7 @@
 	}
 	skydome.view.load('dome', skydome_passes_config)
 	eg:add_child('root', 'dome', skydome.models['dome'].entity)
-
+	model.setup_rawtransformationschain(skydome.models['dome'].entity, 'dome', skydome.scale)
 	model.move.setpos('dome', 0.0, 0.0, 0.0)
 	
 	

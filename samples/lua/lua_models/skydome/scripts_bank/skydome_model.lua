@@ -239,6 +239,6 @@ skydome.view.load = function(p_entity_id, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('skydome model', skydome.createmodelview, p_passes_bindings, nil, skydome.scale, p_entity_id)
+    model.view.load('skydome model', skydome.createmodelview, p_passes_bindings, nil, p_entity_id)
   end
 end

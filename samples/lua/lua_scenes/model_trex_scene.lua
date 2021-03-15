@@ -15,6 +15,7 @@
 	}
 	trex.view.load('t', trex_passes_config)
 	eg:add_child('root', 't', trex.models['t'].entity)
+	model.setup_rawtransformationschain(trex.models['t'].entity, 't', trex.scale)
 
 	model.move.setpos('t', 0.0, 0.0, 0.0)
 	

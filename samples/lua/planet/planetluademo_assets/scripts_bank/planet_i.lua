@@ -417,6 +417,7 @@ spacebox_passes_bindings =
 	}
 }
 spaceboxmod.view.load('spacebox0', spacebox_passes_bindings)
+model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', {x = 1000.0, y = 1000.0, z = 1000.0 } )
 
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
@@ -521,7 +522,6 @@ planet_passes_bindings =
 
 planet_name = 'Resurgam'
 planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr)
-
 
 resurgam_planet_entity = planetmod.models[planet_name].entity
 resurgam_planet_config = planetmod.models[planet_name].specific_config

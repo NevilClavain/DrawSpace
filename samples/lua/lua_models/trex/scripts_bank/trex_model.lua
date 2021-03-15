@@ -274,6 +274,6 @@ trex.view.load = function(p_entity_id, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('trex model', trex.createlitmodelview, p_passes_bindings, trex.anims.parameters, trex.scale, p_entity_id)
+    model.view.load('trex model', trex.createlitmodelview, p_passes_bindings, trex.anims.parameters, p_entity_id)
   end  
 end

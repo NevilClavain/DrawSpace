@@ -138,6 +138,6 @@ spaceboxmod.view.load = function(p_entity_id, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('spacebox model', spaceboxmod.createmodelview, p_passes_bindings, nil, {x = 1000.0, y = 1000.0, z = 1000.0}, p_entity_id)
+    model.view.load('spacebox model', spaceboxmod.createmodelview, p_passes_bindings, nil, p_entity_id)
   end  
 end

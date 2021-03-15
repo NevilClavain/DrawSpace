@@ -1,7 +1,7 @@
 
 model.view = {}
 
-model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_initial_scale, p_entity_id, p_specific_config)
+model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_entity_id, p_specific_config)
 
   local entity
   if p_specific_config == nil then 
@@ -21,6 +21,7 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindi
     end
   end
 
+  --[[
   if entity:has_aspect(TRANSFORM_ASPECT) > 0 then
          
       -- we fall here if transform aspect has been added from model file
@@ -75,7 +76,7 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindi
       model.transformations[p_entity_id] = transform_entry
         
   end
-
+  ]]
 
   local passes_shaders_update_func = {}
   for k, v in pairs(p_passes_bindings) do

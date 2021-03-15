@@ -392,7 +392,7 @@ spacebox_passes_bindings =
 	}
 }
 spaceboxmod.view.load('spacebox0', spacebox_passes_bindings)
-
+model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', {x = 1000.0, y = 1000.0, z = 1000.0 } )
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
