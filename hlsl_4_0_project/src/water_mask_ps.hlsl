@@ -60,7 +60,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
 
         float2 mt = input.TexCoord0.xy + txBump.Sample(SamplerBump, input.TexCoord0).xy;
-        float2 mt2 = input.TexCoord0.xy + 0.05 * txBump.Sample(SamplerBump, input.TexCoord0).xy;
+        float2 mt2 = input.TexCoord0.xy + 0.25 * txBump.Sample(SamplerBump, input.TexCoord0).xy;
 
         float4 refrac = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, mt2);
         float4 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
