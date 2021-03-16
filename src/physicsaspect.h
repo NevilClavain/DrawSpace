@@ -52,17 +52,12 @@ protected:
 
     std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies; // entites ger�es "sous" l'entite-world physique possedant cet aspect
 
-    //std::set<DrawSpace::Core::Entity*>                              m_bodies_set; // les memes entities que dans m_bodies
-
-    //void                on_added_bodyentity( DrawSpace::Core::Entity* p_entity );
-    //void                on_removed_bodyentity( DrawSpace::Core::Entity* p_entity );
 
 public:
 
     PhysicsAspect( void );
     ~PhysicsAspect( void );
     void StepSimulation( void );
-    //void UpdateBodiesList( const std::set<DrawSpace::Core::Entity*>& p_list );
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
 
@@ -72,6 +67,10 @@ public:
 
     void RegisterRigidBody(DrawSpace::Core::Entity* p_entity);
     void UnregisterRigidBody( btRigidBody* p_rigidbody );
+
+    void RegisterCollider(DrawSpace::Core::Entity* p_entity);
+    void UnregisterCollider(btRigidBody* p_rigidbody);
+
 };
 }
 }

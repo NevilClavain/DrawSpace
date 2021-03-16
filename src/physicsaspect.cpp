@@ -26,6 +26,8 @@
 #include "vector.h"
 #include "timemanager.h"
 
+#include "collisionaspect.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
@@ -73,75 +75,33 @@ void PhysicsAspect::UnregisterRigidBody( btRigidBody* p_rigidbody )
 {
     if( m_bodies.count( p_rigidbody ) )
     {
-        //m_bodies_set.erase( m_bodies[p_rigidbody] );
         m_bodies.erase( p_rigidbody );
     }
 }
 
 
-/*
-void PhysicsAspect::on_added_bodyentity( Entity* p_entity )
+void PhysicsAspect::RegisterCollider(DrawSpace::Core::Entity* p_entity)
 {
-    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-    btRigidBody* bd = body_aspect->Init();
+    CollisionAspect* collision_aspect{ p_entity->GetAspect<CollisionAspect>() };
+    if (!collision_aspect)
+    {
+        _DSEXCEPTION("Entity has no collision aspect")
+    }
+
+    btRigidBody* bd = collision_aspect->Init();
 
     m_bodies[bd] = p_entity;
-    body_aspect->RegisterPhysicalAspect( this );
- }
+    collision_aspect->RegisterPhysicalAspect(this);
+}
 
-void PhysicsAspect::on_removed_bodyentity( Entity* p_entity )
+void PhysicsAspect::UnregisterCollider(btRigidBody* p_rigidbody)
 {
-    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-
-    if( body_aspect )
+    if (m_bodies.count(p_rigidbody))
     {
-        btRigidBody* bd = body_aspect->GetRigidBody();
-
-        if( bd )
-        {
-            m_bodies.erase( bd );
-            body_aspect->Release();
-        }
+        m_bodies.erase(p_rigidbody);
     }
 }
 
-
-void PhysicsAspect::UpdateBodiesList( const std::set<Entity*>& p_list )
-{    
-    for( auto it = p_list.begin(); it != p_list.end(); ++it )
-    {
-        Entity* curr_entity = *it; 
-
-        if( 0 == m_bodies_set.count( curr_entity ) )
-        {
-            on_added_bodyentity( curr_entity );
-            m_bodies_set.insert( curr_entity );
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////
-
-    std::vector<Entity*> to_remove;
-    for( auto it = m_bodies_set.begin(); it != m_bodies_set.end(); ++it )
-    {
-        //chercher dans p_list...
-        Entity* curr_entity = *it;
-
-        if( 0 == p_list.count( curr_entity ) )
-        {
-            // cette entite n'est pas dans la liste fournie en entree -> a ete retiree du graph
-            on_removed_bodyentity( curr_entity );
-            to_remove.push_back( curr_entity );
-        }
-    }
-
-    for( size_t i = 0; i < to_remove.size(); ++i )
-    {
-        // effacer de m_bodies_set
-        m_bodies_set.erase( to_remove[i] );
-    }
-}
-*/
 
 void PhysicsAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 {
@@ -231,11 +191,19 @@ void PhysicsAspect::StepSimulation( void )
 
         for( auto it = m_bodies.begin(); it != m_bodies.end(); ++it )
         {
-            BodyAspect* body_aspect = it->second->GetAspect<BodyAspect>();
-
             ComponentList<bool> bools;
-            body_aspect->GetComponentsByType<bool>( bools );
 
+            BodyAspect* body_aspect = it->second->GetAspect<BodyAspect>();
+            if (body_aspect)
+            {
+                body_aspect->GetComponentsByType<bool>(bools);
+            }
+            else
+            {
+                CollisionAspect* coll_aspect = it->second->GetAspect<CollisionAspect>();
+                coll_aspect->GetComponentsByType<bool>(bools);
+            }
+           
             if( bools.size() < 1 )
             {
                 _DSEXCEPTION( "Bad number of bool components for BodyAspect" )
@@ -264,10 +232,19 @@ void PhysicsAspect::StepSimulation( void )
             {
                 if( numContacts > 0 )
                 {
-                    BodyAspect* body_aspect = m_bodies[obA]->GetAspect<BodyAspect>();
-
                     ComponentList<bool> bools;
-                    body_aspect->GetComponentsByType<bool>( bools );
+
+                    BodyAspect* body_aspect = m_bodies[obA]->GetAspect<BodyAspect>();
+                    if (body_aspect)
+                    {
+                        body_aspect->GetComponentsByType<bool>(bools);
+                    }
+                    else
+                    {
+                        CollisionAspect* coll_aspect = m_bodies[obA]->GetAspect<CollisionAspect>();
+                        coll_aspect->GetComponentsByType<bool>(bools);
+                    }
+                    
                     if (bools.size() > 0)
                     {
                         bools[0]->getPurpose() = true;
@@ -278,10 +255,20 @@ void PhysicsAspect::StepSimulation( void )
             {
                 if( numContacts > 0 )
                 {
+                    ComponentList<bool> bools;
+
                     BodyAspect* body_aspect = m_bodies[obB]->GetAspect<BodyAspect>();
 
-                    ComponentList<bool> bools;
-                    body_aspect->GetComponentsByType<bool>( bools );
+                    if (body_aspect)
+                    {
+                        body_aspect->GetComponentsByType<bool>(bools);
+                    }
+                    else
+                    {
+                        CollisionAspect* coll_aspect = m_bodies[obB]->GetAspect<CollisionAspect>();
+                        coll_aspect->GetComponentsByType<bool>(bools);
+                    }
+                    
                     if (bools.size() > 0)
                     {
                         bools[0]->getPurpose() = true;

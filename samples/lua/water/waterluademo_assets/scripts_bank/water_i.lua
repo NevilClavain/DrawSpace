@@ -45,7 +45,7 @@ function( event, resource_path, context )
        rg:update_renderingqueues()
 
        if context == "init" then
-         root_entity:register_rigidbody(land.models['l'].entity)
+         root_entity:register_collider(land.models['l'].entity)
 		 root_entity:register_rigidbody(metalcube.models['cube'].entity)
 		 root_entity:register_rigidbody(spherebump.models['sphere'].entity)
 
@@ -95,7 +95,6 @@ rendercontext:add_shaderparam("water_color", 1, 0)
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
 rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
---rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 0.5, 0.68, 0.95, 1.0)
 rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
 
 
@@ -207,6 +206,16 @@ land_passes_bindings =
 land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_bindings)
 eg:add_child('root', 'l', land.models['l'].entity)
 
+ land_pos_mat = Matrix()
+ land_pos_mat:translation( 0.0, skydome.innerRadius, 0.0 )
+
+ land_transform = RawTransform()
+ land_transform:configure(land.models['l'].entity,0)
+
+ land_transform:add_matrix( "pos", land_pos_mat )
+
+
+
 metalcube_passes_bindings = 
 {
 	binding_0 = 
@@ -223,7 +232,7 @@ metalcube_passes_bindings =
 	}
 }
 
-metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 0.7, z = 0.0}, metalcube_passes_bindings)
+metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 1.7, z = 0.0}, metalcube_passes_bindings)
 eg:add_child('root', 'cube', metalcube.models['cube'].entity)
 
 
@@ -279,7 +288,6 @@ waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	
---model.camera.mvt:set_pos(0.0, 8.0, 30.0)
 
 model.env.light.setstate( TRUE )
 	
@@ -287,8 +295,6 @@ model.env.light.setsphericaldir(0.0,50.0)
 
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
---model.camera.mvt:set_pos(0.0, skydome.innerRadius + 8.0, 20.0)
---model.camera.mvt:set_pos(0.0, 8.0, 0.0)
 
 
 model.camera.speed = 50.0

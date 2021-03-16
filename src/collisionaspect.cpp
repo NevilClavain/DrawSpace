@@ -45,9 +45,9 @@ CollisionAspect::~CollisionAspect(void)
 
 btRigidBody* CollisionAspect::Init(void)
 {
-    if (!m_initialized)
+    if (m_initialized)
     {
-        _DSEXCEPTION("bodyaspect not initialized")
+        _DSEXCEPTION("collisionaspect already initialized")
     }
 
     Matrix attitude_mat;
@@ -176,7 +176,7 @@ void CollisionAspect::Release(void)
 {
     if (!m_initialized)
     {
-        _DSEXCEPTION("bodyaspect not initialized !")
+        _DSEXCEPTION("collisionaspect not initialized !")
     }
 
     _DRAWSPACE_DELETE_(m_motionState);
@@ -193,7 +193,7 @@ void CollisionAspect::Release(void)
     if (m_world)
     {
         m_world->removeRigidBody(m_rigidBody);
-        m_physical_aspect_owner->UnregisterRigidBody(m_rigidBody);
+        m_physical_aspect_owner->UnregisterCollider(m_rigidBody);
 
         m_world = NULL;
         m_physical_aspect_owner = NULL;
@@ -211,33 +211,30 @@ void CollisionAspect::Release(void)
 
 void CollisionAspect::Update(Entity* p_owner_entity)
 {
-    if (!m_initialized)
+    if (m_initialized)
     {
-        _DSEXCEPTION("bodyaspect not initialized")
-    }
+        // read entity world transform, to set it into our physics collider
+        TransformAspect* transform_aspect{ p_owner_entity->GetAspect<TransformAspect>() };
+        if (transform_aspect)
+        {
+            Matrix world;
+            transform_aspect->GetWorldTransform(world);
 
-    // read entity world transform, to set it into our physics collider
-    TransformAspect* transform_aspect{ p_owner_entity->GetAspect<TransformAspect>() };
-    if (transform_aspect)
-    {
-        Matrix world;
-        transform_aspect->GetWorldTransform(world);
+            btScalar    btmat[16];
+            btTransform bt_transform;
 
-        btScalar    btmat[16];
-        btTransform bt_transform;
-
-        convert_matrix_to_bt(world, btmat);
-        bt_transform.setFromOpenGLMatrix(btmat);
-        m_motionState->m_graphicsWorldTrans = bt_transform;
+            convert_matrix_to_bt(world, btmat);
+            bt_transform.setFromOpenGLMatrix(btmat);
+            m_motionState->m_graphicsWorldTrans = bt_transform;
+        }
     }
 }
 
 void CollisionAspect::RegisterPhysicalAspect(PhysicsAspect* p_physical_aspect)
 {
-
     if (!m_initialized)
     {
-        _DSEXCEPTION("bodyaspect not initialized")
+        _DSEXCEPTION("collisionaspect not initialized")
     }
 
     if (NULL == m_physical_aspect_owner)

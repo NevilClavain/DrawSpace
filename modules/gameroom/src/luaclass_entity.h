@@ -28,11 +28,14 @@
 #include "entity.h"
 #include "luna.h"
 #include "componentcontainer.h"
+#include "meshe.h"
 
 class LuaClass_Entity
 {
 protected:
     DrawSpace::Core::Entity m_entity;
+    int                     m_collisionshape_type;
+    DrawSpace::Core::Meshe  m_collisionmeshe;
 
     using AspectType = enum
     {
@@ -80,7 +83,12 @@ public:
 	int LUA_updategravitydirection(lua_State* p_L);
 	int LUA_updategravitystate(lua_State* p_L);
     int LUA_registerrigidbody(lua_State* p_L);
+    int LUA_registercollider(lua_State* p_L);
     int LUA_releaseworld( lua_State* p_L );
+
+    int LUA_configurecollisionshape(lua_State* p_L);
+    int LUA_configurecollision(lua_State* p_L);
+    int LUA_releasecollision(lua_State* p_L);
 
     int LUA_configurecamera( lua_State* p_L );
 	int LUA_readcameraparams(lua_State* p_L);

@@ -64,7 +64,11 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "update_gravitydirection", &LuaClass_Entity::LUA_updategravitydirection },
 	{ "update_gravitystate", &LuaClass_Entity::LUA_updategravitystate },
 	{ "register_rigidbody", &LuaClass_Entity::LUA_registerrigidbody },
+	{ "register_collider", &LuaClass_Entity::LUA_registercollider },
     { "release_world", &LuaClass_Entity::LUA_releaseworld },
+	{ "configure_collision", &LuaClass_Entity::LUA_configurecollision },
+	{ "configure_collisionshape", &LuaClass_Entity::LUA_configurecollisionshape },
+	{ "release_collision", &LuaClass_Entity::LUA_releasecollision },
     { "configure_camera", &LuaClass_Entity::LUA_configurecamera },
 	{ "read_cameraparams", &LuaClass_Entity::LUA_readcameraparams },
     { "release_camera", &LuaClass_Entity::LUA_releasecamera },
@@ -420,6 +424,28 @@ int LuaClass_Entity::LUA_registerrigidbody(lua_State* p_L)
 	return 0;
 }
 
+int LuaClass_Entity::LUA_registercollider(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::register_collider : argument(s) missing");
+	}
+
+	LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+
+	PhysicsAspect* physics_aspect{ m_entity.GetAspect<PhysicsAspect>() };
+	if (NULL == physics_aspect)
+	{
+		LUA_ERROR("Entity::register_collider : physics aspect doesnt exists in this entity!");
+	}
+
+	physics_aspect->RegisterCollider(&lua_ent->GetEntity());
+
+	return 0;
+}
+
+
 int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
 {
     PhysicsAspect* physics_aspect = m_entity.GetAspect<PhysicsAspect>();
@@ -432,6 +458,120 @@ int LuaClass_Entity::LUA_releaseworld( lua_State* p_L )
     physics_aspect->RemoveComponent<bool>( "gravity_state" );
 
     return 0;
+}
+
+int LuaClass_Entity::LUA_configurecollision(lua_State* p_L)
+{
+	CollisionAspect* collision_aspect = m_entity.GetAspect<CollisionAspect>();
+	if (NULL == collision_aspect)
+	{
+		LUA_ERROR("Entity::configure_collision : collision aspect doesnt exists in this entity!");
+	}
+
+	// add bool component for contact state
+	collision_aspect->AddComponent<bool>("contact_state", false);
+
+	// add bool component for linear speed stop
+	collision_aspect->AddComponent<bool>("stop_linear_speed", false);
+
+	// add bool component for angular speed stop
+	collision_aspect->AddComponent<bool>("stop_angular_speed", false);
+
+	return 0;
+}
+
+int LuaClass_Entity::LUA_configurecollisionshape(lua_State* p_L)
+{
+	CollisionAspect* collision_aspect = m_entity.GetAspect<CollisionAspect>();
+	if (NULL == collision_aspect)
+	{
+		LUA_ERROR("Entity::configure_collisionshape : collision aspect doesnt exists in this entity!");
+	}
+
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::configure_collisionshape : argument(s) missing");
+	}
+
+	m_collisionshape_type = luaL_checkint(p_L, 1);
+
+	switch (m_collisionshape_type)
+	{
+		case 0: // SHAPE_BOX
+		{
+			if (argc < 4)
+			{
+				LUA_ERROR("Entity::configure_collisionshape : argument(s) missing");
+			}
+			dsreal xdim = luaL_checknumber(p_L, 2);
+			dsreal ydim = luaL_checknumber(p_L, 3);
+			dsreal zdim = luaL_checknumber(p_L, 4);
+
+			collision_aspect->AddComponent<CollisionAspect::BoxCollisionShape>("shape", Vector(xdim, ydim, zdim, 1.0));
+		}
+		break;
+
+		case 1: // SHAPE_SPHERE
+		{
+			if (argc < 2)
+			{
+				LUA_ERROR("Entity::configure_collisionshape : argument(s) missing");
+			}
+			dsreal ray = luaL_checknumber(p_L, 2);
+
+			collision_aspect->AddComponent<CollisionAspect::SphereCollisionShape>("shape", ray);
+		}
+		break;
+
+		case 2: // SHAPE_MESHE
+		{
+
+			ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
+			if (!resources_aspect)
+			{
+				LUA_ERROR("Entity::configure_collisionshape : attached entity has no resources aspect !");
+			}
+
+
+			if (argc < 3)
+			{
+				LUA_ERROR("Entity::configure_collisionshape : argument(s) missing");
+			}
+			dsstring meshe_path = luaL_checkstring(p_L, 2);			
+			dsstring meshe_name = luaL_checkstring(p_L, 3);
+
+
+			dsstring res_id = "collision_" + meshe_path;
+
+			collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>("shape", m_collisionmeshe);
+			Meshe* mesheref = &collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>("shape")->getPurpose().m_meshe;
+
+			m_collisionmeshe.SetPath(meshe_path);
+
+			resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(res_id,
+				std::make_tuple(mesheref, meshe_path, meshe_name, false));
+
+		}
+		break;
+	}
+	
+	return 0;
+}
+
+int LuaClass_Entity::LUA_releasecollision(lua_State* p_L)
+{
+	CollisionAspect* collision_aspect = m_entity.GetAspect<CollisionAspect>();
+	if (NULL == collision_aspect)
+	{
+		LUA_ERROR("Entity::release_collision : collision aspect doesnt exists in this entity!");
+	}
+
+	collision_aspect->RemoveComponent<bool>("contact_state");
+	collision_aspect->RemoveComponent<bool>("stop_linear_speed");
+	collision_aspect->RemoveComponent<bool>("stop_angular_speed");
+
+	return 0;
 }
 
 
