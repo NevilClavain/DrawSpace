@@ -99,6 +99,7 @@
 #include "transformaspect.h"
 #include "rawtransformaspectimpl.h"
 #include "bodytransformaspectimpl.h"
+#include "rigidbodytransformaspectimpl.h"
 #include "orbittransformaspectimpl.h"
 #include "revolutiontransformaspectimpl.h"
 

@@ -72,6 +72,8 @@ ${CMAKE_SOURCE_DIR}/src/transformaspect.h
 )
 
 source_group(aspectimplementations FILES 
+${CMAKE_SOURCE_DIR}/src/rigidbodytransformaspectimpl.cpp 
+${CMAKE_SOURCE_DIR}/src/rigidbodytransformaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/bodytransformaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/bodytransformaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/impostorsrenderingaspectimpl.cpp 

@@ -42,7 +42,6 @@ public:
 	~LuaClass_RevolutionTransform( void );
 
     int LUA_configure( lua_State* p_L );
-    int LUA_gettimefrom(lua_State* p_L);
     int LUA_release( lua_State* p_L );
 
 
