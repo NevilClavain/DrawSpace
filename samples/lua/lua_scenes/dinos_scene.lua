@@ -13,8 +13,8 @@
       if event == ALL_ASSETS_LOADED then
 
 	  
-         root_entity:register_rigidbody(continent.models['continent'].entity)
-		 root_entity:register_rigidbody(boulder.models['rock'].entity)
+         root_entity:register_collider(continent.models['continent'].entity)
+		 root_entity:register_collider(boulder.models['rock'].entity)
 		 root_entity:register_rigidbody(spherebump.models['s'].entity)
 		 root_entity:register_rigidbody(spherebump.models['s2'].entity)
 		 root_entity:register_rigidbody(metalcube.models['c'].entity)
@@ -75,7 +75,16 @@
 	continent.view.load('continent', {x = 0.0, y = skydome.innerRadius, z = 0.0}, continent_passes_config)
 	eg:add_child('root', 'continent', continent.models['continent'].entity)
 	
-	
+	cont_pos_mat = Matrix()
+    cont_pos_mat:translation( 0.0, skydome.innerRadius, 0.0 )
+
+    cont_transform = RawTransform()
+    cont_transform:configure(continent.models['continent'].entity,0)
+
+    cont_transform:add_matrix( "pos", cont_pos_mat )
+
+
+
 	skydome_passes_config = 
 	{
 		layer_0 = 
@@ -103,6 +112,14 @@
 	}
 	boulder.view.load('rock', {x = -4010.0, y = skydome.innerRadius, z = -2740.0}, boulder_passes_config)
 	eg:add_child('root', 'rock', boulder.models['rock'].entity)
+
+	boulder_pos_mat = Matrix()
+    boulder_pos_mat:translation( -4010.0, skydome.innerRadius, -2740.0 )
+
+    boulder_transform = RawTransform()
+    boulder_transform:configure(boulder.models['rock'].entity,0)
+
+    boulder_transform:add_matrix( "pos", boulder_pos_mat )
 
 	
 	spherebump_passes_config = 

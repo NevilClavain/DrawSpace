@@ -144,20 +144,12 @@ continent.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos
   entity, renderer = commons.create_rendered_meshe(continent.rendering_config, 'continent.ac', 'g TerrainMesh', p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
-  entity:add_aspect(BODY_ASPECT)
-  local body=Body()
-  body:attach_toentity(entity,0)
-  body:configure_shape(SHAPE_MESHE, 'continent.ac', 'g TerrainMesh')
+  entity:add_aspect(COLLISION_ASPECT)
 
-  local pos_mat = Matrix()
-  pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  body:configure_attitude(pos_mat)
-  body:configure_mode(COLLIDER_MODE)
+  entity:configure_collision()
+  entity:configure_collisionshape(SHAPE_MESHE, 'continent.ac', 'g TerrainMesh')
 
-  
-  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
-
-  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
+  local pair = { ['entity'] = entity, ['renderer'] = renderer }
 
   continent.models[p_entity_id] = pair
 
@@ -169,12 +161,8 @@ continent.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local entity = continent.models[p_entity_id]['entity']
   local renderer = continent.models[p_entity_id]['renderer']
 
-  local body = continent.models[p_entity_id]['body']
-
-  body:release()
-  body:detach_fromentity(entity)
-
-  entity:remove_aspect(BODY_ASPECT)
+  entity:release_collision()
+  entity:remove_aspect(COLLISION_ASPECT)
 
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
@@ -182,7 +170,6 @@ continent.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local pair = continent.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
-  pair['body'] = nil
 
   continent.models[p_entity_id] = nil
 end

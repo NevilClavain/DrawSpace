@@ -145,19 +145,12 @@ boulder.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, 
   entity, renderer = commons.create_rendered_meshe(boulder.rendering_config, 'rock2.ac', 'wavefront obj', p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
   
-  entity:add_aspect(BODY_ASPECT)
-  local body=Body()
-  body:attach_toentity(entity,0)
-  body:configure_shape(SHAPE_MESHE, 'rock2.ac', 'wavefront obj')
+  entity:add_aspect(COLLISION_ASPECT)
 
-  local pos_mat = Matrix()
-  pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  body:configure_attitude(pos_mat)
-  body:configure_mode(COLLIDER_MODE)
- 
-  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
+  entity:configure_collision()
+  entity:configure_collisionshape(SHAPE_MESHE, 'rock2.ac', 'wavefront obj')
 
-  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
+  local pair = { ['entity'] = entity, ['renderer'] = renderer }
 
   boulder.models[p_entity_id] = pair
 
@@ -169,12 +162,8 @@ boulder.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local entity = boulder.models[p_entity_id]['entity']
   local renderer = boulder.models[p_entity_id]['renderer']
 
-  local body = boulder.models[p_entity_id]['body']
-
-  body:release()
-  body:detach_fromentity(entity)
-
-  entity:remove_aspect(BODY_ASPECT)
+  entity:release_collision()
+  entity:remove_aspect(COLLISION_ASPECT)
 
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
@@ -182,7 +171,6 @@ boulder.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local pair = boulder.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
-  pair['body'] = nil
 
   boulder.models[p_entity_id] = nil
 end
