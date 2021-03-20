@@ -72,7 +72,7 @@
 			lit_shader_update_func = continent.update_lit_from_scene_env
 		}
 	}	
-	continent.view.load('continent', {x = 0.0, y = skydome.innerRadius, z = 0.0}, continent_passes_config)
+	continent.view.load('continent', continent_passes_config)
 	eg:add_child('root', 'continent', continent.models['continent'].entity)
 	
 	cont_pos_mat = Matrix()
@@ -110,7 +110,7 @@
 			lit_shader_update_func = boulder.update_lit_from_scene_env
 		}
 	}
-	boulder.view.load('rock', {x = -4010.0, y = skydome.innerRadius, z = -2740.0}, boulder_passes_config)
+	boulder.view.load('rock', boulder_passes_config)
 	eg:add_child('root', 'rock', boulder.models['rock'].entity)
 
 	boulder_pos_mat = Matrix()
@@ -161,6 +161,7 @@
 	   }
     }
     spaceboxmod.view.load('spacebox0', spacebox_passes_config)
+	model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', {x = 1000.0, y = 1000.0, z = 1000.0 } )
 	eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 	
 

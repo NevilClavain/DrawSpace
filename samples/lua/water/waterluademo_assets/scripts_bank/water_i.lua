@@ -203,7 +203,7 @@ land_passes_bindings =
 	}
 
 }
-land.view.load('l', {x = 0.0, y = skydome.innerRadius, z = 0.0}, land_passes_bindings)
+land.view.load('l', land_passes_bindings)
 eg:add_child('root', 'l', land.models['l'].entity)
 
  land_pos_mat = Matrix()

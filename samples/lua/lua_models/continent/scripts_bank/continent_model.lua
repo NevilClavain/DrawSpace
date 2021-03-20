@@ -136,7 +136,7 @@ continent.update_lit_from_scene_env = function( p_pass_id, p_environment_table, 
 
 end
 
-continent.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
+continent.createlitmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
   
   local entity
   local renderer
@@ -197,7 +197,7 @@ continent.view.unload = function(p_entity_id)
   end
 end
 
-continent.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
+continent.view.load = function(p_entity_id, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(continent.models) do
@@ -210,7 +210,7 @@ continent.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('continent model', continent.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
+    model.view.load('continent model', continent.createlitmodelview, p_passes_bindings, nil, p_entity_id)
   end
 end
 

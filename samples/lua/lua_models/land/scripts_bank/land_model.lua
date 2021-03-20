@@ -179,7 +179,7 @@ land.update_from_scene_env_mirror = function( p_pass_id, p_environment_table, p_
 end
 
 
-land.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
+land.createlitmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
   
   local entity
   local renderer
@@ -242,7 +242,7 @@ land.view.unload = function(p_entity_id)
   end
 end
 
-land.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
+land.view.load = function(p_entity_id, p_passes_bindings)
 
   found_id = FALSE
   for k, v in pairs(land.models) do
@@ -255,6 +255,6 @@ land.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('land model', land.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
+    model.view.load('land model', land.createlitmodelview, p_passes_bindings, nil, p_entity_id)
   end  
 end
