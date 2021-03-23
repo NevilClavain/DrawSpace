@@ -112,17 +112,16 @@ bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialp
   entity, renderer = commons.create_rendered_meshe(bellerophon.rendering_config, 'bellerophon.ac', 'wavefront obj', p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
   
-  entity:add_aspect(BODY_ASPECT)
-  local body=Body()
-  body:attach_toentity(entity,0)
-  body:configure_shape(SHAPE_BOX, 110.0, 80.0, 170.0)
+  local rigibody_transform = RigdBodyTransform()
 
+  rigibody_transform:attach_toentity(entity,0)
+  rigibody_transform:configure_shape(SHAPE_BOX, 110.0, 80.0, 170.0)
   local pos_mat = Matrix()
   pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  body:configure_attitude(pos_mat)
-  body:configure_mode(BODY_MODE)
+  rigibody_transform:configure_attitude(pos_mat)
+  
  
-  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['body'] = body }
+  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['rigibody_transform'] = rigibody_transform }
 
   bellerophon.models[p_entity_id] = pair
 
@@ -133,13 +132,9 @@ bellerophon.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
   local entity = bellerophon.models[p_entity_id]['entity']
   local renderer = bellerophon.models[p_entity_id]['renderer']
+  local rigibody_transform = bellerophon.models[p_entity_id]['rigibody_transform']
 
-  local body = bellerophon.models[p_entity_id]['body']
-
-  body:release()
-  body:detach_fromentity(entity)
-
-  entity:remove_aspect(BODY_ASPECT)
+  rigibody_transform:release()
 
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
@@ -147,7 +142,7 @@ bellerophon.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local pair = bellerophon.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
-  pair['body'] = nil
+  pair['rigibody_transform'] = nil
 
   bellerophon.models[p_entity_id] = nil
 end

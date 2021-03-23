@@ -680,7 +680,9 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
         entity_name = infos_aspect->GetComponent<dsstring>( "entity_name" )->getPurpose();
 
         CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
-        BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+
+        //BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+        TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
         {
@@ -694,7 +696,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                 _DSEXCEPTION("entities with same name not allowed")
             }
 
-            if( body_aspect )
+            if(transform_aspect)
             {
                 RegisteredBody reg_body;
 

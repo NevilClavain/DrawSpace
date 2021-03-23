@@ -238,7 +238,6 @@ spherebump.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpo
   local pair = {}
   pair['entity'] = entity
   pair['renderer'] = renderer
-
   pair['rigibody_transform'] = rigibody_transform
 
   spherebump.models[p_entity_id] = pair
@@ -260,6 +259,7 @@ spherebump.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local pair = spherebump.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
+  pair['rigibody_transform'] = nil
 
   spherebump.models[p_entity_id] = nil
 end

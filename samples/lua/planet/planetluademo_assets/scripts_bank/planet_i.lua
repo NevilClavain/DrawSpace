@@ -183,7 +183,7 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-      bellerophon_body:update_forcestate("main prop", TRUE)
+      bellerophon_rigibody_transform:update_forcestate("main prop", TRUE)
 	end
   --W key
   elseif key == 87 then
@@ -192,33 +192,33 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-      bellerophon_body:update_forcestate("reverse prop", TRUE)
+      bellerophon_rigibody_transform:update_forcestate("reverse prop", TRUE)
 	end    
   
   elseif key == 16 then -- left shift
 
   elseif key == 65 then --'A'
-    bellerophon_body:update_torquestate("roll_left", TRUE)
+    bellerophon_rigibody_transform:update_torquestate("roll_left", TRUE)
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 90 then --'Z'
-    bellerophon_body:update_torquestate("roll_right", TRUE)
+    bellerophon_rigibody_transform:update_torquestate("roll_right", TRUE)
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 37 then --VK_LEFT
-    bellerophon_body:update_torquestate("yaw_left", TRUE)
+    bellerophon_rigibody_transform:update_torquestate("yaw_left", TRUE)
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 38 then --VK_UP
-    bellerophon_body:update_torquestate("pitch_down", TRUE)
+    bellerophon_rigibody_transform:update_torquestate("pitch_down", TRUE)
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 39 then --VK_RIGHT
-    bellerophon_body:update_torquestate("yaw_right", TRUE)
+    bellerophon_rigibody_transform:update_torquestate("yaw_right", TRUE)
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 40 then --VK_DOWN
-    bellerophon_body:update_torquestate("pitch_up", TRUE)
+    bellerophon_rigibody_transform:update_torquestate("pitch_up", TRUE)
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 68 then --'D'
@@ -255,7 +255,7 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-      bellerophon_body:update_forcestate("main prop", FALSE)
+      bellerophon_rigibody_transform:update_forcestate("main prop", FALSE)
 	end    
 
   --W key
@@ -266,7 +266,7 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 	  model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 	else
-      bellerophon_body:update_forcestate("reverse prop", FALSE)
+      bellerophon_rigibody_transform:update_forcestate("reverse prop", FALSE)
 	end    
 
   -- VK_F1
@@ -284,28 +284,28 @@ function( key )
     
 
   elseif key == 76 then --'L'
-    bellerophon_body:zero_speed()
+    bellerophon_rigibody_transform:zero_speed()
 
   elseif key == 77 then --'M'
-    bellerophon_body:zero_angularespeed()
+    bellerophon_rigibody_transform:zero_angularspeed()
 
   elseif key == 65 then --'A'
-    bellerophon_body:update_torquestate("roll_left", FALSE)
+    bellerophon_rigibody_transform:update_torquestate("roll_left", FALSE)
     
   elseif key == 90 then --'Z'
-    bellerophon_body:update_torquestate("roll_right", FALSE)
+    bellerophon_rigibody_transform:update_torquestate("roll_right", FALSE)
     
   elseif key == 37 then --VK_LEFT
-    bellerophon_body:update_torquestate("yaw_left", FALSE)
+    bellerophon_rigibody_transform:update_torquestate("yaw_left", FALSE)
     
   elseif key == 38 then --VK_UP
-    bellerophon_body:update_torquestate("pitch_down", FALSE)
+    bellerophon_rigibody_transform:update_torquestate("pitch_down", FALSE)
     
   elseif key == 39 then --VK_RIGHT
-    bellerophon_body:update_torquestate("yaw_right", FALSE)
+    bellerophon_rigibody_transform:update_torquestate("yaw_right", FALSE)
     
   elseif key == 40 then --VK_DOWN
-    bellerophon_body:update_torquestate("pitch_up", FALSE)
+    bellerophon_rigibody_transform:update_torquestate("pitch_up", FALSE)
     
 
   elseif key == 68 then --'D'
@@ -456,21 +456,21 @@ bellerophon_entity:add_aspect(INFOS_ASPECT)
 bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
 
 
-bellerophon_body = bellerophon.models['ship'].body
+bellerophon_rigibody_transform = bellerophon.models['ship'].rigibody_transform
 
-bellerophon_body:configure_mass(50.0)
+bellerophon_rigibody_transform:configure_mass(50.0)
 
-bellerophon_body:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_body:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
 
-bellerophon_body:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_body:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
 
-bellerophon_body:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_body:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
 
-bellerophon_body:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_body:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
 
 
 local planet_specific_config_descr =
@@ -604,11 +604,11 @@ function( layout, widget )
 
   elseif widget == "Button_0Rots" then
 
-    bellerophon_body:zero_angularespeed()
+    bellerophon_rigibody_transform:zero_angularspeed()
 
   elseif widget == "Button_0Transl" then
     
-	bellerophon_body:zero_speed()
+	bellerophon_rigibody_transform:zero_speed()
 
   end
 

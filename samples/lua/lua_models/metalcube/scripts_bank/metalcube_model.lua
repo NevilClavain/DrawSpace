@@ -229,25 +229,20 @@ metalcube.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos
   entity, renderer = commons.create_rendered_meshe(metalcube.rendering_config, 'tech.ac', 'box', p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
-  entity:add_aspect(BODY_ASPECT)
+  local rigibody_transform = RigdBodyTransform()
 
-  local cube_body=Body()
-
-  cube_body:attach_toentity(entity,0)
-  cube_body:configure_shape( SHAPE_BOX, 1.0, 1.0, 1.0)
-
+  rigibody_transform:attach_toentity(entity,0)
+  rigibody_transform:configure_shape(SHAPE_BOX, 1.0, 1.0, 1.0)
   local cube_pos_mat = Matrix()
   cube_pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  cube_body:configure_attitude(cube_pos_mat)
-  cube_body:configure_mass(7.0)
-  cube_body:configure_mode(BODY_MODE)
+  rigibody_transform:configure_attitude(cube_pos_mat)
+  rigibody_transform:configure_mass(7.0)
 
-  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
 
   local pair = {}
   pair['entity'] = entity
   pair['renderer'] = renderer
-  pair['body'] = cube_body
+  pair['rigibody_transform'] = rigibody_transform
 
   metalcube.models[p_entity_id] = pair
 
@@ -258,20 +253,17 @@ metalcube.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
   local entity = metalcube.models[p_entity_id]['entity']
   local renderer = metalcube.models[p_entity_id]['renderer']
-  local body = metalcube.models[p_entity_id]['body']
+  local rigibody_transform = metalcube.models[p_entity_id]['rigibody_transform']
 
-  body:release()
-  body:detach_fromentity(entity)
-
-  entity:remove_aspect(BODY_ASPECT)
-
+  rigibody_transform:release()
+  
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
 
   local pair = metalcube.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
-  pair['body'] = nil
+  pair['rigibody_transform'] = nil
 
   metalcube.models[p_entity_id] = nil
 end
