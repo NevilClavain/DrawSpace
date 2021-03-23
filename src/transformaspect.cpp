@@ -136,6 +136,11 @@ TimeAspect* TransformAspect::GetTimeAspectRef(void) const
 	return m_time_aspect;
 }
 
+std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> TransformAspect::GetTransformAspectImplsList(void) const
+{
+    return m_impls_list;
+}
+
 void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 {
     m_time_aspect = p_time_aspect;

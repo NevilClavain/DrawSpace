@@ -63,6 +63,8 @@ public:
     void DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj );
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
+
+    std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> GetTransformAspectImplsList(void) const;
 };
 }
 }

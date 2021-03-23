@@ -133,8 +133,6 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
             }
         }
 
-
-
         ComponentList<Matrix> mats;
         p_transformaspect->GetComponentsByType<Matrix>(mats);
 
@@ -144,7 +142,7 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
     }
 }
 
-void RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspect)
+btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspect)
 {
     if (m_initialized)
     {
@@ -262,6 +260,8 @@ void RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspect)
     m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
     m_initialized = true;
+
+    return m_rigidBody;
 }
 
 void RigidBodyTransformAspectImpl::RegisterPhysicalAspect(PhysicsAspect* p_physical_aspect)

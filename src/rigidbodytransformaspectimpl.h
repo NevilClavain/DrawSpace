@@ -195,7 +195,7 @@ public:
     RigidBodyTransformAspectImpl( void );
     virtual void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
 
-    void Init(Aspect::TransformAspect* p_transformaspect);
+    btRigidBody* Init(Aspect::TransformAspect* p_transformaspect);
 
     void RegisterPhysicalAspect(Aspect::PhysicsAspect* p_physical_aspect);
 

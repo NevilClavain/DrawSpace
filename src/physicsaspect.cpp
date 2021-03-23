@@ -26,12 +26,16 @@
 #include "vector.h"
 #include "timemanager.h"
 
+#include "transformaspect.h"
 #include "collisionaspect.h"
+#include "rigidbodytransformaspectimpl.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::AspectImplementations;
+using namespace DrawSpace::Interface::AspectImplementations;
 
 PhysicsAspect::PhysicsAspect( void ) :
 m_gravity_applied( false ),
@@ -59,15 +63,50 @@ void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
 {
     BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
 
-    if (!body_aspect)
+    if (body_aspect)
     {
-        _DSEXCEPTION("Entity has no body aspect")
+        btRigidBody* bd = body_aspect->Init();
+
+        m_bodies[bd] = p_entity;
+        body_aspect->RegisterPhysicalAspect(this);
     }
+    else
+    {
+        TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+        if (transform_aspect)
+        {
 
-    btRigidBody* bd = body_aspect->Init();
+            RigidBodyTransformAspectImpl* rigibody_transform_impl{ nullptr };
+            auto transformimpls_list{ transform_aspect->GetTransformAspectImplsList() };
 
-    m_bodies[bd] = p_entity;
-    body_aspect->RegisterPhysicalAspect(this);
+            for (auto& e : transformimpls_list)
+            {
+                TransformAspectImpl* impl = e.second;
+                rigibody_transform_impl = dynamic_cast<RigidBodyTransformAspectImpl*>(impl);
+
+                if (rigibody_transform_impl)
+                {
+                    break;
+                }
+            }
+            if (!rigibody_transform_impl)
+            {
+                _DSEXCEPTION("Entity has no rigidbody transform")
+            }
+            else
+            {
+                btRigidBody* bd{ rigibody_transform_impl->Init(transform_aspect) };
+
+                m_bodies[bd] = p_entity;
+                rigibody_transform_impl->RegisterPhysicalAspect(this);
+
+            }
+        }
+        else
+        {
+            _DSEXCEPTION("Entity has no transform aspect")
+        }
+    }
 }
 
 
@@ -201,7 +240,22 @@ void PhysicsAspect::StepSimulation( void )
             else
             {
                 CollisionAspect* coll_aspect = it->second->GetAspect<CollisionAspect>();
-                coll_aspect->GetComponentsByType<bool>(bools);
+                if (coll_aspect)
+                {
+                    coll_aspect->GetComponentsByType<bool>(bools);
+                }
+                else
+                {
+                    TransformAspect* transf_aspect = it->second->GetAspect<TransformAspect>();
+                    if (transf_aspect)
+                    {
+                        transf_aspect->GetComponentsByType<bool>(bools);
+                    }
+                    else
+                    {
+                        _DSEXCEPTION("No suitable aspect found for this entity")
+                    }
+                }                
             }
            
             if( bools.size() < 1 )
@@ -242,7 +296,22 @@ void PhysicsAspect::StepSimulation( void )
                     else
                     {
                         CollisionAspect* coll_aspect = m_bodies[obA]->GetAspect<CollisionAspect>();
-                        coll_aspect->GetComponentsByType<bool>(bools);
+                        if (coll_aspect)
+                        {
+                            coll_aspect->GetComponentsByType<bool>(bools);
+                        }
+                        else
+                        {
+                            TransformAspect* transf_aspect = m_bodies[obA]->GetAspect<TransformAspect>();
+                            if (transf_aspect)
+                            {
+                                transf_aspect->GetComponentsByType<bool>(bools);
+                            }
+                            else
+                            {
+                                _DSEXCEPTION("No suitable aspect found for this entity")
+                            }
+                        }                        
                     }
                     
                     if (bools.size() > 0)
@@ -266,7 +335,23 @@ void PhysicsAspect::StepSimulation( void )
                     else
                     {
                         CollisionAspect* coll_aspect = m_bodies[obB]->GetAspect<CollisionAspect>();
-                        coll_aspect->GetComponentsByType<bool>(bools);
+
+                        if (coll_aspect)
+                        {
+                            coll_aspect->GetComponentsByType<bool>(bools);
+                        }
+                        else
+                        {
+                            TransformAspect* transf_aspect = m_bodies[obB]->GetAspect<TransformAspect>();
+                            if (transf_aspect)
+                            {
+                                transf_aspect->GetComponentsByType<bool>(bools);
+                            }
+                            else
+                            {
+                                _DSEXCEPTION("No suitable aspect found for this entity")
+                            }
+                        }
                     }
                     
                     if (bools.size() > 0)

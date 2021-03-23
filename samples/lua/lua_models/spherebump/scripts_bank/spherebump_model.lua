@@ -226,25 +226,20 @@ spherebump.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpo
   entity, renderer = commons.create_rendered_meshe(spherebump.rendering_config, 'sphere.ac', 'sphere', p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
-  entity:add_aspect(BODY_ASPECT)
+  local rigibody_transform = RigdBodyTransform()
 
-  local sphere_body=Body()
-
-  sphere_body:attach_toentity(entity,0)
-  sphere_body:configure_shape( SHAPE_SPHERE, 1.0)
-
+  rigibody_transform:attach_toentity(entity,0)
+  rigibody_transform:configure_shape(SHAPE_SPHERE, 1.0)
   local sphere_pos_mat = Matrix()
   sphere_pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  sphere_body:configure_attitude(sphere_pos_mat)
-  sphere_body:configure_mass(35.0)
-  sphere_body:configure_mode(BODY_MODE)
-
-  --p_entitygraph:add_child(p_parent_entity_id,p_entity_id,entity)
-
+  rigibody_transform:configure_attitude(sphere_pos_mat)
+  rigibody_transform:configure_mass(35.0)
+ 
   local pair = {}
   pair['entity'] = entity
   pair['renderer'] = renderer
-  pair['body'] = sphere_body
+
+  pair['rigibody_transform'] = rigibody_transform
 
   spherebump.models[p_entity_id] = pair
 
@@ -255,20 +250,16 @@ spherebump.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
   local entity = spherebump.models[p_entity_id]['entity']
   local renderer = spherebump.models[p_entity_id]['renderer']
-  local body = spherebump.models[p_entity_id]['body']
+  local rigibody_transform = spherebump.models[p_entity_id]['rigibody_transform']
 
-  body:release()
-  body:detach_fromentity(entity)
-
-  entity:remove_aspect(BODY_ASPECT)
-
+  rigibody_transform:release()
+    
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
 
   local pair = spherebump.models[p_entity_id]
   pair['entity'] = nil
   pair['renderer'] = nil
-  pair['body'] = nil
 
   spherebump.models[p_entity_id] = nil
 end
