@@ -640,9 +640,7 @@ void MainService::clean_cubes( void )
 
     for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
     {
-        
-        m_dynamic_cubes[i].dynCubeEntity->RemoveAspect<BodyAspect>();
-
+        m_dynamic_cubes[i].dynCubeRigidBodyTransform->Release();
         m_dynamic_cubes[i].dynCubeRender->UnregisterFromRendering( m_rendergraph );
 
         m_dynamic_cubes[i].dynCubeEntityNode->Erase();
@@ -753,7 +751,7 @@ void MainService::create_dynamic_cube( void )
 
     cube.dynCubeRigidBodyTransform = _DRAWSPACE_NEW_(RigidBodyTransformAspectImpl, RigidBodyTransformAspectImpl);
 
-    TransformAspect* transform_aspect{ m_staticCubeEntity.AddAspect<TransformAspect>() };
+    TransformAspect* transform_aspect{ cube.dynCubeEntity->AddAspect<TransformAspect>() };
     transform_aspect->AddImplementation(0, cube.dynCubeRigidBodyTransform);
 
     // add bool component for contact state
