@@ -210,9 +210,9 @@ bool MainService::Init( void )
 
     
     create_ground();
-    create_cube( 0.0, 9.0, 10.0, m_cubeRender, m_cubeEntity);
-    create_cube(0.0, 15.0, 14.0, m_cube2Render, m_cube2Entity);
-    create_composition(-13.0, 28.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity);
+    create_cube( 0.0, 9.0, 10.0, m_cubeRender, m_cubeEntity, m_rigbody_cube_transformer);
+    create_cube(0.0, 15.0, 14.0, m_cube2Render, m_cube2Entity, m_rigbody_cube_transformer2);
+    create_composition(-13.0, 28.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity, m_rigbody_composition_transformer);
     create_screen_impostors();
     create_world_impostor();
 
@@ -445,10 +445,6 @@ void MainService::create_world_impostor( void )
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>( "0", id );
     
-
-
-
-    //ImpostorsRenderingAspectImpl::RenderingNodeProxy* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNodeProxy();
     RenderingNode* impostors_texturepass = rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
 
 
@@ -623,7 +619,8 @@ void MainService::create_screen_impostors( void )
     transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
 }
 
-void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity )
+void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
+                                DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl)
 {
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
@@ -664,31 +661,33 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect{ p_entity.AddAspect<TransformAspect>() };
+    transform_aspect->AddImplementation(0, &p_rigidBodyTransformAspectImpl);
 
-    BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
+    // add bool component for contact state
+    transform_aspect->AddComponent<bool>("contact_state", false);
+
+    // add bool component for linear speed stop
+    transform_aspect->AddComponent<bool>("stop_linear_speed", false);
+
+    // add bool component for angular speed stop
+    transform_aspect->AddComponent<bool>("stop_angular_speed", false);
+
+    transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
 
     Matrix cube_attitude;
-
     cube_attitude.Translation(p_x, p_y, p_z);
-    body_aspect->AddComponent<Matrix>("attitude", cube_attitude);
-
-    body_aspect->AddComponent<dsreal>("mass", 7.0);
-    body_aspect->AddComponent<BodyAspect::Mode>("mode", BodyAspect::BODY);
-
-    body_aspect->AddComponent<bool>("contact_state", false);
-
-    transform_aspect->AddImplementation(0, body_aspect->GetTransformAspectImpl());
-
+    transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
+    transform_aspect->AddComponent<dsreal>("mass", 7.0);
 }
 
-void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z, 
-                                    DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, 
+void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
+                                        DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl,
                                         DrawSpace::Core::Entity& p_entity,
                                         DrawSpace::AspectImplementations::RawTransformAspectImpl& p_transform_impl,
                                         DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl_2,
-                                        DrawSpace::Core::Entity& p_entity_2 )
+                                        DrawSpace::Core::Entity& p_entity_2,
+                                        DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl)
 {
     {
         RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
@@ -731,51 +730,33 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         //////// transform //////////////////////////////////
 
-        /*
-        TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+        TransformAspect* transform_aspect{ p_entity.AddAspect<TransformAspect>() };
+        transform_aspect->AddImplementation(0, &p_rigidBodyTransformAspectImpl);
 
-        transform_aspect->SetImplementation(&p_transform_impl);
+        // add bool component for contact state
+        transform_aspect->AddComponent<bool>("contact_state", false);
 
-        transform_aspect->AddComponent<Matrix>("pos");
+        // add bool component for linear speed stop
+        transform_aspect->AddComponent<bool>("stop_linear_speed", false);
 
-        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(p_x, p_y, p_z, 1.0));
-        */
+        // add bool component for angular speed stop
+        transform_aspect->AddComponent<bool>("stop_angular_speed", false);
 
-
-
-
-
-
-        TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
-
-        BodyAspect* body_aspect = p_entity.AddAspect<BodyAspect>();
-
-
-        body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("main_box", Vector(1.5, 1.0, 1.0, 1.0));
+        transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("main_box", Vector(1.5, 1.0, 1.0, 1.0));
 
         Utils::Matrix feet_pos;
         feet_pos.Translation(1.22307, -3.31759, 0.01);
 
-        body_aspect->AddComponent<BodyAspect::BoxCollisionShape>("feet", Vector(0.1, 2.5, 0.2, 1.0), feet_pos);
+        transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("feet", Vector(0.1, 2.5, 0.2, 1.0), feet_pos);
 
-        
-        body_aspect->AddComponent<BodyAspect::CompoundCollisionShape>("global_shape");
+        transform_aspect->AddComponent<RigidBodyTransformAspectImpl::CompoundCollisionShape>("global_shape");
 
         
 
         Matrix cube_attitude;
-
         cube_attitude.Translation(p_x, p_y, p_z);
-        body_aspect->AddComponent<Matrix>("attitude", cube_attitude);
-
-        body_aspect->AddComponent<dsreal>("mass", 70000.1);
-        body_aspect->AddComponent<BodyAspect::Mode>("mode", BodyAspect::BODY);
-
-        body_aspect->AddComponent<bool>("contact_state", false);
-
-        transform_aspect->AddImplementation(0, body_aspect->GetTransformAspectImpl());
-
-
+        transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
+        transform_aspect->AddComponent<dsreal>("mass", 7.0);
     }
     /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -879,22 +860,19 @@ void MainService::create_ground( void )
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();    
+    TransformAspect* transform_aspect{ m_groundEntity.AddAspect<TransformAspect>() };
+  
+    transform_aspect->AddImplementation(0, &m_ground_transformer);
+    transform_aspect->AddComponent<Matrix>("pos");
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(0.0, -4.0, 0.0, 1.0));
 
-    BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 100.0, 0.0, 100.0, 1.0 ) );
 
-    Matrix ground_attitude;
-    
-    ground_attitude.Translation( 0.0, 0.0, 0.0 );
-    body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
+    CollisionAspect* collision_aspect{ m_groundEntity.AddAspect<CollisionAspect>() };
 
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
+    collision_aspect->AddComponent<CollisionAspect::BoxCollisionShape>("shape", Vector(100.0, 0.0, 100.0, 1.0));
 
-    body_aspect->AddComponent<bool>( "contact_state", false );
-
-    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
-
+    // add bool component for contact state
+    collision_aspect->AddComponent<bool>("contact_state", false);
 }
 
 void MainService::create_camera( void )
@@ -1018,7 +996,7 @@ void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::Resourc
         if ("INIT" == p_context)
         {
             PhysicsAspect* physic_aspect{ m_world1Entity.GetAspect<PhysicsAspect>() };
-            physic_aspect->RegisterRigidBody(&m_groundEntity);
+            physic_aspect->RegisterCollider(&m_groundEntity);
             physic_aspect->RegisterRigidBody(&m_cubeEntity);
             physic_aspect->RegisterRigidBody(&m_cube2Entity);
             physic_aspect->RegisterRigidBody(&m_mainBodyEntity);            

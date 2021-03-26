@@ -640,7 +640,7 @@ void MainService::clean_cubes( void )
 
     for( size_t i = 0; i < m_dynamic_cubes.size(); i++ )
     {
-        m_dynamic_cubes[i].dynCubeBodyAspect->Release();
+        
         m_dynamic_cubes[i].dynCubeEntity->RemoveAspect<BodyAspect>();
 
         m_dynamic_cubes[i].dynCubeRender->UnregisterFromRendering( m_rendergraph );
@@ -650,6 +650,7 @@ void MainService::clean_cubes( void )
         _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntity );
         _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeEntityNode );
         _DRAWSPACE_DELETE_( m_dynamic_cubes[i].dynCubeRender );
+        _DRAWSPACE_DELETE_(m_dynamic_cubes[i].dynCubeRigidBodyTransform);
     }
 
     m_dynamic_cubes.clear();
@@ -750,36 +751,31 @@ void MainService::create_dynamic_cube( void )
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    cube.dynCubeRigidBodyTransform = _DRAWSPACE_NEW_(RigidBodyTransformAspectImpl, RigidBodyTransformAspectImpl);
+
+    TransformAspect* transform_aspect{ m_staticCubeEntity.AddAspect<TransformAspect>() };
+    transform_aspect->AddImplementation(0, cube.dynCubeRigidBodyTransform);
+
+    // add bool component for contact state
+    transform_aspect->AddComponent<bool>("contact_state", false);
+
+    // add bool component for linear speed stop
+    transform_aspect->AddComponent<bool>("stop_linear_speed", false);
+
+    // add bool component for angular speed stop
+    transform_aspect->AddComponent<bool>("stop_angular_speed", false);
+
+    transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
+
     Matrix cube_attitude;
-    
-    cube_attitude.Translation( 0.0, 3.5, 0.0 );    
-
-
-    BodyAspect* body_aspect = cube.dynCubeEntity->AddAspect<BodyAspect>();
-
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 0.5, 0.5, 0.5, 1.0 ) );
-
-    body_aspect->AddComponent<Matrix>( "attitude", cube_attitude );
-
-    body_aspect->AddComponent<dsreal>( "mass", 7.0 );
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::BODY );
-
-    body_aspect->AddComponent<bool>( "contact_state", false );
-
-
-    TransformAspect* transform_aspect = cube.dynCubeEntity->AddAspect<TransformAspect>();
-
-    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
-
-
-    cube.dynCubeBodyAspect = body_aspect;
-
+    cube_attitude.Translation(0.0, 3.5, 0.0);
+    transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
+    transform_aspect->AddComponent<dsreal>("mass", 7.0);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     *cube.dynCubeEntityNode = m_World1EntityNode.AddChild( cube.dynCubeEntity );
     cube.dynCubeRender->RegisterToRendering( m_rendergraph );
-
 
     m_dynamic_cubes.push_back( cube );
 
@@ -873,28 +869,24 @@ void MainService::create_static_cube( void )
 
     //////////////////////////////////////////////////////////////////////////
 
-    TransformAspect* transform_aspect = m_staticCubeEntity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect{ m_staticCubeEntity.AddAspect<TransformAspect>() };
+    transform_aspect->AddImplementation(0, &m_rigbody_cube_transformer);
 
+    // add bool component for contact state
+    transform_aspect->AddComponent<bool>("contact_state", false);
 
-    BodyAspect* body_aspect = m_staticCubeEntity.AddAspect<BodyAspect>();
+    // add bool component for linear speed stop
+    transform_aspect->AddComponent<bool>("stop_linear_speed", false);
 
+    // add bool component for angular speed stop
+    transform_aspect->AddComponent<bool>("stop_angular_speed", false);
 
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 0.5, 0.5, 0.5, 1.0 ) );
-
+    transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
 
     Matrix cube_attitude;
-    
-    cube_attitude.Translation( 0.8, 1.1, 0.3 );
-
-    body_aspect->AddComponent<Matrix>( "attitude", cube_attitude );
-
-    
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
-
-    body_aspect->AddComponent<bool>( "contact_state", false );
-
-    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
-
+    cube_attitude.Translation(0.8, 1.1, 0.3);
+    transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
+    //transform_aspect->AddComponent<dsreal>("mass", 7.0);
 
 }
 
@@ -980,29 +972,18 @@ void MainService::create_ground( void )
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    TransformAspect* transform_aspect = m_groundEntity.AddAspect<TransformAspect>();
+    TransformAspect* transform_aspect{ m_groundEntity.AddAspect<TransformAspect>() };
 
+    transform_aspect->AddImplementation(0, &m_ground_transformer);
+    transform_aspect->AddComponent<Matrix>("pos");
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(0.0, -4.0, 0.0, 1.0));
 
-    BodyAspect* body_aspect = m_groundEntity.AddAspect<BodyAspect>();
+    CollisionAspect* collision_aspect{ m_groundEntity.AddAspect<CollisionAspect>() };
 
+    collision_aspect->AddComponent<CollisionAspect::BoxCollisionShape>("shape", Vector(100.0, 0.0, 100.0, 1.0));
 
-    body_aspect->AddComponent<BodyAspect::BoxCollisionShape>( "shape", Vector( 100.0, 0.0, 100.0, 1.0 ) );
-
-
-    Matrix ground_attitude;
-    
-    //ground_attitude.Identity();
-    ground_attitude.Translation( 0.0, -4.0, 0.0 );
-
-    body_aspect->AddComponent<Matrix>( "attitude", ground_attitude );
-
-    
-    body_aspect->AddComponent<BodyAspect::Mode>( "mode", BodyAspect::COLLIDER );
-
-    body_aspect->AddComponent<bool>( "contact_state", false );
-
-    transform_aspect->AddImplementation( 0, body_aspect->GetTransformAspectImpl() );
-
+    // add bool component for contact state
+    collision_aspect->AddComponent<bool>("contact_state", false);
 
 }
 
@@ -1052,7 +1033,7 @@ void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::Resourc
 
         if ("INIT" == p_context)
         {            
-            physic_aspect->RegisterRigidBody(&m_groundEntity);
+            physic_aspect->RegisterCollider(&m_groundEntity);
             physic_aspect->RegisterRigidBody(&m_staticCubeEntity);
         }
         else

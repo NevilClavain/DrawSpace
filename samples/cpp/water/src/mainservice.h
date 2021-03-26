@@ -75,7 +75,9 @@ protected:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_staticCubeRender;
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
-    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;                       
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer; 
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_ground_transformer;
+    DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_cube_transformer;
     DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_fps_transformer;
 
     DrawSpace::Core::Entity                                                         m_cameraEntity;
@@ -100,7 +102,7 @@ protected:
         DrawSpace::Core::Entity*                                                    dynCubeEntity;
         DrawSpace::EntityGraph::EntityNode*                                         dynCubeEntityNode;
         DrawSpace::AspectImplementations::MesheRenderingAspectImpl*                 dynCubeRender;
-        DrawSpace::Aspect::BodyAspect*                                              dynCubeBodyAspect;
+        DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl*             dynCubeRigidBodyTransform;
 
     } dynamic_cube;
 

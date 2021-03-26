@@ -471,12 +471,6 @@ int LuaClass_Entity::LUA_configurecollision(lua_State* p_L)
 	// add bool component for contact state
 	collision_aspect->AddComponent<bool>("contact_state", false);
 
-	// add bool component for linear speed stop
-	collision_aspect->AddComponent<bool>("stop_linear_speed", false);
-
-	// add bool component for angular speed stop
-	collision_aspect->AddComponent<bool>("stop_angular_speed", false);
-
 	return 0;
 }
 

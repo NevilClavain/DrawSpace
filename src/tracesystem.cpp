@@ -29,6 +29,7 @@
 #include "renderingaspect.h"
 #include "timeaspect.h"
 #include "transformaspect.h"
+#include "collisionaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -105,6 +106,7 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
         ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::RenderingAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::TimeAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::TransformAspect>( aspects[i] );
+        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::CollisionAspect>(aspects[i]);
 
         _DSDEBUG( logger, dsstring ( " aspect " ) << i << dsstring( " is " ) << ClassDump::m_text )
        

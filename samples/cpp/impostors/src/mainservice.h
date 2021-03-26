@@ -102,6 +102,11 @@ protected:
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_impostors_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_composition_transformer;
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_ground_transformer;
+    DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_cube_transformer;
+    DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_cube_transformer2;
+
+    DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_composition_transformer;
     DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_fps_transformer;
 
 
@@ -120,7 +125,8 @@ protected:
 
     void create_skybox( void );
     void create_ground( void );
-    void create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity );
+    void create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
+        DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl);
 
 
     void create_composition(dsreal p_x, dsreal p_y, dsreal p_z, 
@@ -128,7 +134,9 @@ protected:
                             DrawSpace::Core::Entity& p_entity,
                                 DrawSpace::AspectImplementations::RawTransformAspectImpl& p_transform_impl,
                                 DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl_2,
-                                DrawSpace::Core::Entity& p_entity_2);
+                                DrawSpace::Core::Entity& p_entity_2,
+                                DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl
+                                );
 
 
     void create_camera( void );
