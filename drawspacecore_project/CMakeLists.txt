@@ -50,8 +50,6 @@ ${CMAKE_SOURCE_DIR}/src/tracedefs.h
 source_group(aspect FILES 
 ${CMAKE_SOURCE_DIR}/src/animationsaspect.cpp 
 ${CMAKE_SOURCE_DIR}/src/animationsaspect.h
-${CMAKE_SOURCE_DIR}/src/bodyaspect.cpp 
-${CMAKE_SOURCE_DIR}/src/bodyaspect.h
 ${CMAKE_SOURCE_DIR}/src/cameraaspect.cpp 
 ${CMAKE_SOURCE_DIR}/src/cameraaspect.h
 ${CMAKE_SOURCE_DIR}/src/collisionaspect.cpp 
@@ -74,8 +72,6 @@ ${CMAKE_SOURCE_DIR}/src/transformaspect.h
 source_group(aspectimplementations FILES 
 ${CMAKE_SOURCE_DIR}/src/rigidbodytransformaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/rigidbodytransformaspectimpl.h
-${CMAKE_SOURCE_DIR}/src/bodytransformaspectimpl.cpp 
-${CMAKE_SOURCE_DIR}/src/bodytransformaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/impostorsrenderingaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/impostorsrenderingaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/mesherenderingaspectimpl.cpp 

@@ -24,7 +24,6 @@
 
 #include "physicssystem.h"
 #include "physicsaspect.h"
-#include "bodyaspect.h"
 #include "collisionaspect.h"
 #include "exceptions.h"
 
@@ -60,37 +59,6 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
     }
     else
     {
-        BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-        if( body_aspect )
-        {
-            //////////////////////////////////////////////////////////////////////////////////////////
-
-            // recup liste de tout les noeuds entity ancetre de cet entity
-            std::vector<Core::Entity*> ancestors;
-            m_current_graph->GetEntityAncestorsList( p_entity, ancestors );
-
-            body_aspect->SetAncestorsList( ancestors );
-
-            BodyAspect* attached_to = NULL;
-
-            for( auto it = ancestors.begin(); it != ancestors.end(); ++it )
-            {
-                Entity* entity_ancestor = *it;
-
-                BodyAspect* body_candidate = entity_ancestor->GetAspect<BodyAspect>();
-                if( body_candidate )
-                {
-                    attached_to = body_candidate;
-                    break;
-                }
-            }
-            
-            body_aspect->ManageAttachment( attached_to );
-
-            //////////////////////////////////////////////////////////////////////////////////////////
-
-            body_aspect->Update();
-        }
         CollisionAspect* collision_aspect = p_entity->GetAspect<CollisionAspect>();
         if (collision_aspect)
         {

@@ -61,51 +61,39 @@ PhysicsAspect::~PhysicsAspect( void )
 
 void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
 {
-    BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
-
-    if (body_aspect)
+    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+    if (transform_aspect)
     {
-        btRigidBody* bd = body_aspect->Init();
 
-        m_bodies[bd] = p_entity;
-        body_aspect->RegisterPhysicalAspect(this);
-    }
-    else
-    {
-        TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-        if (transform_aspect)
+        RigidBodyTransformAspectImpl* rigibody_transform_impl{ nullptr };
+        auto transformimpls_list{ transform_aspect->GetTransformAspectImplsList() };
+
+        for (auto& e : transformimpls_list)
         {
+            TransformAspectImpl* impl = e.second;
+            rigibody_transform_impl = dynamic_cast<RigidBodyTransformAspectImpl*>(impl);
 
-            RigidBodyTransformAspectImpl* rigibody_transform_impl{ nullptr };
-            auto transformimpls_list{ transform_aspect->GetTransformAspectImplsList() };
-
-            for (auto& e : transformimpls_list)
+            if (rigibody_transform_impl)
             {
-                TransformAspectImpl* impl = e.second;
-                rigibody_transform_impl = dynamic_cast<RigidBodyTransformAspectImpl*>(impl);
-
-                if (rigibody_transform_impl)
-                {
-                    break;
-                }
+                break;
             }
-            if (!rigibody_transform_impl)
-            {
-                _DSEXCEPTION("Entity has no rigidbody transform")
-            }
-            else
-            {
-                btRigidBody* bd{ rigibody_transform_impl->Init(transform_aspect) };
-
-                m_bodies[bd] = p_entity;
-                rigibody_transform_impl->RegisterPhysicalAspect(this);
-
-            }
+        }
+        if (!rigibody_transform_impl)
+        {
+            _DSEXCEPTION("Entity has no rigidbody transform")
         }
         else
         {
-            _DSEXCEPTION("Entity has no transform aspect")
+            btRigidBody* bd{ rigibody_transform_impl->Init(transform_aspect) };
+
+            m_bodies[bd] = p_entity;
+            rigibody_transform_impl->RegisterPhysicalAspect(this);
+
         }
+    }
+    else
+    {
+        _DSEXCEPTION("Entity has no transform aspect")
     }
 }
 
@@ -232,35 +220,27 @@ void PhysicsAspect::StepSimulation( void )
         {
             ComponentList<bool> bools;
 
-            BodyAspect* body_aspect = it->second->GetAspect<BodyAspect>();
-            if (body_aspect)
+            CollisionAspect* coll_aspect = it->second->GetAspect<CollisionAspect>();
+            if (coll_aspect)
             {
-                body_aspect->GetComponentsByType<bool>(bools);
+                coll_aspect->GetComponentsByType<bool>(bools);
             }
             else
             {
-                CollisionAspect* coll_aspect = it->second->GetAspect<CollisionAspect>();
-                if (coll_aspect)
+                TransformAspect* transf_aspect = it->second->GetAspect<TransformAspect>();
+                if (transf_aspect)
                 {
-                    coll_aspect->GetComponentsByType<bool>(bools);
+                    transf_aspect->GetComponentsByType<bool>(bools);
                 }
                 else
                 {
-                    TransformAspect* transf_aspect = it->second->GetAspect<TransformAspect>();
-                    if (transf_aspect)
-                    {
-                        transf_aspect->GetComponentsByType<bool>(bools);
-                    }
-                    else
-                    {
-                        _DSEXCEPTION("No suitable aspect found for this entity")
-                    }
-                }                
+                    _DSEXCEPTION("No suitable aspect found for this entity")
+                }
             }
            
             if( bools.size() < 1 )
             {
-                _DSEXCEPTION( "Bad number of bool components for BodyAspect" )
+                _DSEXCEPTION( "Bad number of bool components for CollisionAspect" )
             }
 
             // reset du composant "contactState" (bools[0])
@@ -288,32 +268,23 @@ void PhysicsAspect::StepSimulation( void )
                 {
                     ComponentList<bool> bools;
 
-                    BodyAspect* body_aspect = m_bodies[obA]->GetAspect<BodyAspect>();
-                    if (body_aspect)
+                    CollisionAspect* coll_aspect{ m_bodies[obA]->GetAspect<CollisionAspect>() };
+                    if (coll_aspect)
                     {
-                        body_aspect->GetComponentsByType<bool>(bools);
+                        coll_aspect->GetComponentsByType<bool>(bools);
                     }
                     else
                     {
-                        CollisionAspect* coll_aspect = m_bodies[obA]->GetAspect<CollisionAspect>();
-                        if (coll_aspect)
+                        TransformAspect* transf_aspect = m_bodies[obA]->GetAspect<TransformAspect>();
+                        if (transf_aspect)
                         {
-                            coll_aspect->GetComponentsByType<bool>(bools);
+                            transf_aspect->GetComponentsByType<bool>(bools);
                         }
                         else
                         {
-                            TransformAspect* transf_aspect = m_bodies[obA]->GetAspect<TransformAspect>();
-                            if (transf_aspect)
-                            {
-                                transf_aspect->GetComponentsByType<bool>(bools);
-                            }
-                            else
-                            {
-                                _DSEXCEPTION("No suitable aspect found for this entity")
-                            }
-                        }                        
-                    }
-                    
+                            _DSEXCEPTION("No suitable aspect found for this entity")
+                        }
+                    }                    
                     if (bools.size() > 0)
                     {
                         bools[0]->getPurpose() = true;
@@ -326,31 +297,22 @@ void PhysicsAspect::StepSimulation( void )
                 {
                     ComponentList<bool> bools;
 
-                    BodyAspect* body_aspect = m_bodies[obB]->GetAspect<BodyAspect>();
+                    CollisionAspect* coll_aspect{ m_bodies[obB]->GetAspect<CollisionAspect>() };
 
-                    if (body_aspect)
+                    if (coll_aspect)
                     {
-                        body_aspect->GetComponentsByType<bool>(bools);
+                        coll_aspect->GetComponentsByType<bool>(bools);
                     }
                     else
                     {
-                        CollisionAspect* coll_aspect = m_bodies[obB]->GetAspect<CollisionAspect>();
-
-                        if (coll_aspect)
+                        TransformAspect* transf_aspect = m_bodies[obB]->GetAspect<TransformAspect>();
+                        if (transf_aspect)
                         {
-                            coll_aspect->GetComponentsByType<bool>(bools);
+                            transf_aspect->GetComponentsByType<bool>(bools);
                         }
                         else
                         {
-                            TransformAspect* transf_aspect = m_bodies[obB]->GetAspect<TransformAspect>();
-                            if (transf_aspect)
-                            {
-                                transf_aspect->GetComponentsByType<bool>(bools);
-                            }
-                            else
-                            {
-                                _DSEXCEPTION("No suitable aspect found for this entity")
-                            }
+                            _DSEXCEPTION("No suitable aspect found for this entity")
                         }
                     }
                     

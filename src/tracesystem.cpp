@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "tracesystem.h"
-#include "bodyaspect.h"
+
 #include "cameraaspect.h"
 #include "physicsaspect.h"
 #include "renderingaspect.h"
@@ -100,7 +100,6 @@ void TraceSystem::VisitEntity( Core::Entity* p_parent, Core::Entity* p_entity )
     for( size_t i = 0; i < aspects.size(); i++ )
     {
         // find aspect's name to dump it on trace...
-        ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::BodyAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::CameraAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::PhysicsAspect>( aspects[i] );
         ClassDump::Dump<DrawSpace::Core::ComponentContainer, Aspect::RenderingAspect>( aspects[i] );

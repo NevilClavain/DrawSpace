@@ -39,7 +39,6 @@ protected:
 
     using AspectType = enum
     {
-        BODY_ASPECT,
         CAMERA_ASPECT,
         PHYSICS_ASPECT,
         RENDERING_ASPECT,

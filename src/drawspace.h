@@ -98,7 +98,7 @@
 
 #include "transformaspect.h"
 #include "rawtransformaspectimpl.h"
-#include "bodytransformaspectimpl.h"
+
 #include "rigidbodytransformaspectimpl.h"
 #include "orbittransformaspectimpl.h"
 #include "revolutiontransformaspectimpl.h"
@@ -108,7 +108,7 @@
 
 #include "cameraaspect.h"
 #include "collisionaspect.h"
-#include "bodyaspect.h"
+
 #include "physicsaspect.h"
 #include "timeaspect.h"
 #include "informationsaspect.h"

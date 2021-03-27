@@ -27,7 +27,7 @@
 #include "renderingaspect.h"
 #include "transformaspect.h"
 #include "cameraaspect.h"
-#include "bodyaspect.h"
+
 #include "informationsaspect.h"
 #include "resourcesaspect.h"
 #include "maths.h"
@@ -681,7 +681,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
 
         CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
 
-        //BodyAspect* body_aspect = p_entity->GetAspect<BodyAspect>();
+        
         TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)

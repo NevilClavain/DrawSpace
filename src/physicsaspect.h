@@ -29,7 +29,6 @@
 #include <btBulletDynamicsCommon.h>
 #include "componentcontainer.h"
 #include "entity.h"
-#include "bodyaspect.h"
 #include "timeaspect.h"
 
 namespace DrawSpace

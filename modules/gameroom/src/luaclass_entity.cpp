@@ -29,7 +29,6 @@
 #include "renderingaspect.h"
 #include "timeaspect.h"
 
-#include "bodyaspect.h"
 #include "cameraaspect.h"
 #include "physicsaspect.h"
 #include "renderingaspect.h"
@@ -116,7 +115,6 @@ int LuaClass_Entity::LUA_addaspect( lua_State* p_L )
 
     static const std::map<AspectType, std::function<void( DrawSpace::Core::Entity& )>> aspect_add_aig = 
     {
-        { BODY_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<BodyAspect>(); } },
         { CAMERA_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<CameraAspect>(); } },
         { PHYSICS_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<PhysicsAspect>(); } },
         { RENDERING_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.AddAspect<RenderingAspect>(); } },
@@ -147,7 +145,6 @@ int LuaClass_Entity::LUA_hasaspect(lua_State* p_L)
 
 	static const std::map<AspectType, std::function<void(const DrawSpace::Core::Entity&, bool&)>> aspect_check_aig =
 	{
-		{ BODY_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<BodyAspect>() ? true : false) ; } },
 		{ CAMERA_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<CameraAspect>() ? true : false); } },
 		{ PHYSICS_ASPECT,[](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<PhysicsAspect>() ? true : false); } },
 		{ RENDERING_ASPECT, [](const DrawSpace::Core::Entity& p_entity, bool& p_status) { p_status = (p_entity.GetAspect<RenderingAspect>() ? true : false); } },
@@ -177,7 +174,6 @@ int LuaClass_Entity::LUA_removeaspect( lua_State* p_L )
 
     static const std::map<AspectType, std::function<void( DrawSpace::Core::Entity& )>> aspect_remove_aig = 
     {
-        { BODY_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<BodyAspect>(); } },
         { CAMERA_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<CameraAspect>(); } },
         { PHYSICS_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<PhysicsAspect>(); } },
         { RENDERING_ASPECT, []( DrawSpace::Core::Entity& p_entity ) { p_entity.RemoveAspect<RenderingAspect>(); } },
@@ -562,8 +558,6 @@ int LuaClass_Entity::LUA_releasecollision(lua_State* p_L)
 	}
 
 	collision_aspect->RemoveComponent<bool>("contact_state");
-	collision_aspect->RemoveComponent<bool>("stop_linear_speed");
-	collision_aspect->RemoveComponent<bool>("stop_angular_speed");
 
 	return 0;
 }
