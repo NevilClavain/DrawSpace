@@ -76,6 +76,7 @@ add_subdirectory(samples/lua/water)
 add_subdirectory(samples/lua/gui)
 add_subdirectory(samples/lua/planet)
 add_subdirectory(samples/lua/nebulae)
+add_subdirectory(samples/lua/dummyspace)
 
 #tools
 add_subdirectory(tools/max)

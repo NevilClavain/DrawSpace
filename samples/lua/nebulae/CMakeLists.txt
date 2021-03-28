@@ -21,7 +21,7 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(luasamples_planet)
+project(luasamples_nebulae)
 
 set(sample_name nebulaeluademo)
 
