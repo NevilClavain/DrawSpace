@@ -4,16 +4,16 @@
 	include('land_model.lua')
 
 	
-	land_passes_config = 
+	land_passes_bindings = 
 	{
-		layer_0 = 
+		binding_0 = 
 		{
 			target_pass_id = 'texture_pass',
 			rendering_id = 'lit_rendering',
 			lit_shader_update_func = land.update_from_scene_env
 		}
 	}
-	land.view.load('l', {x = 0.0, y = 0.0, z = 0.0}, land_passes_config)
+	land.view.load('l', land_passes_bindings)
 	eg:add_child('root', 'l', land.models['l'].entity)
 	
 	

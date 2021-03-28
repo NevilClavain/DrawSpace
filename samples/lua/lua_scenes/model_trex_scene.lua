@@ -13,11 +13,11 @@
 			lit_shader_update_func = trex.update_from_scene_env
 		}
 	}
-	trex.view.load('t', trex_passes_config)
-	eg:add_child('root', 't', trex.models['t'].entity)
-	model.setup_rawtransformationschain(trex.models['t'].entity, 't', trex.scale)
+	trex.view.load('trex', trex_passes_config)
+	eg:add_child('root', 'trex', trex.models['trex'].entity)
+	model.setup_rawtransformationschain(trex.models['trex'].entity, 'trex', trex.scale)
 
-	model.move.setpos('t', 0.0, 0.0, 0.0)
+	model.move.setpos('trex', 0.0, 0.0, 0.0)
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	
@@ -30,4 +30,6 @@
 	model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
 	model.camera.speed = 50.0
+
+	model.target = 'trex' -- select model
 
