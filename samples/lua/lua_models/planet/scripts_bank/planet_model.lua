@@ -234,7 +234,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
 
   renderer:register_to_rendering(rg)
 
-  entity:add_aspect(BODY_ASPECT)
+  --entity:add_aspect(BODY_ASPECT)
   entity:add_aspect(INFOS_ASPECT)
   entity:setup_info( "entity_name", p_entity_id )
   
@@ -254,7 +254,7 @@ planetmod.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
   entity:release_info("entity_name")
   entity:remove_aspect(INFOS_ASPECT)
-  entity:remove_aspect(BODY_ASPECT)
+  --entity:remove_aspect(BODY_ASPECT)
 
   commons.trash.rendering(p_rendergraph, planetmod.module, entity, renderer)
   p_entitygraph:remove(p_entity_id)
