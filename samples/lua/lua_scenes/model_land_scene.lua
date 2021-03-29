@@ -15,11 +15,11 @@
 	}
 	land.view.load('l', land_passes_bindings)
 	eg:add_child('root', 'l', land.models['l'].entity)
-	
+	model.setup_rawtransformationschain(land.models['l'].entity, 'l')	
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	
-	--model.camera.mvt:set_pos(0.0, 8.0, 30.0)
+	
 
 	model.env.light.setstate( TRUE )
 	
@@ -29,4 +29,8 @@
 	
 	model.camera.mvt:set_pos(0.0, 8.0, 0.0)
 	model.camera.speed = 50.0
+
+	
+
+	model.target='l'
 	
