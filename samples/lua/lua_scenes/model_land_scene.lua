@@ -15,7 +15,7 @@
 	}
 	land.view.load('l', land_passes_bindings)
 	eg:add_child('root', 'l', land.models['l'].entity)
-	model.setup_rawtransformationschain(land.models['l'].entity, 'l')	
+	model.setup_rawtransformationschain(land.models['l'].entity, 'l', 0)	
 	
 	model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 	

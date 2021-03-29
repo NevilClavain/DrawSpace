@@ -177,7 +177,7 @@ skydome_passes_bindings =
 skydome.view.load('dome', skydome_passes_bindings)
 eg:add_child('root', 'dome', skydome.models['dome'].entity)
 
-model.setup_rawtransformationschain(skydome.models['dome'].entity, 'dome', skydome.scale)
+model.setup_rawtransformationschain(skydome.models['dome'].entity, 'dome', 0, skydome.scale)
 
 model.move.setpos('dome', 0.0, 0.0, 0.0)
 
@@ -278,7 +278,7 @@ waterquad_passes_bindings =
 waterquad.view.load('water', waterquad_passes_bindings)
 eg:add_child('root', 'water', waterquad.models['water'].entity)
 
-model.setup_rawtransformationschain(waterquad.models['water'].entity, 'water')
+model.setup_rawtransformationschain(waterquad.models['water'].entity, 'water', 0)
 
 
 model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)

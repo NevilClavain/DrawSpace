@@ -96,7 +96,7 @@
 	}
 	skydome.view.load('dome', skydome_passes_config)
 	eg:add_child('root', 'dome', skydome.models['dome'].entity)
-	model.setup_rawtransformationschain(skydome.models['dome'].entity, 'dome', skydome.scale)
+	model.setup_rawtransformationschain(skydome.models['dome'].entity, 'dome', 0, skydome.scale)
 	model.move.setpos('dome', 0.0, 0.0, 0.0)
 	
 	
@@ -161,7 +161,7 @@
 	   }
     }
     spaceboxmod.view.load('spacebox0', spacebox_passes_config)
-	model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', {x = 1000.0, y = 1000.0, z = 1000.0 } )
+	model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', 0, {x = 1000.0, y = 1000.0, z = 1000.0 } )
 	eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 	
 

@@ -157,7 +157,7 @@ transformations_update = function(p_delta)
 
 end
 
-model.setup_rawtransformationschain = function(p_entity, p_entity_id, p_initial_scale)
+model.setup_rawtransformationschain = function(p_entity, p_entity_id, p_impl_order, p_initial_scale)
 
     local rotx_deg_angle = 0.0
     local roty_deg_angle = 0.0
@@ -185,7 +185,7 @@ model.setup_rawtransformationschain = function(p_entity, p_entity_id, p_initial_
 
     local transform = RawTransform()
 
-    transform:configure(p_entity,0)
+    transform:configure(p_entity, p_impl_order)
   
     transform:add_matrix( "scale", scale_mat )
     transform:add_matrix( "roty", roty_mat )
