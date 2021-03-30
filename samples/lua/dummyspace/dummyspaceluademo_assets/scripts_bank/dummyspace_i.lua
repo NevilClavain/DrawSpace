@@ -1,5 +1,6 @@
 
 include('spacebox_model.lua')
+include('ceresplanet_model.lua')
 
 ctrl_key = FALSE
 
@@ -112,14 +113,14 @@ function( key )
   if key == 81 then 
     local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(5.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	model.camera.mvt:update(500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       
   --W key
   elseif key == 87 then
 
     local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(-5.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	model.camera.mvt:update(-500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 
   elseif key == 17 then
     ctrl_key = TRUE
@@ -170,6 +171,35 @@ spaceboxmod.view.load('spacebox0', spacebox_passes_bindings)
 model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', 0, {x = 1000.0, y = 1000.0, z = 1000.0 } )
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
+
+ceresplanet_passes_bindings = 
+{
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = ceresplanet.update_lit_from_scene_env
+	}
+}
+ceresplanet.view.load('ceres', ceresplanet_passes_bindings)
+eg:add_child('root', 'ceres', ceresplanet.models['ceres'].entity)
+
+ceres_planet_entity = ceresplanet.models['ceres'].entity
+
+planet_transform = RawTransform()
+planet_transform:configure(ceres_planet_entity,0)
+
+
+planet_revol = RevolutionTransform()
+planet_revol:configure(ceres_planet_entity, 0.001, 1)
+
+
+
+planet_pos_mat = Matrix()
+planet_pos_mat:translation( 0.0, 0.0, -5000.0 )
+planet_transform:add_matrix( "pos", planet_pos_mat )
+
+
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
 
 model.camera.mvt:set_pos(0.0, 0.0, 10.0)
@@ -177,5 +207,8 @@ model.camera.mvt:set_pos(0.0, 0.0, 10.0)
 
 model.env.light.setstate( TRUE )
 model.env.light.setdir(1.0, -0.4, 0.0)
-model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
+model.env.ambientlight.setcolor(0.05, 0.05, 0.05)
+model.env.fog.setdensity(0.0)
+
+
 
