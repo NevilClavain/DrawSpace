@@ -150,3 +150,13 @@ void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
         e.second->SetTimeAspect(p_time_aspect);
     }
 }
+
+void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+{
+
+}
+
+void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+{
+
+}
