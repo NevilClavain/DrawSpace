@@ -5,6 +5,7 @@ g:signal_rendersceneend("eg")
 
 planet_revol:release()
 planet_transform:release()
+boulder_transform:release()
 
 
 spaceboxmod.view.unload('spacebox0')

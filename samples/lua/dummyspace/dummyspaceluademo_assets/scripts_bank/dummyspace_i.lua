@@ -1,6 +1,7 @@
 
 include('spacebox_model.lua')
 include('ceresplanet_model.lua')
+include('boulder_model.lua')
 
 ctrl_key = FALSE
 
@@ -189,15 +190,34 @@ ceres_planet_entity = ceresplanet.models['ceres'].entity
 planet_transform = RawTransform()
 planet_transform:configure(ceres_planet_entity,0)
 
-
 planet_revol = RevolutionTransform()
 planet_revol:configure(ceres_planet_entity, 0.001, 1)
-
-
 
 planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -5000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
+
+
+boulder_passes_config = 
+{
+	layer_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = boulder.update_lit_from_scene_env
+	}
+}
+boulder.view.load('rock', boulder_passes_config)
+eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
+
+boulder_pos_mat = Matrix()
+boulder_pos_mat:translation( 0.0, 0.0, -800.0 )
+
+boulder_transform = RawTransform()
+boulder_transform:configure(boulder.models['rock'].entity,0)
+
+boulder_transform:add_matrix( "pos", boulder_pos_mat )
+
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
