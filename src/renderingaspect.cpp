@@ -77,7 +77,7 @@ void RenderingAspect::Run( Entity* p_owner_entity, bool p_drawtextlements )
     }
 }
 
-void RenderingAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+void RenderingAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
     m_entitynodegraph = p_entitynodegraph;
     for(auto& e : m_impls)
@@ -86,7 +86,7 @@ void RenderingAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodeg
     }
 }
 
-void RenderingAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+void RenderingAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
     m_entitynodegraph = p_entitynodegraph;
     for(auto& e : m_impls)

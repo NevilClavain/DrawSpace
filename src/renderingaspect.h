@@ -51,8 +51,8 @@ public:
 
     void Run( Core::Entity* p_owner_entity, bool p_drawtextlements );
 
-    void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
-    void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
+    void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
+    void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
 
     void ComponentsUpdated(void);
 

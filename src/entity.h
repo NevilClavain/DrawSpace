@@ -99,22 +99,21 @@ public:
         }
     }
 
-    inline void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) 
+    inline void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
     {
         for (auto& e : m_aspects)
         {
-            e.second->OnAddedInGraph(p_entitynodegraph);
+            e.second->OnAddedInGraph(p_entitynodegraph, p_parent_entity);
         }
     };
 
-    inline void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+    inline void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
     {
         for (auto& e : m_aspects)
         {
-            e.second->OnRemovedFromGraph(p_entitynodegraph);
+            e.second->OnRemovedFromGraph(p_entitynodegraph, p_parent_entity);
         }
     };
-
 };
 }
 }

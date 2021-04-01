@@ -151,12 +151,12 @@ void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
     }
 }
 
-void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
 
 }
 
-void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph)
+void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
 
 }

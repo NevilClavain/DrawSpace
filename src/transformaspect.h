@@ -64,8 +64,8 @@ public:
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
 
-    virtual void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
-    virtual void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
+    void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
+    void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
 
     std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> GetTransformAspectImplsList(void) const;
 };
