@@ -114,14 +114,14 @@ function( key )
   if key == 81 then 
     local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	model.camera.mvt:update(2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       
   --W key
   elseif key == 87 then
 
     local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(-500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+	model.camera.mvt:update(-2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 
   elseif key == 17 then
     ctrl_key = TRUE
@@ -146,6 +146,17 @@ function( key )
     local mvt_info = { model.camera.mvt:read() }
 
 	model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+  -- VK_F1
+  elseif key == 112 then
+    eg:remove('rock')
+    eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
+
+  -- VK_F2
+  elseif key == 113 then
+    eg:remove('rock')
+    eg:add_child('root', 'rock', boulder.models['rock'].entity)
+
 
   elseif key == 17 then
     ctrl_key = FALSE

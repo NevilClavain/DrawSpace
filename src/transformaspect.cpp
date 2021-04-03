@@ -37,6 +37,7 @@ m_time_aspect( NULL )
     m_worldtransform.Identity();
     m_dispatched_viewtransform.Identity();
     m_dispatched_projtransform.Identity();
+    m_stack_matrix.Identity();
 }
 
 void TransformAspect::AddImplementation(int p_order, DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl)
@@ -62,7 +63,6 @@ void TransformAspect::RemoveAllImplementations(void)
 void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
     Matrix locale_mat;
-    Matrix finaltransform_mat;
 
     locale_mat.Identity();
 
@@ -88,26 +88,20 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
         }
     }
 
+    Matrix parent_transform_mat;
+    parent_transform_mat.Identity();
+
     if( p_parent )
     {
-        Matrix parent_finaltransform_mat;
         TransformAspect* parent_world_aspect = p_parent->GetAspect<TransformAspect>();
-
-        if( parent_world_aspect && !ignore_parent_transform )
+        if (parent_world_aspect && !ignore_parent_transform)
         {
-            finaltransform_mat = locale_mat * parent_world_aspect->m_worldtransform;
-        }
-        else
-        {
-            finaltransform_mat = locale_mat;
-        }
+            parent_transform_mat = parent_world_aspect->m_worldtransform;
+        }        
     }
-    else
-    {
-        finaltransform_mat = locale_mat;
-    }
-
-    m_worldtransform = finaltransform_mat;
+    
+    Matrix sp = m_stack_matrix * parent_transform_mat;
+    m_worldtransform = locale_mat * sp;
 }
 
 void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj )
@@ -153,10 +147,29 @@ void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 
 void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
+    TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
+    if (parent_transform_aspect)
+    {
+        Matrix parent_transform{ parent_transform_aspect->m_worldtransform };
 
+        parent_transform.Inverse();
+
+        Matrix current_stack_matrix{ m_stack_matrix };
+        m_stack_matrix = current_stack_matrix * parent_transform;
+    }
 }
 
 void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
+    if (p_parent_entity)
+    {
+        TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
+        if (parent_transform_aspect)
+        {
+            Matrix parent_transform{ parent_transform_aspect->m_worldtransform };
 
+            Matrix current_stack_matrix{ m_stack_matrix };
+            m_stack_matrix = current_stack_matrix * parent_transform;
+        }
+    }
 }

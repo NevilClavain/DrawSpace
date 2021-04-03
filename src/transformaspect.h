@@ -40,6 +40,8 @@ class TransformAspect : public Core::ComponentContainer
 protected:
     DrawSpace::Utils::Matrix                                                            m_worldtransform;
 
+    DrawSpace::Utils::Matrix                                                            m_stack_matrix;
+
     // transfos view et proj "distribuees" par le worldsystem
     DrawSpace::Utils::Matrix                                                            m_dispatched_viewtransform;
     DrawSpace::Utils::Matrix                                                            m_dispatched_projtransform;

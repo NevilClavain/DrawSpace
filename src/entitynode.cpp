@@ -75,7 +75,21 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
 void EntityNode::Erase(void)
 {
     Entity* entity = m_tree_node->data();
-    entity->OnRemovedFromGraph(m_owner_graph, m_tree_node->data());
+    //entity->OnRemovedFromGraph(m_owner_graph, m_tree_node->data());
+
+    std::vector<Entity*> ancestors;
+    m_owner_graph->GetEntityAncestorsList(m_tree_node->data(), ancestors);
+
+    if (ancestors.size())
+    {
+        entity->OnRemovedFromGraph(m_owner_graph, ancestors.front());
+    }
+    else
+    {
+        entity->OnRemovedFromGraph(m_owner_graph, nullptr);
+    }
+    
+
 
     // desinscription dans la table EntityNodeGraph::m_entity_to_node
     m_owner_graph->m_entity_to_node.erase( m_tree_node->data() );
