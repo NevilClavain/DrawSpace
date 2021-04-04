@@ -105,6 +105,13 @@ function()
   local mvt_info = { model.camera.mvt:read() }
   model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 
+
+  planet_rot_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(ceres_angles:get_value()))
+
+  planet_transform:update_matrix( "rot", planet_rot_mat )
+
+  ceres_angles:inc( 5.0 )
+
 end)
 
 g:add_keydowncb( "keydown",
@@ -201,12 +208,22 @@ ceres_planet_entity = ceresplanet.models['ceres'].entity
 planet_transform = RawTransform()
 planet_transform:configure(ceres_planet_entity,0)
 
-planet_revol = RevolutionTransform()
-planet_revol:configure(ceres_planet_entity, 0.001, 1)
+ceres_angles = SyncAngle()
+ceres_angles:init_fromtimeaspectof(root_entity,0.0)
+
+planet_rot_mat = Matrix()
+planet_rot_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(ceres_angles:get_value()))
+planet_transform:add_matrix( "rot", planet_rot_mat )
 
 planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -5000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
+
+
+
+--planet_revol = RevolutionTransform()
+--planet_revol:configure(ceres_planet_entity, 0.001, 1)
+
 
 
 boulder_passes_config = 
