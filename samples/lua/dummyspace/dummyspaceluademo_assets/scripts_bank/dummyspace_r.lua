@@ -3,16 +3,23 @@
 
 g:signal_rendersceneend("eg")
 
-planet_revol:release()
+--planet_revol:release()
 planet_transform:release()
-boulder_transform:release()
 
+
+eg:remove('camera2_entity')
+commons.trash.camera(camera2_entity, camera2_pos)  
+boulder_transform:release()
+boulder.view.unload('rock')
 
 spaceboxmod.view.unload('spacebox0')
-
 ceresplanet.view.unload('ceres')
 
+
+
 model.releasemaincamera()
+
+
 
 g:remove_appruncb('run')
 

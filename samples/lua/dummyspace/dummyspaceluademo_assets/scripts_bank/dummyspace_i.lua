@@ -39,6 +39,29 @@ renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
 
 
+
+set_camera = function(camera)
+  if camera == free_cam then
+
+    eg:set_camera(model.camera.entity)
+    gui:show_mousecursor(FALSE)
+    g:set_mousecursorcircularmode(TRUE)
+
+  elseif camera == asteroid_cam then
+
+    eg:set_camera(camera2_entity)
+    gui:show_mousecursor(TRUE)
+	g:set_mousecursorcircularmode(FALSE)
+  end
+end
+
+free_cam = 0
+asteroid_cam = 1
+
+current_cam = free_cam
+--current_cam = asteroid_cam
+
+
 mvt_mod = Module("mvtmod", "mvts")
 mvt_mod:load()
 g:print(mvt_mod:get_descr().. ' loaded')
@@ -164,6 +187,14 @@ function( key )
     eg:remove('rock')
     eg:add_child('root', 'rock', boulder.models['rock'].entity)
 
+  -- VK_F5
+  elseif key == 116 then  
+
+    current_cam = current_cam + 1
+	if current_cam == 2 then
+	  current_cam = 0
+	end
+	set_camera(current_cam)
 
   elseif key == 17 then
     ctrl_key = FALSE
@@ -221,11 +252,6 @@ planet_transform:add_matrix( "pos", planet_pos_mat )
 
 
 
---planet_revol = RevolutionTransform()
---planet_revol:configure(ceres_planet_entity, 0.001, 1)
-
-
-
 boulder_passes_config = 
 {
 	layer_0 = 
@@ -238,6 +264,7 @@ boulder_passes_config =
 boulder.view.load('rock', boulder_passes_config)
 eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
 
+
 boulder_pos_mat = Matrix()
 boulder_pos_mat:translation( 0.0, 0.0, -800.0 )
 
@@ -246,6 +273,12 @@ boulder_transform:configure(boulder.models['rock'].entity,0)
 
 boulder_transform:add_matrix( "pos", boulder_pos_mat )
 
+
+--local rock_free_transfo=FreeTransform()
+
+renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
+camera2_entity, camera2_pos=commons.create_static_camera(0.0, 70.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+eg:add_child('rock','camera2_entity', camera2_entity)
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
@@ -258,5 +291,5 @@ model.env.light.setdir(1.0, -0.4, 0.0)
 model.env.ambientlight.setcolor(0.05, 0.05, 0.05)
 model.env.fog.setdensity(0.0)
 
-
+set_camera(current_cam)
 
