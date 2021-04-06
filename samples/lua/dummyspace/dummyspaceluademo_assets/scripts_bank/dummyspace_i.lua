@@ -39,8 +39,9 @@ renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
 
 
-
 set_camera = function(camera)
+
+
   if camera == free_cam then
 
     eg:set_camera(model.camera.entity)
@@ -147,16 +148,29 @@ function( key )
 
   --Q key
   if key == 81 then 
-    local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+    if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+      model.camera.mvt:update(2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+    else
+      local mvt_info = { rock_free_transfo:read() }
+      rock_free_transfo:update(500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    end
+
       
   --W key
   elseif key == 87 then
 
-    local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(-2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+      model.camera.mvt:update(-2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    else
+      local mvt_info = { rock_free_transfo:read() }
+      rock_free_transfo:update(-500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    end
 
   elseif key == 17 then
     ctrl_key = TRUE
@@ -172,15 +186,27 @@ function( key )
 
   --Q key
   if key == 81 then
-    local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+      model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    else
+      local mvt_info = { rock_free_transfo:read() }
+      rock_free_transfo:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    end
     
   --W key
   elseif key == 87 then
-    local mvt_info = { model.camera.mvt:read() }
 
-	model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    if current_cam == free_cam then
+      local mvt_info = { model.camera.mvt:read() }
+      model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    else
+      local mvt_info = { rock_free_transfo:read() }
+      rock_free_transfo:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+    end
+
+	
 
   -- VK_F1
   elseif key == 112 then
