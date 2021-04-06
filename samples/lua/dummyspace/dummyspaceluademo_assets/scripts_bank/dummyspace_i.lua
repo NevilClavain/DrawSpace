@@ -44,14 +44,12 @@ set_camera = function(camera)
   if camera == free_cam then
 
     eg:set_camera(model.camera.entity)
-    gui:show_mousecursor(FALSE)
-    g:set_mousecursorcircularmode(TRUE)
 
   elseif camera == asteroid_cam then
 
     eg:set_camera(camera2_entity)
-    gui:show_mousecursor(TRUE)
-	g:set_mousecursorcircularmode(FALSE)
+
+
   end
 end
 
@@ -74,8 +72,6 @@ rg:set_pass_depthclearstate( 'texture_pass', TRUE )
 
 
 model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
-eg:set_camera(model.camera.entity)
-
 
 camera_width, camera_height, zn, zf = model.camera.entity:read_cameraparams()
 
@@ -96,15 +92,19 @@ mouse_right = FALSE
 g:add_mousemovecb( "onmousemove",
 function( xm, ym, dx, dy )  
 
-  if ctrl_key == TRUE then
-
-
-  else
+  if current_cam == free_cam then
     local mvt_info = { model.camera.mvt:read() }
     if mouse_right == FALSE then
   	  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],-dy / 4.0,-dx / 4.0, 0)
     else
-	  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,-dx)
+      model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,-dx)
+    end
+  else
+    local mvt_info = { rock_free_transfo:read() }
+    if mouse_right == FALSE then
+  	  rock_free_transfo:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],-dy / 4.0,-dx / 4.0, 0)
+    else
+      rock_free_transfo:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,-dx)
     end
   end
 
@@ -125,8 +125,13 @@ function()
 
   text_renderer:update(10, 150, 255, 0, 0, resources_event)
 
-  local mvt_info = { model.camera.mvt:read() }
-  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+  if current_cam == free_cam then
+    local mvt_info = { model.camera.mvt:read() }
+    model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+  else
+    local mvt_info = { rock_free_transfo:read() }
+    rock_free_transfo:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+  end
 
 
   planet_rot_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(ceres_angles:get_value()))
@@ -179,13 +184,29 @@ function( key )
 
   -- VK_F1
   elseif key == 112 then
+    eg:remove('asteroid_cam')
     eg:remove('rock')
+    
     eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
+    eg:add_child('rock','asteroid_cam', camera2_entity)
+
+    -- set again asteroid cam because it has been erased
+    if current_cam == asteroid_cam then
+      set_camera(current_cam)
+    end
 
   -- VK_F2
   elseif key == 113 then
+    eg:remove('asteroid_cam')
     eg:remove('rock')
+    
     eg:add_child('root', 'rock', boulder.models['rock'].entity)
+    eg:add_child('rock','asteroid_cam', camera2_entity)
+
+    -- set again asteroid cam because it has been erased
+    if current_cam == asteroid_cam then
+      set_camera(current_cam)
+    end
 
   -- VK_F5
   elseif key == 116 then  
@@ -262,23 +283,15 @@ boulder_passes_config =
 	}
 }
 boulder.view.load('rock', boulder_passes_config)
-eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
+eg:add_child('root', 'rock', boulder.models['rock'].entity)
 
-
-boulder_pos_mat = Matrix()
-boulder_pos_mat:translation( 0.0, 0.0, -800.0 )
-
-boulder_transform = RawTransform()
-boulder_transform:configure(boulder.models['rock'].entity,0)
-
-boulder_transform:add_matrix( "pos", boulder_pos_mat )
-
-
---local rock_free_transfo=FreeTransform()
+rock_free_transfo=FreeTransform()
+rock_free_transfo:instanciate_transformimpl(mvt_mod)
+rock_free_transfo:configure(boulder.models['rock'].entity,0, 0.0, 0.0, -800.0, 0)
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
-camera2_entity, camera2_pos=commons.create_static_camera(0.0, 70.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
-eg:add_child('rock','camera2_entity', camera2_entity)
+camera2_entity, camera2_pos=commons.create_static_camera(0.0, 10.0, 60.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+eg:add_child('rock','asteroid_cam', camera2_entity)
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)

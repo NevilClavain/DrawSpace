@@ -7,9 +7,11 @@ g:signal_rendersceneend("eg")
 planet_transform:release()
 
 
-eg:remove('camera2_entity')
+
+eg:remove('asteroid_cam')
 commons.trash.camera(camera2_entity, camera2_pos)  
-boulder_transform:release()
+--boulder_transform:release()
+rock_free_transfo:release()
 boulder.view.unload('rock')
 
 spaceboxmod.view.unload('spacebox0')
