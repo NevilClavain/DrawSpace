@@ -1,6 +1,6 @@
 
 include('spacebox_model.lua')
-include('ceresplanet_model.lua')
+include('asteroid_model.lua')
 include('boulder_model.lua')
 include('bellerophon_model.lua')
 
@@ -31,7 +31,7 @@ function( event, resource_path, context )
        rg:update_renderingqueues()
 
        if context == "init" then
-         root_entity:register_collider(ceresplanet.models['ceres'].entity)
+         root_entity:register_collider(asteroid.models['ceres'].entity)
          root_entity:register_collider(boulder.models['rock'].entity)
 
          root_entity:register_rigidbody(bellerophon_entity)
@@ -395,19 +395,19 @@ model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spa
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
 
-ceresplanet_passes_bindings = 
+asteroid_passes_bindings = 
 {
 	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
-		lit_shader_update_func = ceresplanet.update_lit_from_scene_env
+		lit_shader_update_func = asteroid.update_lit_from_scene_env
 	}
 }
-ceresplanet.view.load('ceres', ceresplanet_passes_bindings)
-eg:add_child('root', 'ceres', ceresplanet.models['ceres'].entity)
+asteroid.view.load('ceres', asteroid_passes_bindings)
+eg:add_child('root', 'ceres', asteroid.models['ceres'].entity)
 
-ceres_planet_entity = ceresplanet.models['ceres'].entity
+ceres_planet_entity = asteroid.models['ceres'].entity
 
 planet_transform = RawTransform()
 planet_transform:configure(ceres_planet_entity,0)

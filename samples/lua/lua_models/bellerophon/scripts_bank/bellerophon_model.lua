@@ -115,7 +115,7 @@ bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialp
   local rigibody_transform = RigdBodyTransform()
 
   rigibody_transform:attach_toentity(entity,0)
-  rigibody_transform:configure_shape(SHAPE_BOX, 110.0, 80.0, 170.0)
+  rigibody_transform:configure_shape(SHAPE_BOX, 95.0, 70.0, 161.0)
   local pos_mat = Matrix()
   pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
   rigibody_transform:configure_attitude(pos_mat)
