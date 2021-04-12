@@ -153,7 +153,8 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
         if (tb_gen_mode == Core::Meshe::TB_COMPUTED || tb_gen_mode == Core::Meshe::TB_AUTO && !hasTB)
         {
-            if (meshe->GetNumUVChannels() > 0)
+            size_t numUVChannels{ meshe->GetNumUVChannels() };
+            if (numUVChannels > 0)
             {
                 p_destination->ComputeTBs();
             }
