@@ -17,6 +17,9 @@ boulder.view.unload('rock')
 spaceboxmod.view.unload('spacebox0')
 ceresplanet.view.unload('ceres')
 
+bellerophon_entity:release_info("entity_name")
+bellerophon_entity:remove_aspect(INFOS_ASPECT)
+bellerophon.view.unload('ship')
 
 
 model.releasemaincamera()

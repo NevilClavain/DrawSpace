@@ -2,6 +2,7 @@
 include('spacebox_model.lua')
 include('ceresplanet_model.lua')
 include('boulder_model.lua')
+include('bellerophon_model.lua')
 
 ctrl_key = FALSE
 
@@ -28,6 +29,14 @@ function( event, resource_path, context )
        evt_out = "All assets loaded !"
        g:deactivate_resourcessystem();
        rg:update_renderingqueues()
+
+       if context == "init" then
+         root_entity:register_collider(ceresplanet.models['ceres'].entity)
+         root_entity:register_collider(boulder.models['rock'].entity)
+
+         root_entity:register_rigidbody(bellerophon_entity)
+       end
+
     else
        evt_out = "? : "..event       
     end
@@ -88,6 +97,11 @@ container_angle_x_deg = 0.0
 g:activate_resourcessystem("init");
 
 mouse_right = FALSE
+
+
+root_entity:add_aspect(PHYSICS_ASPECT)
+root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
+
 
 
 g:add_mousemovecb( "onmousemove",
@@ -172,6 +186,10 @@ function( key )
       rock_free_transfo:update(-500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
     end
 
+  elseif key == 37 then --VK_LEFT
+
+    bellerophon_rigibody_transform:update_forcestate("lateral prop", TRUE)
+
   elseif key == 17 then
     ctrl_key = TRUE
 
@@ -243,6 +261,10 @@ function( key )
 	end
 	set_camera(current_cam)
 
+  elseif key == 37 then --VK_LEFT
+
+    bellerophon_rigibody_transform:update_forcestate("lateral prop", FALSE)
+
   elseif key == 17 then
     ctrl_key = FALSE
      
@@ -313,11 +335,54 @@ eg:add_child('root', 'rock', boulder.models['rock'].entity)
 
 rock_free_transfo=FreeTransform()
 rock_free_transfo:instanciate_transformimpl(mvt_mod)
-rock_free_transfo:configure(boulder.models['rock'].entity,0, 0.0, 0.0, -800.0, 0)
+rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, -800.0, 0)
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 camera2_entity, camera2_pos=commons.create_static_camera(0.0, 10.0, 60.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
 eg:add_child('rock','asteroid_cam', camera2_entity)
+
+
+
+
+bellerophon_passes_bindings = 
+{
+	binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = bellerophon.update_lit_from_scene_env
+	}
+}
+bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = -800.0 }, bellerophon_passes_bindings)
+
+bellerophon_entity = bellerophon.models['ship'].entity
+
+eg:add_child('root', 'ship', bellerophon_entity)
+
+bellerophon_entity:add_aspect(INFOS_ASPECT)
+bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
+
+
+bellerophon_rigibody_transform = bellerophon.models['ship'].rigibody_transform
+
+bellerophon_rigibody_transform:configure_mass(50.0)
+
+bellerophon_rigibody_transform:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_force("lateral prop", Vector(-5000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_rigibody_transform:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_rigibody_transform:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+
+
+
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
