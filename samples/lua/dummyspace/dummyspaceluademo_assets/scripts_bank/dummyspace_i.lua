@@ -338,7 +338,7 @@ rock_free_transfo:instanciate_transformimpl(mvt_mod)
 rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, -800.0, 0)
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
-camera2_entity, camera2_pos=commons.create_static_camera(0.0, 10.0, 60.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+camera2_entity, camera2_pos=commons.create_static_camera(0.0, 10.0, 60.0, viewport_width,viewport_height, mvt_mod, "rock_camera")
 eg:add_child('rock','asteroid_cam', camera2_entity)
 
 
