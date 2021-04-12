@@ -172,9 +172,12 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
       model.camera.mvt:update(2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
 
-    else
+    elseif current_cam == asteroid_cam then
       local mvt_info = { rock_free_transfo:read() }
       rock_free_transfo:update(500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+    elseif current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_forcestate("main prop", TRUE)
     end
 
       
@@ -185,17 +188,60 @@ function( key )
     if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
       model.camera.mvt:update(-2500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
-    else
+
+    elseif current_cam == asteroid_cam then
       local mvt_info = { rock_free_transfo:read() }
       rock_free_transfo:update(-500.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+    elseif current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_forcestate("reverse prop", TRUE)
+    end
+
+  elseif key == 17 then
+    ctrl_key = TRUE
+
+
+  elseif key == 65 then --'A'
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("roll_left", TRUE)
+      root_entity:update_timescale(NORMAL_TIME)
+    end
+
+  elseif key == 90 then --'Z'
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("roll_right", TRUE)
+      root_entity:update_timescale(NORMAL_TIME)
     end
 
   elseif key == 37 then --VK_LEFT
 
-    bellerophon_rigibody_transform:update_forcestate("lateral prop", TRUE)
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("yaw_left", TRUE)
+      root_entity:update_timescale(NORMAL_TIME)
+    end
 
-  elseif key == 17 then
-    ctrl_key = TRUE
+  elseif key == 38 then --VK_UP
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("pitch_down", TRUE)
+      root_entity:update_timescale(NORMAL_TIME)
+    end
+
+  elseif key == 39 then --VK_RIGHT
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("yaw_right", TRUE)
+      root_entity:update_timescale(NORMAL_TIME)
+    end
+
+  elseif key == 40 then --VK_DOWN
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("pitch_up", TRUE)
+      root_entity:update_timescale(NORMAL_TIME)
+    end
 
   end
 
@@ -212,9 +258,13 @@ function( key )
     if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
       model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
-    else
+
+    elseif current_cam == asteroid_cam then
       local mvt_info = { rock_free_transfo:read() }
       rock_free_transfo:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+    elseif current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_forcestate("main prop", FALSE)
     end
     
   --W key
@@ -223,12 +273,62 @@ function( key )
     if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
       model.camera.mvt:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
-    else
+
+    elseif current_cam == asteroid_cam then
       local mvt_info = { rock_free_transfo:read() }
       rock_free_transfo:update(0.0,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+    elseif current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_forcestate("reverse prop", FALSE)
     end
 
-	
+  elseif key == 76 then --'L'
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:zero_speed()
+    end
+
+  elseif key == 77 then --'M'
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:zero_angularspeed()
+    end
+
+  elseif key == 65 then --'A'
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("roll_left", FALSE)
+    end
+    
+  elseif key == 90 then --'Z'
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("roll_right", FALSE)
+    end
+    
+  elseif key == 37 then --VK_LEFT
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("yaw_left", FALSE)
+    end
+    
+  elseif key == 38 then --VK_UP
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("pitch_down", FALSE)
+    end
+    
+  elseif key == 39 then --VK_RIGHT
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("yaw_right", FALSE)
+    end
+    
+  elseif key == 40 then --VK_DOWN
+
+    if current_cam == ship_cam then
+      bellerophon_rigibody_transform:update_torquestate("pitch_up", FALSE)	
+    end
 
   -- VK_F1
   elseif key == 112 then
