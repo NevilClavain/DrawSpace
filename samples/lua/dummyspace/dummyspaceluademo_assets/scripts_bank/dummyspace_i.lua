@@ -59,12 +59,16 @@ set_camera = function(camera)
 
     eg:set_camera(camera2_entity)
 
+  elseif camera == ship_cam then
+
+    eg:set_camera(camera3_entity)
 
   end
 end
 
 free_cam = 0
 asteroid_cam = 1
+ship_cam = 2
 
 current_cam = free_cam
 --current_cam = asteroid_cam
@@ -256,7 +260,7 @@ function( key )
   elseif key == 116 then  
 
     current_cam = current_cam + 1
-	if current_cam == 2 then
+	if current_cam == 3 then
 	  current_cam = 0
 	end
 	set_camera(current_cam)
@@ -382,7 +386,9 @@ bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000
 
 
 
-
+camera3_entity, camera3_pos=commons.create_static_camera(0.0, 70.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+camera3_entity:setup_info( "referent_body", "Bellorophon" )
+eg:add_child('ship','camera3_entity', camera3_entity)
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)

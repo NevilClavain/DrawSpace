@@ -10,6 +10,12 @@ planet_transform:release()
 
 eg:remove('asteroid_cam')
 commons.trash.camera(camera2_entity, camera2_pos)  
+
+
+camera3_entity:release_info("referent_body")
+eg:remove('camera3_entity')
+commons.trash.camera( camera3_entity, camera3_pos)
+
 --boulder_transform:release()
 rock_free_transfo:release()
 boulder.view.unload('rock')
