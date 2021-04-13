@@ -40,6 +40,8 @@ const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[
     { "unset_camera", &LuaClass_EntityNodeGraph::LUA_unsetcamera },
     { "dump", &LuaClass_EntityNodeGraph::LUA_dumpcontent },
 	{ "find_entityname", &LuaClass_EntityNodeGraph::LUA_findentityname },
+    { "register_rigidbody", &LuaClass_EntityNodeGraph::LUA_registerrigidbody },
+    { "register_collider", &LuaClass_EntityNodeGraph::LUA_registercollider },
 	{ 0, 0 }
 };
 
@@ -195,4 +197,34 @@ int LuaClass_EntityNodeGraph::LUA_findentityname(lua_State* p_L)
 		LUA_ERROR("EntityNodeGraph::find_entityname : cannot find entity name : unknow entity");
 		return 0;
 	}
+}
+
+int LuaClass_EntityNodeGraph::LUA_registerrigidbody(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("EntityNodeGraph::register_rigidbody : argument(s) missing");
+    }
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+    DrawSpace::Core::Entity& ref_entity{ lua_ent->GetEntity() };
+
+    m_entitygraph.RegisterRigidBody(&ref_entity);
+
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_registercollider(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("EntityNodeGraph::register_collider : argument(s) missing");
+    }
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+    DrawSpace::Core::Entity& ref_entity{ lua_ent->GetEntity() };
+
+    m_entitygraph.RegisterCollider(&ref_entity);
+
+    return 0;
 }

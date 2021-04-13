@@ -34,6 +34,7 @@ include_directories(${physfs_include_dir})
 link_directories(${physfs_lib_dir})
 
 include_directories(${bullet_include_dir})
+link_directories(${bullet_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -44,7 +45,7 @@ file(
 )
 
 add_executable(rt WIN32 ${source_files})
-target_link_libraries(rt physfs jsmn drawspace_core)
+target_link_libraries(rt physfs jsmn BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
 
 install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

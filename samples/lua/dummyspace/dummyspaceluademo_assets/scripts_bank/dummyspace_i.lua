@@ -31,10 +31,11 @@ function( event, resource_path, context )
        rg:update_renderingqueues()
 
        if context == "init" then
-         root_entity:register_collider(asteroid.models['ceres'].entity)
-         root_entity:register_collider(boulder.models['rock'].entity)
 
-         root_entity:register_rigidbody(bellerophon_entity)
+         eg:register_collider(asteroid.models['ceres'].entity)
+         eg:register_collider(boulder.models['rock'].entity)
+         eg:register_rigidbody(bellerophon_entity)
+
        end
 
     else

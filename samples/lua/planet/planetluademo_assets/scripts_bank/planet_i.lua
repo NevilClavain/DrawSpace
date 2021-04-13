@@ -33,8 +33,8 @@ function( event, resource_path, context )
        rg:update_renderingqueues()
 
        if context == "init" then
-         root_entity:register_rigidbody(bellerophon_entity)
-         root_entity:register_rigidbody(spherebump.models['sphere'].entity)
+         eg:register_rigidbody(bellerophon_entity)
+         eg:register_rigidbody(spherebump.models['sphere'].entity)
 
          resurgam_planet_config:set_resourcesready( TRUE )
          resurgam_planet_config:updated()

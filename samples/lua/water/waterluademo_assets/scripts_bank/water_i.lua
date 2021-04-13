@@ -45,9 +45,9 @@ function( event, resource_path, context )
        rg:update_renderingqueues()
 
        if context == "init" then
-         root_entity:register_collider(land.models['l'].entity)
-		 root_entity:register_rigidbody(metalcube.models['cube'].entity)
-		 root_entity:register_rigidbody(spherebump.models['sphere'].entity)
+         eg:register_collider(land.models['l'].entity)
+		 eg:register_rigidbody(metalcube.models['cube'].entity)
+		 eg:register_rigidbody(spherebump.models['sphere'].entity)
 
 	   else
 	    

@@ -25,12 +25,14 @@
 #include "entitynodegraph.h"
 #include "systems.h"
 #include "timeaspect.h"
+#include "physicsaspect.h"
 
 
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
+using namespace DrawSpace::Aspect;
 
 EntityNodeGraph::EntityNodeGraph( void ) :
 m_curr_entity_camera( NULL ),
@@ -254,5 +256,43 @@ void EntityNodeGraph::OnEntityRemoved(Core::Entity* p_entity)
     {
         // if removed entity is current camera, set current camera to null
         SetCurrentCameraEntity( nullptr );
+    }
+}
+
+void EntityNodeGraph::RegisterRigidBody(Core::Entity* p_entity) const
+{
+    register_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->RegisterRigidBody(p_entity); } );
+}
+
+void EntityNodeGraph::RegisterCollider(Core::Entity* p_entity) const
+{
+    register_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->RegisterCollider(p_entity); });
+}
+
+void EntityNodeGraph::register_in_physic(Core::Entity* p_entity, const std::function<void(PhysicsAspect*, Core::Entity* )>& p_register) const
+{
+    std::vector<Entity*> ancestors;
+    GetEntityAncestorsList(p_entity, ancestors);
+
+    PhysicsAspect* physics_aspect{ nullptr };
+    for (auto& e : ancestors)
+    {
+        PhysicsAspect* curr_physics_aspect{ e->GetAspect<PhysicsAspect>() };
+
+        if (curr_physics_aspect)
+        {
+            // find first parent with a physic aspect
+            physics_aspect = curr_physics_aspect;
+            break;
+        }
+    }
+
+    if (physics_aspect)
+    {
+        p_register(physics_aspect, p_entity);
+    }
+    else
+    {
+        _DSEXCEPTION("Physic aspect required in at least one entity ancestor");
     }
 }

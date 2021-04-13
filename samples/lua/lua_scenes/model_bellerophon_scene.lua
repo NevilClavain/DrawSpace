@@ -11,7 +11,7 @@
 		   rg:update_renderingqueues()
 
 		   if context == "init" then
-			 root_entity:register_rigidbody(bellerophon.models['b'].entity)
+			 eg:register_rigidbody(bellerophon.models['b'].entity)
 		   end    
 		end
 

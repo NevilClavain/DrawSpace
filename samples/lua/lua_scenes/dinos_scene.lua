@@ -13,11 +13,11 @@
       if event == ALL_ASSETS_LOADED then
 
 	  
-         root_entity:register_collider(continent.models['continent'].entity)
-		 root_entity:register_collider(boulder.models['rock'].entity)
-		 root_entity:register_rigidbody(spherebump.models['s'].entity)
-		 root_entity:register_rigidbody(spherebump.models['s2'].entity)
-		 root_entity:register_rigidbody(metalcube.models['c'].entity)
+         eg:register_collider(continent.models['continent'].entity)
+		 eg:register_collider(boulder.models['rock'].entity)
+		 eg:register_rigidbody(spherebump.models['s'].entity)
+		 eg:register_rigidbody(spherebump.models['s2'].entity)
+		 eg:register_rigidbody(metalcube.models['c'].entity)
 		 
 
       end
