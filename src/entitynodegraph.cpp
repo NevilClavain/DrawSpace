@@ -272,6 +272,10 @@ void EntityNodeGraph::RegisterCollider(Core::Entity* p_entity) const
 void EntityNodeGraph::register_in_physic(Core::Entity* p_entity, const std::function<void(PhysicsAspect*, Core::Entity* )>& p_register) const
 {
     std::vector<Entity*> ancestors;
+
+    // including the entity itself (if the entity has physics aspect, it is the root of a new bullet physic world)
+    ancestors.push_back(p_entity);
+
     GetEntityAncestorsList(p_entity, ancestors);
 
     PhysicsAspect* physics_aspect{ nullptr };

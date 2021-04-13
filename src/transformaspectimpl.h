@@ -51,7 +51,6 @@ public:
 
     virtual void SetTimeAspect( Aspect::TimeAspect* p_time_aspect ) { m_time_aspect = p_time_aspect; };
     virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
-    virtual bool IgnoreParentTransformation( void ) const { return false; };
 };
 }
 }

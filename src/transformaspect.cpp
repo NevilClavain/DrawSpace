@@ -66,8 +66,6 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 
     locale_mat.Identity();
 
-    bool ignore_parent_transform = false;
-
     // operation : pour une liste de N matrices
     // [N] * [N-1] * [N - 2] * ..... * [2] * [1] * [0]
 
@@ -81,11 +79,6 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 
         Matrix::MatrixMult(&current, &locale_mat, &res);
         locale_mat = res;
-
-        if (e.second->IgnoreParentTransformation())
-        {
-            ignore_parent_transform = true;
-        }
     }
 
     Matrix parent_transform_mat;
@@ -94,7 +87,7 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     if( p_parent )
     {
         TransformAspect* parent_world_aspect = p_parent->GetAspect<TransformAspect>();
-        if (parent_world_aspect && !ignore_parent_transform)
+        if (parent_world_aspect)
         {
             parent_transform_mat = parent_world_aspect->m_worldtransform;
         }        
