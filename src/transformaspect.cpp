@@ -149,6 +149,11 @@ void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodeg
 
         Matrix current_stack_matrix{ m_stack_matrix };
         m_stack_matrix = current_stack_matrix * parent_transform;
+
+        for (auto& e : m_impls_list)
+        {
+            e.second->OnAddedInGraph(m_worldtransform, parent_transform_aspect->m_worldtransform);
+        }
     }
 }
 
@@ -163,6 +168,11 @@ void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
 
             Matrix current_stack_matrix{ m_stack_matrix };
             m_stack_matrix = current_stack_matrix * parent_transform;
+        }
+
+        for (auto& e : m_impls_list)
+        {
+            e.second->OnRemovedFromGraph(m_worldtransform, parent_transform_aspect->m_worldtransform);
         }
     }
 }

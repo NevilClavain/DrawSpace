@@ -57,12 +57,10 @@ void PhysicsSystem::VisitEntity( Entity* p_parent, Entity* p_entity )
 
         physics_aspect->StepSimulation();
     }
-    else
+
+    CollisionAspect* collision_aspect = p_entity->GetAspect<CollisionAspect>();
+    if (collision_aspect)
     {
-        CollisionAspect* collision_aspect = p_entity->GetAspect<CollisionAspect>();
-        if (collision_aspect)
-        {
-            collision_aspect->Update(p_entity);
-        }
+        collision_aspect->Update(p_entity);
     }
 }

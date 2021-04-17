@@ -366,3 +366,24 @@ void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, U
     p_mat(3, 3) = bt_matrix[15];
 }
 
+void RigidBodyTransformAspectImpl::OnAddedInGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform)
+{
+    // compute transformation local/relative to parent -> p_transform * p_parent_transform ^-1
+
+    Matrix parent_transform{ p_parent_transform };
+    parent_transform.Inverse();
+    Matrix transform{ p_transform };
+    Matrix res{ transform * parent_transform };
+
+    btScalar    btmat[16];
+
+    convert_matrix_to_bt(res, btmat);
+
+    m_motionState->m_graphicsWorldTrans.setFromOpenGLMatrix(btmat);
+
+}
+
+void RigidBodyTransformAspectImpl::OnRemovedFromGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform)
+{
+
+}

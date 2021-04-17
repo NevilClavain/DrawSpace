@@ -50,6 +50,10 @@ public:
     TransformAspectImpl( void ) : m_time_aspect( NULL ) {};
 
     virtual void SetTimeAspect( Aspect::TimeAspect* p_time_aspect ) { m_time_aspect = p_time_aspect; };
+
+    virtual void OnAddedInGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform) {};
+    virtual void OnRemovedFromGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform) {};
+
     virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform ) = 0;
 };
 }

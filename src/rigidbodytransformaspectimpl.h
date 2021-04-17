@@ -193,7 +193,11 @@ public:
 
 
     RigidBodyTransformAspectImpl( void );
-    virtual void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
+    void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
+
+    void OnAddedInGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform);
+    void OnRemovedFromGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform);
+
 
     btRigidBody* Init(Aspect::TransformAspect* p_transformaspect);
 

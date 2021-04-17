@@ -153,12 +153,12 @@ function()
     rock_free_transfo:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
   end
 
-
+  --[[
   planet_rot_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(ceres_angles:get_value()))
-
   planet_transform:update_matrix( "rot", planet_rot_mat )
-
   ceres_angles:inc( 5.0 )
+  ]]
+  
 
 end)
 
@@ -357,6 +357,23 @@ function( key )
       set_camera(current_cam)
     end
 
+  -- VK_F3
+  elseif key == 114 then
+
+    eg:remove('camera3_entity')
+    eg:remove('ship')
+    
+    eg:add_child('ceres', 'ship', bellerophon_entity)
+    eg:add_child('ship','camera3_entity', camera3_entity)
+
+    -- set again asteroid cam because it has been erased
+    if current_cam == ship_cam then
+      set_camera(current_cam)
+    end
+
+  -- VK_F4
+  elseif key == 115 then
+
   -- VK_F5
   elseif key == 116 then  
 
@@ -423,6 +440,10 @@ planet_transform:add_matrix( "rot", planet_rot_mat )
 planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -5000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
+
+ceres_planet_entity:add_aspect(PHYSICS_ASPECT)
+ceres_planet_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
+
 
 
 
@@ -499,7 +520,7 @@ model.camera.mvt:set_pos(0.0, 0.0, 10.0)
 
 model.env.light.setstate( TRUE )
 model.env.light.setdir(1.0, -0.4, 0.0)
-model.env.ambientlight.setcolor(0.05, 0.05, 0.05)
+model.env.ambientlight.setcolor(0.45, 0.45, 0.45)
 model.env.fog.setdensity(0.0)
 
 set_camera(current_cam)
