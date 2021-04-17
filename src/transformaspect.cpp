@@ -140,39 +140,46 @@ void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 
 void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
+    Matrix parent_transform_mat;
+    parent_transform_mat.Identity();
+
     TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
     if (parent_transform_aspect)
     {
         Matrix parent_transform{ parent_transform_aspect->m_worldtransform };
+        parent_transform_mat = parent_transform;
 
         parent_transform.Inverse();
 
         Matrix current_stack_matrix{ m_stack_matrix };
         m_stack_matrix = current_stack_matrix * parent_transform;
+    }
 
-        for (auto& e : m_impls_list)
-        {
-            e.second->OnAddedInGraph(m_worldtransform, parent_transform_aspect->m_worldtransform);
-        }
+    for (auto& e : m_impls_list)
+    {
+        e.second->OnAddedInGraph(m_worldtransform, parent_transform_mat);
     }
 }
 
 void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
+    Matrix parent_transform_mat;
+    parent_transform_mat.Identity();
     if (p_parent_entity)
     {
         TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
         if (parent_transform_aspect)
         {
             Matrix parent_transform{ parent_transform_aspect->m_worldtransform };
+            parent_transform_mat = parent_transform;
 
             Matrix current_stack_matrix{ m_stack_matrix };
             m_stack_matrix = current_stack_matrix * parent_transform;
         }
+    }
 
-        for (auto& e : m_impls_list)
-        {
-            e.second->OnRemovedFromGraph(m_worldtransform, parent_transform_aspect->m_worldtransform);
-        }
+    for (auto& e : m_impls_list)
+    {
+        e.second->OnRemovedFromGraph(m_worldtransform, parent_transform_mat);
     }
 }
