@@ -557,6 +557,8 @@ int LuaClass_Entity::LUA_releasecollision(lua_State* p_L)
 		LUA_ERROR("Entity::release_collision : collision aspect doesnt exists in this entity!");
 	}
 
+	collision_aspect->Release();
+
 	collision_aspect->RemoveComponent<bool>("contact_state");
 
 	return 0;
