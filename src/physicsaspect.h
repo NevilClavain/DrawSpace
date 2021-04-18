@@ -33,6 +33,10 @@
 
 namespace DrawSpace
 {
+namespace AspectImplementations
+{
+    class RigidBodyTransformAspectImpl;
+}
 namespace Aspect
 {
 class PhysicsAspect : public Core::ComponentContainer
@@ -49,8 +53,9 @@ protected:
 
     TimeAspect*                                                     m_time_aspect;
 
-    std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies; // entites ger�es "sous" l'entite-world physique possedant cet aspect
+    std::map<btRigidBody*, DrawSpace::Core::Entity*>                m_bodies; // entites gerées "sous" l'entite-world physique possedant cet aspect
 
+    AspectImplementations::RigidBodyTransformAspectImpl*            find_rigidbodytransformaspectimpl(DrawSpace::Core::Entity* p_entity) const;
 
 public:
 
@@ -59,16 +64,14 @@ public:
     void StepSimulation( void );
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
-
-    
-
+   
     btDiscreteDynamicsWorld* GetWorld( void ) const;
 
     void RegisterRigidBody(DrawSpace::Core::Entity* p_entity);
-    void UnregisterRigidBody( btRigidBody* p_rigidbody );
+    void UnregisterRigidBody(DrawSpace::Core::Entity* p_entity);
 
     void RegisterCollider(DrawSpace::Core::Entity* p_entity);
-    void UnregisterCollider(btRigidBody* p_rigidbody);
+    void UnregisterCollider(DrawSpace::Core::Entity* p_entity);
 
 };
 }

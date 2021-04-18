@@ -144,6 +144,7 @@ public:
 	~CollisionAspect(void);
 
 	btRigidBody*    Init(void);
+    btRigidBody*    GetRigidBody(void) const;
     void            Update(Core::Entity* p_owner_entity);
 	void            Release(void);
 

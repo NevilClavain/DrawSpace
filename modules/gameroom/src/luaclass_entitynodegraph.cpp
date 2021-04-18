@@ -42,6 +42,9 @@ const Luna<LuaClass_EntityNodeGraph>::RegType LuaClass_EntityNodeGraph::methods[
 	{ "find_entityname", &LuaClass_EntityNodeGraph::LUA_findentityname },
     { "register_rigidbody", &LuaClass_EntityNodeGraph::LUA_registerrigidbody },
     { "register_collider", &LuaClass_EntityNodeGraph::LUA_registercollider },
+    { "unregister_rigidbody", &LuaClass_EntityNodeGraph::LUA_unregisterrigidbody },
+    { "unregister_collider", &LuaClass_EntityNodeGraph::LUA_unregistercollider },
+
 	{ 0, 0 }
 };
 
@@ -225,6 +228,36 @@ int LuaClass_EntityNodeGraph::LUA_registercollider(lua_State* p_L)
     DrawSpace::Core::Entity& ref_entity{ lua_ent->GetEntity() };
 
     m_entitygraph.RegisterCollider(&ref_entity);
+
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_unregisterrigidbody(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("EntityNodeGraph::unregister_rigidbody : argument(s) missing");
+    }
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+    DrawSpace::Core::Entity& ref_entity{ lua_ent->GetEntity() };
+
+    m_entitygraph.UnregisterRigidBody(&ref_entity);
+
+    return 0;
+}
+
+int LuaClass_EntityNodeGraph::LUA_unregistercollider(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("EntityNodeGraph::unregister_collider : argument(s) missing");
+    }
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+    DrawSpace::Core::Entity& ref_entity{ lua_ent->GetEntity() };
+
+    m_entitygraph.UnregisterCollider(&ref_entity);
 
     return 0;
 }

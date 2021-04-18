@@ -261,15 +261,15 @@ void EntityNodeGraph::OnEntityRemoved(Core::Entity* p_entity)
 
 void EntityNodeGraph::RegisterRigidBody(Core::Entity* p_entity) const
 {
-    register_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->RegisterRigidBody(p_entity); } );
+    manage_registration_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->RegisterRigidBody(p_entity); } );
 }
 
 void EntityNodeGraph::RegisterCollider(Core::Entity* p_entity) const
 {
-    register_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->RegisterCollider(p_entity); });
+    manage_registration_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->RegisterCollider(p_entity); });
 }
 
-void EntityNodeGraph::register_in_physic(Core::Entity* p_entity, const std::function<void(PhysicsAspect*, Core::Entity* )>& p_register) const
+void EntityNodeGraph::manage_registration_in_physic(Core::Entity* p_entity, const std::function<void(PhysicsAspect*, Core::Entity* )>& p_register) const
 {
     std::vector<Entity*> ancestors;
 
@@ -299,4 +299,14 @@ void EntityNodeGraph::register_in_physic(Core::Entity* p_entity, const std::func
     {
         _DSEXCEPTION("Physic aspect required in at least one entity ancestor");
     }
+}
+
+void EntityNodeGraph::UnregisterRigidBody(Core::Entity* p_entity) const
+{
+    manage_registration_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->UnregisterRigidBody(p_entity); });
+}
+
+void EntityNodeGraph::UnregisterCollider(Core::Entity* p_entity) const
+{
+    manage_registration_in_physic(p_entity, [](PhysicsAspect* p_aspect, Core::Entity* p_entity) { p_aspect->UnregisterCollider(p_entity); });
 }

@@ -502,7 +502,10 @@ destroy_all_cubes = function()
 
   j = 0
   while j < cube_instance do 
-    metalcube.view.unload('cube_'..j)  
+
+    eg:unregister_rigidbody(metalcube.models['cube_'..j].entity)
+
+    metalcube.view.unload('cube_'..j)
 	j = j + 1
   end
   cube_instance = 0

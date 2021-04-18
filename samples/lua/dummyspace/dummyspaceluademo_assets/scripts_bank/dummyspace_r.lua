@@ -1,5 +1,9 @@
 
 
+eg:unregister_collider(asteroid.models['ceres'].entity)
+eg:unregister_collider(boulder.models['rock'].entity)
+eg:unregister_rigidbody(bellerophon_entity)
+
 
 g:signal_rendersceneend("eg")
 

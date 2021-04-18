@@ -79,7 +79,7 @@ private:
 
     void notify_cam_event( CameraEvent p_evt, Core::Entity* p_entity );
 
-    void register_in_physic(Core::Entity* p_entity, const std::function<void(Aspect::PhysicsAspect*, Core::Entity*)>& p_register) const;
+    void manage_registration_in_physic(Core::Entity* p_entity, const std::function<void(Aspect::PhysicsAspect*, Core::Entity*)>& p_register) const;
 
 public:
 	EntityNodeGraph(void);
@@ -116,6 +116,10 @@ public:
 
     void RegisterRigidBody(Core::Entity* p_entity) const;
     void RegisterCollider(Core::Entity* p_entity) const;
+
+    void UnregisterRigidBody(Core::Entity* p_entity) const;
+    void UnregisterCollider(Core::Entity* p_entity) const;
+
     
     friend class EntityNode;
 };

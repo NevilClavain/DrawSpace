@@ -161,7 +161,6 @@ continent.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local entity = continent.models[p_entity_id]['entity']
   local renderer = continent.models[p_entity_id]['renderer']
 
-  entity:release_collision()
   entity:remove_aspect(COLLISION_ASPECT)
 
   commons.trash.meshe(p_rendergraph, entity, renderer)

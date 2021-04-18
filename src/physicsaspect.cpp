@@ -59,12 +59,11 @@ PhysicsAspect::~PhysicsAspect( void )
     _DRAWSPACE_DELETE_( m_sequentialImpulseConstraintSolver );
 }
 
-void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
+RigidBodyTransformAspectImpl* PhysicsAspect::find_rigidbodytransformaspectimpl(DrawSpace::Core::Entity* p_entity) const
 {
     TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
     if (transform_aspect)
     {
-
         RigidBodyTransformAspectImpl* rigibody_transform_impl{ nullptr };
         auto transformimpls_list{ transform_aspect->GetTransformAspectImplsList() };
 
@@ -84,11 +83,7 @@ void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
         }
         else
         {
-            btRigidBody* bd{ rigibody_transform_impl->Init(transform_aspect) };
-
-            m_bodies[bd] = p_entity;
-            rigibody_transform_impl->RegisterPhysicalAspect(this);
-
+            return rigibody_transform_impl;
         }
     }
     else
@@ -97,12 +92,40 @@ void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
     }
 }
 
-
-void PhysicsAspect::UnregisterRigidBody( btRigidBody* p_rigidbody )
+void PhysicsAspect::RegisterRigidBody(DrawSpace::Core::Entity* p_entity)
 {
-    if( m_bodies.count( p_rigidbody ) )
+    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+    if (transform_aspect)
     {
-        m_bodies.erase( p_rigidbody );
+        RigidBodyTransformAspectImpl* rigibody_transform_impl{ find_rigidbodytransformaspectimpl(p_entity) };
+        btRigidBody* bd{ rigibody_transform_impl->Init(transform_aspect) };
+
+        m_bodies[bd] = p_entity;
+        rigibody_transform_impl->RegisterPhysicalAspect(this);
+    }
+    else
+    {
+        _DSEXCEPTION("Entity has no transform aspect")
+    }
+}
+
+
+void PhysicsAspect::UnregisterRigidBody(DrawSpace::Core::Entity* p_entity)
+{
+    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+    if (transform_aspect)
+    {
+        RigidBodyTransformAspectImpl* rigibody_transform_impl{ find_rigidbodytransformaspectimpl(p_entity) };
+        btRigidBody* bd{ rigibody_transform_impl->GetRigidBody() };
+        if (m_bodies.count(bd))
+        {
+            m_bodies.erase(bd);
+        }
+        rigibody_transform_impl->Release();
+    }
+    else
+    {
+        _DSEXCEPTION("Entity has no transform aspect")
     }
 }
 
@@ -121,12 +144,21 @@ void PhysicsAspect::RegisterCollider(DrawSpace::Core::Entity* p_entity)
     collision_aspect->RegisterPhysicalAspect(this);
 }
 
-void PhysicsAspect::UnregisterCollider(btRigidBody* p_rigidbody)
+void PhysicsAspect::UnregisterCollider(DrawSpace::Core::Entity* p_entity)
 {
-    if (m_bodies.count(p_rigidbody))
+    CollisionAspect* collision_aspect{ p_entity->GetAspect<CollisionAspect>() };
+    if (!collision_aspect)
     {
-        m_bodies.erase(p_rigidbody);
+        _DSEXCEPTION("Entity has no collision aspect")
     }
+   
+    btRigidBody* bd{ collision_aspect->GetRigidBody() };
+    if (m_bodies.count(bd))
+    {
+        m_bodies.erase(bd);
+    }
+
+    collision_aspect->Release();
 }
 
 

@@ -172,6 +172,11 @@ btRigidBody* CollisionAspect::Init(void)
     return m_rigidBody;
 }
 
+btRigidBody* CollisionAspect::GetRigidBody(void) const
+{
+    return m_rigidBody;
+}
+
 void CollisionAspect::Release(void)
 {
     if (!m_initialized)
@@ -193,13 +198,13 @@ void CollisionAspect::Release(void)
     if (m_world)
     {
         m_world->removeRigidBody(m_rigidBody);
-        m_physical_aspect_owner->UnregisterCollider(m_rigidBody);
 
         m_world = NULL;
         m_physical_aspect_owner = NULL;
     }
 
     _DRAWSPACE_DELETE_(m_rigidBody);
+    m_rigidBody = nullptr;
 
     if (m_mesh)
     {

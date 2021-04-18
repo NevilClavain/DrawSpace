@@ -264,6 +264,11 @@ btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspe
     return m_rigidBody;
 }
 
+btRigidBody* RigidBodyTransformAspectImpl::GetRigidBody(void) const
+{
+    return m_rigidBody;
+}
+
 void RigidBodyTransformAspectImpl::RegisterPhysicalAspect(PhysicsAspect* p_physical_aspect)
 {
     if (!m_initialized)
@@ -310,13 +315,15 @@ void RigidBodyTransformAspectImpl::Release(void)
     if (m_world)
     {
         m_world->removeRigidBody(m_rigidBody);
-        m_physical_aspect_owner->UnregisterRigidBody(m_rigidBody);
 
         m_world = NULL;
         m_physical_aspect_owner = NULL;
     }
 
     _DRAWSPACE_DELETE_(m_rigidBody);
+    m_rigidBody = nullptr;
+
+
     m_initialized = false;
 }
 

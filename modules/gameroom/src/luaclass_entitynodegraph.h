@@ -55,6 +55,10 @@ public:
     int LUA_registerrigidbody(lua_State* p_L);
     int LUA_registercollider(lua_State* p_L);
 
+    int LUA_unregisterrigidbody(lua_State* p_L);
+    int LUA_unregistercollider(lua_State* p_L);
+
+
     static const char className[];
     static const Luna<LuaClass_EntityNodeGraph>::RegType methods[];
 };

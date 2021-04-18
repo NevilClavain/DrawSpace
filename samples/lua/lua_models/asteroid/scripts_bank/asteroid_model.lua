@@ -163,7 +163,6 @@ asteroid.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local entity = asteroid.models[p_entity_id]['entity']
   local renderer = asteroid.models[p_entity_id]['renderer']
 
-  entity:release_collision()
   entity:remove_aspect(COLLISION_ASPECT)
 
   commons.trash.meshe(p_rendergraph, entity, renderer)
