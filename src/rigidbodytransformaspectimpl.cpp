@@ -302,22 +302,26 @@ void RigidBodyTransformAspectImpl::Release(void)
     }
     
     _DRAWSPACE_DELETE_(m_motionState);
+    m_motionState = nullptr;
 
     for (auto& e : m_collisionShapesList)
     {
         _DRAWSPACE_DELETE_(e.first);
     }
+    m_collisionShapesList.clear();
+
     if (m_compoundShape)
     {
         _DRAWSPACE_DELETE_(m_compoundShape);
+        m_compoundShape = nullptr;
     }
 
     if (m_world)
     {
         m_world->removeRigidBody(m_rigidBody);
 
-        m_world = NULL;
-        m_physical_aspect_owner = NULL;
+        m_world = nullptr;
+        m_physical_aspect_owner = nullptr;
     }
 
     _DRAWSPACE_DELETE_(m_rigidBody);
@@ -375,6 +379,7 @@ void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, U
 
 void RigidBodyTransformAspectImpl::OnAddedInGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform)
 {
+    /*
     if (m_initialized)
     {
         // compute transformation local/relative to parent -> p_transform * p_parent_transform ^-1
@@ -390,6 +395,7 @@ void RigidBodyTransformAspectImpl::OnAddedInGraph(const Utils::Matrix& p_transfo
 
         m_motionState->m_graphicsWorldTrans.setFromOpenGLMatrix(btmat);
     }
+    */
 }
 
 void RigidBodyTransformAspectImpl::OnRemovedFromGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform)
