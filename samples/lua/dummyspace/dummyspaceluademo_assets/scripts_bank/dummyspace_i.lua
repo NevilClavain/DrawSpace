@@ -333,11 +333,14 @@ function( key )
 
   -- VK_F1
   elseif key == 112 then
+
+    eg:unregister_collider(boulder.models['rock'].entity)
     eg:remove('asteroid_cam')
     eg:remove('rock')
     
     eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
     eg:add_child('rock','asteroid_cam', camera2_entity)
+    eg:register_collider(boulder.models['rock'].entity)
 
     -- set again asteroid cam because it has been erased
     if current_cam == asteroid_cam then
@@ -360,11 +363,13 @@ function( key )
   -- VK_F3
   elseif key == 114 then
 
+    eg:unregister_rigidbody(bellerophon_entity)
     eg:remove('camera3_entity')
     eg:remove('ship')
     
     eg:add_child('ceres', 'ship', bellerophon_entity)
     eg:add_child('ship','camera3_entity', camera3_entity)
+    eg:register_rigidbody(bellerophon_entity)
 
     -- set again asteroid cam because it has been erased
     if current_cam == ship_cam then
