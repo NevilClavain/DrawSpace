@@ -485,10 +485,12 @@ bellerophon_passes_bindings =
 	}
 }
 bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = -800.0 }, bellerophon_passes_bindings)
+--bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = 4200.0 }, bellerophon_passes_bindings)
 
 bellerophon_entity = bellerophon.models['ship'].entity
 
 eg:add_child('root', 'ship', bellerophon_entity)
+--eg:add_child('ceres', 'ship', bellerophon_entity)
 
 bellerophon_entity:add_aspect(INFOS_ASPECT)
 bellerophon_entity:setup_info( "entity_name", "Bellorophon" )

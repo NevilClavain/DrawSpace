@@ -25,7 +25,7 @@
 
 #include "physicsaspect.h"
 #include "transformaspect.h"
-
+#include "matrix.h"
 
 #include "rigidbodytransformaspectimpl.h"
 
@@ -38,6 +38,7 @@ using namespace DrawSpace::Utils;
 
 RigidBodyTransformAspectImpl::RigidBodyTransformAspectImpl(void)
 {
+    m_stack_matrix.Identity();
 }
 
 void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
@@ -138,7 +139,9 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
 
         mats[0]->getPurpose() = local_transf;
 
-        p_out_base_transform = local_transf;
+        //p_out_base_transform = local_transf;
+
+        p_out_base_transform = local_transf * m_stack_matrix;
     }
 }
 
@@ -377,28 +380,31 @@ void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, U
     p_mat(3, 3) = bt_matrix[15];
 }
 
-void RigidBodyTransformAspectImpl::OnAddedInGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform)
+void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_transform, 
+                                                        const Utils::Matrix& p_parent_transform, const Utils::Matrix& p_stack_transform)
 {
-    /*
-    if (m_initialized)
+    if (m_flag)
     {
-        // compute transformation local/relative to parent -> p_transform * p_parent_transform ^-1
-
-        Matrix parent_transform{ p_parent_transform };
-        parent_transform.Inverse();
-        Matrix transform{ p_transform };
-        Matrix res{ transform * parent_transform };
-
-        btScalar    btmat[16];
-
-        convert_matrix_to_bt(res, btmat);
-
-        m_motionState->m_graphicsWorldTrans.setFromOpenGLMatrix(btmat);
+        m_flag = false;
+        return;
     }
-    */
+
+    Matrix transform{ p_transform };
+
+    Matrix res{ transform * p_stack_transform };
+    
+    ComponentList<Matrix> mats;
+    p_transformaspect->GetComponentsByType<Matrix>(mats);
+
+    mats[0]->getPurpose() = res;
+
+    m_stack_matrix = p_stack_transform;
+    m_stack_matrix.Inverse();
+
 }
 
-void RigidBodyTransformAspectImpl::OnRemovedFromGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform)
+void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_transform, 
+                                                        const Utils::Matrix& p_parent_transform, const Utils::Matrix& p_stack_transform)
 {
 
 }

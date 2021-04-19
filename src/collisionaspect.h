@@ -150,6 +150,8 @@ public:
 
 	void RegisterPhysicalAspect(PhysicsAspect* p_physical_aspect);
 
+    void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
+    void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
 };
 }
 }

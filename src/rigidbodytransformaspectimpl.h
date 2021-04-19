@@ -28,6 +28,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "transformaspectimpl.h"
 
+
 namespace DrawSpace
 {
 namespace Aspect
@@ -52,6 +53,10 @@ protected:
     btCompoundShape*                                            m_compoundShape{ nullptr };
 
     btDefaultMotionState*                                       m_motionState{ nullptr };
+
+    bool                                                        m_flag{ true };
+
+    Utils::Matrix                                               m_stack_matrix;
 
 
     void convert_matrix_to_bt(const Utils::Matrix& p_mat, btScalar* bt_matrix);
@@ -196,9 +201,11 @@ public:
     void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
     
 
-    void OnAddedInGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform);
-    void OnRemovedFromGraph(const Utils::Matrix& p_transform, const Utils::Matrix& p_parent_transform);
+    void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_transform, 
+                            const Utils::Matrix& p_parent_transform, const Utils::Matrix& p_stack_transform);
 
+    void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_transform, 
+                            const Utils::Matrix& p_parent_transform, const Utils::Matrix& p_stack_transform);
 
     btRigidBody* Init(Aspect::TransformAspect* p_transformaspect);
     btRigidBody* GetRigidBody(void) const;
