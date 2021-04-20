@@ -38,6 +38,7 @@ m_time_aspect( NULL )
 {
     m_worldtransform.Identity();
     m_worldtransformfromphysicworld.Identity();
+    m_localtransform.Identity();
 
     m_dispatched_viewtransform.Identity();
     m_dispatched_projtransform.Identity();
@@ -85,6 +86,8 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
         locale_mat = res;
     }
 
+    m_localtransform = locale_mat;
+
     Matrix parent_transform_mat;
     parent_transform_mat.Identity();
 
@@ -126,6 +129,11 @@ void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, 
 void TransformAspect::GetWorldTransform( Matrix& p_worldtransform ) const
 {
     p_worldtransform = m_worldtransform;
+}
+
+void TransformAspect::GetLocalTransform(DrawSpace::Utils::Matrix& p_localtransform) const
+{
+    p_localtransform = m_localtransform;
 }
 
 void TransformAspect::GetWorldTransformFromPhysicWorld(Matrix& p_worldtransform) const
