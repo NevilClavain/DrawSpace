@@ -56,7 +56,7 @@ protected:
 
     bool                                                        m_flag{ true };
 
-    Utils::Matrix                                               m_stack_matrix;
+    Utils::Matrix                                               m_stack_matrix_inv;
 
 
     void convert_matrix_to_bt(const Utils::Matrix& p_mat, btScalar* bt_matrix);

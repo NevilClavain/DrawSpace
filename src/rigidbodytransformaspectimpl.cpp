@@ -38,7 +38,7 @@ using namespace DrawSpace::Utils;
 
 RigidBodyTransformAspectImpl::RigidBodyTransformAspectImpl(void)
 {
-    m_stack_matrix.Identity();
+    m_stack_matrix_inv.Identity();
 }
 
 void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
@@ -139,9 +139,8 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
 
         mats[0]->getPurpose() = local_transf;
 
-        //p_out_base_transform = local_transf;
-
-        p_out_base_transform = local_transf * m_stack_matrix;
+        p_out_base_transform = local_transf * m_stack_matrix_inv;  // multiplier par l'inverse de la stack pour compenser le fait que local_transf renvoyée par bullet inclu déja la stack matrix
+                                                                    // (cf méthode OnAddedInGraph() plus bas)
     }
 }
 
@@ -383,24 +382,31 @@ void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, U
 void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_transform, 
                                                         const Utils::Matrix& p_parent_transform, const Utils::Matrix& p_stack_transform)
 {
-    if (m_flag)
-    {
-        m_flag = false;
-        return;
+    if (!m_flag)
+    {   
+
+        // pas le 1er passage ici : on a deplacé l'entité possédand ce rigidbody ailleurs dans le entitynodegraph, sous une autre entity possedant un aspect world physics
+        //  -> remplacer le composant input 'Matrix' du transform aspect (rigid body initial attitude) par la transfo actuelle X la stack matrix
+
+        Matrix transform{ p_transform };
+
+        Matrix res{ transform * p_stack_transform }; // inclure la stack matrix dans la nouvelle inital attitude injectée dans bullet -> transform * stack donne la transfo locale a la nouvelle entité parente dont
+                                                     // on est devenu relatif
+
+        ComponentList<Matrix> mats;
+        p_transformaspect->GetComponentsByType<Matrix>(mats);
+
+        mats[0]->getPurpose() = res;
+
+        m_stack_matrix_inv = p_stack_transform;
+        m_stack_matrix_inv.Inverse();
     }
+    else
+    {
+        // 1er passage ici : ne pas écraser le composant input 'Matrix' du transform aspect (rigid body initial attitude)
 
-    Matrix transform{ p_transform };
-
-    Matrix res{ transform * p_stack_transform };
-    
-    ComponentList<Matrix> mats;
-    p_transformaspect->GetComponentsByType<Matrix>(mats);
-
-    mats[0]->getPurpose() = res;
-
-    m_stack_matrix = p_stack_transform;
-    m_stack_matrix.Inverse();
-
+        m_flag = false;
+    }
 }
 
 void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_transform, 
