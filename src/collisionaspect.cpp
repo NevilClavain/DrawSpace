@@ -261,16 +261,6 @@ void CollisionAspect::RegisterPhysicalAspect(PhysicsAspect* p_physical_aspect)
     }
 }
 
-void CollisionAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
-{
-
-}
-
-void CollisionAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
-{
-
-}
-
 void CollisionAspect::convert_matrix_to_bt(const Matrix& p_mat, btScalar* bt_matrix)
 {
     bt_matrix[0] = p_mat(0, 0);
