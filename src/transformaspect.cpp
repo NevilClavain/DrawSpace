@@ -23,6 +23,8 @@
 /* -*-LIC_END-*- */
 
 #include "transformaspect.h"
+
+#include "physicsaspect.h"
 #include "timeaspect.h"
 
 using namespace DrawSpace;
@@ -35,6 +37,8 @@ TransformAspect::TransformAspect( void ) :
 m_time_aspect( NULL )
 {
     m_worldtransform.Identity();
+    m_worldtransformfromphysicworld.Identity();
+
     m_dispatched_viewtransform.Identity();
     m_dispatched_projtransform.Identity();
     m_stack_matrix.Identity();
@@ -84,17 +88,33 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     Matrix parent_transform_mat;
     parent_transform_mat.Identity();
 
+    Matrix parent_transform_mat_fromphysicworld;
+    parent_transform_mat_fromphysicworld.Identity();
+
     if( p_parent )
     {
         TransformAspect* parent_world_aspect = p_parent->GetAspect<TransformAspect>();
         if (parent_world_aspect)
         {
             parent_transform_mat = parent_world_aspect->m_worldtransform;
+            parent_transform_mat_fromphysicworld = parent_world_aspect->m_worldtransformfromphysicworld;
         }        
     }
     
     Matrix sp = m_stack_matrix * parent_transform_mat;
     m_worldtransform = locale_mat * sp;
+
+
+    PhysicsAspect* physics_aspect{ p_entity->GetAspect<PhysicsAspect>() };
+    if (physics_aspect)
+    {
+        m_worldtransformfromphysicworld.Identity();
+    }
+    else
+    {
+        Matrix sp2 = m_stack_matrix * parent_transform_mat_fromphysicworld;
+        m_worldtransformfromphysicworld = locale_mat * sp2;
+    }
 }
 
 void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj )
@@ -106,6 +126,11 @@ void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, 
 void TransformAspect::GetWorldTransform( Matrix& p_worldtransform ) const
 {
     p_worldtransform = m_worldtransform;
+}
+
+void TransformAspect::GetWorldTransformFromPhysicWorld(Matrix& p_worldtransform) const
+{
+    p_worldtransform = m_worldtransformfromphysicworld;
 }
 
 void TransformAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const

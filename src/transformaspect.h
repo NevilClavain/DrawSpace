@@ -39,6 +39,7 @@ class TransformAspect : public Core::ComponentContainer
 {
 protected:
     DrawSpace::Utils::Matrix                                                            m_worldtransform;
+    DrawSpace::Utils::Matrix                                                            m_worldtransformfromphysicworld;
 
     DrawSpace::Utils::Matrix                                                            m_stack_matrix;
 
@@ -57,6 +58,7 @@ public:
     void RemoveAllImplementations(void);
     
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform ) const;
+    void GetWorldTransformFromPhysicWorld( DrawSpace::Utils::Matrix& p_worldtransform ) const;
     void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const;
     void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform ) const;
 	TimeAspect* GetTimeAspectRef(void) const;
