@@ -224,16 +224,7 @@ void CollisionAspect::Update(Entity* p_owner_entity)
         {
             Matrix world;
 
-            PhysicsAspect* physics_aspect{ p_owner_entity->GetAspect<PhysicsAspect>() };
-
-            if (physics_aspect)
-            {
-                world.Identity();
-            }
-            else
-            {
-                transform_aspect->GetWorldTransform(world);
-            }
+            transform_aspect->GetWorldTransformFromPhysicWorld(world);
           
             btScalar    btmat[16];
             btTransform bt_transform;
