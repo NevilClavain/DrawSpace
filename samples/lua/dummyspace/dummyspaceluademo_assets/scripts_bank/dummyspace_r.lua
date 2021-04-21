@@ -25,12 +25,12 @@ rock_free_transfo:release()
 boulder.view.unload('rock')
 
 spaceboxmod.view.unload('spacebox0')
-asteroid.view.unload('ceres')
 
 bellerophon_entity:release_info("entity_name")
 bellerophon_entity:remove_aspect(INFOS_ASPECT)
 bellerophon.view.unload('ship')
 
+asteroid.view.unload('ceres')
 
 model.releasemaincamera()
 

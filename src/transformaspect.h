@@ -61,6 +61,8 @@ public:
     void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform ) const;
     void GetLocalTransform(DrawSpace::Utils::Matrix& p_localtransform) const;
     void GetWorldTransformFromPhysicWorld( DrawSpace::Utils::Matrix& p_worldtransform ) const;
+    void GetStackMatrix(DrawSpace::Utils::Matrix& p_stack) const;
+
     void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const;
     void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform ) const;
 	TimeAspect* GetTimeAspectRef(void) const;

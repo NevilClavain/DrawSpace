@@ -153,11 +153,11 @@ function()
     rock_free_transfo:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
   end
 
-  --[[
+  
   planet_rot_mat:rotation(0.0, 1.0, 0.0, commons.utils.deg_to_rad(ceres_angles:get_value()))
   planet_transform:update_matrix( "rot", planet_rot_mat )
   ceres_angles:inc( 5.0 )
-  ]]
+ 
   
 
 end)
@@ -349,11 +349,13 @@ function( key )
 
   -- VK_F2
   elseif key == 113 then
+    eg:unregister_collider(boulder.models['rock'].entity)
     eg:remove('asteroid_cam')
     eg:remove('rock')
     
     eg:add_child('root', 'rock', boulder.models['rock'].entity)
     eg:add_child('rock','asteroid_cam', camera2_entity)
+    eg:register_collider(boulder.models['rock'].entity)
 
     -- set again asteroid cam because it has been erased
     if current_cam == asteroid_cam then
@@ -378,6 +380,19 @@ function( key )
 
   -- VK_F4
   elseif key == 115 then
+
+    eg:unregister_rigidbody(bellerophon_entity)
+    eg:remove('camera3_entity')
+    eg:remove('ship')
+    
+    eg:add_child('root', 'ship', bellerophon_entity)
+    eg:add_child('ship','camera3_entity', camera3_entity)
+    eg:register_rigidbody(bellerophon_entity)
+
+    -- set again asteroid cam because it has been erased
+    if current_cam == ship_cam then
+      set_camera(current_cam)
+    end
 
   -- VK_F5
   elseif key == 116 then  
@@ -462,11 +477,15 @@ boulder_passes_config =
 	}
 }
 boulder.view.load('rock', boulder_passes_config)
+
 eg:add_child('root', 'rock', boulder.models['rock'].entity)
+--eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
 
 rock_free_transfo=FreeTransform()
 rock_free_transfo:instanciate_transformimpl(mvt_mod)
+
 rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, -800.0, 0)
+--rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, 4200.0, 0)
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 camera2_entity, camera2_pos=commons.create_static_camera(0.0, 10.0, 60.0, viewport_width,viewport_height, mvt_mod, "rock_camera")
@@ -484,13 +503,13 @@ bellerophon_passes_bindings =
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
 	}
 }
-bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = -800.0 }, bellerophon_passes_bindings)
---bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = 4200.0 }, bellerophon_passes_bindings)
+--bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = -800.0 }, bellerophon_passes_bindings)
+bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = 4200.0 }, bellerophon_passes_bindings)
 
 bellerophon_entity = bellerophon.models['ship'].entity
 
-eg:add_child('root', 'ship', bellerophon_entity)
---eg:add_child('ceres', 'ship', bellerophon_entity)
+--eg:add_child('root', 'ship', bellerophon_entity)
+eg:add_child('ceres', 'ship', bellerophon_entity)
 
 bellerophon_entity:add_aspect(INFOS_ASPECT)
 bellerophon_entity:setup_info( "entity_name", "Bellorophon" )

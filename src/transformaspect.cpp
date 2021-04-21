@@ -141,6 +141,11 @@ void TransformAspect::GetWorldTransformFromPhysicWorld(Matrix& p_worldtransform)
     p_worldtransform = m_worldtransformfromphysicworld;
 }
 
+void TransformAspect::GetStackMatrix(DrawSpace::Utils::Matrix& p_stack) const
+{
+    p_stack = m_stack_matrix;
+}
+
 void TransformAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const
 {
     p_viewtransform = m_dispatched_viewtransform;
@@ -192,13 +197,18 @@ void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodeg
 
     for (auto& e : m_impls_list)
     {
-        e.second->OnAddedInGraph(this, m_worldtransform, parent_transform_mat, m_stack_matrix);
+        e.second->OnAddedInGraph(this);
     }
 
 }
 
 void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
+    for (auto& e : m_impls_list)
+    {
+        e.second->OnRemovedFromGraph(this);
+    }
+
     Matrix parent_transform_mat;
     parent_transform_mat.Identity();
     if (p_parent_entity)
@@ -212,10 +222,5 @@ void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
             Matrix current_stack_matrix{ m_stack_matrix };
             m_stack_matrix = current_stack_matrix * parent_transform;
         }
-    }
-
-    for (auto& e : m_impls_list)
-    {
-        e.second->OnRemovedFromGraph(this, m_worldtransform, parent_transform_mat, m_stack_matrix);
-    }
+    }   
 }
