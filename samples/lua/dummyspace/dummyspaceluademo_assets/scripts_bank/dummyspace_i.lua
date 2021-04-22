@@ -403,6 +403,27 @@ function( key )
 	end
 	set_camera(current_cam)
 
+  -- VK_F7
+  elseif key == 118 then 
+
+    eg:remove('model.camera.entity')
+    eg:add_child('ceres','model.camera.entity',model.camera.entity)
+  
+    if current_cam == free_cam then
+      set_camera(current_cam)
+    end
+
+  -- VK_F8
+  elseif key == 119 then  
+
+    eg:remove('model.camera.entity')
+    eg:add_child('root','model.camera.entity',model.camera.entity)
+
+  
+    if current_cam == free_cam then
+      set_camera(current_cam)
+    end
+
   elseif key == 37 then --VK_LEFT
 
     bellerophon_rigibody_transform:update_forcestate("lateral prop", FALSE)
