@@ -134,6 +134,8 @@ bellerophon.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local renderer = bellerophon.models[p_entity_id]['renderer']
   local rigibody_transform = bellerophon.models[p_entity_id]['rigibody_transform']
 
+  rigibody_transform:release()
+
   commons.trash.meshe(p_rendergraph, entity, renderer)
   p_entitygraph:remove(p_entity_id)
 

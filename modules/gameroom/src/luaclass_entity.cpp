@@ -542,6 +542,8 @@ int LuaClass_Entity::LUA_configurecollisionshape(lua_State* p_L)
 			resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(res_id,
 				std::make_tuple(mesheref, meshe_path, meshe_name, false));
 
+			m_collisionmeshe_res_id = res_id;
+
 		}
 		break;
 	}
@@ -556,11 +558,37 @@ int LuaClass_Entity::LUA_releasecollision(lua_State* p_L)
 	{
 		LUA_ERROR("Entity::release_collision : collision aspect doesnt exists in this entity!");
 	}
-
-	collision_aspect->Release();
-
 	collision_aspect->RemoveComponent<bool>("contact_state");
 
+
+	switch (m_collisionshape_type)
+	{
+		case 0: // SHAPE_BOX
+		{
+			collision_aspect->RemoveComponent<CollisionAspect::BoxCollisionShape>("shape");
+		}
+		break;
+
+		case 1: // SHAPE_SPHERE
+		{
+			collision_aspect->RemoveComponent<CollisionAspect::SphereCollisionShape>("shape");
+		}
+		break;
+
+		case 2: // SHAPE_MESHE
+		{
+
+			ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
+			if (!resources_aspect)
+			{
+				LUA_ERROR("Entity::configure_collisionshape : attached entity has no resources aspect !");
+			}
+
+			collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>("shape");
+			resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(m_collisionmeshe_res_id);
+		}
+		break;
+	}
 	return 0;
 }
 

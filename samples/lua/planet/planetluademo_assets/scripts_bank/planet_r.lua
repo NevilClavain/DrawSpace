@@ -1,5 +1,9 @@
 
+eg:unregister_rigidbody(bellerophon_entity)
+eg:unregister_rigidbody(spherebump.models['sphere'].entity)
+
 g:signal_rendersceneend("eg")
+
 
 
 planet_revol:release()

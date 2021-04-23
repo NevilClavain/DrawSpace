@@ -1,10 +1,15 @@
 
+eg:unregister_collider(land.models['l'].entity)
+eg:unregister_rigidbody(metalcube.models['cube'].entity)
+eg:unregister_rigidbody(spherebump.models['sphere'].entity)
 
 g:signal_rendersceneend("eg")
 
 model.releasemaincamera()
 
+land_transform:release()
 land.view.unload('l')
+
 skydome.view.unload('dome')
 waterquad.view.unload('water')
 

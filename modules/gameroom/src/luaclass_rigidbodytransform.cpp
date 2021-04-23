@@ -447,7 +447,7 @@ int LuaClass_RigidBodyTransform::LuaClass_RigidBodyTransform::LUA_release(lua_St
         m_mass_setted = false;
     }
 
-    m_rigidbody_transformer.Release();
+    //m_rigidbody_transformer.Release();
 
     m_entity_transform_aspect->RemoveAllImplementations();
     m_entity_transform_aspect = nullptr;

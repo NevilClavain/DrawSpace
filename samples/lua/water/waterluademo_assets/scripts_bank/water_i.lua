@@ -212,7 +212,7 @@ eg:add_child('root', 'l', land.models['l'].entity)
  land_transform = RawTransform()
  land_transform:configure(land.models['l'].entity,0)
 
- land_transform:add_matrix( "pos", land_pos_mat )
+ land_transform:add_matrix( "pos_land", land_pos_mat )
 
 
 

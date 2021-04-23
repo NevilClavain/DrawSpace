@@ -36,6 +36,7 @@ protected:
     DrawSpace::Core::Entity m_entity;
     int                     m_collisionshape_type;
     DrawSpace::Core::Meshe  m_collisionmeshe;
+    dsstring                m_collisionmeshe_res_id;
 
     using AspectType = enum
     {

@@ -7,7 +7,7 @@ eg:unregister_rigidbody(bellerophon_entity)
 
 g:signal_rendersceneend("eg")
 
---planet_revol:release()
+
 planet_transform:release()
 
 
@@ -20,7 +20,7 @@ camera3_entity:release_info("referent_body")
 eg:remove('camera3_entity')
 commons.trash.camera( camera3_entity, camera3_pos)
 
---boulder_transform:release()
+
 rock_free_transfo:release()
 boulder.view.unload('rock')
 
@@ -30,6 +30,9 @@ bellerophon_entity:release_info("entity_name")
 bellerophon_entity:remove_aspect(INFOS_ASPECT)
 bellerophon.view.unload('ship')
 
+
+ceres_planet_entity:release_world()
+ceres_planet_entity:remove_aspect(PHYSICS_ASPECT)
 asteroid.view.unload('ceres')
 
 model.releasemaincamera()
