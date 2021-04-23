@@ -33,7 +33,7 @@ commons.utils.shutdown=function(shutdown_lua_file)
 	g:dump_mem()
 	if gameroom_mem_alloc_size ~= g:total_mem() then
 	  g:log(FATAL,"GAMEROOM MEM LEAK DETECTED : "..gameroom_mem_alloc_size.. " -> " ..g:total_mem() )
-	  g:ds_exception( "GAMEROOM MEM LEAK DETECTED !" )
+	  g:ds_exception( "GAMEROOM MEM LEAK DETECTED : "..gameroom_mem_alloc_size.. " -> " ..g:total_mem() )
 	end
 	g:log(DEBUG,"SHUTDOWN END")
 

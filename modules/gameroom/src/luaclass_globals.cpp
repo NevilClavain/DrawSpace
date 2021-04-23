@@ -520,7 +520,8 @@ int LuaClass_Globals::LUA_dsexception(lua_State* p_L)
     }
 
     dsstring text = luaL_checkstring(p_L, 1);
-    _DSEXCEPTION( text );
+    //_DSEXCEPTION( text );
+    LUA_ERROR(text);
 
     return 0;
 }
