@@ -387,10 +387,10 @@ function()
     relative_state = ""
   end
   
-
+  local planet_rev_angle = planet_revol:read_currentangle()
   
   text4_renderer:update(300, 70, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
-                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state)
+                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state..' revol angle = '..planet_rev_angle)
                                             
 
   local mvt_info = { model.camera.mvt:read() }

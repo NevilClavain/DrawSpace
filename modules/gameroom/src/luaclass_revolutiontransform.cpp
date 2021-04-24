@@ -36,6 +36,7 @@ const Luna<LuaClass_RevolutionTransform>::RegType LuaClass_RevolutionTransform::
 {
     { "configure", &LuaClass_RevolutionTransform::LUA_configure },
     { "release", &LuaClass_RevolutionTransform::LUA_release },
+    { "read_currentangle", &LuaClass_RevolutionTransform::LUA_readcurrentangle },
 	{ 0, 0 }
 };
 
@@ -94,6 +95,18 @@ int LuaClass_RevolutionTransform::LUA_release( lua_State* p_L )
     m_entity_transform_aspect->RemoveAllImplementations();
     m_entity_transform_aspect = NULL;
     return 0;
+}
+
+int LuaClass_RevolutionTransform::LUA_readcurrentangle(lua_State* p_L)
+{
+    if (!m_entity_transform_aspect)
+    {
+        LUA_ERROR("RevolutionTransform::read_currentangle : no transform aspect");
+    }
+
+    dsreal current_angle{ m_entity_transform_aspect->GetComponent<dsreal>("angle")->getPurpose() };
+    lua_pushnumber(p_L, current_angle);
+    return 1;
 }
 
 
