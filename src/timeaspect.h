@@ -36,7 +36,7 @@ class TimeAspect : public Core::ComponentContainer
 {
 public:
 
-    typedef enum
+    enum TimeScale
     {
         NORMAL_TIME,
         MUL2_TIME,
@@ -59,7 +59,7 @@ public:
         DIV10_TIME,
         FREEZE,
 
-    } TimeScale;
+    };
 
     class TimeAngle
     {

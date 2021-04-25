@@ -34,7 +34,7 @@ namespace AspectImplementations
 class RevolutionTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 protected:
-    double compute_revolution_angle( double p_revolution_duration, dstime p_currtime );
+    double compute_revolution_angle(double p_revolution_duration, double p_curr_angle);
 
 public:
     virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );

@@ -47,38 +47,42 @@ void RevolutionTransformAspectImpl::GetLocaleTransform( TransformAspect* p_trans
 
     p_out_base_transform = revol_rotation;
 
-    ComponentList<dstime> times_count;
-    m_time_aspect->GetComponentsByType<dstime>( times_count );
-    dstime current_time = times_count[0]->getPurpose();
-    dsreal revol_angle = compute_revolution_angle( revol_duration, current_time );
+    dsreal revol_angle = compute_revolution_angle(revol_duration, angle);
 
     revol_params[0]->getPurpose() = revol_angle;
 }
 
-double RevolutionTransformAspectImpl::compute_revolution_angle( double p_revolution_duration, dstime p_currtime )
+double RevolutionTransformAspectImpl::compute_revolution_angle(double p_revolution_duration, double p_curr_angle)
 {
-    if( 0.0 == p_revolution_duration )
+    double curr_angle{ p_curr_angle };
+    
+    int fps{ m_time_aspect->GetComponent<int>("output_fps")->getPurpose() };
+    if (fps > 0)
     {
-        return 0.0;
-    }
+        TimeAspect::TimeScale time_scale{ m_time_aspect->GetComponent<TimeAspect::TimeScale>("time_scale")->getPurpose() };
 
-    dsreal revolution_duration = p_revolution_duration;
+        static const std::map< TimeAspect::TimeScale, dsreal> timefactor_array = {
 
-    long day_sec = 3600 * 24;
+            { TimeAspect::NORMAL_TIME, 1.0 },
+            { TimeAspect::MUL2_TIME, 2.0 },
+            { TimeAspect::MUL4_TIME, 4.0 },
+            { TimeAspect::MUL10_TIME, 10.0 },
+            { TimeAspect::MUL100_TIME, 100.0 },
+            { TimeAspect::MUL500_TIME, 500.0 },
+            { TimeAspect::SEC_1HOUR_TIME, 3600.0 },
+            { TimeAspect::SEC_1DAY_TIME, 86400.0 },
+            { TimeAspect::SEC_30DAYS_TIME, 2592000.0 },
+            { TimeAspect::SEC_1YEAR_TIME, 31536000.0 },
+            { TimeAspect::DIV2_TIME, 0.5 },
+            { TimeAspect::DIV4_TIME, 0.25 },
+            { TimeAspect::DIV10_TIME, 0.1 },
+            { TimeAspect::FREEZE, 0.0 },
 
-    dsreal delta_time = ( (double) ( p_currtime ) ) / day_sec;
-    dsreal num_revs = delta_time / revolution_duration;
+        };
 
-    dsreal angle_revs = num_revs * 360;
-
-    double angle_rev_i, angle_rev_f;
-    long angle_rev_i_2;
-
-    angle_rev_f = modf( angle_revs, &angle_rev_i );
-
-    angle_rev_i_2 = (long)angle_rev_i;
-
-    double final_angle = (angle_rev_i_2 % 360) + angle_rev_f;       
-
-    return final_angle;
+        double den{ 24.0 * 3600.0 * p_revolution_duration * (double)fps };
+        double step{ 360.0 / den };
+        curr_angle += step * timefactor_array.at(time_scale);
+    }    
+    return curr_angle;
 }
