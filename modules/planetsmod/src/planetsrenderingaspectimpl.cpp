@@ -649,6 +649,10 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
 
 void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity)
 {
+    if (!p_entity)
+    {
+        return;
+    }
     CameraAspect* curr_camera_aspect = p_entity->GetAspect<CameraAspect>();
     dsstring cam_name = curr_camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();
 
