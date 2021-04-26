@@ -7,6 +7,8 @@ include('planet_model.lua')
 
 local speed_factor = 90.0
 
+local relative_ack = FALSE
+
 resources_event = "..."
 
 
@@ -383,8 +385,49 @@ function()
 
     relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit
 
+    if relative_ack == FALSE then
+
+      -- transition
+
+      eg:unregister_rigidbody(bellerophon_entity)
+      eg:remove('camera2_entity')
+      eg:remove('ship')
+    
+      eg:add_child(planet_name, 'ship', bellerophon_entity)
+      eg:add_child('ship','camera2_entity', camera2_entity)
+      eg:register_rigidbody(bellerophon_entity)
+
+      if current_cam == ship_cam then
+        set_camera(current_cam)
+      end
+      
+      relative_ack = TRUE
+    end
+
   else
     relative_state = ""
+
+
+    if relative_ack == TRUE then
+
+      -- transition
+
+      eg:unregister_rigidbody(bellerophon_entity)
+      eg:remove('camera2_entity')
+      eg:remove('ship')
+    
+      eg:add_child('root', 'ship', bellerophon_entity)
+      eg:add_child('ship','camera2_entity', camera2_entity)
+      eg:register_rigidbody(bellerophon_entity)
+
+      if current_cam == ship_cam then
+        set_camera(current_cam)
+      end
+
+      relative_ack = FALSE
+    end
+
+
   end
   
   local planet_rev_angle = planet_revol:read_currentangle()
