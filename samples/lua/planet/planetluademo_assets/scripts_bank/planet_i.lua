@@ -5,9 +5,11 @@ include('bellerophon_model.lua')
 include('planet_model.lua')
 
 
-local speed_factor = 90.0
+local speed_factor = 1500.0
 
 local relative_ack = FALSE
+
+local left_shift = FALSE
 
 resources_event = "..."
 
@@ -183,7 +185,13 @@ function( key )
 
     if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
-	  model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+      if left_shift == TRUE then
+        model.camera.mvt:update(speed_factor * 10000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      else
+        model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      end
+	  
 	else
       bellerophon_rigibody_transform:update_forcestate("main prop", TRUE)
 	end
@@ -192,12 +200,23 @@ function( key )
 
     if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
-	  model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+
+
+      if left_shift == TRUE then
+        model.camera.mvt:update(-speed_factor * 10000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      else
+        model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      end
+	  
+
+
 	else
       bellerophon_rigibody_transform:update_forcestate("reverse prop", TRUE)
 	end    
   
   elseif key == 16 then -- left shift
+
+    left_shift = TRUE
 
   elseif key == 65 then --'A'
     bellerophon_rigibody_transform:update_torquestate("roll_left", TRUE)
@@ -283,6 +302,8 @@ function( key )
 
 
   elseif key == 16 then -- left shift
+
+    left_shift = FALSE
     
 
   elseif key == 76 then --'L'
