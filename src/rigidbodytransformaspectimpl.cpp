@@ -39,6 +39,7 @@ using namespace DrawSpace::Utils;
 RigidBodyTransformAspectImpl::RigidBodyTransformAspectImpl(void)
 {
     m_stack_matrix_inv.Identity();
+    m_memorized_vectors = false;
 }
 
 void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
@@ -263,6 +264,14 @@ btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspe
 
     m_initialized = true;
 
+    if (m_memorized_vectors)
+    {
+        m_rigidBody->setAngularVelocity(btVector3(m_mem_angularspeed[0], m_mem_angularspeed[1], m_mem_angularspeed[2]));
+        m_rigidBody->setLinearVelocity(btVector3(m_mem_linearspeed[0], m_mem_linearspeed[1], m_mem_linearspeed[2]));
+
+        m_memorized_vectors = false;
+    }
+
     return m_rigidBody;
 }
 
@@ -302,6 +311,17 @@ void RigidBodyTransformAspectImpl::Release(void)
     {
         _DSEXCEPTION("RigidBodyTransformAspectImpl not initialized !")
     }
+
+    m_memorized_vectors = true;
+    m_mem_linearspeed[0] = m_rigidBody->getLinearVelocity().x();
+    m_mem_linearspeed[1] = m_rigidBody->getLinearVelocity().y();
+    m_mem_linearspeed[2] = m_rigidBody->getLinearVelocity().z();
+    m_mem_linearspeed[3] = 1.0;
+
+    m_mem_angularspeed[0] = m_rigidBody->getAngularVelocity().x();
+    m_mem_angularspeed[1] = m_rigidBody->getAngularVelocity().y();
+    m_mem_angularspeed[2] = m_rigidBody->getAngularVelocity().z();
+    m_mem_angularspeed[3] = 1.0;
     
     _DRAWSPACE_DELETE_(m_motionState);
     m_motionState = nullptr;
@@ -379,8 +399,21 @@ void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, U
     p_mat(3, 3) = bt_matrix[15];
 }
 
-void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect)
+void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Matrix& p_parent_transform)
 {
+    Vector angularspeed_mem, linearspeed_mem;
+    angularspeed_mem = m_mem_angularspeed;
+    linearspeed_mem = m_mem_linearspeed;
+
+    Matrix parent_transform{ p_parent_transform };
+
+    parent_transform.ClearTranslation();
+    parent_transform.Inverse();
+
+    parent_transform.Transform(&angularspeed_mem, &m_mem_angularspeed);
+    parent_transform.Transform(&linearspeed_mem, &m_mem_linearspeed);
+
+
     Matrix stack_mat;
     p_transformaspect->GetStackMatrix(stack_mat);
 
@@ -399,8 +432,22 @@ void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAs
     m_stack_matrix_inv.Inverse();
 }
 
-void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect)
+void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Matrix& p_parent_transform)
 {
+
+    Vector angularspeed_mem, linearspeed_mem;
+    angularspeed_mem = m_mem_angularspeed;
+    linearspeed_mem = m_mem_linearspeed;
+
+    Matrix parent_transform{ p_parent_transform };
+
+    parent_transform.ClearTranslation();
+    
+    parent_transform.Transform(&angularspeed_mem, &m_mem_angularspeed);
+    parent_transform.Transform(&linearspeed_mem, &m_mem_linearspeed);
+
+
+
     Matrix stack_mat;
     p_transformaspect->GetStackMatrix(stack_mat);
 

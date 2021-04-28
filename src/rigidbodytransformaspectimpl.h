@@ -56,6 +56,10 @@ protected:
 
     Utils::Matrix                                               m_stack_matrix_inv;
 
+    bool                                                        m_memorized_vectors;
+    Utils::Vector                                               m_mem_linearspeed;
+    Utils::Vector                                               m_mem_angularspeed;
+
 
     void convert_matrix_to_bt(const Utils::Matrix& p_mat, btScalar* bt_matrix);
     void convert_matrix_from_bt(btScalar* bt_matrix, Utils::Matrix& p_mat);
@@ -198,8 +202,8 @@ public:
     RigidBodyTransformAspectImpl( void );
     void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
     
-    void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect);
-    void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect);
+    void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_parent_transform);
+    void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_parent_transform);
 
     btRigidBody* Init(Aspect::TransformAspect* p_transformaspect);
     btRigidBody* GetRigidBody(void) const;

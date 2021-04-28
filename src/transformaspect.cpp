@@ -197,20 +197,31 @@ void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodeg
 
     for (auto& e : m_impls_list)
     {
-        e.second->OnAddedInGraph(this);
+        e.second->OnAddedInGraph(this, parent_transform_mat);
     }
 
 }
 
 void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
-    for (auto& e : m_impls_list)
-    {
-        e.second->OnRemovedFromGraph(this);
-    }
-
     Matrix parent_transform_mat;
     parent_transform_mat.Identity();
+
+    if (p_parent_entity)
+    {
+        TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
+        if (parent_transform_aspect)
+        {
+            Matrix parent_transform{ parent_transform_aspect->m_worldtransform };
+            parent_transform_mat = parent_transform;
+        }
+    }
+
+    for (auto& e : m_impls_list)
+    {
+        e.second->OnRemovedFromGraph(this, parent_transform_mat);
+    }
+
     if (p_parent_entity)
     {
         TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
