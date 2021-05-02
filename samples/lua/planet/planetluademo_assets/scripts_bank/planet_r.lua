@@ -5,15 +5,6 @@ eg:unregister_rigidbody(spherebump.models['sphere'].entity)
 g:signal_rendersceneend("eg")
 
 
-
-planet_revol:release()
-planet_transform:release()
-resurgam_planet_config:cleanup()
-
-resurgam_planet_entity:remove_aspect(TRANSFORM_ASPECT)
-
-planetmod.view.unload(planet_name)
-
 spaceboxmod.view.unload('spacebox0')
 spherebump.view.unload('sphere')
 
@@ -28,6 +19,17 @@ bellerophon.view.unload('ship')
 
 model.releasemaincamera()
 
+
+
+
+
+planet_revol:release()
+planet_transform:release()
+resurgam_planet_config:cleanup()
+
+resurgam_planet_entity:remove_aspect(TRANSFORM_ASPECT)
+
+planetmod.view.unload(planet_name)
 
 
 
