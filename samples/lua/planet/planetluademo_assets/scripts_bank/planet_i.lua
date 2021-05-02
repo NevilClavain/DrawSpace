@@ -10,6 +10,8 @@ local speed_factor = 1500.0
 local relative_ack = FALSE
 
 local left_shift = FALSE
+local left_ctrl = FALSE
+
 
 resources_event = "..."
 
@@ -70,14 +72,14 @@ set_camera = function(camera)
   if camera == free_cam then
 
     eg:set_camera(model.camera.entity)
-    gui:show_mousecursor(FALSE)
-    g:set_mousecursorcircularmode(TRUE)
+    --gui:show_mousecursor(FALSE)
+    --g:set_mousecursorcircularmode(TRUE)
 
   elseif camera == ship_cam then
 
     eg:set_camera(camera2_entity)
-    gui:show_mousecursor(TRUE)
-	g:set_mousecursorcircularmode(FALSE)
+    --gui:show_mousecursor(TRUE)
+	--g:set_mousecursorcircularmode(FALSE)
   end
 end
 
@@ -138,7 +140,7 @@ mouse_right = FALSE
 g:add_mousemovecb( "onmousemove",
 function( xm, ym, dx, dy )  
 
-  if current_cam == free_cam then
+  if current_cam == free_cam and left_ctrl == FALSE then
 
     local mvt_info = { model.camera.mvt:read() }
     if mouse_right == FALSE then
@@ -258,6 +260,14 @@ function( key )
     
 
   elseif key == 66 then --'B'
+
+  elseif key == 17 then --left CTRL
+
+    gui:show_mousecursor(TRUE)
+	g:set_mousecursorcircularmode(FALSE)
+
+    left_ctrl = TRUE
+
     
   else
 	--g:print('key code = '..key)
@@ -347,6 +357,13 @@ function( key )
     
 
   elseif key == 66 then --'B'
+
+  elseif key == 17 then --left CTRL
+
+    gui:show_mousecursor(FALSE)
+    g:set_mousecursorcircularmode(TRUE)
+
+    left_ctrl = FALSE
     
   else
     --g:print('key code = '..key) 
@@ -683,6 +700,10 @@ end)
 gui:set_mousecursorimage("xfskin/MouseCursor")
 
 g:show_mousecursor(FALSE)
+
+gui:show_mousecursor(FALSE)
+g:set_mousecursorcircularmode(TRUE)
+
 
 set_camera(current_cam)
 
