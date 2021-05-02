@@ -388,7 +388,7 @@ function()
 
   local relative_state
   
-  local is_relative = planet_infos['viewsInfos']['ship_camera']['relative']
+  local is_relative = planet_infos['viewsInfos'][current_cam_id]['relative']
 
   if is_relative ~= 0 then
     
@@ -409,16 +409,16 @@ function()
     if relative_ack == FALSE then
 
       -- transition
-
-      eg:unregister_rigidbody(bellerophon_entity)
-      eg:remove('camera2_entity')
-      eg:remove('ship')
-    
-      eg:add_child(planet_name, 'ship', bellerophon_entity)
-      eg:add_child('ship','camera2_entity', camera2_entity)
-      eg:register_rigidbody(bellerophon_entity)
-
       if current_cam == ship_cam then
+      
+        eg:unregister_rigidbody(bellerophon_entity)
+        eg:remove('camera2_entity')
+        eg:remove('ship')
+    
+        eg:add_child(planet_name, 'ship', bellerophon_entity)
+        eg:add_child('ship','camera2_entity', camera2_entity)
+        eg:register_rigidbody(bellerophon_entity)
+
         set_camera(current_cam)
       end
       
@@ -432,16 +432,16 @@ function()
     if relative_ack == TRUE then
 
       -- transition
-
-      eg:unregister_rigidbody(bellerophon_entity)
-      eg:remove('camera2_entity')
-      eg:remove('ship')
-    
-      eg:add_child('root', 'ship', bellerophon_entity)
-      eg:add_child('ship','camera2_entity', camera2_entity)
-      eg:register_rigidbody(bellerophon_entity)
-
       if current_cam == ship_cam then
+
+        eg:unregister_rigidbody(bellerophon_entity)
+        eg:remove('camera2_entity')
+        eg:remove('ship')
+    
+        eg:add_child('root', 'ship', bellerophon_entity)
+        eg:add_child('ship','camera2_entity', camera2_entity)
+        eg:register_rigidbody(bellerophon_entity)
+
         set_camera(current_cam)
       end
 
