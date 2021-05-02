@@ -704,6 +704,8 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
             {
                 RegisteredBody reg_body;
 
+                reg_body.entity_name = entity_name;
+
                 reg_body.relative_alt_valid = false;
 
                 for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
@@ -725,6 +727,8 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
             if (camera_aspect)
             {
                 RegisteredCamera reg_camera;
+
+                reg_camera.entity_name = entity_name;
                 dsstring camera_name = camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();                
                 reg_camera.camera_name = camera_name;
                 reg_camera.relative_alt_valid = false;

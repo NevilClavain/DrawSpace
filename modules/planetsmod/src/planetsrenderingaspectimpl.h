@@ -95,6 +95,8 @@ protected:
         dsreal                              relative_alt;
 
         std::vector<LOD::Layer*>            layers;
+
+        dsstring                            entity_name;
     };
 
     struct RegisteredCamera
@@ -108,6 +110,8 @@ protected:
         dsreal                              relative_alt;
 
         std::vector<LOD::Layer*>            layers;
+
+        dsstring                            entity_name;
     };
 
     DrawSpace::Core::Entity*                                        m_owner_entity;
