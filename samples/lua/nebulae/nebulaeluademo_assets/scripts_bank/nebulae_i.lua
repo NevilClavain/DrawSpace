@@ -93,6 +93,8 @@ rg:create_child('transfer_pass', 'texture_pass', 0)
 
 
 model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
+eg:add_child('root','model.camera.entity',model.camera.entity)
+
 eg:set_camera(model.camera.entity)
 
 

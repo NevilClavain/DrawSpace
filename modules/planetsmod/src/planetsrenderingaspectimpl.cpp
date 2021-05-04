@@ -641,7 +641,7 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
         }
         else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
         {
-            manage_bodies();
+            //manage_bodies();
             manage_camerapoints();
         }        
     }
@@ -686,44 +686,10 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
         CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
 
         
-        TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+        //TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
 
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
         {
-            if (0 == m_entities.count(entity_name))
-            {
-                // enregistrer cette entity
-                m_entities[entity_name] = p_entity;
-            }
-            else
-            {
-                _DSEXCEPTION("entities with same name not allowed")
-            }
-
-            if(transform_aspect)
-            {
-                RegisteredBody reg_body;
-
-                reg_body.entity_name = entity_name;
-
-                reg_body.relative_alt_valid = false;
-
-                for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
-                {
-                    LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_inertBodies, m_config.m_layers_descr[i].description));
-                    LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(&m_config, slod_body, &m_subpass_creation_cb, i));
-
-                    layer->SetHotState(false);
-                    m_layers_list.push_back(layer);
-                    reg_body.layers.push_back(layer);                    
-                }
-
-                //...
-
-                m_registered_bodies[p_entity] = reg_body;
-            }
-
-
             if (camera_aspect)
             {
                 RegisteredCamera reg_camera;
@@ -735,43 +701,11 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
 
                 reg_camera.owner_entity = p_entity;
 
-                Component<dsstring>* referent_body = infos_aspect->GetComponent<dsstring>("referent_body");
-                if( referent_body )
-                {
-                    reg_camera.type = INERTBODY_LINKED;
+                reg_camera.attached_body = NULL;
 
-                    dsstring referent_body_name = referent_body->getPurpose();
+                create_camera_collisions(reg_camera, false);
 
-                    if (m_entities.count(referent_body_name))
-                    {
-                        reg_camera.attached_body = m_entities.at(referent_body_name);
-                        
-                        reg_camera.layers = m_registered_bodies[reg_camera.attached_body].layers;
-                    }
-                    else
-                    {
-                        _DSEXCEPTION("camera referent body : cannot find entity with corresponding name")
-                    }
-
-                    m_registered_camerapoints[camera_name] = reg_camera;
-                }
-                else
-                {
-                    reg_camera.type = FREE;
-                    reg_camera.attached_body = NULL;
-
-                    create_camera_collisions(reg_camera, false);
-
-                    m_registered_camerapoints[camera_name] = reg_camera;
-                }
-            }
-        }
-        else if (DrawSpace::EntityGraph::EntityNode::REMOVED_FROM_TREE == p_event)
-        {
-            if (m_entities.count(entity_name))
-            {
-                // desenregistrer cette entity
-                m_entities.erase(entity_name);
+                m_registered_camerapoints[camera_name] = reg_camera;
             }
         }
     }
@@ -966,93 +900,7 @@ void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph
     m_entitynodegraph = p_entitynodegraph;
 }
 
-void PlanetsRenderingAspectImpl::manage_bodies(void)
-{
-    Matrix planet_world;
-    TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
-    if (transform_aspect)
-    {
-        transform_aspect->GetWorldTransform(planet_world);
-    }
-    else
-    {
-        _DSEXCEPTION("Planet must have transform aspect!!!")
-    }
 
-    DrawSpace::Utils::Vector planetbodypos;
-    planetbodypos[0] = planet_world(3, 0);
-    planetbodypos[1] = planet_world(3, 1);
-    planetbodypos[2] = planet_world(3, 2);
-
-    // clear translations
-    planet_world(3, 0) = 0.0;
-    planet_world(3, 1) = 0.0;
-    planet_world(3, 2) = 0.0;
-
-    Matrix planet_world_inv = planet_world;
-
-    // matrix inversion
-    planet_world_inv.Inverse();
-
-    for (auto& body : m_registered_bodies)
-    {
-        LOD::Layer* layer = body.second.layers[0];
-
-        Matrix body_world;
-
-        TransformAspect* body_transform_aspect = body.first->GetAspect<TransformAspect>();
-        if (body_transform_aspect)
-        {
-            body_transform_aspect->GetWorldTransform(body_world);
-        }
-        else
-        {
-            _DSEXCEPTION("Body must have transform aspect!!!")
-        }
-
-        Vector body_pos;
-        body_pos[0] = body_world(3, 0);
-        body_pos[1] = body_world(3, 1);
-        body_pos[2] = body_world(3, 2);
-
-        Vector delta;
-
-        delta[0] = body_pos[0] - planetbodypos[0];
-        delta[1] = body_pos[1] - planetbodypos[1];
-        delta[2] = body_pos[2] - planetbodypos[2];
-        delta[3] = 1.0;
-
-        // compute delta vector local to planet transform (rotation)
-        Vector local_delta;
-        planet_world_inv.Transform(&delta, &local_delta);
-
-        dsreal rel_alt = local_delta.Length() / m_planet_ray;
-
-        body.second.relative_alt_valid = true;
-        body.second.relative_alt = rel_alt;
-
-        layer->UpdateRelativeAlt(rel_alt);
-        layer->UpdateInvariantViewerPos(delta);
-        
-        if (!layer->GetHotState())
-        {
-            if (rel_alt < LOD::cst::hotRelativeAlt)
-            {
-                layer->SetHotState(true);
-            }
-        }
-        else
-        {
-            layer->UpdateHotPoint(local_delta);
-            layer->Compute();
-
-            if (rel_alt >= LOD::cst::hotRelativeAlt)
-            {
-                layer->SetHotState(false);
-            }
-        }
-    }
-}
 
 void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 {
@@ -1113,6 +961,18 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                 {
                     camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
                     camera_layer->Compute();
+
+                    if (rel_alt >= LOD::cst::hotRelativeAlt)
+                    {
+                        camera_layer->SetHotState(false);
+                    }
+                }
+                else
+                {
+                    if (rel_alt < LOD::cst::hotRelativeAlt)
+                    {
+                        camera_layer->SetHotState(true);
+                    }
                 }
             }
         }

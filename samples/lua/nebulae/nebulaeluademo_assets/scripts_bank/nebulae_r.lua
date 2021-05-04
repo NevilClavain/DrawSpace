@@ -5,6 +5,7 @@ g:signal_rendersceneend("eg")
 
 spaceboxmod.view.unload('spacebox0')
 
+eg:remove('model.camera.entity')
 model.releasemaincamera()
 
 g:remove_appruncb('run')

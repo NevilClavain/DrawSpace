@@ -82,28 +82,11 @@ protected:
     DrawSpace::Utils::Timer                             m_timer;
     DrawSpace::Utils::TimeManager*                      m_timemanager;
 
-    enum CameraType
-    {
-        FREE,
-        FREE_ON_PLANET,
-        INERTBODY_LINKED,
-    };
-
-    struct RegisteredBody
-    {
-        bool                                relative_alt_valid;
-        dsreal                              relative_alt;
-
-        std::vector<LOD::Layer*>            layers;
-
-        dsstring                            entity_name;
-    };
-
     struct RegisteredCamera
     {
         Core::Entity*                       owner_entity; // l'entite possedant l'aspect camera
         dsstring                            camera_name;
-        CameraType                          type;
+        //CameraType                          type;
         DrawSpace::Core::Entity*            attached_body;
 
         bool                                relative_alt_valid;
@@ -122,13 +105,9 @@ protected:
     LOD::SubPass::singleshot_subpasses                              m_singleshot_subpasses;
     LOD::SubPass::permanent_subpasses                               m_permanent_subpasses;
 
-    std::map<DrawSpace::Core::Entity*, RegisteredBody>              m_registered_bodies;
     std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
 
     RegisteredCamera*                                               m_current_camera{ nullptr };
-
-
-    std::map<dsstring, DrawSpace::Core::Entity*>                    m_entities;  // stockage de toutes les entities du graph
 
     LOD::Config                                                     m_config;
     LOD::Drawing                                                    m_drawable;
@@ -171,7 +150,6 @@ protected:
     void                        draw_sub_passes(void);
 
     void                        manage_camerapoints(void);
-    void                        manage_bodies(void);
 
     void                        zbuffer_control_from_viewer_alt(void);
    

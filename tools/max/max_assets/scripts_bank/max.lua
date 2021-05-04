@@ -67,7 +67,7 @@ root_entity:add_aspect(PHYSICS_ASPECT)
 
 
 model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
-
+eg:add_child('root','model.camera.entity',model.camera.entity)
 
 -- ///////////////////////////////
 

@@ -5,6 +5,7 @@ eg:unregister_rigidbody(spherebump.models['sphere'].entity)
 
 g:signal_rendersceneend("eg")
 
+eg:remove('model.camera.entity')
 model.releasemaincamera()
 
 land_transform:release()

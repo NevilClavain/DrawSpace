@@ -87,6 +87,7 @@ rg:set_pass_depthclearstate( 'texture_pass', TRUE )
 
 
 model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
+eg:add_child('root','model.camera.entity',model.camera.entity)
 
 camera_width, camera_height, zn, zf = model.camera.entity:read_cameraparams()
 

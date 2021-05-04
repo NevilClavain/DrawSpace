@@ -144,6 +144,8 @@ root_entity:configure_world(environment.gravity_state, environment.gravity.x, en
 
 
 model.createmainfpscamera(0.0, skydome.innerRadius + 8.0, 20.0, mvt_mod)
+eg:add_child('root','model.camera.entity',model.camera.entity)
+
 eg:set_camera(model.camera.entity)
 
 waves=SyncAngle()

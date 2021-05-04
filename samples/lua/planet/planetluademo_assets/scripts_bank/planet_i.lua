@@ -72,14 +72,10 @@ set_camera = function(camera)
   if camera == free_cam then
 
     eg:set_camera(model.camera.entity)
-    --gui:show_mousecursor(FALSE)
-    --g:set_mousecursorcircularmode(TRUE)
 
   elseif camera == ship_cam then
 
     eg:set_camera(camera2_entity)
-    --gui:show_mousecursor(TRUE)
-	--g:set_mousecursorcircularmode(FALSE)
   end
 end
 
@@ -129,7 +125,7 @@ root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
 model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
-
+eg:add_child('root','model.camera.entity',model.camera.entity)
 
 
 mouse_right = FALSE
@@ -437,6 +433,14 @@ function()
         eg:register_rigidbody(bellerophon_entity)
 
         set_camera(current_cam)
+
+      elseif current_cam == free_cam then
+
+        eg:remove('model.camera.entity')
+        eg:add_child(planet_name,'model.camera.entity',model.camera.entity)
+        
+        set_camera(current_cam)
+
       end
       
       relative_ack = TRUE
@@ -460,6 +464,15 @@ function()
         eg:register_rigidbody(bellerophon_entity)
 
         set_camera(current_cam)
+
+      elseif current_cam == free_cam then
+
+        eg:remove('model.camera.entity')
+        eg:add_child('root','model.camera.entity',model.camera.entity)
+        
+        set_camera(current_cam)
+
+
       end
 
       relative_ack = FALSE

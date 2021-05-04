@@ -35,6 +35,7 @@ ceres_planet_entity:release_world()
 ceres_planet_entity:remove_aspect(PHYSICS_ASPECT)
 asteroid.view.unload('ceres')
 
+eg:remove('model.camera.entity')
 model.releasemaincamera()
 
 
