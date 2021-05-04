@@ -12,6 +12,9 @@ local relative_ack = FALSE
 local left_shift = FALSE
 local left_ctrl = FALSE
 
+local tab = FALSE
+
+
 
 resources_event = "..."
 
@@ -185,7 +188,9 @@ function( key )
       local mvt_info = { model.camera.mvt:read() }
 
       if left_shift == TRUE then
-        model.camera.mvt:update(speed_factor * 10000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(speed_factor * 3000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      elseif tab == TRUE then
+        model.camera.mvt:update(speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
         model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
@@ -199,15 +204,14 @@ function( key )
     if current_cam == free_cam then
       local mvt_info = { model.camera.mvt:read() }
 
-
       if left_shift == TRUE then
-        model.camera.mvt:update(-speed_factor * 10000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(-speed_factor * 3000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      elseif tab == TRUE then
+        model.camera.mvt:update(-speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
         model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
 	  
-
-
 	else
       bellerophon_rigibody_transform:update_forcestate("reverse prop", TRUE)
 	end    
@@ -215,6 +219,10 @@ function( key )
   elseif key == 16 then -- left shift
 
     left_shift = TRUE
+
+  elseif key == 9 then -- tab
+
+    tab = TRUE
 
   elseif key == 65 then --'A'
     bellerophon_rigibody_transform:update_torquestate("roll_left", TRUE)
@@ -266,7 +274,7 @@ function( key )
 
     
   else
-	--g:print('key code = '..key)
+	g:print('key code = '..key)
   end
 
   gui:on_keydown( key )
@@ -310,8 +318,11 @@ function( key )
   elseif key == 16 then -- left shift
 
     left_shift = FALSE
-    
 
+  elseif key == 9 then -- tab
+
+    tab = FALSE
+    
   elseif key == 76 then --'L'
     bellerophon_rigibody_transform:zero_speed()
 
