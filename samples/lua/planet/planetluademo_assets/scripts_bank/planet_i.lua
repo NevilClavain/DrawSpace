@@ -14,7 +14,7 @@ local left_ctrl = FALSE
 
 local tab = FALSE
 
-
+local time_factor = 0
 
 resources_event = "..."
 
@@ -148,6 +148,10 @@ function( xm, ym, dx, dy )
 	  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,-dx)
     end
 
+    if time_factor ~= 0 then
+      root_entity:update_timescale(NORMAL_TIME)
+    end
+
   end
 
 
@@ -274,7 +278,7 @@ function( key )
 
     
   else
-	g:print('key code = '..key)
+	--g:print('key code = '..key)
   end
 
   gui:on_keydown( key )
@@ -393,6 +397,8 @@ function()
   text2_renderer:update(10, 70, 255, 0, 0, time_infos[2])
 
   local timescale = commons.print_timescale(time_infos[1])
+
+  time_factor = time_infos[1]
 
   text3_renderer:update(10, 110, 255, 0, 0, timescale)
 
