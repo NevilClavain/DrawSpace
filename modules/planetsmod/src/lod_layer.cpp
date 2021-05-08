@@ -38,8 +38,8 @@ m_current_lod(-1),
 m_patch_update_cb(this, &Layer::on_patchupdate)
 {
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
-    p_body->Initialize();
-    p_body->RegisterPatchUpdateHandler(&m_patch_update_cb);
+    m_body->Initialize();
+    m_body->RegisterPatchUpdateHandler(&m_patch_update_cb);
 }
 
 Body* Layer::GetBody(void) const

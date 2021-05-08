@@ -486,7 +486,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             case DetailsLayer:
 
                 ld.enable_collisions = false;//true;  // temporaire
-                ld.enable_datatextures = true; // temporaire
+                ld.enable_datatextures = true;
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -499,7 +499,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     binder->SetRenderer(m_renderer);
                     binder->SetFx(&m_climate_fx);
 
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.groundCollisionsBinder[i] = NULL; // temporaire
                     ld.patchTexturesBinder[i] = binder;
 
                     m_planet_climate_binder[i] = binder;
