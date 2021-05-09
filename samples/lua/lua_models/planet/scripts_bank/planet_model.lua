@@ -95,6 +95,16 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 	   config_description['climate_pshader_compiled'] ~= nil then
 		planet_specific_configuration:set_climateshaderscompiled(config_description['climate_vshader_compiled'], config_description['climate_pshader_compiled'])
 	end
+
+	if config_description['collision_vshader'] ~= nil and 
+	   config_description['collision_pshader'] ~= nil then
+		planet_specific_configuration:set_collisionshaders(config_description['collision_vshader'], config_description['collision_pshader'])
+	end
+
+	if config_description['collision_vshader_compiled'] ~= nil and 
+	   config_description['collision_pshader_compiled'] ~= nil then
+		planet_specific_configuration:set_collisionshaderscompiled(config_description['collision_vshader_compiled'], config_description['collision_pshader_compiled'])
+	end
 end
 
 planetmod.layers =

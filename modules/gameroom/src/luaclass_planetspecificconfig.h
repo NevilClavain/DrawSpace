@@ -75,6 +75,13 @@ private:
         bool        climate_vshader_compiled;
         bool        climate_pshader_compiled;
 
+        dsstring    collisions_vshader;
+        dsstring    collisions_pshader;
+
+        bool        collisions_vshader_compiled;
+        bool        collisions_pshader_compiled;
+
+
         bool        enable_landplace_patch;
         bool        enable_atmosphere;
 
@@ -113,6 +120,9 @@ public:
     int LUA_enableatmosphere(lua_State* p_L);
     int LUA_setclimateshaders(lua_State* p_L);
     int LUA_setclimateshaderscompiled(lua_State* p_L);
+    int LUA_setcollisionshaders(lua_State* p_L);
+    int LUA_setcollisionshaderscompiled(lua_State* p_L);
+
 
     int LUA_enablelight(lua_State* p_L);
     int LUA_setlightcolor(lua_State* p_L);

@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2021                     
+* Emmanuel Chaumont Copyright (c) 2013-2020                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -22,43 +22,20 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
-
-
-#include "drawspace_commons.h"
-
-namespace LOD
+cbuffer legacyargs : register(b0)
 {
-struct Binder;
-
-struct Config
-{
-public:
-
-    using LayerDescriptor = struct
-    {
-        bool        enable_collisions;
-        bool        enable_datatextures;
-        bool        enable_lod;
-        long        min_lodlevel;  // valable si enable_lod == true
-        dsreal      ray;
-
-        Binder*     groundCollisionsBinder[6];
-        Binder*     patchTexturesBinder[6];
-
-        dsstring    description; // for debug purpose only;
-    };
-
-    double                          m_lod0base;
-    int                             m_nbLODRanges_freeCameras;
-    int                             m_nbLODRanges_inertBodies;
-
-
-    std::map<int,LayerDescriptor>   m_layers_descr;
-    bool                            m_landplace_patch;
-
-    Config( void );
-    ~Config( void );
+    float4 vec[512];
+    Matrix mat[512];
 };
-}
 
+struct PS_INTPUT
+{
+    float4 Position : SV_POSITION;
+    float4 alt      : TEXCOORD0;
+};
+
+float4 ps_main(PS_INTPUT input) : SV_Target
+{
+    float4 color = input.alt.x;
+    return color;
+}

@@ -72,8 +72,6 @@ m_nodes_evt_cb( this, &PlanetsRenderingAspectImpl::on_nodes_event),
 m_entitynodegraph(NULL),
 m_drawable(&m_config),
 m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation),
-m_climate_vshader( NULL ),
-m_climate_pshader( NULL ),
 m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer)
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -173,6 +171,12 @@ void PlanetsRenderingAspectImpl::Release(void)
             _DRAWSPACE_DELETE_( e );
         }
 
+        for (auto& e : m_planet_collision_binder)
+        {
+            _DRAWSPACE_DELETE_(e);
+        }
+
+
         for (auto& e : m_planet_detail_binder)
         {
             for (auto& e2 : e.second)
@@ -199,6 +203,16 @@ void PlanetsRenderingAspectImpl::Release(void)
         if (m_climate_pshader)
         {
             _DRAWSPACE_DELETE_(m_climate_pshader);
+        }
+
+        if (m_collisions_vshader)
+        {
+            _DRAWSPACE_DELETE_(m_collisions_vshader);
+        }
+
+        if (m_collisions_pshader)
+        {
+            _DRAWSPACE_DELETE_(m_collisions_pshader);
         }
     }
     else
@@ -415,6 +429,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool climate_vshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().first };
     bool climate_pshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().second };
 
+    dsstring collision_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisions_shaders")->getPurpose().first };
+    dsstring collision_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisions_shaders")->getPurpose().second };
+
+    bool collision_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().first };
+    bool collision_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().second };
+
+
     using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
     std::vector<Lights> lights = m_owner->GetComponent<std::vector<Lights>>("lights")->getPurpose();
 
@@ -435,8 +456,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         
     Shader::SetRootPath(shaders_path);
 
+
+
     m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, climate_vshader_compiled));
     m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, climate_pshader_compiled));
+
+    m_collisions_vshader = _DRAWSPACE_NEW_(Shader, Shader(collision_vshader, collision_vshader_compiled));
+    m_collisions_pshader = _DRAWSPACE_NEW_(Shader, Shader(collision_pshader, collision_pshader_compiled));
+
     
     //////////// Resources ///////////////////////////
 
@@ -448,15 +475,23 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
     }
 
-    dsstring vshader_name = dsstring("climate_vshader"); //dsstring("vshader") + climate_vshader + std::to_string((int)m_climate_vshader);
-    dsstring pshader_name = dsstring("climate_pshader"); //dsstring("pshader") + climate_vshader + std::to_string((int)m_climate_pshader);
+
+    dsstring vshader_name = dsstring("climate_vshader");
+    dsstring pshader_name = dsstring("climate_pshader");
 
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(vshader_name, std::make_tuple(m_climate_vshader, false, 0));
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(pshader_name, std::make_tuple(m_climate_pshader, false, 1));
 
+
+
+    dsstring vshader_collision_name = dsstring("collision_vshader");
+    dsstring pshader_collision_name = dsstring("collision_pshader");
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(vshader_collision_name, std::make_tuple(m_collisions_vshader, false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(pshader_collision_name, std::make_tuple(m_collisions_pshader, false, 1));
+
+
     /////////////////
-
-
 
     m_climate_fx.AddShader(m_climate_vshader);
     m_climate_fx.AddShader(m_climate_pshader);
@@ -466,6 +501,22 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     climate_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none"));
 
     m_climate_fx.SetRenderStates(climate_rss);
+
+
+    /////////////////
+
+    m_collisions_fx.AddShader(m_collisions_vshader);
+    m_collisions_fx.AddShader(m_collisions_pshader);
+
+    RenderStatesSet collisions_rss;
+    collisions_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear"));
+    collisions_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear"));
+    collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none"));
+    collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none"));
+
+    m_collisions_fx.SetRenderStates(collisions_rss);
+
+    /////////////////
 
     // complete m_config layers
 
@@ -493,16 +544,23 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 ld.description = "Details Layer";
                 for (int i = 0; i < 6; i++)
                 {
-                    PlanetClimateBinder* binder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
+                    PlanetClimateBinder* climateBinder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
                         plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit));
 
-                    binder->SetRenderer(m_renderer);
-                    binder->SetFx(&m_climate_fx);
+                    climateBinder->SetRenderer(m_renderer);
+                    climateBinder->SetFx(&m_climate_fx);
 
-                    ld.groundCollisionsBinder[i] = NULL; // temporaire
-                    ld.patchTexturesBinder[i] = binder;
+                    MultiFractalBinder* collisionsBinder = _DRAWSPACE_NEW_(MultiFractalBinder, MultiFractalBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
+                        plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
-                    m_planet_climate_binder[i] = binder;
+                    collisionsBinder->SetRenderer(m_renderer);
+                    collisionsBinder->SetFx(&m_collisions_fx);
+
+                    ld.groundCollisionsBinder[i] = collisionsBinder;
+                    ld.patchTexturesBinder[i] = climateBinder;
+
+                    m_planet_climate_binder[i] = climateBinder;
+                    m_planet_collision_binder[i] = collisionsBinder;
                 }
 
                 m_config.m_layers_descr[layer] = ld;
@@ -618,6 +676,10 @@ void PlanetsRenderingAspectImpl::release_rendering_objects( void )
 
     resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("climate_vshader");
     resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("climate_pshader");
+
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("collision_vshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("collision_pshader");
+
 
     m_drawable.Shutdown();
 }

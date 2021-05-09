@@ -38,6 +38,7 @@
 
 class PlanetDetailsBinder;
 class PlanetClimateBinder;
+class MultiFractalBinder;
 
 namespace LOD
 {
@@ -117,10 +118,15 @@ protected:
 
 
     std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;
+    std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
 
     DrawSpace::Core::Fx                                             m_climate_fx;
-    DrawSpace::Core::Shader*                                        m_climate_vshader;
-    DrawSpace::Core::Shader*                                        m_climate_pshader;
+    DrawSpace::Core::Shader*                                        m_climate_vshader{ nullptr };
+    DrawSpace::Core::Shader*                                        m_climate_pshader{ nullptr };
+
+    DrawSpace::Core::Fx                                             m_collisions_fx;
+    DrawSpace::Core::Shader*                                        m_collisions_vshader{ nullptr };
+    DrawSpace::Core::Shader*                                        m_collisions_pshader{ nullptr };
 
     SubPassCreationCb                                               m_subpass_creation_cb;
 
