@@ -70,6 +70,13 @@ protected:
     static const int AtmosphereLayer    = 1;
     static const int FlatCloudsLayer    = 2;
 
+    static const dsstring ClimateVShaderComponentName;
+    static const dsstring ClimatePShaderComponentName;
+
+    static const dsstring CollisionVShaderComponentName;
+    static const dsstring CollisionPShaderComponentName;
+
+
 protected:
 
 

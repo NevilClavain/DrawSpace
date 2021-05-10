@@ -51,6 +51,13 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 
 
+const dsstring PlanetsRenderingAspectImpl::ClimateVShaderComponentName = "climate_vshader";
+const dsstring PlanetsRenderingAspectImpl::ClimatePShaderComponentName = "climate_pshader";
+
+const dsstring PlanetsRenderingAspectImpl::CollisionVShaderComponentName = "collision_vshader";
+const dsstring PlanetsRenderingAspectImpl::CollisionPShaderComponentName = "collision_pshader";
+
+
 //Root::on_camera_event : 
 // -> EntityNodeGraph::CAMERA_ACTIVE
 // -> EntityNodeGraph::CAMERA_INACTIVE
@@ -475,21 +482,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
     }
 
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(ClimateVShaderComponentName, std::make_tuple(m_climate_vshader, false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(ClimatePShaderComponentName, std::make_tuple(m_climate_pshader, false, 1));
 
-    dsstring vshader_name = dsstring("climate_vshader");
-    dsstring pshader_name = dsstring("climate_pshader");
-
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(vshader_name, std::make_tuple(m_climate_vshader, false, 0));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(pshader_name, std::make_tuple(m_climate_pshader, false, 1));
-
-
-
-    dsstring vshader_collision_name = dsstring("collision_vshader");
-    dsstring pshader_collision_name = dsstring("collision_pshader");
-
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(vshader_collision_name, std::make_tuple(m_collisions_vshader, false, 0));
-    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(pshader_collision_name, std::make_tuple(m_collisions_pshader, false, 1));
-
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(CollisionVShaderComponentName, std::make_tuple(m_collisions_vshader, false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(CollisionPShaderComponentName, std::make_tuple(m_collisions_pshader, false, 1));
 
     /////////////////
 
@@ -674,11 +671,11 @@ void PlanetsRenderingAspectImpl::release_rendering_objects( void )
 
     ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
 
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("climate_vshader");
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("climate_pshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(ClimateVShaderComponentName);
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(ClimatePShaderComponentName);
 
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("collision_vshader");
-    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>("collision_pshader");
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(CollisionVShaderComponentName);
+    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(CollisionPShaderComponentName);
 
 
     m_drawable.Shutdown();
