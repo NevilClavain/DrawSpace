@@ -277,6 +277,9 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     if (m_owner->GetComponent<bool>("resources_ready")->getPurpose())
     {
+        // we can prepare permanent sub passes (UpdateOutputQueueNoOpt, FlipOutputQueues, DeclareReady) only if all resources has been loaded
+        prepare_permanent_subpasses();
+
         draw_sub_passes();
     }
     
@@ -293,7 +296,11 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         rel_alt = e.second.relative_alt;
         dsreal altitude = e.second.layers[0]->GetBody()->GetHotPointAltitud();
 
-        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, altitude);
+        dsreal current_patch_max_height = e.second.layers[0]->GetCurrentPatchMaxHeight();
+        dsreal current_patch_min_height = e.second.layers[0]->GetCurrentPatchMinHeight();
+        dsreal current_patch_current_height = e.second.layers[0]->GetCurrentPatchCurrentHeight();
+
+        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, altitude, current_patch_max_height, current_patch_min_height, current_patch_current_height);
     }
 
     m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
@@ -508,6 +515,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     RenderStatesSet collisions_rss;
     collisions_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "linear"));
     collisions_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "linear"));
+
     collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE, "none"));
     collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none"));
 
@@ -533,7 +541,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             case DetailsLayer:
 
-                ld.enable_collisions = false;//true;  // temporaire
+                ld.enable_collisions = true;
                 ld.enable_datatextures = true;
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
@@ -877,19 +885,41 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         singleshot_subpasses_sequence.SetCurrentStep(dsstring("singleshot_subpasses_sequence_step"));
         runner_system.RegisterSequence(singleshot_subpasses_sequence_id, singleshot_subpasses_sequence);
     }
+
+    for (size_t i = 0; i < m_permanent_subpasses.size(); i++)
+    {
+        LOD::SubPass* sp{ m_permanent_subpasses[i] };
+        sp->DrawSubPass();
+        sp->SubPassDone();
+    }
+}
+
+void PlanetsRenderingAspectImpl::prepare_permanent_subpasses(void)
+{
+    for (auto& e : m_m_permanent_subpasses_to_prepare)
+    {
+        LOD::SubPass* sp = e;
+
+        sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
+        sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
+        sp->GetPass()->GetRenderingQueue()->DeclareReady();
+    }
+    m_m_permanent_subpasses_to_prepare.clear();
 }
 
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
 {
     LOD::FaceDrawingNode* node = static_cast<LOD::FaceDrawingNode*>(p_pass->GetNode());
-
     node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
-
     // on ajoute le node a la queue directement ici
     p_pass->GetPass()->GetRenderingQueue()->Add(node);
 
-
-
+    
+    if (LOD::SubPass::PERMANENT_SUBPASS == p_dest)
+    {        
+        m_m_permanent_subpasses_to_prepare.push_back(p_pass);
+    }
+    
     ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
     if (!resources_aspect)
     {
@@ -1024,6 +1054,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                     if (rel_alt >= LOD::cst::hotRelativeAlt)
                     {
                         camera_layer->SetHotState(false);
+                        camera_layer->ResetBody();
                     }
                 }
                 else

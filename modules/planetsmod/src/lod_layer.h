@@ -25,6 +25,9 @@
 #pragma once
 
 #include "lod_patch.h"
+#include "lod_collisions.h"
+#include "csts.h"
+
 
 namespace LOD
 {
@@ -43,20 +46,40 @@ public:
 
 private:
 
-    Config*                             m_config;
-    Body*                               m_body;
-    Layer::SubPassCreationHandler*      m_handler;
-    bool                                m_hot;
-    int                                 m_current_lod;
+    Config*                                 m_config{ nullptr };
+    Body*                                   m_body{ nullptr };
+    Layer::SubPassCreationHandler*          m_handler{ nullptr };
+    bool                                    m_hot;
+    int                                     m_current_lod;
 
-    dsreal                              m_planetray;
+    dsreal                                  m_planetray;
+    bool                                    m_collisions;
 
-    PatchUpdateCb                       m_patch_update_cb;
+    LOD::Collisions*                        m_collisions_hms[6];
+    LOD::Collisions*                        m_current_collisions_hm{ nullptr };
+
+    LOD::Patch*                             m_current_patch{ nullptr };
+
+    bool                                    m_draw_collidinghm{ false };
+
+    PatchUpdateCb                           m_patch_update_cb;
+
+    dsstring                                m_description; // for debug purpose :)
+
+    dsreal                                  m_currentpatch_max_height{ -2.0 };
+    dsreal                                  m_currentpatch_min_height{ -2.0 };
+    dsreal                                  m_currentpatch_current_height{ -2.0 };
+
+    dsreal                                  m_alt_grid[Collisions::heightmapTextureSize * Collisions::heightmapTextureSize];
 
     void on_patchupdate(Patch* p_patch, int p_patch_lod);
+    void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
+    dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
+
 
 public:
     Layer( Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
+    ~Layer(void);
 
     Body* GetBody(void) const;
     bool  GetHotState(void) const;
@@ -68,5 +91,11 @@ public:
     void UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
     void UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
     void Compute( void );
+    void SubPassDone(LOD::Collisions* p_collider);
+    void ResetBody(void);
+
+    dsreal GetCurrentPatchMaxHeight(void) const;
+    dsreal GetCurrentPatchMinHeight(void) const;
+    dsreal GetCurrentPatchCurrentHeight(void) const;
 };
 }

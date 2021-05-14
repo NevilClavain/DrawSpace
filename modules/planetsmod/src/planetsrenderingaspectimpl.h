@@ -64,7 +64,7 @@ protected:
     using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using TimerCb           = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
 
-    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal>>;
+    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal>>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;
@@ -112,6 +112,8 @@ protected:
     LOD::SubPass::singleshot_subpasses_stack                        m_singleshot_subpasses_stack;
     LOD::SubPass::singleshot_subpasses                              m_singleshot_subpasses;
     LOD::SubPass::permanent_subpasses                               m_permanent_subpasses;
+
+    std::vector<LOD::SubPass*>                                      m_m_permanent_subpasses_to_prepare;
 
     std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
 
@@ -165,6 +167,8 @@ protected:
     void                        manage_camerapoints(void);
 
     void                        zbuffer_control_from_viewer_alt(void);
+
+    void                        prepare_permanent_subpasses(void);
    
 public:
     PlanetsRenderingAspectImpl( void );

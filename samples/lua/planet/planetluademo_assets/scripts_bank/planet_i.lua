@@ -400,6 +400,11 @@ function()
 
   time_factor = time_infos[1]
 
+  --[[
+  local planet_rev_angle = planet_revol:read_currentangle()
+  text3_renderer:update(10, 110, 255, 0, 0, timescale..' revol angle = '..planet_rev_angle)
+  ]]
+
   text3_renderer:update(10, 110, 255, 0, 0, timescale)
 
   text5_renderer:update(10, 150, 255, 0, 0, resources_event)
@@ -434,7 +439,10 @@ function()
 	  altitude_unit = " m"
 	end
 
-    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit
+    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit..
+                    ' pminh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_min_height"],2)..
+                    ' pmaxh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_max_height"],2)..
+                    ' pcurrh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_current_height"],2)
 
     if relative_ack == FALSE then
 
@@ -494,14 +502,11 @@ function()
 
       relative_ack = FALSE
     end
-
-
   end
   
-  local planet_rev_angle = planet_revol:read_currentangle()
-  
+ 
   text4_renderer:update(300, 70, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
-                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state..' revol angle = '..planet_rev_angle)
+                                            ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state)
                                             
 
   local mvt_info = { model.camera.mvt:read() }
@@ -624,6 +629,7 @@ planet_passes_bindings =
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'surface_rendering',
+        --rendering_id = 'surface_wireframe_rendering',
 		lit_shader_update_func = nil
 	},
 	binding_1 = 
