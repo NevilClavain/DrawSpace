@@ -109,11 +109,11 @@ public:
 
     struct MesheCollisionShape
     {
-        MesheCollisionShape(const Core::Meshe& p_meshe) : m_meshe(p_meshe)
+        MesheCollisionShape(Core::Meshe& p_meshe) : m_meshe(p_meshe)
         {
             m_transformation.Identity();
         };
-        MesheCollisionShape(const Core::Meshe& p_meshe, const Utils::Matrix& p_mat) :
+        MesheCollisionShape(Core::Meshe& p_meshe, const Utils::Matrix& p_mat) :
             m_meshe(p_meshe),
             m_transformation(p_mat)
         {
@@ -122,7 +122,7 @@ public:
 
         Utils::Matrix GetTransform(void) const { return m_transformation; };
 
-        Core::Meshe m_meshe;
+        Core::Meshe& m_meshe;
     public:
         Utils::Matrix m_transformation;
     };

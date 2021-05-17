@@ -534,10 +534,13 @@ int LuaClass_Entity::LUA_configurecollisionshape(lua_State* p_L)
 
 			dsstring res_id = "collision_" + meshe_path;
 
-			collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>("shape", m_collisionmeshe);
-			Meshe* mesheref = &collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>("shape")->getPurpose().m_meshe;
 
 			m_collisionmeshe.SetPath(meshe_path);
+
+			CollisionAspect::MesheCollisionShape meshe_collision_shape(m_collisionmeshe);
+			collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>("shape", meshe_collision_shape);
+
+			Meshe* mesheref = &m_collisionmeshe;
 
 			resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(res_id,
 				std::make_tuple(mesheref, meshe_path, meshe_name, false));
