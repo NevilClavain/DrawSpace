@@ -550,6 +550,7 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
             dsreal current_patch_max_height = std::get<4>(e.second);
             dsreal current_patch_min_height = std::get<5>(e.second);
             dsreal current_patch_current_height = std::get<6>(e.second);
+            Vector camera_pos = std::get<7>(e.second);
 
             lua_pushstring(p_L, camera_name.c_str()); nb_ret++;
             lua_pushinteger(p_L, currentLOD); nb_ret++;
@@ -560,6 +561,12 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
             lua_pushnumber(p_L, current_patch_max_height); nb_ret++;
             lua_pushnumber(p_L, current_patch_min_height); nb_ret++;
             lua_pushnumber(p_L, current_patch_current_height); nb_ret++;
+
+            lua_pushnumber(p_L, camera_pos[0]); nb_ret++;
+            lua_pushnumber(p_L, camera_pos[1]); nb_ret++;
+            lua_pushnumber(p_L, camera_pos[2]); nb_ret++;
+
+
         }
     }
     else

@@ -28,6 +28,7 @@
 
 #include "luna.h"
 #include "misc_utils.h"
+#include "vector.h"
 
 namespace DrawSpace
 {
@@ -93,7 +94,7 @@ private:
 
     DrawSpace::Aspect::RenderingAspect* m_rendering_aspect;
 
-    using ViewOutInfos = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal>>;
+    using ViewOutInfos = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
 
 public:
     LuaClass_PlanetSpecificConfig(lua_State* p_L);

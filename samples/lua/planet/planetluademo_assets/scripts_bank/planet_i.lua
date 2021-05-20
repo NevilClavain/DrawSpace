@@ -439,10 +439,23 @@ function()
 	  altitude_unit = " m"
 	end
 
+    --[[
     relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit..
                     ' pminh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_min_height"],2)..
                     ' pmaxh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_max_height"],2)..
-                    ' pcurrh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_current_height"],2)
+                    ' pcurrh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_current_height"],2)..
+                    ' xloc='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["camera_local_pos_x"],2)..
+                    ' yloc='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["camera_local_pos_y"],2)..
+                    ' zloc='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["camera_local_pos_z"],2)
+                    ]]
+
+    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit..
+                    ' pcurrh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_current_height"],2)..
+                    ' pminh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_min_height"],2)..
+                    ' pmaxh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_max_height"],2)
+                    
+                    
+
 
     if relative_ack == FALSE then
 
@@ -505,7 +518,7 @@ function()
   end
   
  
-  text4_renderer:update(300, 70, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
+  text4_renderer:update(10, 90, 255, 0, 0, 'cam_id=' ..current_cam_id..' subpasses='..planet_infos['delayedSingleSubPassQueueSize']..
                                             ' LOD='..planet_infos["viewsInfos"][current_cam_id]["currentLOD"]..' '..relative_state)
                                             
 
@@ -664,6 +677,8 @@ planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
+
+resurgam_planet_entity:add_aspect(PHYSICS_ASPECT)
 
 g:print("Planet creation done...")
 

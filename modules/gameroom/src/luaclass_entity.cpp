@@ -563,7 +563,6 @@ int LuaClass_Entity::LUA_releasecollision(lua_State* p_L)
 	}
 	collision_aspect->RemoveComponent<bool>("contact_state");
 
-
 	switch (m_collisionshape_type)
 	{
 		case 0: // SHAPE_BOX
@@ -584,7 +583,7 @@ int LuaClass_Entity::LUA_releasecollision(lua_State* p_L)
 			ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
 			if (!resources_aspect)
 			{
-				LUA_ERROR("Entity::configure_collisionshape : attached entity has no resources aspect !");
+				LUA_ERROR("Entity::release_collision : attached entity has no resources aspect !");
 			}
 
 			collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>("shape");

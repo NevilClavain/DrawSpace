@@ -47,7 +47,10 @@ class Layer;
 
 namespace DrawSpace
 {
-
+namespace Aspect
+{
+class CollisionAspect;
+}
 namespace Systems
 {
 class Hub;
@@ -64,7 +67,7 @@ protected:
     using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using TimerCb           = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
 
-    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal>>;
+    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;
@@ -81,14 +84,14 @@ protected:
 
 
     bool                                                m_add_in_rendergraph;
-    Systems::Hub*                                       m_hub;
+    Systems::Hub*                                       m_hub{ nullptr };;
     SystemsEvtCb                                        m_system_evt_cb;
     CameraEventsCb                                      m_cameras_evt_cb;
     NodesEventsCb                                       m_nodes_evt_cb;
-    EntityGraph::EntityNodeGraph*                       m_entitynodegraph;
+    EntityGraph::EntityNodeGraph*                       m_entitynodegraph{ nullptr };
     TimerCb                                             m_timer_cb;
     DrawSpace::Utils::Timer                             m_timer;
-    DrawSpace::Utils::TimeManager*                      m_timemanager;
+    DrawSpace::Utils::TimeManager*                      m_timemanager{ nullptr };;
 
     struct RegisteredCamera
     {
@@ -96,6 +99,8 @@ protected:
         dsstring                            camera_name;
         //CameraType                          type;
         DrawSpace::Core::Entity*            attached_body;
+
+        DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
 
         bool                                relative_alt_valid;
         dsreal                              relative_alt;
@@ -105,7 +110,7 @@ protected:
         dsstring                            entity_name;
     };
 
-    DrawSpace::Core::Entity*                                        m_owner_entity;
+    DrawSpace::Core::Entity*                                        m_owner_entity{ nullptr };
 
     dsreal                                                          m_planet_ray;
 
@@ -145,6 +150,8 @@ protected:
 
     std::set<dsstring>                                              m_passes;
 
+
+
     
 
     ///////////////////////////////////////////////////////////////////////////
@@ -169,6 +176,9 @@ protected:
     void                        zbuffer_control_from_viewer_alt(void);
 
     void                        prepare_permanent_subpasses(void);
+
+    void                        setup_collisions_aspect(void);
+    void                        release_collisions_aspect(void);
    
 public:
     PlanetsRenderingAspectImpl( void );

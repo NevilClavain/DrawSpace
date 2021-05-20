@@ -26,9 +26,21 @@
 
 #include "lod_patch.h"
 #include "lod_collisions.h"
+#include "collisionaspect.h"
 #include "csts.h"
 
+namespace DrawSpace
+{
+namespace EntityGraph
+{
+class EntityNodeGraph;
+}
 
+namespace Aspect
+{
+class CollisionAspect;
+}
+}
 namespace LOD
 {
 struct Config;
@@ -46,39 +58,55 @@ public:
 
 private:
 
-    Config*                                 m_config{ nullptr };
-    Body*                                   m_body{ nullptr };
-    Layer::SubPassCreationHandler*          m_handler{ nullptr };
-    bool                                    m_hot;
-    int                                     m_current_lod;
+    DrawSpace::Core::Entity*                                    m_owner_entity{ nullptr };
+    DrawSpace::EntityGraph::EntityNodeGraph*                    m_entitynodegraph{ nullptr };
 
-    dsreal                                  m_planetray;
-    bool                                    m_collisions;
+    Config*                                                     m_config{ nullptr };
+    Body*                                                       m_body{ nullptr };
+    Layer::SubPassCreationHandler*                              m_handler{ nullptr };
+    bool                                                        m_hot;
+    int                                                         m_current_lod;
 
-    LOD::Collisions*                        m_collisions_hms[6];
-    LOD::Collisions*                        m_current_collisions_hm{ nullptr };
+    dsreal                                                      m_planetray;
+    bool                                                        m_collisions;
 
-    LOD::Patch*                             m_current_patch{ nullptr };
+    LOD::Collisions*                                            m_collisions_hms[6];
+    LOD::Collisions*                                            m_current_collisions_hm{ nullptr };
 
-    bool                                    m_draw_collidinghm{ false };
+    LOD::Patch*                                                 m_current_patch{ nullptr };
 
-    PatchUpdateCb                           m_patch_update_cb;
+    bool                                                        m_draw_collidinghm{ false };
+    bool                                                        m_collision_state{ false };
 
-    dsstring                                m_description; // for debug purpose :)
+    PatchUpdateCb                                               m_patch_update_cb;
 
-    dsreal                                  m_currentpatch_max_height{ -2.0 };
-    dsreal                                  m_currentpatch_min_height{ -2.0 };
-    dsreal                                  m_currentpatch_current_height{ -2.0 };
+    dsstring                                                    m_description; // for debug purpose :)
 
-    dsreal                                  m_alt_grid[Collisions::heightmapTextureSize * Collisions::heightmapTextureSize];
+
+    DrawSpace::Aspect::CollisionAspect*                         m_collision_aspect{ nullptr };
+
+    dsreal                                                      m_currentpatch_max_height{ -2.0 };
+    dsreal                                                      m_currentpatch_min_height{ -2.0 };
+    dsreal                                                      m_currentpatch_current_height{ -2.0 };
+
+    //dsreal                                                      m_alt_grid[Collisions::heightmapTextureSize * Collisions::heightmapTextureSize];
+    dsreal                                                      m_alt_grid[cst::patchResolution * cst::patchResolution];
+
+    DrawSpace::Core::Meshe                                      m_hm_meshe; // meshe produced with heightmap result and used in bullet
+    DrawSpace::Aspect::CollisionAspect::MesheCollisionShape     m_meshe_collision_shape;
 
     void on_patchupdate(Patch* p_patch, int p_patch_lod);
     void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
 
+    void setup_collider(void);
+    void remove_collider(void);
+
 
 public:
-    Layer( Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
+    Layer(DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNodeGraph* p_eg, 
+                    Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
+
     ~Layer(void);
 
     Body* GetBody(void) const;
@@ -93,6 +121,8 @@ public:
     void Compute( void );
     void SubPassDone(LOD::Collisions* p_collider);
     void ResetBody(void);
+
+    void RemoveCollider(void);
 
     dsreal GetCurrentPatchMaxHeight(void) const;
     dsreal GetCurrentPatchMinHeight(void) const;

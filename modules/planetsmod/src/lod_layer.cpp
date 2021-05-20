@@ -26,22 +26,29 @@
 #include "lod_body.h"
 #include "lod_config.h"
 #include "lod_drawing.h"
+#include "collisionaspect.h"
+#include "entitynodegraph.h"
 
 #include "maths.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Aspect;
 
 using namespace LOD;
 
-Layer::Layer(Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index) :
+Layer::Layer(DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNodeGraph* p_eg,
+                Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index) :
+m_owner_entity(p_entity),
+m_entitynodegraph(p_eg),
 m_config(p_config),
 m_body(p_body),
 m_handler(p_handler),
 m_hot(false),
 m_current_lod(-1),
-m_patch_update_cb(this, &Layer::on_patchupdate)
+m_patch_update_cb(this, &Layer::on_patchupdate),
+m_meshe_collision_shape(m_hm_meshe)
 {
     m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
@@ -61,6 +68,12 @@ m_patch_update_cb(this, &Layer::on_patchupdate)
     m_description = m_config->m_layers_descr[p_index].description;
 
     memset(m_alt_grid, 0, sizeof(m_alt_grid));
+
+    m_collision_aspect = m_owner_entity->GetAspect<CollisionAspect>();
+    if (NULL == m_collision_aspect)
+    {
+        _DSEXCEPTION("Collision aspect doesnt exists in Planet entity!");
+    }
 }
 
 Layer::~Layer(void)
@@ -147,6 +160,8 @@ void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
         if (p_patch->GetOrientation() == m_body->GetCurrentFace())
         {
             // ce patch appartient bien a la face "courante"
+
+            // lance la generation de la heightmap
           
             std::vector<LOD::Patch*> display_list;
             display_list.push_back(m_current_patch);
@@ -167,24 +182,22 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
     dsreal max_height{ 0.0 };
     dsreal min_height{ 1000000000.0 };
 
-    for (int y = 0; y < Collisions::heightmapTextureSize; y++)
+    for (int y = 0; y < cst::patchResolution; y++)
     {
-        for (int x = 0; x < Collisions::heightmapTextureSize; x++)
+        for (int x = 0; x < cst::patchResolution; x++)
         {
-            Vertex v, vertex_out;
+            Vertex vertex_in, vertex_out;
 
-            // p_patchmeshe resol is cst::patchResolution
-            int x_input = (x * cst::patchResolution) / Collisions::heightmapTextureSize;
-            int y_input = (y * cst::patchResolution) / Collisions::heightmapTextureSize;
+            int index{ (cst::patchResolution * y) + x };
+            p_patchmeshe.GetVertex(index, vertex_in);
 
-            int index{ (cst::patchResolution * y_input) + x_input };
-            int index_hm{ (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y)) + x };
-
-            p_patchmeshe.GetVertex(index, v);
-
+            int x_input = (x * Collisions::heightmapTextureSize) / cst::patchResolution;
+            int y_input = (y * Collisions::heightmapTextureSize) / cst::patchResolution;
+            int index_hm{ (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y_input)) + x_input };
+            
             double alt{ *(p_heightmap + index_hm) };
 
-            m_alt_grid[index_hm] = alt;
+            m_alt_grid[index] = alt;
 
             if (alt > max_height)
             {
@@ -197,7 +210,7 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
             }
 
             Vector v_out;
-            p_patch->ProjectVertex(Vector(v.x, v.y, v.z, 1.0), v_out);
+            p_patch->ProjectVertex(Vector(vertex_in.x, vertex_in.y, vertex_in.z, 1.0), v_out);
             v_out.Scale(m_planetray + alt);
 
             vertex_out.x = v_out[0];
@@ -205,6 +218,7 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
             vertex_out.z = v_out[2];
 
             p_outmeshe.AddVertex(vertex_out);
+
         }
     }
 
@@ -243,16 +257,16 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     x2 = x1 + 1;
     y2 = y1 + 1;
 
-    index_hm = (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y1)) + x1;
+    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y1)) + x1;
     dsreal h1 = m_alt_grid[index_hm];
 
-    index_hm = (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y1)) + x2;
+    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y1)) + x2;
     dsreal h2 = m_alt_grid[index_hm];
 
-    index_hm = (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y2)) + x2;
+    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y2)) + x2;
     dsreal h3 = m_alt_grid[index_hm];
 
-    index_hm = (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y2)) + x1;
+    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y2)) + x1;
     dsreal h4 = m_alt_grid[index_hm];
 
 
@@ -285,30 +299,15 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
 
         Meshe final_meshe;
         build_meshe(*(m_body->GetPatcheMeshe()), m_current_patch, final_meshe, heightmap);
+        m_hm_meshe = final_meshe;
 
-        /*
-        Dynamics::InertBody::Body::Parameters params;
-
-        params.mass = 0.0;
-
-        params.initial_attitude.Translation(0.0, 0.0, 0.0);
-
-        params.shape_descr.shape = DrawSpace::Dynamics::Body::MESHE_SHAPE;
-        params.shape_descr.meshe = final_meshe;
-
-        RemoveColliderFromWorld();
-
-        m_collider->SetKinematic(params);
-        m_collider->AddToWorld(m_world);
-
-        m_collision_state = true;
-        m_nb_collisionmeshebuild_done++;
-        */
+        remove_collider();
+        setup_collider();
 
         m_draw_collidinghm = false;
         m_current_collisions_hm->Disable();
 
-        m_current_collisions_hm = nullptr;
+        m_current_collisions_hm = nullptr;        
     }
 }
 
@@ -330,4 +329,31 @@ dsreal Layer::GetCurrentPatchMinHeight(void) const
 dsreal Layer::GetCurrentPatchCurrentHeight(void) const
 {
     return m_currentpatch_current_height;
+}
+
+void Layer::setup_collider(void)
+{
+    if (!m_collision_state)
+    {
+        m_collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>("shape", m_meshe_collision_shape);
+        m_entitynodegraph->RegisterCollider(m_owner_entity);
+
+        m_collision_state = true;
+    }
+}
+
+void Layer::remove_collider(void)
+{
+    if (m_collision_state)
+    {
+        m_entitynodegraph->UnregisterCollider(m_owner_entity);
+        m_collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>("shape");
+
+        m_collision_state = false;
+    }
+}
+
+void Layer::RemoveCollider(void)
+{
+    remove_collider();
 }

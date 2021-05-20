@@ -41,6 +41,8 @@
 
 #include "lod_layer.h"
 
+#include "collisionaspect.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -49,6 +51,7 @@ using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
+using namespace DrawSpace::EntityGraph;
 
 
 const dsstring PlanetsRenderingAspectImpl::ClimateVShaderComponentName = "climate_vshader";
@@ -146,6 +149,7 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpa
         }
 
         m_owner_entity = p_entity;
+        setup_collisions_aspect();
     }
     else
     {
@@ -167,6 +171,20 @@ void PlanetsRenderingAspectImpl::Release(void)
 {
     if( m_hub )
     {
+        /////////////// release collisions stuff...
+        for (auto& camera : m_registered_camerapoints)
+        {
+            for (auto& camera_layer : camera.second.layers)
+            {
+                if (camera_layer->GetHotState())
+                {
+                    camera_layer->RemoveCollider();
+                }
+            }
+        }
+        release_collisions_aspect();
+        //////////////////////////////////////
+
         std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
         for (auto& e : systems)
         {
@@ -300,7 +318,9 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         dsreal current_patch_min_height = e.second.layers[0]->GetCurrentPatchMinHeight();
         dsreal current_patch_current_height = e.second.layers[0]->GetCurrentPatchCurrentHeight();
 
-        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, altitude, current_patch_max_height, current_patch_min_height, current_patch_current_height);
+        Vector camera_pos = e.second.locale_camera_pos_from_planet;
+
+        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, altitude, current_patch_max_height, current_patch_min_height, current_patch_current_height, camera_pos);
     }
 
     m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
@@ -965,7 +985,7 @@ void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspect
     for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
     {
         LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras, m_config.m_layers_descr[i].description));
-        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(&m_config, slod_body, &m_subpass_creation_cb, i));
+        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_owner_entity, m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, i));
 
         layer->SetHotState(p_hotstate);
 
@@ -1040,6 +1060,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 
             camera.second.relative_alt_valid = true;
             camera.second.relative_alt = rel_alt;
+            camera.second.locale_camera_pos_from_planet = locale_camera_pos_from_planet;
 
             for(auto& camera_layer: camera.second.layers)
             {
@@ -1055,6 +1076,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                     {
                         camera_layer->SetHotState(false);
                         camera_layer->ResetBody();
+                        camera_layer->RemoveCollider();
                     }
                 }
                 else
@@ -1093,3 +1115,25 @@ void PlanetsRenderingAspectImpl::zbuffer_control_from_viewer_alt(void)
     }
 }
 
+void PlanetsRenderingAspectImpl::setup_collisions_aspect(void)
+{
+    m_owner_entity->AddAspect<CollisionAspect>();
+
+    // for collisions management
+    CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+    if (NULL == collision_aspect)
+    {
+        _DSEXCEPTION("Collision aspect doesnt exists in Planet entity!");
+    }
+
+    // add bool component for contact state
+    collision_aspect->AddComponent<bool>("contact_state", false);
+}
+
+void PlanetsRenderingAspectImpl::release_collisions_aspect(void)
+{   
+    CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+
+    collision_aspect->RemoveComponent<bool>("contact_state");
+    m_owner_entity->RemoveAspect<CollisionAspect>();
+}
