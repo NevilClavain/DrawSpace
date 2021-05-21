@@ -579,11 +579,10 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
+void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
 {
 
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
-    node->m_debug_id = "planet main node";
     m_facedrawingnodes.push_back( node );
 
     FaceDrawingNode* node_skirts = NULL;
@@ -596,14 +595,14 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
-
+            node->m_debug_id = "LOWRES_MESHE for layer : " + std::to_string(p_layer_index);
 
             if( m_config->m_landplace_patch )
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
-                node_landplace->m_debug_id = "LOWRES_MESHE_node_landplace";
+                node_landplace->m_debug_id = "LOWRES_MESHE_node_landplace for layer : " + std::to_string(p_layer_index);
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
                 node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
 
@@ -613,19 +612,22 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
             break;
 
         case Body::AVGRES_MESHE:
-
+           
             // node patch terrain
             node->SetMeshe( Body::m_patch3_meshe );
+            node->m_debug_id = "AVGRES_MESHE for layer : " + std::to_string(p_layer_index);
+
             break;
 
         case Body::LOWRES_SKIRT_MESHE:
 
             node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
-            node_skirts->m_debug_id = "LOWRES_SKIRT_MESHE_skirts";
+            node_skirts->m_debug_id = "LOWRES_SKIRT_MESHE_skirts for layer : " + std::to_string(p_layer_index);
             m_facedrawingnodes.push_back( node_skirts );
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
+            node->m_debug_id = "LOWRES_SKIRT_MESHE for layer : " + std::to_string(p_layer_index);
 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
@@ -648,6 +650,7 @@ void Drawing::RegisterSinglePassSlot( /*Pass* p_pass,*/ const dsstring& p_pass, 
 
             //node patch terrain
             node->SetMeshe( Body::m_patch2_meshe );
+            node->m_debug_id = "HIRES_MESHE for layer : " + std::to_string(p_layer_index);
             break;
     }
         
