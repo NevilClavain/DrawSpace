@@ -470,6 +470,16 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool collision_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().second };
 
 
+    bool enable_collisionmeshe_display{ m_owner->GetComponent<bool>("enable_collisionmeshe_display")->getPurpose() };
+
+    dsstring collisionmeshe_display_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().first };
+    dsstring collisionmeshe_display_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().second };
+
+    bool collisionmeshe_display_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().first };
+    bool collisionmeshe_display_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().second };
+
+
+
     using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
     std::vector<Lights> lights = m_owner->GetComponent<std::vector<Lights>>("lights")->getPurpose();
 
@@ -658,6 +668,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 m_planet_detail_binder[pass_id] = details_binders;
 
+                if (enable_collisionmeshe_display)
+                {
+                    m_drawable.RegisterSinglePassSlotForCollisionDisplay(pass_id);
+                }
             }
             else if (AtmosphereLayer == layer)
             {

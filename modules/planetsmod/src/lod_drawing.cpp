@@ -44,6 +44,26 @@ using namespace DrawSpace::Aspect;
 using namespace LOD;
 
 
+
+CollisionMesheDrawingNode::CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer)
+{
+
+}
+
+CollisionMesheDrawingNode::~CollisionMesheDrawingNode(void)
+{
+
+}
+
+void CollisionMesheDrawingNode::draw(void)
+{
+
+}
+
+
+
+
+
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, Config* p_config, int p_layer_index ) :
 m_renderer( p_renderer ),
 m_current_patch( NULL ),
@@ -492,7 +512,10 @@ void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core:
     }
 }
 
+void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
+{
 
+}
 
 
 void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
@@ -700,6 +723,11 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
         // pour faire le rendu landplace terrains APRES le rendu des nodes patch terrains
         node_landplace->SetOrderNumber( p_rendering_order + 1 );
     }
+}
+
+void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass)
+{
+
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void ) const

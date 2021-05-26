@@ -105,6 +105,22 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 	   config_description['collision_pshader_compiled'] ~= nil then
 		planet_specific_configuration:set_collisionshaderscompiled(config_description['collision_vshader_compiled'], config_description['collision_pshader_compiled'])
 	end
+
+	if config_description['enable_collisionmeshe_display'] ~= nil and 
+	   config_description['enable_collisionmeshe_display'] ~= nil then
+		planet_specific_configuration:enable_collisiondisplay(config_description['enable_collisionmeshe_display'])
+	end
+
+	if config_description['collisionmeshe_display_vshader'] ~= nil and 
+	   config_description['collisionmeshe_display_pshader'] ~= nil then
+		planet_specific_configuration:set_collisiondisplayshaders(config_description['collisionmeshe_display_vshader'], config_description['collisionmeshe_display_pshader'])
+	end
+
+	if config_description['collisionmeshe_display_vshader_compiled'] ~= nil and 
+	   config_description['collisionmeshe_display_pshader_compiled'] ~= nil then
+		planet_specific_configuration:set_collisiondisplayshaderscompiled(config_description['collisionmeshe_display_vshader_compiled'], config_description['collisionmeshe_display_pshader_compiled'])
+	end
+
 end
 
 planetmod.layers =

@@ -44,6 +44,20 @@ struct Config;
 struct Binder;
 
 
+class CollisionMesheDrawingNode : public DrawSpace::Core::RenderingNode
+{
+public:
+
+    CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
+
+    ~CollisionMesheDrawingNode(void);
+
+private:
+
+    void draw(void);
+
+};
+
 class FaceDrawingNode : public DrawSpace::Core::RenderingNode
 {
 public:
@@ -152,8 +166,8 @@ protected:
 
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+    void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
 
     void create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest );
 
@@ -180,7 +194,8 @@ public:
     void AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
     void RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
 
-    void RegisterSinglePassSlot( /*DrawSpace::Pass* p_pass,*/ const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
+    void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
+    void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass);
    
 };
 }

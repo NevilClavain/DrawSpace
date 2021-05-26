@@ -52,6 +52,9 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_climateshaderscompiled", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaderscompiled },
     { "set_collisionshaders", &LuaClass_PlanetSpecificConfig::LUA_setcollisionshaders },
     { "set_collisionshaderscompiled", &LuaClass_PlanetSpecificConfig::LUA_setcollisionshaderscompiled },
+    { "enable_collisiondisplay", &LuaClass_PlanetSpecificConfig::LUA_enablecollisiondisplay },
+    { "set_collisiondisplayshaders", &LuaClass_PlanetSpecificConfig::LUA_setcollisiondisplayshaders },
+    { "set_collisiondisplayshaderscompiled", &LuaClass_PlanetSpecificConfig::LUA_setcollisiondisplayshaderscompiled },
     { "enable_landplacepatch", &LuaClass_PlanetSpecificConfig::LUA_enablelandplacepatch },
     { "enable_atmosphere", &LuaClass_PlanetSpecificConfig::LUA_enableatmosphere },
     { "enable_light", &LuaClass_PlanetSpecificConfig::LUA_enablelight },
@@ -134,6 +137,14 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<std::pair<bool, bool>>("collisions_shaders_compiled", collisions_shaders_compiled);
 
 
+    entity_rendering_aspect->AddComponent<bool>("enable_collisionmeshe_display", m_planets_details.enable_collisionmeshe_display);
+
+    std::pair<dsstring, dsstring> collisionmeshe_display_shaders(m_planets_details.collisionmeshe_display_vshader, m_planets_details.collisionmeshe_display_pshader);
+    entity_rendering_aspect->AddComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders", collisionmeshe_display_shaders);
+
+    std::pair<bool, bool> collisionmeshe_display_shaders_compiled(m_planets_details.collisionmeshe_display_vshader_compiled, m_planets_details.collisionmeshe_display_pshader_compiled);
+    entity_rendering_aspect->AddComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled", collisionmeshe_display_shaders_compiled);
+
 
     std::vector<PlanetDetails::Lights> lights;
     for( int i = 0; i < 4; i++ )
@@ -192,6 +203,10 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("collisions_shaders");
     m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("collisions_shaders_compiled");
     m_rendering_aspect->RemoveComponent<std::vector<PlanetDetails::Lights>>("lights");
+
+    m_rendering_aspect->RemoveComponent<bool>("enable_collisionmeshe_display");
+    m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders");
+    m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled");
 
 
     m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
@@ -458,6 +473,49 @@ int LuaClass_PlanetSpecificConfig::LUA_setcollisionshaderscompiled(lua_State* p_
 
     m_planets_details.collisions_vshader_compiled = luaL_checkint(p_L, 1);
     m_planets_details.collisions_pshader_compiled = luaL_checkint(p_L, 2);
+
+    return 0;
+}
+
+
+int LuaClass_PlanetSpecificConfig::LUA_enablecollisiondisplay(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::enable_collisiondisplay : argument(s) missing");
+    }
+
+    m_planets_details.enable_collisionmeshe_display = luaL_checkint(p_L, 1);
+
+    return 0;
+}
+
+
+int LuaClass_PlanetSpecificConfig::LUA_setcollisiondisplayshaders(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_collisiondisplayshaders : argument(s) missing");
+    }
+
+    m_planets_details.collisionmeshe_display_vshader = luaL_checkstring(p_L, 1);
+    m_planets_details.collisionmeshe_display_pshader = luaL_checkstring(p_L, 2);
+
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setcollisiondisplayshaderscompiled(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_collisiondisplayshaderscompiled : argument(s) missing");
+    }
+
+    m_planets_details.collisionmeshe_display_vshader_compiled = luaL_checkint(p_L, 1);
+    m_planets_details.collisionmeshe_display_pshader_compiled = luaL_checkint(p_L, 2);
 
     return 0;
 }
