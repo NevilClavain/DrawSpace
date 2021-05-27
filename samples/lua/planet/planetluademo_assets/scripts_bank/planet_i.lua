@@ -685,8 +685,6 @@ planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
 
-resurgam_planet_entity:add_aspect(PHYSICS_ASPECT)
-
 g:print("Planet creation done...")
 
 
