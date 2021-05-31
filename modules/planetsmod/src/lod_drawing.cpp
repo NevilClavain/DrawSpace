@@ -55,7 +55,7 @@ CollisionMesheDrawingNode::~CollisionMesheDrawingNode(void)
 
 }
 
-void CollisionMesheDrawingNode::draw(void)
+void CollisionMesheDrawingNode::Draw(void)
 {
 
 }
@@ -465,6 +465,9 @@ void Drawing::Shutdown(void)
     {
         destroy_all_landplace_meshes();
     }
+
+    ////////////////////////////////////////////////////////
+
     _DRAWSPACE_DELETE_(m_singlenode_draw_handler);
 
     for (size_t i = 0; i < m_drawing_handlers.size(); i++)
@@ -472,9 +475,16 @@ void Drawing::Shutdown(void)
         _DRAWSPACE_DELETE_(m_drawing_handlers[i]);
     }
 
-    for (size_t i = 0; i < m_facedrawingnodes.size(); i++)
+    ////////////////////////////////////////////////////////
+
+    for (auto& e : m_facedrawingnodes)
     {
-        _DRAWSPACE_DELETE_(m_facedrawingnodes[i]);
+        _DRAWSPACE_DELETE_(e);
+    }
+
+    for (auto& e : m_collisionmeshedrawingnodes)
+    {
+        _DRAWSPACE_DELETE_(e);
     }
 }
 
@@ -499,6 +509,14 @@ void Drawing::AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::Rend
             p_passqueue->Add( e.second );
         }
     }
+
+    for( auto& e : m_passescollisionsdrawingnodes )
+    {
+        if (e.first == p_passname)
+        {
+            p_passqueue->Add(e.second);
+        }
+    }
 }
 
 void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue)
@@ -510,11 +528,19 @@ void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core:
             p_passqueue->Remove(e.second);
         }
     }
+
+    for (auto& e : m_passescollisionsdrawingnodes)
+    {
+        if (e.first == p_passname)
+        {
+            p_passqueue->Remove(e.second);
+        }
+    }
 }
 
 void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
 {
-
+    //TODO
 }
 
 
@@ -725,9 +751,25 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
     }
 }
 
-void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass)
+void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order)
 {
+    CollisionMesheDrawingNode* node{ _DRAWSPACE_NEW_(CollisionMesheDrawingNode, CollisionMesheDrawingNode(m_renderer)) };
 
+    node->SetFx(p_fx);
+    node->m_debug_id = "COLLISIONDISPLAY_MESHE";
+
+    node->SetOrderNumber(p_rendering_order);
+
+    auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_collisionmeshe_draw)) };
+
+    node->RegisterHandler(cb);
+
+    m_drawing_handlers.push_back(cb);
+
+    auto p{ std::make_pair(p_pass, node) };
+    m_passescollisionsdrawingnodes.push_back(p);
+
+    m_collisionmeshedrawingnodes.push_back(node);
 }
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void ) const

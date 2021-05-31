@@ -60,6 +60,10 @@ const dsstring PlanetsRenderingAspectImpl::ClimatePShaderComponentName = "climat
 const dsstring PlanetsRenderingAspectImpl::CollisionVShaderComponentName = "collision_vshader";
 const dsstring PlanetsRenderingAspectImpl::CollisionPShaderComponentName = "collision_pshader";
 
+const dsstring PlanetsRenderingAspectImpl::CollisionDisplayVShaderComponentName = "collision_display__vshader";
+const dsstring PlanetsRenderingAspectImpl::CollisionDisplayPShaderComponentName = "collision_display_pshader";
+
+
 
 //Root::on_camera_event : 
 // -> EntityNodeGraph::CAMERA_ACTIVE
@@ -238,6 +242,16 @@ void PlanetsRenderingAspectImpl::Release(void)
         if (m_collisions_pshader)
         {
             _DRAWSPACE_DELETE_(m_collisions_pshader);
+        }
+
+        if (m_collisions_display_vshader)
+        {
+            _DRAWSPACE_DELETE_(m_collisions_display_vshader);
+        }
+
+        if (m_collisions_display_pshader)
+        {
+            _DRAWSPACE_DELETE_(m_collisions_display_pshader);
         }
     }
     else
@@ -469,8 +483,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool collision_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().first };
     bool collision_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().second };
 
-
-    bool enable_collisionmeshe_display{ m_owner->GetComponent<bool>("enable_collisionmeshe_display")->getPurpose() };
+    m_enable_collisionmeshe_display = m_owner->GetComponent<bool>("enable_collisionmeshe_display")->getPurpose();
 
     dsstring collisionmeshe_display_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().first };
     dsstring collisionmeshe_display_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().second };
@@ -500,13 +513,17 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         
     Shader::SetRootPath(shaders_path);
 
-
-
     m_climate_vshader = _DRAWSPACE_NEW_(Shader, Shader(climate_vshader, climate_vshader_compiled));
     m_climate_pshader = _DRAWSPACE_NEW_(Shader, Shader(climate_pshader, climate_pshader_compiled));
 
     m_collisions_vshader = _DRAWSPACE_NEW_(Shader, Shader(collision_vshader, collision_vshader_compiled));
     m_collisions_pshader = _DRAWSPACE_NEW_(Shader, Shader(collision_pshader, collision_pshader_compiled));
+
+    if (m_enable_collisionmeshe_display)
+    {
+        m_collisions_display_vshader = _DRAWSPACE_NEW_(Shader, Shader(collisionmeshe_display_vshader, collisionmeshe_display_vshader_compiled));
+        m_collisions_display_pshader = _DRAWSPACE_NEW_(Shader, Shader(collisionmeshe_display_pshader, collisionmeshe_display_pshader_compiled));
+    }
 
     
     //////////// Resources ///////////////////////////
@@ -524,6 +541,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(CollisionVShaderComponentName, std::make_tuple(m_collisions_vshader, false, 0));
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(CollisionPShaderComponentName, std::make_tuple(m_collisions_pshader, false, 1));
+
+    if (m_enable_collisionmeshe_display)
+    {
+        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(CollisionDisplayVShaderComponentName, std::make_tuple(m_collisions_display_vshader, false, 0));
+        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(CollisionDisplayPShaderComponentName, std::make_tuple(m_collisions_display_pshader, false, 1));
+    }
+
 
     /////////////////
 
@@ -550,6 +574,20 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE, "none"));
 
     m_collisions_fx.SetRenderStates(collisions_rss);
+
+    /////////////////
+    if (m_enable_collisionmeshe_display)
+    {
+        m_collisions_display_fx.AddShader(m_collisions_display_vshader);
+        m_collisions_display_fx.AddShader(m_collisions_display_pshader);
+
+        RenderStatesSet collisions_display_rss;
+
+        collisions_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETFILLMODE, "line"));
+        collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETFILLMODE, "solid"));
+
+        m_collisions_display_fx.SetRenderStates(collisions_display_rss);
+    }
 
     /////////////////
 
@@ -668,10 +706,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 m_planet_detail_binder[pass_id] = details_binders;
 
-                if (enable_collisionmeshe_display)
+                if (m_enable_collisionmeshe_display)
                 {
-                    m_drawable.RegisterSinglePassSlotForCollisionDisplay(pass_id);
-                }
+                    m_drawable.RegisterSinglePassSlotForCollisionDisplay(pass_id, &m_collisions_display_fx, ro + 1);
+                }                
             }
             else if (AtmosphereLayer == layer)
             {
@@ -720,6 +758,11 @@ void PlanetsRenderingAspectImpl::release_rendering_objects( void )
     resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(CollisionPShaderComponentName);
 
 
+    if (m_enable_collisionmeshe_display)
+    {
+        resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(CollisionDisplayVShaderComponentName);
+        resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(CollisionDisplayPShaderComponentName);
+    }
     m_drawable.Shutdown();
 }
 

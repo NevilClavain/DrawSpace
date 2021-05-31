@@ -52,9 +52,8 @@ public:
 
     ~CollisionMesheDrawingNode(void);
 
-private:
 
-    void draw(void);
+    void Draw(void);
 
 };
 
@@ -147,14 +146,21 @@ protected:
     std::vector<Body*>                                                          m_planetbodies;
 
     std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
-
     std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
+
+    //CollisionMesheDrawingNode*                                                  m_collisiondrawingnode{ nullptr };
+
+    std::vector<std::pair<dsstring, CollisionMesheDrawingNode*>>                m_passescollisionsdrawingnodes;
+    std::vector<CollisionMesheDrawingNode*>                                     m_collisionmeshedrawingnodes;
+
 
     NodesSet                                                                    m_nodes;
 
-    RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler;
+    RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler{ nullptr };
+    //RenderingNodeDrawCallback*                                                  m_collision_draw_handler{ nullptr };
     
     std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers; 
+    
     
     DrawSpace::Interface::Renderer*                                             m_renderer;
        
@@ -162,7 +168,7 @@ protected:
 
     DrawSpace::Core::Meshe*                                                     m_landplace_meshes[6];
 
-    DrawSpace::Core::Entity*                                                    m_owner_entity;
+    DrawSpace::Core::Entity*                                                    m_owner_entity;    
 
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
@@ -195,7 +201,7 @@ public:
     void RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
 
     void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
-    void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass);
+    void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
    
 };
 }

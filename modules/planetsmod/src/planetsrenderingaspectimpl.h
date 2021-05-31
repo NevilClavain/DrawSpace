@@ -79,6 +79,9 @@ protected:
     static const dsstring CollisionVShaderComponentName;
     static const dsstring CollisionPShaderComponentName;
 
+    static const dsstring CollisionDisplayVShaderComponentName;
+    static const dsstring CollisionDisplayPShaderComponentName;
+
 
 protected:
 
@@ -142,6 +145,11 @@ protected:
     DrawSpace::Core::Shader*                                        m_collisions_vshader{ nullptr };
     DrawSpace::Core::Shader*                                        m_collisions_pshader{ nullptr };
 
+    DrawSpace::Core::Fx                                             m_collisions_display_fx;
+    DrawSpace::Core::Shader*                                        m_collisions_display_vshader{ nullptr };
+    DrawSpace::Core::Shader*                                        m_collisions_display_pshader{ nullptr };
+
+
     SubPassCreationCb                                               m_subpass_creation_cb;
 
     std::vector<LOD::Layer*>                                        m_layers_list;
@@ -149,6 +157,8 @@ protected:
     DrawSpace::Interface::Renderer*                                 m_renderer;
 
     std::set<dsstring>                                              m_passes;
+
+    bool                                                            m_enable_collisionmeshe_display{ false };
 
 
 
