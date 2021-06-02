@@ -196,9 +196,11 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
             int index{ (cst::patchResolution * y) + x };
             p_patchmeshe.GetVertex(index, vertex_in);
 
-            int x_input = (x * Collisions::heightmapTextureSize) / cst::patchResolution;
-            int y_input = (y * Collisions::heightmapTextureSize) / cst::patchResolution;
+            int x_input = (x * (Collisions::heightmapTextureSize - 1)) / (cst::patchResolution - 1);
+            int y_input = (y * (Collisions::heightmapTextureSize - 1)) / (cst::patchResolution - 1);
             int index_hm{ (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y_input)) + x_input };
+
+            //int index_hm{ (Collisions::heightmapTextureSize * (y_input)) + x_input };
             
             double alt{ *(p_heightmap + index_hm) };
 
@@ -216,7 +218,11 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
 
             Vector v_out;
             p_patch->ProjectVertex(Vector(vertex_in.x, vertex_in.y, vertex_in.z, 1.0), v_out);
-            v_out.Scale(m_planetray + alt);
+
+            //v_out.Scale(m_planetray + alt);
+
+            v_out.Scale(m_planetray);
+            v_out.Scale(1.0 + (alt / m_planetray));
 
             vertex_out.x = v_out[0];
             vertex_out.y = v_out[1];

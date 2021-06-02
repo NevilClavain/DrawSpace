@@ -622,6 +622,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     node_binder->Unbind();
 }
 
+// used for subpasses :)
 void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node )
 {
     if (0 == m_planetbodies.size())

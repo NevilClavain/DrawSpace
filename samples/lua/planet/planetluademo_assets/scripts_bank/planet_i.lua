@@ -449,11 +449,7 @@ function()
                     ' zloc='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["camera_local_pos_z"],2)
                     ]]
 
-    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit..
-                    ' pcurrh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_current_height"],2)..
-                    ' pminh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_min_height"],2)..
-                    ' pmaxh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_max_height"],2)
-                    
+    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit                    
                     
 
 
@@ -648,8 +644,8 @@ planet_passes_bindings =
 	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
-		rendering_id = 'surface_rendering',
-        --rendering_id = 'surface_wireframe_rendering',
+		--rendering_id = 'surface_rendering',
+        rendering_id = 'surface_wireframe_rendering',
 		lit_shader_update_func = nil
 	},
 	binding_1 = 

@@ -79,8 +79,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     v_position2.w = 1.0;
     v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
 	
-    float h = sqrt((v_position2.x * v_position2.x) + (v_position2.z * v_position2.z)); // h compris entre 0.0 et 1.0
-
     float res = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
 
