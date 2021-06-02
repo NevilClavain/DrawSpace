@@ -583,8 +583,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
         RenderStatesSet collisions_display_rss;
 
-        collisions_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETFILLMODE, "line"));
-        collisions_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETFILLMODE, "solid"));
+        collisions_display_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETFILLMODE, "line"));
+        collisions_display_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETFILLMODE, "solid"));
 
         m_collisions_display_fx.SetRenderStates(collisions_display_rss);
     }
@@ -828,10 +828,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
         entity_name = infos_aspect->GetComponent<dsstring>( "entity_name" )->getPurpose();
 
         CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
-
-        
-        //TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-
+       
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
         {
             if (camera_aspect)
@@ -1048,6 +1045,15 @@ void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspect
 
         p_cameradescr.layers.push_back(layer);
         m_layers_list.push_back(layer);
+        
+        if (m_enable_collisionmeshe_display)
+        {
+            // connect collision meshe creation update/event to Drawing
+            if (0 == i) // for layer 0 (planet ground) only
+            {
+                layer->RegisterNewCollisionMesheCreationHandler(m_drawable.GetNewCollisionMesheCreationCb());
+            }
+        }
     }
 }
 
@@ -1134,6 +1140,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                         camera_layer->SetHotState(false);
                         camera_layer->ResetBody();
                         camera_layer->RemoveCollider();
+                        m_drawable.ResetCollisionMesheValidity();
                     }
                 }
                 else

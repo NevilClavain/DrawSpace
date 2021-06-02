@@ -45,19 +45,20 @@ using namespace LOD;
 
 
 
-CollisionMesheDrawingNode::CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer)
+CollisionMesheDrawingNode::CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer):
+m_renderer(p_renderer)
 {
-
 }
 
 CollisionMesheDrawingNode::~CollisionMesheDrawingNode(void)
 {
-
 }
 
-void CollisionMesheDrawingNode::Draw(void)
+void CollisionMesheDrawingNode::Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
-
+    // red color
+    m_renderer->SetFxShaderParams(1, 0, Utils::Vector(1.0, 0.0, 0.0, 1.0));
+    m_renderer->DrawMeshe(p_world, p_view, p_proj);
 }
 
 
@@ -441,6 +442,7 @@ m_renderer( NULL ),
 m_config( p_config ),
 m_owner_entity( NULL )
 {
+    m_collisionmeshe.SetPath("Collision display meshe");
 }
 
 Drawing::~Drawing( void )
@@ -450,6 +452,8 @@ Drawing::~Drawing( void )
 void Drawing::Startup( Core::Entity* p_entity )
 {
     m_singlenode_draw_handler = _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_rendering_singlenode_draw));
+
+    m_newcollisionmeshecreation_cb = _DRAWSPACE_NEW_(NewCollisionMesheCreationCb, NewCollisionMesheCreationCb(this, &Drawing::on_new_collisionmeshe_creation));
 
     if (m_config->m_landplace_patch)
     {
@@ -469,6 +473,8 @@ void Drawing::Shutdown(void)
     ////////////////////////////////////////////////////////
 
     _DRAWSPACE_DELETE_(m_singlenode_draw_handler);
+
+    _DRAWSPACE_DELETE_(m_newcollisionmeshecreation_cb);
 
     for (size_t i = 0; i < m_drawing_handlers.size(); i++)
     {
@@ -540,7 +546,26 @@ void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core:
 
 void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
 {
-    //TODO
+    if (m_collisionmeshe_valid)
+    {
+        DrawSpace::Utils::Matrix view;
+        DrawSpace::Utils::Matrix proj;
+        DrawSpace::Utils::Matrix world;
+
+        TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+        if (!transform_aspect)
+        {
+            _DSEXCEPTION("Owner entity has no transform aspect!");
+        }
+
+        transform_aspect->GetViewTransform(view);
+        transform_aspect->GetProjTransform(proj);
+        transform_aspect->GetWorldTransform(world);
+
+        CollisionMesheDrawingNode* collisionmeshe_node = static_cast<CollisionMesheDrawingNode*>(p_rendering_node);
+
+        collisionmeshe_node->Draw(world, view, proj);
+    }
 }
 
 
@@ -758,6 +783,12 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
     node->SetFx(p_fx);
     node->m_debug_id = "COLLISIONDISPLAY_MESHE";
 
+    // we cannot create a void meshe, so set whatever meshes in it
+    // this meshe will be updated later, when collision meshe will be generated from Layer 0 (Drawing::on_new_collisionmeshe_creation callback)
+    create_collision_meshe_from(*(LOD::Body::GetPatcheMeshe()));
+
+    node->SetMeshe(&m_collisionmeshe);
+
     node->SetOrderNumber(p_rendering_order);
 
     auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_collisionmeshe_draw)) };
@@ -768,9 +799,20 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
 
     auto p{ std::make_pair(p_pass, node) };
     m_passescollisionsdrawingnodes.push_back(p);
-
+   
     m_collisionmeshedrawingnodes.push_back(node);
 }
+
+void Drawing::on_new_collisionmeshe_creation(const DrawSpace::Core::Meshe& p_meshe)
+{
+    // update meshe with new vertices/triangles
+    create_collision_meshe_from(p_meshe);
+
+    //and then update in renderer side
+    m_collisionmeshe.UpdateIndexes();
+    m_collisionmeshe.UpdateVertices();
+}
+
 
 Drawing::RenderingNodeDrawCallback* Drawing::GetSingleNodeDrawHandler( void ) const
 {
@@ -798,6 +840,27 @@ void Drawing::EnableZBufferForLayer(int p_layer_index, bool p_zbuffer)
         }
     }
 }
+
+void Drawing::create_collision_meshe_from(const DrawSpace::Core::Meshe& p_src_meshe)
+{
+    m_collisionmeshe.ClearVertices();
+    m_collisionmeshe.ClearTriangles();
+
+    auto v_list{ p_src_meshe.GetVertices() };
+    auto t_list{ p_src_meshe.GetTriangles() };
+
+    for (auto& e : v_list)
+    {
+        m_collisionmeshe.AddVertex(e);
+    }
+    for (auto& e : t_list)
+    {
+        m_collisionmeshe.AddTriangle(e);
+    }
+
+    m_collisionmeshe_valid = true;
+}
+
 
 void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest )
 {
@@ -887,11 +950,20 @@ void Drawing::create_all_landplace_meshes( void )
     }
 }
 
-
 void Drawing::destroy_all_landplace_meshes( void )
 {
     for( long i = 0; i < 6; i++ )
     {
         _DRAWSPACE_DELETE_( m_landplace_meshes[i] );
     }
+}
+
+Drawing::NewCollisionMesheCreationCb* Drawing::GetNewCollisionMesheCreationCb(void) const
+{
+    return m_newcollisionmeshecreation_cb;
+}
+
+void Drawing::ResetCollisionMesheValidity(void)
+{
+    m_collisionmeshe_valid = false;
 }

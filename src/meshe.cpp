@@ -42,7 +42,6 @@ Meshe::Meshe( void ) :
 m_importer( NULL ), 
 m_render_data( NULL ),
 m_n_gen_mode(NORMALES_COMPUTED),
-//m_tb_gen_mode(TB_COMPUTED)
 m_tb_gen_mode(TB_DISCARDED)
 {
     m_normales_transf.Identity();
@@ -271,8 +270,15 @@ void Meshe::GetMD5( dsstring& p_md5 )
     }
     dsstring hash_t = md5.digestMemory( (BYTE*)tbuff, (int)( m_triangles.size() * sizeof( Triangle ) ) );
 
-
     p_md5 = hash_v + hash_t;
+
+    if (m_path != "")
+    {
+        dsstring hash_p{ md5.digestMemory( (BYTE*)m_path.c_str(), m_path.size() ) };
+
+        p_md5 += hash_p;
+    }
+
 
     delete[] vbuff;
     delete[] tbuff;

@@ -87,30 +87,31 @@ public:
 
     virtual ~Body( void );
 
-    DrawSpace::Core::Meshe*     GetPatcheMeshe(void) const;
-    Patch*                      GetFaceCurrentLeaf(int p_faceid) const;
-    Face*                       GetFace(int p_faceid) const;
-    dsreal                      GetHotPointAltitud(void) const;
-    int                         GetCurrentFace(void) const;
-    void                        GetInvariantViewerPos(DrawSpace::Utils::Vector& p_pos) const;
-    dsreal                      GetDiameter(void) const;
-    dsstring                    GetDescription(void) const;
-    dsreal                      GetRelativeAlt(void) const;
+    
+    Patch*                          GetFaceCurrentLeaf(int p_faceid) const;
+    Face*                           GetFace(int p_faceid) const;
+    dsreal                          GetHotPointAltitud(void) const;
+    int                             GetCurrentFace(void) const;
+    void                            GetInvariantViewerPos(DrawSpace::Utils::Vector& p_pos) const;
+    dsreal                          GetDiameter(void) const;
+    dsstring                        GetDescription(void) const;
+    dsreal                          GetRelativeAlt(void) const;
 
     
-    void                        Initialize(void);
-    void                        Compute( void );
+    void                            Initialize(void);
+    void                            Compute( void );
     
-    void                        RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler );
-    void                        UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
-    void                        UpdateRelativeAlt(dsreal p_alt);
-    void                        UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
+    void                            RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler );
+    void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
+    void                            UpdateRelativeAlt(dsreal p_alt);
+    void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
 
-    void                        SetHotState( bool p_hotstate );
+    void                            SetHotState( bool p_hotstate );
     
-    void                        Reset( void ); // merge all
+    void                            Reset( void ); // merge all
 
-    static void                 BuildMeshes(void);
-    static void                 DestroyMeshes(void);
+    static void                     BuildMeshes(void);
+    static void                     DestroyMeshes(void);
+    static DrawSpace::Core::Meshe*  GetPatcheMeshe(void);
 };
 }

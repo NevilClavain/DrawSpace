@@ -97,6 +97,11 @@ bool Layer::GetHotState(void) const
     return m_hot;
 }
 
+void Layer::RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler)
+{
+    m_collision_meshe_creation_handler.push_back(p_handler);
+}
+
 Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
 {
     return m_handler;
@@ -298,8 +303,13 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
         float* heightmap = (float*)m_current_collisions_hm->GetHMTextureContent();
 
         Meshe final_meshe;
-        build_meshe(*(m_body->GetPatcheMeshe()), m_current_patch, final_meshe, heightmap);
+        build_meshe(*(LOD::Body::GetPatcheMeshe()), m_current_patch, final_meshe, heightmap);
         m_hm_meshe = final_meshe;
+
+        for (auto& e : m_collision_meshe_creation_handler)
+        {
+            (*e)(m_hm_meshe);
+        }
 
         remove_collider();
         setup_collider();

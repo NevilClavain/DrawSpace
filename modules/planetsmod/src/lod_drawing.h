@@ -46,6 +46,11 @@ struct Binder;
 
 class CollisionMesheDrawingNode : public DrawSpace::Core::RenderingNode
 {
+protected:
+
+    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+
+
 public:
 
     CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
@@ -53,7 +58,7 @@ public:
     ~CollisionMesheDrawingNode(void);
 
 
-    void Draw(void);
+    void Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
 
 };
 
@@ -138,6 +143,10 @@ public:
 
 class Drawing
 {
+public:
+
+    using NewCollisionMesheCreationCb = DrawSpace::Core::CallBack<Drawing, void, const DrawSpace::Core::Meshe&>;
+
 protected:
 
     using NodesSet                  = std::map<FaceDrawingNode*, int>;
@@ -148,28 +157,28 @@ protected:
     std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
     std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
 
-    //CollisionMesheDrawingNode*                                                  m_collisiondrawingnode{ nullptr };
-
     std::vector<std::pair<dsstring, CollisionMesheDrawingNode*>>                m_passescollisionsdrawingnodes;
     std::vector<CollisionMesheDrawingNode*>                                     m_collisionmeshedrawingnodes;
 
+    DrawSpace::Core::Meshe                                                      m_collisionmeshe;
 
     NodesSet                                                                    m_nodes;
 
     RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler{ nullptr };
-    //RenderingNodeDrawCallback*                                                  m_collision_draw_handler{ nullptr };
     
     std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers; 
-    
-    
+        
     DrawSpace::Interface::Renderer*                                             m_renderer;
        
     Config*                                                                     m_config;
 
     DrawSpace::Core::Meshe*                                                     m_landplace_meshes[6];
 
-    DrawSpace::Core::Entity*                                                    m_owner_entity;    
+    DrawSpace::Core::Entity*                                                    m_owner_entity;
 
+    NewCollisionMesheCreationCb*                                                m_newcollisionmeshecreation_cb{ nullptr };
+
+    bool                                                                        m_collisionmeshe_valid{ false };
 
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
@@ -177,8 +186,12 @@ protected:
 
     void create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest );
 
+    void create_collision_meshe_from(const DrawSpace::Core::Meshe& p_src_meshe);   // for collision meshe display (debug feature)
+
     void create_all_landplace_meshes( void );
     void destroy_all_landplace_meshes( void );
+
+    void on_new_collisionmeshe_creation(const DrawSpace::Core::Meshe& p_meshe);
 
 public:
 
@@ -187,7 +200,6 @@ public:
 
     void Startup( DrawSpace::Core::Entity* p_entity );
     void Shutdown( void );
-
 
     RenderingNodeDrawCallback* GetSingleNodeDrawHandler(void) const;
 
@@ -202,7 +214,10 @@ public:
 
     void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
     void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
-   
+
+    NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;
+
+    void ResetCollisionMesheValidity(void);
 };
 }
 

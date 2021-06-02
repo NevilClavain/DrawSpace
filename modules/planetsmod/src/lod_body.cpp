@@ -514,7 +514,7 @@ void Body::GetInvariantViewerPos( DrawSpace::Utils::Vector& p_pos ) const
     p_pos = m_invariant_viewerpos;
 }
 
-DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void ) const
+DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
 {
     return m_patch_meshe;
 }

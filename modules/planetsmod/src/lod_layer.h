@@ -56,6 +56,8 @@ public:
 
     using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
+    using NewCollisionMesheCreationHandler = DrawSpace::Core::BaseCallback<void, const DrawSpace::Core::Meshe&>;
+
 private:
 
     DrawSpace::Core::Entity*                                    m_owner_entity{ nullptr };
@@ -63,9 +65,11 @@ private:
 
     Config*                                                     m_config{ nullptr };
     Body*                                                       m_body{ nullptr };
-    Layer::SubPassCreationHandler*                              m_handler{ nullptr };
+    SubPassCreationHandler*                                     m_handler{ nullptr };
     bool                                                        m_hot;
     int                                                         m_current_lod;
+
+    std::vector<NewCollisionMesheCreationHandler*>              m_collision_meshe_creation_handler;
 
     dsreal                                                      m_planetray;
     bool                                                        m_collisions;
@@ -89,7 +93,6 @@ private:
     dsreal                                                      m_currentpatch_min_height{ -2.0 };
     dsreal                                                      m_currentpatch_current_height{ -2.0 };
 
-    //dsreal                                                      m_alt_grid[Collisions::heightmapTextureSize * Collisions::heightmapTextureSize];
     dsreal                                                      m_alt_grid[cst::patchResolution * cst::patchResolution];
 
     DrawSpace::Core::Meshe                                      m_hm_meshe; // meshe produced with heightmap result and used in bullet
@@ -109,23 +112,25 @@ public:
 
     ~Layer(void);
 
-    Body* GetBody(void) const;
-    bool  GetHotState(void) const;
-    Layer::SubPassCreationHandler* GetSubPassCreationHandler(void) const;
-    int GetCurrentLOD(void) const;
+    Body*                           GetBody(void) const;
+    bool                            GetHotState(void) const;
+    Layer::SubPassCreationHandler*  GetSubPassCreationHandler(void) const;
+    int                             GetCurrentLOD(void) const;
     
-    void SetHotState(bool p_hotstate);
-    void UpdateRelativeAlt(dsreal p_alt);
-    void UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
-    void UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
-    void Compute( void );
-    void SubPassDone(LOD::Collisions* p_collider);
-    void ResetBody(void);
+    void                            SetHotState(bool p_hotstate);
+    void                            UpdateRelativeAlt(dsreal p_alt);
+    void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
+    void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
+    void                            Compute( void );
+    void                            SubPassDone(LOD::Collisions* p_collider);
+    void                            ResetBody(void);
 
-    void RemoveCollider(void);
+    void                            RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler);
 
-    dsreal GetCurrentPatchMaxHeight(void) const;
-    dsreal GetCurrentPatchMinHeight(void) const;
-    dsreal GetCurrentPatchCurrentHeight(void) const;
+    void                            RemoveCollider(void);
+
+    dsreal                          GetCurrentPatchMaxHeight(void) const;
+    dsreal                          GetCurrentPatchMinHeight(void) const;
+    dsreal                          GetCurrentPatchCurrentHeight(void) const;
 };
 }
