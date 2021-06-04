@@ -46,7 +46,7 @@ private:
 
 public:
 
-    static const int heightmapTextureSize = 256;
+    static const int heightmapTextureSize = 1024;
 
     Collisions(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index);
     virtual ~Collisions(void);
