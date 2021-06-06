@@ -158,9 +158,21 @@ void Layer::Compute(void)
 void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
 {
     m_current_lod = p_patch_lod;
-    m_current_patch = p_patch;
 
-    if( m_collisions && m_current_patch && p_patch_lod == 0)
+    Patch* curr_patch{ p_patch };
+
+    for (int i = 0; i < 1; i++)
+    {
+        if (nullptr == curr_patch->GetParent())
+        {
+            break;
+        }
+        curr_patch = curr_patch->GetParent();
+    }
+    m_collision_patch = curr_patch;
+
+
+    if( m_collisions && m_collision_patch && p_patch_lod == 0)
     {               
         if (p_patch->GetOrientation() == m_body->GetCurrentFace())
         {
@@ -169,7 +181,7 @@ void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
             // lance la generation de la heightmap
           
             std::vector<LOD::Patch*> display_list;
-            display_list.push_back(m_current_patch);
+            display_list.push_back(m_collision_patch);
             
             m_draw_collidinghm = true;
 
@@ -309,7 +321,7 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
         float* heightmap = (float*)m_current_collisions_hm->GetHMTextureContent();
 
         Meshe final_meshe;
-        build_meshe(*(LOD::Body::GetPatcheMeshe()), m_current_patch, final_meshe, heightmap);
+        build_meshe(*(LOD::Body::GetPatcheMeshe()), m_collision_patch, final_meshe, heightmap);
         m_hm_meshe = final_meshe;
 
         for (auto& e : m_collision_meshe_creation_handler)

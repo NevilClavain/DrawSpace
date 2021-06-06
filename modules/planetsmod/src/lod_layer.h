@@ -77,7 +77,7 @@ private:
     LOD::Collisions*                                            m_collisions_hms[6];
     LOD::Collisions*                                            m_current_collisions_hm{ nullptr };
 
-    LOD::Patch*                                                 m_current_patch{ nullptr };
+    LOD::Patch*                                                 m_collision_patch{ nullptr };
 
     bool                                                        m_draw_collidinghm{ false };
     bool                                                        m_collision_state{ false };

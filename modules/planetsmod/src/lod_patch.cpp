@@ -667,6 +667,18 @@ DrawSpace::Core::Texture* Patch::GetDataTexture( void ) const
     return NULL;
 }
 
+Patch* Patch::GetParent(void)
+{    
+    BaseQuadtreeNode* parent{ m_owner->GetParent() };    
+    if (parent)
+    {
+        QuadtreeNode<Patch>* node{ nullptr };
+        node = static_cast<QuadtreeNode<Patch>*>(parent);
+        return node->GetContent();
+    }
+    return nullptr;
+}
+
 Patch* Patch::GetTextureReferent( void ) const
 {
     return m_texture_referent;

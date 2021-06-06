@@ -125,6 +125,9 @@ public:
 
     void                                DestroyColorTexture(void);
 
+
+    Patch*                              GetParent(void);
+
     virtual void                        SubPassDone( void );
 
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
