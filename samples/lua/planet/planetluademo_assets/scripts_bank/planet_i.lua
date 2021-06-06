@@ -621,10 +621,10 @@ local planet_specific_config_descr =
 	mountains_amplitude					         = 46000.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
-	plains_seed1						         = 19043.0,
+	plains_seed1						         = 89189.0,
 	plains_seed2						         = 233.0,
-	mix_seed1							         = 8901.0,
-	mix_seed2							         = 7566.0,
+	mix_seed1							         = 18901.0,
+	mix_seed2							         = 17566.0,
 	terrainbump_factor					         = 16.0,
 	splat_transition_up_relative_alt	         = 1.095,
 	splat_transition_down_relative_alt	         = 1.0040,
@@ -644,8 +644,8 @@ planet_passes_bindings =
 	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
-		--rendering_id = 'surface_rendering',
-        rendering_id = 'surface_wireframe_rendering',
+		rendering_id = 'surface_rendering',
+        --rendering_id = 'surface_wireframe_rendering',
 		lit_shader_update_func = nil
 	},
 	binding_1 = 
@@ -672,8 +672,8 @@ planet_transform = RawTransform()
 planet_transform:configure(resurgam_planet_entity,0)
 
 
-planet_revol = RevolutionTransform()
-planet_revol:configure(resurgam_planet_entity, 1.0, 1)
+--planet_revol = RevolutionTransform()
+--planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 
 
 
