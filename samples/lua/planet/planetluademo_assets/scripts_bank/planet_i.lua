@@ -618,7 +618,7 @@ local planet_specific_config_descr =
 
 	planet_ray							         = 6500.0,
 	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 46000.0,
+	mountains_amplitude					         = 10000.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	plains_seed1						         = 89189.0,
