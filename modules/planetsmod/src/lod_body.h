@@ -58,8 +58,6 @@ protected:
 
     int                                                                         m_current_face;
 
-    Patch*                                                                      m_current_patch;
-
     double                                                                      m_relative_alt;
 
     bool                                                                        m_enable_cdlod;
@@ -67,8 +65,6 @@ protected:
     DrawSpace::Utils::Vector                                                    m_invariant_viewerpos; //relatif au centre planete
 
     dsstring                                                                    m_description; // for debug purpose only;
-
-    void check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod );
 
     static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt );
 

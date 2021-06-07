@@ -45,7 +45,6 @@ Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 Body::Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description) :
 m_current_face( -1 ),
-m_current_patch( NULL ),
 m_relative_alt( 0.0 ),
 m_config( p_config ),
 m_description(p_description)
@@ -122,7 +121,6 @@ void Body::Compute( void )
             }
         }
     }
-    check_currentpatch_event( m_faces[m_current_face]->GetCurrentPatch(), m_faces[m_current_face]->GetCurrentPatchLOD() );
 }
 
 
@@ -551,7 +549,6 @@ dsreal Body::GetRelativeAlt(void) const
 
 void Body::SetHotState( bool p_hotstate )
 {
-    check_currentpatch_event( NULL, -1 );    
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->SetHotState( p_hotstate );
@@ -564,14 +561,6 @@ void Body::UpdateRelativeAlt( dsreal p_alt )
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->UpdateRelativeAlt( p_alt );
-    }
-}
-
-void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
-{
-    if( m_current_patch != p_newvalue )
-    {
-        m_current_patch = p_newvalue;
     }
 }
 
