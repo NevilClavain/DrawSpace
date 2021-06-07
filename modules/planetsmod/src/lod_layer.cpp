@@ -47,7 +47,6 @@ m_body(p_body),
 m_handler(p_handler),
 m_hot(false),
 m_current_lod(-1),
-m_patch_update_cb(this, &Layer::on_patchupdate),
 m_meshe_collision_shape(m_hm_meshe)
 {
     m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
@@ -63,7 +62,6 @@ m_meshe_collision_shape(m_hm_meshe)
     }
 
     m_body->Initialize();
-    m_body->RegisterPatchUpdateHandler(&m_patch_update_cb);
 
     m_description = m_config->m_layers_descr[p_index].description;
 
@@ -196,10 +194,6 @@ void Layer::Compute(void)
             m_currentpatch_current_height = new_alt;
         }
     }   
-}
-
-void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
-{
 }
 
 void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap)

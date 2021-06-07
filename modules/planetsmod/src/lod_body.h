@@ -37,7 +37,6 @@ struct Config;
 class Body
 {
 public:
-    using PatchUpdateHandler = DrawSpace::Core::BaseCallback2<void, Patch*, int>;
     using BodyTimerCb = DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>;
 
     enum MesheType
@@ -56,8 +55,6 @@ protected:
     dsreal                                                                      m_hotpoint_altitud;
     
     Face*                                                                       m_faces[6];
-
-    std::vector<PatchUpdateHandler*>                                            m_patchupdate_handlers;
 
     int                                                                         m_current_face;
 
@@ -101,7 +98,6 @@ public:
     void                            Initialize(void);
     void                            Compute( void );
     
-    void                            RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler );
     void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
     void                            UpdateRelativeAlt(dsreal p_alt);
     void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);

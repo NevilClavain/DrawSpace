@@ -486,12 +486,6 @@ void Body::DestroyMeshes( void )
     _DRAWSPACE_DELETE_(m_patch_meshe);
 }
 
-
-void Body::RegisterPatchUpdateHandler( PatchUpdateHandler* p_handler )
-{
-    m_patchupdate_handlers.push_back( p_handler );
-}
-
 void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
 {    
     DrawSpace::Utils::Vector hotpoint = p_hotpoint;
@@ -578,10 +572,6 @@ void Body::check_currentpatch_event( Patch* p_newvalue, int p_currentpatch_lod )
     if( m_current_patch != p_newvalue )
     {
         m_current_patch = p_newvalue;
-        for( size_t i = 0; i < m_patchupdate_handlers.size(); i++ )
-        {
-            (*m_patchupdate_handlers[i])( m_current_patch, p_currentpatch_lod ); 
-        }
     }
 }
 

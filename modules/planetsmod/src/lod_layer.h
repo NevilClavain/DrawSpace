@@ -48,10 +48,6 @@ class Body;
 
 class Layer
 {
-private:
-
-    using PatchUpdateCb = DrawSpace::Core::CallBack2<Layer, void, Patch*, int>;
-
 public:
 
     using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
@@ -82,10 +78,7 @@ private:
     bool                                                        m_draw_collidinghm{ false };
     bool                                                        m_collision_state{ false };
 
-    PatchUpdateCb                                               m_patch_update_cb;
-
     dsstring                                                    m_description; // for debug purpose :)
-
 
     DrawSpace::Aspect::CollisionAspect*                         m_collision_aspect{ nullptr };
 
@@ -100,7 +93,6 @@ private:
 
     Patch*                                                      m_current_patch{ nullptr };
 
-    void on_patchupdate(Patch* p_patch, int p_patch_lod);
     void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
 
