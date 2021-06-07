@@ -138,6 +138,52 @@ void Layer::Compute(void)
     m_body->Compute();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Patch* curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
+
+    
+    if (m_current_patch != curr_patch)
+    {
+        m_current_patch = curr_patch;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (nullptr == curr_patch->GetParent())
+            {
+                break;
+            }
+            curr_patch = curr_patch->GetParent();
+        }
+        m_collision_patch = curr_patch;
+
+
+        if (m_collisions && m_collision_patch && m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatchLOD() == 0)
+        {
+            if (curr_patch->GetOrientation() == m_body->GetCurrentFace())
+            {
+                // ce patch appartient bien a la face "courante"
+
+                // lance la generation de la heightmap
+
+                std::vector<LOD::Patch*> display_list;
+                display_list.push_back(m_collision_patch);
+
+                m_draw_collidinghm = true;
+
+                m_current_collisions_hm = m_collisions_hms[curr_patch->GetOrientation()];
+                m_current_collisions_hm->Enable();
+
+                LOD::FaceDrawingNode* node{ static_cast<LOD::FaceDrawingNode*>(m_current_collisions_hm->GetNode()) };
+                node->SetDisplayList(display_list);
+            }
+        }
+    }
+    
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     Vector view_patch_coords;
     int curr_face = m_body->GetCurrentFace();
@@ -159,6 +205,7 @@ void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
 {
     m_current_lod = p_patch_lod;
 
+    /*
     Patch* curr_patch{ p_patch };
 
     for (int i = 0; i < 1; i++)
@@ -192,6 +239,7 @@ void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
             node->SetDisplayList(display_list);
         }
     }
+    */
 }
 
 void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap)
@@ -342,6 +390,8 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
 void Layer::ResetBody(void)
 {
     m_body->Reset();
+
+    m_current_patch = nullptr;
 }
 
 dsreal Layer::GetCurrentPatchMaxHeight(void) const

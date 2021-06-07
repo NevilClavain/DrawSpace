@@ -98,6 +98,8 @@ private:
     DrawSpace::Core::Meshe                                      m_hm_meshe; // meshe produced with heightmap result and used in bullet
     DrawSpace::Aspect::CollisionAspect::MesheCollisionShape     m_meshe_collision_shape;
 
+    Patch*                                                      m_current_patch{ nullptr };
+
     void on_patchupdate(Patch* p_patch, int p_patch_lod);
     void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);

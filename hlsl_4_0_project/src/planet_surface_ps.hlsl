@@ -400,6 +400,14 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 	*/
 
+
+    if (flags2.y > 0.0)
+    {
+        // for debug purpose (show current patch in purple)
+        final_color.x = final_color.z = 1.0;
+        final_color.y = 0.0;
+    }
+
     final_color.w = 1.0;
     return final_color;
 }
