@@ -139,8 +139,9 @@ void Layer::Compute(void)
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Patch* curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
+    m_current_lod = m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatchLOD();
 
+    Patch* curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
     
     if (m_current_patch != curr_patch)
     {
@@ -179,10 +180,6 @@ void Layer::Compute(void)
         }
     }
     
-
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     Vector view_patch_coords;
@@ -203,43 +200,6 @@ void Layer::Compute(void)
 
 void Layer::on_patchupdate(Patch* p_patch, int p_patch_lod)
 {
-    m_current_lod = p_patch_lod;
-
-    /*
-    Patch* curr_patch{ p_patch };
-
-    for (int i = 0; i < 1; i++)
-    {
-        if (nullptr == curr_patch->GetParent())
-        {
-            break;
-        }
-        curr_patch = curr_patch->GetParent();
-    }
-    m_collision_patch = curr_patch;
-
-
-    if( m_collisions && m_collision_patch && p_patch_lod == 0)
-    {               
-        if (p_patch->GetOrientation() == m_body->GetCurrentFace())
-        {
-            // ce patch appartient bien a la face "courante"
-
-            // lance la generation de la heightmap
-          
-            std::vector<LOD::Patch*> display_list;
-            display_list.push_back(m_collision_patch);
-            
-            m_draw_collidinghm = true;
-
-            m_current_collisions_hm = m_collisions_hms[p_patch->GetOrientation()];
-            m_current_collisions_hm->Enable();
-            
-            LOD::FaceDrawingNode* node{ static_cast<LOD::FaceDrawingNode*>(m_current_collisions_hm->GetNode()) };
-            node->SetDisplayList(display_list);
-        }
-    }
-    */
 }
 
 void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap)

@@ -610,7 +610,7 @@ local planet_specific_config_descr =
 	collision_vshader_compiled			         = FALSE,
 	collision_pshader_compiled			         = FALSE,
 
-    enable_collisionmeshe_display                = TRUE,
+    enable_collisionmeshe_display                = FALSE, --TRUE,
     collisionmeshe_display_vshader               = "color_vs.hlsl",
     collisionmeshe_display_pshader               = "color_ps.hlsl",
     collisionmeshe_display_vshader_compiled      = FALSE,
@@ -672,8 +672,8 @@ planet_transform = RawTransform()
 planet_transform:configure(resurgam_planet_entity,0)
 
 
---planet_revol = RevolutionTransform()
---planet_revol:configure(resurgam_planet_entity, 1.0, 1)
+planet_revol = RevolutionTransform()
+planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 
 
 

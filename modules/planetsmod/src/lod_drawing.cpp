@@ -173,11 +173,14 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     Vector pixels_flags_2;
     pixels_flags_2[0] = cst::patchHighResolution;
 
+    // uncomment to see current patch
+    /*
     if (p_patch == m_current_patch)
     {
         // highlight current patch
         pixels_flags_2[1] = 1.0;
     }
+    */
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
     m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
