@@ -40,6 +40,8 @@ RigidBodyTransformAspectImpl::RigidBodyTransformAspectImpl(void)
 {
     m_stack_matrix_inv.Identity();
     m_memorized_vectors = false;
+
+    m_last_local_transf.Identity();
 }
 
 void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
@@ -139,6 +141,7 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
         p_transformaspect->GetComponentsByType<Matrix>(mats);
 
         mats[0]->getPurpose() = local_transf;
+        m_last_local_transf = local_transf;
 
         p_out_base_transform = local_transf * m_stack_matrix_inv;  // multiplier par l'inverse de la stack pour compenser le fait que local_transf renvoyée par bullet inclu déja la stack matrix
                                                                     // (cf méthode OnAddedInGraph() plus bas)
@@ -466,4 +469,9 @@ void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::Transfo
 
     m_stack_matrix_inv = stack_mat;
     m_stack_matrix_inv.Inverse();
+}
+
+DrawSpace::Utils::Matrix RigidBodyTransformAspectImpl::GetLastLocalTransform(void) const
+{
+    return m_last_local_transf;
 }

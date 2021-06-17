@@ -42,6 +42,7 @@
 #include "lod_layer.h"
 
 #include "collisionaspect.h"
+#include "rigidbodytransformaspectimpl.h"
 
 
 using namespace DrawSpace;
@@ -782,6 +783,7 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
         if (DrawSpace::Interface::System::SYSTEM_RUN_BEGIN == p_event)
         {
             // apply gravity
+            manage_gravity_targets();
         }
         else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
         {
@@ -828,6 +830,8 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
         entity_name = infos_aspect->GetComponent<dsstring>( "entity_name" )->getPurpose();
 
         CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
+
+        TransformAspect* transformation_aspect = p_entity->GetAspect<TransformAspect>();
        
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
         {
@@ -842,11 +846,11 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
 
                 reg_camera.owner_entity = p_entity;
 
-                reg_camera.attached_body = NULL;
-
                 create_camera_collisions(reg_camera, false);
 
                 m_registered_camerapoints[camera_name] = reg_camera;
+
+                //////////////////////////////////////////////////////////////////////////////////////////
             }
         }
     }
@@ -1072,6 +1076,75 @@ void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph
     m_entitynodegraph = p_entitynodegraph;
 }
 
+std::vector<PlanetsRenderingAspectImpl::RegisteredBody> PlanetsRenderingAspectImpl::get_bodies_list_from_registered_cams()
+{
+    std::vector<RegisteredBody> bodies;
+
+    for (auto& cam : m_registered_camerapoints)
+    {
+        // search if has parent with rigidbodytransformaspectimpl, to apply gravity on it when it is relative (see manage_gravity_targets)
+        std::vector<Entity*> ancestors;
+        m_entitynodegraph->GetEntityAncestorsList(cam.second.owner_entity, ancestors);
+        for (auto& e : ancestors)
+        {
+            TransformAspect* curr_transforms_aspect{ e->GetAspect<TransformAspect>() };
+            if (curr_transforms_aspect)
+            {
+                auto impls{ curr_transforms_aspect->GetTransformAspectImplsList() };
+                for (auto& impl : impls)
+                {
+                    RigidBodyTransformAspectImpl* rigidbodyimpl = dynamic_cast<RigidBodyTransformAspectImpl*>(impl.second);
+                    if (rigidbodyimpl)
+                    {
+                        RegisteredBody body{ &m_registered_camerapoints.at(cam.second.camera_name), curr_transforms_aspect };
+                        bodies.push_back(body);
+                    }
+                }
+            }
+        }
+    }
+    return bodies;
+}
+
+void PlanetsRenderingAspectImpl::manage_gravity_targets(void)
+{
+    auto bodies{ get_bodies_list_from_registered_cams() };
+
+    for (auto& body : bodies)
+    {
+        TransformAspect* curr_transforms_aspect{ body.transform_aspect };
+        auto impls{ curr_transforms_aspect->GetTransformAspectImplsList() };
+
+        for (auto& impl : impls)
+        {
+            RigidBodyTransformAspectImpl* rigidbodyimpl = dynamic_cast<RigidBodyTransformAspectImpl*>(impl.second);
+            if (body.owner->layers[0]->GetHotState()) // if relative
+            {
+                auto m = rigidbodyimpl->GetLastLocalTransform();
+
+                // gravity vector : from rigid body pos to planet center (which is 0,0,0 in planet physic world)
+                Vector grav_to_planet(-m(3, 0), -m(3, 1), -m(3, 2), 1.0);
+
+                grav_to_planet.Normalize();
+                grav_to_planet.Scale(9.81);
+
+                dsstring gravity_force_comp_name{ dsstring("planet_gravity_") + std::to_string( (int)this )};
+
+                Component<RigidBodyTransformAspectImpl::Force>* force = body.transform_aspect->GetComponent<RigidBodyTransformAspectImpl::Force>(gravity_force_comp_name);
+                if (nullptr == force)
+                {
+                    // component does not exists, create it
+                    body.transform_aspect->AddComponent<RigidBodyTransformAspectImpl::Force>(gravity_force_comp_name, grav_to_planet, RigidBodyTransformAspectImpl::Force::GLOBAL, true);
+                }
+                else
+                {
+                    body.transform_aspect->GetComponent<RigidBodyTransformAspectImpl::Force>(gravity_force_comp_name)->getPurpose().UpdateForce(grav_to_planet);
+                }
+                break;
+            }
+        }
+    }
+}
 
 
 void PlanetsRenderingAspectImpl::manage_camerapoints(void)

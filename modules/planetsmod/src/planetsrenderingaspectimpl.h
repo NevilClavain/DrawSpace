@@ -50,6 +50,7 @@ namespace DrawSpace
 namespace Aspect
 {
 class CollisionAspect;
+class TransformAspect;
 }
 namespace Systems
 {
@@ -57,6 +58,9 @@ class Hub;
 }
 namespace AspectImplementations
 {
+class RigidBodyTransformAspectImpl;
+
+
 class PlanetsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 protected:
@@ -100,8 +104,6 @@ protected:
     {
         Core::Entity*                       owner_entity; // l'entite possedant l'aspect camera
         dsstring                            camera_name;
-        //CameraType                          type;
-        DrawSpace::Core::Entity*            attached_body;
 
         DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
 
@@ -111,6 +113,12 @@ protected:
         std::vector<LOD::Layer*>            layers;
 
         dsstring                            entity_name;
+    };
+
+    struct RegisteredBody
+    {
+        RegisteredCamera*                   owner{ nullptr };
+        DrawSpace::Aspect::TransformAspect* transform_aspect{ nullptr };
     };
 
     DrawSpace::Core::Entity*                                        m_owner_entity{ nullptr };
@@ -166,29 +174,33 @@ protected:
 
     ///////////////////////////////////////////////////////////////////////////
 
-    void                        init_rendering_objects(void);
-    void                        release_rendering_objects(void);
+    void                                        init_rendering_objects(void);
+    void                                        release_rendering_objects(void);
 
-    void                        update_shader_params(void); // for all passes
+    void                                        update_shader_params(void); // for all passes
 
-    void                        on_timer(DrawSpace::Utils::Timer* p_timer);
-    void                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
-    void                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
-    void                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
-    LOD::SubPass::EntryInfos    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
+    void                                        on_timer(DrawSpace::Utils::Timer* p_timer);
+    void                                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
+    void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
+    void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
+    LOD::SubPass::EntryInfos                    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
 
-    void                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
+    void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 
-    void                        draw_sub_passes(void);
+    void                                        draw_sub_passes(void);
 
-    void                        manage_camerapoints(void);
+    void                                        manage_gravity_targets(void);
 
-    void                        zbuffer_control_from_viewer_alt(void);
+    void                                        manage_camerapoints(void);
 
-    void                        prepare_permanent_subpasses(void);
+    void                                        zbuffer_control_from_viewer_alt(void);
 
-    void                        setup_collisions_aspect(void);
-    void                        release_collisions_aspect(void);
+    void                                        prepare_permanent_subpasses(void);
+
+    void                                        setup_collisions_aspect(void);
+    void                                        release_collisions_aspect(void);
+
+    std::vector<RegisteredBody>                 get_bodies_list_from_registered_cams();
    
 public:
     PlanetsRenderingAspectImpl( void );

@@ -41,6 +41,8 @@ class RigidBodyTransformAspectImpl : public DrawSpace::Interface::AspectImplemen
 {
 protected:
 
+    DrawSpace::Utils::Matrix                                    m_last_local_transf;
+
     btDiscreteDynamicsWorld*                                    m_world{ nullptr };
     Aspect::PhysicsAspect*                                      m_physical_aspect_owner{ nullptr };
 
@@ -128,11 +130,11 @@ public:
     class Force
     {
     public:
-        typedef enum
+        using Mode = enum
         {
             GLOBAL,
             LOCALE
-        } Mode;
+        };
 
     protected:
         DrawSpace::Utils::Vector    m_force_dir;
@@ -163,11 +165,11 @@ public:
     class Torque
     {
     public:
-        typedef enum
+        using Mode = enum
         {
             GLOBAL,
             LOCALE
-        } Mode;
+        };
 
     protected:
         DrawSpace::Utils::Vector    m_torque_axis;
@@ -197,8 +199,6 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
     RigidBodyTransformAspectImpl( void );
     void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
     
@@ -211,6 +211,8 @@ public:
     void RegisterPhysicalAspect(Aspect::PhysicsAspect* p_physical_aspect);
 
     void Release(void);
+
+    DrawSpace::Utils::Matrix GetLastLocalTransform(void) const;
 };
 }
 }
