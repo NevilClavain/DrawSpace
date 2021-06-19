@@ -39,6 +39,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_resourcespath", &LuaClass_PlanetSpecificConfig::LUA_setresourcespath },
     { "set_resourcesready", &LuaClass_PlanetSpecificConfig::LUA_setresourcesready },    
     { "set_planetray", &LuaClass_PlanetSpecificConfig::LUA_setplanetray },
+    { "set_gravityacc", &LuaClass_PlanetSpecificConfig::LUA_setgravityacc },
     { "set_atmothickness", &LuaClass_PlanetSpecificConfig::LUA_setatmothickness },
     { "set_amplitudes", &LuaClass_PlanetSpecificConfig::LUA_setamplitudes },
     { "set_offsets", &LuaClass_PlanetSpecificConfig::LUA_setoffsets },
@@ -99,6 +100,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsstring>("resources_path", m_planets_details.resources_path);
     entity_rendering_aspect->AddComponent<bool>("resources_ready", m_planets_details.resources_ready);
     entity_rendering_aspect->AddComponent<dsreal>("planet_ray", m_planets_details.planet_ray);
+    entity_rendering_aspect->AddComponent<dsreal>("gravity_acc", m_planets_details.gravity_acc);
     entity_rendering_aspect->AddComponent<dsreal>("atmo_thickness", m_planets_details.atmo_thickness);
     entity_rendering_aspect->AddComponent<dsreal>("plains_amplitude", m_planets_details.plains_amplitude);
     entity_rendering_aspect->AddComponent<dsreal>("mountains_amplitude", m_planets_details.mountains_amplitude);
@@ -178,6 +180,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsstring>("resources_path");
     m_rendering_aspect->RemoveComponent<bool>("resources_ready");
     m_rendering_aspect->RemoveComponent<dsreal>("planet_ray");
+    m_rendering_aspect->RemoveComponent<dsreal>("gravity_acc");
     m_rendering_aspect->RemoveComponent<dsreal>("atmo_thickness");
     m_rendering_aspect->RemoveComponent<dsreal>("plains_amplitude");
     m_rendering_aspect->RemoveComponent<dsreal>("mountains_amplitude");
@@ -271,6 +274,18 @@ int LuaClass_PlanetSpecificConfig::LUA_setplanetray(lua_State* p_L)
     }
 
     m_planets_details.planet_ray = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setgravityacc(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_gravityacc : argument(s) missing");
+    }
+
+    m_planets_details.gravity_acc = luaL_checknumber(p_L, 1);
     return 0;
 }
 

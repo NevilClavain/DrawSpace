@@ -51,6 +51,7 @@ private:
         dsstring    resources_path;
         bool        resources_ready;
         dsreal      planet_ray; 
+        dsreal      gravity_acc;
         dsreal      atmo_thickness;
         dsreal      plains_amplitude;
         dsreal      mountains_amplitude; 
@@ -113,6 +114,7 @@ public:
     int LUA_setresourcespath(lua_State* p_L);
     int LUA_setresourcesready(lua_State* p_L);
     int LUA_setplanetray(lua_State* p_L);
+    int LUA_setgravityacc(lua_State* p_L);
     int LUA_setatmothickness(lua_State* p_L);
     int LUA_setamplitudes(lua_State* p_L);
     int LUA_setoffsets(lua_State* p_L);

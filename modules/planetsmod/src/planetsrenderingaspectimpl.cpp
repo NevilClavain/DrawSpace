@@ -504,6 +504,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_planet_ray = planet_ray * 1000.0;
 
+    m_gravity_acc = m_owner->GetComponent<dsreal>("gravity_acc")->getPurpose();
+
     auto rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes")->getPurpose() };
     auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index")->getPurpose() };
 
@@ -1149,7 +1151,7 @@ void PlanetsRenderingAspectImpl::manage_gravity_targets(void)
                 Vector grav_to_planet(-m(3, 0), -m(3, 1), -m(3, 2), 1.0);
 
                 grav_to_planet.Normalize();
-                grav_to_planet.Scale(9.81);
+                grav_to_planet.Scale(m_gravity_acc);
 
                 dsstring gravity_force_comp_name{ dsstring("planet_gravity_") + std::to_string( (int)this )};
 

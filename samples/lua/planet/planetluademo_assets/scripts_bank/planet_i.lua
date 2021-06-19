@@ -617,6 +617,7 @@ local planet_specific_config_descr =
     collisionmeshe_display_pshader_compiled      = FALSE,
 
 	planet_ray							         = 6500.0,
+    gravity_acc                                  = 1100.11,
 	plains_amplitude					         = 600.0,
 	mountains_amplitude					         = 10000.0,
 	vertical_offset						         = 20.0,

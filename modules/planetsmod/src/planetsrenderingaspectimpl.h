@@ -126,6 +126,7 @@ protected:
     DrawSpace::Core::Entity*                                        m_owner_entity{ nullptr };
 
     dsreal                                                          m_planet_ray;
+    dsreal                                                          m_gravity_acc{ 0.0 };
 
     LOD::SubPass::singleshot_subpasses_stack                        m_singleshot_subpasses_stack;
     LOD::SubPass::singleshot_subpasses                              m_singleshot_subpasses;
