@@ -113,6 +113,8 @@ protected:
         std::vector<LOD::Layer*>            layers;
 
         dsstring                            entity_name;
+
+        DrawSpace::Aspect::TransformAspect* parent_body_transform_aspect;
     };
 
     struct RegisteredBody

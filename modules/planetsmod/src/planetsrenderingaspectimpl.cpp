@@ -845,12 +845,34 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                 reg_camera.relative_alt_valid = false;
 
                 reg_camera.owner_entity = p_entity;
+                reg_camera.parent_body_transform_aspect = nullptr;
 
                 create_camera_collisions(reg_camera, false);
 
                 m_registered_camerapoints[camera_name] = reg_camera;
 
                 //////////////////////////////////////////////////////////////////////////////////////////
+            }
+        }
+        else // REMOVED_FROM_TREE
+        {
+            if (camera_aspect)
+            {
+                dsstring camera_name = camera_aspect->GetComponent<dsstring>("camera_name")->getPurpose();
+
+                if (m_registered_camerapoints.count(camera_name))
+                {
+                    RegisteredCamera reg_camera{ m_registered_camerapoints.at(camera_name)};
+
+                    if (reg_camera.parent_body_transform_aspect)
+                    {
+                        dsstring gravity_force_comp_name{ dsstring("planet_gravity_") + std::to_string((int)this) };
+                        if (reg_camera.parent_body_transform_aspect->GetComponent<RigidBodyTransformAspectImpl::Force>(gravity_force_comp_name))
+                        {
+                            reg_camera.parent_body_transform_aspect->RemoveComponent<RigidBodyTransformAspectImpl::Force>(gravity_force_comp_name);
+                        }
+                    }
+                }
             }
         }
     }
@@ -1097,6 +1119,7 @@ std::vector<PlanetsRenderingAspectImpl::RegisteredBody> PlanetsRenderingAspectIm
                     if (rigidbodyimpl)
                     {
                         RegisteredBody body{ &m_registered_camerapoints.at(cam.second.camera_name), curr_transforms_aspect };
+                        m_registered_camerapoints.at(cam.second.camera_name).parent_body_transform_aspect = curr_transforms_aspect;
                         bodies.push_back(body);
                     }
                 }

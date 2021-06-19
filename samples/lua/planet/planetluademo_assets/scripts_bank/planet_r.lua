@@ -31,6 +31,7 @@ resurgam_planet_config:cleanup()
 resurgam_planet_entity:remove_aspect(TRANSFORM_ASPECT)
 
 
+-- planet MUST BE the last entity removed from scene
 planetmod.view.unload(planet_name)
 
 
