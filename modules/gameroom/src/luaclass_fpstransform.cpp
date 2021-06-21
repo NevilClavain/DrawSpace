@@ -235,9 +235,9 @@ int LuaClass_FPSTransform::LUA_read( lua_State* p_L )
         lua_pushnumber( p_L, z );
         lua_pushinteger( p_L, ymvt );
 
-        lua_pushinteger( p_L, speed[0] );
-        lua_pushinteger( p_L, speed[1] );
-        lua_pushinteger( p_L, speed[2] );
+        lua_pushnumber( p_L, speed[0] );
+        lua_pushnumber( p_L, speed[1] );
+        lua_pushnumber( p_L, speed[2] );
 
     } LUA_CATCH;
 

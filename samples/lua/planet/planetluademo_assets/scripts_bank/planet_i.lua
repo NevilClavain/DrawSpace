@@ -89,6 +89,12 @@ ship_cam = 1
 current_cam = ship_cam
 
 
+ship_cam_fps_yaw=SyncAngle()
+ship_cam_fps_pitch=SyncAngle()
+ship_cam_fps_yaw:init_fromtimeaspectof(root_entity, 0.0)
+ship_cam_fps_pitch:init_fromtimeaspectof(root_entity,0.0)
+
+
 
 g:print('Current renderer is '..model.renderer_infos[1]..', '..model.renderer_infos[2]..'x'..model.renderer_infos[3])
 renderer_infos = {renderer:descr()}
@@ -151,6 +157,15 @@ function( xm, ym, dx, dy )
     if time_factor ~= 0 then
       root_entity:update_timescale(NORMAL_TIME)
     end
+
+  elseif current_cam == ship_cam and left_ctrl == FALSE then
+
+    local mvt_info = { camera2_pos:read() }
+
+	ship_cam_fps_yaw:inc(-dx / 1.0)
+	ship_cam_fps_pitch:inc(-dy / 1.0)
+
+    camera2_pos:update(ship_cam_fps_yaw:get_value(),ship_cam_fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], mvt_info[9])
 
   end
 
@@ -687,7 +702,9 @@ g:print("Planet creation done...")
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 
-camera2_entity, camera2_pos=commons.create_static_camera(0.0, 70.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 80.0, 0.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+
+
 camera2_entity:setup_info( "referent_body", "Bellorophon" )
 eg:add_child('ship','camera2_entity', camera2_entity)
 
