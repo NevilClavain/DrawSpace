@@ -167,6 +167,10 @@ function( xm, ym, dx, dy )
 
     camera2_pos:update(ship_cam_fps_yaw:get_value(),ship_cam_fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], mvt_info[9])
 
+    if time_factor ~= 0 then
+      root_entity:update_timescale(NORMAL_TIME)
+    end
+
   end
 
 
