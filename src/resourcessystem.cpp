@@ -730,10 +730,31 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<void*>("text");
 						}
 
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").GetComponent<void*>("text"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<void*>("text");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").GetComponent<void*>("text"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<void*>("text");
+						}
+
 						if (m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").GetComponent<long>("text_size"))
 						{
 							m_runner_system.GetSequence(final_asset_path).GetStep("readShaderMD5Step").RemoveComponent<long>("text_size");
 						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").GetComponent<long>("text_size"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<long>("text_size");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").GetComponent<long>("text_size"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<long>("text_size");
+						}
+
 
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderbcStep").RemoveComponent<dsstring>("final_asset_path");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderbcStep").RemoveComponent<dsstring>("bcCodeFileName_path");
@@ -750,6 +771,17 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<dsstring>("shader_id");
 						m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_shadersCache");
 
+						
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").GetComponent<long>("bc_length"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<long>("bc_length");
+						}
+												
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").GetComponent<void*>("bc"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<void*>("bc");
+						}
+						
 						m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<dsstring>("final_asset_path");
 						m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<dsstring>("shader_id");
 
@@ -757,6 +789,17 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						{
 							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<dsstring>("hash_shader");
 						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").GetComponent<dsstring>("hash_shader"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("compileShaderStep").RemoveComponent<dsstring>("hash_shader");
+						}
+
+						if (m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").GetComponent<dsstring>("hash_shader"))
+						{
+							m_runner_system.GetSequence(final_asset_path).GetStep("updateShaderStep").RemoveComponent<dsstring>("hash_shader");
+						}
+
 
 						if (m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").GetComponent<void*>("text"))
 						{
@@ -767,8 +810,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						{
 							m_runner_system.GetSequence(final_asset_path).GetStep("createDirectoryStep").RemoveComponent<long>("text_size");
 						}
-
-
+																
 						m_runner_system.RemoveSequence(final_asset_path);
 					}
 				}
