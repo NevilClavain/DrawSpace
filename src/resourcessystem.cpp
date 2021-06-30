@@ -39,6 +39,7 @@
 #include "md5.h"
 
 #include "loadfiletask.h"
+#include "loadshaderfiletask.h"
 #include "loadfiletoassimptask.h"
 #include "readshadermd5task.h"
 #include "compileshadertask.h"
@@ -315,6 +316,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						RunnerSequenceStep create_directory_step;
 
 						load_shader_step.AddComponent<dsstring>("final_asset_path", final_asset_path);
+						load_shader_step.AddComponent<dsstring>("final_asset_dir", final_asset_dir);
 						load_shader_step.AddComponent<dsstring>("shader_id", shader_id);
 						load_shader_step.AddComponent<ResourcesSystem*>("ResourcesSystem", this);
 						load_shader_step.AddComponent<std::map<dsstring, Blob>*>("&m_shadersCache", &m_shadersCache);
@@ -323,15 +325,26 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						load_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto final_asset_dir{ p_step.GetComponent<dsstring>("final_asset_dir")->getPurpose() };
 							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
 							const dsstring task_id{ final_asset_path };
 
+							/*
 							LoadFileTask* task = _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask);
 							task->SetTargetDescr(task_id);
 							task->SetActionDescr("LOADASSETFILE");
 							task->SetFinalAssetPath(final_asset_path);
 							p_step.SetTask(task);
+							*/
+
+							LoadShaderFileTask* task{ _DRAWSPACE_NEW_(LoadShaderFileTask, LoadShaderFileTask) };
+							task->SetTargetDescr(task_id);
+							task->SetActionDescr("LOADASSETFILE");
+							task->SetFinalAssetPath(final_asset_path);
+							task->SetFinalAssetDir(final_asset_dir);
+							p_step.SetTask(task);
+
 
 							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
 						});
@@ -342,7 +355,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
 							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 
-							LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
+							LoadShaderFileTask* task{ static_cast<LoadShaderFileTask*>(p_step.GetTask()) };
 
 							if (task->Failed())
 							{
@@ -709,6 +722,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("final_asset_path");
+						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("final_asset_dir");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<dsstring>("shader_id");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadShaderStep").RemoveComponent<std::map<dsstring, Blob>*>("&m_shadersCache");

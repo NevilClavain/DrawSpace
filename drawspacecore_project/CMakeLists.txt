@@ -235,6 +235,8 @@ ${CMAKE_SOURCE_DIR}/src/runnersystem.cpp
 ${CMAKE_SOURCE_DIR}/src/runnersystem.h
 ${CMAKE_SOURCE_DIR}/src/loadfiletask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadfiletask.h
+${CMAKE_SOURCE_DIR}/src/loadshaderfiletask.cpp
+${CMAKE_SOURCE_DIR}/src/loadshaderfiletask.h
 ${CMAKE_SOURCE_DIR}/src/loadfiletoassimptask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadfiletoassimptask.h
 ${CMAKE_SOURCE_DIR}/src/readshadermd5task.cpp
