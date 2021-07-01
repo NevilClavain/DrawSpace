@@ -719,7 +719,7 @@ model.camera.mvt:set_pos(0.0, 0.0, 10.0)
 
 
 model.env.light.setstate( TRUE )
-model.env.light.setdir(1.0, -0.4, 0.0)
+model.env.light.setdir(-1.0, 0.0, 0.0)
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 
 model.env.fog.setdensity(0.0)

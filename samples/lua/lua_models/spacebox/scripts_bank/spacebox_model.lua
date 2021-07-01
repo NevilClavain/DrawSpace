@@ -35,27 +35,27 @@ spaceboxmod.layers =
 			{
 				[1] = 
 				{
-					{path='neb_front5.png', stage=0}
+					{path='spacebox_front5.png', stage=0}
 				},
 				[2] = 
 				{
-					{path='neb_back6.png', stage=0}
+					{path='spacebox_back6.png', stage=0}
 				},
 				[3] = 
 				{
-					{path='neb_left2.png', stage=0}
+					{path='spacebox_left2.png', stage=0}
 				},
 				[4] = 
 				{
-					{path='neb_right1.png', stage=0}
+					{path='spacebox_right1.png', stage=0}
 				},
 				[5] = 
 				{
-					{path='neb_top3.png', stage=0}
+					{path='spacebox_top3.png', stage=0}
 				},
 				[6] = 
 				{
-					{path='neb_bottom4.png', stage=0}
+					{path='spacebox_bottom4.png', stage=0}
 				}
 			},
 			vertex_textures =
