@@ -40,6 +40,8 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples/lua/dummyspace/dummyspaceluademo_a
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/dummyspaceluademo_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/texture_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/dummyspaceluademo_assets/shaders_bank/hlsl_4_0)
 
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/dummyspaceluademo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/generic_rendering.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/dummyspaceluademo_assets/shaders_bank/hlsl_4_0)
 
 # required lua models for this demo
 

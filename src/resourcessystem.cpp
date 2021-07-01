@@ -330,14 +330,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							const dsstring task_id{ final_asset_path };
 
-							/*
-							LoadFileTask* task = _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask);
-							task->SetTargetDescr(task_id);
-							task->SetActionDescr("LOADASSETFILE");
-							task->SetFinalAssetPath(final_asset_path);
-							p_step.SetTask(task);
-							*/
-
 							LoadShaderFileTask* task{ _DRAWSPACE_NEW_(LoadShaderFileTask, LoadShaderFileTask) };
 							task->SetTargetDescr(task_id);
 							task->SetActionDescr("LOADASSETFILE");
@@ -359,7 +351,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							if (task->Failed())
 							{
-								_DSEXCEPTION("LoadFileTask Failed for shader : " + final_asset_path);
+								_DSEXCEPTION("LoadShaderFileTask Failed for shader : " + final_asset_path);
 							}
 
 							long size = task->GetSize();
