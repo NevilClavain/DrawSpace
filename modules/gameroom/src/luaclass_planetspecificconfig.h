@@ -53,6 +53,7 @@ private:
         dsreal      planet_ray; 
         dsreal      gravity_acc;
         dsreal      atmo_thickness;
+        dsreal      flatclouds_altitude;
         dsreal      plains_amplitude;
         dsreal      mountains_amplitude; 
         dsreal      vertical_offset;
@@ -116,6 +117,7 @@ public:
     int LUA_setplanetray(lua_State* p_L);
     int LUA_setgravityacc(lua_State* p_L);
     int LUA_setatmothickness(lua_State* p_L);
+    int LUA_setflatcloudsaltitude(lua_State* p_L);
     int LUA_setamplitudes(lua_State* p_L);
     int LUA_setoffsets(lua_State* p_L);
     int LUA_setseeds(lua_State* p_L);

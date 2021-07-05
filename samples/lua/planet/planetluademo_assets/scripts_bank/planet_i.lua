@@ -656,7 +656,8 @@ local planet_specific_config_descr =
 	beach_limit							         = 25.0,
 	landplace_patch						         = FALSE,
 	enable_atmosphere					         = TRUE,
-	atmo_thickness                               = 160.0
+	atmo_thickness                               = 160.0,
+    flatclouds_altitude                          = 70.0
 }
 
 planet_passes_bindings = 

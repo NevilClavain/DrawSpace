@@ -28,6 +28,10 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:set_atmothickness(config_description['atmo_thickness'])
 	end
 
+    if config_description['flatclouds_altitude'] ~= nil then
+		planet_specific_configuration:set_flatcloudsaltitude(config_description['flatclouds_altitude'])
+	end
+
 	if config_description['plains_amplitude'] ~= nil and config_description['mountains_amplitude'] ~= nil then
 		planet_specific_configuration:set_amplitudes(config_description['plains_amplitude'], config_description['mountains_amplitude'])
 	end

@@ -450,6 +450,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     dsreal planet_ray { m_owner->GetComponent<dsreal>("planet_ray")->getPurpose() };
     dsreal atmo_thickness { m_owner->GetComponent<dsreal>("atmo_thickness")->getPurpose() };
+    dsreal flatclouds_altitude{ m_owner->GetComponent<dsreal>("flatclouds_altitude")->getPurpose() };
     dsreal plains_amplitude { m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose() };
     dsreal mountains_amplitude { m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose() };
     dsreal vertical_offset { m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose() };

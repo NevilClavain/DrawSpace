@@ -41,6 +41,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_planetray", &LuaClass_PlanetSpecificConfig::LUA_setplanetray },
     { "set_gravityacc", &LuaClass_PlanetSpecificConfig::LUA_setgravityacc },
     { "set_atmothickness", &LuaClass_PlanetSpecificConfig::LUA_setatmothickness },
+    { "set_flatcloudsaltitude", &LuaClass_PlanetSpecificConfig::LUA_setflatcloudsaltitude },
     { "set_amplitudes", &LuaClass_PlanetSpecificConfig::LUA_setamplitudes },
     { "set_offsets", &LuaClass_PlanetSpecificConfig::LUA_setoffsets },
     { "set_seeds", &LuaClass_PlanetSpecificConfig::LUA_setseeds },
@@ -102,6 +103,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("planet_ray", m_planets_details.planet_ray);
     entity_rendering_aspect->AddComponent<dsreal>("gravity_acc", m_planets_details.gravity_acc);
     entity_rendering_aspect->AddComponent<dsreal>("atmo_thickness", m_planets_details.atmo_thickness);
+    entity_rendering_aspect->AddComponent<dsreal>("flatclouds_altitude", m_planets_details.flatclouds_altitude);
     entity_rendering_aspect->AddComponent<dsreal>("plains_amplitude", m_planets_details.plains_amplitude);
     entity_rendering_aspect->AddComponent<dsreal>("mountains_amplitude", m_planets_details.mountains_amplitude);
     entity_rendering_aspect->AddComponent<dsreal>("vertical_offset", m_planets_details.vertical_offset);
@@ -182,6 +184,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("planet_ray");
     m_rendering_aspect->RemoveComponent<dsreal>("gravity_acc");
     m_rendering_aspect->RemoveComponent<dsreal>("atmo_thickness");
+    m_rendering_aspect->RemoveComponent<dsreal>("flatclouds_altitude");
     m_rendering_aspect->RemoveComponent<dsreal>("plains_amplitude");
     m_rendering_aspect->RemoveComponent<dsreal>("mountains_amplitude");
     m_rendering_aspect->RemoveComponent<dsreal>("vertical_offset");
@@ -298,6 +301,18 @@ int LuaClass_PlanetSpecificConfig::LUA_setatmothickness(lua_State* p_L)
     }
 
     m_planets_details.atmo_thickness = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setflatcloudsaltitude(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_flatcloudsaltitude : argument(s) missing");
+    }
+
+    m_planets_details.flatclouds_altitude = luaL_checknumber(p_L, 1);
     return 0;
 }
 
