@@ -143,6 +143,7 @@ protected:
 
     std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;
+    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_flatclouds_binder;
 
 
     std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;

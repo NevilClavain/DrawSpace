@@ -674,6 +674,12 @@ planet_passes_bindings =
         target_pass_id = 'texture_pass',
 		rendering_id = 'atmo_rendering',
 		lit_shader_update_func = nil
+	},
+	binding_2 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'flatclouds_rendering',
+		lit_shader_update_func = nil
 	}
 }
 

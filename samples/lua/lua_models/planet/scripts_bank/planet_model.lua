@@ -251,6 +251,55 @@ planetmod.layers =
 			},
 			rendering_order = 4500		
 		}
+	},
+
+	flatclouds_layer = 
+	{
+		flatclouds_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_flatclouds_vs.hlsl', mode=SHADER_NOT_COMPILED },
+					{ path='planet_flatclouds_ps.hlsl', mode=SHADER_NOT_COMPILED }
+				},
+				
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },		
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
+						
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+				}
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{ path='se_asia_clouds_8k.jpg', stage=0 }
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 5500		
+		}
 	}
 }
 
