@@ -71,6 +71,7 @@ struct PS_INTPUT
 #define v_clouds_texture_infos      29
 
 #include "spherelod_commons.hlsl"
+#include "landscapes.hlsl"
 
 
 float3 CtoS(float3 p_v)
@@ -159,21 +160,22 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     uv.y = 1.0 - ((spherical.z + (pi / 2.0)) / pi);
 
     final_color.w = Clouds_Texture.Sample(Clouds_Texture_Sampler, uv).xyz;
-    
+
+    float3 avg = 0.0;
+    avg = compute_clouds_bump_vector(8192, 4096, Clouds_Texture, Clouds_Texture_Sampler, uv, 0.333);
+
+
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord.xy);
+
+    texel_pos.x += avg.x;
+    texel_pos.y += -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+
     texel_pos = normalize(texel_pos);
 
     float3 texel_pos2;
     texel_pos2 = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
 
     float lights_dot_offset = 0.2;
-
-    /*
-    if (flags_lights.x > 0.0)
-    {
-        lit_color += ambient_color;
-    }
-    */
 
     if (flags_lights.y > 0.0)
     {

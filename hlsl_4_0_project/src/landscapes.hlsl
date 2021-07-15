@@ -144,8 +144,9 @@ float3 compute_water_bump_vector(int p_texture_resol, sampler2D p_water_bump_tex
 
     return avg;
 }
+*/
 
-float3 compute_clouds_bump_vector(int p_texture_w_resol, int p_texture_h_resol, sampler2D p_bump_texture, float2 p_tex_coords, float p_vector_bias)
+float3 compute_clouds_bump_vector(int p_texture_w_resol, int p_texture_h_resol, Texture2D p_bump_texture, SamplerState p_bump_texture_Sampler, float2 p_tex_coords, float p_vector_bias)
 {
     float3 avg = 0.0;
 
@@ -164,11 +165,12 @@ float3 compute_clouds_bump_vector(int p_texture_w_resol, int p_texture_h_resol, 
     float2 down_coords = p_tex_coords;
     down_coords.y += texel_size_h;
 
-    float4 wb_left = tex2D(p_bump_texture, left_coords);
-    float4 wb_right = tex2D(p_bump_texture, right_coords);
-    float4 wb_up = tex2D(p_bump_texture, up_coords);
-    float4 wb_down = tex2D(p_bump_texture, down_coords);
-    float4 wb_center = tex2D(p_bump_texture, p_tex_coords);
+    float4 wb_left = p_bump_texture.Sample(p_bump_texture_Sampler, left_coords);
+    float4 wb_right = p_bump_texture.Sample(p_bump_texture_Sampler, right_coords);
+    float4 wb_up = p_bump_texture.Sample(p_bump_texture_Sampler, up_coords);
+    float4 wb_down = p_bump_texture.Sample(p_bump_texture_Sampler, down_coords);
+    float4 wb_center = p_bump_texture.Sample(p_bump_texture_Sampler, p_tex_coords);
+
 
     float3 vec_left;
     vec_left.x = -p_vector_bias;
@@ -199,7 +201,7 @@ float3 compute_clouds_bump_vector(int p_texture_w_resol, int p_texture_h_resol, 
 
     return avg;
 }
-*/
+
 
 float2 compute_sampling_params(float p_param, float p_interval)
 {
