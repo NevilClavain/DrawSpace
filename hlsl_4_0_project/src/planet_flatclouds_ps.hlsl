@@ -38,6 +38,15 @@ struct PS_INTPUT
 
     float4 TexCoord0                : TEXCOORD0;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
+
+    float4 c0                       : COLOR0;
+    float4 c1                       : COLOR1;
+
+    float4 c0_1                     : COLOR2;
+    float4 c1_1                     : COLOR3;
+
+    float4 c0_2                     : COLOR4;
+    float4 c1_2                     : COLOR5;
 };
 
 
@@ -95,6 +104,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {
 
     float4 flags = vec[v_flags];
+    float4 viewer_pos = vec[v_viewer_pos];
+
     float4 flags_lights = vec[v_flags_lights];
 
     float4 ambient_color = vec[v_ambient_color];
@@ -110,6 +121,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 light2_dir_local = vec[v_light2_dir_local];
     float4 light2_dir = vec[v_light2_dir];
     float4 light2_color = vec[v_light2_color];
+
+    float4 atmo_scattering_flag_0 = vec[v_atmo_scattering_flag_0];
+    float4 atmo_scattering_flag_1 = vec[v_atmo_scattering_flag_1];
+    float4 atmo_scattering_flag_2 = vec[v_atmo_scattering_flag_2];
+    float4 atmo_scattering_flag_3 = vec[v_atmo_scattering_flag_3];
+    float4 atmo_scattering_flag_4 = vec[v_atmo_scattering_flag_4];
+    float4 atmo_scattering_flag_5 = vec[v_atmo_scattering_flag_5];
+    float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
+
 
     float4 clouds_texture_infos = vec[v_clouds_texture_infos];
 
@@ -171,10 +191,66 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         lit_color += clamp(dot(texel_pos2, light2_dir_local.xyz) + lights_dot_offset, 0.0, 1.0) * light2_color;
     }
 
-    final_color.xyz = lit_color.xyz;
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
+
+
+    float4 c0_final, c1_final;
+    c0_final = c1_final = 0.0;
     
+    if (viewer_alt >= atmo_scattering_flag_5.x)
+    {
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += input.c1;
+        }
 
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += input.c1_1;
+        }
 
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += input.c1_2;
+        }
+    }
+    else
+    {
+
+        // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
+        // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
+
+        float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
+
+        if (flags_lights.y > 0.0)
+        {
+            c0_final += input.c0;
+            c1_final += lerp(input.c1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            c0_final += input.c0_1;
+            c1_final += lerp(input.c1_1, 1.0, factor_alt);
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            c0_final += input.c0_2;
+            c1_final += lerp(input.c1_2, 1.0, factor_alt);
+        }
+    }
+    
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    final_color.xyz = c0_final + (lit_color.xyz * c1_final);
+    
+    //////////////////////////////////////////////////////////////////////////////////////
 
     float delta = 0.0035;
 
