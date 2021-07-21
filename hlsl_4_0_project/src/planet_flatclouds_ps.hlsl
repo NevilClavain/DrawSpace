@@ -78,38 +78,18 @@ float3 CtoS(float3 p_v)
 {
     float3 res;
 
-    if (p_v.y > 0.0 && p_v.x == 0.0 && p_v.z == 0.0)
-    {
-        res.x = p_v.y;
-        res.z = 3.1415927 / 2.0;
-        res.y = 0.0;
-        return res;
-    }
-    else if (p_v.y < 0.0 && p_v.x == 0.0 && p_v.z == 0.0)
-    {
-        res.x = -p_v.y;
-        res.z = -3.1415927 / 2.0;
-        res.y = 0.0;
-        return res;
-    }
-    else
-    {
+    float normev = length(p_v);
 
-        float normev = length(p_v);
+    float ph, th;
+    ph = asin(p_v.y / normev);
 
-        float ph, th;
-        ph = asin(p_v.y / normev);
+    th = atan2(p_v.x, p_v.z);
+    res.y = th;
+    res.z = ph;
+    res.x = normev;
 
-        th = atan2(p_v.x, p_v.z);
-        res.y = th;
-        res.z = ph;
-        res.x = normev;
-
-        return res;
-
-    }
+    return res;
 }
-
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
@@ -159,8 +139,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     uv.y = 1.0 - ((spherical.z + (pi / 2.0)) / pi);
 
-    final_color.w = Clouds_Texture.Sample(Clouds_Texture_Sampler, uv).xyz;
-
+  
     float3 avg = 0.0;
     avg = compute_clouds_bump_vector(8192, 4096, Clouds_Texture, Clouds_Texture_Sampler, uv, 0.333);
 
@@ -193,6 +172,28 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 
     final_color.xyz = lit_color.xyz;
+    
 
+
+
+    float delta = 0.0035;
+
+    if (abs(input.TexCoord0.x) < delta)
+    {
+        if (input.TexCoord0.z < delta)
+        {
+            // to fix the gray line artifact :-p
+            uv.x = 1.0;
+            final_color.w = Clouds_Texture.Sample(Clouds_Texture_Sampler, uv).xyz;
+        }
+        else
+        {
+            final_color.w = Clouds_Texture.Sample(Clouds_Texture_Sampler, uv).xyz;
+        }
+    }    
+    else
+    {
+        final_color.w = Clouds_Texture.Sample(Clouds_Texture_Sampler, uv).xyz;
+    }    
     return final_color;
 }
