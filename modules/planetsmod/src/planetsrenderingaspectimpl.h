@@ -197,7 +197,8 @@ protected:
 
     void                                        manage_camerapoints(void);
 
-    void                                        zbuffer_control_from_viewer_alt(void);
+    void                                        details_control_from_viewer_alt(void);
+    void                                        flatclouds_control_from_viewer_alt(void);
 
     void                                        prepare_permanent_subpasses(void);
 

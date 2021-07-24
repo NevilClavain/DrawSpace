@@ -86,6 +86,11 @@ void FaceDrawingNode::EnableZBuffer(bool p_zbuffer)
     m_zbuffer_on = p_zbuffer;
 }
 
+void FaceDrawingNode::ForceCulling(const dsstring& p_culling)
+{
+    m_force_culling_arg = p_culling;
+}
+
 void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
     m_display_list = p_list;
@@ -342,6 +347,11 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
         }
 
+        if (m_force_culling_arg != "")
+        {
+            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, m_force_culling_arg));
+        }
+
         if( DRAW_ALL == m_drawpatch_mode )
         {
             draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
@@ -374,8 +384,12 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         {
             m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
         }
-    }
 
+        if (m_force_culling_arg != "")
+        {
+            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"));
+        }
+    }
 }
 
 void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
@@ -847,6 +861,17 @@ void Drawing::EnableZBufferForLayer(int p_layer_index, bool p_zbuffer)
         if (p_layer_index == e->GetLayerIndex())
         {
             e->EnableZBuffer(p_zbuffer);
+        }
+    }
+}
+
+void Drawing::ForceCullingForLayer(int p_layer_index, const dsstring& p_culling)
+{
+    for (auto& e : m_facedrawingnodes)
+    {
+        if (p_layer_index == e->GetLayerIndex())
+        {
+            e->ForceCulling(p_culling);
         }
     }
 }

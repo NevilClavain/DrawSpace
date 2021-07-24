@@ -35,7 +35,7 @@ namespace Core
 class RenderState
 {
 public:
-    typedef enum
+    using Operation = enum
     {
         NONE,
         SETCULLING,
@@ -48,15 +48,12 @@ public:
         ALPHABLENDFUNC,
         ALPHABLENDDEST,
         ALPHABLENDSRC,
-
-    } Operation;
+    };
 
 protected:
 
     dsstring                                m_arg;         //argument operation renderstate, sous forme de chaine ascii
     Operation                               m_operation;
-
-
 
 public:
 

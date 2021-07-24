@@ -323,7 +323,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     ////////////////////////////////////////////////////////
 
-    zbuffer_control_from_viewer_alt();
+    details_control_from_viewer_alt();
+    flatclouds_control_from_viewer_alt();
 
     ////////////////////////////////////////////////////////
 
@@ -825,7 +826,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, FlatCloudsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
                     flatclouds_binders[orientation] = binder;
                 }
 
@@ -1350,12 +1351,11 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
     }
 }
 
-void PlanetsRenderingAspectImpl::zbuffer_control_from_viewer_alt(void)
+void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
 {
     if (m_current_camera && m_current_camera->relative_alt_valid)
     {        
-        dsreal view_rel_alt{ m_current_camera->relative_alt };
-        
+        dsreal view_rel_alt{ m_current_camera->relative_alt };        
         dsreal zbuffer_activation_rel_alt{ m_owner->GetComponent<dsreal>("zbufferactivationrelalt")->getPurpose() };
 
         if (view_rel_alt < zbuffer_activation_rel_alt)
@@ -1365,6 +1365,30 @@ void PlanetsRenderingAspectImpl::zbuffer_control_from_viewer_alt(void)
         else
         {
             m_drawable.EnableZBufferForLayer(DetailsLayer, false);
+        }
+    }
+}
+
+void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
+{
+    if (m_current_camera && m_current_camera->relative_alt_valid)
+    {
+        //dsreal view_rel_alt{ m_current_camera->relative_alt };
+
+        bool relative{ m_current_camera->layers[0]->GetHotState() };
+        dsreal altitude{ m_current_camera->layers[0]->GetBody()->GetHotPointAltitud() };
+
+        dsreal flatclouds_altitude{ m_owner->GetComponent<dsreal>("flatclouds_altitude")->getPurpose() };
+
+        if (relative && altitude < flatclouds_altitude * 1000.0)
+        {
+            m_drawable.EnableZBufferForLayer(FlatCloudsLayer, true);
+            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "ccw");
+        }
+        else
+        {
+            m_drawable.EnableZBufferForLayer(FlatCloudsLayer, false);
+            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "cw");
         }
     }
 }

@@ -102,6 +102,9 @@ protected:
 
     bool                                m_zbuffer_on{ false };
 
+    dsstring                            m_force_culling_arg;
+
+
     void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
@@ -134,10 +137,11 @@ public:
 
     void SetDrawPatchMode( DrawPatchMode p_mode );
 
-
     void UpdateRelativeHotPoint( const DrawSpace::Utils::Vector p_hotpoint );
 
     void EnableZBuffer(bool p_zbuffer);
+
+    void ForceCulling(const dsstring& p_culling);
     
 };
 
@@ -208,6 +212,7 @@ public:
 
     void SetLayerNodeDrawingState(int p_layer_index, bool p_drawing_state);
     void EnableZBufferForLayer(int p_layer_index, bool p_zbuffer);
+    void ForceCullingForLayer(int p_layer_index, const dsstring& p_culling);
 
     void AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
     void RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
