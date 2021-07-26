@@ -69,6 +69,35 @@ waterquad.rendering_config =
 			{ param_name = "water_normale", shader_index = 0, register = 10 }
 		}
 	},
+	halfvector_rendering = 
+	{
+		fx = 
+		{
+			shaders = 
+			{
+				{ path='water_halfvector_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='water_halfvector_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		textures =
+		{
+		},
+		vertex_textures =
+		{
+		},
+		rendering_order = 10000,
+		shaders_params = 
+		{
+		}
+	},
     bump_rendering = 
 	{
 		fx = 
@@ -117,6 +146,12 @@ waterquad.update_normales_from_scene_env = function( p_pass_id, p_environment_ta
 
   local renderer = waterquad.models[p_entity_id]['renderer']
   renderer:set_shaderrealvector( p_pass_id, 'water_normale', p_environment_table.reflector_normale.x, p_environment_table.reflector_normale.y, p_environment_table.reflector_normale.z, 1.0 )
+
+end
+
+waterquad.update_halfvector_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
+
+  local renderer = waterquad.models[p_entity_id]['renderer']
 
 end
 

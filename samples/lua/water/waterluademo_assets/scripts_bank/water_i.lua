@@ -117,6 +117,8 @@ rg:set_pass_targetclearcolor('texturerefrac_pass', 0, 56, 67, 0)
 
 rg:create_child('final_pass', 'waternormales_pass', 4)
 
+rg:create_child('final_pass', 'waterhalfvector_pass', 5)
+
 
 rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
 
@@ -275,6 +277,12 @@ waterquad_passes_bindings =
 		target_pass_id = 'waternormales_pass',
 		rendering_id = 'normales_rendering',
 		lit_shader_update_func = waterquad.update_normales_from_scene_env
+	},
+	binding_3 = 
+	{
+		target_pass_id = 'waterhalfvector_pass',
+		rendering_id = 'halfvector_rendering',
+		lit_shader_update_func = waterquad.update_halfvector_from_scene_env
 	}
 }
 waterquad.view.load('water', waterquad_passes_bindings)

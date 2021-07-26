@@ -44,6 +44,9 @@ SamplerState SamplerDiffuseRefrac   : register(s3);
 Texture2D txNormales                : register(t4);
 SamplerState SamplerNormales        : register(s4);
 
+Texture2D txHalfVector              : register(t5);
+SamplerState SamplerHalfVector      : register(s5);
+
 
 struct PS_INTPUT 
 {
@@ -59,15 +62,16 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     {
         float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
 
+        float3 halfvector = txHalfVector.Sample(SamplerHalfVector, input.TexCoord0).rgb;
+
         float2 mt = input.TexCoord0.xy + txBump.Sample(SamplerBump, input.TexCoord0).xy;
         float2 mt2 = input.TexCoord0.xy + 0.25 * txBump.Sample(SamplerBump, input.TexCoord0).xy;
 
         float4 refrac = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, mt2);
         float4 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
 
-        float4 color_mod = vec[0];        
-        scene_color = color_mod * lerp(mirror, refrac, lerp(0.0, 0.99, reflex_refrac_factor));
-        
+        float4 color_mod = vec[0];
+        scene_color = color_mod* lerp(mirror, refrac, lerp(0.0, 0.99, reflex_refrac_factor));        
     }   
     return scene_color;           
 }
