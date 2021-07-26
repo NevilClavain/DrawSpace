@@ -65,13 +65,13 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     pos2 = mul(pos, mat[matWorld]);
 
     float3 delta_cam;
-    delta_cam.xyz = pos2.xyz - viewer_pos.xyz;
+    delta_cam.xyz = viewer_pos.xyz - pos2.xyz;
 
     float4 surface_normale = vec[10];
 
     Output.delta_cam.x = 0;
     Output.delta_cam.y = 0;
-    Output.delta_cam.z = dot(normalize(-delta_cam), surface_normale.xyz);
+    Output.delta_cam.z = dot(normalize(delta_cam), surface_normale.xyz);
       
     return( Output );   
 }
