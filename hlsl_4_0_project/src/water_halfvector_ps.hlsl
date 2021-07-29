@@ -32,14 +32,10 @@ cbuffer legacyargs : register(b0)
 struct PS_INTPUT 
 {
     float4 Position     : SV_POSITION;
+    float4 Half0        : TEXCOORD4;
 };
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-    float4 color;
-    color.a = 1.0;
-    color.b = 1.0;
-    color.rg = 0.0;
-
-    return color;
+    return normalize(input.Half0);
 }

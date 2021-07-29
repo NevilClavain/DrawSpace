@@ -96,6 +96,7 @@ waterquad.rendering_config =
 		rendering_order = 10000,
 		shaders_params = 
 		{
+			{ param_name = "light0_dir_v", shader_index = 0, register = 25 }
 		}
 	},
     bump_rendering = 
@@ -152,6 +153,7 @@ end
 waterquad.update_halfvector_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
 
   local renderer = waterquad.models[p_entity_id]['renderer']
+  renderer:set_shaderrealvector( p_pass_id, 'light0_dir_v', p_environment_table.light0.direction.x, p_environment_table.light0.direction.y, p_environment_table.light0.direction.z, p_environment_table.light0.direction.w )
 
 end
 

@@ -38,6 +38,7 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position      : SV_POSITION;
+   float4 Half0         : TEXCOORD4;
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
@@ -50,7 +51,27 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     pos.w = 1.0;
     Output.Position = mul(pos, mat[matWorldViewProjection]);
 
-    
+    // compute half vector
+    float4x4 mat_World = mat[matWorld];
+    float4x4 mat_Cam = mat[matCam];
+    float4 Light0_Dir = vec[25];
+
+    float4 Pos2 = mul(pos, mat_World);
+
+    float4 CamPos;
+    CamPos[0] = mat_Cam[3][0];
+    CamPos[1] = mat_Cam[3][1];
+    CamPos[2] = mat_Cam[3][2];
+    CamPos[3] = 1.0;
+
+    float3 nView = normalize(CamPos.xyz - Pos2.xyz);
+    float3 nLight = normalize(-Light0_Dir.xyz);
+
+    float4 H;
+    H.xyz = nLight + nView;
+    H.w = 0.0;
+
+    Output.Half0 = H;
       
     return( Output );   
 }
