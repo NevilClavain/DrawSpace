@@ -39,6 +39,7 @@ struct PS_INTPUT
 	float2 TexCoord0: TEXCOORD0;
 };
 
+#include "mat_input_constants.hlsl"
 
 float3 compute_water_bump_vector(int p_texture_resol, Texture2D p_water_bump_texture, SamplerState p_ss, float2 p_tex_coords, float p_vector_bias)
 {
@@ -111,8 +112,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     np2.z = np.y;
     np2.w = 1.0;
     
-    float4 np_t = mul(np2, transpose(mat[104]));
-    float4 nbase_t = mul(float4(0.0, 1.0, 0.0, 1.0), transpose(mat[104]));
+    float4 np_t = mul(np2, transpose(mat[matWorldView_ps]));
+    float4 nbase_t = mul(float4(0.0, 1.0, 0.0, 1.0), transpose(mat[matWorldView_ps]));
       
     res_color.xyz = np_t.xyz - nbase_t.xyz;
 
