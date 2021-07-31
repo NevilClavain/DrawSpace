@@ -104,18 +104,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float3 np;
     np = compute_water_bump_vector(512, Texture0, SamplerTexture0, input.TexCoord0.xy, bump_bias.x);
-
-    float4 np2;
-
-    np2.x = np.x;
-    np2.y = np.z;
-    np2.z = np.y;
-    np2.w = 1.0;
-    
-    float4 np_t = mul(np2, transpose(mat[matWorldView_ps]));
-    float4 nbase_t = mul(float4(0.0, 1.0, 0.0, 1.0), transpose(mat[matWorldView_ps]));
-      
-    res_color.xyz = np_t.xyz - nbase_t.xyz;
+    float3 nbase_t = { 0.0, 1.0, 0.0 };      
+    res_color.xyz = np.xzy - nbase_t;
 
     return res_color;
 }
