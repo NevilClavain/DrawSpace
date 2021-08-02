@@ -556,6 +556,5 @@ g:signal_renderscenebegin("eg")
 
 g:activate_resourcessystem("init")
 
-set_water_bump(5.0)
-
+set_water_bump(2.4)
 
