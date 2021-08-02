@@ -97,14 +97,15 @@ float3 compute_water_bump_vector(int p_texture_resol, Texture2D p_water_bump_tex
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
-{
+{   
     float4 bump_bias = vec[0];
+    float4 surface_normale = vec[1];
 
     float4 res_color = 0;
 
     float3 np;
     np = compute_water_bump_vector(512, Texture0, SamplerTexture0, input.TexCoord0.xy, bump_bias.x);
-    float3 nbase_t = { 0.0, 1.0, 0.0 };      
+    float3 nbase_t = surface_normale;
     res_color.xyz = np.xzy - nbase_t;
 
     return res_color;

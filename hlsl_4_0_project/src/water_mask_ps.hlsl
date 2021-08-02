@@ -60,11 +60,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 scene_color = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0);                 
     if( scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0 )
     {
-        float3 normale;
+        float3 surface_normale;
         
-        normale.x = 0.0;
-        normale.y = 1.0;
-        normale.z = 0.0;
+        surface_normale = vec[1].xyz;
         
 
         float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
@@ -72,9 +70,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float spec_power = 10.0;
         float k_specular = 0.33;
 
-        normale += normalize(txBump.Sample(SamplerBump, input.TexCoord0).xzy);
+        surface_normale += normalize(txBump.Sample(SamplerBump, input.TexCoord0).xzy);
         
-        float3 nNormale = normalize(normale);
+        float3 nNormale = normalize(surface_normale);
 
         float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
 

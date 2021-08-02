@@ -91,11 +91,13 @@ rendercontext = RenderContext('final_pass')
 rendercontext:add_fxparams(fxparams)
 rendercontext:add_texturesset(textures)
 rendercontext:add_shaderparam("water_color", 1, 0)
+rendercontext:add_shaderparam("surface_normale", 1, 1)
 
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
 rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
 rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
+rg:set_viewportquadshaderrealvector('final_pass', 'surface_normale', environment.reflector_normale.x, environment.reflector_normale.y, environment.reflector_normale.z, 1.0)
 
 
 rg:create_child('final_pass', 'texture_pass', 0)
