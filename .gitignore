@@ -126,6 +126,9 @@ ALL_BUILD.vcxproj*
 /samples/lua/nebulae/CMakeFiles/
 /samples/lua/nebulae/*.sln
 /samples/lua/nebulae/*.vcxproj*
+/samples/lua/dummyspace/CMakeFiles/
+/samples/lua/dummyspace/*.sln
+/samples/lua/dummyspace/*.vcxproj*
 /tools/max/CMakeFiles/
 /tools/max/*.sln
 /tools/max/*.vcxproj*
