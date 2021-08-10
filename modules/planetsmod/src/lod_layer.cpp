@@ -367,7 +367,9 @@ void Layer::setup_collider(void)
 {
     if (!m_collision_state)
     {
-        m_collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>("shape", m_meshe_collision_shape);
+        dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
+
+        m_collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>(shape_component_name, m_meshe_collision_shape);
         m_entitynodegraph->RegisterCollider(m_owner_entity);
 
         m_collision_state = true;
@@ -379,7 +381,9 @@ void Layer::remove_collider(void)
     if (m_collision_state)
     {
         m_entitynodegraph->UnregisterCollider(m_owner_entity);
-        m_collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>("shape");
+
+        dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
+        m_collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>(shape_component_name);
 
         m_collision_state = false;
     }
