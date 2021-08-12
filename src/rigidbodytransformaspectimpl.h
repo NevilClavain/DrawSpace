@@ -111,19 +111,7 @@ public:
         Utils::Matrix m_transformation;
     };
 
-
-    struct CompoundCollisionShape
-    {
-        CompoundCollisionShape(void)
-        {
-            m_transformation.Identity();
-        };
-
-        Utils::Matrix GetTransform(void) const { return m_transformation; };
-
-    private:
-        Utils::Matrix m_transformation;
-    };
+    struct CompoundCollisionShape {};
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

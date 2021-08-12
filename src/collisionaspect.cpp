@@ -194,6 +194,7 @@ void CollisionAspect::Release(void)
     {
         _DRAWSPACE_DELETE_(m_compoundShape);
     }
+    m_collisionShapesList.clear();
 
     if (m_world)
     {
