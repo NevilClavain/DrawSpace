@@ -87,6 +87,7 @@ m_nodes_evt_cb( this, &PlanetsRenderingAspectImpl::on_nodes_event),
 m_entitynodegraph(NULL),
 m_drawable(&m_config),
 m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation),
+m_collisionmeshe_update_cb(this, &PlanetsRenderingAspectImpl::on_collisionmeshe_update),
 m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer)
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -1102,6 +1103,27 @@ void PlanetsRenderingAspectImpl::prepare_permanent_subpasses(void)
     m_m_permanent_subpasses_to_prepare.clear();
 }
 
+void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape)
+{
+    if (m_collisions_active)
+    {
+        m_entitynodegraph->UnregisterCollider(m_owner_entity);
+    }
+    
+    DrawSpace::Aspect::CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+    if (NULL == collision_aspect)
+    {
+        _DSEXCEPTION("Collision aspect doesnt exists in Planet entity!");
+    }
+
+    if (!collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>(component_name))
+    {
+        collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>(component_name, p_shape);
+    }
+    m_entitynodegraph->RegisterCollider(m_owner_entity);
+    m_collisions_active = true;
+}
+
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
 {
     LOD::FaceDrawingNode* node = static_cast<LOD::FaceDrawingNode*>(p_pass->GetNode());
@@ -1160,7 +1182,7 @@ void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspect
     for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
     {
         LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras, m_config.m_layers_descr[i].description));
-        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_owner_entity, m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, i));
+        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, &m_collisionmeshe_update_cb, i));
 
         layer->SetHotState(p_hotstate);
 
@@ -1406,6 +1428,8 @@ void PlanetsRenderingAspectImpl::setup_collisions_aspect(void)
 
     // add bool component for contact state
     collision_aspect->AddComponent<bool>("contact_state", false);
+
+    collision_aspect->AddComponent<CollisionAspect::CompoundCollisionShape>("global_shape");
 }
 
 void PlanetsRenderingAspectImpl::release_collisions_aspect(void)
@@ -1414,4 +1438,6 @@ void PlanetsRenderingAspectImpl::release_collisions_aspect(void)
 
     collision_aspect->RemoveComponent<bool>("contact_state");
     m_owner_entity->RemoveAspect<CollisionAspect>();
+
+    collision_aspect->RemoveComponent<CollisionAspect::CompoundCollisionShape>("global_shape");
 }

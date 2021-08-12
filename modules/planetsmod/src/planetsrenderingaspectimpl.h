@@ -36,6 +36,8 @@
 #include "lod_config.h"
 #include "lod_drawing.h"
 
+#include "collisionaspect.h"
+
 class PlanetDetailsBinder;
 class PlanetClimateBinder;
 class MultiFractalBinder;
@@ -65,13 +67,14 @@ class PlanetsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementa
 {
 protected:
 
-    using SystemsEvtCb      = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
-    using CameraEventsCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
-    using NodesEventsCb     = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
-    using SubPassCreationCb = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
-    using TimerCb           = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
+    using SystemsEvtCb              = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
+    using CameraEventsCb            = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
+    using NodesEventsCb             = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
+    using SubPassCreationCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
+    using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape>;
+    using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
 
-    using ViewOutInfos      = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
+    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;
@@ -163,6 +166,7 @@ protected:
 
 
     SubPassCreationCb                                               m_subpass_creation_cb;
+    CollisionMesheUpdateCb                                          m_collisionmeshe_update_cb;
 
     std::vector<LOD::Layer*>                                        m_layers_list;
 
@@ -173,7 +177,7 @@ protected:
     bool                                                            m_enable_collisionmeshe_display{ false };
 
 
-
+    bool                                                            m_collisions_active{ false };
     
 
     ///////////////////////////////////////////////////////////////////////////
@@ -188,6 +192,7 @@ protected:
     void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
     void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
     LOD::SubPass::EntryInfos                    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
+    void                                        on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape);
 
     void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 

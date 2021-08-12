@@ -38,13 +38,15 @@ using namespace DrawSpace::Aspect;
 
 using namespace LOD;
 
-Layer::Layer(DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNodeGraph* p_eg,
-                Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index) :
-m_owner_entity(p_entity),
+Layer::Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body, 
+                Layer::SubPassCreationHandler* p_subpass_creation_handler, 
+                CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
+                int p_index) :
 m_entitynodegraph(p_eg),
 m_config(p_config),
 m_body(p_body),
-m_handler(p_handler),
+m_subpass_creation_handler(p_subpass_creation_handler),
+m_collision_meshe_update_handler(p_collision_meshe_update_handler),
 m_hot(false),
 m_current_lod(-1),
 m_meshe_collision_shape(m_hm_meshe)
@@ -67,11 +69,13 @@ m_meshe_collision_shape(m_hm_meshe)
 
     memset(m_alt_grid, 0, sizeof(m_alt_grid));
 
+    /*
     m_collision_aspect = m_owner_entity->GetAspect<CollisionAspect>();
     if (NULL == m_collision_aspect)
     {
         _DSEXCEPTION("Collision aspect doesnt exists in Planet entity!");
     }
+    */
 }
 
 Layer::~Layer(void)
@@ -102,7 +106,7 @@ void Layer::RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHa
 
 Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
 {
-    return m_handler;
+    return m_subpass_creation_handler;
 }
 
 int Layer::GetCurrentLOD(void) const
@@ -331,8 +335,8 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
             (*e)(m_hm_meshe);
         }
 
-        remove_collider();
-        setup_collider();
+        dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
+        (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape);
 
         m_draw_collidinghm = false;
         m_current_collisions_hm->Disable();
@@ -363,6 +367,7 @@ dsreal Layer::GetCurrentPatchCurrentHeight(void) const
     return m_currentpatch_current_height;
 }
 
+/*
 void Layer::setup_collider(void)
 {
     if (!m_collision_state)
@@ -388,8 +393,9 @@ void Layer::remove_collider(void)
         m_collision_state = false;
     }
 }
+*/
 
 void Layer::RemoveCollider(void)
 {
-    remove_collider();
+    //remove_collider();
 }

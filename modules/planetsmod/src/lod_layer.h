@@ -50,18 +50,20 @@ class Layer
 {
 public:
 
-    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
+    using SubPassCreationHandler        = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
+    using CollisionMesheUpdateHandler   = DrawSpace::Core::BaseCallback2<void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape>;
 
     using NewCollisionMesheCreationHandler = DrawSpace::Core::BaseCallback<void, const DrawSpace::Core::Meshe&>;
 
 private:
 
-    DrawSpace::Core::Entity*                                    m_owner_entity{ nullptr };
+    //DrawSpace::Core::Entity*                                    m_owner_entity{ nullptr };
     DrawSpace::EntityGraph::EntityNodeGraph*                    m_entitynodegraph{ nullptr };
 
     Config*                                                     m_config{ nullptr };
     Body*                                                       m_body{ nullptr };
-    SubPassCreationHandler*                                     m_handler{ nullptr };
+    SubPassCreationHandler*                                     m_subpass_creation_handler{ nullptr };
+    CollisionMesheUpdateHandler*                                m_collision_meshe_update_handler{ nullptr };
     bool                                                        m_hot;
     int                                                         m_current_lod;
 
@@ -76,11 +78,11 @@ private:
     LOD::Patch*                                                 m_collision_patch{ nullptr };
 
     bool                                                        m_draw_collidinghm{ false };
-    bool                                                        m_collision_state{ false };
+    //bool                                                        m_collision_state{ false };
 
     dsstring                                                    m_description; // for debug purpose :)
 
-    DrawSpace::Aspect::CollisionAspect*                         m_collision_aspect{ nullptr };
+    //DrawSpace::Aspect::CollisionAspect*                         m_collision_aspect{ nullptr };
 
     dsreal                                                      m_currentpatch_max_height{ -2.0 };
     dsreal                                                      m_currentpatch_min_height{ -2.0 };
@@ -96,13 +98,16 @@ private:
     void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
 
+    /*
     void setup_collider(void);
     void remove_collider(void);
-
+    */
 
 public:
-    Layer(DrawSpace::Core::Entity* p_entity, DrawSpace::EntityGraph::EntityNodeGraph* p_eg, 
-                    Config* p_config, Body* p_body, Layer::SubPassCreationHandler* p_handler, int p_index );
+    Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body,
+            Layer::SubPassCreationHandler* p_subpass_creation_handler, 
+            CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
+            int p_index );
 
     ~Layer(void);
 
