@@ -71,7 +71,7 @@ protected:
     using CameraEventsCb            = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
     using NodesEventsCb             = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
     using SubPassCreationCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
-    using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape>;
+    using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack3<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
     using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
 
     using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
@@ -192,7 +192,7 @@ protected:
     void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
     void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
     LOD::SubPass::EntryInfos                    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
-    void                                        on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape);
+    void                                        on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent);
 
     void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 

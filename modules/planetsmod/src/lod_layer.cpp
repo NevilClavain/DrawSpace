@@ -68,14 +68,6 @@ m_meshe_collision_shape(m_hm_meshe)
     m_description = m_config->m_layers_descr[p_index].description;
 
     memset(m_alt_grid, 0, sizeof(m_alt_grid));
-
-    /*
-    m_collision_aspect = m_owner_entity->GetAspect<CollisionAspect>();
-    if (NULL == m_collision_aspect)
-    {
-        _DSEXCEPTION("Collision aspect doesnt exists in Planet entity!");
-    }
-    */
 }
 
 Layer::~Layer(void)
@@ -181,7 +173,7 @@ void Layer::Compute(void)
             }
         }
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     Vector view_patch_coords;
@@ -336,12 +328,14 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
         }
 
         dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
-        (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape);
+        (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
 
         m_draw_collidinghm = false;
         m_current_collisions_hm->Disable();
 
-        m_current_collisions_hm = nullptr;        
+        m_current_collisions_hm = nullptr;    
+
+        m_collisions_active = true;
     }
 }
 
@@ -367,35 +361,13 @@ dsreal Layer::GetCurrentPatchCurrentHeight(void) const
     return m_currentpatch_current_height;
 }
 
-/*
-void Layer::setup_collider(void)
-{
-    if (!m_collision_state)
-    {
-        dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
-
-        m_collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>(shape_component_name, m_meshe_collision_shape);
-        m_entitynodegraph->RegisterCollider(m_owner_entity);
-
-        m_collision_state = true;
-    }
-}
-
-void Layer::remove_collider(void)
-{
-    if (m_collision_state)
-    {
-        m_entitynodegraph->UnregisterCollider(m_owner_entity);
-
-        dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
-        m_collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>(shape_component_name);
-
-        m_collision_state = false;
-    }
-}
-*/
-
 void Layer::RemoveCollider(void)
 {
-    //remove_collider();
+    if (m_collisions_active)
+    {
+        dsstring shape_component_name{ "shape_" + std::to_string((long)this) };
+        (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, false);
+
+        m_collisions_active = false;
+    }
 }

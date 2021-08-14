@@ -178,16 +178,16 @@ void PlanetsRenderingAspectImpl::Release(void)
     if( m_hub )
     {
         /////////////// release collisions stuff...
+        
         for (auto& camera : m_registered_camerapoints)
         {
             for (auto& camera_layer : camera.second.layers)
             {
-                if (camera_layer->GetHotState())
-                {
-                    camera_layer->RemoveCollider();
-                }
+                camera_layer->RemoveCollider();
             }
         }
+        
+
         release_collisions_aspect();
         //////////////////////////////////////
 
@@ -1103,7 +1103,7 @@ void PlanetsRenderingAspectImpl::prepare_permanent_subpasses(void)
     m_m_permanent_subpasses_to_prepare.clear();
 }
 
-void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape)
+void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent)
 {
     if (m_collisions_active)
     {
@@ -1111,17 +1111,34 @@ void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_nam
     }
     
     DrawSpace::Aspect::CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
-    if (NULL == collision_aspect)
+    if (p_addcomponent)
     {
-        _DSEXCEPTION("Collision aspect doesnt exists in Planet entity!");
+        if (!collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>(component_name))
+        {
+            collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>(component_name, p_shape);
+        }
+    }
+    else
+    {
+        if (collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>(component_name))
+        {
+            collision_aspect->RemoveComponent<CollisionAspect::MesheCollisionShape>(component_name);
+        }
     }
 
-    if (!collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>(component_name))
+    // check if there is still CollisionAspect::MesheCollisionShape registetred
+    ComponentList<CollisionAspect::MesheCollisionShape> meshecollision_shapes;
+    collision_aspect->GetComponentsByType<CollisionAspect::MesheCollisionShape>(meshecollision_shapes);
+    if (meshecollision_shapes.size() > 0) 
     {
-        collision_aspect->AddComponent<CollisionAspect::MesheCollisionShape>(component_name, p_shape);
+        m_entitynodegraph->RegisterCollider(m_owner_entity);
+        m_collisions_active = true;
     }
-    m_entitynodegraph->RegisterCollider(m_owner_entity);
-    m_collisions_active = true;
+    else
+    {
+        // no more CollisionAspect::MesheCollisionShape registered
+        m_collisions_active = false;
+    }
 }
 
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
@@ -1437,7 +1454,7 @@ void PlanetsRenderingAspectImpl::release_collisions_aspect(void)
     CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
 
     collision_aspect->RemoveComponent<bool>("contact_state");
-    m_owner_entity->RemoveAspect<CollisionAspect>();
-
     collision_aspect->RemoveComponent<CollisionAspect::CompoundCollisionShape>("global_shape");
+
+    m_owner_entity->RemoveAspect<CollisionAspect>();
 }

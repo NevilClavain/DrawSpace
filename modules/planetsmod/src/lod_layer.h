@@ -51,7 +51,7 @@ class Layer
 public:
 
     using SubPassCreationHandler        = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
-    using CollisionMesheUpdateHandler   = DrawSpace::Core::BaseCallback2<void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape>;
+    using CollisionMesheUpdateHandler   = DrawSpace::Core::BaseCallback3<void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
 
     using NewCollisionMesheCreationHandler = DrawSpace::Core::BaseCallback<void, const DrawSpace::Core::Meshe&>;
 
@@ -92,6 +92,7 @@ private:
 
     DrawSpace::Core::Meshe                                      m_hm_meshe; // meshe produced with heightmap result and used in bullet
     DrawSpace::Aspect::CollisionAspect::MesheCollisionShape     m_meshe_collision_shape;
+    bool                                                        m_collisions_active{ false };
 
     Patch*                                                      m_current_patch{ nullptr };
 
