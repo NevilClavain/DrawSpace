@@ -97,7 +97,7 @@ btRigidBody* CollisionAspect::Init(void)
     {
         Meshe meshe = meshecollision_shapes[0]->getPurpose().m_meshe;
 
-        m_mesh = _DRAWSPACE_NEW_(btTriangleMesh, btTriangleMesh);
+        auto mesh{ _DRAWSPACE_NEW_(btTriangleMesh, btTriangleMesh) };
 
         for (long i = 0; i < meshe.GetTrianglesListSize(); i++)
         {
@@ -114,14 +114,16 @@ btRigidBody* CollisionAspect::Init(void)
             btVector3 b(v2.x, v2.y, v2.z);
             btVector3 c(v3.x, v3.y, v3.z);
 
-            m_mesh->addTriangle(a, b, c, false);
+            mesh->addTriangle(a, b, c, false);
         }
 
-        btBvhTriangleMeshShape* shape = _DRAWSPACE_NEW_(btBvhTriangleMeshShape, btBvhTriangleMeshShape(m_mesh, true, true));
+        btBvhTriangleMeshShape* shape = _DRAWSPACE_NEW_(btBvhTriangleMeshShape, btBvhTriangleMeshShape(mesh, true, true));
 
         Utils::Matrix transf = e->getPurpose().GetTransform();
 
         m_collisionShapesList.push_back(std::make_pair(shape, transf));
+
+        m_trianglesMeshes.push_back(mesh);
     }
 
     if (compoundcollision_shapes.size())
@@ -207,9 +209,9 @@ void CollisionAspect::Release(void)
     _DRAWSPACE_DELETE_(m_rigidBody);
     m_rigidBody = nullptr;
 
-    if (m_mesh)
+    for (auto& e : m_trianglesMeshes)
     {
-        _DRAWSPACE_DELETE_(m_mesh);
+        _DRAWSPACE_DELETE_(e);
     }
 
     m_initialized = false;

@@ -50,7 +50,7 @@ protected:
 	btDiscreteDynamicsWorld*									m_world{ nullptr };
 	PhysicsAspect*												m_physical_aspect_owner{ nullptr };
 
-	btTriangleMesh*												m_mesh{ nullptr };
+    std::vector<btTriangleMesh*>                                m_trianglesMeshes;
 
 	btRigidBody*												m_rigidBody{ nullptr };
 	btDefaultMotionState*										m_motionState{ nullptr };
