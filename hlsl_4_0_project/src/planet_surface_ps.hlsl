@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
+* Emmanuel Chaumont Copyright (c) 2013-2021                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -126,7 +126,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     /////////////////////////////////////////////////////////////////////////
 
-    float4 final_color = 0.0;
+    float4 final_color = 1.0;
     float4 lit_color = 0.0;
     float4 pixel_color = 0.0;
 
@@ -149,22 +149,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         water_mask_mode = true;
     }
 
-    if (flags.x <= lim_inf)
+    if (flags.x > lim_inf)
     {
-		// si altitude relative a un certain seuil
-        
-		// regarder l'altitude vertex interpole pour determiner si rendu mer
-        if (input.LODGlobalPatch_TexCoord.z <= 0.1) // altitude vertex (interpolee)
-        {
-            sea = true;
-        }
-    }
-    else
-    {
-	
-		// si altitude relative > 1.5
+        // si altitude relative > 1.5
 
-		// regarder texture donnees temperature/humidite pour determiner si rendu mer
+        // regarder texture donnees temperature/humidite pour determiner si rendu mer
         if (temp_humidity.z > 0.0)
         {
             sea = true;
@@ -297,7 +286,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
-    if (atmo_scattering_flag_5.w > 0.0) // si calcul atmo autorise
+    if (viewer_alt > 0.0 && atmo_scattering_flag_5.w > 0.0) // si calcul atmo autorise
     {
         float4 c0_final, c1_final;
         c0_final = c1_final = 0.0;

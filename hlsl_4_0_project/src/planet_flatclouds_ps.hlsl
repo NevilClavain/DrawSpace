@@ -195,60 +195,64 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float viewer_alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
-
-    float4 c0_final, c1_final;
-    c0_final = c1_final = 0.0;
-    
-    if (viewer_alt >= atmo_scattering_flag_5.x)
+    if (viewer_alt > 0.0 && atmo_scattering_flag_5.w > 0.0) // si calcul atmo autorise
     {
-        if (flags_lights.y > 0.0)
+        float4 c0_final, c1_final;
+        c0_final = c1_final = 0.0;
+
+        if (viewer_alt >= atmo_scattering_flag_5.x)
         {
-            c0_final += input.c0;
-            c1_final += input.c1;
+            if (flags_lights.y > 0.0)
+            {
+                c0_final += input.c0;
+                c1_final += input.c1;
+            }
+
+            if (flags_lights.z > 0.0)
+            {
+                c0_final += input.c0_1;
+                c1_final += input.c1_1;
+            }
+
+            if (flags_lights.w > 0.0)
+            {
+                c0_final += input.c0_2;
+                c1_final += input.c1_2;
+            }
+        }
+        else
+        {
+
+            // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
+            // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
+
+            float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
+
+            if (flags_lights.y > 0.0)
+            {
+                c0_final += input.c0;
+                c1_final += lerp(input.c1, 1.0, factor_alt);
+            }
+
+            if (flags_lights.z > 0.0)
+            {
+                c0_final += input.c0_1;
+                c1_final += lerp(input.c1_1, 1.0, factor_alt);
+            }
+
+            if (flags_lights.w > 0.0)
+            {
+                c0_final += input.c0_2;
+                c1_final += lerp(input.c1_2, 1.0, factor_alt);
+            }
         }
 
-        if (flags_lights.z > 0.0)
-        {
-            c0_final += input.c0_1;
-            c1_final += input.c1_1;
-        }
-
-        if (flags_lights.w > 0.0)
-        {
-            c0_final += input.c0_2;
-            c1_final += input.c1_2;
-        }
+        final_color.xyz = c0_final + (lit_color.xyz * c1_final);
     }
     else
     {
-
-        // vue de l'interieur de l'atmo, on ne veut pas prendre en compte la composante c1 (provoque un rougoiement indesirable des
-        // couleurs) -> remplacer progressivement par 1.0, en fct de l'altitude camera
-
-        float factor_alt = 1.0 - clamp(viewer_alt / atmo_scattering_flag_5.x, 0.0, 1.0);
-
-        if (flags_lights.y > 0.0)
-        {
-            c0_final += input.c0;
-            c1_final += lerp(input.c1, 1.0, factor_alt);
-        }
-
-        if (flags_lights.z > 0.0)
-        {
-            c0_final += input.c0_1;
-            c1_final += lerp(input.c1_1, 1.0, factor_alt);
-        }
-
-        if (flags_lights.w > 0.0)
-        {
-            c0_final += input.c0_2;
-            c1_final += lerp(input.c1_2, 1.0, factor_alt);
-        }
+        final_color.xyz = lit_color.xyz;
     }
-    
-    //////////////////////////////////////////////////////////////////////////////////////
-
-    final_color.xyz = c0_final + (lit_color.xyz * c1_final);
     
     //////////////////////////////////////////////////////////////////////////////////////
 

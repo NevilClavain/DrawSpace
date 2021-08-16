@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
+* Emmanuel Chaumont Copyright (c) 2013-2021                     
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -67,6 +67,8 @@ cbuffer legacyargs : register(b0)
 #define v_light2_dir_local          58
 #define v_light2_dir                59
 #define v_light2_color              60
+
+#define v_flag6                     62
 
 
 struct VS_INPUT
@@ -137,10 +139,11 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 atmo_scattering_flag_5 = vec[v_atmo_scattering_flag_5];
     float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
 
-
     float4 landplacepatch_normale = vec[v_landplacepatch_normale];
 
+    float4 flags6 = vec[v_flag6];
 
+    float splatting_lim_inf = flags6.z;
     //////////////////////////////////////////////////////////////////////
 
     float4x4 matWorldRot = mat[matWorld];
@@ -240,7 +243,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         float4 v_position4 = mul(v_position3, mat[matWorldView]);
         vertex_distance = sqrt(v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z);
 
-        float viewer_alt = flag0.w * flag0.z;
+        float relative_alt = flag0.w;
+
+        float viewer_alt = relative_alt * flag0.z;
         float horizon_limit = sqrt(viewer_alt * viewer_alt - flag0.z * flag0.z);
 
 
@@ -249,29 +254,51 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
         //float v_factor = ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
 
-        if (vertex_distance < 1.05 * horizon_limit)
+        bool apply_fractals = false;
+
+        //////////////// if viewer alt is superior to splatting_lim_inf, apply horizon clipping
+        //////////////// elsewhere, horizon clipping test has no sense, so apply fractals without conditions
+        if (relative_alt > splatting_lim_inf)
         {
-        	
+            if (vertex_distance < 1.05 * horizon_limit)
+            {
+                apply_fractals = true;
+            }
+        }
+        else
+        {
+            apply_fractals = true;
+        }
+        ////////////////
+        ////////////////
+
+        if (apply_fractals)
+        {
+
             v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
             //v_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
 
-            if (v_alt >= 0.0)
-            {
-          
-			    // seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
-			    // les vertex "skirt" ont toujours une altitude de zero
-
-                if (Input.TexCoord0.z == 0.0)
+            if (relative_alt < splatting_lim_inf)
+            {               
+                if (v_alt < 0.0)
                 {
-                    v_position3 *= (1.0 + ( /*v_factor * */(v_alt / flag0.z)));
-                }
-                else
-                {
-                    v_position3 *= (1.0 + (-100.0 / flag0.z));
+                    //if ground point is under sea level, amplify ground variations
+                    v_alt *= 70.0;
                 }
             }
-        }
 
+		    // seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
+		    // les vertex "skirt" ont toujours une altitude de zero
+
+            if (Input.TexCoord0.z == 0.0)
+            {
+                v_position3 *= (1.0 + ( /*v_factor * */(v_alt / flag0.z)));
+            }
+            else
+            {
+                v_position3 *= (1.0 + ((v_alt-100.0) / flag0.z));
+            }
+        }
 
         v_position3.w = 1.0;
 
