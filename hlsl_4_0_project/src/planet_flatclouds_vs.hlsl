@@ -2,7 +2,7 @@
 /*
 *                                                                          
 * DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
+* Emmanuel Chaumont Copyright (c) 2013-2021                
 *                                                                          
 * This file is part of DrawSpace.                                          
 *                                                                          
@@ -63,9 +63,6 @@ cbuffer legacyargs : register(b0)
 #define v_light2_dir                59
 #define v_light2_color              60
 
-
-Texture2D txDiffuse         : register(t0);
-SamplerState sam            : register(s0);
 
 struct VS_INPUT
 {
