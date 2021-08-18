@@ -79,6 +79,7 @@ protected:
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;
     static const int FlatCloudsLayer    = 2;
+    static const int OceansLayer        = 3;
 
     static const dsstring ClimateVShaderComponentName;
     static const dsstring ClimatePShaderComponentName;
@@ -147,6 +148,7 @@ protected:
     std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_flatclouds_binder;
+    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_oceans_binder;
 
 
     std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;
