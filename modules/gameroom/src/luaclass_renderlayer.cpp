@@ -44,13 +44,14 @@ LuaClass_RenderLayer::~LuaClass_RenderLayer(void)
 int LuaClass_RenderLayer::LUA_addrenderconfig(lua_State* p_L)
 {
     int argc = lua_gettop(p_L);
-    if (argc < 1)
+    if (argc < 2)
     {
         LUA_ERROR("RenderLayer::add_renderconfig : argument(s) missing");
     }
     LuaClass_RenderConfig* lua_rc = Luna<LuaClass_RenderConfig>::check(p_L, 1);
-
-    m_renderConfigs.push_back(lua_rc->GetData());
+    int layer_index = luaL_checkint(p_L, 2);
+    
+    m_renderConfigs.push_back(std::make_pair(layer_index, lua_rc->GetData()));
 
     return 0;
 }
@@ -60,7 +61,7 @@ int LuaClass_RenderLayer::GetRenderConfigListSize(void) const
     return m_renderConfigs.size();
 }
 
-LuaClass_RenderConfig::Data LuaClass_RenderLayer::GetRenderConfig(int p_index) const
+std::pair<int, LuaClass_RenderConfig::Data> LuaClass_RenderLayer::GetRenderConfig(int p_index) const
 {
     return m_renderConfigs[p_index];
 }

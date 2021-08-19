@@ -132,7 +132,8 @@ end
 
 planetmod.layers =
 { 
-	surface_layer = 
+	--surface_layer = 
+	[0] = 
 	{
 		surface_rendering =	
 		{
@@ -212,7 +213,9 @@ planetmod.layers =
 			rendering_order = 5000
 		}
 	},
-	atmosphere_layer =
+
+	--atmosphere_layer
+	[1] = 
 	{
 		atmo_rendering =	
 		{
@@ -253,7 +256,8 @@ planetmod.layers =
 		}
 	},
 
-	flatclouds_layer = 
+	--flatclouds_layer
+	[2] = 
 	{
 		flatclouds_rendering =	
 		{
@@ -299,6 +303,44 @@ planetmod.layers =
 			{
 			},
 			rendering_order = 5500		
+		}
+	},
+	
+	--ocean_layer
+	[3] = 
+	{
+		oceans_rendering = 
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_ocean_vs.hlsl', mode=SHADER_NOT_COMPILED },
+					{ path='planet_ocean_ps.hlsl', mode=SHADER_NOT_COMPILED }
+				},
+				
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
+						
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 4900
 		}
 	}
 }

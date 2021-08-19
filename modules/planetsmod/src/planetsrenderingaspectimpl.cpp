@@ -793,7 +793,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             case OceansLayer:
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
-                ld.enable_lod = false;
+                ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
                 ld.description = "Oceans Layer";
@@ -921,7 +921,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
                     oceans_binders[orientation] = binder;
                 }
 

@@ -156,13 +156,13 @@ commons.create_rendering_from_module = function(p_layers, p_module, p_rendering_
 	
 	for k0, v0 in pairs(p_layers) do
 
-		g:print("k0 is "..k0)
+		--g:print("k0 is "..k0)
 
 		local renderconfig=RenderConfig()
 
 		for k, v in pairs(v0) do
 
-			g:print("	k is "..k)
+			--g:print("	k is "..k)
 
 			local rendercontext = RenderContext(k)
 
@@ -234,7 +234,7 @@ commons.create_rendering_from_module = function(p_layers, p_module, p_rendering_
 			renderconfig:add_rendercontext(rendercontext)
 		end
 
-		renderlayer:add_renderconfig(renderconfig)
+		renderlayer:add_renderconfig(renderconfig, k0)
 	end
 
 	local rendering=Rendering(TimeManagerRef(root_entity))

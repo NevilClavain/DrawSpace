@@ -207,28 +207,33 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
             std::vector<std::map<dsstring, Fx*>>                                                                layers_fx;
             std::vector<std::map<dsstring,std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>      layers_shaders_params;            
             std::vector<std::map<dsstring, int>>                                                                layers_ro;
-
             std::map<dsstring, int>                                                                             rcname_to_layer_index; 
 
             int rcfg_list_size = lua_renderlayer->GetRenderConfigListSize();
-            for( int cfg_index = 0; cfg_index < rcfg_list_size; cfg_index++ )
+
+            layers_ro.resize(rcfg_list_size);
+            layers_shaders_params.resize(rcfg_list_size);
+            layers_fx.resize(rcfg_list_size);
+            layers_textures.resize(rcfg_list_size);
+
+            for( int k = 0; k < rcfg_list_size; k++ )
             {
-                LuaClass_RenderConfig::Data render_config = lua_renderlayer->GetRenderConfig(cfg_index);
+                auto render_config{ lua_renderlayer->GetRenderConfig(k) };
+                size_t rc_list_size{ render_config.second.render_contexts.size() };
+                int cfg_index{ render_config.first };
 
-                int rc_list_size = render_config.render_contexts.size();
-
-                for (int i = 0; i < rc_list_size; i++)
+                for (size_t i = 0; i < rc_list_size; i++)
                 {
-                    LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
+                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
                     rcname_to_layer_index[render_context.rendercontextname] = cfg_index;  // NB : 'layer' or 'config' -> the same thing
                 }
   
                 ///////////////// jeux de textures pour chaque passes
 
                 std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
-                for( int i = 0; i < rc_list_size; i++ )
+                for(size_t i = 0; i < rc_list_size; i++ )
                 {
-                    LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
+                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
 
                     int textures_set_size = render_context.textures_sets.size();
 
@@ -258,15 +263,14 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
                     }
 
                     config_textures[render_context.rendercontextname] = textures;
-                }                
-                layers_textures.push_back(config_textures);
+                }
+                layers_textures[cfg_index] = config_textures;
                 
                 ////////////////// fx pour chaque passes
                 std::map<dsstring, Fx*> config_fxs;
-                for (int i = 0; i < rc_list_size; i++)
+                for (size_t i = 0; i < rc_list_size; i++)
                 {
-                    LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
-
+                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
 
                     if (render_context.fxparams.size() < 1)
                     {
@@ -290,16 +294,14 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
                     config_fxs[render_context.rendercontextname] = fx;
                 }
-
-                layers_fx.push_back(config_fxs);
+                layers_fx[cfg_index] = config_fxs;
 
                 //////////////// parametres de shaders
                 std::map<dsstring,std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> config_shadersparams;
-                for (int i = 0; i < rc_list_size; i++)
+                for (size_t i = 0; i < rc_list_size; i++)
                 {
                     std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
-
-                    LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
+                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
 
                     for (size_t j = 0; j < render_context.shaders_params.size(); j++)
                     {
@@ -309,17 +311,16 @@ int LuaClass_Rendering::LUA_configure( lua_State* p_L )
 
                     config_shadersparams[render_context.rendercontextname] = texturepass_shaders_params;
                 }
-
-                layers_shaders_params.push_back(config_shadersparams);
+                layers_shaders_params[cfg_index] = config_shadersparams;
 
                 ///////////////// rendering order
                 std::map<dsstring, int> ros;
-                for (int i = 0; i < rc_list_size; i++)
+                for (size_t i = 0; i < rc_list_size; i++)
                 {
-                    LuaClass_RenderContext::Data render_context = render_config.render_contexts[i];
+                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
                     ros[render_context.rendercontextname] = render_context.rendering_order;
                 }
-                layers_ro.push_back(ros);
+                layers_ro[cfg_index] = ros;
             }
 
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, int>>("rcname_to_layer_index", rcname_to_layer_index);

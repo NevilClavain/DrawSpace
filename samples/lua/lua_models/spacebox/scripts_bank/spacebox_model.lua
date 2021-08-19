@@ -11,7 +11,7 @@ spaceboxmod.models = {}
 
 spaceboxmod.layers =
 {
-	spacebox_config = 
+	[0] =	
 	{
 		spacebox_rendering =	
 		{
