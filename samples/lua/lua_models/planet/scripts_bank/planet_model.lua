@@ -341,6 +341,7 @@ planetmod.layers =
 			{
 			},
 			rendering_order = 4900
+			--rendering_order = 5100
 		}
 	}
 }

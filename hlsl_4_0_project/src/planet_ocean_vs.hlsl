@@ -29,6 +29,9 @@ cbuffer legacyargs : register(b0)
 };
 
 #include "mat_input_constants.hlsl"
+#include "fbm.hlsl"
+#include "multifbm_height.hlsl"
+#include "spherelod_commons.hlsl"
 
 #define v_flag0                     24
 #define v_patch_translation         25
@@ -36,7 +39,8 @@ cbuffer legacyargs : register(b0)
 #define v_base_uv_global            27
 #define v_viewer_pos                28
 
-#define v_mirror_flag				61
+#define v_landscape_control         40
+#define v_seeds                     41
 
 
 struct VS_INPUT
@@ -48,12 +52,10 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 Position                 : SV_POSITION;
-
+    float4 TexCoord0                : TEXCOORD0;
 };
 
-#include "mat_input_constants.hlsl"
-#include "spherelod_commons.hlsl"
-#include "landscapes.hlsl"
+
 
 
 VS_OUTPUT vs_main(VS_INPUT Input)
@@ -65,13 +67,13 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 patch_translation = vec[v_patch_translation];    
 
     float4 viewer_pos = vec[v_viewer_pos];
-
-
-	float4 mirror_flag = vec[v_mirror_flag];
+    float4 landscape_control = vec[v_landscape_control];
+    float4 seeds = vec[v_seeds];
 
     //////////////////////////////////////////////////////////////////////
 
     float4 v_position;
+    float v_alt = 0.0;
 
 	// sidelenght scaling
 
@@ -89,20 +91,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     v_position3 = v_position2 * flag0.z;
     v_position3.w = 1.0;
     
-    if (mirror_flag.x > 0.0)
-    {
-        // calculer normale et position du plan de reflection
-        float4 rn = normalize(viewer_pos);
-        float4 rp = rn * mirror_flag.y;
-        float4 pos = mat[matWorld][3];
-        rp += pos;
+    v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
-        Output.Position = reflected_vertex_pos(v_position3, rp, rn, matWorld, matView, matProj);
-    }
-    else
-    {
+    Output.TexCoord0 = 0.0;
+    Output.TexCoord0.x = v_alt;
 
-        Output.Position = mul(v_position3, mat[matWorldViewProjection]);
-    }
+    Output.Position = mul(v_position3, mat[matWorldViewProjection]);
+
     return (Output);
 }

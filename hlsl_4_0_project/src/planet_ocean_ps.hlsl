@@ -28,13 +28,20 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+
 struct PS_INTPUT
 {
     float4 Position                 : SV_POSITION;
+    float4 TexCoord0                : TEXCOORD0;
 };
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
+    float v_alt = input.TexCoord0.x;
     float4 water_color = { 0.17, 0.36, 0.48, 1.0 };
+    if (v_alt > 0.0)
+    {
+        clip(-1.0);
+    }    
     return water_color;
 }

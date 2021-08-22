@@ -346,6 +346,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     details_control_from_viewer_alt();
     flatclouds_control_from_viewer_alt();
+    oceans_control_from_viewer_alt();
 
     ////////////////////////////////////////////////////////
 
@@ -1523,6 +1524,31 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
             m_drawable.EnableZBufferForLayer(FlatCloudsLayer, false);
             m_drawable.ForceCullingForLayer(FlatCloudsLayer, "cw");
         }
+    }
+}
+
+void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
+{
+    if (m_current_camera && m_current_camera->relative_alt_valid)
+    {
+        bool relative{ m_current_camera->layers[0]->GetHotState() };
+
+        dsreal relative_altitude{ m_current_camera->relative_alt };
+
+        dsreal ocean_details_limit{ m_owner->GetComponent<dsreal>("splat_transition_down_relative_alt")->getPurpose() };
+
+        if (relative && relative_altitude < ocean_details_limit)
+        {
+            m_drawable.SetLayerNodeDrawingState(OceansLayer, true);
+        }
+        else
+        {
+            m_drawable.SetLayerNodeDrawingState(OceansLayer, false);
+        }
+    }
+    else
+    {
+        m_drawable.SetLayerNodeDrawingState(OceansLayer, false);
     }
 }
 

@@ -206,6 +206,7 @@ protected:
 
     void                                        details_control_from_viewer_alt(void);
     void                                        flatclouds_control_from_viewer_alt(void);
+    void                                        oceans_control_from_viewer_alt(void);
 
     void                                        prepare_permanent_subpasses(void);
 
