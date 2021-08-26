@@ -46,7 +46,7 @@ mvt_mod = Module("mvtmod", "mvts")
 mvt_mod:load()
 g:print(mvt_mod:get_descr().. ' loaded')
 
-commons.init_final_pass(rg, 'final_pass')
+commons.init_final_pass(rg, 'final_pass', 'texture_vs.hlsl', 'texture_ps.hlsl')
 
 
 rg:create_child('final_pass', 'transfer_pass', 0)

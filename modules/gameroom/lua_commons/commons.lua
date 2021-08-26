@@ -61,7 +61,7 @@ commons.utils.init_matrix = function(array)
 	return m
 end
 
-commons.init_final_pass = function(p_rendergraph, p_passid)
+commons.init_final_pass = function(p_rendergraph, p_passid, p_vshader, p_pshader)
 
 	p_rendergraph:create_pass_viewportquad(p_passid)
 
@@ -73,8 +73,8 @@ commons.init_final_pass = function(p_rendergraph, p_passid)
 	local textures = TexturesSet()
 
 	local fxparams = FxParams()
-	fxparams:add_shaderfile('texture_vs.hlsl',SHADER_NOT_COMPILED)
-	fxparams:add_shaderfile('texture_ps.hlsl',SHADER_NOT_COMPILED)
+	fxparams:add_shaderfile(p_vshader,SHADER_NOT_COMPILED)
+	fxparams:add_shaderfile(p_pshader,SHADER_NOT_COMPILED)
 	fxparams:set_renderstatesset(finalpass_rss)
 
 	local rendercontext = RenderContext(p_passid)
