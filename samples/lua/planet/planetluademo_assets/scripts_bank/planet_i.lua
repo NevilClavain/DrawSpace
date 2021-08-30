@@ -105,7 +105,7 @@ mvt_mod = Module("mvtmod", "mvts")
 mvt_mod:load()
 g:print(mvt_mod:get_descr().. ' loaded')
 
-commons.init_final_pass(rg, 'final_pass', 'texture_vs.hlsl', 'texture_ps.hlsl')
+commons.init_final_pass(rg, 'final_pass', 'space_final_composition_vs.hlsl', 'space_final_composition_ps.hlsl')
 
 rg:create_child('final_pass', 'texture_pass', 0)
 rg:set_pass_targetclearstate( 'texture_pass', FALSE )
