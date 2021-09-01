@@ -723,8 +723,7 @@ planet_passes_bindings =
 		rendering_id = 'oceans_rendering',
 		lit_shader_update_func = nil
 	},
-
-    --[[
+    
 	binding_4 = 
 	{
         target_pass_id = 'texturemirror_pass',
@@ -737,8 +736,7 @@ planet_passes_bindings =
         target_pass_id = 'texturemirror_pass',
 		rendering_id = 'atmo_mirror_rendering',
 		lit_shader_update_func = nil
-	},
-    ]]
+	},   
 }
 
 
