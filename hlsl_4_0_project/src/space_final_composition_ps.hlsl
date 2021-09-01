@@ -28,9 +28,14 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+// debug mode : 1
+Texture2D txDiffuse                 : register(t0);
+SamplerState SamplerDiffuse         : register(s0);
 
-Texture2D txDiffuse         : register(t0);
-SamplerState sam            : register(s0);
+// debug mode : 2
+Texture2D txDiffuseMirror           : register(t1);
+SamplerState SamplerDiffuseMirror   : register(s1);
+
 
 struct PS_INTPUT 
 {
@@ -41,9 +46,23 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
+    float debug_mode = vec[2].x;
     float4 final_color;
     
-    final_color.rgb = txDiffuse.Sample(sam, input.TexCoord0).rgb;
+    if (debug_mode == 0.0)
+    {
+        final_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+    }
+    else if (debug_mode == 1.0)
+    {
+        final_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+    }
+    else if (debug_mode == 2.0)
+    {
+        final_color.rgb = txDiffuseMirror.Sample(SamplerDiffuseMirror, input.TexCoord0).rgb;
+    }
+
+
     final_color.a = 1.0;
 
     return final_color;

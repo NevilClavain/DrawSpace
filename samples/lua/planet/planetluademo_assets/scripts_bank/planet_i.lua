@@ -105,11 +105,46 @@ mvt_mod = Module("mvtmod", "mvts")
 mvt_mod:load()
 g:print(mvt_mod:get_descr().. ' loaded')
 
-commons.init_final_pass(rg, 'final_pass', 'space_final_composition_vs.hlsl', 'space_final_composition_ps.hlsl')
+
+rg:create_pass_viewportquad('final_pass')
+local finalpass_rss=RenderStatesSet()
+
+finalpass_rss:add_renderstate_in(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "point")
+finalpass_rss:add_renderstate_out(RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, "linear")
+
+local textures = TexturesSet()
+
+local fxparams = FxParams()
+fxparams:add_shaderfile('space_final_composition_vs.hlsl',SHADER_NOT_COMPILED)
+fxparams:add_shaderfile('space_final_composition_ps.hlsl',SHADER_NOT_COMPILED)
+fxparams:set_renderstatesset(finalpass_rss)
+
+
+rendercontext = RenderContext('final_pass')
+rendercontext:add_fxparams(fxparams)
+rendercontext:add_texturesset(textures)
+rendercontext:add_shaderparam("water_color", 1, 0)
+rendercontext:add_shaderparam("surface_normale", 1, 1)
+rendercontext:add_shaderparam("debug_mode", 1, 2)
+
+renderconfig=RenderConfig()
+renderconfig:add_rendercontext(rendercontext)
+rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
+rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
+rg:set_viewportquadshaderrealvector('final_pass', 'surface_normale', environment.reflector_normale.x, environment.reflector_normale.y, environment.reflector_normale.z, 1.0)
+rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', 0.0, 0.0, 0.0, 0.0)
+
+
 
 rg:create_child('final_pass', 'texture_pass', 0)
 rg:set_pass_targetclearstate( 'texture_pass', FALSE )
 rg:set_pass_depthclearstate( 'texture_pass', TRUE )
+
+
+rg:create_child('final_pass', 'texturemirror_pass', 1)
+
+rg:set_pass_targetclearcolor('texturemirror_pass', 0, 0, 0)
+
 
 text_renderer=TextRendering()
 text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
@@ -688,6 +723,22 @@ planet_passes_bindings =
 		rendering_id = 'oceans_rendering',
 		lit_shader_update_func = nil
 	},
+
+    --[[
+	binding_4 = 
+	{
+        target_pass_id = 'texturemirror_pass',
+		rendering_id = 'flatclouds_mirror_rendering',
+		lit_shader_update_func = nil
+	},
+    
+	binding_5 = 
+	{
+        target_pass_id = 'texturemirror_pass',
+		rendering_id = 'atmo_mirror_rendering',
+		lit_shader_update_func = nil
+	},
+    ]]
 }
 
 
@@ -802,3 +853,7 @@ set_camera(current_cam)
 g:activate_resourcessystem("init")
 
 root_entity:update_time(2128)
+
+dmode = function(mode)
+	rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', mode, 0.0, 0.0, 0.0)
+end
