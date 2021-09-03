@@ -44,6 +44,8 @@
 #include "collisionaspect.h"
 #include "rigidbodytransformaspectimpl.h"
 
+#include "planetscentraladmin.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -94,6 +96,9 @@ m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer)
     m_drawable.SetRenderer(m_renderer);
 
     LOD::Body::BuildMeshes();
+    
+    PlanetsCentralAdmin::GetInstance()->Register(this);
+
 }
 
 PlanetsRenderingAspectImpl::~PlanetsRenderingAspectImpl(void)
