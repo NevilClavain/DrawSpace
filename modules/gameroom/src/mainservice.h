@@ -111,10 +111,6 @@ protected:
     void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context);
 
     void set_mouse_circular_mode( bool p_state );
-
-    void create_skybox( void );
-    void create_ground( void );
-    void create_camera( void );
     void create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res_system);
 
     void process_console_command( const dsstring& p_cmd );
