@@ -95,7 +95,7 @@ protected:
 
 
     bool                                                m_add_in_rendergraph;
-    Systems::Hub*                                       m_hub{ nullptr };;
+    Systems::Hub*                                       m_hub{ nullptr };
     SystemsEvtCb                                        m_system_evt_cb;
     CameraEventsCb                                      m_cameras_evt_cb;
     NodesEventsCb                                       m_nodes_evt_cb;

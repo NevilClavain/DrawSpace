@@ -34,7 +34,7 @@ namespace Interface
 class System
 {
 public:
-    enum Event
+    enum class Event
     {
         SYSTEM_RUN_BEGIN,
         SYSTEM_RUN_END,
@@ -55,14 +55,14 @@ public:
     {
         for (auto& e : m_system_evt_handlers)
         {
-            (*e)(SYSTEM_RUN_BEGIN, GetSystemId());
+            (*e)(Event::SYSTEM_RUN_BEGIN, GetSystemId());
         }
 
         run(p_entitygraph);
 
         for (auto& e : m_system_evt_handlers)
         {
-            (*e)(SYSTEM_RUN_END, GetSystemId());
+            (*e)(Event::SYSTEM_RUN_END, GetSystemId());
         }
     }
 

@@ -44,7 +44,6 @@
 #include "collisionaspect.h"
 #include "rigidbodytransformaspectimpl.h"
 
-#include "planetscentraladmin.h"
 
 
 using namespace DrawSpace;
@@ -95,10 +94,7 @@ m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer)
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
 
-    LOD::Body::BuildMeshes();
-    
-    PlanetsCentralAdmin::GetInstance()->Register(this);
-
+    LOD::Body::BuildMeshes();   
 }
 
 PlanetsRenderingAspectImpl::~PlanetsRenderingAspectImpl(void)
@@ -976,12 +972,12 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
 {
     if( "TransformSystem" == p_id)
     {
-        if (DrawSpace::Interface::System::SYSTEM_RUN_BEGIN == p_event)
+        if (DrawSpace::Interface::System::Event::SYSTEM_RUN_BEGIN == p_event)
         {
             // apply gravity
             manage_gravity_targets();
         }
-        else if( DrawSpace::Interface::System::SYSTEM_RUN_END == p_event )
+        else if( DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event )
         {
             //manage_bodies();
             manage_camerapoints();

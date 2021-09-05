@@ -25,11 +25,13 @@
 #include "planetsroot.h"
 #include "file.h"
 #include "planetsrenderingaspectimpl.h"
+#include "planetscentraladmin.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface::Module;
+using namespace DrawSpace::AspectImplementations;
 
 PlanetsRoot::PlanetsRoot( void )
 {
@@ -64,6 +66,8 @@ DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* PlanetsRoot::I
     {
         DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl* impl = new DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl;
         impl->SetHub( m_hub );
+
+        PlanetsCentralAdmin::GetInstance()->Register(impl, m_hub);
         return impl;
     }
 
@@ -73,5 +77,7 @@ DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* PlanetsRoot::I
 void PlanetsRoot::TrashRenderingAspectImpls( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl )
 {
     DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl* pl_impl = static_cast<DrawSpace::AspectImplementations::PlanetsRenderingAspectImpl*>(p_impl);
+
+    PlanetsCentralAdmin::GetInstance()->Unregister(pl_impl);
     delete pl_impl;
 }

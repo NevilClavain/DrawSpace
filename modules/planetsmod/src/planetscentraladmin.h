@@ -26,6 +26,7 @@
 
 #include "drawspace_commons.h"
 #include "crtp_singleton.h"
+#include "hub.h"
 
 namespace DrawSpace
 {
@@ -33,15 +34,23 @@ namespace AspectImplementations
 {
 class PlanetsRenderingAspectImpl;
 
-
 class PlanetsCentralAdmin : public DrawSpace::Utils::BaseSingleton<PlanetsCentralAdmin>
 {
 private:
 
-	std::vector<PlanetsRenderingAspectImpl*> m_planets;
+	using SystemsEvtCb = DrawSpace::Core::CallBack2<PlanetsCentralAdmin, void, DrawSpace::Interface::System::Event, dsstring>;
+
+	Systems::Hub*								m_hub{ nullptr };
+	SystemsEvtCb								m_system_evt_cb;
+	std::set<PlanetsRenderingAspectImpl*>		m_planet_renderers;
+
+	void on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
 
 public:
-	void Register(PlanetsRenderingAspectImpl* p_planet);
+	PlanetsCentralAdmin(void);
+
+	void Register(PlanetsRenderingAspectImpl* p_planet, Systems::Hub* p_hub);
+	void Unregister(PlanetsRenderingAspectImpl* p_planet);
 
 };
 }
