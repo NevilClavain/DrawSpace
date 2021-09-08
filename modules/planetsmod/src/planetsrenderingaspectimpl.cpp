@@ -1454,29 +1454,6 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             {
                 camera_layer->UpdateRelativeAlt( rel_alt );
                 camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
-
-                /*
-                if (camera_layer->GetHotState())
-                {
-                    camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
-                    camera_layer->Compute();
-
-                    if (rel_alt >= LOD::cst::hotRelativeAlt)
-                    {
-                        camera_layer->SetHotState(false);
-                        camera_layer->ResetBody();
-                        camera_layer->RemoveCollider();
-                        m_drawable.ResetCollisionMesheValidity();
-                    }
-                }
-                else
-                {
-                    if (rel_alt < LOD::cst::hotRelativeAlt)
-                    {
-                        camera_layer->SetHotState(true);
-                    }
-                }
-                */
             }
         }
         else
