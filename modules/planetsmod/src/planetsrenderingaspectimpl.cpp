@@ -366,15 +366,15 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     ViewOutInfos registeredCameraInfos;
     for(auto& e : m_registered_camerapoints)
     {
-        int currentLOD = e.second.layers[0]->GetCurrentLOD();
-        bool relative = e.second.layers[0]->GetHotState();
+        int currentLOD = e.second.layers[DetailsLayer]->GetCurrentLOD();
+        bool relative = e.second.layers[DetailsLayer]->GetHotState();
         dsreal rel_alt = 0.0;
         rel_alt = e.second.relative_alt;
-        dsreal altitude = e.second.layers[0]->GetBody()->GetHotPointAltitud();
+        dsreal altitude = e.second.layers[DetailsLayer]->GetBody()->GetHotPointAltitud();
 
-        dsreal current_patch_max_height = e.second.layers[0]->GetCurrentPatchMaxHeight();
-        dsreal current_patch_min_height = e.second.layers[0]->GetCurrentPatchMinHeight();
-        dsreal current_patch_current_height = e.second.layers[0]->GetCurrentPatchCurrentHeight();
+        dsreal current_patch_max_height = e.second.layers[DetailsLayer]->GetCurrentPatchMaxHeight();
+        dsreal current_patch_min_height = e.second.layers[DetailsLayer]->GetCurrentPatchMinHeight();
+        dsreal current_patch_current_height = e.second.layers[DetailsLayer]->GetCurrentPatchCurrentHeight();
 
         Vector camera_pos = e.second.locale_camera_pos_from_planet;
 
@@ -1427,8 +1427,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
     {
         // process all type of cameras 
 
-        TransformAspect* camera_transform_aspect = camera.second.owner_entity->GetAspect<TransformAspect>();
-
+        TransformAspect* camera_transform_aspect{ camera.second.owner_entity->GetAspect<TransformAspect>() };
         if (camera_transform_aspect)
         {
             Matrix camera_world;
@@ -1456,6 +1455,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                 camera_layer->UpdateRelativeAlt( rel_alt );
                 camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
 
+                /*
                 if (camera_layer->GetHotState())
                 {
                     camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
@@ -1476,13 +1476,13 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                         camera_layer->SetHotState(true);
                     }
                 }
+                */
             }
         }
         else
         {
             _DSEXCEPTION("Camera must have transform aspect!!!")
         }
-
     }
 }
 
@@ -1578,4 +1578,14 @@ void PlanetsRenderingAspectImpl::release_collisions_aspect(void)
     collision_aspect->RemoveComponent<CollisionAspect::CompoundCollisionShape>("global_shape");
 
     m_owner_entity->RemoveAspect<CollisionAspect>();
+}
+
+std::map<dsstring, PlanetsRenderingAspectImpl::RegisteredCamera> PlanetsRenderingAspectImpl::GetRegisteredCameras(void) const
+{
+    return m_registered_camerapoints;
+}
+
+void PlanetsRenderingAspectImpl::ResetCollisionMesheValidity(void)
+{
+    m_drawable.ResetCollisionMesheValidity();
 }

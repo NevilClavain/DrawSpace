@@ -45,6 +45,7 @@ private:
 	std::set<PlanetsRenderingAspectImpl*>		m_planet_renderers;
 
 	void on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
+	void check_is_planet_relative(PlanetsRenderingAspectImpl* planet_renderer);
 
 public:
 	PlanetsCentralAdmin(void);

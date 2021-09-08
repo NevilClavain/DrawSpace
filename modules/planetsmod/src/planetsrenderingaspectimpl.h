@@ -65,6 +65,31 @@ class RigidBodyTransformAspectImpl;
 
 class PlanetsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
+public:
+
+    struct RegisteredCamera
+    {
+        Core::Entity* owner_entity; // l'entite possedant l'aspect camera
+        dsstring                            camera_name;
+
+        DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
+
+        bool                                relative_alt_valid;
+        dsreal                              relative_alt;
+
+        std::vector<LOD::Layer*>            layers;
+
+        dsstring                            entity_name;
+
+        DrawSpace::Aspect::TransformAspect* parent_body_transform_aspect;
+    };
+
+    struct RegisteredBody
+    {
+        RegisteredCamera* owner{ nullptr };
+        DrawSpace::Aspect::TransformAspect* transform_aspect{ nullptr };
+    };
+
 protected:
 
     using SystemsEvtCb              = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
@@ -90,42 +115,15 @@ protected:
     static const dsstring CollisionDisplayVShaderComponentName;
     static const dsstring CollisionDisplayPShaderComponentName;
 
-
-protected:
-
-
-    bool                                                m_add_in_rendergraph;
-    Systems::Hub*                                       m_hub{ nullptr };
-    SystemsEvtCb                                        m_system_evt_cb;
-    CameraEventsCb                                      m_cameras_evt_cb;
-    NodesEventsCb                                       m_nodes_evt_cb;
-    EntityGraph::EntityNodeGraph*                       m_entitynodegraph{ nullptr };
-    TimerCb                                             m_timer_cb;
-    DrawSpace::Utils::Timer                             m_timer;
-    DrawSpace::Utils::TimeManager*                      m_timemanager{ nullptr };;
-
-    struct RegisteredCamera
-    {
-        Core::Entity*                       owner_entity; // l'entite possedant l'aspect camera
-        dsstring                            camera_name;
-
-        DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
-
-        bool                                relative_alt_valid;
-        dsreal                              relative_alt;
-
-        std::vector<LOD::Layer*>            layers;
-
-        dsstring                            entity_name;
-
-        DrawSpace::Aspect::TransformAspect* parent_body_transform_aspect;
-    };
-
-    struct RegisteredBody
-    {
-        RegisteredCamera*                   owner{ nullptr };
-        DrawSpace::Aspect::TransformAspect* transform_aspect{ nullptr };
-    };
+    bool                                                            m_add_in_rendergraph;
+    Systems::Hub*                                                   m_hub{ nullptr };
+    SystemsEvtCb                                                    m_system_evt_cb;
+    CameraEventsCb                                                  m_cameras_evt_cb;
+    NodesEventsCb                                                   m_nodes_evt_cb;
+    EntityGraph::EntityNodeGraph*                                   m_entitynodegraph{ nullptr };
+    TimerCb                                                         m_timer_cb;
+    DrawSpace::Utils::Timer                                         m_timer;
+    DrawSpace::Utils::TimeManager*                                  m_timemanager{ nullptr };;
 
     DrawSpace::Core::Entity*                                        m_owner_entity{ nullptr };
 
@@ -228,6 +226,10 @@ public:
     void Release(void);
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
+
+    void ResetCollisionMesheValidity(void);
+
+    std::map<dsstring, RegisteredCamera> GetRegisteredCameras(void) const;
 
 
     void ComponentsUpdated(void);
