@@ -93,34 +93,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     bool spec_mask_mode = flags.w;
 
-    /*
-    if( spec_mask_mode )
-    {
-        float4 mask = txMask.Sample(samMask, input.TexCoord0);
-
-        if (mask.r == 1.0 && mask.g == 0.0 && mask.b == 0.0)
-        {
-            spec_enabled = true;
-        }
-        else if (mask.r == 0.0 && mask.g == 1.0 && mask.b == 0.0)
-        {
-            self_emissive = 1.0;
-
-        }
-        else
-        {
-            self_emissive = 0.0;
-        }        
-    }
-    else
-    {
-        if (spec_power > 0.0)
-        {
-            spec_enabled = true;
-        }        
-    }
-    */
-
     float4 em_intensity = 0.0;
     if (self_emissive.x > 0.0 || self_emissive.y > 0.0 || self_emissive.z > 0.0)
     {
