@@ -62,7 +62,12 @@ private:
     static const dsstring bcCacheName;
     static const dsstring bcMd5FileName;
     static const dsstring bcCodeFileName;
+    static const dsstring sourceFileNameExt;
 
+    // shader complete source text
+    long        m_text_size;
+    void*       m_text{ nullptr };
+    
     // execution data
     dsstring    m_shader_id;
     dsstring    m_hash;
@@ -73,6 +78,8 @@ private:
 public:
 
     UpdateBCFilesTask();
+
+    void SetShaderText(void* p_text, long p_text_size);
 
     void Execute(void);
     void SetBC(void* p_bc, long p_bc_length);

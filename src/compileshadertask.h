@@ -46,7 +46,7 @@ private:
     DrawSpace::Interface::Renderer* m_renderer{ nullptr };
 
     long                            m_text_size;
-    void* m_text{ nullptr };
+    void*                           m_text{ nullptr };
     int                             m_shadertype;
 
     dsstring                        m_final_asset_dir;

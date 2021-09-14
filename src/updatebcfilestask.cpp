@@ -32,10 +32,17 @@ using namespace DrawSpace::Systems;
 const dsstring UpdateBCFilesTask::bcCacheName{ "bc_cache" };
 const dsstring UpdateBCFilesTask::bcMd5FileName{ "bc.md5" };
 const dsstring UpdateBCFilesTask::bcCodeFileName{ "bc.code" };
+const dsstring UpdateBCFilesTask::sourceFileNameExt{ ".hlsl" };
 
 
 UpdateBCFilesTask::UpdateBCFilesTask() : ITask("UPDATEBCFILES", "")
 {
+}
+
+void UpdateBCFilesTask::SetShaderText(void* p_text, long p_text_size)
+{
+    m_text_size = p_text_size;
+    m_text = p_text;
 }
 
 void UpdateBCFilesTask::Execute(void)
@@ -44,6 +51,10 @@ void UpdateBCFilesTask::Execute(void)
 
     DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcMd5FileName, (void*)m_hash.c_str(), m_hash.length());
     DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcCodeFileName, m_bc, m_bc_length);
+
+#ifdef _DEBUG
+    DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + m_shader_id + sourceFileNameExt, m_text, m_text_size);
+#endif
 }
 
 void UpdateBCFilesTask::UpdateBCFilesTask::SetBC(void* p_bc, long p_bc_length)

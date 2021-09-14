@@ -158,19 +158,12 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
         // basculer automatiquement sur un mode correspondant a la resol actuelle du bureau windows
         fullscreen_autoset_desktop_resolution( fullscreen_width, fullscreen_height, fullscreen_format, fullscreen_refresh_rate_num, fullscreen_refresh_rate_den );
     }
-
-
     //////////////////////////////
 
     m_hwnd = p_hwnd;
 
-
-
-
     RECT rect;
     GetClientRect( m_hwnd, &rect );
-
-
 
     UINT createDeviceFlags = 0;
 #ifdef _DEBUG
@@ -2682,13 +2675,17 @@ HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTST
 {
     HRESULT hr = S_OK;
 
-	DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
+    DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
     // Setting this flag improves the shader debugging experience, but still allows 
     // the shaders to be optimized and to run exactly the way they will run in 
     // the release configuration of this program.
-    //dwShaderFlags |= D3DCOMPILE_DEBUG;
+
+#ifdef _DEBUG
+    dwShaderFlags |= D3DCOMPILE_DEBUG;
+    //dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
 
     ID3DBlob* pErrorBlob;
     hr = D3DX11CompileFromMemory( (LPCTSTR)p_data, p_size, szFileName, NULL, p_include, szEntryPoint, szShaderModel, dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
