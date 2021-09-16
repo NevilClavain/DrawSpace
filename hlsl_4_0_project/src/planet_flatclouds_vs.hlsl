@@ -151,19 +151,22 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     v_position3 = v_position2 * flag0.z;
     v_position3.w = 1.0;
     
+    
     if (mirror_flag.x > 0.0)
     {
         // calculer normale et position du plan de reflection
+        
         float4 rn = normalize(viewer_pos);
         float4 rp = rn * mirror_flag.y;
+        
         float4 pos = mat[matWorld][3];
         rp += pos;
+        Output.Position = reflected_vertex_pos(v_position3, rp, rn, mat[matWorld], mat[matView], mat[matProj]);
 
-        Output.Position = reflected_vertex_pos(v_position3, rp, rn, matWorld, matView, matProj);
+        //Output.Position = mul(v_position3, mat[matWorldViewProjection]);
     }
     else
-    {
-
+    {      
         Output.Position = mul(v_position3, mat[matWorldViewProjection]);
     }
 

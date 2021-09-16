@@ -128,6 +128,10 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:set_collisiondisplayshaderscompiled(config_description['collisionmeshe_display_vshader_compiled'], config_description['collisionmeshe_display_pshader_compiled'])
 	end
 
+	if config_description['reflection_pass'] ~= nil then
+		planet_specific_configuration:set_reflectionpass(config_description['reflection_pass'])
+	end
+
 end
 
 planetmod.layers =

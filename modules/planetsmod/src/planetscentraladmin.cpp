@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "planetscentraladmin.h"
+#include "planetdetailsbinder.h"
 #include "planetsrenderingaspectimpl.h"
 #include "transformaspect.h"
 #include "lod_layer.h"
@@ -89,14 +90,14 @@ void PlanetsCentralAdmin::check_is_planet_relative(PlanetsRenderingAspectImpl* p
                 {
                     camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
                     camera_layer->Compute();
-
-                    if (rel_alt >= LOD::cst::hotRelativeAlt)
+                    
+                    if (rel_alt >= LOD::cst::hotRelativeAlt * 1.2)
                     {
                         camera_layer->SetHotState(false);
                         camera_layer->ResetBody();
                         camera_layer->RemoveCollider();
                         planet_renderer->ResetCollisionMesheValidity();
-                    }
+                    }                    
                 }
                 else
                 {
@@ -114,15 +115,32 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
 {
     if ("RenderingSystem" == p_id)
     {
+        if (DrawSpace::Interface::System::Event::SYSTEM_RUN_BEGIN == p_event)
+        {
+            for (auto planet_renderer : m_planet_renderers)
+            {
+                dsstring reflexion_pass{ planet_renderer->GetReflectionPassId() };
+
+                auto flatclouds_binder{ planet_renderer->GetPlanetFlatCloudsBinder() };
+                if (flatclouds_binder.count(reflexion_pass))
+                {
+                    auto clouds_binders_array{ flatclouds_binder.at(reflexion_pass) };
+                    for (auto cloud_binder : clouds_binders_array)
+                    {
+                        cloud_binder->SetMirrorMode(true);
+                    }
+                }
+            }
+        }
     }
     else if ("TransformSystem" == p_id)
     {
         if (DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event)
         {
-            for (PlanetsRenderingAspectImpl* planet_renderer : m_planet_renderers)
+            for (auto planet_renderer : m_planet_renderers)
             {
-                check_is_planet_relative(planet_renderer);
-            }         
+                //check_is_planet_relative(planet_renderer);
+            }
         }
     }
 }

@@ -589,6 +589,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
     bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
 
+    m_reflection_pass = m_owner->GetComponent<dsstring>("reflection_pass")->getPurpose();
+
     dsstring climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
     dsstring climate_pshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second };
 
@@ -1448,12 +1450,35 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 
             camera.second.relative_alt_valid = true;
             camera.second.relative_alt = rel_alt;
+
             camera.second.locale_camera_pos_from_planet = locale_camera_pos_from_planet;
 
             for(auto& camera_layer: camera.second.layers)
             {
                 camera_layer->UpdateRelativeAlt( rel_alt );
                 camera_layer->UpdateInvariantViewerPos( camera_pos_from_planet );
+
+                if (camera_layer->GetHotState())
+                {
+                    camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
+                    camera_layer->Compute();
+
+                    if (rel_alt >= LOD::cst::hotRelativeAlt * 1.2)
+                    {
+                        camera_layer->SetHotState(false);
+                        camera_layer->ResetBody();
+                        camera_layer->RemoveCollider();                        
+                        m_drawable.ResetCollisionMesheValidity();
+                    }
+                }
+                else
+                {
+                    if (rel_alt < LOD::cst::hotRelativeAlt)
+                    {
+                        camera_layer->SetHotState(true);
+                    }
+                }
+
             }
         }
         else
@@ -1495,12 +1520,14 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
         if (relative && altitude < flatclouds_altitude * 1000.0)
         {
             m_drawable.EnableZBufferForLayer(FlatCloudsLayer, true);
-            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "ccw");
+            //m_drawable.ForceCullingForLayer(FlatCloudsLayer, "ccw");
+            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "none");
         }
         else
         {
             m_drawable.EnableZBufferForLayer(FlatCloudsLayer, false);
-            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "cw");
+            //m_drawable.ForceCullingForLayer(FlatCloudsLayer, "cw");
+            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "none");
         }
     }
 }
@@ -1557,12 +1584,22 @@ void PlanetsRenderingAspectImpl::release_collisions_aspect(void)
     m_owner_entity->RemoveAspect<CollisionAspect>();
 }
 
+void PlanetsRenderingAspectImpl::ResetCollisionMesheValidity(void)
+{
+    m_drawable.ResetCollisionMesheValidity();
+}
+
 std::map<dsstring, PlanetsRenderingAspectImpl::RegisteredCamera> PlanetsRenderingAspectImpl::GetRegisteredCameras(void) const
 {
     return m_registered_camerapoints;
 }
 
-void PlanetsRenderingAspectImpl::ResetCollisionMesheValidity(void)
+std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectImpl::GetPlanetFlatCloudsBinder(void) const
 {
-    m_drawable.ResetCollisionMesheValidity();
+    return m_planet_flatclouds_binder;
+}
+
+dsstring PlanetsRenderingAspectImpl::GetReflectionPassId(void) const
+{
+    return m_reflection_pass;
 }

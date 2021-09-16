@@ -178,6 +178,8 @@ protected:
 
 
     bool                                                            m_collisions_active{ false };
+
+    dsstring                                                        m_reflection_pass;
     
 
     ///////////////////////////////////////////////////////////////////////////
@@ -228,13 +230,14 @@ public:
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
 
     void ResetCollisionMesheValidity(void);
-
-    std::map<dsstring, RegisteredCamera> GetRegisteredCameras(void) const;
-
-
     void ComponentsUpdated(void);
-
     virtual void SetHub(Systems::Hub* p_hub);
+
+    /// accessors
+    std::map<dsstring, RegisteredCamera>                    GetRegisteredCameras(void) const;
+    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetFlatCloudsBinder(void) const;
+    dsstring                                                GetReflectionPassId(void) const;
+
 };
 }
 }
