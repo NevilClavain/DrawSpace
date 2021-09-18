@@ -972,18 +972,21 @@ void PlanetsRenderingAspectImpl::SetHub(Systems::Hub* p_hub)
 
 void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
 {
-    if( "TransformSystem" == p_id)
+    if (m_owner->GetComponent<bool>("resources_ready")->getPurpose())
     {
-        if (DrawSpace::Interface::System::Event::SYSTEM_RUN_BEGIN == p_event)
+        if ("TransformSystem" == p_id)
         {
-            // apply gravity
-            manage_gravity_targets();
+            if (DrawSpace::Interface::System::Event::SYSTEM_RUN_BEGIN == p_event)
+            {
+                // apply gravity
+                manage_gravity_targets();
+            }
+            else if (DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event)
+            {
+                //manage_bodies();
+                manage_camerapoints();
+            }
         }
-        else if( DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event )
-        {
-            //manage_bodies();
-            manage_camerapoints();
-        }        
     }
 }
 
@@ -1467,7 +1470,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                     {
                         camera_layer->SetHotState(false);
                         camera_layer->ResetBody();
-                        camera_layer->RemoveCollider();                        
+                        camera_layer->RemoveCollider();
                         m_drawable.ResetCollisionMesheValidity();
                     }
                 }
@@ -1478,7 +1481,6 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
                         camera_layer->SetHotState(true);
                     }
                 }
-
             }
         }
         else
