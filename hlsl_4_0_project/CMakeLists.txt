@@ -47,6 +47,6 @@ set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_DISABLE_OPTIMIZATIONS 
 set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENABLE_DEBUG False)
 set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENTRYPOINT vs_main)
 
-add_custom_target(shadersc SOURCES ${vs_source_files} ${ps_source_files})
+add_custom_target(hlsl_4_0_shaders SOURCES ${vs_source_files} ${ps_source_files})
 
 
