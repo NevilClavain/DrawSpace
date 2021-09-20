@@ -74,43 +74,6 @@ void PlanetsCentralAdmin::Unregister(PlanetsRenderingAspectImpl* p_planet)
     }
 }
 
-void PlanetsCentralAdmin::check_is_planet_relative(PlanetsRenderingAspectImpl* planet_renderer)
-{
-    auto registered_camerapoints{ planet_renderer->GetRegisteredCameras() };
-
-    for (auto& camera : registered_camerapoints)
-    {
-        if (camera.second.relative_alt_valid)
-        {
-            dsreal rel_alt{ camera.second.relative_alt };
-            DrawSpace::Utils::Vector locale_camera_pos_from_planet{ camera.second.locale_camera_pos_from_planet };
-            for (auto& camera_layer : camera.second.layers)
-            {
-                if (camera_layer->GetHotState())
-                {
-                    camera_layer->UpdateHotPoint(locale_camera_pos_from_planet);
-                    camera_layer->Compute();
-                    
-                    if (rel_alt >= LOD::cst::hotRelativeAlt * 1.2)
-                    {
-                        camera_layer->SetHotState(false);
-                        camera_layer->ResetBody();
-                        camera_layer->RemoveCollider();
-                        planet_renderer->ResetCollisionMesheValidity();
-                    }                    
-                }
-                else
-                {
-                    if (rel_alt < LOD::cst::hotRelativeAlt)
-                    {
-                        camera_layer->SetHotState(true);
-                    }
-                }
-            }
-        }
-    }
-}
-
 void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id)
 {
     if ("RenderingSystem" == p_id)
@@ -130,16 +93,16 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                         cloud_binder->SetMirrorMode(true);
                     }
                 }
-            }
-        }
-    }
-    else if ("TransformSystem" == p_id)
-    {
-        if (DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event)
-        {
-            for (auto planet_renderer : m_planet_renderers)
-            {
-                //check_is_planet_relative(planet_renderer);
+
+                auto atmos_binder{ planet_renderer->GetPlanetAtmoBinder() };
+                if (atmos_binder.count(reflexion_pass))
+                {
+                    auto atmo_binders_array{ atmos_binder.at(reflexion_pass) };
+                    for (auto atmo_binder : atmo_binders_array)
+                    {
+                        atmo_binder->SetMirrorMode(true);
+                    }
+                }
             }
         }
     }
