@@ -1601,6 +1601,11 @@ std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectIm
     return m_planet_flatclouds_binder;
 }
 
+std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectImpl::GetPlanetAtmoBinder(void) const
+{
+    return m_planet_atmosphere_binder;
+}
+
 dsstring PlanetsRenderingAspectImpl::GetReflectionPassId(void) const
 {
     return m_reflection_pass;

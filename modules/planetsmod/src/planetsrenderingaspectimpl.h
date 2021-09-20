@@ -236,6 +236,7 @@ public:
     /// accessors
     std::map<dsstring, RegisteredCamera>                    GetRegisteredCameras(void) const;
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetFlatCloudsBinder(void) const;
+    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetAtmoBinder(void) const;
     dsstring                                                GetReflectionPassId(void) const;
 
 };
