@@ -167,7 +167,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     UINT createDeviceFlags = 0;
 #ifdef _DEBUG
-    //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 
@@ -2684,7 +2684,7 @@ HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTST
 
 #ifdef _DEBUG
     dwShaderFlags |= D3DCOMPILE_DEBUG;
-    //dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+    dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
     ID3DBlob* pErrorBlob;
