@@ -28,8 +28,6 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-#include "mat_input_constants.hlsl"
-
 #define v_flag0                     24
 #define v_patch_translation         25
 #define v_base_uv                   26
@@ -99,10 +97,10 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         // calculer normale et position du plan de reflection
         float4 rn = normalize(viewer_pos);
         float4 rp = rn * mirror_flag.y;
+
         float4 pos = mat[matWorld][3];
         rp += pos;
-
-        Output.Position = reflected_vertex_pos(v_position3, rp, rn, matWorld, matView, matProj);
+        Output.Position = reflected_vertex_pos(v_position3, rp, rn, mat[matWorld], mat[matView], mat[matProj]);
     }
     else
     {
