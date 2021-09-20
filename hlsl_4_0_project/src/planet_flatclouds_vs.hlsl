@@ -162,8 +162,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         float4 pos = mat[matWorld][3];
         rp += pos;
         Output.Position = reflected_vertex_pos(v_position3, rp, rn, mat[matWorld], mat[matView], mat[matProj]);
-
-        //Output.Position = mul(v_position3, mat[matWorldViewProjection]);
     }
     else
     {      
