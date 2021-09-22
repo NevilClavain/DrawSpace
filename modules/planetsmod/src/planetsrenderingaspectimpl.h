@@ -98,6 +98,7 @@ protected:
     using SubPassCreationCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack3<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
     using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
+    using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
 
     using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
 
@@ -122,6 +123,7 @@ protected:
     NodesEventsCb                                                   m_nodes_evt_cb;
     EntityGraph::EntityNodeGraph*                                   m_entitynodegraph{ nullptr };
     TimerCb                                                         m_timer_cb;
+    RenderPassEventCb                                               m_render_evt_cb;
     DrawSpace::Utils::Timer                                         m_timer;
     DrawSpace::Utils::TimeManager*                                  m_timemanager{ nullptr };;
 
@@ -195,6 +197,7 @@ protected:
     void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
     LOD::SubPass::EntryInfos                    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
     void                                        on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent);
+    void                                        on_render_event(RenderGraph::RenderPassNodeGraph::RenderPassEvent p_evt, const dsstring& p_pass);
 
     void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 

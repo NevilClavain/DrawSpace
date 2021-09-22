@@ -1002,3 +1002,8 @@ void Drawing::ResetCollisionMesheValidity(void)
 {
     m_collisionmeshe_valid = false;
 }
+
+void Drawing::SetCurrentPass(const dsstring& p_pass)
+{
+    m_current_pass = p_pass;
+}

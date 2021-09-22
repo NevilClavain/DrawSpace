@@ -96,14 +96,14 @@ void RenderPassNodeGraph::Accept( RenderingAspectImpl* p_renderingaspectimpl )
 
             for (auto& e : m_evt_handlers)
             {
-                (*e)(RENDERINGQUEUE_PASS_BEGIN, pass_id);
+                (*e)(RenderPassEvent::RENDERINGQUEUE_PASS_BEGIN, pass_id);
             }
 
             bool updated_queue = p_renderingaspectimpl->VisitRenderPassDescr(pass_descr->m_name, pass_descr->m_renderingqueue);
 
             for (auto& e : m_evt_handlers)
             {
-                (*e)(RENDERINGQUEUE_PASS_END, pass_id);
+                (*e)(RenderPassEvent::RENDERINGQUEUE_PASS_END, pass_id);
             }
 
             pass_descr->m_renderingqueue_update_flag = pass_descr->m_renderingqueue_update_flag | updated_queue;
@@ -230,7 +230,7 @@ void RenderPassNodeGraph::ProcessSignals( void )
 
             for (auto& e : m_evt_handlers)
             {
-                (*e)(RENDERINGQUEUE_UPDATED, "");
+                (*e)(RenderPassEvent::RENDERINGQUEUE_UPDATED, "");
             }
         }
         else if (SIGNAL_DISABLE_PASS == sig)

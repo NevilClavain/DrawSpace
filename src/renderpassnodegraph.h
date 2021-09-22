@@ -43,7 +43,7 @@ class RenderPassNodeGraph
 public:
     using PassDescrTree = st_tree::tree<RenderPassNode::PassDescr*>;
 
-	using RenderPassEvent = enum
+    enum class RenderPassEvent
 	{
 		RENDERINGQUEUE_UPDATED,
         RENDERINGQUEUE_PASS_BEGIN,

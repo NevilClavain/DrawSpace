@@ -184,6 +184,8 @@ protected:
 
     bool                                                                        m_collisionmeshe_valid{ false };
 
+    dsstring                                                                    m_current_pass;
+
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
@@ -213,6 +215,8 @@ public:
     void SetLayerNodeDrawingState(int p_layer_index, bool p_drawing_state);
     void EnableZBufferForLayer(int p_layer_index, bool p_zbuffer);
     void ForceCullingForLayer(int p_layer_index, const dsstring& p_culling);
+
+    void SetCurrentPass(const dsstring& p_pass);
 
     void AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
     void RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);

@@ -89,7 +89,8 @@ m_entitynodegraph(NULL),
 m_drawable(&m_config),
 m_subpass_creation_cb(this, &PlanetsRenderingAspectImpl::on_subpasscreation),
 m_collisionmeshe_update_cb(this, &PlanetsRenderingAspectImpl::on_collisionmeshe_update),
-m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer)
+m_timer_cb(this, &PlanetsRenderingAspectImpl::on_timer),
+m_render_evt_cb(this, &PlanetsRenderingAspectImpl::on_render_event)
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
@@ -135,10 +136,14 @@ void PlanetsRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::Re
 
     m_add_in_rendergraph = true;
     p_rendergraph.Accept( this );
+
+    p_rendergraph.RegisterRenderPassEvtHandler(&m_render_evt_cb);
 }
 
 void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
+    p_rendergraph.UnregisterRenderPassEvtHandler(&m_render_evt_cb);
+
     m_add_in_rendergraph = false;
     p_rendergraph.Accept( this );
 
@@ -1293,6 +1298,14 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
     ei.queue_id = p_dest;
     
     return ei;
+}
+
+void PlanetsRenderingAspectImpl::on_render_event(RenderPassNodeGraph::RenderPassEvent p_evt, const dsstring& p_pass)
+{
+    if (RenderPassNodeGraph::RenderPassEvent::RENDERINGQUEUE_PASS_BEGIN == p_evt)
+    {
+        m_drawable.SetCurrentPass(p_pass);
+    }
 }
 
 void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate)

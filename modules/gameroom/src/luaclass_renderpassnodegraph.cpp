@@ -510,7 +510,7 @@ void LuaClass_RenderPassNodeGraph::on_renderpass_event(DrawSpace::RenderGraph::R
 {
 	for (auto& it = m_renderpassevent_lua_callbacks.begin(); it != m_renderpassevent_lua_callbacks.end(); ++it)
 	{
-		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_passname);
+		LuaContext::GetInstance()->CallLuaFunc(it->second, static_cast<int>(p_event), p_passname);
 	}
 }
 
