@@ -1512,11 +1512,11 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
 
         if (view_rel_alt < zbuffer_activation_rel_alt)
         {
-            m_drawable.EnableZBufferForLayer(DetailsLayer, true);
+            //m_drawable.EnableZBufferForLayer(DetailsLayer, true);
         }
         else
         {
-            m_drawable.EnableZBufferForLayer(DetailsLayer, false);
+            //m_drawable.EnableZBufferForLayer(DetailsLayer, false);
         }
     }
 }
@@ -1534,15 +1534,19 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
 
         if (relative && altitude < flatclouds_altitude * 1000.0)
         {
+            /*
             m_drawable.EnableZBufferForLayer(FlatCloudsLayer, true);
             //m_drawable.ForceCullingForLayer(FlatCloudsLayer, "ccw");
             m_drawable.ForceCullingForLayer(FlatCloudsLayer, "none");
+            */
         }
         else
         {
+            /*
             m_drawable.EnableZBufferForLayer(FlatCloudsLayer, false);
             //m_drawable.ForceCullingForLayer(FlatCloudsLayer, "cw");
             m_drawable.ForceCullingForLayer(FlatCloudsLayer, "none");
+            */
         }
     }
 }

@@ -81,35 +81,29 @@ public:
 
 protected:
 
-    DrawSpace::Interface::Renderer*     m_renderer;
-    Config*                             m_config;
+    DrawSpace::Interface::Renderer*                                                                             m_renderer;
+    Config*                                                                                                     m_config;
+    std::vector<Patch*>                                                                                         m_display_list;
+    Binder*                                                                                                     m_binder;
+    Stats                                                                                                       m_stats;
+    Patch*                                                                                                      m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
+    int                                                                                                         m_layer_index;
+    DrawPatchMode                                                                                               m_drawpatch_mode;
+    DrawSpace::Utils::Vector                                                                                    m_relativehotpoint;
+    dsstring                                                                                                    m_current_body_description; // for debug purpose only
 
-    std::vector<Patch*>                 m_display_list;
+    /*
+    bool                                                                m_zbuffer_on{ false };
+    dsstring                                                            m_force_culling_arg;
+    */
 
-    Binder*                             m_binder;
-
-    Stats                               m_stats;
-
-    Patch*                              m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
-
-    int                                 m_layer_index;
-
-    DrawPatchMode                       m_drawpatch_mode;
-
-    DrawSpace::Utils::Vector            m_relativehotpoint;
-
-    dsstring                            m_current_body_description; // for debug purpose only
-
-    bool                                m_zbuffer_on{ false };
-
-    dsstring                            m_force_culling_arg;
-
+    dsstring                                                                                                    m_current_pass;
+    std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      m_renderstate_per_passes;
 
     void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
                                                             const DrawSpace::Utils::Matrix& p_proj );
-
 
     bool                                check_view_in_patch( dsreal p_ray, const DrawSpace::Utils::Vector& p_view, Patch* p_patch );
     
@@ -137,11 +131,16 @@ public:
 
     void SetDrawPatchMode( DrawPatchMode p_mode );
 
+    void SetRenderStatePerPassTable(const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table);
+
+    void SetCurrentPass(const dsstring& p_pass);
+
     void UpdateRelativeHotPoint( const DrawSpace::Utils::Vector p_hotpoint );
 
+    /*
     void EnableZBuffer(bool p_zbuffer);
-
     void ForceCulling(const dsstring& p_culling);
+    */
     
 };
 
@@ -184,8 +183,6 @@ protected:
 
     bool                                                                        m_collisionmeshe_valid{ false };
 
-    dsstring                                                                    m_current_pass;
-
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
@@ -213,8 +210,10 @@ public:
     void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
 
     void SetLayerNodeDrawingState(int p_layer_index, bool p_drawing_state);
+    /*
     void EnableZBufferForLayer(int p_layer_index, bool p_zbuffer);
     void ForceCullingForLayer(int p_layer_index, const dsstring& p_culling);
+    */
 
     void SetCurrentPass(const dsstring& p_pass);
 

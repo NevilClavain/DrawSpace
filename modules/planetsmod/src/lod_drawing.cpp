@@ -80,7 +80,7 @@ FaceDrawingNode::~FaceDrawingNode( void )
 {
 }
 
-
+/*
 void FaceDrawingNode::EnableZBuffer(bool p_zbuffer)
 {
     m_zbuffer_on = p_zbuffer;
@@ -90,6 +90,7 @@ void FaceDrawingNode::ForceCulling(const dsstring& p_culling)
 {
     m_force_culling_arg = p_culling;
 }
+*/
 
 void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
@@ -342,6 +343,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             current_texture = refpatchtexture;
         }
 
+        /*
         if (m_zbuffer_on)
         {
             m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
@@ -350,6 +352,18 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         if (m_force_culling_arg != "")
         {
             m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, m_force_culling_arg));
+        }
+        */
+
+        //apply IN-renderstate required for current pass...
+        if (m_renderstate_per_passes.count(m_current_pass))
+        {
+            auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
+            for (auto& rs_pair : rs_list)
+            {
+                auto rs_in{ rs_pair.first };
+                m_renderer->SetRenderState(&rs_in);
+            }
         }
 
         if( DRAW_ALL == m_drawpatch_mode )
@@ -380,6 +394,19 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             }
         }
 
+        //apply OUT-renderstate required for current pass...
+        if (m_renderstate_per_passes.count(m_current_pass))
+        {
+            auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
+            for (auto& rs_pair : rs_list)
+            {
+                auto rs_out{ rs_pair.first };
+                m_renderer->SetRenderState(&rs_out);
+            }
+        }
+
+
+        /*
         if (m_zbuffer_on)
         {
             m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
@@ -389,6 +416,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         {
             m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"));
         }
+        */
     }
 }
 
@@ -456,6 +484,16 @@ bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Utils::Vector& p_
     }
 
     return false;
+}
+
+void FaceDrawingNode::SetRenderStatePerPassTable(const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table)
+{
+    m_renderstate_per_passes = p_table;
+}
+
+void FaceDrawingNode::SetCurrentPass(const dsstring& p_pass)
+{
+    m_current_pass = p_pass;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -854,6 +892,7 @@ void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state 
     }
 }
 
+/*
 void Drawing::EnableZBufferForLayer(int p_layer_index, bool p_zbuffer)
 {
     for (auto& e : m_facedrawingnodes)
@@ -875,6 +914,7 @@ void Drawing::ForceCullingForLayer(int p_layer_index, const dsstring& p_culling)
         }
     }
 }
+*/
 
 void Drawing::create_collision_meshe_from(const DrawSpace::Core::Meshe& p_src_meshe)
 {
@@ -1005,5 +1045,8 @@ void Drawing::ResetCollisionMesheValidity(void)
 
 void Drawing::SetCurrentPass(const dsstring& p_pass)
 {
-    m_current_pass = p_pass;
+    for (auto& e : m_facedrawingnodes)
+    {
+        e->SetCurrentPass(p_pass);
+    }
 }
