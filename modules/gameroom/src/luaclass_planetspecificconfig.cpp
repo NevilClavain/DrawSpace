@@ -63,6 +63,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_lightcolor", &LuaClass_PlanetSpecificConfig::LUA_setlightcolor },
     { "set_lightdir", &LuaClass_PlanetSpecificConfig::LUA_setlightdir },
     { "set_reflectionpass", &LuaClass_PlanetSpecificConfig::LUA_setreflectionpass },
+    { "set_mainpass", &LuaClass_PlanetSpecificConfig::LUA_setmainpass },
 
     { "get_outparam", &LuaClass_PlanetSpecificConfig::LUA_getoutparam },
     { 0, 0 }
@@ -130,6 +131,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<bool>("enable_atmosphere", m_planets_details.enable_atmosphere);
 
     entity_rendering_aspect->AddComponent<dsstring>("reflection_pass", m_planets_details.reflection_pass);
+    entity_rendering_aspect->AddComponent<dsstring>("main_pass", m_planets_details.main_pass);
 
     std::pair<dsstring, dsstring> climate_shaders(m_planets_details.climate_vshader, m_planets_details.climate_pshader);
     entity_rendering_aspect->AddComponent<std::pair<dsstring,dsstring>>("climate_shaders", climate_shaders);
@@ -208,6 +210,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<dsstring>("reflection_pass");
+    m_rendering_aspect->RemoveComponent<dsstring>("main_pass");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
     m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("climate_shaders_compiled");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("collisions_shaders");
@@ -620,6 +623,18 @@ int LuaClass_PlanetSpecificConfig::LUA_setreflectionpass(lua_State* p_L)
     }
     dsstring passid = luaL_checkstring(p_L, 1);
     m_planets_details.reflection_pass = passid;
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setmainpass(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_mainpass : argument(s) missing");
+    }
+    dsstring passid = luaL_checkstring(p_L, 1);
+    m_planets_details.main_pass = passid;
     return 0;
 }
 

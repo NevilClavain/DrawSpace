@@ -594,6 +594,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
     bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
 
+    m_main_pass = m_owner->GetComponent<dsstring>("main_pass")->getPurpose();
     m_reflection_pass = m_owner->GetComponent<dsstring>("reflection_pass")->getPurpose();
 
     dsstring climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
@@ -1511,12 +1512,24 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
         dsreal zbuffer_activation_rel_alt{ m_owner->GetComponent<dsreal>("zbufferactivationrelalt")->getPurpose() };
 
         if (view_rel_alt < zbuffer_activation_rel_alt)
-        {
-            //m_drawable.EnableZBufferForLayer(DetailsLayer, true);
+        {           
+            auto rs_pair{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };          
+            std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
+            {
+                { m_main_pass, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>(1, rs_pair) }
+            };
+
+            m_drawable.SetRenderStatePerPassTableForLayer(DetailsLayer, renderstate_per_passes);
         }
         else
         {
-            //m_drawable.EnableZBufferForLayer(DetailsLayer, false);
+            auto rs_pair{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
+            std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
+            {
+                { m_main_pass, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>(1, rs_pair) }
+            };
+
+            m_drawable.SetRenderStatePerPassTableForLayer(DetailsLayer, renderstate_per_passes);
         }
     }
 }
@@ -1525,8 +1538,6 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
 {
     if (m_current_camera && m_current_camera->relative_alt_valid)
     {
-        //dsreal view_rel_alt{ m_current_camera->relative_alt };
-
         bool relative{ m_current_camera->layers[0]->GetHotState() };
         dsreal altitude{ m_current_camera->layers[0]->GetBody()->GetHotPointAltitud() };
 
@@ -1534,19 +1545,60 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
 
         if (relative && altitude < flatclouds_altitude * 1000.0)
         {
-            /*
-            m_drawable.EnableZBufferForLayer(FlatCloudsLayer, true);
-            //m_drawable.ForceCullingForLayer(FlatCloudsLayer, "ccw");
-            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "none");
-            */
+            std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_mainpass;
+            {
+                auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
+                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "ccw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                rs_list_mainpass.push_back(rs_pair_zbuff);
+                rs_list_mainpass.push_back(rs_pair_culling);
+            }
+
+            std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_reflectionpass;
+            {
+                auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
+                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                rs_list_reflectionpass.push_back(rs_pair_zbuff);
+                rs_list_reflectionpass.push_back(rs_pair_culling);
+            }
+
+            std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
+            {
+                { m_main_pass, rs_list_mainpass },
+                { m_reflection_pass, rs_list_reflectionpass }
+            };
+
+            m_drawable.SetRenderStatePerPassTableForLayer(FlatCloudsLayer, renderstate_per_passes);
+
         }
         else
         {
-            /*
-            m_drawable.EnableZBufferForLayer(FlatCloudsLayer, false);
-            //m_drawable.ForceCullingForLayer(FlatCloudsLayer, "cw");
-            m_drawable.ForceCullingForLayer(FlatCloudsLayer, "none");
-            */
+            std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_mainpass;
+            {
+                auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
+                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                rs_list_mainpass.push_back(rs_pair_zbuff);
+                rs_list_mainpass.push_back(rs_pair_culling);
+            }
+
+            std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_reflectionpass;
+            {
+                auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
+                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "ccw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                rs_list_reflectionpass.push_back(rs_pair_zbuff);
+                rs_list_reflectionpass.push_back(rs_pair_culling);
+            }
+
+            std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
+            {
+                { m_main_pass, rs_list_mainpass },
+                { m_reflection_pass, rs_list_reflectionpass }
+            };
+
+            m_drawable.SetRenderStatePerPassTableForLayer(FlatCloudsLayer, renderstate_per_passes);
         }
     }
 }

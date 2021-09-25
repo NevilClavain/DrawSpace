@@ -94,6 +94,7 @@ private:
         bool        enable_atmosphere;
 
         dsstring    reflection_pass;
+        dsstring    main_pass;
 
         Lights      lights[4];
 
@@ -135,6 +136,7 @@ public:
     int LUA_setcollisionshaders(lua_State* p_L);
     int LUA_setcollisionshaderscompiled(lua_State* p_L);
     int LUA_setreflectionpass(lua_State* p_L);
+    int LUA_setmainpass(lua_State* p_L);
 
     int LUA_enablecollisiondisplay(lua_State* p_L);
     int LUA_setcollisiondisplayshaders(lua_State* p_L);

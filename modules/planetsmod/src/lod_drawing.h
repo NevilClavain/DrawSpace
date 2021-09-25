@@ -226,6 +226,8 @@ public:
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;
 
     void ResetCollisionMesheValidity(void);
+
+    void SetRenderStatePerPassTableForLayer(int p_layer_index, const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table);
 };
 }
 

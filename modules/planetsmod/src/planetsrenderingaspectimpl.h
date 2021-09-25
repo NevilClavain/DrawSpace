@@ -181,6 +181,7 @@ protected:
 
     bool                                                            m_collisions_active{ false };
 
+    dsstring                                                        m_main_pass;
     dsstring                                                        m_reflection_pass;
     
 

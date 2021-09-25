@@ -343,18 +343,6 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             current_texture = refpatchtexture;
         }
 
-        /*
-        if (m_zbuffer_on)
-        {
-            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
-        }
-
-        if (m_force_culling_arg != "")
-        {
-            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, m_force_culling_arg));
-        }
-        */
-
         //apply IN-renderstate required for current pass...
         if (m_renderstate_per_passes.count(m_current_pass))
         {
@@ -400,23 +388,10 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
             for (auto& rs_pair : rs_list)
             {
-                auto rs_out{ rs_pair.first };
+                auto rs_out{ rs_pair.second };
                 m_renderer->SetRenderState(&rs_out);
             }
         }
-
-
-        /*
-        if (m_zbuffer_on)
-        {
-            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
-        }
-
-        if (m_force_culling_arg != "")
-        {
-            m_renderer->SetRenderState(&DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"));
-        }
-        */
     }
 }
 
@@ -915,6 +890,17 @@ void Drawing::ForceCullingForLayer(int p_layer_index, const dsstring& p_culling)
     }
 }
 */
+
+void Drawing::SetRenderStatePerPassTableForLayer(int p_layer_index, const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table)
+{
+    for (auto& e : m_facedrawingnodes)
+    {
+        if (p_layer_index == e->GetLayerIndex())
+        {
+            e->SetRenderStatePerPassTable(p_table);
+        }
+    }
+}
 
 void Drawing::create_collision_meshe_from(const DrawSpace::Core::Meshe& p_src_meshe)
 {
