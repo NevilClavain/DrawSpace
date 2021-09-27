@@ -47,23 +47,30 @@ struct PS_INTPUT
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float debug_mode = vec[2].x;
-    float4 final_color;
+    
+    float4 scene_color = 0.0;
     
     if (debug_mode == 0.0)
     {
-        final_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+        scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+        if (scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0)
+        {
+            float2 mt = input.TexCoord0.xy;
+            float3 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt).rgb;
+
+            scene_color.rgb = mirror;
+        }
+
     }
     else if (debug_mode == 1.0)
     {
-        final_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+        scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
     }
     else if (debug_mode == 2.0)
     {
-        final_color.rgb = txDiffuseMirror.Sample(SamplerDiffuseMirror, input.TexCoord0).rgb;
+        scene_color.rgb = txDiffuseMirror.Sample(SamplerDiffuseMirror, input.TexCoord0).rgb;
     }
 
-
-    final_color.a = 1.0;
-
-    return final_color;
+    scene_color.a = 1.0;
+    return scene_color;
 }

@@ -168,8 +168,8 @@ root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
---model.createmainfreecamera(0.0, 200.0, 10.0, mvt_mod)
-model.createmainfreecamera(0.0, 10.0, 40620000.0, mvt_mod)
+model.createmainfreecamera(0.0, 200.0, 10.0, mvt_mod)
+--model.createmainfreecamera(0.0, 10.0, 40620000.0, mvt_mod)
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 
@@ -612,7 +612,8 @@ spherebump_passes_bindings =
 	}
 }
 
-spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = 40620000 }, spherebump_passes_bindings)
+spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_bindings)
+--spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = 40620000 }, spherebump_passes_bindings)
 
 eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 
@@ -626,9 +627,9 @@ bellerophon_passes_bindings =
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
 	}
 }
---bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings)
+bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings)
 
-bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = 40620000 }, bellerophon_passes_bindings)
+--bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = 40620000 }, bellerophon_passes_bindings)
 
 bellerophon_entity = bellerophon.models['ship'].entity
 
@@ -762,14 +763,14 @@ planet_transform:configure(resurgam_planet_entity,0)
 
 
 planet_revol = RevolutionTransform()
---planet_revol:configure(resurgam_planet_entity, 1.0, 1)
-planet_revol:configure(resurgam_planet_entity, 100000.0, 1)
+planet_revol:configure(resurgam_planet_entity, 1.0, 1)
+--planet_revol:configure(resurgam_planet_entity, 100000.0, 1)
 
 
 
 planet_pos_mat = Matrix()
---planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
-planet_pos_mat:translation( 0.0, 0.0, 0.0 )
+planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
+--planet_pos_mat:translation( 0.0, 0.0, 0.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
 
 g:print("Planet creation done...")
