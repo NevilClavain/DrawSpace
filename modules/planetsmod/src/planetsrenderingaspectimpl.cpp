@@ -1504,6 +1504,31 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
     }
 }
 
+
+// needed renderstate behaviours for surface layer (0)
+//      main_pass
+//      --> under threshold : ENABLE ZBUFFER
+//      --> over threshold : DISABLE ZBUFFER
+//      reflection pass
+//      --> N/A
+
+// needed renderstate behaviours for flatclouds layer (2)
+//      main_pass
+//      --> under threshold : ENABLE ZBUFFER, CULLING CCW
+//      --> over threshold : DISABLE ZBUFFER, CULLING CW
+//      reflection_pass
+//      --> under threshold : ENABLE ZBUFFER, CULLING CW 
+//      --> over threshold : ENABLE ZBUFFER, CULLING CW --> CW is default behaviour : no need to specify anything
+//  
+
+// needed renderstate behaviours for atmo layer (1)
+//      main_pass
+//      --> DISABLE ZBUFFER, CULLING CCW   --> setting in lua model file is enough
+
+//      reflection_pass
+//      --> DISABLE ZBUFFER, CULLING CW --> CW is default behaviour : no need to specify anything
+
+
 void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
 {
     if (m_current_camera && m_current_camera->relative_alt_valid)
@@ -1534,6 +1559,9 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
     }
 }
 
+        
+
+
 void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
 {
     if (m_current_camera && m_current_camera->relative_alt_valid)
@@ -1557,10 +1585,12 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
             std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_reflectionpass;
             {
                 auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
-                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                // not needed, cw is default behaviour
+                //auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
 
                 rs_list_reflectionpass.push_back(rs_pair_zbuff);
-                rs_list_reflectionpass.push_back(rs_pair_culling);
+                //rs_list_reflectionpass.push_back(rs_pair_culling);
             }
 
             std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
@@ -1570,23 +1600,24 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
             };
 
             m_drawable.SetRenderStatePerPassTableForLayer(FlatCloudsLayer, renderstate_per_passes);
-
         }
         else
         {
             std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_mainpass;
             {
                 auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
-                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                // not needed, cw is default behaviour
+                //auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
 
                 rs_list_mainpass.push_back(rs_pair_zbuff);
-                rs_list_mainpass.push_back(rs_pair_culling);
+                //rs_list_mainpass.push_back(rs_pair_culling);
             }
 
             std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_reflectionpass;
             {
-                auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
-                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "ccw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+                auto rs_pair_zbuff{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false")) };
+                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
 
                 rs_list_reflectionpass.push_back(rs_pair_zbuff);
                 rs_list_reflectionpass.push_back(rs_pair_culling);
