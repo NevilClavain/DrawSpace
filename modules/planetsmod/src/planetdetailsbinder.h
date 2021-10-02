@@ -92,6 +92,9 @@ protected:
 
     dsreal                                                      m_atmoThickness;
 
+	dsreal														m_ocean_bump_texture_resol;
+	dsreal														m_ocean_bump_factor;
+
 public:
 
 	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,

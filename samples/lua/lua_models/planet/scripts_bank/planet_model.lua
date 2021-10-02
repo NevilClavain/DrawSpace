@@ -421,6 +421,35 @@ planetmod.layers =
 			},
 			rendering_order = 4900
 			--rendering_order = 5100
+		},
+		oceans_bump_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_ocean_bump_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_ocean_bump_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			rendering_order = 10000,
+			shaders_params = 
+			{			
+			}
 		}
 	}
 }

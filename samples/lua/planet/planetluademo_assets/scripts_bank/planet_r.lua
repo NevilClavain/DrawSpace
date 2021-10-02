@@ -44,6 +44,7 @@ text5_renderer:release()
 
 g:remove_appruncb('run')
 
+rg:remove_pass('bump_pass')
 rg:remove_pass('texturemirror_pass')
 rg:remove_pass('texture_pass')
 commons.trash.final_pass(rg, 'final_pass')

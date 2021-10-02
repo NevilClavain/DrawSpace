@@ -1636,6 +1636,7 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
 
 void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
 {
+
     if (m_current_camera && m_current_camera->relative_alt_valid)
     {
         bool relative{ m_current_camera->layers[0]->GetHotState() };

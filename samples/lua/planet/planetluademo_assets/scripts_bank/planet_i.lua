@@ -145,6 +145,16 @@ rg:create_child('final_pass', 'texturemirror_pass', 1)
 
 rg:set_pass_targetclearcolor('texturemirror_pass', 0, 0, 0)
 
+-- TEMPORAIRE
+--rg:create_child('final_pass', 'bump_pass', 2, RENDERPURPOSE_FLOATVECTOR)
+rg:create_child('final_pass', 'bump_pass', 2)
+rg:set_pass_depthclearstate('bump_pass', TRUE)
+rg:set_pass_targetclearstate('bump_pass', TRUE)
+rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
+
+
+
+
 
 text_renderer=TextRendering()
 text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
@@ -722,23 +732,26 @@ planet_passes_bindings =
         target_pass_id = 'texture_pass',
 		rendering_id = 'flatclouds_rendering',
 		lit_shader_update_func = nil
-	},
-    
+	},    
 	binding_3 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'oceans_rendering',
 		lit_shader_update_func = nil
 	},
-    
 	binding_4 = 
+	{
+		target_pass_id = 'bump_pass',
+		rendering_id = 'oceans_bump_rendering',
+		lit_shader_update_func = nil
+	},    
+	binding_5 = 
 	{
         target_pass_id = 'texturemirror_pass',
 		rendering_id = 'flatclouds_mirror_rendering',
 		lit_shader_update_func = nil
-	},
-        
-	binding_5 = 
+	},        
+	binding_6 = 
 	{
         target_pass_id = 'texturemirror_pass',
 		rendering_id = 'atmo_mirror_rendering',

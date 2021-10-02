@@ -41,7 +41,9 @@ m_splatTransitionDownRelativeAlt( p_splatTransitionDownRelativeAlt ),
 m_splatTextureResol( p_splatTextureResol ),
 m_kr( p_atmoKr ),
 m_fog_alt_limit( p_fog_alt_limit ),
-m_fog_density( p_fog_density )
+m_fog_density( p_fog_density ),
+m_ocean_bump_texture_resol(512),
+m_ocean_bump_factor(1.24)
 {
 
 	m_mirror_mode = false;
