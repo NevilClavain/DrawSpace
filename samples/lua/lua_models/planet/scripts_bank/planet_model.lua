@@ -432,8 +432,8 @@ planetmod.layers =
 					{ path='planet_ocean_bump_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+				{					
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"}
 				},
 				rs_out =
 				{
