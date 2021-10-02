@@ -2684,7 +2684,7 @@ HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTST
 
 #ifdef _DEBUG
     dwShaderFlags |= D3DCOMPILE_DEBUG;
-    dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+    //dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;  // decommmenter ce flag si besoin de debugger les shaders avec Graphics diagnostics tool
 #endif
 
     ID3DBlob* pErrorBlob;
