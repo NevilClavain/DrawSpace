@@ -147,10 +147,31 @@ rg:set_pass_targetclearcolor('texturemirror_pass', 0, 0, 0)
 
 -- TEMPORAIRE
 --rg:create_child('final_pass', 'bump_pass', 2, RENDERPURPOSE_FLOATVECTOR)
+
 rg:create_child('final_pass', 'bump_pass', 2)
 rg:set_pass_depthclearstate('bump_pass', TRUE)
 rg:set_pass_targetclearstate('bump_pass', TRUE)
 rg:set_pass_targetclearcolor('bump_pass', 0, 0, 0, 0)
+
+
+rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
+
+rg:create_pass_viewportquad('wave_pass')
+
+wave_fxparams = FxParams()
+wave_fxparams:add_shaderfile('water_waves_vs.hlsl',SHADER_NOT_COMPILED)
+wave_fxparams:add_shaderfile('water_waves_ps.hlsl',SHADER_NOT_COMPILED)
+
+wave_textures = TexturesSet()
+wave_rendercontext = RenderContext('wave_pass')
+wave_rendercontext:add_fxparams(wave_fxparams)
+wave_rendercontext:add_texturesset(wave_textures)
+wave_rendercontext:add_shaderparam("waves", 1, 0)
+
+waves_renderconfig=RenderConfig()
+waves_renderconfig:add_rendercontext(wave_rendercontext)
+rg:configure_pass_viewportquad_resources('wave_pass',waves_renderconfig)
+
 
 
 
