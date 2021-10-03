@@ -28,14 +28,6 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-Texture2D       Pixels_HTMap_Texture            : register(t0);
-SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
-
-Texture2D       Splatting_HTMap_Texture         : register(t1);
-SamplerState    Splatting_HTMap_Texture_Sampler : register(s1);
-
-Texture2D       HT_Texture                      : register(t7);
-SamplerState    HT_Texture_sampler              : register(s7);
 
 struct PS_INTPUT
 {
