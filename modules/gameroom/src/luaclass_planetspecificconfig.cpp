@@ -229,6 +229,10 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
     m_rendering_aspect->RemoveComponent<ViewOutInfos>("OUT_viewsInfos");
 
+    if (m_rendering_aspect->GetComponent<Texture*>("wavepass_result_texture"))
+    {
+        m_rendering_aspect->RemoveComponent<Texture*>("wavepass_result_texture");
+    }    
     return 0;
 }
 
