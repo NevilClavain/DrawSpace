@@ -1272,7 +1272,6 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
         long bpp;
 
-        //switch( m_textures_base[path]->descr.Format )
         switch( m_textures_base[hash]->descr.Format )
         {
             case DXGI_FORMAT_R8G8B8A8_TYPELESS:
@@ -1348,6 +1347,7 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             texture_infos->hash = hash;
             m_targettextures_base[hash] = texture_infos;
+            m_textures_base[hash] = texture_infos;
 
             *p_data = (void*)texture_infos;
         }
@@ -1387,8 +1387,6 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
             texture_infos->textureShaderResourceView = textureResourceView;
             texture_infos->stencilDepthBuffer = NULL;
             texture_infos->stencilDepthView = NULL;
-
-            //m_textures_base[path] = texture_infos;
 
             texture_infos->hash = hash;
             m_textures_base[hash] = texture_infos;
@@ -1480,7 +1478,6 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
 
             texture_infos->textureShaderResourceView = textureResourceView;
 
-            //m_textures_base[path] = texture_infos;
             m_textures_base[hash] = texture_infos;
 
             *p_data = (void*)texture_infos;

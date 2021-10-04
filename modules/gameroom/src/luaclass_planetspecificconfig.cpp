@@ -26,8 +26,11 @@
 #include "luaclass_planetspecificconfig.h"
 #include "renderingaspect.h"
 #include "luaclass_rendering.h"
+#include "luaclass_renderpassnodegraph.h"
+#include "texture.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 const char LuaClass_PlanetSpecificConfig::className[] = "PlanetSpecificConfig";
@@ -64,6 +67,8 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_lightdir", &LuaClass_PlanetSpecificConfig::LUA_setlightdir },
     { "set_reflectionpass", &LuaClass_PlanetSpecificConfig::LUA_setreflectionpass },
     { "set_mainpass", &LuaClass_PlanetSpecificConfig::LUA_setmainpass },
+    { "connect_wavepass", &LuaClass_PlanetSpecificConfig::LUA_connectwavepass },
+    
 
     { "get_outparam", &LuaClass_PlanetSpecificConfig::LUA_getoutparam },
     { 0, 0 }
@@ -98,7 +103,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     }
 
     LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 1);
-    DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect = lua_rendering->GetRenderingAspect();
+    DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect{ lua_rendering->GetRenderingAspect() };
 
     entity_rendering_aspect->AddComponent<dsstring>("resources_path", m_planets_details.resources_path);
     entity_rendering_aspect->AddComponent<bool>("resources_ready", m_planets_details.resources_ready);
@@ -161,7 +166,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
         lights.push_back(m_planets_details.lights[i] );
     }
     entity_rendering_aspect->AddComponent<std::vector<PlanetDetails::Lights>>("lights", lights);
-
+   
     ///////////////////////
     // OUT params
 
@@ -220,7 +225,6 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<bool>("enable_collisionmeshe_display");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders");
     m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled");
-
 
     m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
     m_rendering_aspect->RemoveComponent<ViewOutInfos>("OUT_viewsInfos");
@@ -693,4 +697,24 @@ int LuaClass_PlanetSpecificConfig::LUA_getoutparam(lua_State* p_L)
         LUA_ERROR("PlanetSpecificConfig::get_outparam : Unknown param id : " << id);
     }    
     return nb_ret;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_connectwavepass(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("PlanetSpecificConfig::connect_wavepass : argument(s) missing");
+    }
+
+    LuaClass_RenderPassNodeGraph* rg = Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1);
+    dsstring pass_wave_id = luaL_checkstring(p_L, 2);
+    LuaClass_Rendering* lua_rendering = Luna<LuaClass_Rendering>::check(p_L, 3);
+    DrawSpace::Aspect::RenderingAspect* entity_rendering_aspect{ lua_rendering->GetRenderingAspect() };
+
+    Texture* target_texture{ rg->GetNode(pass_wave_id).GetTargetTexture() }; 
+    
+    entity_rendering_aspect->AddComponent<Texture*>("wavepass_result_texture", target_texture);
+
+    return 0;
 }

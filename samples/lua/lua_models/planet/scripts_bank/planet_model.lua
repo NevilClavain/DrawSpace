@@ -463,6 +463,9 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   local specific_config = PlanetSpecificConfig()
 
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
+
+  specific_config:connect_wavepass(p_rendergraph, 'wave_pass', renderer)
+
   specific_config:apply(renderer)
 
   renderer:register_to_rendering(rg)

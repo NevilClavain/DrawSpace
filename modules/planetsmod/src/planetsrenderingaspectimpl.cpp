@@ -618,6 +618,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool collisionmeshe_display_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().second };
 
 
+    Texture* wavepass_result_texture{ m_owner->GetComponent<Texture*>("wavepass_result_texture")->getPurpose() };
+
 
     using Lights = std::tuple<bool, std::array<dsreal, 3>, std::array<dsreal, 3>>;
     std::vector<Lights> lights = m_owner->GetComponent<std::vector<Lights>>("lights")->getPurpose();
@@ -930,6 +932,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
+
+                    if ("bump_pass" == pass_id)
+                    {
+                        binder->SetTexture(wavepass_result_texture, 0);
+                    }
 
                     m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
                     oceans_binders[orientation] = binder;

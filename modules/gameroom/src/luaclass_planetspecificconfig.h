@@ -97,7 +97,6 @@ private:
         dsstring    main_pass;
 
         Lights      lights[4];
-
     };
 
     PlanetDetails m_planets_details;
@@ -146,6 +145,8 @@ public:
     int LUA_enablelight(lua_State* p_L);
     int LUA_setlightcolor(lua_State* p_L);
     int LUA_setlightdir(lua_State* p_L);
+
+    int LUA_connectwavepass(lua_State* p_L);
 
 
     int LUA_getoutparam(lua_State* p_L);
