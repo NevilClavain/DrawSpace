@@ -787,16 +787,6 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
             if( NULL != current_tx )
             {
-                {
-                    dsstring path;
-                    current_tx->GetPath(path);
-
-                    if ("planetluademo_assets/textures_bank/wave_pass/target" == path)
-                    {
-                        _asm nop
-                    }
-                }
-
                 if( false == renderer->CreateTexture( current_tx, &tx_data ) )
                 {
                     dsstring path;
