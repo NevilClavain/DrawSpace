@@ -933,6 +933,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
 
+                    // temporary
                     if ("bump_pass" == pass_id)
                     {
                         binder->SetTexture(wavepass_result_texture, 0);

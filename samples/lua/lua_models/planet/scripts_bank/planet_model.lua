@@ -433,11 +433,13 @@ planetmod.layers =
 				},
 				rs_in = 
 				{					
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
 					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"}
 				},
 				rs_out =
 				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" }
 				}
 			},
 			textures =
@@ -464,6 +466,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
 
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
 
+  --temporary
   specific_config:connect_wavepass(p_rendergraph, 'wave_pass', renderer)
 
   specific_config:apply(renderer)

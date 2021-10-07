@@ -172,8 +172,9 @@ waves_renderconfig=RenderConfig()
 waves_renderconfig:add_rendercontext(wave_rendercontext)
 rg:configure_pass_viewportquad_resources('wave_pass',waves_renderconfig)
 
-
-
+waves=SyncAngle()
+waves_inc = TRUE
+waves:init_fromtimeaspectof(root_entity,0.0)
 
 
 
@@ -494,6 +495,25 @@ function()
   text3_renderer:update(10, 110, 255, 0, 0, timescale)
 
   text5_renderer:update(10, 150, 255, 0, 0, resources_event)
+
+
+  if waves_inc == TRUE then
+
+    if waves:get_value() < 200.0 then
+        waves:inc( 1.0 )
+    else
+        waves_inc = FALSE
+    end
+    else
+
+    if waves:get_value() > 0.0 then
+        waves:dec( 1.0 )
+    else
+        waves_inc = TRUE
+    end
+  end
+
+  rg:set_viewportquadshaderrealvector('wave_pass', 'waves', waves:get_value(), 0.0, 0.0, 0.0)
 
   -- display planet infos 
 

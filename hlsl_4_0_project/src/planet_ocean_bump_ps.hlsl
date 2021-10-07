@@ -28,8 +28,8 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
-Texture2D WaterBumpTexture              : register(t0);
-SamplerState SamplerWaterBumpTexture    : register(s0);
+Texture2D WaveTexture               : register(t0);
+SamplerState SamplerWave            : register(s0);
 
 struct PS_INTPUT 
 {
@@ -108,7 +108,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 res_color = 0;
 
     float3 np;
-    np = compute_water_bump_vector(bump_flag.x, WaterBumpTexture, SamplerWaterBumpTexture, input.LODGlobalPatch_TexCoord.xy, bump_flag.y);
+    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, input.LODGlobalPatch_TexCoord.xy, bump_flag.y);
 
     float4 np2;
     np2.x = np.x;
@@ -124,6 +124,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     return res_color;
     */
 
-    float4 res_color = 1;
+    float4 res_color;
+
+    res_color = WaveTexture.Sample(SamplerWave, input.GlobalPatch_TexCoord.xy);
+    res_color.w = 1.0;
     return res_color;
 }
