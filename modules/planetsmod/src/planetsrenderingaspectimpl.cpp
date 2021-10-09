@@ -596,6 +596,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_main_pass = m_owner->GetComponent<dsstring>("main_pass")->getPurpose();
     m_reflection_pass = m_owner->GetComponent<dsstring>("reflection_pass")->getPurpose();
+    m_bump_pass = m_owner->GetComponent<dsstring>("bump_pass")->getPurpose();
 
     dsstring climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
     dsstring climate_pshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second };
@@ -933,8 +934,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
 
-                    // temporary
-                    if ("bump_pass" == pass_id)
+                    if (m_bump_pass == pass_id)
                     {
                         binder->SetTexture(wavepass_result_texture, 0);
                     }

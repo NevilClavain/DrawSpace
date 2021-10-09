@@ -727,6 +727,7 @@ local planet_specific_config_descr =
 
     main_pass                                    = 'texture_pass',
     reflection_pass                              = 'texturemirror_pass',
+    bump_pass                                    = 'bump_pass',
 
 	planet_ray							         = 6500.0,
     gravity_acc                                  = 9.81,
@@ -802,7 +803,7 @@ planet_passes_bindings =
 
 
 planet_name = 'Resurgam'
-planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr)
+planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr, 'wave_pass')
 
 resurgam_planet_entity = planetmod.models[planet_name].entity
 resurgam_planet_config = planetmod.models[planet_name].specific_config

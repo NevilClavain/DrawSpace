@@ -93,6 +93,7 @@ private:
         bool        enable_landplace_patch;
         bool        enable_atmosphere;
 
+        dsstring    bump_pass;
         dsstring    reflection_pass;
         dsstring    main_pass;
 
@@ -134,6 +135,7 @@ public:
     int LUA_setclimateshaderscompiled(lua_State* p_L);
     int LUA_setcollisionshaders(lua_State* p_L);
     int LUA_setcollisionshaderscompiled(lua_State* p_L);
+    int LUA_setbumppass(lua_State* p_L);
     int LUA_setreflectionpass(lua_State* p_L);
     int LUA_setmainpass(lua_State* p_L);
 

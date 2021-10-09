@@ -9,6 +9,8 @@ g:print(planetmod.module:get_descr().. ' loaded')
 -- stockage des instances modeles : paire {entity, renderer, specific_config}
 planetmod.models = {}
 
+planetmod.wavepass_name = 'default'
+
 
 planetmod.setup_specific_config=function(config_description, planet_specific_configuration)
 
@@ -126,6 +128,10 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 	if config_description['collisionmeshe_display_vshader_compiled'] ~= nil and 
 	   config_description['collisionmeshe_display_pshader_compiled'] ~= nil then
 		planet_specific_configuration:set_collisiondisplayshaderscompiled(config_description['collisionmeshe_display_vshader_compiled'], config_description['collisionmeshe_display_pshader_compiled'])
+	end
+
+	if config_description['bump_pass'] ~= nil then
+		planet_specific_configuration:set_bumppass(config_description['bump_pass'])
 	end
 
 	if config_description['reflection_pass'] ~= nil then
@@ -466,8 +472,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
 
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
 
-  --temporary
-  specific_config:connect_wavepass(p_rendergraph, 'wave_pass', renderer)
+  specific_config:connect_wavepass(p_rendergraph, planetmod.wavepass_name, renderer)
 
   specific_config:apply(renderer)
 
@@ -528,7 +533,7 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific_config_descr)
+planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific_config_descr, wavepass_name)
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do
@@ -538,10 +543,11 @@ planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific
 	end
   end
 
+  planetmod.wavepass_name = wavepass_name
+
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
     model.view.load('planet model', planetmod.createmodelview, p_passes_bindings, nil, p_entity_id, p_planet_specific_config_descr)
   end  
-
 end

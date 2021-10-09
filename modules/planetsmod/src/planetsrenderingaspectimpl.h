@@ -183,6 +183,7 @@ protected:
 
     dsstring                                                        m_main_pass;
     dsstring                                                        m_reflection_pass;
+    dsstring                                                        m_bump_pass;
     
 
     ///////////////////////////////////////////////////////////////////////////
