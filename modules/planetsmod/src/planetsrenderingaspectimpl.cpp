@@ -933,13 +933,16 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
-
                     if (m_bump_pass == pass_id)
                     {
                         binder->SetTexture(wavepass_result_texture, 0);
-                    }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
+                    }
+                    else
+                    {
+                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                    }                    
                     oceans_binders[orientation] = binder;
                 }
 

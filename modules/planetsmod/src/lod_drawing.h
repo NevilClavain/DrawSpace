@@ -70,8 +70,8 @@ public:
     {
         DRAW_ALL,
         DRAW_LANDPLACEPATCH_ONLY,
-        DRAW_ALL_BUTLANDPLACEPATCH
-    
+        DRAW_ALL_BUTLANDPLACEPATCH,
+        DRAW_MAXLODLEVEL            // used in pair with m_maxlodlevel_to_draw
     };
 
     struct Stats
@@ -92,13 +92,10 @@ protected:
     DrawSpace::Utils::Vector                                                                                    m_relativehotpoint;
     dsstring                                                                                                    m_current_body_description; // for debug purpose only
 
-    /*
-    bool                                                                m_zbuffer_on{ false };
-    dsstring                                                            m_force_culling_arg;
-    */
-
     dsstring                                                                                                    m_current_pass;
     std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      m_renderstate_per_passes;
+
+    int                                                                                                         m_maxlodlevel_to_draw{ -1 }; // used in pair with DRAW_MAXLODLEVEL
 
     void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
                                                             const DrawSpace::Utils::Vector& p_invariant_view_pos,
@@ -129,7 +126,7 @@ public:
 
     int GetLayerIndex( void );
 
-    void SetDrawPatchMode( DrawPatchMode p_mode );
+    void SetDrawPatchMode( DrawPatchMode p_mode, int maxlodlevel_to_draw = -1);
 
     void SetRenderStatePerPassTable(const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table);
 
@@ -220,7 +217,7 @@ public:
     void AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
     void RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue);
 
-    void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order );
+    void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw = -1);
     void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
 
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;

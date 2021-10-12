@@ -97,9 +97,10 @@ void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
     m_display_list = p_list;
 }
 
-void FaceDrawingNode::SetDrawPatchMode( DrawPatchMode p_mode )
+void FaceDrawingNode::SetDrawPatchMode( DrawPatchMode p_mode, int maxlodlevel_to_draw)
 {
     m_drawpatch_mode = p_mode;
+    m_maxlodlevel_to_draw = maxlodlevel_to_draw;
 }
 
 
@@ -364,9 +365,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             {
                 // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
                 if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel() )
-                //if( 0 != m_display_list[i]->GetLodLevel()  )
-                {
-                    
+                {                    
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
                 }
             }
@@ -374,10 +373,17 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             {
                 if( check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) )
                 {
-
                     m_renderer->ClearDepth();
                     // dessiner LE patch de niveau LOD 0 qui contient  la camera
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
+                }
+            }
+            else if (DRAW_MAXLODLEVEL == m_drawpatch_mode)
+            {
+                int lodlevel{ m_display_list[i]->GetLodLevel() };
+                if (/*check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) &&*/ lodlevel <= m_maxlodlevel_to_draw)
+                {
+                    draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
                 }
             }
         }
@@ -690,7 +696,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind();
 }
 
-void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order )
+void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)
 {
 
     FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
@@ -719,7 +725,6 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
                 m_facedrawingnodes.push_back(node_landplace);
             }
-
             break;
 
         case Body::AVGRES_MESHE:
@@ -764,6 +769,12 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             node->m_debug_id = "HIRES_MESHE for layer : " + std::to_string(p_layer_index);
             break;
     }
+
+    if (maxlodlevel_to_draw > -1)
+    {
+        node->SetDrawPatchMode(FaceDrawingNode::DRAW_MAXLODLEVEL, maxlodlevel_to_draw);
+    }
+
         
     RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
 
