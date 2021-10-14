@@ -60,7 +60,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
         if (scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0)
         {
-            float2 mt = input.TexCoord0.xy;
+            float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
+
+            float2 mt = input.TexCoord0.xy + bump_factor;
             float3 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt).rgb;
 
             scene_color.rgb = mirror;

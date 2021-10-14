@@ -112,6 +112,10 @@ public:
     void SetAtmoKr( dsreal p_kr );
     void SetFogAltLimit( dsreal p_fogaltlimit );
     void SetFogDensity( dsreal p_fog_density );
+
+	void SetWaterBumpTextureResol(int p_resol);
+	void SetWaterBumpFactor(int p_resol);
+
     inline void SetMirrorMode(bool p_state)
     {
         m_mirror_mode = p_state;

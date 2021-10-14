@@ -36,6 +36,7 @@ SamplerState SamplerDiffuse         : register(s0);
 Texture2D txDiffuseMirror           : register(t1);
 SamplerState SamplerDiffuseMirror   : register(s1);
 
+// debug mode : 4
 Texture2D txBump                    : register(t2);
 SamplerState SamplerBump            : register(s2);
 
@@ -108,6 +109,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     else if (debug_mode == 3.0)
     {
         scene_color = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, input.TexCoord0);
+    }
+
+    else if (debug_mode == 4.0)
+    {
+        scene_color = txBump.Sample(SamplerBump, input.TexCoord0);
     }
 
     return scene_color;

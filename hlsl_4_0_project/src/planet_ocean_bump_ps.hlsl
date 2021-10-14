@@ -96,37 +96,26 @@ float3 compute_water_bump_vector(int p_texture_resol, Texture2D p_water_bump_tex
     return avg;
 }
 
-
 float4 ps_main(PS_INTPUT input) : SV_Target
-{   
-    // temporaire
-    /*
+{       
     float4x4 mWorldView = mat[matWorldView_ps];
 
     float4 bump_flag = vec[v_bump_flag];
-
     float4 res_color = 0;
-
     float3 np;
-    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, input.LODGlobalPatch_TexCoord.xy, bump_flag.y);
+    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, input.GlobalPatch_TexCoord.xy, bump_flag.y);
 
     float4 np2;
     np2.x = np.x;
     np2.y = np.z;
     np2.z = np.y;
     np2.w = 1.0;
-
+    
     float3 np_t = mul(np2, transpose(mWorldView));
     float3 nbase_t = mul(float4(0.0, 1.0, 0.0, 1.0), transpose(matWorldView));
 
-    res_color.xyz = np_t - nbase_t;
+    res_color.xyz = np_t - nbase_t;   
+    res_color = np2;
 
-    return res_color;
-    */
-
-    float4 res_color;
-
-    res_color = WaveTexture.Sample(SamplerWave, input.GlobalPatch_TexCoord.xy);
-    res_color.w = 1.0;
-    return res_color;
+    return res_color;    
 }
