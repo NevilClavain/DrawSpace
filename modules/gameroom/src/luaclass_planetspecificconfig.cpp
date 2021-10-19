@@ -68,6 +68,10 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_bumppass", &LuaClass_PlanetSpecificConfig::LUA_setbumppass },
     { "set_reflectionpass", &LuaClass_PlanetSpecificConfig::LUA_setreflectionpass },
     { "set_mainpass", &LuaClass_PlanetSpecificConfig::LUA_setmainpass },
+    { "set_wavepassresol", &LuaClass_PlanetSpecificConfig::LUA_setwavepassresol },
+    { "set_oceanbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setoceanbumpfactor },
+
+
     { "connect_wavepass", &LuaClass_PlanetSpecificConfig::LUA_connectwavepass },
     
 
@@ -161,6 +165,9 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     std::pair<bool, bool> collisionmeshe_display_shaders_compiled(m_planets_details.collisionmeshe_display_vshader_compiled, m_planets_details.collisionmeshe_display_pshader_compiled);
     entity_rendering_aspect->AddComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled", collisionmeshe_display_shaders_compiled);
 
+    entity_rendering_aspect->AddComponent<int>("wave_pass_resol", m_planets_details.wave_pass_resol);
+    entity_rendering_aspect->AddComponent<dsreal>("ocean_bump_factor", m_planets_details.ocean_bump_factor);
+
 
     std::vector<PlanetDetails::Lights> lights;
     for( int i = 0; i < 4; i++ )
@@ -229,6 +236,9 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders");
     m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled");
 
+    m_rendering_aspect->RemoveComponent<int>("wave_pass_resol");
+    m_rendering_aspect->RemoveComponent<dsreal>("ocean_bump_factor");
+
     m_rendering_aspect->RemoveComponent<int>("OUT_delayedSingleSubPassQueueSize");
     m_rendering_aspect->RemoveComponent<ViewOutInfos>("OUT_viewsInfos");
 
@@ -254,6 +264,8 @@ int LuaClass_PlanetSpecificConfig::LUA_updated(lua_State* p_L)
     m_rendering_aspect->GetComponent<std::vector<PlanetDetails::Lights>>("lights")->getPurpose() = lights;
     m_rendering_aspect->GetComponent<bool>("enable_atmosphere")->getPurpose() = m_planets_details.enable_atmosphere;
     m_rendering_aspect->GetComponent<bool>("resources_ready")->getPurpose() = m_planets_details.resources_ready;
+
+    m_rendering_aspect->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() = m_planets_details.ocean_bump_factor;
 
     // signaler le chgt d'un ou plusieurs components...
     m_rendering_aspect->ComponentsUpdated();
@@ -658,6 +670,30 @@ int LuaClass_PlanetSpecificConfig::LUA_setmainpass(lua_State* p_L)
     }
     dsstring passid = luaL_checkstring(p_L, 1);
     m_planets_details.main_pass = passid;
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setwavepassresol(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_wavepassresol : argument(s) missing");
+    }
+    int resol = luaL_checkint(p_L, 1);
+    m_planets_details.wave_pass_resol = resol;
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setoceanbumpfactor(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_oceanbumpfactor : argument(s) missing");
+    }
+    dsreal bump_factor = luaL_checknumber(p_L, 1);
+    m_planets_details.ocean_bump_factor = bump_factor;
     return 0;
 }
 

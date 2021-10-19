@@ -391,7 +391,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
 void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 {
-    bool enable_atmosphere = m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose();
+    bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
+    dsreal ocean_bump_factor{ m_owner->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() };
 
     // setup lights...
     
@@ -559,6 +560,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
             binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
             binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
+
+            binder->SetWaterBumpFactor(ocean_bump_factor);
         }
     }
 }
@@ -593,6 +596,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     bool enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
     bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
+
+    int wave_pass_resol { m_owner->GetComponent<int>("wave_pass_resol")->getPurpose() };
+    dsreal ocean_bump_factor{ m_owner->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() };
+
 
     m_main_pass = m_owner->GetComponent<dsstring>("main_pass")->getPurpose();
     m_reflection_pass = m_owner->GetComponent<dsstring>("reflection_pass")->getPurpose();
@@ -936,6 +943,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     if (m_bump_pass == pass_id)
                     {
                         binder->SetTexture(wavepass_result_texture, 0);
+                        binder->SetWaveTextureResol(wave_pass_resol);
+                        binder->SetWaterBumpFactor(ocean_bump_factor);
 
                         m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
                     }

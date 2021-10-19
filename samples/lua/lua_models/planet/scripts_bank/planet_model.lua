@@ -142,6 +142,14 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:set_mainpass(config_description['main_pass'])
 	end
 
+	if config_description['wave_pass_resol'] ~= nil then
+		planet_specific_configuration:set_wavepassresol(config_description['wave_pass_resol'])
+	end
+
+	if config_description['ocean_bump_factor'] ~= nil then
+		planet_specific_configuration:set_oceanbumpfactor(config_description['ocean_bump_factor'])
+	end
+
 end
 
 planetmod.layers =

@@ -635,6 +635,11 @@ atmo = function( state )
 	resurgam_planet_config:updated()
 end
 
+water_bump = function( state )
+	resurgam_planet_config:set_oceanbumpfactor( state )
+	resurgam_planet_config:updated()
+end
+
 
 spacebox_passes_bindings = 
 {
@@ -749,7 +754,9 @@ local planet_specific_config_descr =
 	landplace_patch						         = FALSE,
 	enable_atmosphere					         = TRUE,
 	atmo_thickness                               = 160.0,
-    flatclouds_altitude                          = 24.0
+    flatclouds_altitude                          = 24.0,
+    wave_pass_resol                              = 512,
+    ocean_bump_factor                            = 0.9
 }
 
 planet_passes_bindings = 

@@ -97,6 +97,9 @@ private:
         dsstring    reflection_pass;
         dsstring    main_pass;
 
+        int         wave_pass_resol;
+        dsreal      ocean_bump_factor;
+
         Lights      lights[4];
     };
 
@@ -138,6 +141,9 @@ public:
     int LUA_setbumppass(lua_State* p_L);
     int LUA_setreflectionpass(lua_State* p_L);
     int LUA_setmainpass(lua_State* p_L);
+    int LUA_setwavepassresol(lua_State* p_L);
+    int LUA_setoceanbumpfactor(lua_State* p_L);
+
 
     int LUA_enablecollisiondisplay(lua_State* p_L);
     int LUA_setcollisiondisplayshaders(lua_State* p_L);

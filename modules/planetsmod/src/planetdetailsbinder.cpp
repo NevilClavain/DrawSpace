@@ -42,7 +42,7 @@ m_splatTextureResol( p_splatTextureResol ),
 m_kr( p_atmoKr ),
 m_fog_alt_limit( p_fog_alt_limit ),
 m_fog_density( p_fog_density ),
-m_ocean_bump_texture_resol(512),
+m_wave_texture_resol(512),
 m_ocean_bump_factor(0.99)
 {
 
@@ -215,7 +215,7 @@ void PlanetDetailsBinder::Bind( void )
 	m_planet_final_transform_rots.Transpose(); // faire comme dans le plugin
 	m_renderer->SetFxShaderMatrix(1, 25, m_planet_final_transform_rots);
 
-	Vector water_bump_flags(m_ocean_bump_texture_resol, m_ocean_bump_factor, 0, 0);
+	Vector water_bump_flags(m_wave_texture_resol, m_ocean_bump_factor, 0, 0);
 	m_renderer->SetFxShaderParams(1, 30, water_bump_flags);
 
 	Vector terrain_bump_flag(m_terrain_bump_factor, 0.0, 0.0, 0.0);
@@ -289,12 +289,12 @@ void PlanetDetailsBinder::SetFogDensity( dsreal p_fog_density )
     m_atmo_scattering_flags5[2] = m_fog_density; // intensite fog "sol"
 }
 
-void PlanetDetailsBinder::SetWaterBumpTextureResol(int p_resol)
+void PlanetDetailsBinder::SetWaveTextureResol(int p_resol)
 {
-	m_ocean_bump_texture_resol = p_resol;
+	m_wave_texture_resol = p_resol;
 }
 
-void PlanetDetailsBinder::SetWaterBumpFactor(int p_resol)
+void PlanetDetailsBinder::SetWaterBumpFactor(dsreal p_bump_factor)
 {
-	m_ocean_bump_factor = p_resol;
+	m_ocean_bump_factor = p_bump_factor;
 }

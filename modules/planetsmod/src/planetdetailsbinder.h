@@ -92,7 +92,7 @@ protected:
 
     dsreal                                                      m_atmoThickness;
 
-	dsreal														m_ocean_bump_texture_resol;
+	dsreal														m_wave_texture_resol;
 	dsreal														m_ocean_bump_factor;
 
 public:
@@ -113,8 +113,8 @@ public:
     void SetFogAltLimit( dsreal p_fogaltlimit );
     void SetFogDensity( dsreal p_fog_density );
 
-	void SetWaterBumpTextureResol(int p_resol);
-	void SetWaterBumpFactor(int p_resol);
+	void SetWaveTextureResol(int p_resol);
+	void SetWaterBumpFactor(dsreal p_bump_factor);
 
     inline void SetMirrorMode(bool p_state)
     {
