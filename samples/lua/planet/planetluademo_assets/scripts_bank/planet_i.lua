@@ -756,7 +756,7 @@ local planet_specific_config_descr =
 	atmo_thickness                               = 160.0,
     flatclouds_altitude                          = 24.0,
     wave_pass_resol                              = 512,
-    ocean_bump_factor                            = 0.9
+    ocean_bump_factor                            = 2.1
 }
 
 planet_passes_bindings = 
