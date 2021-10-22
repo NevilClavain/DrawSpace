@@ -58,7 +58,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     if (debug_mode == 0.0)
     {
         scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
-        if (scene_color.x == 1.0 && scene_color.y == 0.0 && scene_color.z == 1.0)
+        if (scene_color.x > 0.90 && scene_color.y < 0.1 && scene_color.z > 0.90)
         {
             float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
 
