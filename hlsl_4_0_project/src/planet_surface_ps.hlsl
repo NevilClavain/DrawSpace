@@ -133,7 +133,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 temp_humidity = HT_Texture.Sample(HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy);
 
     float3 water_color = { 0.17, 0.36, 0.48 };
-    float3 water_mask_color = { 1.0, 0.0, 1.0 };
 
     bool water_mask_mode = false;
 
