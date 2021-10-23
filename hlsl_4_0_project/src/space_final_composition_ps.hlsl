@@ -40,6 +40,10 @@ SamplerState SamplerDiffuseMirror   : register(s1);
 Texture2D txBump                    : register(t2);
 SamplerState SamplerBump            : register(s2);
 
+// debug mode : 3
+Texture2D txOceanMask               : register(t3);
+SamplerState SamplerOceanMask       : register(s3);
+
 
 
 struct PS_INTPUT 
@@ -57,8 +61,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     
     if (debug_mode == 0.0)
     {
-        scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
-        if (scene_color.x > 0.90 && scene_color.y < 0.1 && scene_color.z > 0.90)
+        float3 mask;
+        mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).rgb;
+        if (mask.r > 0.90 && mask.g < 0.1 && mask.b > 0.90)
         {
             float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
 
@@ -67,7 +72,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             scene_color.rgb = mirror;
         }
-
+        else
+        {
+            scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+        }
     }
     else if (debug_mode == 1.0)
     {
@@ -77,6 +85,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     {
         scene_color.rgb = txDiffuseMirror.Sample(SamplerDiffuseMirror, input.TexCoord0).rgb;
     }
+    else if (debug_mode == 3.0)
+    {
+        scene_color.rgb = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).rgb;
+    }
+
     else if (debug_mode == 4.0)
     {
         scene_color.rgb = txBump.Sample(SamplerBump, input.TexCoord0).rgb;
