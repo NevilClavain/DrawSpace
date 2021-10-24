@@ -179,7 +179,7 @@ waves:init_fromtimeaspectof(root_entity,0.0)
 rg:create_child('final_pass', 'oceanmask_pass', 3)
 rg:set_pass_targetclearstate( 'oceanmask_pass', TRUE )
 rg:set_pass_depthclearstate( 'oceanmask_pass', TRUE )
-
+rg:set_pass_targetclearcolor('oceanmask_pass', 0, 0, 0, 0)
 
 
 

@@ -39,7 +39,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float v_alt = input.TexCoord0.x;
     //float4 water_color = { 0.17, 0.36, 0.48, 1.0 };
-    float4 water_color = { 1.0, 0.0, 1.0, 1.0 };
+    float4 water_color = { 1.0, 0.0, 0.0, 0.0 };
     if (v_alt > 0.0)
     {
         clip(-1.0);
