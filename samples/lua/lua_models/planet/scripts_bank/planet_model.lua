@@ -414,7 +414,7 @@ planetmod.layers =
 				
 				rs_in = 
 				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
 					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
 						
 				},
