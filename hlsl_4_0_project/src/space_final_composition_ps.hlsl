@@ -62,15 +62,27 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     if (debug_mode == 0.0)
     {
         float3 mask;
-        mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).rgb;
-        if (mask.r > 0.90 && mask.g < 0.1 && mask.b > 0.90)
+        mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).xyz;
+        if (mask.x > 0.99)
         {
+            float4 basic_water_color = { 0.17, 0.36, 0.48, 1.0 };
+
             float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
 
             float2 mt = input.TexCoord0.xy + bump_factor;
+            float2 mt2 = input.TexCoord0.xy + 0.25 * bump_factor;
+
+            float4 refrac = txDiffuse.Sample(SamplerDiffuse, mt2);
             float3 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt).rgb;
 
-            scene_color.rgb = mirror;
+            float reflex_refrac_factor = mask.y;
+
+            float3 detailed_water_color = lerp(mirror, refrac, lerp(0.0, 0.99, reflex_refrac_factor));
+
+            // transition between ocean "basic" color" and ocean details (reflexion + refraction)
+
+            scene_color.rgb = lerp(detailed_water_color, basic_water_color, mask.z);
+
         }
         else
         {

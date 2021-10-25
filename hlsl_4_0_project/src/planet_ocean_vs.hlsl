@@ -98,5 +98,20 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     Output.Position = mul(v_position3, mat[matWorldViewProjection]);
 
+    float4 pos2;
+    float4x4 matWorldRot = mat[matWorld];
+
+    matWorldRot[3][0] = 0.0;
+    matWorldRot[3][1] = 0.0;
+    matWorldRot[3][2] = 0.0;
+
+    pos2 = mul(v_position3, matWorldRot);
+
+    float3 delta_cam;
+    delta_cam.xyz = viewer_pos.xyz - pos2.xyz;
+
+    float4 surface_normale = normalize(viewer_pos);
+
+    Output.TexCoord0.y = dot(normalize(delta_cam), surface_normale.xyz);
     return (Output);
 }

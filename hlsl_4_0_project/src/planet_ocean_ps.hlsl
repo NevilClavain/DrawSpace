@@ -35,11 +35,21 @@ struct PS_INTPUT
     float4 TexCoord0                : TEXCOORD0;
 };
 
+#define v_flags                     0
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float v_alt = input.TexCoord0.x;
-    //float4 water_color = { 0.17, 0.36, 0.48, 1.0 };
-    float4 water_color = { 1.0, 0.0, 0.0, 0.0 };
+
+    float4 flags = vec[v_flags];
+
+    float water_color_transition_high = 1.0005; // relative alt
+    float water_color_transition_low = 1.0001; // relative alt
+
+    float relative_alt = flags.x;
+    float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
+
+    float4 water_color = { 1.0, input.TexCoord0.y, alt, 0.0 };
     if (v_alt > 0.0)
     {
         clip(-1.0);
