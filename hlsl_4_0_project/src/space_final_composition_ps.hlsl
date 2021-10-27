@@ -63,7 +63,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     {
         float3 mask;
         mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).xyz;
-        if (mask.x > 0.99)
+        if (mask.y > 0.0)
         {
             float4 basic_water_color = { 0.17, 0.36, 0.48, 1.0 };
 

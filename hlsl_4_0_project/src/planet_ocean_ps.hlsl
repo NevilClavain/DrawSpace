@@ -49,7 +49,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float relative_alt = flags.x;
     float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
 
-    float4 water_color = { 1.0, input.TexCoord0.y, alt, 0.0 };
+    float surface_dot_delta = input.TexCoord0.y;
+
+    float4 water_color = { 0.0, surface_dot_delta, alt, 0.0 };
     if (v_alt > 0.0)
     {
         clip(-1.0);
