@@ -61,10 +61,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     
     if (debug_mode == 0.0)
     {
-        float3 mask;
-        mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).xyz;
+        float4 mask;
+        mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).xyzw;
         if (mask.y > 0.0)
         {
+            ////////////// PLANET WATER RENDERING
             float4 basic_water_color = { 0.17, 0.36, 0.48, 1.0 };
 
             float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
@@ -83,8 +84,14 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             // transition between ocean "basic" color" and ocean details (reflexion + refraction)
 
-            scene_color.rgb = light_luminance * lerp(detailed_water_color, basic_water_color, mask.z);
+            float3 pixel_color = lerp(detailed_water_color, basic_water_color, mask.z);
 
+            float fog_factor = mask.w;
+            float3 fog_color = { 0.45, 0.63, 0.78 };
+            float3 fogged_color = saturate(lerp(fog_color, pixel_color, fog_factor));
+
+            scene_color.rgb = light_luminance * fogged_color;  
+            ////////////// PLANET WATER RENDERING
         }
         else
         {

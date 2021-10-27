@@ -36,6 +36,8 @@ struct PS_INTPUT
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
     float4 TexCoord3                : TEXCOORD3;
+
+    float Fog : FOG;
 };
 
 #include "spherelod_commons.hlsl"
@@ -107,9 +109,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     texel_pos2.xyz = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
     texel_pos2.w = 1.0;
 
-
-
-
     int count_lights = 0;
 
     if (flags_lights.x > 0.0)
@@ -137,7 +136,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float avg_lit_color = 0.299 * lit_color.r + 0.587 * lit_color.r + 0.114 * lit_color.b;
 
-    float4 water_color = { avg_lit_color, surface_dot_delta, alt, 0.0 };
-
+    float4 water_color = { avg_lit_color, surface_dot_delta, alt, input.Fog };
     return water_color;
 }
