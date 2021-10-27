@@ -52,7 +52,10 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 Position                 : SV_POSITION;
-    float4 TexCoord0                : TEXCOORD0;
+    float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
+    float4 UnitPatch_TexCoord       : TEXCOORD1;
+    float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    float4 TexCoord3                : TEXCOORD3;
 };
 
 
@@ -65,7 +68,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     float4 flag0 = vec[v_flag0];
     float4 patch_translation = vec[v_patch_translation];    
-
+    float4 base_uv = vec[v_base_uv];
+    float4 base_uv_global = vec[v_base_uv_global];
     float4 viewer_pos = vec[v_viewer_pos];
     float4 landscape_control = vec[v_landscape_control];
     float4 seeds = vec[v_seeds];
@@ -93,8 +97,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     
     v_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
-    Output.TexCoord0 = 0.0;
-    Output.TexCoord0.x = v_alt;
+    Output.TexCoord3 = 0.0;
+    Output.TexCoord3.x = v_alt;
 
     Output.Position = mul(v_position3, mat[matWorldViewProjection]);
 
@@ -112,6 +116,26 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     float4 surface_normale = normalize(viewer_pos);
 
-    Output.TexCoord0.y = dot(normalize(delta_cam), surface_normale.xyz);
+    Output.TexCoord3.y = dot(normalize(delta_cam), surface_normale.xyz);
+
+
+
+    Output.LODGlobalPatch_TexCoord = 0.0;
+    Output.LODGlobalPatch_TexCoord.x = lerp(base_uv.x, base_uv.z, Input.TexCoord0.x);
+    Output.LODGlobalPatch_TexCoord.y = lerp(base_uv.y, base_uv.w, Input.TexCoord0.y);
+
+    // conserver aussi les coords textures originales du patch
+    Output.UnitPatch_TexCoord = 0.0;
+    Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
+    Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
+
+    Output.GlobalPatch_TexCoord = 0.0;
+    Output.GlobalPatch_TexCoord.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
+    Output.GlobalPatch_TexCoord.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
+    ///////////////////////////////////////////////////
+
+
+
+
     return (Output);
 }

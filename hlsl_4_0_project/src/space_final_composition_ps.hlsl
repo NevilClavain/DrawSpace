@@ -77,11 +77,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             float reflex_refrac_factor = mask.y;
 
+            float light_luminance = mask.x;
+
             float3 detailed_water_color = lerp(mirror, refrac, lerp(0.0, 0.99, reflex_refrac_factor));
 
             // transition between ocean "basic" color" and ocean details (reflexion + refraction)
 
-            scene_color.rgb = lerp(detailed_water_color, basic_water_color, mask.z);
+            scene_color.rgb = light_luminance * lerp(detailed_water_color, basic_water_color, mask.z);
 
         }
         else

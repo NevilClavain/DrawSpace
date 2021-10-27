@@ -32,16 +32,62 @@ cbuffer legacyargs : register(b0)
 struct PS_INTPUT
 {
     float4 Position                 : SV_POSITION;
-    float4 TexCoord0                : TEXCOORD0;
+    float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
+    float4 UnitPatch_TexCoord       : TEXCOORD1;
+    float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    float4 TexCoord3                : TEXCOORD3;
 };
+
+#include "spherelod_commons.hlsl"
 
 #define v_flags                     0
 
+#define v_flags_lights              7
+
+
+#define v_ambient_color             8
+#define v_light0_dir_local          9
+#define v_light0_dir                10
+#define v_light0_color              11
+
+#define v_light1_dir_local          12
+#define v_light1_dir                13
+#define v_light1_color              14
+
+#define v_light2_dir_local          15
+#define v_light2_dir                16
+#define v_light2_color              17
+
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-    float v_alt = input.TexCoord0.x;
+    float v_alt = input.TexCoord3.x;
+
+    if (v_alt > 0.0)
+    {
+        clip(-1.0);
+    }
 
     float4 flags = vec[v_flags];
+    float4 flags_lights = vec[v_flags_lights];
+
+    float4 ambient_color = vec[v_ambient_color];
+
+    float4 lit_color = 0.0;
+
+    float4 light0_dir_local = vec[v_light0_dir_local];
+    float4 light0_dir = vec[v_light0_dir];
+    float4 light0_color = vec[v_light0_color];
+
+    float4 light1_dir_local = vec[v_light1_dir_local];
+    float4 light1_dir = vec[v_light1_dir];
+    float4 light1_color = vec[v_light1_color];
+
+    float4 light2_dir_local = vec[v_light2_dir_local];
+    float4 light2_dir = vec[v_light2_dir];
+    float4 light2_color = vec[v_light2_color];
+
+
 
     float water_color_transition_high = 1.0005; // relative alt
     float water_color_transition_low = 1.0001; // relative alt
@@ -49,12 +95,49 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float relative_alt = flags.x;
     float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
 
-    float surface_dot_delta = input.TexCoord0.y;
+    float surface_dot_delta = input.TexCoord3.y;
 
-    float4 water_color = { 0.0, surface_dot_delta, alt, 0.0 };
-    if (v_alt > 0.0)
+
+
+
+    float3 avg = 0.0;
+    float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord.xy);
+
+    float4 texel_pos2;
+    texel_pos2.xyz = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
+    texel_pos2.w = 1.0;
+
+
+
+
+    int count_lights = 0;
+
+    if (flags_lights.x > 0.0)
     {
-        clip(-1.0);
-    }    
+        lit_color += ambient_color;
+    }
+
+    if (flags_lights.y > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2.xyz, light0_dir_local.xyz), 0.0, 1.0) * light0_color;
+        count_lights++;
+    }
+
+    if (flags_lights.z > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2.xyz, light1_dir_local.xyz), 0.0, 1.0) * light1_color;
+        count_lights++;
+    }
+
+    if (flags_lights.w > 0.0)
+    {
+        lit_color += clamp(dot(texel_pos2.xyz, light2_dir_local.xyz), 0.0, 1.0) * light2_color;
+        count_lights++;
+    }
+
+    float avg_lit_color = 0.299 * lit_color.r + 0.587 * lit_color.r + 0.114 * lit_color.b;
+
+    float4 water_color = { avg_lit_color, surface_dot_delta, alt, 0.0 };
+
     return water_color;
 }
