@@ -738,6 +738,7 @@ local planet_specific_config_descr =
     main_pass                                    = 'texture_pass',
     reflection_pass                              = 'texturemirror_pass',
     bump_pass                                    = 'bump_pass',
+    oceanmask_pass                               = 'oceanmask_pass',
 
 	planet_ray							         = 6500.0,
     gravity_acc                                  = 9.81,

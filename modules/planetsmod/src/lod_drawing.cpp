@@ -1047,3 +1047,8 @@ void Drawing::SetCurrentPass(const dsstring& p_pass)
         e->SetCurrentPass(p_pass);
     }
 }
+
+std::vector<std::pair<dsstring, FaceDrawingNode*>> Drawing::GetFaceDrawingNode(void) const
+{
+    return m_passesnodes;
+}

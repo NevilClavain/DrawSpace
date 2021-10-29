@@ -604,6 +604,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     m_main_pass = m_owner->GetComponent<dsstring>("main_pass")->getPurpose();
     m_reflection_pass = m_owner->GetComponent<dsstring>("reflection_pass")->getPurpose();
     m_bump_pass = m_owner->GetComponent<dsstring>("bump_pass")->getPurpose();
+    m_oceanmask_pass = m_owner->GetComponent<dsstring>("oceanmask_pass")->getPurpose();
 
     dsstring climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
     dsstring climate_pshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second };
@@ -1656,7 +1657,6 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
 
 void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
 {
-
     if (m_current_camera && m_current_camera->relative_alt_valid)
     {
         bool relative{ m_current_camera->layers[0]->GetHotState() };
@@ -1672,6 +1672,66 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
         else
         {
             m_drawable.SetLayerNodeDrawingState(OceansLayer, false);
+        }
+
+        if (relative && relative_altitude < 1.0)
+        {
+
+            ////////////// set ccw culling
+            std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_mainpass;
+            {
+                auto rs_pair_culling{ std::make_pair(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "ccw"), DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::SETCULLING, "cw")) };
+
+                rs_list_mainpass.push_back(rs_pair_culling);
+            }
+
+            std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
+            {
+                { m_oceanmask_pass, rs_list_mainpass },
+            };
+            m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
+
+            ////////////////////// and set DrawPatchMode for the oceanmask rendering node
+            auto nodes{ m_drawable.GetFaceDrawingNode() };
+            for (auto& node : nodes)
+            {
+                if (node.first == m_oceanmask_pass)
+                {
+                    if (OceansLayer == node.second->GetLayerIndex())
+                    {
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 1);
+                    }
+                }
+            }
+        }
+        else
+        {
+            std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>> rs_list_mainpass;
+            {
+                // sending void list here, cw is default behaviour
+            }
+
+            std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
+            {
+                { m_oceanmask_pass, rs_list_mainpass },
+            };
+
+            m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
+
+
+            ////////////////////// set DrawPatchMode for the oceanmask rendering node
+            auto nodes{ m_drawable.GetFaceDrawingNode() };
+            for (auto& node : nodes)
+            {
+                if (node.first == m_oceanmask_pass)
+                {
+                    if (OceansLayer == node.second->GetLayerIndex())
+                    {
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_ALL);
+                    }
+                }
+            }
+
         }
     }
     else

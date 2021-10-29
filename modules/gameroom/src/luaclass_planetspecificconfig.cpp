@@ -68,6 +68,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_bumppass", &LuaClass_PlanetSpecificConfig::LUA_setbumppass },
     { "set_reflectionpass", &LuaClass_PlanetSpecificConfig::LUA_setreflectionpass },
     { "set_mainpass", &LuaClass_PlanetSpecificConfig::LUA_setmainpass },
+    { "set_oceanmaskpass", &LuaClass_PlanetSpecificConfig::LUA_setoceanmaskpass },
     { "set_wavepassresol", &LuaClass_PlanetSpecificConfig::LUA_setwavepassresol },
     { "set_oceanbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setoceanbumpfactor },
 
@@ -143,6 +144,7 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsstring>("bump_pass", m_planets_details.bump_pass);
     entity_rendering_aspect->AddComponent<dsstring>("reflection_pass", m_planets_details.reflection_pass);
     entity_rendering_aspect->AddComponent<dsstring>("main_pass", m_planets_details.main_pass);
+    entity_rendering_aspect->AddComponent<dsstring>("oceanmask_pass", m_planets_details.oceanmask_pass);
 
     std::pair<dsstring, dsstring> climate_shaders(m_planets_details.climate_vshader, m_planets_details.climate_pshader);
     entity_rendering_aspect->AddComponent<std::pair<dsstring,dsstring>>("climate_shaders", climate_shaders);
@@ -226,6 +228,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsstring>("bump_pass");
     m_rendering_aspect->RemoveComponent<dsstring>("reflection_pass");
     m_rendering_aspect->RemoveComponent<dsstring>("main_pass");
+    m_rendering_aspect->RemoveComponent<dsstring>("oceanmask_pass");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("climate_shaders");
     m_rendering_aspect->RemoveComponent<std::pair<bool, bool>>("climate_shaders_compiled");
     m_rendering_aspect->RemoveComponent<std::pair<dsstring, dsstring>>("collisions_shaders");
@@ -670,6 +673,18 @@ int LuaClass_PlanetSpecificConfig::LUA_setmainpass(lua_State* p_L)
     }
     dsstring passid = luaL_checkstring(p_L, 1);
     m_planets_details.main_pass = passid;
+    return 0;
+}
+
+int LuaClass_PlanetSpecificConfig::LUA_setoceanmaskpass(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::set_mainpass : argument(s) missing");
+    }
+    dsstring passid = luaL_checkstring(p_L, 1);
+    m_planets_details.oceanmask_pass = passid;
     return 0;
 }
 

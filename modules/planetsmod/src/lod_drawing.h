@@ -133,12 +133,6 @@ public:
     void SetCurrentPass(const dsstring& p_pass);
 
     void UpdateRelativeHotPoint( const DrawSpace::Utils::Vector p_hotpoint );
-
-    /*
-    void EnableZBuffer(bool p_zbuffer);
-    void ForceCulling(const dsstring& p_culling);
-    */
-    
 };
 
 class Drawing
@@ -225,6 +219,9 @@ public:
     void ResetCollisionMesheValidity(void);
 
     void SetRenderStatePerPassTableForLayer(int p_layer_index, const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table);
+
+
+    std::vector<std::pair<dsstring, FaceDrawingNode*>> GetFaceDrawingNode(void) const;
 };
 }
 

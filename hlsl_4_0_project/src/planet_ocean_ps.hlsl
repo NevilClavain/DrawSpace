@@ -96,8 +96,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float relative_alt = flags.x;
     float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
+    
 
-    float surface_dot_delta = input.TexCoord3.y;
+    float surface_dot_delta = abs(input.TexCoord3.y);
 
 
 

@@ -77,7 +77,7 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 	   config_description['fog_alt_limit'] ~= nil and
 	   config_description['fog_density'] ~= nil then
 
-	   planet_specific_configuration:set_fogandatmoparams(config_description['atmo_kr'],
+		planet_specific_configuration:set_fogandatmoparams(config_description['atmo_kr'],
 												config_description['fog_alt_limit'],
 												config_description['fog_density'])
 
@@ -140,6 +140,10 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 	if config_description['main_pass'] ~= nil then
 		planet_specific_configuration:set_mainpass(config_description['main_pass'])
+	end
+
+	if config_description['oceanmask_pass'] ~= nil then
+		planet_specific_configuration:set_oceanmaskpass(config_description['oceanmask_pass'])
 	end
 
 	if config_description['wave_pass_resol'] ~= nil then

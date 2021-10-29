@@ -96,6 +96,7 @@ private:
         dsstring    bump_pass;
         dsstring    reflection_pass;
         dsstring    main_pass;
+        dsstring    oceanmask_pass;
 
         int         wave_pass_resol;
         dsreal      ocean_bump_factor;
@@ -143,6 +144,7 @@ public:
     int LUA_setmainpass(lua_State* p_L);
     int LUA_setwavepassresol(lua_State* p_L);
     int LUA_setoceanbumpfactor(lua_State* p_L);
+    int LUA_setoceanmaskpass(lua_State* p_L);
 
 
     int LUA_enablecollisiondisplay(lua_State* p_L);
