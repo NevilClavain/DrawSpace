@@ -16,6 +16,8 @@ local tab = FALSE
 
 local time_factor = 0
 
+local relative_alt = 0.0;
+
 resources_event = "..."
 
 
@@ -123,15 +125,17 @@ fxparams:set_renderstatesset(finalpass_rss)
 rendercontext = RenderContext('final_pass')
 rendercontext:add_fxparams(fxparams)
 rendercontext:add_texturesset(textures)
-rendercontext:add_shaderparam("water_color", 1, 0)
-rendercontext:add_shaderparam("surface_normale", 1, 1)
+--rendercontext:add_shaderparam("water_color", 1, 0)
+--rendercontext:add_shaderparam("surface_normale", 1, 1)
+
+rendercontext:add_shaderparam("relative_alt", 1, 0)
 rendercontext:add_shaderparam("debug_mode", 1, 2)
 
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
 rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
-rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
-rg:set_viewportquadshaderrealvector('final_pass', 'surface_normale', environment.reflector_normale.x, environment.reflector_normale.y, environment.reflector_normale.z, 1.0)
+--rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
+--rg:set_viewportquadshaderrealvector('final_pass', 'surface_normale', environment.reflector_normale.x, environment.reflector_normale.y, environment.reflector_normale.z, 1.0)
 rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', 0.0, 0.0, 0.0, 0.0)
 
 
@@ -560,7 +564,10 @@ function()
                     ' zloc='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["camera_local_pos_z"],2)
                     ]]
 
-    relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],6)..' '..display_altitude..altitude_unit                    
+    relative_alt = planet_infos["viewsInfos"][current_cam_id]["relative_altitude"]
+    rg:set_viewportquadshaderrealvector('final_pass', 'relative_alt', relative_alt, 0.0, 0.0, 0.0)
+
+    relative_state = "RELATIVE"..' '..g:format_real(relative_alt,6)..' '..display_altitude..altitude_unit                    
                     
 
 

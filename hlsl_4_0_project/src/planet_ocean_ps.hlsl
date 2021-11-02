@@ -89,13 +89,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 light2_dir = vec[v_light2_dir];
     float4 light2_color = vec[v_light2_color];
 
-
-
-    float water_color_transition_high = 1.0005; // relative alt
-    float water_color_transition_low = 1.0001; // relative alt
-
-    float relative_alt = flags.x;
-    float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
     
 
     float surface_dot_delta = abs(input.TexCoord3.y);
@@ -137,6 +130,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float avg_lit_color = 0.299 * lit_color.r + 0.587 * lit_color.r + 0.114 * lit_color.b;
 
-    float4 water_color = { avg_lit_color, surface_dot_delta, alt, input.Fog };
+    float4 water_color = { avg_lit_color, surface_dot_delta, 0.0, input.Fog };
     return water_color;
 }
