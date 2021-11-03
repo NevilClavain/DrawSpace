@@ -153,6 +153,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     matWorldRot[3][1] = 0.0;
     matWorldRot[3][2] = 0.0;
 
+    float relative_alt = flag0.w;
 
     float4 v_position;
     
@@ -242,9 +243,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
         float4 v_position4 = mul(v_position3, mat[matWorldView]);
         vertex_distance = sqrt(v_position4.x * v_position4.x + v_position4.y * v_position4.y + v_position4.z * v_position4.z);
-
-        float relative_alt = flag0.w;
-
+       
         float viewer_alt = relative_alt * flag0.z;
         float horizon_limit = sqrt(viewer_alt * viewer_alt - flag0.z * flag0.z);
 
@@ -424,10 +423,19 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     // fog module en fct de l'altitude
 
-    float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
+    
+
+    if (relative_alt < 1.0)
+    {
+        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.001));
+    }
+    else
+    {
+        float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
+        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
+    }
 
     
-    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
 
 
     return (Output);
