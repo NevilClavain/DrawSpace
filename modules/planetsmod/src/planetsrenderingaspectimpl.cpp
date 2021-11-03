@@ -1699,7 +1699,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 {
                     if (OceansLayer == node.second->GetLayerIndex())
                     {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 5);
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 1);
                     }
                 }
             }

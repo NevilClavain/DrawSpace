@@ -159,8 +159,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
     }
 
-    float relative_alt = flags.w;
-
     float3 avg = 0.0;
 
     if (!sea)
@@ -280,17 +278,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 
     float4 fog_color;
-
-    if (relative_alt > 1.0)
-    {
-        fog_color = atmo_scattering_flag_6;
-    }
-    else
-    {
-        //underwater : fog color is water color
-        fog_color.rgb = water_color;
-        fog_color.a = 1.0;
-    }
+    fog_color = atmo_scattering_flag_6;
 
     ///////////////////// inclure le "fog de surface" dans la couleur pixel
 
@@ -383,25 +371,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         // pour eviter la saturation des couleurs dues a l'additivite
         final_color.xyz = final_color.xyz / count_lights;
     }
-
-	/* ECH desactivation temporaire
-    if (water_mask_mode)
-    {
-        if (sea)
-        {
-            //float4 real_color = c0_final + (lit_color * pixel_color * c1_final);
-            final_color.w = 0.0;
-        }
-        else
-        {
-            final_color.w = 1.0;
-        }
-    }
-    else
-    {
-        final_color.w = 1.0;
-    }
-	*/
 
 
     if (flags2.y > 0.0)
