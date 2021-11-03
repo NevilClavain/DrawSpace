@@ -141,6 +141,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     bool sea = false;
 
+    float relative_alt = flags.x;
+
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
 
     if (flags.x <= flags6.w)
@@ -278,7 +280,17 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 
     float4 fog_color;
-    fog_color = atmo_scattering_flag_6;
+
+    if (relative_alt > 1.0)
+    {
+        fog_color = atmo_scattering_flag_6;
+    }
+    else
+    {
+        fog_color.rgb = water_color;
+        fog_color.a = 1.0;
+    }
+    
 
     ///////////////////// inclure le "fog de surface" dans la couleur pixel
 
