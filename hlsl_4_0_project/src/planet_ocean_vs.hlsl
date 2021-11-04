@@ -89,6 +89,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float v_alt = 0.0;
     float4 PositionWV;
 
+    float relative_alt = flag0.w;
+
 	// sidelenght scaling
 
     v_position.xyz = Input.Position * flag0.y / 2.0;
@@ -149,7 +151,15 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
     float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
-    Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
+
+    if (relative_alt < 1.0)
+    {
+        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.001));
+    }
+    else
+    {
+        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
+    }
 
     return (Output);
 }

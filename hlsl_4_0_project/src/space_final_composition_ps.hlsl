@@ -105,7 +105,22 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             float3 pixel_color = lerp(detailed_water_color, basic_water_color, alt);
 
             float fog_factor = mask.w;
-            float3 fog_color = { 0.45, 0.63, 0.78 };
+            float3 fog_color;
+
+            //float3 fog_color = { 0.45, 0.63, 0.78 };
+            if (relative_alt > 1.0)
+            {
+                // over the water : fog color is the same as the one used for planet ground
+                fog_color.r = 0.45;
+                fog_color.g = 0.63;
+                fog_color.b = 0.78;
+            }
+            else
+            {
+                // underwater : fog color is water color
+                fog_color.rgb = basic_water_color.rgb;
+            }
+
             float3 fogged_color = saturate(lerp(fog_color, pixel_color, fog_factor));
 
             scene_color.rgb = light_luminance * fogged_color;
