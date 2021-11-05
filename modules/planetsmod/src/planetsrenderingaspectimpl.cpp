@@ -1688,6 +1688,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
             std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
             {
                 { m_oceanmask_pass, rs_list_mainpass },
+                { m_bump_pass, rs_list_mainpass }
             };
             m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
 
@@ -1714,6 +1715,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
             std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      renderstate_per_passes =
             {
                 { m_oceanmask_pass, rs_list_mainpass },
+                { m_bump_pass, rs_list_mainpass }
             };
 
             m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
