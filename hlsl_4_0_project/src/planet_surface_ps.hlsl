@@ -145,12 +145,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
 
-    if (flags.x <= flags6.w)
+    if (relative_alt <= flags6.w)
     {
         water_mask_mode = true;
     }
 
-    if (flags.x > lim_inf)
+    if (relative_alt > lim_inf)
     {
         // si altitude relative > 1.5
 

@@ -106,21 +106,32 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float bump_bias;
 
+    float relative_alt = flags.x;
+
     float bump_bias_transition_high = 1.00025; // relative alt
     float bump_bias_transition_low = 1.00005; // relative alt
     
-    if (flags.x > bump_bias_transition_high)
+    if (relative_alt > 1.0)
     {
-        bump_bias = 100.0;
-    }
-    else if (flags.x <= bump_bias_transition_high && flags.x > bump_bias_transition_low)
-    {
-        bump_bias = lerp(bump_flag.y, 100.0, (flags.x - bump_bias_transition_low) / (bump_bias_transition_high - bump_bias_transition_low));
+        if (relative_alt > bump_bias_transition_high)
+        {
+            bump_bias = 100.0;
+        }
+        else if (relative_alt <= bump_bias_transition_high && relative_alt > bump_bias_transition_low)
+        {
+            bump_bias = lerp(bump_flag.y, 100.0, (relative_alt - bump_bias_transition_low) / (bump_bias_transition_high - bump_bias_transition_low));
+        }
+        else
+        {
+            bump_bias = bump_flag.y;
+        }
     }
     else
     {
-        bump_bias = bump_flag.y;
+        //if underwater
+        bump_bias = 0.1;
     }
+
        
     float4 res_color = 0;
     float3 np;
