@@ -140,7 +140,7 @@ rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', 0.0, 0.0, 0.0, 0
 
 
 
-rg:create_child('final_pass', 'texture_pass', 0)
+rg:create_child('final_pass', 'texture_pass', 0, RENDERPURPOSE_FLOATVECTOR)
 rg:set_pass_targetclearstate( 'texture_pass', FALSE )
 rg:set_pass_depthclearstate( 'texture_pass', TRUE )
 
@@ -538,8 +538,10 @@ function()
 
   local relative_state
   
-  local is_relative = planet_infos['viewsInfos'][current_cam_id]['relative']
+  local relative_alt = planet_infos["viewsInfos"][current_cam_id]["relative_altitude"]
+  rg:set_viewportquadshaderrealvector('final_pass', 'relative_alt', relative_alt, 0.0, 0.0, 0.0)
 
+  local is_relative = planet_infos['viewsInfos'][current_cam_id]['relative']
   if is_relative ~= 0 then
     
     local altitude = planet_infos["viewsInfos"][current_cam_id]["altitude"]
@@ -564,8 +566,8 @@ function()
                     ' zloc='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["camera_local_pos_z"],2)
                     ]]
 
-    relative_alt = planet_infos["viewsInfos"][current_cam_id]["relative_altitude"]
-    rg:set_viewportquadshaderrealvector('final_pass', 'relative_alt', relative_alt, 0.0, 0.0, 0.0)
+    
+    
 
     relative_state = "RELATIVE"..' '..g:format_real(relative_alt,6)..' '..display_altitude..altitude_unit                    
                     

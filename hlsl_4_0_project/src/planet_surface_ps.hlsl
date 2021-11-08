@@ -392,6 +392,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         final_color.y = 0.0;
     }
 
-    final_color.w = 1.0;
+    final_color.w = 2.0;
     return final_color;
 }

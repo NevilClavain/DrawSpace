@@ -60,6 +60,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     
     float4 scene_color = 0.0;
+    float4 basic_water_color = { 0.17, 0.36, 0.48, 1.0 };
     
     if (debug_mode == 0.0)
     {
@@ -69,9 +70,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         {
 
             ////////////// PLANET WATER RENDERING
-            float4 basic_water_color = { 0.17, 0.36, 0.48, 1.0 };
 
-            //float alt = mask.z;
             float water_color_transition_high = 1.0005; // relative alt
             float water_color_transition_low = 1.0001; // relative alt                
             float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
@@ -129,7 +128,27 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
         else
         {
-            scene_color.rgb = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgb;
+            float4 main_color = 0.0;
+            main_color.rgba = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgba;
+
+            if (relative_alt > 1.0)
+            {
+                scene_color.rgb = main_color.rgb;
+            }
+            else
+            {
+                // if underwater
+                if (main_color.a < 2.0)
+                {
+                    //pixel from other than planet ground (clouds, atmo, spacebox, etc...)
+                    scene_color.rgb = basic_water_color.rgb;
+                }
+                else
+                {
+                    //pixel from planet ground (identified by alpha == 2.0)
+                    scene_color.rgb = main_color.rgb;
+                }
+            }
         }
     }
     else if (debug_mode == 1.0)
