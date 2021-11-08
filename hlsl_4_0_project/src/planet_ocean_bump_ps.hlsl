@@ -129,7 +129,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     else
     {
         //if underwater
-        bump_bias = 0.1;
+        bump_bias = 0.333;
     }
 
        
