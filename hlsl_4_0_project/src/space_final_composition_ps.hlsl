@@ -57,6 +57,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float debug_mode = vec[2].x;
     float relative_alt = vec[0].x;
+    float underwater_lightfactor = vec[1].x;
 
     
     float4 scene_color = 0.0;
@@ -141,7 +142,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
                 if (main_color.a < 2.0)
                 {
                     //pixel from other than planet ground (clouds, atmo, spacebox, etc...)
-                    scene_color.rgb = basic_water_color.rgb;
+                    scene_color.rgb = underwater_lightfactor * basic_water_color.rgb;
                 }
                 else
                 {

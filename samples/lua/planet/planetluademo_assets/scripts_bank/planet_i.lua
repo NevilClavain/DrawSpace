@@ -129,7 +129,9 @@ rendercontext:add_texturesset(textures)
 --rendercontext:add_shaderparam("surface_normale", 1, 1)
 
 rendercontext:add_shaderparam("relative_alt", 1, 0)
+rendercontext:add_shaderparam("underwater_lightfactor", 1, 1)
 rendercontext:add_shaderparam("debug_mode", 1, 2)
+
 
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
@@ -540,6 +542,13 @@ function()
   
   local relative_alt = planet_infos["viewsInfos"][current_cam_id]["relative_altitude"]
   rg:set_viewportquadshaderrealvector('final_pass', 'relative_alt', relative_alt, 0.0, 0.0, 0.0)
+
+
+  -- ###################################
+
+  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', 0.25, 0.0, 0.0, 0.0)
+  
+  -- ###################################
 
   local is_relative = planet_infos['viewsInfos'][current_cam_id]['relative']
   if is_relative ~= 0 then
