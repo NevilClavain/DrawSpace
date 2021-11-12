@@ -577,7 +577,7 @@ commons.procedural.planet.read_infos=function(planet_specific_configuration)
 	for i = 0, nb_views-1, 1 do
 		
 		local views_infos_entry = {}
-		local offset = (11 * i) + 2
+		local offset = (14 * i) + 2
 		local camera_name = views_infos[offset]
 		local current_lod = views_infos[offset + 1]
 		local relative = views_infos[offset + 2]
@@ -592,6 +592,10 @@ commons.procedural.planet.read_infos=function(planet_specific_configuration)
 		local camera_local_pos_y = views_infos[offset + 9]
 		local camera_local_pos_z = views_infos[offset + 10]
 
+		local global_camera_local_pos_x = views_infos[offset + 11]
+		local global_camera_local_pos_y = views_infos[offset + 12]
+		local global_camera_local_pos_z = views_infos[offset + 13]
+
 		views_infos_entry['currentLOD'] = current_lod
 		views_infos_entry['relative'] = relative
 		views_infos_entry['relative_altitude'] = rel_alt
@@ -604,6 +608,10 @@ commons.procedural.planet.read_infos=function(planet_specific_configuration)
 		views_infos_entry['camera_local_pos_x'] = camera_local_pos_x
 		views_infos_entry['camera_local_pos_y'] = camera_local_pos_y
 		views_infos_entry['camera_local_pos_z'] = camera_local_pos_z
+
+		views_infos_entry['global_camera_local_pos_x'] = global_camera_local_pos_x
+		views_infos_entry['global_camera_local_pos_y'] = global_camera_local_pos_y
+		views_infos_entry['global_camera_local_pos_z'] = global_camera_local_pos_z
 
 		formatted_views_infos[camera_name] = views_infos_entry
 

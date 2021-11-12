@@ -73,6 +73,7 @@ public:
         dsstring                            camera_name;
 
         DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
+        DrawSpace::Utils::Vector            global_camera_pos_from_planet;
 
         bool                                relative_alt_valid;
         dsreal                              relative_alt;
@@ -100,7 +101,7 @@ protected:
     using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
     using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
 
-    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector>>;
+    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector>>;
 
     static const int DetailsLayer       = 0;
     static const int AtmosphereLayer    = 1;

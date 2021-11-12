@@ -381,9 +381,18 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         dsreal current_patch_min_height = e.second.layers[DetailsLayer]->GetCurrentPatchMinHeight();
         dsreal current_patch_current_height = e.second.layers[DetailsLayer]->GetCurrentPatchCurrentHeight();
 
-        Vector camera_pos = e.second.locale_camera_pos_from_planet;
+        Vector locale_camera_pos{ e.second.locale_camera_pos_from_planet };
+        Vector global_camera_pos{ e.second.global_camera_pos_from_planet };
 
-        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, relative, rel_alt, altitude, current_patch_max_height, current_patch_min_height, current_patch_current_height, camera_pos);
+        registeredCameraInfos[e.first] = std::make_tuple(currentLOD, 
+                                                            relative, 
+                                                            rel_alt, 
+                                                            altitude, 
+                                                            current_patch_max_height, 
+                                                            current_patch_min_height, 
+                                                            current_patch_current_height, 
+                                                            locale_camera_pos, 
+                                                            global_camera_pos);
     }
 
     m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
@@ -1490,6 +1499,8 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             camera.second.relative_alt = rel_alt;
 
             camera.second.locale_camera_pos_from_planet = locale_camera_pos_from_planet;
+            camera.second.global_camera_pos_from_planet = camera_pos_from_planet;
+
 
             for(auto& camera_layer: camera.second.layers)
             {
@@ -1700,7 +1711,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 {
                     if (OceansLayer == node.second->GetLayerIndex())
                     {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 1);
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 3);
                     }
                 }
             }
