@@ -563,3 +563,75 @@ planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific
     model.view.load('planet model', planetmod.createmodelview, p_passes_bindings, nil, p_entity_id, p_planet_specific_config_descr)
   end  
 end
+
+planetmod.compute_ocean_sub_lights_level = function(global_camera_local_pos)
+
+  local underwater_lightfactor = 0.0
+
+  local viewwerPosVector = global_camera_local_pos
+
+  viewwerPosVector:normalize();
+
+
+  -- ambient light 
+  underwater_lightfactor = underwater_lightfactor + (0.299 * environment.ambient_light.r + 0.587 * environment.ambient_light.g + 0.114 * environment.ambient_light.b)
+
+  -- light0
+  if environment.lights_enabled.x == TRUE then
+
+    local light1Vector = Vector(-environment.light0.direction.x,
+                                    -environment.light0.direction.y,
+                                    -environment.light0.direction.z,
+                                    1.0)
+
+    
+    light1Vector:normalize();
+
+    local prodsca = light1Vector:dotproduct_with(viewwerPosVector)
+    if prodsca < 0.0 then
+      prodsca = 0.0
+    end
+
+    underwater_lightfactor = underwater_lightfactor + prodsca
+  end
+
+  -- light1
+  if environment.lights_enabled.y == TRUE then
+
+    local light2Vector = Vector(-environment.light1.direction.x,
+                                    -environment.light1.direction.y,
+                                    -environment.light1.direction.z,
+                                    1.0)
+
+    
+    light2Vector:normalize();
+
+    local prodsca = light2Vector:dotproduct_with(viewwerPosVector)
+    if prodsca < 0.0 then
+      prodsca = 0.0
+    end
+
+    underwater_lightfactor = underwater_lightfactor + prodsca
+  end
+
+  -- light2
+  if environment.lights_enabled.z == TRUE then
+
+    local light3Vector = Vector(-environment.light2.direction.x,
+                                    -environment.light2.direction.y,
+                                    -environment.light2.direction.z,
+                                    1.0)
+
+    
+    light3Vector:normalize();
+
+    local prodsca = light3Vector:dotproduct_with(viewwerPosVector)
+    if prodsca < 0.0 then
+      prodsca = 0.0
+    end
+
+    underwater_lightfactor = underwater_lightfactor + prodsca
+  end
+  
+  return underwater_lightfactor
+end

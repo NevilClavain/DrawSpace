@@ -543,83 +543,14 @@ function()
   local relative_alt = planet_infos["viewsInfos"][current_cam_id]["relative_altitude"]
   rg:set_viewportquadshaderrealvector('final_pass', 'relative_alt', relative_alt, 0.0, 0.0, 0.0)
 
-
-  -- ###################################
-
-  local underwater_lightfactor = 0.0
-
-  local viewwerPosVector = Vector(planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_x"],
+  local global_camera_local_pos = Vector(planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_x"],
                                     planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_y"],
                                     planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_z"],
                                     1.0)
 
-  viewwerPosVector:normalize();
-
-
-  -- ambient light 
-  underwater_lightfactor = underwater_lightfactor + (0.299 * environment.ambient_light.r + 0.587 * environment.ambient_light.g + 0.114 * environment.ambient_light.b)
-
-  -- light0
-  if environment.lights_enabled.x == TRUE then
-
-    local light1Vector = Vector(-environment.light0.direction.x,
-                                    -environment.light0.direction.y,
-                                    -environment.light0.direction.z,
-                                    1.0)
-
-    
-    light1Vector:normalize();
-
-    local prodsca = light1Vector:dotproduct_with(viewwerPosVector)
-    if prodsca < 0.0 then
-      prodsca = 0.0
-    end
-
-    underwater_lightfactor = underwater_lightfactor + prodsca
-  end
-
-  -- light1
-  if environment.lights_enabled.y == TRUE then
-
-    local light2Vector = Vector(-environment.light1.direction.x,
-                                    -environment.light1.direction.y,
-                                    -environment.light1.direction.z,
-                                    1.0)
-
-    
-    light2Vector:normalize();
-
-    local prodsca = light2Vector:dotproduct_with(viewwerPosVector)
-    if prodsca < 0.0 then
-      prodsca = 0.0
-    end
-
-    underwater_lightfactor = underwater_lightfactor + prodsca
-  end
-
-  -- light2
-  if environment.lights_enabled.z == TRUE then
-
-    local light3Vector = Vector(-environment.light2.direction.x,
-                                    -environment.light2.direction.y,
-                                    -environment.light2.direction.z,
-                                    1.0)
-
-    
-    light3Vector:normalize();
-
-    local prodsca = light3Vector:dotproduct_with(viewwerPosVector)
-    if prodsca < 0.0 then
-      prodsca = 0.0
-    end
-
-    underwater_lightfactor = underwater_lightfactor + prodsca
-  end
-
+  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', planetmod.compute_ocean_sub_lights_level(global_camera_local_pos), 0.0, 0.0, 0.0)
   
-  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', underwater_lightfactor, 0.0, 0.0, 0.0)
 
-  -- ###################################
 
   local is_relative = planet_infos['viewsInfos'][current_cam_id]['relative']
   if is_relative ~= 0 then
@@ -1022,3 +953,4 @@ root_entity:update_time(2128)
 dmode = function(mode)
 	rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', mode, 0.0, 0.0, 0.0)
 end
+
