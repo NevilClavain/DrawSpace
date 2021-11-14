@@ -286,15 +286,13 @@ VS_OUTPUT vs_main(VS_INPUT Input)
                 }
             }
 
-		    // seuls les vertex "non skirt" prennent en compte l'altitude calculee du vertex;
-		    // les vertex "skirt" ont toujours une altitude de zero
-
             if (Input.TexCoord0.z == 0.0)
             {
-                v_position3 *= (1.0 + ( /*v_factor * */(v_alt / flag0.z)));
+                v_position3 *= (1.0 + ( (v_alt / flag0.z)));
             }
             else
             {
+                // SKIRT VERTEX
                 v_position3 *= (1.0 + ((v_alt-100.0) / flag0.z));
             }
         }
