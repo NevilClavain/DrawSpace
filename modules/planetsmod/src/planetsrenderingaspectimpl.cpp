@@ -960,7 +960,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     }
                     else
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
                     }                    
                     oceans_binders[orientation] = binder;
                 }
