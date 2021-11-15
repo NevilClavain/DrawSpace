@@ -184,7 +184,8 @@ waves:init_fromtimeaspectof(root_entity,0.0)
 
 rg:create_child('final_pass', 'oceanmask_pass', 3)
 rg:set_pass_targetclearstate( 'oceanmask_pass', TRUE )
-rg:set_pass_depthclearstate( 'oceanmask_pass', FALSE )
+--rg:set_pass_depthclearstate( 'oceanmask_pass', FALSE )
+rg:set_pass_depthclearstate( 'oceanmask_pass', TRUE )
 rg:set_pass_targetclearcolor('oceanmask_pass', 0, 0, 0, 0)
 
 
@@ -239,6 +240,7 @@ function( xm, ym, dx, dy )
 
   elseif current_cam == ship_cam and left_ctrl == FALSE then
 
+  --[[
     local mvt_info = { camera2_pos:read() }
 
 	ship_cam_fps_yaw:inc(-dx / 1.0)
@@ -249,6 +251,7 @@ function( xm, ym, dx, dy )
     if time_factor ~= 0 then
       root_entity:update_timescale(NORMAL_TIME)
     end
+    ]]
 
   end
 
@@ -701,11 +704,18 @@ eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 
 bellerophon_passes_bindings = 
 {
+    
 	binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'lit_rendering',
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
+	},   
+	binding_1 = 
+	{
+        target_pass_id = 'oceanmask_pass',
+		rendering_id = 'color_rendering',
+		lit_shader_update_func = nil
 	}
 }
 bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings)
@@ -735,6 +745,9 @@ bellerophon_rigibody_transform:configure_torque("roll_right", Vector(0.0, 0.0, -
 
 bellerophon_rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
 bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_renderer = bellerophon.models['ship']['renderer']
+bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 1, 0, 0, 1 )
 
 
 local planet_specific_config_descr =
