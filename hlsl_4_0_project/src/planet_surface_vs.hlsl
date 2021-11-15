@@ -282,7 +282,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
                 if (v_alt < 0.0)
                 {
                     //if ground point is under sea level, amplify ground variations
-                    v_alt *= 70.0;
+                    v_alt *= UNDERWATER_GROUND_AMPLITUDE_FACTOR;
                 }
             }
 

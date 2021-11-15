@@ -81,6 +81,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	
     float res = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
+    if (res < 0.0)
+    {
+        //if ground point is under sea level, amplify ground variations
+        res *= UNDERWATER_GROUND_AMPLITUDE_FACTOR;
+    }
+
 
     float4 global_uv = 0.0;
     global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);

@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#define UNDERWATER_GROUND_AMPLITUDE_FACTOR 70.0
 
 float3 ProjectVectorToCube( int p_orientation, float3 p_vector )
 {
