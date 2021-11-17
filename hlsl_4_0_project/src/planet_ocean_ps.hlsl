@@ -130,6 +130,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float avg_lit_color = 0.299 * lit_color.r + 0.587 * lit_color.r + 0.114 * lit_color.b;
 
+    //////////////////////////////
+    // output mask pixel :
+    // .x -> avg_lit_color = ocean light intensity
+    // .y -> surface_dot_delta = dot product between ocean surface normale and vector from this point to camera point
+    // .z -> not used
+    // .w -> fog density
+
+    //////////////////////////////
     float4 water_color = { avg_lit_color, surface_dot_delta, 0.0, input.Fog };
+   
     return water_color;
 }
