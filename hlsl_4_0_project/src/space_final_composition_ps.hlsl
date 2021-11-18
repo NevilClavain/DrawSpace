@@ -141,8 +141,19 @@ float4 ps_main(PS_INTPUT input) : SV_Target
                 // if underwater
                 if (main_color.a < 2.0)
                 {
-                    //pixel from other than planet ground (clouds, atmo, spacebox, etc...)
-                    scene_color.rgb = underwater_lightfactor * basic_water_color.rgb;
+                    //if pixel from other than planet ground (clouds, atmo, spacebox, ship, objects etc...)
+
+                    if (mask.z > 0.0)
+                    {
+                        // here, objects that shall not be rendered with ocean background uninque color
+                        // i.e object that are underwater : ship that dived underwater, underwater buildings, etc...
+                        scene_color.rgb = main_color.rgb;
+                    }
+                    else
+                    {
+                        // here, object that shall be rendered with ocean background uninque color (deep blue...)
+                        scene_color.rgb = underwater_lightfactor * basic_water_color.rgb;
+                    }                    
                 }
                 else
                 {

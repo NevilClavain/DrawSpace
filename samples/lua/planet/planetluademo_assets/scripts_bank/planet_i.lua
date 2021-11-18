@@ -747,7 +747,7 @@ bellerophon_rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0
 bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
 
 bellerophon_renderer = bellerophon.models['ship']['renderer']
-bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 1, 0, 0, 1 )
+bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1 ) -- z set to 1.0 to render correctly the ship underwater (see space_final_composition_ps.hlsl)
 
 
 local planet_specific_config_descr =
