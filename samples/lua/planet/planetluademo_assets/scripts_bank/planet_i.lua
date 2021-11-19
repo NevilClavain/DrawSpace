@@ -18,6 +18,8 @@ local time_factor = 0
 
 local relative_alt = 0.0;
 
+local viewer_under_water = FALSE
+
 resources_event = "..."
 
 
@@ -551,7 +553,9 @@ function()
                                     planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_z"],
                                     1.0)
 
-  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', planetmod.compute_ocean_sub_lights_level(global_camera_local_pos), 0.0, 0.0, 0.0)
+  local planet_light_level = planetmod.compute_lights_level(global_camera_local_pos)
+
+  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', planet_light_level, 0.0, 0.0, 0.0)
   
 
 
@@ -584,6 +588,26 @@ function()
     
 
     relative_state = "RELATIVE"..' '..g:format_real(relative_alt,6)..' '..display_altitude..altitude_unit                    
+
+    if relative_alt < 1.0 then
+
+      if viewer_under_water == FALSE then
+        viewer_under_water = TRUE -- transition
+
+        model.env.fog.setcolor(0.17 * planet_light_level, 0.36 * planet_light_level, 0.48 * planet_light_level) -- fog color = planet gloabal water color
+        model.env.fog.setdensity(0.001)
+      end
+
+    else
+
+      if viewer_under_water == TRUE then
+        viewer_under_water = FALSE -- transition
+
+        model.env.fog.setcolor(0.45 * planet_light_level, 0.63 * planet_light_level, 0.78 * planet_light_level) -- fog color = planet fog color
+        model.env.fog.setdensity(0.0001)
+      end
+
+    end
                     
 
 

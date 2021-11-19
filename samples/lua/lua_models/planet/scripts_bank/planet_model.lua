@@ -564,9 +564,9 @@ planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific
   end  
 end
 
-planetmod.compute_ocean_sub_lights_level = function(global_camera_local_pos)
+planetmod.compute_lights_level = function(global_camera_local_pos)
 
-  local underwater_lightfactor = 0.0
+  local lightfactor = 0.0
 
   local viewwerPosVector = global_camera_local_pos
 
@@ -574,7 +574,7 @@ planetmod.compute_ocean_sub_lights_level = function(global_camera_local_pos)
 
 
   -- ambient light 
-  underwater_lightfactor = underwater_lightfactor + (0.299 * environment.ambient_light.r + 0.587 * environment.ambient_light.g + 0.114 * environment.ambient_light.b)
+  lightfactor = lightfactor + (0.299 * environment.ambient_light.r + 0.587 * environment.ambient_light.g + 0.114 * environment.ambient_light.b)
 
   -- light0
   if environment.lights_enabled.x == TRUE then
@@ -592,7 +592,7 @@ planetmod.compute_ocean_sub_lights_level = function(global_camera_local_pos)
       prodsca = 0.0
     end
 
-    underwater_lightfactor = underwater_lightfactor + prodsca
+    lightfactor = lightfactor + prodsca
   end
 
   -- light1
@@ -611,7 +611,7 @@ planetmod.compute_ocean_sub_lights_level = function(global_camera_local_pos)
       prodsca = 0.0
     end
 
-    underwater_lightfactor = underwater_lightfactor + prodsca
+    lightfactor = lightfactor + prodsca
   end
 
   -- light2
@@ -630,8 +630,8 @@ planetmod.compute_ocean_sub_lights_level = function(global_camera_local_pos)
       prodsca = 0.0
     end
 
-    underwater_lightfactor = underwater_lightfactor + prodsca
+    lightfactor = lightfactor + prodsca
   end
   
-  return underwater_lightfactor
+  return lightfactor
 end
