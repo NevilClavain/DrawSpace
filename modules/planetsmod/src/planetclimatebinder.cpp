@@ -30,9 +30,10 @@ using namespace DrawSpace::Utils;
 
 
 PlanetClimateBinder::PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset, 
-                                            dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2, dsreal p_beach_limit ) : 
+                                            dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2, dsreal p_beach_limit, bool p_oceans ) : 
 MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset, p_plains_seed1, p_plains_seed2, p_mix_seed1, p_mix_seed2 ),
-m_beachlimit( p_beach_limit )
+m_beachlimit( p_beach_limit ),
+m_oceans(p_oceans)
 {
 }
 
@@ -52,7 +53,7 @@ void PlanetClimateBinder::Bind( void )
 	//Vector thparams2( 0.05, 0.1, 0.45, 0.48 );
 
 
-	// monde glac� et plutot sec
+	// monde glacé et plutot sec
 	//Vector thparams( 50.0, 80.0, TEMP_DEC_PER_KM, BEACH_LIMIT );
 	//Vector thparams2( 1.4, 1.5, 0.28, 0.99 );
 
@@ -63,6 +64,9 @@ void PlanetClimateBinder::Bind( void )
 
 	m_renderer->SetFxShaderParams( 0, 42, thparams );
 	m_renderer->SetFxShaderParams( 0, 43, thparams2 );
+
+	Vector flags6(m_oceans, 0.0, 0.0, 0.0);
+	m_renderer->SetFxShaderParams(1, 6, flags6);
 
 	MultiFractalBinder::Bind();
 }

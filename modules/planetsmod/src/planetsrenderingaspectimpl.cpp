@@ -767,7 +767,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 for (int i = 0; i < 6; i++)
                 {
                     PlanetClimateBinder* climateBinder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
-                        plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit));
+                        plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit, enable_oceans));
 
                     climateBinder->SetRenderer(m_renderer);
                     climateBinder->SetFx(&m_climate_fx);
