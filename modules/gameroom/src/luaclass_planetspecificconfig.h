@@ -72,6 +72,8 @@ private:
         dsreal      fog_density;
         dsreal      beach_limit;
 
+        bool        oceans;
+
         dsstring    climate_vshader;
         dsstring    climate_pshader;
 
@@ -133,6 +135,7 @@ public:
     int LUA_setfogandatmoparams(lua_State* p_L);
     int LUA_setterrainbumpfactor(lua_State* p_L);
     int LUA_setbeachlimit(lua_State* p_L);
+    int LUA_enableoceans(lua_State* p_L);
     int LUA_enablelandplacepatch(lua_State* p_L);
     int LUA_enableatmosphere(lua_State* p_L);
     int LUA_setclimateshaders(lua_State* p_L);

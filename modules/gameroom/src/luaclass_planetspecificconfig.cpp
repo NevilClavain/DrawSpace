@@ -53,6 +53,7 @@ const Luna<LuaClass_PlanetSpecificConfig>::RegType LuaClass_PlanetSpecificConfig
     { "set_fogandatmoparams", &LuaClass_PlanetSpecificConfig::LUA_setfogandatmoparams },
     { "set_terrainbumpfactor", &LuaClass_PlanetSpecificConfig::LUA_setterrainbumpfactor },
     { "set_beachlimit", &LuaClass_PlanetSpecificConfig::LUA_setbeachlimit },
+    { "enable_oceans", &LuaClass_PlanetSpecificConfig::LUA_enableoceans },
     { "set_climateshaders", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaders },
     { "set_climateshaderscompiled", &LuaClass_PlanetSpecificConfig::LUA_setclimateshaderscompiled },
     { "set_collisionshaders", &LuaClass_PlanetSpecificConfig::LUA_setcollisionshaders },
@@ -138,6 +139,9 @@ int LuaClass_PlanetSpecificConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("fog_alt_limit", m_planets_details.fog_alt_limit);
     entity_rendering_aspect->AddComponent<dsreal>("fog_density", m_planets_details.fog_density);
     entity_rendering_aspect->AddComponent<dsreal>("beach_limit", m_planets_details.beach_limit);
+
+    entity_rendering_aspect->AddComponent<bool>("oceans", m_planets_details.oceans);
+
     entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
     entity_rendering_aspect->AddComponent<bool>("enable_atmosphere", m_planets_details.enable_atmosphere);
 
@@ -223,6 +227,7 @@ int LuaClass_PlanetSpecificConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
     m_rendering_aspect->RemoveComponent<dsreal>("fog_density");
     m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
+    m_rendering_aspect->RemoveComponent<bool>("oceans");
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<dsstring>("bump_pass");
@@ -459,6 +464,19 @@ int LuaClass_PlanetSpecificConfig::LUA_setbeachlimit(lua_State* p_L)
     m_planets_details.beach_limit = luaL_checknumber(p_L, 1);
     return 0;
 }
+
+int LuaClass_PlanetSpecificConfig::LUA_enableoceans(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetSpecificConfig::enable_oceans : argument(s) missing");
+    }
+
+    m_planets_details.oceans = luaL_checkint(p_L, 1);
+    return 0;
+}
+
 
 int LuaClass_PlanetSpecificConfig::LUA_enableatmosphere(lua_State* p_L)
 {

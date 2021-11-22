@@ -635,6 +635,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     bool collisionmeshe_display_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().first };
     bool collisionmeshe_display_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().second };
 
+    bool enable_oceans{ m_owner->GetComponent<bool>("oceans")->getPurpose() };
 
     Texture* wavepass_result_texture{ m_owner->GetComponent<Texture*>("wavepass_result_texture")->getPurpose() };
 
