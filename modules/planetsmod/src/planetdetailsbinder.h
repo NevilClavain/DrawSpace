@@ -95,13 +95,15 @@ protected:
 	dsreal														m_wave_texture_resol;
 	dsreal														m_ocean_bump_factor;
 
+	bool														m_oceans;
+
 public:
 
 	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,
                             dsreal p_mountains_offset,
                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density );
+                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans);
 
 	dsreal inline GetOceansDetailsAlt( void ) const { return m_ocean_details_alt; };
 	PlanetLight inline GetLight( int p_index ) const { return m_lights[p_index]; };

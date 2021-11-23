@@ -32,7 +32,7 @@ PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThick
                                             dsreal p_mountains_offset,
                                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density ) :
+                                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans) :
 MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset, p_plains_seed1, p_plains_seed2, p_mix_seed1, p_mix_seed2 ),
 m_ocean_details_alt( 1.0010 ),
 m_terrain_bump_factor( p_terrainbump_factor ),
@@ -43,7 +43,8 @@ m_kr( p_atmoKr ),
 m_fog_alt_limit( p_fog_alt_limit ),
 m_fog_density( p_fog_density ),
 m_wave_texture_resol(512),
-m_ocean_bump_factor(0.99)
+m_ocean_bump_factor(0.99),
+m_oceans(p_oceans)
 {
 
 	m_mirror_mode = false;
@@ -187,6 +188,11 @@ void PlanetDetailsBinder::Bind( void )
 
 	m_renderer->SetFxShaderParams(0, 61, mirror_flag);
 
+	Vector flags63(m_oceans, 0.0, 0.0, 0.0);
+	m_renderer->SetFxShaderParams(0, 63, flags63);
+
+
+
 	m_renderer->SetFxShaderParams(1, 6, flags6);
 
 	m_renderer->SetFxShaderParams(1, 7, flags_lights);
@@ -220,6 +226,9 @@ void PlanetDetailsBinder::Bind( void )
 
 	Vector terrain_bump_flag(m_terrain_bump_factor, 0.0, 0.0, 0.0);
 	m_renderer->SetFxShaderParams(1, 31, terrain_bump_flag);
+
+	Vector flags32(m_oceans, 0.0, 0.0, 0.0);
+	m_renderer->SetFxShaderParams(1, 32, flags32);
 
 	MultiFractalBinder::Bind();
 }

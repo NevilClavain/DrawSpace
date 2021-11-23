@@ -868,7 +868,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density));
+                        fog_alt_limit, fog_density, enable_oceans));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
@@ -900,7 +900,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density));
+                        fog_alt_limit, fog_density, enable_oceans));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
@@ -921,7 +921,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density));
+                        fog_alt_limit, fog_density, enable_oceans));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
@@ -947,7 +947,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density));
+                        fog_alt_limit, fog_density, enable_oceans));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
