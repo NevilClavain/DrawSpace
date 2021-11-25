@@ -58,6 +58,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float debug_mode = vec[2].x;
     float relative_alt = vec[0].x;
     float underwater_lightfactor = vec[1].x;
+    bool oceans_enabled = vec[1].y;
 
     
     float4 scene_color = 0.0;
@@ -132,12 +133,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             float4 main_color = 0.0;
             main_color.rgba = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgba;
 
-            if (relative_alt > 1.0)
+            if (relative_alt > 1.0 || !oceans_enabled)
             {
                 scene_color.rgb = main_color.rgb;
             }
             else
-            {
+            {                
                 // if underwater
                 if (main_color.a < 2.0)
                 {
@@ -156,7 +157,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
                     }                    
                 }
                 else
-                {
+                {                
                     //pixel from planet ground (identified by alpha == 2.0)
                     scene_color.rgb = main_color.rgb;
                 }

@@ -23,6 +23,60 @@ local viewer_under_water = FALSE
 resources_event = "..."
 
 
+
+
+local planet_specific_config_descr =
+{
+	resources_path						         = "planetluademo_assets/shaders_bank",
+	climate_vshader						         = "planet_ht_vs.hlsl",
+	climate_pshader						         = "planet_ht_ps.hlsl",
+	climate_vshader_compiled			         = FALSE,
+	climate_pshader_compiled			         = FALSE,
+	collision_vshader					         = "planet_hm_vs.hlsl",
+	collision_pshader					         = "planet_hm_ps.hlsl",
+	collision_vshader_compiled			         = FALSE,
+	collision_pshader_compiled			         = FALSE,
+
+    enable_collisionmeshe_display                = FALSE, --TRUE,
+    collisionmeshe_display_vshader               = "color_vs.hlsl",
+    collisionmeshe_display_pshader               = "color_ps.hlsl",
+    collisionmeshe_display_vshader_compiled      = FALSE,
+    collisionmeshe_display_pshader_compiled      = FALSE,
+
+    main_pass                                    = 'texture_pass',
+    reflection_pass                              = 'texturemirror_pass',
+    bump_pass                                    = 'bump_pass',
+    oceanmask_pass                               = 'oceanmask_pass',
+
+	planet_ray							         = 6500.0,
+    gravity_acc                                  = 9.81,
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 10000.0,
+	vertical_offset						         = 20.0,
+	mountains_offset					         = 0.0,
+	plains_seed1						         = 89189.0,
+	plains_seed2						         = 233.0,
+	mix_seed1							         = 18901.0,
+	mix_seed2							         = 17566.0,
+	terrainbump_factor					         = 16.0,
+	splat_transition_up_relative_alt	         = 1.095,
+	splat_transition_down_relative_alt	         = 1.0040,
+	splat_texture_resol					         = 16,
+    zbuffer_activation_relative_alt              = 1.004,
+	atmo_kr								         = 0.0033,
+	fog_alt_limit						         = 30000.0,
+	fog_density							         = 0.000031,
+	beach_limit							         = 25.0,
+	landplace_patch						         = FALSE,
+	enable_atmosphere					         = TRUE,
+	atmo_thickness                               = 160.0,
+    flatclouds_altitude                          = 24.0,
+    wave_pass_resol                              = 512,
+    ocean_bump_factor                            = 2.1,
+    enable_oceans                                = TRUE
+}
+
+
 g:add_resourceeventcb( "onresourceevent",
 function( event, resource_path, context )
 
@@ -555,7 +609,7 @@ function()
 
   local planet_light_level = planetmod.compute_lights_level(global_camera_local_pos)
 
-  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', planet_light_level, 0.0, 0.0, 0.0)
+  rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', planet_light_level, planet_specific_config_descr.enable_oceans, 0.0, 0.0)
   
 
 
@@ -589,25 +643,28 @@ function()
 
     relative_state = "RELATIVE"..' '..g:format_real(relative_alt,6)..' '..display_altitude..altitude_unit                    
 
-    if relative_alt < 1.0 then
+    if planet_specific_config_descr.enable_oceans == TRUE then
+      if relative_alt < 1.0 then
 
-      if viewer_under_water == FALSE then
-        viewer_under_water = TRUE -- transition
+        if viewer_under_water == FALSE then
+          viewer_under_water = TRUE -- transition
 
-        model.env.fog.setcolor(0.17 * planet_light_level, 0.36 * planet_light_level, 0.48 * planet_light_level) -- fog color = planet gloabal water color
-        model.env.fog.setdensity(0.001)
+          model.env.fog.setcolor(0.17 * planet_light_level, 0.36 * planet_light_level, 0.48 * planet_light_level) -- fog color = planet gloabal water color
+          model.env.fog.setdensity(0.001)
+        end
+
+      else
+
+        if viewer_under_water == TRUE then
+          viewer_under_water = FALSE -- transition
+
+          model.env.fog.setcolor(0.45 * planet_light_level, 0.63 * planet_light_level, 0.78 * planet_light_level) -- fog color = planet fog color
+          model.env.fog.setdensity(0.0001)
+        end
+
       end
-
-    else
-
-      if viewer_under_water == TRUE then
-        viewer_under_water = FALSE -- transition
-
-        model.env.fog.setcolor(0.45 * planet_light_level, 0.63 * planet_light_level, 0.78 * planet_light_level) -- fog color = planet fog color
-        model.env.fog.setdensity(0.0001)
-      end
-
     end
+
                     
 
 
@@ -773,60 +830,13 @@ bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000
 bellerophon_renderer = bellerophon.models['ship']['renderer']
 bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1 ) -- z set to 1.0 to render correctly the ship underwater (see space_final_composition_ps.hlsl)
 
+planet_name = 'Resurgam'
 
-local planet_specific_config_descr =
-{
-	resources_path						         = "planetluademo_assets/shaders_bank",
-	climate_vshader						         = "planet_ht_vs.hlsl",
-	climate_pshader						         = "planet_ht_ps.hlsl",
-	climate_vshader_compiled			         = FALSE,
-	climate_pshader_compiled			         = FALSE,
-	collision_vshader					         = "planet_hm_vs.hlsl",
-	collision_pshader					         = "planet_hm_ps.hlsl",
-	collision_vshader_compiled			         = FALSE,
-	collision_pshader_compiled			         = FALSE,
+if planet_specific_config_descr.enable_oceans == TRUE then
 
-    enable_collisionmeshe_display                = FALSE, --TRUE,
-    collisionmeshe_display_vshader               = "color_vs.hlsl",
-    collisionmeshe_display_pshader               = "color_ps.hlsl",
-    collisionmeshe_display_vshader_compiled      = FALSE,
-    collisionmeshe_display_pshader_compiled      = FALSE,
-
-    main_pass                                    = 'texture_pass',
-    reflection_pass                              = 'texturemirror_pass',
-    bump_pass                                    = 'bump_pass',
-    oceanmask_pass                               = 'oceanmask_pass',
-
-	planet_ray							         = 6500.0,
-    gravity_acc                                  = 9.81,
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 10000.0,
-	vertical_offset						         = 20.0,
-	mountains_offset					         = 0.0,
-	plains_seed1						         = 89189.0,
-	plains_seed2						         = 233.0,
-	mix_seed1							         = 18901.0,
-	mix_seed2							         = 17566.0,
-	terrainbump_factor					         = 16.0,
-	splat_transition_up_relative_alt	         = 1.095,
-	splat_transition_down_relative_alt	         = 1.0040,
-	splat_texture_resol					         = 16,
-    zbuffer_activation_relative_alt              = 1.004,
-	atmo_kr								         = 0.0033,
-	fog_alt_limit						         = 30000.0,
-	fog_density							         = 0.000031,
-	beach_limit							         = 25.0,
-	landplace_patch						         = FALSE,
-	enable_atmosphere					         = TRUE,
-	atmo_thickness                               = 160.0,
-    flatclouds_altitude                          = 24.0,
-    wave_pass_resol                              = 512,
-    ocean_bump_factor                            = 2.1
-}
-
-planet_passes_bindings = 
-{
-	binding_0 = 
+  local planet_passes_bindings = 
+  {
+    binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'surface_rendering',
@@ -844,7 +854,8 @@ planet_passes_bindings =
         target_pass_id = 'texture_pass',
 		rendering_id = 'flatclouds_rendering',
 		lit_shader_update_func = nil
-	},    
+	},
+
 	binding_3 = 
 	{
         target_pass_id = 'oceanmask_pass',
@@ -868,12 +879,41 @@ planet_passes_bindings =
         target_pass_id = 'texturemirror_pass',
 		rendering_id = 'atmo_mirror_rendering',
 		lit_shader_update_func = nil
-	},      
-}
+	}   
+  }
+
+  planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr, 'wave_pass')
+
+else
+
+  local planet_passes_bindings = 
+  {
+    binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'surface_rendering',
+        --rendering_id = 'surface_wireframe_rendering',
+		lit_shader_update_func = nil
+	},
+	binding_1 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'atmo_rendering',
+		lit_shader_update_func = nil
+	},
+	binding_2 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'flatclouds_rendering',
+		lit_shader_update_func = nil
+	}
+  }
+
+  planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr, 'wave_pass')
+end
 
 
-planet_name = 'Resurgam'
-planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr, 'wave_pass')
+
 
 resurgam_planet_entity = planetmod.models[planet_name].entity
 resurgam_planet_config = planetmod.models[planet_name].specific_config

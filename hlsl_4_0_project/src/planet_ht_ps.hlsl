@@ -35,9 +35,10 @@ struct PS_INTPUT
     float4 aht : TEXCOORD0; // aht : altitude temperature humidity
 };
 
+#define v_flags6                    6
+
 float4 ps_main(PS_INTPUT input) : SV_Target
-{
-    
+{    
     float4 color = 0.0;
 
     float point_alt = input.aht.x;
@@ -48,11 +49,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     color.x = color_temp;
     color.y = color_humidity;
 
-    if (point_alt <= 0.0)
+    bool oceans_enabled = vec[v_flags6].x;
+    
+    if (oceans_enabled)
     {
-        color.z = 1.0;
-    }
-
+        if (point_alt <= 0.0)
+        {
+            color.z = 1.0;
+        }
+    }   
     color.w = point_alt;
 
     return color;

@@ -90,6 +90,8 @@ struct PS_INTPUT
 
 #define v_terrain_bump_flag         31
 
+#define v_flag32                    32
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
 
@@ -123,6 +125,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4x4 matWorldRots = mat[m_matWorldRots];
     float4 terrain_bump_flag = vec[v_terrain_bump_flag];
+
+    bool oceans_enabled = vec[v_flag32].x;
 
     /////////////////////////////////////////////////////////////////////////
 
@@ -281,7 +285,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 fog_color;
 
-    if (relative_alt > 1.0)
+    if (relative_alt > 1.0 || !oceans_enabled)
     {
         fog_color = atmo_scattering_flag_6;
     }
@@ -291,7 +295,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         fog_color.a = 1.0;
     }
     
-
     ///////////////////// inclure le "fog de surface" dans la couleur pixel
 
     pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));

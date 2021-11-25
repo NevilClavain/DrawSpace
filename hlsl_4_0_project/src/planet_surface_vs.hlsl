@@ -69,6 +69,7 @@ cbuffer legacyargs : register(b0)
 #define v_light2_color              60
 
 #define v_flag6                     62
+#define v_flag63                    63
 
 
 struct VS_INPUT
@@ -142,6 +143,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 landplacepatch_normale = vec[v_landplacepatch_normale];
 
     float4 flags6 = vec[v_flag6];
+
+    bool oceans_enabled = vec[v_flag63].x;
 
     float splatting_lim_inf = flags6.z;
     //////////////////////////////////////////////////////////////////////
@@ -421,20 +424,15 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     // fog module en fct de l'altitude
 
-    
-
-    if (relative_alt < 1.0)
-    {
-        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.001));
-    }
-    else
+    if (relative_alt > 1.0 || !oceans_enabled)
     {
         float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
         Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
     }
-
-    
-
+    else
+    {
+        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.001));
+    }
 
     return (Output);
 }
