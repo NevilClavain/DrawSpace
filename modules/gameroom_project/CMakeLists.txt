@@ -45,6 +45,7 @@ file(
         source_files
 		${CMAKE_SOURCE_DIR}/modules/gameroom/src/*.h
         ${CMAKE_SOURCE_DIR}/modules/gameroom/src/*.cpp
+        ${CMAKE_SOURCE_DIR}/modules/gameroom/lua_commons/*.lua
 		
 )
 
