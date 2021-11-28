@@ -29,29 +29,24 @@
 #include "transformaspectimpl.h"
 #include "transformaspect.h"
 
-class LuaClass_FPSTransform
+class LuaClass_FPSTransform : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 private:
-
-    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   m_fps_transformer;
-    DrawSpace::Aspect::TransformAspect*                                 m_entity_transform_aspect;
+    DrawSpace::Aspect::TransformAspect* m_entity_transform_aspect{ nullptr };
 
 public:
-
 	LuaClass_FPSTransform( lua_State* p_L );
 	~LuaClass_FPSTransform( void );
-
-    int LUA_instanciateTransformationImpl(lua_State* p_L);
-    int LUA_trashTransformationImpl(lua_State* p_L);
 
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
     int LUA_update( lua_State* p_L );
     int LUA_read( lua_State* p_L );
 
+    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
+
     static const char className[];
     static const Luna<LuaClass_FPSTransform>::RegType methods[];
-
 };
 
 #endif

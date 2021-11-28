@@ -62,9 +62,9 @@ model.createmainfreecamera = function(p_x, p_y, p_z, p_mvt_mod)
 
 end
 
-model.createmainfpscamera = function(p_x, p_y, p_z, p_mvt_mod, p_transfoimpl_order)
+model.createmainfpscamera = function(p_x, p_y, p_z)
 
-  model.camera.entity, model.camera.mvt=commons.create_fps_camera(p_x, p_y, p_z, model.renderer_infos[5],model.renderer_infos[6], p_mvt_mod, "model.camera", p_transfoimpl_order)
+  model.camera.entity, model.camera.mvt=commons.create_fps_camera(p_x, p_y, p_z, model.renderer_infos[5],model.renderer_infos[6], "model.camera")
   --eg:add_child('root','model.camera.entity',model.camera.entity)
 
 end

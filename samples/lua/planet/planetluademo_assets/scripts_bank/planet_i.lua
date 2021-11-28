@@ -943,7 +943,7 @@ g:print("Planet creation done...")
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 
-camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 110.0, 500.0, viewport_width,viewport_height, mvt_mod, "ship_camera")
+camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 110.0, 500.0, viewport_width,viewport_height, "ship_camera")
 
 
 camera2_entity:setup_info( "referent_body", "Bellorophon" )

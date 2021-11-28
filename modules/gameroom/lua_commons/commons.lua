@@ -109,7 +109,7 @@ commons.create_static_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewp
 end
 
 
-commons.create_fps_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewport_height, p_module, p_name)
+commons.create_fps_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewport_height, p_name)
 
 	local camera_entity=Entity()
 	camera_entity:add_aspect(TRANSFORM_ASPECT)
@@ -122,7 +122,6 @@ commons.create_fps_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewport
 
 
 	local fps_transfo=FPSTransform()
-	fps_transfo:instanciate_transformimpl(p_module)
 	fps_transfo:configure(camera_entity,0,0,p_x,p_y,p_z,TRUE,0)
 
 	return camera_entity, fps_transfo

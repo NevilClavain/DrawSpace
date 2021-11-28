@@ -67,11 +67,6 @@ renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
 
 
-mvt_mod = Module("mvtmod", "mvts")
-mvt_mod:load()
-g:print(mvt_mod:get_descr().. ' loaded')
-
-
 rg:create_pass_viewportquad('final_pass')
 
 local finalpass_rss=RenderStatesSet()
@@ -148,8 +143,7 @@ root_entity:configure_world(environment.gravity_state, environment.gravity.x, en
 
 
 
-
-model.createmainfpscamera(0.0, skydome.innerRadius + 8.0, 20.0, mvt_mod)
+model.createmainfpscamera(0.0, skydome.innerRadius + 8.0, 20.0)
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 eg:set_camera(model.camera.entity)
