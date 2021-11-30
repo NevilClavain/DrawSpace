@@ -37,8 +37,8 @@ using namespace DrawSpace::Aspect;
 const char LuaClass_FreeTransform::className[] = "FreeTransform";
 const Luna<LuaClass_FreeTransform>::RegType LuaClass_FreeTransform::methods[] =
 {
-    { "instanciate_transformimpl", &LuaClass_FreeTransform::LUA_instanciateTransformationImpl },
-    { "trash_transformimpl", &LuaClass_FreeTransform::LUA_trashTransformationImpl },
+    //{ "instanciate_transformimpl", &LuaClass_FreeTransform::LUA_instanciateTransformationImpl },
+    //{ "trash_transformimpl", &LuaClass_FreeTransform::LUA_trashTransformationImpl },
     { "configure", &LuaClass_FreeTransform::LUA_configure },
     { "update", &LuaClass_FreeTransform::LUA_update },
 	{ "set_pos", &LuaClass_FreeTransform::LUA_setpos },
@@ -54,32 +54,6 @@ m_entity_transform_aspect( NULL )
 
 LuaClass_FreeTransform::~LuaClass_FreeTransform( void )
 {
-}
-
-int LuaClass_FreeTransform::LUA_instanciateTransformationImpl(lua_State* p_L)
-{
-    int argc = lua_gettop(p_L);
-    if (argc < 1)
-    {
-        LUA_ERROR("FreeTransform::instanciate_transformimpl : argument(s) missing");
-    }
-    LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check(p_L, 1);
-
-    m_free_transformer = lua_mod->GetModuleRoot()->InstanciateTransformAspectImpls("free");
-    return 0;
-}
-
-int LuaClass_FreeTransform::LUA_trashTransformationImpl(lua_State* p_L)
-{
-    int argc = lua_gettop(p_L);
-    if (argc < 1)
-    {
-        LUA_ERROR("FreeTransform::trash_transformimpl : argument(s) missing");
-    }
-    LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check(p_L, 1);
-
-    lua_mod->GetModuleRoot()->TrashTransformAspectImpls(m_free_transformer);
-    return 0;
 }
 
 int LuaClass_FreeTransform::LUA_configure( lua_State* p_L )
@@ -105,7 +79,7 @@ int LuaClass_FreeTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect = entity.GetAspect<TransformAspect>();
     if (transform_aspect)
     {
-        transform_aspect->AddImplementation(transfoimpl_order, m_free_transformer);
+        transform_aspect->AddImplementation(transfoimpl_order, this);
         m_entity_transform_aspect = transform_aspect;
 
         LUA_TRY
@@ -254,4 +228,132 @@ int LuaClass_FreeTransform::LUA_read( lua_State* p_L )
 
     } LUA_CATCH;
     return 4;
+}
+
+void LuaClass_FreeTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform)
+{
+    if (NULL == m_time_aspect)
+    {
+        _DSEXCEPTION("Need a time reference!!!")
+    }
+
+    // recup des composants donnees d'entrées
+
+    ComponentList<Vector> vectors;
+    p_transformaspect->GetComponentsByType<Vector>(vectors);
+
+    Vector local_speed = vectors[0]->getPurpose();
+    local_speed[2] = -local_speed[2];
+
+    ComponentList<Matrix> mats;
+    p_transformaspect->GetComponentsByType<Matrix>(mats);
+
+    Matrix pos = mats[0]->getPurpose();
+
+    ComponentList<TimeAspect::TimeScale> time_scales;
+    m_time_aspect->GetComponentsByType<TimeAspect::TimeScale>(time_scales);
+
+
+    //vitesses demandées...
+
+    ComponentList<dsreal> reals;
+    p_transformaspect->GetComponentsByType<dsreal>(reals);
+    dsreal rspeed_x = reals[0]->getPurpose();
+    dsreal rspeed_y = reals[1]->getPurpose();
+    dsreal rspeed_z = reals[2]->getPurpose();
+
+    if (TimeAspect::FREEZE == time_scales[0]->getPurpose())
+    {
+        rspeed_x = rspeed_y = rspeed_z = 0.0;
+    }
+
+
+    // axe demandé
+    Vector rot_axis_x = vectors[1]->getPurpose();
+    Vector rot_axis_y = vectors[2]->getPurpose();
+    Vector rot_axis_z = vectors[3]->getPurpose();
+
+    // quaternion resultat courant
+    ComponentList<Quaternion>   quats;
+    p_transformaspect->GetComponentsByType<Quaternion>(quats);
+    Quaternion	                current_res = quats[0]->getPurpose();
+
+    Utils::Matrix			    orientation;
+    Vector                      gs;
+
+    ////////////////////////////////////////
+
+
+    Quaternion q, qres;
+    dsreal fps;
+
+
+    /// NB: l'ordre dans lequel sont traites les axes n'a pas d'importance...
+
+    /////////////////Axe X /////////////////////////////
+
+    //fps = tm->ConvertUnitPerSecFramePerSec( rspeed_x );
+    fps = m_time_aspect->ConvertUnitPerSecFramePerSec(rspeed_x);
+    q.RotationAxis(rot_axis_x, fps);
+    qres = current_res * q;
+    current_res = qres;
+
+    current_res.RotationMatFrom(orientation);
+    rot_axis_x[0] = orientation(0, 0);
+    rot_axis_x[1] = orientation(0, 1);
+    rot_axis_x[2] = orientation(0, 2);
+
+    /////////////////Axe Y /////////////////////////////
+
+    //fps = tm->ConvertUnitPerSecFramePerSec( rspeed_y );
+    fps = m_time_aspect->ConvertUnitPerSecFramePerSec(rspeed_y);
+    q.RotationAxis(rot_axis_y, fps);
+    qres = current_res * q;
+    current_res = qres;
+
+    current_res.RotationMatFrom(orientation);
+    rot_axis_y[0] = orientation(1, 0);
+    rot_axis_y[1] = orientation(1, 1);
+    rot_axis_y[2] = orientation(1, 2);
+
+    /////////////////Axe Z /////////////////////////////
+
+    //fps = tm->ConvertUnitPerSecFramePerSec( rspeed_z );
+    fps = m_time_aspect->ConvertUnitPerSecFramePerSec(rspeed_z);
+    q.RotationAxis(rot_axis_z, fps);
+    qres = current_res * q;
+    current_res = qres;
+
+    current_res.RotationMatFrom(orientation);
+    rot_axis_z[0] = orientation(2, 0);
+    rot_axis_z[1] = orientation(2, 1);
+    rot_axis_z[2] = orientation(2, 2);
+
+
+    // resultat calcul est dans 'orientation'
+
+    ////////////////////////////////////////
+
+    orientation.Transform(&local_speed, &gs);
+
+    TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory(pos(3, 0));
+    TimeAspect::TimeScalar pos_31 = m_time_aspect->TimeScalarFactory(pos(3, 1));
+    TimeAspect::TimeScalar pos_32 = m_time_aspect->TimeScalarFactory(pos(3, 2));
+
+    pos_30 += gs[0];
+    pos_31 += gs[1];
+    pos_32 += gs[2];
+
+    pos(3, 0) = pos_30.GetValue();
+    pos(3, 1) = pos_31.GetValue();
+    pos(3, 2) = pos_32.GetValue();
+
+    p_out_base_transform = orientation * pos;
+
+    mats[0]->getPurpose() = pos;
+    quats[0]->getPurpose() = current_res;
+
+    vectors[1]->getPurpose() = rot_axis_x;
+    vectors[2]->getPurpose() = rot_axis_y;
+    vectors[3]->getPurpose() = rot_axis_z;
 }

@@ -66,7 +66,7 @@ dbg_string = ""
 root_entity:add_aspect(PHYSICS_ASPECT)
 
 
-model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
+model.createmainfreecamera(0.0, 0.0, 0.0)
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 -- ///////////////////////////////

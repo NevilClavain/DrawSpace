@@ -29,26 +29,24 @@
 #include "transformaspectimpl.h"
 #include "transformaspect.h"
 
-class LuaClass_FreeTransform
+class LuaClass_FreeTransform : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 private:
 
-    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*   m_free_transformer;
-    DrawSpace::Aspect::TransformAspect*                                 m_entity_transform_aspect;
+    DrawSpace::Aspect::TransformAspect* m_entity_transform_aspect{ nullptr };
 
 public:
 
 	LuaClass_FreeTransform( lua_State* p_L );
 	~LuaClass_FreeTransform( void );
 
-    int LUA_instanciateTransformationImpl(lua_State* p_L);
-    int LUA_trashTransformationImpl(lua_State* p_L);
-
     int LUA_configure( lua_State* p_L );
     int LUA_release( lua_State* p_L );
     int LUA_update( lua_State* p_L );
 	int LUA_setpos( lua_State* p_L );
     int LUA_read( lua_State* p_L );
+
+    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
 
     static const char className[];
     static const Luna<LuaClass_FreeTransform>::RegType methods[];

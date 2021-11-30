@@ -74,5 +74,3 @@ g:set_mousecursorcircularmode(FALSE)
 
 root_entity:release_world()
 root_entity:remove_aspect(PHYSICS_ASPECT)
-
-mvt_mod:unload()

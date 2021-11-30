@@ -159,10 +159,6 @@ renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
 
 
-mvt_mod = Module("mvtmod", "mvts")
-mvt_mod:load()
-g:print(mvt_mod:get_descr().. ' loaded')
-
 
 rg:create_pass_viewportquad('final_pass')
 local finalpass_rss=RenderStatesSet()
@@ -268,8 +264,8 @@ root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
-model.createmainfreecamera(0.0, 200.0, 10.0, mvt_mod)
---model.createmainfreecamera(0.0, 10.0, 40620000.0, mvt_mod)
+model.createmainfreecamera(0.0, 200.0, 10.0)
+--model.createmainfreecamera(0.0, 10.0, 40620000.0)
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 

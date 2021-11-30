@@ -30,5 +30,3 @@ g:show_mousecursor(TRUE)
 g:set_mousecursorcircularmode(FALSE)
 
 
-
-mvt_mod:unload()

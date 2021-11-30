@@ -42,10 +42,6 @@ renderer_infos = {renderer:descr()}
 g:print('Current resolution is '..renderer_infos[2].." "..renderer_infos[3])
 
 
-mvt_mod = Module("mvtmod", "mvts")
-mvt_mod:load()
-g:print(mvt_mod:get_descr().. ' loaded')
-
 commons.init_final_pass(rg, 'final_pass', 'texture_vs.hlsl', 'texture_ps.hlsl')
 
 
@@ -92,7 +88,7 @@ rg:configure_pass_viewportquad_resources('transfer_pass',transfer_renderconfig)
 rg:create_child('transfer_pass', 'texture_pass', 0)
 
 
-model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
+model.createmainfreecamera(0.0, 0.0, 0.0)
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 eg:set_camera(model.camera.entity)

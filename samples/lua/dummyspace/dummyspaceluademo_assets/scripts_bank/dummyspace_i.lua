@@ -75,9 +75,6 @@ current_cam = free_cam
 --current_cam = asteroid_cam
 
 
-mvt_mod = Module("mvtmod", "mvts")
-mvt_mod:load()
-g:print(mvt_mod:get_descr().. ' loaded')
 
 commons.init_final_pass(rg, 'final_pass', 'texture_vs.hlsl', 'texture_ps.hlsl')
 
@@ -86,7 +83,7 @@ rg:set_pass_targetclearstate( 'texture_pass', FALSE )
 rg:set_pass_depthclearstate( 'texture_pass', TRUE )
 
 
-model.createmainfreecamera(0.0, 0.0, 0.0, mvt_mod)
+model.createmainfreecamera(0.0, 0.0, 0.0)
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 camera_width, camera_height, zn, zf = model.camera.entity:read_cameraparams()
@@ -504,7 +501,7 @@ eg:add_child('root', 'rock', boulder.models['rock'].entity)
 --eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
 
 rock_free_transfo=FreeTransform()
-rock_free_transfo:instanciate_transformimpl(mvt_mod)
+
 
 rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, -800.0, 0)
 --rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, 4200.0, 0)
