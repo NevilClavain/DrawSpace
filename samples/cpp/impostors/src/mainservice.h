@@ -27,6 +27,7 @@
 
 #include "drawspace.h"
 #include "serviceaspectimpl.h"
+#include "fpstransformaspectimpl.h"
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
 {
@@ -107,7 +108,7 @@ protected:
     DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_cube_transformer2;
 
     DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_composition_transformer;
-    DrawSpace::Interface::AspectImplementations::TransformAspectImpl*               m_fps_transformer;
+    FPSTransformAspectImpl                                                          m_fps_transformer;
 
 
     DrawSpace::Core::BaseCallback<void, bool>*                                      m_mousecircularmode_cb;

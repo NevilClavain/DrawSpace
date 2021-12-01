@@ -41,7 +41,6 @@ extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
 extern DrawSpace::Logger::Sink runner_logger;
 
 MainService::MainService( void ) :
-m_fps_transformer( NULL ),
 m_resource_events_cb(this, &MainService::on_resource_event)
 {
     DrawSpace::Systems::ResourcesSystem::SetTexturesRootPath("impostorsdemo_assets/textures_bank");
@@ -877,6 +876,7 @@ void MainService::create_ground( void )
 
 void MainService::create_camera( void )
 {
+    /*
     DrawSpace::Interface::Module::Root* mvtmod_root;
 
     if (!DrawSpace::Utils::PILoad::LoadModule("mvtmod", "mvt", &mvtmod_root))
@@ -885,10 +885,11 @@ void MainService::create_camera( void )
     }
 
     m_fps_transformer = mvtmod_root->InstanciateTransformAspectImpls("fps");
+    */
 
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
-    transform_aspect->AddImplementation( 0, m_fps_transformer );
+    transform_aspect->AddImplementation( 0, &m_fps_transformer );
     transform_aspect->AddComponent<dsreal>( "yaw", 0.0 );
     transform_aspect->AddComponent<dsreal>( "pitch", 0.0 );
 
