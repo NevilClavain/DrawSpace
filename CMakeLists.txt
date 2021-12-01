@@ -65,7 +65,6 @@ add_subdirectory(vm_project)
 # modules
 add_subdirectory(modules/gameroom_project)
 add_subdirectory(modules/skyboxmod_project)
-add_subdirectory(modules/mvtmod_project)
 add_subdirectory(modules/planetsmod_project)
 
 # demos
