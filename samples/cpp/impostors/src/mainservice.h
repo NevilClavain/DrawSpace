@@ -28,6 +28,7 @@
 #include "drawspace.h"
 #include "serviceaspectimpl.h"
 #include "fpstransformaspectimpl.h"
+#include "impostorsrenderingaspectimpl.h"
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
 {
@@ -95,8 +96,9 @@ protected:
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_mainBodyRender;
     DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_feetRender;
 
-    DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_impostorsRender;
-    DrawSpace::AspectImplementations::ImpostorsRenderingAspectImpl                  m_worldImpostorsRender;
+    ImpostorsRenderingAspectImpl                                                    m_impostorsRender;
+    ImpostorsRenderingAspectImpl                                                    m_worldImpostorsRender;
+
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
 

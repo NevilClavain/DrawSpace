@@ -31,10 +31,7 @@
 #include "renderingnode.h"
 #include "renderpassnodegraph.h"
 
-namespace DrawSpace
-{
-namespace AspectImplementations
-{
+
 class ImpostorsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
 public:
@@ -64,9 +61,9 @@ public:
 
     public:
 
-        Utils::Matrix                           m_world;
-        Utils::Matrix                           m_view;
-        Utils::Matrix                           m_proj;
+        DrawSpace::Utils::Matrix                           m_world;
+        DrawSpace::Utils::Matrix                           m_view;
+        DrawSpace::Utils::Matrix                           m_proj;
 
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
@@ -95,9 +92,6 @@ public:
     void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
 
-    void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
+    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
 };
-}
-}
-
 #endif
