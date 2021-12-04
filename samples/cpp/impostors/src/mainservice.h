@@ -82,6 +82,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_worldImpostorsEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_worldImpostorsEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_spriteEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_spriteEntityNode;
+
+
     DrawSpace::Core::Entity                                                         m_skyboxEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
 
@@ -98,6 +102,7 @@ protected:
 
     ImpostorsRenderingAspectImpl                                                    m_impostorsRender;
     ImpostorsRenderingAspectImpl                                                    m_worldImpostorsRender;
+    ImpostorsRenderingAspectImpl                                                    m_spriteRender;
 
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
@@ -145,6 +150,7 @@ protected:
     void create_camera( void );
     void create_screen_impostors( void );
     void create_world_impostor( void );
+    void create_sprite_impostor(void);
 
     void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context);
 

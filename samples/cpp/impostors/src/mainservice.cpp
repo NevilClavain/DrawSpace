@@ -214,6 +214,7 @@ bool MainService::Init( void )
     create_composition(-13.0, 28.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity, m_rigbody_composition_transformer);
     create_screen_impostors();
     create_world_impostor();
+    create_sprite_impostor();
 
 
 
@@ -264,7 +265,15 @@ bool MainService::Init( void )
     // ajout de l'impostor world a la scene
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
-    
+
+
+
+    // ajout sprite a la scene
+    m_spriteEntityNode = m_World1EntityNode.AddChild(&m_spriteEntity);
+    m_spriteRender.RegisterToRendering(m_rendergraph);
+
+
+
     m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem").Activate("INIT");
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -468,6 +477,8 @@ void MainService::create_world_impostor( void )
     impostors_texturepass->AddShaderParameter( 1, "color", 1 );
     impostors_texturepass->SetShaderRealVector( "color", Vector( 1.0, 1.0, 1.0, 1.0 ) );
 
+    impostors_texturepass->SetOrderNumber(1000);
+
     RenderStatesSet impostors_texturepass_rss;
     impostors_texturepass_rss.AddRenderStateIn( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "true" ) );
     impostors_texturepass_rss.AddRenderStateOut( DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
@@ -506,8 +517,6 @@ void MainService::create_screen_impostors( void )
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
     ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
-
-
     id.width_scale = 0.1;
     id.height_scale = 0.1;
     id.u1 = 0.0;
@@ -617,6 +626,65 @@ void MainService::create_screen_impostors( void )
 
     transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
 }
+
+void MainService::create_sprite_impostor(void)
+{
+    RenderingAspect* rendering_aspect{ m_spriteEntity.AddAspect<RenderingAspect>() };
+    TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
+
+    rendering_aspect->AddImplementation(&m_spriteRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
+    id.localpos = Vector(-0.78, -0.78, 0.0, 1.0);
+    id.width_scale = 0.4;
+    id.height_scale = 0.4;
+    id.u1 = 0.0;
+    id.v1 = 0.0;
+
+    id.u2 = 1.0;
+    id.v2 = 0.0;
+
+    id.u3 = 1.0;
+    id.v3 = 1.0;
+
+    id.u4 = 0.0;
+    id.v4 = 1.0;
+
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>("0", id);
+    RenderingNode* impostors_texturepass{ rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
+
+    impostors_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
+    impostors_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("spriteimpostor_vs.hlsl", false)));
+    impostors_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("spriteimpostor_ps.hlsl", false)));
+
+    Systems::ResourcesSystem& resources_system{ m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem") };
+    resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(0), 0);
+    resources_system.LoadShader(impostors_texturepass->GetFx()->GetShader(1), 1);
+
+    impostors_texturepass->AddShaderParameter(1, "flags", 0);
+    impostors_texturepass->SetShaderRealVector("flags", Vector(0.0, 0.0, 0.0, 0.0));
+
+    impostors_texturepass->AddShaderParameter(1, "color", 1);
+    impostors_texturepass->SetShaderRealVector("color", Vector(1.0, 1.0, 1.0, 1.0));
+
+    impostors_texturepass->SetOrderNumber(2000);
+
+    RenderStatesSet impostors_texturepass_rss;
+
+    impostors_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    impostors_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+    impostors_texturepass->GetFx()->SetRenderStates(impostors_texturepass_rss);
+
+    impostors_texturepass->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("wolverine.jpg")), 0);
+
+    ResourcesAspect* resources_aspect = m_spriteEntity.AddAspect<ResourcesAspect>();
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass->GetTexture(0), false));
+
+}
+
+
 
 void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
                                 DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl)
