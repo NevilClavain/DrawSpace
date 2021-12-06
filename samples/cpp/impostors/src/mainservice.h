@@ -104,6 +104,8 @@ protected:
     ImpostorsRenderingAspectImpl                                                    m_worldImpostorsRender;
     ImpostorsRenderingAspectImpl                                                    m_spriteRender;
 
+    DrawSpace::Core::RenderingNode*                                                 sprite_texturepass_rnode;
+
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
 

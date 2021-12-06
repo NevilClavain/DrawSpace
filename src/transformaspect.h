@@ -30,6 +30,7 @@
 #include "entity.h"
 
 
+
 namespace DrawSpace
 {
 namespace Aspect
@@ -74,6 +75,9 @@ public:
 
     void OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
     void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
+
+
+    void ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy);
 
     std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> GetTransformAspectImplsList(void) const;
 };

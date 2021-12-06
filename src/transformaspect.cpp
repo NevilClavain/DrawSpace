@@ -27,6 +27,8 @@
 #include "physicsaspect.h"
 #include "timeaspect.h"
 
+#include "transformation.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
@@ -234,4 +236,28 @@ void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
             m_stack_matrix = current_stack_matrix * parent_transform;
         }
     }   
+}
+
+void TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
+{
+    DrawSpace::Utils::Matrix final_view;
+    DrawSpace::Utils::Matrix inv;
+    inv.Identity();
+    inv(2, 2) = -1.0;
+    final_view = m_dispatched_viewtransform * inv;
+
+    DrawSpace::Utils::Matrix result;
+    Transformation chain;
+    chain.PushMatrix(m_dispatched_projtransform);
+    chain.PushMatrix(final_view);
+    chain.PushMatrix(m_worldtransform);
+    chain.BuildResult();
+    chain.GetResult(&result);
+
+    Vector local_point = p_local_point;
+    Vector t_local_point;
+    result.Transform(&local_point, &t_local_point);
+
+    p_posx = (t_local_point[0] / (t_local_point[2] + 1.0));
+    p_posy = (t_local_point[1] / (t_local_point[2] + 1.0));    
 }

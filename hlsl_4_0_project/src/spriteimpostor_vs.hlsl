@@ -51,28 +51,31 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     VS_OUTPUT Output;
     float4 vertexpos;
 
+    float2 pos2D = vec[5].xy;
+
+    vertexpos.xy = pos2D;
     vertexpos.z = 0.0;
     vertexpos.w = 1.0;
 
     if (Input.Normales.x == 1.0)    
     {
-        vertexpos.x = -0.5 * Input.Scale.x;
-        vertexpos.y = 0.5 * Input.Scale.y;
+        vertexpos.x += -0.5 * Input.Scale.x;
+        vertexpos.y += 0.5 * Input.Scale.y;
     }
     else if (Input.Normales.x == 2.0)
     {
-        vertexpos.x = 0.5 * Input.Scale.x;
-        vertexpos.y = 0.5 * Input.Scale.y;
+        vertexpos.x += 0.5 * Input.Scale.x;
+        vertexpos.y += 0.5 * Input.Scale.y;
     }
     else if (Input.Normales.x == 3.0)
     {
-        vertexpos.x = 0.5 * Input.Scale.x;
-        vertexpos.y = -0.5 * Input.Scale.y;
+        vertexpos.x += 0.5 * Input.Scale.x;
+        vertexpos.y += -0.5 * Input.Scale.y;
     }
     else
     {
-        vertexpos.x = -0.5 * Input.Scale.x;
-        vertexpos.y = -0.5 * Input.Scale.y;
+        vertexpos.x += -0.5 * Input.Scale.x;
+        vertexpos.y += -0.5 * Input.Scale.y;
     }
    
     vertexpos.xy += Input.Pos.xy;
