@@ -85,6 +85,9 @@ protected:
     DrawSpace::Core::Entity                                                         m_spriteEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_spriteEntityNode;
 
+    DrawSpace::Core::Entity                                                         m_spriteCollimatorEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_spriteCollimatorEntityNode;
+
 
     DrawSpace::Core::Entity                                                         m_skyboxEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_skyboxEntityNode;
@@ -103,8 +106,11 @@ protected:
     ImpostorsRenderingAspectImpl                                                    m_impostorsRender;
     ImpostorsRenderingAspectImpl                                                    m_worldImpostorsRender;
     ImpostorsRenderingAspectImpl                                                    m_spriteRender;
+    ImpostorsRenderingAspectImpl                                                    m_spriteCollimatorRender;
 
-    DrawSpace::Core::RenderingNode*                                                 sprite_texturepass_rnode;
+    DrawSpace::Core::RenderingNode*                                                 m_sprite_texturepass_rnode;
+
+    DrawSpace::Core::RenderingNode*                                                 m_spritecollimator_texturepass_rnode;
 
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
 
@@ -153,6 +159,7 @@ protected:
     void create_screen_impostors( void );
     void create_world_impostor( void );
     void create_sprite_impostor(void);
+    void create_collimator_sprite_impostor(void);
 
     void on_resource_event(DrawSpace::Systems::ResourcesSystem::ResourceEvent p_event, const dsstring& p_resource, const dsstring& p_context);
 

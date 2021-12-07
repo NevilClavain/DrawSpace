@@ -215,6 +215,7 @@ bool MainService::Init( void )
     create_screen_impostors();
     create_world_impostor();
     create_sprite_impostor();
+    create_collimator_sprite_impostor();
 
 
 
@@ -266,11 +267,14 @@ bool MainService::Init( void )
     m_worldImpostorsEntityNode = m_World1EntityNode.AddChild( &m_worldImpostorsEntity );
     m_worldImpostorsRender.RegisterToRendering( m_rendergraph );
 
-
-
     // ajout sprite a la scene
     m_spriteEntityNode = m_World1EntityNode.AddChild(&m_spriteEntity);
     m_spriteRender.RegisterToRendering(m_rendergraph);
+
+
+
+    m_spriteCollimatorEntityNode = m_World1EntityNode.AddChild(&m_spriteCollimatorEntity);
+    m_spriteCollimatorRender.RegisterToRendering(m_rendergraph);
 
 
 
@@ -307,7 +311,7 @@ void MainService::Run( void )
     dsreal spx, spy;
     bodyTransform->ProjectLocalPoint(Vector(0.0, 0.0, 0.0, 1.0), spx, spy);
 
-    sprite_texturepass_rnode->SetShaderRealVector("pos2D", Vector(spx, spy, 0.0, 0.0));
+    m_spritecollimator_texturepass_rnode->SetShaderRealVector("pos2D", Vector(spx, spy, 0.0, 0.0));
 
     /////////////////////////////
 }
@@ -673,7 +677,7 @@ void MainService::create_sprite_impostor(void)
     resources_system.LoadShader(impostors_texturepass_rnode->GetFx()->GetShader(1), 1);
 
     impostors_texturepass_rnode->AddShaderParameter(0, "pos2D", 5);
-    impostors_texturepass_rnode->SetShaderRealVector("pos2D", Vector(0.0, 0.0, 0.0, 0.0));
+    impostors_texturepass_rnode->SetShaderRealVector("pos2D", Vector(-0.7, -0.7, 0.0, 0.0));
 
     impostors_texturepass_rnode->AddShaderParameter(1, "flags", 0);
     impostors_texturepass_rnode->SetShaderRealVector("flags", Vector(0.0, 0.0, 0.0, 0.0));
@@ -683,7 +687,7 @@ void MainService::create_sprite_impostor(void)
 
     impostors_texturepass_rnode->SetOrderNumber(2000);
 
-    sprite_texturepass_rnode = impostors_texturepass_rnode;
+    m_sprite_texturepass_rnode = impostors_texturepass_rnode;
 
     RenderStatesSet impostors_texturepass_rss;
 
@@ -694,12 +698,71 @@ void MainService::create_sprite_impostor(void)
 
     impostors_texturepass_rnode->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("wolverine.jpg")), 0);
 
-    ResourcesAspect* resources_aspect = m_spriteEntity.AddAspect<ResourcesAspect>();
+    ResourcesAspect* resources_aspect{ m_spriteEntity.AddAspect<ResourcesAspect>() };
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass_rnode->GetTexture(0), false));
 
 }
 
+void MainService::create_collimator_sprite_impostor(void)
+{
+    RenderingAspect* rendering_aspect{ m_spriteCollimatorEntity.AddAspect<RenderingAspect>() };
+    TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
+    rendering_aspect->AddImplementation(&m_spriteCollimatorRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
+    id.localpos = Vector(0.0, 0.0, 0.0, 1.0);
+    id.width_scale = 0.1;
+    id.height_scale = 0.1;
+    id.u1 = 0.0;
+    id.v1 = 0.0;
+
+    id.u2 = 1.0;
+    id.v2 = 0.0;
+
+    id.u3 = 1.0;
+    id.v3 = 1.0;
+
+    id.u4 = 0.0;
+    id.v4 = 1.0;
+
+    rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>("0", id);
+    RenderingNode* impostors_texturepass_rnode{ rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
+
+    impostors_texturepass_rnode->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
+    impostors_texturepass_rnode->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("spriteimpostor_vs.hlsl", false)));
+    impostors_texturepass_rnode->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("spriteimpostor_ps.hlsl", false)));
+
+    Systems::ResourcesSystem& resources_system{ m_systemsHub.GetSystem<Systems::ResourcesSystem>("ResourcesSystem") };
+    resources_system.LoadShader(impostors_texturepass_rnode->GetFx()->GetShader(0), 0);
+    resources_system.LoadShader(impostors_texturepass_rnode->GetFx()->GetShader(1), 1);
+
+    impostors_texturepass_rnode->AddShaderParameter(0, "pos2D", 5);
+    impostors_texturepass_rnode->SetShaderRealVector("pos2D", Vector(0.0, 0.0, 0.0, 0.0));
+
+    impostors_texturepass_rnode->AddShaderParameter(1, "flags", 0);
+    impostors_texturepass_rnode->SetShaderRealVector("flags", Vector(0.0, 0.0, 0.0, 0.0));
+
+    impostors_texturepass_rnode->AddShaderParameter(1, "color", 1);
+    impostors_texturepass_rnode->SetShaderRealVector("color", Vector(1.0, 1.0, 1.0, 1.0));
+
+    impostors_texturepass_rnode->SetOrderNumber(2000);
+
+    m_spritecollimator_texturepass_rnode = impostors_texturepass_rnode;
+
+    RenderStatesSet impostors_texturepass_rss;
+
+    impostors_texturepass_rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    impostors_texturepass_rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+
+    impostors_texturepass_rnode->GetFx()->SetRenderStates(impostors_texturepass_rss);
+
+    impostors_texturepass_rnode->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("collimator.bmp")), 0);
+
+    ResourcesAspect* resources_aspect{ m_spriteCollimatorEntity.AddAspect<ResourcesAspect>() };
+    resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass_rnode->GetTexture(0), false));
+}
 
 void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
                                 DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl)
