@@ -79,6 +79,8 @@ void LuaContext::Startup( void )
     luaopen_table( m_L );
     luaopen_string( m_L );
     
+    lua_checkstack(m_L, 120);   // pos et valeur trouvees empiriquement
+
     Luna<LuaClass_Globals>::Register( m_L );
     Luna<LuaClass_RenderPassNodeGraph>::Register( m_L );
     Luna<LuaClass_Renderer>::Register( m_L );
@@ -102,8 +104,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_Matrix>::Register( m_L );
 	Luna<LuaClass_Quaternion>::Register(m_L);
     Luna<LuaClass_Vector>::Register(m_L);
-    Luna<LuaClass_TimeManagerRef>::Register(m_L);
-    lua_checkstack(m_L, 120);   // pos et valeur trouvees empiriquement
+    Luna<LuaClass_TimeManagerRef>::Register(m_L);    
     Luna<LuaClass_Rendering>::Register(m_L);    
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
