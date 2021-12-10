@@ -117,6 +117,9 @@ protected:
 
     DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_entityIdTextRender;
 
+    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_entityDistanceTextRender;
+    dsreal                                                                          m_entityDistance = 0.0;
+
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_skybox_transformer;
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_impostors_transformer;

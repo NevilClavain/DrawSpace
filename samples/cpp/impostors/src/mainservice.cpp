@@ -193,8 +193,10 @@ bool MainService::Init( void )
 
 
     rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("entityId", 10, 60, 0, 255, 0, "Entity0");
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("entityId", 0, 0, 0, 255, 0, "Entity0");
 
+    rendering_aspect->AddImplementation(&m_entityDistanceTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance", 0, 0, 0, 255, 0, "?");
 
 
 
@@ -305,6 +307,12 @@ bool MainService::Init( void )
 
 void MainService::Run( void )
 {
+    DrawSpace::Interface::Renderer* renderer{ DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics(characteristics);
+
+
+
     m_systemsHub.Run( &m_entitygraph );
     
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
@@ -325,28 +333,37 @@ void MainService::Run( void )
     m_spritecollimator_texturepass_rnode->SetShaderRealVector("pos2D", Vector(spx, spy, 0.0, 0.0));
 
 
+    //////
 
     dsreal text_pos_x = spx - 0.05;
     dsreal text_pos_y = spy + 0.1;
-
-    
-    
-
-    DrawSpace::Interface::Renderer* renderer{ DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
-
-    DrawSpace::Interface::Renderer::Characteristics characteristics;
-    renderer->GetRenderCharacteristics(characteristics);
-
-    //dsreal aspect_ratio{ characteristics.width_viewport / characteristics.height_viewport };
+         
 
     int tpos_x = (dsreal)characteristics.width_resol * 0.5 * (text_pos_x + 1.0);
     int tpos_y = (dsreal)characteristics.height_resol * 0.5 * (text_pos_y + 1.0);
 
-
     rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posx = tpos_x;
     rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posy = characteristics.height_resol - tpos_y;
 
+    //////
 
+
+    m_entityDistance = bodyTransform->LocalPointDistanceFromCamera(Vector(0.0, 0.0, 0.0, 1.0));
+
+
+
+    dsreal text2_pos_x = spx - 0.05;
+    dsreal text2_pos_y = spy - 0.1;
+
+
+    int t2pos_x = (dsreal)characteristics.width_resol * 0.5 * (text2_pos_x + 1.0);
+    int t2pos_y = (dsreal)characteristics.height_resol * 0.5 * (text2_pos_y + 1.0);
+
+
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_posx = t2pos_x;
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_posy = characteristics.height_resol - t2pos_y;
+
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_text = std::to_string(m_entityDistance);
 
 
 

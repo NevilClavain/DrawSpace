@@ -261,3 +261,26 @@ void TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_
     p_posx = (t_local_point[0] / (t_local_point[2] + 1.0));
     p_posy = (t_local_point[1] / (t_local_point[2] + 1.0));    
 }
+
+
+dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Utils::Vector& p_local_point)
+{
+    DrawSpace::Utils::Matrix final_view;
+    DrawSpace::Utils::Matrix inv;
+    inv.Identity();
+    inv(2, 2) = -1.0;
+    final_view = m_dispatched_viewtransform * inv;
+
+    DrawSpace::Utils::Matrix result;
+    Transformation chain;
+    chain.PushMatrix(final_view);
+    chain.PushMatrix(m_worldtransform);
+    chain.BuildResult();
+    chain.GetResult(&result);
+
+    Vector local_point = p_local_point;
+    Vector t_local_point;
+    result.Transform(&local_point, &t_local_point);
+
+    return t_local_point.Length();
+}

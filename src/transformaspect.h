@@ -79,6 +79,8 @@ public:
 
     void ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy);
 
+    dsreal LocalPointDistanceFromCamera(const DrawSpace::Utils::Vector& p_local_point);
+
     std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> GetTransformAspectImplsList(void) const;
 };
 }
