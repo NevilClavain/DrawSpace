@@ -187,8 +187,19 @@ bool MainService::Init( void )
     rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     m_passesRender.SetRendergraph( &m_rendergraph );
 
+
     rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
+
+
+    rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("entityId", 10, 60, 0, 255, 0, "Entity0");
+
+
+
+
+
+
 
     m_rootEntityNode = m_entitygraph.SetRoot( &m_rootEntity );
 
@@ -312,6 +323,32 @@ void MainService::Run( void )
     bodyTransform->ProjectLocalPoint(Vector(0.0, 0.0, 0.0, 1.0), spx, spy);
 
     m_spritecollimator_texturepass_rnode->SetShaderRealVector("pos2D", Vector(spx, spy, 0.0, 0.0));
+
+
+
+    dsreal text_pos_x = spx - 0.05;
+    dsreal text_pos_y = spy + 0.1;
+
+    
+    
+
+    DrawSpace::Interface::Renderer* renderer{ DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics(characteristics);
+
+    //dsreal aspect_ratio{ characteristics.width_viewport / characteristics.height_viewport };
+
+    int tpos_x = (dsreal)characteristics.width_resol * 0.5 * (text_pos_x + 1.0);
+    int tpos_y = (dsreal)characteristics.height_resol * 0.5 * (text_pos_y + 1.0);
+
+
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posx = tpos_x;
+    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posy = characteristics.height_resol - tpos_y;
+
+
+
+
 
     /////////////////////////////
 }
@@ -711,10 +748,21 @@ void MainService::create_collimator_sprite_impostor(void)
     rendering_aspect->AddImplementation(&m_spriteCollimatorRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
 
+    DrawSpace::Interface::Renderer* renderer{ DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+
+    DrawSpace::Interface::Renderer::Characteristics characteristics;
+    renderer->GetRenderCharacteristics(characteristics);
+
+    dsreal aspect_ratio{ characteristics.width_viewport / characteristics.height_viewport };
+
+
     ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
     id.localpos = Vector(0.0, 0.0, 0.0, 1.0);
+
     id.width_scale = 0.1;
-    id.height_scale = 0.1;
+    id.height_scale = id.width_scale * aspect_ratio;
+
+
     id.u1 = 0.0;
     id.v1 = 0.0;
 
@@ -742,10 +790,13 @@ void MainService::create_collimator_sprite_impostor(void)
     impostors_texturepass_rnode->SetShaderRealVector("pos2D", Vector(0.0, 0.0, 0.0, 0.0));
 
     impostors_texturepass_rnode->AddShaderParameter(1, "flags", 0);
-    impostors_texturepass_rnode->SetShaderRealVector("flags", Vector(0.0, 0.0, 0.0, 0.0));
+    impostors_texturepass_rnode->SetShaderRealVector("flags", Vector(0.0, 1.0, 0.0, 0.0));
 
     impostors_texturepass_rnode->AddShaderParameter(1, "color", 1);
     impostors_texturepass_rnode->SetShaderRealVector("color", Vector(1.0, 1.0, 1.0, 1.0));
+
+    impostors_texturepass_rnode->AddShaderParameter(1, "keycolor", 2);
+    impostors_texturepass_rnode->SetShaderRealVector("keycolor", Vector(0.0, 0.0, 0.0, 1.0));
 
     impostors_texturepass_rnode->SetOrderNumber(2000);
 
@@ -758,7 +809,7 @@ void MainService::create_collimator_sprite_impostor(void)
 
     impostors_texturepass_rnode->GetFx()->SetRenderStates(impostors_texturepass_rss);
 
-    impostors_texturepass_rnode->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("collimator.bmp")), 0);
+    impostors_texturepass_rnode->SetTexture(_DRAWSPACE_NEW_(Texture, Texture("collimator.jpg")), 0);
 
     ResourcesAspect* resources_aspect{ m_spriteCollimatorEntity.AddAspect<ResourcesAspect>() };
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass_rnode->GetTexture(0), false));
@@ -1022,17 +1073,6 @@ void MainService::create_ground( void )
 
 void MainService::create_camera( void )
 {
-    /*
-    DrawSpace::Interface::Module::Root* mvtmod_root;
-
-    if (!DrawSpace::Utils::PILoad::LoadModule("mvtmod", "mvt", &mvtmod_root))
-    {
-        _DSEXCEPTION("fail to load mvtmod module root")
-    }
-
-    m_fps_transformer = mvtmod_root->InstanciateTransformAspectImpls("fps");
-    */
-
     TransformAspect* transform_aspect = m_cameraEntity.AddAspect<TransformAspect>();
 
     transform_aspect->AddImplementation( 0, &m_fps_transformer );

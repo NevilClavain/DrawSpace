@@ -41,17 +41,36 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
-    float4 flags = vec[0];
-    float4 color = vec[1];
+    float4 flags        = vec[0];
+    float4 color        = vec[1];
+    float4 keycolor     = vec[2];
     float4 ret_color;
+
+    float4 texel = txDiffuse.Sample(sam, input.TexCoord0);
+
+    
     if (flags.x > 0.0)
     {
         ret_color = color;
     }
     else
     {
-        ret_color = color * txDiffuse.Sample(sam, input.TexCoord0);
+        ret_color = color * texel;
     }
+    
+
+    ret_color = texel;
+
+    
+    if (flags.y > 0.0)
+    {
+        //if (abs(texel.x - keycolor.x) < 0.01 && abs(texel.y - keycolor.y) < 0.01 && abs(texel.z - keycolor.z) < 0.01)
+        if (texel.x==keycolor.x && texel.y==keycolor.y && texel.z==keycolor.z)
+        {
+            clip(-1.0);
+        }
+    }
+    
 
     return ret_color;
 }
