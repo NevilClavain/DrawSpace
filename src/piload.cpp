@@ -78,7 +78,7 @@ bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instan
 #endif
 #endif
 
-    DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle = NULL;
+    DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::Handle pihandle = NULL;
 
     DrawSpace::Interface::Module::Root* module_root = NULL;
     PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::LoadPlugin( complete_path.c_str(), pihandle );
