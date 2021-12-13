@@ -31,7 +31,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::LoadPlugin( const cha
         HMODULE hMod = LoadLibraryA( p_path );
         if( NULL == hMod )
         {
-            return PIM_FAIL_PILOADING;
+            return PluginManagerStatus::PIM_FAIL_PILOADING;
         }
         else
         {
@@ -42,7 +42,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::LoadPlugin( const cha
             LibList* ll = get_lib_list();
             (*ll)[p_path] = pii;
             p_handle   = hMod;
-            return PIM_OK;
+            return PluginManagerStatus::PIM_OK;
         }
     }
     else
@@ -51,9 +51,9 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::LoadPlugin( const cha
         p_handle = it->second.handle;
         it->second.refcount++;
 
-        return PIM_OK_PIALREADYLOADED;
+        return PluginManagerStatus::PIM_OK_PIALREADYLOADED;
     }  
-    return PIM_OK;
+    return PluginManagerStatus::PIM_OK;
 }
 
 template <typename base>
@@ -62,7 +62,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::UnloadPlugin( const c
     auto it = get_lib_list()->find( p_path );
     if( it == get_lib_list()->end() )
     {
-        return PIM_FAIL_UNKNOWN;
+        return PluginManagerStatus::PIM_FAIL_UNKNOWN;
     }
 
     else
@@ -75,7 +75,7 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::UnloadPlugin( const c
             FreeLibrary( pii.handle );
         }
     }
-    return PIM_OK;
+    return PluginManagerStatus::PIM_OK;
 }
 
 template <typename base>
@@ -86,14 +86,14 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::Instanciate( Handle p
 
     if( NULL == proc )
     {
-        return PIM_FAIL_ENTRYPOINTNOTFOUND;
+        return PluginManagerStatus::PIM_FAIL_ENTRYPOINTNOTFOUND;
     }
     else
     {
         Factory factory = (Factory)proc;
         base* inst = (*factory)();
         *p_inst = inst;
-        return PIM_OK;
+        return PluginManagerStatus::PIM_OK;
     }
 }
 
@@ -103,20 +103,20 @@ PluginManagerStatus DrawSpace::Utils::PlugInManager<base>::TrashInstance( const 
     auto it = get_lib_list()->find( p_path );
     if( it == get_lib_list()->end() )
     {
-        return PIM_FAIL_UNKNOWN;
+        return PluginManagerStatus::PIM_FAIL_UNKNOWN;
     }
 
     // TODO  : verifier que le handle fourni est bien dans m_libs; sinon retour PIM_FAIL_UNKNOWN
     FARPROC proc = GetProcAddress( it->second.handle, PITRASHSYMBOLNAME );
     if( NULL == proc )
     {
-        return PIM_FAIL_ENTRYPOINTNOTFOUND;
+        return PluginManagerStatus::PIM_FAIL_ENTRYPOINTNOTFOUND;
     }
     else
     {
         Trash trash = (Trash)proc;
         (*trash)( p_inst );
-        return PIM_OK;    
+        return PluginManagerStatus::PIM_OK;
     }
 }
 

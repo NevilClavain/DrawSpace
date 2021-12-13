@@ -48,12 +48,12 @@ bool PILoad::LoadRendererPlugin( const dsstring& p_file )
     DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Handle pihandle = NULL;
     DrawSpace::Interface::Renderer* renderer = NULL;
 	PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK )
+    if( pistatus != PluginManagerStatus::PIM_OK )
     {
         return false;
     }
 
-    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Instanciate( pihandle, &renderer ) != PIM_OK )
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Renderer>::Instanciate( pihandle, &renderer ) != PluginManagerStatus::PIM_OK )
     {
         return false;
     }
@@ -82,12 +82,12 @@ bool PILoad::LoadModule( const dsstring& p_file, const dsstring& p_module_instan
 
     DrawSpace::Interface::Module::Root* module_root = NULL;
     PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::LoadPlugin( complete_path.c_str(), pihandle );
-    if( pistatus != PIM_OK && pistatus != PIM_OK_PIALREADYLOADED )
+    if( pistatus != PluginManagerStatus::PIM_OK && pistatus != PluginManagerStatus::PIM_OK_PIALREADYLOADED )
     {
         return false;
     }
 
-    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::Instanciate( pihandle, &module_root ) != PIM_OK )
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::Instanciate( pihandle, &module_root ) != PluginManagerStatus::PIM_OK )
     {
         return false;
     }
@@ -118,12 +118,12 @@ bool PILoad::UnloadModule( const dsstring& p_file, DrawSpace::Interface::Module:
 
     p_module_root->Release();
 
-    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::TrashInstance( complete_path.c_str(), p_module_root ) != PIM_OK )
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::TrashInstance( complete_path.c_str(), p_module_root ) != PluginManagerStatus::PIM_OK )
     {
         return false;
     }
     
-    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::UnloadPlugin( complete_path.c_str() ) != PIM_OK )
+    if( DrawSpace::Utils::PlugInManager<DrawSpace::Interface::Module::Root>::UnloadPlugin( complete_path.c_str() ) != PluginManagerStatus::PIM_OK )
     {
         return false;
     }

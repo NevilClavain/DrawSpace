@@ -27,16 +27,15 @@
 
 #include "drawspace_commons.h"
 
-typedef enum
+enum class PluginManagerStatus
 {
     PIM_OK,
     PIM_OK_PIALREADYLOADED,
     PIM_FAIL_PILOADING,
     PIM_FAIL_PIUNLOADING,
     PIM_FAIL_UNKNOWN,
-    PIM_FAIL_ENTRYPOINTNOTFOUND,
-
-} PluginManagerStatus;
+    PIM_FAIL_ENTRYPOINTNOTFOUND
+};
 
 #define PIFACTORYSYMBOLNAME "PIFactory"
 #define PITRASHSYMBOLNAME   "PITrash"
@@ -49,21 +48,20 @@ template <typename base>
 class PlugInManager
 {
 public:
-    typedef HMODULE Handle;
+    using Handle = HMODULE;
 
 private:
-    typedef struct
+    using PluginInfos = struct
     {
         Handle          handle;
         dsstring        path;
         long            refcount;
+    };
 
-    } PluginInfos;
+    using Factory   = base * (*)(void);
+    using Trash     = void  (*)(base*);
 
-    typedef base* (* Factory)( void );
-    typedef void  (* Trash)( base* );
-
-    typedef std::map<std::string, PluginInfos> LibList;
+    using LibList = std::map<std::string, PluginInfos>;
 
     PlugInManager( void )  { };
     ~PlugInManager( void ) { };
