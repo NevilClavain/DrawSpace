@@ -33,6 +33,9 @@
 #include "texture.h"
 #include "AC3DMeshe.h"
 
+#include "luaext_load.h"
+
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -100,8 +103,10 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 
     { "release_assets", &LuaClass_Globals::LUA_releaseassets },
 
-    { "activate_resourcessystem", &LuaClass_Globals::LUA_ActivateResourcesSystem },
-    { "deactivate_resourcessystem", &LuaClass_Globals::LUA_DeactivateResourcesSystem },
+    { "activate_resourcessystem", &LuaClass_Globals::LUA_activateresourcessystem },
+    { "deactivate_resourcessystem", &LuaClass_Globals::LUA_deactivateresourcessystem },
+
+    { "register_extension", &LuaClass_Globals::LUA_registerextension },
 
 	{ 0, 0 }
 };
@@ -634,7 +639,7 @@ int LuaClass_Globals::LUA_sin(lua_State* p_L)
     return 1;
 }
 
-int LuaClass_Globals::LUA_ActivateResourcesSystem(lua_State* p_L)
+int LuaClass_Globals::LUA_activateresourcessystem(lua_State* p_L)
 {
     int argc = lua_gettop(p_L);
     if (argc < 1)
@@ -648,8 +653,15 @@ int LuaClass_Globals::LUA_ActivateResourcesSystem(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_Globals::LUA_DeactivateResourcesSystem(lua_State* p_L)
+int LuaClass_Globals::LUA_deactivateresourcessystem(lua_State* p_L)
 {
     MainService::GetInstance()->DeactivateResourcesSystem();
+    return 0;
+}
+
+int LuaClass_Globals::LUA_registerextension(lua_State* p_L)
+{
+    dsstring extension{ luaL_checkstring(p_L, 1) };
+    LuaExtLoad::RegisterLuaExtension(extension, p_L);
     return 0;
 }
