@@ -33,7 +33,7 @@ public:
     LuaClass_Impostors( lua_State* p_L );
 	~LuaClass_Impostors( void );
 
-    int LUA_getinfos( lua_State* p_L );
+    int LUA_attachtoentity(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Impostors>::RegType methods[];

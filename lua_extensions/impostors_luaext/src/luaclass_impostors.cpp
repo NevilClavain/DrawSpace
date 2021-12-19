@@ -24,11 +24,13 @@
 
 
 #include "luaclass_impostors.h"
+#include "luacontext.h"
+#include "luaclass_entity.h"
 
 const char LuaClass_Impostors::className[] = "Impostors";
 const Luna<LuaClass_Impostors>::RegType LuaClass_Impostors::methods[] =
 {
-    { "descr", &LuaClass_Impostors::LUA_getinfos },
+	{ "attach_toentity", &LuaClass_Impostors::LUA_attachtoentity },
 	{ 0, 0 }
 };
 
@@ -40,7 +42,32 @@ LuaClass_Impostors::~LuaClass_Impostors( void )
 {
 }
 
-int LuaClass_Impostors::LUA_getinfos( lua_State* p_L )
+int LuaClass_Impostors::LUA_attachtoentity(lua_State* p_L)
 {
+    int argc = lua_gettop(p_L);
+    /*
+    if (argc < 1)
+    {
+        LUA_ERROR("Impostors::attach_toentity : argument(s) missing");
+    }
+    */
+
+    //LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check(p_L, 1);
+
+    /*
+    DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
+    RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
+
+    if (NULL == rendering_aspect)
+    {
+        LUA_ERROR("MesheRendering::attach_toentity : entity has no rendering aspect!");
+    }
+
+    m_entity_rendering_aspect = rendering_aspect;
+    m_entity = &entity;
+
+    m_meshe_render = _DRAWSPACE_NEW_(DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl);
+    m_entity_rendering_aspect->AddImplementation(m_meshe_render, NULL);
+    */
     return 0;
 }

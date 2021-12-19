@@ -5,6 +5,7 @@ include('skydome_model.lua')
 include('waterquad_model.lua')
 include('metalcube_model.lua')
 include('spherebump_model.lua')
+include('impostors_model.lua')
 
 
 environment.reflector_pos.x = 0.0
@@ -161,6 +162,57 @@ text2_renderer=TextRendering()
 text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 
+sprite_world_passes_binding = 
+{	
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = nil
+	}
+}
+
+local world_impostor_descr =
+{
+	localpos = 
+	{
+		x = 0.0,
+		y = 0.0,
+		z = 0.0
+	},
+
+    width_scale = 1.0,
+    height_scale = 1.0,
+
+    u1 = 0.0,
+    v1 = 0.0,
+    u2 = 1.0,
+    v2 = 0.0,
+    u3 = 1.0,
+    v3 = 1.0,
+    u4 = 0.0,
+    v4 = 1.0,
+
+	textures_set =
+	{
+		{path='map.jpg', stage=0}
+	}
+}
+
+impostors.view.load('sprite_world', world_impostor_descr, sprite_world_passes_binding)
+
+
+--eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)
+
+
+
+
+
+
+
+
+
+
 skydome_passes_bindings = 
 {
 	binding_0 = 
@@ -208,13 +260,15 @@ land_passes_bindings =
 land.view.load('l', land_passes_bindings)
 eg:add_child('root', 'l', land.models['l'].entity)
 
- land_pos_mat = Matrix()
- land_pos_mat:translation( 0.0, skydome.innerRadius, 0.0 )
+land_pos_mat = Matrix()
+land_pos_mat:translation( 0.0, skydome.innerRadius, 0.0 )
 
- land_transform = RawTransform()
- land_transform:configure(land.models['l'].entity,0)
+land_transform = RawTransform()
+land_transform:configure(land.models['l'].entity,0)
 
- land_transform:add_matrix( "pos_land", land_pos_mat )
+land_transform:add_matrix( "pos_land", land_pos_mat )
+
+
 
 
 
