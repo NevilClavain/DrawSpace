@@ -64,6 +64,5 @@ dsstring RootImpl::GetModuleDescr( void ) const
 
 DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* RootImpl::InstanciateServiceAspectImpl( const dsstring& p_id )
 {
-    //return _DRAWSPACE_NEW_( MainService, MainService );
     return MainService::GetInstance();
 }

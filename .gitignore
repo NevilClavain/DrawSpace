@@ -105,6 +105,9 @@ ALL_BUILD.vcxproj*
 /lua_extensions/impostors_luaext/CMakeFiles/
 /lua_extensions/impostors_luaext/*.sln
 /lua_extensions/impostors_luaext/*.vcxproj*
+/lua_core/CMakeFiles/
+/lua_core/*.sln
+/lua_core/*.vcxproj*
 /hlsl_4_0_project/CMakeFiles/
 /hlsl_4_0_project/*.sln
 /hlsl_4_0_project/*.vcxproj*

@@ -24,11 +24,33 @@
 
 #ifndef _LUACLASS_RENDERER_H_
 #define _LUACLASS_RENDERER_H_
-
 #include "luna.h"
+
+// fwd decls
+namespace DrawSpace
+{
+namespace Core
+{
+class Entity;
+}
+namespace Aspect
+{
+class RenderingAspect;
+}
+};
+
+class ImpostorsRenderingAspectImpl;
+// fwd decls
 
 class LuaClass_Impostors
 {
+private:
+
+    ImpostorsRenderingAspectImpl*           m_impostors_render;
+    DrawSpace::Aspect::RenderingAspect*     m_entity_rendering_aspect;
+    DrawSpace::Core::Entity*                m_entity;
+
+
 public:
     LuaClass_Impostors( lua_State* p_L );
 	~LuaClass_Impostors( void );

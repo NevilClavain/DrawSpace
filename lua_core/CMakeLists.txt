@@ -21,45 +21,24 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(gameroom)
+project(lua_core)
 
 include_directories(${lua_include_dir})
-link_directories(${lua_lib_dir})
-
 include_directories(${physfs_include_dir})
-link_directories(${physfs_lib_dir})
-
-include_directories(${bullet_include_dir})
-link_directories(${bullet_lib_dir})
-
-include_directories(${jsonjsmn_include_dir})
-link_directories(${jsonjsmn_lib_dir})
-
 include_directories(${assimp_include_dir})
-link_directories(${assimp_lib_dir})
+include_directories(${bullet_include_dir})
+include_directories(${jsonjsmn_include_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/modules/gameroom/src/*.h
-        ${CMAKE_SOURCE_DIR}/modules/gameroom/src/*.cpp
-        ${CMAKE_SOURCE_DIR}/modules/gameroom/lua_commons/*.lua
+		${CMAKE_SOURCE_DIR}/lua_core/src/*.h
+        ${CMAKE_SOURCE_DIR}/lua_core/src/*.cpp
 		
 )
 
-add_library(gameroom SHARED ${source_files})
-target_link_libraries(gameroom lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core lua_core)
-install(TARGETS gameroom CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS gameroom CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+add_library(lua_core ${source_files})
 
-install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)
-install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)
-
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/modules/gameroom/lua_commons DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/gameroom/user.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/lua_commons)
 

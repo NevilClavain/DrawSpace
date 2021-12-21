@@ -70,6 +70,9 @@ add_subdirectory(modules/planetsmod_project)
 # lua extensions
 add_subdirectory(lua_extensions/impostors_luaext)
 
+# lua_core
+add_subdirectory(lua_core)
+
 # demos
 add_subdirectory(samples/cpp/impostors)
 add_subdirectory(samples/cpp/water)
