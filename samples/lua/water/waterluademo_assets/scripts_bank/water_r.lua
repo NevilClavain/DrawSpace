@@ -15,6 +15,9 @@ skydome.view.unload('dome')
 waterquad.view.unload('water')
 
 
+impostors.view.unload('sprite_world')
+
+
 metalcube.view.unload('cube')
 destroy_all_cubes()
 

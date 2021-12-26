@@ -37,6 +37,7 @@ const char LuaClass_Impostors::className[] = "Impostors";
 const Luna<LuaClass_Impostors>::RegType LuaClass_Impostors::methods[] =
 {
 	{ "attach_toentity", &LuaClass_Impostors::LUA_attachtoentity },
+    { "detach_fromentity", &LuaClass_Impostors::LUA_detachfromentity },
 	{ 0, 0 }
 };
 
@@ -64,7 +65,7 @@ int LuaClass_Impostors::LUA_attachtoentity(lua_State* p_L)
 
     if (NULL == rendering_aspect)
     {
-        LUA_ERROR("MesheRendering::attach_toentity : entity has no rendering aspect!");
+        LUA_ERROR("Impostors::attach_toentity : entity has no rendering aspect!");
     }
     
     m_entity_rendering_aspect = rendering_aspect;
@@ -73,5 +74,26 @@ int LuaClass_Impostors::LUA_attachtoentity(lua_State* p_L)
     m_impostors_render = _DRAWSPACE_NEW_(ImpostorsRenderingAspectImpl, ImpostorsRenderingAspectImpl);
     m_entity_rendering_aspect->AddImplementation(m_impostors_render, nullptr);
     
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_detachfromentity(lua_State* p_L)
+{
+    if (!m_entity)
+    {
+        LUA_ERROR("Impostors::detach_fromentity : argument(s) missing");
+    }
+    if (m_impostors_render)
+    {
+        _DRAWSPACE_DELETE_(m_impostors_render);
+    }
+    LUA_TRY
+    {
+        m_entity_rendering_aspect->RemoveImplementation(m_impostors_render);
+
+    } LUA_CATCH;
+
+    m_entity_rendering_aspect = nullptr;
+    m_entity = nullptr;
     return 0;
 }

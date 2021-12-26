@@ -45,6 +45,15 @@ impostors.create_rendered_impostors = function(p_config, rendering_passes_array)
 
   -- TO BE CONTINUED
 
+  return entity, impostors_renderer
+end
+
+impostors.trash_impostors = function(p_rendergraph, p_entity, p_renderer)
+
+	p_renderer:detach_fromentity()
+
+	p_entity:remove_aspect(RENDERING_ASPECT)
+	p_entity:remove_aspect(RESOURCES_ASPECT)
 
 end
 
@@ -56,11 +65,27 @@ impostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
 
   entity, renderer = impostors.create_rendered_impostors(impostors.rendering_config, p_passes_bindings)
 
+  local pair = {}
+  pair['entity'] = entity
+  pair['renderer'] = renderer
+
+  impostors.models[p_entity_id] = pair
   
 end
 
+
 impostors.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
+  local entity = impostors.models[p_entity_id]['entity']
+  local renderer = impostors.models[p_entity_id]['renderer']
+    
+  impostors.trash_impostors(p_rendergraph, entity, renderer)
+
+  local pair = impostors.models[p_entity_id]
+  pair['entity'] = nil
+  pair['renderer'] = nil
+
+  impostors.models[p_entity_id] = nil
 
 end
 

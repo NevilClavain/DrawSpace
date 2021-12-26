@@ -56,6 +56,7 @@ public:
 	~LuaClass_Impostors( void );
 
     int LUA_attachtoentity(lua_State* p_L);
+    int LUA_detachfromentity(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Impostors>::RegType methods[];
