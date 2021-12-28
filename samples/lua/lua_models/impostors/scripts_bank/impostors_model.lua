@@ -5,6 +5,8 @@ impostors.view = {}
 -- stockage des instances modeles : paire {entity, renderer}
 impostors.models = {}
 
+impostors.requested_ro = 1000
+impostors.requested_texture = ""
 
 impostors.world = {}
 
@@ -31,25 +33,81 @@ impostors.world.rendering_config =
 	}
 }
 
-impostors.create_rendered_impostors = function(p_config, rendering_passes_array)
+impostors.create_rendered_impostors = function(p_config, p_rendering_passes_array)
 
   local entity=Entity()
   entity:add_aspect(RENDERING_ASPECT)
   entity:add_aspect(RESOURCES_ASPECT)
 
   
-  local impostors_renderer=Impostors()
-  impostors_renderer:attach_toentity(entity)
+  local renderer=Impostors()
+  renderer:attach_toentity(entity)
   
   local renderconfig=RenderConfig()
 
-  -- TO BE CONTINUED
+  for k, v in pairs(p_rendering_passes_array) do
 
-  return entity, impostors_renderer
+	local layer_entry = v
+
+	local pass_id = layer_entry.target_pass_id
+	local rendering_id = layer_entry.rendering_id
+
+	--g:print("###### "..rendering_id..' '..pass_id)
+	renderer:set_passforrenderid(rendering_id, pass_id)
+  end
+
+
+  for k, v in pairs(p_config) do   
+	local rendercontext = RenderContext(k)
+
+	local fxparams = FxParams()
+	local fx_config = v['fx']
+
+	local rss=RenderStatesSet()
+
+	local rs_in_config = fx_config['rs_in']
+	for k2, v2 in pairs(rs_in_config) do
+	  local curr_rs_in = v2
+	  --g:print(curr_rs_in['ope']..'->'..curr_rs_in['value'])
+	  rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+	end
+
+	local rs_out_config = fx_config['rs_out']
+	for k2, v2 in pairs(rs_out_config) do
+	  local curr_rs_out = v2
+	  --g:print(curr_rs_out['ope']..'->'..curr_rs_out['value'])
+	  rss:add_renderstate_out(curr_rs_out['ope'], curr_rs_out['value'])
+	end
+	fxparams:set_renderstatesset(rss)
+
+	local shaders_config = fx_config['shaders']
+	for k2, v2 in pairs(shaders_config) do
+	  local curr_shader = v2
+	  --g:print(curr_shader['path']..'->'..curr_shader['mode'])
+	  fxparams:add_shaderfile(curr_shader['path'],curr_shader['mode'])
+	end
+
+	rendercontext:add_fxparams(fxparams)
+
+	local textures = TexturesSet()
+	textures:set_texturefiletostage(impostors.requested_texture, 0)
+	rendercontext:add_texturesset(textures)
+
+	--g:print('Impostors : requested rendering order = '..impostors.requested_ro)
+	rendercontext:set_renderingorder(impostors.requested_ro)
+
+	renderconfig:add_rendercontext(rendercontext)
+
+  end
+
+  --renderer:configure(renderconfig)
+
+  return entity, renderer
 end
 
 impostors.trash_impostors = function(p_rendergraph, p_entity, p_renderer)
 
+    p_renderer:unregister_from_rendering(p_rendergraph)
 	p_renderer:detach_fromentity()
 
 	p_entity:remove_aspect(RENDERING_ASPECT)
@@ -63,7 +121,9 @@ impostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   local entity
   local renderer
 
-  entity, renderer = impostors.create_rendered_impostors(impostors.rendering_config, p_passes_bindings)
+  entity, renderer = impostors.create_rendered_impostors(impostors.world.rendering_config, p_passes_bindings)
+  renderer:register_to_rendering(p_rendergraph)
+
 
   local pair = {}
   pair['entity'] = entity
@@ -107,7 +167,10 @@ impostors.view.unload = function(p_entity_id)
   end
 end
 
-impostors.view.load = function(p_entity_id, p_descriptor, p_passes_bindings)
+impostors.view.load = function(p_entity_id, p_descriptor, p_passes_bindings, p_ro, p_texture)
+
+  impostors.requested_ro = p_ro
+  impostors.requested_texture = p_texture
 
   local found_id = FALSE
   for k, v in pairs(impostors.models) do

@@ -40,8 +40,7 @@ private:
     DrawSpace::Core::Entity*                                        m_entity;
 
 	// table de traduction RenderContext name -> Passes Name
-	// permet de savoir a quelle passe est attribu�e un rendercontext
-	//std::map<dsstring, dsstring>									m_rcname_to_passes;
+	// permet de savoir a quelle passe est attribue un rendercontext
     std::map<dsstring, std::vector<dsstring>>                       m_rcname_to_passes;
 
     std::map<dsstring, DrawSpace::Core::RenderingNode*>             m_renderingnodes; // classes par passes

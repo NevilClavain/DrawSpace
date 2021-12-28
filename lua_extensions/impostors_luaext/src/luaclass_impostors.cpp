@@ -28,6 +28,7 @@
 #include "luaclass_entity.h"
 #include "renderingaspect.h"
 #include "impostorsrenderingaspectimpl.h"
+#include "luaclass_renderpassnodegraph.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Aspect;
@@ -38,6 +39,10 @@ const Luna<LuaClass_Impostors>::RegType LuaClass_Impostors::methods[] =
 {
 	{ "attach_toentity", &LuaClass_Impostors::LUA_attachtoentity },
     { "detach_fromentity", &LuaClass_Impostors::LUA_detachfromentity },
+    { "set_passforrenderid", &LuaClass_Impostors::LUA_setPassForRenderId },
+    { "register_to_rendering", &LuaClass_Impostors::LUA_registertorendering },
+    { "unregister_from_rendering", &LuaClass_Impostors::LUA_unregisterfromrendering },
+
 	{ 0, 0 }
 };
 
@@ -95,5 +100,59 @@ int LuaClass_Impostors::LUA_detachfromentity(lua_State* p_L)
 
     m_entity_rendering_aspect = nullptr;
     m_entity = nullptr;
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_setPassForRenderId(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("Impostors::set_passforrenderid : argument(s) missing");
+    }
+
+    dsstring rc_id = luaL_checkstring(p_L, 1);
+    dsstring pass_id = luaL_checkstring(p_L, 2);
+
+    m_rcname_to_passes[rc_id].push_back(pass_id);
+
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_registertorendering(lua_State* p_L)
+{
+    if (NULL == m_impostors_render)
+    {
+        LUA_ERROR("Impostors::register_to_rendering : no impostors rendering aspect impl created");
+    }
+
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Impostors::register_to_rendering : argument(s) missing");
+    }
+
+    LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1);
+
+    m_impostors_render->RegisterToRendering(lua_rg->GetRenderGraph());
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_unregisterfromrendering(lua_State* p_L)
+{
+    if (NULL == m_impostors_render)
+    {
+        LUA_ERROR("Impostors::unregister_from_rendering : no impostors rendering aspect impl created");
+    }
+
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Impostors::unregister_from_rendering : argument(s) missing");
+    }
+
+    LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1);
+
+    m_impostors_render->UnregisterFromRendering(lua_rg->GetRenderGraph());
     return 0;
 }

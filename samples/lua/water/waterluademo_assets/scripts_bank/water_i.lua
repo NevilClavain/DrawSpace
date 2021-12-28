@@ -199,7 +199,7 @@ local world_impostor_descr =
 	}
 }
 
-impostors.view.load('sprite_world', world_impostor_descr, sprite_world_passes_binding)
+impostors.view.load('sprite_world', world_impostor_descr, sprite_world_passes_binding, 1200, "map.jpg")
 
 
 --eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)

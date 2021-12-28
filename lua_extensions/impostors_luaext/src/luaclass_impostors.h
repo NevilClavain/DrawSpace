@@ -46,9 +46,14 @@ class LuaClass_Impostors
 {
 private:
 
-    ImpostorsRenderingAspectImpl*           m_impostors_render;
-    DrawSpace::Aspect::RenderingAspect*     m_entity_rendering_aspect;
-    DrawSpace::Core::Entity*                m_entity;
+    ImpostorsRenderingAspectImpl*                   m_impostors_render          { nullptr };
+    DrawSpace::Aspect::RenderingAspect*             m_entity_rendering_aspect   { nullptr };
+    DrawSpace::Core::Entity*                        m_entity                    { nullptr };
+
+    // table de traduction RenderContext name -> Passes Name
+    // permet de savoir a quelle passe est attribue un rendercontext
+    std::map<dsstring, std::vector<dsstring>>       m_rcname_to_passes;
+
 
 
 public:
@@ -57,6 +62,12 @@ public:
 
     int LUA_attachtoentity(lua_State* p_L);
     int LUA_detachfromentity(lua_State* p_L);
+
+    int LUA_setPassForRenderId(lua_State* p_L);
+
+    int LUA_registertorendering(lua_State* p_L);
+    int LUA_unregisterfromrendering(lua_State* p_L);
+
 
     static const char className[];
     static const Luna<LuaClass_Impostors>::RegType methods[];
