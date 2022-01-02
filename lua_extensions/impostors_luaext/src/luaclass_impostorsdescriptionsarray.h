@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,16 +22,29 @@
 */
 /* -*-LIC_END-*- */
 
-#include "impostorsluaext.h"
-#include "luaclass_impostors.h"
-#include "luaclass_impostorsdescriptionsarray.h"
+#pragma once
 
-ImpostorsLuaExtension::ImpostorsLuaExtension(void)
-{
-}
+#include "luna.h"
+#include "impostorsrenderingaspectimpl.h"
 
-void ImpostorsLuaExtension::Register(lua_State* p_L)
+
+class LuaClass_ImpostorsDescriptionsArray
 {
-	Luna<LuaClass_Impostors>::Register(p_L);
-	Luna<LuaClass_ImpostorsDescriptionsArray>::Register(p_L);
-}
+private:
+    std::vector<ImpostorsRenderingAspectImpl::ImpostorDescriptor> m_descriptions;
+
+public:
+    LuaClass_ImpostorsDescriptionsArray(lua_State* p_L);
+    ~LuaClass_ImpostorsDescriptionsArray(void);
+
+
+    int LUA_add(lua_State* p_L);
+    int LUA_setscale(lua_State* p_L);
+    int LUA_setposition(lua_State* p_L);
+    int LUA_setuvcoords(lua_State* p_L);
+
+
+    static const char className[];
+    static const Luna<LuaClass_ImpostorsDescriptionsArray>::RegType methods[];
+
+};
