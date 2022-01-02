@@ -150,13 +150,13 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 
     // recupere l'aspect rendu s'il existe pour cette entitee
     if( m_entity_rendering_aspect )
-    {               
+    {
         LUA_TRY
         {
             LuaClass_RenderConfig::Data rcfg_data = rcfg->GetData();
 
             for(size_t i = 0; i < rcfg_data.render_contexts.size(); i++)
-            {               
+            {
                 LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
 				
 				if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontextname))
@@ -436,7 +436,7 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
     }
 
     if( m_entity_rendering_aspect )
-    {        
+    {
         for( auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it )
         {
             it->second->CleanupShaderParams();
