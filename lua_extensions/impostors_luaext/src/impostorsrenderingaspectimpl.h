@@ -52,10 +52,10 @@ public:
     private:
         typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
 
-        dsstring                                m_pass_name;
-        DrawSpace::Core::RenderingNode*         m_rendering_node;  
-        RenderingNodeDrawCallback*              m_cb;
-        DrawSpace::Interface::Renderer*         m_renderer;
+        dsstring                                m_pass_name                 = { nullptr };
+        DrawSpace::Core::RenderingNode*         m_rendering_node            = { nullptr };
+        RenderingNodeDrawCallback*              m_cb                        = { nullptr };
+        DrawSpace::Interface::Renderer*         m_renderer                  = { nullptr };
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 

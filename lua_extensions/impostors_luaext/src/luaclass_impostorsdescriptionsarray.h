@@ -43,6 +43,8 @@ public:
     int LUA_setposition(lua_State* p_L);
     int LUA_setuvcoords(lua_State* p_L);
 
+    std::vector<ImpostorsRenderingAspectImpl::ImpostorDescriptor> GetData(void) const;
+
 
     static const char className[];
     static const Luna<LuaClass_ImpostorsDescriptionsArray>::RegType methods[];

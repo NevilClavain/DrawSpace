@@ -24,6 +24,7 @@
 
 #pragma once
 
+/*
 #include "drawspace_commons.h"
 
 extern "C" {
@@ -31,10 +32,20 @@ extern "C" {
 #include "lualib.h"
 #include "lauxlib.h"
 };
+*/
 
+//fwd decl
+struct lua_State;
+namespace DrawSpace
+{
+namespace Interface
+{
+class Renderer;
+}
+}
 class LuaExtension
 {
 public:
-	virtual void Register(lua_State* p_L) = 0;
-
+	virtual void Register(lua_State*) = 0;
+	virtual void UpdateRenderer(DrawSpace::Interface::Renderer*) = 0;
 };

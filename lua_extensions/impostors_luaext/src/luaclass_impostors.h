@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERER_H_
-#define _LUACLASS_RENDERER_H_
+#pragma once
+
+#include "drawspace_commons.h"
 #include "luna.h"
 
 // fwd decls
@@ -32,6 +33,7 @@ namespace DrawSpace
 namespace Core
 {
 class Entity;
+class RenderingNode;
 }
 namespace Aspect
 {
@@ -46,15 +48,17 @@ class LuaClass_Impostors
 {
 private:
 
-    ImpostorsRenderingAspectImpl*                   m_impostors_render          { nullptr };
-    DrawSpace::Aspect::RenderingAspect*             m_entity_rendering_aspect   { nullptr };
-    DrawSpace::Core::Entity*                        m_entity                    { nullptr };
+    ImpostorsRenderingAspectImpl*                                   m_impostors_render          { nullptr };
+    DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect   { nullptr };
+    DrawSpace::Core::Entity*                                        m_entity                    { nullptr };
+
+    std::map<dsstring, DrawSpace::Core::RenderingNode*>             m_renderingnodes; // classes par passes
 
     // table de traduction RenderContext name -> Passes Name
     // permet de savoir a quelle passe est attribue un rendercontext
-    std::map<dsstring, std::vector<dsstring>>       m_rcname_to_passes;
+    std::map<dsstring, std::vector<dsstring>>                       m_rcname_to_passes;
 
-
+    void cleanup_resources(lua_State* p_L);
 
 public:
     LuaClass_Impostors( lua_State* p_L );
@@ -68,10 +72,11 @@ public:
     int LUA_registertorendering(lua_State* p_L);
     int LUA_unregisterfromrendering(lua_State* p_L);
 
+    int LUA_configure(lua_State* p_L);
+    int LUA_release(lua_State* p_L);
+
 
     static const char className[];
     static const Luna<LuaClass_Impostors>::RegType methods[];
 
 };
-
-#endif

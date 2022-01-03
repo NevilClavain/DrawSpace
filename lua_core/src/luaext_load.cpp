@@ -23,10 +23,13 @@
 /* -*-LIC_END-*- */
 
 #include "luaext_load.h"
+#include "renderer.h"
 #include "pimanager.h"
+#include "plugin.h"
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
@@ -58,6 +61,7 @@ bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L)
         return false;
     }
 
+    lua_extension->UpdateRenderer(DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface);
     lua_extension->Register(p_L);
 
     return true;

@@ -162,6 +162,11 @@ text2_renderer=TextRendering()
 text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 
+
+
+
+-- impostor
+
 sprite_world_passes_binding = 
 {	
 	binding_0 = 
@@ -172,39 +177,23 @@ sprite_world_passes_binding =
 	}
 }
 
-local world_impostor_descr =
-{
-	localpos = 
-	{
-		x = 0.0,
-		y = 0.0,
-		z = 0.0
-	},
+impostors_descriptors_array = ImpostorsDescriptionsArray()
 
-    width_scale = 1.0,
-    height_scale = 1.0,
+impostors_descriptors_array:add()
 
-    u1 = 0.0,
-    v1 = 0.0,
-    u2 = 1.0,
-    v2 = 0.0,
-    u3 = 1.0,
-    v3 = 1.0,
-    u4 = 0.0,
-    v4 = 1.0,
+impostors.view.load('sprite_world', impostors_descriptors_array, sprite_world_passes_binding, 1200, "map.jpg")
 
-	textures_set =
-	{
-		{path='map.jpg', stage=0}
-	}
-}
+eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)
 
-impostors.view.load('sprite_world', world_impostor_descr, sprite_world_passes_binding, 1200, "map.jpg")
+impostors.models['sprite_world'].entity:add_aspect(TRANSFORM_ASPECT)
 
+world_impostor_transform = RawTransform()
+world_impostor_transform:configure(impostors.models['sprite_world'].entity,0)
 
---eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)
+world_impostor_pos_mat = Matrix()
+world_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 10.0, 0.0 )
 
-
+world_impostor_transform:add_matrix( "pos_land", world_impostor_pos_mat )
 
 
 

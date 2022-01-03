@@ -44,6 +44,11 @@ LuaClass_ImpostorsDescriptionsArray::~LuaClass_ImpostorsDescriptionsArray(void)
 {
 }
 
+std::vector<ImpostorsRenderingAspectImpl::ImpostorDescriptor> LuaClass_ImpostorsDescriptionsArray::GetData(void) const
+{
+    return m_descriptions;
+}
+
 int LuaClass_ImpostorsDescriptionsArray::LUA_add(lua_State* p_L)
 {
     // create a descriptor with some default values
@@ -54,15 +59,76 @@ int LuaClass_ImpostorsDescriptionsArray::LUA_add(lua_State* p_L)
 
 int LuaClass_ImpostorsDescriptionsArray::LUA_setscale(lua_State* p_L)
 {
+    int argc{ lua_gettop(p_L) };
+    if (argc < 3)
+    {
+        LUA_ERROR("ImpostorsDescriptionsArray::set_scale : argument(s) missing");
+    }
+    
+    int index{ luaL_checkint(p_L, 1) };
+    dsreal width_scale{ luaL_checknumber(p_L, 2) };
+    dsreal height_scale{ luaL_checknumber(p_L, 3) };
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor descriptor{ m_descriptions[index] };
+    descriptor.width_scale = width_scale;
+    descriptor.height_scale = height_scale;
+    m_descriptions[index] = descriptor;
+
     return 0;
 }
 
 int LuaClass_ImpostorsDescriptionsArray::LUA_setposition(lua_State* p_L)
 {
+    int argc{ lua_gettop(p_L) };
+    if (argc < 4)
+    {
+        LUA_ERROR("ImpostorsDescriptionsArray::set_position : argument(s) missing");
+    }
+
+    int index{ luaL_checkint(p_L, 1) };
+    dsreal x{ luaL_checknumber(p_L, 2) };
+    dsreal y{ luaL_checknumber(p_L, 3) };
+    dsreal z{ luaL_checknumber(p_L, 4) };
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor descriptor{ m_descriptions[index] };
+    descriptor.localpos[0] = x;
+    descriptor.localpos[1] = y;
+    descriptor.localpos[2] = z;
+    m_descriptions[index] = descriptor;
+
     return 0;
 }
 
 int LuaClass_ImpostorsDescriptionsArray::LUA_setuvcoords(lua_State* p_L)
 {
+    int argc{ lua_gettop(p_L) };
+    if (argc < 9)
+    {
+        LUA_ERROR("ImpostorsDescriptionsArray::set_uvcoords : argument(s) missing");
+    }
+
+    int index{ luaL_checkint(p_L, 1) };
+    dsreal u1{ luaL_checknumber(p_L, 2) };
+    dsreal v1{ luaL_checknumber(p_L, 3) };
+    dsreal u2{ luaL_checknumber(p_L, 4) };
+    dsreal v2{ luaL_checknumber(p_L, 5) };
+    dsreal u3{ luaL_checknumber(p_L, 6) };
+    dsreal v3{ luaL_checknumber(p_L, 7) };
+    dsreal u4{ luaL_checknumber(p_L, 8) };
+    dsreal v4{ luaL_checknumber(p_L, 9) };
+
+    ImpostorsRenderingAspectImpl::ImpostorDescriptor descriptor{ m_descriptions[index] };
+    
+    descriptor.u1 = u1;
+    descriptor.v1 = v1;
+    descriptor.u2 = u2;
+    descriptor.v2 = v2;
+    descriptor.u3 = u3;
+    descriptor.v3 = v3;
+    descriptor.u4 = u4;
+    descriptor.v4 = v4;
+
+    m_descriptions[index] = descriptor;
+
     return 0;
 }

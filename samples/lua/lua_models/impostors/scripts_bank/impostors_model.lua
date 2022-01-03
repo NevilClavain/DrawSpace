@@ -7,6 +7,7 @@ impostors.models = {}
 
 impostors.requested_ro = 1000
 impostors.requested_texture = ""
+impostors.requested_descriptors = nil
 
 impostors.world = {}
 
@@ -29,6 +30,12 @@ impostors.world.rendering_config =
 			{
 				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
 			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "vflags", shader_index = 0, register = 24 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "colormode", shader_index = 1, register = 1 },
 		}
 	}
 }
@@ -89,6 +96,14 @@ impostors.create_rendered_impostors = function(p_config, p_rendering_passes_arra
 
 	rendercontext:add_fxparams(fxparams)
 
+
+	local shaderparams_config = v['shaders_params']
+	for k2, v2 in pairs(shaderparams_config) do
+	  local param = v2
+	    --g:print(param['param_name']..'->'..param['shader_index']..','..param['register'])
+        rendercontext:add_shaderparam(param['param_name'], param['shader_index'], param['register'])
+	end
+
 	local textures = TexturesSet()
 	textures:set_texturefiletostage(impostors.requested_texture, 0)
 	rendercontext:add_texturesset(textures)
@@ -99,8 +114,8 @@ impostors.create_rendered_impostors = function(p_config, p_rendering_passes_arra
 	renderconfig:add_rendercontext(rendercontext)
 
   end
-
-  --renderer:configure(renderconfig)
+  
+  renderer:configure(renderconfig, impostors.requested_descriptors)
 
   return entity, renderer
 end
@@ -108,6 +123,7 @@ end
 impostors.trash_impostors = function(p_rendergraph, p_entity, p_renderer)
 
     p_renderer:unregister_from_rendering(p_rendergraph)
+	p_renderer:release()
 	p_renderer:detach_fromentity()
 
 	p_entity:remove_aspect(RENDERING_ASPECT)
@@ -167,10 +183,11 @@ impostors.view.unload = function(p_entity_id)
   end
 end
 
-impostors.view.load = function(p_entity_id, p_descriptor, p_passes_bindings, p_ro, p_texture)
+impostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture)
 
   impostors.requested_ro = p_ro
   impostors.requested_texture = p_texture
+  impostors.requested_descriptors = p_descriptors_array
 
   local found_id = FALSE
   for k, v in pairs(impostors.models) do

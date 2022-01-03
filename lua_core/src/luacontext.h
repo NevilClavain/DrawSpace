@@ -48,6 +48,15 @@ extern "C" {
                 LUA_ERROR( dsstring( msgexcp ) );\
             }
 
+#define LUA_STDCATCH catch( std::exception& p_e )\
+            {\
+                const char* what = p_e.what();\
+                char msgexcp[1024];\
+                sprintf( msgexcp, "exception catch : %s", what );\
+                LUA_ERROR( dsstring( msgexcp ) );\
+            }
+
+
 class LuaContext : public DrawSpace::Utils::BaseSingleton<LuaContext>
 {
 protected:

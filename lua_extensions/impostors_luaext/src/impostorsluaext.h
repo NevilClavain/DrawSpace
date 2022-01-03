@@ -34,6 +34,7 @@ public:
 	ImpostorsLuaExtension(void);
 
 	void Register(lua_State* p_L);
+	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
 
 };
 

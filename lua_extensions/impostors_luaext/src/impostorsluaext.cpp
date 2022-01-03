@@ -36,3 +36,8 @@ void ImpostorsLuaExtension::Register(lua_State* p_L)
 	Luna<LuaClass_Impostors>::Register(p_L);
 	Luna<LuaClass_ImpostorsDescriptionsArray>::Register(p_L);
 }
+
+void ImpostorsLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
+{
+	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
