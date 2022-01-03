@@ -536,8 +536,8 @@ void MainService::create_world_impostor( void )
 	resources_system.LoadShader(impostors_texturepass_rnode->GetFx()->GetShader(1), 1);
 
 
-    impostors_texturepass_rnode->AddShaderParameter( 0, "globalscale", 24 );
-    impostors_texturepass_rnode->SetShaderRealVector( "globalscale", Vector( 5.0, 5.0, 0.0, 1.0 ) );
+    impostors_texturepass_rnode->AddShaderParameter(0, "vflags", 24);
+    impostors_texturepass_rnode->SetShaderRealVector("vflags", Vector(0.0, 0.0, 0.0, 0.0));
 
     impostors_texturepass_rnode->AddShaderParameter( 1, "flags", 0 );
     impostors_texturepass_rnode->SetShaderRealVector( "flags", Vector( 0.0, 0.0, 0.0, 0.0 ) );
