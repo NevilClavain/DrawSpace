@@ -24,16 +24,6 @@
 
 #pragma once
 
-/*
-#include "drawspace_commons.h"
-
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-};
-*/
-
 //fwd decl
 struct lua_State;
 namespace DrawSpace
