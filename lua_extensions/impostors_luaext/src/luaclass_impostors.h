@@ -75,6 +75,13 @@ public:
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);
 
+    int LUA_setshaderreal(lua_State* p_L);
+    int LUA_setshaderrealvector(lua_State* p_L);
+    int LUA_setshaderrealinvector(lua_State* p_L);
+    int LUA_setshaderrealmatrix(lua_State* p_L);
+    int LUA_setshaderbool(lua_State* p_L);
+
+
 
     static const char className[];
     static const Luna<LuaClass_Impostors>::RegType methods[];

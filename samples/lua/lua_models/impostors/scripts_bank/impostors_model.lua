@@ -40,6 +40,16 @@ impostors.world.rendering_config =
 	}
 }
 
+impostors.update_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
+
+    local renderer = impostors.models[p_entity_id]['renderer']
+	renderer:set_shaderrealvector( p_pass_id, 'vflags', 0.0, 0.0, 0.0, 0.0 )
+	renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
+	renderer:set_shaderrealvector( p_pass_id, 'colormode', 0.0, 0.0, 0.0, 0.0 )
+
+end
+
+
 impostors.create_rendered_impostors = function(p_config, p_rendering_passes_array)
 
   local entity=Entity()
@@ -146,6 +156,7 @@ impostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   pair['renderer'] = renderer
 
   impostors.models[p_entity_id] = pair
+
   
 end
 

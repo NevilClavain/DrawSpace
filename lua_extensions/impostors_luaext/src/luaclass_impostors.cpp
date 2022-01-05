@@ -31,14 +31,15 @@
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_renderconfig.h"
 #include "luaclass_impostorsdescriptionsarray.h"
+#include "luaclass_matrix.h"
 
 #include "renderingnode.h"
 #include "resourcesaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
-
 
 const char LuaClass_Impostors::className[] = "Impostors";
 const Luna<LuaClass_Impostors>::RegType LuaClass_Impostors::methods[] =
@@ -50,8 +51,11 @@ const Luna<LuaClass_Impostors>::RegType LuaClass_Impostors::methods[] =
     { "unregister_from_rendering", &LuaClass_Impostors::LUA_unregisterfromrendering },
     { "configure", &LuaClass_Impostors::LUA_configure },
     { "release", &LuaClass_Impostors::LUA_release },
-
-
+    { "set_shaderreal", &LuaClass_Impostors::LUA_setshaderreal },
+    { "set_shaderrealvector", &LuaClass_Impostors::LUA_setshaderrealvector },
+    { "set_shaderrealinvector", &LuaClass_Impostors::LUA_setshaderrealinvector },
+    { "set_shaderrealmatrix", &LuaClass_Impostors::LUA_setshaderrealmatrix },
+    { "set_shaderbool", &LuaClass_Impostors::LUA_setshaderbool },
 	{ 0, 0 }
 };
 
@@ -321,4 +325,144 @@ void LuaClass_Impostors::cleanup_resources(lua_State* p_L)
     {
         LUA_ERROR("Impostors::cleanup_resources : no rendering aspect");
     }
+}
+
+int LuaClass_Impostors::LUA_setshaderreal(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("MesheRendering::set_shaderreal : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    dsstring param_id = luaL_checkstring(p_L, 2);
+    dsreal val = luaL_checknumber(p_L, 3);
+
+    if (0 == m_renderingnodes.count(pass_id))
+    {
+        LUA_ERROR("MesheRendering::set_shaderreal : unknown pass");
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderReal(param_id, val);
+
+        } LUA_CATCH;
+    }
+
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_setshaderrealvector(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 6)
+    {
+        LUA_ERROR("MesheRendering::set_shaderrealvector : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    dsstring param_id = luaL_checkstring(p_L, 2);
+    dsreal valx = luaL_checknumber(p_L, 3);
+    dsreal valy = luaL_checknumber(p_L, 4);
+    dsreal valz = luaL_checknumber(p_L, 5);
+    dsreal valw = luaL_checknumber(p_L, 6);
+
+    if (0 == m_renderingnodes.count(pass_id))
+    {
+        LUA_ERROR(dsstring("MesheRendering::set_shaderrealvector : unknown pass ") + pass_id);
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderRealVector(param_id, Vector(valx, valy, valz, valw));
+
+        } LUA_CATCH;
+    }
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_setshaderrealinvector(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 4)
+    {
+        LUA_ERROR("MesheRendering::set_shaderrealinvector : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    dsstring param_id = luaL_checkstring(p_L, 2);
+    int param_index_in_vector = luaL_checkinteger(p_L, 3);
+    dsreal val = luaL_checknumber(p_L, 4);
+
+    if (0 == m_renderingnodes.count(pass_id))
+    {
+        LUA_ERROR("MesheRendering::set_shaderrealinvector : unknown pass");
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderRealInVector(param_id, param_index_in_vector, val);
+
+        } LUA_CATCH;
+    }
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_setshaderrealmatrix(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("MesheRendering::set_shaderrealmatrix : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    dsstring param_id = luaL_checkstring(p_L, 2);
+    LuaClass_Matrix* lua_mat = Luna<LuaClass_Matrix>::check(p_L, 3);
+
+    if (0 == m_renderingnodes.count(pass_id))
+    {
+        LUA_ERROR("MesheRendering::set_shaderrealmatrix : unknown pass");
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderRealMatrix(param_id, lua_mat->GetMatrix());
+
+        } LUA_CATCH;
+    }
+    return 0;
+}
+
+int LuaClass_Impostors::LUA_setshaderbool(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 3)
+    {
+        LUA_ERROR("MesheRendering::set_shaderreal : argument(s) missing");
+    }
+
+    dsstring pass_id = luaL_checkstring(p_L, 1);
+    dsstring param_id = luaL_checkstring(p_L, 2);
+    bool val = luaL_checkint(p_L, 3);
+
+    if (0 == m_renderingnodes.count(pass_id))
+    {
+        LUA_ERROR("MesheRendering::set_shaderreal : unknown pass");
+    }
+    else
+    {
+        LUA_TRY
+        {
+            m_renderingnodes[pass_id]->SetShaderBool(param_id, val);
+
+        } LUA_CATCH;
+    }
+    return 0;
 }

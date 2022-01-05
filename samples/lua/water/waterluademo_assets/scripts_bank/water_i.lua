@@ -173,7 +173,7 @@ sprite_world_passes_binding =
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
-		lit_shader_update_func = nil
+		lit_shader_update_func = impostors.update_from_scene_env
 	}
 }
 
