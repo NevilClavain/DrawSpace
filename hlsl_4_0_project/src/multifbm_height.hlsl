@@ -1,27 +1,26 @@
 /* -*-LIC_BEGIN-*- */
 /*
-*                                                                          
-* DrawSpace Rendering engine                                               
-* Emmanuel Chaumont Copyright (c) 2013-2020                     
-*                                                                          
-* This file is part of DrawSpace.                                          
-*                                                                          
-*    DrawSpace is free software: you can redistribute it and/or modify     
-*    it under the terms of the GNU General Public License as published by  
-*    the Free Software Foundation, either version 3 of the License, or     
-*    (at your option) any later version.                                   
-*                                                                          
-*    DrawSpace is distributed in the hope that it will be useful,          
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of        
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-*    GNU General Public License for more details.                          
-*                                                                          
-*    You should have received a copy of the GNU General Public License     
-*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.    
+*
+* DrawSpace Rendering engine
+* Emmanuel Chaumont Copyright (c) 2013-2022
+*
+* This file is part of DrawSpace.
+*
+*    DrawSpace is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    DrawSpace is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.
 *
 */
 /* -*-LIC_END-*- */
-
 
 float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mountains_amplitude, float p_offset, float p_mountain_offset,
                             float p_plains_seed1, float p_plains_seed2, float p_mix_seed1, float p_mix_seed2 )
@@ -93,7 +92,7 @@ float ComputeVertexHeight(float4 p_vpos, float p_plains_amplitude, float p_mount
     return res;
 }
 
-// commenté provisoirement car il y a du hlsl 3.0 qui traine (sampler2D -> à remplacer par SampleState
+// commentï¿½ provisoirement car il y a du hlsl 3.0 qui traine (sampler2D -> ï¿½ remplacer par SampleState
 /*
 // retourne un facteur multiplicatif entre 0.0 et 1.0 et non une altitude en metres
 float ComputeRiversFromTexture(sampler2D p_mapSampler, float4 p_vpos, float4 p_uv, float p_uvnoise_seed1, float p_uvnoise_seed2)

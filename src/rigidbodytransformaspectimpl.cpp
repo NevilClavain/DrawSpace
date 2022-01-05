@@ -2,7 +2,7 @@
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2021
+* Emmanuel Chaumont Copyright (c) 2013-2022
 *
 * This file is part of DrawSpace.
 *
@@ -21,7 +21,6 @@
 *
 */
 /* -*-LIC_END-*- */
-
 
 #include "physicsaspect.h"
 #include "transformaspect.h"
@@ -143,8 +142,8 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
         mats[0]->getPurpose() = local_transf;
         m_last_local_transf = local_transf;
 
-        p_out_base_transform = local_transf * m_stack_matrix_inv;  // multiplier par l'inverse de la stack pour compenser le fait que local_transf renvoyée par bullet inclu déja la stack matrix
-                                                                    // (cf méthode OnAddedInGraph() plus bas)
+        p_out_base_transform = local_transf * m_stack_matrix_inv;  // multiplier par l'inverse de la stack pour compenser le fait que local_transf renvoyï¿½e par bullet inclu dï¿½ja la stack matrix
+                                                                    // (cf mï¿½thode OnAddedInGraph() plus bas)
     }
 }
 

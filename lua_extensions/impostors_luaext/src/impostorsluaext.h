@@ -1,9 +1,8 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2021
+* Emmanuel Chaumont Copyright (c) 2013-2022
 *
 * This file is part of DrawSpace.
 *

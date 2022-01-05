@@ -1,7 +1,8 @@
+/* -*-LIC_BEGIN-*- */
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2016
+* Emmanuel Chaumont Copyright (c) 2013-2022
 *
 * This file is part of DrawSpace.
 *
@@ -19,6 +20,8 @@
 *    along with DrawSpace.  If not, see <http://www.gnu.org/licenses/>.
 *
 */
+/* -*-LIC_END-*- */
+
 
 #include "lod_layer.h"
 #include "lod_collisions.h"
