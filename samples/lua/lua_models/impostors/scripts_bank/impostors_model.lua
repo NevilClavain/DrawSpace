@@ -1,6 +1,9 @@
 
 impostors = {}
+spaceimpostors = {}
+
 impostors.view = {}
+spaceimpostors.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
 impostors.models = {}
@@ -9,9 +12,9 @@ impostors.requested_ro = 1000
 impostors.requested_texture = ""
 impostors.requested_descriptors = nil
 
-impostors.world = {}
+impostors.space = {}
 
-impostors.world.rendering_config =
+spaceimpostors.rendering_config =
 {
 	main_rendering =	
 	{
@@ -141,12 +144,12 @@ impostors.trash_impostors = function(p_rendergraph, p_entity, p_renderer)
 end
 
 
-impostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
+spaceimpostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
 
   local entity
   local renderer
 
-  entity, renderer = impostors.create_rendered_impostors(impostors.world.rendering_config, p_passes_bindings)
+  entity, renderer = impostors.create_rendered_impostors(spaceimpostors.rendering_config, p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
 
@@ -154,9 +157,7 @@ impostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   pair['entity'] = entity
   pair['renderer'] = renderer
 
-  impostors.models[p_entity_id] = pair
-
-  
+  impostors.models[p_entity_id] = pair  
 end
 
 
@@ -193,7 +194,7 @@ impostors.view.unload = function(p_entity_id)
   end
 end
 
-impostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture)
+spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture)
 
   impostors.requested_ro = p_ro
   impostors.requested_texture = p_texture
@@ -210,6 +211,6 @@ impostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindin
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.load('impostors model', impostors.createmodelview, p_passes_bindings, nil, p_entity_id)
+    model.view.load('impostors model', spaceimpostors.createmodelview, p_passes_bindings, nil, p_entity_id)
   end  
 end

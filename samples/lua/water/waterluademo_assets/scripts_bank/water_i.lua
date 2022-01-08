@@ -188,7 +188,7 @@ impostors_descriptors_array:set_scale(1, 2.0, 2.0)
 impostors_descriptors_array:set_position(1, -3.0, 0.0, 0.0)
 
 
-impostors.view.load('sprite_world', impostors_descriptors_array, sprite_world_passes_binding, 1200, "map.jpg")
+spaceimpostors.view.load('sprite_world', impostors_descriptors_array, sprite_world_passes_binding, 1200, "map.jpg")
 
 eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)
 
