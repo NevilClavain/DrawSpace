@@ -167,13 +167,13 @@ text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "
 
 -- impostor
 
-sprite_world_passes_binding = 
+world_impostor_passes_binding = 
 {	
 	binding_0 = 
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
-		lit_shader_update_func = impostors.update_from_scene_env
+		lit_shader_update_func = impostors.update_spaceimpostor_from_scene_env
 	}
 }
 
@@ -188,19 +188,22 @@ impostors_descriptors_array:set_scale(1, 2.0, 2.0)
 impostors_descriptors_array:set_position(1, -3.0, 0.0, 0.0)
 
 
-spaceimpostors.view.load('sprite_world', impostors_descriptors_array, sprite_world_passes_binding, 1200, "map.jpg")
+spaceimpostors.view.load('sprite_world', impostors_descriptors_array, world_impostor_passes_binding, 1200, "map.jpg")
 
 eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)
 
 impostors.models['sprite_world'].entity:add_aspect(TRANSFORM_ASPECT)
 
-world_impostor_transform = RawTransform()
-world_impostor_transform:configure(impostors.models['sprite_world'].entity,0)
+space_impostor_transform = RawTransform()
+space_impostor_transform:configure(impostors.models['sprite_world'].entity,0)
 
-world_impostor_pos_mat = Matrix()
-world_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 10.0, 0.0 )
+space_impostor_pos_mat = Matrix()
+space_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 10.0, 0.0 )
 
-world_impostor_transform:add_matrix( "pos_land", world_impostor_pos_mat )
+space_impostor_transform:add_matrix( "pos_land", space_impostor_pos_mat )
+
+
+
 
 
 
