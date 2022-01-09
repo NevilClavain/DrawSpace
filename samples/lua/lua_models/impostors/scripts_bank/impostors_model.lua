@@ -1,9 +1,11 @@
 
 impostors = {}
 spaceimpostors = {}
+screenimpostors = {}
 
 impostors.view = {}
 spaceimpostors.view = {}
+screenimpostors.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
 impostors.models = {}
@@ -38,7 +40,36 @@ spaceimpostors.rendering_config =
 		{ 
 			{ param_name = "vflags", shader_index = 0, register = 24 },
 			{ param_name = "flags", shader_index = 1, register = 0 },
-			{ param_name = "colormode", shader_index = 1, register = 1 },
+			{ param_name = "color", shader_index = 1, register = 1 },
+		}
+	}
+}
+
+screenimpostors.rendering_config =
+{
+	main_rendering =	
+	{
+		fx =
+		{
+			shaders = 
+			{
+				{ path='screenimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='screenimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "scale", shader_index = 0, register = 24 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "color", shader_index = 1, register = 1 },
 		}
 	}
 }
@@ -48,9 +79,16 @@ impostors.update_spaceimpostor_from_scene_env = function( p_pass_id, p_environme
   local renderer = impostors.models[p_entity_id]['renderer']
   renderer:set_shaderrealvector( p_pass_id, 'vflags', 0.0, 0.0, 0.0, 0.0 )
   renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
-  renderer:set_shaderrealvector( p_pass_id, 'colormode', 0.0, 0.0, 0.0, 0.0 )
+  renderer:set_shaderrealvector( p_pass_id, 'color', 0.0, 0.0, 0.0, 0.0 )
 end
 
+impostors.update_screenimpostor_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
+
+  local renderer = impostors.models[p_entity_id]['renderer']
+  renderer:set_shaderrealvector( p_pass_id, 'scale', 1.0, 1.0, 0.0, 0.0 )
+  renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
+  renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
+end
 
 impostors.create_rendered_impostors = function(p_config, p_rendering_passes_array)
 
@@ -158,6 +196,25 @@ spaceimpostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_b
   pair['renderer'] = renderer
 
   impostors.models[p_entity_id] = pair  
+
+  return entity
+end
+
+screenimpostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
+
+  local entity
+  local renderer
+
+  entity, renderer = impostors.create_rendered_impostors(screenimpostors.rendering_config, p_passes_bindings)
+  renderer:register_to_rendering(p_rendergraph)
+
+  local pair = {}
+  pair['entity'] = entity
+  pair['renderer'] = renderer
+
+  impostors.models[p_entity_id] = pair  
+
+  return entity
 end
 
 
@@ -213,4 +270,27 @@ spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_b
   else
     model.view.load('impostors model', spaceimpostors.createmodelview, p_passes_bindings, nil, p_entity_id)
   end  
+end
+
+
+screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture)
+
+  impostors.requested_ro = p_ro
+  impostors.requested_texture = p_texture
+  impostors.requested_descriptors = p_descriptors_array
+
+  local found_id = FALSE
+  for k, v in pairs(impostors.models) do
+
+    if k == p_entity_id then
+	  found_id = TRUE
+	end
+  end
+
+  if found_id == TRUE then
+    g:print('Entity '..p_entity_id..' already exists')
+  else
+    model.view.load('impostors model', screenimpostors.createmodelview, p_passes_bindings, nil, p_entity_id)
+  end  
+
 end

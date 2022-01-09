@@ -14,9 +14,14 @@ land.view.unload('l')
 skydome.view.unload('dome')
 waterquad.view.unload('water')
 
+
+screen_impostor_transform:release()
+impostors.models['impostors1'].entity:remove_aspect(TRANSFORM_ASPECT)
+impostors.view.unload('impostors1')
+
 space_impostor_transform:release()
-impostors.models['sprite_world'].entity:remove_aspect(TRANSFORM_ASPECT)
-impostors.view.unload('sprite_world')
+impostors.models['impostors0'].entity:remove_aspect(TRANSFORM_ASPECT)
+impostors.view.unload('impostors0')
 
 
 metalcube.view.unload('cube')

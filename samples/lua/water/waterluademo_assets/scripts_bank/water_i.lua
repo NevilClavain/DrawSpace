@@ -165,9 +165,9 @@ text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "
 
 
 
--- impostor
+-- space impostor
 
-world_impostor_passes_binding = 
+space_impostor_passes_binding = 
 {	
 	binding_0 = 
 	{
@@ -188,22 +188,48 @@ impostors_descriptors_array:set_scale(1, 2.0, 2.0)
 impostors_descriptors_array:set_position(1, -3.0, 0.0, 0.0)
 
 
-spaceimpostors.view.load('sprite_world', impostors_descriptors_array, world_impostor_passes_binding, 1200, "map.jpg")
+spaceimpostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, 1200, "map.jpg")
 
-eg:add_child('root', 'sprite_world', impostors.models['sprite_world'].entity)
+eg:add_child('root', 'impostors0', impostors.models['impostors0'].entity)
 
-impostors.models['sprite_world'].entity:add_aspect(TRANSFORM_ASPECT)
+impostors.models['impostors0'].entity:add_aspect(TRANSFORM_ASPECT)
 
 space_impostor_transform = RawTransform()
-space_impostor_transform:configure(impostors.models['sprite_world'].entity,0)
+space_impostor_transform:configure(impostors.models['impostors0'].entity,0)
 
 space_impostor_pos_mat = Matrix()
 space_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 10.0, 0.0 )
 
-space_impostor_transform:add_matrix( "pos_land", space_impostor_pos_mat )
+space_impostor_transform:add_matrix( "pos", space_impostor_pos_mat )
+
+-- screen impostor
+screen_impostor_passes_binding = 
+{	
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = impostors.update_screenimpostor_from_scene_env
+	}
+}
+
+impostors_descriptors_array_2 = ImpostorsDescriptionsArray()
+impostors_descriptors_array_2:add()
+
+screenimpostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, 1200, "star.bmp")
+
+eg:add_child('root', 'impostors1', impostors.models['impostors1'].entity)
+
+impostors.models['impostors1'].entity:add_aspect(TRANSFORM_ASPECT)
 
 
+screen_impostor_transform = RawTransform()
+screen_impostor_transform:configure(impostors.models['impostors1'].entity,0)
 
+screen_impostor_pos_mat = Matrix()
+screen_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 20.0, 0.0 )
+
+screen_impostor_transform:add_matrix( "pos", screen_impostor_pos_mat )
 
 
 
