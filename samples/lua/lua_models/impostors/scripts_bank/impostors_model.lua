@@ -10,8 +10,6 @@ screenimpostors.view = {}
 -- stockage des instances modeles : paire {entity, renderer}
 impostors.models = {}
 
-impostors.requested_ro = 1000
-impostors.requested_texture = ""
 impostors.requested_descriptors = nil
 
 impostors.requested_rendering_config = nil
@@ -197,10 +195,8 @@ impostors.view.unload = function(p_entity_id)
   end
 end
 
-spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture, p_rendering_config)
+spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_rendering_config)
 
-  impostors.requested_ro = p_ro
-  impostors.requested_texture = p_texture
   impostors.requested_descriptors = p_descriptors_array
 
   impostors.requested_rendering_config = p_rendering_config
@@ -221,10 +217,8 @@ spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_b
 end
 
 
-screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture, p_rendering_config)
+screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_rendering_config)
 
-  impostors.requested_ro = p_ro
-  impostors.requested_texture = p_texture
   impostors.requested_descriptors = p_descriptors_array
 
   impostors.requested_rendering_config = p_rendering_config

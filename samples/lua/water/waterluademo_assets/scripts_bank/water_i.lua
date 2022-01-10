@@ -187,12 +187,20 @@ space_impostor_rendering_config =
 				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
 			}
 		},
+		textures =
+		{
+			[1] = 
+			{
+				{ path='map.jpg', stage=0 },
+			}
+		},
 		shaders_params = 
 		{ 
 			{ param_name = "vflags", shader_index = 0, register = 24 },
 			{ param_name = "flags", shader_index = 1, register = 0 },
 			{ param_name = "color", shader_index = 1, register = 1 },
-		}
+		},
+		rendering_order = 1200
 	}
 }
 
@@ -223,7 +231,7 @@ impostors_descriptors_array:set_scale(1, 2.0, 2.0)
 impostors_descriptors_array:set_position(1, -3.0, 0.0, 0.0)
 
 
-spaceimpostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, 1200, "map.jpg", space_impostor_rendering_config)
+spaceimpostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, space_impostor_rendering_config)
 
 eg:add_child('root', 'impostors0', impostors.models['impostors0'].entity)
 
@@ -252,11 +260,24 @@ screen_impostor_rendering_config =
 			},
 			rs_in = 
 			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="one" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
 			},
 			rs_out =
 			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+				{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" }
+			}
+		},
+		textures =
+		{
+			[1] = 
+			{
+				{ path='star.bmp', stage=0 },
 			}
 		},
 		shaders_params = 
@@ -264,7 +285,8 @@ screen_impostor_rendering_config =
 			{ param_name = "scale", shader_index = 0, register = 24 },
 			{ param_name = "flags", shader_index = 1, register = 0 },
 			{ param_name = "color", shader_index = 1, register = 1 },
-		}
+		},
+		rendering_order = 1200
 	}
 }
 
@@ -286,7 +308,7 @@ screen_impostor_passes_binding =
 impostors_descriptors_array_2 = ImpostorsDescriptionsArray()
 impostors_descriptors_array_2:add()
 
-screenimpostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, 1200, "star.bmp", screen_impostor_rendering_config)
+screenimpostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, screen_impostor_rendering_config)
 
 eg:add_child('root', 'impostors1', impostors.models['impostors1'].entity)
 
