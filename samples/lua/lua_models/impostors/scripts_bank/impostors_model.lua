@@ -14,65 +14,9 @@ impostors.requested_ro = 1000
 impostors.requested_texture = ""
 impostors.requested_descriptors = nil
 
+impostors.requested_rendering_config = nil
+
 impostors.space = {}
-
-spaceimpostors.rendering_config =
-{
-	main_rendering =	
-	{
-		fx =
-		{
-			shaders = 
-			{
-				{ path='spaceimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
-				{ path='spaceimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
-			},
-			rs_in = 
-			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
-			},
-			rs_out =
-			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
-			}
-		},
-		shaders_params = 
-		{ 
-			{ param_name = "vflags", shader_index = 0, register = 24 },
-			{ param_name = "flags", shader_index = 1, register = 0 },
-			{ param_name = "color", shader_index = 1, register = 1 },
-		}
-	}
-}
-
-screenimpostors.rendering_config =
-{
-	main_rendering =	
-	{
-		fx =
-		{
-			shaders = 
-			{
-				{ path='screenimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
-				{ path='screenimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
-			},
-			rs_in = 
-			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
-			},
-			rs_out =
-			{
-				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
-			}
-		},
-		shaders_params = 
-		{ 
-			{ param_name = "scale", shader_index = 0, register = 24 },
-			{ param_name = "flags", shader_index = 1, register = 0 },
-			{ param_name = "color", shader_index = 1, register = 1 },
-		}
-	}
-}
 
 impostors.create_rendered_impostors = function(p_config, p_rendering_passes_array)
 
@@ -128,6 +72,18 @@ impostors.create_rendered_impostors = function(p_config, p_rendering_passes_arra
 	  fxparams:add_shaderfile(curr_shader['path'],curr_shader['mode'])
 	end
 
+	local tx_config = v['textures']		
+	for k2, v2 in ipairs(tx_config) do
+		--g:print(k2)
+		local textures = TexturesSet()
+		for k3, v3 in pairs(v2) do
+			local tx = v3
+			--g:print(tx['path']..'->'..tx['stage'])
+			textures:set_texturefiletostage(tx['path'], tx['stage'])
+		end
+		rendercontext:add_texturesset(textures)
+	end
+
 	rendercontext:add_fxparams(fxparams)
 
 
@@ -138,12 +94,18 @@ impostors.create_rendered_impostors = function(p_config, p_rendering_passes_arra
         rendercontext:add_shaderparam(param['param_name'], param['shader_index'], param['register'])
 	end
 
-	local textures = TexturesSet()
-	textures:set_texturefiletostage(impostors.requested_texture, 0)
-	rendercontext:add_texturesset(textures)
 
-	--g:print('Impostors : requested rendering order = '..impostors.requested_ro)
-	rendercontext:set_renderingorder(impostors.requested_ro)
+	local ro = v['rendering_order']
+	--g:print( 'ro ='..ro )
+	
+	rendercontext:set_renderingorder(ro)
+
+
+
+	--local textures = TexturesSet()
+	--textures:set_texturefiletostage(impostors.requested_texture, 0)
+	--rendercontext:add_texturesset(textures)
+	--rendercontext:set_renderingorder(impostors.requested_ro)
 
 	renderconfig:add_rendercontext(rendercontext)
 
@@ -171,7 +133,7 @@ spaceimpostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_b
   local entity
   local renderer
 
-  entity, renderer = impostors.create_rendered_impostors(spaceimpostors.rendering_config, p_passes_bindings)
+  entity, renderer = impostors.create_rendered_impostors(impostors.requested_rendering_config, p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
 
@@ -189,7 +151,7 @@ screenimpostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_
   local entity
   local renderer
 
-  entity, renderer = impostors.create_rendered_impostors(screenimpostors.rendering_config, p_passes_bindings)
+  entity, renderer = impostors.create_rendered_impostors(impostors.requested_rendering_config, p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
   local pair = {}
@@ -235,11 +197,13 @@ impostors.view.unload = function(p_entity_id)
   end
 end
 
-spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture)
+spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture, p_rendering_config)
 
   impostors.requested_ro = p_ro
   impostors.requested_texture = p_texture
   impostors.requested_descriptors = p_descriptors_array
+
+  impostors.requested_rendering_config = p_rendering_config
 
   local found_id = FALSE
   for k, v in pairs(impostors.models) do
@@ -257,11 +221,13 @@ spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_b
 end
 
 
-screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture)
+screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_ro, p_texture, p_rendering_config)
 
   impostors.requested_ro = p_ro
   impostors.requested_texture = p_texture
   impostors.requested_descriptors = p_descriptors_array
+
+  impostors.requested_rendering_config = p_rendering_config
 
   local found_id = FALSE
   for k, v in pairs(impostors.models) do

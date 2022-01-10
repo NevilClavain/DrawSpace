@@ -167,6 +167,35 @@ text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "
 
 -- space impostor
 
+space_impostor_rendering_config =
+{
+	main_rendering =	
+	{
+		fx =
+		{
+			shaders = 
+			{
+				{ path='spaceimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='spaceimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "vflags", shader_index = 0, register = 24 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "color", shader_index = 1, register = 1 },
+		}
+	}
+}
+
 space_impostor_passes_binding = 
 {	
 	binding_0 = 
@@ -194,7 +223,7 @@ impostors_descriptors_array:set_scale(1, 2.0, 2.0)
 impostors_descriptors_array:set_position(1, -3.0, 0.0, 0.0)
 
 
-spaceimpostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, 1200, "map.jpg")
+spaceimpostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, 1200, "map.jpg", space_impostor_rendering_config)
 
 eg:add_child('root', 'impostors0', impostors.models['impostors0'].entity)
 
@@ -209,6 +238,36 @@ space_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 10.0, 0.0 )
 space_impostor_transform:add_matrix( "pos", space_impostor_pos_mat )
 
 -- screen impostor
+
+screen_impostor_rendering_config =
+{
+	main_rendering =	
+	{
+		fx =
+		{
+			shaders = 
+			{
+				{ path='screenimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='screenimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "scale", shader_index = 0, register = 24 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "color", shader_index = 1, register = 1 },
+		}
+	}
+}
+
 screen_impostor_passes_binding = 
 {	
 	binding_0 = 
@@ -218,7 +277,7 @@ screen_impostor_passes_binding =
 		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
 			local renderer = impostors.models[p_entity_id]['renderer']
 			renderer:set_shaderrealvector( p_pass_id, 'scale', 1.0, 1.0, 0.0, 0.0 )
-			renderer:set_shaderrealvector( p_pass_id, 'flags', 1.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
 			renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
 		end
 	}
@@ -227,7 +286,7 @@ screen_impostor_passes_binding =
 impostors_descriptors_array_2 = ImpostorsDescriptionsArray()
 impostors_descriptors_array_2:add()
 
-screenimpostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, 1200, "star.bmp")
+screenimpostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, 1200, "star.bmp", screen_impostor_rendering_config)
 
 eg:add_child('root', 'impostors1', impostors.models['impostors1'].entity)
 
