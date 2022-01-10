@@ -173,7 +173,13 @@ space_impostor_passes_binding =
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
-		lit_shader_update_func = impostors.update_spaceimpostor_from_scene_env
+		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
+
+			local renderer = impostors.models[p_entity_id]['renderer']
+			renderer:set_shaderrealvector( p_pass_id, 'vflags', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'color', 0.0, 0.0, 0.0, 0.0 )
+		end
 	}
 }
 
@@ -209,7 +215,12 @@ screen_impostor_passes_binding =
 	{
 		target_pass_id = 'texture_pass',
 		rendering_id = 'main_rendering',
-		lit_shader_update_func = impostors.update_screenimpostor_from_scene_env
+		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
+			local renderer = impostors.models[p_entity_id]['renderer']
+			renderer:set_shaderrealvector( p_pass_id, 'scale', 1.0, 1.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 1.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
+		end
 	}
 }
 

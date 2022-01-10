@@ -74,22 +74,6 @@ screenimpostors.rendering_config =
 	}
 }
 
-impostors.update_spaceimpostor_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
-
-  local renderer = impostors.models[p_entity_id]['renderer']
-  renderer:set_shaderrealvector( p_pass_id, 'vflags', 0.0, 0.0, 0.0, 0.0 )
-  renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
-  renderer:set_shaderrealvector( p_pass_id, 'color', 0.0, 0.0, 0.0, 0.0 )
-end
-
-impostors.update_screenimpostor_from_scene_env = function( p_pass_id, p_environment_table, p_entity_id )
-
-  local renderer = impostors.models[p_entity_id]['renderer']
-  renderer:set_shaderrealvector( p_pass_id, 'scale', 1.0, 1.0, 0.0, 0.0 )
-  renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
-  renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
-end
-
 impostors.create_rendered_impostors = function(p_config, p_rendering_passes_array)
 
   local entity=Entity()
