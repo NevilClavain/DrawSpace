@@ -286,7 +286,7 @@ screen_impostor_rendering_config =
 			{ param_name = "flags", shader_index = 1, register = 0 },
 			{ param_name = "color", shader_index = 1, register = 1 },
 		},
-		rendering_order = 1200
+		rendering_order = 11000
 	}
 }
 
@@ -324,10 +324,68 @@ screen_impostor_pos_mat:translation( 0.0, skydome.innerRadius + 20.0, 0.0 )
 screen_impostor_transform:add_matrix( "pos", screen_impostor_pos_mat )
 
 
+-- sprite
+
+sprite_rendering_config =
+{
+	main_rendering =	
+	{
+		fx =
+		{
+			shaders = 
+			{
+				{ path='spriteimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='spriteimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		textures =
+		{
+			[1] = 
+			{
+				{ path='wolverine.jpg', stage=0 },
+			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "pos2D", shader_index = 0, register = 5 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "color", shader_index = 1, register = 1 },
+		},
+		rendering_order = 20000
+	}
+}
+
+sprites_passes_binding = 
+{	
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
+			local renderer = impostors.models[p_entity_id]['renderer']
+			renderer:set_shaderrealvector( p_pass_id, 'pos2D', -0.7, -0.7, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
+		end
+	}
+}
+
+sprite_descriptors_array = ImpostorsDescriptionsArray()
+sprite_descriptors_array:add()
+
+sprite_descriptors_array:set_scale(0, 0.1, 0.1, 0.0)
 
 
-
-
+screenimpostors.view.load('sprite', sprite_descriptors_array, sprites_passes_binding, sprite_rendering_config)
+eg:add_child('root', 'sprite', impostors.models['sprite'].entity)
 
 
 skydome_passes_bindings = 

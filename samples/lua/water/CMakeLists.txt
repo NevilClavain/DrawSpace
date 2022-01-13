@@ -106,6 +106,8 @@ install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/spaceimpostor_ps.hlsl OPT
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/spaceimpostor_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/screenimpostor_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/screenimpostor_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/spriteimpostor_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
+install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/spriteimpostor_vs.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/waterluademo_assets/shaders_bank/hlsl_4_0)
 
 
 

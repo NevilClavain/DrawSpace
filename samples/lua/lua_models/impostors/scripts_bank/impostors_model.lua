@@ -2,16 +2,17 @@
 impostors = {}
 spaceimpostors = {}
 screenimpostors = {}
+sprites = {}
 
 impostors.view = {}
 spaceimpostors.view = {}
 screenimpostors.view = {}
+sprites.view = {}
 
 -- stockage des instances modeles : paire {entity, renderer}
 impostors.models = {}
 
 impostors.requested_descriptors = nil
-
 impostors.requested_rendering_config = nil
 
 impostors.space = {}
@@ -161,6 +162,22 @@ screenimpostors.createmodelview = function(p_rendergraph, p_entity_id, p_passes_
   return entity
 end
 
+sprites.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
+
+  local entity
+  local renderer
+
+  entity, renderer = impostors.create_rendered_impostors(impostors.requested_rendering_config, p_passes_bindings)
+  renderer:register_to_rendering(p_rendergraph)
+
+  local pair = {}
+  pair['entity'] = entity
+  pair['renderer'] = renderer
+
+  impostors.models[p_entity_id] = pair  
+
+  return entity
+end
 
 impostors.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
@@ -198,7 +215,6 @@ end
 spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_rendering_config)
 
   impostors.requested_descriptors = p_descriptors_array
-
   impostors.requested_rendering_config = p_rendering_config
 
   local found_id = FALSE
@@ -213,14 +229,13 @@ spaceimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_b
     g:print('Entity '..p_entity_id..' already exists')
   else
     model.view.load('impostors model', spaceimpostors.createmodelview, p_passes_bindings, nil, p_entity_id)
-  end  
+  end
 end
 
 
 screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_rendering_config)
 
   impostors.requested_descriptors = p_descriptors_array
-
   impostors.requested_rendering_config = p_rendering_config
 
   local found_id = FALSE
@@ -235,6 +250,25 @@ screenimpostors.view.load = function(p_entity_id, p_descriptors_array, p_passes_
     g:print('Entity '..p_entity_id..' already exists')
   else
     model.view.load('impostors model', screenimpostors.createmodelview, p_passes_bindings, nil, p_entity_id)
-  end  
+  end
+end
 
+sprites.view.load = function(p_entity_id, p_descriptors_array, p_passes_bindings, p_rendering_config)
+
+  impostors.requested_descriptors = p_descriptors_array
+  impostors.requested_rendering_config = p_rendering_config
+
+  local found_id = FALSE
+  for k, v in pairs(impostors.models) do
+
+    if k == p_entity_id then
+	  found_id = TRUE
+	end
+  end
+
+  if found_id == TRUE then
+    g:print('Entity '..p_entity_id..' already exists')
+  else
+    model.view.load('impostors model', sprites.createmodelview, p_passes_bindings, nil, p_entity_id)
+  end
 end
