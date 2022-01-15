@@ -231,7 +231,7 @@ impostors_descriptors_array:set_scale(1, 2.0, 2.0)
 impostors_descriptors_array:set_position(1, -3.0, 0.0, 0.0)
 
 
-spaceimpostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, space_impostor_rendering_config)
+impostors.view.load('impostors0', impostors_descriptors_array, space_impostor_passes_binding, space_impostor_rendering_config)
 
 eg:add_child('root', 'impostors0', impostors.models['impostors0'].entity)
 
@@ -308,7 +308,7 @@ screen_impostor_passes_binding =
 impostors_descriptors_array_2 = ImpostorsDescriptionsArray()
 impostors_descriptors_array_2:add()
 
-screenimpostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, screen_impostor_rendering_config)
+impostors.view.load('impostors1', impostors_descriptors_array_2, screen_impostor_passes_binding, screen_impostor_rendering_config)
 
 eg:add_child('root', 'impostors1', impostors.models['impostors1'].entity)
 
@@ -384,9 +384,71 @@ sprite_descriptors_array:add()
 sprite_descriptors_array:set_scale(0, 0.1, 0.1, 0.0)
 
 
-screenimpostors.view.load('sprite', sprite_descriptors_array, sprites_passes_binding, sprite_rendering_config)
+impostors.view.load('sprite', sprite_descriptors_array, sprites_passes_binding, sprite_rendering_config)
 eg:add_child('root', 'sprite', impostors.models['sprite'].entity)
 
+
+-- collimator sprite
+
+collimatorsprite_rendering_config =
+{
+	main_rendering =	
+	{
+		fx =
+		{
+			shaders = 
+			{
+				{ path='spriteimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='spriteimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		textures =
+		{
+			[1] = 
+			{
+				{ path='collimator.jpg', stage=0 },
+			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "pos2D", shader_index = 0, register = 5 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "color", shader_index = 1, register = 1 },
+		},
+		rendering_order = 30000
+	}
+}
+
+collimatorsprite_passes_binding = 
+{	
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
+			local renderer = impostors.models[p_entity_id]['renderer']
+			renderer:set_shaderrealvector( p_pass_id, 'pos2D', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
+		end
+	}
+}
+
+collmiatorsprite_descriptors_array = ImpostorsDescriptionsArray()
+collmiatorsprite_descriptors_array:add()
+
+collmiatorsprite_descriptors_array:set_scale(0, 0.2, 0.2, 0.0)
+
+
+-----------------------------------
 
 skydome_passes_bindings = 
 {
