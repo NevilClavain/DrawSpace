@@ -97,7 +97,7 @@ int LuaClass_EntityNodeGraph::LUA_setroot( lua_State* p_L )
     
     if( m_entities.count( entity_id ) )
     {
-        LUA_ERROR( "EntityNodeGraph::set_root : an entity with same id exists in entities table" );
+        LUA_ERROR( "EntityNodeGraph::set_root : an entity with same id exists in entities table -> " + entity_id);
     }
 
     m_entities[entity_id] = m_entitygraph.SetRoot( &lua_ent->GetEntity() );
@@ -120,7 +120,7 @@ int LuaClass_EntityNodeGraph::LUA_addchild( lua_State* p_L )
 
     if( m_entities.count( entity_id ) )
     {
-        LUA_ERROR( "EntityNodeGraph::add_child : an entity with same id exists in entities table" );
+        LUA_ERROR( "EntityNodeGraph::add_child : an entity with same id exists in entities table -> " + entity_id);
     }
 
     if( 0 == m_entities.count( parent_entity_id ) )
