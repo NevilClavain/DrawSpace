@@ -147,6 +147,7 @@ impostors.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   local renderer = impostors.models[p_entity_id]['renderer']
     
   impostors.trash_impostors(p_rendergraph, entity, renderer)
+  p_entitygraph:remove(p_entity_id)
 
   local pair = impostors.models[p_entity_id]
   pair['entity'] = nil
