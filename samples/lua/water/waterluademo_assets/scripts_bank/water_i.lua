@@ -444,12 +444,12 @@ collimatorsprite_passes_binding =
 	}
 }
 
-collmiatorsprite_descriptors_array = ImpostorsDescriptionsArray()
-collmiatorsprite_descriptors_array:add()
+collimatorsprite_descriptors_array = ImpostorsDescriptionsArray()
+collimatorsprite_descriptors_array:add()
 
-collmiatorsprite_descriptors_array:set_scale(0, 0.099, 0.099, 0.0)
+collimatorsprite_descriptors_array:set_scale(0, 0.099, 0.099, 0.0)
 
-impostors.view.load('collimator', collmiatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
+impostors.view.load('collimator', collimatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
 eg:add_child('root', 'collimator', impostors.models['collimator'].entity)
 
 
