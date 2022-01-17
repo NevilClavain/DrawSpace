@@ -422,6 +422,7 @@ collimatorsprite_rendering_config =
 			{ param_name = "pos2D", shader_index = 0, register = 5 },
 			{ param_name = "flags", shader_index = 1, register = 0 },
 			{ param_name = "color", shader_index = 1, register = 1 },
+			{ param_name = "keycolor", shader_index = 1, register = 2 },
 		},
 		rendering_order = 30000
 	}
@@ -436,8 +437,9 @@ collimatorsprite_passes_binding =
 		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
 			local renderer = impostors.models[p_entity_id]['renderer']
 			renderer:set_shaderrealvector( p_pass_id, 'pos2D', 0.0, 0.0, 0.0, 0.0 )
-			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 1.0, 0.0, 0.0 )
 			renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'keycolor', 0.0, 0.0, 0.0, 1.0 )
 		end
 	}
 }
@@ -445,7 +447,10 @@ collimatorsprite_passes_binding =
 collmiatorsprite_descriptors_array = ImpostorsDescriptionsArray()
 collmiatorsprite_descriptors_array:add()
 
-collmiatorsprite_descriptors_array:set_scale(0, 0.2, 0.2, 0.0)
+collmiatorsprite_descriptors_array:set_scale(0, 0.099, 0.099, 0.0)
+
+impostors.view.load('collimator', collmiatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
+eg:add_child('root', 'collimator', impostors.models['collimator'].entity)
 
 
 -----------------------------------
@@ -737,15 +742,19 @@ function()
 
     local mvt_info = { model.camera.mvt:read() }
 
+	local localpos = Vector(0.0, 0.0, 0.0, 1.0)
+    local collimator_pos_x, collimator_pos_y = spherebump.models['sphere'].entity:project_localpoint(localpos)
 
-    --model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
-	--model.camera.mvt:update(mvt_info[1],mvt_info[2],mvt_info[3],mvt_info[4],mvt_info[5])
+	local collimator_renderer = impostors.models['collimator']['renderer']
+	collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )
+	
 
 	
 	time_infos = { root_entity:read_timemanager() }
 	output_infos = renderer:descr() .." "..time_infos[3].. " fps"
 
 	text_renderer:update(520, 30, 255, 0, 0, output_infos)
+
 
 	text2_renderer:update(10, 150, 255, 0, 0, resources_event)
 

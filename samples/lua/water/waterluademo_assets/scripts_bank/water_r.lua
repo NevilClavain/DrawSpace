@@ -16,6 +16,7 @@ waterquad.view.unload('water')
 
 
 impostors.view.unload('sprite')
+impostors.view.unload('collimator')
 
 screen_impostor_transform:release()
 impostors.models['impostors1'].entity:remove_aspect(TRANSFORM_ASPECT)

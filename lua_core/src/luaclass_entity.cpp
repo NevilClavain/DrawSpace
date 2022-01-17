@@ -26,6 +26,7 @@
 #include "luaclass_entity.h"
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_matrix.h"
+#include "luaclass_vector.h"
 #include "renderingaspect.h"
 #include "timeaspect.h"
 
@@ -86,6 +87,7 @@ const Luna<LuaClass_Entity>::RegType LuaClass_Entity::methods[] =
 	{ "release_mesheresource", &LuaClass_Entity::LUA_releasemesheresource },
 	{ "read_meshesfiledescription", &LuaClass_Entity::LUA_readmeshesfiledescription },
 	{ "read_meshesfiledescriptionssize", &LuaClass_Entity::LUA_readmeshesfiledescriptionssize },
+	{ "project_localpoint", &LuaClass_Entity::LUA_projectlocalpoint },
 	{ 0, 0 }
 };
 
@@ -1171,4 +1173,28 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 
 	} LUA_CATCH
 	return 0;
+}
+
+int LuaClass_Entity::LUA_projectlocalpoint(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Entity::project_localpoint : argument(s) missing");
+	}
+
+	LuaClass_Vector* lua_vec{ Luna<LuaClass_Vector>::check(p_L, 1) };
+
+	TransformAspect* transform_aspect{ m_entity.GetAspect<TransformAspect>() };
+	if (NULL == transform_aspect)
+	{
+		LUA_ERROR("Entity::project_localpoint : transform aspect doesnt exists in this entity!");
+	}
+	dsreal spx, spy;
+	transform_aspect->ProjectLocalPoint(lua_vec->getVector(), spx, spy);
+
+	lua_pushnumber(p_L, spx);
+	lua_pushnumber(p_L, spy);
+
+	return 2;
 }
