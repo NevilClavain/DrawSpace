@@ -34,6 +34,8 @@ spherebump.view.unload('sphere')
 
 destroy_all_cubes()
 
+objectdistance_renderer:release()
+objectid_renderer:release()
 text_renderer:release()
 text2_renderer:release()
 

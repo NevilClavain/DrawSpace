@@ -162,6 +162,11 @@ text2_renderer=TextRendering()
 text2_renderer:configure(root_entity, "resource_infos", 620, 130, 255, 0, 255, "resources...")
 
 
+objectid_renderer=TextRendering()
+objectid_renderer:configure(root_entity, "objectid", 600, 600, 255, 0, 255, "sphere")
+
+objectdistance_renderer=TextRendering()
+objectdistance_renderer:configure(root_entity, "objectdistance", 600, 600, 255, 0, 255, "...")
 
 
 
@@ -751,6 +756,25 @@ function()
 	collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )
 	
 
+
+    local objectid_text_pos_x = collimator_pos_x - 0.05;
+    local objectid_text_pos_y = collimator_pos_y + 0.1;
+    local objectid_tpos_x = model.renderer_infos[2] * 0.5 * (objectid_text_pos_x + 1.0);
+    local objectid_tpos_y = model.renderer_infos[3] - (model.renderer_infos[3] * 0.5 * (objectid_text_pos_y + 1.0));
+	objectid_renderer:update(objectid_tpos_x, objectid_tpos_y, 0, 255, 0, "Sphere")
+
+
+
+    local objectdistance_text_pos_x = collimator_pos_x - 0.05;
+    local objectdistance_text_pos_y = collimator_pos_y - 0.1;
+    local objectdistance_tpos_x = model.renderer_infos[2] * 0.5 * (objectdistance_text_pos_x + 1.0);
+    local objectdistance_tpos_y = model.renderer_infos[3] - (model.renderer_infos[3] * 0.5 * (objectdistance_text_pos_y + 1.0));
+
+
+	objectdistance_renderer:update(objectdistance_tpos_x, objectdistance_tpos_y, 0, 255, 0, spherebump.models['sphere'].entity:localpoint_distancefromcamera(localpos))
+
+
+
 	
 	time_infos = { root_entity:read_timemanager() }
 	output_infos = renderer:descr() .." "..time_infos[3].. " fps"
@@ -759,6 +783,8 @@ function()
 
 
 	text2_renderer:update(520, 60, 255, 0, 0, resources_event)
+
+	
 
 
     if waves_inc == TRUE then

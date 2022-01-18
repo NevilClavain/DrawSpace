@@ -116,6 +116,7 @@ public:
 	int LUA_readmeshesfiledescriptionssize(lua_State* p_L);
 
     int LUA_projectlocalpoint(lua_State* p_L);
+    int LUA_localpointdistancefromcamera(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Entity>::RegType methods[];
