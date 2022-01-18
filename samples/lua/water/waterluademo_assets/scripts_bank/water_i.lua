@@ -447,7 +447,9 @@ collimatorsprite_passes_binding =
 collimatorsprite_descriptors_array = ImpostorsDescriptionsArray()
 collimatorsprite_descriptors_array:add()
 
-collimatorsprite_descriptors_array:set_scale(0, 0.099, 0.099, 0.0)
+renderer_aspect_ratio =  model.renderer_infos[5] / model.renderer_infos[6];
+
+collimatorsprite_descriptors_array:set_scale(0, 0.1, 0.1 * renderer_aspect_ratio, 0.0)
 
 impostors.view.load('collimator', collimatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
 eg:add_child('root', 'collimator', impostors.models['collimator'].entity)
