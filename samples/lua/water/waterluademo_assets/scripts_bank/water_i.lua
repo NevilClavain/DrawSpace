@@ -159,7 +159,7 @@ text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
 
 
 text2_renderer=TextRendering()
-text2_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
+text2_renderer:configure(root_entity, "resource_infos", 620, 130, 255, 0, 255, "resources...")
 
 
 
@@ -758,7 +758,7 @@ function()
 	text_renderer:update(520, 30, 255, 0, 0, output_infos)
 
 
-	text2_renderer:update(10, 150, 255, 0, 0, resources_event)
+	text2_renderer:update(520, 60, 255, 0, 0, resources_event)
 
 
     if waves_inc == TRUE then
