@@ -238,8 +238,9 @@ void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
     }   
 }
 
-void TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
+bool TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
 {
+    
     DrawSpace::Utils::Matrix final_view;
     DrawSpace::Utils::Matrix inv;
     inv.Identity();
@@ -259,7 +260,9 @@ void TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_
     result.Transform(&local_point, &t_local_point);
 
     p_posx = (t_local_point[0] / (t_local_point[2] + 1.0));
-    p_posy = (t_local_point[1] / (t_local_point[2] + 1.0));    
+    p_posy = (t_local_point[1] / (t_local_point[2] + 1.0));
+
+    return (t_local_point[2] < 0.0 ? true : false);
 }
 
 

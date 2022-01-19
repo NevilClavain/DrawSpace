@@ -1191,12 +1191,13 @@ int LuaClass_Entity::LUA_projectlocalpoint(lua_State* p_L)
 		LUA_ERROR("Entity::project_localpoint : transform aspect doesnt exists in this entity!");
 	}
 	dsreal spx, spy;
-	transform_aspect->ProjectLocalPoint(lua_vec->getVector(), spx, spy);
+	bool is_behind = transform_aspect->ProjectLocalPoint(lua_vec->getVector(), spx, spy);
 
 	lua_pushnumber(p_L, spx);
 	lua_pushnumber(p_L, spy);
+	lua_pushinteger(p_L, is_behind);
 
-	return 2;
+	return 3;
 }
 
 int LuaClass_Entity::LUA_localpointdistancefromcamera(lua_State* p_L)

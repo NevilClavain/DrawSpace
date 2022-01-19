@@ -750,7 +750,13 @@ function()
     local mvt_info = { model.camera.mvt:read() }
 
 	local localpos = Vector(0.0, 0.0, 0.0, 1.0)
-    local collimator_pos_x, collimator_pos_y = spherebump.models['sphere'].entity:project_localpoint(localpos)
+    local collimator_pos_x, collimator_pos_y, is_behind = spherebump.models['sphere'].entity:project_localpoint(localpos)
+	if is_behind == TRUE then
+
+	  -- hide by setting 2D pos out of the viewport
+	  collimator_pos_x = 10.0
+	  collimator_pos_y = 10.0
+	end
 
 	local collimator_renderer = impostors.models['collimator']['renderer']
 	collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )

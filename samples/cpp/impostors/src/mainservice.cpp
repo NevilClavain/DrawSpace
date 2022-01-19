@@ -328,7 +328,12 @@ void MainService::Run( void )
         
     TransformAspect* bodyTransform{ m_mainBodyEntity.GetAspect<TransformAspect>() };
     dsreal spx, spy;
-    bodyTransform->ProjectLocalPoint(Vector(0.0, 0.0, 0.0, 1.0), spx, spy);
+    bool is_behind{ bodyTransform->ProjectLocalPoint(Vector(0.0, 0.0, 0.0, 1.0), spx, spy) };
+    if (is_behind)
+    {
+        // hide by setting 2D pos out of the viewport
+        spx = spx = 100.0;
+    }
 
     m_spritecollimator_texturepass_rnode->SetShaderRealVector("pos2D", Vector(spx, spy, 0.0, 0.0));
 
