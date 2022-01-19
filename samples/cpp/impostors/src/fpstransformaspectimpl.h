@@ -22,9 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _FPSTRANSFORMASPECTIMPL_H_
-#define _FPSTRANSFORMASPECTIMPL_H_
-
+#pragma once
 #include "transformaspectimpl.h"
 #include "quaternion.h"
 
@@ -35,4 +33,4 @@ public:
 
     virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform );
 };
-#endif
+

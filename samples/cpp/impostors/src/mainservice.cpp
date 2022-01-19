@@ -189,14 +189,14 @@ bool MainService::Init( void )
 
 
     rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
+    rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
 
 
     rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("entityId", 0, 0, 0, 255, 0, "Entity0");
+    rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>("entityId", 0, 0, 0, 255, 0, "Entity0");
 
     rendering_aspect->AddImplementation(&m_entityDistanceTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
-    rendering_aspect->AddComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance", 0, 0, 0, 255, 0, "?");
+    rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>("entityDistance", 0, 0, 0, 255, 0, "?");
 
 
 
@@ -321,7 +321,7 @@ void MainService::Run( void )
     sprintf( comment, "%d fps - %s", time_aspect->GetComponent<int>( "output_fps" )->getPurpose(), m_pluginDescr.c_str() );
 
     RenderingAspect* rendering_aspect = m_rootEntity.GetAspect<RenderingAspect>();
-    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
+    rendering_aspect->GetComponent<StringRenderingAspectImpl::TextDisplay>( "fps" )->getPurpose().m_text = comment;
 
 
     /////////////////////////////
@@ -347,8 +347,8 @@ void MainService::Run( void )
     int tpos_x = (dsreal)characteristics.width_resol * 0.5 * (text_pos_x + 1.0);
     int tpos_y = (dsreal)characteristics.height_resol * 0.5 * (text_pos_y + 1.0);
 
-    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posx = tpos_x;
-    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posy = characteristics.height_resol - tpos_y;
+    rendering_aspect->GetComponent<StringRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posx = tpos_x;
+    rendering_aspect->GetComponent<StringRenderingAspectImpl::TextDisplay>("entityId")->getPurpose().m_posy = characteristics.height_resol - tpos_y;
 
     //////
 
@@ -365,10 +365,10 @@ void MainService::Run( void )
     int t2pos_y = (dsreal)characteristics.height_resol * 0.5 * (text2_pos_y + 1.0);
 
 
-    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_posx = t2pos_x;
-    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_posy = characteristics.height_resol - t2pos_y;
+    rendering_aspect->GetComponent<StringRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_posx = t2pos_x;
+    rendering_aspect->GetComponent<StringRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_posy = characteristics.height_resol - t2pos_y;
 
-    rendering_aspect->GetComponent<TextRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_text = std::to_string(m_entityDistance);
+    rendering_aspect->GetComponent<StringRenderingAspectImpl::TextDisplay>("entityDistance")->getPurpose().m_text = std::to_string(m_entityDistance);
 
 
 

@@ -22,13 +22,13 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MAINSERVICE_H_
-#define _MAINSERVICE_H_
+#pragma once
 
 #include "drawspace.h"
 #include "serviceaspectimpl.h"
 #include "fpstransformaspectimpl.h"
 #include "impostorsrenderingaspectimpl.h"
+#include "stringrenderingaspectimpl.h"
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
 {
@@ -112,12 +112,12 @@ protected:
 
     DrawSpace::Core::RenderingNode*                                                 m_spritecollimator_texturepass_rnode;
 
-    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
+    StringRenderingAspectImpl                                                       m_textRender;
 
 
-    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_entityIdTextRender;
+    StringRenderingAspectImpl                                                       m_entityIdTextRender;
 
-    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_entityDistanceTextRender;
+    StringRenderingAspectImpl                                                       m_entityDistanceTextRender;
     dsreal                                                                          m_entityDistance = 0.0;
 
 
@@ -191,5 +191,3 @@ public:
     void OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 
 };
-
-#endif
