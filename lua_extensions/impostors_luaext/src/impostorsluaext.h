@@ -34,7 +34,7 @@ public:
 	void Register(lua_State* p_L);
 	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
 
-	__LUAEXT_DESCRIPTION__("Impostors rendering lua extension")
+	__LUAEXT_DESCRIPTION__("Impostors and 2D Sprites")
 };
 
 
