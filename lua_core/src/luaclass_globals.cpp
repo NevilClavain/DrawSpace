@@ -662,6 +662,7 @@ int LuaClass_Globals::LUA_deactivateresourcessystem(lua_State* p_L)
 int LuaClass_Globals::LUA_registerextension(lua_State* p_L)
 {
     dsstring extension{ luaL_checkstring(p_L, 1) };
-    LuaExtLoad::RegisterLuaExtension(extension, p_L);
+    dsstring extension_description;
+    LuaExtLoad::RegisterLuaExtension(extension, p_L, extension_description);
     return 0;
 }

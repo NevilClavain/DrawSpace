@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MAINSERVICE_H_
-#define _MAINSERVICE_H_
+#pragma once
 
 #include "drawspace.h"
 #include "serviceaspectimpl.h"
@@ -32,6 +31,7 @@
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_entity.h"
+#include "stringrenderingaspectimpl.h"
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public DrawSpace::Utils::BaseSingleton<MainService>
 {
@@ -66,7 +66,7 @@ protected:
     DrawSpace::EntityGraph::EntityNode                                              m_quadEntityNode;
 
     DrawSpace::Systems::Hub                                                         m_systemsHub;
-    DrawSpace::AspectImplementations::TextRenderingAspectImpl                       m_textRender;
+    StringRenderingAspectImpl                                                       m_textRender;
     DrawSpace::AspectImplementations::QuadRenderingAspectImpl                       m_quadRender;
 
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_quadTransformer;
@@ -104,7 +104,6 @@ protected:
 	std::vector<dsstring>															m_commands_mem; // store here all typed commands
 
     bool                                                                            m_print_from_command;
-
 
     void on_guipushbutton_clicked( const dsstring& p_layout, const dsstring& p_widget_id );
 	void on_animation_event(const dsstring& p_event_id, DrawSpace::Systems::AnimationsSystem::AnimationEvent p_event, const dsstring& p_animation_name);
@@ -222,4 +221,3 @@ public:
     friend class DrawSpace::Utils::BaseSingleton<MainService>;
 };
 
-#endif

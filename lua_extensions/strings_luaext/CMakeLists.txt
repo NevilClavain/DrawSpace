@@ -21,10 +21,11 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(impostors_luaext)
+project(strings_luaext)
 
 include_directories(${lua_include_dir})
 link_directories(${lua_lib_dir})
+
 
 link_directories(${physfs_lib_dir})
 
@@ -40,12 +41,12 @@ include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/lua_extensions/impostors_luaext/src/*.h
-        ${CMAKE_SOURCE_DIR}/lua_extensions/impostors_luaext/src/*.cpp
+		${CMAKE_SOURCE_DIR}/lua_extensions/strings_luaext/src/*.h
+        ${CMAKE_SOURCE_DIR}/lua_extensions/strings_luaext/src/*.cpp
 		
 )
 
-add_library(impostors_luaext SHARED ${source_files})
-target_link_libraries(impostors_luaext drawspace_core lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
-install(TARGETS impostors_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS impostors_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+add_library(strings_luaext SHARED ${source_files})
+target_link_libraries(strings_luaext drawspace_core lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
+install(TARGETS strings_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS strings_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

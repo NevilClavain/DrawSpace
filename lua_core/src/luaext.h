@@ -23,6 +23,9 @@
 /* -*-LIC_END-*- */
 
 #pragma once
+#include "drawspace_commons.h"
+
+#define __LUAEXT_DESCRIPTION__( __description_text__ ) dsstring Description(void) const { return __description_text__; };
 
 //fwd decl
 struct lua_State;
@@ -38,4 +41,5 @@ class LuaExtension
 public:
 	virtual void Register(lua_State*) = 0;
 	virtual void UpdateRenderer(DrawSpace::Interface::Renderer*) = 0;
+	virtual dsstring Description(void) const = 0;
 };

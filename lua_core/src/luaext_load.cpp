@@ -33,7 +33,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L)
+bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L, dsstring& p_description)
 {
     dsstring complete_path = p_file;
 
@@ -63,6 +63,9 @@ bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L)
 
     lua_extension->UpdateRenderer(DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface);
     lua_extension->Register(p_L);
+
+    dsstring description{ lua_extension->Description() };
+    p_description = description;
 
     return true;
 }

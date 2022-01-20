@@ -31,5 +31,5 @@
 class LuaExtLoad
 {
 public:
-    static bool RegisterLuaExtension(const dsstring& p_file, lua_State* p_L);
+    static bool RegisterLuaExtension(const dsstring& p_file, lua_State* p_L, dsstring& p_description);
 };

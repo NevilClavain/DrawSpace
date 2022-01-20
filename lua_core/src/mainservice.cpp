@@ -174,7 +174,7 @@ void MainService::Run( void )
     DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
     RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
 
-    rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().clear();
+    rendering_aspect->GetComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().clear();
     if( m_console_active )
     {
         print_console_content();
@@ -204,24 +204,24 @@ void MainService::print_console_content( void )
     {
         for( size_t i = 0; i < m_console_texts.size(); i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 170, 170, 170, m_console_texts[i] );
-            rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
+            StringRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 170, 170, 170, m_console_texts[i] );
+            rendering_aspect->GetComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
 		// display caret over last line
-		TextRenderingAspectImpl::TextDisplay caret_line_display(15, m_console_y_pos + ((m_console_texts.size() - 1) * 15) + 2, 170, 170, 170, m_console_caret_line);
-		rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>("console_lines")->getPurpose().push_back(caret_line_display);
+		StringRenderingAspectImpl::TextDisplay caret_line_display(15, m_console_y_pos + ((m_console_texts.size() - 1) * 15) + 2, 170, 170, 170, m_console_caret_line);
+		rendering_aspect->GetComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>("console_lines")->getPurpose().push_back(caret_line_display);
 
     }
     else
     {
         for( size_t i = 0; i < m_console_max_lines_display; i++ )
         {
-            TextRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 170, 170, 170, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
-            rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
+            StringRenderingAspectImpl::TextDisplay myline( 15, m_console_y_pos + ( i * 15 ), 170, 170, 170, m_console_texts[m_console_texts.size() - m_console_max_lines_display + i] );
+            rendering_aspect->GetComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>( "console_lines" )->getPurpose().push_back( myline );
         }
 		// display caret over last line
-		TextRenderingAspectImpl::TextDisplay caret_line_display(15, m_console_y_pos + ((m_console_max_lines_display - 1) * 15) + 2, 170, 170, 170, m_console_caret_line);
-		rendering_aspect->GetComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>("console_lines")->getPurpose().push_back(caret_line_display);
+		StringRenderingAspectImpl::TextDisplay caret_line_display(15, m_console_y_pos + ((m_console_max_lines_display - 1) * 15) + 2, 170, 170, 170, m_console_caret_line);
+		rendering_aspect->GetComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>("console_lines")->getPurpose().push_back(caret_line_display);
     }    
 }
 
@@ -509,7 +509,7 @@ void MainService::process_console_command( const dsstring& p_cmd )
             DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
             DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
             RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
-            rendering_aspect->RemoveComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
+            rendering_aspect->RemoveComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
             LuaContext::GetInstance()->Shutdown();
             LuaContext::GetInstance()->Startup();
@@ -952,7 +952,7 @@ void MainService::buil_lua_prerequisites( void )
 
     rendering_aspect->AddImplementation( &m_textRender, NULL );
     
-    rendering_aspect->AddComponent<std::vector<TextRenderingAspectImpl::TextDisplay>>( "console_lines" );
+    rendering_aspect->AddComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
     m_console_ready = true;
 
