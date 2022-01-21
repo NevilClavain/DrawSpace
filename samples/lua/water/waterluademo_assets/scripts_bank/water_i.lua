@@ -154,18 +154,18 @@ waves_inc = TRUE
 
 waves:init_fromtimeaspectof(root_entity,0.0)
 
-text_renderer=TextRendering()
+text_renderer=StringRendering()
 text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
 
 
-text2_renderer=TextRendering()
+text2_renderer=StringRendering()
 text2_renderer:configure(root_entity, "resource_infos", 620, 130, 255, 0, 255, "resources...")
 
 
-objectid_renderer=TextRendering()
+objectid_renderer=StringRendering()
 objectid_renderer:configure(root_entity, "objectid", 600, 600, 255, 0, 255, "sphere")
 
-objectdistance_renderer=TextRendering()
+objectdistance_renderer=StringRendering()
 objectdistance_renderer:configure(root_entity, "objectdistance", 600, 600, 255, 0, 255, "...")
 
 

@@ -22,20 +22,33 @@
 */
 /* -*-LIC_END-*- */
 
-#include "stringsluaext.h"
-#include "luaclass_stringrendering.h"
-#include "plugin.h"
+#pragma once
 
-StringsLuaExtension::StringsLuaExtension(void)
-{
-}
+#include "luna.h"
+#include "stringrenderingaspectimpl.h"
+#include "luaclass_entity.h"
+#include "renderingaspect.h"
 
-void StringsLuaExtension::Register(lua_State* p_L)
+class LuaClass_StringsRendering
 {
-	Luna<LuaClass_StringsRendering>::Register(p_L);
-}
+private:
+    
+    StringRenderingAspectImpl               m_text_render;
+    DrawSpace::Aspect::RenderingAspect*     m_entity_rendering_aspect;
+    dsstring                                m_id;
 
-void StringsLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
-{
-	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
+public:
+
+    LuaClass_StringsRendering( lua_State* p_L );
+	~LuaClass_StringsRendering( void );
+
+    int LUA_configure( lua_State* p_L );
+    int LUA_release( lua_State* p_L );
+
+    int LUA_update( lua_State* p_L );
+   
+    static const char className[];
+    static const Luna<LuaClass_StringsRendering>::RegType methods[];
+
+};
+

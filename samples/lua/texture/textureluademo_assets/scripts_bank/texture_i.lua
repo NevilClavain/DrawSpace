@@ -44,7 +44,7 @@ renderconfig:add_rendercontext(rendercontext)
 rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
 
 
-text_renderer=TextRendering()
+text_renderer=StringRendering()
 text_renderer:configure(root_entity, "fps", 10, 40, 255, 0, 255, "??? fps")
 
 g:add_appruncb( "run",

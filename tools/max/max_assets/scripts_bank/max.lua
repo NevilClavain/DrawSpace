@@ -59,7 +59,7 @@ rg:create_child('final_pass', 'texture_pass', 0)
 rg:set_pass_targetclearcolor('texture_pass', 80, 80, 80)
 
 
-dbg_renderer=TextRendering()
+dbg_renderer=StringRendering()
 dbg_renderer:configure(root_entity, "debug", 80, 100, 255, 0, 255, "...")
 dbg_string = ""
 

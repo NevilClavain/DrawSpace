@@ -10,7 +10,7 @@ gui:set_layout("planetsetup.layout")
 gui:show_gui(TRUE)
 
 
-dbg_text_renderer=TextRendering()
+dbg_text_renderer=StringRendering()
 dbg_text_renderer:configure(root_entity, "debug", 350, 20, 255, 0, 255, "")
 
 

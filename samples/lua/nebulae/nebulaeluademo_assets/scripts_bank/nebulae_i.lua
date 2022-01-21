@@ -101,7 +101,7 @@ rg:set_viewportquadshaderrealvector('transfer_pass', 'camera_params', camera_wid
 rg:set_viewportquadshaderrealvector('transfer_pass', 'resol', renderer_infos[2], renderer_infos[3], 0.0, 0.0)
 
 
-text_renderer=TextRendering()
+text_renderer=StringRendering()
 text_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 

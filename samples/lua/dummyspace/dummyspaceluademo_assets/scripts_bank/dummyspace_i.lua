@@ -90,7 +90,7 @@ camera_width, camera_height, zn, zf = model.camera.entity:read_cameraparams()
 
 g:print('camera params = '..camera_width..' '..camera_height..' '..zn..' '..zf )
 
-text_renderer=TextRendering()
+text_renderer=StringRendering()
 text_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 container_angle_y_deg = 0.0

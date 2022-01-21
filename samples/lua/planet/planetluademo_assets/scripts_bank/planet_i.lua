@@ -242,21 +242,21 @@ rg:set_pass_targetclearcolor('oceanmask_pass', 0, 0, 0, 0)
 
 
 
-text_renderer=TextRendering()
+text_renderer=StringRendering()
 text_renderer:configure(root_entity, "fps", 320, 30, 255, 0, 255, "??? fps")
 
-text2_renderer=TextRendering()
+text2_renderer=StringRendering()
 text2_renderer:configure(root_entity, "datetime", 320, 70, 255, 0, 255, "xxxxxxx")
 
 
-text3_renderer=TextRendering()
+text3_renderer=StringRendering()
 text3_renderer:configure(root_entity, "timescale", 320, 110, 255, 0, 255, "xxxxxxx")
 
 
-text4_renderer=TextRendering()
+text4_renderer=StringRendering()
 text4_renderer:configure(root_entity, "planets_infos", 450, 70, 255, 0, 255, "xxxxxxx")
 
-text5_renderer=TextRendering()
+text5_renderer=StringRendering()
 text5_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
 
