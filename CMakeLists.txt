@@ -76,7 +76,6 @@ add_subdirectory(lua_core)
 
 # demos
 add_subdirectory(samples/cpp/impostors)
-add_subdirectory(samples/cpp/water)
 add_subdirectory(samples/lua/texture)
 add_subdirectory(samples/lua/water)
 add_subdirectory(samples/lua/gui)
