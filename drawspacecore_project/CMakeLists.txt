@@ -84,8 +84,6 @@ ${CMAKE_SOURCE_DIR}/src/rawtransformaspectimpl.cpp
 ${CMAKE_SOURCE_DIR}/src/rawtransformaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/revolutiontransformaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/revolutiontransformaspectimpl.h
-${CMAKE_SOURCE_DIR}/src/textrenderingaspectimpl.cpp 
-${CMAKE_SOURCE_DIR}/src/textrenderingaspectimpl.h
 )
 
 source_group(core FILES

@@ -92,7 +92,7 @@
 #include "passesrenderingaspectimpl.h"
 #include "mesherenderingaspectimpl.h"
 #include "quadrenderingaspectimpl.h"
-#include "textrenderingaspectimpl.h"
+
 
 
 #include "transformaspect.h"

@@ -40,7 +40,7 @@
 #include "resourcesaspect.h"
 #include "animationsaspect.h"
 #include "collisionaspect.h"
-#include "textrenderingaspectimpl.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
