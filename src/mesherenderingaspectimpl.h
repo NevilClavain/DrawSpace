@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MESHERENDERINGASPECTIMPL_H_
-#define _MESHERENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "renderingaspectimpl.h"
 #include "renderer.h"
@@ -36,35 +35,8 @@ namespace DrawSpace
 namespace AspectImplementations
 {
 class MesheRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
-{
-public:
-    class PassSlot
-    {
-    private:
-        using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
-
-        dsstring                                m_pass_name         = { nullptr };
-        DrawSpace::Core::RenderingNode*         m_rendering_node    = { nullptr };
-        RenderingNodeDrawCallback*              m_cb                = { nullptr };
-        DrawSpace::Interface::Renderer*         m_renderer          = { nullptr };
-
-        virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-
-    public:
-
-        Utils::Matrix                           m_world;
-        Utils::Matrix                           m_view;
-        Utils::Matrix                           m_proj;
-
-        PassSlot( const dsstring& p_pass_name );
-        ~PassSlot( void );
-
-        inline DrawSpace::Core::RenderingNode*  GetRenderingNode( void ) const { return m_rendering_node; };
-        inline dsstring                         GetPassName( void ) const { return m_pass_name; };
-    };
-    
+{    
 protected:
-
     bool                                m_add_in_rendergraph;
     
 public:
@@ -82,5 +54,3 @@ public:
 };
 }
 }
-
-#endif

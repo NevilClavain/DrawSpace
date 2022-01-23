@@ -24,6 +24,7 @@
 
 #include "buildemeshetask.h"
 #include "resourcessystem.h"
+#include "passslot.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
@@ -291,8 +292,8 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
                 _DSEXCEPTION("an entity with AnimationsAspect must also have a RenderingAspect");
             }
 
-            Core::ComponentList<AspectImplementations::MesheRenderingAspectImpl::PassSlot> passes;
-            rendering_aspect->GetComponentsByType<AspectImplementations::MesheRenderingAspectImpl::PassSlot>(passes);
+            Core::ComponentList<Core::PassSlot> passes;
+            rendering_aspect->GetComponentsByType<Core::PassSlot>(passes);
 
             for (auto e : passes)
             {

@@ -24,6 +24,7 @@
 
 #include "mainservice.h"
 #include "component.h"
+#include "passslot.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -845,9 +846,9 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 
     rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
-    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+    rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
-    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
+    RenderingNode* cube_texturepass = rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
     cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
 
     cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
@@ -913,9 +914,9 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
-        rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+        rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
-        RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
+        RenderingNode* cube_texturepass = rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
         cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
 
         cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
@@ -984,9 +985,9 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         rendering_aspect->AddImplementation(&p_rendering_aspect_impl_2, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
-        rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
+        rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
-        RenderingNode* cube_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
+        RenderingNode* cube_texturepass = rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode();
         cube_texturepass->SetFx(_DRAWSPACE_NEW_(Fx, Fx));
 
         cube_texturepass->GetFx()->AddShader(_DRAWSPACE_NEW_(Shader, Shader("texture_vs.hlsl", false)));
@@ -1040,10 +1041,10 @@ void MainService::create_ground( void )
 
     rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
-    rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
+    rendering_aspect->AddComponent<PassSlot>( "texturepass_slot", "texture_pass" );
 
     
-    RenderingNode* ground_texturepass = rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
+    RenderingNode* ground_texturepass = rendering_aspect->GetComponent<PassSlot>( "texturepass_slot" )->getPurpose().GetRenderingNode();
     ground_texturepass->SetFx( _DRAWSPACE_NEW_( Fx, Fx ) );
 
     ground_texturepass->GetFx()->AddShader( _DRAWSPACE_NEW_( Shader, Shader( "texture_vs.hlsl", false ) ) );

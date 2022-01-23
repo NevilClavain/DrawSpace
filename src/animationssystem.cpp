@@ -26,6 +26,7 @@
 #include "transformaspect.h"
 #include "mesherenderingaspectimpl.h"
 #include "maths.h"
+#include "passslot.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
@@ -495,8 +496,8 @@ void AnimationsSystem::send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect
 	// inject previously computed bones matrixes into each renderingnodes (one for" each passes)
 
 
-	ComponentList<MesheRenderingAspectImpl::PassSlot> passes;
-	p_rendering_aspect->GetComponentsByType<MesheRenderingAspectImpl::PassSlot>(passes);
+	ComponentList<PassSlot> passes;
+	p_rendering_aspect->GetComponentsByType<PassSlot>(passes);
 
 	for (auto e : passes)
 	{

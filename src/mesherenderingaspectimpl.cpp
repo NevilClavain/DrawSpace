@@ -25,6 +25,7 @@
 #include "mesherenderingaspectimpl.h"
 #include "renderingaspect.h"
 #include "transformaspect.h"
+#include "passslot.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -32,33 +33,6 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
-
-MesheRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
-    m_pass_name( p_pass_name )
-{
-    m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-
-    m_rendering_node = _DRAWSPACE_NEW_( RenderingNode, RenderingNode );
-
-    m_cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &PassSlot::on_renderingnode_draw ) );
-    m_rendering_node->RegisterHandler( m_cb );
-
-    m_world.Identity();
-    
-    m_view.Identity();
-    m_proj.Identity();
-}
-
-MesheRenderingAspectImpl::PassSlot::~PassSlot( void )
-{
-    _DRAWSPACE_DELETE_( m_rendering_node );
-    _DRAWSPACE_DELETE_( m_cb );
-}       
-
-void MesheRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
-{
-    m_renderer->DrawMeshe( m_world, m_view, m_proj );
-}
 
 MesheRenderingAspectImpl::MesheRenderingAspectImpl( void )
 {

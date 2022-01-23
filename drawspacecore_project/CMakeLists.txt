@@ -133,6 +133,8 @@ ${CMAKE_SOURCE_DIR}/src/transformation.cpp
 ${CMAKE_SOURCE_DIR}/src/transformation.h
 ${CMAKE_SOURCE_DIR}/src/triangle.h
 ${CMAKE_SOURCE_DIR}/src/vertex.h
+${CMAKE_SOURCE_DIR}/src/passslot.h
+${CMAKE_SOURCE_DIR}/src/passslot.cpp
 )
 
 source_group(dynamics FILES

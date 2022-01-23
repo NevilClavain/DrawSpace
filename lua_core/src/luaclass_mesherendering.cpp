@@ -33,6 +33,7 @@
 #include "luaclass_matrix.h"
 
 #include "mainservice.h"
+#include "passslot.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -163,8 +164,8 @@ int LuaClass_MesheRendering::LUA_configure( lua_State* p_L )
 				{
                     for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontextname))
                     {
-                        m_entity_rendering_aspect->AddComponent<MesheRenderingAspectImpl::PassSlot>(pass_id, pass_id);
-                        RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode();
+                        m_entity_rendering_aspect->AddComponent<PassSlot>(pass_id, pass_id);
+                        RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode();
                         m_renderingnodes[pass_id] = rnode;
 
                         //  on a besoin que d'un seul fx....
@@ -443,7 +444,7 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
 
             dsstring id = it->first;
 
-            RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<MesheRenderingAspectImpl::PassSlot>( id )->getPurpose().GetRenderingNode();
+            RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<PassSlot>( id )->getPurpose().GetRenderingNode();
 
             Fx* fx = rnode->GetFx();
 			if (fx)
@@ -509,7 +510,7 @@ void LuaClass_MesheRendering::cleanup_resources( lua_State* p_L )
 
             LUA_TRY
             {
-                m_entity_rendering_aspect->RemoveComponent<MesheRenderingAspectImpl::PassSlot>( id );
+                m_entity_rendering_aspect->RemoveComponent<PassSlot>( id );
 
             } LUA_CATCH; 
 
