@@ -762,7 +762,7 @@ function()
 	collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )
 	
 
-
+	
     local objectid_text_pos_x = collimator_pos_x - 0.05;
     local objectid_text_pos_y = collimator_pos_y + 0.1;
     local objectid_tpos_x = model.renderer_infos[2] * 0.5 * (objectid_text_pos_x + 1.0);
@@ -770,15 +770,15 @@ function()
 	objectid_renderer:update(objectid_tpos_x, objectid_tpos_y, 0, 255, 0, "Sphere")
 
 
-
+	
     local objectdistance_text_pos_x = collimator_pos_x - 0.05;
     local objectdistance_text_pos_y = collimator_pos_y - 0.1;
     local objectdistance_tpos_x = model.renderer_infos[2] * 0.5 * (objectdistance_text_pos_x + 1.0);
     local objectdistance_tpos_y = model.renderer_infos[3] - (model.renderer_infos[3] * 0.5 * (objectdistance_text_pos_y + 1.0));
 
-
-	objectdistance_renderer:update(objectdistance_tpos_x, objectdistance_tpos_y, 0, 255, 0, spherebump.models['sphere'].entity:localpoint_distancefromcamera(localpos))
-
+	local distance_to_object = spherebump.models['sphere'].entity:localpoint_distancefromcamera(localpos)
+	objectdistance_renderer:update(objectdistance_tpos_x, objectdistance_tpos_y, 0, 255, 0, g:format_real(distance_to_object, 2))
+	
 
 
 	
