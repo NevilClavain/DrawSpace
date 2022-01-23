@@ -74,19 +74,19 @@ bool MesheRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, Ren
 
     for( size_t i = 0; i < pass_slots.size(); i++ )
     {
-        if( pass_slots[i]->getPurpose().m_pass_name == p_name )
+        if( pass_slots[i]->getPurpose().GetPassName() == p_name )
         {
             if( m_add_in_rendergraph )
             {
                 // ajout du renderingnode dans la renderingqueue  
 
-                p_passqueue->Add( pass_slots[i]->getPurpose().m_rendering_node );
+                p_passqueue->Add( pass_slots[i]->getPurpose().GetRenderingNode() );
             }
             else
             {
                 // suppression du renderingnode de la renderingqueue
 
-                p_passqueue->Remove( pass_slots[i]->getPurpose().m_rendering_node );
+                p_passqueue->Remove( pass_slots[i]->getPurpose().GetRenderingNode() );
             }
             updated_queue = true;
         }

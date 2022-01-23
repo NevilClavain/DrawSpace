@@ -41,12 +41,12 @@ public:
     class PassSlot
     {
     private:
-        typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
+        using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
 
-        dsstring                                m_pass_name;
-        DrawSpace::Core::RenderingNode*         m_rendering_node;
-        RenderingNodeDrawCallback*              m_cb;
-        DrawSpace::Interface::Renderer*         m_renderer;
+        dsstring                                m_pass_name         = { nullptr };
+        DrawSpace::Core::RenderingNode*         m_rendering_node    = { nullptr };
+        RenderingNodeDrawCallback*              m_cb                = { nullptr };
+        DrawSpace::Interface::Renderer*         m_renderer          = { nullptr };
 
         virtual void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
 
@@ -59,9 +59,8 @@ public:
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
 
-        DrawSpace::Core::RenderingNode* GetRenderingNode( void ) const { return m_rendering_node; };
-
-        friend class MesheRenderingAspectImpl;
+        inline DrawSpace::Core::RenderingNode*  GetRenderingNode( void ) const { return m_rendering_node; };
+        inline dsstring                         GetPassName( void ) const { return m_pass_name; };
     };
     
 protected:
