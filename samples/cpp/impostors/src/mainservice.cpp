@@ -838,7 +838,7 @@ void MainService::create_collimator_sprite_impostor(void)
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass_rnode->GetTexture(0), false));
 }
 
-void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
+void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
                                 DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl)
 {
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
@@ -901,10 +901,10 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::As
 }
 
 void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
-                                        DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl,
+                                        MeshRenderingAspectImpl& p_rendering_aspect_impl,
                                         DrawSpace::Core::Entity& p_entity,
                                         DrawSpace::AspectImplementations::RawTransformAspectImpl& p_transform_impl,
-                                        DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl_2,
+                                        MeshRenderingAspectImpl& p_rendering_aspect_impl_2,
                                         DrawSpace::Core::Entity& p_entity_2,
                                         DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl)
 {

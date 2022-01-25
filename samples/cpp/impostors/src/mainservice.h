@@ -28,7 +28,9 @@
 #include "serviceaspectimpl.h"
 #include "fpstransformaspectimpl.h"
 #include "impostorsrenderingaspectimpl.h"
+#include "meshrenderingaspectimpl.h"
 #include "stringrenderingaspectimpl.h"
+
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
 {
@@ -97,11 +99,11 @@ protected:
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
     DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_groundRender;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cubeRender;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_cube2Render;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_mainBodyRender;
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl                      m_feetRender;
+    MeshRenderingAspectImpl                                                         m_groundRender;
+    MeshRenderingAspectImpl                                                         m_cubeRender;
+    MeshRenderingAspectImpl                                                         m_cube2Render;
+    MeshRenderingAspectImpl                                                         m_mainBodyRender;
+    MeshRenderingAspectImpl                                                         m_feetRender;
 
     ImpostorsRenderingAspectImpl                                                    m_impostorsRender;
     ImpostorsRenderingAspectImpl                                                    m_worldImpostorsRender;
@@ -147,15 +149,15 @@ protected:
 
     void create_skybox( void );
     void create_ground( void );
-    void create_cube( dsreal p_x, dsreal p_y, dsreal p_z, DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
+    void create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
         DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl);
 
 
     void create_composition(dsreal p_x, dsreal p_y, dsreal p_z, 
-                            DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl, 
+                            MeshRenderingAspectImpl& p_rendering_aspect_impl, 
                             DrawSpace::Core::Entity& p_entity,
                                 DrawSpace::AspectImplementations::RawTransformAspectImpl& p_transform_impl,
-                                DrawSpace::AspectImplementations::MesheRenderingAspectImpl& p_rendering_aspect_impl_2,
+                                MeshRenderingAspectImpl& p_rendering_aspect_impl_2,
                                 DrawSpace::Core::Entity& p_entity_2,
                                 DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl
                                 );
