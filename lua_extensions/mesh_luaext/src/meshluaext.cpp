@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "meshluaext.h"
-//#include "luaclass_stringrendering.h"
+#include "luaclass_meshrendering.h"
 #include "plugin.h"
 
 MeshLuaExtension::MeshLuaExtension(void)
@@ -32,7 +32,7 @@ MeshLuaExtension::MeshLuaExtension(void)
 
 void MeshLuaExtension::Register(lua_State* p_L)
 {
-	//Luna<LuaClass_StringsRendering>::Register(p_L);
+	Luna<LuaClass_MeshRendering>::Register(p_L);
 }
 
 void MeshLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)

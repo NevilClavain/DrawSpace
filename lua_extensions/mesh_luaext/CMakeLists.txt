@@ -26,13 +26,16 @@ project(mesh_luaext)
 include_directories(${lua_include_dir})
 link_directories(${lua_lib_dir})
 
-
+include_directories(${physfs_include_dir})
 link_directories(${physfs_lib_dir})
 
+include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
 
+include_directories(${assimp_include_dir})
 link_directories(${assimp_lib_dir})
 
+include_directories(${bullet_include_dir})
 link_directories(${bullet_lib_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
