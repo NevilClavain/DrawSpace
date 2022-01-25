@@ -60,7 +60,6 @@ using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
-using namespace DrawSpace::AspectImplementations;
 
 dsstring ResourcesSystem::m_textures_rootpath { "." };
 dsstring ResourcesSystem::m_meshes_rootpath { "." };

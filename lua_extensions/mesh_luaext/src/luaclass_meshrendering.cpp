@@ -31,6 +31,7 @@
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_entity.h"
 #include "luaclass_matrix.h"
+#include "meshrenderingaspectimpl.h"
 
 #include "mainservice.h"
 #include "passslot.h"
@@ -96,7 +97,7 @@ int LuaClass_MeshRendering::LUA_attachtoentity( lua_State* p_L )
     m_entity_rendering_aspect = rendering_aspect;
     m_entity = &entity;
 
-    m_meshe_render = _DRAWSPACE_NEW_( DrawSpace::AspectImplementations::MesheRenderingAspectImpl, DrawSpace::AspectImplementations::MesheRenderingAspectImpl );
+    m_meshe_render = _DRAWSPACE_NEW_( MeshRenderingAspectImpl, MeshRenderingAspectImpl );
     m_entity_rendering_aspect->AddImplementation( m_meshe_render, NULL );
 
     return 0;

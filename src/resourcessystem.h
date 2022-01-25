@@ -44,7 +44,6 @@
 
 #include "animationssystem.h"
 
-#include "mesherenderingaspectimpl.h"
 #include "vertex.h"
 #include "triangle.h"
 

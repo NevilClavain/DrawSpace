@@ -263,7 +263,7 @@ commons.create_rendered_meshe = function(p_config, p_meshefile, p_meshe_name, re
 
 	local renderconfig=RenderConfig()
 
-	local renderer=MesheRendering()
+	local renderer=MeshRendering()
 	renderer:attach_toentity(meshe_entity)
 
 

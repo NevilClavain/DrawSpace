@@ -34,7 +34,7 @@ public:
 	void Register(lua_State* p_L);
 	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
 
-	__LUAEXT_DESCRIPTION__("Strings and text rendering")
+	__LUAEXT_DESCRIPTION__("Simple triangles mesh rendering")
 };
 
 

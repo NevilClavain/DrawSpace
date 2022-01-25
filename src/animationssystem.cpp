@@ -24,7 +24,6 @@
 
 #include "animationssystem.h"
 #include "transformaspect.h"
-#include "mesherenderingaspectimpl.h"
 #include "maths.h"
 #include "passslot.h"
 
@@ -33,7 +32,6 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::AspectImplementations;
 
 const dsstring AnimationsSystem::bonesBuffer0Id = "bones_0";
 const dsstring AnimationsSystem::bonesBuffer1Id = "bones_1";

@@ -25,16 +25,17 @@
 #pragma once
 
 #include "luna.h"
-#include "mesherenderingaspectimpl.h"
 #include "renderingaspect.h"
-//#include "mesheimport.h"
+
+// fwd decl
+class MeshRenderingAspectImpl;
 
 class LuaClass_MeshRendering
 {
 private:
     DrawSpace::Core::Meshe                                          m_meshe;
 
-    DrawSpace::AspectImplementations::MesheRenderingAspectImpl*     m_meshe_render;
+    MeshRenderingAspectImpl*                                        m_meshe_render;
     DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect;
     DrawSpace::Core::Entity*                                        m_entity;
 

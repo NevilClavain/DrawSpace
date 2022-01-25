@@ -36,7 +36,6 @@
 #include "luaclass_rawtransform.h"
 #include "luaclass_revolutiontransform.h"
 #include "luaclass_rigidbodytransform.h"
-#include "luaclass_mesherendering.h"
 #include "luaclass_syncangle.h"
 #include "luaclass_syncscalar.h"
 #include "luaclass_texturesset.h"
@@ -92,7 +91,7 @@ void LuaContext::Startup( void )
     Luna<LuaClass_FPSTransform>::Register( m_L );
     Luna<LuaClass_FreeTransform>::Register(m_L);
     Luna<LuaClass_RawTransform>::Register( m_L );
-    Luna<LuaClass_MesheRendering>::Register( m_L );
+    //Luna<LuaClass_MesheRendering>::Register( m_L );
     Luna<LuaClass_SyncAngle>::Register( m_L );
     Luna<LuaClass_SyncScalar>::Register( m_L );
     Luna<LuaClass_RenderContext>::Register( m_L );

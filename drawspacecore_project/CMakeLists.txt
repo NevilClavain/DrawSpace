@@ -72,8 +72,6 @@ ${CMAKE_SOURCE_DIR}/src/transformaspect.h
 source_group(aspectimplementations FILES 
 ${CMAKE_SOURCE_DIR}/src/rigidbodytransformaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/rigidbodytransformaspectimpl.h
-${CMAKE_SOURCE_DIR}/src/mesherenderingaspectimpl.cpp 
-${CMAKE_SOURCE_DIR}/src/mesherenderingaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/orbittransformaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/orbittransformaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/passesrenderingaspectimpl.cpp 
