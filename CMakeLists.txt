@@ -70,6 +70,7 @@ add_subdirectory(modules/planetsmod_project)
 # lua extensions
 add_subdirectory(lua_extensions/impostors_luaext)
 add_subdirectory(lua_extensions/strings_luaext)
+add_subdirectory(lua_extensions/mesh_luaext)
 
 # lua_core
 add_subdirectory(lua_core)
