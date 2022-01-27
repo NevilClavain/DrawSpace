@@ -391,8 +391,8 @@ void MainService::create_skybox(void)
 
     rendering_aspect->AddImplementation(&m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
-    std::map<dsstring, int>                                 rcname_to_layer_index   = { { "main_rendering", 0 } };
-    std::map<dsstring, std::vector<dsstring>>               rcname_to_passes        = { { "main_rendering", { { "texture_pass" } } } };
+    std::map<dsstring, int>                                 rcname_to_layer_index   { { "main_rendering", 0 } };
+    std::map<dsstring, std::vector<dsstring>>               rcname_to_passes        { { "main_rendering", { { "texture_pass" } } } };
 
     ////////////// 6 jeux de 32 textures stages
 
