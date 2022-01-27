@@ -30,6 +30,7 @@
 #include "impostorsrenderingaspectimpl.h"
 #include "meshrenderingaspectimpl.h"
 #include "stringrenderingaspectimpl.h"
+#include "skyboxrenderingaspectimpl.h"
 
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl
@@ -98,7 +99,10 @@ protected:
     DrawSpace::Systems::Hub                                                         m_systemsHub;
 
     DrawSpace::AspectImplementations::PassesRenderingAspectImpl                     m_passesRender;
-    DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
+
+    //DrawSpace::Interface::AspectImplementations::RenderingAspectImpl*               m_skyboxRender;
+    SkyboxRenderingAspectImpl                                                       m_skyboxRender;
+
     MeshRenderingAspectImpl                                                         m_groundRender;
     MeshRenderingAspectImpl                                                         m_cubeRender;
     MeshRenderingAspectImpl                                                         m_cube2Render;

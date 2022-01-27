@@ -235,9 +235,8 @@ bool MainService::Init( void )
 
     // ajouter la skybox a la scene
     m_skyboxEntityNode = m_rootEntityNode.AddChild( &m_skyboxEntity );
-    m_skyboxRender->RegisterToRendering( m_rendergraph );
 
-
+    m_skyboxRender.RegisterToRendering(m_rendergraph);
 
     // ajouter la cameras a la scene
     m_cameraEntityNode = m_rootEntityNode.AddChild( &m_cameraEntity );
@@ -385,29 +384,17 @@ void MainService::Release( void )
     m_systemsHub.ReleaseAssets();
 }
 
-void MainService::create_skybox( void )
+void MainService::create_skybox(void)
 {
-    DrawSpace::Interface::Module::Root* sbmod_root;
+    RenderingAspect* rendering_aspect{ m_skyboxEntity.AddAspect<RenderingAspect>() };
+    TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    if( !DrawSpace::Utils::PILoad::LoadModule( "skyboxmod", "skybox", &sbmod_root ) )
-    {
-        _DSEXCEPTION( "fail to load skyboxmod module root" )
-    }
-    m_skyboxRender = sbmod_root->InstanciateRenderingAspectImpls( "skyboxRender" );
-
-
-    RenderingAspect* rendering_aspect = m_skyboxEntity.AddAspect<RenderingAspect>();
-
-    TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
-    rendering_aspect->AddImplementation( m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    rendering_aspect->AddImplementation(&m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
 
     std::map<dsstring, int>                                 rcname_to_layer_index   = { { "main_rendering", 0 } };
     std::map<dsstring, std::vector<dsstring>>               rcname_to_passes        = { { "main_rendering", { { "texture_pass" } } } };
 
-
-
     ////////////// 6 jeux de 32 textures stages
-
 
     ///////////////// jeux de textures pour chaque passes
 
