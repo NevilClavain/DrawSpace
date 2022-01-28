@@ -438,6 +438,66 @@ g:set_mousecursorcircularmode(TRUE)
 
 g:signal_renderscenebegin("eg")
 
+spacebox_layers =
+{
+	[0] =	
+	{
+		spacebox_rendering =
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='texture_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='texture_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+				}
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{path='spacebox_front5.png', stage=0}
+				},
+				[2] = 
+				{
+					{path='spacebox_back6.png', stage=0}
+				},
+				[3] = 
+				{
+					{path='spacebox_left2.png', stage=0}
+				},
+				[4] = 
+				{
+					{path='spacebox_right1.png', stage=0}
+				},
+				[5] = 
+				{
+					{path='spacebox_top3.png', stage=0}
+				},
+				[6] = 
+				{
+					{path='spacebox_bottom4.png', stage=0}
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 10
+		}
+	}
+}
+
 spacebox_passes_bindings = 
 {
 	binding_0 = 
@@ -447,7 +507,7 @@ spacebox_passes_bindings =
 		lit_shader_update_func = nil
 	}
 }
-spaceboxmod.view.load('spacebox0', spacebox_passes_bindings)
+spaceboxmod.view.load('spacebox0', spacebox_passes_bindings, spacebox_layers)
 model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spacebox0', 0, {x = 1000.0, y = 1000.0, z = 1000.0 } )
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 

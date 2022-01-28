@@ -9,72 +9,14 @@ g:print(spaceboxmod.module:get_descr().. ' loaded')
 -- stockage des instances modeles : paire {entity, renderer}
 spaceboxmod.models = {}
 
-spaceboxmod.layers =
-{
-	[0] =	
-	{
-		spacebox_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='texture_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='texture_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
-				}
-			},
-			textures =
-			{
-				[1] = 
-				{
-					{path='spacebox_front5.png', stage=0}
-				},
-				[2] = 
-				{
-					{path='spacebox_back6.png', stage=0}
-				},
-				[3] = 
-				{
-					{path='spacebox_left2.png', stage=0}
-				},
-				[4] = 
-				{
-					{path='spacebox_right1.png', stage=0}
-				},
-				[5] = 
-				{
-					{path='spacebox_top3.png', stage=0}
-				},
-				[6] = 
-				{
-					{path='spacebox_bottom4.png', stage=0}
-				}
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 10
-		}
-	}
-}
+spaceboxmod.requested_rendering_layers = nil
 
 spaceboxmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
 
   local entity
   local renderer
 
-  entity, renderer=commons.create_rendering_from_module(spaceboxmod.layers, spaceboxmod.module, "skyboxRender", p_passes_bindings)
+  entity, renderer=commons.create_rendering_from_module(spaceboxmod.requested_rendering_layers, spaceboxmod.module, "skyboxRender", p_passes_bindings)
   renderer:register_to_rendering(p_rendergraph)
 
 
@@ -125,7 +67,9 @@ spaceboxmod.view.unload = function(p_entity_id)
   end
 end
 
-spaceboxmod.view.load = function(p_entity_id, p_passes_bindings)
+spaceboxmod.view.load = function(p_entity_id, p_passes_bindings, p_spacebox_layers)
+
+  spaceboxmod.requested_rendering_layers = p_spacebox_layers
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do
