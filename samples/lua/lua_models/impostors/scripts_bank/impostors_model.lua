@@ -9,8 +9,6 @@ impostors.models = {}
 impostors.requested_descriptors = nil
 impostors.requested_rendering_config = nil
 
-impostors.space = {}
-
 impostors.create_rendered_impostors = function(p_config, p_rendering_passes_array)
 
   local entity=Entity()
