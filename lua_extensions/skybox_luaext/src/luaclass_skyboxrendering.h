@@ -22,20 +22,23 @@
 */
 /* -*-LIC_END-*- */
 
-#include "skyboxluaext.h"
-#include "luaclass_skyboxrendering.h"
-#include "plugin.h"
+#pragma once
 
-SkyboxLuaExtension::SkyboxLuaExtension(void)
-{
-}
+#include "luna.h"
+#include "renderingaspect.h"
 
-void SkyboxLuaExtension::Register(lua_State* p_L)
-{
-	Luna<LuaClass_SkyboxRendering>::Register(p_L);
-}
 
-void SkyboxLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
+class LuaClass_SkyboxRendering
 {
-	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
+private:
+    
+public:
+
+    LuaClass_SkyboxRendering( lua_State* p_L );
+	~LuaClass_SkyboxRendering( void );
+
+    
+    static const char className[];
+    static const Luna<LuaClass_SkyboxRendering>::RegType methods[];
+    
+};
