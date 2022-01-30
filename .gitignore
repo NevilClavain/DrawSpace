@@ -111,6 +111,9 @@ ALL_BUILD.vcxproj*
 /lua_extensions/mesh_luaext/CMakeFiles/
 /lua_extensions/mesh_luaext/*.sln
 /lua_extensions/mesh_luaext/*.vcxproj*
+/lua_extensions/skybox_luaext/CMakeFiles/
+/lua_extensions/skybox_luaext/*.sln
+/lua_extensions/skybox_luaext/*.vcxproj*
 /lua_core/CMakeFiles/
 /lua_core/*.sln
 /lua_core/*.vcxproj*
