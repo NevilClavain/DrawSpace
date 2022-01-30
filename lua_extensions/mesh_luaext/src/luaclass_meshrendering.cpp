@@ -33,7 +33,7 @@
 #include "luaclass_matrix.h"
 #include "meshrenderingaspectimpl.h"
 
-#include "mainservice.h"
+#include "resourcesaspect.h"
 #include "passslot.h"
 
 using namespace DrawSpace;
