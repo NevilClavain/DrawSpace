@@ -195,8 +195,6 @@ int LuaClass_Impostors::LUA_configure(lua_State* p_L)
     {
         LUA_TRY
         {
-            //m_entity_rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::ImpostorDescriptor>("0", id);
-
             // retrieve descriptor arrays content
             auto descriptors_array{ descriptions_arrays->GetData() };
             int d_count{ 0 };
@@ -317,8 +315,47 @@ void LuaClass_Impostors::cleanup_resources(lua_State* p_L)
 
     if (m_entity_rendering_aspect)
     {
-        // TODO
+        for (auto& e : m_renderingnodes)
+        {
+            e.second->CleanupShaderParams();
+            dsstring id{ e.first };
+            RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>(id)->getPurpose().GetRenderingNode() };
+            Fx* fx{ rnode->GetFx() };
+            if (fx)
+            {
+                for (long i = 0; i < fx->GetShadersListSize(); i++)
+                {
+                    Shader* shader = fx->GetShader(i);
+                    dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                    resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
+                    _DRAWSPACE_DELETE_(shader);
+                }
+                fx->ClearShaders();
+            }
 
+            _DRAWSPACE_DELETE_(fx);
+
+            for (int i = 0; i < rnode->GetTextureListSize(); i++)
+            {
+                Texture* texture = rnode->GetTexture(i);
+                if (texture)
+                {
+                    dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                    resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
+
+                    _DRAWSPACE_DELETE_(texture);
+                    rnode->SetTexture(NULL, i);
+                }
+            }
+
+            LUA_TRY
+            {
+                m_entity_rendering_aspect->RemoveComponent<ImpostorsRenderingAspectImpl::PassSlot>(id);
+
+            } LUA_CATCH;
+
+        }
+        m_renderingnodes.clear();
     }
     else
     {

@@ -50,7 +50,7 @@ public:
     class PassSlot
     {
     private:
-        typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
+        using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
 
         dsstring                                m_pass_name                 = { nullptr };
         DrawSpace::Core::RenderingNode*         m_rendering_node            = { nullptr };
