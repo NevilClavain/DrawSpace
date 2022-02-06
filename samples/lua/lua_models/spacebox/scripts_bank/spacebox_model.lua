@@ -112,7 +112,16 @@ spaceboxmod.create_rendered_spacebox = function(p_layers, p_rendering_passes_arr
   return entity, renderer
 end
 
+spaceboxmod.trash_spacebox = function(p_rendergraph, p_entity, p_renderer)
 
+    p_renderer:unregister_from_rendering(p_rendergraph)
+	p_renderer:release()
+	p_renderer:detach_fromentity()
+
+	p_entity:remove_aspect(RENDERING_ASPECT)
+	p_entity:remove_aspect(RESOURCES_ASPECT)
+
+end
 
 spaceboxmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings)
 
@@ -141,7 +150,8 @@ spaceboxmod.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
 
   entity:remove_aspect(TRANSFORM_ASPECT)
 
-  commons.trash.rendering(p_rendergraph, spaceboxmod.module, entity, renderer)
+  spaceboxmod.trash_spacebox(p_rendergraph, entity, renderer)
+
   p_entitygraph:remove(p_entity_id)
 
   local pair = spaceboxmod.models[p_entity_id]
