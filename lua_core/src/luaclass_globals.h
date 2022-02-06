@@ -27,8 +27,14 @@
 
 #include "luna.h"
 
+//fwd decl
+class LuaExtension;
+
 class LuaClass_Globals
 {
+private:
+    std::map<dsstring, LuaExtension*> m_extensions;
+
 public:
 	LuaClass_Globals( lua_State* p_L );
 	~LuaClass_Globals( void );
@@ -113,7 +119,9 @@ public:
     int LUA_activateresourcessystem(lua_State* p_L);
     int LUA_deactivateresourcessystem(lua_State* p_L);
 
-    int LuaClass_Globals::LUA_registerextension(lua_State* p_L);
+    int LUA_registerextension(lua_State* p_L);
+
+    int LUA_dumpallextensionsalloc(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];

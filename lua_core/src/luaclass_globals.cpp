@@ -107,6 +107,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "deactivate_resourcessystem", &LuaClass_Globals::LUA_deactivateresourcessystem },
 
     { "register_extension", &LuaClass_Globals::LUA_registerextension },
+    { "dump_allextensionsalloc", &LuaClass_Globals::LUA_dumpallextensionsalloc },
 
 	{ 0, 0 }
 };
@@ -664,7 +665,23 @@ int LuaClass_Globals::LUA_registerextension(lua_State* p_L)
     dsstring extension_name{ luaL_checkstring(p_L, 1) };
     dsstring extension_description;
     LuaExtension* extension_instance{ LuaExtLoad::RegisterLuaExtension(extension_name, p_L, extension_description) };
+    m_extensions[extension_name] = extension_instance;
 
     lua_pushstring(p_L, extension_description.c_str());
     return 1;
+}
+
+int LuaClass_Globals::LUA_dumpallextensionsalloc(lua_State* p_L)
+{
+    for (auto& e : m_extensions)
+    {
+        LuaExtension* extension_instance{ e.second };
+
+        dsstring luaext_name = e.first;
+        _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << luaext_name << dsstring("lua extension mem allocs*******************"));
+        extension_instance->GetMemAllocInstance()->DumpContent();
+        _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
+
+    }
+    return 0;
 }
