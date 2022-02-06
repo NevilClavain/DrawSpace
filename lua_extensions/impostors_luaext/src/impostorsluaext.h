@@ -33,6 +33,7 @@ public:
 
 	void Register(lua_State* p_L);
 	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
+	DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const;
 
 	__LUAEXT_DESCRIPTION__("Impostors and 2D Sprites")
 };

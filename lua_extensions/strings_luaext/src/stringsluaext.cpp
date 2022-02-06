@@ -25,6 +25,7 @@
 #include "stringsluaext.h"
 #include "luaclass_stringrendering.h"
 #include "plugin.h"
+#include "memalloc.h"
 
 StringsLuaExtension::StringsLuaExtension(void)
 {
@@ -38,4 +39,9 @@ void StringsLuaExtension::Register(lua_State* p_L)
 void StringsLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
 {
 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
+
+DrawSpace::Utils::MemAlloc* StringsLuaExtension::GetMemAllocInstance(void) const
+{
+	return DrawSpace::Utils::MemAlloc::GetInstance();
 }

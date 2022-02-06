@@ -25,6 +25,7 @@
 #include "impostorsluaext.h"
 #include "luaclass_impostors.h"
 #include "luaclass_impostorsdescriptionsarray.h"
+#include "memalloc.h"
 
 ImpostorsLuaExtension::ImpostorsLuaExtension(void)
 {
@@ -39,4 +40,9 @@ void ImpostorsLuaExtension::Register(lua_State* p_L)
 void ImpostorsLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
 {
 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
+
+DrawSpace::Utils::MemAlloc* ImpostorsLuaExtension::GetMemAllocInstance(void) const
+{
+	return DrawSpace::Utils::MemAlloc::GetInstance();
 }

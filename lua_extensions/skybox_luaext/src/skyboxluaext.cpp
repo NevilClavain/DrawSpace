@@ -25,6 +25,7 @@
 #include "skyboxluaext.h"
 #include "luaclass_skyboxrendering.h"
 #include "plugin.h"
+#include "memalloc.h"
 
 SkyboxLuaExtension::SkyboxLuaExtension(void)
 {
@@ -38,4 +39,9 @@ void SkyboxLuaExtension::Register(lua_State* p_L)
 void SkyboxLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
 {
 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
+
+DrawSpace::Utils::MemAlloc* SkyboxLuaExtension::GetMemAllocInstance(void) const
+{
+	return DrawSpace::Utils::MemAlloc::GetInstance();
 }

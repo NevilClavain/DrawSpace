@@ -31,8 +31,9 @@ class SkyboxLuaExtension : public LuaExtension
 public:
 	SkyboxLuaExtension(void);
 
-	void Register(lua_State* p_L);
-	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
+	void						Register(lua_State* p_L);
+	void						UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
+	DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const;
 
 	__LUAEXT_DESCRIPTION__("Skybox rendering extension")
 };

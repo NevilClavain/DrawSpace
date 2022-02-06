@@ -25,6 +25,7 @@
 #include "meshluaext.h"
 #include "luaclass_meshrendering.h"
 #include "plugin.h"
+#include "memalloc.h"
 
 MeshLuaExtension::MeshLuaExtension(void)
 {
@@ -38,4 +39,9 @@ void MeshLuaExtension::Register(lua_State* p_L)
 void MeshLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
 {
 	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
+
+DrawSpace::Utils::MemAlloc* MeshLuaExtension::GetMemAllocInstance(void) const
+{
+	return DrawSpace::Utils::MemAlloc::GetInstance();
 }

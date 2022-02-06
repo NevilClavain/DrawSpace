@@ -31,6 +31,10 @@
 struct lua_State;
 namespace DrawSpace
 {
+namespace Utils
+{
+class MemAlloc;
+}
 namespace Interface
 {
 class Renderer;
@@ -42,4 +46,5 @@ public:
 	virtual void Register(lua_State*) = 0;
 	virtual void UpdateRenderer(DrawSpace::Interface::Renderer*) = 0;
 	virtual dsstring Description(void) const = 0;
+	virtual DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const = 0;
 };
