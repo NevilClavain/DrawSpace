@@ -26,6 +26,7 @@
 #include "renderer.h"
 #include "pimanager.h"
 #include "plugin.h"
+#include "exceptions.h"
 
 
 using namespace DrawSpace;
@@ -33,7 +34,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 
-bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L, dsstring& p_description)
+LuaExtension* LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L, dsstring& p_description)
 {
     dsstring complete_path = p_file;
 
@@ -53,12 +54,12 @@ bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L, ds
     PluginManagerStatus pistatus = DrawSpace::Utils::PlugInManager<LuaExtension>::LoadPlugin(complete_path.c_str(), pihandle);
     if (pistatus != PluginManagerStatus::PIM_OK)
     {
-        return false;
+        _DSEXCEPTION("Error while loading plugin " + complete_path)
     }
 
     if (DrawSpace::Utils::PlugInManager<LuaExtension>::Instanciate(pihandle, &lua_extension) != PluginManagerStatus::PIM_OK)
     {
-        return false;
+        _DSEXCEPTION("Error while instanciating lua ext of plugin " + complete_path)
     }
 
     lua_extension->UpdateRenderer(DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface);
@@ -67,5 +68,5 @@ bool LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State* p_L, ds
     dsstring description{ lua_extension->Description() };
     p_description = description;
 
-    return true;
+    return lua_extension;
 }
