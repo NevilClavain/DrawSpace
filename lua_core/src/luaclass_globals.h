@@ -120,8 +120,8 @@ public:
     int LUA_deactivateresourcessystem(lua_State* p_L);
 
     int LUA_registerextension(lua_State* p_L);
-
     int LUA_dumpallextensionsalloc(lua_State* p_L);
+    int LUA_getextensionsalloctotalsize(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_Globals>::RegType methods[];

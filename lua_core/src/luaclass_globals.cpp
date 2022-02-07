@@ -108,6 +108,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 
     { "register_extension", &LuaClass_Globals::LUA_registerextension },
     { "dump_allextensionsalloc", &LuaClass_Globals::LUA_dumpallextensionsalloc },
+    { "get_extensionsalloctotalsize", &LuaClass_Globals::LUA_getextensionsalloctotalsize },
 
 	{ 0, 0 }
 };
@@ -681,7 +682,27 @@ int LuaClass_Globals::LUA_dumpallextensionsalloc(lua_State* p_L)
         _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << luaext_name << dsstring("lua extension mem allocs*******************"));
         extension_instance->GetMemAllocInstance()->DumpContent();
         _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
-
     }
     return 0;
+}
+
+int LuaClass_Globals::LUA_getextensionsalloctotalsize(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Globals::get_extensionsalloctotalsize : argument(s) missing");
+    }
+
+    dsstring extensionid = luaL_checkstring(p_L, 1);
+    int totalsize = 0;
+    if (0 == m_extensions.count(extensionid))
+    {
+        LUA_ERROR("Globals::get_extensionsalloctotalsize : unknown extension id " + extensionid);
+    }
+
+    totalsize = m_extensions.at(extensionid)->GetMemAllocInstance()->GetTotalSize();
+
+    lua_pushinteger(p_L, totalsize);
+    return 1;
 }
