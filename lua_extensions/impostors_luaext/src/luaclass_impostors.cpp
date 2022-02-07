@@ -215,7 +215,7 @@ int LuaClass_Impostors::LUA_configure(lua_State* p_L)
                         m_entity_rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>(pass_id, pass_id);
 
                         RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
-                        m_renderingnodes.at(pass_id) = rnode;
+                        m_renderingnodes[pass_id] = rnode;
 
                         if (render_context.fxparams.size() < 1)
                         {
@@ -356,6 +356,7 @@ void LuaClass_Impostors::cleanup_resources(lua_State* p_L)
 
         }
         m_renderingnodes.clear();
+        m_entity_rendering_aspect->RemoveAllComponentsOfType<ImpostorsRenderingAspectImpl::ImpostorDescriptor>();
     }
     else
     {

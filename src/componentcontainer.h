@@ -91,12 +91,9 @@ public:
         {
             _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
-        Component<T>* comp = static_cast<Component<T>*>( m_components[p_id] );
-
-        //logComponent("RemoveComponent : ", p_id, comp);
-              
+        Component<T>* comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
         // suppression dans m_components_by_type
-        const size_t tid = typeid(T).hash_code();
+        const size_t tid{ typeid(T).hash_code() };
         for( auto it = m_components_by_type.at(tid).begin(); it != m_components_by_type.at(tid).end(); ++it )
         {
             if( m_components.at(p_id) == *it )
@@ -126,14 +123,38 @@ public:
     template<typename T>
     inline void GetComponentsByType( ComponentList<T>& p_outlist ) const
     {
-        const size_t tid = typeid(T).hash_code();
+        const size_t tid{ typeid(T).hash_code() };
         if( m_components_by_type.count( tid ) > 0 )
         {
-            const std::vector<BaseComponent*> list = m_components_by_type.at(tid);
-            for( size_t i = 0; i < list.size(); i++ )
+            const auto& list{ m_components_by_type.at(tid) };
+            for(auto& e: list)
             {
-                p_outlist.push_back( static_cast<Component<T>*>( list[i] ) );
+                p_outlist.push_back( static_cast<Component<T>*>( e ) );
             }
+        }
+    }
+
+    template<typename T>
+    inline void RemoveAllComponentsOfType(void)
+    {
+        const size_t tid{ typeid(T).hash_code() };
+        if (m_components_by_type.count(tid) > 0)
+        {
+            const auto& list{ m_components_by_type.at(tid) };
+            for (auto& e : list)
+            {
+                for (auto it = m_components.begin(); it != m_components.end(); ++it)
+                {
+                    if (it->second == e)
+                    {
+                        Component<T>* comp{ static_cast<Component<T>*>(it->second) };
+                        _DRAWSPACE_DELETE_(comp);
+                        m_components.erase(it);
+                        break;
+                    }
+                }
+            }
+            m_components_by_type.erase(tid);
         }
     }
 
