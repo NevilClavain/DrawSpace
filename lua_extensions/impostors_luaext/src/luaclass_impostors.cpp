@@ -215,7 +215,7 @@ int LuaClass_Impostors::LUA_configure(lua_State* p_L)
                         m_entity_rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>(pass_id, pass_id);
 
                         RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<ImpostorsRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
-                        m_renderingnodes[pass_id] = rnode;
+                        m_renderingnodes.at(pass_id) = rnode;
 
                         if (render_context.fxparams.size() < 1)
                         {
@@ -383,7 +383,7 @@ int LuaClass_Impostors::LUA_setshaderreal(lua_State* p_L)
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderReal(param_id, val);
+            m_renderingnodes.at(pass_id)->SetShaderReal(param_id, val);
 
         } LUA_CATCH;
     }
@@ -414,7 +414,7 @@ int LuaClass_Impostors::LUA_setshaderrealvector(lua_State* p_L)
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderRealVector(param_id, Vector(valx, valy, valz, valw));
+            m_renderingnodes.at(pass_id)->SetShaderRealVector(param_id, Vector(valx, valy, valz, valw));
 
         } LUA_CATCH;
     }
@@ -442,7 +442,7 @@ int LuaClass_Impostors::LUA_setshaderrealinvector(lua_State* p_L)
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderRealInVector(param_id, param_index_in_vector, val);
+            m_renderingnodes.at(pass_id)->SetShaderRealInVector(param_id, param_index_in_vector, val);
 
         } LUA_CATCH;
     }
@@ -469,7 +469,7 @@ int LuaClass_Impostors::LUA_setshaderrealmatrix(lua_State* p_L)
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderRealMatrix(param_id, lua_mat->GetMatrix());
+            m_renderingnodes.at(pass_id)->SetShaderRealMatrix(param_id, lua_mat->GetMatrix());
 
         } LUA_CATCH;
     }
@@ -496,7 +496,7 @@ int LuaClass_Impostors::LUA_setshaderbool(lua_State* p_L)
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderBool(param_id, val);
+            m_renderingnodes.at(pass_id)->SetShaderBool(param_id, val);
 
         } LUA_CATCH;
     }
