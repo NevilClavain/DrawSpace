@@ -303,7 +303,7 @@ int LuaClass_MeshRendering::LUA_setshaderreal( lua_State* p_L )
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderReal( param_id, val );
+            m_renderingnodes.at(pass_id)->SetShaderReal( param_id, val );
 
         } LUA_CATCH;    
     }
@@ -334,7 +334,7 @@ int LuaClass_MeshRendering::LUA_setshaderrealvector( lua_State* p_L )
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderRealVector( param_id, Vector( valx, valy, valz, valw ) );
+            m_renderingnodes.at(pass_id)->SetShaderRealVector( param_id, Vector( valx, valy, valz, valw ) );
 
         } LUA_CATCH;    
     }
@@ -362,7 +362,7 @@ int LuaClass_MeshRendering::LUA_setshaderrealinvector(lua_State* p_L)
 	{
 		LUA_TRY
 		{
-			m_renderingnodes[pass_id]->SetShaderRealInVector(param_id, param_index_in_vector, val);
+            m_renderingnodes.at(pass_id)->SetShaderRealInVector(param_id, param_index_in_vector, val);
 
 		} LUA_CATCH;
 	}
@@ -389,7 +389,7 @@ int LuaClass_MeshRendering::LUA_setshaderrealmatrix( lua_State* p_L )
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderRealMatrix( param_id, lua_mat->GetMatrix() );
+            m_renderingnodes.at(pass_id)->SetShaderRealMatrix( param_id, lua_mat->GetMatrix() );
 
         } LUA_CATCH;    
     }
@@ -416,7 +416,7 @@ int LuaClass_MeshRendering::LUA_setshaderbool( lua_State* p_L )
     {
         LUA_TRY
         {
-            m_renderingnodes[pass_id]->SetShaderBool( param_id, val );
+            m_renderingnodes.at(pass_id)->SetShaderBool( param_id, val );
 
         } LUA_CATCH;    
     }
