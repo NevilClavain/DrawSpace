@@ -430,7 +430,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
     {
         LUA_ERROR("MesheRendering::cleanup_resources : no attached entity");
     }
-    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    ResourcesAspect* resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         LUA_ERROR("MesheRendering::cleanup_resources : attached entity has no resources aspect !");
@@ -441,12 +441,10 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
         for( auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it )
         {
             it->second->CleanupShaderParams();
+            dsstring id{ it->first };
+            RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(id)->getPurpose().GetRenderingNode() };
 
-            dsstring id = it->first;
-
-            RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<PassSlot>( id )->getPurpose().GetRenderingNode();
-
-            Fx* fx = rnode->GetFx();
+            Fx* fx{ rnode->GetFx() };
 			if (fx)
 			{
 				for (long i = 0; i < fx->GetShadersListSize(); i++)
