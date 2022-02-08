@@ -52,7 +52,6 @@ private:
     DrawSpace::Aspect::RenderingAspect*                     m_entity_rendering_aspect   { nullptr };
     DrawSpace::Core::Entity*                                m_entity                    { nullptr };
 
-    std::map<dsstring, DrawSpace::Core::RenderingNode*>     m_renderingnodes; // classes par passes
 
     // table de traduction RenderContext name -> Passes Name
     // permet de savoir a quelle passe est attribue un rendercontext
