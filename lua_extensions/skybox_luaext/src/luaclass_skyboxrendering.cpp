@@ -61,7 +61,6 @@ LuaClass_SkyboxRendering::~LuaClass_SkyboxRendering( void )
 int LuaClass_SkyboxRendering::LUA_attachtoentity(lua_State* p_L)
 {
     int argc{ lua_gettop(p_L) };
-
     if (argc < 1)
     {
         LUA_ERROR("SkyboxRendering::attach_toentity : argument(s) missing");
@@ -71,7 +70,6 @@ int LuaClass_SkyboxRendering::LUA_attachtoentity(lua_State* p_L)
 
     DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
     RenderingAspect* rendering_aspect{ entity.GetAspect<RenderingAspect>() };
-
     if (NULL == rendering_aspect)
     {
         LUA_ERROR("SkyboxRendering::attach_toentity : entity has no rendering aspect!");
@@ -117,7 +115,6 @@ int LuaClass_SkyboxRendering::LUA_setPassForRenderId(lua_State* p_L)
 
     dsstring rc_id{ luaL_checkstring(p_L, 1) };
     dsstring pass_id{ luaL_checkstring(p_L, 2) };
-
     m_rcname_to_passes[rc_id].push_back(pass_id);
 
     return 0;
@@ -226,11 +223,11 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
                     {
                         std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { NULL };
 
-                        LuaClass_TexturesSet::Data txts_set = render_context.textures_sets[texture_face_index];
+                        LuaClass_TexturesSet::Data txts_set{ render_context.textures_sets[texture_face_index] };
 
                         for (int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++)
                         {
-                            dsstring texture_name = txts_set.textures[texture_stage_index];
+                            dsstring texture_name{ txts_set.textures[texture_stage_index] };
                             if (texture_name != "")
                             {
                                 Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_name));
@@ -240,10 +237,8 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
                                 textures_set[texture_stage_index] = texture;
                             }
                         }
-
                         textures.push_back(textures_set);
                     }
-
                     config_textures[render_context.rendercontextname] = textures;
                 }
                 layers_textures[cfg_index] = config_textures;
@@ -253,18 +248,15 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
                 for (size_t i = 0; i < rc_list_size; i++)
                 {
                     LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-
                     if (render_context.fxparams.size() < 1)
                     {
                         cleanup_resources(p_L);
                         LUA_ERROR("Rendering::configure : missing fx parameters description");
                     }
-                    LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
+                    LuaClass_FxParams::Data fx_params{ render_context.fxparams[0] };
 
-                    Fx* fx = _DRAWSPACE_NEW_(Fx, Fx);
-
+                    Fx* fx{ _DRAWSPACE_NEW_(Fx, Fx) };
                     fx->SetRenderStates(fx_params.rss);
-
                     for (size_t j = 0; j < fx_params.shaders.size(); j++)
                     {
                         std::pair<dsstring, bool> shader_file_infos = fx_params.shaders[j];
@@ -273,7 +265,6 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
                         resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
                         fx->AddShader(shader);
                     }
-
                     config_fxs[render_context.rendercontextname] = fx;
                 }
                 layers_fx[cfg_index] = config_fxs;
@@ -290,7 +281,6 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
                         LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
                         texturepass_shaders_params.push_back(param);
                     }
-
                     config_shadersparams[render_context.rendercontextname] = texturepass_shaders_params;
                 }
                 layers_shaders_params[cfg_index] = config_shadersparams;
