@@ -56,7 +56,7 @@ int LuaClass_RenderLayer::LUA_addrenderconfig(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_RenderLayer::GetRenderConfigListSize(void) const
+size_t LuaClass_RenderLayer::GetRenderConfigListSize(void) const
 {
     return m_renderConfigs.size();
 }

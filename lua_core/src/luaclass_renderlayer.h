@@ -30,10 +30,7 @@
 class LuaClass_RenderLayer
 {
 protected:
-
-    //std::vector<LuaClass_RenderConfig::Data>     m_renderConfigs;
     std::vector<std::pair<int,LuaClass_RenderConfig::Data>>     m_renderConfigs;
-
 
 public:
 
@@ -42,7 +39,7 @@ public:
 
     int LUA_addrenderconfig(lua_State* p_L);
 
-    int GetRenderConfigListSize(void) const;
+    size_t GetRenderConfigListSize(void) const;
     std::pair<int,LuaClass_RenderConfig::Data> GetRenderConfig(int p_index) const;
 
     static const char className[];

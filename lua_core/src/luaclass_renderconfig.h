@@ -47,8 +47,6 @@ public:
 	~LuaClass_RenderConfig( void );
 
     int LUA_addrendercontext( lua_State* p_L );
-
-
     inline Data GetData(void) const
     {
         return m_data;
