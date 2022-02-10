@@ -45,11 +45,11 @@ public:
 	    static const int    BottomQuad   = 5;
 
     private:
-        typedef DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>                                 RenderingNodeDrawCallback;
+        using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
 
         dsstring                                m_pass_name;        
-        RenderingNodeDrawCallback*              m_cb;
-        DrawSpace::Interface::Renderer*         m_renderer;
+        RenderingNodeDrawCallback*              m_cb            { nullptr };
+        DrawSpace::Interface::Renderer*         m_renderer      { nullptr };
 
         DrawSpace::Core::RenderingNode*         m_rendering_node[6];
         DrawSpace::Core::Meshe*                 m_meshes[6];
@@ -70,16 +70,8 @@ public:
         friend class SkyboxRenderingAspectImpl;
     };
 
-protected:
-
-    std::map<dsstring, PassSlot*>  m_pass_slots;
-
+private:
     bool                    m_add_in_rendergraph;
-
-    void        init_rendering_objects( void );
-    void        release_rendering_objects( void );
-
-    void        update_shader_params( void ); // for all passes
 
 public:
     SkyboxRenderingAspectImpl( void );

@@ -181,127 +181,87 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
     if (m_entity_rendering_aspect)
     {
         LUA_TRY
-        {
-            std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>    layers_textures;
-            std::vector<std::map<dsstring, Fx*>>                                                                layers_fx;
-            std::vector<std::map<dsstring,std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>      layers_shaders_params;
-            std::vector<std::map<dsstring, int>>                                                                layers_ro;
-            std::map<dsstring, int>                                                                             rcname_to_layer_index;
-
-            int rcfg_list_size{ lua_renderlayer->GetRenderConfigListSize() };
-
-            layers_ro.resize(rcfg_list_size);
-            layers_shaders_params.resize(rcfg_list_size);
-            layers_fx.resize(rcfg_list_size);
-            layers_textures.resize(rcfg_list_size);
-
-            for (int k = 0; k < rcfg_list_size; k++)
+        {            
+            size_t renderconfig_list_size{ lua_renderlayer->GetRenderConfigListSize() };
+            for (size_t k = 0; k < renderconfig_list_size; k++)
             {
-                auto render_config{ lua_renderlayer->GetRenderConfig(k) };
-                size_t rc_list_size{ render_config.second.render_contexts.size() };
-                int cfg_index{ render_config.first };
+                auto render_config_entry{ lua_renderlayer->GetRenderConfig(k) };                
+                LuaClass_RenderConfig::Data render_config_data{ render_config_entry.second };
 
-                for (size_t i = 0; i < rc_list_size; i++)
+                // loop on render contexts
+
+                for (auto& render_context : render_config_data.render_contexts)
                 {
-                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-                    rcname_to_layer_index[render_context.rendercontextname] = cfg_index;  // NB : 'layer' or 'config' -> the same thing
-                }
-
-                ///////////////// jeux de textures pour chaque passes
-
-                std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
-                for (size_t i = 0; i < rc_list_size; i++)
-                {
-                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-
-                    int textures_set_size = render_context.textures_sets.size();
-
-                    ////////////// les N jeux de 32 textures stages
-                    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures;
-
-                    for (int texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++)
+                    if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontextname))
                     {
-                        std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { NULL };
-
-                        LuaClass_TexturesSet::Data txts_set{ render_context.textures_sets[texture_face_index] };
-
-                        for (int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++)
+                        for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontextname))
                         {
-                            dsstring texture_name{ txts_set.textures[texture_stage_index] };
-                            if (texture_name != "")
+                            m_entity_rendering_aspect->AddComponent<SkyboxRenderingAspectImpl::PassSlot>(pass_id, pass_id);
+
+                            for (int i = 0; i < 6; i++)
                             {
-                                Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_name));
-                                dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
-                                resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+                                RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode(i) };
 
-                                textures_set[texture_stage_index] = texture;
-                            }
+                                ///////////// TEXTURES RESOURCES
+                                
+                                //int textures_set_size = render_context.textures_sets.size();
+                                // 
+                                ////////////// les N jeux de 32 textures stages
+                                std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures;
+                                std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { NULL };
+                                LuaClass_TexturesSet::Data txts_set{ render_context.textures_sets[i] };
+
+                                for (int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++)
+                                {
+                                    dsstring texture_name{ txts_set.textures[texture_stage_index] };
+                                    if (texture_name != "")
+                                    {
+                                        Texture* texture{ _DRAWSPACE_NEW_(Texture, Texture(texture_name)) };
+                                        dsstring res_id{ dsstring("texture_") + std::to_string((int)texture) };
+                                        resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+                                        rnode->SetTexture(texture, texture_stage_index);
+                                    }
+                                }
+
+                                /////////////////// FX RESOURCES
+                                if (render_context.fxparams.size() < 1)
+                                {
+                                    cleanup_resources(p_L);
+                                    LUA_ERROR("Rendering::configure : missing fx parameters description");
+                                }
+                                LuaClass_FxParams::Data fx_params{ render_context.fxparams[0] };
+                                Fx* fx{ _DRAWSPACE_NEW_(Fx, Fx) };
+                                rnode->SetFx(fx);
+
+                                fx->SetRenderStates(fx_params.rss);
+                                for (size_t j = 0; j < fx_params.shaders.size(); j++)
+                                {
+                                    std::pair<dsstring, bool> shader_file_infos{ fx_params.shaders[j] };
+
+                                    Shader* shader{ _DRAWSPACE_NEW_(Shader, Shader(shader_file_infos.first, shader_file_infos.second)) };
+                                    dsstring res_id{ dsstring("shader_") + std::to_string((int)shader) };
+                                    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
+                                    fx->AddShader(shader);
+                                }
+
+                                /////////////////// SHADERS PARAMS
+                                for (size_t j = 0; j < render_context.shaders_params.size(); j++)
+                                {
+                                    LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
+                                    
+                                    dsstring param_id{ param.first };
+                                    RenderingNode::ShadersParams indexes{ param.second };
+
+                                    rnode->AddShaderParameter(indexes.shader_index, param_id, indexes.param_register);
+                                }
+
+                                /////////////////// RENDERING ORDER
+                                rnode->SetOrderNumber(render_context.rendering_order);
+                            }                           
                         }
-                        textures.push_back(textures_set);
                     }
-                    config_textures[render_context.rendercontextname] = textures;
                 }
-                layers_textures[cfg_index] = config_textures;
-
-                ////////////////// fx pour chaque passes
-                std::map<dsstring, Fx*> config_fxs;
-                for (size_t i = 0; i < rc_list_size; i++)
-                {
-                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-                    if (render_context.fxparams.size() < 1)
-                    {
-                        cleanup_resources(p_L);
-                        LUA_ERROR("Rendering::configure : missing fx parameters description");
-                    }
-                    LuaClass_FxParams::Data fx_params{ render_context.fxparams[0] };
-
-                    Fx* fx{ _DRAWSPACE_NEW_(Fx, Fx) };
-                    fx->SetRenderStates(fx_params.rss);
-                    for (size_t j = 0; j < fx_params.shaders.size(); j++)
-                    {
-                        std::pair<dsstring, bool> shader_file_infos = fx_params.shaders[j];
-                        Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_file_infos.first, shader_file_infos.second));
-                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-                        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
-                        fx->AddShader(shader);
-                    }
-                    config_fxs[render_context.rendercontextname] = fx;
-                }
-                layers_fx[cfg_index] = config_fxs;
-
-                //////////////// parametres de shaders
-                std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> config_shadersparams;
-                for (size_t i = 0; i < rc_list_size; i++)
-                {
-                    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
-                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-
-                    for (size_t j = 0; j < render_context.shaders_params.size(); j++)
-                    {
-                        LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
-                        texturepass_shaders_params.push_back(param);
-                    }
-                    config_shadersparams[render_context.rendercontextname] = texturepass_shaders_params;
-                }
-                layers_shaders_params[cfg_index] = config_shadersparams;
-
-                ///////////////// rendering order
-                std::map<dsstring, int> ros;
-                for (size_t i = 0; i < rc_list_size; i++)
-                {
-                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-                    ros[render_context.rendercontextname] = render_context.rendering_order;
-                }
-                layers_ro[cfg_index] = ros;
             }
-
-            m_entity_rendering_aspect->AddComponent<std::map<dsstring, int>>("rcname_to_layer_index", rcname_to_layer_index);
-            m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes", m_rcname_to_passes);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx", layers_fx);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, int>>>("layers_ro", layers_ro);
-
         } LUA_CATCH;
     }
     else

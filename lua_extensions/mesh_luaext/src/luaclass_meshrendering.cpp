@@ -165,7 +165,7 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
                     for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontextname))
                     {
                         m_entity_rendering_aspect->AddComponent<PassSlot>(pass_id, pass_id);
-                        RenderingNode* rnode = m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode();
+                        RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
                         m_renderingnodes[pass_id] = rnode;
 
                         //  on a besoin que d'un seul fx....

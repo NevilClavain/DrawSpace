@@ -255,10 +255,19 @@ SkyboxRenderingAspectImpl::PassSlot::~PassSlot( void )
 {    
     for( long i = 0; i < 6; i++ )
     {
-        _DRAWSPACE_DELETE_( m_rendering_node[i] );
-        _DRAWSPACE_DELETE_( m_meshes[i] );
-    }
-    _DRAWSPACE_DELETE_( m_cb );
+        if (m_rendering_node[i])
+        {
+            _DRAWSPACE_DELETE_(m_rendering_node[i]);
+        }        
+        if (m_meshes[i])
+        {
+            _DRAWSPACE_DELETE_(m_meshes[i]);
+        }        
+    }    
+    if (m_cb)
+    {
+        _DRAWSPACE_DELETE_(m_cb);
+    }    
 }       
 
 void SkyboxRenderingAspectImpl::PassSlot::on_renderingnode_draw( RenderingNode* p_rendering_node )
@@ -274,28 +283,28 @@ bool SkyboxRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, Dr
 {
     bool updated_queue = false;
 
-    for (auto& e : m_pass_slots)
-    {
-        PassSlot* pass_slot{ e.second };
+    ComponentList<PassSlot> pass_slots;
+    m_owner->GetComponentsByType<SkyboxRenderingAspectImpl::PassSlot>(pass_slots);
 
-        if (pass_slot->m_pass_name == p_name)
+    for (auto& e : pass_slots)
+    {
+        auto& pass_slot{ e->getPurpose() };
+        if (pass_slot.m_pass_name == p_name)
         {
             if (m_add_in_rendergraph)
             {
                 // ajout du renderingnode dans la renderingqueue  
-
                 for (int j = 0; j < 6; j++)
                 {
-                    p_passqueue->Add(pass_slot->m_rendering_node[j]);
+                    p_passqueue->Add(pass_slot.m_rendering_node[j]);
                 }
             }
             else
             {
                 // suppression du renderingnode de la renderingqueue
-
                 for (int j = 0; j < 6; j++)
                 {
-                    p_passqueue->Remove(pass_slot->m_rendering_node[j]);
+                    p_passqueue->Remove(pass_slot.m_rendering_node[j]);
                 }
             }
             updated_queue = true;
@@ -307,7 +316,7 @@ bool SkyboxRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, Dr
 
 void SkyboxRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
-    init_rendering_objects();
+    //init_rendering_objects();
 
     m_add_in_rendergraph = true;
     p_rendergraph.Accept( this );
@@ -315,7 +324,7 @@ void SkyboxRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::Ren
 
 void SkyboxRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
-    release_rendering_objects();
+    //release_rendering_objects();
 
     m_add_in_rendergraph = false;
     p_rendergraph.Accept( this );
@@ -324,7 +333,6 @@ void SkyboxRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph:
 void SkyboxRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 {
     TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-
     if( transform_aspect )
     {
         Matrix world;        
@@ -338,100 +346,19 @@ void SkyboxRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         Matrix proj;
         transform_aspect->GetProjTransform( proj ); 
 
-        for (auto& e : m_pass_slots)
+        ComponentList<PassSlot> pass_slots;
+        m_owner->GetComponentsByType<SkyboxRenderingAspectImpl::PassSlot>(pass_slots);
+
+        for (auto& e : pass_slots)
         {
-            e.second->m_world = world;
-            e.second->m_view = view;
-            e.second->m_proj = proj;
+            auto& pass_slot{ e->getPurpose() };
+        
+            pass_slot.m_world = world;
+            pass_slot.m_view = view;
+            pass_slot.m_proj = proj;
         }
     }
-
     ////////////////////////////////////////////////////////
 
-    update_shader_params();
-}
-
-void SkyboxRenderingAspectImpl::init_rendering_objects( void )
-{
-    auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose() };
-    auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("layers_fx")->getPurpose() };
-    auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("layers_ro")->getPurpose() };
-
-    auto rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes")->getPurpose() };
-    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index")->getPurpose() };
-
-    for (auto& rcp : rcname_to_passes)
-    {
-        dsstring rendercontextname{rcp.first};
-
-        for (auto& pass_name : rcp.second)
-        {
-            auto config_textures{ layers_textures[rcname_to_layer_index[rendercontextname]] };
-            std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures = config_textures.at(rendercontextname);
-
-            PassSlot* pass_slot = _DRAWSPACE_NEW_(PassSlot, PassSlot(pass_name));
-
-            for (size_t j = 0; j < 6; j++)
-            {
-                auto config_ros{ layers_ro[rcname_to_layer_index[rendercontextname]] };
-                pass_slot->GetRenderingNode(j)->SetOrderNumber(config_ros.at(rendercontextname));
-
-                auto config_fxs{ layers_fx[rcname_to_layer_index[rendercontextname]] };
-                pass_slot->GetRenderingNode(j)->SetFx(config_fxs.at(rendercontextname));
-
-                std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = textures[j];
-
-                for (size_t k = 0; k < RenderingNode::NbMaxTextures; k++)
-                {
-                    pass_slot->GetRenderingNode(j)->SetTexture(textures_set[k], k);
-                }
-            }
-
-            m_pass_slots[rendercontextname] = pass_slot;
-        }
-    }
-
-    update_shader_params();
-
-}
-
-void SkyboxRenderingAspectImpl::release_rendering_objects( void )
-{
-    for (auto& e : m_pass_slots)
-    {
-        _DRAWSPACE_DELETE_(e.second);
-    }
-    m_pass_slots.clear();
-}
-
-void SkyboxRenderingAspectImpl::update_shader_params( void ) // for all passes
-{
-    ////////////////////////////////////////////////////////
-    //recup des params shaders
-
-    auto layers_shaders_params{ m_owner->GetComponent< std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params")->getPurpose() };
-    auto rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes")->getPurpose() };
-    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index")->getPurpose() };
-
-    for (auto& rcp : rcname_to_passes)
-    {
-        dsstring rendercontextname{ rcp.first };
-
-        for (auto& pass_name : rcp.second)
-        {
-            auto shaders_params_passes{ layers_shaders_params[rcname_to_layer_index[rendercontextname]] };
-
-            std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> shaders_params = shaders_params_passes.at(rendercontextname);
-
-            for (size_t k = 0; k < shaders_params.size(); k++)
-            {
-                std::pair<dsstring, RenderingNode::ShadersParams> shader_params_pair = shaders_params[k];
-
-                for (size_t j = 0; j < 6; j++)
-                {
-                    m_pass_slots.at(rendercontextname)->GetRenderingNode(j)->UpdateShaderParams(shader_params_pair.first, shader_params_pair.second);
-                }
-            }
-        }
-    }
+    //update_shader_params();
 }

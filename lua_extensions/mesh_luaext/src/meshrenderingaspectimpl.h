@@ -23,15 +23,6 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-
-/*
-#include "renderingaspectimpl.h"
-#include "renderer.h"
-#include "plugin.h"
-#include "renderingnode.h"
-#include "renderpassnodegraph.h"
-*/
-
 #include "renderingaspectimpl.h"
 
 /////// fwd decls
@@ -58,7 +49,7 @@ class TimeManager;
 
 class MeshRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {    
-protected:
+private:
     bool                                m_add_in_rendergraph{ false };
     
 public:
