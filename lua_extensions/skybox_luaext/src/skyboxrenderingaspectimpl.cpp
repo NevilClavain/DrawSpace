@@ -316,16 +316,12 @@ bool SkyboxRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, Dr
 
 void SkyboxRenderingAspectImpl::RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
-    //init_rendering_objects();
-
     m_add_in_rendergraph = true;
     p_rendergraph.Accept( this );
 }
 
 void SkyboxRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph )
 {
-    //release_rendering_objects();
-
     m_add_in_rendergraph = false;
     p_rendergraph.Accept( this );
 }
