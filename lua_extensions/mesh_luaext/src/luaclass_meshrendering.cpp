@@ -442,7 +442,10 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
         {
             it->second->CleanupShaderParams();
             dsstring id{ it->first };
-            RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(id)->getPurpose().GetRenderingNode() };
+            RenderingNode* rnode{ it->second };
+
+            //RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(id)->getPurpose().GetRenderingNode() };
+            
 
             Fx* fx{ rnode->GetFx() };
 			if (fx)
@@ -456,10 +459,10 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
 					_DRAWSPACE_DELETE_(shader);
 				}
 				fx->ClearShaders();
+
+                _DRAWSPACE_DELETE_(fx);
 			}
-
-            _DRAWSPACE_DELETE_( fx );
-
+            
             for( int i = 0; i < rnode->GetTextureListSize(); i++ )
             {
                 Texture* texture = rnode->GetTexture( i );
@@ -506,12 +509,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
                 }
             }
 
-            LUA_TRY
-            {
-                m_entity_rendering_aspect->RemoveComponent<PassSlot>( id );
-
-            } LUA_CATCH; 
-
+            m_entity_rendering_aspect->RemoveComponent<PassSlot>( id );
 
             dsstring meshe_res_id = dsstring("meshe_") + id;
 			if (resources_aspect->GetComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id))

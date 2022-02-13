@@ -48,14 +48,17 @@ class LuaClass_SkyboxRendering
 {
 private:
 
-    SkyboxRenderingAspectImpl*                              m_skybox_render             { nullptr };
-    DrawSpace::Aspect::RenderingAspect*                     m_entity_rendering_aspect   { nullptr };
-    DrawSpace::Core::Entity*                                m_entity                    { nullptr };
+    SkyboxRenderingAspectImpl*                                                      m_skybox_render             { nullptr };
+    DrawSpace::Aspect::RenderingAspect*                                             m_entity_rendering_aspect   { nullptr };
+    DrawSpace::Core::Entity*                                                        m_entity                    { nullptr };
 
 
     // table de traduction RenderContext name -> Passes Name
     // permet de savoir a quelle passe est attribue un rendercontext
-    std::map<dsstring, std::vector<dsstring>>               m_rcname_to_passes;
+    std::map<dsstring, std::vector<dsstring>>                                       m_rcname_to_passes;
+
+    std::map<dsstring, std::vector<DrawSpace::Core::RenderingNode*>>                m_renderingnodes; // classes par passes
+
 
     void cleanup_resources(lua_State* p_L);
     

@@ -198,6 +198,9 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
                         {
                             m_entity_rendering_aspect->AddComponent<SkyboxRenderingAspectImpl::PassSlot>(pass_id, pass_id);
 
+                            // set of 6 rnodes
+                            std::vector<DrawSpace::Core::RenderingNode*> nodes;
+
                             for (int i = 0; i < 6; i++)
                             {
                                 RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<SkyboxRenderingAspectImpl::PassSlot>(pass_id)->getPurpose().GetRenderingNode(i) };
@@ -257,7 +260,10 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
 
                                 /////////////////// RENDERING ORDER
                                 rnode->SetOrderNumber(render_context.rendering_order);
-                            }                           
+
+                                nodes.push_back(rnode);
+                            } 
+                            m_renderingnodes[pass_id] = nodes;
                         }
                     }
                 }
@@ -279,5 +285,42 @@ int LuaClass_SkyboxRendering::LUA_release(lua_State* p_L)
 
 void LuaClass_SkyboxRendering::cleanup_resources(lua_State* p_L)
 {
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("SkyboxRendering::cleanup_resources : no attached entity");
+    }
+    ResourcesAspect* resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
+    if (!resources_aspect)
+    {
+        LUA_ERROR("SkyboxRendering::cleanup_resources : attached entity has no resources aspect !");
+    }
 
+    if (m_entity_rendering_aspect)
+    {
+        for (auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it)
+        {
+            dsstring passid{ it->first };
+            auto rnodes_set{ it->second }; // always 6 entries
+
+            for (auto& rnode : rnodes_set)
+            {
+                Fx* fx{ rnode->GetFx() };
+                if (fx)
+                {
+                    for (long i = 0; i < fx->GetShadersListSize(); i++)
+                    {
+                        Shader* shader = fx->GetShader(i);
+                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
+
+                        _DRAWSPACE_DELETE_(shader);
+                    }
+                    fx->ClearShaders();
+
+                    _DRAWSPACE_DELETE_(fx);
+                }
+            }
+            m_entity_rendering_aspect->RemoveComponent<SkyboxRenderingAspectImpl::PassSlot>(passid);
+        }
+    }
 }
