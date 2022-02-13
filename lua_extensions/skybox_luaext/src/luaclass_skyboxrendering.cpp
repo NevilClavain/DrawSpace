@@ -319,6 +319,19 @@ void LuaClass_SkyboxRendering::cleanup_resources(lua_State* p_L)
 
                     _DRAWSPACE_DELETE_(fx);
                 }
+
+                for (int i = 0; i < rnode->GetTextureListSize(); i++)
+                {
+                    Texture* texture = rnode->GetTexture(i);
+                    if (texture)
+                    {
+                        dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                        resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
+
+                        _DRAWSPACE_DELETE_(texture);
+                        rnode->SetTexture(NULL, i);
+                    }
+                }
             }
             m_entity_rendering_aspect->RemoveComponent<SkyboxRenderingAspectImpl::PassSlot>(passid);
         }
