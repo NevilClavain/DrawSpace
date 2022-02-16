@@ -140,6 +140,9 @@ ALL_BUILD.vcxproj*
 /samples/lua/planet/CMakeFiles/
 /samples/lua/planet/*.sln
 /samples/lua/planet/*.vcxproj*
+/samples/lua/planet2/CMakeFiles/
+/samples/lua/planet2/*.sln
+/samples/lua/planet2/*.vcxproj*
 /samples/lua/nebulae/CMakeFiles/
 /samples/lua/nebulae/*.sln
 /samples/lua/nebulae/*.vcxproj*
