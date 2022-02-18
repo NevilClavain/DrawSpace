@@ -72,6 +72,7 @@ add_subdirectory(lua_extensions/impostors_luaext)
 add_subdirectory(lua_extensions/strings_luaext)
 add_subdirectory(lua_extensions/mesh_luaext)
 add_subdirectory(lua_extensions/skybox_luaext)
+add_subdirectory(lua_extensions/planets_luaext)
 
 # lua_core
 add_subdirectory(lua_core)

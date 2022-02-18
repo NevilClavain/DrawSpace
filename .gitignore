@@ -116,6 +116,9 @@ ALL_BUILD.vcxproj*
 /lua_extensions/skybox_luaext/CMakeFiles/
 /lua_extensions/skybox_luaext/*.sln
 /lua_extensions/skybox_luaext/*.vcxproj*
+/lua_extensions/planets_luaext/CMakeFiles/
+/lua_extensions/planets_luaext/*.sln
+/lua_extensions/planets_luaext/*.vcxproj*
 /lua_core/CMakeFiles/
 /lua_core/*.sln
 /lua_core/*.vcxproj*
