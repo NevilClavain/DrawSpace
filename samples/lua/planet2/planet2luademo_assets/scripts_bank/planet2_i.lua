@@ -2,7 +2,7 @@
 include('spacebox_model.lua')
 include('spherebump_model.lua')
 include('bellerophon_model.lua')
-include('planet_model.lua')
+include('procplanet_model.lua')
 
 
 local speed_factor = 1500.0
