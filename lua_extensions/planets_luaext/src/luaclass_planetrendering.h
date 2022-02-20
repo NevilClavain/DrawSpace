@@ -22,28 +22,23 @@
 */
 /* -*-LIC_END-*- */
 
-#include "planetsluaext.h"
-#include "luaclass_planetrendering.h"
-#include "luaclass_planetconfig.h"
-#include "plugin.h"
-#include "memalloc.h"
+#pragma once
 
-PlanetsLuaExtension::PlanetsLuaExtension(void)
-{
-}
+#include "luna.h"
+#include "renderingaspect.h"
 
-void PlanetsLuaExtension::Register(lua_State* p_L)
-{
-	Luna<LuaClass_PlanetRendering>::Register(p_L);
-	Luna<LuaClass_PlanetConfig>::Register(p_L);
-}
 
-void PlanetsLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
+class LuaClass_PlanetRendering
 {
-	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
+private:
 
-DrawSpace::Utils::MemAlloc* PlanetsLuaExtension::GetMemAllocInstance(void) const
-{
-	return DrawSpace::Utils::MemAlloc::GetInstance();
-}
+    
+public:
+
+    LuaClass_PlanetRendering( lua_State* p_L );
+	~LuaClass_PlanetRendering( void );
+
+    
+    static const char className[];
+    static const Luna<LuaClass_PlanetRendering>::RegType methods[];
+};
