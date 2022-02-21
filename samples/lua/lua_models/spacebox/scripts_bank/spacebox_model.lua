@@ -2,9 +2,6 @@
 spaceboxmod = {}
 spaceboxmod.view = {}
 
-spaceboxmod.module = Module("skyboxmod", "spacebox")
-spaceboxmod.module:load()
-g:print(spaceboxmod.module:get_descr().. ' loaded')
 
 -- stockage des instances modeles : paire {entity, renderer}
 spaceboxmod.models = {}
