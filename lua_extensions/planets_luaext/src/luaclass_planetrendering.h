@@ -27,16 +27,38 @@
 #include "luna.h"
 #include "renderingaspect.h"
 
+// fwd decls
+namespace DrawSpace
+{
+namespace Core
+{
+class Entity;
+class RenderingNode;
+}
+namespace Aspect
+{
+class RenderingAspect;
+}
+};
+
+class PlanetsRenderingAspectImpl;
+// fwd decls
+
 
 class LuaClass_PlanetRendering
 {
 private:
 
+    PlanetsRenderingAspectImpl*         m_planet_render{ nullptr };
+    DrawSpace::Aspect::RenderingAspect* m_entity_rendering_aspect{ nullptr };
+    DrawSpace::Core::Entity*            m_entity{ nullptr };
     
 public:
 
     LuaClass_PlanetRendering( lua_State* p_L );
 	~LuaClass_PlanetRendering( void );
+
+    int LUA_attachtoentity(lua_State* p_L);
 
     
     static const char className[];

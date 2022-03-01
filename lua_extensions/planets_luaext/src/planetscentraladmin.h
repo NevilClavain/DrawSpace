@@ -28,10 +28,6 @@
 #include "crtp_singleton.h"
 #include "hub.h"
 
-namespace DrawSpace
-{
-namespace AspectImplementations
-{
 class PlanetsRenderingAspectImpl;
 
 class PlanetsCentralAdmin : public DrawSpace::Utils::BaseSingleton<PlanetsCentralAdmin>
@@ -40,7 +36,7 @@ private:
 
 	using SystemsEvtCb = DrawSpace::Core::CallBack2<PlanetsCentralAdmin, void, DrawSpace::Interface::System::Event, dsstring>;
 
-	Systems::Hub*								m_hub{ nullptr };
+	DrawSpace::Systems::Hub*					m_hub{ nullptr };
 	SystemsEvtCb								m_system_evt_cb;
 	std::set<PlanetsRenderingAspectImpl*>		m_planet_renderers;
 
@@ -50,9 +46,8 @@ private:
 public:
 	PlanetsCentralAdmin(void);
 
-	void Register(PlanetsRenderingAspectImpl* p_planet, Systems::Hub* p_hub);
+	void Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub);
 	void Unregister(PlanetsRenderingAspectImpl* p_planet);
 
 };
-}
-}
+

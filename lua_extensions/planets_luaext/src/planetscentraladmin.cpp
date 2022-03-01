@@ -39,7 +39,7 @@ m_system_evt_cb(this, &PlanetsCentralAdmin::on_system_event)
 
 }
 
-void PlanetsCentralAdmin::Register(PlanetsRenderingAspectImpl* p_planet, Systems::Hub* p_hub)
+void PlanetsCentralAdmin::Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub)
 {
     m_planet_renderers.insert(p_planet);
 

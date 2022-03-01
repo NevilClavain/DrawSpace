@@ -2,12 +2,10 @@
 planetmod = {}
 planetmod.view = {}
 
-planetmod.module = Module("planetsmod", "planets")
-planetmod.module:load()
-g:print(planetmod.module:get_descr().. ' loaded')
-
 -- stockage des instances modeles : paire {entity, renderer, specific_config}
 planetmod.models = {}
+
+planetmod.requested_rendering_layers = nil
 
 planetmod.wavepass_name = 'default'
 
@@ -160,329 +158,128 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 end
 
-planetmod.layers =
-{ 
-	--surface_layer = 
-	[0] = 
-	{
-		surface_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_surface_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='planet_surface_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
-					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="linear" }
-												
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
-					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="none" }						
-				}		
-			},
-			textures =
-			{
-				[1] = 
-				{
-					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='earth_th_splatting_16.jpg', stage=1 },
-				}
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 5000
-		},
+planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
 
-		surface_wireframe_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_surface_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='planet_surface_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
-						
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
-				}		
-			},
-			textures =
-			{
-				[1] = 
-				{
-					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='earth_th_splatting_16.jpg', stage=1 },
-				}
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 5000
-		}
-	},
+  local entity=Entity()
+  entity:add_aspect(RENDERING_ASPECT)
+  entity:add_aspect(RESOURCES_ASPECT)
 
-	--atmosphere_layer
-	[1] = 
-	{
-		atmo_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_atmosphere_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='planet_atmosphere_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
-					{ ope=RENDERSTATE_OPE_SETCULLING, value="ccw" }
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
-					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
-				}
-			},
-			textures =
-			{
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 4500		
-		},
+  local renderer=PlanetRendering()
+  renderer:attach_toentity(entity)
 
-		atmo_mirror_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_atmosphere_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='planet_atmosphere_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
-				}
-			},
-			textures =
-			{
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 4500		
-		},
-	},
+  local renderlayer=RenderLayer()
 
-	--flatclouds_layer
-	[2] = 
-	{
-		flatclouds_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_flatclouds_vs.hlsl', mode=SHADER_NOT_COMPILED },
-					{ path='planet_flatclouds_ps.hlsl', mode=SHADER_NOT_COMPILED }
-				},
-				
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
+  for k, v in pairs(p_rendering_passes_array) do
 
-						
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
-				}
-			},
-			textures =
-			{
-				[1] = 
-				{
-					{ path='se_asia_clouds_8k.jpg', stage=0 }
-				}
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 5500		
-		},
+	local layer_entry = v
 
-		flatclouds_mirror_rendering =	
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_flatclouds_vs.hlsl', mode=SHADER_NOT_COMPILED },
-					{ path='planet_flatclouds_ps.hlsl', mode=SHADER_NOT_COMPILED }
-				},
-				
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },						
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
-					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
-				}
-			},
-			textures =
-			{
-				[1] = 
-				{
-					{ path='se_asia_clouds_8k.jpg', stage=0 }
-				}
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 5500		
-		}
+	local pass_id = layer_entry.target_pass_id
+	local rendering_id = layer_entry.rendering_id
 
-	},
-	
-	--ocean_layer
-	[3] = 
-	{
-		oceans_rendering = 
-		{
-			fx =
-			{
-				shaders = 
-				{
-					{ path='planet_ocean_vs.hlsl', mode=SHADER_NOT_COMPILED },
-					{ path='planet_ocean_ps.hlsl', mode=SHADER_NOT_COMPILED }
-				},
-				
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
-					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
-						
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
-					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
-				}
-			},
-			textures =
-			{
-			},
-			vertex_textures =
-			{
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 4900
-			--rendering_order = 5100
-		},
-		oceans_bump_rendering = 
-		{
-			fx = 
-			{
-				shaders = 
-				{
-					{ path='planet_ocean_bump_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='planet_ocean_bump_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{					
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"}
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" }
-				}
-			},
-			textures =
-			{
-			},
-			vertex_textures =
-			{
-			},
-			rendering_order = 10000,
-			shaders_params = 
-			{			
-			}
-		}
-	}
-}
+	renderer:set_passforrenderid(rendering_id, pass_id) -- to be continued
+  end
+
+  for k0, v0 in pairs(p_layers) do
+    --g:print("k0 is "..k0)
+
+	local renderconfig=RenderConfig()
+
+	for k, v in pairs(v0) do
+	  --g:print("	k is "..k)
+
+	  local rendercontext = RenderContext(k)
+
+	  local fxparams = FxParams()
+	  local fx_config = v['fx']
+
+	  local rss=RenderStatesSet()
+
+      local rs_in_config = fx_config['rs_in']
+      for k2, v2 in pairs(rs_in_config) do
+	    local curr_rs_in = v2
+	    --g:print(curr_rs_in['ope']..'->'..curr_rs_in['value'])
+		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+	  end
+
+	  local rs_out_config = fx_config['rs_out']
+	  for k2, v2 in pairs(rs_out_config) do
+	    local curr_rs_out = v2
+		--g:print(curr_rs_out['ope']..'->'..curr_rs_out['value'])
+		rss:add_renderstate_out(curr_rs_out['ope'], curr_rs_out['value'])
+	  end
+	  fxparams:set_renderstatesset(rss)
+
+	  local shaders_config = fx_config['shaders']
+	  for k2, v2 in pairs(shaders_config) do
+	    local curr_shader = v2
+	    --g:print(curr_shader['path']..'->'..curr_shader['mode'])
+		fxparams:add_shaderfile(curr_shader['path'],curr_shader['mode'])
+	  end
+
+	  local tx_config = v['textures']		
+	  for k2, v2 in ipairs(tx_config) do
+	    --g:print(k2)
+	    local textures = TexturesSet()
+		for k3, v3 in pairs(v2) do
+		  local tx = v3
+		  --g:print(tx['path']..'->'..tx['stage'])
+		  textures:set_texturefiletostage(tx['path'], tx['stage'])
+		end
+		rendercontext:add_texturesset(textures)
+	  end
+
+	  local shaderparams_config = v['shaders_params']
+	  for k2, v2 in pairs(shaderparams_config) do
+	    local param = v2
+		--g:print(param['param_name']..'->'..param['shader_index']..','..param['register'])
+		rendercontext:add_shaderparam(param['param_name'], param['shader_index'], param['register'])
+	  end
+
+	  local ro = v['rendering_order']
+	  --g:print( 'ro ='..ro )
+
+	  rendercontext:set_renderingorder(ro)
+
+	  rendercontext:add_fxparams(fxparams)
+	  renderconfig:add_rendercontext(rendercontext)
+
+	end
+
+	renderlayer:add_renderconfig(renderconfig, k0)
+
+  end
+
+  renderer:configure(renderlayer)
+  return entity, renderer
+end
 
 planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings, p_planet_specific_config_descr)
 
   local entity
   local renderer
 
+  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_rendering_layers, p_passes_bindings)
+
+  local specific_config = PlanetConfig()
+  planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
+  specific_config:connect_wavepass(p_rendergraph, planetmod.wavepass_name, renderer)
+  specific_config:apply(renderer)
+
+  renderer:register_to_rendering(p_rendergraph)
+
+  entity:add_aspect(INFOS_ASPECT)
+  entity:setup_info( "entity_name", p_entity_id )
+
+  entity:add_aspect(PHYSICS_ASPECT)
+
+  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['specific_config'] = specific_config }
+  planetmod.models[p_entity_id] = pair
+
+  return entity
+
+
+
+  --[[
   entity,renderer=commons.create_rendering_from_module(planetmod.layers, planetmod.module, "planetsRender", p_passes_bindings)
   local specific_config = PlanetSpecificConfig()
 
@@ -505,6 +302,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   planetmod.models[p_entity_id] = pair
 
   return entity
+  ]]
 
 end
 
@@ -549,7 +347,9 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_specific_config_descr, wavepass_name)
+planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_layers, p_planet_specific_config_descr, wavepass_name)
+
+  planetmod.requested_rendering_layers = p_planet_layers
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do

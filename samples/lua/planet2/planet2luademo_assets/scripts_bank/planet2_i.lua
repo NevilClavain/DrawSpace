@@ -890,6 +890,327 @@ bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1
 
 planet_name = 'Resurgam'
 
+
+planet_layers =
+{ 
+	--surface_layer = 
+	[0] = 
+	{
+		surface_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_surface_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_surface_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="linear" }
+												
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="none" }						
+				}		
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{ path='earth_th_pixels_16.jpg', stage=0 },
+					{ path='earth_th_splatting_16.jpg', stage=1 },
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 5000
+		},
+
+		surface_wireframe_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_surface_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_surface_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
+						
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+				}		
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{ path='earth_th_pixels_16.jpg', stage=0 },
+					{ path='earth_th_splatting_16.jpg', stage=1 },
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 5000
+		}
+	},
+
+	--atmosphere_layer
+	[1] = 
+	{
+		atmo_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_atmosphere_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_atmosphere_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="ccw" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 4500		
+		},
+
+		atmo_mirror_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_atmosphere_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_atmosphere_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 4500		
+		},
+	},
+
+	--flatclouds_layer
+	[2] = 
+	{
+		flatclouds_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_flatclouds_vs.hlsl', mode=SHADER_NOT_COMPILED },
+					{ path='planet_flatclouds_ps.hlsl', mode=SHADER_NOT_COMPILED }
+				},
+				
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },
+
+						
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
+				}
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{ path='se_asia_clouds_8k.jpg', stage=0 }
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 5500		
+		},
+
+		flatclouds_mirror_rendering =	
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_flatclouds_vs.hlsl', mode=SHADER_NOT_COMPILED },
+					{ path='planet_flatclouds_ps.hlsl', mode=SHADER_NOT_COMPILED }
+				},
+				
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="true" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDOP, value="add" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDFUNC, value="always" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDDEST, value="invsrcalpha" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDSRC, value="srcalpha" },						
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_ALPHABLENDENABLE, value="false" },
+				}
+			},
+			textures =
+			{
+				[1] = 
+				{
+					{ path='se_asia_clouds_8k.jpg', stage=0 }
+				}
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 5500		
+		}
+
+	},
+	
+	--ocean_layer
+	[3] = 
+	{
+		oceans_rendering = 
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_ocean_vs.hlsl', mode=SHADER_NOT_COMPILED },
+					{ path='planet_ocean_ps.hlsl', mode=SHADER_NOT_COMPILED }
+				},
+				
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
+						
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 4900
+			--rendering_order = 5100
+		},
+		oceans_bump_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_ocean_bump_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_ocean_bump_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{					
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"}
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" }
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			rendering_order = 10000,
+			shaders_params = 
+			{			
+			}
+		}
+	}
+}
+
+
+
 if planet_specific_config_descr.enable_oceans == TRUE then
 
   local planet_passes_bindings = 
@@ -940,7 +1261,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	}   
   }
 
-  planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr, 'wave_pass')
+  planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
 
 else
 
@@ -967,7 +1288,7 @@ else
 	}
   }
 
-  planetmod.view.load(planet_name, planet_passes_bindings, planet_specific_config_descr, 'wave_pass')
+  planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
 end
 
 

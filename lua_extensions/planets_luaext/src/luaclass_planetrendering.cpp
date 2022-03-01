@@ -24,13 +24,20 @@
 
 #include "luacontext.h"
 #include "luaclass_planetrendering.h"
+#include "luaclass_entity.h"
+#include "planetsrenderingaspectimpl.h"
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
+using namespace DrawSpace::Aspect;
+
 
 const char LuaClass_PlanetRendering::className[] = "PlanetRendering";
 const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[] =
 {
+	{ "attach_toentity", &LuaClass_PlanetRendering::LUA_attachtoentity },
 	{ 0, 0 }
 };
 
@@ -42,3 +49,28 @@ LuaClass_PlanetRendering::~LuaClass_PlanetRendering( void )
 {
 }
 
+int LuaClass_PlanetRendering::LUA_attachtoentity(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetRendering::attach_toentity : argument(s) missing");
+    }
+
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+    DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
+
+    RenderingAspect* rendering_aspect{ entity.GetAspect<RenderingAspect>() };
+    if (NULL == rendering_aspect)
+    {
+        LUA_ERROR("PlanetRendering::attach_toentity : entity has no rendering aspect!");
+    }
+
+    m_entity_rendering_aspect = rendering_aspect;
+    m_entity = &entity;
+
+    m_planet_render = _DRAWSPACE_NEW_(PlanetsRenderingAspectImpl, PlanetsRenderingAspectImpl);
+    m_entity_rendering_aspect->AddImplementation(m_planet_render, nullptr);
+
+    return 0;
+}

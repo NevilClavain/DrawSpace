@@ -49,6 +49,10 @@ class Layer;
 
 namespace DrawSpace
 {
+namespace Core
+{
+class Entity;
+}
 namespace Aspect
 {
 class CollisionAspect;
@@ -61,7 +65,8 @@ class Hub;
 namespace AspectImplementations
 {
 class RigidBodyTransformAspectImpl;
-
+}
+}
 
 class PlanetsRenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
@@ -69,7 +74,7 @@ public:
 
     struct RegisteredCamera
     {
-        Core::Entity* owner_entity; // l'entite possedant l'aspect camera
+        DrawSpace::Core::Entity*            owner_entity; // l'entite possedant l'aspect camera
         dsstring                            camera_name;
 
         DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
@@ -94,12 +99,12 @@ public:
 protected:
 
     using SystemsEvtCb              = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::Interface::System::Event, dsstring>;
-    using CameraEventsCb            = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, Core::Entity*>;
-    using NodesEventsCb             = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, EntityGraph::EntityNode::Event, Core::Entity*>;
+    using CameraEventsCb            = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent, DrawSpace::Core::Entity*>;
+    using NodesEventsCb             = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>;
     using SubPassCreationCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack3<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
     using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
-    using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
+    using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
 
     using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector>>;
 
@@ -118,11 +123,11 @@ protected:
     static const dsstring CollisionDisplayPShaderComponentName;
 
     bool                                                            m_add_in_rendergraph;
-    Systems::Hub*                                                   m_hub{ nullptr };
+    DrawSpace::Systems::Hub*                                        m_hub{ nullptr };
     SystemsEvtCb                                                    m_system_evt_cb;
     CameraEventsCb                                                  m_cameras_evt_cb;
     NodesEventsCb                                                   m_nodes_evt_cb;
-    EntityGraph::EntityNodeGraph*                                   m_entitynodegraph{ nullptr };
+    DrawSpace::EntityGraph::EntityNodeGraph*                        m_entitynodegraph{ nullptr };
     TimerCb                                                         m_timer_cb;
     RenderPassEventCb                                               m_render_evt_cb;
     DrawSpace::Utils::Timer                                         m_timer;
@@ -197,11 +202,11 @@ protected:
 
     void                                        on_timer(DrawSpace::Utils::Timer* p_timer);
     void                                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
-    void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, Core::Entity* p_entity);
-    void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity);
+    void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, DrawSpace::Core::Entity* p_entity);
+    void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, DrawSpace::Core::Entity* p_entity);
     LOD::SubPass::EntryInfos                    on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest);
     void                                        on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent);
-    void                                        on_render_event(RenderGraph::RenderPassNodeGraph::RenderPassEvent p_evt, const dsstring& p_pass);
+    void                                        on_render_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_evt, const dsstring& p_pass);
 
     void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
 
@@ -234,11 +239,11 @@ public:
     bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager );
     void Release(void);
     void Run( DrawSpace::Core::Entity* p_entity );
-    void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph);
+    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph);
 
     void ResetCollisionMesheValidity(void);
     void ComponentsUpdated(void);
-    virtual void SetHub(Systems::Hub* p_hub);
+    virtual void SetHub(DrawSpace::Systems::Hub* p_hub);
 
     /// accessors
     std::map<dsstring, RegisteredCamera>                    GetRegisteredCameras(void) const;
@@ -247,6 +252,5 @@ public:
     dsstring                                                GetReflectionPassId(void) const;
 
 };
-}
-}
+
 
