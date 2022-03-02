@@ -25,7 +25,9 @@
 #include "luacontext.h"
 #include "luaclass_planetrendering.h"
 #include "luaclass_entity.h"
+#include "luaclass_timemanagerref.h"
 #include "planetsrenderingaspectimpl.h"
+#include "planetsluaext.h"
 
 
 using namespace DrawSpace;
@@ -43,6 +45,13 @@ const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[
 
 LuaClass_PlanetRendering::LuaClass_PlanetRendering( lua_State* p_L )
 {
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("Rendering::Rendering : argument(s) missing");
+    }
+    LuaClass_TimeManagerRef* lua_tmref = Luna<LuaClass_TimeManagerRef>::check(p_L, 1);
+    m_tm = lua_tmref->GetTimeManager();
 }
 
 LuaClass_PlanetRendering::~LuaClass_PlanetRendering( void )
@@ -70,7 +79,8 @@ int LuaClass_PlanetRendering::LUA_attachtoentity(lua_State* p_L)
     m_entity = &entity;
 
     m_planet_render = _DRAWSPACE_NEW_(PlanetsRenderingAspectImpl, PlanetsRenderingAspectImpl);
-    m_entity_rendering_aspect->AddImplementation(m_planet_render, nullptr);
+    m_planet_render->SetHub(PlanetsLuaExtension::GetInstance()->GetHub());
+    m_entity_rendering_aspect->AddImplementation(m_planet_render, m_tm);
 
     return 0;
 }

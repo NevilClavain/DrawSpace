@@ -668,6 +668,9 @@ int LuaClass_Globals::LUA_registerextension(lua_State* p_L)
     LuaExtension* extension_instance{ LuaExtLoad::RegisterLuaExtension(extension_name, p_L, extension_description) };
     m_extensions[extension_name] = extension_instance;
 
+    Systems::Hub* hub{ MainService::GetInstance()->GetHub() };
+    extension_instance->SetHub(hub);
+
     lua_pushstring(p_L, extension_description.c_str());
     return 1;
 }

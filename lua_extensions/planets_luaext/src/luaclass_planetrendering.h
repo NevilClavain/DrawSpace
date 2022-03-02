@@ -52,6 +52,7 @@ private:
     PlanetsRenderingAspectImpl*         m_planet_render{ nullptr };
     DrawSpace::Aspect::RenderingAspect* m_entity_rendering_aspect{ nullptr };
     DrawSpace::Core::Entity*            m_entity{ nullptr };
+    DrawSpace::Utils::TimeManager*      m_tm{ nullptr };
     
 public:
 

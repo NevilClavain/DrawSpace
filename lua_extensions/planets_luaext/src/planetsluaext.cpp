@@ -27,6 +27,7 @@
 #include "luaclass_planetconfig.h"
 #include "plugin.h"
 #include "memalloc.h"
+#include "hub.h"
 
 PlanetsLuaExtension::PlanetsLuaExtension(void)
 {
@@ -46,4 +47,14 @@ void PlanetsLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_rende
 DrawSpace::Utils::MemAlloc* PlanetsLuaExtension::GetMemAllocInstance(void) const
 {
 	return DrawSpace::Utils::MemAlloc::GetInstance();
+}
+
+void PlanetsLuaExtension::SetHub(DrawSpace::Systems::Hub* p_hub)
+{
+	m_hub = p_hub;
+}
+
+DrawSpace::Systems::Hub* PlanetsLuaExtension::GetHub(void) const
+{
+	return m_hub;
 }

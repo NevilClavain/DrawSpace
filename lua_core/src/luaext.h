@@ -39,12 +39,18 @@ namespace Interface
 {
 class Renderer;
 }
+namespace Systems
+{
+class Hub;
+}
 }
 class LuaExtension
 {
 public:
 	virtual void Register(lua_State*) = 0;
-	virtual void UpdateRenderer(DrawSpace::Interface::Renderer*) = 0;
+	virtual void UpdateRenderer(DrawSpace::Interface::Renderer*) = 0;	
 	virtual dsstring Description(void) const = 0;
 	virtual DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const = 0;
+
+	virtual void SetHub(DrawSpace::Systems::Hub* p_hub) {};
 };

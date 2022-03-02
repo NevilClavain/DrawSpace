@@ -164,7 +164,7 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
   entity:add_aspect(RENDERING_ASPECT)
   entity:add_aspect(RESOURCES_ASPECT)
 
-  local renderer=PlanetRendering()
+  local renderer=PlanetRendering(TimeManagerRef(root_entity))
   renderer:attach_toentity(entity)
 
   local renderlayer=RenderLayer()
