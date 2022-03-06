@@ -53,6 +53,11 @@ private:
     DrawSpace::Aspect::RenderingAspect* m_entity_rendering_aspect{ nullptr };
     DrawSpace::Core::Entity*            m_entity{ nullptr };
     DrawSpace::Utils::TimeManager*      m_tm{ nullptr };
+
+    // table de traduction RenderContext name -> Passes Name
+    // permet de savoir a quelle passe est attribue un rendercontext
+    std::map<dsstring, std::vector<dsstring>>                                       m_rcname_to_passes;
+
     
 public:
 
@@ -60,7 +65,9 @@ public:
 	~LuaClass_PlanetRendering( void );
 
     int LUA_attachtoentity(lua_State* p_L);
+    int LUA_detachfromentity(lua_State* p_L);
 
+    int LUA_setPassForRenderId(lua_State* p_L);
     
     static const char className[];
     static const Luna<LuaClass_PlanetRendering>::RegType methods[];

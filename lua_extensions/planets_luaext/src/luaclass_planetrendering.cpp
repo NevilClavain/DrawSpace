@@ -40,6 +40,8 @@ const char LuaClass_PlanetRendering::className[] = "PlanetRendering";
 const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[] =
 {
 	{ "attach_toentity", &LuaClass_PlanetRendering::LUA_attachtoentity },
+    { "detach_fromentity", &LuaClass_PlanetRendering::LUA_detachfromentity },
+    { "set_passforrenderid", &LuaClass_PlanetRendering::LUA_setPassForRenderId },
 	{ 0, 0 }
 };
 
@@ -81,6 +83,42 @@ int LuaClass_PlanetRendering::LUA_attachtoentity(lua_State* p_L)
     m_planet_render = _DRAWSPACE_NEW_(PlanetsRenderingAspectImpl, PlanetsRenderingAspectImpl);
     m_planet_render->SetHub(PlanetsLuaExtension::GetInstance()->GetHub());
     m_entity_rendering_aspect->AddImplementation(m_planet_render, m_tm);
+
+    return 0;
+}
+
+int LuaClass_PlanetRendering::LUA_detachfromentity(lua_State* p_L)
+{
+    if (!m_entity)
+    {
+        LUA_ERROR("PlanetRendering::detach_fromentity : argument(s) missing");
+    }
+    if (m_planet_render)
+    {
+        _DRAWSPACE_DELETE_(m_planet_render);
+    }
+    LUA_TRY
+    {
+        m_entity_rendering_aspect->RemoveImplementation(m_planet_render);
+
+    } LUA_CATCH;
+
+    m_entity_rendering_aspect = nullptr;
+    m_entity = nullptr;
+    return 0;
+}
+
+int LuaClass_PlanetRendering::LUA_setPassForRenderId(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetRendering::set_passforrenderid : argument(s) missing");
+    }
+
+    dsstring rc_id{ luaL_checkstring(p_L, 1) };
+    dsstring pass_id{ luaL_checkstring(p_L, 2) };
+    m_rcname_to_passes[rc_id].push_back(pass_id);
 
     return 0;
 }
