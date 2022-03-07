@@ -181,11 +181,11 @@ int LuaClass_SkyboxRendering::LUA_configure(lua_State* p_L)
     if (m_entity_rendering_aspect)
     {
         LUA_TRY
-        {            
+        {
             size_t renderconfig_list_size{ lua_renderlayer->GetRenderConfigListSize() };
             for (size_t k = 0; k < renderconfig_list_size; k++)
             {
-                auto render_config_entry{ lua_renderlayer->GetRenderConfig(k) };                
+                auto render_config_entry{ lua_renderlayer->GetRenderConfig(k) };
                 LuaClass_RenderConfig::Data render_config_data{ render_config_entry.second };
 
                 // loop on render contexts
