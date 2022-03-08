@@ -276,34 +276,6 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   planetmod.models[p_entity_id] = pair
 
   return entity
-
-
-
-  --[[
-  entity,renderer=commons.create_rendering_from_module(planetmod.layers, planetmod.module, "planetsRender", p_passes_bindings)
-  local specific_config = PlanetSpecificConfig()
-
-  planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
-
-  specific_config:connect_wavepass(p_rendergraph, planetmod.wavepass_name, renderer)
-
-  specific_config:apply(renderer)
-
-  renderer:register_to_rendering(rg)
-
-  
-  entity:add_aspect(INFOS_ASPECT)
-  entity:setup_info( "entity_name", p_entity_id )
-
-  entity:add_aspect(PHYSICS_ASPECT)
-  
-  
-  local pair = { ['entity'] = entity, ['renderer'] = renderer, ['specific_config'] = specific_config }
-  planetmod.models[p_entity_id] = pair
-
-  return entity
-  ]]
-
 end
 
 planetmod.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
