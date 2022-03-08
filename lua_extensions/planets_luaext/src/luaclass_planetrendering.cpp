@@ -30,6 +30,7 @@
 #include "planetsluaext.h"
 #include "luaclass_renderlayer.h"
 #include "luaclass_renderpassnodegraph.h"
+#include "planetscentraladmin.h"
 
 
 using namespace DrawSpace;
@@ -91,6 +92,8 @@ int LuaClass_PlanetRendering::LUA_attachtoentity(lua_State* p_L)
     m_planet_render->SetHub(PlanetsLuaExtension::GetInstance()->GetHub());
     m_entity_rendering_aspect->AddImplementation(m_planet_render, m_tm);
 
+    PlanetsCentralAdmin::GetInstance()->Register(m_planet_render, PlanetsLuaExtension::GetInstance()->GetHub());
+
     return 0;
 }
 
@@ -102,6 +105,7 @@ int LuaClass_PlanetRendering::LUA_detachfromentity(lua_State* p_L)
     }
     if (m_planet_render)
     {
+        PlanetsCentralAdmin::GetInstance()->Unregister(m_planet_render);
         _DRAWSPACE_DELETE_(m_planet_render);
     }
     LUA_TRY
