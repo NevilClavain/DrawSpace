@@ -110,16 +110,16 @@ int LuaClass_MeshRendering::LUA_detachfromentity( lua_State* p_L )
         LUA_ERROR( "MesheRendering::detach_fromentity : argument(s) missing" );
     }
 
-    if( m_meshe_render )
-    {
-        _DRAWSPACE_DELETE_( m_meshe_render );
-    }
-
     LUA_TRY
     {
         m_entity_rendering_aspect->RemoveImplementation( m_meshe_render );
 
     } LUA_CATCH; 
+
+    if (m_meshe_render)
+    {
+        _DRAWSPACE_DELETE_(m_meshe_render);
+    }
 
     m_entity_rendering_aspect = NULL;
     m_entity = NULL;

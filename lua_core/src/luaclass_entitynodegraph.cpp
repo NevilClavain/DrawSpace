@@ -147,7 +147,7 @@ int LuaClass_EntityNodeGraph::LUA_remove( lua_State* p_L )
         LUA_ERROR( "EntityNodeGraph::remove : id doesnt exists in entities table: " + entity_id);
     }
 
-    m_entities[entity_id].Erase();
+    m_entities.at(entity_id).Erase();
     m_entities.erase( entity_id );
     return 0;
 }

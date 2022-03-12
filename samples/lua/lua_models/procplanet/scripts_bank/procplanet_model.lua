@@ -253,6 +253,17 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
   return entity, renderer
 end
 
+planetmod.trash_planet = function(p_rendergraph, p_entity, p_renderer)
+
+    p_renderer:unregister_from_rendering(p_rendergraph)
+	p_renderer:release()
+	p_renderer:detach_fromentity()
+
+	p_entity:remove_aspect(RENDERING_ASPECT)
+	p_entity:remove_aspect(RESOURCES_ASPECT)
+
+end
+
 planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindings, p_planet_specific_config_descr)
 
   local entity
@@ -287,7 +298,8 @@ planetmod.trashmodelview = function(p_rendergraph, p_entitygraph, p_entity_id)
   entity:remove_aspect(INFOS_ASPECT)
   
 
-  commons.trash.rendering(p_rendergraph, planetmod.module, entity, renderer)
+  planetmod.trash_planet(p_rendergraph, entity, renderer)
+
   entity:remove_aspect(PHYSICS_ASPECT)
 
   p_entitygraph:remove(p_entity_id)

@@ -90,15 +90,17 @@ int LuaClass_SkyboxRendering::LUA_detachfromentity(lua_State* p_L)
     {
         LUA_ERROR("SkyboxRendering::detach_fromentity : argument(s) missing");
     }
-    if (m_skybox_render)
-    {
-        _DRAWSPACE_DELETE_(m_skybox_render);
-    }
+
     LUA_TRY
     {
         m_entity_rendering_aspect->RemoveImplementation(m_skybox_render);
 
     } LUA_CATCH;
+
+    if (m_skybox_render)
+    {
+        _DRAWSPACE_DELETE_(m_skybox_render);
+    }
 
     m_entity_rendering_aspect = nullptr;
     m_entity = nullptr;

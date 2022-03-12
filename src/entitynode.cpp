@@ -95,7 +95,7 @@ void EntityNode::Erase(void)
     m_owner_graph->m_entity_to_node.erase( m_tree_node->data() );
 	m_tree_node->erase();
 
-    std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
+    std::set<EntityNode::EventsHandler*> nodesevt_handlers{ m_owner_graph->m_nodesevt_handlers };
     for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {
         (**it )( EntityNode::REMOVED_FROM_TREE, entity );

@@ -103,16 +103,18 @@ int LuaClass_PlanetRendering::LUA_detachfromentity(lua_State* p_L)
     {
         LUA_ERROR("PlanetRendering::detach_fromentity : argument(s) missing");
     }
-    if (m_planet_render)
-    {
-        PlanetsCentralAdmin::GetInstance()->Unregister(m_planet_render);
-        _DRAWSPACE_DELETE_(m_planet_render);
-    }
+
     LUA_TRY
     {
         m_entity_rendering_aspect->RemoveImplementation(m_planet_render);
 
     } LUA_CATCH;
+
+    if (m_planet_render)
+    {
+        PlanetsCentralAdmin::GetInstance()->Unregister(m_planet_render);
+        _DRAWSPACE_DELETE_(m_planet_render);
+    }
 
     m_entity_rendering_aspect = nullptr;
     m_entity = nullptr;
@@ -280,6 +282,7 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
 
 int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 {
+    cleanup_resources(p_L);
     return 0;
 }
 
@@ -304,13 +307,134 @@ int LuaClass_PlanetRendering::LUA_registertorendering(lua_State* p_L)
 
 int LuaClass_PlanetRendering::LUA_unregisterfromrendering(lua_State* p_L)
 {
+    if (NULL == m_planet_render)
+    {
+        LUA_ERROR("PlanetRendering::unregister_from_rendering : no rendering aspect impl created");
+    }
+
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetRendering::unregister_from_rendering : argument(s) missing");
+    }
+
+    LuaClass_RenderPassNodeGraph* lua_rg{ Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1) };
+
+    m_planet_render->UnregisterFromRendering(lua_rg->GetRenderGraph());
+
     return 0;
 }
 
 
 void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
 {
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("PlanetRendering::cleanup_resources : no attached entity");
+    }
+    ResourcesAspect* resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
+    if (!resources_aspect)
+    {
+        LUA_ERROR("PlanetRendering::cleanup_resources : attached entity has no resources aspect !");
+    }
 
+    if (m_entity_rendering_aspect)
+    {
+
+        /////////////////// textures
+
+        Component<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>* layers_textures_comp;
+
+        layers_textures_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
+        if (layers_textures_comp)
+        {
+            std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = layers_textures_comp->getPurpose();
+            for (auto& e1 : layers_textures)
+            {
+                for (auto& e2 : e1)
+                {
+                    for (auto& e3 : e2.second)
+                    {
+                        std::array<Texture*, RenderingNode::NbMaxTextures> texture_set = e3;
+
+                        for (size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++)
+                        {
+                            Texture* texture = texture_set[texture_stage_index];
+                            if (texture)
+                            {
+                                dsstring id;
+                                dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                                resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
+
+                                _DRAWSPACE_DELETE_(texture);
+                            }
+                        }
+                    }
+                }
+            }
+
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
+        }
+
+        /////////////////// fx
+
+        Component<std::vector<std::map<dsstring, Fx*>>>* layers_fx_comp;
+
+        layers_fx_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx");
+        if (layers_fx_comp)
+        {
+            std::vector<std::map<dsstring, Fx*>> layers_fx = layers_fx_comp->getPurpose();
+            for (auto& e1 : layers_fx)
+            {
+                for (auto& e2 : e1)
+                {
+                    Fx* fx = e2.second;
+                    for (int j = 0; j < fx->GetShadersListSize(); j++)
+                    {
+                        Shader* shader = fx->GetShader(j);
+
+                        dsstring id;
+                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
+
+                        _DRAWSPACE_DELETE_(shader);
+                    }
+                    _DRAWSPACE_DELETE_(fx);
+                }
+            }
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx");
+        }
+
+        //////////////// args shaders
+
+        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params");
+        }
+
+        //////////////// rendering orders
+
+        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, int>>>("layers_ro"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, int>>>("layers_ro");
+        }
+
+        //////////////// rcname_to_passes
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes");
+        }
+
+
+        //////////////// rcname_to_layer_index
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, int>>("rcname_to_layer_index");
+        }
+
+    }
 }
 
 DrawSpace::Aspect::RenderingAspect* LuaClass_PlanetRendering::GetRenderingAspect(void) const
