@@ -43,8 +43,6 @@ using namespace DrawSpace::Aspect;
 const char LuaClass_Rendering::className[] = "Rendering";
 const Luna<LuaClass_Rendering>::RegType LuaClass_Rendering::methods[] =
 {    
-    { "instanciate_renderingimpl", &LuaClass_Rendering::LUA_instanciateRenderingImpl },    
-    { "trash_renderingimpl", &LuaClass_Rendering::LUA_trashRenderingImpl },
     { "attach_toentity", &LuaClass_Rendering::LUA_attachtoentity },
     { "detach_fromentity", &LuaClass_Rendering::LUA_detachfromentity },
     { "configure", &LuaClass_Rendering::LUA_configure },
@@ -70,67 +68,6 @@ m_rendering_impl( NULL )
 
 LuaClass_Rendering::~LuaClass_Rendering( void )
 {
-}
-
-int LuaClass_Rendering::LUA_instanciateRenderingImpl( lua_State* p_L )
-{
-    
-	int argc = lua_gettop( p_L );
-	if( argc < 2 )
-	{		
-        LUA_ERROR( "Rendering::instanciate_renderingimpl : argument(s) missing" );
-	}
-
-    LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
-    dsstring implementation_id = luaL_checkstring(p_L, 2);
-
-    // ici appel de MemAlloc::GetTotalSize()
-
-    dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
-
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << mod_name << dsstring( " mem allocs*******************"));
-    lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
-
-    size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
-    m_total_mem_allocs = total;
-
-    m_rendering_impl = lua_mod->GetModuleRoot()->InstanciateRenderingAspectImpls( implementation_id );
-    
-    return 0;
-}
-
-int LuaClass_Rendering::LUA_trashRenderingImpl( lua_State* p_L )
-{
-    
-	int argc = lua_gettop( p_L );
-	if( argc < 1 )
-	{		
-        LUA_ERROR( "Rendering::trash_renderingimpl : argument(s) missing" );
-	}
-
-    LuaClass_Module* lua_mod = Luna<LuaClass_Module>::check( p_L, 1 );
-
-    lua_mod->GetModuleRoot()->TrashRenderingAspectImpls( m_rendering_impl );
-
-    // ici appel de MemAlloc::GetTotalSize() pour comparaison 
-
-    dsstring mod_name = lua_mod->GetModuleRoot()->GetModuleName();
-
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << mod_name << dsstring(" mem allocs*******************"));
-    lua_mod->GetModuleRoot()->GetMemAllocInstance()->DumpContent();
-    _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
-
-    size_t total = lua_mod->GetModuleRoot()->GetMemAllocInstance()->GetTotalSize();
-
-    if( total != m_total_mem_allocs )
-    {
-        dsstring log = dsstring( "RENDERING MODULE MEM LEAK DETECTED " ) + mod_name;
-        MainService::GetInstance()->RequestLog(4, log); // 4 = FATAL
-        _DSEXCEPTION( log );
-    }
-    
-    return 0;
 }
 
 int LuaClass_Rendering::LUA_attachtoentity( lua_State* p_L )

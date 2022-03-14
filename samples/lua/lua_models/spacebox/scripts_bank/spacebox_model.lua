@@ -125,7 +125,6 @@ spaceboxmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bind
   local entity
   local renderer
 
-  --entity, renderer=commons.create_rendering_from_module(spaceboxmod.requested_rendering_layers, spaceboxmod.module, "skyboxRender", p_passes_bindings)
   entity, renderer=spaceboxmod.create_rendered_spacebox(spaceboxmod.requested_rendering_layers, p_passes_bindings)
 
   renderer:register_to_rendering(p_rendergraph)
