@@ -64,8 +64,6 @@ add_subdirectory(vm_project)
 
 # modules
 add_subdirectory(modules/gameroom_project)
-add_subdirectory(modules/skyboxmod_project)
-add_subdirectory(modules/planetsmod_project)
 
 # lua extensions
 add_subdirectory(lua_extensions/impostors_luaext)
