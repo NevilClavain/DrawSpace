@@ -55,8 +55,6 @@ protected:
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
-    DrawSpace::Utils::AC3DMesheImport                                               m_meshe_import;
-
     std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
     std::unordered_map<dsstring, LuaClass_EntityNodeGraph*>                         m_entitygraphs;
 
@@ -186,7 +184,6 @@ public:
     void RegisterResourceEventCallback(const dsstring& p_id, int p_regindex);
     int UnregisterResourceEventCallback(const dsstring& p_id);
 
-    DrawSpace::Interface::MesheImport* GetMesheImport( void );
     DrawSpace::Systems::Hub* GetHub( void );
 
     void RequestClose( void );

@@ -183,7 +183,6 @@ ${CMAKE_SOURCE_DIR}/src/systems.h
 )
 
 source_group(interface FILES
-${CMAKE_SOURCE_DIR}/src/mesheimport.h
 ${CMAKE_SOURCE_DIR}/src/renderer.h
 )
 
@@ -259,8 +258,6 @@ ${CMAKE_SOURCE_DIR}/src/runner.cpp
 )
 
 source_group(utils FILES
-${CMAKE_SOURCE_DIR}/src/ac3dmeshe.cpp
-${CMAKE_SOURCE_DIR}/src/ac3dmeshe.h
 ${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/file.cpp
 ${CMAKE_SOURCE_DIR}/src/file.h

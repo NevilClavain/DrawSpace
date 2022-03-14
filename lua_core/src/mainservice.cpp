@@ -854,11 +854,6 @@ int MainService::UnregisterResourceEventCallback(const dsstring& p_id)
     return index;
 }
 
-DrawSpace::Interface::MesheImport* MainService::GetMesheImport( void )
-{
-    return &m_meshe_import;
-}
-
 DrawSpace::Systems::Hub* MainService::GetHub(void)
 {
     return &m_systemsHub;

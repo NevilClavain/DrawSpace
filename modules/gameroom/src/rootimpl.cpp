@@ -27,7 +27,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "renderstate.h"
-#include "AC3DMeshe.h"
+
 #include "mainservice.h"
 #include "luacontext.h"
 

@@ -23,12 +23,10 @@
 /* -*-LIC_END-*- */
 
 #include "meshe.h"
-#include "mesheimport.h"
 #include "md5.h"
 #include "exceptions.h"
 #include "misc_utils.h"
 #include "pimanager.h"
-#include "ac3dmeshe.h"
 #include "renderer.h"
 #include "plugin.h"
 #include "maths.h"
@@ -39,7 +37,6 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
 Meshe::Meshe( void ) : 
-m_importer( NULL ), 
 m_render_data( NULL ),
 m_n_gen_mode(NORMALES_COMPUTED),
 m_tb_gen_mode(TB_DISCARDED)
@@ -52,24 +49,6 @@ Meshe::~Meshe( void )
 
 }
 
-void Meshe::SetImporter( DrawSpace::Interface::MesheImport* p_importer )
-{
-    m_importer = p_importer;
-}
-
-bool Meshe::LoadFromFile( const dsstring& p_filepath, long p_index )
-{
-    if( NULL == m_importer )
-    {
-        return false;
-    }
-    if( m_importer->LoadFromFile( p_filepath, p_index, this ) )
-    {
-        m_path = p_filepath;
-        return true;
-    }
-    return false;
-}
 
 long Meshe::GetVertexListSize( void ) const
 {

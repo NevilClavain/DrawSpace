@@ -75,7 +75,6 @@
 #include "camerapoint.h"
 #include "spacebox.h"
 #include "chunk.h"
-#include "ac3dmeshe.h"
 #include "procedural_blocs.h"
 #include "procedural_parser.h"
 #include "procedural_seeds.h"

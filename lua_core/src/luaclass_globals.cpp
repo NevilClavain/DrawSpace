@@ -31,7 +31,6 @@
 #include "memalloc.h"
 #include "shader.h"
 #include "texture.h"
-#include "AC3DMeshe.h"
 
 #include "luaext_load.h"
 
@@ -441,7 +440,6 @@ int LuaClass_Globals::LUA_setmeshesrootpath( lua_State* p_L )
 
 	dsstring path = luaL_checkstring( p_L, 1 );
 
-    AC3DMesheImport::SetRootPath( path ); // temporaire, a supprimer quand tout lua stack utilisera le resource system
 
     DrawSpace::Systems::ResourcesSystem::SetMeshesRootPath(path);
 

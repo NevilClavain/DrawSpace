@@ -113,9 +113,6 @@ bool MainService::Init( void )
     m_renderer->SetRenderState( &DrawSpace::Core::RenderState( DrawSpace::Core::RenderState::ENABLEZBUFFER, "false" ) );
 
 
-    m_meshe_import = _DRAWSPACE_NEW_( DrawSpace::Utils::AC3DMesheImport, DrawSpace::Utils::AC3DMesheImport );
-
-
     /////////////////////////////////////////////////////////////////////////////////
 
     m_rendergraph.SetSystemsHub(&m_systemsHub);

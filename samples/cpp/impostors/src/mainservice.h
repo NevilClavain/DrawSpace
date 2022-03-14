@@ -42,8 +42,6 @@ protected:
     DrawSpace::Interface::Renderer*                                                 m_renderer;
     dsstring                                                                        m_pluginDescr;
 
-    DrawSpace::Interface::MesheImport*                                              m_meshe_import;
-
     DrawSpace::RenderGraph::RenderPassNodeGraph                                     m_rendergraph;
     DrawSpace::EntityGraph::EntityNodeGraph                                         m_entitygraph;
 

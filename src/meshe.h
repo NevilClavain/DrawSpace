@@ -88,9 +88,6 @@ public:
     Meshe( void );
     ~Meshe( void );
 
-    void SetImporter( DrawSpace::Interface::MesheImport* p_importer );
-    bool LoadFromFile( const dsstring& p_filepath, long p_index );
-
     void ComputeNormales( void );
     void ComputeTBs(void);
 
