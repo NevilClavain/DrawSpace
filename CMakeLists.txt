@@ -60,7 +60,6 @@ add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
 # add_subdirectory(Plugins/d3d9_project)
 add_subdirectory(rt_project)
-add_subdirectory(vm_project)
 
 # modules
 add_subdirectory(modules/gameroom_project)

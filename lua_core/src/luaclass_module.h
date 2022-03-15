@@ -44,7 +44,6 @@ public:
     int LUA_unload( lua_State* p_L );
     int LUA_getmodulename( lua_State* p_L );
     int LUA_getmoduledescr( lua_State* p_L );
-    int LUA_getserviceslist( lua_State* p_L );
 
     DrawSpace::Interface::Module::Root* GetModuleRoot( void ) const;
 

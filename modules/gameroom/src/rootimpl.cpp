@@ -59,7 +59,7 @@ dsstring RootImpl::GetModuleName( void ) const
 
 dsstring RootImpl::GetModuleDescr( void ) const
 {
-    return "GameRoom module";
+    return "GameRoom module - LUA stack";
 }
 
 DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* RootImpl::InstanciateServiceAspectImpl( const dsstring& p_id )

@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include "module_service.h"
 #include "plugin.h"
 
 #include "renderingaspectimpl.h"
@@ -36,27 +35,26 @@ namespace DrawSpace
 {
 namespace Utils
 {
-    class MemAlloc;
+class MemAlloc;
 }
 
 
 namespace Systems
 {
-    class Hub;
+class Hub;
 }
 
 namespace Interface
 {
+class Renderer;
+
 namespace Module
 {
 class Root
 {
 protected:
 
-    // table des differents services
-    std::map<dsstring, DrawSpace::Interface::Module::Service*>  m_services;
     dsstring                                                    m_id;           //identifiant instance de module
-
     Systems::Hub*                                               m_hub;
 
 public:
@@ -75,9 +73,6 @@ public:
     virtual void                                                                Release(void) = 0;
 
     virtual void                                                                DumpMemoryAllocs( void );
-
-    virtual std::vector<dsstring>                                               GetServicesList( void ) const;
-    virtual Service*                                                            InstanciateService( const dsstring& p_id );
 
     virtual DrawSpace::Interface::AspectImplementations::ServiceAspectImpl*     InstanciateServiceAspectImpl( const dsstring& p_id );
     virtual void                                                                TrashServiceAspectImpls( DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* p_impl ) {};

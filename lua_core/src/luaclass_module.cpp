@@ -34,7 +34,6 @@ const Luna<LuaClass_Module>::RegType LuaClass_Module::methods[] =
     { "unload", &LuaClass_Module::LUA_unload },
     { "get_name", &LuaClass_Module::LUA_getmodulename },
     { "get_descr", &LuaClass_Module::LUA_getmoduledescr },
-    { "get_services", &LuaClass_Module::LUA_getserviceslist },
 	{ 0, 0 }
 };
 
@@ -102,21 +101,6 @@ int LuaClass_Module::LUA_getmoduledescr( lua_State* p_L )
     return 1;
 }
 
-int LuaClass_Module::LUA_getserviceslist( lua_State* p_L )
-{
-    if( !m_mod_root )
-    {
-        LUA_ERROR( "module not loaded!" );
-    }
-
-    std::vector<dsstring> list = m_mod_root->GetServicesList();
-
-    for( size_t i = 0; i < list.size(); i++ )
-    {
-        lua_pushstring( p_L, list[i].c_str() );
-    }
-    return list.size();
-}
 
 DrawSpace::Interface::Module::Root* LuaClass_Module::GetModuleRoot( void ) const
 {

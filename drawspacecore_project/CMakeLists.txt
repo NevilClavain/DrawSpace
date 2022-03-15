@@ -175,7 +175,6 @@ ${CMAKE_SOURCE_DIR}/src/transformaspectimpl.h
 source_group(interface/module FILES
 ${CMAKE_SOURCE_DIR}/src/module_root.cpp
 ${CMAKE_SOURCE_DIR}/src/module_root.h
-${CMAKE_SOURCE_DIR}/src/module_service.h
 )
 
 source_group(interface/system FILES
@@ -184,11 +183,6 @@ ${CMAKE_SOURCE_DIR}/src/systems.h
 
 source_group(interface FILES
 ${CMAKE_SOURCE_DIR}/src/renderer.h
-)
-
-source_group(module FILES
-${CMAKE_SOURCE_DIR}/src/module_keys.cpp
-${CMAKE_SOURCE_DIR}/src/module_keys.h
 )
 
 source_group(procedural FILES
