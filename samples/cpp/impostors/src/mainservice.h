@@ -24,13 +24,19 @@
 
 #pragma once
 
-#include "drawspace.h"
+//#include "drawspace.h"
 #include "serviceaspectimpl.h"
 #include "fpstransformaspectimpl.h"
 #include "impostorsrenderingaspectimpl.h"
 #include "meshrenderingaspectimpl.h"
 #include "stringrenderingaspectimpl.h"
 #include "skyboxrenderingaspectimpl.h"
+#include "passesrenderingaspectimpl.h"
+#include "rawtransformaspectimpl.h"
+#include "rigidbodytransformaspectimpl.h"
+
+#include "hub.h"
+#include "resourcessystem.h"
 
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl

@@ -26,6 +26,15 @@
 #include "component.h"
 #include "passslot.h"
 
+#include "logconf.h"
+#include "callback.h"
+
+#include "serviceaspect.h"
+#include "physicsaspect.h"
+#include "transformaspect.h"
+#include "collisionaspect.h"
+#include "cameraaspect.h"
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
