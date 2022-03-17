@@ -28,7 +28,6 @@
 
 #include "lod_patch.h"
 #include "lod_body.h"
-#include "scenenodegraph.h"
 
 namespace DrawSpace
 {

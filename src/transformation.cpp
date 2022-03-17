@@ -103,10 +103,6 @@ void Transformation::UpdateMatrix( size_t p_index, const Matrix& p_mat )
     m_matrix_chain[p_index] = p_mat;
 }
 
-void Transformation::Update( DrawSpace::Utils::TimeManager& p_timemanager )
-{    
-    BuildResult();
-}
 
 void Transformation::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
 {

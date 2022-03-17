@@ -28,7 +28,7 @@
 
 #include "drawspace_commons.h"
 #include "Matrix.h"
-#include "scenenodegraph.h"
+
 
 namespace DrawSpace
 {
@@ -55,8 +55,6 @@ public:
     void    GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list );
     void    UpdateMatrix( size_t p_index, const DrawSpace::Utils::Matrix& p_mat );
 
-    void    Update( DrawSpace::Utils::TimeManager& p_timemanager );
-    void    Update2( DrawSpace::Utils::TimeManager& p_timemanager ) {};
 
     void    GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
     void    SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };

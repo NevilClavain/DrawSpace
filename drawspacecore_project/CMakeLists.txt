@@ -88,26 +88,12 @@ source_group(core FILES
 ${CMAKE_SOURCE_DIR}/src/componentcontainer.cpp
 ${CMAKE_SOURCE_DIR}/src/componentcontainer.h
 ${CMAKE_SOURCE_DIR}/src/callback.h
-${CMAKE_SOURCE_DIR}/src/circularmovement.cpp
-${CMAKE_SOURCE_DIR}/src/circularmovement.h
 ${CMAKE_SOURCE_DIR}/src/component.h
 ${CMAKE_SOURCE_DIR}/src/entity.h
-${CMAKE_SOURCE_DIR}/src/fpsmovement.cpp
-${CMAKE_SOURCE_DIR}/src/fpsmovement.h
-${CMAKE_SOURCE_DIR}/src/freemovement.cpp
-${CMAKE_SOURCE_DIR}/src/freemovement.h
 ${CMAKE_SOURCE_DIR}/src/fx.cpp
 ${CMAKE_SOURCE_DIR}/src/fx.h
-${CMAKE_SOURCE_DIR}/src/headmovement.cpp
-${CMAKE_SOURCE_DIR}/src/headmovement.h
-${CMAKE_SOURCE_DIR}/src/linearmovement.cpp
-${CMAKE_SOURCE_DIR}/src/linearmovement.h
-${CMAKE_SOURCE_DIR}/src/longlatmovement.cpp
-${CMAKE_SOURCE_DIR}/src/longlatmovement.h
 ${CMAKE_SOURCE_DIR}/src/meshe.cpp
 ${CMAKE_SOURCE_DIR}/src/meshe.h
-${CMAKE_SOURCE_DIR}/src/movement.cpp
-${CMAKE_SOURCE_DIR}/src/movement.h
 ${CMAKE_SOURCE_DIR}/src/plugin.h
 ${CMAKE_SOURCE_DIR}/src/renderingnode.cpp
 ${CMAKE_SOURCE_DIR}/src/renderingnode.h
@@ -117,14 +103,8 @@ ${CMAKE_SOURCE_DIR}/src/renderstate.cpp
 ${CMAKE_SOURCE_DIR}/src/renderstate.h
 ${CMAKE_SOURCE_DIR}/src/renderstatesset.cpp
 ${CMAKE_SOURCE_DIR}/src/renderstatesset.h
-${CMAKE_SOURCE_DIR}/src/scenenode.cpp
-${CMAKE_SOURCE_DIR}/src/scenenode.h
-${CMAKE_SOURCE_DIR}/src/scenenodegraph.cpp
-${CMAKE_SOURCE_DIR}/src/scenenodegraph.h
 ${CMAKE_SOURCE_DIR}/src/shader.cpp
 ${CMAKE_SOURCE_DIR}/src/shader.h
-${CMAKE_SOURCE_DIR}/src/spectatormovement.cpp
-${CMAKE_SOURCE_DIR}/src/spectatormovement.h
 ${CMAKE_SOURCE_DIR}/src/texture.cpp
 ${CMAKE_SOURCE_DIR}/src/texture.h
 ${CMAKE_SOURCE_DIR}/src/transformation.cpp
@@ -135,24 +115,6 @@ ${CMAKE_SOURCE_DIR}/src/passslot.h
 ${CMAKE_SOURCE_DIR}/src/passslot.cpp
 )
 
-source_group(dynamics FILES
-${CMAKE_SOURCE_DIR}/src/body.cpp
-${CMAKE_SOURCE_DIR}/src/body.h
-${CMAKE_SOURCE_DIR}/src/calendar.cpp
-${CMAKE_SOURCE_DIR}/src/calendar.h
-${CMAKE_SOURCE_DIR}/src/camerapoint.cpp
-${CMAKE_SOURCE_DIR}/src/camerapoint.h
-${CMAKE_SOURCE_DIR}/src/collider.cpp
-${CMAKE_SOURCE_DIR}/src/collider.h
-${CMAKE_SOURCE_DIR}/src/inertbody.cpp
-${CMAKE_SOURCE_DIR}/src/inertbody.h
-${CMAKE_SOURCE_DIR}/src/orbiter.cpp
-${CMAKE_SOURCE_DIR}/src/orbiter.h
-${CMAKE_SOURCE_DIR}/src/rocket.cpp
-${CMAKE_SOURCE_DIR}/src/rocket.h
-${CMAKE_SOURCE_DIR}/src/world.cpp
-${CMAKE_SOURCE_DIR}/src/world.h
-)
 
 source_group(entitygraph FILES
 ${CMAKE_SOURCE_DIR}/src/entitynode.cpp

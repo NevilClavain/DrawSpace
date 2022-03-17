@@ -26,6 +26,7 @@
 #include "memalloc.h"
 #include "file.h"
 #include "misc_utils.h"
+#include "exceptions.h"
 #include <md5.h>
 #include <d3dcompiler.h>
 

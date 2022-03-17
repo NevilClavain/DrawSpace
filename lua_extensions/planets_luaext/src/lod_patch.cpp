@@ -29,6 +29,7 @@
 #include "renderer.h"
 #include "plugin.h"
 #include "maths.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
