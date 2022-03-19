@@ -26,6 +26,19 @@
 #define _DSAPPCLIENT_H_
 
 #include <dsapp.h>
+#include "servicesystem.h"
+
+//fwd decl
+namespace DrawSpace
+{
+namespace Interface
+{
+namespace AspectImplementations
+{
+class ServiceAspectImpl;
+}
+}
+}
 
 class dsAppClient : public DrawSpace::App
 {

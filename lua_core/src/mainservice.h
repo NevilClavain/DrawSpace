@@ -24,7 +24,8 @@
 
 #pragma once
 
-#include "drawspace.h"
+#include "resourcessystem.h"
+#include "animationssystem.h"
 #include "serviceaspectimpl.h"
 #include "crtp_singleton.h"
 
@@ -32,6 +33,21 @@
 #include "luaclass_entitynodegraph.h"
 #include "luaclass_entity.h"
 #include "stringrenderingaspectimpl.h"
+#include "quadrenderingaspectimpl.h"
+#include "rawtransformaspectimpl.h"
+#include "hub.h"
+
+//fwd decl
+namespace DrawSpace
+{
+namespace Interface
+{
+namespace Module
+{
+class Root;
+}
+}
+}
 
 class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public DrawSpace::Utils::BaseSingleton<MainService>
 {

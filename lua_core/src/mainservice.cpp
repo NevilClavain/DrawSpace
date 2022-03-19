@@ -23,8 +23,15 @@
 /* -*-LIC_END-*- */
 
 #include "mainservice.h"
+
+#include "module_root.h"
 #include "component.h"
 #include "luacontext.h"
+#include "serviceaspect.h"
+#include "transformaspect.h"
+#include "logconf.h"
+#include "callback.h"
+#include "matrix.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;

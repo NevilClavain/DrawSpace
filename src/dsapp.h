@@ -25,11 +25,12 @@
 #ifndef _DSAPP_H_
 #define _DSAPP_H_
 
-#include "drawspace.h"
+#include "drawspace_commons.h"
+#include "jsonparser.h"
+#include "renderer.h"
 
 namespace DrawSpace
 {
-
 class App
 {
 protected:

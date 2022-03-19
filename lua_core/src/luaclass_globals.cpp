@@ -31,6 +31,7 @@
 #include "memalloc.h"
 #include "shader.h"
 #include "texture.h"
+#include "maths.h"
 
 #include "luaext_load.h"
 

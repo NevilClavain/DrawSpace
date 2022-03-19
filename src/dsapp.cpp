@@ -24,6 +24,8 @@
 
 #include "dsapp.h"
 #include "tracedefs.h"
+#include "plugin.h"
+#include "module_root.h"
 
 // sur laptop, forcer l'utilisation du GPU haute performance, au lieu des chipset graphiques integr�s
 extern "C" {

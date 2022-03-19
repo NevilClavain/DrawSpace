@@ -24,6 +24,11 @@
 
 #include "dsappclient.h"
 
+#include "serviceaspect.h"
+#include "serviceaspectimpl.h"
+#include "module_root.h"
+#include "plugin.h"
+
 dsAppClient* dsAppClient::m_instance = NULL;
 
 using namespace DrawSpace::Interface::Module;
