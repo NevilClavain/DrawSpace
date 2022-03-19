@@ -149,15 +149,6 @@ source_group(interface FILES
 ${CMAKE_SOURCE_DIR}/src/renderer.h
 )
 
-source_group(procedural FILES
-${CMAKE_SOURCE_DIR}/src/procedural_blocs.cpp
-${CMAKE_SOURCE_DIR}/src/procedural_blocs.h
-${CMAKE_SOURCE_DIR}/src/procedural_parser.cpp
-${CMAKE_SOURCE_DIR}/src/procedural_parser.h
-${CMAKE_SOURCE_DIR}/src/procedural_seeds.cpp
-${CMAKE_SOURCE_DIR}/src/procedural_seeds.h
-)
-
 source_group(rendergraph FILES
 ${CMAKE_SOURCE_DIR}/src/renderpassnode.cpp
 ${CMAKE_SOURCE_DIR}/src/renderpassnode.h
