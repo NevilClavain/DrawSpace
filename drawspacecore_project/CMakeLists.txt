@@ -206,7 +206,6 @@ ${CMAKE_SOURCE_DIR}/src/loadanimationstask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadanimationstask.h
 ${CMAKE_SOURCE_DIR}/src/buildemeshetask.cpp
 ${CMAKE_SOURCE_DIR}/src/buildemeshetask.h
-${CMAKE_SOURCE_DIR}/src/system.h
 ${CMAKE_SOURCE_DIR}/src/systems.h
 )
 
