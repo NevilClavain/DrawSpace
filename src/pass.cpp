@@ -49,7 +49,7 @@ Pass::~Pass( void )
 
 
 
-RenderingQueue* Pass::GetRenderingQueue( void )
+RenderingQueue* Pass::GetRenderingQueue( void ) const
 {
     if( !m_initialized )
     {
@@ -94,7 +94,7 @@ void Pass::SetSpecificName( const dsstring& p_name )
     m_name = p_name;
 }
 
-void Pass::GetSpecificName( dsstring& p_name )
+void Pass::GetSpecificName( dsstring& p_name ) const
 {
     p_name = m_name;
 }
@@ -132,8 +132,6 @@ m_rendertarget( Texture::RENDERTARGET_GPU )
 {
 
 }
-
-
 
 IntermediatePass::IntermediatePass( const dsstring& p_name ) :
 m_targetdims_fromrenderer( true ),

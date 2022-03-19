@@ -29,52 +29,43 @@
 #include "renderingqueue.h"
 #include "viewportquad.h"
 
-
 namespace DrawSpace
 {
-
 class Pass
 {
 public:
-    typedef enum
+    enum TextureSource
     {
         TEXTURE_NAME,
         PASS_NAME,
+    };
 
-    } TextureSource;
-
-    typedef struct
+    struct
     {
         TextureSource   source;
         dsstring        name;
-
     } TextureSourceName;
-
 
 protected:
 
-    Core::RenderingQueue*   m_renderingqueue;
-    ViewportQuad*           m_viewportquad;
-
+    Core::RenderingQueue*   m_renderingqueue{ nullptr };
+    ViewportQuad*           m_viewportquad{ nullptr };
     dsstring                m_name;
-
-    bool                    m_initialized;
-
+    bool                    m_initialized{ false };
 
     // pour empecher l'instanciation
     Pass( void );    
 public:
     virtual ~Pass( void );
 
-    virtual Core::RenderingQueue* GetRenderingQueue( void );
+    virtual Core::RenderingQueue*   GetRenderingQueue( void ) const;
+    virtual ViewportQuad*           GetViewportQuad(void) const;
+    virtual void                    GetSpecificName(dsstring& p_name) const;
 
     virtual void CreateViewportQuad( dsreal p_z_offset = 0.0 );
     virtual void CreateViewportQuad( dsreal p_viewport_width, dsreal p_viewport_height, dsreal p_z_offset = 0.0 );
 
-    virtual ViewportQuad* GetViewportQuad( void ) const;
-
-    virtual void SetSpecificName( const dsstring& p_name );
-    virtual void GetSpecificName( dsstring& p_name );
+    virtual void SetSpecificName( const dsstring& p_name );    
 };
 
 class FinalPass : public Pass
@@ -90,7 +81,7 @@ public:
 class IntermediatePass : public Pass
 {
 protected:
-    Core::Texture*                  m_targettexture;
+    Core::Texture*                  m_targettexture{ nullptr };
 
     bool                            m_targetdims_fromrenderer;
     long                            m_targetdims_width;
