@@ -261,7 +261,6 @@ public:
     bool SetMeshe( void* p_data );
     bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data );
     bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data );
-    bool UpdateMesheVerticesFromImpostors( const DrawSpace::ImpostorsDisplayList& p_list, void* p_data );
 
     bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
     void DestroyTexture( void* p_data );

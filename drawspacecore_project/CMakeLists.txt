@@ -113,6 +113,8 @@ ${CMAKE_SOURCE_DIR}/src/triangle.h
 ${CMAKE_SOURCE_DIR}/src/vertex.h
 ${CMAKE_SOURCE_DIR}/src/passslot.h
 ${CMAKE_SOURCE_DIR}/src/passslot.cpp
+${CMAKE_SOURCE_DIR}/src/updatequeuetask.h
+${CMAKE_SOURCE_DIR}/src/updatequeuetask.cpp
 )
 
 
@@ -204,6 +206,8 @@ ${CMAKE_SOURCE_DIR}/src/loadanimationstask.cpp
 ${CMAKE_SOURCE_DIR}/src/loadanimationstask.h
 ${CMAKE_SOURCE_DIR}/src/buildemeshetask.cpp
 ${CMAKE_SOURCE_DIR}/src/buildemeshetask.h
+${CMAKE_SOURCE_DIR}/src/system.h
+${CMAKE_SOURCE_DIR}/src/systems.h
 )
 
 source_group(threading FILES

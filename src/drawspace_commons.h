@@ -41,7 +41,8 @@
 #include <iterator>
 #include <mutex>
 
-#include "flags.h"
+#pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
+#define _DRAWSPACE_ENABLE_TRACES_
 
 #define dsstring    std::string
 #define dswstring   std::wstring
