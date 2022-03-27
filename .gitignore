@@ -89,21 +89,9 @@ ALL_BUILD.vcxproj*
 /rt_project/CMakeFiles/
 /rt_project/*.sln
 /rt_project/*.vcxproj*
-/vm_project/CMakeFiles/
-/vm_project/*.sln
-/vm_project/*.vcxproj*
 /modules/gameroom_project/CMakeFiles/
 /modules/gameroom_project/*.sln
 /modules/gameroom_project/*.vcxproj*
-/modules/skyboxmod_project/CMakeFiles/
-/modules/skyboxmod_project/*.sln
-/modules/skyboxmod_project/*.vcxproj*
-/modules/mvtmod_project/CMakeFiles/
-/modules/mvtmod_project/*.sln
-/modules/mvtmod_project/*.vcxproj*
-/modules/planetsmod_project/CMakeFiles/
-/modules/planetsmod_project/*.sln
-/modules/planetsmod_project/*.vcxproj*
 /lua_extensions/impostors_luaext/CMakeFiles/
 /lua_extensions/impostors_luaext/*.sln
 /lua_extensions/impostors_luaext/*.vcxproj*
@@ -155,6 +143,9 @@ ALL_BUILD.vcxproj*
 /tools/max/CMakeFiles/
 /tools/max/*.sln
 /tools/max/*.vcxproj*
+/tools/dgent/*.sln
+/tools/dgent/*.vcxproj*
+/tools/dgent/CMakeFiles/
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

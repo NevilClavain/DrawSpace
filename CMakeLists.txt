@@ -85,6 +85,7 @@ add_subdirectory(samples/lua/dummyspace)
 
 #tools
 add_subdirectory(tools/max)
+add_subdirectory(tools/dgent)
 
 # shaders
 add_subdirectory(hlsl_4_0_project)
