@@ -144,12 +144,7 @@ TRANSFORMATION_PROJ_MATRIX = 2
 
 gui=Gui()
 gui:init()
---gui:set_resourcespath("./xfskin2")
---gui:set_resourcespath("./testskin")
 
-gui:set_resourcespath("./guiskins")
-gui:load_scheme("xfskin.scheme")
-gui:load_scheme("AlfiskoSkin.scheme")
 
 
 
