@@ -23,6 +23,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(ds_engine)
 
+set(CMAKE_CXX_STANDARD 17)
+
 # disable ZERO_CHECK project generation
 set(CMAKE_SUPPRESS_REGENERATION true)
 
