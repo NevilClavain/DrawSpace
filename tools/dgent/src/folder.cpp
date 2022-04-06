@@ -22,31 +22,27 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
-
 #include "folder.h"
 
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
+Folder::Folder(const dsstring& p_path) :
+m_path(p_path)
+{
+}
 
-int main( void )
-{    
-    const Folder luaext_template_folder("D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext");
+Folder Folder::CloneTo(const dsstring& p_path) const
+{
+	const auto copy_options{ std::filesystem::copy_options::update_existing | std::filesystem::copy_options::recursive };
+	std::filesystem::copy(m_path, p_path, copy_options);
+	Folder folder(p_path);
+	return folder;
+}
 
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo("D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext") };
+void Folder::Explore(void)
+{
+	for (const auto& dir_entry : std::filesystem::recursive_directory_iterator{ m_path })
+	{
+		std::filesystem::path mypath{ dir_entry };
 
-    const SubstitutionTable substitution_table =
-    {
-        { "aaa", "111"},
-        { "bbb", "222"}
-    };      
-
-
-    
-    const FilenamesSubstitution filenames_subst(substitution_table);
-    const FilecontentSubstitution content_subst(substitution_table);
-    luaext_dest_folder >> filenames_subst >> content_subst;
-    
-
-    return 0;
+		_asm nop
+	}
 }

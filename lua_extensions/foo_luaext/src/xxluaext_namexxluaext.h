@@ -22,31 +22,20 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#pragma once
 
-#include "folder.h"
+#include "luaext.h"
 
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
+class ??class_name??LuaExtension : public LuaExtension
+{
+public:
+	??class_name??LuaExtension(void);
 
-int main( void )
-{    
-    const Folder luaext_template_folder("D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext");
+	void Register(lua_State* p_L);
+	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
+	DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const;
 
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo("D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext") };
-
-    const SubstitutionTable substitution_table =
-    {
-        { "aaa", "111"},
-        { "bbb", "222"}
-    };      
+	__LUAEXT_DESCRIPTION__("??luaext_description??")
+};
 
 
-    
-    const FilenamesSubstitution filenames_subst(substitution_table);
-    const FilecontentSubstitution content_subst(substitution_table);
-    luaext_dest_folder >> filenames_subst >> content_subst;
-    
-
-    return 0;
-}

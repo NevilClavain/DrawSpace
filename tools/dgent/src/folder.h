@@ -22,31 +22,20 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#pragma once
+#include "drawspace_commons.h"
+#include <filesystem>
 
-#include "folder.h"
+class Folder
+{
+private:
+	Folder(void) {};
+	std::filesystem::path m_path;
+public:
+	Folder(const dsstring& p_path);
+	Folder CloneTo(const dsstring& p_path) const;
 
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
-
-int main( void )
-{    
-    const Folder luaext_template_folder("D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext");
-
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo("D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext") };
-
-    const SubstitutionTable substitution_table =
-    {
-        { "aaa", "111"},
-        { "bbb", "222"}
-    };      
+	void Explore(void);
+};
 
 
-    
-    const FilenamesSubstitution filenames_subst(substitution_table);
-    const FilecontentSubstitution content_subst(substitution_table);
-    luaext_dest_folder >> filenames_subst >> content_subst;
-    
-
-    return 0;
-}
