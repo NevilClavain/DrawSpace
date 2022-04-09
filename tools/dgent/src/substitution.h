@@ -40,16 +40,17 @@ template<class T>
 class SubstitutionContainer : public ISubstitutionContainer
 {
 private:
-	T m_substitution_method;
+	SubstitutionTable m_substitution_table;
 public:
-	SubstitutionContainer(const T& p_method):
-	m_substitution_method(p_method)
+	SubstitutionContainer(const SubstitutionTable& p_table):
+	m_substitution_table(p_table)
 	{
 	}
 
 	void Run(void) const
 	{
-		m_substitution_method.Process();
+		const T substitution_method(m_substitution_table);
+		substitution_method.Process();
 	}
 	friend Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj);
 };

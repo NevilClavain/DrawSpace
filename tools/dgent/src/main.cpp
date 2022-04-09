@@ -42,10 +42,8 @@ int main( void )
     };      
 
     
-
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(FilenamesSubstitution(substitution_table))
-                        >> SubstitutionContainer<FilecontentSubstitution>(FilecontentSubstitution(substitution_table));
+    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(substitution_table)
+                        >> SubstitutionContainer<FilecontentSubstitution>(substitution_table);
     
-
     return 0;
 }
