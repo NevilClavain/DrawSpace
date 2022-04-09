@@ -41,11 +41,14 @@ int main( void )
         { "bbb", "222"}
     };      
 
-
     
     const FilenamesSubstitution filenames_subst(substitution_table);
     const FilecontentSubstitution content_subst(substitution_table);
-    luaext_dest_folder >> filenames_subst >> content_subst;
+
+
+
+    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(filenames_subst) 
+                        >> SubstitutionContainer<FilecontentSubstitution>(content_subst);
     
 
     return 0;

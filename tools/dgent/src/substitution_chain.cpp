@@ -24,7 +24,7 @@
 
 #include "substitution.h"
 
-Folder& operator>>(Folder& p_in, const Substitution& p_obj)
+Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj)
 {
 	p_obj.Process();
 	return p_in;

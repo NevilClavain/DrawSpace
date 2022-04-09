@@ -27,18 +27,29 @@
 
 //fwd decl
 class Folder;
+
 using SubstitutionTable = std::map<dsstring, dsstring>;
-class Substitution
+
+class ISubstitutionContainer
 {
-private:
-	SubstitutionTable m_substitution_table;
-
 public:
-	Substitution(const SubstitutionTable& p_substitution_table);
-
 	virtual void Process(void) const = 0;
-
-	friend Folder& operator>>(Folder& p_in, const Substitution& p_obj);
 };
 
+template<class T>
+class SubstitutionContainer : public ISubstitutionContainer
+{
+private:
+	T m_substitution_method;
+public:
+	SubstitutionContainer(const T& p_method):
+	m_substitution_method(p_method)
+	{
+	}
 
+	void Process(void) const
+	{
+		m_substitution_method.Process();
+	}
+	friend Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj);
+};

@@ -25,8 +25,10 @@
 #pragma once
 #include "substitution.h"
 
-class FilecontentSubstitution : public Substitution
+class FilecontentSubstitution
 {
+private:
+	SubstitutionTable m_substitution_table;
 public:
 	FilecontentSubstitution(const SubstitutionTable& p_substitution_table);
 	void Process(void) const;

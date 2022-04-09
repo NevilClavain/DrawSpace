@@ -24,7 +24,8 @@
 
 #include "substitution_filenames.h"
 
-FilenamesSubstitution::FilenamesSubstitution(const SubstitutionTable& p_substitution_table) : Substitution(p_substitution_table)
+FilenamesSubstitution::FilenamesSubstitution(const SubstitutionTable& p_substitution_table):
+m_substitution_table(p_substitution_table)
 {
 }
 

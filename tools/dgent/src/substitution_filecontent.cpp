@@ -24,7 +24,8 @@
 
 #include "substitution_filecontent.h"
 
-FilecontentSubstitution::FilecontentSubstitution(const SubstitutionTable& p_substitution_table) : Substitution(p_substitution_table)
+FilecontentSubstitution::FilecontentSubstitution(const SubstitutionTable& p_substitution_table):
+m_substitution_table(p_substitution_table)
 {
 }
 
