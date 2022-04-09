@@ -42,13 +42,9 @@ int main( void )
     };      
 
     
-    const FilenamesSubstitution filenames_subst(substitution_table);
-    const FilecontentSubstitution content_subst(substitution_table);
 
-
-
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(filenames_subst) 
-                        >> SubstitutionContainer<FilecontentSubstitution>(content_subst);
+    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(FilenamesSubstitution(substitution_table))
+                        >> SubstitutionContainer<FilecontentSubstitution>(FilecontentSubstitution(substitution_table));
     
 
     return 0;

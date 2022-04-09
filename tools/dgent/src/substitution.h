@@ -33,7 +33,7 @@ using SubstitutionTable = std::map<dsstring, dsstring>;
 class ISubstitutionContainer
 {
 public:
-	virtual void Process(void) const = 0;
+	virtual void Run(void) const = 0;
 };
 
 template<class T>
@@ -47,7 +47,7 @@ public:
 	{
 	}
 
-	void Process(void) const
+	void Run(void) const
 	{
 		m_substitution_method.Process();
 	}

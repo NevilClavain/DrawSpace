@@ -31,4 +31,5 @@ m_substitution_table(p_substitution_table)
 
 void FilecontentSubstitution::Process(void) const
 {
+	// IMPLEMENT HERE
 }
