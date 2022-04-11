@@ -33,7 +33,7 @@ using SubstitutionTable = std::map<dsstring, dsstring>;
 class ISubstitutionContainer
 {
 public:
-	virtual void Run(void) const = 0;
+	virtual void Run(const Folder& p_folder) const = 0;
 };
 
 template<class T>
@@ -47,10 +47,10 @@ public:
 	{
 	}
 
-	void Run(void) const
+	void Run(const Folder& p_folder) const
 	{
 		const T substitution_method(m_substitution_table);
-		substitution_method.Process();
+		substitution_method.Process(p_folder);
 	}
 	friend Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj);
 };

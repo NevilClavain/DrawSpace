@@ -23,13 +23,19 @@
 /* -*-LIC_END-*- */
 
 #include "substitution_filenames.h"
+#include "folder.h"
 
 FilenamesSubstitution::FilenamesSubstitution(const SubstitutionTable& p_substitution_table):
 m_substitution_table(p_substitution_table)
 {
 }
 
-void FilenamesSubstitution::Process(void) const
+void FilenamesSubstitution::Process(const Folder& p_folder) const
 {
-	// IMPLEMENT HERE
+	p_folder.Accept<FilenamesSubstitution>(*this);
+}
+
+void FilenamesSubstitution::ProcessPath(const std::filesystem::path& p_path) const
+{
+
 }

@@ -36,13 +36,3 @@ Folder Folder::CloneTo(const dsstring& p_path) const
 	Folder folder(p_path);
 	return folder;
 }
-
-void Folder::Explore(void)
-{
-	for (const auto& dir_entry : std::filesystem::recursive_directory_iterator{ m_path })
-	{
-		std::filesystem::path mypath{ dir_entry };
-
-		_asm nop
-	}
-}

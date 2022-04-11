@@ -35,7 +35,17 @@ public:
 	Folder(const dsstring& p_path);
 	Folder CloneTo(const dsstring& p_path) const;
 
-	void Explore(void);
+	//void Explore(void);
+	
+	template<class T>
+	void Accept(const T& p_visitor) const
+	{
+		for (const auto& dir_entry : std::filesystem::recursive_directory_iterator{ m_path })
+		{
+			std::filesystem::path current_path{ dir_entry };
+			p_visitor.ProcessPath(current_path);
+		}
+	}
 };
 
 

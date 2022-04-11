@@ -24,6 +24,7 @@
 
 #pragma once
 #include "substitution.h"
+#include <filesystem>
 
 class FilenamesSubstitution
 {
@@ -31,7 +32,9 @@ private:
 	SubstitutionTable m_substitution_table;
 public:
 	FilenamesSubstitution(const SubstitutionTable& p_substitution_table);
-	void Process(void) const;
+	void Process(const Folder& p_folder) const;
+
+	void ProcessPath(const std::filesystem::path& p_path) const;
 };
 
 

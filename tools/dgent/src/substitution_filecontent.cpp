@@ -23,13 +23,20 @@
 /* -*-LIC_END-*- */
 
 #include "substitution_filecontent.h"
+#include "folder.h"
+
 
 FilecontentSubstitution::FilecontentSubstitution(const SubstitutionTable& p_substitution_table):
 m_substitution_table(p_substitution_table)
 {
 }
 
-void FilecontentSubstitution::Process(void) const
+void FilecontentSubstitution::Process(const Folder& p_folder) const
 {
-	// IMPLEMENT HERE
+	p_folder.Accept<FilecontentSubstitution>(*this);
+}
+
+void FilecontentSubstitution::ProcessPath(const std::filesystem::path& p_path) const
+{
+
 }
