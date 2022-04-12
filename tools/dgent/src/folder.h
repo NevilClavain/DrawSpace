@@ -34,8 +34,6 @@ private:
 public:
 	Folder(const dsstring& p_path);
 	Folder CloneTo(const dsstring& p_path) const;
-
-	//void Explore(void);
 	
 	template<class T>
 	void Accept(const T& p_visitor) const

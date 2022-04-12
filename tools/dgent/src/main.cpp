@@ -37,8 +37,7 @@ int main( void )
 
     const SubstitutionTable substitution_table =
     {
-        { "aaa", "111"},
-        { "bbb", "222"}
+        { "luaext_name", "foo"}        
     };      
 
     
