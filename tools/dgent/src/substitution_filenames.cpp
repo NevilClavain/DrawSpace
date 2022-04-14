@@ -48,9 +48,8 @@ void FilenamesSubstitution::ProcessPath(const std::filesystem::path& p_path) con
 		if (pos != std::string::npos)
 		{
 			const size_t pos_end{ pos + strlen(pattern_to_replace.c_str()) };
-			path.replace(path.begin() + pos, path.begin() + pos_end, e.second);
-
-			std::filesystem::rename(p_path, std::filesystem::path(path));
+			path.replace(path.begin() + pos, path.begin() + pos_end, e.second);			
 		}
 	}
+	std::filesystem::rename(p_path, std::filesystem::path(path));
 }

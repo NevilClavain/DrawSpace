@@ -22,30 +22,26 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#include "??luaext_name??luaext.h"
+#include "luaclass_??luaext_name????extension_type??.h"
+#include "plugin.h"
+#include "memalloc.h"
 
-#include "folder.h"
+??class_name??LuaExtension::??class_name??LuaExtension(void)
+{
+}
 
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
+void ??class_name??LuaExtension::Register(lua_State* p_L)
+{
+	Luna<LuaClass_??class_name????extension_type??>::Register(p_L);
+}
 
-int main( void )
-{    
-    const Folder luaext_template_folder("D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext");
+void ??class_name??LuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
+{
+	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
 
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo("D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext") };
-
-    const SubstitutionTable substitution_table =
-    {
-        { "luaext_name", "foo"},
-        { "class_name", "Foo"},
-        { "luaext_description", "Foo lua extension"},
-        { "extension_type", "Rendering"},
-    };      
-
-    
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(substitution_table)
-                        >> SubstitutionContainer<FilecontentSubstitution>(substitution_table);
-    
-    return 0;
+DrawSpace::Utils::MemAlloc* ??class_name??LuaExtension::GetMemAllocInstance(void) const
+{
+	return DrawSpace::Utils::MemAlloc::GetInstance();
 }

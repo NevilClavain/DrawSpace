@@ -22,30 +22,13 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#include <luaext.h>
+#include "??luaext_name??luaext.h"
 
-#include "folder.h"
-
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
-
-int main( void )
-{    
-    const Folder luaext_template_folder("D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext");
-
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo("D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext") };
-
-    const SubstitutionTable substitution_table =
-    {
-        { "luaext_name", "foo"},
-        { "class_name", "Foo"},
-        { "luaext_description", "Foo lua extension"},
-        { "extension_type", "Rendering"},
-    };      
-
-    
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(substitution_table)
-                        >> SubstitutionContainer<FilecontentSubstitution>(substitution_table);
-    
-    return 0;
+extern "C"
+{
+__declspec(dllexport) LuaExtension* PIFactory( void )
+{
+    return new ??class_name??LuaExtension();
+}
 }
