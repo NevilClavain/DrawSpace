@@ -37,7 +37,9 @@ int main( void )
 
     const SubstitutionTable substitution_table =
     {
-        { "luaext_name", "foo"}        
+        { "luaext_name", "foo"},
+        { "class_name", "Foo"},
+        { "luaext_description", "Foo lua extension"}
     };      
 
     

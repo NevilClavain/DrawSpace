@@ -38,18 +38,17 @@ void FilenamesSubstitution::Process(const Folder& p_folder) const
 void FilenamesSubstitution::ProcessPath(const std::filesystem::path& p_path) const
 {
 	std::string path{ p_path.u8string() };
-	std::string name{ p_path.filename().u8string() };
-	for (auto& e : m_substitution_table)
+	for (const auto& e : m_substitution_table)
 	{
 		// build pattern to search and replace
-		std::string key{ e.first };		
-		std::string pattern_to_replace = std::string("xx") + key + std::string("xx");
+		const std::string key{ e.first };		
+		const std::string pattern_to_replace = std::string("xx") + key + std::string("xx");
 
-		size_t pos{ path.find(pattern_to_replace) };
+		const size_t pos{ path.find(pattern_to_replace) };
 		if (pos != std::string::npos)
 		{
-			size_t pos2{ pos + strlen(pattern_to_replace.c_str()) };
-			path.replace(path.begin() + pos, path.begin() + pos2, e.second);
+			const size_t pos_end{ pos + strlen(pattern_to_replace.c_str()) };
+			path.replace(path.begin() + pos, path.begin() + pos_end, e.second);
 
 			std::filesystem::rename(p_path, std::filesystem::path(path));
 		}

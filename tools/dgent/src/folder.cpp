@@ -32,6 +32,7 @@ m_path(p_path)
 Folder Folder::CloneTo(const dsstring& p_path) const
 {
 	const auto copy_options{ std::filesystem::copy_options::update_existing | std::filesystem::copy_options::recursive };
+	std::filesystem::remove_all(p_path);
 	std::filesystem::copy(m_path, p_path, copy_options);
 	Folder folder(p_path);
 	return folder;

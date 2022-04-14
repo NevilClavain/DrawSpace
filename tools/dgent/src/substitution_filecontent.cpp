@@ -22,6 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
+#include <fstream>
+#include <sstream>
+
 #include "substitution_filecontent.h"
 #include "folder.h"
 
@@ -38,5 +41,41 @@ void FilecontentSubstitution::Process(const Folder& p_folder) const
 
 void FilecontentSubstitution::ProcessPath(const std::filesystem::path& p_path) const
 {
+	if (std::filesystem::file_type::regular == std::filesystem::status(p_path).type())
+	{
+		const std::string path{ p_path.u8string() };
+		std::ifstream f(path);
+		if (f)
+		{
+			std::ostringstream ss;
+			ss << f.rdbuf();
+			auto file_content{ ss.str() };
+			f.close();
 
+			for (const auto& e : m_substitution_table)
+			{
+				// build pattern to search and replace
+				const std::string key{ e.first };
+				const std::string pattern_to_replace = std::string("??") + key + std::string("??");
+
+				const std::string new_string{ e.second };
+
+				//search and replace
+
+				size_t pos = file_content.find(pattern_to_replace);
+				while (pos != std::string::npos)
+				{
+					file_content.replace(pos, pattern_to_replace.size(), new_string);
+					pos = file_content.find(pattern_to_replace, pos + new_string.size());
+				}
+			}
+
+			std::ofstream f_out(path);
+			if (f_out)
+			{
+				f_out << file_content;
+				f_out.close();
+			}
+		}
+	}
 }
