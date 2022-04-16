@@ -1,0 +1,8 @@
+{ 
+  "template" : "D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext",
+  "destination" : "D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext",
+  "luaext_name" : "foo",
+  "class_name": "Foo",
+  "luaext_description": "Foo lua extension",
+  "extension_type": "Rendering"
+}
