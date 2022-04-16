@@ -52,7 +52,7 @@ int JSONParser::Parse( const dsstring& p_str )
 	return r;
 }
 
-int JSONParser::GetTokenType( int p_index )
+int JSONParser::GetTokenType( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
@@ -62,7 +62,7 @@ int JSONParser::GetTokenType( int p_index )
 	return m_tokens[p_index].type;
 }
 
-void JSONParser::GetTokenString( int p_index, dsstring& p_out_tokentext )
+void JSONParser::GetTokenString( int p_index, dsstring& p_out_tokentext ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
@@ -75,7 +75,7 @@ void JSONParser::GetTokenString( int p_index, dsstring& p_out_tokentext )
 	p_out_tokentext = m_text.substr( start, end - start );
 }
 
-int JSONParser::GetTokenSize( int p_index )
+int JSONParser::GetTokenSize( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{

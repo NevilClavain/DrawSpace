@@ -557,7 +557,7 @@ void App::Config::ParseFromFile( const dsstring& p_filepath )
             {
                 if( JSMN_STRING != type1 )
                 {
-                    _DSEXCEPTION( "string type expected for renderplugin field" );
+                    _DSEXCEPTION( "App::Config::ParseFromFile : string type expected for renderplugin field" );
                 }
 
                 m_renderplugin = token_text1;
@@ -566,7 +566,7 @@ void App::Config::ParseFromFile( const dsstring& p_filepath )
             {
                 if( JSMN_PRIMITIVE != type1 )
                 {
-                    _DSEXCEPTION( "string type expected for fullscreen field" );
+                    _DSEXCEPTION( "App::Config::ParseFromFile : string type expected for fullscreen field" );
                 }
 
                 if( "true" == token_text1 )
@@ -582,7 +582,7 @@ void App::Config::ParseFromFile( const dsstring& p_filepath )
             {
                 if( JSMN_PRIMITIVE != type1 )
                 {
-                    _DSEXCEPTION( "string type expected for width field" );
+                    _DSEXCEPTION( "App::Config::ParseFromFile : string type expected for width field" );
                 }
 
                 m_width = atoi( token_text1.c_str() );
@@ -592,7 +592,7 @@ void App::Config::ParseFromFile( const dsstring& p_filepath )
             {
                 if( JSMN_PRIMITIVE != type1 )
                 {
-                    _DSEXCEPTION( "string type expected for height field" );
+                    _DSEXCEPTION( "App::Config::ParseFromFile : string type expected for height field" );
                 }
             
                 m_height = atoi( token_text1.c_str() );
@@ -601,7 +601,7 @@ void App::Config::ParseFromFile( const dsstring& p_filepath )
     }
     else
     {
-        _DSEXCEPTION( "JSON parse : unexpected type for token 0" );
+        _DSEXCEPTION( "App::Config::ParseFromFile : unexpected type for token 0" );
     }
 }
 

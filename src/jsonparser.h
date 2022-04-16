@@ -58,8 +58,7 @@ public:
     using NumericContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, dsreal>;
     
 
-
-protected:
+private:
 	static const int max_tokens = 1024;
 
 	jsmn_parser     m_parser;
@@ -81,9 +80,9 @@ public:
 
 	int		    Parse( const dsstring& p_str );
     void        ParseFromFile( const dsstring& p_filepath );
-	int		    GetTokenType( int p_index );
-	int		    GetTokenSize( int p_index );
-	void	    GetTokenString( int p_index, dsstring& p_out_tokentext );
+	int		    GetTokenType( int p_index ) const;
+	int		    GetTokenSize( int p_index ) const;
+	void	    GetTokenString( int p_index, dsstring& p_out_tokentext ) const;
 
     void        AnalyzeTokens( UserData* p_user_data, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
 

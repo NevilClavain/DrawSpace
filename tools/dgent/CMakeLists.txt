@@ -24,6 +24,10 @@ cmake_minimum_required(VERSION 3.0)
 project(dgent)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${jsonjsmn_include_dir})
+
+link_directories(${jsonjsmn_lib_dir})
+link_directories(${physfs_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -33,7 +37,7 @@ file(
 )
 
 add_executable(dgent ${source_files})
-target_link_libraries(dgent drawspace_core)
+target_link_libraries(dgent jsmn physfs drawspace_core)
 
 install(TARGETS dgent CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS dgent CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

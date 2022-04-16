@@ -22,25 +22,23 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#pragma once
+#include "jsonparser.h"
+#include "substitution.h"
 
-
-#include "config.h"
-#include "folder.h"
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
-
-
-int main( void )
+struct Config : public DrawSpace::Utils::JSONParser
 {
-    Config config;
-    config.ParseFromFile("luaext.json");
+private:
+	std::string							m_template_path;
+	std::string							m_destination_path;
+	SubstitutionTable					m_substitution_table;
 
-    const Folder luaext_template_folder(config.GetTemplatePath());
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo(config.GetDestinationPath()) };
-    
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(config.GetSubstitutionTable())
-                        >> SubstitutionContainer<FilecontentSubstitution>(config.GetSubstitutionTable());
+	std::string extract_token(int p_tkindex) const;
 
-    return 0;
-}
+public:
+	void ParseFromFile(const dsstring& p_filepath);
+
+	std::string			GetTemplatePath(void) const;
+	std::string			GetDestinationPath(void) const;
+	SubstitutionTable	GetSubstitutionTable(void) const;
+};

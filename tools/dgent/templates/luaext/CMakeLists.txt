@@ -47,6 +47,6 @@ file(
 )
 
 add_library(??luaext_name??_luaext SHARED ${source_files})
-target_link_libraries(strings_luaext drawspace_core lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
+target_link_libraries(??luaext_name??_luaext drawspace_core lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
 install(TARGETS ??luaext_name??_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS ??luaext_name??_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
