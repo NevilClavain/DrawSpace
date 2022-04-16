@@ -56,7 +56,7 @@ int JSONParser::GetTokenType( int p_index )
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-		// todo : exception
+        _DSEXCEPTION("JSONParser::GetTokenType");
 	}
 
 	return m_tokens[p_index].type;
@@ -66,7 +66,7 @@ void JSONParser::GetTokenString( int p_index, dsstring& p_out_tokentext )
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-		// todo : exception
+        _DSEXCEPTION("JSONParser::GetTokenString");
 	}
 
 	int start = m_tokens[p_index].start;
@@ -79,7 +79,7 @@ int JSONParser::GetTokenSize( int p_index )
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-		// todo : exception
+        _DSEXCEPTION("JSONParser::GetTokenSize");
 	}
 
 	return m_tokens[p_index].size;
