@@ -22,27 +22,18 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#include "??luaext_name????extension_type??aspectimpl.h"
+#include "??extension_type??aspect.h"
+#include "plugin.h"
 
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Aspect;
 
-#include "config.h"
-#include "folder.h"
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
-
-
-int main( void )
+??class_name????extension_type??AspectImpl::??class_name????extension_type??AspectImpl( void )
 {
-    Config config;
-    config.ParseFromFile("luaext.json");
+}
 
-    // clone template files
-    const Folder luaext_template_folder(config.GetTemplatePath());
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo(config.GetDestinationPath()) };
-    
-    // and proceed to substitutions
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(config.GetSubstitutionTable())
-                        >> SubstitutionContainer<FilecontentSubstitution>(config.GetSubstitutionTable());
-
-    return 0;
+void ??class_name????extension_type??AspectImpl::Run( Entity* p_entity )
+{
 }

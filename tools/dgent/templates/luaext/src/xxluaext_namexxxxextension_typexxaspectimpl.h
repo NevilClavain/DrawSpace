@@ -22,27 +22,19 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#pragma once
 
+#include "??extension_type??aspectimpl.h"
 
-#include "config.h"
-#include "folder.h"
-#include "substitution_filenames.h"
-#include "substitution_filecontent.h"
-
-
-int main( void )
+class ??class_name????extension_type??AspectImpl : public DrawSpace::Interface::AspectImplementations::??extension_type??AspectImpl
 {
-    Config config;
-    config.ParseFromFile("luaext.json");
-
-    // clone template files
-    const Folder luaext_template_folder(config.GetTemplatePath());
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo(config.GetDestinationPath()) };
+private:
     
-    // and proceed to substitutions
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(config.GetSubstitutionTable())
-                        >> SubstitutionContainer<FilecontentSubstitution>(config.GetSubstitutionTable());
+public:
+    ??class_name????extension_type??AspectImpl( void );
 
-    return 0;
-}
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
+    void Release( void ) {};
+    void Run( DrawSpace::Core::Entity* p_entity );
+    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
+};
