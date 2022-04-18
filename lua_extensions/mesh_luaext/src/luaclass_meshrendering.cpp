@@ -66,7 +66,6 @@ const Luna<LuaClass_MeshRendering>::RegType LuaClass_MeshRendering::methods[] =
 };
 
 LuaClass_MeshRendering::LuaClass_MeshRendering( lua_State* p_L ) :
-m_meshe_render( NULL ),
 m_entity_rendering_aspect( NULL ),
 m_entity( NULL )
 {
@@ -97,8 +96,7 @@ int LuaClass_MeshRendering::LUA_attachtoentity( lua_State* p_L )
     m_entity_rendering_aspect = rendering_aspect;
     m_entity = &entity;
 
-    m_meshe_render = _DRAWSPACE_NEW_( MeshRenderingAspectImpl, MeshRenderingAspectImpl );
-    m_entity_rendering_aspect->AddImplementation( m_meshe_render, NULL );
+    m_entity_rendering_aspect->AddImplementation( &m_meshe_render, NULL );
 
     return 0;
 }
@@ -112,14 +110,9 @@ int LuaClass_MeshRendering::LUA_detachfromentity( lua_State* p_L )
 
     LUA_TRY
     {
-        m_entity_rendering_aspect->RemoveImplementation( m_meshe_render );
+        m_entity_rendering_aspect->RemoveImplementation( &m_meshe_render );
 
     } LUA_CATCH; 
-
-    if (m_meshe_render)
-    {
-        _DRAWSPACE_DELETE_(m_meshe_render);
-    }
 
     m_entity_rendering_aspect = NULL;
     m_entity = NULL;
@@ -536,11 +529,6 @@ int LuaClass_MeshRendering::LUA_release( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_registertorendering( lua_State* p_L )
 {
-    if( NULL == m_meshe_render )
-    {
-        LUA_ERROR( "MesheRendering::register_to_rendering : no meshe rendering aspect impl created" );
-    }
-
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -549,17 +537,12 @@ int LuaClass_MeshRendering::LUA_registertorendering( lua_State* p_L )
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
 
-    m_meshe_render->RegisterToRendering( lua_rg->GetRenderGraph() );
+    m_meshe_render.RegisterToRendering( lua_rg->GetRenderGraph() );
     return 0;
 }
 
 int LuaClass_MeshRendering::LUA_unregisterfromrendering( lua_State* p_L )
 {
-    if( NULL == m_meshe_render )
-    {
-        LUA_ERROR( "MesheRendering::unregister_from_rendering : no meshe rendering aspect impl created" );
-    }
-
 	int argc = lua_gettop( p_L );
 	if( argc < 1 )
 	{		
@@ -568,7 +551,7 @@ int LuaClass_MeshRendering::LUA_unregisterfromrendering( lua_State* p_L )
 
     LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
 
-    m_meshe_render->UnregisterFromRendering( lua_rg->GetRenderGraph() );
+    m_meshe_render.UnregisterFromRendering( lua_rg->GetRenderGraph() );
     return 0;
 }
 
