@@ -31,18 +31,21 @@
 #include "substitution_filecontent.h"
 
 
-int main( void )
-{
-    Config config;
-    config.ParseFromFile("luaext.json");
+int main( int argc, char* argv[] )
+{    
+    if (argc > 1)
+    {
+        std::string config_file = argv[1];
+        Config config;
+        config.ParseFromFile(config_file);
 
-    // clone template files
-    const Folder luaext_template_folder(config.GetTemplatePath());
-    Folder luaext_dest_folder{ luaext_template_folder.CloneTo(config.GetDestinationPath()) };
-    
-    // and proceed to substitutions
-    luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(config.GetSubstitutionTable())
-                        >> SubstitutionContainer<FilecontentSubstitution>(config.GetSubstitutionTable());
+        // clone template files
+        const Folder luaext_template_folder(config.GetTemplatePath());
+        Folder luaext_dest_folder{ luaext_template_folder.CloneTo(config.GetDestinationPath()) };
 
+        // and proceed to substitutions
+        luaext_dest_folder >> SubstitutionContainer<FilenamesSubstitution>(config.GetSubstitutionTable())
+            >> SubstitutionContainer<FilecontentSubstitution>(config.GetSubstitutionTable());
+    }
     return 0;
 }
