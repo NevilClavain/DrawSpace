@@ -27,6 +27,8 @@
 #include "drawspace_commons.h"
 #include "luna.h"
 
+#include "??luaext_name????extension_type??aspectimpl.h"
+
 // fwd decls
 namespace DrawSpace
 {
@@ -43,7 +45,7 @@ class LuaClass_??class_name????extension_type??
 {
 private:
 
-    ??class_name????extension_type??AspectImpl  m_??class_name????extension_type?? { nullptr };
+    ??class_name????extension_type??AspectImpl  m_??class_name????extension_type??;
     DrawSpace::Aspect::RenderingAspect*     	m_entity_??extension_type??_aspect { nullptr };
     DrawSpace::Core::Entity*                	m_entity { nullptr };
 
@@ -53,8 +55,6 @@ public:
     LuaClass_??class_name????extension_type??( lua_State* p_L );
 	~LuaClass_??class_name????extension_type??( void );
 
-    int LUA_attachtoentity(lua_State* p_L);
-    int LUA_detachfromentity(lua_State* p_L);
 
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);
