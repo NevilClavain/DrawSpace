@@ -65,9 +65,7 @@ const Luna<LuaClass_MeshRendering>::RegType LuaClass_MeshRendering::methods[] =
 	{ 0, 0 }
 };
 
-LuaClass_MeshRendering::LuaClass_MeshRendering( lua_State* p_L ) :
-m_entity_rendering_aspect( NULL ),
-m_entity( NULL )
+LuaClass_MeshRendering::LuaClass_MeshRendering( lua_State* p_L )
 {
 }
 

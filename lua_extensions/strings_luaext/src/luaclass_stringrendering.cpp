@@ -40,8 +40,7 @@ const Luna<LuaClass_StringsRendering>::RegType LuaClass_StringsRendering::method
 	{ 0, 0 }
 };
 
-LuaClass_StringsRendering::LuaClass_StringsRendering( lua_State* p_L ) :
-m_entity_rendering_aspect( NULL )
+LuaClass_StringsRendering::LuaClass_StringsRendering( lua_State* p_L )
 {
 }
 

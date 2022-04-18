@@ -34,7 +34,7 @@ class LuaClass_StringsRendering
 private:
     
     StringRenderingAspectImpl               m_text_render;
-    DrawSpace::Aspect::RenderingAspect*     m_entity_rendering_aspect;
+    DrawSpace::Aspect::RenderingAspect*     m_entity_rendering_aspect{ nullptr };
     dsstring                                m_id;
 
 public:

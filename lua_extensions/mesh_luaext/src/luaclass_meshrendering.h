@@ -34,8 +34,8 @@ private:
     DrawSpace::Core::Meshe                                          m_meshe;
 
     MeshRenderingAspectImpl                                         m_meshe_render;
-    DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect;
-    DrawSpace::Core::Entity*                                        m_entity;
+    DrawSpace::Aspect::RenderingAspect*                             m_entity_rendering_aspect { nullptr };
+    DrawSpace::Core::Entity*                                        m_entity { nullptr };
 
 	// table de traduction RenderContext name -> Passes Name
 	// permet de savoir a quelle passe est attribue un rendercontext
