@@ -22,26 +22,19 @@
 */
 /* -*-LIC_END-*- */
 
-#include "??luaext_name??luaext.h"
-#include "luaclass_??luaext_name??rendering.h"
-#include "plugin.h"
-#include "memalloc.h"
+#pragma once
 
-??class_name??LuaExtension::??class_name??LuaExtension(void)
-{
-}
+#include "renderingaspectimpl.h"
 
-void ??class_name??LuaExtension::Register(lua_State* p_L)
+class ??class_name??RenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
-	Luna<LuaClass_??class_name??Rendering>::Register(p_L);
-}
+private:
+    
+public:
+    ??class_name??RenderingAspectImpl( void );
 
-void ??class_name??LuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
-{
-	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
-}
-
-DrawSpace::Utils::MemAlloc* ??class_name??LuaExtension::GetMemAllocInstance(void) const
-{
-	return DrawSpace::Utils::MemAlloc::GetInstance();
-}
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
+    void Release( void ) {};
+    void Run( DrawSpace::Core::Entity* p_entity );
+    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
+};

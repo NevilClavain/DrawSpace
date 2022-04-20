@@ -23,40 +23,40 @@
 /* -*-LIC_END-*- */
 
 #include "luacontext.h"
-#include "luaclass_??luaext_name????extension_type??.h"
+#include "luaclass_??luaext_name??rendering.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 
-const char LuaClass_??class_name????extension_type??::className[] = "??class_name????extension_type??";
-const Luna<LuaClass_??class_name????extension_type??>::RegType LuaClass_??class_name????extension_type??::methods[] =
+const char LuaClass_??class_name??Rendering::className[] = "??class_name??Rendering";
+const Luna<LuaClass_??class_name??Rendering>::RegType LuaClass_??class_name??Rendering::methods[] =
 {
-    { "configure", &LuaClass_??class_name????extension_type??::LUA_configure },
-    { "release", &LuaClass_??class_name????extension_type??::LUA_release },
+    { "configure", &LuaClass_??class_name??Rendering::LUA_configure },
+    { "release", &LuaClass_??class_name??Rendering::LUA_release },
 	{ 0, 0 }
 };
 
-LuaClass_??class_name????extension_type??::LuaClass_??class_name????extension_type??( lua_State* p_L )
+LuaClass_??class_name??Rendering::LuaClass_??class_name??Rendering( lua_State* p_L )
 {
 }
 
-LuaClass_??class_name????extension_type??::~LuaClass_??class_name????extension_type??( void )
+LuaClass_??class_name??Rendering::~LuaClass_??class_name??Rendering( void )
 {
 }
 
 
-int LuaClass_??class_name????extension_type??::LUA_configure( lua_State* p_L )
+int LuaClass_??class_name??Rendering::LUA_configure( lua_State* p_L )
 {
     return 0;
 }
 
-int LuaClass_??class_name????extension_type??::LUA_release( lua_State* p_L )
+int LuaClass_??class_name??Rendering::LUA_release( lua_State* p_L )
 {
-    if( !m_entity_??extension_type??_aspect )
+    if( !m_entity_rendering_aspect )
     {
-        LUA_ERROR( "??class_name????extension_type??::update : no rendering aspect" );
+        LUA_ERROR( "??class_name??Rendering::update : no rendering aspect" );
     }
 		
     return 0;

@@ -24,17 +24,40 @@
 
 #pragma once
 
-#include "??extension_type??aspectimpl.h"
+#include "drawspace_commons.h"
+#include "luna.h"
 
-class ??class_name????extension_type??AspectImpl : public DrawSpace::Interface::AspectImplementations::??extension_type??AspectImpl
+#include "??luaext_name??renderingaspectimpl.h"
+
+// fwd decls
+namespace DrawSpace
+{
+namespace Core
+{
+class Entity;
+}
+};
+
+class ??class_name??RenderingAspectImpl;
+// fwd decls
+
+class LuaClass_??class_name??Rendering
 {
 private:
-    
-public:
-    ??class_name????extension_type??AspectImpl( void );
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
-    void Release( void ) {};
-    void Run( DrawSpace::Core::Entity* p_entity );
-    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
+    ??class_name??RenderingAspectImpl           m_??luaext_name??_rendering;
+    DrawSpace::Aspect::RenderingAspect*     	m_entity_rendering_aspect { nullptr };
+    DrawSpace::Core::Entity*                	m_entity { nullptr };
+
+public:
+    LuaClass_??class_name??Rendering( lua_State* p_L );
+	~LuaClass_??class_name??Rendering( void );
+
+
+    int LUA_configure(lua_State* p_L);
+    int LUA_release(lua_State* p_L);
+
+    static const char className[];
+    static const Luna<LuaClass_??class_name??Rendering>::RegType methods[];
+
 };
