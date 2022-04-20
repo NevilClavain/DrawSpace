@@ -1,5 +1,5 @@
 { 
-  "template" : "D:\\dev\\DrawSpace\\tools\\dgent\\templates\\luaext",
+  "template" : "D:\\dev\\DrawSpace\\tools\\dgent\\templates\\renderingluaext",
   "destination" : "D:\\dev\\DrawSpace\\lua_extensions\\foo_luaext",
   "luaext_name" : "foo",
   "class_name": "Foo",
