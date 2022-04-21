@@ -22,18 +22,26 @@
 */
 /* -*-LIC_END-*- */
 
-#include "??luaext_name??renderingaspectimpl.h"
-#include "renderingaspect.h"
+#include "??luaext_name??luaext.h"
+#include "luaclass_??luaext_name??rendering.h"
 #include "plugin.h"
+#include "memalloc.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
-
-??class_name??RenderingAspectImpl::??class_name??RenderingAspectImpl( void )
+??class_name??LuaExtension::??class_name??LuaExtension(void)
 {
 }
 
-void ??class_name??RenderingAspectImpl::Run( Entity* p_entity )
+void ??class_name??LuaExtension::Register(lua_State* p_L)
 {
+	Luna<LuaClass_??class_name??Rendering>::Register(p_L);
+}
+
+void ??class_name??LuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)
+{
+	DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface = p_renderer;
+}
+
+DrawSpace::Utils::MemAlloc* ??class_name??LuaExtension::GetMemAllocInstance(void) const
+{
+	return DrawSpace::Utils::MemAlloc::GetInstance();
 }

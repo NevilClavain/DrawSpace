@@ -22,18 +22,13 @@
 */
 /* -*-LIC_END-*- */
 
-#include "??luaext_name??renderingaspectimpl.h"
-#include "renderingaspect.h"
-#include "plugin.h"
+#include <luaext.h>
+#include "??luaext_name??luaext.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
-
-??class_name??RenderingAspectImpl::??class_name??RenderingAspectImpl( void )
+extern "C"
 {
+__declspec(dllexport) LuaExtension* PIFactory( void )
+{
+    return new ??class_name??LuaExtension();
 }
-
-void ??class_name??RenderingAspectImpl::Run( Entity* p_entity )
-{
 }

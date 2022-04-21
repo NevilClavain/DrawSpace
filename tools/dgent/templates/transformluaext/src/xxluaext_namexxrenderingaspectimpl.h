@@ -22,18 +22,19 @@
 */
 /* -*-LIC_END-*- */
 
-#include "??luaext_name??renderingaspectimpl.h"
-#include "renderingaspect.h"
-#include "plugin.h"
+#pragma once
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
+#include "renderingaspectimpl.h"
 
-??class_name??RenderingAspectImpl::??class_name??RenderingAspectImpl( void )
+class ??class_name??RenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
 {
-}
+private:
+    
+public:
+    ??class_name??RenderingAspectImpl( void );
 
-void ??class_name??RenderingAspectImpl::Run( Entity* p_entity )
-{
-}
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
+    void Release( void ) {};
+    void Run( DrawSpace::Core::Entity* p_entity );
+    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
+};

@@ -22,18 +22,20 @@
 */
 /* -*-LIC_END-*- */
 
-#include "??luaext_name??renderingaspectimpl.h"
-#include "renderingaspect.h"
-#include "plugin.h"
+#pragma once
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
+#include "luaext.h"
 
-??class_name??RenderingAspectImpl::??class_name??RenderingAspectImpl( void )
+class ??class_name??LuaExtension : public LuaExtension
 {
-}
+public:
+	??class_name??LuaExtension(void);
 
-void ??class_name??RenderingAspectImpl::Run( Entity* p_entity )
-{
-}
+	void Register(lua_State* p_L);
+	void UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
+	DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const;
+
+	__LUAEXT_DESCRIPTION__("??luaext_description??")
+};
+
+

@@ -22,18 +22,42 @@
 */
 /* -*-LIC_END-*- */
 
+#pragma once
+
+#include "drawspace_commons.h"
+#include "luna.h"
+
 #include "??luaext_name??renderingaspectimpl.h"
-#include "renderingaspect.h"
-#include "plugin.h"
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
-
-??class_name??RenderingAspectImpl::??class_name??RenderingAspectImpl( void )
+// fwd decls
+namespace DrawSpace
 {
-}
-
-void ??class_name??RenderingAspectImpl::Run( Entity* p_entity )
+namespace Core
 {
+class Entity;
 }
+};
+
+class ??class_name??RenderingAspectImpl;
+// fwd decls
+
+class LuaClass_??class_name??Rendering
+{
+private:
+
+    ??class_name??RenderingAspectImpl           m_??luaext_name??_rendering;
+    DrawSpace::Aspect::RenderingAspect*     	m_entity_rendering_aspect { nullptr };
+    DrawSpace::Core::Entity*                	m_entity { nullptr };
+
+public:
+    LuaClass_??class_name??Rendering( lua_State* p_L );
+	~LuaClass_??class_name??Rendering( void );
+
+
+    int LUA_configure(lua_State* p_L);
+    int LUA_release(lua_State* p_L);
+
+    static const char className[];
+    static const Luna<LuaClass_??class_name??Rendering>::RegType methods[];
+
+};
