@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "??luaext_name??luaext.h"
-#include "luaclass_??luaext_name??rendering.h"
+#include "luaclass_??luaext_name??transform.h"
 #include "plugin.h"
 #include "memalloc.h"
 
@@ -33,7 +33,7 @@
 
 void ??class_name??LuaExtension::Register(lua_State* p_L)
 {
-	Luna<LuaClass_??class_name??Rendering>::Register(p_L);
+	Luna<LuaClass_??class_name??Transform>::Register(p_L);
 }
 
 void ??class_name??LuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)

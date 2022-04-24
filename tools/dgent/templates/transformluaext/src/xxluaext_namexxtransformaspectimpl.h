@@ -24,40 +24,13 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
-#include "luna.h"
+#include "transformaspectimpl.h"
 
-#include "??luaext_name??renderingaspectimpl.h"
-
-// fwd decls
-namespace DrawSpace
-{
-namespace Core
-{
-class Entity;
-}
-};
-
-class ??class_name??RenderingAspectImpl;
-// fwd decls
-
-class LuaClass_??class_name??Rendering
+class ??class_name??TransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 private:
-
-    ??class_name??RenderingAspectImpl           m_??luaext_name??_rendering;
-    DrawSpace::Aspect::RenderingAspect*     	m_entity_rendering_aspect { nullptr };
-    DrawSpace::Core::Entity*                	m_entity { nullptr };
-
+    
 public:
-    LuaClass_??class_name??Rendering( lua_State* p_L );
-	~LuaClass_??class_name??Rendering( void );
-
-
-    int LUA_configure(lua_State* p_L);
-    int LUA_release(lua_State* p_L);
-
-    static const char className[];
-    static const Luna<LuaClass_??class_name??Rendering>::RegType methods[];
-
+    ??class_name??TransformAspectImpl( void );
+    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
 };

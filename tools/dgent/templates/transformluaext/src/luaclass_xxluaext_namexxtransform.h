@@ -22,18 +22,42 @@
 */
 /* -*-LIC_END-*- */
 
-#include "??luaext_name??renderingaspectimpl.h"
-#include "renderingaspect.h"
-#include "plugin.h"
+#pragma once
 
-using namespace DrawSpace;
-using namespace DrawSpace::Core;
-using namespace DrawSpace::Aspect;
+#include "drawspace_commons.h"
+#include "luna.h"
 
-??class_name??RenderingAspectImpl::??class_name??RenderingAspectImpl( void )
+#include "??luaext_name??transformaspectimpl.h"
+
+// fwd decls
+namespace DrawSpace
 {
-}
-
-void ??class_name??RenderingAspectImpl::Run( Entity* p_entity )
+namespace Core
 {
+class Entity;
 }
+};
+
+class ??class_name??TransformAspectImpl;
+// fwd decls
+
+class LuaClass_??class_name??Transform
+{
+private:
+
+    ??class_name??TransformAspectImpl           m_??luaext_name??_rendering;
+    DrawSpace::Aspect::TransformAspect*     	m_entity_transform_aspect { nullptr };
+    DrawSpace::Core::Entity*                	m_entity { nullptr };
+
+public:
+    LuaClass_??class_name??Transform( lua_State* p_L );
+	~LuaClass_??class_name??Transform( void );
+
+
+    int LUA_configure(lua_State* p_L);
+    int LUA_release(lua_State* p_L);
+
+    static const char className[];
+    static const Luna<LuaClass_??class_name??Transform>::RegType methods[];
+
+};

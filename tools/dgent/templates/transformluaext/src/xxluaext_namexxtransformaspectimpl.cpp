@@ -22,19 +22,19 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
+#include "??luaext_name??transformaspectimpl.h"
+#include "renderingaspect.h"
+#include "plugin.h"
 
-#include "renderingaspectimpl.h"
+using namespace DrawSpace;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Aspect;
 
-class ??class_name??RenderingAspectImpl : public DrawSpace::Interface::AspectImplementations::RenderingAspectImpl
+??class_name??TransformAspectImpl::??class_name??TransformAspectImpl( void )
 {
-private:
-    
-public:
-    ??class_name??RenderingAspectImpl( void );
+}
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
-    void Release( void ) {};
-    void Run( DrawSpace::Core::Entity* p_entity );
-    void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
-};
+void ??class_name??TransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
+{
+
+}
