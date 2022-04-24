@@ -25,7 +25,7 @@
 #pragma once
 
 #include "luna.h"
-#include "renderingaspect.h"
+
 #include "meshrenderingaspectimpl.h"
 
 class LuaClass_MeshRendering

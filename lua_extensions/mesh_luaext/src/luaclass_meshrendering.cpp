@@ -32,7 +32,7 @@
 #include "luaclass_entity.h"
 #include "luaclass_matrix.h"
 #include "meshrenderingaspectimpl.h"
-
+#include "renderingaspect.h"
 #include "resourcesaspect.h"
 #include "passslot.h"
 
