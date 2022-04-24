@@ -24,10 +24,8 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
-#include "luna.h"
 
-#include "luaclass_entity.h"
+#include "luna.h"
 #include "??luaext_name??renderingaspectimpl.h"
 
 // fwd decls

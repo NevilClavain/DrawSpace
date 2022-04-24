@@ -25,6 +25,7 @@
 #include "luacontext.h"
 #include "luaclass_??luaext_name??rendering.h"
 #include "renderingaspect.h"
+#include "luaclass_entity.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
