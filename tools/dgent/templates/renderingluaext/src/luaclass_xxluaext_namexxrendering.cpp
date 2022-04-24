@@ -24,6 +24,7 @@
 
 #include "luacontext.h"
 #include "luaclass_??luaext_name??rendering.h"
+#include "renderingaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -33,6 +34,8 @@ using namespace DrawSpace::Aspect;
 const char LuaClass_??class_name??Rendering::className[] = "??class_name??Rendering";
 const Luna<LuaClass_??class_name??Rendering>::RegType LuaClass_??class_name??Rendering::methods[] =
 {
+    { "attach_toentity", &LuaClass_??class_name??Rendering::LUA_attachtoentity },
+    { "detach_fromentity", &LuaClass_??class_name??Rendering::LUA_detachfromentity },
     { "configure", &LuaClass_??class_name??Rendering::LUA_configure },
     { "release", &LuaClass_??class_name??Rendering::LUA_release },
 	{ 0, 0 }
@@ -45,6 +48,52 @@ LuaClass_??class_name??Rendering::LuaClass_??class_name??Rendering( lua_State* p
 LuaClass_??class_name??Rendering::~LuaClass_??class_name??Rendering( void )
 {
 }
+
+int LuaClass_??class_name??Rendering::LUA_attachtoentity(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("??class_name??::attach_toentity : argument(s) missing");
+    }
+
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+
+    DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
+    RenderingAspect* rendering_aspect{ entity.GetAspect<RenderingAspect>() };
+
+    if (NULL == rendering_aspect)
+    {
+        LUA_ERROR("??class_name??::attach_toentity : entity has no rendering aspect!");
+    }
+
+    m_entity_rendering_aspect = rendering_aspect;
+    m_entity = &entity;
+
+    m_entity_rendering_aspect->AddImplementation(&m_??luaext_name??_rendering, NULL);
+
+    return 0;
+}
+
+int LuaClass_??class_name??Rendering::LUA_detachfromentity(lua_State* p_L)
+{
+    if (NULL == m_entity)
+    {
+        LUA_ERROR("??class_name??::detach_fromentity : argument(s) missing");
+    }
+
+    LUA_TRY
+    {
+        m_entity_rendering_aspect->RemoveImplementation(&m_??luaext_name??_rendering);
+
+    } LUA_CATCH;
+
+    m_entity_rendering_aspect = NULL;
+    m_entity = NULL;
+
+    return 0;
+}
+
 
 
 int LuaClass_??class_name??Rendering::LUA_configure( lua_State* p_L )

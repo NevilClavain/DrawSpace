@@ -27,6 +27,7 @@
 #include "drawspace_commons.h"
 #include "luna.h"
 
+#include "luaclass_entity.h"
 #include "??luaext_name??renderingaspectimpl.h"
 
 // fwd decls
@@ -53,7 +54,8 @@ public:
     LuaClass_??class_name??Rendering( lua_State* p_L );
 	~LuaClass_??class_name??Rendering( void );
 
-
+    int LUA_attachtoentity(lua_State* p_L);
+    int LUA_detachfromentity(lua_State* p_L);
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);
 
