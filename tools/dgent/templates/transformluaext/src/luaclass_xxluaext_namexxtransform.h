@@ -45,9 +45,8 @@ class LuaClass_??class_name??Transform
 {
 private:
 
-    ??class_name??TransformAspectImpl           m_??luaext_name??_rendering;
+    ??class_name??TransformAspectImpl           m_??luaext_name??_transform;
     DrawSpace::Aspect::TransformAspect*     	m_entity_transform_aspect { nullptr };
-    DrawSpace::Core::Entity*                	m_entity { nullptr };
 
 public:
     LuaClass_??class_name??Transform( lua_State* p_L );
