@@ -32,7 +32,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 
-const char LuaClass_RevolutionTransform::className[] = "RevolutionTransform2";
+const char LuaClass_RevolutionTransform::className[] = "RevolutionTransform";
 const Luna<LuaClass_RevolutionTransform>::RegType LuaClass_RevolutionTransform::methods[] =
 {
     { "configure", &LuaClass_RevolutionTransform::LUA_configure },

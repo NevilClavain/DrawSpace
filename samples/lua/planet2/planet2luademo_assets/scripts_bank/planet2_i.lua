@@ -1306,7 +1306,7 @@ planet_transform = RawTransform()
 planet_transform:configure(resurgam_planet_entity,0)
 
 
-planet_revol = RevolutionTransform2()
+planet_revol = RevolutionTransform()
 planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 --planet_revol:configure(resurgam_planet_entity, 0.01, 1)
 
