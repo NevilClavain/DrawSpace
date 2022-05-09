@@ -29,8 +29,8 @@
 class RevolutionTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 private:
-    
-public:
-    RevolutionTransformAspectImpl( void );
+    double compute_revolution_angle(double p_revolution_duration, double p_curr_angle);
+
+public:    
     virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
 };
