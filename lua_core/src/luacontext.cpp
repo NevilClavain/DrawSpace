@@ -34,7 +34,6 @@
 #include "luaclass_fpstransform.h"
 #include "luaclass_freetransform.h"
 #include "luaclass_rawtransform.h"
-#include "luaclass_revolutiontransform.h"
 #include "luaclass_rigidbodytransform.h"
 #include "luaclass_syncangle.h"
 #include "luaclass_syncscalar.h"
@@ -104,7 +103,6 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
     Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
-    Luna<LuaClass_RevolutionTransform>::Register(m_L);
     Luna<LuaClass_RigidBodyTransform>::Register(m_L);
 
 	//
