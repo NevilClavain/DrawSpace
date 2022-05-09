@@ -54,7 +54,6 @@
 
 
 #include "luaclass_nebulaespecificconfig.h"
-#include "luaclass_planetspecificconfig.h"
 
 #include "mainservice.h"
 
@@ -91,7 +90,6 @@ void LuaContext::Startup( void )
     Luna<LuaClass_FPSTransform>::Register( m_L );
     Luna<LuaClass_FreeTransform>::Register(m_L);
     Luna<LuaClass_RawTransform>::Register( m_L );
-    //Luna<LuaClass_MesheRendering>::Register( m_L );
     Luna<LuaClass_SyncAngle>::Register( m_L );
     Luna<LuaClass_SyncScalar>::Register( m_L );
     Luna<LuaClass_RenderContext>::Register( m_L );
@@ -106,7 +104,6 @@ void LuaContext::Startup( void )
     Luna<LuaClass_RandomEngine>::Register(m_L);    
     Luna<LuaClass_Distribution>::Register(m_L);       
     Luna<LuaClass_NebulaeSpecificConfig>::Register(m_L);
-    Luna<LuaClass_PlanetSpecificConfig>::Register(m_L);
     Luna<LuaClass_RevolutionTransform>::Register(m_L);
     Luna<LuaClass_RigidBodyTransform>::Register(m_L);
 
