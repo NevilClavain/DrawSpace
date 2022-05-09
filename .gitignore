@@ -107,6 +107,10 @@ ALL_BUILD.vcxproj*
 /lua_extensions/planets_luaext/CMakeFiles/
 /lua_extensions/planets_luaext/*.sln
 /lua_extensions/planets_luaext/*.vcxproj*
+/lua_extensions/revolution_luaext/CMakeFiles/
+/lua_extensions/revolution_luaext/*.sln
+/lua_extensions/revolution_luaext/*.vcxproj*
+
 /lua_core/CMakeFiles/
 /lua_core/*.sln
 /lua_core/*.vcxproj*
