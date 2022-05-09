@@ -262,7 +262,7 @@ void LuaClass_FreeTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspe
     dsreal rspeed_y = reals[1]->getPurpose();
     dsreal rspeed_z = reals[2]->getPurpose();
 
-    if (TimeAspect::FREEZE == time_scales[0]->getPurpose())
+    if (TimeAspect::TimeScale::FREEZE == time_scales[0]->getPurpose())
     {
         rspeed_x = rspeed_y = rspeed_z = 0.0;
     }

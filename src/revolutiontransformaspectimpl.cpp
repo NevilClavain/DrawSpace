@@ -63,20 +63,20 @@ double RevolutionTransformAspectImpl::compute_revolution_angle(double p_revoluti
 
         static const std::map< TimeAspect::TimeScale, dsreal> timefactor_array = {
 
-            { TimeAspect::NORMAL_TIME, 1.0 },
-            { TimeAspect::MUL2_TIME, 2.0 },
-            { TimeAspect::MUL4_TIME, 4.0 },
-            { TimeAspect::MUL10_TIME, 10.0 },
-            { TimeAspect::MUL100_TIME, 100.0 },
-            { TimeAspect::MUL500_TIME, 500.0 },
-            { TimeAspect::SEC_1HOUR_TIME, 3600.0 },
-            { TimeAspect::SEC_1DAY_TIME, 86400.0 },
-            { TimeAspect::SEC_30DAYS_TIME, 2592000.0 },
-            { TimeAspect::SEC_1YEAR_TIME, 31536000.0 },
-            { TimeAspect::DIV2_TIME, 0.5 },
-            { TimeAspect::DIV4_TIME, 0.25 },
-            { TimeAspect::DIV10_TIME, 0.1 },
-            { TimeAspect::FREEZE, 0.0 },
+            { TimeAspect::TimeScale::NORMAL_TIME, 1.0 },
+            { TimeAspect::TimeScale::MUL2_TIME, 2.0 },
+            { TimeAspect::TimeScale::MUL4_TIME, 4.0 },
+            { TimeAspect::TimeScale::MUL10_TIME, 10.0 },
+            { TimeAspect::TimeScale::MUL100_TIME, 100.0 },
+            { TimeAspect::TimeScale::MUL500_TIME, 500.0 },
+            { TimeAspect::TimeScale::SEC_1HOUR_TIME, 3600.0 },
+            { TimeAspect::TimeScale::SEC_1DAY_TIME, 86400.0 },
+            { TimeAspect::TimeScale::SEC_30DAYS_TIME, 2592000.0 },
+            { TimeAspect::TimeScale::SEC_1YEAR_TIME, 31536000.0 },
+            { TimeAspect::TimeScale::DIV2_TIME, 0.5 },
+            { TimeAspect::TimeScale::DIV4_TIME, 0.25 },
+            { TimeAspect::TimeScale::DIV10_TIME, 0.1 },
+            { TimeAspect::TimeScale::FREEZE, 0.0 },
 
         };
 

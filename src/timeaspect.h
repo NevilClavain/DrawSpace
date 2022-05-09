@@ -36,7 +36,7 @@ class TimeAspect : public Core::ComponentContainer
 {
 public:
 
-    enum TimeScale
+    enum class TimeScale
     {
         NORMAL_TIME,
         MUL2_TIME,
@@ -44,21 +44,14 @@ public:
         MUL10_TIME,
         MUL100_TIME,
         MUL500_TIME,
-
-        SEC_1HOUR_TIME, // 1 sec = 1 hour -> x 3600
-        
+        SEC_1HOUR_TIME, // 1 sec = 1 hour -> x 3600        
         SEC_1DAY_TIME, // 1 sec = 24 hour -> x 86400
-
         SEC_30DAYS_TIME, // 1 sec = 30 days -> x 2592000
-
         SEC_1YEAR_TIME, // 1sec = 1 year -> x 31536000
-
-
         DIV2_TIME,
         DIV4_TIME,
         DIV10_TIME,
         FREEZE,
-
     };
 
     class TimeAngle

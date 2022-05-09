@@ -36,7 +36,7 @@ m_time_period( 1000 ),
 m_current_time_increment( 1 ),
 m_sub_sec_count( 0 ),
 m_sub_sec_count_lim( 0 ),
-m_mode( NORMAL_TIME ),
+m_mode(TimeAspect::TimeScale::NORMAL_TIME ),
 m_active( false ),
 m_world_nbsteps( 5 ),
 m_freeze( false )
@@ -214,7 +214,7 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 {
     switch( p_scale )
     {
-        case NORMAL_TIME:
+        case TimeAspect::TimeScale::NORMAL_TIME:
 
             m_time_period = 1000;
             m_time_factor = 1;
@@ -226,10 +226,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
             break;
 
-        case MUL2_TIME:
+        case TimeAspect::TimeScale::MUL2_TIME:
 
             m_time_period = 500;
             m_time_factor = 2;
@@ -241,11 +240,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case MUL4_TIME:
+        case TimeAspect::TimeScale::MUL4_TIME:
            
             m_time_period = 250;
             m_time_factor = 4;
@@ -257,11 +254,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case MUL10_TIME:
+        case TimeAspect::TimeScale::MUL10_TIME:
 
             m_time_period = 100;
             m_time_factor = 10;
@@ -273,11 +268,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case MUL100_TIME:
+        case TimeAspect::TimeScale::MUL100_TIME:
 
             m_time_period = 100;
             m_time_factor = 100.0;
@@ -289,11 +282,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case MUL500_TIME:
+        case TimeAspect::TimeScale::MUL500_TIME:
 
             m_time_period = 100;
             m_time_factor = 500.0;
@@ -305,12 +296,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-
-        case SEC_1HOUR_TIME:
+        case TimeAspect::TimeScale::SEC_1HOUR_TIME:
 
             m_time_period = 100;
             m_time_factor = 3600.0;
@@ -322,11 +310,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case SEC_1DAY_TIME:
+        case TimeAspect::TimeScale::SEC_1DAY_TIME:
 
             m_time_period = 100;
             m_time_factor = 86400.0;
@@ -338,11 +324,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case SEC_30DAYS_TIME:
+        case TimeAspect::TimeScale::SEC_30DAYS_TIME:
 
             m_time_period = 100;
             m_time_factor = 2592000.0;
@@ -356,11 +340,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case SEC_1YEAR_TIME:
+        case TimeAspect::TimeScale::SEC_1YEAR_TIME:
 
             m_time_period = 100;
             m_time_factor = 86400.0 * 365.0;
@@ -372,11 +354,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case DIV2_TIME:
+        case TimeAspect::TimeScale::DIV2_TIME:
 
             m_time_period = 1000;
             m_time_factor = 0.5;
@@ -389,11 +369,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case DIV4_TIME:
+        case TimeAspect::TimeScale::DIV4_TIME:
 
             m_time_period = 1000;
             m_time_factor = 0.25;
@@ -406,11 +384,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case DIV10_TIME:
+        case TimeAspect::TimeScale::DIV10_TIME:
 
             m_time_period = 1000;
             m_time_factor = 0.1;
@@ -423,11 +399,9 @@ void TimeAspect::set_time_factor( TimeAspect::TimeScale p_scale )
 
             m_freeze = false;
             m_timer.Suspend( false );
-
-
             break;
 
-        case FREEZE:
+        case TimeAspect::TimeScale::FREEZE:
 
             m_freeze = true;
             m_timer.Suspend( true );

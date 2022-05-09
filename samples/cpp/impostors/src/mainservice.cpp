@@ -176,7 +176,7 @@ bool MainService::Init( void )
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
     time_aspect->AddComponent<TimeManager>("time_manager");
-    time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::NORMAL_TIME);
+    time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::TimeScale::NORMAL_TIME);
     time_aspect->AddComponent<dsstring>("output_formated_datetime", "...");
     time_aspect->AddComponent<dstime>("time", 0);
     time_aspect->AddComponent<int>("output_fps");

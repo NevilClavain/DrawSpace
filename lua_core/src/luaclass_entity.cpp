@@ -240,7 +240,7 @@ int LuaClass_Entity::LUA_readtimemmanager( lua_State* p_L )
         int fps = time_aspect->GetComponent<int>( "output_fps" )->getPurpose();
         int world_nbsteps = time_aspect->GetComponent<int>( "output_world_nbsteps" )->getPurpose();
 
-        lua_pushinteger( p_L, time_scale );
+        lua_pushinteger( p_L, static_cast<int>(time_scale) );
         lua_pushstring( p_L, datetime.c_str() );
         lua_pushinteger( p_L, fps );
         lua_pushinteger( p_L, world_nbsteps );

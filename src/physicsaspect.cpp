@@ -229,7 +229,7 @@ void PhysicsAspect::StepSimulation( void )
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if( time_scales[0]->getPurpose() != TimeAspect::FREEZE )
+    if( time_scales[0]->getPurpose() != TimeAspect::TimeScale::FREEZE )
     {
         ComponentList<dsreal> reals;
         m_time_aspect->GetComponentsByType<dsreal>( reals );
