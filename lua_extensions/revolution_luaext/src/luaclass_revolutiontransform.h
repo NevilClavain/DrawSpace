@@ -45,7 +45,7 @@ class LuaClass_RevolutionTransform
 {
 private:
 
-    RevolutionTransformAspectImpl           m_revolution_transform;
+    RevolutionTransformAspectImpl               m_revolution_transform;
     DrawSpace::Aspect::TransformAspect*     	m_entity_transform_aspect { nullptr };
 
 public:
@@ -55,6 +55,8 @@ public:
 
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);
+
+    int LUA_readcurrentangle(lua_State* p_L);
 
     static const char className[];
     static const Luna<LuaClass_RevolutionTransform>::RegType methods[];
