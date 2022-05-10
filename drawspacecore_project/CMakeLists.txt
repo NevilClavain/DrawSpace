@@ -80,8 +80,6 @@ ${CMAKE_SOURCE_DIR}/src/quadrenderingaspectimpl.cpp
 ${CMAKE_SOURCE_DIR}/src/quadrenderingaspectimpl.h
 ${CMAKE_SOURCE_DIR}/src/rawtransformaspectimpl.cpp 
 ${CMAKE_SOURCE_DIR}/src/rawtransformaspectimpl.h
-${CMAKE_SOURCE_DIR}/src/revolutiontransformaspectimpl.cpp 
-${CMAKE_SOURCE_DIR}/src/revolutiontransformaspectimpl.h
 )
 
 source_group(core FILES
