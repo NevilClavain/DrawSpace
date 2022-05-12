@@ -110,6 +110,10 @@ ALL_BUILD.vcxproj*
 /lua_extensions/revolution_luaext/CMakeFiles/
 /lua_extensions/revolution_luaext/*.sln
 /lua_extensions/revolution_luaext/*.vcxproj*
+/lua_extensions/orbit_luaext/CMakeFiles/
+/lua_extensions/orbit_luaext/*.sln
+/lua_extensions/orbit_luaext/*.vcxproj*
+
 
 /lua_core/CMakeFiles/
 /lua_core/*.sln

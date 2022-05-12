@@ -73,6 +73,7 @@ add_subdirectory(lua_extensions/mesh_luaext)
 add_subdirectory(lua_extensions/skybox_luaext)
 add_subdirectory(lua_extensions/planets_luaext)
 add_subdirectory(lua_extensions/revolution_luaext)
+add_subdirectory(lua_extensions/orbit_luaext)
 
 # lua_core
 add_subdirectory(lua_core)
