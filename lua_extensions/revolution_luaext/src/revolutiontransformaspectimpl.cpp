@@ -23,7 +23,6 @@
 /* -*-LIC_END-*- */
 
 #include "revolutiontransformaspectimpl.h"
-#include "renderingaspect.h"
 #include "plugin.h"
 #include "maths.h"
 #include "transformaspect.h"
