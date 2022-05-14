@@ -23,8 +23,8 @@
 /* -*-LIC_END-*- */
 
 #include "??luaext_name??transformaspectimpl.h"
-#include "renderingaspect.h"
 #include "plugin.h"
+#include "transformaspect.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
