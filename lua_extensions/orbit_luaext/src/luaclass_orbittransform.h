@@ -45,7 +45,7 @@ class LuaClass_OrbitTransform
 {
 private:
 
-    OrbitTransformAspectImpl           m_orbit_transform;
+    OrbitTransformAspectImpl                    m_orbit_transform;
     DrawSpace::Aspect::TransformAspect*     	m_entity_transform_aspect { nullptr };
 
 public:

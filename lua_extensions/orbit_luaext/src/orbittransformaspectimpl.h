@@ -29,8 +29,8 @@
 class OrbitTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 private:
+    dsreal compute_orbit_angle(dsreal p_orbit_duration, dstime p_currtime);
     
-public:
-    OrbitTransformAspectImpl( void );
+public:    
     virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
 };

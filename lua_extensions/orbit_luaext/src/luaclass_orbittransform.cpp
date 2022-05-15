@@ -52,16 +52,24 @@ LuaClass_OrbitTransform::~LuaClass_OrbitTransform( void )
 int LuaClass_OrbitTransform::LUA_configure( lua_State* p_L )
 {
     int argc = lua_gettop(p_L);
-    if (argc < 2)
+    if (argc < 12)
     {
         LUA_ERROR("OrbitTransform::configure : argument(s) missing");
     }
-
-    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
-	int transfoimpl_order{ luaL_checkint(p_L, 2) };
 	
-	// here get specific parameters...
-	// ...
+    LuaClass_Entity* lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
+    dsreal orbit_ray{ luaL_checknumber(p_L, 2) };
+    dsreal excentricity{ luaL_checknumber(p_L, 3) };
+    dsreal angle{ luaL_checknumber(p_L, 4) };
+    dsreal orbit_duration{ luaL_checknumber(p_L, 5) };
+    dsreal orbit_offset_rot{ luaL_checknumber(p_L, 6) };
+    dsreal orbit_pan_angle{ luaL_checknumber(p_L, 7) };
+    dsreal orbit_tilt_angle{ luaL_checknumber(p_L, 8) };
+    dsreal orbit_translation_x{ luaL_checknumber(p_L, 9) };
+    dsreal orbit_translation_z{ luaL_checknumber(p_L, 10) };
+    dsreal revol_axe_inclination{ luaL_checknumber(p_L, 11) };
+    int transfoimpl_order{ luaL_checkint(p_L, 12) };
+
 	
     DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
 
@@ -72,7 +80,16 @@ int LuaClass_OrbitTransform::LUA_configure( lua_State* p_L )
         transform_aspect->AddImplementation(transfoimpl_order, &m_orbit_transform);
         m_entity_transform_aspect = transform_aspect;
 
-		// here set specific parameters in m_entity_transform_aspect with AddComponent<type>(...) calls
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_ray", orbit_ray);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_excentricity", excentricity);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_angle", angle);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_duration", orbit_duration);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_offset_rot", orbit_offset_rot);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_pan_angle", orbit_pan_angle);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_tilt_angle", orbit_tilt_angle);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_translation_x", orbit_translation_x);
+        m_entity_transform_aspect->AddComponent<dsreal>("orbit_translation_z", orbit_translation_z);
+        m_entity_transform_aspect->AddComponent<dsreal>("revol_axe_inclination", revol_axe_inclination);       
     }
     else
     {
@@ -89,8 +106,16 @@ int LuaClass_OrbitTransform::LUA_release( lua_State* p_L )
         LUA_ERROR( "OrbitTransform::update : no transform aspect" );
     }
    
-    // here unset specific parameters in m_entity_transform_aspect with RemoveComponent<type>(...) calls
-	// ...
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_ray");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_excentricity");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_angle");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_duration");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_offset_rot");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_pan_angle");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_tilt_angle");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_translation_x");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_translation_z");
+    m_entity_transform_aspect->RemoveComponent<dsreal>("revol_axe_inclination");
 
     m_entity_transform_aspect->RemoveAllImplementations();
     m_entity_transform_aspect = NULL;

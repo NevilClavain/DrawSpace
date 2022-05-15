@@ -25,7 +25,7 @@ model.releasemaincamera()
 
 
 planet_revol:release()
-planet_transform:release()
+planet_orbit:release()
 resurgam_planet_config:cleanup()
 
 resurgam_planet_entity:remove_aspect(TRANSFORM_ASPECT)

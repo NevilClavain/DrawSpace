@@ -1302,8 +1302,40 @@ eg:add_child('root', planet_name, resurgam_planet_entity)
 
 resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)
 
-planet_transform = RawTransform()
-planet_transform:configure(resurgam_planet_entity,0)
+--planet_transform = RawTransform()
+--planet_transform:configure(resurgam_planet_entity,0)
+
+
+planet_orbit = OrbitTransform()
+local planet_orbit_descr = 
+{
+	orbit_ray = 15620000.0,
+	excentricity = 1.0,
+	angle = 0.0,
+	orbit_duration = 0.025,
+	orbit_offset_rot = 0.0,
+	orbit_pan_angle = 0.0,
+	orbit_tilt_angle = 0.0,
+	orbit_translation_x = 0.0,
+	orbit_translation_z = -60400000.0,
+	revol_axe_inclination = 33
+}
+
+planet_orbit:configure(resurgam_planet_entity, 
+
+	planet_orbit_descr.orbit_ray,
+	planet_orbit_descr.excentricity,
+	planet_orbit_descr.angle,
+	planet_orbit_descr.orbit_duration,
+	planet_orbit_descr.orbit_offset_rot,
+	planet_orbit_descr.orbit_pan_angle,
+	planet_orbit_descr.orbit_tilt_angle,
+	planet_orbit_descr.orbit_translation_x,
+	planet_orbit_descr.orbit_translation_z,
+	planet_orbit_descr.revol_axe_inclination,
+
+	0 )
+
 
 
 planet_revol = RevolutionTransform()
@@ -1312,10 +1344,11 @@ planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 
 
 
-planet_pos_mat = Matrix()
-planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
---planet_pos_mat:translation( 0.0, 0.0, 0.0 )
-planet_transform:add_matrix( "pos", planet_pos_mat )
+--planet_pos_mat = Matrix()
+--planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
+--planet_transform:add_matrix( "pos", planet_pos_mat )
+
+
 
 g:print("Planet creation done...")
 
