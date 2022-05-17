@@ -52,7 +52,7 @@ LuaClass_OrbitTransform::~LuaClass_OrbitTransform( void )
 int LuaClass_OrbitTransform::LUA_configure( lua_State* p_L )
 {
     int argc = lua_gettop(p_L);
-    if (argc < 12)
+    if (argc < 10)
     {
         LUA_ERROR("OrbitTransform::configure : argument(s) missing");
     }
@@ -65,10 +65,8 @@ int LuaClass_OrbitTransform::LUA_configure( lua_State* p_L )
     dsreal orbit_offset_rot{ luaL_checknumber(p_L, 6) };
     dsreal orbit_pan_angle{ luaL_checknumber(p_L, 7) };
     dsreal orbit_tilt_angle{ luaL_checknumber(p_L, 8) };
-    dsreal orbit_translation_x{ luaL_checknumber(p_L, 9) };
-    dsreal orbit_translation_z{ luaL_checknumber(p_L, 10) };
-    dsreal revol_axe_inclination{ luaL_checknumber(p_L, 11) };
-    int transfoimpl_order{ luaL_checkint(p_L, 12) };
+    dsreal revol_axe_inclination{ luaL_checknumber(p_L, 9) };
+    int transfoimpl_order{ luaL_checkint(p_L, 10) };
 
 	
     DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
@@ -87,8 +85,6 @@ int LuaClass_OrbitTransform::LUA_configure( lua_State* p_L )
         m_entity_transform_aspect->AddComponent<dsreal>("orbit_offset_rot", orbit_offset_rot);
         m_entity_transform_aspect->AddComponent<dsreal>("orbit_pan_angle", orbit_pan_angle);
         m_entity_transform_aspect->AddComponent<dsreal>("orbit_tilt_angle", orbit_tilt_angle);
-        m_entity_transform_aspect->AddComponent<dsreal>("orbit_translation_x", orbit_translation_x);
-        m_entity_transform_aspect->AddComponent<dsreal>("orbit_translation_z", orbit_translation_z);
         m_entity_transform_aspect->AddComponent<dsreal>("revol_axe_inclination", revol_axe_inclination);       
     }
     else
@@ -113,8 +109,6 @@ int LuaClass_OrbitTransform::LUA_release( lua_State* p_L )
     m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_offset_rot");
     m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_pan_angle");
     m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_tilt_angle");
-    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_translation_x");
-    m_entity_transform_aspect->RemoveComponent<dsreal>("orbit_translation_z");
     m_entity_transform_aspect->RemoveComponent<dsreal>("revol_axe_inclination");
 
     m_entity_transform_aspect->RemoveAllImplementations();

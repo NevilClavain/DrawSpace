@@ -43,8 +43,6 @@ void OrbitTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_tra
     dsreal orbit_offset_rot{ p_transformaspect->GetComponent<dsreal>("orbit_offset_rot")->getPurpose() };
     dsreal orbit_pan_angle{ p_transformaspect->GetComponent<dsreal>("orbit_pan_angle")->getPurpose() };
     dsreal orbit_tilt_angle{ p_transformaspect->GetComponent<dsreal>("orbit_tilt_angle")->getPurpose() };
-    dsreal orbit_translation_x{ p_transformaspect->GetComponent<dsreal>("orbit_translation_x")->getPurpose() };
-    dsreal orbit_translation_z{ p_transformaspect->GetComponent<dsreal>("orbit_translation_z")->getPurpose() };
     dsreal revol_axe_inclination{ p_transformaspect->GetComponent<dsreal>("revol_axe_inclination")->getPurpose() };
 
 
@@ -72,11 +70,7 @@ void OrbitTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_tra
     Matrix orbit_pan;
     orbit_pan.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::DegToRad(orbit_pan_angle));
 
-    Matrix orbit_translation;
-    orbit_translation.Translation(orbit_translation_x, 0.0, orbit_translation_z);
-
-    p_out_base_transform = revol_ax * orbit * orbit_translation * orbit_tilt * orbit_pan;
-
+    p_out_base_transform = revol_ax * orbit * orbit_tilt * orbit_pan;
 
     ComponentList<dstime> times_count;
     m_time_aspect->GetComponentsByType<dstime>(times_count);
