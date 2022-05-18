@@ -1302,6 +1302,11 @@ eg:add_child('root', planet_name, resurgam_planet_entity)
 
 resurgam_planet_entity:add_aspect(TRANSFORM_ASPECT)
 
+
+-- with an orbit
+
+--[[
+
 planet_transform = RawTransform()
 planet_transform:configure(resurgam_planet_entity,0)
 
@@ -1340,9 +1345,21 @@ planet_orbit:configure(resurgam_planet_entity,
 
 planet_revol = RevolutionTransform()
 planet_revol:configure(resurgam_planet_entity, 1.0, 2)
+
+]]
+
+-- direct positioning
+
+planet_transform = RawTransform()
+planet_transform:configure(resurgam_planet_entity,0)
+
+planet_pos_mat = Matrix()
+planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
+planet_transform:add_matrix( "pos", planet_pos_mat )
+
+planet_revol = RevolutionTransform()
+planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 --planet_revol:configure(resurgam_planet_entity, 0.01, 2)
-
-
 
 
 
