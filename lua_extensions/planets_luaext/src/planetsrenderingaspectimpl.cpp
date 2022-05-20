@@ -1264,7 +1264,7 @@ void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_nam
         }
     }
 
-    // check if there is still CollisionAspect::MesheCollisionShape registetred
+    // check if there is still CollisionAspect::MesheCollisionShape registered
     ComponentList<CollisionAspect::MesheCollisionShape> meshecollision_shapes;
     collision_aspect->GetComponentsByType<CollisionAspect::MesheCollisionShape>(meshecollision_shapes);
     if (meshecollision_shapes.size() > 0) 
