@@ -208,11 +208,11 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
 
             int x_input = (x * (Collisions::heightmapTextureSize - 1)) / (cst::patchResolution - 1);
             int y_input = (y * (Collisions::heightmapTextureSize - 1)) / (cst::patchResolution - 1);
-            int index_hm{ (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y_input)) + x_input };
 
-            //int index_hm{ (Collisions::heightmapTextureSize * (y_input)) + x_input };
-            
-            double alt{ *(p_heightmap + index_hm) };
+
+            int index_hm{ (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y_input)) + x_input };
+           
+            double alt = p_heightmap[index_hm];
 
             m_alt_grid[index] = alt;
 
@@ -270,7 +270,7 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     // xcoord et ycoord sur le range [-0.5, 0.5]
     // trouver les coords discretes de grille patch, c a d [0, cst::patchResolution - 1], encadrant le point coord fourni;
 
-    dsreal resol = cst::patchResolution - 1;
+    dsreal resol = cst::patchResolution;// -1;
 
     x1 = Maths::Floor(((xcoord + 0.5)) * resol);
     y1 = Maths::Floor(((ycoord + 0.5)) * resol);
@@ -278,16 +278,20 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     x2 = x1 + 1;
     y2 = y1 + 1;
 
-    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y1)) + x1;
+    y1 = cst::patchResolution - y1;
+    y2 = cst::patchResolution - y2;
+
+
+    index_hm = (cst::patchResolution * y1) + x1;
     dsreal h1 = m_alt_grid[index_hm];
 
-    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y1)) + x2;
+    index_hm = (cst::patchResolution * y1) + x2;
     dsreal h2 = m_alt_grid[index_hm];
 
-    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y2)) + x2;
+    index_hm = (cst::patchResolution * y2) + x2;
     dsreal h3 = m_alt_grid[index_hm];
 
-    index_hm = (cst::patchResolution * (cst::patchResolution - 1 - y2)) + x1;
+    index_hm = (cst::patchResolution * y2) + x1;
     dsreal h4 = m_alt_grid[index_hm];
 
 
