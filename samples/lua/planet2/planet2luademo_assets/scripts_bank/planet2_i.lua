@@ -37,7 +37,7 @@ local planet_specific_config_descr =
 	collision_vshader_compiled			         = FALSE,
 	collision_pshader_compiled			         = FALSE,
 
-    enable_collisionmeshe_display                = FALSE, --TRUE,
+    enable_collisionmeshe_display                = FALSE,
     collisionmeshe_display_vshader               = "color_vs.hlsl",
     collisionmeshe_display_pshader               = "color_ps.hlsl",
     collisionmeshe_display_vshader_compiled      = FALSE,
@@ -264,8 +264,9 @@ root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
-model.createmainfreecamera(0.0, 200.0, 10.0)
---model.createmainfreecamera(0.0, 10.0, 40620000.0)
+--model.createmainfreecamera(0.0, 200.0, 10.0)
+model.createmainfreecamera(0.0, 200.0, -32620000.0)
+
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
 
@@ -624,6 +625,7 @@ function()
 	  altitude_unit = " m"
 	end
 
+	
     --[[
     relative_state = "RELATIVE"..' '..g:format_real(planet_infos["viewsInfos"][current_cam_id]["relative_altitude"],4)..' '..display_altitude..altitude_unit..
                     ' pminh='..g:format_real(planet_infos["viewsInfos"][current_cam_id]["current_patch_min_height"],2)..
@@ -637,7 +639,7 @@ function()
     
     
 
-    relative_state = "RELATIVE"..' '..g:format_real(relative_alt,6)..' '..display_altitude..altitude_unit                    
+    relative_state = "RELATIVE"..' '..g:format_real(relative_alt,6)..' '..display_altitude..altitude_unit
 
     if planet_specific_config_descr.enable_oceans == TRUE then
       if relative_alt < 1.0 then
