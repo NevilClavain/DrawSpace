@@ -27,23 +27,22 @@
 #include "drawspace_commons.h"
 #include "luna.h"
 
+#include "transformaspectimpl.h"
+
 // fwd decls
 namespace DrawSpace
 {
-namespace Core
-{
-class Entity;
-}
-namespace Aspect
-{
-class TransformAspect;
-}
+    namespace Core
+    {
+        class Entity;
+    }
+    namespace Aspect
+    {
+        class TransformAspect;
+    }
 };
 
-class FreeMovementTransformAspectImpl;
-// fwd decls
-
-class LuaClass_FreeMovementTransform
+class LuaClass_FreeMovementTransform : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 private:
 
@@ -53,9 +52,13 @@ public:
     LuaClass_FreeMovementTransform( lua_State* p_L );
 	~LuaClass_FreeMovementTransform( void );
 
-
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);
+    int LUA_update(lua_State* p_L);
+    int LUA_setpos(lua_State* p_L);
+    int LUA_read(lua_State* p_L);
+
+    void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
 
     static const char className[];
     static const Luna<LuaClass_FreeMovementTransform>::RegType methods[];

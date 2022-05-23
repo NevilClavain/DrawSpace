@@ -138,7 +138,7 @@ commons.create_free_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewpor
 	camera_entity:setup_info( "entity_name", p_name )
 
 
-	local free_transfo=FreeTransform()
+	local free_transfo=FreeMovementTransform()
 	free_transfo:configure(camera_entity,0,p_x, p_y, p_z,0)
 
 	return camera_entity, free_transfo

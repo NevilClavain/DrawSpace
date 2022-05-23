@@ -560,7 +560,7 @@ boulder.view.load('rock', boulder_passes_config)
 eg:add_child('root', 'rock', boulder.models['rock'].entity)
 --eg:add_child('ceres', 'rock', boulder.models['rock'].entity)
 
-rock_free_transfo=FreeTransform()
+rock_free_transfo=FreeMovementTransform()
 
 
 rock_free_transfo:configure(boulder.models['rock'].entity, 0, 0.0, 0.0, -800.0, 0)
