@@ -69,7 +69,7 @@ int LuaClass_FreeMovementTransform::LUA_configure( lua_State* p_L )
     TransformAspect* transform_aspect{ entity.GetAspect<TransformAspect>() };
     if (transform_aspect)
     {
-        transform_aspect->AddImplementation(transfoimpl_order, &m_freemvt_transform);
+        //transform_aspect->AddImplementation(transfoimpl_order, &m_freemvt_transform);
         m_entity_transform_aspect = transform_aspect;
 
 		// here set specific parameters in m_entity_transform_aspect with AddComponent<type>(...) calls

@@ -27,14 +27,16 @@
 #include "drawspace_commons.h"
 #include "luna.h"
 
-#include "freemvttransformaspectimpl.h"
-
 // fwd decls
 namespace DrawSpace
 {
 namespace Core
 {
 class Entity;
+}
+namespace Aspect
+{
+class TransformAspect;
 }
 };
 
@@ -45,7 +47,6 @@ class LuaClass_FreeMovementTransform
 {
 private:
 
-    FreeMovementTransformAspectImpl           m_freemvt_transform;
     DrawSpace::Aspect::TransformAspect*     	m_entity_transform_aspect { nullptr };
 
 public:
