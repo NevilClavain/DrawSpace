@@ -113,6 +113,13 @@ ALL_BUILD.vcxproj*
 /lua_extensions/orbit_luaext/CMakeFiles/
 /lua_extensions/orbit_luaext/*.sln
 /lua_extensions/orbit_luaext/*.vcxproj*
+/lua_extensions/freetransformation_luaext/CMakeFiles/
+/lua_extensions/freetransformation_luaext/*.sln
+/lua_extensions/freetransformation_luaext/*.vcxproj*
+/lua_extensions/freemvt_luaext/CMakeFiles/
+/lua_extensions/freemvt_luaext/*.sln
+/lua_extensions/freemvt_luaext/*.vcxproj*
+
 
 
 /lua_core/CMakeFiles/

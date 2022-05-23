@@ -37,8 +37,6 @@ using namespace DrawSpace::Aspect;
 const char LuaClass_FreeTransform::className[] = "FreeTransform";
 const Luna<LuaClass_FreeTransform>::RegType LuaClass_FreeTransform::methods[] =
 {
-    //{ "instanciate_transformimpl", &LuaClass_FreeTransform::LUA_instanciateTransformationImpl },
-    //{ "trash_transformimpl", &LuaClass_FreeTransform::LUA_trashTransformationImpl },
     { "configure", &LuaClass_FreeTransform::LUA_configure },
     { "update", &LuaClass_FreeTransform::LUA_update },
 	{ "set_pos", &LuaClass_FreeTransform::LUA_setpos },
