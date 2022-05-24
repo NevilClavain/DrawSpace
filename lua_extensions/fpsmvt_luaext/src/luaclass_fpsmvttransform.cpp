@@ -37,6 +37,8 @@ const char LuaClass_FPSMovementTransform::className[] = "FPSMovementTransform";
 const Luna<LuaClass_FPSMovementTransform>::RegType LuaClass_FPSMovementTransform::methods[] =
 {
     { "configure", &LuaClass_FPSMovementTransform::LUA_configure },
+    { "update", &LuaClass_FPSMovementTransform::LUA_update },
+    { "read", &LuaClass_FPSMovementTransform::LUA_read },
     { "release", &LuaClass_FPSMovementTransform::LUA_release },
 	{ 0, 0 }
 };

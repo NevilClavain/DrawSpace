@@ -31,7 +31,6 @@
 #include "luaclass_renderstatesset.h"
 #include "luaclass_entity.h"
 #include "luaclass_entitynodegraph.h"
-#include "luaclass_fpstransform.h"
 #include "luaclass_rawtransform.h"
 #include "luaclass_rigidbodytransform.h"
 #include "luaclass_syncangle.h"
@@ -85,7 +84,6 @@ void LuaContext::Startup( void )
     Luna<LuaClass_FxParams>::Register( m_L );
     Luna<LuaClass_Entity>::Register( m_L );
     Luna<LuaClass_EntityNodeGraph>::Register( m_L );
-    Luna<LuaClass_FPSTransform>::Register( m_L );
     Luna<LuaClass_RawTransform>::Register( m_L );
     Luna<LuaClass_SyncAngle>::Register( m_L );
     Luna<LuaClass_SyncScalar>::Register( m_L );

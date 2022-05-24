@@ -121,7 +121,7 @@ commons.create_fps_camera = function(p_x, p_y, p_z, p_viewport_width, p_viewport
 	camera_entity:setup_info( "entity_name", p_name )
 
 
-	local fps_transfo=FPSTransform()
+	local fps_transfo=FPSMovementTransform()
 	fps_transfo:configure(camera_entity,0,0,p_x,p_y,p_z,TRUE,0)
 
 	return camera_entity, fps_transfo
