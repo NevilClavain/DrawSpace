@@ -75,6 +75,7 @@ add_subdirectory(lua_extensions/planets_luaext)
 add_subdirectory(lua_extensions/revolution_luaext)
 add_subdirectory(lua_extensions/orbit_luaext)
 add_subdirectory(lua_extensions/freemvt_luaext)
+add_subdirectory(lua_extensions/fpsmvt_luaext)
 
 
 # lua_core

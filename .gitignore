@@ -119,6 +119,9 @@ ALL_BUILD.vcxproj*
 /lua_extensions/freemvt_luaext/CMakeFiles/
 /lua_extensions/freemvt_luaext/*.sln
 /lua_extensions/freemvt_luaext/*.vcxproj*
+/lua_extensions/fpsmvt_luaext/CMakeFiles/
+/lua_extensions/fpsmvt_luaext/*.sln
+/lua_extensions/fpsmvt_luaext/*.vcxproj*
 
 
 
