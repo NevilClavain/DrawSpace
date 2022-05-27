@@ -259,13 +259,16 @@ text4_renderer:configure(root_entity, "planets_infos", 450, 70, 255, 0, 255, "xx
 text5_renderer=StringRendering()
 text5_renderer:configure(root_entity, "resource_infos", 320, 130, 255, 0, 255, "resources...")
 
+text6_renderer=StringRendering()
+text6_renderer:configure(root_entity, "camera pos", 320, 150, 255, 0, 255, "...")
+
 
 root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
---model.createmainfreecamera(0.0, 200.0, 10.0)
-model.createmainfreecamera(0.0, 200.0, -32620000.0)
+model.createmainfreecamera(0.0, 200.0, 10.0)
+--model.createmainfreecamera(0.0, 200.0, -32620000.0)
 
 eg:add_child('root','model.camera.entity',model.camera.entity)
 
@@ -276,7 +279,7 @@ mouse_right = FALSE
 
 
 g:add_mousemovecb( "onmousemove",
-function( xm, ym, dx, dy )  
+function( xm, ym, dx, dy ) 
 
   if current_cam == free_cam and left_ctrl == FALSE then
 
@@ -542,6 +545,14 @@ end)
 g:add_appruncb( "run",
 function()
 
+  local free_cam_info = { model.camera.mvt:read() }
+  local l_fcam_cam_x = free_cam_info[5]
+  local l_fcam_cam_y = free_cam_info[6]
+  local l_fcam_cam_z = free_cam_info[7]
+  local g_fcam_cam_x = free_cam_info[8]
+  local g_fcam_cam_y = free_cam_info[9]
+  local g_fcam_cam_z = free_cam_info[10]
+
 
   local time_infos = { root_entity:read_timemanager() }
   output_infos = renderer:descr() .." "..time_infos[3].. " fps "
@@ -562,6 +573,8 @@ function()
   text3_renderer:update(10, 110, 255, 0, 0, timescale)
 
   text5_renderer:update(10, 150, 255, 0, 0, resources_event)
+
+  text6_renderer:update(10, 180, 255, 0, 0, "free cam: "..l_fcam_cam_x.." "..l_fcam_cam_y.." "..l_fcam_cam_z.." - "..g_fcam_cam_x.." "..g_fcam_cam_y.." "..g_fcam_cam_z)
 
 
   if waves_inc == TRUE then

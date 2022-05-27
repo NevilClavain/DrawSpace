@@ -41,6 +41,7 @@ text2_renderer:release()
 text3_renderer:release()
 text4_renderer:release()
 text5_renderer:release()
+text6_renderer:release()
 
 g:remove_appruncb('run')
 
