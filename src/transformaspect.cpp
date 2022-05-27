@@ -88,8 +88,6 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
         locale_mat = res;
     }
 
-    m_localtransform = locale_mat;
-
     Matrix parent_transform_mat;
     parent_transform_mat.Identity();
 
@@ -105,6 +103,9 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
             parent_transform_mat_fromphysicworld = parent_world_aspect->m_worldtransformfromphysicworld;
         }        
     }
+
+    // la "vraie" transformation locale n'est pas locale_mat seule mais locale_mat * m_stack_matrix -> m_stack_matrix utlisée pour empiler les transfo des "attach/detach" successifs
+    m_localtransform = locale_mat * m_stack_matrix;
     
     Matrix sp = m_stack_matrix * parent_transform_mat;
     m_worldtransform = locale_mat * sp;
