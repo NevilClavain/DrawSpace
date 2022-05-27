@@ -95,6 +95,9 @@ int LuaClass_FreeMovementTransform::LUA_configure( lua_State* p_L )
             transform_aspect->AddComponent<Matrix>("pos");
             transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(initial_posx, initial_posy, initial_posz, 1.0));
 
+            transform_aspect->AddComponent<Vector>("localpos");
+            transform_aspect->AddComponent<Vector>("globalpos");
+
             transform_aspect->AddComponent<Quaternion>("quat");
             transform_aspect->GetComponent<Quaternion>("quat")->getPurpose().Identity();
 
@@ -126,6 +129,9 @@ int LuaClass_FreeMovementTransform::LUA_release( lua_State* p_L )
     m_entity_transform_aspect->RemoveComponent<Vector>("rot_axis_z");
     m_entity_transform_aspect->RemoveComponent<Matrix>("pos");
     m_entity_transform_aspect->RemoveComponent<Quaternion>("quat");
+
+    m_entity_transform_aspect->RemoveComponent<Vector>("localpos");
+    m_entity_transform_aspect->RemoveComponent<Vector>("globalpos");
 
     m_entity_transform_aspect->RemoveAllImplementations();
     m_entity_transform_aspect = NULL;
@@ -164,6 +170,18 @@ int LuaClass_FreeMovementTransform::LUA_update(lua_State* p_L)
         m_entity_transform_aspect->GetComponent<dsreal>("rspeed_z")->getPurpose() = rotz_speed;
 
         m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(posx, posy, posz, 1.0));
+
+        Matrix localpos_mat;
+        m_entity_transform_aspect->GetLocalTransform(localpos_mat);
+        Vector localpos(localpos_mat(3, 0), localpos_mat(3, 1), localpos_mat(3, 2), 1.0);
+
+        m_entity_transform_aspect->GetComponent<Vector>("localpos")->getPurpose() = localpos;
+
+        Matrix globalpos_mat;
+        m_entity_transform_aspect->GetWorldTransform(globalpos_mat);
+        Vector globalpos(globalpos_mat(3, 0), globalpos_mat(3, 1), globalpos_mat(3, 2), 1.0);
+
+        m_entity_transform_aspect->GetComponent<Vector>("globalpos")->getPurpose() = globalpos;
 
     } LUA_CATCH;
 
@@ -208,6 +226,9 @@ int LuaClass_FreeMovementTransform::LUA_read(lua_State* p_L)
         dsreal speed{ m_entity_transform_aspect->GetComponent<Vector>("speed")->getPurpose()[2] };
         Matrix mat{ m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose() };
 
+        Vector localpos{ m_entity_transform_aspect->GetComponent<Vector>("localpos")->getPurpose() };
+        Vector globalpos{ m_entity_transform_aspect->GetComponent<Vector>("globalpos")->getPurpose() };
+
         dsreal posx{ mat(3, 0) };
         dsreal posy{ mat(3, 1) };
         dsreal posz{ mat(3, 2) };
@@ -216,10 +237,16 @@ int LuaClass_FreeMovementTransform::LUA_read(lua_State* p_L)
         lua_pushnumber(p_L, posy);
         lua_pushnumber(p_L, posz);
         lua_pushnumber(p_L, speed);
+        lua_pushnumber(p_L, localpos[0]);
+        lua_pushnumber(p_L, localpos[1]);
+        lua_pushnumber(p_L, localpos[2]);
+        lua_pushnumber(p_L, globalpos[0]);
+        lua_pushnumber(p_L, globalpos[1]);
+        lua_pushnumber(p_L, globalpos[2]);
 
     } LUA_CATCH;
 
-    return 4;
+    return 10;
 }
 
 void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform)
