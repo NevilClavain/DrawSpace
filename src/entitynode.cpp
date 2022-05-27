@@ -45,7 +45,7 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
 	m_tree_node(p_node),
     m_owner_graph( p_owner )
 {
-    // si on passe dans ce ctor c'est que l'entitee a �t� ajout�e au graph
+    // si on passe dans ce ctor c'est que l'entitee a été ajout�e au graph
     // donc notif de l'evt
     std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
     for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
@@ -61,7 +61,7 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
 {
     if( NULL == m_owner_graph )
     {
-        //si m_owner_graph est a NULL c'est que cet EntityNode n'est pas ratach� a un EntityTree
+        //si m_owner_graph est a NULL c'est que cet EntityNode n'est pas ratache a un EntityTree
         _DSEXCEPTION( "Detached node; cannot add child to it!" );
     }
 
