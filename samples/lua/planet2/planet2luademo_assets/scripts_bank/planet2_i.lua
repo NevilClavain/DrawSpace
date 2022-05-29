@@ -545,15 +545,6 @@ end)
 g:add_appruncb( "run",
 function()
 
-  local free_cam_info = { model.camera.mvt:read() }
-  local l_fcam_cam_x = free_cam_info[5]
-  local l_fcam_cam_y = free_cam_info[6]
-  local l_fcam_cam_z = free_cam_info[7]
-  local g_fcam_cam_x = free_cam_info[8]
-  local g_fcam_cam_y = free_cam_info[9]
-  local g_fcam_cam_z = free_cam_info[10]
-
-
   local time_infos = { root_entity:read_timemanager() }
   output_infos = renderer:descr() .." "..time_infos[3].. " fps "
 
@@ -620,7 +611,7 @@ function()
                                     planet_infos["viewsInfos"][current_cam_id]["local_camera_pos_z"],
                                     1.0)
 
-  text6_renderer:update(10, 180, 255, 0, 0, "free cam: "..l_fcam_cam_x.." "..l_fcam_cam_y.." "..l_fcam_cam_z.." - "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
+  text6_renderer:update(10, 180, 255, 0, 0, "local pos: "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
 
 
   local planet_light_level = planetmod.compute_lights_level(global_camera_pos)
