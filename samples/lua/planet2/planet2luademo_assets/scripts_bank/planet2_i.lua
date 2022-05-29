@@ -574,9 +574,7 @@ function()
 
   text5_renderer:update(10, 150, 255, 0, 0, resources_event)
 
-  text6_renderer:update(10, 180, 255, 0, 0, "free cam: "..l_fcam_cam_x.." "..l_fcam_cam_y.." "..l_fcam_cam_z.." - "..g_fcam_cam_x.." "..g_fcam_cam_y.." "..g_fcam_cam_z)
-
-
+ 
   if waves_inc == TRUE then
 
     if waves:get_value() < 200.0 then
@@ -612,12 +610,20 @@ function()
   local relative_alt = planet_infos["viewsInfos"][current_cam_id]["relative_altitude"]
   rg:set_viewportquadshaderrealvector('final_pass', 'relative_alt', relative_alt, 0.0, 0.0, 0.0)
 
-  local global_camera_local_pos = Vector(planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_x"],
-                                    planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_y"],
-                                    planet_infos["viewsInfos"][current_cam_id]["global_camera_local_pos_z"],
+  local global_camera_pos = Vector(planet_infos["viewsInfos"][current_cam_id]["global_camera_pos_x"],
+                                    planet_infos["viewsInfos"][current_cam_id]["global_camera_pos_y"],
+                                    planet_infos["viewsInfos"][current_cam_id]["global_camera_pos_z"],
                                     1.0)
 
-  local planet_light_level = planetmod.compute_lights_level(global_camera_local_pos)
+  local local_camera_pos = Vector(planet_infos["viewsInfos"][current_cam_id]["local_camera_pos_x"],
+                                    planet_infos["viewsInfos"][current_cam_id]["local_camera_pos_y"],
+                                    planet_infos["viewsInfos"][current_cam_id]["local_camera_pos_z"],
+                                    1.0)
+
+  text6_renderer:update(10, 180, 255, 0, 0, "free cam: "..l_fcam_cam_x.." "..l_fcam_cam_y.." "..l_fcam_cam_z.." - "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
+
+
+  local planet_light_level = planetmod.compute_lights_level(global_camera_pos)
 
   rg:set_viewportquadshaderrealvector('final_pass', 'underwater_lightfactor', planet_light_level, planet_specific_config_descr.enable_oceans, 0.0, 0.0)
   
