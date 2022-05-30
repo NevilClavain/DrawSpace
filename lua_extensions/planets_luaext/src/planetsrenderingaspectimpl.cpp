@@ -382,6 +382,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         dsreal current_patch_current_height = e.second.layers[DetailsLayer]->GetCurrentPatchCurrentHeight();
 
         Vector locale_camera_pos{ e.second.locale_camera_pos_from_planet };
+        Vector longlat_pos{ e.second.locale_camera_long_lat };
         Vector global_camera_pos{ e.second.global_camera_pos_from_planet };
 
         registeredCameraInfos[e.first] = std::make_tuple(currentLOD, 
@@ -391,7 +392,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                                                             current_patch_max_height, 
                                                             current_patch_min_height, 
                                                             current_patch_current_height, 
-                                                            locale_camera_pos, 
+                                                            locale_camera_pos,
+                                                            longlat_pos,
                                                             global_camera_pos);
     }
 
@@ -1500,6 +1502,14 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             camera.second.relative_alt = rel_alt;
 
             camera.second.locale_camera_pos_from_planet = locale_camera_pos_from_planet;
+            Vector spherical;
+            Maths::CartesiantoSpherical(locale_camera_pos_from_planet, spherical);
+            //camera.second.locale_camera_long_lat = spherical;
+
+            camera.second.locale_camera_long_lat[0] = spherical[0];
+            camera.second.locale_camera_long_lat[1] = Utils::Maths::RadToDeg( spherical[1] );
+            camera.second.locale_camera_long_lat[2] = Utils::Maths::RadToDeg( spherical[2] );
+
             camera.second.global_camera_pos_from_planet = camera_pos_from_planet;
 
 
