@@ -22,7 +22,7 @@ local viewer_under_water = FALSE
 
 resources_event = "..."
 
-
+planet_name = 'Resurgam'
 
 
 local planet_specific_config_descr =
@@ -267,11 +267,9 @@ root_entity:add_aspect(PHYSICS_ASPECT)
 root_entity:configure_world(GRAVITY_DISABLED, 1.0, 1.0, 1.0)
 
 
-model.createmainfreecamera(0.0, 200.0, 10.0)
---model.createmainfreecamera(0.0, 200.0, -32620000.0)
 
-eg:add_child('root','model.camera.entity',model.camera.entity)
-
+--model.createmainfreecamera(0.0, 200.0, 10.0)
+--eg:add_child('root','model.camera.entity',model.camera.entity)
 
 mouse_right = FALSE
 
@@ -904,7 +902,7 @@ bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000
 bellerophon_renderer = bellerophon.models['ship']['renderer']
 bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1 ) -- z set to 1.0 to render correctly the ship underwater (see space_final_composition_ps.hlsl)
 
-planet_name = 'Resurgam'
+
 
 
 planet_layers =
@@ -1381,6 +1379,18 @@ planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 
 
 g:print("Planet creation done...")
+
+
+
+
+model.createmainfreecamera(5432010, -3036867, 2327850)
+--model.camera.entity:setup_info( "relative_to_planet", "Resurgam" )
+eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
+
+
+
+
+
 
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
