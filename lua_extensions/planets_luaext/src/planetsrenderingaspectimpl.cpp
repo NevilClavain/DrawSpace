@@ -1059,15 +1059,12 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
 
 void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, Core::Entity* p_entity)
 {
-    dsstring entity_name;
     InfosAspect* infos_aspect = p_entity->GetAspect<InfosAspect>();
     if( infos_aspect )
     {
-        entity_name = infos_aspect->GetComponent<dsstring>( "entity_name" )->getPurpose();
-
-        CameraAspect* camera_aspect = p_entity->GetAspect<CameraAspect>();
-
-        TransformAspect* transformation_aspect = p_entity->GetAspect<TransformAspect>();
+        dsstring entity_name                        { infos_aspect->GetComponent<dsstring>("entity_name")->getPurpose() };
+        CameraAspect* camera_aspect                 { p_entity->GetAspect<CameraAspect>() };
+        TransformAspect* transformation_aspect      { p_entity->GetAspect<TransformAspect>() };
        
         if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
         {
