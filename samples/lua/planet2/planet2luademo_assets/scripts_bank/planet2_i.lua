@@ -3,6 +3,7 @@ include('spacebox_model.lua')
 include('spherebump_model.lua')
 include('bellerophon_model.lua')
 include('procplanet_model.lua')
+include('impostors_model.lua')
 
 
 local speed_factor = 1500.0
@@ -23,6 +24,12 @@ local viewer_under_water = FALSE
 resources_event = "..."
 
 planet_name = 'Resurgam'
+
+local free_cam = 0
+local ship_cam = 1
+
+local current_cam = free_cam
+--local current_cam = ship_cam
 
 
 local planet_specific_config_descr =
@@ -140,11 +147,7 @@ set_camera = function(camera)
   end
 end
 
-free_cam = 0
-ship_cam = 1
 
---current_cam = free_cam
-current_cam = ship_cam
 
 
 ship_cam_fps_yaw=SyncAngle()
@@ -545,6 +548,33 @@ function()
 
   local time_infos = { root_entity:read_timemanager() }
   output_infos = renderer:descr() .." "..time_infos[3].. " fps "
+
+
+
+
+  local localpos = Vector(0.0, 0.0, 0.0, 1.0)
+  local collimator_pos_x, collimator_pos_y, is_behind = spherebump.models['sphere'].entity:project_localpoint(localpos)
+  if is_behind == TRUE then
+
+	-- hide by setting 2D pos out of the viewport
+	collimator_pos_x = 10.0
+	collimator_pos_y = 10.0
+  end
+
+  local collimator_renderer = impostors.models['collimator']['renderer']
+  collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )
+
+
+
+
+
+
+
+
+
+
+
+
 
   text_renderer:update(10, 30, 255, 0, 0, output_infos)
 
@@ -1381,14 +1411,16 @@ planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 g:print("Planet creation done...")
 
 
-
-
+-- on planet
 model.createmainfreecamera(5432010, -3036867, 2327850)
---model.camera.entity:setup_info( "relative_to_planet", "Resurgam" )
 eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
 
 
-
+-- in space
+--[[
+model.createmainfreecamera(100, 200, 500)
+eg:add_child('root','model.camera.entity', model.camera.entity)
+]]
 
 
 
@@ -1400,6 +1432,90 @@ camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 110.0, 500.0, viewpor
 
 camera2_entity:setup_info( "referent_body", "Bellorophon" )
 eg:add_child('ship','camera2_entity', camera2_entity)
+
+
+
+-- collimators
+
+-- collimator sprite
+
+collimatorsprite_rendering_config =
+{
+	main_rendering =	
+	{
+		fx =
+		{
+			shaders = 
+			{
+				{ path='spriteimpostor_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='spriteimpostor_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+		textures =
+		{
+			[1] = 
+			{
+				{ path='collimator.jpg', stage=0 },
+			}
+		},
+		shaders_params = 
+		{ 
+			{ param_name = "pos2D", shader_index = 0, register = 5 },
+			{ param_name = "flags", shader_index = 1, register = 0 },
+			{ param_name = "color", shader_index = 1, register = 1 },
+			{ param_name = "keycolor", shader_index = 1, register = 2 },
+		},
+		rendering_order = 30000
+	}
+}
+
+collimatorsprite_passes_binding = 
+{	
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = function( p_pass_id, p_environment_table, p_entity_id )
+			local renderer = impostors.models[p_entity_id]['renderer']
+			renderer:set_shaderrealvector( p_pass_id, 'pos2D', 0.0, 0.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'flags', 0.0, 1.0, 0.0, 0.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'color', 1.0, 1.0, 1.0, 1.0 )
+			renderer:set_shaderrealvector( p_pass_id, 'keycolor', 0.0, 0.0, 0.0, 1.0 )
+		end
+	}
+}
+
+collimatorsprite_descriptors_array = ImpostorsDescriptionsArray()
+collimatorsprite_descriptors_array:add()
+
+renderer_aspect_ratio =  model.renderer_infos[5] / model.renderer_infos[6];
+
+collimatorsprite_descriptors_array:set_scale(0, 0.1, 0.1 * renderer_aspect_ratio, 0.0)
+
+impostors.view.load('collimator', collimatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
+eg:add_child('root', 'collimator', impostors.models['collimator'].entity)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)

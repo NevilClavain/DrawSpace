@@ -5,6 +5,8 @@ eg:unregister_rigidbody(spherebump.models['sphere'].entity)
 g:signal_rendersceneend("eg")
 
 
+impostors.view.unload('collimator')
+
 spaceboxmod.view.unload('spacebox0')
 spherebump.view.unload('sphere')
 
