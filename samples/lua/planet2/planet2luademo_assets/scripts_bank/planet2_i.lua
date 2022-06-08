@@ -31,8 +31,7 @@ local ship_cam = 1
 local current_cam = free_cam
 --local current_cam = ship_cam
 
-
-
+local collimator_table = {}
 
 
 
@@ -103,6 +102,13 @@ create_collimator = function(collimator_id)
   impostors.view.load(collimator_id, collimatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
   eg:add_child('root', collimator_id, impostors.models[collimator_id].entity)
 
+  local collimator_entry = 
+  {
+	collimator_renderer = impostors.models[collimator_id]['renderer']
+  }
+
+  collimator_table[collimator_id] = collimator_entry
+
 end
 
 update_collimator = function(collimator_id, connected_entity)
@@ -116,7 +122,9 @@ update_collimator = function(collimator_id, connected_entity)
 	collimator_pos_y = 10.0
   end
 
-  local collimator_renderer = impostors.models[collimator_id]['renderer']
+  --local collimator_renderer = impostors.models[collimator_id]['renderer']
+
+  local collimator_renderer = collimator_table[collimator_id].collimator_renderer
   collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )
 end
 
