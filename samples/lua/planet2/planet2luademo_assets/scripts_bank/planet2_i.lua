@@ -31,7 +31,7 @@ local ship_cam = 1
 local current_cam = free_cam
 --local current_cam = ship_cam
 
-local collimator_table = {}
+collimator_table = {}
 
 
 
@@ -669,8 +669,7 @@ function()
   local time_infos = { root_entity:read_timemanager() }
   output_infos = renderer:descr() .." "..time_infos[3].. " fps "
 
-  update_collimator('collimator_sphere', spherebump.models['sphere'].entity)
-
+  update_collimator('collimator_ship', bellerophon.models['ship'].entity)
   update_collimator('collimator_freecam', model.camera.entity)
 
 
@@ -1543,7 +1542,7 @@ eg:add_child('ship','camera2_entity', camera2_entity)
 -- collimator sprite
 
 
-create_collimator('collimator_sphere', 'bump sphere')
+create_collimator('collimator_ship', 'Bellerophon spaceship')
 
 create_collimator('collimator_freecam', 'free camera')
 
