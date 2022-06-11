@@ -36,7 +36,9 @@ local collimator_table = {}
 
 
 
-create_collimator = function(collimator_id)
+create_collimator = function(collimator_id, name)
+
+  -- the impostor...
 
   local collimatorsprite_rendering_config =
   {
@@ -102,9 +104,18 @@ create_collimator = function(collimator_id)
   impostors.view.load(collimator_id, collimatorsprite_descriptors_array, collimatorsprite_passes_binding, collimatorsprite_rendering_config)
   eg:add_child('root', collimator_id, impostors.models[collimator_id].entity)
 
+  -- the object id
+  local objectid_renderer=StringRendering()
+  objectid_renderer:configure(root_entity, collimator_id, 0, 0, 255, 0, 255, "...")
+
+
+
+  -- register
   local collimator_entry = 
   {
-	collimator_renderer = impostors.models[collimator_id]['renderer']
+	collimator_renderer				= impostors.models[collimator_id]['renderer'],
+	collimator_objectid_renderer	= objectid_renderer,
+	collimator_name                 = name
   }
 
   collimator_table[collimator_id] = collimator_entry
@@ -122,10 +133,18 @@ update_collimator = function(collimator_id, connected_entity)
 	collimator_pos_y = 10.0
   end
 
-  --local collimator_renderer = impostors.models[collimator_id]['renderer']
-
   local collimator_renderer = collimator_table[collimator_id].collimator_renderer
-  collimator_renderer:set_shaderrealvector( 'texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0 )
+  collimator_renderer:set_shaderrealvector('texture_pass', 'pos2D', collimator_pos_x, collimator_pos_y, 0.0, 0.0)
+
+
+  local objectid_text_pos_x = collimator_pos_x - 0.05;
+  local objectid_text_pos_y = collimator_pos_y + 0.1;
+  local objectid_tpos_x = model.renderer_infos[2] * 0.5 * (objectid_text_pos_x + 1.0);
+  local objectid_tpos_y = model.renderer_infos[3] - (model.renderer_infos[3] * 0.5 * (objectid_text_pos_y + 1.0));
+
+  local objectid_renderer = collimator_table[collimator_id].collimator_objectid_renderer
+  objectid_renderer:update(objectid_tpos_x, objectid_tpos_y, 0, 255, 0, collimator_table[collimator_id].collimator_name)
+
 end
 
 
@@ -1524,9 +1543,9 @@ eg:add_child('ship','camera2_entity', camera2_entity)
 -- collimator sprite
 
 
-create_collimator('collimator_sphere')
+create_collimator('collimator_sphere', 'bump sphere')
 
-create_collimator('collimator_freecam')
+create_collimator('collimator_freecam', 'free camera')
 
 
 
