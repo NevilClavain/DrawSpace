@@ -34,6 +34,17 @@ local current_cam = free_cam
 collimator_table = {}
 
 
+set_freecam_on_planet = function(longitud, latitud, altitud_meters, planet_config)
+
+  local planet_ray_meters = planet_config.planet_ray * 1000.0;
+  local pos_ray = planet_ray_meters + altitud_meters;
+ 
+  local xyz_pos = { g:stoc(pos_ray, longitud, latitud ) }
+
+  model.createmainfreecamera(xyz_pos[1], xyz_pos[2], xyz_pos[3])
+  eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
+
+end
 
 
 create_collimator = function(collimator_id, name)
@@ -1514,8 +1525,12 @@ g:print("Planet creation done...")
 
 
 -- on planet
-model.createmainfreecamera(5432010, -3036867, 2327850)
-eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
+
+
+set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
+
+--model.createmainfreecamera(5432010, -3036867, 2327850)
+--eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
 
 
 -- in space

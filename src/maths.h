@@ -50,9 +50,9 @@ public:
 	static double	Clamp( dsreal a, dsreal b, dsreal x )		{ return (x < a ? a : (x > b ? b : x)); };
 	static double	Lerp( dsreal a, dsreal b, dsreal x )		{ return a + x * (b - a); };
 	static double	Cubic( dsreal a )							{ return a * a * (3 - 2*a); };
-	static double	Pulse( dsreal a, dsreal b, dsreal x )		    { return (double)((x >= a) - (x >= b)); };
+	static double	Pulse( dsreal a, dsreal b, dsreal x )		{ return (double)((x >= a) - (x >= b)); };
 	static double	Gamma( dsreal a, dsreal g )				    { return pow(a, 1/g); };
-	static double	Expose( dsreal l, dsreal k )				    { return (1 - exp(-l * k)); };
+	static double	Expose( dsreal l, dsreal k )				{ return (1 - exp(-l * k)); };
 	static double	DegToRad( dsreal ang )					    { return ( ( ang * PI ) / 180.0 ); };
     static double	RadToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / PI ); };
 

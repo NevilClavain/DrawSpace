@@ -40,6 +40,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
+
 const char LuaClass_Globals::className[] = "Globals";
 const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 {
@@ -59,6 +60,9 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
 	{ "stoi", &LuaClass_Globals::LUA_stoi },
     { "cos", &LuaClass_Globals::LUA_cos },
     { "sin", &LuaClass_Globals::LUA_sin },
+    { "ctos", &LuaClass_Globals::LUA_ctos },
+    { "stoc", &LuaClass_Globals::LUA_stoc },
+
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
     { "remove_appruncb", &LuaClass_Globals::LUA_removeappruncb },
@@ -639,6 +643,54 @@ int LuaClass_Globals::LUA_sin(lua_State* p_L)
     lua_pushnumber(p_L, sina);
     return 1;
 }
+
+int LuaClass_Globals::LUA_ctos(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 3)
+    {
+        LUA_ERROR("Globals::ctos : argument(s) missing");
+    }
+
+    dsreal x = luaL_checknumber(p_L, 1);
+    dsreal y = luaL_checknumber(p_L, 2);
+    dsreal z = luaL_checknumber(p_L, 3);
+
+    Vector c(x, y, z, 1.0);
+    Vector s;
+    Utils::Maths::CartesiantoSpherical(c, s);
+       
+    dsreal longit{ Maths::RadToDeg(s[1]) };
+    dsreal latit{ Maths::RadToDeg(s[2]) };
+
+    lua_pushnumber(p_L, s[0]);
+    lua_pushnumber(p_L, longit);
+    lua_pushnumber(p_L, latit);
+    return 3;
+}
+
+int LuaClass_Globals::LUA_stoc(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 3)
+    {
+        LUA_ERROR("Globals::stoc : argument(s) missing");
+    }
+
+    dsreal r = luaL_checknumber(p_L, 1);
+    dsreal t = Maths::DegToRad(luaL_checknumber(p_L, 2));
+    dsreal p = Maths::DegToRad(luaL_checknumber(p_L, 3));
+
+    Vector s(r, t, p, 1.0);
+    Vector c;
+    Utils::Maths::SphericaltoCartesian(s, c);
+
+    lua_pushnumber(p_L, c[0]);
+    lua_pushnumber(p_L, c[1]);
+    lua_pushnumber(p_L, c[2]);
+    return 3;
+}
+
 
 int LuaClass_Globals::LUA_activateresourcessystem(lua_State* p_L)
 {
