@@ -1529,8 +1529,6 @@ g:print("Planet creation done...")
 
 set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
 
---model.createmainfreecamera(5432010, -3036867, 2327850)
---eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
 
 
 -- in space
