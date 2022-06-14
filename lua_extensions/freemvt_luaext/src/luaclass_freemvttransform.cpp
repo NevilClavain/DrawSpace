@@ -264,11 +264,8 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
     Vector local_speed = vectors[0]->getPurpose();
     local_speed[2] = -local_speed[2];
 
-    ComponentList<Matrix> mats;
-    p_transformaspect->GetComponentsByType<Matrix>(mats);
-
-    Matrix pos = mats[0]->getPurpose();
-
+    Matrix pos{ p_transformaspect->GetComponent<Matrix>("pos")->getPurpose() };
+    
     ComponentList<TimeAspect::TimeScale> time_scales;
     m_time_aspect->GetComponentsByType<TimeAspect::TimeScale>(time_scales);
 
@@ -293,9 +290,7 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
     Vector rot_axis_z = vectors[3]->getPurpose();
 
     // quaternion resultat courant
-    ComponentList<Quaternion>   quats;
-    p_transformaspect->GetComponentsByType<Quaternion>(quats);
-    Quaternion	                current_res = quats[0]->getPurpose();
+    Quaternion	                current_res{ p_transformaspect->GetComponent<Quaternion>("quat")->getPurpose() };
 
     Utils::Matrix			    orientation;
     Vector                      gs;
@@ -369,8 +364,8 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
 
     p_out_base_transform = orientation * pos;
 
-    mats[0]->getPurpose() = pos;
-    quats[0]->getPurpose() = current_res;
+    p_transformaspect->GetComponent<Matrix>("pos")->getPurpose() = pos;
+    p_transformaspect->GetComponent<Quaternion>("quat")->getPurpose() = current_res;
 
     vectors[1]->getPurpose() = rot_axis_x;
     vectors[2]->getPurpose() = rot_axis_y;
