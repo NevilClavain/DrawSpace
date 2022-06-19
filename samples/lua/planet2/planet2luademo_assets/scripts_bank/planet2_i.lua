@@ -42,6 +42,12 @@ set_freecam_on_planet = function(longitud, latitud, altitud_meters, planet_confi
   local xyz_pos = { g:stoc(pos_ray, longitud, latitud ) }
 
   model.createmainfreecamera(xyz_pos[1], xyz_pos[2], xyz_pos[3])
+
+  source = Vector( xyz_pos[1], xyz_pos[2], xyz_pos[3], 1.0 )
+  dest = Vector( 0.0, 0.0, 0.0, 1.0 )
+
+  model.camera.mvt:lookat(source, dest)
+
   eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
 
 end

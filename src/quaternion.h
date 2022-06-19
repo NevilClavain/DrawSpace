@@ -26,6 +26,8 @@
 #define _QUATERNION_H_
 
 #include "matrix.h"
+#include "vector.h"
+#include "maths.h"
 
 namespace DrawSpace
 {
@@ -64,6 +66,42 @@ public:
 		m_quat[2] = 0.0;
 		m_quat[3] = 1.0;
 	};
+
+	// https://stackoverflow.com/questions/12435671/quaternion-lookat-function
+
+	inline void LookAt(const Vector& p_source, const Vector& p_dest)
+	{
+		Vector forwardVector(p_dest[0] - p_source[0],
+								p_dest[1] - p_source[1],
+								p_dest[2] - p_source[2],
+								0.0);
+
+		forwardVector.Normalize();
+
+		Vector forward(0.0, 0.0, -1.0, 0.0);
+
+		dsreal dot{ forward * forwardVector };
+
+		if (Utils::Maths::Abs(dot - (-1.0)) < 0.000001)
+		{
+			m_quat[0] = 0.0;
+			m_quat[1] = 1.0;
+			m_quat[2] = 0.0;
+			m_quat[3] = PI;
+		}
+		else if (Utils::Maths::Abs(dot - (1.0)) < 0.000001)
+		{
+			Identity();
+		}
+		else
+		{
+			dsreal rotAngle{ std::acos(dot) };			
+			Vector rotAxis = ProdVec(forward, forwardVector);
+			rotAxis.Normalize();
+			
+			RotationAxis(rotAxis, rotAngle);
+		}
+	}
 
 	inline void RotationAxis( Vector& p_axis, dsreal p_angle )
 	{

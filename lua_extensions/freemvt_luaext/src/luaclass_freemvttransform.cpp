@@ -25,6 +25,7 @@
 #include "luacontext.h"
 #include "luaclass_freemvttransform.h"
 #include "luaclass_entity.h"
+#include "luaclass_vector.h"
 #include "transformaspect.h"
 #include "quaternion.h"
 
@@ -36,11 +37,12 @@ using namespace DrawSpace::Aspect;
 const char LuaClass_FreeMovementTransform::className[] = "FreeMovementTransform";
 const Luna<LuaClass_FreeMovementTransform>::RegType LuaClass_FreeMovementTransform::methods[] =
 {
-    { "configure",  &LuaClass_FreeMovementTransform::LUA_configure },
-    { "update",     &LuaClass_FreeMovementTransform::LUA_update },
-    { "set_pos",    &LuaClass_FreeMovementTransform::LUA_setpos },
-    { "read",       &LuaClass_FreeMovementTransform::LUA_read },
-    { "release",    &LuaClass_FreeMovementTransform::LUA_release },
+    { "configure",      &LuaClass_FreeMovementTransform::LUA_configure },
+    { "update",         &LuaClass_FreeMovementTransform::LUA_update },
+    { "set_pos",        &LuaClass_FreeMovementTransform::LUA_setpos },
+    { "lookat",         &LuaClass_FreeMovementTransform::LUA_lookat },
+    { "read",           &LuaClass_FreeMovementTransform::LUA_read },
+    { "release",        &LuaClass_FreeMovementTransform::LUA_release },
 	{ 0, 0 }
 };
 
@@ -210,6 +212,31 @@ int LuaClass_FreeMovementTransform::LUA_setpos(lua_State* p_L)
         m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(posx, posy, posz, 1.0));
 
     } LUA_CATCH;
+
+    return 0;
+}
+
+int LuaClass_FreeMovementTransform::LUA_lookat(lua_State* p_L)
+{
+    if (!m_entity_transform_aspect)
+    {
+        LUA_ERROR("FreeMovementTransform::lookat : no transform aspect");
+    }
+
+    int argc = lua_gettop(p_L);
+    if (argc < 2)
+    {
+        LUA_ERROR("FreeMovementTransform::lookat : argument(s) missing");
+    }
+   
+    LuaClass_Vector* lua_source{ Luna<LuaClass_Vector>::check(p_L, 1) };
+    LuaClass_Vector* lua_dest{ Luna<LuaClass_Vector>::check(p_L, 2) };
+
+    const Vector& source{ lua_source->getVector() };
+    const Vector& dest{ lua_dest->getVector() };
+    
+    Quaternion& quat{ m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() };
+    quat.LookAt(source, dest);
 
     return 0;
 }

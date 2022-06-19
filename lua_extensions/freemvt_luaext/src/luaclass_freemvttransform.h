@@ -56,6 +56,7 @@ public:
     int LUA_release(lua_State* p_L);
     int LUA_update(lua_State* p_L);
     int LUA_setpos(lua_State* p_L);
+    int LUA_lookat(lua_State* p_L);
     int LUA_read(lua_State* p_L);
 
     void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
