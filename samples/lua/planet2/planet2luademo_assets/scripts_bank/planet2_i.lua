@@ -46,7 +46,14 @@ set_freecam_on_planet = function(longitud, latitud, altitud_meters, planet_confi
   source = Vector( xyz_pos[1], xyz_pos[2], xyz_pos[3], 1.0 )
   dest = Vector( 0.0, 0.0, 0.0, 1.0 )
 
+
+  -- watch planet center 
   model.camera.mvt:lookat(source, dest)
+
+  -- and then rotate 90 degres on x-axis
+  for i = 0, 900, 1 do
+    model.camera.mvt:rotate_x(0.1)
+  end
 
   eg:add_child(planet_name,'model.camera.entity', model.camera.entity)
 
@@ -691,7 +698,7 @@ function()
 
 
 
-
+  
 
 
 

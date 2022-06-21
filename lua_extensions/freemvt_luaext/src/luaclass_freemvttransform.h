@@ -59,6 +59,10 @@ public:
     int LUA_lookat(lua_State* p_L);
     int LUA_read(lua_State* p_L);
 
+    int LUA_rotateX(lua_State* p_L);
+    int LUA_rotateY(lua_State* p_L);
+    int LUA_rotateZ(lua_State* p_L);
+
     void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
 
     static const char className[];
