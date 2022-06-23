@@ -59,6 +59,53 @@ set_freecam_on_planet = function(longitud, latitud, altitud_meters, planet_confi
 
 end
 
+create_ship_at_pos = function(pos_x, pos_y, pos_z)
+
+  bellerophon_passes_bindings = 
+  {    
+	binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = bellerophon.update_lit_from_scene_env
+	},   
+	binding_1 = 
+	{
+        target_pass_id = 'oceanmask_pass',
+		rendering_id = 'color_rendering',
+		lit_shader_update_func = nil
+	}
+  }
+
+  bellerophon.view.load('ship', {x = pos_x, y = pos_y, z = pos_z}, bellerophon_passes_bindings)
+
+  local ship_entity = bellerophon.models['ship'].entity
+
+  ship_entity:add_aspect(INFOS_ASPECT)
+  ship_entity:setup_info( "entity_name", "Bellorophon" )
+
+  local rigibody_transform = bellerophon.models['ship'].rigibody_transform
+
+  rigibody_transform:configure_mass(50.0)
+
+  rigibody_transform:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
+  rigibody_transform:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
+
+  rigibody_transform:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+  rigibody_transform:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+  rigibody_transform:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
+  rigibody_transform:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
+
+  rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+  rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+  local ship_renderer = bellerophon.models['ship']['renderer']
+  ship_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1 ) -- z set to 1.0 to render correctly the ship underwater (see space_final_composition_ps.hlsl)
+
+  return ship_entity, rigibody_transform
+end
+
 
 create_collimator = function(collimator_id, name)
 
@@ -1011,56 +1058,6 @@ spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_
 eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 
 
-bellerophon_passes_bindings = 
-{
-    
-	binding_0 = 
-	{
-        target_pass_id = 'texture_pass',
-		rendering_id = 'lit_rendering',
-		lit_shader_update_func = bellerophon.update_lit_from_scene_env
-	},   
-	binding_1 = 
-	{
-        target_pass_id = 'oceanmask_pass',
-		rendering_id = 'color_rendering',
-		lit_shader_update_func = nil
-	}
-}
-bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings)
-
---bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = 40620000 }, bellerophon_passes_bindings)
-
-bellerophon_entity = bellerophon.models['ship'].entity
-
-eg:add_child('root', 'ship', bellerophon_entity)
-
-bellerophon_entity:add_aspect(INFOS_ASPECT)
-bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
-
-
-bellerophon_rigibody_transform = bellerophon.models['ship'].rigibody_transform
-
-bellerophon_rigibody_transform:configure_mass(50.0)
-
-bellerophon_rigibody_transform:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_rigibody_transform:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
-
-bellerophon_rigibody_transform:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_rigibody_transform:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
-
-bellerophon_rigibody_transform:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_rigibody_transform:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
-
-bellerophon_rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
-bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
-
-bellerophon_renderer = bellerophon.models['ship']['renderer']
-bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1 ) -- z set to 1.0 to render correctly the ship underwater (see space_final_composition_ps.hlsl)
-
-
-
-
 planet_layers =
 { 
 	--surface_layer = 
@@ -1537,6 +1534,66 @@ planet_revol:configure(resurgam_planet_entity, 1.0, 1)
 g:print("Planet creation done...")
 
 
+
+
+
+--[[
+bellerophon_passes_bindings = 
+{
+    
+	binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'lit_rendering',
+		lit_shader_update_func = bellerophon.update_lit_from_scene_env
+	},   
+	binding_1 = 
+	{
+        target_pass_id = 'oceanmask_pass',
+		rendering_id = 'color_rendering',
+		lit_shader_update_func = nil
+	}
+}
+bellerophon.view.load('ship', {x = -160.0, y = 0.0, z = -500.0 }, bellerophon_passes_bindings)
+
+bellerophon_entity = bellerophon.models['ship'].entity
+
+bellerophon_entity:add_aspect(INFOS_ASPECT)
+bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
+
+
+bellerophon_rigibody_transform = bellerophon.models['ship'].rigibody_transform
+
+bellerophon_rigibody_transform:configure_mass(50.0)
+
+bellerophon_rigibody_transform:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_rigibody_transform:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_rigibody_transform:configure_torque("roll_left", Vector(0.0, 0.0, 150000.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("roll_right", Vector(0.0, 0.0, -150000.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_rigibody_transform:configure_torque("yaw_left", Vector(0.0, 150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+bellerophon_rigibody_transform:configure_torque("yaw_right", Vector(0.0, -150000.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+
+bellerophon_renderer = bellerophon.models['ship']['renderer']
+bellerophon_renderer:set_shaderrealvector( 'oceanmask_pass', 'color', 0, 0, 1, 1 ) -- z set to 1.0 to render correctly the ship underwater (see space_final_composition_ps.hlsl)
+]]
+
+bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(-160.0, 0.0, -500.0)
+
+eg:add_child('root', 'ship', bellerophon_entity)
+
+
+
+
+
+
+
+
+
 -- on planet
 
 
@@ -1545,10 +1602,10 @@ set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
 
 
 -- in space
---[[
-model.createmainfreecamera(100, 200, 500)
-eg:add_child('root','model.camera.entity', model.camera.entity)
-]]
+
+--model.createmainfreecamera(100, 200, 500)
+--eg:add_child('root','model.camera.entity', model.camera.entity)
+
 
 
 
