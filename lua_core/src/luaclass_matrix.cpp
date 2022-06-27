@@ -227,6 +227,11 @@ DrawSpace::Utils::Matrix LuaClass_Matrix::GetMatrix( void ) const
     return m_matrix;
 }
 
+void LuaClass_Matrix::SetMatrix(const DrawSpace::Utils::Matrix& p_mat)
+{
+	m_matrix = p_mat;
+}
+
 int LuaClass_Matrix::LUA_storeentitytransformation(lua_State* p_L)
 {
 	int argc = lua_gettop(p_L);

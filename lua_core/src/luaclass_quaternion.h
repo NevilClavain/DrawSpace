@@ -39,9 +39,11 @@ public:
 
 	int LUA_zero(lua_State* p_L);
 	int LUA_identity(lua_State* p_L);
+	int LUA_lookat(lua_State* p_L);
 	int LUA_rotationaxis(lua_State* p_L);
 	int LUA_normalize(lua_State* p_L);
 	int LUA_storelerp(lua_State* p_L);
+	int LUA_rotationmatfrom(lua_State* p_L);
 
 
 	DrawSpace::Utils::Quaternion GetQuaternion(void) const;

@@ -55,6 +55,7 @@ public:
     int LUA_storeproduct( lua_State* p_L );
 
     DrawSpace::Utils::Matrix GetMatrix( void ) const;
+    void SetMatrix(const DrawSpace::Utils::Matrix& p_mat);
 
 	int LUA_storeentitytransformation(lua_State* p_L);
 

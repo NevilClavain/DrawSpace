@@ -25,7 +25,9 @@
 #include "luacontext.h"
 #include "luaclass_quaternion.h"
 #include "maths.h"
-#include "vector.h"
+#include "luaclass_vector.h"
+#include "luaclass_matrix.h"
+
 
 
 using namespace DrawSpace::Utils;
@@ -35,9 +37,11 @@ const Luna<LuaClass_Quaternion>::RegType LuaClass_Quaternion::methods[] =
 {
 	{ "zero", &LuaClass_Quaternion::LUA_zero },
 	{ "identity", &LuaClass_Quaternion::LUA_identity },
+	{ "lookat", &LuaClass_Quaternion::LUA_lookat },
 	{ "rotation_axis", &LuaClass_Quaternion::LUA_rotationaxis },
 	{ "normalize", &LuaClass_Quaternion::LUA_normalize },
 	{ "store_lerp", &LuaClass_Quaternion::LUA_storelerp },
+	{ "rotationmat_from", &LuaClass_Quaternion::LUA_rotationmatfrom },
 	{ 0, 0 }
 };
 
@@ -59,6 +63,24 @@ int LuaClass_Quaternion::LUA_zero(lua_State* p_L)
 int LuaClass_Quaternion::LUA_identity(lua_State* p_L)
 {
 	m_quat.Identity();
+	return 0;
+}
+
+int LuaClass_Quaternion::LUA_lookat(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 2)
+	{
+		LUA_ERROR("Quaternion::lookat : argument(s) missing");
+	}
+
+	LuaClass_Vector* lua_source{ Luna<LuaClass_Vector>::check(p_L, 1) };
+	LuaClass_Vector* lua_dest{ Luna<LuaClass_Vector>::check(p_L, 2) };
+
+	const Vector& source{ lua_source->getVector() };
+	const Vector& dest{ lua_dest->getVector() };
+	m_quat.LookAt(source, dest);
+	
 	return 0;
 }
 
@@ -101,6 +123,23 @@ int LuaClass_Quaternion::LUA_storelerp(lua_State* p_L)
 	dsreal blend_factor = luaL_checknumber(p_L, 3);
 
 	m_quat = Quaternion::Lerp(lua_q1->GetQuaternion(), lua_q2->GetQuaternion(), blend_factor);
+
+	return 0;
+}
+
+int LuaClass_Quaternion::LUA_rotationmatfrom(lua_State* p_L)
+{
+	int argc = lua_gettop(p_L);
+	if (argc < 1)
+	{
+		LUA_ERROR("Quaternion::rotationmat_from : argument(s) missing");
+	}
+
+	LuaClass_Matrix* lua_mat{ Luna<LuaClass_Matrix>::check(p_L, 1) };
+
+	Matrix out_mat;
+	m_quat.RotationMatFrom(out_mat);
+	lua_mat->SetMatrix(out_mat);
 
 	return 0;
 }
