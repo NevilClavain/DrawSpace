@@ -135,7 +135,7 @@ end
 
 
 
-bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
+bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_body_attitude_and_pos_mat, p_passes_bindings)
   
   local entity
   local renderer
@@ -147,11 +147,8 @@ bellerophon.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialp
 
   rigibody_transform:attach_toentity(entity,0)
   rigibody_transform:configure_shape(SHAPE_BOX, 95.0, 70.0, 161.0)
-  local pos_mat = Matrix()
-  pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  rigibody_transform:configure_attitude(pos_mat)
-  
- 
+  rigibody_transform:configure_attitude(p_body_attitude_and_pos_mat)
+   
   local pair = { ['entity'] = entity, ['renderer'] = renderer, ['rigibody_transform'] = rigibody_transform }
 
   bellerophon.models[p_entity_id] = pair
@@ -195,7 +192,7 @@ bellerophon.view.unload = function(p_entity_id)
   end
 end
 
-bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
+bellerophon.view.load = function(p_entity_id, p_attitude_and_pos_mat, p_passes_bindings)
 
   local found_id = FALSE
   for k, v in pairs(bellerophon.models) do
@@ -208,6 +205,6 @@ bellerophon.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
+    model.view.loadbody('bellerophon model', bellerophon.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_attitude_and_pos_mat)
   end  
 end

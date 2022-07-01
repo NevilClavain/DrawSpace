@@ -59,7 +59,7 @@ set_freecam_on_planet = function(longitud, latitud, altitud_meters, planet_confi
 
 end
 
-create_ship_at_pos = function(pos_x, pos_y, pos_z)
+create_ship = function(attitude_and_pos_mat)
 
   bellerophon_passes_bindings = 
   {    
@@ -77,7 +77,7 @@ create_ship_at_pos = function(pos_x, pos_y, pos_z)
 	}
   }
 
-  bellerophon.view.load('ship', {x = pos_x, y = pos_y, z = pos_z}, bellerophon_passes_bindings)
+  bellerophon.view.load('ship', attitude_and_pos_mat, bellerophon_passes_bindings)
 
   local ship_entity = bellerophon.models['ship'].entity
 
@@ -114,8 +114,24 @@ set_body_on_planet = function(longitud, latitud, altitud_meters, planet_config)
  
   local xyz_pos = { g:stoc(pos_ray, longitud, latitud ) }
 
-  bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(xyz_pos[1], xyz_pos[2], xyz_pos[3])
+  source = Vector( xyz_pos[1], xyz_pos[2], xyz_pos[3], 1.0 )
+  dest = Vector( 0.0, 0.0, 0.0, 1.0 )
+
+  -- positioning my ship
+  local pos_mat = Matrix()
+  pos_mat:translation(xyz_pos[1], xyz_pos[2], xyz_pos[3])
+
+  -- my ship watches planet center 
+  local rot_quat = Quaternion()
+  rot_quat:lookat(source, dest)
+  local rot_mat = Matrix()
+  rot_quat:rotationmat_from(rot_mat)
+
+  local result_mat = Matrix()
+  result_mat:set_product(rot_mat, pos_mat)
   
+  bellerophon_entity, bellerophon_rigibody_transform = create_ship(result_mat)
+    
   eg:add_child(planet_name, 'ship', bellerophon_entity)
 
 end
@@ -1551,7 +1567,7 @@ g:print("Planet creation done...")
 
 -- on planet
 
-set_body_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
+set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 
 -- on space
 --bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(-160.0, 0.0, -500.0)
@@ -1569,14 +1585,14 @@ set_body_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
+--set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
 
 
 
 -- in space
 
---model.createmainfreecamera(100, 200, 500)
---eg:add_child('root','model.camera.entity', model.camera.entity)
+model.createmainfreecamera(100, 200, 500)
+eg:add_child('root','model.camera.entity', model.camera.entity)
 
 
 

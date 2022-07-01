@@ -59,9 +59,9 @@ model.view.load = function(p_modelname, p_modelviewload_function, p_passes_bindi
 
 end
 
-model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_entity_id, p_bodyinitialpos)
+model.view.loadbody = function(p_modelname, p_modelviewload_function, p_passes_bindings, p_anims_parameters, p_entity_id, p_body_attitude_and_pos_mat)
 
-  local entity = p_modelviewload_function(rg, p_entity_id, p_bodyinitialpos, p_passes_bindings)
+  local entity = p_modelviewload_function(rg, p_entity_id, p_body_attitude_and_pos_mat, p_passes_bindings)
 
   -- loop pour execution lit_shader_update_func de chaque entree de p_passes_bindings
   for k, v in pairs(p_passes_bindings) do
