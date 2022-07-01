@@ -538,7 +538,9 @@ metalcube_passes_bindings =
 	}
 }
 
-metalcube.view.load('cube', {x = 0.0, y = skydome.innerRadius + 1.7, z = 0.0}, metalcube_passes_bindings)
+cube_pos_mat = Matrix()
+cube_pos_mat:translation( 0.0, skydome.innerRadius + 1.7, 0.0 )
+metalcube.view.load('cube', cube_pos_mat, metalcube_passes_bindings)
 eg:add_child('root', 'cube', metalcube.models['cube'].entity)
 
 
@@ -832,7 +834,11 @@ g:set_mousecursorcircularmode(TRUE)
 add_cube = function()
 
   local instance_name = 'cube_'..cube_instance
-  metalcube.view.load(instance_name, {x = 0.0, y = skydome.innerRadius + 37.9, z = 0.0}, metalcube_passes_bindings)
+
+  local cube_pos_mat = Matrix()
+  cube_pos_mat:translation( 0.0, skydome.innerRadius + 37.9, 0.0 )
+
+  metalcube.view.load(instance_name, cube_pos_mat, metalcube_passes_bindings)
   eg:add_child('root', instance_name, metalcube.models[instance_name].entity)
 
   cube_instance = cube_instance + 1

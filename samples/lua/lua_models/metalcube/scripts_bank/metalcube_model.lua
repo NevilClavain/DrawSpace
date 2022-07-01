@@ -221,7 +221,7 @@ metalcube.update_flatcolor = function( p_pass_id, p_r, p_g, p_b, p_a, p_entity_i
     renderer:set_shaderrealvector( p_pass_id, 'color', p_r, p_g, p_b, p_a )
 end
 
-metalcube.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos, p_passes_bindings)
+metalcube.createlitmodelview = function(p_rendergraph, p_entity_id, p_body_attitude_and_pos_mat, p_passes_bindings)
   
   local entity
   local renderer
@@ -233,9 +233,7 @@ metalcube.createlitmodelview = function(p_rendergraph, p_entity_id, p_initialpos
 
   rigibody_transform:attach_toentity(entity,0)
   rigibody_transform:configure_shape(SHAPE_BOX, 1.0, 1.0, 1.0)
-  local cube_pos_mat = Matrix()
-  cube_pos_mat:translation( p_initialpos.x, p_initialpos.y, p_initialpos.z )
-  rigibody_transform:configure_attitude(cube_pos_mat)
+  rigibody_transform:configure_attitude(p_body_attitude_and_pos_mat)
   rigibody_transform:configure_mass(7.0)
 
 
@@ -291,7 +289,7 @@ metalcube.view.unload = function(p_entity_id)
   end
 end
 
-metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
+metalcube.view.load = function(p_entity_id, p_attitude_and_pos_mat, p_passes_bindings)
 
   found_id = FALSE
   for k, v in pairs(metalcube.models) do
@@ -304,6 +302,6 @@ metalcube.view.load = function(p_entity_id, p_initialpos, p_passes_bindings)
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')
   else
-    model.view.loadbody('metalcube model', metalcube.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_initialpos)
+    model.view.loadbody('metalcube model', metalcube.createlitmodelview, p_passes_bindings, nil, p_entity_id, p_attitude_and_pos_mat)
   end  
 end

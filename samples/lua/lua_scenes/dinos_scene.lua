@@ -151,7 +151,10 @@
 			lit_shader_update_func = metalcube.update_from_scene_env
 		}
 	}
-	metalcube.view.load('c', {x = -4010.0, y = skydome.innerRadius + 25.0, z = -2740.0}, metalcube_passes_config)
+
+    cube_pos_mat = Matrix()
+    cube_pos_mat:translation( -4010.0, skydome.innerRadius + 25.9, -2740.0 )
+	metalcube.view.load('c', cube_pos_mat, metalcube_passes_config)
 	eg:add_child('root', 'c', metalcube.models['c'].entity)
 	
 	
