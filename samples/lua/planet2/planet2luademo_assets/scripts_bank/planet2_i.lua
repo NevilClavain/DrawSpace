@@ -1083,8 +1083,11 @@ spherebump_passes_bindings =
 	}
 }
 
-spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = -62.0}, spherebump_passes_bindings)
---spherebump.view.load('sphere', {x = 0.0, y = 0.0, z = 40620000 }, spherebump_passes_bindings)
+
+sphere_pos_mat = Matrix()
+sphere_pos_mat:translation( 0.0, 0.0, -62.0 )
+spherebump.view.load('sphere', sphere_pos_mat, spherebump_passes_bindings)
+
 
 eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 

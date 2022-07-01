@@ -557,7 +557,10 @@ spherebump_passes_bindings =
 		lit_shader_update_func = spherebump.update_from_scene_env_mirror	
 	}
 }
-spherebump.view.load('sphere', {x = 0.0, y = skydome.innerRadius + 5.0, z = 0.0}, spherebump_passes_bindings)
+
+sphere_pos_mat = Matrix()
+sphere_pos_mat:translation( 0.0, skydome.innerRadius + 2.0, 0.0 )
+spherebump.view.load('sphere', sphere_pos_mat, spherebump_passes_bindings)
 eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
 
 waterquad_passes_bindings = 

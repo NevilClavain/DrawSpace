@@ -131,12 +131,16 @@
 			lit_shader_update_func = spherebump.update_from_scene_env
 		}
 	}
-	spherebump.view.load('s', {x = -4010.0, y = skydome.innerRadius + 135.0, z = -2740.0}, spherebump_passes_config)
+
+	sphere_pos_mat = Matrix()
+	sphere_pos_mat:translation( -4010.0, skydome.innerRadius + 135.0, -2740.0 )
+	spherebump.view.load('s', sphere_pos_mat, spherebump_passes_config)
 	eg:add_child('root', 's', spherebump.models['s'].entity)
 
-	spherebump.view.load('s2', {x = -4010.0, y = skydome.innerRadius + 18.0, z = -2740.0}, spherebump_passes_config)
+	sphere2_pos_mat = Matrix()
+	sphere2_pos_mat:translation( -4010.0, skydome.innerRadius + 18.0, -2740.0 )
+	spherebump.view.load('s2', sphere2_pos_mat, spherebump_passes_config)
 	eg:add_child('root', 's2', spherebump.models['s2'].entity)
-
 	
 	metalcube_passes_config = 
 	{
