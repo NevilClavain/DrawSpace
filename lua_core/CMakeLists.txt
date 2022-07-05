@@ -39,6 +39,8 @@ file(
 		
 )
 
+add_definitions( -D_FROMCMAKE )
+
 add_library(lua_core ${source_files})
 
 
