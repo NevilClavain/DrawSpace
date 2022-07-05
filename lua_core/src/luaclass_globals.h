@@ -92,6 +92,10 @@ public:
     int LUA_ctos(lua_State* p_L);
     int LUA_stoc(lua_State* p_L);
 
+    int LUA_rotatequaternionx(lua_State* p_L);
+    int LUA_rotatequaterniony(lua_State* p_L);
+    int LUA_rotatequaternionz(lua_State* p_L);
+
 
     int LUA_showmousecursor( lua_State* p_L );
     int LUA_setmousecursorcircularmode( lua_State* p_L );

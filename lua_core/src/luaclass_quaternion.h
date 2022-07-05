@@ -47,6 +47,7 @@ public:
 
 
 	DrawSpace::Utils::Quaternion GetQuaternion(void) const;
+	void SetQuaternion(const DrawSpace::Utils::Quaternion& p_quat);
 
 	static const char className[];
 	static const Luna<LuaClass_Quaternion>::RegType methods[];

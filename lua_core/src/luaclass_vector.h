@@ -59,6 +59,7 @@ public:
     int LUA_subwith(lua_State* p_L);
 
     DrawSpace::Utils::Vector getVector( void ) const;
+    void setVector(const DrawSpace::Utils::Vector& p_vector);
 
     static const char className[];
     static const Luna<LuaClass_Vector>::RegType methods[];

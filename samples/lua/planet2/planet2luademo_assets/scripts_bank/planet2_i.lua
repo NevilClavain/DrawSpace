@@ -124,6 +124,20 @@ set_body_on_planet = function(longitud, latitud, altitud_meters, planet_config)
   -- my ship watches planet center 
   local rot_quat = Quaternion()
   rot_quat:lookat(source, dest)
+
+
+
+  -- and then rotate 90 degres on x-axis
+  local x_axis_vec = Vector(1.0, 0.0, 0.0, 1.0)
+
+  for i = 0, 900, 1 do
+    --model.camera.mvt:rotate_x(0.1)
+	g:rotate_quaternion_x(0.1, x_axis_vec, rot_quat)
+
+  end
+
+
+
   local rot_mat = Matrix()
   rot_quat:rotationmat_from(rot_mat)
 
@@ -1588,14 +1602,14 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
---set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
+set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
 
 
 
 -- in space
 
-model.createmainfreecamera(100, 200, 500)
-eg:add_child('root','model.camera.entity', model.camera.entity)
+--model.createmainfreecamera(100, 200, 500)
+--eg:add_child('root','model.camera.entity', model.camera.entity)
 
 
 

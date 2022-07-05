@@ -33,6 +33,10 @@
 #include "texture.h"
 #include "maths.h"
 
+#include "luaclass_matrix.h"
+#include "luaclass_vector.h"
+#include "luaclass_quaternion.h"
+
 #include "luaext_load.h"
 
 
@@ -62,6 +66,7 @@ const Luna<LuaClass_Globals>::RegType LuaClass_Globals::methods[] =
     { "sin", &LuaClass_Globals::LUA_sin },
     { "ctos", &LuaClass_Globals::LUA_ctos },
     { "stoc", &LuaClass_Globals::LUA_stoc },
+    { "rotate_quaternion_x", &LuaClass_Globals::LUA_rotatequaternionx },
 
     
     { "add_appruncb", &LuaClass_Globals::LUA_addappruncb },
@@ -691,6 +696,101 @@ int LuaClass_Globals::LUA_stoc(lua_State* p_L)
     return 3;
 }
 
+int LuaClass_Globals::LUA_rotatequaternionx(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 3)
+    {
+        LUA_ERROR("Globals::rotate_quaternion_x : argument(s) missing");
+    }
+
+    dsreal angle_deg{ luaL_checknumber(p_L, 1) };
+    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+
+    LuaClass_Vector*        lua_axis_vector     { Luna<LuaClass_Vector>::check(p_L, 2) };
+    LuaClass_Quaternion*    lua_quat            { Luna<LuaClass_Quaternion>::check(p_L, 3) };
+
+    Quaternion q, qres;
+
+    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    qres = lua_quat->GetQuaternion() * q; 
+
+    // update input quaternion
+    lua_quat->SetQuaternion(qres);
+
+    Utils::Matrix orientation;
+    qres.RotationMatFrom(orientation);
+
+    // update input axis vector
+    Vector out_axis_vector(orientation(0, 0), orientation(0, 1), orientation(0, 2), 1.0);
+    lua_axis_vector->setVector(out_axis_vector);
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_rotatequaterniony(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 3)
+    {
+        LUA_ERROR("Globals::rotate_quaternion_y : argument(s) missing");
+    }
+
+    dsreal angle_deg{ luaL_checknumber(p_L, 1) };
+    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+
+    LuaClass_Vector*        lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
+    LuaClass_Quaternion*    lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
+
+    Quaternion q, qres;
+
+    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    qres = lua_quat->GetQuaternion() * q;
+
+    // update input quaternion
+    lua_quat->SetQuaternion(qres);
+
+    Utils::Matrix orientation;
+    qres.RotationMatFrom(orientation);
+
+    // update input axis vector
+    Vector out_axis_vector(orientation(1, 0), orientation(1, 1), orientation(1, 2), 1.0);
+    lua_axis_vector->setVector(out_axis_vector);
+
+    return 0;
+}
+
+int LuaClass_Globals::LUA_rotatequaternionz(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 3)
+    {
+        LUA_ERROR("Globals::rotate_quaternion_z : argument(s) missing");
+    }
+
+    dsreal angle_deg{ luaL_checknumber(p_L, 1) };
+    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+
+    LuaClass_Vector* lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
+    LuaClass_Quaternion* lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
+
+    Quaternion q, qres;
+
+    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    qres = lua_quat->GetQuaternion() * q;
+
+    // update input quaternion
+    lua_quat->SetQuaternion(qres);
+
+    Utils::Matrix orientation;
+    qres.RotationMatFrom(orientation);
+
+    // update input axis vector
+    Vector out_axis_vector(orientation(2, 0), orientation(2, 1), orientation(2, 2), 1.0);
+    lua_axis_vector->setVector(out_axis_vector);
+
+    return 0;
+}
 
 int LuaClass_Globals::LUA_activateresourcessystem(lua_State* p_L)
 {

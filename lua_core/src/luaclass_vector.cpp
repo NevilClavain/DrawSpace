@@ -257,3 +257,8 @@ DrawSpace::Utils::Vector LuaClass_Vector::getVector(void) const
 {
     return *m_vector;
 }
+
+void LuaClass_Vector::setVector(const DrawSpace::Utils::Vector& p_vector)
+{
+    *m_vector = p_vector;
+}

@@ -148,3 +148,8 @@ DrawSpace::Utils::Quaternion LuaClass_Quaternion::GetQuaternion(void) const
 {
 	return m_quat;
 }
+
+void LuaClass_Quaternion::SetQuaternion(const DrawSpace::Utils::Quaternion& p_quat)
+{
+	m_quat = p_quat;
+}
