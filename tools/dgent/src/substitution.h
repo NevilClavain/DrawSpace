@@ -32,8 +32,10 @@ using SubstitutionTable = std::map<dsstring, dsstring>;
 
 class ISubstitutionContainer
 {
-public:
-	virtual void Run(const Folder& p_folder) const = 0;
+protected:
+	virtual void run(const Folder& p_folder) const = 0;
+
+	friend Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj);
 };
 
 template<class T>
@@ -41,16 +43,17 @@ class SubstitutionContainer : public ISubstitutionContainer
 {
 private:
 	SubstitutionTable m_substitution_table;
+
+protected:
+	void run(const Folder& p_folder) const
+	{
+		const T substitution_method(m_substitution_table);
+		substitution_method.Process(p_folder);
+	}
+
 public:
 	SubstitutionContainer(const SubstitutionTable& p_table):
 	m_substitution_table(p_table)
 	{
 	}
-
-	void Run(const Folder& p_folder) const
-	{
-		const T substitution_method(m_substitution_table);
-		substitution_method.Process(p_folder);
-	}
-	friend Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj);
 };

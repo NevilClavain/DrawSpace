@@ -26,6 +26,6 @@
 
 Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj)
 {
-	p_obj.Run(p_in);
+	p_obj.run(p_in);
 	return p_in;
 }
