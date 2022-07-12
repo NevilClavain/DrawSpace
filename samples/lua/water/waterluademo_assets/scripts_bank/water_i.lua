@@ -20,8 +20,23 @@ hmi_mode=FALSE
 
 cube_instance=0
 
-
 resources_event = "..."
+
+light_theta = SyncAngle()
+light_phi = SyncAngle()
+
+light_theta:init_fromtimeaspectof(root_entity, 0.0)
+light_phi:init_fromtimeaspectof(root_entity,0.0)
+
+move_light_vector = function(dx, dy)
+		
+  light_theta:inc(dx * 5)
+  light_phi:inc(-dy * 5)
+
+  model.env.light.setsphericaldir(light_theta:get_value(), light_phi:get_value())
+
+end
+
 
 g:add_resourceeventcb( "onresourceevent",
 function( event, resource_path, context )
@@ -608,7 +623,7 @@ model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
 
 model.env.light.setstate( TRUE )
 	
-model.env.light.setsphericaldir(0.0,50.0)
+model.env.light.setsphericaldir(0.0, 8.0)
 
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 	
@@ -644,12 +659,17 @@ function( xm, ym, dx, dy )
 	if hmi_mode == TRUE then
 		gui:on_mousemove( xm, ym, dx, dy )
 	else
-      local mvt_info = { model.camera.mvt:read() }
 
-	  fps_yaw:inc(-dx / 1.0)
-	  fps_pitch:inc(-dy / 1.0)
+	  if mouse_right == TRUE then
+	    move_light_vector(dx, dy)
+	  else
+        local mvt_info = { model.camera.mvt:read() }
 
-	  model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], mvt_info[9])
+	    fps_yaw:inc(-dx / 1.0)
+	    fps_pitch:inc(-dy / 1.0)
+
+	    model.camera.mvt:update(fps_yaw:get_value(),fps_pitch:get_value(),mvt_info[3],mvt_info[4],mvt_info[5],mvt_info[6], mvt_info[7], mvt_info[8], mvt_info[9])
+	  end
 	end
 end)
 
