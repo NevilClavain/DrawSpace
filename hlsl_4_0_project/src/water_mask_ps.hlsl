@@ -72,19 +72,21 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
 
-            float spec_power = 10.0;
-            float k_specular = 0.33;
+            float spec_power = 50.0;
+            float k_specular = 1.0;
 
-            surface_normale += normalize(txBump.Sample(SamplerBump, input.TexCoord0).xzy);
+            //surface_normale += 0.33 * normalize(txBump.Sample(SamplerBump, input.TexCoord0).xzy);
 
             float3 nNormale = normalize(surface_normale);
 
             float reflex_refrac_factor = txNormales.Sample(SamplerNormales, input.TexCoord0).b;
 
-            float3 halfvector = txHalfVector.Sample(SamplerHalfVector, input.TexCoord0).rgb;
+            //float3 halfvector = txHalfVector.Sample(SamplerHalfVector, input.TexCoord0).rgb;
 
             float2 mt = input.TexCoord0.xy + bump_factor;
             float2 mt2 = input.TexCoord0.xy + 0.25 * bump_factor;
+
+            float3 halfvector = txHalfVector.Sample(SamplerHalfVector, mt).rgb;
 
             float4 refrac = txDiffuseRefrac.Sample(SamplerDiffuseRefrac, mt2);
             float4 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt);
@@ -94,6 +96,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             float spec = pow(clamp(dot(nNormale, halfvector), 0.0, 1.0), spec_power);
 
             scene_color = saturate((color_mod * lerp(mirror, refrac, lerp(0.0, 0.99, reflex_refrac_factor))) + (k_specular * spec));
+
+            //scene_color = saturate(k_specular * spec);
         }
     }
     else if (debug_mode == 1.0)
