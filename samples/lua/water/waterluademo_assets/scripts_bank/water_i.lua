@@ -104,6 +104,7 @@ rendercontext:add_texturesset(textures)
 rendercontext:add_shaderparam("water_color", 1, 0)
 rendercontext:add_shaderparam("surface_normale", 1, 1)
 rendercontext:add_shaderparam("debug_mode", 1, 2)
+rendercontext:add_shaderparam("water_specular_power", 1, 3)
 
 renderconfig=RenderConfig()
 renderconfig:add_rendercontext(rendercontext)
@@ -111,6 +112,7 @@ rg:configure_pass_viewportquad_resources('final_pass',renderconfig)
 rg:set_viewportquadshaderrealvector('final_pass', 'water_color', 1, 1, 1, 1.0)
 rg:set_viewportquadshaderrealvector('final_pass', 'surface_normale', environment.reflector_normale.x, environment.reflector_normale.y, environment.reflector_normale.z, 1.0)
 rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', 0.0, 0.0, 0.0, 0.0)
+rg:set_viewportquadshaderrealvector('final_pass', 'water_specular_power', 50.0, 0.0, 0.0, 0.0)
 
 
 rg:create_child('final_pass', 'texture_pass', 0)
@@ -907,15 +909,19 @@ end)
 
 
 set_water_bump = function(bias)
-	waterquad.models['water']['renderer']:set_shaderrealvector('bump_pass', 'bump_bias', bias, 0.0, 0.0, 0.0)
+  waterquad.models['water']['renderer']:set_shaderrealvector('bump_pass', 'bump_bias', bias, 0.0, 0.0, 0.0)
 end
 
 set_water_color = function(r, g, b)
-	rg:set_viewportquadshaderrealvector('final_pass', 'water_color', r, g, b, 1.0)
+  rg:set_viewportquadshaderrealvector('final_pass', 'water_color', r, g, b, 1.0)
+end
+
+set_water_spec = function(s)
+  rg:set_viewportquadshaderrealvector('final_pass', 'water_specular_power', s, 0.0, 0.0, 0.0)
 end
 
 dmode = function(mode)
-	rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', mode, 0.0, 0.0, 0.0)
+  rg:set_viewportquadshaderrealvector('final_pass', 'debug_mode', mode, 0.0, 0.0, 0.0)
 end
 
 g:signal_renderscenebegin("eg")
