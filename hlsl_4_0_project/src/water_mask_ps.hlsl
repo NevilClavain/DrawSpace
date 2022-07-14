@@ -47,6 +47,8 @@ SamplerState SamplerDiffuseRefrac   : register(s3);
 Texture2D txNormales                : register(t4);
 SamplerState SamplerNormales        : register(s4);
 
+// debug mode : 5
+
 Texture2D txHalfVector              : register(t5);
 SamplerState SamplerHalfVector      : register(s5);
 
@@ -111,6 +113,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     else if (debug_mode == 4.0)
     {
         scene_color = txBump.Sample(SamplerBump, input.TexCoord0);
+    }
+
+    else if (debug_mode == 5.0)
+    {
+        scene_color = txHalfVector.Sample(SamplerHalfVector, input.TexCoord0);
     }
 
     return scene_color;

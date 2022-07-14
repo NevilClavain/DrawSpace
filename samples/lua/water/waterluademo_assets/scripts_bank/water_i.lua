@@ -26,7 +26,7 @@ light_theta = SyncAngle()
 light_phi = SyncAngle()
 
 light_theta:init_fromtimeaspectof(root_entity, 0.0)
-light_phi:init_fromtimeaspectof(root_entity,0.0)
+light_phi:init_fromtimeaspectof(root_entity, 8.0)
 
 move_light_vector = function(dx, dy)
 		
@@ -134,7 +134,7 @@ rg:set_pass_targetclearcolor('texturerefrac_pass', 0, 56, 67, 0)
 
 rg:create_child('final_pass', 'waternormales_pass', 4)
 
-rg:create_child('final_pass', 'waterhalfvector_pass', 5)
+rg:create_child('final_pass', 'waterhalfvector_pass', 5, RENDERPURPOSE_FLOATVECTOR)
 
 
 rg:create_child('final_pass', 'wave_pass', NO_TEXTURESTAGE_CONNECTION, RENDERPURPOSE_COLOR, RENDERTARGET_GPU, FALSE, 512, 512)
