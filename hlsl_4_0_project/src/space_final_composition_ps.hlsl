@@ -44,7 +44,9 @@ SamplerState SamplerBump            : register(s2);
 Texture2D txOceanMask               : register(t3);
 SamplerState SamplerOceanMask       : register(s3);
 
-
+// debug mode : 5
+Texture2D txOceanNormales           : register(t4);
+SamplerState SamplerOceanNormales   : register(s4);
 
 struct PS_INTPUT 
 {
@@ -182,6 +184,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         scene_color.rgb = txBump.Sample(SamplerBump, input.TexCoord0).rgb;
     }
 
+    else if (debug_mode == 5.0)
+    {
+        scene_color.rgb = txOceanNormales.Sample(SamplerOceanNormales, input.TexCoord0).rgb;
+    }
 
     scene_color.a = 1.0;
     return scene_color;

@@ -28,8 +28,8 @@ planet_name = 'Resurgam'
 local free_cam = 0
 local ship_cam = 1
 
---local current_cam = free_cam
-local current_cam = ship_cam
+local current_cam = free_cam
+--local current_cam = ship_cam
 
 collimator_table = {}
 
@@ -475,9 +475,15 @@ waves:init_fromtimeaspectof(root_entity,0.0)
 
 rg:create_child('final_pass', 'oceanmask_pass', 3)
 rg:set_pass_targetclearstate( 'oceanmask_pass', TRUE )
---rg:set_pass_depthclearstate( 'oceanmask_pass', FALSE )
 rg:set_pass_depthclearstate( 'oceanmask_pass', TRUE )
 rg:set_pass_targetclearcolor('oceanmask_pass', 0, 0, 0, 0)
+
+
+
+rg:create_child('final_pass', 'ocean_normales_pass', 4)
+rg:set_pass_targetclearstate( 'ocean_normales_pass', TRUE )
+--rg:set_pass_depthclearstate( 'ocean_normales_pass', TRUE )
+rg:set_pass_targetclearcolor( 'ocean_normales_pass', 0, 0, 255, 255 )
 
 
 
@@ -1420,6 +1426,39 @@ planet_layers =
 			shaders_params = 
 			{			
 			}
+		},
+		oceans_normales_rendering = 
+		{
+			fx =
+			{
+				shaders = 
+				{
+					{ path='planet_ocean_normales_vs.hlsl', mode=SHADER_NOT_COMPILED },
+					{ path='planet_ocean_normales_ps.hlsl', mode=SHADER_NOT_COMPILED }
+				},
+				
+				rs_in = 
+				{
+					--{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
+						
+				},
+				rs_out =
+				{
+					--{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
+					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+				}
+			},
+			textures =
+			{
+			},
+			vertex_textures =
+			{
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 4900
 		}
 	}
 }
@@ -1449,7 +1488,6 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 		rendering_id = 'flatclouds_rendering',
 		lit_shader_update_func = nil
 	},
-
 	binding_3 = 
 	{
         target_pass_id = 'oceanmask_pass',
@@ -1473,7 +1511,13 @@ if planet_specific_config_descr.enable_oceans == TRUE then
         target_pass_id = 'texturemirror_pass',
 		rendering_id = 'atmo_mirror_rendering',
 		lit_shader_update_func = nil
-	}   
+	},
+	binding_7 = 
+	{
+        target_pass_id = 'ocean_normales_pass',
+		rendering_id = 'oceans_normales_rendering',
+		lit_shader_update_func = nil
+	},
   }
 
   planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
@@ -1602,7 +1646,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(66.803, -27.193, 60.0, planet_specific_config_descr)
+set_freecam_on_planet(8.77, -11.80, 90.0, planet_specific_config_descr)
 
 
 
