@@ -52,9 +52,9 @@ void UpdateBCFilesTask::Execute(void)
     DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcMd5FileName, (void*)m_hash.c_str(), m_hash.length());
     DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcCodeFileName, m_bc, m_bc_length);
 
-#ifdef _DEBUG
+
     DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + m_shader_id + sourceFileNameExt, m_text, m_text_size);
-#endif
+
 }
 
 void UpdateBCFilesTask::UpdateBCFilesTask::SetBC(void* p_bc, long p_bc_length)
