@@ -53,6 +53,7 @@ text6_renderer:release()
 g:remove_appruncb('run')
 
 
+rg:remove_pass('ocean_specular_pass')
 rg:remove_pass('oceanmask_pass')
 rg:remove_pass('bump_pass')
 rg:release_pass_viewportquad_resources('wave_pass')
