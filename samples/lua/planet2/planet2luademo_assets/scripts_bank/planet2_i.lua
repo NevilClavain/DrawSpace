@@ -480,7 +480,7 @@ rg:set_pass_targetclearcolor('oceanmask_pass', 0, 0, 0, 0)
 
 
 
-rg:create_child('final_pass', 'ocean_normales_pass', 4)
+rg:create_child('final_pass', 'ocean_normales_pass', 4, RENDERPURPOSE_FLOATVECTOR)
 rg:set_pass_targetclearstate( 'ocean_normales_pass', TRUE )
 --rg:set_pass_depthclearstate( 'ocean_normales_pass', TRUE )
 rg:set_pass_targetclearcolor( 'ocean_normales_pass', 0, 0, 255, 255 )
@@ -1440,13 +1440,13 @@ planet_layers =
 				rs_in = 
 				{
 					--{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
-					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="line" }
 						
 				},
 				rs_out =
 				{
 					--{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false"},
-					{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
+					--{ ope=RENDERSTATE_OPE_SETFILLMODE, value="solid" }
 				}
 			},
 			textures =

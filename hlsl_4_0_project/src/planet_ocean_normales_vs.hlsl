@@ -46,6 +46,11 @@ cbuffer legacyargs : register(b0)
 #define v_atmo_scattering_flag_0    42
 #define v_atmo_scattering_flag_5    47
 
+
+#define v_light0_dir_local          52
+#define v_light0_dir                53
+#define v_light0_color              54
+
 struct VS_INPUT
 {
     float3 Position         : POSITION;
@@ -58,6 +63,8 @@ struct VS_OUTPUT
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    float3 Half0                    : TEXCOORD3;
+    float3 Normale                  : TEXCOORD4;
 };
 
 
@@ -76,9 +83,15 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 landscape_control = vec[v_landscape_control];
     float4 seeds = vec[v_seeds];
 
+    float4 light0_dir = vec[v_light0_dir];
+
 
     float4 atmo_scattering_flag_0 = vec[v_atmo_scattering_flag_0];
     float4 atmo_scattering_flag_5 = vec[v_atmo_scattering_flag_5];
+
+    float4x4 mat_World = mat[matWorld];
+    float4x4 mat_Cam = mat[matCam];
+
 
     //////////////////////////////////////////////////////////////////////
 
@@ -118,6 +131,34 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.GlobalPatch_TexCoord.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
     Output.GlobalPatch_TexCoord.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
     ///////////////////////////////////////////////////
+
+    // compute half vector
+    
+    float3 nLight = normalize(light0_dir.xyz);
+
+    float4 Pos2 = mul(v_position3, mat_World);
+
+    float4 CamPos;
+    CamPos[0] = mat_Cam[3][0];
+    CamPos[1] = mat_Cam[3][1];
+    CamPos[2] = mat_Cam[3][2];
+    CamPos[3] = 1.0;
+
+    float3 nView = normalize(CamPos.xyz - Pos2.xyz);
+
+    float3 H;
+    H.xyz = nLight + nView;
+
+    Output.Half0 = normalize(H);
+
+    // compute normale in world space
+    float4x4 matWorldRot = mat_World;
+    matWorldRot[3][0] = 0.0;
+    matWorldRot[3][1] = 0.0;
+    matWorldRot[3][2] = 0.0;
+
+    float4 n2 = mul(v_position2, matWorldRot);
+    Output.Normale = normalize(n2.xyz);
 
     return (Output);
 }

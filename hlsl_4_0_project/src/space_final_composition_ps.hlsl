@@ -92,11 +92,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             float4 refrac = txDiffuse.Sample(SamplerDiffuse, mt2);
 
+            float3 spec = txOceanNormales.Sample(SamplerOceanNormales, mt).rgb;
+
             if (relative_alt > 1.0)
             {
                 float reflex_refrac_factor = mask.y;
                 float3 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt).rgb;
-                detailed_water_color = basic_water_color * lerp(mirror, refrac, lerp(0.0, 1.0, reflex_refrac_factor));
+                detailed_water_color = (basic_water_color * lerp(mirror, refrac, lerp(0.0, 1.0, reflex_refrac_factor))) + spec;
             }
             else
             {
