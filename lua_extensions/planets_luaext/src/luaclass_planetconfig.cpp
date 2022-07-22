@@ -279,6 +279,8 @@ int LuaClass_PlanetConfig::LUA_updated(lua_State* p_L)
 
     m_rendering_aspect->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() = m_planets_details.ocean_bump_factor;
 
+    m_rendering_aspect->GetComponent<dsreal>("oceandetails_specularpower")->getPurpose() = m_planets_details.oceandetails_specularpower;
+
     // signaler le chgt d'un ou plusieurs components...
     m_rendering_aspect->ComponentsUpdated();
     return 0;

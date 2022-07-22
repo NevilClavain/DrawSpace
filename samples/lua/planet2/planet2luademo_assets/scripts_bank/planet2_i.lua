@@ -317,7 +317,7 @@ local planet_specific_config_descr =
     wave_pass_resol                              = 512,
     ocean_bump_factor                            = 2.1,
     enable_oceans                                = TRUE,
-	oceansdetails_specularpower					 = 100.0
+	oceansdetails_specularpower					 = 40.0
 }
 
 
@@ -1015,6 +1015,10 @@ water_bump = function( state )
 	resurgam_planet_config:updated()
 end
 
+ocean_spec = function(power)
+    resurgam_planet_config:set_oceansdetailsspecularpower( power )
+	resurgam_planet_config:updated()
+end
 
 
 

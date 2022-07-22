@@ -119,6 +119,7 @@ public:
 
 	void SetWaveTextureResol(int p_resol);
 	void SetWaterBumpFactor(dsreal p_bump_factor);
+	void SetOceanDetailsSpecPower(dsreal p_pow);
 
     inline void SetMirrorMode(bool p_state)
     {

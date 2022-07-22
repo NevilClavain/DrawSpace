@@ -404,6 +404,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 {
     bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
     dsreal ocean_bump_factor{ m_owner->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() };
+  
+    dsreal oceandetails_specularpower{ m_owner->GetComponent<dsreal>("oceandetails_specularpower")->getPurpose() };
 
     // setup lights...
     
@@ -573,6 +575,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
 
             binder->SetWaterBumpFactor(ocean_bump_factor);
+            binder->SetOceanDetailsSpecPower(oceandetails_specularpower);
         }
     }
 }

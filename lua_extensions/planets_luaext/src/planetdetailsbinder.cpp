@@ -308,3 +308,8 @@ void PlanetDetailsBinder::SetWaterBumpFactor(dsreal p_bump_factor)
 {
 	m_ocean_bump_factor = p_bump_factor;
 }
+
+void PlanetDetailsBinder::SetOceanDetailsSpecPower(dsreal p_pow)
+{
+	m_oceandetails_specularpower = p_pow;
+}
