@@ -35,8 +35,10 @@ struct PS_INTPUT
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
-    float3 Half0                    : TEXCOORD3;
-    float3 Normale                  : TEXCOORD4;
+    float3 Normale                  : TEXCOORD3;
+    float3 Half0                    : TEXCOORD4;
+    float3 Half1                    : TEXCOORD5;
+    float3 Half2                    : TEXCOORD6;
 };
 
 #include "spherelod_commons.hlsl"
@@ -62,11 +64,29 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-    float4 color;
+    float4 color = 0;
     float spec_power = 13.0;
-    float dotNH = clamp(dot(input.Normale, input.Half0), 0.0, 1.0);
-    color.xyz = pow(dotNH, spec_power);
-    color.w = 1;
 
+    float4 flags_lights = vec[v_flags_lights];
+
+    if (flags_lights.y > 0.0)
+    {
+        float dotNH = clamp(dot(input.Normale, input.Half0), 0.0, 1.0);
+        color.xyz += pow(dotNH, spec_power);
+    }
+
+    if (flags_lights.z > 0.0)
+    {
+        float dotNH = clamp(dot(input.Normale, input.Half1), 0.0, 1.0);
+        color.xyz += pow(dotNH, spec_power);
+    }
+
+    if (flags_lights.w > 0.0)
+    {
+        float dotNH = clamp(dot(input.Normale, input.Half2), 0.0, 1.0);
+        color.xyz += pow(dotNH, spec_power);
+    }
+       
+    color.w = 1;
     return color;
 }

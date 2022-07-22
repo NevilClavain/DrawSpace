@@ -47,9 +47,13 @@ cbuffer legacyargs : register(b0)
 #define v_atmo_scattering_flag_5    47
 
 
-#define v_light0_dir_local          52
+#define v_flags_lights              50
+
 #define v_light0_dir                53
-#define v_light0_color              54
+#define v_light1_dir                56
+#define v_light2_dir                59
+
+
 
 struct VS_INPUT
 {
@@ -62,12 +66,35 @@ struct VS_OUTPUT
     float4 Position                 : SV_POSITION;
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
-    float4 GlobalPatch_TexCoord     : TEXCOORD2;
-    float3 Half0                    : TEXCOORD3;
-    float3 Normale                  : TEXCOORD4;
+    float4 GlobalPatch_TexCoord     : TEXCOORD2;    
+    float3 Normale                  : TEXCOORD3;
+    float3 Half0                    : TEXCOORD4;
+    float3 Half1                    : TEXCOORD5;
+    float3 Half2                    : TEXCOORD6;
 };
 
+float4 HalfVector(float4 p_pos, float4 p_lightdir, float4x4 p_cammat, float4x4 p_worldmat)
+{
+    float4 CamPos;
+    float4 Pos2;
+    float3 nView;
+    float3 nLight;
 
+    CamPos[0] = p_cammat[3][0];
+    CamPos[1] = p_cammat[3][1];
+    CamPos[2] = p_cammat[3][2];
+    CamPos[3] = 1.0;
+
+    Pos2 = mul(p_pos, p_worldmat);
+    nView = normalize(CamPos.xyz - Pos2.xyz);
+
+    nLight = normalize(p_lightdir.xyz);
+
+    float4 H;
+    H.xyz = nLight + nView;
+    H.w = 0.0;
+    return normalize(H);
+}
 
 
 VS_OUTPUT vs_main(VS_INPUT Input)
@@ -83,7 +110,11 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float4 landscape_control = vec[v_landscape_control];
     float4 seeds = vec[v_seeds];
 
+    float4 flags_lights = vec[v_flags_lights];
+
     float4 light0_dir = vec[v_light0_dir];
+    float4 light1_dir = vec[v_light1_dir];
+    float4 light2_dir = vec[v_light2_dir];
 
 
     float4 atmo_scattering_flag_0 = vec[v_atmo_scattering_flag_0];
@@ -134,22 +165,32 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     // compute half vector
     
-    float3 nLight = normalize(light0_dir.xyz);
+    if (flags_lights.y > 0.0)
+    {
+        Output.Half0 = HalfVector(v_position3, light0_dir, mat_Cam, mat_World);
+    }
+    else
+    {
+        Output.Half0 = 0;
+    }
 
-    float4 Pos2 = mul(v_position3, mat_World);
+    if (flags_lights.z > 0.0)
+    {
+        Output.Half1 = HalfVector(v_position3, light1_dir, mat_Cam, mat_World);
+    }
+    else
+    {
+        Output.Half1 = 0;
+    }
 
-    float4 CamPos;
-    CamPos[0] = mat_Cam[3][0];
-    CamPos[1] = mat_Cam[3][1];
-    CamPos[2] = mat_Cam[3][2];
-    CamPos[3] = 1.0;
-
-    float3 nView = normalize(CamPos.xyz - Pos2.xyz);
-
-    float3 H;
-    H.xyz = nLight + nView;
-
-    Output.Half0 = normalize(H);
+    if (flags_lights.w > 0.0)
+    {
+        Output.Half2 = HalfVector(v_position3, light2_dir, mat_Cam, mat_World);
+    }
+    else
+    {
+        Output.Half2 = 0;
+    }
 
     // compute normale in world space
     float4x4 matWorldRot = mat_World;
