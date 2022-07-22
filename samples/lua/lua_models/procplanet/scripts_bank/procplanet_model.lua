@@ -156,6 +156,9 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:set_oceanbumpfactor(config_description['ocean_bump_factor'])
 	end
 
+	if config_description['oceansdetails_specularpower'] ~= nil then
+		planet_specific_configuration:set_oceansdetailsspecularpower(config_description['oceansdetails_specularpower'])
+	end
 end
 
 planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)

@@ -309,14 +309,15 @@ local planet_specific_config_descr =
 	atmo_kr								         = 0.0033,
 	fog_alt_limit						         = 30000.0,
 	fog_density							         = 0.000031,
-	beach_limit							         = 25.0,
+	beach_limit							         = 2.0,
 	landplace_patch						         = FALSE,
 	enable_atmosphere					         = TRUE,
 	atmo_thickness                               = 160.0,
     flatclouds_altitude                          = 24.0,
     wave_pass_resol                              = 512,
     ocean_bump_factor                            = 2.1,
-    enable_oceans                                = TRUE
+    enable_oceans                                = TRUE,
+	oceansdetails_specularpower					 = 100.0
 }
 
 

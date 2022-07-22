@@ -61,11 +61,13 @@ struct PS_INTPUT
 #define v_light2_dir                16
 #define v_light2_color              17
 
+#define v_flag32                    32
+
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
     float4 color = 0;
-    float spec_power = 13.0;
+    float spec_power = vec[v_flag32].y;
 
     float4 flags_lights = vec[v_flags_lights];
 

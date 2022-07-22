@@ -97,13 +97,15 @@ protected:
 
 	bool														m_oceans;
 
+	dsreal														m_oceandetails_specularpower; // specular power for oceans surface details (low altitude)
+
 public:
 
 	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,
                             dsreal p_mountains_offset,
                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
                             dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans);
+                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans, dsreal p_oceandetails_specularpower);
 
 	dsreal inline GetOceansDetailsAlt( void ) const { return m_ocean_details_alt; };
 	PlanetLight inline GetLight( int p_index ) const { return m_lights[p_index]; };

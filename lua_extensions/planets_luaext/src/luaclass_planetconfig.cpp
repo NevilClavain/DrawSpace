@@ -55,6 +55,7 @@ const Luna<LuaClass_PlanetConfig>::RegType LuaClass_PlanetConfig::methods[] =
     { "set_terrainbumpfactor", &LuaClass_PlanetConfig::LUA_setterrainbumpfactor },
     { "set_beachlimit", &LuaClass_PlanetConfig::LUA_setbeachlimit },
     { "enable_oceans", &LuaClass_PlanetConfig::LUA_enableoceans },
+    { "set_oceansdetailsspecularpower", &LuaClass_PlanetConfig::LUA_setoceansdetailsspecularpower },
     { "set_climateshaders", &LuaClass_PlanetConfig::LUA_setclimateshaders },
     { "set_climateshaderscompiled", &LuaClass_PlanetConfig::LUA_setclimateshaderscompiled },
     { "set_collisionshaders", &LuaClass_PlanetConfig::LUA_setcollisionshaders },
@@ -142,6 +143,7 @@ int LuaClass_PlanetConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("beach_limit", m_planets_details.beach_limit);
 
     entity_rendering_aspect->AddComponent<bool>("oceans", m_planets_details.oceans);
+    entity_rendering_aspect->AddComponent<dsreal>("oceandetails_specularpower", m_planets_details.oceandetails_specularpower);
 
     entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
     entity_rendering_aspect->AddComponent<bool>("enable_atmosphere", m_planets_details.enable_atmosphere);
@@ -229,6 +231,7 @@ int LuaClass_PlanetConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("fog_density");
     m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
     m_rendering_aspect->RemoveComponent<bool>("oceans");
+    m_rendering_aspect->RemoveComponent<dsreal>("oceandetails_specularpower");
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<dsstring>("bump_pass");
@@ -478,6 +481,18 @@ int LuaClass_PlanetConfig::LUA_enableoceans(lua_State* p_L)
     return 0;
 }
 
+int LuaClass_PlanetConfig::LUA_setoceansdetailsspecularpower(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_oceansdetailsspecularpower : argument(s) missing");
+    }
+
+    m_planets_details.oceandetails_specularpower = luaL_checknumber(p_L, 1);
+    return 0;
+
+}
 
 int LuaClass_PlanetConfig::LUA_enableatmosphere(lua_State* p_L)
 {

@@ -73,6 +73,7 @@ private:
         dsreal      beach_limit;
 
         bool        oceans;
+        dsreal      oceandetails_specularpower;
 
         dsstring    climate_vshader;
         dsstring    climate_pshader;
@@ -136,6 +137,7 @@ public:
     int LUA_setterrainbumpfactor(lua_State* p_L);
     int LUA_setbeachlimit(lua_State* p_L);
     int LUA_enableoceans(lua_State* p_L);
+    int LUA_setoceansdetailsspecularpower(lua_State* p_L);
     int LUA_enablelandplacepatch(lua_State* p_L);
     int LUA_enableatmosphere(lua_State* p_L);
     int LUA_setclimateshaders(lua_State* p_L);
