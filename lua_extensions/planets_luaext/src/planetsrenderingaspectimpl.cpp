@@ -964,6 +964,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         binder->SetWaveTextureResol(wave_pass_resol);
                         binder->SetWaterBumpFactor(ocean_bump_factor);
 
+                        //m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                    }
+                    else if (m_oceanmask_pass == pass_id)
+                    {
                         m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
                     }
                     else
@@ -1714,19 +1719,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 { m_bump_pass, rs_list_mainpass }
             };
             m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
-
-            ////////////////////// and set DrawPatchMode for the oceanmask rendering node
-            auto nodes{ m_drawable.GetFaceDrawingNode() };
-            for (auto& node : nodes)
-            {
-                if (node.first == m_oceanmask_pass)
-                {
-                    if (OceansLayer == node.second->GetLayerIndex())
-                    {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 3);
-                    }
-                }
-            }
+            
         }
         else
         {
