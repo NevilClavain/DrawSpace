@@ -1719,7 +1719,19 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 { m_bump_pass, rs_list_mainpass }
             };
             m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
-            
+
+            ////////////////////// and set DrawPatchMode for the oceanmask rendering node
+            auto nodes{ m_drawable.GetFaceDrawingNode() };
+            for (auto& node : nodes)
+            {
+                if (node.first == m_oceanmask_pass)
+                {
+                    if (OceansLayer == node.second->GetLayerIndex())
+                    {
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 3);
+                    }
+                }
+            }            
         }
         else
         {
