@@ -14,8 +14,8 @@ land.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
-				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				{ path='landscape_details_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='landscape_details_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -64,8 +64,8 @@ land.rendering_config =
 		{
 			shaders = 
 			{
-				{ path='lit_vs.hlsl',mode=SHADER_NOT_COMPILED },
-				{ path='lit_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				{ path='landscape_details_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='landscape_details_ps.hlsl',mode=SHADER_NOT_COMPILED }
 			},
 			rs_in = 
 			{
@@ -112,7 +112,7 @@ land.rendering_config =
 	},
 	meshes_loader_params =
 	{
-		normale_generation_mode = NORMALES_AUTO,
+		normale_generation_mode = NORMALES_COMPUTED,
 		tb_generation_mode = TB_AUTO
 	}
 }
