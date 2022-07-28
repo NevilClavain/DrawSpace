@@ -112,7 +112,7 @@ land.rendering_config =
 	},
 	meshes_loader_params =
 	{
-		normale_generation_mode = NORMALES_COMPUTED,
+		normale_generation_mode = NORMALES_FROMLOADER_SMOOTH,
 		tb_generation_mode = TB_AUTO
 	}
 }
