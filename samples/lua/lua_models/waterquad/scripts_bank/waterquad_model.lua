@@ -6,6 +6,7 @@ waterquad.view = {}
 -- stockage des instances modeles : paire {entity, renderer, body}
 waterquad.models = {}
 
+waterquad.bump_bias = 1.0
 
 waterquad.rendering_config = 
 { 
@@ -161,7 +162,7 @@ end
 waterquad.update_from_scene_env_bump = function( p_pass_id, p_environment_table, p_entity_id )
 
   local renderer = waterquad.models[p_entity_id]['renderer']
-  renderer:set_shaderrealvector( p_pass_id, 'bump_bias', 1.0, 0.0, 0.0, 1.0 )
+  renderer:set_shaderrealvector( p_pass_id, 'bump_bias', waterquad.bump_bias, 0.0, 0.0, 1.0 )
   renderer:set_shaderrealvector( p_pass_id, 'water_normale', p_environment_table.reflector_normale.x, p_environment_table.reflector_normale.y, p_environment_table.reflector_normale.z, 1.0 )
 
 end

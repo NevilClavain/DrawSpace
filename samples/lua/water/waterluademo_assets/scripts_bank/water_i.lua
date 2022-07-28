@@ -910,6 +910,7 @@ end)
 
 set_water_bump = function(bias)
   waterquad.models['water']['renderer']:set_shaderrealvector('bump_pass', 'bump_bias', bias, 0.0, 0.0, 0.0)
+  waterquad.bump_bias = bias -- memorize new value for the case where model.env.update_entities_shaders() is called
 end
 
 set_water_color = function(r, g, b)
