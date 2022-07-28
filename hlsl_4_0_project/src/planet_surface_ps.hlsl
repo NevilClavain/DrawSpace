@@ -244,7 +244,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float2 ddx = { 0.0, 0.0 };
     float2 ddy = { 0.0, 0.0 };
-	
+
+    // disabled texture splatting
+	/*
     if (flags.x > 0.0 && flags.x <= lim_inf)
     {
         if (sea)
@@ -273,6 +275,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     else
     {
+    
         if (sea)
         {
             pixel_color.xyz = water_color;
@@ -282,6 +285,21 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         }
     }
+    */
+
+        
+    if (sea)
+    {
+        pixel_color.xyz = water_color;
+    }
+    else
+    {
+        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+    }
+    
+
+
+
 
     float4 fog_color;
 
