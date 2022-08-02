@@ -36,10 +36,12 @@ struct PS_INTPUT
     float4 Tangent      : TEXCOORD2;
     float4 Binormale    : TEXCOORD3;
     float4 Half0        : TEXCOORD4;
+    float3 LocalePos    : TEXCOORD5;
     float  Fog : FOG;
 };
 
 #include "mat_input_constants.hlsl"
+#include "fbm.hlsl"
 #include "generic_rendering.hlsl"
 
 // Flags ->
@@ -48,16 +50,6 @@ struct PS_INTPUT
 //          .y = bump mapping bias. if == 0.0, bump mapping is deactivated
 //          .z = texture size
 //          .w = specular mask mode
-
-// base_color = (bf * texture) + ((1-bf) * input_color )
-
-// pl = f(base_color, lights)
-
-
-// em = self-emissive
-// ab = lightabsorption
-
-// (1-em) * (ab * pl) + (em * base_color)
 
 // Flags2 -> 
 //
@@ -76,7 +68,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     bool spec_enabled = false;
 
     int texture_size = flags.z;
-    float bump_bias = flags.y;
+    float bump_bias = 7.0; //flags.y;
 
     float4 Ambient_Color = vec[0];
     float4 Lights_Enabled = vec[1];
@@ -86,6 +78,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4x4 mat_World = mat[matWorld_ps];
 
     float4x4 tbn_mat;
+
+    float4 vpos;
+    vpos.xyz = 0.9 * input.LocalePos;
+    //vpos.xyz = input.LocalePos.xyz;
+    
+    vpos.w = 1.0;
+
 
     tbn_mat[0][0] = input.Tangent[0];
     tbn_mat[1][0] = input.Tangent[1];
@@ -111,32 +110,66 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 object_normale;
 
+
+    float4 base_color;
+
+
+    float4 vpos_up = vpos;
+    float4 vpos_down = vpos;
+    float4 vpos_left = vpos;
+    float4 vpos_right = vpos;
+
+    float step = 1.0;
+
+    vpos_up.z += step;
+    vpos_down.z -= step;
+
+    vpos_left.x -= step;
+    vpos_right.x += step;
+
+
+    // SET 1
     /*
-    if (bump_bias > 0.0)
-    {
-        float4 local_normale;
-
-        if (flags2.x == 0.0)
-        {
-            local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, texture_size, bump_bias);
-        }
-        else
-        {
-
-            local_normale = bump_vector_avg(input.TexCoord0, txBump, samBump, texture_size);
-        }
-        object_normale = mul(tbn_mat, local_normale);
-    }
-    else
-    {
-        object_normale = input.Normale;
-    }
+    float res = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+    float res_up = iqTurbulence(vpos_up.xyz, 3, 2.0, 0.46);
+    float res_down = iqTurbulence(vpos_down.xyz, 3, 2.0, 0.46);
+    float res_right = iqTurbulence(vpos_right.xyz, 3, 2.0, 0.46);
+    float res_left = iqTurbulence(vpos_left.xyz, 3, 2.0, 0.46);
     */
-    object_normale = input.Normale;
+
+    // SET 2
+    /*
+    float res = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 1.0, 0.99, 0.0, 344.8, 890);
+    float res_up = iqTurbulence(vpos_up.xyz, 3, 2.0, 0.46);
+    float res_down = iqTurbulence(vpos_down.xyz, 3, 2.0, 0.46);
+    float res_right = iqTurbulence(vpos_right.xyz, 3, 2.0, 0.46);
+    float res_left = iqTurbulence(vpos_left.xyz, 3, 2.0, 0.46);
+    */
+
+    // SET 3
+    
+    float res = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+    float res_up = Fractal_fBm_wombat_perlin(vpos_up.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+    float res_down = Fractal_fBm_wombat_perlin(vpos_down.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+    float res_right = Fractal_fBm_wombat_perlin(vpos_right.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+    float res_left = Fractal_fBm_wombat_perlin(vpos_left.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+    
+    
+    //float delta = (abs(res - res_up) + abs(res - res_down) + abs(res - res_left) + abs(res - res_right)) * 0.25;
+    
+    float4 local_normale;
+    local_normale = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, bump_bias);
+    
+    object_normale = mul(tbn_mat, local_normale);
 
     float4 world_normale = TransformedNormaleForLights(object_normale, mat_World);
 
-    float4 base_color = 1.0; // txColor.Sample(samColor, input.TexCoord0);
+
+    //base_color.xyz = lerp(color1, color2, saturate(delta));
+    base_color.x = 0.76;
+    base_color.y = 0.72;
+    base_color.z = 0.53;
+    base_color.w = 1.0;
 
     float4 pixel_light_color = 0.0;
 

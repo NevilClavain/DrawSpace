@@ -44,10 +44,6 @@ struct VS_INPUT
 	float3 Tangent      : TANGENT;
 	float3 Binormale    : BINORMALE;
 	float4 TexCoord0    : TEXCOORD0;
-	float4 BonesId0      : TEXCOORD4;
-	float4 Weights0      : TEXCOORD5;
-	float4 BonesId1      : TEXCOORD6;
-	float4 Weights1      : TEXCOORD7;
 };
 
 struct VS_OUTPUT
@@ -58,6 +54,7 @@ struct VS_OUTPUT
 	float4 Tangent      : TEXCOORD2;
 	float4 Binormale    : TEXCOORD3;
 	float4 Half0        : TEXCOORD4;
+	float3 LocalePos    : TEXCOORD5;
 	float  Fog : FOG;
 };
 
@@ -139,6 +136,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
 	float4 PositionWV = mul(pos, mat_WorldView);
 	Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, Flags.y));
+
+
+	Output.LocalePos = Input.Position;
 
 	return (Output);
 }
