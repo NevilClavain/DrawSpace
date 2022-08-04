@@ -42,19 +42,19 @@ Animated water rendering:
 
 Bones-based animations execution :
 
-![alt tag](https://1.bp.blogspot.com/-R393UDVXHaA/XioOQcla87I/AAAAAAAADhA/WwpU6mMBuEU_ANKKJgfSprLoc7cCoxzxACLcBGAsYHQ/s1600/anims.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image1.jpg)
 
 Material shaders:
 
-![alt tag](https://1.bp.blogspot.com/-aqQActz5-Cw/W1TiUw-LkHI/AAAAAAAADW0/kPXzccgRmcIDiRSuflPfqITef64f6Lr5ACLcBGAs/s1600/bumpmap.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image3.jpg)
 
 Procedural planet:
 
-![alt tag](https://2.bp.blogspot.com/-R6beb0Ym7wY/XJF6boDwcjI/AAAAAAAADZ8/im06Bwg1hxQ6kEWG0X8txeGmMprtuIzUQCLcBGAs/s1600/xf.jpg)
-![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
-![alt tag](https://3.bp.blogspot.com/-82kYw9Zkzpk/VzjFhWsdqKI/AAAAAAAAAvg/AH5CPYrEQGoTS-qJMEPsXcybr7YJxDPLQCLcB/s640/Image21.png)
-![alt tag](https://1.bp.blogspot.com/-TXkQyEqbvQE/VzjFmt84yLI/AAAAAAAAAvs/tAJBUYeRUeQdi7zz491lY2OKjA36RL3XgCLcB/s640/Image29.png)
-![alt tag](https://1.bp.blogspot.com/-LqGrp_Crt-M/VzjFor4VDBI/AAAAAAAAAvw/PlyM94rhHhUR0_-Wb7kudygHVKAAh2KtACLcB/s640/Image31.png)
-![alt tag](https://4.bp.blogspot.com/-jmefk176pi4/V9ZWFlQ6jhI/AAAAAAAAB2Q/FKWtm9D_6yYqMar5TLqPrNW6Mr35_GMGQCLcB/s640/Image17.png)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image6.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image7.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image9.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image11.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image13.jpg)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image15.jpg)
 
 
