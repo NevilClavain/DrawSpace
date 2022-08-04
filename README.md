@@ -51,10 +51,6 @@ Material shaders:
 
 ![alt tag](https://1.bp.blogspot.com/-aqQActz5-Cw/W1TiUw-LkHI/AAAAAAAADW0/kPXzccgRmcIDiRSuflPfqITef64f6Lr5ACLcBGAs/s1600/bumpmap.jpg)
 
-3D clouds:
-
-![alt tag](https://1.bp.blogspot.com/-v8Ay57cOyoU/V9ZVmdgARHI/AAAAAAAAB2A/4SaU7m9dmooubJ3PR6tdow8N5KZpituXwCLcB/s640/3Dclouds.jpg)
-
 Procedural planet:
 
 ![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
