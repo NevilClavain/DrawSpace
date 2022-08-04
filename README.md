@@ -40,7 +40,7 @@ DrawSpace currently rely on some 3rd-parts libraries:
 
 Animated water rendering:
 
-![alt tag](https://drive.google.com/file/d/17c0zLcF6cYoiAAzbfkXg7ahR5YeOAbyo/view?usp=sharing)
+![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image4.jpg)
 
 Bones-based animations execution :
 
