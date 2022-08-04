@@ -35,9 +35,6 @@ DrawSpace currently rely on some 3rd-parts libraries:
 	-> 'Working directory' : set to "<drawspace_install>\apps\Debug"
 
 
-
-![alt tag](https://2.bp.blogspot.com/-R6beb0Ym7wY/XJF6boDwcjI/AAAAAAAADZ8/im06Bwg1hxQ6kEWG0X8txeGmMprtuIzUQCLcBGAs/s1600/xf.jpg)
-
 Animated water rendering:
 
 ![alt tag](https://github.com/NevilClavain/DrawSpace/blob/develop/screens/Image4.jpg)
@@ -53,14 +50,11 @@ Material shaders:
 
 Procedural planet:
 
+![alt tag](https://2.bp.blogspot.com/-R6beb0Ym7wY/XJF6boDwcjI/AAAAAAAADZ8/im06Bwg1hxQ6kEWG0X8txeGmMprtuIzUQCLcBGAs/s1600/xf.jpg)
 ![alt tag](https://1.bp.blogspot.com/-0dPNeTT4lYw/V7NZ6Uve5HI/AAAAAAAABuY/lr7re1lYz0MLvO8uhMdNMGfGetvLT3nCwCLcB/s1600/Image59.png)
-
 ![alt tag](https://3.bp.blogspot.com/-82kYw9Zkzpk/VzjFhWsdqKI/AAAAAAAAAvg/AH5CPYrEQGoTS-qJMEPsXcybr7YJxDPLQCLcB/s640/Image21.png)
-
 ![alt tag](https://1.bp.blogspot.com/-TXkQyEqbvQE/VzjFmt84yLI/AAAAAAAAAvs/tAJBUYeRUeQdi7zz491lY2OKjA36RL3XgCLcB/s640/Image29.png)
-
 ![alt tag](https://1.bp.blogspot.com/-LqGrp_Crt-M/VzjFor4VDBI/AAAAAAAAAvw/PlyM94rhHhUR0_-Wb7kudygHVKAAh2KtACLcB/s640/Image31.png)
-
 ![alt tag](https://4.bp.blogspot.com/-jmefk176pi4/V9ZWFlQ6jhI/AAAAAAAAB2Q/FKWtm9D_6yYqMar5TLqPrNW6Mr35_GMGQCLcB/s640/Image17.png)
 
 
