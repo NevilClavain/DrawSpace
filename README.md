@@ -63,39 +63,4 @@ Procedural planet:
 
 ![alt tag](https://4.bp.blogspot.com/-jmefk176pi4/V9ZWFlQ6jhI/AAAAAAAAB2Q/FKWtm9D_6yYqMar5TLqPrNW6Mr35_GMGQCLcB/s640/Image17.png)
 
-![alt tag](https://2.bp.blogspot.com/-JT9rCnQ_ses/V9ZWE4zdGlI/AAAAAAAAB2M/qxR4LkY6UuofSgrEP5RjRKBe09HreLWsACLcB/s640/Image24.png)
-
-![alt tag](https://1.bp.blogspot.com/-W39MNx6fkHU/V9ZWCuyhPZI/AAAAAAAAB2E/Sb1mJMzZM9sBDKNvkpfRuICpi8H3PUeMgCLcB/s640/Image28.png)
-
-![alt tag](https://4.bp.blogspot.com/--RS8EPv-Rws/V9ZWEsPfRUI/AAAAAAAAB2I/uF5RPzCiuFU4pBPy5ttib1qTQ7NX2HC-ACLcB/s640/Image34.png)
-
-![alt tag](https://3.bp.blogspot.com/-Kw_dSRUHKUk/V9ZWHFs9M3I/AAAAAAAAB2U/YJT5jAaTKycFI8C64vG2wpci5CRE3J_twCLcB/s640/Image35.png)
-
-![alt tag](https://4.bp.blogspot.com/-YHbEVJOJqco/V9ZWJpysTcI/AAAAAAAAB2g/ZXTGGaauFxsC13QxULMIafu8fp3lVGPrQCLcB/s640/Image41.png)
-
-![alt tag](https://3.bp.blogspot.com/-I59Lj3bi3fU/V9ZWJhdqORI/AAAAAAAAB2c/7pa3yz-rTDg9L28Haj1hxbG8vgPMgwjIACLcB/s640/Image42.png)
-
-![alt tag](https://4.bp.blogspot.com/-gM8yxsRBKVg/V2Bb-3Z5zEI/AAAAAAAAA64/fbSCURSPUQMlFaZEHQyR8m1kWAZ2ADy7QCLcB/s640/Image37.png)
-
-![alt tag](https://3.bp.blogspot.com/-sQ1XhPDZriE/V2Bb8qMjhUI/AAAAAAAAA6s/P1D7q5HWGxMOKgdCGMLFj10Ruo3xT4hQwCLcB/s640/Image36.png)
-
-![alt tag](https://2.bp.blogspot.com/-S5YXd68LlqI/V2BbyJ5BcII/AAAAAAAAA6Q/3V_Vao7oi3YgaJqKEKfL7iY-7dB0hyJogCLcB/s640/Image32.png)
-
-![alt tag](https://2.bp.blogspot.com/-Xh1Vt7hbmhA/V3VxLIU34YI/AAAAAAAABmI/QWrSGDx9Dn8oInZrodrLMbq3h0LxoQV7gCLcB/s640/Image47.png)
-
-![alt tag](https://4.bp.blogspot.com/-VYDFsAgslTQ/V3VxFVx5hRI/AAAAAAAABmA/q0jtao56mSYlN1SELWyqxEyI473sJagOwCLcB/s640/Image46.png)
-
-![alt tag](https://4.bp.blogspot.com/-DspdeXA2j7g/V7NaEj0xvmI/AAAAAAAABus/5AWpP1s1KVwSMnQKxSwiOXWNSomr584mgCLcB/s640/Image52.png)
-
-![alt tag](https://4.bp.blogspot.com/-K6Gc-rzOgxI/V7NZ627WmhI/AAAAAAAABuc/gVN6mMEssFAvVF6fwFVbsz2UPA5H0HmgACLcB/s640/Image58.png)
-
-![alt tag](https://1.bp.blogspot.com/-QXHmeGIIvHk/V7NZ_WXzcTI/AAAAAAAABuk/S1230_yZb_AXmwHUd1XwQLjCH22okb5cgCLcB/s640/Image55.png)
-
-![alt tag](https://4.bp.blogspot.com/-qOTcQPfD5Ac/V7NaImWq5VI/AAAAAAAABuw/UOhgv7-vIx4AzcdgkffWV5nJKyNan5Y6QCLcB/s640/Image50.png)
-
-![alt tag](https://4.bp.blogspot.com/-Fc0Lpc_Yzjg/V8U8kuC2qGI/AAAAAAAAByI/1UWdJ8-VKtoP0w77JVnOQ6xkBlaFAjYLwCLcB/s640/Image64.png)
-
-![alt tag](https://3.bp.blogspot.com/-LY_Q77MXx4g/V8U8jNL3LiI/AAAAAAAAByA/zPXQnyBhxywjx_QbcJi459uSogibNydiQCLcB/s640/Image62.png)
-
-![alt tag](https://2.bp.blogspot.com/-8P4ldPQ1o4E/V8U8jjyVmOI/AAAAAAAAByE/3qhTsfPxI70hOlvt2vciXRQQgMfrO9JCgCLcB/s640/Image61.png)
 
