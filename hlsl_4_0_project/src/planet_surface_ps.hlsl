@@ -43,6 +43,7 @@ struct PS_INTPUT
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    float3 LocalePos                : TEXCOORD3;
     
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
@@ -58,6 +59,7 @@ struct PS_INTPUT
 
 #include "spherelod_commons.hlsl"
 #include "landscapes.hlsl"
+#include "fbm.hlsl"
 
 #define v_flags                     0
 #define v_flags2                    1
@@ -129,6 +131,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     bool oceans_enabled = vec[v_flag32].x;
 
     /////////////////////////////////////////////////////////////////////////
+
+    float4 vpos;
+    vpos.xyz = 10000.0 * input.LocalePos;
+    //vpos.xyz = input.LocalePos.xyz;
+    vpos.w = 1.0;
+
+
 
     float4 final_color = 1.0;
     float4 lit_color = 0.0;
@@ -294,7 +303,25 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     else
     {
-        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+        
+        float2 delta = 
+        { 
+            Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890),
+            Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
+        };
+        
+
+
+
+        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + 0.1 * delta, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+        
+        
+
+        /*
+        pixel_color.x = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+        pixel_color.yz = 0.0;
+        pixel_color.w = 1.0;
+        */
     }
     
 
