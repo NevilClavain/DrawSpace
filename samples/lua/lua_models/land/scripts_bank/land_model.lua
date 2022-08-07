@@ -28,11 +28,6 @@ land.rendering_config =
 		},
 		textures =
 		{
-			[1] = 
-			{
-				{ path='012b2su2.jpg', stage=0 },
-				{ path='grass_bump.bmp', stage=1 }
-			}
 		},
 		vertex_textures =
 		{
@@ -80,11 +75,6 @@ land.rendering_config =
 		},
 		textures =
 		{
-			[1] = 
-			{
-				{ path='012b2su2.jpg', stage=0 },
-				{ path='grass_bump.bmp', stage=1 }
-			}
 		},
 		vertex_textures =
 		{

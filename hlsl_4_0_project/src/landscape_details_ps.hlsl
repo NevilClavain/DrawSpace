@@ -111,7 +111,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 object_normale;
 
 
-    float4 base_color;
+    
 
 
     float4 vpos_up = vpos;
@@ -128,23 +128,30 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     vpos_right.x += step;
 
 
-    // SET 1
+
+    float color_res = iqTurbulence(1.0 * input.LocalePos.xyz, 3, 2.0, 0.46);
+
+    float color_res_2 = iqTurbulence(0.05 * input.LocalePos.xyz, 3, 3.0, 0.20);
+    
+
+    float3 color1 = { 0.76, 0.72, 0.53 };
+    float3 color2 = { 0.70, 0.60, 0.44 };
+    float3 color3 = { 0.18, 0.40, 0.04 };
+
+
+
+    float4 base_color;
+    base_color.xyz = lerp( lerp(color1, color2, saturate(color_res)), color3, saturate(color_res_2));
+    base_color.w = 1.0;
+
     /*
-    float res = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
-    float res_up = iqTurbulence(vpos_up.xyz, 3, 2.0, 0.46);
-    float res_down = iqTurbulence(vpos_down.xyz, 3, 2.0, 0.46);
-    float res_right = iqTurbulence(vpos_right.xyz, 3, 2.0, 0.46);
-    float res_left = iqTurbulence(vpos_left.xyz, 3, 2.0, 0.46);
+    base_color.x = 0.76;
+    base_color.y = 0.72;
+    base_color.z = 0.53;
+    base_color.w = 1.0;
     */
 
-    // SET 2
-    /*
-    float res = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 1.0, 0.99, 0.0, 344.8, 890);
-    float res_up = iqTurbulence(vpos_up.xyz, 3, 2.0, 0.46);
-    float res_down = iqTurbulence(vpos_down.xyz, 3, 2.0, 0.46);
-    float res_right = iqTurbulence(vpos_right.xyz, 3, 2.0, 0.46);
-    float res_left = iqTurbulence(vpos_left.xyz, 3, 2.0, 0.46);
-    */
+
 
     // SET 3
     
@@ -155,21 +162,23 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float res_left = Fractal_fBm_wombat_perlin(vpos_left.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
     
     
-    //float delta = (abs(res - res_up) + abs(res - res_down) + abs(res - res_left) + abs(res - res_right)) * 0.25;
     
+
+    //
     float4 local_normale;
     local_normale = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, bump_bias);
+    //local_normale.xyz = input.Normale.xyz;
+    //local_normale.w = 1.0;
+    //
+
     
     object_normale = mul(tbn_mat, local_normale);
 
     float4 world_normale = TransformedNormaleForLights(object_normale, mat_World);
 
 
-    //base_color.xyz = lerp(color1, color2, saturate(delta));
-    base_color.x = 0.76;
-    base_color.y = 0.72;
-    base_color.z = 0.53;
-    base_color.w = 1.0;
+
+
 
     float4 pixel_light_color = 0.0;
 
