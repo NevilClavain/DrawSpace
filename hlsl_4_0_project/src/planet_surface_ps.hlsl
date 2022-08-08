@@ -60,6 +60,7 @@ struct PS_INTPUT
 #include "spherelod_commons.hlsl"
 #include "landscapes.hlsl"
 #include "fbm.hlsl"
+#include "generic_rendering.hlsl"
 
 #define v_flags                     0
 #define v_flags2                    1
@@ -177,24 +178,54 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             sea = true;
         }
     }
-
-    float3 avg = 0.0;
-
-    if (!sea)
-    {
-        avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy, terrain_bump_flag.x);
-    }
-
+   
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord.xy);
 
-
     if (!sea)
     {
+        float3 avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy, terrain_bump_flag.x);
+
         float k = clamp((1.5708 - atan(30.0 * (flags.x - 1.0))), 0.01, 0.35);
         
         texel_pos.x += k * avg.x;
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
         
+
+
+        ////////////////////////////////////////////////////////////////
+        // details bump mapping
+
+        float4 vpos_up = vpos;
+        float4 vpos_down = vpos;
+        float4 vpos_left = vpos;
+        float4 vpos_right = vpos;
+
+        float step = 1.0;
+
+        vpos_up.z += step;
+        vpos_down.z -= step;
+
+        vpos_left.x -= step;
+        vpos_right.x += step;
+
+
+        float scale = 1.75;
+        float res = Fractal_fBm_wombat_perlin(scale * vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+        float res_up = Fractal_fBm_wombat_perlin(scale * vpos_up.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+        float res_down = Fractal_fBm_wombat_perlin(scale * vpos_down.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+        float res_right = Fractal_fBm_wombat_perlin(scale * vpos_right.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+        float res_left = Fractal_fBm_wombat_perlin(scale * vpos_left.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+
+        float4 normale_delta;
+        normale_delta = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, 1.4);
+
+        ////////////////////////////////////////////////////////////////
+
+        texel_pos.x +=  normale_delta.x;
+        texel_pos.y += -normale_delta.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+
+
+
         texel_pos = normalize(texel_pos);
 
     }
@@ -209,8 +240,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 texel_pos2;
     texel_pos2.xyz = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
     texel_pos2.w = 1.0;
-
+    
     float4 normale_world = mul(matWorldRots, texel_pos2);
+
+    //texel_pos2.xyz = normalize(normalize(texel_pos2.xyz) + normalize(normale_delta.xyz));
 
     float ocean_spec_power = 120.0;
 
