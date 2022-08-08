@@ -132,8 +132,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     /////////////////////////////////////////////////////////////////////////
 
+    float planet_ray = flags.z;
+
     float4 vpos;
-    vpos.xyz = 10000.0 * input.LocalePos;
+
+    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouvé empiriquement :-p  : pour être indépendant de la taille de la planète
+
     //vpos.xyz = input.LocalePos.xyz;
     vpos.w = 1.0;
 
@@ -296,27 +300,21 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     */
 
-        
     if (sea)
     {
         pixel_color.xyz = water_color;
     }
     else
-    {
-        
+    {        
         float2 delta = 
         { 
             Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890),
             Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
         };
         
-
-
-
         pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + 0.1 * delta, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         
-        
-
+       
         /*
         pixel_color.x = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
         pixel_color.yz = 0.0;
@@ -324,10 +322,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         */
     }
     
-
-
-
-
     float4 fog_color;
 
     if (relative_alt > 1.0 || !oceans_enabled)
