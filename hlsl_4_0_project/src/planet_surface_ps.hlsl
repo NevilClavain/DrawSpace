@@ -178,14 +178,21 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             sea = true;
         }
     }
-   
+
+    float details_limit_sup = 1.060; // **PARAM**
+    float ground_details_factor = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
+
+    float bump_details_limit_sup = 1.0060; // **PARAM**
+    float ground_bump_details_factor = saturate((bump_details_limit_sup - relative_alt) / (bump_details_limit_sup - 1.0));
+
+
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord.xy);
 
     if (!sea)
     {
         float3 avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy, terrain_bump_flag.x);
 
-        float k = clamp((1.5708 - atan(30.0 * (flags.x - 1.0))), 0.01, 0.35);
+        float k = clamp((1.5708 - atan(30.0 * (relative_alt - 1.0))), 0.01, 0.35);
         
         texel_pos.x += k * avg.x;
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
@@ -208,9 +215,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         vpos_left.x -= step;
         vpos_right.x += step;
 
-        float scale = 2.75;
+        float scale = 2.75; // **PARAM**
 
-        float bump_bias = 1.5;
+        float bump_bias = 1.8;  // **PARAM**
                 
         float res = Fractal_fBm_wombat_perlin(scale * vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
         float res_up = Fractal_fBm_wombat_perlin(scale * vpos_up.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
@@ -220,11 +227,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
                 
         float4 normale_delta_for_details;
         normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, bump_bias);
+        
 
         ////////////////////////////////////////////////////////////////
 
-        texel_pos.x +=  normale_delta_for_details.x;
-        texel_pos.y += -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        texel_pos.x += ground_bump_details_factor * normale_delta_for_details.x;
+        texel_pos.y += ground_bump_details_factor * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
 
 
@@ -260,7 +268,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light0_dir.xyz + nviewerpos);
-            spec0 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light0_dir.xyz, hv);
+            spec0 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), relative_alt, light0_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -271,7 +279,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light1_dir.xyz + nviewerpos);
-            spec1 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light1_dir.xyz, hv);
+            spec1 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), relative_alt, light1_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -282,7 +290,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light2_dir.xyz + nviewerpos);
-            spec2 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light2_dir.xyz, hv);
+            spec2 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), relative_alt, light2_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -346,8 +354,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890),
             Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
         };
+
+        float level_disturbance_scale = 0.33; //0.30;    // **PARAM**
         
-        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + 0.1 * delta, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         
        
         /*

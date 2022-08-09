@@ -294,7 +294,7 @@ local planet_specific_config_descr =
 	planet_ray							         = 6500.0,
     gravity_acc                                  = 9.81,
 	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 10000.0,
+	mountains_amplitude					         = 16000.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	plains_seed1						         = 89189.0,
@@ -1650,7 +1650,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(104.1804, -24.5838, 1538.0, planet_specific_config_descr)
+set_freecam_on_planet(120.06, -20.48, 8538.0, planet_specific_config_descr)
 
 
 
