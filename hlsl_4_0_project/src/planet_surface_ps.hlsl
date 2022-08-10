@@ -217,22 +217,32 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         float scale = 2.75; // **PARAM**
 
-        float bump_bias = 1.8;  // **PARAM**
-                
-        float res = Fractal_fBm_wombat_perlin(scale * vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
-        float res_up = Fractal_fBm_wombat_perlin(scale * vpos_up.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
-        float res_down = Fractal_fBm_wombat_perlin(scale * vpos_down.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
-        float res_right = Fractal_fBm_wombat_perlin(scale * vpos_right.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
-        float res_left = Fractal_fBm_wombat_perlin(scale * vpos_left.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
-                
+        float bump_bias = 1.2;  // **PARAM**
+
+
+        float lacunarity = 4.0;
+        float roughness = 1.46;
+
+
+        float res = Fractal_fBm_classic_perlin(scale * vpos.xyz, 4, lacunarity, roughness, 0.0);
+        float res_up = Fractal_fBm_classic_perlin(scale * vpos_up.xyz, 4, lacunarity, roughness, 0.0);
+        float res_down = Fractal_fBm_classic_perlin(scale * vpos_down.xyz, 4, lacunarity, roughness, 0.0);
+        float res_right = Fractal_fBm_classic_perlin(scale * vpos_right.xyz, 4, lacunarity, roughness, 0.0);
+        float res_left = Fractal_fBm_classic_perlin(scale * vpos_left.xyz, 4, lacunarity, roughness, 0.0);
+
+
+        // WIP
+        //float details_mask = 1.0; // saturate(Fractal_fBm_classic_perlin(0.025 * scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
+
+
         float4 normale_delta_for_details;
         normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, bump_bias);
         
 
         ////////////////////////////////////////////////////////////////
 
-        texel_pos.x += ground_bump_details_factor * normale_delta_for_details.x;
-        texel_pos.y += ground_bump_details_factor * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        texel_pos.x += /*details_mask * */ ground_bump_details_factor * normale_delta_for_details.x;
+        texel_pos.y += /* details_mask * */ ground_bump_details_factor * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
 
 
@@ -359,12 +369,17 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         
         pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         
-       
+
+
         /*
-        pixel_color.x = Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890);
+        float lacunarity = 4.0;
+        float roughness = 1.46;
+        float scale = 2.75; 
+        pixel_color.x = saturate(Fractal_fBm_classic_perlin(0.25 * scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
         pixel_color.yz = 0.0;
         pixel_color.w = 1.0;
         */
+        
     }
     
     float4 fog_color;
