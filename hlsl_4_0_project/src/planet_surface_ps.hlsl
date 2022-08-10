@@ -217,7 +217,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         float scale = 2.75; // **PARAM**
 
-        float bump_bias = 1.2;  // **PARAM**
+        float bump_bias = 1.8;  // **PARAM**
 
 
         float lacunarity = 4.0;
