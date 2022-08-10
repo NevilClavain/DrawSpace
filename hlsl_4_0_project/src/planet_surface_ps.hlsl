@@ -218,9 +218,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         vpos_left.x -= step;
         vpos_right.x += step;
 
-        float scale = 2.75; // **PARAM**
+        float scale = 3.0; // 2.75; // **PARAM**
 
-        float bump_bias = 1.6;  // **PARAM**
+        float bump_bias = 1.0;  // **PARAM**
 
 
         float lacunarity = 4.0;
@@ -266,7 +266,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     
     float4 normale_world = mul(matWorldRots, texel_pos2);
 
-    //texel_pos2.xyz = normalize(normalize(texel_pos2.xyz) + normalize(normale_delta.xyz));
 
     float ocean_spec_power = 120.0;
 
@@ -368,7 +367,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
         };
 
-        float level_disturbance_scale = 0.30;    // **PARAM**
+        float level_disturbance_scale = 0.27;    // **PARAM**
         
         pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         
