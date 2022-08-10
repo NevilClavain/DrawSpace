@@ -180,11 +180,14 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
 
     float details_limit_sup = 1.060; // **PARAM**
-    float ground_details_factor = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
+    float ground_details_factor_alt = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
 
     float bump_details_limit_sup = 1.0060; // **PARAM**
-    float ground_bump_details_factor = saturate((bump_details_limit_sup - relative_alt) / (bump_details_limit_sup - 1.0));
+    float ground_bump_details_factor_alt = saturate((bump_details_limit_sup - relative_alt) / (bump_details_limit_sup - 1.0));
 
+    float ground_bump_details_factor_depth_distance = 8000.0; // **PARAM**
+
+    float ground_bump_details_factor_depth = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
 
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord.xy);
 
@@ -217,7 +220,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         float scale = 2.75; // **PARAM**
 
-        float bump_bias = 1.8;  // **PARAM**
+        float bump_bias = 1.6;  // **PARAM**
 
 
         float lacunarity = 4.0;
@@ -241,8 +244,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         ////////////////////////////////////////////////////////////////
 
-        texel_pos.x += /*details_mask * */ ground_bump_details_factor * normale_delta_for_details.x;
-        texel_pos.y += /* details_mask * */ ground_bump_details_factor * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        texel_pos.x += /*details_mask * */ ground_bump_details_factor_depth * ground_bump_details_factor_alt * normale_delta_for_details.x;
+        texel_pos.y += /* details_mask * */ ground_bump_details_factor_depth * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
 
 
@@ -365,9 +368,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
         };
 
-        float level_disturbance_scale = 0.33; //0.30;    // **PARAM**
+        float level_disturbance_scale = 0.30;    // **PARAM**
         
-        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         
 
 
