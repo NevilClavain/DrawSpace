@@ -215,28 +215,28 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         vpos_left.x -= step;
         vpos_right.x += step;
 
-        float scale = 3.0; // 2.75; // **PARAM**
+        float details_terrain_noise_scale = 3.0; // 2.75; // **PARAM**
 
-        float bump_bias = 1.0;  // **PARAM**
+        float details_terrain_bump_bias = 1.0;  // **PARAM**
 
 
         float lacunarity = 4.0;
         float roughness = 1.46;
 
 
-        float res = Fractal_fBm_classic_perlin(scale * vpos.xyz, 4, lacunarity, roughness, 0.0);
-        float res_up = Fractal_fBm_classic_perlin(scale * vpos_up.xyz, 4, lacunarity, roughness, 0.0);
-        float res_down = Fractal_fBm_classic_perlin(scale * vpos_down.xyz, 4, lacunarity, roughness, 0.0);
-        float res_right = Fractal_fBm_classic_perlin(scale * vpos_right.xyz, 4, lacunarity, roughness, 0.0);
-        float res_left = Fractal_fBm_classic_perlin(scale * vpos_left.xyz, 4, lacunarity, roughness, 0.0);
+        float res = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos.xyz, 4, lacunarity, roughness, 0.0);
+        float res_up = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_up.xyz, 4, lacunarity, roughness, 0.0);
+        float res_down = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_down.xyz, 4, lacunarity, roughness, 0.0);
+        float res_right = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_right.xyz, 4, lacunarity, roughness, 0.0);
+        float res_left = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_left.xyz, 4, lacunarity, roughness, 0.0);
 
 
         // WIP
-        //float details_mask = 1.0; // saturate(Fractal_fBm_classic_perlin(0.025 * scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
+        //float details_mask = 1.0; // saturate(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
 
 
         float4 normale_delta_for_details;
-        normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, bump_bias);
+        normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
         
 
         ////////////////////////////////////////////////////////////////
