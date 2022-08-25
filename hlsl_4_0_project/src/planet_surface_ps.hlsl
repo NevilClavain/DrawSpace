@@ -31,9 +31,6 @@ cbuffer legacyargs : register(b0)
 Texture2D       Pixels_HTMap_Texture            : register(t0);
 SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
 
-Texture2D       Splatting_HTMap_Texture         : register(t1);
-SamplerState    Splatting_HTMap_Texture_Sampler : register(s1);
-
 Texture2D       HT_Texture                      : register(t7);
 SamplerState    HT_Texture_sampler              : register(s7);
 
@@ -312,48 +309,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float2 ddx = { 0.0, 0.0 };
     float2 ddy = { 0.0, 0.0 };
-
-    // disabled texture splatting
-	/*
-    if (flags.x > 0.0 && flags.x <= lim_inf)
-    {
-        if (sea)
-        {
-            pixel_color.xyz = water_color;
-        }
-        else
-        {
-            pixel_color = splatting_color(input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture, Splatting_HTMap_Texture_Sampler);
-        }
-
-    }
-    else if (flags.x > lim_inf && flags.x <= lim_sup)
-    {
-        float4 color_splat = splatting_color(input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture, Splatting_HTMap_Texture_Sampler);
-        float4 color_pixel = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
-
-        if (sea)
-        {
-            pixel_color.xyz = water_color;
-        }
-        else
-        {
-            pixel_color = lerp(color_splat, color_pixel, (flags.x - lim_inf) / (lim_sup - lim_inf));
-        }
-    }
-    else
-    {
-    
-        if (sea)
-        {
-            pixel_color.xyz = water_color;
-        }
-        else
-        {
-            pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
-        }
-    }
-    */
 
     if (sea)
     {

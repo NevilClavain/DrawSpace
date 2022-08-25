@@ -1146,8 +1146,7 @@ planet_layers =
 			{
 				[1] = 
 				{
-					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='earth_th_splatting_16.jpg', stage=1 },
+					{ path='earth_th_pixels_16.jpg', stage=0 }
 				}
 			},
 			vertex_textures =
@@ -1182,8 +1181,7 @@ planet_layers =
 			{
 				[1] = 
 				{
-					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='earth_th_splatting_16.jpg', stage=1 },
+					{ path='earth_th_pixels_16.jpg', stage=0 }
 				}
 			},
 			vertex_textures =
