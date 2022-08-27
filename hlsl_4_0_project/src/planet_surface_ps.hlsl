@@ -31,9 +31,6 @@ cbuffer legacyargs : register(b0)
 Texture2D       Pixels_HTMap_Texture            : register(t0);
 SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
 
-Texture2D       Splatting_HTMap_Texture         : register(t1);
-SamplerState    Splatting_HTMap_Texture_Sampler : register(s1);
-
 Texture2D       HT_Texture                      : register(t7);
 SamplerState    HT_Texture_sampler              : register(s7);
 
@@ -43,6 +40,7 @@ struct PS_INTPUT
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    float3 LocalePos                : TEXCOORD3;
     
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
@@ -58,6 +56,8 @@ struct PS_INTPUT
 
 #include "spherelod_commons.hlsl"
 #include "landscapes.hlsl"
+#include "fbm.hlsl"
+#include "generic_rendering.hlsl"
 
 #define v_flags                     0
 #define v_flags2                    1
@@ -88,9 +88,26 @@ struct PS_INTPUT
 
 #define m_matWorldRots              25
 
+// flag 31
+// x->high_terrain_bump_bias
+// y->details_terrain_bump_bias
+// z->details_terrain_noise_scale
+// w->level_disturbance_scale
+
 #define v_terrain_bump_flag         31
 
+// flag 32
+// x->oceans_enabled
+// y->oceans specular
+
 #define v_flag32                    32
+
+// flag 33
+// x->details_limit_sup
+// y->bump_details_limit_sup
+// z->ground_bump_details_factor_depth_distance
+
+#define v_terrain_details_flags             33
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
@@ -126,9 +143,22 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4x4 matWorldRots = mat[m_matWorldRots];
     float4 terrain_bump_flag = vec[v_terrain_bump_flag];
 
+    float4 terrain_details_flags = vec[v_terrain_details_flags];
+
     bool oceans_enabled = vec[v_flag32].x;
 
     /////////////////////////////////////////////////////////////////////////
+
+    float planet_ray = flags.z;
+
+    float4 vpos;
+
+    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouvé empiriquement :-p  : pour être indépendant de la taille de la planète
+
+    //vpos.xyz = input.LocalePos.xyz;
+    vpos.w = 1.0;
+
+
 
     float4 final_color = 1.0;
     float4 lit_color = 0.0;
@@ -165,23 +195,76 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
     }
 
-    float3 avg = 0.0;
+    float details_limit_sup = terrain_details_flags.x;
+    float ground_details_factor_alt = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
 
-    if (!sea)
-    {
-        avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy, terrain_bump_flag.x);
-    }
+    float bump_details_limit_sup = terrain_details_flags.y;
+    float ground_bump_details_factor_alt = saturate((bump_details_limit_sup - relative_alt) / (bump_details_limit_sup - 1.0));
+
+    float ground_bump_details_factor_depth_distance = terrain_details_flags.z;
+
+    float ground_bump_details_factor_depth = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
 
     float3 texel_pos = compute_front_face_point_vector(input.GlobalPatch_TexCoord.xy);
 
-
     if (!sea)
     {
-        float k = clamp((1.5708 - atan(30.0 * (flags.x - 1.0))), 0.01, 0.35);
+        float3 avg = compute_terrain_bump_vector(temp_humidity.w, flags2.x, HT_Texture, HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy, terrain_bump_flag.x);
+
+        float k = clamp((1.5708 - atan(30.0 * (relative_alt - 1.0))), 0.01, 0.35);
         
         texel_pos.x += k * avg.x;
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
         
+
+
+        ////////////////////////////////////////////////////////////////
+        // details bump mapping
+
+        float4 vpos_up = vpos;
+        float4 vpos_down = vpos;
+        float4 vpos_left = vpos;
+        float4 vpos_right = vpos;
+
+        float step = 1.0;
+
+        vpos_up.z += step;
+        vpos_down.z -= step;
+
+        vpos_left.x -= step;
+        vpos_right.x += step;
+
+        float details_terrain_noise_scale = terrain_bump_flag.z;
+
+        float details_terrain_bump_bias = terrain_bump_flag.y;
+
+
+        float lacunarity = 4.0;
+        float roughness = 1.46;
+
+
+        float res = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos.xyz, 4, lacunarity, roughness, 0.0);
+        float res_up = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_up.xyz, 4, lacunarity, roughness, 0.0);
+        float res_down = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_down.xyz, 4, lacunarity, roughness, 0.0);
+        float res_right = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_right.xyz, 4, lacunarity, roughness, 0.0);
+        float res_left = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_left.xyz, 4, lacunarity, roughness, 0.0);
+
+
+        // WIP
+        //float details_mask = 1.0; // saturate(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
+
+
+        float4 normale_delta_for_details;
+        normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
+        
+
+        ////////////////////////////////////////////////////////////////
+
+        texel_pos.x += /*details_mask * */ ground_bump_details_factor_depth * ground_bump_details_factor_alt * normale_delta_for_details.x;
+        texel_pos.y += /* details_mask * */ ground_bump_details_factor_depth * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+
+
+
         texel_pos = normalize(texel_pos);
 
     }
@@ -196,8 +279,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 texel_pos2;
     texel_pos2.xyz = CubeToSphere(ProjectVectorToCube(flags.w, texel_pos));
     texel_pos2.w = 1.0;
-
+    
     float4 normale_world = mul(matWorldRots, texel_pos2);
+
 
     float ocean_spec_power = 120.0;
 
@@ -212,7 +296,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light0_dir.xyz + nviewerpos);
-            spec0 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light0_dir.xyz, hv);
+            spec0 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), relative_alt, light0_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -223,7 +307,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light1_dir.xyz + nviewerpos);
-            spec1 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light1_dir.xyz, hv);
+            spec1 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), relative_alt, light1_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -234,7 +318,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         if (sea)
         {
             float3 hv = normalize(light2_dir.xyz + nviewerpos);
-            spec2 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), flags.x, light2_dir.xyz, hv);
+            spec2 = ocean_specular_from_space(specular_light(hv, normale_world.xyz, ocean_spec_power), relative_alt, light2_dir.xyz, hv);
         }
         count_lights++;
     }
@@ -245,62 +329,35 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float2 ddx = { 0.0, 0.0 };
     float2 ddy = { 0.0, 0.0 };
 
-    // disabled texture splatting
-	/*
-    if (flags.x > 0.0 && flags.x <= lim_inf)
-    {
-        if (sea)
-        {
-            pixel_color.xyz = water_color;
-        }
-        else
-        {
-            pixel_color = splatting_color(input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture, Splatting_HTMap_Texture_Sampler);
-        }
-
-    }
-    else if (flags.x > lim_inf && flags.x <= lim_sup)
-    {
-        float4 color_splat = splatting_color(input.UnitPatch_TexCoord, temp_humidity.x, temp_humidity.y, flags6.x, Splatting_HTMap_Texture, Splatting_HTMap_Texture_Sampler);
-        float4 color_pixel = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
-
-        if (sea)
-        {
-            pixel_color.xyz = water_color;
-        }
-        else
-        {
-            pixel_color = lerp(color_splat, color_pixel, (flags.x - lim_inf) / (lim_sup - lim_inf));
-        }
-    }
-    else
-    {
-    
-        if (sea)
-        {
-            pixel_color.xyz = water_color;
-        }
-        else
-        {
-            pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
-        }
-    }
-    */
-
-        
     if (sea)
     {
         pixel_color.xyz = water_color;
     }
     else
-    {
-        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy, ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+    {        
+        float2 delta = 
+        { 
+            Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890),
+            Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
+        };
+
+        float level_disturbance_scale = terrain_bump_flag.w;
+        
+        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
+        
+
+
+        /*
+        float lacunarity = 4.0;
+        float roughness = 1.46;
+        float scale = 2.75; 
+        pixel_color.x = saturate(Fractal_fBm_classic_perlin(0.25 * scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
+        pixel_color.yz = 0.0;
+        pixel_color.w = 1.0;
+        */
+        
     }
     
-
-
-
-
     float4 fog_color;
 
     if (relative_alt > 1.0 || !oceans_enabled)

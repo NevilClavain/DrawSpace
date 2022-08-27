@@ -159,6 +159,32 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 	if config_description['oceansdetails_specularpower'] ~= nil then
 		planet_specific_configuration:set_oceansdetailsspecularpower(config_description['oceansdetails_specularpower'])
 	end
+
+
+
+	if config_description['details_terrain_bump_bias'] ~= nil then
+		planet_specific_configuration:set_detailsterrainbumpbias(config_description['details_terrain_bump_bias'])
+	end
+
+	if config_description['details_terrain_noise_scale'] ~= nil then
+		planet_specific_configuration:set_detailsterrainnoisescale(config_description['details_terrain_noise_scale'])
+	end
+
+	if config_description['level_disturbance_scale'] ~= nil then
+		planet_specific_configuration:set_leveldisturbancescale(config_description['level_disturbance_scale'])
+	end
+
+	if config_description['details_limit_sup'] ~= nil then
+		planet_specific_configuration:set_detailslimitsup(config_description['details_limit_sup'])
+	end
+
+	if config_description['bump_details_limit_sup'] ~= nil then
+		planet_specific_configuration:set_bumpdetailslimitsup(config_description['bump_details_limit_sup'])
+	end
+
+	if config_description['ground_bump_details_factor_depth_distance'] ~= nil then
+		planet_specific_configuration:set_groundbumpdetailsfactordepthdistance(config_description['ground_bump_details_factor_depth_distance'])
+	end
 end
 
 planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)

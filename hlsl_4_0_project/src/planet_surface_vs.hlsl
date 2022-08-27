@@ -84,6 +84,7 @@ struct VS_OUTPUT
     float4 LODGlobalPatch_TexCoord  : TEXCOORD0;
     float4 UnitPatch_TexCoord       : TEXCOORD1;
     float4 GlobalPatch_TexCoord     : TEXCOORD2;
+    float3 LocalePos                : TEXCOORD3;
 
     float4 c0 : COLOR0;
     float4 c1 : COLOR1;
@@ -162,6 +163,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     
     float v_alt = 0.0;
     float vertex_distance;
+    float4 v_position2;
     float4 v_position3;
     float4 vertex_pos;    
     float4 PositionWV;
@@ -235,7 +237,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         v_position.z = 1.0;
         v_position.w = 1.0;
 	
-        float4 v_position2;
+        
         v_position2.w = 1.0;
         v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
 
@@ -433,6 +435,9 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     {
         Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.001));
     }
+
+
+    Output.LocalePos = v_position2.xyz;
 
     return (Output);
 }

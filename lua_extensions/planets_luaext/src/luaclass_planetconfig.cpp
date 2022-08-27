@@ -75,6 +75,13 @@ const Luna<LuaClass_PlanetConfig>::RegType LuaClass_PlanetConfig::methods[] =
     { "set_wavepassresol", &LuaClass_PlanetConfig::LUA_setwavepassresol },
     { "set_oceanbumpfactor", &LuaClass_PlanetConfig::LUA_setoceanbumpfactor },
 
+    { "set_detailsterrainbumpbias", &LuaClass_PlanetConfig::LUA_setdetailsterrainbumpbias },
+    { "set_detailsterrainnoisescale", &LuaClass_PlanetConfig::LUA_setdetailsterrainnoisescale },
+    { "set_leveldisturbancescale", &LuaClass_PlanetConfig::LUA_setleveldisturbancescale },
+    { "set_detailslimitsup", &LuaClass_PlanetConfig::LUA_setdetailslimitsup },
+    { "set_bumpdetailslimitsup", &LuaClass_PlanetConfig::LUA_setbumpdetailslimitsup },
+    { "set_groundbumpdetailsfactordepthdistance", &LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthdistance },
+
 
     { "connect_wavepass", &LuaClass_PlanetConfig::LUA_connectwavepass },
     
@@ -144,6 +151,13 @@ int LuaClass_PlanetConfig::LUA_apply(lua_State* p_L)
 
     entity_rendering_aspect->AddComponent<bool>("oceans", m_planets_details.oceans);
     entity_rendering_aspect->AddComponent<dsreal>("oceandetails_specularpower", m_planets_details.oceandetails_specularpower);
+
+    entity_rendering_aspect->AddComponent<dsreal>("details_terrain_bump_bias", m_planets_details.details_terrain_bump_bias );
+    entity_rendering_aspect->AddComponent<dsreal>("details_terrain_noise_scale", m_planets_details.details_terrain_noise_scale );
+    entity_rendering_aspect->AddComponent<dsreal>("level_disturbance_scale", m_planets_details.level_disturbance_scale);
+    entity_rendering_aspect->AddComponent<dsreal>("details_limit_sup", m_planets_details.details_limit_sup);
+    entity_rendering_aspect->AddComponent<dsreal>("bump_details_limit_sup", m_planets_details.bump_details_limit_sup );
+    entity_rendering_aspect->AddComponent<dsreal>("ground_bump_details_factor_depth_distance", m_planets_details.ground_bump_details_factor_depth_distance);
 
     entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
     entity_rendering_aspect->AddComponent<bool>("enable_atmosphere", m_planets_details.enable_atmosphere);
@@ -232,6 +246,14 @@ int LuaClass_PlanetConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
     m_rendering_aspect->RemoveComponent<bool>("oceans");
     m_rendering_aspect->RemoveComponent<dsreal>("oceandetails_specularpower");
+
+    m_rendering_aspect->RemoveComponent<dsreal>("details_terrain_bump_bias");
+    m_rendering_aspect->RemoveComponent<dsreal>("details_terrain_noise_scale");
+    m_rendering_aspect->RemoveComponent<dsreal>("level_disturbance_scale");
+    m_rendering_aspect->RemoveComponent<dsreal>("details_limit_sup");
+    m_rendering_aspect->RemoveComponent<dsreal>("bump_details_limit_sup");
+    m_rendering_aspect->RemoveComponent<dsreal>("ground_bump_details_factor_depth_distance");
+
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<dsstring>("bump_pass");
@@ -747,6 +769,85 @@ int LuaClass_PlanetConfig::LUA_setoceanbumpfactor(lua_State* p_L)
     m_planets_details.ocean_bump_factor = bump_factor;
     return 0;
 }
+
+int LuaClass_PlanetConfig::LUA_setdetailsterrainbumpbias(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_detailsterrainbumpbias : argument(s) missing");
+    }
+    dsreal value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.details_terrain_bump_bias = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setdetailsterrainnoisescale(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_detailsterrainnoisescale : argument(s) missing");
+    }
+    dsreal value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.details_terrain_noise_scale = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setleveldisturbancescale(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_leveldisturbancescale : argument(s) missing");
+    }
+    dsreal value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.level_disturbance_scale = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setdetailslimitsup(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_detailslimitsup : argument(s) missing");
+    }
+    dsreal value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.details_limit_sup = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setbumpdetailslimitsup(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_bumpdetailslimitsup : argument(s) missing");
+    }
+    dsreal value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.bump_details_limit_sup = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthdistance(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_groundbumpdetailsfactordepthdistance : argument(s) missing");
+    }
+    dsreal value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.ground_bump_details_factor_depth_distance = value;
+
+    return 0;
+}
+
 
 int LuaClass_PlanetConfig::LUA_getoutparam(lua_State* p_L)
 {

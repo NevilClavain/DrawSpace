@@ -644,6 +644,15 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     dsreal oceandetails_specularpower{ m_owner->GetComponent<dsreal>("oceandetails_specularpower")->getPurpose() };
 
+    dsreal details_terrain_bump_bias{ m_owner->GetComponent<dsreal>("details_terrain_bump_bias")->getPurpose() };
+    dsreal details_terrain_noise_scale{ m_owner->GetComponent<dsreal>("details_terrain_noise_scale")->getPurpose() };
+    dsreal level_disturbance_scale{ m_owner->GetComponent<dsreal>("level_disturbance_scale")->getPurpose() };
+    dsreal details_limit_sup{ m_owner->GetComponent<dsreal>("details_limit_sup")->getPurpose() };
+    dsreal bump_details_limit_sup{ m_owner->GetComponent<dsreal>("bump_details_limit_sup")->getPurpose() };
+    dsreal ground_bump_details_factor_depth_distance{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_distance")->getPurpose() };
+
+
+
     Texture* wavepass_result_texture{ m_owner->GetComponent<Texture*>("wavepass_result_texture")->getPurpose() };
 
 
@@ -875,7 +884,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower));
+                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
+                        details_terrain_bump_bias,
+                        details_terrain_noise_scale,
+                        level_disturbance_scale,
+                        details_limit_sup,
+                        bump_details_limit_sup,
+                        ground_bump_details_factor_depth_distance
+                        ));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
@@ -907,7 +923,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower));
+                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
+                        details_terrain_bump_bias,
+                        details_terrain_noise_scale,
+                        level_disturbance_scale,
+                        details_limit_sup,
+                        bump_details_limit_sup,
+                        ground_bump_details_factor_depth_distance
+                        ));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
@@ -928,7 +951,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower));
+                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
+                        details_terrain_bump_bias,
+                        details_terrain_noise_scale,
+                        level_disturbance_scale,
+                        details_limit_sup,
+                        bump_details_limit_sup,
+                        ground_bump_details_factor_depth_distance
+                        ));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);
@@ -954,7 +984,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
                         splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower));
+                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
+                        details_terrain_bump_bias,
+                        details_terrain_noise_scale,
+                        level_disturbance_scale,
+                        details_limit_sup,
+                        bump_details_limit_sup,
+                        ground_bump_details_factor_depth_distance
+                        ));
 
                     binder->SetFx(fx);
                     binder->SetRenderer(m_renderer);

@@ -294,7 +294,7 @@ local planet_specific_config_descr =
 	planet_ray							         = 6500.0,
     gravity_acc                                  = 9.81,
 	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 10000.0,
+	mountains_amplitude					         = 16000.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	plains_seed1						         = 89189.0,
@@ -315,9 +315,17 @@ local planet_specific_config_descr =
 	atmo_thickness                               = 160.0,
     flatclouds_altitude                          = 24.0,
     wave_pass_resol                              = 512,
-    ocean_bump_factor                            = 2.1,
+    ocean_bump_factor                            = 0.85,
     enable_oceans                                = TRUE,
-	oceansdetails_specularpower					 = 40.0
+	oceansdetails_specularpower					 = 40.0,
+
+	details_terrain_bump_bias					 = 1.0,
+	details_terrain_noise_scale					 = 3.0,
+	level_disturbance_scale						 = 0.11,
+	details_limit_sup							 = 1.060,
+	bump_details_limit_sup					     = 1.0060,
+	ground_bump_details_factor_depth_distance	 = 8000.0,
+
 }
 
 
@@ -1146,8 +1154,7 @@ planet_layers =
 			{
 				[1] = 
 				{
-					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='earth_th_splatting_16.jpg', stage=1 },
+					{ path='earth_th_pixels_16.jpg', stage=0 }
 				}
 			},
 			vertex_textures =
@@ -1182,8 +1189,7 @@ planet_layers =
 			{
 				[1] = 
 				{
-					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='earth_th_splatting_16.jpg', stage=1 },
+					{ path='earth_th_pixels_16.jpg', stage=0 }
 				}
 			},
 			vertex_textures =
@@ -1650,7 +1656,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(104.1804, -24.5838, 1538.0, planet_specific_config_descr)
+set_freecam_on_planet(120.06, -20.48, 8538.0, planet_specific_config_descr)
 
 
 

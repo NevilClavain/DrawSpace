@@ -28,24 +28,37 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-PlanetDetailsBinder::PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,
-                                            dsreal p_mountains_offset,
-                                            dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
-                                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans, dsreal p_oceandetails_specularpower) :
-MultiFractalBinder( p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset, p_plains_seed1, p_plains_seed2, p_mix_seed1, p_mix_seed2 ),
-m_ocean_details_alt( 1.0010 ),
-m_terrain_bump_factor( p_terrainbump_factor ),
-m_splatTransitionUpRelativeAlt( p_splatTransitionUpRelativeAlt ),
-m_splatTransitionDownRelativeAlt( p_splatTransitionDownRelativeAlt ),
-m_splatTextureResol( p_splatTextureResol ),
-m_kr( p_atmoKr ),
-m_fog_alt_limit( p_fog_alt_limit ),
-m_fog_density( p_fog_density ),
-m_wave_texture_resol(512),
-m_ocean_bump_factor(0.99),
-m_oceans(p_oceans),
-m_oceandetails_specularpower(p_oceandetails_specularpower)
+PlanetDetailsBinder::PlanetDetailsBinder(dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,
+	dsreal p_mountains_offset,
+	dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
+	dsreal p_high_terrainbump_bias, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
+	int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans, dsreal p_oceandetails_specularpower,
+	dsreal p_details_terrain_bump_bias,
+	dsreal p_details_terrain_noise_scale,
+	dsreal p_level_disturbance_scale,
+	dsreal p_details_limit_sup,
+	dsreal p_bump_details_limit_sup,
+	dsreal p_ground_bump_details_factor_depth_distance
+) :
+	MultiFractalBinder(p_plains_amplitude, p_mountains_amplitude, p_vertical_offset, p_mountains_offset, p_plains_seed1, p_plains_seed2, p_mix_seed1, p_mix_seed2),
+	m_ocean_details_alt(1.0010),
+	m_high_terrain_bump_bias(p_high_terrainbump_bias),
+	m_splatTransitionUpRelativeAlt(p_splatTransitionUpRelativeAlt),
+	m_splatTransitionDownRelativeAlt(p_splatTransitionDownRelativeAlt),
+	m_splatTextureResol(p_splatTextureResol),
+	m_kr(p_atmoKr),
+	m_fog_alt_limit(p_fog_alt_limit),
+	m_fog_density(p_fog_density),
+	m_wave_texture_resol(512),
+	m_ocean_bump_factor(0.99),
+	m_oceans(p_oceans),
+	m_oceandetails_specularpower(p_oceandetails_specularpower),
+	m_details_terrain_bump_bias(p_details_terrain_bump_bias),
+	m_details_terrain_noise_scale(p_details_terrain_noise_scale),
+	m_level_disturbance_scale(p_level_disturbance_scale),
+	m_details_limit_sup(p_details_limit_sup),
+	m_bump_details_limit_sup(p_bump_details_limit_sup),
+	m_ground_bump_details_factor_depth_distance(p_ground_bump_details_factor_depth_distance)
 {
 
 	m_mirror_mode = false;
@@ -225,11 +238,14 @@ void PlanetDetailsBinder::Bind( void )
 	Vector water_bump_flags(m_wave_texture_resol, m_ocean_bump_factor, 0, 0);
 	m_renderer->SetFxShaderParams(1, 30, water_bump_flags);
 
-	Vector terrain_bump_flag(m_terrain_bump_factor, 0.0, 0.0, 0.0);
+	Vector terrain_bump_flag(m_high_terrain_bump_bias, m_details_terrain_bump_bias, m_details_terrain_noise_scale, m_level_disturbance_scale);
 	m_renderer->SetFxShaderParams(1, 31, terrain_bump_flag);
 
 	Vector flags32(m_oceans, m_oceandetails_specularpower, 0.0, 0.0);
 	m_renderer->SetFxShaderParams(1, 32, flags32);
+
+	Vector details_flags(m_details_limit_sup, m_bump_details_limit_sup, m_ground_bump_details_factor_depth_distance, 0.0);
+	m_renderer->SetFxShaderParams(1, 33, details_flags);
 
 	MultiFractalBinder::Bind();
 }
@@ -269,9 +285,9 @@ void PlanetDetailsBinder::Update( const Utils::Matrix& p_global_transform )
 	}
 }
 
-void PlanetDetailsBinder::SetLandscapeBumpFactor( dsreal p_factor )
+void PlanetDetailsBinder::SetLandscapeBumpBias( dsreal p_factor )
 {
-    m_terrain_bump_factor = p_factor;
+	m_high_terrain_bump_bias = p_factor;
 }
 
 void PlanetDetailsBinder::EnableAtmoRender( bool p_value )
