@@ -315,9 +315,17 @@ local planet_specific_config_descr =
 	atmo_thickness                               = 160.0,
     flatclouds_altitude                          = 24.0,
     wave_pass_resol                              = 512,
-    ocean_bump_factor                            = 2.1,
+    ocean_bump_factor                            = 0.85,
     enable_oceans                                = TRUE,
-	oceansdetails_specularpower					 = 40.0
+	oceansdetails_specularpower					 = 40.0,
+
+	details_terrain_bump_bias					 = 1.0,
+	details_terrain_noise_scale					 = 3.0,
+	level_disturbance_scale						 = 0.11,
+	details_limit_sup							 = 1.060,
+	bump_details_limit_sup					     = 1.0060,
+	ground_bump_details_factor_depth_distance	 = 8000.0,
+
 }
 
 

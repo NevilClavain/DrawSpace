@@ -104,6 +104,14 @@ private:
         int         wave_pass_resol;
         dsreal      ocean_bump_factor;
 
+        dsreal      details_terrain_bump_bias;
+        dsreal      details_terrain_noise_scale;
+        dsreal      level_disturbance_scale;
+        dsreal      details_limit_sup;
+        dsreal      bump_details_limit_sup;
+        dsreal      ground_bump_details_factor_depth_distance;
+      
+
         Lights      lights[4];
     };
 
@@ -150,6 +158,13 @@ public:
     int LUA_setwavepassresol(lua_State* p_L);
     int LUA_setoceanbumpfactor(lua_State* p_L);
     int LUA_setoceanmaskpass(lua_State* p_L);
+
+    int LUA_setdetailsterrainbumpbias(lua_State* p_L);
+    int LUA_setdetailsterrainnoisescale(lua_State* p_L);
+    int LUA_setleveldisturbancescale(lua_State* p_L);
+    int LUA_setdetailslimitsup(lua_State* p_L);
+    int LUA_setbumpdetailslimitsup(lua_State* p_L);
+    int LUA_setgroundbumpdetailsfactordepthdistance(lua_State* p_L);
 
 
     int LUA_enablecollisiondisplay(lua_State* p_L);
