@@ -83,7 +83,13 @@ protected:
 	bool														m_mirror_mode;
 
 	dsreal														m_ocean_details_alt;
-	dsreal														m_terrain_bump_factor;
+
+	dsreal														m_high_terrain_bump_bias;
+	dsreal														m_details_terrain_bump_bias;
+	dsreal														m_details_terrain_noise_scale;
+	dsreal														m_level_disturbance_scale;
+
+	
 
     dsreal                                                      m_splatTransitionUpRelativeAlt;
     dsreal                                                      m_splatTransitionDownRelativeAlt;
@@ -96,23 +102,32 @@ protected:
 	dsreal														m_ocean_bump_factor;
 
 	bool														m_oceans;
-
 	dsreal														m_oceandetails_specularpower; // specular power for oceans surface details (low altitude)
+
+	dsreal														m_details_limit_sup;
+	dsreal														m_bump_details_limit_sup;
+	dsreal														m_ground_bump_details_factor_depth_distance;
 
 public:
 
 	PlanetDetailsBinder( dsreal p_planetRay, dsreal p_atmoThickness, dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset,
                             dsreal p_mountains_offset,
                             dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2,
-                            dsreal p_terrainbump_factor, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
-                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans, dsreal p_oceandetails_specularpower);
+                            dsreal p_high_terrainbump_bias, dsreal p_splatTransitionUpRelativeAlt, dsreal p_splatTransitionDownRelativeAlt,
+                            int p_splatTextureResol, dsreal p_atmoKr, dsreal p_fog_alt_limit, dsreal p_fog_density, bool p_oceans, dsreal p_oceandetails_specularpower,
+							dsreal p_details_terrain_bump_bias,
+							dsreal p_details_terrain_noise_scale,
+							dsreal p_level_disturbance_scale,
+							dsreal p_details_limit_sup,
+							dsreal p_bump_details_limit_sup,
+							dsreal p_ground_bump_details_factor_depth_distance);
 
 	dsreal inline GetOceansDetailsAlt( void ) const { return m_ocean_details_alt; };
 	PlanetLight inline GetLight( int p_index ) const { return m_lights[p_index]; };
     dsreal inline GetAtmoThickness(void) const { return m_atmoThickness; };
 
     void EnableAtmoRender(bool p_value);
-    void SetLandscapeBumpFactor( dsreal p_factor );  
+    void SetLandscapeBumpBias( dsreal p_factor );  
     void SetAtmoKr( dsreal p_kr );
     void SetFogAltLimit( dsreal p_fogaltlimit );
     void SetFogDensity( dsreal p_fog_density );

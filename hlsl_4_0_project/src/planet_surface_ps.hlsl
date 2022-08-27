@@ -88,9 +88,26 @@ struct PS_INTPUT
 
 #define m_matWorldRots              25
 
+// flag 31
+// x->high_terrain_bump_bias
+// y->details_terrain_bump_bias
+// z->details_terrain_noise_scale
+// w->level_disturbance_scale
+
 #define v_terrain_bump_flag         31
 
+// flag 32
+// x->oceans_enabled
+// y->oceans specular
+
 #define v_flag32                    32
+
+// flag 33
+// x->details_limit_sup
+// y->bump_details_limit_sup
+// z->ground_bump_details_factor_depth_distance
+
+#define v_terrain_details_flags             33
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
@@ -125,6 +142,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4x4 matWorldRots = mat[m_matWorldRots];
     float4 terrain_bump_flag = vec[v_terrain_bump_flag];
+
+    float4 terrain_details_flags = vec[v_terrain_details_flags];
 
     bool oceans_enabled = vec[v_flag32].x;
 
@@ -176,13 +195,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
     }
 
-    float details_limit_sup = 1.060; // **PARAM**
+    float details_limit_sup = terrain_details_flags.x;
     float ground_details_factor_alt = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
 
-    float bump_details_limit_sup = 1.0060; // **PARAM**
+    float bump_details_limit_sup = terrain_details_flags.y;
     float ground_bump_details_factor_alt = saturate((bump_details_limit_sup - relative_alt) / (bump_details_limit_sup - 1.0));
 
-    float ground_bump_details_factor_depth_distance = 8000.0; // **PARAM**
+    float ground_bump_details_factor_depth_distance = terrain_details_flags.z;
 
     float ground_bump_details_factor_depth = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
 
@@ -215,9 +234,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         vpos_left.x -= step;
         vpos_right.x += step;
 
-        float details_terrain_noise_scale = 3.0; // 2.75; // **PARAM**
+        float details_terrain_noise_scale = terrain_bump_flag.z;
 
-        float details_terrain_bump_bias = 1.0;  // **PARAM**
+        float details_terrain_bump_bias = terrain_bump_flag.y;
 
 
         float lacunarity = 4.0;
@@ -322,7 +341,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
         };
 
-        float level_disturbance_scale = 0.27;    // **PARAM**
+        float level_disturbance_scale = terrain_bump_flag.w;
         
         pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
         

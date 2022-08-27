@@ -145,6 +145,13 @@ int LuaClass_PlanetConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<bool>("oceans", m_planets_details.oceans);
     entity_rendering_aspect->AddComponent<dsreal>("oceandetails_specularpower", m_planets_details.oceandetails_specularpower);
 
+    entity_rendering_aspect->AddComponent<dsreal>("details_terrain_bump_bias", 1.0);
+    entity_rendering_aspect->AddComponent<dsreal>("details_terrain_noise_scale", 3.0);
+    entity_rendering_aspect->AddComponent<dsreal>("level_disturbance_scale", 0.11 /*0.27*/);
+    entity_rendering_aspect->AddComponent<dsreal>("details_limit_sup", 1.060);
+    entity_rendering_aspect->AddComponent<dsreal>("bump_details_limit_sup", 1.0060);
+    entity_rendering_aspect->AddComponent<dsreal>("ground_bump_details_factor_depth_distance", 8000.0);
+
     entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
     entity_rendering_aspect->AddComponent<bool>("enable_atmosphere", m_planets_details.enable_atmosphere);
 
@@ -232,6 +239,14 @@ int LuaClass_PlanetConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
     m_rendering_aspect->RemoveComponent<bool>("oceans");
     m_rendering_aspect->RemoveComponent<dsreal>("oceandetails_specularpower");
+
+    m_rendering_aspect->RemoveComponent<dsreal>("details_terrain_bump_bias");
+    m_rendering_aspect->RemoveComponent<dsreal>("details_terrain_noise_scale");
+    m_rendering_aspect->RemoveComponent<dsreal>("level_disturbance_scale");
+    m_rendering_aspect->RemoveComponent<dsreal>("details_limit_sup");
+    m_rendering_aspect->RemoveComponent<dsreal>("bump_details_limit_sup");
+    m_rendering_aspect->RemoveComponent<dsreal>("ground_bump_details_factor_depth_distance");
+
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
     m_rendering_aspect->RemoveComponent<dsstring>("bump_pass");
