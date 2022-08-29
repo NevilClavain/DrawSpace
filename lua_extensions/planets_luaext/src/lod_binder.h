@@ -31,12 +31,13 @@
 #include "renderingnode.h"
 #include "plugin.h"
 #include "renderer.h"
+#include "lod_shaderfeeder.h"
 
 namespace LOD
 {
 
 // cette classe peut etre vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
-struct Binder abstract
+struct Binder //abstract
 {
 private:
     
