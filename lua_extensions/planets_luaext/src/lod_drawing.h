@@ -115,15 +115,15 @@ public:
 
     void SetCurrentBodyDescription( const dsstring& p_descr );
     
-    void GetStats( Stats& p_stats );
+    void GetStats( Stats& p_stats ) const;
 
     void SetCurrentPatch( Patch* p_patch );
 
     void SetBinder( Binder* p_binder );
 
-    Binder* GetBinder( void );
+    Binder* GetBinder( void ) const;
 
-    int GetLayerIndex( void );
+    int GetLayerIndex( void ) const;
 
     void SetDrawPatchMode( DrawPatchMode p_mode, int maxlodlevel_to_draw = -1);
 

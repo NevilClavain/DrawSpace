@@ -399,7 +399,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
     }
 }
 
-void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats )
+void FaceDrawingNode::GetStats( FaceDrawingNode::Stats& p_stats ) const
 {
     p_stats = m_stats;
 }
@@ -430,12 +430,12 @@ void FaceDrawingNode::SetBinder( Binder* p_binder )
     }
 }
 
-Binder* FaceDrawingNode::GetBinder( void )
+Binder* FaceDrawingNode::GetBinder( void ) const
 {
     return m_binder;
 }
 
-int FaceDrawingNode::GetLayerIndex( void )
+int FaceDrawingNode::GetLayerIndex( void ) const
 {
     return m_layer_index;
 }
