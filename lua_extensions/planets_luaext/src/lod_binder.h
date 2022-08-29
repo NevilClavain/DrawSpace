@@ -38,12 +38,15 @@ namespace LOD
 // cette classe peut etre vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
 struct Binder abstract
 {
-protected:
-    DrawSpace::Core::Fx*                            m_fx;
+private:
+    
     DrawSpace::Core::Texture*                       m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
     DrawSpace::Core::Texture*                       m_vertextextures[DrawSpace::Core::RenderingNode::NbMaxTextures];
 
-    DrawSpace::Interface::Renderer*                 m_renderer;
+    DrawSpace::Core::Fx*                            m_fx{ nullptr };
+
+protected:
+    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
 
 public:
 

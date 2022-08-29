@@ -29,8 +29,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace LOD;
 
-Binder::Binder( void ) : 
-m_renderer( NULL )
+Binder::Binder( void )
 {
     for( long i = 0; i < RenderingNode::GetTextureListSize(); i++ )
     {

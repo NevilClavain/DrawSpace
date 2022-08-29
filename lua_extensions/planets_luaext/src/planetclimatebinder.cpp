@@ -41,7 +41,9 @@ void PlanetClimateBinder::Bind( void )
 {
 	// planete temperee
 
-	Vector thparams( 40.0, 20.0, TEMP_DEC_PER_KM, m_beachlimit );
+	static const dsreal temp_dec_per_km = 34.0;
+
+	Vector thparams( 40.0, 20.0, temp_dec_per_km, m_beachlimit );
 	Vector thparams2( 0.48, 0.87, 0.45, 0.75 );
 
 	// planete chaude et peu humide (aride) : desertique
