@@ -51,7 +51,7 @@ public:
     DrawSpace::Utils::Vector									m_ambient_color;
     PlanetLight													m_lights[3];
 
-protected:
+private:
 
 	dsreal														m_innerRadius;
 	dsreal														m_outerRadius;
@@ -141,8 +141,8 @@ public:
         m_mirror_mode = p_state;
     }
 
-    virtual void Bind(void);
-    virtual void Unbind(void);
+    void Bind(void);
+    void Unbind(void);
     void Update(const DrawSpace::Utils::Matrix& p_global_transform);
 
 };

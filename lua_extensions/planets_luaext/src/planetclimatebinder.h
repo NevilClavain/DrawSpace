@@ -27,7 +27,7 @@
 
 class PlanetClimateBinder : public MultiFractalBinder
 {
-protected:
+private:
 
     dsreal  m_beachlimit;
 	bool	m_oceans;
@@ -36,8 +36,6 @@ public:
 	PlanetClimateBinder( dsreal p_plains_amplitude, dsreal p_mountains_amplitude, dsreal p_vertical_offset, dsreal p_mountains_offset, 
                         dsreal p_plains_seed1, dsreal p_plains_seed2, dsreal p_mix_seed1, dsreal p_mix_seed2, dsreal p_beach_limit, bool p_oceans);
 
-	virtual void Bind( void );
-	virtual void Unbind( void );
-
-    virtual void SetBeachLimit( dsreal p_limit );
+	void Bind( void );
+	void Unbind( void );
 };
