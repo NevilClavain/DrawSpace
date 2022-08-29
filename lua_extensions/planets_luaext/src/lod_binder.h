@@ -46,7 +46,7 @@ private:
     DrawSpace::Core::Fx*                            m_fx{ nullptr };
 
 protected:
-    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+    DrawSpace::Interface::Renderer*                 m_renderer{ nullptr };
 
 public:
 
@@ -61,9 +61,9 @@ public:
     void SetVertexTexture( DrawSpace::Core::Texture* p_texture, long p_stage );
     void SetFx( DrawSpace::Core::Fx* p_fx );
     
-    DrawSpace::Core::Texture* GetTexture( long p_index ) const;
-    DrawSpace::Core::Texture* GetVertexTexture( long p_index ) const;
-    DrawSpace::Core::Fx* GetFx( void ) const;
+    DrawSpace::Core::Texture*   GetTexture( long p_index ) const;
+    DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
+    DrawSpace::Core::Fx*        GetFx( void ) const;
 };
 }
 
