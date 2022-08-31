@@ -46,6 +46,8 @@ private:
 
     DrawSpace::Core::Fx*                            m_fx{ nullptr };
 
+    std::map<int, ShaderFeeder>                     m_shaders_feeders;
+
 protected:
     DrawSpace::Interface::Renderer*                 m_renderer{ nullptr };
 
@@ -56,6 +58,8 @@ public:
     virtual void Bind( void ) {}; // appelee juste avant le rendu du node
     virtual void Unbind( void ) {}; // appelee juste apres le rendu du node
 
+    void BindToShader(void) const;
+
     void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
 
     void SetTexture( DrawSpace::Core::Texture* p_texture, long p_stage );
@@ -65,6 +69,8 @@ public:
     DrawSpace::Core::Texture*   GetTexture( long p_index ) const;
     DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
     DrawSpace::Core::Fx*        GetFx( void ) const;
+
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder& p_obj);
 };
 }
 

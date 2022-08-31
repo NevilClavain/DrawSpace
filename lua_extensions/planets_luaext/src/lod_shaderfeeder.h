@@ -43,13 +43,20 @@ public:
 
 private:
 	
-    ShaderType                  m_shader;
-	int							m_register;
+    ShaderType                  m_shader{ 0 };
+    int							m_register{ 0 };
 	DrawSpace::Utils::Vector	m_value;
-
+   
 public:
 
+    ShaderFeeder(void) { };
     ShaderFeeder(ShaderType p_shader_type, int p_register, const DrawSpace::Utils::Vector& p_value);
+
+    int Hash(void) const;
+
+    int                         GetShaderType(void) const;
+    int                         GetRegister(void) const;
+    DrawSpace::Utils::Vector    GetValue(void) const;
 
     friend Binder& operator<<(Binder& p_in, const ShaderFeeder& p_obj);
 };

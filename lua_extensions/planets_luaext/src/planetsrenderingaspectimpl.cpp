@@ -905,12 +905,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
                     details_binders[orientation] = binder;
 
-
+                    /*
                     ///// TEMPORARY , TEST PURPOSE ONLY
-
-
                     *binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 23, Utils::Vector(1.0, 2.0, 3.0, 4.0))
                         << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 23, Utils::Vector(4.0, 5.0, 6.0, 7.0));
+                        */
                 }
 
                 m_planet_detail_binder[pass_id] = details_binders;

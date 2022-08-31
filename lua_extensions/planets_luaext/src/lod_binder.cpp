@@ -33,8 +33,8 @@ Binder::Binder( void )
 {
     for( long i = 0; i < RenderingNode::GetTextureListSize(); i++ )
     {
-        m_textures[i] = NULL;
-        m_vertextextures[i] = NULL;
+        m_textures[i] = nullptr;
+        m_vertextextures[i] = nullptr;
     }
 }
 
@@ -71,4 +71,12 @@ Texture* Binder::GetVertexTexture( long p_index ) const
 Fx* Binder::GetFx( void ) const
 {
     return m_fx;
+}
+
+void Binder::BindToShader(void) const
+{
+    for (auto& e : m_shaders_feeders)
+    {
+        m_renderer->SetFxShaderParams(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
+    }
 }

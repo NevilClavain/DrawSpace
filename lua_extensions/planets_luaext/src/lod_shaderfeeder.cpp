@@ -36,7 +36,29 @@ ShaderFeeder::ShaderFeeder(ShaderType p_shader_type, int p_register, const DrawS
 {
 }
 
-Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder& p_obj)
+int ShaderFeeder::Hash(void) const
 {
+	std::hash<int> hash;
+	return hash((static_cast<int>(m_shader) * 1000) + m_register);
+}
+
+int ShaderFeeder::GetShaderType(void) const
+{
+	return static_cast<int>(m_shader);
+}
+
+int ShaderFeeder::GetRegister(void) const
+{
+	return m_register;
+}
+
+DrawSpace::Utils::Vector ShaderFeeder::GetValue(void) const
+{
+	return m_value;
+}
+
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder& p_obj)
+{	
+	p_in.m_shaders_feeders[p_obj.Hash()] = p_obj;
 	return p_in;
 }
