@@ -305,8 +305,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
                 e2->Update( world );
             }
         }
@@ -315,8 +313,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
                 e2->Update( world );
             }
         }
@@ -325,8 +321,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
                 e2->Update(world);
             }
         }
@@ -335,8 +329,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
                 e2->Update(world);
             }
         }
