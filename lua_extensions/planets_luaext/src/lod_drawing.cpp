@@ -682,7 +682,9 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     face_node->SetCurrentPatch( NULL );
 
     Binder* node_binder = face_node->GetBinder();
-    node_binder->Bind();
+
+    node_binder->Bind(); // TO REMOVE
+    node_binder->BindToShader();
 
     Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
     dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
@@ -691,7 +693,7 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     planetbody->GetInvariantViewerPos( view_pos );
 
     face_node->Draw( 1.0, rel_alt, view_pos, world, view, proj, false );   
-    node_binder->Unbind();
+    node_binder->Unbind(); // TO REMOVE
 }
 
 void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)

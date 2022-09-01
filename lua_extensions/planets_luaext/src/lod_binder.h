@@ -37,7 +37,7 @@ namespace LOD
 {
 
 // cette classe peut etre vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
-struct Binder //abstract
+struct Binder
 {
 private:
     
@@ -46,7 +46,7 @@ private:
 
     DrawSpace::Core::Fx*                            m_fx{ nullptr };
 
-    std::map<int, ShaderFeeder>                     m_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder>           m_shaders_feeders;
 
 protected:
     DrawSpace::Interface::Renderer*                 m_renderer{ nullptr };

@@ -39,7 +39,6 @@
 #include "collisionaspect.h"
 
 class PlanetDetailsBinder;
-class PlanetClimateBinder;
 class MultiFractalBinder;
 
 namespace LOD
@@ -159,7 +158,9 @@ protected:
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_oceans_binder;
 
 
-    std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;
+    //std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;
+    std::array<LOD::Binder*, 6>                                     m_planet_climate_binder;
+
     std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
 
     DrawSpace::Core::Fx                                             m_climate_fx;
