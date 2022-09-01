@@ -36,7 +36,6 @@
 #include "updatequeuetask.h"
 
 #include "planetdetailsbinder.h"
-#include "planetclimatebinder.h"
 #include <functional>
 
 #include "lod_layer.h"
@@ -212,7 +211,6 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             _DRAWSPACE_DELETE_(e);
         }
-
 
         for (auto& e : m_planet_detail_binder)
         {
@@ -773,12 +771,25 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 ld.ray = planet_ray;
                 ld.description = "Details Layer";
                 for (int i = 0; i < 6; i++)
-                {
-                    PlanetClimateBinder* climateBinder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
-                        plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit, enable_oceans));
+                {     
 
-                    climateBinder->SetRenderer(m_renderer);
-                    climateBinder->SetFx(&m_climate_fx);
+                    ////////////////// climate shader bindings
+                    LOD::Binder* climate_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+                    climate_binder->SetRenderer(m_renderer);
+                    climate_binder->SetFx(&m_climate_fx);
+
+                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+
+                    static const dsreal temp_dec_per_km = 34.0;   
+
+                    // pour une planete temperee
+                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 42, Utils::Vector(40.0, 20.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
+
+                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
+                    ////////////////////////////////////////////
+
 
                     MultiFractalBinder* collisionsBinder = _DRAWSPACE_NEW_(MultiFractalBinder, MultiFractalBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
                         plains_seed1, plains_seed2, mix_seed1, mix_seed2));
@@ -786,10 +797,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     collisionsBinder->SetRenderer(m_renderer);
                     collisionsBinder->SetFx(&m_collisions_fx);
 
+                    ld.patchTexturesBinder[i] = climate_binder;
                     ld.groundCollisionsBinder[i] = collisionsBinder;
-                    ld.patchTexturesBinder[i] = climateBinder;
 
-                    m_planet_climate_binder[i] = climateBinder;
+                    m_planet_climate_binder[i] = climate_binder;
                     m_planet_collision_binder[i] = collisionsBinder;
                 }
 
@@ -897,11 +908,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
                     details_binders[orientation] = binder;
 
-                    /*
+                    
                     ///// TEMPORARY , TEST PURPOSE ONLY
                     *binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 23, Utils::Vector(1.0, 2.0, 3.0, 4.0))
                         << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 23, Utils::Vector(4.0, 5.0, 6.0, 7.0));
-                        */
+                        
                 }
 
                 m_planet_detail_binder[pass_id] = details_binders;
