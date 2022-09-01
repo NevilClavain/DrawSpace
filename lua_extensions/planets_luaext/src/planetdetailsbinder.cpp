@@ -258,28 +258,17 @@ void PlanetDetailsBinder::Unbind( void )
 void PlanetDetailsBinder::Update( const Utils::Matrix& p_global_transform )
 {
 	Matrix planet_final_transform = p_global_transform;
-
-	Vector planet_pos;
-	planet_pos[0] = - planet_final_transform(3, 0);
-	planet_pos[1] = - planet_final_transform(3, 1);
-	planet_pos[2] = - planet_final_transform(3, 2);
-	planet_pos[3] = 1.0;
-
-	planet_pos.Normalize();
-
 	m_lights[0].m_dir.Normalize();
 
 	planet_final_transform.ClearTranslation();
 	m_planet_final_transform_rots = planet_final_transform;
 
 	planet_final_transform.Transpose();
-
 	for (long i = 0; i < 3; i++)
 	{
 		if (m_lights[i].m_enable)
 		{
 			planet_final_transform.Transform( &m_lights[i].m_dir, &m_lights[i].m_local_dir );
-
 			m_lights[i].m_local_dir.Normalize();
 		}
 	}
