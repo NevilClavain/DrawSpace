@@ -52,13 +52,13 @@ public:
     ShaderFeeder(void) { };
     ShaderFeeder(ShaderType p_shader_type, int p_register, const DrawSpace::Utils::Vector& p_value);
 
+    static int ComputeHash(ShaderType p_shader_type, int p_register);
+
     int Hash(void) const;
 
     int                         GetShaderType(void) const;
     int                         GetRegister(void) const;
     DrawSpace::Utils::Vector    GetValue(void) const;
-
-    friend Binder& operator<<(Binder& p_in, const ShaderFeeder& p_obj);
 };
 
 }

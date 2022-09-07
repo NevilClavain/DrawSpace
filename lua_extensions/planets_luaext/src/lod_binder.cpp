@@ -80,3 +80,9 @@ void Binder::BindToShader(void) const
         m_renderer->SetFxShaderParams(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
     }
 }
+
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder& p_obj)
+{
+    p_in.m_shaders_feeders[p_obj.Hash()] = p_obj;
+    return p_in;
+}
