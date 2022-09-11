@@ -1038,6 +1038,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             pass_textures = textures[0];
         }
+
+
+
+
        
         for (auto& pass_id : rcp.second)
         {
@@ -1079,7 +1083,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
 
 
-
                     LOD::Binder* details_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
 
                     details_binder->SetFx(fx);
@@ -1088,6 +1091,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     {
                         details_binder->SetTexture(pass_textures[stage], stage);
                     }
+
+
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+
 
                     static const dsreal innerRadius{ planet_ray * 1000.0 };
                     static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
@@ -1128,6 +1136,21 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
                     *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
                     *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
+
+
+                    static const dsreal ocean_details_alt{ 1.0010 };
+                    const Utils::Vector flags6(splat_texture_resol, splat_transition_up_relative_alt, splat_transition_down_relative_alt, ocean_details_alt);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 62, flags6);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 6, atmo_flags_6);
+
+
+
+                    const Utils::Vector mirror_flag(0.0, innerRadius, 0.0, 0.0);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61, mirror_flag);
+
+
+
+
 
                     details_binders_2[orientation] = details_binder;
                 }
@@ -2081,6 +2104,18 @@ std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectIm
 {
     return m_planet_atmosphere_binder;
 }
+
+std::map<dsstring, std::array<LOD::Binder*, 6>> PlanetsRenderingAspectImpl::GetPlanetFlatCloudsBinder2(void) const
+{
+    return m_planet_flatclouds_binder_2;
+}
+
+std::map<dsstring, std::array<LOD::Binder*, 6>> PlanetsRenderingAspectImpl::GetPlanetAtmoBinder2(void) const
+{
+    return m_planet_atmosphere_binder_2;
+}
+
+
 
 dsstring PlanetsRenderingAspectImpl::GetReflectionPassId(void) const
 {

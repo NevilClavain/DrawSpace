@@ -193,7 +193,7 @@ void PlanetDetailsBinder::Bind( void )
 	m_renderer->SetFxShaderParams(0, 58, m_lights[2].m_local_dir); //
 	m_renderer->SetFxShaderParams(0, 59, m_lights[2].m_dir); //
 	m_renderer->SetFxShaderParams(0, 60, m_lights[2].m_color); //
-	m_renderer->SetFxShaderParams(0, 62, flags6);
+	m_renderer->SetFxShaderParams(0, 62, flags6);              //
 
 	Vector mirror_flag;
 
@@ -207,7 +207,7 @@ void PlanetDetailsBinder::Bind( void )
 
 
 
-	m_renderer->SetFxShaderParams(1, 6, flags6);
+	m_renderer->SetFxShaderParams(1, 6, flags6);        //
 
 	m_renderer->SetFxShaderParams(1, 7, flags_lights); //
 	m_renderer->SetFxShaderParams(1, 8, m_ambient_color); //
