@@ -200,7 +200,7 @@ void PlanetDetailsBinder::Bind( void )
 	mirror_flag[0] = (m_mirror_mode ? 1.0 : 0.0);
 	mirror_flag[1] = m_innerRadius;
 
-	m_renderer->SetFxShaderParams(0, 61, mirror_flag);
+	m_renderer->SetFxShaderParams(0, 61, mirror_flag); //
 
 	Vector flags63(m_oceans, 0.0, 0.0, 0.0);
 	m_renderer->SetFxShaderParams(0, 63, flags63);
