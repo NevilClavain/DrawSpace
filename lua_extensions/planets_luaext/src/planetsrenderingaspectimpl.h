@@ -153,9 +153,16 @@ protected:
     LOD::Drawing                                                    m_drawable;
 
     std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
+    std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_detail_binder_2;
+
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;
+    std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_atmosphere_binder_2;
+
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_flatclouds_binder;
+    std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_flatclouds_binder_2;
+
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_oceans_binder;
+    std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_oceans_binder_2;
 
 
     //std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;

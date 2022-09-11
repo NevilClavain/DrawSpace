@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "lod_binder.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -78,6 +79,19 @@ void Binder::BindToShader(void) const
     for (auto& e : m_shaders_feeders)
     {
         m_renderer->SetFxShaderParams(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
+    }
+}
+
+DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderFeeder::ShaderType p_shader_type, int p_register)
+{
+    const int key{ ShaderFeeder::ComputeHash(p_shader_type, p_register) };
+    if (m_shaders_feeders.count(key))
+    {
+        return m_shaders_feeders.at(key).GetValue();
+    }
+    else
+    {
+        _DSEXCEPTION("unknow shader feeder");
     }
 }
 

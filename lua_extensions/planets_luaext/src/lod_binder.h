@@ -70,6 +70,8 @@ public:
     DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
     DrawSpace::Core::Fx*        GetFx( void ) const;
 
+    DrawSpace::Utils::Vector    GetShaderFeederValue(ShaderFeeder::ShaderType p_shader_type, int p_register);
+
     friend Binder& operator<<(Binder& p_in, const ShaderFeeder& p_obj);
 };
 }
