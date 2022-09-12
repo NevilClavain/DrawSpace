@@ -337,6 +337,9 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
             planet_final_transform.ClearTranslation();
             planet_final_transform.Transpose();
 
+
+            // ICI
+
             const auto light_flags{ p_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 50) };
 
             Utils::Vector light_local_dir, light_dir;
@@ -1149,6 +1152,23 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61, mirror_flag);
 
 
+                    const Utils::Vector flags63(enable_oceans, 0.0, 0.0, 0.0);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 63, flags63);
+
+                    static const int wave_texture_resol{ 512 };
+                    static const dsreal ocean_bump_factor{ 0.99 };
+                    const Utils::Vector water_bump_flags(wave_texture_resol, ocean_bump_factor, 0, 0);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 30, water_bump_flags);
+
+                    const Utils::Vector terrain_bump_flag(terrainbump_factor, details_terrain_bump_bias, details_terrain_noise_scale, level_disturbance_scale);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 31, terrain_bump_flag);
+
+                    const Utils::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 32, flags32);
+
+
+                    Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
+                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 33, flags32);
 
 
 

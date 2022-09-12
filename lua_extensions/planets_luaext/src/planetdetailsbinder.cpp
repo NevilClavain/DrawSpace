@@ -203,7 +203,7 @@ void PlanetDetailsBinder::Bind( void )
 	m_renderer->SetFxShaderParams(0, 61, mirror_flag); //
 
 	Vector flags63(m_oceans, 0.0, 0.0, 0.0);
-	m_renderer->SetFxShaderParams(0, 63, flags63);
+	m_renderer->SetFxShaderParams(0, 63, flags63);   //
 
 
 
@@ -236,16 +236,16 @@ void PlanetDetailsBinder::Bind( void )
 	m_renderer->SetFxShaderMatrix(1, 25, m_planet_final_transform_rots);
 
 	Vector water_bump_flags(m_wave_texture_resol, m_ocean_bump_factor, 0, 0);
-	m_renderer->SetFxShaderParams(1, 30, water_bump_flags);
+	m_renderer->SetFxShaderParams(1, 30, water_bump_flags); //
 
 	Vector terrain_bump_flag(m_high_terrain_bump_bias, m_details_terrain_bump_bias, m_details_terrain_noise_scale, m_level_disturbance_scale);
-	m_renderer->SetFxShaderParams(1, 31, terrain_bump_flag);
+	m_renderer->SetFxShaderParams(1, 31, terrain_bump_flag); //
 
 	Vector flags32(m_oceans, m_oceandetails_specularpower, 0.0, 0.0);
-	m_renderer->SetFxShaderParams(1, 32, flags32);
+	m_renderer->SetFxShaderParams(1, 32, flags32);   //
 
 	Vector details_flags(m_details_limit_sup, m_bump_details_limit_sup, m_ground_bump_details_factor_depth_distance, 0.0);
-	m_renderer->SetFxShaderParams(1, 33, details_flags);
+	m_renderer->SetFxShaderParams(1, 33, details_flags);  //
 
 	MultiFractalBinder::Bind();
 }
