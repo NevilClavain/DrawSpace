@@ -337,47 +337,47 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
             planet_final_transform.ClearTranslation();
             planet_final_transform.Transpose();
 
-
             // ICI
+            *p_binder << LOD::ShaderFeeder<DrawSpace::Utils::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
 
-            const auto light_flags{ p_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 50) };
+            const auto light_flags{ p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 50) };
 
             Utils::Vector light_local_dir, light_dir;
 
             if (light_flags[1])
             {
-                light_dir = p_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 53);
+                light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 53);
                 light_dir.Normalize();
 
                 planet_final_transform.Transform(&light_dir, &light_local_dir);
                 light_local_dir.Normalize();
 
-                *p_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 52, light_local_dir);
-                *p_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 9, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 52, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 9, light_local_dir);
             }
 
             if (light_flags[2])
             {
-                light_dir = p_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 56);
+                light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 56);
                 light_dir.Normalize();
 
                 planet_final_transform.Transform(&light_dir, &light_local_dir);
                 light_local_dir.Normalize();
 
-                *p_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 55, light_local_dir);
-                *p_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 12, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 55, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 12, light_local_dir);
             }
 
             if (light_flags[3])
             {
-                light_dir = p_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 59);
+                light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 59);
                 light_dir.Normalize();
 
                 planet_final_transform.Transform(&light_dir, &light_local_dir);
                 light_local_dir.Normalize();
 
-                *p_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 58, light_local_dir);
-                *p_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 15, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 58, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 15, light_local_dir);
             }
 
         };
@@ -581,39 +581,39 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         for (auto& e2 : e.second)
         {
             const Utils::Vector light_flags(std::get<0>(ambient), std::get<0>(dir0), std::get<0>(dir1), std::get<0>(dir2));
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 50, light_flags);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 7, light_flags);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 50, light_flags);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 7, light_flags);
 
             const Utils::Vector ambient_color(std::get<1>(ambient)[0], std::get<1>(ambient)[1], std::get<1>(ambient)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 51, ambient_color);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 8, ambient_color);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 51, ambient_color);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 8, ambient_color);
 
 
             const Utils::Vector light_dir_0(-std::get<2>(dir0)[0], -std::get<2>(dir0)[1], -std::get<2>(dir0)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 53, light_dir_0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 10, light_dir_0);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 53, light_dir_0);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 10, light_dir_0);
 
             const Utils::Vector light_color_0(std::get<1>(dir0)[0], std::get<1>(dir0)[1], std::get<1>(dir0)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 54, light_color_0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 11, light_color_0);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 54, light_color_0);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 11, light_color_0);
 
 
             const Utils::Vector light_dir_1(-std::get<2>(dir1)[0], -std::get<2>(dir1)[1], -std::get<2>(dir1)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 56, light_dir_1);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 13, light_dir_1);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 56, light_dir_1);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 13, light_dir_1);
 
             const Utils::Vector light_color_1(std::get<1>(dir1)[0], std::get<1>(dir1)[1], std::get<1>(dir1)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 57, light_color_1);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 14, light_color_1);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 57, light_color_1);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 14, light_color_1);
 
 
             const Utils::Vector light_dir_2(-std::get<2>(dir2)[0], -std::get<2>(dir2)[1], -std::get<2>(dir2)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 59, light_dir_2);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 16, light_dir_2);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 59, light_dir_2);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 16, light_dir_2);
 
             const Utils::Vector light_color_2(std::get<1>(dir2)[0], std::get<1>(dir2)[1], std::get<1>(dir2)[2], 1.0);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 60, light_color_2);
-            *e2 << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 17, light_color_2);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 60, light_color_2);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 17, light_color_2);
 
 
 
@@ -947,16 +947,16 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     climate_binder->SetRenderer(m_renderer);
                     climate_binder->SetFx(&m_climate_fx);
 
-                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
-                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
                     static const dsreal temp_dec_per_km = 34.0;   
 
                     // pour une planete temperee
-                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 42, Utils::Vector(40.0, 20.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(40.0, 20.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
 
-                    *climate_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
                     ////////////////////////////////////////////
 
 
@@ -1096,79 +1096,79 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     }
 
 
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
 
                     static const dsreal innerRadius{ planet_ray * 1000.0 };
                     static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
                    
                     const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius * outerRadius, innerRadius * innerRadius);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 42, atmo_flags);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 18, atmo_flags);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 18, atmo_flags);
 
                     static const dsreal scaleDepth{ 0.25 };
                     const Utils::Vector atmo_flags_1(scaleDepth, 1.0 / scaleDepth, 1.0 / (outerRadius - innerRadius), (1.0 / (outerRadius - innerRadius)) / scaleDepth);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 43, atmo_flags_1);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 19, atmo_flags_1);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, atmo_flags_1);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 19, atmo_flags_1);
 
                     const Utils::Vector waveLength(0.650, 0.570, 0.475, 0.0);
                     const Utils::Vector atmo_flags_2( (1.0 / pow(waveLength[0], 4.0)), (1.0 / pow(waveLength[1], 4.0)), (1.0 / pow(waveLength[2], 4.0)), 0.0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 44, atmo_flags_2);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 20, atmo_flags_2);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 44, atmo_flags_2);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 20, atmo_flags_2);
 
                     static const dsreal atmoKm{ 0.0010 };
                     const Utils::Vector atmo_flags_3(atmo_kr, atmoKm, 4.0 * atmo_kr * 3.1415927, 4.0 * atmoKm * 3.1415927);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 45, atmo_flags_3);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 21, atmo_flags_3);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 45, atmo_flags_3);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 21, atmo_flags_3);
 
                     static const dsreal skyfromspace_ESun{ 8.7 };
                     static const dsreal skyfromatmo_ESun{ 70.0 };
                     static const dsreal groundfromspace_ESun{ 24.0 };
                     static const dsreal groundfromatmo_ESun{ 12.0 };
                     const Utils::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 46, atmo_flags_3);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 22, atmo_flags_3);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_3);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_3);
 
 
                     const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, enable_atmosphere);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
 
                     // couleurs fog "sol"
                     const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
 
 
                     static const dsreal ocean_details_alt{ 1.0010 };
                     const Utils::Vector flags6(splat_texture_resol, splat_transition_up_relative_alt, splat_transition_down_relative_alt, ocean_details_alt);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 62, flags6);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 6, atmo_flags_6);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 62, flags6);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, atmo_flags_6);
 
 
 
                     const Utils::Vector mirror_flag(0.0, innerRadius, 0.0, 0.0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61, mirror_flag);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
 
 
                     const Utils::Vector flags63(enable_oceans, 0.0, 0.0, 0.0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 63, flags63);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 63, flags63);
 
                     static const int wave_texture_resol{ 512 };
                     static const dsreal ocean_bump_factor{ 0.99 };
                     const Utils::Vector water_bump_flags(wave_texture_resol, ocean_bump_factor, 0, 0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 30, water_bump_flags);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 30, water_bump_flags);
 
                     const Utils::Vector terrain_bump_flag(terrainbump_factor, details_terrain_bump_bias, details_terrain_noise_scale, level_disturbance_scale);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 31, terrain_bump_flag);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 31, terrain_bump_flag);
 
                     const Utils::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 32, flags32);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
 
 
                     Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
-                    *details_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::PIXEL_SHADER, 33, flags32);
+                    *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, flags32);
 
 
 

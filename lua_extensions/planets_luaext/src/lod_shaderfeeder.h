@@ -26,39 +26,53 @@
 
 #pragma once
 #include "vector.h"
+#include "shader.h"
 
 namespace LOD
 {
-// fwd decl 
-struct Binder;
 
+template<typename T = DrawSpace::Utils::Vector>
 struct ShaderFeeder
 {
 public:
-    enum class ShaderType
-    {
-        VERTEX_SHADER   = 0,
-        PIXEL_SHADER    = 1
-    };
 
 private:
 	
-    ShaderType                  m_shader{ 0 };
-    int							m_register{ 0 };
-	DrawSpace::Utils::Vector	m_value;
+    DrawSpace::Core::ShaderType     m_shader{ 0 };
+    int							    m_register{ 0 };
+	T	                            m_value;
    
 public:
 
     ShaderFeeder(void) { };
-    ShaderFeeder(ShaderType p_shader_type, int p_register, const DrawSpace::Utils::Vector& p_value);
+    ShaderFeeder(DrawSpace::Core::ShaderType p_shader_type, int p_register, const T& p_value) :
+        m_shader(p_shader_type),
+        m_register(p_register),
+        m_value(p_value)
+    {
+    }
 
-    static int ComputeHash(ShaderType p_shader_type, int p_register);
+    int Hash(void) const
+    {
+        return LOD::ComputeHash(m_shader, m_register);
+    }
 
-    int Hash(void) const;
+    inline int GetShaderType(void) const
+    {
+        return static_cast<int>(m_shader);
+    }
 
-    int                         GetShaderType(void) const;
-    int                         GetRegister(void) const;
-    DrawSpace::Utils::Vector    GetValue(void) const;
+    inline int GetRegister(void) const
+    {
+        return m_register;
+    }
+
+    inline T GetValue(void) const
+    {
+        return m_value;
+    }
 };
+
+int ComputeHash(DrawSpace::Core::ShaderType p_shader_type, int p_register);
 
 }

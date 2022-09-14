@@ -28,6 +28,7 @@
 #include "drawspace_commons.h"
 #include "fx.h"
 #include "texture.h"
+#include "shader.h"
 #include "renderingnode.h"
 #include "plugin.h"
 #include "renderer.h"
@@ -41,15 +42,16 @@ struct Binder
 {
 private:
     
-    DrawSpace::Core::Texture*                       m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
-    DrawSpace::Core::Texture*                       m_vertextextures[DrawSpace::Core::RenderingNode::NbMaxTextures];
+    DrawSpace::Core::Texture*                                       m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
+    DrawSpace::Core::Texture*                                       m_vertextextures[DrawSpace::Core::RenderingNode::NbMaxTextures];
 
-    DrawSpace::Core::Fx*                            m_fx{ nullptr };
+    DrawSpace::Core::Fx*                                            m_fx{ nullptr };
 
-    std::unordered_map<int, ShaderFeeder>           m_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Vector>> m_vector_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Matrix>> m_matrix_shaders_feeders;
 
 protected:
-    DrawSpace::Interface::Renderer*                 m_renderer{ nullptr };
+    DrawSpace::Interface::Renderer*                                 m_renderer{ nullptr };
 
 public:
 
@@ -69,10 +71,11 @@ public:
     DrawSpace::Core::Texture*   GetTexture( long p_index ) const;
     DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
     DrawSpace::Core::Fx*        GetFx( void ) const;
+    
+    DrawSpace::Utils::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
 
-    DrawSpace::Utils::Vector    GetShaderFeederValue(ShaderFeeder::ShaderType p_shader_type, int p_register);
-
-    friend Binder& operator<<(Binder& p_in, const ShaderFeeder& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj);
 };
 }
 

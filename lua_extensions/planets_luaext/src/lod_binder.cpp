@@ -76,18 +76,23 @@ Fx* Binder::GetFx( void ) const
 
 void Binder::BindToShader(void) const
 {
-    for (auto& e : m_shaders_feeders)
+    for (auto& e : m_vector_shaders_feeders)
     {
         m_renderer->SetFxShaderParams(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
     }
+
+    for (auto& e : m_matrix_shaders_feeders)
+    {
+        m_renderer->SetFxShaderMatrix(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
+    }
 }
 
-DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderFeeder::ShaderType p_shader_type, int p_register)
+DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderType p_shader_type, int p_register)
 {
-    const int key{ ShaderFeeder::ComputeHash(p_shader_type, p_register) };
-    if (m_shaders_feeders.count(key))
+    const auto key{ LOD::ComputeHash(p_shader_type, p_register) };
+    if (m_vector_shaders_feeders.count(key))
     {
-        return m_shaders_feeders.at(key).GetValue();
+        return m_vector_shaders_feeders.at(key).GetValue();
     }
     else
     {
@@ -95,8 +100,14 @@ DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderFeeder::ShaderType p
     }
 }
 
-Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder& p_obj)
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj)
 {
-    p_in.m_shaders_feeders[p_obj.Hash()] = p_obj;
+    p_in.m_vector_shaders_feeders[p_obj.Hash()] = p_obj;
+    return p_in;
+}
+
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj)
+{ 
+    p_in.m_matrix_shaders_feeders[p_obj.Hash()] = p_obj;
     return p_in;
 }

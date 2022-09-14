@@ -33,6 +33,7 @@
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
 PlanetsCentralAdmin::PlanetsCentralAdmin(void):
@@ -114,11 +115,11 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                     auto clouds_binders_array{ flatclouds_binder_2.at(reflexion_pass) };
                     for (auto cloud_binder : clouds_binders_array)
                     {
-                        Vector mirror_flag{ cloud_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61) };
+                        Vector mirror_flag{ cloud_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
 
                         // enable mirror flag for this pass
                         mirror_flag[0] = 1.0;
-                        *cloud_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61, mirror_flag);
+                        *cloud_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
                     }
                 }
 
@@ -128,11 +129,11 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                     auto atmo_binders_array{ atmos_binder_2.at(reflexion_pass) };
                     for (auto atmo_binder : atmo_binders_array)
                     {
-                        Vector mirror_flag{ atmo_binder->GetShaderFeederValue(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61) };
+                        Vector mirror_flag{ atmo_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
 
                         // enable mirror flag for this pass
                         mirror_flag[0] = 1.0;
-                        *atmo_binder << LOD::ShaderFeeder(LOD::ShaderFeeder::ShaderType::VERTEX_SHADER, 61, mirror_flag);
+                        *atmo_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
                     }
                 }
             }

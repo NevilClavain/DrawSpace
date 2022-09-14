@@ -23,6 +23,8 @@
 /* -*-LIC_END-*- */
 
 #include "lod_shaderfeeder.h"
+
+/*
 #include "lod_binder.h"
 
 using namespace DrawSpace;
@@ -60,4 +62,11 @@ int ShaderFeeder::GetRegister(void) const
 DrawSpace::Utils::Vector ShaderFeeder::GetValue(void) const
 {
 	return m_value;
+}
+*/
+
+int LOD::ComputeHash(DrawSpace::Core::ShaderType p_shader_type, int p_register)
+{
+	std::hash<int> hash;
+	return hash((static_cast<int>(p_shader_type) * 1000) + p_register);
 }

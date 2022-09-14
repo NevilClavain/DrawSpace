@@ -233,7 +233,7 @@ void PlanetDetailsBinder::Bind( void )
 	m_renderer->SetFxShaderParams(1, 24, m_atmo_scattering_flags6);  //
 
 	m_planet_final_transform_rots.Transpose(); // faire comme dans le plugin
-	m_renderer->SetFxShaderMatrix(1, 25, m_planet_final_transform_rots);
+	m_renderer->SetFxShaderMatrix(1, 25, m_planet_final_transform_rots); //
 
 	Vector water_bump_flags(m_wave_texture_resol, m_ocean_bump_factor, 0, 0);
 	m_renderer->SetFxShaderParams(1, 30, water_bump_flags); //
