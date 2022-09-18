@@ -126,17 +126,17 @@ public:
 	PlanetLight inline GetLight( int p_index ) const { return m_lights[p_index]; };
     dsreal inline GetAtmoThickness(void) const { return m_atmoThickness; };
 
-    void EnableAtmoRender(bool p_value);
-    void SetLandscapeBumpBias( dsreal p_factor );  
-    void SetAtmoKr( dsreal p_kr );
-    void SetFogAltLimit( dsreal p_fogaltlimit );
-    void SetFogDensity( dsreal p_fog_density );
+    void EnableAtmoRender(bool p_value); //
+    void SetLandscapeBumpBias( dsreal p_factor );  //
+    void SetAtmoKr( dsreal p_kr ); //
+    void SetFogAltLimit( dsreal p_fogaltlimit ); //
+    void SetFogDensity( dsreal p_fog_density ); //
 
-	void SetWaveTextureResol(int p_resol);
-	void SetWaterBumpFactor(dsreal p_bump_factor);
-	void SetOceanDetailsSpecPower(dsreal p_pow);
+	void SetWaveTextureResol(int p_resol); //
+	void SetWaterBumpFactor(dsreal p_bump_factor); //
+	void SetOceanDetailsSpecPower(dsreal p_pow);   //
 
-    inline void SetMirrorMode(bool p_state)
+    inline void SetMirrorMode(bool p_state)  //
     {
         m_mirror_mode = p_state;
     }
