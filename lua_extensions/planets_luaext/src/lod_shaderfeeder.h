@@ -34,8 +34,6 @@ namespace LOD
 template<typename T = DrawSpace::Utils::Vector>
 struct ShaderFeeder
 {
-public:
-
 private:
 	
     DrawSpace::Core::ShaderType     m_shader{ 0 };
@@ -52,7 +50,7 @@ public:
     {
     }
 
-    int Hash(void) const
+    inline int Hash(void) const
     {
         return LOD::ComputeHash(m_shader, m_register);
     }
