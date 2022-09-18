@@ -53,14 +53,14 @@ public:
     using SystemsUpdateEventHandler = DrawSpace::Core::BaseCallback<void, SystemsUpdateEvent>;
     
 private:
-    Systems::RenderingSystem                        m_renderingSystem;
-    Systems::TransformSystem                        m_transformSystem;
-    Systems::PhysicsSystem                          m_physicsSystem;
-    Systems::TimeSystem                             m_timeSystem;
-    Systems::TraceSystem                            m_traceSystem;
-    Systems::ResourcesSystem                        m_resourcesSystem;
-    Systems::AnimationsSystem                       m_animationsSystem;
-    Systems::RunnerSystem                           m_runnerSystem;
+    RenderingSystem                        m_renderingSystem;
+    TransformSystem                        m_transformSystem;
+    PhysicsSystem                          m_physicsSystem;
+    TimeSystem                             m_timeSystem;
+    TraceSystem                            m_traceSystem;
+    ResourcesSystem                        m_resourcesSystem;
+    AnimationsSystem                       m_animationsSystem;
+    RunnerSystem                           m_runnerSystem;
 
     std::vector<DrawSpace::Interface::System*>      m_systems;
     std::set<SystemsUpdateEventHandler*>            m_systems_update_evt_handlers;
@@ -79,7 +79,7 @@ public:
 	template<typename T>
 	inline T& GetSystem(const dsstring& p_id) const
 	{
-		for (auto& e : m_systems)
+		for (const auto& e : m_systems)
 		{
 			if (e->GetSystemId() == p_id)
 			{
