@@ -338,9 +338,10 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         {
             auto planet_final_transform = p_global_transform;
             planet_final_transform.ClearTranslation();
-            planet_final_transform.Transpose();
-            
+                        
             *p_binder << LOD::ShaderFeeder<DrawSpace::Utils::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
+
+            planet_final_transform.Transpose();
 
             const auto light_flags{ p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 50) };
            
