@@ -645,6 +645,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     Binder* node_binder = face_node->GetBinder();
     node_binder->Bind();
+    node_binder->BindToShader();
     
     // recup relative alt de la face
     dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAltSphere();

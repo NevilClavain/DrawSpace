@@ -152,7 +152,7 @@ protected:
     LOD::Config                                                     m_config;
     LOD::Drawing                                                    m_drawable;
 
-    std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
+    //std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_detail_binder_2;
 
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;

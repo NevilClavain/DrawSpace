@@ -212,6 +212,7 @@ void PlanetsRenderingAspectImpl::Release(void)
             _DRAWSPACE_DELETE_(e);
         }
 
+        /*
         for (auto& e : m_planet_detail_binder)
         {
             for (auto& e2 : e.second)
@@ -220,6 +221,7 @@ void PlanetsRenderingAspectImpl::Release(void)
                 _DRAWSPACE_DELETE_(binder);
             }
         }
+        */
 
         for (auto& e : m_planet_detail_binder_2)
         {
@@ -341,11 +343,10 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
             *p_binder << LOD::ShaderFeeder<DrawSpace::Utils::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
 
             const auto light_flags{ p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 50) };
-
-            Utils::Vector light_local_dir, light_dir;
-
+           
             if (light_flags[1])
             {
+                Utils::Vector light_local_dir, light_dir;
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 53);
                 light_dir.Normalize();
 
@@ -358,6 +359,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
             if (light_flags[2])
             {
+                Utils::Vector light_local_dir, light_dir;
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 56);
                 light_dir.Normalize();
 
@@ -370,6 +372,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
             if (light_flags[3])
             {
+                Utils::Vector light_local_dir, light_dir;
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 59);
                 light_dir.Normalize();
 
@@ -382,6 +385,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
         };
 
+        /*
         for (auto& e : m_planet_detail_binder)
         {
             for (auto& e2 : e.second)
@@ -389,6 +393,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 e2->Update( world );
             }
         }
+        */
+        
 
         for (auto& e : m_planet_detail_binder_2)
         {
@@ -541,7 +547,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 8, ambient_color);
 
 
-        const Utils::Vector light_dir_0(-std::get<2>(dir0)[0], -std::get<2>(dir0)[1], -std::get<2>(dir0)[2], 1.0);
+        Utils::Vector light_dir_0(-std::get<2>(dir0)[0], -std::get<2>(dir0)[1], -std::get<2>(dir0)[2], 1.0);
+        light_dir_0.Normalize();
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 53, light_dir_0);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 10, light_dir_0);
 
@@ -550,7 +557,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 11, light_color_0);
 
 
-        const Utils::Vector light_dir_1(-std::get<2>(dir1)[0], -std::get<2>(dir1)[1], -std::get<2>(dir1)[2], 1.0);
+        Utils::Vector light_dir_1(-std::get<2>(dir1)[0], -std::get<2>(dir1)[1], -std::get<2>(dir1)[2], 1.0);
+        light_dir_1.Normalize();
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 56, light_dir_1);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 13, light_dir_1);
 
@@ -558,7 +566,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 57, light_color_1);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 14, light_color_1);
 
-        const Utils::Vector light_dir_2(-std::get<2>(dir2)[0], -std::get<2>(dir2)[1], -std::get<2>(dir2)[2], 1.0);
+        Utils::Vector light_dir_2(-std::get<2>(dir2)[0], -std::get<2>(dir2)[1], -std::get<2>(dir2)[2], 1.0);
+        light_dir_2.Normalize();
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 59, light_dir_2);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 16, light_dir_2);
 
@@ -570,6 +579,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
     ///////////////////////////////////////////////////////////////////////////
 
+    /*
     for (auto& e : m_planet_detail_binder)
     {
         for (auto& e2 : e.second)
@@ -609,6 +619,9 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
         }
     }
+    */
+    
+
 
     for (auto& e : m_planet_detail_binder_2)
     {
@@ -616,11 +629,13 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         {
             lights_updater(*e2);
 
+            
             // enable/disable atmo render
             auto atmo_flags_5{ e2->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 47) };
-            atmo_flags_5[3] = enable_atmosphere;
+            atmo_flags_5[3] = (enable_atmosphere ? 1.0 : 0.0);
             *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
             *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+            
         }
     }
 
@@ -1126,13 +1141,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             static const dsreal groundfromspace_ESun{ 24.0 };
             static const dsreal groundfromatmo_ESun{ 12.0 };
             const Utils::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
-            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_3);
-            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_3);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_4);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_4);
 
-
-            const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, p_enable_atmosphere);
+            
+            const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, (p_enable_atmosphere ? 1.0 : 0.0));
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+            
 
             // couleurs fog "sol"
             const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
@@ -1142,7 +1158,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             static const dsreal ocean_details_alt{ 1.0010 };
             const Utils::Vector flags6(splat_texture_resol, splat_transition_up_relative_alt, splat_transition_down_relative_alt, ocean_details_alt);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 62, flags6);
-            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, atmo_flags_6);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, flags6);
 
             const Utils::Vector mirror_flag(0.0, innerRadius, 0.0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
@@ -1162,7 +1178,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
 
             Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
-            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, flags32);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, details_flags);
 
             return details_binder;
         };
@@ -1183,6 +1199,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 {
 
                     ///////////////////////////////////////////////////////////////////////////////
+                    /*
                     PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
@@ -1207,13 +1224,15 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                     m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
                     details_binders[orientation] = binder;
+                    */
                     ////////////////////////////////////////////////////////////////////////////////
 
-                    LOD::Binder* details_binder{ build_details_binder(enable_atmosphere) };
-                    details_binders_2[orientation] = details_binder;
+                    LOD::Binder* binder2{ build_details_binder(enable_atmosphere) };                    
+                    m_drawable.RegisterSinglePassSlot(pass_id, binder2, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
+                    details_binders_2[orientation] = binder2;
                 }
 
-                m_planet_detail_binder[pass_id] = details_binders;
+                //m_planet_detail_binder[pass_id] = details_binders;
 
                 m_planet_detail_binder_2[pass_id] = details_binders_2;
 
