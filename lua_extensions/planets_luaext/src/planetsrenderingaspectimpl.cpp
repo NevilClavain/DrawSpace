@@ -1107,10 +1107,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             details_binder->SetFx(fx);
             details_binder->SetRenderer(m_renderer);
-            for (size_t stage = 0; stage < pass_textures.size(); stage++)
-            {
-                details_binder->SetTexture(pass_textures[stage], stage);
-            }
 
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
@@ -1228,7 +1224,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     */
                     ////////////////////////////////////////////////////////////////////////////////
 
-                    LOD::Binder* binder2{ build_details_binder(enable_atmosphere) };                    
+                    LOD::Binder* binder2{ build_details_binder(enable_atmosphere) };
+                    for (size_t stage = 0; stage < pass_textures.size(); stage++)
+                    {
+                        binder2->SetTexture(pass_textures[stage], stage);
+                    }
+
                     m_drawable.RegisterSinglePassSlot(pass_id, binder2, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
                     details_binders_2[orientation] = binder2;
                 }
