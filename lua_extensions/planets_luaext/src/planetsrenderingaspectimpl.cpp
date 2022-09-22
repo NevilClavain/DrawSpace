@@ -227,7 +227,8 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             for (auto& e2 : e.second)
             {
-                _DRAWSPACE_DELETE_(e2);
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
             }
         }
 
@@ -246,10 +247,10 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             for (auto& e2 : e.second)
             {
-                _DRAWSPACE_DELETE_(e2);
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
             }
         }
-
 
 
         for (auto& e : m_planet_flatclouds_binder)
@@ -1323,8 +1324,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     flatclouds_binders[orientation] = binder;
                     ///////////////////////////////////////////////////////////////////////////////
 
-                    LOD::Binder* details_binder{ build_details_binder() };
-                    flatclouds_binders_2[orientation] = details_binder;
+                    //LOD::Binder* details_binder{ build_details_binder() };
+                    //flatclouds_binders_2[orientation] = details_binder;
 
                 }
 
@@ -1373,8 +1374,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     oceans_binders[orientation] = binder;
                     ///////////////////////////////////////////////////////////////////////////////
 
-                    LOD::Binder* details_binder{ build_details_binder() };
-                    oceans_binders_2[orientation] = details_binder;
+                    //LOD::Binder* details_binder{ build_details_binder() };
+                    //oceans_binders_2[orientation] = details_binder;
 
                 }
 
