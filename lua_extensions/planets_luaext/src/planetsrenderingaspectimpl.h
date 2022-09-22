@@ -155,7 +155,7 @@ protected:
     //std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_detail_binder_2;
 
-    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;
+    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_atmosphere_binder_2;
 
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_flatclouds_binder;
@@ -259,7 +259,7 @@ public:
     std::map<dsstring, RegisteredCamera>                    GetRegisteredCameras(void) const;
     std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetFlatCloudsBinder(void) const;
 
-    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetAtmoBinder(void) const;
+    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetAtmoBinder(void) const;
     dsstring                                                GetReflectionPassId(void) const;
 
     std::map<dsstring, std::array<LOD::Binder*, 6>>         GetPlanetFlatCloudsBinder2(void) const;

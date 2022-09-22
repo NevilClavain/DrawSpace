@@ -97,6 +97,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                     }
                 }
 
+                /*
                 auto atmos_binder{ planet_renderer->GetPlanetAtmoBinder() };
                 if (atmos_binder.count(reflexion_pass))
                 {
@@ -106,6 +107,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                         atmo_binder->SetMirrorMode(true);
                     }
                 }
+                */
 
                 //////////////////////////////////////////////////////////////////
 
