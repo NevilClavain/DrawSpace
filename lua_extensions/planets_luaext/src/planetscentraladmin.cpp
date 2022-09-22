@@ -87,6 +87,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
             {
                 dsstring reflexion_pass{ planet_renderer->GetReflectionPassId() };
 
+                /*
                 auto flatclouds_binder{ planet_renderer->GetPlanetFlatCloudsBinder() };
                 if (flatclouds_binder.count(reflexion_pass))
                 {
@@ -96,6 +97,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                         cloud_binder->SetMirrorMode(true);
                     }
                 }
+                */
 
                 /*
                 auto atmos_binder{ planet_renderer->GetPlanetAtmoBinder() };
