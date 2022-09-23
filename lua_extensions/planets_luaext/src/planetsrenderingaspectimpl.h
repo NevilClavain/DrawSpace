@@ -152,20 +152,10 @@ protected:
     LOD::Config                                                     m_config;
     LOD::Drawing                                                    m_drawable;
 
-    //std::map<dsstring,std::array<PlanetDetailsBinder*, 6>>          m_planet_detail_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_detail_binder_2;
-
-    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_atmosphere_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_atmosphere_binder_2;
-
-    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_flatclouds_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_flatclouds_binder_2;
-
-    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_oceans_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_oceans_binder_2;
-
-
-    //std::array<PlanetClimateBinder*, 6>                             m_planet_climate_binder;
     std::array<LOD::Binder*, 6>                                     m_planet_climate_binder;
 
     std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
@@ -257,14 +247,8 @@ public:
 
     /// accessors
     std::map<dsstring, RegisteredCamera>                    GetRegisteredCameras(void) const;
-
-    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetFlatCloudsBinder(void) const;
-
-    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> GetPlanetAtmoBinder(void) const;
     dsstring                                                GetReflectionPassId(void) const;
-
     std::map<dsstring, std::array<LOD::Binder*, 6>>         GetPlanetFlatCloudsBinder2(void) const;
-
     std::map<dsstring, std::array<LOD::Binder*, 6>>         GetPlanetAtmoBinder2(void) const;
 
 

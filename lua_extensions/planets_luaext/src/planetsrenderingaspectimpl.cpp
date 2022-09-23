@@ -212,17 +212,6 @@ void PlanetsRenderingAspectImpl::Release(void)
             _DRAWSPACE_DELETE_(e);
         }
 
-        /*
-        for (auto& e : m_planet_detail_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                PlanetDetailsBinder* binder = e2;
-                _DRAWSPACE_DELETE_(binder);
-            }
-        }
-        */
-
         for (auto& e : m_planet_detail_binder_2)
         {
             for (auto& e2 : e.second)
@@ -231,17 +220,6 @@ void PlanetsRenderingAspectImpl::Release(void)
                 _DRAWSPACE_DELETE_(binder);
             }
         }
-
-        /*
-        for (auto& e : m_planet_atmosphere_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                PlanetDetailsBinder* binder = e2;
-                _DRAWSPACE_DELETE_(binder);
-            }
-        }
-        */
 
         for (auto& e : m_planet_atmosphere_binder_2)
         {
@@ -252,17 +230,6 @@ void PlanetsRenderingAspectImpl::Release(void)
             }
         }
 
-        /*
-        for (auto& e : m_planet_flatclouds_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                PlanetDetailsBinder* binder = e2;
-                _DRAWSPACE_DELETE_(binder);
-            }
-        }
-        */
-
         for (auto& e : m_planet_flatclouds_binder_2)
         {
             for (auto& e2 : e.second)
@@ -271,18 +238,6 @@ void PlanetsRenderingAspectImpl::Release(void)
             }
         }
 
-
-        /*
-        for (auto& e : m_planet_oceans_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                PlanetDetailsBinder* binder = e2;
-                _DRAWSPACE_DELETE_(binder);
-            }
-        }
-        */
-
         for (auto& e : m_planet_oceans_binder_2)
         {
             for (auto& e2 : e.second)
@@ -290,8 +245,6 @@ void PlanetsRenderingAspectImpl::Release(void)
                 _DRAWSPACE_DELETE_(e2);
             }
         }
-
-
 
         if(m_climate_vshader)
         {
@@ -390,17 +343,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
         };
 
-        /*
-        for (auto& e : m_planet_detail_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                e2->Update( world );
-            }
-        }
-        */
-        
-
         for (auto& e : m_planet_detail_binder_2)
         {
             for (auto& e2 : e.second)
@@ -408,17 +350,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 light_updater(e2, world);
             }
         }
-
-
-        /*
-        for (auto& e : m_planet_atmosphere_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                e2->Update( world );
-            }
-        }
-        */
 
         for (auto& e : m_planet_atmosphere_binder_2)
         {
@@ -428,16 +359,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
             }
         }
 
-        /*
-        for (auto& e : m_planet_flatclouds_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                e2->Update(world);
-            }
-        }
-        */
-
         for (auto& e : m_planet_flatclouds_binder_2)
         {
             for (auto& e2 : e.second)
@@ -445,17 +366,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 light_updater(e2, world);
             }
         }
-
-
-        /*
-        for (auto& e : m_planet_oceans_binder)
-        {
-            for (auto& e2 : e.second)
-            {
-                e2->Update(world);
-            }
-        }
-        */
 
         for (auto& e : m_planet_oceans_binder_2)
         {
@@ -591,51 +501,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
     };
 
     ///////////////////////////////////////////////////////////////////////////
-
-    /*
-    for (auto& e : m_planet_detail_binder)
-    {
-        for (auto& e2 : e.second)
-        {
-            PlanetDetailsBinder* binder = e2;
-
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
-
-            binder->EnableAtmoRender(enable_atmosphere);
-
-        }
-    }
-    */
-    
-
-
+   
     for (auto& e : m_planet_detail_binder_2)
     {
         for (auto& e2 : e.second)
@@ -652,45 +518,6 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
-    /*
-    for (auto& e : m_planet_atmosphere_binder)
-    {
-        for (auto& e2 : e.second)
-        {
-            PlanetDetailsBinder* binder = e2;
-
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
-        }
-    }
-    */
-
     for (auto& e : m_planet_atmosphere_binder_2)
     {
         for (auto& e2 : e.second)
@@ -699,49 +526,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
-
-
-
     m_drawable.SetLayerNodeDrawingState(AtmosphereLayer, enable_atmosphere);
-
-    /*
-    for (auto& e : m_planet_flatclouds_binder)
-    {
-        for (auto& e2 : e.second)
-        {
-            PlanetDetailsBinder* binder = e2;
-
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
-        }
-    }
-    */
 
     for (auto& e : m_planet_flatclouds_binder_2)
     {
@@ -750,49 +535,6 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             lights_updater(*e2);
         }
     }
-
-
-    /*
-    for (auto& e : m_planet_oceans_binder)
-    {
-        for (auto& e2 : e.second)
-        {
-            PlanetDetailsBinder* binder = e2;
-
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
-
-            binder->SetWaterBumpFactor(ocean_bump_factor);
-            binder->SetOceanDetailsSpecPower(oceandetails_specularpower);
-        }
-    }
-    */
 
     for (auto& e : m_planet_oceans_binder_2)
     {
@@ -811,7 +553,6 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
         }
     }
-
 }
 
 void PlanetsRenderingAspectImpl::init_rendering_objects(void)
@@ -1213,36 +954,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-
-                    ///////////////////////////////////////////////////////////////////////////////
-                    /*
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
-                    for (size_t stage = 0; stage < pass_textures.size(); stage++)
-                    {
-                        binder->SetTexture(pass_textures[stage], stage);
-                    }
-
-                    binder->EnableAtmoRender(enable_atmosphere);
-
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
-                    details_binders[orientation] = binder;
-                    */
-                    ////////////////////////////////////////////////////////////////////////////////
-
                     LOD::Binder* details_binder{ build_details_binder(enable_atmosphere) };
                     for (size_t stage = 0; stage < pass_textures.size(); stage++)
                     {
@@ -1252,8 +963,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
                     details_binders_2[orientation] = details_binder;
                 }
-
-                //m_planet_detail_binder[pass_id] = details_binders;
 
                 m_planet_detail_binder_2[pass_id] = details_binders_2;
 
@@ -1269,37 +978,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-
-                    ///////////////////////////////////////////////////////////////////////////////
-                    /*
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
-
-                    //m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::HIRES_MESHE, AtmosphereLayer, ro);
-                    atmo_binders[orientation] = binder;
-                    */
-                    ///////////////////////////////////////////////////////////////////////////////
-
                     LOD::Binder* atmo_binder{ build_details_binder() };
                     m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::HIRES_MESHE, AtmosphereLayer, ro);
                     atmo_binders_2[orientation] = atmo_binder;
-
                 }
-
-                //m_planet_atmosphere_binder[pass_id] = atmo_binders;
 
                 m_planet_atmosphere_binder_2[pass_id] = atmo_binders_2;
             }
@@ -1310,50 +992,16 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    ///////////////////////////////////////////////////////////////////////////////
-
-                    /*
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
-
-                    for (size_t stage = 0; stage < pass_textures.size(); stage++)
-                    {
-                        binder->SetTexture(pass_textures[stage], stage);
-                    }
-
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
-                    flatclouds_binders[orientation] = binder;
-                    */
-
-                    ///////////////////////////////////////////////////////////////////////////////
-
                     LOD::Binder* clouds_binder{ build_details_binder() };
                     for (size_t stage = 0; stage < pass_textures.size(); stage++)
                     {
                         clouds_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-
-
                     m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
                     flatclouds_binders_2[orientation] = clouds_binder;
 
                 }
-
-                //m_planet_flatclouds_binder[pass_id] = flatclouds_binders;
 
                 m_planet_flatclouds_binder_2[pass_id] = flatclouds_binders_2;
             }
@@ -1364,44 +1012,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    ///////////////////////////////////////////////////////////////////////////////
-                    /*
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
-                    if (m_bump_pass == pass_id)
-                    {
-                        binder->SetTexture(wavepass_result_texture, 0);
-                        binder->SetWaveTextureResol(wave_pass_resol);
-                        binder->SetWaterBumpFactor(ocean_bump_factor);
-
-                        //m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
-                    }
-                    else if (m_oceanmask_pass == pass_id)
-                    {
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
-                    }
-                    else
-                    {
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
-                    }                    
-                    oceans_binders[orientation] = binder;
-                    */
-                    ///////////////////////////////////////////////////////////////////////////////
-
                     LOD::Binder* oceans_binder{ build_details_binder() };
 
                     if (m_bump_pass == pass_id)
@@ -1422,8 +1032,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     oceans_binders_2[orientation] = oceans_binder;
 
                 }
-
-                //m_planet_oceans_binder[pass_id] = oceans_binders;
                 m_planet_oceans_binder_2[pass_id] = oceans_binders_2;
             }
         }
@@ -2253,20 +1861,6 @@ std::map<dsstring, PlanetsRenderingAspectImpl::RegisteredCamera> PlanetsRenderin
     return m_registered_camerapoints;
 }
 
-/*
-std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectImpl::GetPlanetFlatCloudsBinder(void) const
-{
-    return m_planet_flatclouds_binder;
-}
-*/
-
-/*
-std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectImpl::GetPlanetAtmoBinder(void) const
-{
-    return m_planet_atmosphere_binder;
-}
-*/
-
 std::map<dsstring, std::array<LOD::Binder*, 6>> PlanetsRenderingAspectImpl::GetPlanetFlatCloudsBinder2(void) const
 {
     return m_planet_flatclouds_binder_2;
@@ -2276,8 +1870,6 @@ std::map<dsstring, std::array<LOD::Binder*, 6>> PlanetsRenderingAspectImpl::GetP
 {
     return m_planet_atmosphere_binder_2;
 }
-
-
 
 dsstring PlanetsRenderingAspectImpl::GetReflectionPassId(void) const
 {

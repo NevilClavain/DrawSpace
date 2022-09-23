@@ -87,32 +87,6 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
             {
                 dsstring reflexion_pass{ planet_renderer->GetReflectionPassId() };
 
-                /*
-                auto flatclouds_binder{ planet_renderer->GetPlanetFlatCloudsBinder() };
-                if (flatclouds_binder.count(reflexion_pass))
-                {
-                    auto clouds_binders_array{ flatclouds_binder.at(reflexion_pass) };
-                    for (auto cloud_binder : clouds_binders_array)
-                    {
-                        cloud_binder->SetMirrorMode(true);
-                    }
-                }
-                */
-
-                /*
-                auto atmos_binder{ planet_renderer->GetPlanetAtmoBinder() };
-                if (atmos_binder.count(reflexion_pass))
-                {
-                    auto atmo_binders_array{ atmos_binder.at(reflexion_pass) };
-                    for (auto atmo_binder : atmo_binders_array)
-                    {
-                        atmo_binder->SetMirrorMode(true);
-                    }
-                }
-                */
-
-                //////////////////////////////////////////////////////////////////
-
                 auto flatclouds_binder_2{ planet_renderer->GetPlanetFlatCloudsBinder2() };
                 if (flatclouds_binder_2.count(reflexion_pass))
                 {
