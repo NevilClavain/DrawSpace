@@ -272,7 +272,7 @@ void PlanetsRenderingAspectImpl::Release(void)
         }
 
 
-
+        /*
         for (auto& e : m_planet_oceans_binder)
         {
             for (auto& e2 : e.second)
@@ -281,6 +281,7 @@ void PlanetsRenderingAspectImpl::Release(void)
                 _DRAWSPACE_DELETE_(binder);
             }
         }
+        */
 
         for (auto& e : m_planet_oceans_binder_2)
         {
@@ -445,6 +446,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
             }
         }
 
+
+        /*
         for (auto& e : m_planet_oceans_binder)
         {
             for (auto& e2 : e.second)
@@ -452,6 +455,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 e2->Update(world);
             }
         }
+        */
 
         for (auto& e : m_planet_oceans_binder_2)
         {
@@ -747,6 +751,8 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
+
+    /*
     for (auto& e : m_planet_oceans_binder)
     {
         for (auto& e2 : e.second)
@@ -786,6 +792,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             binder->SetOceanDetailsSpecPower(oceandetails_specularpower);
         }
     }
+    */
 
     for (auto& e : m_planet_oceans_binder_2)
     {
@@ -1236,14 +1243,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     */
                     ////////////////////////////////////////////////////////////////////////////////
 
-                    LOD::Binder* binder2{ build_details_binder(enable_atmosphere) };
+                    LOD::Binder* details_binder{ build_details_binder(enable_atmosphere) };
                     for (size_t stage = 0; stage < pass_textures.size(); stage++)
                     {
-                        binder2->SetTexture(pass_textures[stage], stage);
+                        details_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder2, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
-                    details_binders_2[orientation] = binder2;
+                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
+                    details_binders_2[orientation] = details_binder;
                 }
 
                 //m_planet_detail_binder[pass_id] = details_binders;
@@ -1358,6 +1365,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
                     ///////////////////////////////////////////////////////////////////////////////
+                    /*
                     PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
                         mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
                         mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
@@ -1391,14 +1399,32 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
                     }                    
                     oceans_binders[orientation] = binder;
+                    */
                     ///////////////////////////////////////////////////////////////////////////////
 
-                    //LOD::Binder* details_binder{ build_details_binder() };
-                    //oceans_binders_2[orientation] = details_binder;
+                    LOD::Binder* oceans_binder{ build_details_binder() };
+
+                    if (m_bump_pass == pass_id)
+                    {
+                        oceans_binder->SetTexture(wavepass_result_texture, 0);
+
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                    }
+                    else if (m_oceanmask_pass == pass_id)
+                    {
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
+                    }
+                    else
+                    {
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
+                    }
+
+                    oceans_binders_2[orientation] = oceans_binder;
 
                 }
 
-                m_planet_oceans_binder[pass_id] = oceans_binders;
+                //m_planet_oceans_binder[pass_id] = oceans_binders;
+                m_planet_oceans_binder_2[pass_id] = oceans_binders_2;
             }
         }
     }

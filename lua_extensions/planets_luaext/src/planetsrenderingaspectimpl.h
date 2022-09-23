@@ -161,7 +161,7 @@ protected:
     //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_flatclouds_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_flatclouds_binder_2;
 
-    std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_oceans_binder;
+    //std::map<dsstring, std::array<PlanetDetailsBinder*, 6>>         m_planet_oceans_binder;
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_oceans_binder_2;
 
 
