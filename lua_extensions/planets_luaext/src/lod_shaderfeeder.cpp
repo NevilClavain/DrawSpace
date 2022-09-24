@@ -24,47 +24,6 @@
 
 #include "lod_shaderfeeder.h"
 
-/*
-#include "lod_binder.h"
-
-using namespace DrawSpace;
-using namespace DrawSpace::Utils;
-using namespace LOD;
-
-ShaderFeeder::ShaderFeeder(ShaderType p_shader_type, int p_register, const DrawSpace::Utils::Vector& p_value) :
-	m_shader(p_shader_type),
-	m_register(p_register),
-	m_value(p_value)
-{
-}
-
-int ShaderFeeder::ComputeHash(ShaderType p_shader_type, int p_register)
-{
-	std::hash<int> hash;
-	return hash((static_cast<int>(p_shader_type) * 1000) + p_register);
-}
-
-int ShaderFeeder::Hash(void) const
-{
-	return ShaderFeeder::ComputeHash(m_shader, m_register);
-}
-
-int ShaderFeeder::GetShaderType(void) const
-{
-	return static_cast<int>(m_shader);
-}
-
-int ShaderFeeder::GetRegister(void) const
-{
-	return m_register;
-}
-
-DrawSpace::Utils::Vector ShaderFeeder::GetValue(void) const
-{
-	return m_value;
-}
-*/
-
 int LOD::ComputeHash(DrawSpace::Core::ShaderType p_shader_type, int p_register)
 {
 	std::hash<int> hash;

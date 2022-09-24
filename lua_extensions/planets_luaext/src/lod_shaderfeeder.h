@@ -30,7 +30,6 @@
 
 namespace LOD
 {
-
 template<typename T = DrawSpace::Utils::Vector>
 struct ShaderFeeder
 {
