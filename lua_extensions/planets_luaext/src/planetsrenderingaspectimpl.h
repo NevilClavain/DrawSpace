@@ -158,7 +158,9 @@ protected:
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_oceans_binder_2;
     std::array<LOD::Binder*, 6>                                     m_planet_climate_binder;
 
-    std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
+    //std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
+
+    std::array<LOD::Binder*, 6>                                     m_planet_collision_binder;
 
     DrawSpace::Core::Fx                                             m_climate_fx;
     DrawSpace::Core::Shader*                                        m_climate_vshader{ nullptr };

@@ -35,10 +35,11 @@
 #include "runnersystem.h"
 #include "updatequeuetask.h"
 
-#include "planetdetailsbinder.h"
+//#include "planetdetailsbinder.h"
 #include <functional>
 
 #include "lod_layer.h"
+#include "lod_binder.h"
 
 #include "collisionaspect.h"
 #include "rigidbodytransformaspectimpl.h"
@@ -211,6 +212,7 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             _DRAWSPACE_DELETE_(e);
         }
+
 
         for (auto& e : m_planet_detail_binder_2)
         {
@@ -775,18 +777,21 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
                     ////////////////////////////////////////////
 
-
-                    MultiFractalBinder* collisionsBinder = _DRAWSPACE_NEW_(MultiFractalBinder, MultiFractalBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
-                        plains_seed1, plains_seed2, mix_seed1, mix_seed2));
-
-                    collisionsBinder->SetRenderer(m_renderer);
-                    collisionsBinder->SetFx(&m_collisions_fx);
-
                     ld.patchTexturesBinder[i] = climate_binder;
-                    ld.groundCollisionsBinder[i] = collisionsBinder;
-
                     m_planet_climate_binder[i] = climate_binder;
-                    m_planet_collision_binder[i] = collisionsBinder;
+
+
+
+                    LOD::Binder* collisions_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+                    collisions_binder->SetRenderer(m_renderer);
+                    collisions_binder->SetFx(&m_collisions_fx);
+
+                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+
+                    ld.groundCollisionsBinder[i] = collisions_binder;
+                    m_planet_collision_binder[i] = collisions_binder;
+
                 }
 
                 m_config.m_layers_descr[layer] = ld;

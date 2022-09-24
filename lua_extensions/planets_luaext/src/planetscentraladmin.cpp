@@ -23,10 +23,10 @@
 /* -*-LIC_END-*- */
 
 #include "planetscentraladmin.h"
-#include "planetdetailsbinder.h"
 #include "planetsrenderingaspectimpl.h"
 #include "transformaspect.h"
 #include "lod_layer.h"
+#include "lod_binder.h"
 #include "vector.h"
 
 
