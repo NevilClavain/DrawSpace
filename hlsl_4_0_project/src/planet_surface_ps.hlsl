@@ -153,7 +153,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 vpos;
 
-    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouvé empiriquement :-p  : pour être indépendant de la taille de la planète
+    float details_terrain_noise_scale = terrain_bump_flag.z;
+
+    vpos.xyz = details_terrain_noise_scale * (planet_ray / 1000.0) * input.LocalePos; // trouvé empiriquement :-p  : pour être indépendant de la taille de la planète
 
     //vpos.xyz = input.LocalePos.xyz;
     vpos.w = 1.0;
@@ -234,7 +236,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         vpos_left.x -= step;
         vpos_right.x += step;
 
-        float details_terrain_noise_scale = terrain_bump_flag.z;
+        
 
         float details_terrain_bump_bias = terrain_bump_flag.y;
 
@@ -243,11 +245,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float roughness = 1.46;
 
 
-        float res = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos.xyz, 4, lacunarity, roughness, 0.0);
-        float res_up = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_up.xyz, 4, lacunarity, roughness, 0.0);
-        float res_down = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_down.xyz, 4, lacunarity, roughness, 0.0);
-        float res_right = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_right.xyz, 4, lacunarity, roughness, 0.0);
-        float res_left = Fractal_fBm_classic_perlin(details_terrain_noise_scale * vpos_left.xyz, 4, lacunarity, roughness, 0.0);
+        float res = Fractal_fBm_classic_perlin(vpos.xyz, 4, lacunarity, roughness, 0.0);
+        float res_up = Fractal_fBm_classic_perlin(vpos_up.xyz, 4, lacunarity, roughness, 0.0);
+        float res_down = Fractal_fBm_classic_perlin(vpos_down.xyz, 4, lacunarity, roughness, 0.0);
+        float res_right = Fractal_fBm_classic_perlin(vpos_right.xyz, 4, lacunarity, roughness, 0.0);
+        float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, 4, lacunarity, roughness, 0.0);
 
 
         // WIP
