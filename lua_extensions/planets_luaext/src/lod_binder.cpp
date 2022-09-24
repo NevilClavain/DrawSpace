@@ -23,19 +23,19 @@
 /* -*-LIC_END-*- */
 
 #include "lod_binder.h"
+#include "exceptions.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace LOD;
 
-Binder::Binder( void ) : 
-m_renderer( NULL )
+Binder::Binder( void )
 {
     for( long i = 0; i < RenderingNode::GetTextureListSize(); i++ )
     {
-        m_textures[i] = NULL;
-        m_vertextextures[i] = NULL;
+        m_textures[i] = nullptr;
+        m_vertextextures[i] = nullptr;
     }
 }
 
@@ -72,4 +72,42 @@ Texture* Binder::GetVertexTexture( long p_index ) const
 Fx* Binder::GetFx( void ) const
 {
     return m_fx;
+}
+
+void Binder::BindToShader(void) const
+{
+    for (auto& e : m_vector_shaders_feeders)
+    {
+        m_renderer->SetFxShaderParams(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
+    }
+
+    for (auto& e : m_matrix_shaders_feeders)
+    {
+        m_renderer->SetFxShaderMatrix(e.second.GetShaderType(), e.second.GetRegister(), e.second.GetValue());
+    }
+}
+
+DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderType p_shader_type, int p_register)
+{
+    const auto key{ LOD::ComputeHash(p_shader_type, p_register) };
+    if (m_vector_shaders_feeders.count(key))
+    {
+        return m_vector_shaders_feeders.at(key).GetValue();
+    }
+    else
+    {
+        _DSEXCEPTION("unknow shader feeder");
+    }
+}
+
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj)
+{
+    p_in.m_vector_shaders_feeders[p_obj.Hash()] = p_obj;
+    return p_in;
+}
+
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj)
+{ 
+    p_in.m_matrix_shaders_feeders[p_obj.Hash()] = p_obj;
+    return p_in;
 }

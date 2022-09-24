@@ -23,15 +23,18 @@
 /* -*-LIC_END-*- */
 
 #include "planetscentraladmin.h"
-#include "planetdetailsbinder.h"
 #include "planetsrenderingaspectimpl.h"
 #include "transformaspect.h"
 #include "lod_layer.h"
+#include "lod_binder.h"
+#include "vector.h"
 
 
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Core;
+using namespace DrawSpace::Utils;
 
 PlanetsCentralAdmin::PlanetsCentralAdmin(void):
 m_system_evt_cb(this, &PlanetsCentralAdmin::on_system_event)
@@ -84,23 +87,31 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
             {
                 dsstring reflexion_pass{ planet_renderer->GetReflectionPassId() };
 
-                auto flatclouds_binder{ planet_renderer->GetPlanetFlatCloudsBinder() };
-                if (flatclouds_binder.count(reflexion_pass))
+                auto flatclouds_binder_2{ planet_renderer->GetPlanetFlatCloudsBinder2() };
+                if (flatclouds_binder_2.count(reflexion_pass))
                 {
-                    auto clouds_binders_array{ flatclouds_binder.at(reflexion_pass) };
+                    auto clouds_binders_array{ flatclouds_binder_2.at(reflexion_pass) };
                     for (auto cloud_binder : clouds_binders_array)
                     {
-                        cloud_binder->SetMirrorMode(true);
+                        Vector mirror_flag{ cloud_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
+
+                        // enable mirror flag for this pass
+                        mirror_flag[0] = 1.0;
+                        *cloud_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
                     }
                 }
 
-                auto atmos_binder{ planet_renderer->GetPlanetAtmoBinder() };
-                if (atmos_binder.count(reflexion_pass))
+                auto atmos_binder_2{ planet_renderer->GetPlanetAtmoBinder2() };
+                if (atmos_binder_2.count(reflexion_pass))
                 {
-                    auto atmo_binders_array{ atmos_binder.at(reflexion_pass) };
+                    auto atmo_binders_array{ atmos_binder_2.at(reflexion_pass) };
                     for (auto atmo_binder : atmo_binders_array)
                     {
-                        atmo_binder->SetMirrorMode(true);
+                        Vector mirror_flag{ atmo_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
+
+                        // enable mirror flag for this pass
+                        mirror_flag[0] = 1.0;
+                        *atmo_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
                     }
                 }
             }

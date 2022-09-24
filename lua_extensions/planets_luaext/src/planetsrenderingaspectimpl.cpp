@@ -35,11 +35,11 @@
 #include "runnersystem.h"
 #include "updatequeuetask.h"
 
-#include "planetdetailsbinder.h"
-#include "planetclimatebinder.h"
+//#include "planetdetailsbinder.h"
 #include <functional>
 
 #include "lod_layer.h"
+#include "lod_binder.h"
 
 #include "collisionaspect.h"
 #include "rigidbodytransformaspectimpl.h"
@@ -214,42 +214,39 @@ void PlanetsRenderingAspectImpl::Release(void)
         }
 
 
-        for (auto& e : m_planet_detail_binder)
+        for (auto& e : m_planet_detail_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
+                auto binder{ e2 };
                 _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_atmosphere_binder)
+        for (auto& e : m_planet_atmosphere_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
+                auto binder{ e2 };
                 _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_flatclouds_binder)
+        for (auto& e : m_planet_flatclouds_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-                _DRAWSPACE_DELETE_(binder);
+                _DRAWSPACE_DELETE_(e2);
             }
         }
 
-        for (auto& e : m_planet_oceans_binder)
+        for (auto& e : m_planet_oceans_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-                _DRAWSPACE_DELETE_(binder);
+                _DRAWSPACE_DELETE_(e2);
             }
         }
-
 
         if(m_climate_vshader)
         {
@@ -295,49 +292,88 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         Matrix world;        
         transform_aspect->GetWorldTransform( world );
 
-        Matrix view;
-        transform_aspect->GetViewTransform( view );
+        //std::function
+        const auto light_updater = [](LOD::Binder* p_binder, const Utils::Matrix& p_global_transform)
+        {
+            auto planet_final_transform = p_global_transform;
+            planet_final_transform.ClearTranslation();
+                        
+            *p_binder << LOD::ShaderFeeder<DrawSpace::Utils::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
 
-        Matrix proj;
-        transform_aspect->GetProjTransform( proj );
+            planet_final_transform.Transpose();
 
-        for (auto& e : m_planet_detail_binder)
+            const auto light_flags{ p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 50) };
+           
+            if (light_flags[1])
+            {
+                Utils::Vector light_local_dir, light_dir;
+                light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 53);
+                light_dir.Normalize();
+
+                planet_final_transform.Transform(&light_dir, &light_local_dir);
+                light_local_dir.Normalize();
+
+                *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 52, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 9, light_local_dir);
+            }
+
+            if (light_flags[2])
+            {
+                Utils::Vector light_local_dir, light_dir;
+                light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 56);
+                light_dir.Normalize();
+
+                planet_final_transform.Transform(&light_dir, &light_local_dir);
+                light_local_dir.Normalize();
+
+                *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 55, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 12, light_local_dir);
+            }
+
+            if (light_flags[3])
+            {
+                Utils::Vector light_local_dir, light_dir;
+                light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 59);
+                light_dir.Normalize();
+
+                planet_final_transform.Transform(&light_dir, &light_local_dir);
+                light_local_dir.Normalize();
+
+                *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 58, light_local_dir);
+                *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 15, light_local_dir);
+            }
+
+        };
+
+        for (auto& e : m_planet_detail_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
-                e2->Update( world );
+                light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_atmosphere_binder)
+        for (auto& e : m_planet_atmosphere_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
-                e2->Update( world );
+                light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_flatclouds_binder)
+        for (auto& e : m_planet_flatclouds_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
-                e2->Update(world);
+                light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_oceans_binder)
+        for (auto& e : m_planet_oceans_binder_2)
         {
             for (auto& e2 : e.second)
             {
-                PlanetDetailsBinder* binder = e2;
-
-                e2->Update(world);
+                light_updater(e2, world);
             }
         }
     }
@@ -424,158 +460,99 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
     ///////////////////////////////////////////////////////////////////////////
 
-    for (auto& e : m_planet_detail_binder)
+    // std::function
+    const auto lights_updater = [&](LOD::Binder& p_binder)
+    {
+        const Utils::Vector light_flags(std::get<0>(ambient), std::get<0>(dir0), std::get<0>(dir1), std::get<0>(dir2));
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 50, light_flags);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 7, light_flags);
+
+        const Utils::Vector ambient_color(std::get<1>(ambient)[0], std::get<1>(ambient)[1], std::get<1>(ambient)[2], 1.0);
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 51, ambient_color);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 8, ambient_color);
+
+
+        Utils::Vector light_dir_0(-std::get<2>(dir0)[0], -std::get<2>(dir0)[1], -std::get<2>(dir0)[2], 1.0);
+        light_dir_0.Normalize();
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 53, light_dir_0);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 10, light_dir_0);
+
+        const Utils::Vector light_color_0(std::get<1>(dir0)[0], std::get<1>(dir0)[1], std::get<1>(dir0)[2], 1.0);
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 54, light_color_0);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 11, light_color_0);
+
+
+        Utils::Vector light_dir_1(-std::get<2>(dir1)[0], -std::get<2>(dir1)[1], -std::get<2>(dir1)[2], 1.0);
+        light_dir_1.Normalize();
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 56, light_dir_1);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 13, light_dir_1);
+
+        const Utils::Vector light_color_1(std::get<1>(dir1)[0], std::get<1>(dir1)[1], std::get<1>(dir1)[2], 1.0);
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 57, light_color_1);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 14, light_color_1);
+
+        Utils::Vector light_dir_2(-std::get<2>(dir2)[0], -std::get<2>(dir2)[1], -std::get<2>(dir2)[2], 1.0);
+        light_dir_2.Normalize();
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 59, light_dir_2);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 16, light_dir_2);
+
+        const Utils::Vector light_color_2(std::get<1>(dir2)[0], std::get<1>(dir2)[1], std::get<1>(dir2)[2], 1.0);
+        p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 60, light_color_2);
+        p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 17, light_color_2);
+
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+   
+    for (auto& e : m_planet_detail_binder_2)
     {
         for (auto& e2 : e.second)
         {
-            PlanetDetailsBinder* binder = e2;
+            lights_updater(*e2);
 
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
-
-            binder->EnableAtmoRender(enable_atmosphere);
+            
+            // enable/disable atmo render
+            auto atmo_flags_5{ e2->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 47) };
+            atmo_flags_5[3] = (enable_atmosphere ? 1.0 : 0.0);
+            *e2 << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+            
         }
     }
 
-    for (auto& e : m_planet_atmosphere_binder)
+    for (auto& e : m_planet_atmosphere_binder_2)
     {
         for (auto& e2 : e.second)
         {
-            PlanetDetailsBinder* binder = e2;
-
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
+            lights_updater(*e2);
         }
     }
 
     m_drawable.SetLayerNodeDrawingState(AtmosphereLayer, enable_atmosphere);
 
-    for (auto& e : m_planet_flatclouds_binder)
+    for (auto& e : m_planet_flatclouds_binder_2)
     {
         for (auto& e2 : e.second)
         {
-            PlanetDetailsBinder* binder = e2;
-
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
-
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
+            lights_updater(*e2);
         }
     }
 
-    for (auto& e : m_planet_oceans_binder)
+    for (auto& e : m_planet_oceans_binder_2)
     {
         for (auto& e2 : e.second)
         {
-            PlanetDetailsBinder* binder = e2;
+            lights_updater(*e2);
 
-            binder->m_ambient = std::get<0>(ambient);
-            binder->m_ambient_color[0] = std::get<1>(ambient)[0];
-            binder->m_ambient_color[1] = std::get<1>(ambient)[1];
-            binder->m_ambient_color[2] = std::get<1>(ambient)[2];
+            // set water bump factor
+            Vector water_bump_flags{ e2->GetShaderFeederValue(ShaderType::PIXEL_SHADER, 30) };
+            water_bump_flags[1] = ocean_bump_factor;
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 30, water_bump_flags);
 
-            binder->m_lights[0].m_enable = std::get<0>(dir0);
-            binder->m_lights[0].m_color[0] = std::get<1>(dir0)[0];
-            binder->m_lights[0].m_color[1] = std::get<1>(dir0)[1];
-            binder->m_lights[0].m_color[2] = std::get<1>(dir0)[2];
-            binder->m_lights[0].m_dir[0] = -std::get<2>(dir0)[0];
-            binder->m_lights[0].m_dir[1] = -std::get<2>(dir0)[1];
-            binder->m_lights[0].m_dir[2] = -std::get<2>(dir0)[2];
-
-            binder->m_lights[1].m_enable = std::get<0>(dir1);
-            binder->m_lights[1].m_color[0] = std::get<1>(dir1)[0];
-            binder->m_lights[1].m_color[1] = std::get<1>(dir1)[1];
-            binder->m_lights[1].m_color[2] = std::get<1>(dir1)[2];
-            binder->m_lights[1].m_dir[0] = -std::get<2>(dir1)[0];
-            binder->m_lights[1].m_dir[1] = -std::get<2>(dir1)[1];
-            binder->m_lights[1].m_dir[2] = -std::get<2>(dir1)[2];
-
-            binder->m_lights[2].m_enable = std::get<0>(dir2);
-            binder->m_lights[2].m_color[0] = std::get<1>(dir2)[0];
-            binder->m_lights[2].m_color[1] = std::get<1>(dir2)[1];
-            binder->m_lights[2].m_color[2] = std::get<1>(dir2)[2];
-            binder->m_lights[2].m_dir[0] = -std::get<2>(dir2)[0];
-            binder->m_lights[2].m_dir[1] = -std::get<2>(dir2)[1];
-            binder->m_lights[2].m_dir[2] = -std::get<2>(dir2)[2];
-
-            binder->SetWaterBumpFactor(ocean_bump_factor);
-            binder->SetOceanDetailsSpecPower(oceandetails_specularpower);
+            // set ocean details spec power
+            Vector flags32{ e2->GetShaderFeederValue(ShaderType::PIXEL_SHADER, 32) };
+            flags32[2] = oceandetails_specularpower;
+            *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
         }
     }
 }
@@ -781,24 +758,40 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 ld.ray = planet_ray;
                 ld.description = "Details Layer";
                 for (int i = 0; i < 6; i++)
-                {
-                    PlanetClimateBinder* climateBinder = _DRAWSPACE_NEW_(PlanetClimateBinder, PlanetClimateBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
-                        plains_seed1, plains_seed2, mix_seed1, mix_seed2, beach_limit, enable_oceans));
+                {     
 
-                    climateBinder->SetRenderer(m_renderer);
-                    climateBinder->SetFx(&m_climate_fx);
+                    ////////////////// climate shader bindings
+                    LOD::Binder* climate_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+                    climate_binder->SetRenderer(m_renderer);
+                    climate_binder->SetFx(&m_climate_fx);
 
-                    MultiFractalBinder* collisionsBinder = _DRAWSPACE_NEW_(MultiFractalBinder, MultiFractalBinder(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset,
-                        plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
-                    collisionsBinder->SetRenderer(m_renderer);
-                    collisionsBinder->SetFx(&m_collisions_fx);
+                    static const dsreal temp_dec_per_km = 34.0;   
 
-                    ld.groundCollisionsBinder[i] = collisionsBinder;
-                    ld.patchTexturesBinder[i] = climateBinder;
+                    // pour une planete temperee
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(40.0, 20.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
 
-                    m_planet_climate_binder[i] = climateBinder;
-                    m_planet_collision_binder[i] = collisionsBinder;
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
+                    ////////////////////////////////////////////
+
+                    ld.patchTexturesBinder[i] = climate_binder;
+                    m_planet_climate_binder[i] = climate_binder;
+
+
+
+                    LOD::Binder* collisions_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+                    collisions_binder->SetRenderer(m_renderer);
+                    collisions_binder->SetFx(&m_collisions_fx);
+
+                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+
+                    ld.groundCollisionsBinder[i] = collisions_binder;
+                    m_planet_collision_binder[i] = collisions_binder;
+
                 }
 
                 m_config.m_layers_descr[layer] = ld;
@@ -869,6 +862,91 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             pass_textures = textures[0];
         }
+
+
+
+        // std::function
+        const auto build_details_binder = [&](bool p_enable_atmosphere = false)
+        {
+            LOD::Binder* details_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+
+            details_binder->SetFx(fx);
+            details_binder->SetRenderer(m_renderer);
+
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+
+            static const dsreal innerRadius{ planet_ray * 1000.0 };
+            static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
+
+            const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius* outerRadius, innerRadius* innerRadius);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 18, atmo_flags);
+
+            static const dsreal scaleDepth{ 0.25 };
+            const Utils::Vector atmo_flags_1(scaleDepth, 1.0 / scaleDepth, 1.0 / (outerRadius - innerRadius), (1.0 / (outerRadius - innerRadius)) / scaleDepth);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, atmo_flags_1);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 19, atmo_flags_1);
+
+            const Utils::Vector waveLength(0.650, 0.570, 0.475, 0.0);
+            const Utils::Vector atmo_flags_2((1.0 / pow(waveLength[0], 4.0)), (1.0 / pow(waveLength[1], 4.0)), (1.0 / pow(waveLength[2], 4.0)), 0.0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 44, atmo_flags_2);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 20, atmo_flags_2);
+
+            static const dsreal atmoKm{ 0.0010 };
+            const Utils::Vector atmo_flags_3(atmo_kr, atmoKm, 4.0 * atmo_kr * 3.1415927, 4.0 * atmoKm * 3.1415927);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 45, atmo_flags_3);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 21, atmo_flags_3);
+
+            static const dsreal skyfromspace_ESun{ 8.7 };
+            static const dsreal skyfromatmo_ESun{ 70.0 };
+            static const dsreal groundfromspace_ESun{ 24.0 };
+            static const dsreal groundfromatmo_ESun{ 12.0 };
+            const Utils::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_4);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_4);
+
+            
+            const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, (p_enable_atmosphere ? 1.0 : 0.0));
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+            
+
+            // couleurs fog "sol"
+            const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
+
+            static const dsreal ocean_details_alt{ 1.0010 };
+            const Utils::Vector flags6(splat_texture_resol, splat_transition_up_relative_alt, splat_transition_down_relative_alt, ocean_details_alt);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 62, flags6);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, flags6);
+
+            const Utils::Vector mirror_flag(0.0, innerRadius, 0.0, 0.0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
+
+
+            const Utils::Vector flags63(enable_oceans, 0.0, 0.0, 0.0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 63, flags63);
+
+            const Utils::Vector water_bump_flags(wave_pass_resol, ocean_bump_factor, 0, 0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 30, water_bump_flags);
+
+            const Utils::Vector terrain_bump_flag(terrainbump_factor, details_terrain_bump_bias, details_terrain_noise_scale, level_disturbance_scale);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 31, terrain_bump_flag);
+
+            const Utils::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
+
+
+            Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, details_flags);
+
+            return details_binder;
+        };
+
+
+
        
         for (auto& pass_id : rcp.second)
         {
@@ -877,36 +955,21 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             if (DetailsLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> details_binders;
+                std::array<LOD::Binder*, 6> details_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
+                    LOD::Binder* details_binder{ build_details_binder(enable_atmosphere) };
                     for (size_t stage = 0; stage < pass_textures.size(); stage++)
                     {
-                        binder->SetTexture(pass_textures[stage], stage);
+                        details_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    binder->EnableAtmoRender(enable_atmosphere);
-
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
-                    details_binders[orientation] = binder;
+                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
+                    details_binders_2[orientation] = details_binder;
                 }
 
-                m_planet_detail_binder[pass_id] = details_binders;
+                m_planet_detail_binder_2[pass_id] = details_binders_2;
 
                 if (m_enable_collisionmeshe_display)
                 {
@@ -916,106 +979,65 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             else if (AtmosphereLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> atmo_binders;
+                std::array<LOD::Binder*, 6> atmo_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
-
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::HIRES_MESHE, AtmosphereLayer, ro);
-                    atmo_binders[orientation] = binder;
+                    LOD::Binder* atmo_binder{ build_details_binder() };
+                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::HIRES_MESHE, AtmosphereLayer, ro);
+                    atmo_binders_2[orientation] = atmo_binder;
                 }
 
-                m_planet_atmosphere_binder[pass_id] = atmo_binders;
+                m_planet_atmosphere_binder_2[pass_id] = atmo_binders_2;
             }
             else if (FlatCloudsLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> flatclouds_binders;
+                std::array<LOD::Binder*, 6>         flatclouds_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
-
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
-
+                    LOD::Binder* clouds_binder{ build_details_binder() };
                     for (size_t stage = 0; stage < pass_textures.size(); stage++)
                     {
-                        binder->SetTexture(pass_textures[stage], stage);
+                        clouds_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
-                    flatclouds_binders[orientation] = binder;
+                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
+                    flatclouds_binders_2[orientation] = clouds_binder;
+
                 }
 
-                m_planet_flatclouds_binder[pass_id] = flatclouds_binders;
+                m_planet_flatclouds_binder_2[pass_id] = flatclouds_binders_2;
             }
             else if (OceansLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> oceans_binders;
+                std::array<LOD::Binder*, 6>         oceans_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
-                    PlanetDetailsBinder* binder = _DRAWSPACE_NEW_(PlanetDetailsBinder, PlanetDetailsBinder(planet_ray * 1000.0, atmo_thickness * 1000.0, plains_amplitude,
-                        mountains_amplitude, vertical_offset, mountains_offset, plains_seed1, plains_seed2,
-                        mix_seed1, mix_seed2, terrainbump_factor, splat_transition_up_relative_alt,
-                        splat_transition_down_relative_alt, splat_texture_resol, atmo_kr,
-                        fog_alt_limit, fog_density, enable_oceans, oceandetails_specularpower,
-                        details_terrain_bump_bias,
-                        details_terrain_noise_scale,
-                        level_disturbance_scale,
-                        details_limit_sup,
-                        bump_details_limit_sup,
-                        ground_bump_details_factor_depth_distance
-                        ));
+                    LOD::Binder* oceans_binder{ build_details_binder() };
 
-                    binder->SetFx(fx);
-                    binder->SetRenderer(m_renderer);
                     if (m_bump_pass == pass_id)
                     {
-                        binder->SetTexture(wavepass_result_texture, 0);
-                        binder->SetWaveTextureResol(wave_pass_resol);
-                        binder->SetWaterBumpFactor(ocean_bump_factor);
+                        oceans_binder->SetTexture(wavepass_result_texture, 0);
 
-                        //m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
                     }
                     else if (m_oceanmask_pass == pass_id)
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
                     }
                     else
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
-                    }                    
-                    oceans_binders[orientation] = binder;
-                }
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
+                    }
 
-                m_planet_oceans_binder[pass_id] = oceans_binders;
+                    oceans_binders_2[orientation] = oceans_binder;
+
+                }
+                m_planet_oceans_binder_2[pass_id] = oceans_binders_2;
             }
         }
     }
@@ -1844,14 +1866,14 @@ std::map<dsstring, PlanetsRenderingAspectImpl::RegisteredCamera> PlanetsRenderin
     return m_registered_camerapoints;
 }
 
-std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectImpl::GetPlanetFlatCloudsBinder(void) const
+std::map<dsstring, std::array<LOD::Binder*, 6>> PlanetsRenderingAspectImpl::GetPlanetFlatCloudsBinder2(void) const
 {
-    return m_planet_flatclouds_binder;
+    return m_planet_flatclouds_binder_2;
 }
 
-std::map<dsstring, std::array<PlanetDetailsBinder*, 6>> PlanetsRenderingAspectImpl::GetPlanetAtmoBinder(void) const
+std::map<dsstring, std::array<LOD::Binder*, 6>> PlanetsRenderingAspectImpl::GetPlanetAtmoBinder2(void) const
 {
-    return m_planet_atmosphere_binder;
+    return m_planet_atmosphere_binder_2;
 }
 
 dsstring PlanetsRenderingAspectImpl::GetReflectionPassId(void) const

@@ -28,13 +28,13 @@
 #include "drawspace_commons.h"
 #include "tracedefs.h"
 
-#define _DRAWSPACE_NEW_( __type__, __item__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, sizeof( __item__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
+#define _DRAWSPACE_NEW_( __type__, __item__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
 #define _DRAWSPACE_NEW_EXPLICIT_SIZE_( __type__, __item__, __size__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, __size__, #__item__, __FUNCTION__, __LINE__, __FILE__ )
 #define _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT( __type__, __item__, __size__, __comment__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, __size__, #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
 
-#define _DRAWSPACE_NEW_FROM_MEMMGR_( __mgr__, __type__, __item__ ) __mgr__->Register<__type__>( new __item__, sizeof( __item__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
+#define _DRAWSPACE_NEW_FROM_MEMMGR_( __mgr__, __type__, __item__ ) __mgr__->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
 
-#define _DRAWSPACE_NEW_WITH_COMMENT( __type__, __item__, __comment__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, sizeof( __item__ ), #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
+#define _DRAWSPACE_NEW_WITH_COMMENT( __type__, __item__, __comment__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
 
 #define _DRAWSPACE_DELETE_( __ptr__ ) delete __ptr__; DrawSpace::Utils::MemAlloc::GetInstance()->Unregister( __ptr__ ); __ptr__ = NULL
 #define _DRAWSPACE_DELETE_N_( __ptr__ ) delete[] __ptr__; DrawSpace::Utils::MemAlloc::GetInstance()->Unregister( __ptr__ ); __ptr__ = NULL

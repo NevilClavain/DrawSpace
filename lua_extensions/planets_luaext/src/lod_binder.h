@@ -28,22 +28,30 @@
 #include "drawspace_commons.h"
 #include "fx.h"
 #include "texture.h"
+#include "shader.h"
 #include "renderingnode.h"
 #include "plugin.h"
 #include "renderer.h"
+#include "lod_shaderfeeder.h"
 
 namespace LOD
 {
 
 // cette classe peut etre vue comme un "descripteur" de renderingNode de planete (SphericalLOD::FaceDrawingNode)
-struct Binder abstract
+struct Binder
 {
-protected:
-    DrawSpace::Core::Fx*                            m_fx;
-    DrawSpace::Core::Texture*                       m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
-    DrawSpace::Core::Texture*                       m_vertextextures[DrawSpace::Core::RenderingNode::NbMaxTextures];
+private:
+    
+    DrawSpace::Core::Texture*                                       m_textures[DrawSpace::Core::RenderingNode::NbMaxTextures]; // 32 textures stages max
+    DrawSpace::Core::Texture*                                       m_vertextextures[DrawSpace::Core::RenderingNode::NbMaxTextures];
 
-    DrawSpace::Interface::Renderer*                 m_renderer;
+    DrawSpace::Core::Fx*                                            m_fx{ nullptr };
+
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Vector>> m_vector_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Matrix>> m_matrix_shaders_feeders;
+
+protected:
+    DrawSpace::Interface::Renderer*                                 m_renderer{ nullptr };
 
 public:
 
@@ -52,15 +60,22 @@ public:
     virtual void Bind( void ) {}; // appelee juste avant le rendu du node
     virtual void Unbind( void ) {}; // appelee juste apres le rendu du node
 
+    void BindToShader(void) const;
+
     void SetRenderer( DrawSpace::Interface::Renderer* p_renderer );
 
     void SetTexture( DrawSpace::Core::Texture* p_texture, long p_stage );
     void SetVertexTexture( DrawSpace::Core::Texture* p_texture, long p_stage );
     void SetFx( DrawSpace::Core::Fx* p_fx );
     
-    DrawSpace::Core::Texture* GetTexture( long p_index ) const;
-    DrawSpace::Core::Texture* GetVertexTexture( long p_index ) const;
-    DrawSpace::Core::Fx* GetFx( void ) const;
+    DrawSpace::Core::Texture*   GetTexture( long p_index ) const;
+    DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
+    DrawSpace::Core::Fx*        GetFx( void ) const;
+    
+    DrawSpace::Utils::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
+
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj);
 };
 }
 

@@ -34,6 +34,12 @@ namespace DrawSpace
 namespace Core
 {
 
+enum class ShaderType
+{
+    VERTEX_SHADER = 0,
+    PIXEL_SHADER = 1
+};
+
 class Shader 
 {
 protected:
