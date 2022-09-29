@@ -768,7 +768,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
-                    static const dsreal temp_dec_per_km = 34.0;   
+                    //static const dsreal temp_dec_per_km = 34.0;
+                    static const dsreal temp_dec_per_km = 8.0;
 
                     // pour une planete temperee
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(40.0, 20.0, temp_dec_per_km, beach_limit));
