@@ -106,7 +106,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     float vertex_latitude = acos(clamp( h, 0.0, 1.0 ));
 
-    float res = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
+    float vert_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
 
     float4 global_uv = 0.0;
@@ -114,12 +114,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     global_uv.y = lerp(base_uv_global.y, base_uv_global.w, Input.TexCoord0.y);
     
     /*
-    res += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
-    res *= ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
+    vert_alt += ComputeCanyonsFromTexture(TextureCanyons, v_position2, global_uv, seeds.z, seeds.w);
+    vert_alt *= ComputeRiversFromTexture(TextureRivers, v_position2, global_uv, seeds.z, seeds.w);
     */
     
     Output.aht = 0.0;
-    Output.aht.x = res;
+    Output.aht.x = vert_alt;
 
 
     float n_vpos_x = (v_position2.x / 2.0) + 0.5;
@@ -141,17 +141,21 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     f_temperature[1] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_x);
     f_temperature[2] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_y);
 
-    float pn_temperature_variation = SimplexPerlin3D(f_temperature, seeds.w, seeds.z);
+    //float pn_temperature_variation = SimplexPerlin3D(f_temperature, seeds.w, seeds.z);
 	
 
 
-	// calcul facteur temperature
+	///////////////////// calcul facteur temperature
 
 
 	// calcul temperature en fct de la lattitude du vertex
 
 
     float norm_latitude = clamp( 1.0 - (2.0 * vertex_latitude / 3.1415927), 0.0, 1.0 );
+
+    // pole : vertex_latitude = PI/2 -> norm_latitude = 0.0
+    // equateur : vertex_latitude = 0 -> norm_latitude = 1.0
+
 
 
     float temp_x;
@@ -190,15 +194,26 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
 
     temperature_lat = ((temperature_max - temperature_min) * temp_x) + temperature_min;
+
+    // temp_x = 0.0 -> temperature_lat = temperature_min
+    // temp_x = 1.0 -> temperature_lat = temperature_max
 	
 	// calcul de la baisse de temperature en fct de l'altitude
-    float temp_dec = temperature_alt_dec * clamp(2.0 * pn_temperature_variation, 0.6, 2.0) * res;
+    //float temp_dec = temperature_alt_dec * clamp(2.0 * pn_temperature_variation, 0.6, 2.0) * vert_alt;
+    float temp_dec = temperature_alt_dec * vert_alt;
 
+    // vert_alt = 0 -> temp_dec = 0 -> temperature_alt = temperature_lat
+    // sinon temperature_alt <<< temperature_lat
     temperature_alt = temperature_lat - temp_dec;
+
     temperature_final = clamp(temperature_alt, temperature_min, temperature_max);
     float color_temp = (temperature_final - temperature_min) / (temperature_max - temperature_min);
 
-	// calcul facteur humidite
+    // -> color_temp : compris entre 0.0 et 1.0
+
+
+
+    ///////////////////// calcul facteur humidite
 
     float color_humidity;
     float color_humidity_final;
@@ -207,18 +222,18 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	
     humidity_alt_max = humidity_k * pn_humidity_variation + humidity_base;
 
-    float res2 = res;
+    float vert_alt_2 = vert_alt;
 
-    if (res2 > humidity_alt_max)
+    if (vert_alt_2 > humidity_alt_max)
     {
-        res2 = humidity_alt_max;
+        vert_alt_2 = humidity_alt_max;
     }
-    else if (res2 < 0.0)
+    else if (vert_alt_2 < 0.0)
     {
-        res2 = 0.0;
+        vert_alt_2 = 0.0;
     }
 	
-    float hf = 1.0 - (res2 / humidity_alt_max);
+    float hf = 1.0 - (vert_alt_2 / humidity_alt_max);
 
     color_humidity = lerp(1.0 - hf, hf, color_temp);
 
@@ -226,13 +241,13 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	//float beach_lim = norm_latitude * 25.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
     float beach_lim = norm_latitude * thparams.w * (lerp(0.0, 1.0, pn_humidity_variation));
 
-    if (res > beach_lim)
+    if (vert_alt > beach_lim)
     {
         color_humidity_final = color_humidity;
     }
-    else if (res <= beach_lim && res > 0.0)
+    else if (vert_alt <= beach_lim && vert_alt > 0.0)
     {
-        color_humidity_final = lerp(0.0, color_humidity, res * 0.5);
+        color_humidity_final = lerp(0.0, color_humidity, vert_alt * 0.5);
     }
     else
     {
