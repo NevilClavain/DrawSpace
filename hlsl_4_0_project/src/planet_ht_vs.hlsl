@@ -38,10 +38,22 @@ cbuffer legacyargs : register(b0)
 
 #define v_landscape_control         40
 #define v_seeds                     41
+
+
+///////////////////////////////////// Inputs description ///////////////////////
+
+
 #define v_thparams                  42
+// x -> humidity_alt_max : en metres : plus ce seuil altitude sera haut, plus l'humidite pourra se repandre
+// y -> not used
+// z -> temperature_alt_dec : en degres centigrades; taux de decrementation de temperature au fur et a mesure de l'augmentation de l'altitude -> nombre de degres perdus tout les 1000 mètres
+// w -> beach_lim, en mètres
+
 #define v_thparams2                 43
-
-
+// x -> lim polar : en latitude "normalisée" : 0.0 = pole, 1.0 = equateur
+// y -> lim tropical : en latitude "normalisée" : 0.0 = pole, 1.0 = equateur
+// z -> k polar : de 0.0 a 1.0
+// w -> k tropical : de 0.0 a 1.0
 
 struct VS_INPUT
 {
@@ -106,8 +118,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     float vertex_latitude = acos(clamp( h, 0.0, 1.0 ));
 
-    float vert_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
-
+    float vert_alt = ComputeVertexHeight(v_position2, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);    
+    // vert_alt : altitude en metres
 
     float4 global_uv = 0.0;
     global_uv.x = lerp(base_uv_global.x, base_uv_global.z, Input.TexCoord0.x);
@@ -122,27 +134,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.aht.x = vert_alt;
 
 
-    float n_vpos_x = (v_position2.x / 2.0) + 0.5;
-    float n_vpos_y = (v_position2.y / 2.0) + 0.5;
-    float n_vpos_z = (v_position2.z / 2.0) + 0.5;
-
-
-    float3 f_humidity;
-    float mask_input_hl = 20.0;
-
-    f_humidity[0] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_x);
-    f_humidity[1] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_y);
-    f_humidity[2] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_z);
-
-    float pn_humidity_variation = SimplexPerlin3D(f_humidity, seeds.z, seeds.w);
-	
-    float3 f_temperature;
-    f_temperature[0] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_z);
-    f_temperature[1] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_x);
-    f_temperature[2] = lerp(-mask_input_hl * 0.5, mask_input_hl * 0.5, n_vpos_y);
-
-    //float pn_temperature_variation = SimplexPerlin3D(f_temperature, seeds.w, seeds.z);
-	
 
 
 	///////////////////// calcul facteur temperature
@@ -166,9 +157,6 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float lim_tropical = thparams2.y;
     float k_polar = thparams2.z;
     float k_tropical = thparams2.w;
-
-    float humidity_base = thparams.y;
-    float humidity_k = thparams.x;
 
 	//////////////////////////////////////////
 
@@ -218,28 +206,29 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     float color_humidity;
     float color_humidity_final;
 
-    float humidity_alt_max;
-	
-    humidity_alt_max = humidity_k * pn_humidity_variation + humidity_base;
+    float humidity_alt_max = thparams.x;
 
-    float vert_alt_2 = vert_alt;
-
-    if (vert_alt_2 > humidity_alt_max)
-    {
-        vert_alt_2 = humidity_alt_max;
-    }
-    else if (vert_alt_2 < 0.0)
-    {
-        vert_alt_2 = 0.0;
-    }
+    float vert_alt_2 = clamp(vert_alt, 0.0, humidity_alt_max);
 	
     float hf = 1.0 - (vert_alt_2 / humidity_alt_max);
 
+    // vertice élevé -> hf = 0
+    // vertice altitude 0 -> hf = 1
+
     color_humidity = lerp(1.0 - hf, hf, color_temp);
 
+    // color_temp (temperature) élevée
+    //      -> vertex = 0.0 : humidité élevée
+    //      -> vertex = humidity_alt_max : humidité faible
+    // 
+    // color_temp (temperature) basse
+    //      -> vertex = 0.0 : humidité faible
+    //      -> vertex = humidity_alt_max : humidité élevée
 
-	//float beach_lim = norm_latitude * 25.0 * ( lerp( 0.0, 1.0, pn_humidity_variation ) );
-    float beach_lim = norm_latitude * thparams.w * (lerp(0.0, 1.0, pn_humidity_variation));
+    // seuil humidity_alt_max élevé -> l'humidité se "repandra" plus facilement
+
+    
+    float beach_lim = norm_latitude * thparams.w;
 
     if (vert_alt > beach_lim)
     {
