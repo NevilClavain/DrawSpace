@@ -583,6 +583,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     dsreal atmo_kr { m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose() };
     dsreal fog_alt_limit { m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose() };
     dsreal fog_density { m_owner->GetComponent<dsreal>("fog_density")->getPurpose() };
+
+
+    dsreal lim_polar{ m_owner->GetComponent<dsreal>("lim_polar")->getPurpose() };
+    dsreal lim_tropical{ m_owner->GetComponent<dsreal>("lim_tropical")->getPurpose() };
+    dsreal k_polar{ m_owner->GetComponent<dsreal>("k_polar")->getPurpose() };
+    dsreal k_tropical{ m_owner->GetComponent<dsreal>("k_tropical")->getPurpose() };
+    dsreal humidity_alt_max{ m_owner->GetComponent<dsreal>("humidity_alt_max")->getPurpose() };
+    dsreal temp_dec_per_km{ m_owner->GetComponent<dsreal>("temp_dec_per_km")->getPurpose() };
     dsreal beach_limit { m_owner->GetComponent<dsreal>("beach_limit")->getPurpose() };
 
     bool enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
@@ -768,15 +776,51 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
-                    //static const dsreal temp_dec_per_km = 34.0;
-                    static const dsreal temp_dec_per_km = 8.0;
+
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, 0.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
+
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
+
+
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, 0.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
+
 
                     // pour une planete temperee
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(40.0, 20.0, temp_dec_per_km, beach_limit));
+
+                    /*
+                    static const dsreal temp_dec_per_km = 8.0;
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(90.0, 0.0, temp_dec_per_km, beach_limit));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
 
                     *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
-                    ////////////////////////////////////////////
+                    * 
+                    */
+                    
+                                        
+                    // pour une planete aride sans oceans
+                    /*
+                    static const dsreal temp_dec_per_km = 2.0;
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(0.0, 0.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.25, 0.33, 0.85, 0.99));
+
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(false, 0, 0, 0));
+                    */
+
+
+                    // pour une planete desertique avec oceans, et un peu d'humidité
+                    /*
+                    static const dsreal temp_dec_per_km = 4.0;
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(10.0, 0.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.40, 0.42, 0.85, 0.99));
+
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(true, 0, 0, 0));
+                    */
+
+
+
 
                     ld.patchTexturesBinder[i] = climate_binder;
                     m_planet_climate_binder[i] = climate_binder;

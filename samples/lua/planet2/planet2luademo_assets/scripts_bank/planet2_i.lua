@@ -309,7 +309,15 @@ local planet_specific_config_descr =
 	atmo_kr								         = 0.0033,
 	fog_alt_limit						         = 30000.0,
 	fog_density							         = 0.000031,
+
+	lim_polar									 = 0.48,
+	lim_tropical							     = 0.87,
+	k_polar										 = 0.45,
+	k_tropical									 = 0.75,
+	humidity_alt_max							 = 90.0,
+	temp_dec_per_km								 = 8.0,
 	beach_limit							         = 2.0,
+
 	landplace_patch						         = FALSE,
 	enable_atmosphere					         = TRUE,
 	atmo_thickness                               = 160.0,

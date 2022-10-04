@@ -53,7 +53,16 @@ const Luna<LuaClass_PlanetConfig>::RegType LuaClass_PlanetConfig::methods[] =
     { "set_zbufferactivationrelalt", &LuaClass_PlanetConfig::LUA_setzbufferactivationrelalt },
     { "set_fogandatmoparams", &LuaClass_PlanetConfig::LUA_setfogandatmoparams },
     { "set_terrainbumpfactor", &LuaClass_PlanetConfig::LUA_setterrainbumpfactor },
+
+
+    { "set_limpolar", &LuaClass_PlanetConfig::LUA_setlimpolar },
+    { "set_limtropical", &LuaClass_PlanetConfig::LUA_setlimtropical },
+    { "set_kpolar", &LuaClass_PlanetConfig::LUA_setkpolar },
+    { "set_ktropical", &LuaClass_PlanetConfig::LUA_setktropical },
+    { "set_humidityaltmax", &LuaClass_PlanetConfig::LUA_sethumidityaltmax },
+    { "set_tempdecperkm", &LuaClass_PlanetConfig::LUA_settempdecperkm },
     { "set_beachlimit", &LuaClass_PlanetConfig::LUA_setbeachlimit },
+
     { "enable_oceans", &LuaClass_PlanetConfig::LUA_enableoceans },
     { "set_oceansdetailsspecularpower", &LuaClass_PlanetConfig::LUA_setoceansdetailsspecularpower },
     { "set_climateshaders", &LuaClass_PlanetConfig::LUA_setclimateshaders },
@@ -147,6 +156,14 @@ int LuaClass_PlanetConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("atmo_kr", m_planets_details.atmo_kr);
     entity_rendering_aspect->AddComponent<dsreal>("fog_alt_limit", m_planets_details.fog_alt_limit);
     entity_rendering_aspect->AddComponent<dsreal>("fog_density", m_planets_details.fog_density);
+
+
+    entity_rendering_aspect->AddComponent<dsreal>("lim_polar", m_planets_details.lim_polar);
+    entity_rendering_aspect->AddComponent<dsreal>("lim_tropical", m_planets_details.lim_tropical);
+    entity_rendering_aspect->AddComponent<dsreal>("k_polar", m_planets_details.k_polar);
+    entity_rendering_aspect->AddComponent<dsreal>("k_tropical", m_planets_details.k_tropical);
+    entity_rendering_aspect->AddComponent<dsreal>("humidity_alt_max", m_planets_details.humidity_alt_max);
+    entity_rendering_aspect->AddComponent<dsreal>("temp_dec_per_km", m_planets_details.temp_dec_per_km);
     entity_rendering_aspect->AddComponent<dsreal>("beach_limit", m_planets_details.beach_limit);
 
     entity_rendering_aspect->AddComponent<bool>("oceans", m_planets_details.oceans);
@@ -243,7 +260,15 @@ int LuaClass_PlanetConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("atmo_kr");
     m_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
     m_rendering_aspect->RemoveComponent<dsreal>("fog_density");
+
+    m_rendering_aspect->RemoveComponent<dsreal>("lim_polar");
+    m_rendering_aspect->RemoveComponent<dsreal>("lim_tropical");
+    m_rendering_aspect->RemoveComponent<dsreal>("k_polar");
+    m_rendering_aspect->RemoveComponent<dsreal>("k_tropical");
+    m_rendering_aspect->RemoveComponent<dsreal>("humidity_alt_max");
+    m_rendering_aspect->RemoveComponent<dsreal>("temp_dec_per_km");
     m_rendering_aspect->RemoveComponent<dsreal>("beach_limit");
+
     m_rendering_aspect->RemoveComponent<bool>("oceans");
     m_rendering_aspect->RemoveComponent<dsreal>("oceandetails_specularpower");
 
@@ -481,6 +506,79 @@ int LuaClass_PlanetConfig::LUA_setterrainbumpfactor(lua_State* p_L)
     return 0;
 }
 
+
+int LuaClass_PlanetConfig::LUA_setlimpolar(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_limpolar : argument(s) missing");
+    }
+
+    m_planets_details.lim_polar = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setlimtropical(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_limtropical : argument(s) missing");
+    }
+
+    m_planets_details.lim_tropical = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setkpolar(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_kpolar : argument(s) missing");
+    }
+
+    m_planets_details.k_polar = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setktropical(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_ktropical : argument(s) missing");
+    }
+
+    m_planets_details.k_tropical = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_sethumidityaltmax(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_humidityaltmax : argument(s) missing");
+    }
+
+    m_planets_details.humidity_alt_max = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_settempdecperkm(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_tempdecperkm : argument(s) missing");
+    }
+
+    m_planets_details.temp_dec_per_km = luaL_checknumber(p_L, 1);
+    return 0;
+}
+
 int LuaClass_PlanetConfig::LUA_setbeachlimit(lua_State* p_L)
 {
     int argc = lua_gettop(p_L);
@@ -492,6 +590,7 @@ int LuaClass_PlanetConfig::LUA_setbeachlimit(lua_State* p_L)
     m_planets_details.beach_limit = luaL_checknumber(p_L, 1);
     return 0;
 }
+
 
 int LuaClass_PlanetConfig::LUA_enableoceans(lua_State* p_L)
 {

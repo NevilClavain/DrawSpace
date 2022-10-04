@@ -81,9 +81,35 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 	end
 
+	if config_description['lim_polar'] ~= nil then
+		planet_specific_configuration:set_limpolar(config_description['lim_polar'])
+	end
+
+	if config_description['lim_tropical'] ~= nil then
+		planet_specific_configuration:set_limtropical(config_description['lim_tropical'])
+	end
+
+	if config_description['k_polar'] ~= nil then
+		planet_specific_configuration:set_kpolar(config_description['k_polar'])
+	end
+
+	if config_description['k_tropical'] ~= nil then
+		planet_specific_configuration:set_ktropical(config_description['k_tropical'])
+	end
+
+	if config_description['humidity_alt_max'] ~= nil then
+		planet_specific_configuration:set_humidityaltmax(config_description['humidity_alt_max'])
+	end
+
+	if config_description['temp_dec_per_km'] ~= nil then
+		planet_specific_configuration:set_tempdecperkm(config_description['temp_dec_per_km'])
+	end
+
 	if config_description['beach_limit'] ~= nil then
 		planet_specific_configuration:set_beachlimit(config_description['beach_limit'])
 	end
+
+
 
 	if config_description['landplace_patch'] ~= nil then
 		planet_specific_configuration:enable_landplacepatch(config_description['landplace_patch'])

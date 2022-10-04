@@ -70,6 +70,14 @@ private:
         dsreal      atmo_kr; 
         dsreal      fog_alt_limit; 
         dsreal      fog_density;
+
+        dsreal      lim_polar;
+        dsreal      lim_tropical;
+        dsreal      k_polar;
+        dsreal      k_tropical;
+
+        dsreal      humidity_alt_max;
+        dsreal      temp_dec_per_km;
         dsreal      beach_limit;
 
         bool        oceans;
@@ -143,7 +151,15 @@ public:
     int LUA_setzbufferactivationrelalt(lua_State* p_L);
     int LUA_setfogandatmoparams(lua_State* p_L);
     int LUA_setterrainbumpfactor(lua_State* p_L);
+
+    int LUA_setlimpolar(lua_State* p_L);
+    int LUA_setlimtropical(lua_State* p_L);
+    int LUA_setkpolar(lua_State* p_L);
+    int LUA_setktropical(lua_State* p_L);
+    int LUA_sethumidityaltmax(lua_State* p_L);
+    int LUA_settempdecperkm(lua_State* p_L);
     int LUA_setbeachlimit(lua_State* p_L);
+
     int LUA_enableoceans(lua_State* p_L);
     int LUA_setoceansdetailsspecularpower(lua_State* p_L);
     int LUA_enablelandplacepatch(lua_State* p_L);
