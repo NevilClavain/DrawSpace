@@ -585,6 +585,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     dsreal fog_density { m_owner->GetComponent<dsreal>("fog_density")->getPurpose() };
 
 
+    dsreal temp_scale{ m_owner->GetComponent<dsreal>("temp_scale")->getPurpose() };
     dsreal lim_polar{ m_owner->GetComponent<dsreal>("lim_polar")->getPurpose() };
     dsreal lim_tropical{ m_owner->GetComponent<dsreal>("lim_tropical")->getPurpose() };
     dsreal k_polar{ m_owner->GetComponent<dsreal>("k_polar")->getPurpose() };
@@ -777,13 +778,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
 
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
-
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, 0.0, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, temp_scale, temp_dec_per_km, beach_limit));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
 

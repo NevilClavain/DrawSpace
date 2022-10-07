@@ -81,6 +81,11 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 	end
 
+	if config_description['temp_scale'] ~= nil then
+		planet_specific_configuration:set_tempscale(config_description['temp_scale'])
+	end
+
+
 	if config_description['lim_polar'] ~= nil then
 		planet_specific_configuration:set_limpolar(config_description['lim_polar'])
 	end

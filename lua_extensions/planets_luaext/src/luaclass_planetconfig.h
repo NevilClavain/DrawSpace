@@ -71,6 +71,7 @@ private:
         dsreal      fog_alt_limit; 
         dsreal      fog_density;
 
+        dsreal      temp_scale;
         dsreal      lim_polar;
         dsreal      lim_tropical;
         dsreal      k_polar;
@@ -152,6 +153,7 @@ public:
     int LUA_setfogandatmoparams(lua_State* p_L);
     int LUA_setterrainbumpfactor(lua_State* p_L);
 
+    int LUA_settempscale(lua_State* p_L);
     int LUA_setlimpolar(lua_State* p_L);
     int LUA_setlimtropical(lua_State* p_L);
     int LUA_setkpolar(lua_State* p_L);

@@ -45,7 +45,7 @@ cbuffer legacyargs : register(b0)
 
 #define v_thparams                  42
 // x -> humidity_alt_max : en metres : plus ce seuil altitude sera haut, plus l'humidite pourra se repandre
-// y -> not used
+// y -> temperature final scale
 // z -> temperature_alt_dec : en degres centigrades; taux de decrementation de temperature au fur et a mesure de l'augmentation de l'altitude -> nombre de degres perdus tout les 1000 mètres
 // w -> beach_lim, en mètres
 
@@ -96,6 +96,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	//float temperature_alt_dec = 0.0064;  // INPUT 
     float temperature_alt_dec = thparams.z / 1000.0;
 	//pente temperature fct de l'altitude : x ? perdus tout les 1000 metres 
+
+    float temp_scale = thparams.y;
 
     float temperature_lat;
     float temperature_alt;
@@ -181,7 +183,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
 
 
-    temperature_lat = ((temperature_max - temperature_min) * temp_x) + temperature_min;
+    temperature_lat = ((temperature_max - temperature_min) * temp_x * temp_scale) + temperature_min;
 
     // temp_x = 0.0 -> temperature_lat = temperature_min
     // temp_x = 1.0 -> temperature_lat = temperature_max

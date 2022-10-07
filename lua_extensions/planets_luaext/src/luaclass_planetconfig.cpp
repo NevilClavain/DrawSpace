@@ -55,6 +55,7 @@ const Luna<LuaClass_PlanetConfig>::RegType LuaClass_PlanetConfig::methods[] =
     { "set_terrainbumpfactor", &LuaClass_PlanetConfig::LUA_setterrainbumpfactor },
 
 
+    { "set_tempscale", &LuaClass_PlanetConfig::LUA_settempscale },
     { "set_limpolar", &LuaClass_PlanetConfig::LUA_setlimpolar },
     { "set_limtropical", &LuaClass_PlanetConfig::LUA_setlimtropical },
     { "set_kpolar", &LuaClass_PlanetConfig::LUA_setkpolar },
@@ -158,6 +159,7 @@ int LuaClass_PlanetConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("fog_density", m_planets_details.fog_density);
 
 
+    entity_rendering_aspect->AddComponent<dsreal>("temp_scale", m_planets_details.temp_scale);
     entity_rendering_aspect->AddComponent<dsreal>("lim_polar", m_planets_details.lim_polar);
     entity_rendering_aspect->AddComponent<dsreal>("lim_tropical", m_planets_details.lim_tropical);
     entity_rendering_aspect->AddComponent<dsreal>("k_polar", m_planets_details.k_polar);
@@ -261,6 +263,7 @@ int LuaClass_PlanetConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("fog_alt_limit");
     m_rendering_aspect->RemoveComponent<dsreal>("fog_density");
 
+    m_rendering_aspect->RemoveComponent<dsreal>("temp_scale");
     m_rendering_aspect->RemoveComponent<dsreal>("lim_polar");
     m_rendering_aspect->RemoveComponent<dsreal>("lim_tropical");
     m_rendering_aspect->RemoveComponent<dsreal>("k_polar");
@@ -506,6 +509,17 @@ int LuaClass_PlanetConfig::LUA_setterrainbumpfactor(lua_State* p_L)
     return 0;
 }
 
+int LuaClass_PlanetConfig::LUA_settempscale(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_tempscale : argument(s) missing");
+    }
+
+    m_planets_details.temp_scale = luaL_checknumber(p_L, 1);
+    return 0;
+}
 
 int LuaClass_PlanetConfig::LUA_setlimpolar(lua_State* p_L)
 {

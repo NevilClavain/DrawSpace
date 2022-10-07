@@ -293,10 +293,6 @@ local planet_specific_config_descr =
 
 	planet_ray							         = 6500.0,
     gravity_acc                                  = 9.81,
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 16000.0,
-	vertical_offset						         = 20.0,
-	mountains_offset					         = 0.0,
 	plains_seed1						         = 89189.0,
 	plains_seed2						         = 233.0,
 	mix_seed1							         = 18901.0,
@@ -310,6 +306,32 @@ local planet_specific_config_descr =
 	fog_alt_limit						         = 30000.0,
 	fog_density							         = 0.000031,
 
+
+
+	-- earth-like planet
+	--[[
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 13000.0,
+	vertical_offset						         = 20.0,
+	mountains_offset					         = 0.0,
+	temp_scale									 = 1.0,
+	lim_polar									 = 0.38,
+	lim_tropical							     = 0.87,
+	k_polar										 = 0.25,
+	k_tropical									 = 0.75,
+	humidity_alt_max							 = 90.0,
+	temp_dec_per_km								 = 8.0,
+	beach_limit							         = 2.0,
+	enable_oceans                                = TRUE,
+	]]
+
+	-- oceanic planet
+	--[[
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 0.0, -- 16000.0,
+	vertical_offset						         = -420.0, --20.0,
+	mountains_offset					         = 0.0,
+	temp_scale									 = 1.0,
 	lim_polar									 = 0.48,
 	lim_tropical							     = 0.87,
 	k_polar										 = 0.45,
@@ -317,6 +339,28 @@ local planet_specific_config_descr =
 	humidity_alt_max							 = 90.0,
 	temp_dec_per_km								 = 8.0,
 	beach_limit							         = 2.0,
+	enable_oceans                                = TRUE,
+	]]
+
+
+	-- cold planet
+	
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 13000.0,
+	vertical_offset						         = 20.0,
+	mountains_offset					         = 0.0,
+	temp_scale									 = 0.3,
+	lim_polar									 = 0.76,
+	lim_tropical							     = 0.80,
+	k_polar										 = 0.15,
+	k_tropical									 = 0.63,
+	humidity_alt_max							 = 9500.0,
+	temp_dec_per_km								 = 55.0,
+	beach_limit							         = 2.0,
+	enable_oceans                                = FALSE,
+
+
+
 
 	landplace_patch						         = FALSE,
 	enable_atmosphere					         = TRUE,
@@ -324,7 +368,7 @@ local planet_specific_config_descr =
     flatclouds_altitude                          = 24.0,
     wave_pass_resol                              = 512,
     ocean_bump_factor                            = 0.85,
-    enable_oceans                                = TRUE,
+    
 	oceansdetails_specularpower					 = 40.0,
 
 	details_terrain_bump_bias					 = 4.0,
