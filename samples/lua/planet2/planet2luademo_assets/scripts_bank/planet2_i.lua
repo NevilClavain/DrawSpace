@@ -309,7 +309,7 @@ local planet_specific_config_descr =
 
 
 	-- earth-like planet
-	--[[
+
 	plains_amplitude					         = 600.0,
 	mountains_amplitude					         = 13000.0,
 	vertical_offset						         = 20.0,
@@ -323,7 +323,7 @@ local planet_specific_config_descr =
 	temp_dec_per_km								 = 8.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = TRUE,
-	]]
+
 
 	-- oceanic planet
 	--[[
@@ -344,7 +344,8 @@ local planet_specific_config_descr =
 
 
 	-- cold planet
-	
+
+	--[[
 	plains_amplitude					         = 600.0,
 	mountains_amplitude					         = 13000.0,
 	vertical_offset						         = 20.0,
@@ -358,8 +359,59 @@ local planet_specific_config_descr =
 	temp_dec_per_km								 = 55.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = FALSE,
+	]]
 
+	--desertic planet with oceans and a few humidity
 
+	--[[
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 13000.0,
+	vertical_offset						         = 20.0,
+	mountains_offset					         = 0.0,
+	temp_scale									 = 1.0,
+	lim_polar									 = 0.20,
+	lim_tropical							     = 0.66,
+	k_polar										 = 0.3,
+	k_tropical									 = 0.88,
+	humidity_alt_max							 = 90.0,
+	temp_dec_per_km								 = 5.0,
+	beach_limit							         = 6.0,
+	enable_oceans                                = TRUE,
+	]]
+
+	-- arid planet, no oceans, no humidity
+	--[[
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 13000.0,
+	vertical_offset						         = 20.0,
+	mountains_offset					         = 0.0,
+	temp_scale									 = 1.0,
+	lim_polar									 = 0.12,
+	lim_tropical							     = 0.46,
+	k_polar										 = 0.66,
+	k_tropical									 = 0.88,
+	humidity_alt_max							 = 0.5,
+	temp_dec_per_km								 = 3.0,
+	beach_limit							         = 6.0,
+	enable_oceans                                = FALSE,
+	]]
+
+	-- hot planet, with humidity
+	--[[
+	plains_amplitude					         = 600.0,
+	mountains_amplitude					         = 13000.0,
+	vertical_offset						         = 20.0,
+	mountains_offset					         = 0.0,
+	temp_scale									 = 1.0,
+	lim_polar									 = 0.32,
+	lim_tropical							     = 0.56,
+	k_polar										 = 0.66,
+	k_tropical									 = 0.88,
+	humidity_alt_max							 = 750.0,
+	temp_dec_per_km								 = 6.0,
+	beach_limit							         = 6.0,
+	enable_oceans                                = TRUE,
+	]]
 
 
 	landplace_patch						         = FALSE,
