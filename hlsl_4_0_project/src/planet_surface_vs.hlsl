@@ -226,6 +226,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
         iv.xyz = Input.Position.xyz;
         iv.w = 1.0;
         vertex_pos = mul(iv, mul(mat[matLandPlacePatchLocalPos], mPlanetWorld));
+
+        v_position2 = v_local_pos_unit;
     }
     else
     {

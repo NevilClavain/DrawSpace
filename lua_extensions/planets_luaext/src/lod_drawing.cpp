@@ -371,7 +371,9 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             {
                 if( check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) )
                 {
-                    m_renderer->ClearDepth();
+                    // not needed ?
+                    //m_renderer->ClearDepth();
+                    
                     // dessiner LE patch de niveau LOD 0 qui contient  la camera
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
                 }
@@ -1017,7 +1019,7 @@ void Drawing::create_all_landplace_meshes( void )
     {
         m_landplace_meshes[i] = _DRAWSPACE_NEW_( Meshe, Meshe );
 
-        create_landplace_meshe( cst::patchAvgResolution, i, m_landplace_meshes[i] );
+        create_landplace_meshe( /*cst::patchAvgResolution*/ cst::patchResolution, i, m_landplace_meshes[i]);
 
         m_landplace_meshes[i]->SetPath( "sphereLOD landplace meshe" );
     }

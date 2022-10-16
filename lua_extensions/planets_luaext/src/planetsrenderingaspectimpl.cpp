@@ -749,6 +749,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     m_config.m_nbLODRanges_inertBodies = 15;
     m_config.m_nbLODRanges_freeCameras = 14;
 
+    m_drawable.Startup(m_owner->GetOwnerEntity());
+
     for (auto& rcp : rcname_to_passes)
     {
         dsstring rendercontextname{ rcp.first };
@@ -1084,7 +1086,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     ComponentsUpdated();
     
-    m_drawable.Startup( m_owner->GetOwnerEntity() );
+    //m_drawable.Startup( m_owner->GetOwnerEntity() );
 
     update_shader_params();
 }
