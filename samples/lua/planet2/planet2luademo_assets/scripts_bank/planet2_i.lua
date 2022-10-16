@@ -10,8 +10,11 @@ local speed_factor = 1500.0
 
 local relative_ack = FALSE
 
+-- pressed keys
 local left_shift = FALSE
 local left_ctrl = FALSE
+local space = FALSE
+-- pressed keys
 
 local tab = FALSE
 
@@ -414,7 +417,9 @@ local planet_specific_config_descr =
 	]]
 
 
-	landplace_patch						         = FALSE,
+	landplace_patch						         = TRUE,
+	--landplace_patch						         = FALSE,
+
 	enable_atmosphere					         = TRUE,
 	atmo_thickness                               = 160.0,
     flatclouds_altitude                          = 24.0,
@@ -707,6 +712,8 @@ function( key )
         model.camera.mvt:update(speed_factor * 3000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif tab == TRUE then
         model.camera.mvt:update(speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      elseif space == TRUE then
+        model.camera.mvt:update(speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
         model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
@@ -724,6 +731,8 @@ function( key )
         model.camera.mvt:update(-speed_factor * 3000.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif tab == TRUE then
         model.camera.mvt:update(-speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+      elseif space == TRUE then
+        model.camera.mvt:update(-speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
         model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
@@ -788,9 +797,13 @@ function( key )
 
     left_ctrl = TRUE
 
+
+  elseif key == 32 then --space
+
+    space = TRUE
     
   else
-	--g:print('key code = '..key)
+	-- g:print('key code = '..key)
   end
 
   gui:on_keydown( key )
@@ -887,6 +900,10 @@ function( key )
     g:set_mousecursorcircularmode(TRUE)
 
     left_ctrl = FALSE
+
+  elseif key == 32 then --space
+
+    space = FALSE
     
   else
     --g:print('key code = '..key) 
@@ -1587,6 +1604,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'surface_rendering',
+
         --rendering_id = 'surface_wireframe_rendering',
 		lit_shader_update_func = nil
 	},
@@ -1760,7 +1778,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(120.06, -20.48, 8538.0, planet_specific_config_descr)
+set_freecam_on_planet(141.59, -11.89, 3000.0, planet_specific_config_descr)
 
 
 
