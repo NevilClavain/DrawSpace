@@ -112,8 +112,8 @@ void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
-    dsreal patch_dim = p_patch->GetUnitSideLenght() / 2.0 * p_ray;
-    dsreal patch_scale = 0.5;
+    const dsreal patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
+    const dsreal patch_scale{ 1.5 };
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -376,7 +376,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                     // not needed ?
                     //m_renderer->ClearDepth();
                     
-                    // dessiner LE patch de niveau LOD 0 qui contient  la camera
+                    // dessiner LE patch de niveau LOD 0 qui contient la camera
                     draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
                 }
             }
@@ -719,7 +719,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             node->SetMeshe( Body::m_patch_meshe );
             node->m_debug_id = "LOWRES_MESHE for layer : " + std::to_string(p_layer_index);
 
-            if( m_config->m_landplace_patch && p_layer_index == 0) // AMELIORER : remplacer par une constante 'DetailsLayer'
+            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::DetailsLayer)
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
@@ -753,7 +753,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
 
-            if( m_config->m_landplace_patch && p_layer_index == 0) // AMELIORER : remplacer par une constante 'DetailsLayer'
+            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::DetailsLayer)
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
                 node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
