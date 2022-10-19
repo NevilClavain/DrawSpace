@@ -353,42 +353,46 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             }
         }
 
+        switch (m_drawpatch_mode)
+        {
+            case DRAW_ALL:
 
-        // AMELIORER : transformer ce block en switch/case
-        if( DRAW_ALL == m_drawpatch_mode )
-        {
-            draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-        }
-        else
-        {
-            if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode )
-            {
-                // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
-                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel() )
-                {                    
-                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-                }
-            }
-            else if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode && 0 == m_display_list[i]->GetLodLevel() )
-            {
-                if( check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) )
-                {
-                    // not needed ?
-                    //m_renderer->ClearDepth();
-                    
-                    // dessiner LE patch de niveau LOD 0 qui contient la camera
-                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-                }
-            }
-            else if (DRAW_MAXLODLEVEL == m_drawpatch_mode)
-            {
-                int lodlevel{ m_display_list[i]->GetLodLevel() };
-                if (/*check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) &&*/ lodlevel <= m_maxlodlevel_to_draw)
+                draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
+                break;
+
+            case DRAW_ALL_BUTLANDPLACEPATCH:
+
+                if (!check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel())
                 {
                     draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
                 }
-            }
+                break;
+
+            case DRAW_LANDPLACEPATCH_ONLY:
+
+                if(0 == m_display_list[i]->GetLodLevel())
+                {
+                    if (check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]))
+                    {
+                        // not needed ?
+                        //m_renderer->ClearDepth();
+
+                        // dessiner LE patch de niveau LOD 0 qui contient la camera
+                        draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
+                    }
+                }
+                break;
+
+            case DRAW_MAXLODLEVEL:
+
+                int lodlevel{ m_display_list[i]->GetLodLevel() };
+                if (lodlevel <= m_maxlodlevel_to_draw)
+                {
+                    draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
+                }
+                break;
         }
+
 
         //apply OUT-renderstate required for current pass...
         if (m_renderstate_per_passes.count(m_current_pass))
