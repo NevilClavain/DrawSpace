@@ -188,6 +188,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         pixels_flags_2[1] = 1.0;
     }
     */
+    
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
     m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
@@ -375,7 +376,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                     if (check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]))
                     {
                         // not needed ?
-                        //m_renderer->ClearDepth();
+                        m_renderer->ClearDepth();
 
                         // dessiner LE patch de niveau LOD 0 qui contient la camera
                         draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
@@ -723,7 +724,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             node->SetMeshe( Body::m_patch_meshe );
             node->m_debug_id = "LOWRES_MESHE for layer : " + std::to_string(p_layer_index);
 
-            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::DetailsLayer)
+            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
@@ -757,7 +758,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
 
-            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::DetailsLayer)
+            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
                 node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );

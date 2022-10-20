@@ -36,7 +36,7 @@ namespace cst
     static const dsreal     hotRelativeAlt         = 4.2;
     static const int        timerPeriod            = 20;     // ms
 
-    static const int        DetailsLayer           = 0;
+    static const int        SurfaceLayer           = 0;
     static const int        AtmosphereLayer        = 1;
     static const int        FlatCloudsLayer        = 2;
     static const int        OceansLayer            = 3;

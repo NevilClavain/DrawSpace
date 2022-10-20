@@ -407,15 +407,15 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     ViewOutInfos registeredCameraInfos;
     for(auto& e : m_registered_camerapoints)
     {
-        int currentLOD = e.second.layers[LOD::cst::DetailsLayer]->GetCurrentLOD();
-        bool relative = e.second.layers[LOD::cst::DetailsLayer]->GetHotState();
+        int currentLOD = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentLOD();
+        bool relative = e.second.layers[LOD::cst::SurfaceLayer]->GetHotState();
         dsreal rel_alt = 0.0;
         rel_alt = e.second.relative_alt;
-        dsreal altitude = e.second.layers[LOD::cst::DetailsLayer]->GetBody()->GetHotPointAltitud();
+        dsreal altitude = e.second.layers[LOD::cst::SurfaceLayer]->GetBody()->GetHotPointAltitud();
 
-        dsreal current_patch_max_height = e.second.layers[LOD::cst::DetailsLayer]->GetCurrentPatchMaxHeight();
-        dsreal current_patch_min_height = e.second.layers[LOD::cst::DetailsLayer]->GetCurrentPatchMinHeight();
-        dsreal current_patch_current_height = e.second.layers[LOD::cst::DetailsLayer]->GetCurrentPatchCurrentHeight();
+        dsreal current_patch_max_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMaxHeight();
+        dsreal current_patch_min_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMinHeight();
+        dsreal current_patch_current_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchCurrentHeight();
 
         Vector locale_camera_pos{ e.second.locale_camera_pos_from_planet };
         Vector longlat_pos{ e.second.locale_camera_long_lat };
@@ -760,7 +760,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
         switch (layer)
         {
-            case LOD::cst::DetailsLayer:
+            case LOD::cst::SurfaceLayer:
 
                 ld.enable_collisions = true;
                 ld.enable_datatextures = true;
@@ -994,7 +994,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             m_passes.insert(pass_id);
 
-            if (LOD::cst::DetailsLayer == layer)
+            if (LOD::cst::SurfaceLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> details_binders;
                 std::array<LOD::Binder*, 6> details_binders_2;
@@ -1007,7 +1007,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         details_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::DetailsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::SurfaceLayer, ro);
                     details_binders_2[orientation] = details_binder;
                 }
 
@@ -1694,7 +1694,7 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
                 { m_main_pass, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>(1, rs_pair) }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::DetailsLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::SurfaceLayer, renderstate_per_passes);
         }
         else
         {
@@ -1704,7 +1704,7 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
                 { m_main_pass, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>(1, rs_pair) }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::DetailsLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::SurfaceLayer, renderstate_per_passes);
         }
     }
 }
