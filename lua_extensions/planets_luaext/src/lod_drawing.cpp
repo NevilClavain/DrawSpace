@@ -113,7 +113,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
     const dsreal patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
-    const dsreal patch_scale{ 1.5 };
+    const dsreal patch_scale{ 1.05 };
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -376,7 +376,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                     if (check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]))
                     {
                         // not needed ?
-                        m_renderer->ClearDepth();
+                        //m_renderer->ClearDepth();
 
                         // dessiner LE patch de niveau LOD 0 qui contient la camera
                         draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
