@@ -113,7 +113,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
     const dsreal patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
-    const dsreal patch_scale{ 1.05 };
+    const dsreal patch_scale{ cst::detailsPatchScaling };
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();

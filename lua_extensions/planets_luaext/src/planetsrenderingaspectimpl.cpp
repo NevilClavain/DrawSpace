@@ -744,10 +744,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     // complete m_config layers
 
-    m_config.m_landplace_patch = enable_landplace_patch;    
-    m_config.m_lod0base = 19000.0;    
-    m_config.m_nbLODRanges_inertBodies = 15;
-    m_config.m_nbLODRanges_freeCameras = 14;
+    m_config.m_landplace_patch = enable_landplace_patch;
+
+    m_config.m_lod0base = LOD::cst::lod0base;
+    m_config.m_nbLODRanges_inertBodies = LOD::cst::nbLODRanges_inertBodies;
+    m_config.m_nbLODRanges_freeCameras = LOD::cst::nbLODRanges_freeCameras;
+
 
     m_drawable.Startup(m_owner->GetOwnerEntity());
 
