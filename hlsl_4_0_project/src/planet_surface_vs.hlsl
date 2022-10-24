@@ -202,11 +202,24 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
         v_alt = ComputeVertexHeight(v_local_pos_unit, landscape_control.x, landscape_control.y, landscape_control.z, landscape_control.w, seeds.x, seeds.y, seeds.z, seeds.w);
 
+        /*
         if (v_alt >= 0.0)
         {
             v2.xyz += landplacepatch_normale.xyz * v_alt;
 
         }
+        */
+        
+        if (relative_alt < splatting_lim_inf)
+        {
+            if (v_alt < 0.0)
+            {
+                //if ground point is under sea level, amplify ground variations
+                v_alt *= UNDERWATER_GROUND_AMPLITUDE_FACTOR;
+            }
+        }
+        v2.xyz += landplacepatch_normale.xyz * v_alt;
+
 
         //////////////////////////////////////////////////////
 
