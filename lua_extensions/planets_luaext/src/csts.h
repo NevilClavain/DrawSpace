@@ -34,8 +34,8 @@ namespace cst
     static const dsreal     detailsPatchScaling         = 1.0;
 
     static const int        lod0base                    = 19000.0;
-    static const int        nbLODRanges_inertBodies     = 17.0;
-    static const int        nbLODRanges_freeCameras     = 17.0;
+    static const int        nbLODRanges_inertBodies     = 15;
+    static const int        nbLODRanges_freeCameras     = 15;
 
     static const int        patchResolution             = 15;
     static const int        patchHighResolution         = 256;
