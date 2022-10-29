@@ -417,8 +417,8 @@ local planet_specific_config_descr =
 	]]
 
 
-	landplace_patch						         = TRUE,
-	--landplace_patch						         = FALSE,
+
+	landplace_patch						         = FALSE,
 
 	enable_atmosphere					         = TRUE,
 	atmo_thickness                               = 160.0,
