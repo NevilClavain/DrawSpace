@@ -29,11 +29,25 @@ namespace LOD
 {
 namespace cst
 {
-    static const int        nbLODRangesMax         = 20;
-    static const int        patchResolution        = 15;
-    static const int        patchHighResolution    = 256;
-    static const int        patchAvgResolution     = 256;
-    static const dsreal     hotRelativeAlt         = 4.2;
-    static const int        timerPeriod            = 20;     // ms
+    static const int        nbLODRangesMax              = 30;
+
+    static const dsreal     detailsPatchScaling         = 1.0;
+
+    static const int        lod0base                    = 19000.0;
+    static const int        nbLODRanges_inertBodies     = 15;
+    static const int        nbLODRanges_freeCameras     = 15;
+
+    static const int        patchResolution             = 15;
+    static const int        patchHighResolution         = 256;
+    static const int        patchAvgResolution          = 256;
+
+    static const dsreal     hotRelativeAlt              = 4.2;
+    static const int        timerPeriod                 = 20;     // ms
+
+    static const int        SurfaceLayer                = 0;
+    static const int        AtmosphereLayer             = 1;
+    static const int        FlatCloudsLayer             = 2;
+    static const int        OceansLayer                 = 3;
+
 }
 }

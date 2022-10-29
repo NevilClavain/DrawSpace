@@ -1361,7 +1361,7 @@ planet_layers =
 			shaders_params = 
 			{
 			},
-			rendering_order = 4500		
+			rendering_order = 4500
 		},
 
 		atmo_mirror_rendering =	
@@ -1444,7 +1444,7 @@ planet_layers =
 			shaders_params = 
 			{
 			},
-			rendering_order = 5500		
+			rendering_order = 5500
 		},
 
 		flatclouds_mirror_rendering =	

@@ -407,15 +407,15 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     ViewOutInfos registeredCameraInfos;
     for(auto& e : m_registered_camerapoints)
     {
-        int currentLOD = e.second.layers[DetailsLayer]->GetCurrentLOD();
-        bool relative = e.second.layers[DetailsLayer]->GetHotState();
+        int currentLOD = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentLOD();
+        bool relative = e.second.layers[LOD::cst::SurfaceLayer]->GetHotState();
         dsreal rel_alt = 0.0;
         rel_alt = e.second.relative_alt;
-        dsreal altitude = e.second.layers[DetailsLayer]->GetBody()->GetHotPointAltitud();
+        dsreal altitude = e.second.layers[LOD::cst::SurfaceLayer]->GetBody()->GetHotPointAltitud();
 
-        dsreal current_patch_max_height = e.second.layers[DetailsLayer]->GetCurrentPatchMaxHeight();
-        dsreal current_patch_min_height = e.second.layers[DetailsLayer]->GetCurrentPatchMinHeight();
-        dsreal current_patch_current_height = e.second.layers[DetailsLayer]->GetCurrentPatchCurrentHeight();
+        dsreal current_patch_max_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMaxHeight();
+        dsreal current_patch_min_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMinHeight();
+        dsreal current_patch_current_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchCurrentHeight();
 
         Vector locale_camera_pos{ e.second.locale_camera_pos_from_planet };
         Vector longlat_pos{ e.second.locale_camera_long_lat };
@@ -528,7 +528,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
-    m_drawable.SetLayerNodeDrawingState(AtmosphereLayer, enable_atmosphere);
+    m_drawable.SetLayerNodeDrawingState(LOD::cst::AtmosphereLayer, enable_atmosphere);
 
     for (auto& e : m_planet_flatclouds_binder_2)
     {
@@ -744,10 +744,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     // complete m_config layers
 
-    m_config.m_landplace_patch = enable_landplace_patch;    
-    m_config.m_lod0base = 19000.0;    
-    m_config.m_nbLODRanges_inertBodies = 15;
-    m_config.m_nbLODRanges_freeCameras = 14;
+    m_config.m_landplace_patch = enable_landplace_patch;
+
+    m_config.m_lod0base = LOD::cst::lod0base;
+    m_config.m_nbLODRanges_inertBodies = LOD::cst::nbLODRanges_inertBodies;
+    m_config.m_nbLODRanges_freeCameras = LOD::cst::nbLODRanges_freeCameras;
+
 
     m_drawable.Startup(m_owner->GetOwnerEntity());
 
@@ -760,7 +762,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
         switch (layer)
         {
-            case DetailsLayer:
+            case LOD::cst::SurfaceLayer:
 
                 ld.enable_collisions = true;
                 ld.enable_datatextures = true;
@@ -839,7 +841,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 m_config.m_layers_descr[layer] = ld;
                 break;
 
-            case AtmosphereLayer:
+            case LOD::cst::AtmosphereLayer:
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
@@ -855,7 +857,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 m_config.m_layers_descr[layer] = ld;
                 break;
 
-            case FlatCloudsLayer:
+            case LOD::cst::FlatCloudsLayer:
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
@@ -872,7 +874,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 m_config.m_layers_descr[layer] = ld;
                 break;
 
-            case OceansLayer:
+            case LOD::cst::OceansLayer:
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = true;
@@ -994,7 +996,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             m_passes.insert(pass_id);
 
-            if (DetailsLayer == layer)
+            if (LOD::cst::SurfaceLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> details_binders;
                 std::array<LOD::Binder*, 6> details_binders_2;
@@ -1007,7 +1009,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         details_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, DetailsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::SurfaceLayer, ro);
                     details_binders_2[orientation] = details_binder;
                 }
 
@@ -1018,7 +1020,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     m_drawable.RegisterSinglePassSlotForCollisionDisplay(pass_id, &m_collisions_display_fx, ro + 1);
                 }                
             }
-            else if (AtmosphereLayer == layer)
+            else if (LOD::cst::AtmosphereLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> atmo_binders;
                 std::array<LOD::Binder*, 6> atmo_binders_2;
@@ -1026,13 +1028,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
                     LOD::Binder* atmo_binder{ build_details_binder() };
-                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::HIRES_MESHE, AtmosphereLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::HIRES_MESHE, LOD::cst::AtmosphereLayer, ro);
                     atmo_binders_2[orientation] = atmo_binder;
                 }
 
                 m_planet_atmosphere_binder_2[pass_id] = atmo_binders_2;
             }
-            else if (FlatCloudsLayer == layer)
+            else if (LOD::cst::FlatCloudsLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> flatclouds_binders;
                 std::array<LOD::Binder*, 6>         flatclouds_binders_2;
@@ -1045,14 +1047,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         clouds_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::AVGRES_MESHE, FlatCloudsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::AVGRES_MESHE, LOD::cst::FlatCloudsLayer, ro);
                     flatclouds_binders_2[orientation] = clouds_binder;
 
                 }
 
                 m_planet_flatclouds_binder_2[pass_id] = flatclouds_binders_2;
             }
-            else if (OceansLayer == layer)
+            else if (LOD::cst::OceansLayer == layer)
             {
                 std::array<PlanetDetailsBinder*, 6> oceans_binders;
                 std::array<LOD::Binder*, 6>         oceans_binders_2;
@@ -1065,15 +1067,15 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     {
                         oceans_binder->SetTexture(wavepass_result_texture, 0);
 
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
                     else if (m_oceanmask_pass == pass_id)
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro, 1);
                     }
                     else
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro);
                     }
 
                     oceans_binders_2[orientation] = oceans_binder;
@@ -1694,7 +1696,7 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
                 { m_main_pass, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>(1, rs_pair) }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(DetailsLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::SurfaceLayer, renderstate_per_passes);
         }
         else
         {
@@ -1704,7 +1706,7 @@ void PlanetsRenderingAspectImpl::details_control_from_viewer_alt(void)
                 { m_main_pass, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>(1, rs_pair) }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(DetailsLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::SurfaceLayer, renderstate_per_passes);
         }
     }
 }
@@ -1749,7 +1751,7 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
                 { m_reflection_pass, rs_list_reflectionpass }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(FlatCloudsLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::FlatCloudsLayer, renderstate_per_passes);
         }
         else
         {
@@ -1779,7 +1781,7 @@ void PlanetsRenderingAspectImpl::flatclouds_control_from_viewer_alt(void)
                 { m_reflection_pass, rs_list_reflectionpass }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(FlatCloudsLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::FlatCloudsLayer, renderstate_per_passes);
         }
     }
 }
@@ -1796,11 +1798,11 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
 
         if (relative && relative_altitude < ocean_details_limit)
         {
-            m_drawable.SetLayerNodeDrawingState(OceansLayer, true);
+            m_drawable.SetLayerNodeDrawingState(LOD::cst::OceansLayer, true);
         }
         else
         {
-            m_drawable.SetLayerNodeDrawingState(OceansLayer, false);
+            m_drawable.SetLayerNodeDrawingState(LOD::cst::OceansLayer, false);
         }
 
         if (relative && relative_altitude < 1.0)
@@ -1819,7 +1821,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 { m_oceanmask_pass, rs_list_mainpass },
                 { m_bump_pass, rs_list_mainpass }
             };
-            m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::OceansLayer, renderstate_per_passes);
 
             ////////////////////// and set DrawPatchMode for the oceanmask rendering node
             auto nodes{ m_drawable.GetFaceDrawingNode() };
@@ -1827,7 +1829,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
             {
                 if (node.first == m_oceanmask_pass)
                 {
-                    if (OceansLayer == node.second->GetLayerIndex())
+                    if (LOD::cst::OceansLayer == node.second->GetLayerIndex())
                     {
                         node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 3);
                     }
@@ -1847,7 +1849,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 { m_bump_pass, rs_list_mainpass }
             };
 
-            m_drawable.SetRenderStatePerPassTableForLayer(OceansLayer, renderstate_per_passes);
+            m_drawable.SetRenderStatePerPassTableForLayer(LOD::cst::OceansLayer, renderstate_per_passes);
 
 
             ////////////////////// set DrawPatchMode for the oceanmask rendering node
@@ -1856,7 +1858,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
             {
                 if (node.first == m_oceanmask_pass)
                 {
-                    if (OceansLayer == node.second->GetLayerIndex())
+                    if (LOD::cst::OceansLayer == node.second->GetLayerIndex())
                     {
                         node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_ALL);
                     }
@@ -1867,7 +1869,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
     }
     else
     {
-        m_drawable.SetLayerNodeDrawingState(OceansLayer, false);
+        m_drawable.SetLayerNodeDrawingState(LOD::cst::OceansLayer, false);
     }
 }
 

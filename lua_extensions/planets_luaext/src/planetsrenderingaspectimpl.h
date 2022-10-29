@@ -109,11 +109,6 @@ protected:
 
     using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector>>;
 
-    static const int DetailsLayer       = 0;
-    static const int AtmosphereLayer    = 1;
-    static const int FlatCloudsLayer    = 2;
-    static const int OceansLayer        = 3;
-
     static const dsstring ClimateVShaderComponentName;
     static const dsstring ClimatePShaderComponentName;
 

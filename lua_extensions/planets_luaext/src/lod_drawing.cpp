@@ -112,8 +112,8 @@ void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
-    dsreal patch_dim = p_patch->GetUnitSideLenght() / 2.0 * p_ray;
-    dsreal patch_scale = 0.5;
+    const dsreal patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
+    const dsreal patch_scale{ cst::detailsPatchScaling };
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -188,6 +188,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         pixels_flags_2[1] = 1.0;
     }
     */
+    
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
     m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
@@ -353,42 +354,46 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
             }
         }
 
+        switch (m_drawpatch_mode)
+        {
+            case DRAW_ALL:
 
-        // AMELIORER : transformer ce block en switch/case
-        if( DRAW_ALL == m_drawpatch_mode )
-        {
-            draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-        }
-        else
-        {
-            if( DRAW_ALL_BUTLANDPLACEPATCH == m_drawpatch_mode )
-            {
-                // dessiner les patchs de niveau LOD 0 qui ne contiennent PAS la camera... et tout les autres
-                if( !check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel() )
-                {                    
-                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-                }
-            }
-            else if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode && 0 == m_display_list[i]->GetLodLevel() )
-            {
-                if( check_view_in_patch( p_ray, m_relativehotpoint, m_display_list[i] ) )
-                {
-                    // not needed ?
-                    //m_renderer->ClearDepth();
-                    
-                    // dessiner LE patch de niveau LOD 0 qui contient  la camera
-                    draw_single_patch( m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj );
-                }
-            }
-            else if (DRAW_MAXLODLEVEL == m_drawpatch_mode)
-            {
-                int lodlevel{ m_display_list[i]->GetLodLevel() };
-                if (/*check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) &&*/ lodlevel <= m_maxlodlevel_to_draw)
+                draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
+                break;
+
+            case DRAW_ALL_BUTLANDPLACEPATCH:
+
+                if (!check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel())
                 {
                     draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
                 }
-            }
+                break;
+
+            case DRAW_LANDPLACEPATCH_ONLY:
+
+                if(0 == m_display_list[i]->GetLodLevel())
+                {
+                    if (check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]))
+                    {
+                        // not needed ?
+                        //m_renderer->ClearDepth();
+
+                        // dessiner LE patch de niveau LOD 0 qui contient la camera
+                        draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
+                    }
+                }
+                break;
+
+            case DRAW_MAXLODLEVEL:
+
+                int lodlevel{ m_display_list[i]->GetLodLevel() };
+                if (lodlevel <= m_maxlodlevel_to_draw)
+                {
+                    draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
+                }
+                break;
         }
+
 
         //apply OUT-renderstate required for current pass...
         if (m_renderstate_per_passes.count(m_current_pass))
@@ -719,7 +724,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             node->SetMeshe( Body::m_patch_meshe );
             node->m_debug_id = "LOWRES_MESHE for layer : " + std::to_string(p_layer_index);
 
-            if( m_config->m_landplace_patch && p_layer_index == 0) // AMELIORER : remplacer par une constante 'DetailsLayer'
+            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
 
@@ -753,7 +758,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             // plus un node jupes terrain
             node_skirts->SetMeshe( Body::m_skirt_meshe );
 
-            if( m_config->m_landplace_patch && p_layer_index == 0) // AMELIORER : remplacer par une constante 'DetailsLayer'
+            if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
                 node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
                 node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
