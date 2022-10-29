@@ -429,7 +429,7 @@ local planet_specific_config_descr =
 	oceansdetails_specularpower					 = 40.0,
 
 	details_terrain_bump_bias					 = 4.0,
-	details_terrain_noise_scale					 = 1.0,
+	details_terrain_noise_scale					 = 20.0,
 	level_disturbance_scale						 = 0.11,
 	details_limit_sup							 = 1.060,
 	bump_details_limit_sup					     = 1.0060,
