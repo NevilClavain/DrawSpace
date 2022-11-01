@@ -426,7 +426,7 @@ local planet_specific_config_descr =
     wave_pass_resol                              = 512,
     ocean_bump_factor                            = 0.85,
     
-	oceansdetails_specularpower					 = 40.0,
+	oceansdetails_specularpower					 = 50.0,
 
 	details_terrain_bump_bias					 = 2.0,
 	details_terrain_noise_scale					 = 40.0,
@@ -713,7 +713,7 @@ function( key )
       elseif tab == TRUE then
         model.camera.mvt:update(speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif space == TRUE then
-        model.camera.mvt:update(speed_factor * 0.001, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
         model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
@@ -732,7 +732,7 @@ function( key )
       elseif tab == TRUE then
         model.camera.mvt:update(-speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif space == TRUE then
-        model.camera.mvt:update(-speed_factor * 0.001, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(-speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
         model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
@@ -1751,7 +1751,7 @@ planet_transform:add_matrix( "pos", planet_pos_mat )
 
 planet_revol = RevolutionTransform()
 planet_revol:configure(resurgam_planet_entity, 1.0, 1)
---planet_revol:configure(resurgam_planet_entity, 0.01, 2)
+--planet_revol:configure(resurgam_planet_entity, 1000, 2)
 
 
 
@@ -1779,7 +1779,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(141.59, -11.89, 3000.0, planet_specific_config_descr)
+set_freecam_on_planet(76.212, -27.298, 12.0, planet_specific_config_descr)
 
 
 

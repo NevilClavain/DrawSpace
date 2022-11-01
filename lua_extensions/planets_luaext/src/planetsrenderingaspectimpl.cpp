@@ -1075,7 +1075,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     }
                     else
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro);
+                        // Ocean details specular 
+
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::HIRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
 
                     oceans_binders_2[orientation] = oceans_binder;
