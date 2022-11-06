@@ -45,6 +45,9 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
 	m_tree_node(p_node),
     m_owner_graph( p_owner )
 {
+    // inscription dans la table EntityNodeGraph::m_entity_to_node
+    m_owner_graph->m_entity_to_node[m_tree_node->data()] = m_tree_node;
+
     // si on passe dans ce ctor c'est que l'entitee a été ajout�e au graph
     // donc notif de l'evt
     std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
@@ -52,9 +55,6 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
     {
         (**it )( EntityNode::ADDED_IN_TREE, m_tree_node->data() );
     }
-
-    // inscription dans la table EntityNodeGraph::m_entity_to_node
-    m_owner_graph->m_entity_to_node[m_tree_node->data()] = m_tree_node;
 }
 
 EntityNode EntityNode::AddChild(Entity* p_entity)
