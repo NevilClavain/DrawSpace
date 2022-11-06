@@ -75,9 +75,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             ////////////// PLANET WATER RENDERING
 
-            float water_color_transition_high = 1.0005; // relative alt
-            float water_color_transition_low = 1.0001; // relative alt                
-            float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
+            //float water_color_transition_high = 1.0005; // relative alt
+            //float water_color_transition_low = 1.0001; // relative alt                
+            //float alt = clamp(0.0, 1.0, (relative_alt - water_color_transition_low) / (water_color_transition_high - water_color_transition_low));
 
 
             float2 bump_factor = txBump.Sample(SamplerBump, input.TexCoord0).xz;
@@ -106,8 +106,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             }
 
             // transition between ocean "basic" color" and ocean details (reflexion + refraction)
+            //float3 pixel_color = lerp(detailed_water_color, basic_water_color, alt);
 
-            float3 pixel_color = lerp(detailed_water_color, basic_water_color, alt);
+
+
+            float3 pixel_color = detailed_water_color;
 
             float fog_factor = mask.w;
             float3 fog_color;
