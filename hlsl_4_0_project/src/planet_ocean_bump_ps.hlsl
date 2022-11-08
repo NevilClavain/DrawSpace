@@ -108,8 +108,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float relative_alt = flags.x;
 
-    float bump_bias_transition_high = 1.00025; // relative alt
-    float bump_bias_transition_low = 1.00005; // relative alt
+    float bump_bias_transition_high = 1.004; // 1.00025; // relative alt
+    float bump_bias_transition_low = 1.001; // 1.00005; // relative alt
+    float wave_scale = 0.35;
     
     if (relative_alt > 1.0)
     {
@@ -135,7 +136,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
        
     float4 res_color = 0;
     float3 np;
-    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, input.GlobalPatch_TexCoord.xy, bump_bias);
+  
+    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, input.GlobalPatch_TexCoord.xy * wave_scale, bump_bias);
 
     float4 np2;
     np2.x = np.x;
