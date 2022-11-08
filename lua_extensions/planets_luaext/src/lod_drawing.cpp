@@ -179,6 +179,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     Vector pixels_flags_2;
     pixels_flags_2[0] = cst::patchHighResolution;
+    
 
     // uncomment to see current patch
     /*
@@ -189,6 +190,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     }
     */
     
+    pixels_flags_2[2] = (dsreal)p_patch->GetLodLevel();
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
     m_renderer->SetFxShaderParams( 1, 1, pixels_flags_2 );
