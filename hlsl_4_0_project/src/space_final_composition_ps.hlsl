@@ -92,7 +92,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             float4 refrac = txDiffuse.Sample(SamplerDiffuse, mt2);
 
-            float spec = saturate(txOceanNormales.Sample(SamplerOceanNormales, mt).rgb);
+            float spec = 1.5 * saturate(txOceanNormales.Sample(SamplerOceanNormales, mt).rgb);
 
             if (relative_alt > 1.0)
             {
