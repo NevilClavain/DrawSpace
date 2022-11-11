@@ -41,6 +41,7 @@ struct PS_INTPUT
 #include "mat_input_constants.hlsl"
 
 #define v_flags             0
+#define v_flags2            1
 #define v_bump_flag         30
 
 float3 compute_water_bump_vector(int p_texture_resol, Texture2D p_water_bump_texture, SamplerState p_ss, float2 p_tex_coords, float p_vector_bias)
@@ -102,15 +103,18 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4x4 mWorldView = mat[matWorldView_ps];
 
     float4 flags = vec[v_flags];
+    float4 flags2 = vec[v_flags2];
     float4 bump_flag = vec[v_bump_flag];
 
     float bump_bias;
 
     float relative_alt = flags.x;
 
+    float lod_level = flags2.z;
+
     float bump_bias_transition_high = 1.004; // 1.00025; // relative alt
     float bump_bias_transition_low = 1.001; // 1.00005; // relative alt
-    float wave_scale = 0.35;
+    float wave_scale = 0.1;
     
     if (relative_alt > 1.0)
     {
@@ -136,8 +140,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
        
     float4 res_color = 0;
     float3 np;
+
+    float2 uvcoords = input.GlobalPatch_TexCoord.xy * wave_scale;
   
-    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, input.GlobalPatch_TexCoord.xy * wave_scale, bump_bias);
+    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, uvcoords * pow(2.0, lod_level - 1), bump_bias);
 
     float4 np2;
     np2.x = np.x;
