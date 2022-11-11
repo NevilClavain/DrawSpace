@@ -112,9 +112,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float lod_level = flags2.z;
 
-    float bump_bias_transition_high = 1.004; // 1.00025; // relative alt
-    float bump_bias_transition_low = 1.001; // 1.00005; // relative alt
-    float wave_scale = 0.1;
+    float bump_bias_transition_high = 1.008;
+    float bump_bias_transition_low = 1.004;
+    float wave_scale = 0.35;
     
     if (relative_alt > 1.0)
     {
