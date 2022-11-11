@@ -349,24 +349,52 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory( &sampDesc, sizeof(sampDesc) );
 
-    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     sampDesc.MinLOD = 0;
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
+
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
     hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_pointFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
 
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    hRes = m_lpd3ddevice->CreateSamplerState(&sampDesc, &m_pointFilterSamplerState_uvwrap);
+    D3D11_CHECK(CreateSamplerState)
+
+
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_linearFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
 
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    hRes = m_lpd3ddevice->CreateSamplerState(&sampDesc, &m_linearFilterSamplerState_uvwrap);
+    D3D11_CHECK(CreateSamplerState)
+
+
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
     hRes = m_lpd3ddevice->CreateSamplerState( &sampDesc, &m_anisotropicFilterSamplerState );
     D3D11_CHECK( CreateSamplerState )
+
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    hRes = m_lpd3ddevice->CreateSamplerState(&sampDesc, &m_anisotropicFilterSamplerState_uvwrap);
+    D3D11_CHECK(CreateSamplerState)
+
 
     ID3D11SamplerState* ss_array[1] = { m_pointFilterSamplerState };
 
@@ -619,6 +647,12 @@ void D3D11Renderer::Release( void )
     D3D11_RELEASE( m_anisotropicFilterSamplerState );
     D3D11_RELEASE( m_linearFilterSamplerState );
     D3D11_RELEASE( m_pointFilterSamplerState );
+
+    D3D11_RELEASE(m_anisotropicFilterSamplerState_uvwrap);
+    D3D11_RELEASE(m_linearFilterSamplerState_uvwrap);
+    D3D11_RELEASE(m_pointFilterSamplerState_uvwrap);
+
+
     m_fontWrapper->Release();
     D3D11_RELEASE( m_pDepthStencilView );
     D3D11_RELEASE( m_pDepthStencil );
@@ -2234,7 +2268,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
         case DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE:
             {
-                ID3D11SamplerState* ss_array[1];
+                ID3D11SamplerState* ss_array[1] = { nullptr };
 
                 if( "none" == arg )
                 {
@@ -2251,6 +2285,22 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                 else if( "anisotropic" == arg )
                 {
                     ss_array[0] = m_anisotropicFilterSamplerState;
+                }
+                else if ("point_uvwrap" == arg)
+                {
+                    ss_array[0] = m_pointFilterSamplerState_uvwrap;
+                }
+                else if ("linear_uvwrap" == arg)
+                {
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                }
+                else if ("anisotropic_uvwrap" == arg)
+                {
+                    ss_array[0] = m_anisotropicFilterSamplerState_uvwrap;
+                }
+                else
+                {
+                    ss_array[0] = m_pointFilterSamplerState;
                 }
 
                 for( long i = 0; i < 8; i++ )
@@ -2263,23 +2313,39 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
         case DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE:
             {
-                ID3D11SamplerState* ss_array[1];
+                ID3D11SamplerState* ss_array[1] = { nullptr };
 
-                if( "none" == arg )
+                if ("none" == arg)
                 {
                     ss_array[0] = m_pointFilterSamplerState;
                 }
-                else if( "point" == arg )
+                else if ("point" == arg)
                 {
                     ss_array[0] = m_pointFilterSamplerState;
                 }
-                else if( "linear" == arg )
+                else if ("linear" == arg)
                 {
                     ss_array[0] = m_linearFilterSamplerState;
                 }
-                else if( "anisotropic" == arg )
+                else if ("anisotropic" == arg)
                 {
                     ss_array[0] = m_anisotropicFilterSamplerState;
+                }
+                else if ("point_uvwrap" == arg)
+                {
+                    ss_array[0] = m_pointFilterSamplerState_uvwrap;
+                }
+                else if ("linear_uvwrap" == arg)
+                {
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                }
+                else if ("anisotropic_uvwrap" == arg)
+                {
+                    ss_array[0] = m_anisotropicFilterSamplerState_uvwrap;
+                }
+                else
+                {
+                    ss_array[0] = m_pointFilterSamplerState;
                 }
 
                 for( long i = 0; i < 8; i++ )
