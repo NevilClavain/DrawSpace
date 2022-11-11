@@ -1071,13 +1071,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     }
                     else if (m_oceanmask_pass == pass_id)
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro, 1);
                     }
                     else
                     {
                         // Ocean details specular 
 
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::HIRES_MESHE, LOD::cst::OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
 
                     oceans_binders_2[orientation] = oceans_binder;
