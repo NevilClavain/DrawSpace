@@ -306,8 +306,8 @@ local planet_specific_config_descr =
 	splat_texture_resol					         = 16,
     zbuffer_activation_relative_alt              = 1.045,
 	atmo_kr								         = 0.0033,
-	fog_alt_limit						         = 2800.0,
-	fog_density							         = 0.002700,
+	fog_alt_limit						         = 60.0,
+	fog_density							         = 0.010000,
 
 
 

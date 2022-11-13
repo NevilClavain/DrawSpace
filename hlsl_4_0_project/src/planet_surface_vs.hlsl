@@ -444,13 +444,13 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     
     if (relative_alt > 1.0 || !oceans_enabled)
     {
-        float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
-        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
+        float fog_factor = saturate(atmo_scattering_flag_5.y / alt);
+        Output.Fog = saturate(ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor)));
     }
     else
     {
         // underwater
-        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.04));
+        Output.Fog = saturate(ComputeExp2Fog(PositionWV, 0.04));
     }
     
     Output.LocalePos = v_position2.xyz;
