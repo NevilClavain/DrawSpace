@@ -323,7 +323,7 @@ local planet_specific_config_descr =
 	k_polar										 = 0.25,
 	k_tropical									 = 0.75,
 	humidity_alt_max							 = 90.0,
-	temp_dec_per_km								 = 240.0,
+	temp_dec_per_km								 = 180.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = TRUE,
 
@@ -429,7 +429,7 @@ local planet_specific_config_descr =
 	oceansdetails_specularpower					 = 50.0,
 
 	
-	details_terrain_bump_bias					 = 5.0,
+	details_terrain_bump_bias					 = 3.5,
 	
 
 	details_terrain_noise_scale					 = 40.0,
