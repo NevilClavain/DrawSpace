@@ -307,7 +307,7 @@ local planet_specific_config_descr =
     zbuffer_activation_relative_alt              = 1.045,
 	atmo_kr								         = 0.0033,
 	fog_alt_limit						         = 60.0,
-	fog_density							         = 0.010000,
+	fog_density							         = 0.01,
 
 
 
@@ -323,7 +323,7 @@ local planet_specific_config_descr =
 	k_polar										 = 0.25,
 	k_tropical									 = 0.75,
 	humidity_alt_max							 = 90.0,
-	temp_dec_per_km								 = 280.0,
+	temp_dec_per_km								 = 240.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = TRUE,
 
@@ -428,7 +428,10 @@ local planet_specific_config_descr =
     
 	oceansdetails_specularpower					 = 50.0,
 
-	details_terrain_bump_bias					 = 2.0,
+	
+	details_terrain_bump_bias					 = 5.0,
+	
+
 	details_terrain_noise_scale					 = 40.0,
 	level_disturbance_scale						 = 0.24,
 	details_limit_sup							 = 1.40,
@@ -1779,7 +1782,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(76.212, -27.298, 12.0, planet_specific_config_descr)
+set_freecam_on_planet(110.011, -20.322, 100.0, planet_specific_config_descr)
 
 
 
