@@ -64,7 +64,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     
     float4 scene_color = 0.0;
-    float4 basic_water_color = { 0.17, 0.36, 0.48, 1.0 };
+    float4 basic_water_color = { 1.0, 1.0, 1.0, 1.0 };
     
     if (debug_mode == 0.0)
     {
@@ -88,15 +88,18 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             
             float light_luminance = mask.x;
             float3 detailed_water_color;
+            float spec_gain = 1.5;
+
+            float refraction_gain = 2.0;
 
 
             float4 refrac = txDiffuse.Sample(SamplerDiffuse, mt2);
 
-            float spec = 1.5 * saturate(txOceanNormales.Sample(SamplerOceanNormales, mt).rgb);
+            float spec = spec_gain * saturate(txOceanNormales.Sample(SamplerOceanNormales, mt).rgb);
 
             if (relative_alt > 1.0)
             {
-                float reflex_refrac_factor = mask.y;
+                float reflex_refrac_factor = saturate(mask.y * refraction_gain);
                 float3 mirror = txDiffuseMirror.Sample(SamplerDiffuseMirror, mt).rgb;
                 detailed_water_color = (basic_water_color * lerp(mirror, refrac, lerp(0.0, 1.0, reflex_refrac_factor))) + spec;
             }
