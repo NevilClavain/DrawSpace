@@ -1196,17 +1196,20 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                 reg_camera.parent_body_transform_aspect = nullptr;
 
                 int nbLODS;
+                bool is_freecamera;
                 if (is_registeredcam_from_body(reg_camera))
                 {
                     // camera attachee a un body
                     nbLODS = m_config.m_nbLODRanges_inertBodies;
+                    is_freecamera = false;
                 }
                 else
                 {
                     // free camera point
                     nbLODS = m_config.m_nbLODRanges_freeCameras;
+                    is_freecamera = true;
                 }
-                create_camera_collisions(reg_camera, false, nbLODS);
+                create_camera_collisions(reg_camera, false, nbLODS, is_freecamera);
                 m_registered_camerapoints[camera_name] = reg_camera;
 
                 //////////////////////////////////////////////////////////////////////////////////////////
@@ -1464,12 +1467,12 @@ void PlanetsRenderingAspectImpl::on_render_event(RenderPassNodeGraph::RenderPass
     }
 }
 
-void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate, int p_nbLODs)
+void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate, int p_nbLODs, bool p_freecamera)
 {
     for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
     {
         LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, p_nbLODs, m_config.m_layers_descr[i].description));
-        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, &m_collisionmeshe_update_cb, i));
+        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, &m_collisionmeshe_update_cb, i, p_freecamera));
 
         layer->SetHotState(p_hotstate);
 

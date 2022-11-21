@@ -283,7 +283,7 @@ local planet_specific_config_descr =
 	collision_vshader_compiled			         = FALSE,
 	collision_pshader_compiled			         = FALSE,
 
-    enable_collisionmeshe_display                = FALSE,
+    enable_collisionmeshe_display                = TRUE, --FALSE,
     collisionmeshe_display_vshader               = "color_vs.hlsl",
     collisionmeshe_display_pshader               = "color_ps.hlsl",
     collisionmeshe_display_vshader_compiled      = FALSE,
@@ -1764,7 +1764,7 @@ g:print("Planet creation done...")
 
 -- on planet
 
-set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
+set_body_on_planet(66.403, -26.193, 360.0, planet_specific_config_descr)
 
 -- on space
 --bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(-160.0, 0.0, -500.0)
