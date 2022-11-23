@@ -1797,7 +1797,7 @@ set_freecam_on_planet(110.011, -20.322, 100.0, planet_specific_config_descr)
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 
-camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 110.0, 500.0, viewport_width,viewport_height, "ship_camera")
+camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 50.0, 35.0, viewport_width,viewport_height, "ship_camera")
 
 
 camera2_entity:setup_info( "referent_body", "Bellorophon" )
