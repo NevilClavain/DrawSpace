@@ -203,32 +203,32 @@ float4 bump_bias_vector(float2 p_tex_coords, Texture2D p_txBump, SamplerState p_
 float4 bump_bias_vector_from_height_values(float p_bump_center, float p_bump_left, float p_bump_right, float p_bump_up, float p_bump_down, float p_vector_bias)
 {
     
-    float4 bump_left = p_bump_left;
-    float4 bump_right = p_bump_right;
-    float4 bump_up = p_bump_up;
-    float4 bump_down = p_bump_down;
+    float bump_left = p_bump_left;
+    float bump_right = p_bump_right;
+    float bump_up = p_bump_up;
+    float bump_down = p_bump_down;
     float bump_center = p_bump_center;
 
     float vector_bias = p_vector_bias;
     float3 vec_left;
     vec_left.x = -vector_bias;
     vec_left.y = 0.0;
-    vec_left.z = clamp(bump_left - bump_center, -1.0, 1.0);
+    vec_left.z = bump_left - bump_center; // clamp(bump_left - bump_center, -1.0, 1.0);
 
     float3 vec_right;
     vec_right.x = vector_bias;
     vec_right.y = 0.0;
-    vec_right.z = clamp(bump_right - bump_center, -1.0, 1.0);
+    vec_right.z = bump_right - bump_center; // clamp(bump_right - bump_center, -1.0, 1.0);
 
     float3 vec_up;
     vec_up.x = 0.0;
     vec_up.y = -vector_bias;
-    vec_up.z = clamp(bump_up - bump_center, -1.0, 1.0);
+    vec_up.z = bump_up - bump_center; // clamp(bump_up - bump_center, -1.0, 1.0);
 
     float3 vec_down;
     vec_down.x = 0.0;
     vec_down.y = vector_bias;
-    vec_down.z = clamp(bump_down - bump_center, -1.0, 1.0);
+    vec_down.z = bump_down - bump_center; // clamp(bump_down - bump_center, -1.0, 1.0);
 
     float3 vec1 = normalize(cross(vec_right, vec_down));
     float3 vec2 = normalize(cross(vec_down, vec_left));

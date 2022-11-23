@@ -41,7 +41,7 @@ using namespace LOD;
 Layer::Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body, 
                 Layer::SubPassCreationHandler* p_subpass_creation_handler, 
                 CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
-                int p_index) :
+                int p_index, bool p_freecamera) :
 m_entitynodegraph(p_eg),
 m_config(p_config),
 m_body(p_body),
@@ -51,7 +51,24 @@ m_hot(false),
 m_current_lod(-1),
 m_meshe_collision_shape(m_hm_meshe)
 {
-    m_collisions = m_config->m_layers_descr[p_index].enable_collisions;
+
+    if (m_config->m_layers_descr[p_index].enable_collisions)
+    {
+        if (p_freecamera)
+        {
+            m_collisions = false;
+        }
+        else
+        {
+            m_collisions = true;
+        }
+    }
+    else
+    {
+        m_collisions = false;
+    }
+
+
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
     if (m_collisions)
@@ -141,6 +158,7 @@ void Layer::Compute(void)
     {
         m_current_patch = curr_patch;
 
+        
         for (int i = 0; i < 4; i++)
         {
             if (nullptr == curr_patch->GetParent())
@@ -149,10 +167,11 @@ void Layer::Compute(void)
             }
             curr_patch = curr_patch->GetParent();
         }
+        
         m_collision_patch = curr_patch;
 
 
-        if (m_collisions && m_collision_patch && m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatchLOD() == 0)
+        if (m_collisions && m_collision_patch && m_current_lod == 0)
         {
             if (curr_patch->GetOrientation() == m_body->GetCurrentFace())
             {

@@ -73,27 +73,27 @@ struct VS_OUTPUT
     float3 Half2                    : TEXCOORD6;
 };
 
-float4 HalfVector(float4 p_pos, float4 p_lightdir, float4x4 p_cammat, float4x4 p_worldmat)
+float4 HalfVector(float4 p_pos, float3 p_lightdir, float4x4 p_worldmat, float3 p_viewerpos)
 {
-    float4 CamPos;
     float4 Pos2;
     float3 nView;
     float3 nLight;
 
-    CamPos[0] = p_cammat[3][0];
-    CamPos[1] = p_cammat[3][1];
-    CamPos[2] = p_cammat[3][2];
-    CamPos[3] = 1.0;
+    float4x4 worldmatRot = p_worldmat;
+    worldmatRot[3][0] = 0.0;
+    worldmatRot[3][1] = 0.0;
+    worldmatRot[3][2] = 0.0;
 
-    Pos2 = mul(p_pos, p_worldmat);
-    nView = normalize(CamPos.xyz - Pos2.xyz);
+    Pos2 = mul(p_pos, worldmatRot);
+
+    nView = normalize(p_viewerpos.xyz - Pos2.xyz);
 
     nLight = normalize(p_lightdir.xyz);
 
     float4 H;
-    H.xyz = nLight + nView;
+    H.xyz = normalize(nLight + nView);
     H.w = 0.0;
-    return normalize(H);
+    return H;
 }
 
 
@@ -167,7 +167,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     
     if (flags_lights.y > 0.0)
     {
-        Output.Half0 = HalfVector(v_position3, light0_dir, mat_Cam, mat_World);
+        Output.Half0 = HalfVector(v_position3, light0_dir.xyz, mat_World, viewer_pos.xyz);
     }
     else
     {
@@ -176,7 +176,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     if (flags_lights.z > 0.0)
     {
-        Output.Half1 = HalfVector(v_position3, light1_dir, mat_Cam, mat_World);
+        Output.Half1 = HalfVector(v_position3, light1_dir.xyz, mat_World, viewer_pos.xyz);
     }
     else
     {
@@ -185,7 +185,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     if (flags_lights.w > 0.0)
     {
-        Output.Half2 = HalfVector(v_position3, light2_dir, mat_Cam, mat_World);
+        Output.Half2 = HalfVector(v_position3, light2_dir.xyz, mat_World, viewer_pos.xyz);
     }
     else
     {

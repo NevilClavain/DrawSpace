@@ -240,7 +240,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         
 
-        float details_terrain_bump_bias = terrain_bump_flag.y;
+        
 
 
         float lacunarity = 4.0;
@@ -254,23 +254,21 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, 4, lacunarity, roughness, 0.0);
 
 
-        // WIP
-        //float details_mask = 1.0; // saturate(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
+        float lacunarity_mask = 4.0;
+        float roughness_mask = 1.46;
 
 
-        float4 normale_delta_for_details;
-        normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
-        
+        float details_mask = clamp(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity_mask, roughness_mask, 0.0), 0.35, 0.999);
+        float details_terrain_bump_bias = terrain_bump_flag.y;
+
+        float4 normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
 
         ////////////////////////////////////////////////////////////////
 
-        texel_pos.x += /*details_mask * */ ground_bump_details_factor_depth * ground_bump_details_factor_alt * normale_delta_for_details.x;
-        texel_pos.y += /* details_mask * */ ground_bump_details_factor_depth * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
-
-
+        texel_pos.x += details_mask * ground_bump_details_factor_depth * ground_bump_details_factor_alt * normale_delta_for_details.x;
+        texel_pos.y += details_mask * ground_bump_details_factor_depth * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
         texel_pos = normalize(texel_pos);
-
     }
 
     int count_lights = 0;

@@ -205,7 +205,7 @@ protected:
     void                                        on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent);
     void                                        on_render_event(DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent p_evt, const dsstring& p_pass);
 
-    void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate);
+    void                                        create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate, int p_nbLODs, bool p_freecamera);
 
     void                                        draw_sub_passes(void);
 
@@ -223,6 +223,7 @@ protected:
     void                                        release_collisions_aspect(void);
 
     std::vector<RegisteredBody>                 get_bodies_list_from_registered_cams();
+    bool                                        is_registeredcam_from_body(const RegisteredCamera& p_camera) const;
    
 public:
     PlanetsRenderingAspectImpl( void );

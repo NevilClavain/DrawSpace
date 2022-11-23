@@ -108,7 +108,7 @@ public:
     Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body,
             Layer::SubPassCreationHandler* p_subpass_creation_handler, 
             CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
-            int p_index );
+            int p_index, bool p_freecamera);
 
     ~Layer(void);
 

@@ -1071,11 +1071,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     }
                     else if (m_oceanmask_pass == pass_id)
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro, 1);
                     }
                     else
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro);
+                        // Ocean details specular 
+
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
 
                     oceans_binders_2[orientation] = oceans_binder;
@@ -1193,8 +1195,21 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
                 reg_camera.owner_entity = p_entity;
                 reg_camera.parent_body_transform_aspect = nullptr;
 
-                create_camera_collisions(reg_camera, false);
-
+                int nbLODS;
+                bool is_freecamera;
+                if (is_registeredcam_from_body(reg_camera))
+                {
+                    // camera attachee a un body
+                    nbLODS = m_config.m_nbLODRanges_inertBodies;
+                    is_freecamera = false;
+                }
+                else
+                {
+                    // free camera point
+                    nbLODS = m_config.m_nbLODRanges_freeCameras;
+                    is_freecamera = true;
+                }
+                create_camera_collisions(reg_camera, false, nbLODS, is_freecamera);
                 m_registered_camerapoints[camera_name] = reg_camera;
 
                 //////////////////////////////////////////////////////////////////////////////////////////
@@ -1452,12 +1467,12 @@ void PlanetsRenderingAspectImpl::on_render_event(RenderPassNodeGraph::RenderPass
     }
 }
 
-void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate)
+void PlanetsRenderingAspectImpl::create_camera_collisions(PlanetsRenderingAspectImpl::RegisteredCamera& p_cameradescr, bool p_hotstate, int p_nbLODs, bool p_freecamera)
 {
     for (size_t i = 0; i < m_config.m_layers_descr.size(); i++)
     {
-        LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, m_config.m_nbLODRanges_freeCameras, m_config.m_layers_descr[i].description));
-        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, &m_collisionmeshe_update_cb, i));
+        LOD::Body* slod_body = _DRAWSPACE_NEW_(LOD::Body, LOD::Body(&m_config, i, &m_subpass_creation_cb, p_nbLODs, m_config.m_layers_descr[i].description));
+        LOD::Layer* layer = _DRAWSPACE_NEW_(LOD::Layer, LOD::Layer(m_entitynodegraph, &m_config, slod_body, &m_subpass_creation_cb, &m_collisionmeshe_update_cb, i, p_freecamera));
 
         layer->SetHotState(p_hotstate);
 
@@ -1488,6 +1503,32 @@ void PlanetsRenderingAspectImpl::SetEntityNodeGraph(EntityGraph::EntityNodeGraph
         m_entitynodegraph->UnregisterNodesEvtHandler( &m_nodes_evt_cb );
     }
     m_entitynodegraph = p_entitynodegraph;
+}
+
+bool PlanetsRenderingAspectImpl::is_registeredcam_from_body(const RegisteredCamera& p_camera) const
+{
+    bool status{ false };
+
+    // search if has parent with rigidbodytransformaspectimpl, to apply gravity on it when it is relative (see manage_gravity_targets)
+    std::vector<Entity*> ancestors;
+    m_entitynodegraph->GetEntityAncestorsList(p_camera.owner_entity, ancestors);
+    for (auto& e : ancestors)
+    {
+        TransformAspect* curr_transforms_aspect{ e->GetAspect<TransformAspect>() };
+        if (curr_transforms_aspect)
+        {
+            auto impls{ curr_transforms_aspect->GetTransformAspectImplsList() };
+            for (auto& impl : impls)
+            {
+                RigidBodyTransformAspectImpl* rigidbodyimpl = dynamic_cast<RigidBodyTransformAspectImpl*>(impl.second);
+                if (rigidbodyimpl)
+                {
+                    status = true;
+                }
+            }
+        }
+    }
+    return status;
 }
 
 std::vector<PlanetsRenderingAspectImpl::RegisteredBody> PlanetsRenderingAspectImpl::get_bodies_list_from_registered_cams()

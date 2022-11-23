@@ -150,15 +150,15 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     float alt = length(viewer_pos) - atmo_scattering_flag_0.y;
 
-    float fog_factor_alt = 1.0 - clamp(alt / atmo_scattering_flag_5.y, 0.0, 1.0);
+    float fog_factor = saturate(atmo_scattering_flag_5.y / alt);
 
     if (relative_alt < 1.0)
     {
-        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, 0.001));
+        Output.Fog = saturate(ComputeExp2Fog(PositionWV, 0.001));
     }
     else
     {
-        Output.Fog = clamp(0.0, 1.0, ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor_alt)));
+        Output.Fog = saturate(ComputeExp2Fog(PositionWV, lerp(0.0, atmo_scattering_flag_5.z, fog_factor)));
     }
 
     return (Output);

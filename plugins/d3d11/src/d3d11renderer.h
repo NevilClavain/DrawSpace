@@ -172,9 +172,14 @@ protected:
     ID3D11DepthStencilView*                                         m_currentView;
     ID3D11RenderTargetView*                                         m_currentTarget;
 
-    ID3D11SamplerState*                                             m_linearFilterSamplerState;
-    ID3D11SamplerState*                                             m_pointFilterSamplerState;
-    ID3D11SamplerState*                                             m_anisotropicFilterSamplerState;
+    ID3D11SamplerState*                                             m_linearFilterSamplerState { nullptr };
+    ID3D11SamplerState*                                             m_pointFilterSamplerState { nullptr };
+    ID3D11SamplerState*                                             m_anisotropicFilterSamplerState { nullptr };
+
+    ID3D11SamplerState*                                             m_linearFilterSamplerState_uvwrap { nullptr };
+    ID3D11SamplerState*                                             m_pointFilterSamplerState_uvwrap { nullptr };
+    ID3D11SamplerState*                                             m_anisotropicFilterSamplerState_uvwrap { nullptr };
+
 
     ID3D11Texture2D*                                                m_pDepthStencil; 
     ID3D11DepthStencilView*                                         m_pDepthStencilView;

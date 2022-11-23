@@ -6,7 +6,7 @@ include('procplanet_model.lua')
 include('impostors_model.lua')
 
 
-local speed_factor = 1500.0
+local speed_factor = 500.0
 
 local relative_ack = FALSE
 
@@ -283,7 +283,7 @@ local planet_specific_config_descr =
 	collision_vshader_compiled			         = FALSE,
 	collision_pshader_compiled			         = FALSE,
 
-    enable_collisionmeshe_display                = FALSE,
+    enable_collisionmeshe_display                = TRUE, --FALSE,
     collisionmeshe_display_vshader               = "color_vs.hlsl",
     collisionmeshe_display_pshader               = "color_ps.hlsl",
     collisionmeshe_display_vshader_compiled      = FALSE,
@@ -294,7 +294,7 @@ local planet_specific_config_descr =
     bump_pass                                    = 'bump_pass',
     oceanmask_pass                               = 'oceanmask_pass',
 
-	planet_ray							         = 6500.0,
+	planet_ray							         = 100.0,
     gravity_acc                                  = 9.81,
 	plains_seed1						         = 89189.0,
 	plains_seed2						         = 233.0,
@@ -304,26 +304,26 @@ local planet_specific_config_descr =
 	splat_transition_up_relative_alt	         = 1.095,
 	splat_transition_down_relative_alt	         = 1.0040,
 	splat_texture_resol					         = 16,
-    zbuffer_activation_relative_alt              = 1.004,
+    zbuffer_activation_relative_alt              = 1.045,
 	atmo_kr								         = 0.0033,
-	fog_alt_limit						         = 30000.0,
-	fog_density							         = 0.000031,
+	fog_alt_limit						         = 60.0,
+	fog_density							         = 0.01,
 
 
 
 	-- earth-like planet
 
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 13000.0,
+	plains_amplitude					         = 130.0,
+	mountains_amplitude					         = 380.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,
-	lim_polar									 = 0.38,
-	lim_tropical							     = 0.87,
+	lim_polar									 = 0.18,
+	lim_tropical							     = 0.77,
 	k_polar										 = 0.25,
 	k_tropical									 = 0.75,
 	humidity_alt_max							 = 90.0,
-	temp_dec_per_km								 = 8.0,
+	temp_dec_per_km								 = 180.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = TRUE,
 
@@ -421,18 +421,21 @@ local planet_specific_config_descr =
 	landplace_patch						         = FALSE,
 
 	enable_atmosphere					         = TRUE,
-	atmo_thickness                               = 160.0,
-    flatclouds_altitude                          = 24.0,
+	atmo_thickness                               = 4.0,
+    flatclouds_altitude                          = 1.0,
     wave_pass_resol                              = 512,
     ocean_bump_factor                            = 0.85,
     
-	oceansdetails_specularpower					 = 40.0,
+	oceansdetails_specularpower					 = 50.0,
 
-	details_terrain_bump_bias					 = 4.0,
-	details_terrain_noise_scale					 = 20.0,
-	level_disturbance_scale						 = 0.11,
-	details_limit_sup							 = 1.060,
-	bump_details_limit_sup					     = 1.0060,
+	
+	details_terrain_bump_bias					 = 3.5,
+	
+
+	details_terrain_noise_scale					 = 40.0,
+	level_disturbance_scale						 = 0.24,
+	details_limit_sup							 = 1.40,
+	bump_details_limit_sup					     = 1.30,
 	ground_bump_details_factor_depth_distance	 = 8000.0,
 
 }
@@ -645,7 +648,7 @@ function( xm, ym, dx, dy )
 
     local mvt_info = { model.camera.mvt:read() }
     if mouse_right == FALSE then
-  	  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],-dy / 4.0,-dx / 4.0, 0)
+  	  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],-dy / 8.0,-dx / 8.0, 0)
     else
 	  model.camera.mvt:update(mvt_info[4],mvt_info[1],mvt_info[2],mvt_info[3],0,0,-dx)
     end
@@ -1538,7 +1541,7 @@ planet_layers =
 				},
 				rs_in = 
 				{					
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear_uvwrap" },
 					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"}
 				},
 				rs_out =
@@ -1746,11 +1749,12 @@ planet_transform:configure(resurgam_planet_entity,0)
 
 planet_pos_mat = Matrix()
 planet_pos_mat:translation( 0.0, 0.0, -40620000.0 )
+--planet_pos_mat:translation( 0.0, 0.0, 0.0 )
 planet_transform:add_matrix( "pos", planet_pos_mat )
 
 planet_revol = RevolutionTransform()
 planet_revol:configure(resurgam_planet_entity, 1.0, 1)
---planet_revol:configure(resurgam_planet_entity, 0.01, 2)
+--planet_revol:configure(resurgam_planet_entity, 1000, 2)
 
 
 
@@ -1760,7 +1764,7 @@ g:print("Planet creation done...")
 
 -- on planet
 
-set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
+set_body_on_planet(66.403, -26.193, 360.0, planet_specific_config_descr)
 
 -- on space
 --bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(-160.0, 0.0, -500.0)
@@ -1778,7 +1782,7 @@ set_body_on_planet(66.803, -27.193, 360.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(141.59, -11.89, 3000.0, planet_specific_config_descr)
+set_freecam_on_planet(110.011, -20.322, 100.0, planet_specific_config_descr)
 
 
 
@@ -1793,7 +1797,7 @@ set_freecam_on_planet(141.59, -11.89, 3000.0, planet_specific_config_descr)
 
 renderer_descr, renderer_width, renderer_height, renderer_fullscreen, viewport_width, viewport_height = renderer:descr()
 
-camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 110.0, 500.0, viewport_width,viewport_height, "ship_camera")
+camera2_entity, camera2_pos=commons.create_fps_camera(0.0, 50.0, 35.0, viewport_width,viewport_height, "ship_camera")
 
 
 camera2_entity:setup_info( "referent_body", "Bellorophon" )
