@@ -94,6 +94,9 @@ create_ship = function(attitude_and_pos_mat)
   rigibody_transform:configure_force("main prop", Vector(0.0, 0.0, -5000.0, 0.0), LOCALE_FORCE, FALSE)
   rigibody_transform:configure_force("reverse prop", Vector(0.0, 0.0, 5000.0, 0.0), LOCALE_FORCE, FALSE)
 
+  rigibody_transform:configure_force("up prop", Vector(0.0, 3500.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
+  
+
   rigibody_transform:configure_torque("pitch_down", Vector(-150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
   rigibody_transform:configure_torque("pitch_up", Vector(150000.0, 0.0, 0.0, 0.0), LOCALE_FORCE, FALSE)
 
@@ -777,6 +780,8 @@ function( key )
     root_entity:update_timescale(NORMAL_TIME)
 
   elseif key == 68 then --'D'
+
+	bellerophon_rigibody_transform:update_forcestate("up prop", TRUE)
     
 
   elseif key == 67 then --'C'
@@ -881,6 +886,8 @@ function( key )
     
 
   elseif key == 68 then --'D'
+
+	bellerophon_rigibody_transform:update_forcestate("up prop", FALSE)
     
 
   elseif key == 67 then --'C'
@@ -1782,7 +1789,7 @@ set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(110.011, -20.322, 100.0, planet_specific_config_descr)
+set_freecam_on_planet(66.2, -26.093, 100.0, planet_specific_config_descr)
 
 
 
