@@ -31,6 +31,10 @@ cbuffer legacyargs : register(b0)
 Texture2D       Pixels_HTMap_Texture            : register(t0);
 SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
 
+Texture2D       UltraDetails_Texture            : register(t1);
+SamplerState    UltraDetails_Texture_Sampler    : register(s2);
+
+
 Texture2D       HT_Texture                      : register(t7);
 SamplerState    HT_Texture_sampler              : register(s7);
 
@@ -162,7 +166,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 final_color = 1.0;
     float4 lit_color = 0.0;
+    
     float4 pixel_color = 0.0;
+    float4 ht_pixel_color = 0.0;
+    float4 ultra_details_pixel_color = 0.0;
 
     float4 temp_humidity = HT_Texture.Sample(HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy);
 
@@ -345,18 +352,23 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         float level_disturbance_scale = terrain_bump_flag.w;
         
-        pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy); //tex2D(Pixels_HTMap_Texture, temp_humidity);
-        
-
-
+        ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
         /*
         float lacunarity = 4.0;
         float roughness = 1.46;
-        float scale = 2.75; 
+        float scale = 2.75;
         pixel_color.x = saturate(Fractal_fBm_classic_perlin(0.25 * scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
         pixel_color.yz = 0.0;
         pixel_color.w = 1.0;
         */
+
+
+
+        ultra_details_pixel_color = UltraDetails_Texture.Sample(UltraDetails_Texture_Sampler, input.UnitPatch_TexCoord);
+        pixel_color = lerp(ultra_details_pixel_color, ht_pixel_color, 1.0);
+
+
+
         
     }
     
