@@ -337,6 +337,7 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.UnitPatch_TexCoord = 0.0;
     Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
     Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
+    Output.UnitPatch_TexCoord.z = PositionWV.z;
 
 	
     Output.GlobalPatch_TexCoord = 0.0;

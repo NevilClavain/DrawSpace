@@ -151,6 +151,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     bool oceans_enabled = vec[v_flag32].x;
 
+    float lod_level = flags2.z;
+
     /////////////////////////////////////////////////////////////////////////
 
     float planet_ray = flags.z;
@@ -185,6 +187,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float relative_alt = flags.x;
 
     float pixel_distance = input.LODGlobalPatch_TexCoord.w;
+
+
+    float pixel_depth = abs(input.UnitPatch_TexCoord.z);
 
     if (relative_alt <= flags6.w)
     {
@@ -362,14 +367,20 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         pixel_color.w = 1.0;
         */
 
-
+        float ultra_details_max_distance = 80.0;
 
         ultra_details_pixel_color = UltraDetails_Texture.Sample(UltraDetails_Texture_Sampler, input.UnitPatch_TexCoord);
-        pixel_color = lerp(ultra_details_pixel_color, ht_pixel_color, 1.0);
 
+        float ultra_details_pixel_color_lum = 0.299 * ultra_details_pixel_color.r + 0.587 * ultra_details_pixel_color.g + 0.114 * ultra_details_pixel_color.b;
 
+        float ultra_details_pixels_lerp = 0.0;
 
-        
+        if (lod_level < 3)
+        {
+            ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
+        }
+       
+        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color_lum * ht_pixel_color, ultra_details_pixels_lerp);
     }
     
     float4 fog_color;
