@@ -1286,7 +1286,8 @@ planet_layers =
 				[1] = 
 				{
 					{ path='earth_th_pixels_16.jpg', stage=0 },
-					{ path='ground_details.jpg', stage=1 }
+					{ path='ground_details.jpg', stage=1 },
+					{ path='TexturesCom_RockGrassy0048_1_seamless_S.jpg', stage=2 }
 				}
 			},
 			vertex_textures =

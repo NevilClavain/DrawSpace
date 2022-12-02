@@ -32,7 +32,10 @@ Texture2D       Pixels_HTMap_Texture            : register(t0);
 SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
 
 Texture2D       UltraDetails_Texture            : register(t1);
-SamplerState    UltraDetails_Texture_Sampler    : register(s2);
+SamplerState    UltraDetails_Texture_Sampler    : register(s1);
+
+Texture2D       UltraDetails2_Texture           : register(t2);
+SamplerState    UltraDetails2_Texture_Sampler   : register(s2);
 
 
 Texture2D       HT_Texture                      : register(t7);
@@ -358,18 +361,18 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float level_disturbance_scale = terrain_bump_flag.w;
         
         ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
-        /*
+        
         float lacunarity = 4.0;
         float roughness = 1.46;
-        float scale = 2.75;
-        pixel_color.x = saturate(Fractal_fBm_classic_perlin(0.25 * scale * vpos.xyz, 4, lacunarity, roughness, 0.0));
-        pixel_color.yz = 0.0;
-        pixel_color.w = 1.0;
-        */
+        float scale = 5.0;
 
+        float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 3, lacunarity, roughness, 0.0));
+        
+        
         float ultra_details_max_distance = 80.0;
 
-        ultra_details_pixel_color = UltraDetails_Texture.Sample(UltraDetails_Texture_Sampler, input.UnitPatch_TexCoord);
+        ultra_details_pixel_color = lerp(UltraDetails_Texture.Sample(UltraDetails_Texture_Sampler, input.UnitPatch_TexCoord), 
+                                            UltraDetails2_Texture.Sample(UltraDetails2_Texture_Sampler, input.UnitPatch_TexCoord), ultra_texture_mask);
 
         float ultra_details_pixel_color_lum = 0.299 * ultra_details_pixel_color.r + 0.587 * ultra_details_pixel_color.g + 0.114 * ultra_details_pixel_color.b;
 
@@ -381,6 +384,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
        
         pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color_lum * ht_pixel_color, ultra_details_pixels_lerp);
+        
+
     }
     
     float4 fog_color;
