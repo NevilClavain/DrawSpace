@@ -31,11 +31,23 @@ cbuffer legacyargs : register(b0)
 Texture2D       Pixels_HTMap_Texture            : register(t0);
 SamplerState    Pixels_HTMap_Texture_Sampler    : register(s0);
 
-Texture2D       UltraDetails_Texture            : register(t1);
-SamplerState    UltraDetails_Texture_Sampler    : register(s1);
+Texture2D       Splat_HTMap_Texture             : register(t1);
+SamplerState    Splat_HTMap_Texture_Sampler     : register(s1);
 
-Texture2D       UltraDetails2_Texture           : register(t2);
-SamplerState    UltraDetails2_Texture_Sampler   : register(s2);
+Texture2D       Rock0_Texture                   : register(t2);
+SamplerState    Rock0_Texture_Sampler           : register(s2);
+
+Texture2D       Rock1_Texture                   : register(t3);
+SamplerState    Rock1_Texture_Sampler           : register(s3);
+
+Texture2D       Grass0_Texture                  : register(t4);
+SamplerState    Grass0_Texture_Sampler          : register(s4);
+
+Texture2D       Grass1_Texture                  : register(t5);
+SamplerState    Grass1_Texture_Sampler          : register(s5);
+
+Texture2D       Snow_Texture                    : register(t6);
+SamplerState    Snow_Texture_Sampler            : register(s6);
 
 
 Texture2D       HT_Texture                      : register(t7);
@@ -173,9 +185,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 lit_color = 0.0;
     
     float4 pixel_color = 0.0;
-    float4 ht_pixel_color = 0.0;
-    float4 ultra_details_pixel_color = 0.0;
-
+    
+   
     float4 temp_humidity = HT_Texture.Sample(HT_Texture_sampler, input.LODGlobalPatch_TexCoord.xy);
 
     float3 water_color = { 0.17, 0.36, 0.48 };
@@ -360,15 +371,42 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         float level_disturbance_scale = terrain_bump_flag.w;
         
-        ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
-        
+        float4 ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
+        float4 splat_pixel_color = Splat_HTMap_Texture.SampleGrad(Splat_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
+
+        float4 rocky0 = Rock0_Texture.Sample(Rock0_Texture_Sampler, input.UnitPatch_TexCoord);
+        float4 rocky1 = Rock1_Texture.Sample(Rock1_Texture_Sampler, input.UnitPatch_TexCoord);
+
+        float4 grass0 = Grass0_Texture.Sample(Grass0_Texture_Sampler, input.UnitPatch_TexCoord);
+        float4 grass1 = Grass1_Texture.Sample(Grass1_Texture_Sampler, input.UnitPatch_TexCoord);
+
+        //////////// random mask /////////////
         float lacunarity = 4.0;
         float roughness = 1.46;
-        float scale = 5.0;
-
+        float scale = 10.0;
         float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 3, lacunarity, roughness, 0.0));
+        //////////////////////////////////////
+
+        float4 final_grass = lerp(grass0, grass1, ultra_texture_mask);
+        float4 final_rock = lerp(rocky0, rocky1, ultra_texture_mask);
+
+        float4 final_snow = Snow_Texture.Sample(Snow_Texture_Sampler, input.UnitPatch_TexCoord);
+
+
+        float4 ultra_details_pixel_color = (splat_pixel_color.r * final_rock) + (splat_pixel_color.g * final_grass) + (splat_pixel_color.b * final_snow);
         
+        float ultra_details_max_distance = 150.0;
+        float ultra_details_pixels_lerp = 0.0;
+        if (lod_level < 3)
+        {
+            ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
+        }
+
+        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
+
         
+
+        /*
         float ultra_details_max_distance = 80.0;
 
         ultra_details_pixel_color = lerp(UltraDetails_Texture.Sample(UltraDetails_Texture_Sampler, input.UnitPatch_TexCoord), 
@@ -377,14 +415,18 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float ultra_details_pixel_color_lum = 0.299 * ultra_details_pixel_color.r + 0.587 * ultra_details_pixel_color.g + 0.114 * ultra_details_pixel_color.b;
 
         float ultra_details_pixels_lerp = 0.0;
-
         if (lod_level < 3)
         {
             ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
         }
        
         pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color_lum * ht_pixel_color, ultra_details_pixels_lerp);
+        */
+
         
+
+        //pixel_color = ht_pixel_color; //temp
+        //pixel_color = splat_pixel_color; //temp
 
     }
     
