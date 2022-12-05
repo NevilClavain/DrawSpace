@@ -381,10 +381,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float4 grass1 = Grass1_Texture.Sample(Grass1_Texture_Sampler, input.UnitPatch_TexCoord);
 
         //////////// random mask /////////////
-        float lacunarity = 4.0;
-        float roughness = 1.46;
-        float scale = 10.0;
-        float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 3, lacunarity, roughness, 0.0));
+        float lacunarity = 3.0;
+        float roughness = 1.26;
+        float scale = 40.0;
+        float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
         //////////////////////////////////////
 
         float4 final_grass = lerp(grass0, grass1, ultra_texture_mask);
@@ -395,39 +395,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         float4 ultra_details_pixel_color = (splat_pixel_color.r * final_rock) + (splat_pixel_color.g * final_grass) + (splat_pixel_color.b * final_snow);
         
-        float ultra_details_max_distance = 150.0;
+        float ultra_details_max_distance = 180.0;
         float ultra_details_pixels_lerp = 0.0;
-        if (lod_level < 3)
-        {
-            ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
-        }
-
+        ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
         pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
 
-        
-
-        /*
-        float ultra_details_max_distance = 80.0;
-
-        ultra_details_pixel_color = lerp(UltraDetails_Texture.Sample(UltraDetails_Texture_Sampler, input.UnitPatch_TexCoord), 
-                                            UltraDetails2_Texture.Sample(UltraDetails2_Texture_Sampler, input.UnitPatch_TexCoord), ultra_texture_mask);
-
-        float ultra_details_pixel_color_lum = 0.299 * ultra_details_pixel_color.r + 0.587 * ultra_details_pixel_color.g + 0.114 * ultra_details_pixel_color.b;
-
-        float ultra_details_pixels_lerp = 0.0;
-        if (lod_level < 3)
-        {
-            ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
-        }
-       
-        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color_lum * ht_pixel_color, ultra_details_pixels_lerp);
-        */
-
-        
-
-        //pixel_color = ht_pixel_color; //temp
-        //pixel_color = splat_pixel_color; //temp
-
+      
     }
     
     float4 fog_color;
