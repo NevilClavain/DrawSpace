@@ -229,11 +229,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float ground_bump_details_factor_depth_distance = terrain_details_flags.z;
 
-    float ground_bump_details_factor_depth = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
+    float ground_bump_details_factor_depth_far = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
 
     float d1 = 150.0;
     float d2 = 350.0;
-    float ground_bump_details_factor_depth_2 = saturate((pixel_distance - d1) / (d2 - d1));
+    float ground_bump_details_factor_depth_near = saturate((pixel_distance - d1) / (d2 - d1));
 
 
 
@@ -297,8 +297,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         ////////////////////////////////////////////////////////////////
 
-        texel_pos.x += details_mask * ground_bump_details_factor_depth * ground_bump_details_factor_depth_2 * ground_bump_details_factor_alt * normale_delta_for_details.x;
-        texel_pos.y += details_mask * ground_bump_details_factor_depth * ground_bump_details_factor_depth_2 * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+        texel_pos.x += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * normale_delta_for_details.x;
+        texel_pos.y += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+
+        //float4 local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, 1024, 1.0);
+
+
 
         texel_pos = normalize(texel_pos);
     }
@@ -404,10 +408,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float ultra_details_max_distance = 1500.0;
         float ultra_details_pixels_lerp = 0.0;
         ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
-        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
-
-      
+        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);      
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
     
     float4 fog_color;
 
