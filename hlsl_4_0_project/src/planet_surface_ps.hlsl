@@ -128,6 +128,23 @@ struct PS_INTPUT
 
 #define v_terrain_details_flags             33
 
+float4 get_ultradetails_pixelcolor(float4 p_UnitPatch_TexCoord, float4 p_splat_pixel_color, float p_ultra_texture_mask)
+{
+    float4 rocky0 = Rock0_Texture.Sample(Rock0_Texture_Sampler, p_UnitPatch_TexCoord);
+    float4 rocky1 = Rock1_Texture.Sample(Rock1_Texture_Sampler, p_UnitPatch_TexCoord);
+
+    float4 grass0 = Grass0_Texture.Sample(Grass0_Texture_Sampler, p_UnitPatch_TexCoord);
+    float4 grass1 = Grass1_Texture.Sample(Grass1_Texture_Sampler, p_UnitPatch_TexCoord);
+
+    float4 final_grass = lerp(grass0, grass1, p_ultra_texture_mask);
+    float4 final_rock = lerp(rocky0, rocky1, p_ultra_texture_mask);
+
+    float4 final_snow = Snow_Texture.Sample(Snow_Texture_Sampler, p_UnitPatch_TexCoord);
+
+    float4 ultra_details_pixel_color = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
+    return ultra_details_pixel_color;
+}
+
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
 
@@ -221,6 +238,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
     }
 
+
     float details_limit_sup = terrain_details_flags.x;
     float ground_details_factor_alt = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
 
@@ -231,9 +249,50 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float ground_bump_details_factor_depth_far = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
 
-    float d1 = 150.0;
-    float d2 = 350.0;
+    float d1 = 150.0; // PARAM ?
+    float d2 = 350.0; // PARAM ?
     float ground_bump_details_factor_depth_near = saturate((pixel_distance - d1) / (d2 - d1));
+
+
+    //////////////COMPUTE PIXEL COLOR (details & ultra details)//////////////////////////////////////////////////////////////////////
+
+    if (sea)
+    {
+        pixel_color.xyz = water_color;
+    }
+    else
+    {
+        float2 delta =
+        {
+            Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890),
+            Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
+        };
+
+        float level_disturbance_scale = terrain_bump_flag.w;
+
+        float2 ddx = { 0.0, 0.0 };
+        float2 ddy = { 0.0, 0.0 };
+
+
+        float4 ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
+        float4 splat_pixel_color = Splat_HTMap_Texture.SampleGrad(Splat_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
+
+        //////////// random mask /////////////
+        float lacunarity = 3.0;
+        float roughness = 1.26;
+        float scale = 40.0;
+        float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
+        //////////////////////////////////////
+
+        float4 ultra_details_pixel_color = get_ultradetails_pixelcolor(input.UnitPatch_TexCoord, splat_pixel_color, ultra_texture_mask);
+
+        float ultra_details_max_distance = 1500.0; // PARAM ?
+        float ultra_details_pixels_lerp = 0.0;
+        ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
+        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -360,58 +419,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
         count_lights++;
     }
-
-
-	////////////////////////////////////////////////////////////////////////////////////
-
-    float2 ddx = { 0.0, 0.0 };
-    float2 ddy = { 0.0, 0.0 };
-
-    if (sea)
-    {
-        pixel_color.xyz = water_color;
-    }
-    else
-    {        
-        float2 delta = 
-        { 
-            Fractal_fBm_wombat_perlin(vpos.xyz, 4, 2.0, 0.46, 0.0, 344.8, 890),
-            Fractal_fBm_wombat_perlin(vpos.zxy, 4, 2.0, 0.46, 0.0, 344.8, 890)
-        };
-
-        float level_disturbance_scale = terrain_bump_flag.w;
-        
-        float4 ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
-        float4 splat_pixel_color = Splat_HTMap_Texture.SampleGrad(Splat_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
-
-        float4 rocky0 = Rock0_Texture.Sample(Rock0_Texture_Sampler, input.UnitPatch_TexCoord);
-        float4 rocky1 = Rock1_Texture.Sample(Rock1_Texture_Sampler, input.UnitPatch_TexCoord);
-
-        float4 grass0 = Grass0_Texture.Sample(Grass0_Texture_Sampler, input.UnitPatch_TexCoord);
-        float4 grass1 = Grass1_Texture.Sample(Grass1_Texture_Sampler, input.UnitPatch_TexCoord);
-
-        //////////// random mask /////////////
-        float lacunarity = 3.0;
-        float roughness = 1.26;
-        float scale = 40.0;
-        float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
-        //////////////////////////////////////
-
-        float4 final_grass = lerp(grass0, grass1, ultra_texture_mask);
-        float4 final_rock = lerp(rocky0, rocky1, ultra_texture_mask);
-
-        float4 final_snow = Snow_Texture.Sample(Snow_Texture_Sampler, input.UnitPatch_TexCoord);
-
-
-        float4 ultra_details_pixel_color = (splat_pixel_color.r * final_rock) + (splat_pixel_color.g * final_grass) + (splat_pixel_color.b * final_snow);
-        
-        float ultra_details_max_distance = 1500.0;
-        float ultra_details_pixels_lerp = 0.0;
-        ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
-        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);      
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////
     
     float4 fog_color;
 
