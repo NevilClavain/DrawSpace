@@ -128,7 +128,7 @@ struct PS_INTPUT
 
 #define v_terrain_details_flags             33
 
-float4 get_ultradetails_pixelcolor(float4 p_UnitPatch_TexCoord, float4 p_splat_pixel_color, float p_ultra_texture_mask)
+float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_pixel_color, float p_ultra_texture_mask)
 {
     float4 rocky0 = Rock0_Texture.Sample(Rock0_Texture_Sampler, p_UnitPatch_TexCoord);
     float4 rocky1 = Rock1_Texture.Sample(Rock1_Texture_Sampler, p_UnitPatch_TexCoord);
@@ -253,6 +253,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float d2 = 350.0; // PARAM ?
     float ground_bump_details_factor_depth_near = saturate((pixel_distance - d1) / (d2 - d1));
 
+    float4 splat_pixel_color = 0.0;
+    float4 ultra_details_pixel_color = 0.0;
+    float ultra_texture_mask = 0.0;
+
+
+    float2 ultra_details_text_coords = input.UnitPatch_TexCoord;// *pow(2.0, lod_level - 1);
 
     //////////////COMPUTE PIXEL COLOR (details & ultra details)//////////////////////////////////////////////////////////////////////
 
@@ -275,18 +281,18 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 
         float4 ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
-        float4 splat_pixel_color = Splat_HTMap_Texture.SampleGrad(Splat_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
+        splat_pixel_color = Splat_HTMap_Texture.SampleGrad(Splat_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
 
         //////////// random mask /////////////
         float lacunarity = 3.0;
         float roughness = 1.26;
         float scale = 40.0;
-        float ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
+        ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
         //////////////////////////////////////
 
-        float4 ultra_details_pixel_color = get_ultradetails_pixelcolor(input.UnitPatch_TexCoord, splat_pixel_color, ultra_texture_mask);
+        ultra_details_pixel_color = get_ultradetails_pixelcolor(ultra_details_text_coords, splat_pixel_color, ultra_texture_mask);
 
-        float ultra_details_max_distance = 1500.0; // PARAM ?
+        float ultra_details_max_distance = 300.0; // PARAM ?
         float ultra_details_pixels_lerp = 0.0;
         ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
         pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
@@ -359,7 +365,65 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         texel_pos.x += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * normale_delta_for_details.x;
         texel_pos.y += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
-        //float4 local_normale = bump_bias_vector(input.TexCoord0, txBump, samBump, 1024, 1.0);
+        {
+            float ground_bump_ultra_details_factor_depth_far = 1.0 - saturate(pixel_distance / 100.0);
+
+            float texel_size = 1.0 / (float)1024;
+
+            float2 left_coords = ultra_details_text_coords;
+            left_coords.x -= texel_size;
+
+            float2 right_coords = ultra_details_text_coords;
+            right_coords.x += texel_size;
+
+            float2 up_coords = ultra_details_text_coords;
+            up_coords.y -= texel_size;
+
+            float2 down_coords = ultra_details_text_coords;
+            down_coords.y += texel_size;
+
+            float4 bump_left = get_ultradetails_pixelcolor(left_coords, splat_pixel_color, ultra_texture_mask);
+            float4 bump_right = get_ultradetails_pixelcolor(right_coords, splat_pixel_color, ultra_texture_mask);
+            float4 bump_up = get_ultradetails_pixelcolor(up_coords, splat_pixel_color, ultra_texture_mask);
+            float4 bump_down = get_ultradetails_pixelcolor(down_coords, splat_pixel_color, ultra_texture_mask);
+
+            float bump_center = ultra_details_pixel_color;
+
+            float vector_bias = 0.1;
+            float3 vec_left;
+            vec_left.x = -vector_bias;
+            vec_left.y = 0.0;
+            vec_left.z = (bump_left - bump_center);
+
+            float3 vec_right;
+            vec_right.x = vector_bias;
+            vec_right.y = 0.0;
+            vec_right.z = (bump_right - bump_center);
+
+            float3 vec_up;
+            vec_up.x = 0.0;
+            vec_up.y = -vector_bias;
+            vec_up.z = (bump_up - bump_center);
+
+            float3 vec_down;
+            vec_down.x = 0.0;
+            vec_down.y = vector_bias;
+            vec_down.z = (bump_down - bump_center);
+
+            float3 vec1 = normalize(cross(vec_right, vec_down));
+            float3 vec2 = normalize(cross(vec_down, vec_left));
+            float3 vec3 = normalize(cross(vec_left, vec_up));
+            float3 vec4 = normalize(cross(vec_up, vec_right));
+
+            float4 avg;
+
+            avg.xyz = normalize(0.25 * (vec1 + vec2 + vec3 + vec4));
+            avg.w = 1.0;
+
+
+            texel_pos.x += ground_bump_ultra_details_factor_depth_far * avg.y;
+            texel_pos.y += ground_bump_ultra_details_factor_depth_far * avg.z;
+        }
 
 
 
