@@ -316,8 +316,8 @@ local planet_specific_config_descr =
 
 	-- earth-like planet
 
-	plains_amplitude					         = 130.0,
-	mountains_amplitude					         = 380.0,
+	plains_amplitude					         = 100.0,
+	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,

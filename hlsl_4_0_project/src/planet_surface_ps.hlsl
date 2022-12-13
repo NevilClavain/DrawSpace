@@ -183,7 +183,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     bool oceans_enabled = vec[v_flag32].x;
 
-    float lod_level = flags2.z;
+    //float lod_level = flags2.z;
 
     /////////////////////////////////////////////////////////////////////////
 
@@ -249,8 +249,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float ground_bump_details_factor_depth_far = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
 
-    float d1 = 150.0; // PARAM ?
-    float d2 = 350.0; // PARAM ?
+    float d1 = 4.0; // PARAM ?
+    float d2 = 50.0; // PARAM ?
     float ground_bump_details_factor_depth_near = saturate((pixel_distance - d1) / (d2 - d1));
 
     float4 splat_pixel_color = 0.0;
@@ -258,7 +258,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float ultra_texture_mask = 0.0;
 
 
-    float2 ultra_details_text_coords = input.UnitPatch_TexCoord;// *pow(2.0, lod_level - 1);
+    float2 ultra_details_text_coords = input.UnitPatch_TexCoord;
 
     //////////////COMPUTE PIXEL COLOR (details & ultra details)//////////////////////////////////////////////////////////////////////
 
@@ -292,7 +292,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         ultra_details_pixel_color = get_ultradetails_pixelcolor(ultra_details_text_coords, splat_pixel_color, ultra_texture_mask);
 
-        float ultra_details_max_distance = 300.0; // PARAM ?
+        float ultra_details_max_distance = 350; // PARAM ?
+
         float ultra_details_pixels_lerp = 0.0;
         ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
         pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
@@ -335,11 +336,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         vpos_left.x -= step;
         vpos_right.x += step;
 
-        
-
-        
-
-
+       
         float lacunarity = 4.0;
         float roughness = 1.46;
 
@@ -365,8 +362,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         texel_pos.x += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * normale_delta_for_details.x;
         texel_pos.y += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
-        {
-            float ground_bump_ultra_details_factor_depth_far = 1.0 - saturate(pixel_distance / 100.0);
+        {            
+            float ground_bump_ultra_details_max_distance = 350.0;  // PARAM ?
+
+            float ground_bump_ultra_details_factor_depth_far = 1.0 - saturate(pixel_distance / ground_bump_ultra_details_max_distance);
 
             float texel_size = 1.0 / (float)1024;
 
@@ -389,25 +388,25 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
             float bump_center = ultra_details_pixel_color;
 
-            float vector_bias = 0.1;
+            float ground_bump_ultra_details_vector_bias = 0.25; // PARAM ?
             float3 vec_left;
-            vec_left.x = -vector_bias;
+            vec_left.x = -ground_bump_ultra_details_vector_bias;
             vec_left.y = 0.0;
             vec_left.z = (bump_left - bump_center);
 
             float3 vec_right;
-            vec_right.x = vector_bias;
+            vec_right.x = ground_bump_ultra_details_vector_bias;
             vec_right.y = 0.0;
             vec_right.z = (bump_right - bump_center);
 
             float3 vec_up;
             vec_up.x = 0.0;
-            vec_up.y = -vector_bias;
+            vec_up.y = -ground_bump_ultra_details_vector_bias;
             vec_up.z = (bump_up - bump_center);
 
             float3 vec_down;
             vec_down.x = 0.0;
-            vec_down.y = vector_bias;
+            vec_down.y = ground_bump_ultra_details_vector_bias;
             vec_down.z = (bump_down - bump_center);
 
             float3 vec1 = normalize(cross(vec_right, vec_down));
