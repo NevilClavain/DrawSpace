@@ -147,6 +147,14 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
+    //////////////////////////////////////////////////
+
+    int ground_detail_bump_nb_frac_loop = 4;
+    bool ground_detail_bump = true;
+    bool enable_ultra_detail = true;
+    bool enable_ultra_detail_bump = true;
+    //////////////////////////////////////////////////
+
 
     float4 flags = vec[v_flags];
     float4 flags2 = vec[v_flags2];
@@ -283,20 +291,27 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         float4 ht_pixel_color = Pixels_HTMap_Texture.SampleGrad(Pixels_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
         splat_pixel_color = Splat_HTMap_Texture.SampleGrad(Splat_HTMap_Texture_Sampler, temp_humidity.xy + (ground_details_factor_alt * level_disturbance_scale * delta), ddx, ddy);
 
-        //////////// random mask /////////////
-        float lacunarity = 3.0;
-        float roughness = 1.26;
-        float scale = 40.0;
-        ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
-        //////////////////////////////////////
+        if (enable_ultra_detail)
+        {
+            //////////// random mask /////////////
+            float lacunarity = 3.0;
+            float roughness = 1.26;
+            float scale = 40.0;
+            ultra_texture_mask = saturate(Fractal_fBm_classic_perlin(scale * vpos.xyz, 2, lacunarity, roughness, 0.0));
+            //////////////////////////////////////
 
-        ultra_details_pixel_color = get_ultradetails_pixelcolor(ultra_details_text_coords, splat_pixel_color, ultra_texture_mask);
+            ultra_details_pixel_color = get_ultradetails_pixelcolor(ultra_details_text_coords, splat_pixel_color, ultra_texture_mask);
 
-        float ultra_details_max_distance = 350; // PARAM ?
+            float ultra_details_max_distance = 350; // PARAM ?
 
-        float ultra_details_pixels_lerp = 0.0;
-        ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
-        pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
+            float ultra_details_pixels_lerp = 0.0;
+            ultra_details_pixels_lerp = 1.0 - saturate(pixel_depth / ultra_details_max_distance);
+            pixel_color = lerp(ht_pixel_color, ultra_details_pixel_color * ht_pixel_color, ultra_details_pixels_lerp);
+        }
+        else
+        {
+            pixel_color = ht_pixel_color;
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,53 +330,56 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
         
 
+        if (ground_detail_bump)
+        {
+            ////////////////////////////////////////////////////////////////
+            // details bump mapping
 
-        ////////////////////////////////////////////////////////////////
-        // details bump mapping
+            float details_terrain_noise_scale = terrain_bump_flag.z;
 
-        float details_terrain_noise_scale = terrain_bump_flag.z;
+            float4 vpos_scaled = vpos * details_terrain_noise_scale;
 
-        float4 vpos_scaled = vpos * details_terrain_noise_scale;
+            float4 vpos_up = vpos_scaled;
+            float4 vpos_down = vpos_scaled;
+            float4 vpos_left = vpos_scaled;
+            float4 vpos_right = vpos_scaled;
 
-        float4 vpos_up = vpos_scaled;
-        float4 vpos_down = vpos_scaled;
-        float4 vpos_left = vpos_scaled;
-        float4 vpos_right = vpos_scaled;
+            float step = 1.0;
 
-        float step = 1.0;
+            vpos_up.z += step;
+            vpos_down.z -= step;
 
-        vpos_up.z += step;
-        vpos_down.z -= step;
-
-        vpos_left.x -= step;
-        vpos_right.x += step;
-
-       
-        float lacunarity = 4.0;
-        float roughness = 1.46;
+            vpos_left.x -= step;
+            vpos_right.x += step;
 
 
-        float res = Fractal_fBm_classic_perlin(vpos_scaled.xyz, 4, lacunarity, roughness, 0.0);
-        float res_up = Fractal_fBm_classic_perlin(vpos_up.xyz, 4, lacunarity, roughness, 0.0);
-        float res_down = Fractal_fBm_classic_perlin(vpos_down.xyz, 4, lacunarity, roughness, 0.0);
-        float res_right = Fractal_fBm_classic_perlin(vpos_right.xyz, 4, lacunarity, roughness, 0.0);
-        float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, 4, lacunarity, roughness, 0.0);
+            float lacunarity = 4.0;
+            float roughness = 1.46;
+
+            
+            float res = Fractal_fBm_classic_perlin(vpos_scaled.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+            float res_up = Fractal_fBm_classic_perlin(vpos_up.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+            float res_down = Fractal_fBm_classic_perlin(vpos_down.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+            float res_right = Fractal_fBm_classic_perlin(vpos_right.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+            float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
 
 
-        float lacunarity_mask = 4.0;
-        float roughness_mask = 1.46;
+            float lacunarity_mask = 4.0;
+            float roughness_mask = 1.46;
 
 
-        float details_mask = clamp(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity_mask, roughness_mask, 0.0), 0.35, 0.999);
-        float details_terrain_bump_bias = terrain_bump_flag.y;
+            float details_mask = clamp(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity_mask, roughness_mask, 0.0), 0.35, 0.999);
+            float details_terrain_bump_bias = terrain_bump_flag.y;
 
-        float4 normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
+            float4 normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
 
-        ////////////////////////////////////////////////////////////////
+            texel_pos.x += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * normale_delta_for_details.x;
+            texel_pos.y += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
 
-        texel_pos.x += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * normale_delta_for_details.x;
-        texel_pos.y += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+            ////////////////////////////////////////////////////////////////
+        }
 
+        if(enable_ultra_detail_bump)
         {            
             float ground_bump_ultra_details_max_distance = 350.0;  // PARAM ?
 
@@ -423,8 +441,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             texel_pos.x += ground_bump_ultra_details_factor_depth_far * avg.y;
             texel_pos.y += ground_bump_ultra_details_factor_depth_far * avg.z;
         }
-
-
 
         texel_pos = normalize(texel_pos);
     }
