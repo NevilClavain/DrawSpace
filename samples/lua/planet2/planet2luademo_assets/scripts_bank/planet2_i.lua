@@ -1795,7 +1795,7 @@ set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(66.2, -26.093, 100.0, planet_specific_config_descr)
+set_freecam_on_planet(66.2, -26.093, 29.0, planet_specific_config_descr)
 
 
 
