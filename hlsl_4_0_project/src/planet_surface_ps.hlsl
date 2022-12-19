@@ -127,7 +127,7 @@ struct PS_INTPUT
 
 #define v_terrain_details_flags             33
 
-float4 recursive_texture(Texture2D p_texture, SamplerState p_sampler, float2 p_TexCoord, float p_depth)
+float4 recursive_texture(Texture2D p_texture, SamplerState p_sampler, float2 p_TexCoord, float p_depth, float p_lod_level, bool p_adapt_ultra_details_on_LOD)
 {
     float scaled_depth = p_depth * 0.25;
     // 
@@ -143,6 +143,13 @@ float4 recursive_texture(Texture2D p_texture, SamplerState p_sampler, float2 p_T
     float2 uv2 = p_TexCoord / exp(LOD_floor + 0.0);
     float2 uv3 = p_TexCoord / exp(LOD_floor + 1.0);
 
+    if (p_adapt_ultra_details_on_LOD)
+    {
+        uv1 *= pow(2.0, p_lod_level - 1);
+        uv2 *= pow(2.0, p_lod_level - 1);
+        uv3 *= pow(2.0, p_lod_level - 1);
+    }
+
     float4 tex0 = p_texture.Sample(p_sampler, uv1);
     float4 tex1 = p_texture.Sample(p_sampler, uv2);
     float4 tex2 = p_texture.Sample(p_sampler, uv3);
@@ -153,18 +160,7 @@ float4 recursive_texture(Texture2D p_texture, SamplerState p_sampler, float2 p_T
 
 float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_pixel_color, float p_ultra_texture_mask, 
                                     float p_pixel_depth, float p_lod_level, bool p_adapt_ultra_details_on_LOD, bool p_enable_recursive_ultra_detail_textures)
-{
-    float2 uv;
-
-    if (p_adapt_ultra_details_on_LOD)
-    {
-        uv = p_UnitPatch_TexCoord * pow(2.0, p_lod_level - 1);
-    }
-    else
-    {
-        uv = p_UnitPatch_TexCoord;
-    }
-
+{   
     float4 rocky0;
     float4 rocky1;
     float4 grass0;
@@ -173,16 +169,27 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
 
     if (p_enable_recursive_ultra_detail_textures)
     {
-        rocky0 = recursive_texture(Rock0_Texture, Rock0_Texture_Sampler, uv, p_pixel_depth);
-        rocky1 = recursive_texture(Rock1_Texture, Rock1_Texture_Sampler, uv, p_pixel_depth);
+        rocky0 = recursive_texture(Rock0_Texture, Rock0_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
+        rocky1 = recursive_texture(Rock1_Texture, Rock1_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
 
-        grass0 = recursive_texture(Grass0_Texture, Grass0_Texture_Sampler, uv, p_pixel_depth);
-        grass1 = recursive_texture(Grass1_Texture, Grass1_Texture_Sampler, uv, p_pixel_depth);
+        grass0 = recursive_texture(Grass0_Texture, Grass0_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
+        grass1 = recursive_texture(Grass1_Texture, Grass1_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
 
-        final_snow = recursive_texture(Snow_Texture, Snow_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth);
+        final_snow = recursive_texture(Snow_Texture, Snow_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
     }
     else
     {
+        float2 uv;
+
+        if (p_adapt_ultra_details_on_LOD)
+        {
+            uv = p_UnitPatch_TexCoord * pow(2.0, p_lod_level - 1);
+        }
+        else
+        {
+            uv = p_UnitPatch_TexCoord;
+        }
+
         rocky0 = Rock0_Texture.Sample(Rock0_Texture_Sampler, uv);
         rocky1 = Rock1_Texture.Sample(Rock1_Texture_Sampler, uv);
 
@@ -213,11 +220,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     bool enable_ultra_detail = true;
     bool enable_ultra_detail_bump = true;
 
-    bool adapt_ultra_details_on_LOD = false;
+    bool adapt_ultra_details_on_LOD = true;
 
     bool enable_recursive_ultra_detail_textures = false;
 
-    float ultra_details_max_distance = 350; // PARAM ?
+    float ultra_details_max_distance = 150; // PARAM ?
 
     float ground_bump_details_factor_depth_near_d1 = 4.0; // PARAM ?
     float ground_bump_details_factor_depth_near_d2 = 15.0; // PARAM ?
