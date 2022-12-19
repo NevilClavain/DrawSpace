@@ -2298,6 +2298,36 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                 {
                     ss_array[0] = m_anisotropicFilterSamplerState_uvwrap;
                 }
+
+                else if ("special" == arg)
+                {
+                    ss_array[0] = m_linearFilterSamplerState;
+                    m_lpd3ddevcontext->PSSetSamplers(0, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState;
+                    m_lpd3ddevcontext->PSSetSamplers(1, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->PSSetSamplers(2, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->PSSetSamplers(3, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->PSSetSamplers(4, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->PSSetSamplers(5, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->PSSetSamplers(6, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState;
+                    m_lpd3ddevcontext->PSSetSamplers(7, 1, ss_array);
+
+                    break;
+                }
+
                 else
                 {
                     ss_array[0] = m_pointFilterSamplerState;
