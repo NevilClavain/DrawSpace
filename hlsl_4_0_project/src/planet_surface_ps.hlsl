@@ -129,7 +129,7 @@ struct PS_INTPUT
 
 float4 recursive_texture(Texture2D p_texture, SamplerState p_sampler, float2 p_TexCoord, float p_depth, float p_lod_level, bool p_adapt_ultra_details_on_LOD)
 {
-    float scaled_depth = p_depth * 0.25;
+    float scaled_depth = p_depth * 0.1;
     // 
     //Find the pixel level of detail
     float LOD = log(scaled_depth);
@@ -165,19 +165,29 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
     float4 rocky1;
     float4 grass0;
     float4 grass1;
+
+    float4 final_grass;
+    float4 final_rock;
     float4 final_snow;
 
-    if (p_enable_recursive_ultra_detail_textures)
+    float4 ultra_details_pixel_color_simple_sampling;
+    float4 ultra_details_pixel_color_recursive_sampling;
+
+
     {
         rocky0 = recursive_texture(Rock0_Texture, Rock0_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
         rocky1 = recursive_texture(Rock1_Texture, Rock1_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
+        final_rock = lerp(rocky0, rocky1, p_ultra_texture_mask);
 
         grass0 = recursive_texture(Grass0_Texture, Grass0_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
         grass1 = recursive_texture(Grass1_Texture, Grass1_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
+        final_grass = lerp(grass0, grass1, p_ultra_texture_mask);
 
         final_snow = recursive_texture(Snow_Texture, Snow_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
+
+        ultra_details_pixel_color_recursive_sampling = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
     }
-    else
+
     {
         float2 uv;
 
@@ -192,21 +202,26 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
 
         rocky0 = Rock0_Texture.Sample(Rock0_Texture_Sampler, uv);
         rocky1 = Rock1_Texture.Sample(Rock1_Texture_Sampler, uv);
+        final_rock = lerp(rocky0, rocky1, p_ultra_texture_mask);
 
         grass0 = Grass0_Texture.Sample( Grass0_Texture_Sampler, uv);
         grass1 = Grass1_Texture.Sample(Grass1_Texture_Sampler, uv);
+        final_grass = lerp(grass0, grass1, p_ultra_texture_mask);
 
         final_snow = Snow_Texture.Sample(Snow_Texture_Sampler, p_UnitPatch_TexCoord);
+
+        ultra_details_pixel_color_simple_sampling = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
     }
 
+   
+    float recursive_ultra_detail_textures_max_distance = 10.0;
 
-    float4 final_grass = lerp(grass0, grass1, p_ultra_texture_mask);
-    float4 final_rock = lerp(rocky0, rocky1, p_ultra_texture_mask);
 
-    //float4 final_snow = Snow_Texture.Sample(Snow_Texture_Sampler, p_UnitPatch_TexCoord);
-    
+    float4 ultra_details_pixel_color = lerp(ultra_details_pixel_color_recursive_sampling, 
+                                            ultra_details_pixel_color_simple_sampling, 
+                                            saturate(p_pixel_depth / recursive_ultra_detail_textures_max_distance));
 
-    float4 ultra_details_pixel_color = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
+
     return ultra_details_pixel_color;
 }
 
@@ -223,8 +238,9 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     bool adapt_ultra_details_on_LOD = true;
 
     bool enable_recursive_ultra_detail_textures = true;
+    
 
-    float ultra_details_max_distance = 150; // PARAM ?
+    float ultra_details_max_distance = 350; // PARAM ?
 
     float ground_bump_details_factor_depth_near_d1 = 4.0; // PARAM ?
     float ground_bump_details_factor_depth_near_d2 = 15.0; // PARAM ?
