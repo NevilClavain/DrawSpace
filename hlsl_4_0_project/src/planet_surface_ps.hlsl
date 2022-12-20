@@ -222,7 +222,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     bool adapt_ultra_details_on_LOD = true;
 
-    bool enable_recursive_ultra_detail_textures = false;
+    bool enable_recursive_ultra_detail_textures = true;
 
     float ultra_details_max_distance = 150; // PARAM ?
 
@@ -440,26 +440,30 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             float lacunarity = 4.0;
             float roughness = 1.46;
 
-            
-            float res = Fractal_fBm_classic_perlin(vpos_scaled.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-            float res_up = Fractal_fBm_classic_perlin(vpos_up.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-            float res_down = Fractal_fBm_classic_perlin(vpos_down.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-            float res_right = Fractal_fBm_classic_perlin(vpos_right.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-            float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-
-
             float lacunarity_mask = 4.0;
             float roughness_mask = 1.46;
 
-
             float details_mask = clamp(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity_mask, roughness_mask, 0.0), 0.35, 0.999);
-            float details_terrain_bump_bias = terrain_bump_flag.y;
 
-            float4 normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
 
-            texel_pos.x += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * normale_delta_for_details.x;
-            texel_pos.y += details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+            float ground_bump_details_control = details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt;
 
+            if (ground_bump_details_control > 0.0)
+            {
+                float res = Fractal_fBm_classic_perlin(vpos_scaled.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+                float res_up = Fractal_fBm_classic_perlin(vpos_up.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+                float res_down = Fractal_fBm_classic_perlin(vpos_down.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+                float res_right = Fractal_fBm_classic_perlin(vpos_right.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+                float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
+
+                float details_terrain_bump_bias = terrain_bump_flag.y;
+
+                float4 normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
+
+                texel_pos.x += ground_bump_details_control * normale_delta_for_details.x;
+                texel_pos.y += ground_bump_details_control * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
+            }
+           
             ////////////////////////////////////////////////////////////////
         }
 
