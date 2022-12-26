@@ -396,7 +396,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     D3D11_CHECK(CreateSamplerState)
 
 
-    ID3D11SamplerState* ss_array[1] = { m_pointFilterSamplerState };
+    ID3D11SamplerState* ss_array[] = { m_pointFilterSamplerState };
 
     // a mettre en option dans l'interface renderer ?
     for( long i = 0; i < 8; i++ )
@@ -2228,6 +2228,17 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
     dsstring arg;
     p_renderstate->GetArg( arg );
 
+    static const std::map<dsstring, ID3D11SamplerState*> translate_samplerstate =
+    {
+        { "none",               m_pointFilterSamplerState              },
+        { "point",              m_pointFilterSamplerState              },
+        { "linear",             m_linearFilterSamplerState             },
+        { "anisotropic",        m_anisotropicFilterSamplerState        },
+        { "point_uvwrap",       m_pointFilterSamplerState_uvwrap       },
+        { "linear_uvwrap",      m_linearFilterSamplerState_uvwrap      },
+        { "anisotropic_uvwrap", m_anisotropicFilterSamplerState_uvwrap }
+    };
+
     switch( p_renderstate->GetOperation() )
     {
         case DrawSpace::Core::RenderState::SETCULLING:
@@ -2268,39 +2279,10 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
         case DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE:
             {
-                ID3D11SamplerState* ss_array[1] = { nullptr };
+                if ("special" == arg)
+                {
+                    ID3D11SamplerState* ss_array[] = { nullptr };
 
-                if( "none" == arg )
-                {
-                    ss_array[0] = m_pointFilterSamplerState;
-                }
-                else if( "point" == arg )
-                {
-                    ss_array[0] = m_pointFilterSamplerState;
-                }
-                else if( "linear" == arg )
-                {
-                    ss_array[0] = m_linearFilterSamplerState;
-                }
-                else if( "anisotropic" == arg )
-                {
-                    ss_array[0] = m_anisotropicFilterSamplerState;
-                }
-                else if ("point_uvwrap" == arg)
-                {
-                    ss_array[0] = m_pointFilterSamplerState_uvwrap;
-                }
-                else if ("linear_uvwrap" == arg)
-                {
-                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
-                }
-                else if ("anisotropic_uvwrap" == arg)
-                {
-                    ss_array[0] = m_anisotropicFilterSamplerState_uvwrap;
-                }
-
-                else if ("special" == arg)
-                {
                     ss_array[0] = m_linearFilterSamplerState;
                     m_lpd3ddevcontext->PSSetSamplers(0, 1, ss_array);
 
@@ -2324,63 +2306,79 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
                     ss_array[0] = m_linearFilterSamplerState;
                     m_lpd3ddevcontext->PSSetSamplers(7, 1, ss_array);
-
-                    break;
                 }
+                else if ("extended" == arg)
+                {
+                    ID3D11SamplerState* ss_array[] = { nullptr };
 
+                    const auto args_list{ p_renderstate->GetExtendedArgs() };
+                    auto index{ 0 };
+                    for (const auto& e : args_list)
+                    {
+                        ss_array[0] = translate_samplerstate.at(e);
+                        m_lpd3ddevcontext->PSSetSamplers(index++, 1, ss_array);
+                    }
+                }
                 else
                 {
-                    ss_array[0] = m_pointFilterSamplerState;
-                }
-
-                for( long i = 0; i < 8; i++ )
-                {
-                    m_lpd3ddevcontext->PSSetSamplers( i, 1, ss_array );
-                }
+                    ID3D11SamplerState* ss_array[] = { translate_samplerstate.at(arg) };
+                    for (auto i = 0; i < 8; i++)
+                    {
+                        m_lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
+                    }
+                }               
             }
             break;
 
-
         case DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE:
             {
-                ID3D11SamplerState* ss_array[1] = { nullptr };
+                if ("special" == arg)
+                {
+                    ID3D11SamplerState* ss_array[] = { nullptr };
 
-                if ("none" == arg)
-                {
-                    ss_array[0] = m_pointFilterSamplerState;
-                }
-                else if ("point" == arg)
-                {
-                    ss_array[0] = m_pointFilterSamplerState;
-                }
-                else if ("linear" == arg)
-                {
                     ss_array[0] = m_linearFilterSamplerState;
-                }
-                else if ("anisotropic" == arg)
-                {
-                    ss_array[0] = m_anisotropicFilterSamplerState;
-                }
-                else if ("point_uvwrap" == arg)
-                {
-                    ss_array[0] = m_pointFilterSamplerState_uvwrap;
-                }
-                else if ("linear_uvwrap" == arg)
-                {
+                    m_lpd3ddevcontext->VSSetSamplers(0, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState;
+                    m_lpd3ddevcontext->VSSetSamplers(1, 1, ss_array);
+
                     ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->VSSetSamplers(2, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->VSSetSamplers(3, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->VSSetSamplers(4, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->VSSetSamplers(5, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState_uvwrap;
+                    m_lpd3ddevcontext->VSSetSamplers(6, 1, ss_array);
+
+                    ss_array[0] = m_linearFilterSamplerState;
+                    m_lpd3ddevcontext->VSSetSamplers(7, 1, ss_array);
                 }
-                else if ("anisotropic_uvwrap" == arg)
+                else if ("extended" == arg)
                 {
-                    ss_array[0] = m_anisotropicFilterSamplerState_uvwrap;
+                    ID3D11SamplerState* ss_array[] = { nullptr };
+
+                    const auto args_list{ p_renderstate->GetExtendedArgs() };
+                    auto index{ 0 };
+                    for (const auto& e : args_list)
+                    {
+                        ss_array[0] = translate_samplerstate.at(e);
+                        m_lpd3ddevcontext->VSSetSamplers(index++, 1, ss_array);
+                    }
                 }
                 else
                 {
-                    ss_array[0] = m_pointFilterSamplerState;
-                }
-
-                for( long i = 0; i < 8; i++ )
-                {
-                    m_lpd3ddevcontext->VSSetSamplers( i, 1, ss_array );
+                    ID3D11SamplerState* ss_array[] = { translate_samplerstate.at(arg) };
+                    for (auto i = 0; i < 8; i++)
+                    {
+                        m_lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
+                    }
                 }
             }
             break;

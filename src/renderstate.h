@@ -35,6 +35,7 @@ namespace Core
 class RenderState
 {
 public:
+
     using Operation = enum
     {
         NONE,
@@ -50,24 +51,23 @@ public:
         ALPHABLENDSRC,
     };
 
-protected:
-
-    dsstring                                m_arg;         //argument operation renderstate, sous forme de chaine ascii
-    Operation                               m_operation;
-
-public:
-
     RenderState( void );
     RenderState( Operation p_operation, const dsstring& p_arg );
-    ~RenderState( void );
 
     void SetOperation( Operation p_operation );
     void SetArg( const dsstring& p_arg );
+    void SetExtendedArgs(const std::vector<dsstring>& p_args);
 
-    Operation GetOperation( void );
-    void GetArg( dsstring& p_arg );
+    Operation GetOperation( void ) const;
+    void GetArg( dsstring& p_arg ) const;
+    std::vector<dsstring> GetExtendedArgs(void) const;
+
+private:
+    dsstring                                m_arg;         //argument operation renderstate, sous forme de chaine ascii
+    std::vector<dsstring>                   m_extendedargs;
+
+    Operation                               m_operation{ NONE };
 };
-
 }
 }
 

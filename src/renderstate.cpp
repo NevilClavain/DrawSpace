@@ -27,40 +27,43 @@
 
 using namespace DrawSpace::Core;
 
-RenderState::RenderState( Operation p_operation, const dsstring& p_arg ) : m_operation( p_operation ), m_arg( p_arg )
+RenderState::RenderState( Operation p_operation, const dsstring& p_arg ) : 
+m_operation( p_operation ), 
+m_arg( p_arg )
 {
 }
 
-RenderState::RenderState( void ) : m_operation( NONE )
+RenderState::RenderState( void )
 {
 }
-
-RenderState::~RenderState( void )
-{
-}
-
-
 
 void RenderState::SetOperation( Operation p_operation )
 {
     m_operation = p_operation;
 }
 
-
 void RenderState::SetArg( const dsstring& p_arg )
 {
     m_arg = p_arg;
 }
 
-RenderState::Operation RenderState::GetOperation( void )
+void RenderState::SetExtendedArgs(const std::vector<dsstring>& p_args)
+{
+    m_extendedargs = p_args;
+}
+
+RenderState::Operation RenderState::GetOperation( void ) const
 {
     return m_operation;
 }
 
-
-
-void RenderState::GetArg( dsstring& p_arg )
+void RenderState::GetArg( dsstring& p_arg ) const
 {
     p_arg = m_arg;
+}
+
+std::vector<dsstring> RenderState::GetExtendedArgs(void) const
+{
+    return m_extendedargs;
 }
 
