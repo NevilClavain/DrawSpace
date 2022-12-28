@@ -58,6 +58,9 @@ public:
     void SetArg( const dsstring& p_arg );
     void SetExtendedArgs(const std::vector<dsstring>& p_args);
 
+    void ClearExtendedArgs(void);
+    void PushExtendedArg(const dsstring& p_arg);
+
     Operation GetOperation( void ) const;
     void GetArg( dsstring& p_arg ) const;
     std::vector<dsstring> GetExtendedArgs(void) const;

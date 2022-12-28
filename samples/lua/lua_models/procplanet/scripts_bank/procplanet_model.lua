@@ -257,8 +257,21 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
       local rs_in_config = fx_config['rs_in']
       for k2, v2 in pairs(rs_in_config) do
 	    local curr_rs_in = v2
-	    --g:print(curr_rs_in['ope']..'->'..curr_rs_in['value'])
+
 		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+
+		if curr_rs_in['value'] == 'extended' then
+		  if curr_rs_in['extended_args'] ~= nil then
+		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
+
+			  g:print("	**-> "..k2.." "..v2)
+
+			  rss:push_renderstate_in_extendedargs(0, v2)
+
+			end
+		  end
+		end
+
 	  end
 
 	  local rs_out_config = fx_config['rs_out']

@@ -49,13 +49,44 @@ void RenderStatesSet::AddRenderStateOut( const RenderState& p_renderstate )
 
 void RenderStatesSet::UpdateRenderStateIn( int p_index,const RenderState& p_renderstate )
 {
-    m_renderstates_in[p_index] = p_renderstate;
+    m_renderstates_in.at(p_index) = p_renderstate;
 }
 
 void RenderStatesSet::UpdateRenderStateOut( int p_index, const RenderState& p_renderstate )
 {
-    m_renderstates_out[p_index] = p_renderstate;
+    m_renderstates_out.at(p_index) = p_renderstate;
 }
+
+void RenderStatesSet::UpdateRenderStateInExtendedArgs(int p_index, const std::vector<dsstring>& p_args)
+{
+    m_renderstates_in.at(p_index).SetExtendedArgs(p_args);
+}
+
+void RenderStatesSet::UpdateRenderStateOutExtendedArgs(int p_index, const std::vector<dsstring>& p_args)
+{
+    m_renderstates_out.at(p_index).SetExtendedArgs(p_args);
+}
+
+void RenderStatesSet::ClearRenderStateInExtendedArgs(int p_index)
+{
+    m_renderstates_in.at(p_index).ClearExtendedArgs();
+}
+
+void RenderStatesSet::ClearRenderStateOutExtendedArgs(int p_index)
+{
+    m_renderstates_out.at(p_index).ClearExtendedArgs();
+}
+
+void RenderStatesSet::PushRenderStateInExtendedArgs(int p_index, const dsstring& p_arg)
+{
+    m_renderstates_in.at(p_index).PushExtendedArg(p_arg);
+}
+
+void RenderStatesSet::PushRenderStateOutExtendedArgs(int p_index, const dsstring& p_arg)
+{
+    m_renderstates_out.at(p_index).PushExtendedArg(p_arg);
+}
+
 
 RenderState RenderStatesSet::GetRenderStateIn( long p_index ) const
 {

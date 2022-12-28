@@ -52,6 +52,17 @@ void RenderState::SetExtendedArgs(const std::vector<dsstring>& p_args)
     m_extendedargs = p_args;
 }
 
+void RenderState::ClearExtendedArgs(void)
+{
+    m_extendedargs.clear();
+}
+
+void RenderState::PushExtendedArg(const dsstring& p_arg)
+{
+    m_extendedargs.push_back(p_arg);
+}
+
+
 RenderState::Operation RenderState::GetOperation( void ) const
 {
     return m_operation;

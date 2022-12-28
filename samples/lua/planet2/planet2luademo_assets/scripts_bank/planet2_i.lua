@@ -1271,7 +1271,21 @@ planet_layers =
 				},
 				rs_in = 
 				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="special" },
+					{ 
+						ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, 
+						value="extended",
+						extended_args = 
+						{
+							"linear",
+							"linear",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear"
+						}
+					},
 					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="linear" }
 												
 				},

@@ -2279,7 +2279,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
         case DrawSpace::Core::RenderState::SETTEXTUREFILTERTYPE:
             {
-                if ("special" == arg)
+                /*if ("special" == arg)
                 {
                     ID3D11SamplerState* ss_array[] = { nullptr };
 
@@ -2307,7 +2307,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                     ss_array[0] = m_linearFilterSamplerState;
                     m_lpd3ddevcontext->PSSetSamplers(7, 1, ss_array);
                 }
-                else if ("extended" == arg)
+                else */if ("extended" == arg)
                 {
                     ID3D11SamplerState* ss_array[] = { nullptr };
 
@@ -2332,7 +2332,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
 
         case DrawSpace::Core::RenderState::SETVERTEXTEXTUREFILTERTYPE:
             {
-                if ("special" == arg)
+                /*if ("special" == arg)
                 {
                     ID3D11SamplerState* ss_array[] = { nullptr };
 
@@ -2360,7 +2360,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
                     ss_array[0] = m_linearFilterSamplerState;
                     m_lpd3ddevcontext->VSSetSamplers(7, 1, ss_array);
                 }
-                else if ("extended" == arg)
+                else */if ("extended" == arg)
                 {
                     ID3D11SamplerState* ss_array[] = { nullptr };
 

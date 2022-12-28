@@ -47,6 +47,15 @@ public:
     void            UpdateRenderStateIn( int p_index, const RenderState& p_renderstate );
     void            UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
 
+    void            UpdateRenderStateInExtendedArgs(int p_index, const std::vector<dsstring>& p_args);
+    void            UpdateRenderStateOutExtendedArgs(int p_index, const std::vector<dsstring>& p_args);
+
+    void            ClearRenderStateInExtendedArgs(int p_index);
+    void            ClearRenderStateOutExtendedArgs(int p_index);
+
+    void            PushRenderStateInExtendedArgs(int p_index, const dsstring& p_arg);
+    void            PushRenderStateOutExtendedArgs(int p_index, const dsstring& p_arg);
+
     RenderState     GetRenderStateIn( long p_index ) const;
     RenderState     GetRenderStateOut( long p_index ) const;
     size_t          GetRenderStatesInListSize( void ) const;

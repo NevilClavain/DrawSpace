@@ -40,6 +40,12 @@ public:
     int LUA_updaterenderstatein( lua_State* p_L );
     int LUA_updaterenderstateout( lua_State* p_L );
 
+    int LUA_clearrenderstateinextendedargs(lua_State* p_L);
+    int LUA_clearrenderstateoutextendedargs(lua_State* p_L);
+
+    int LUA_pushrenderstateinextendedargs(lua_State* p_L);
+    int LUA_pushrenderstateoutextendedargs(lua_State* p_L);
+
     DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
 
     static const char className[];
