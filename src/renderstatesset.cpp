@@ -29,14 +29,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-dsstring RenderStatesSet::m_rootpath = ".";
-
 RenderStatesSet::RenderStatesSet( void )
-{
-}
-
-RenderStatesSet::RenderStatesSet( const dsstring& p_filepath ) :
-m_path( p_filepath )
 {
 }
 
@@ -64,46 +57,27 @@ void RenderStatesSet::UpdateRenderStateOut( int p_index, const RenderState& p_re
     m_renderstates_out[p_index] = p_renderstate;
 }
 
-bool RenderStatesSet::LoadFromFile( void )
+RenderState RenderStatesSet::GetRenderStateIn( long p_index ) const
 {
-    return true;
+    return m_renderstates_in.at(p_index);
 }
 
-dsstring RenderStatesSet::compute_final_path( void )
+RenderState RenderStatesSet::GetRenderStateOut( long p_index ) const
 {
-    dsstring final_path = m_rootpath + "/";
-    
-    final_path += m_path;
-    return final_path;
+    return m_renderstates_out.at(p_index);
 }
 
-void RenderStatesSet::SetRootPath( const dsstring& p_path )
+size_t RenderStatesSet::GetRenderStatesInListSize( void ) const
 {
-    m_rootpath = p_path;
+    return m_renderstates_in.size();
 }
 
-
-RenderState RenderStatesSet::GetRenderStateIn( long p_index )
+size_t RenderStatesSet::GetRenderStatesOutListSize( void ) const
 {
-    return m_renderstates_in[p_index];
+    return m_renderstates_out.size();
 }
 
-RenderState RenderStatesSet::GetRenderStateOut( long p_index )
-{
-    return m_renderstates_out[p_index];
-}
-
-long RenderStatesSet::GetRenderStatesInListSize( void )
-{
-    return (long)m_renderstates_in.size();
-}
-
-long RenderStatesSet::GetRenderStatesOutListSize( void )
-{
-    return (long)m_renderstates_out.size();
-}
-
-void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 )
+void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 ) const
 {
     MD5 md5;
 
@@ -143,7 +117,6 @@ void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 )
     {
         hash_rsargs = md5.digestMemory( (BYTE*)renderstates_arg.c_str(), (int)renderstates_arg.size() );
     }
-
     p_md5 = hash_rs + hash_rsargs + m_renderstate_unique_queue_id;
 }
 
