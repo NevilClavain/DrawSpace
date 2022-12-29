@@ -234,16 +234,14 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     bool ground_detail_bump = true;
     bool enable_ultra_detail = true;
     bool enable_ultra_detail_bump = true;
-
     bool adapt_ultra_details_on_LOD = true;
-
     bool enable_recursive_ultra_detail_textures = true;
     
 
-    float ultra_details_max_distance = 350; // PARAM ?
+    float ultra_details_max_distance = 550; // PARAM ?
 
-    float ground_bump_details_factor_depth_near_d1 = 4.0; // PARAM ?
-    float ground_bump_details_factor_depth_near_d2 = 15.0; // PARAM ?
+    float ground_bump_details_factor_depth_near_d1 = 200.0; //4.0; // PARAM ?
+    float ground_bump_details_factor_depth_near_d2 = 250.0; //15.0; // PARAM ?
 
     float ground_bump_ultra_details_vector_bias = 0.25; // PARAM ?
 
