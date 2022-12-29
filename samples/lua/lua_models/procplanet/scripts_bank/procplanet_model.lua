@@ -263,15 +263,11 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
 		if curr_rs_in['value'] == 'extended' then
 		  if curr_rs_in['extended_args'] ~= nil then
 		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
-
-			  g:print("	**-> "..k2.." "..v2)
-
+			  --g:print("	**-> "..k2.." "..v2)
 			  rss:push_renderstate_in_extendedargs(0, v2)
-
 			end
 		  end
 		end
-
 	  end
 
 	  local rs_out_config = fx_config['rs_out']
