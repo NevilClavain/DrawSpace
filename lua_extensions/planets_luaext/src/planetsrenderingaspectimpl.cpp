@@ -551,7 +551,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
             // set ocean details spec power
             Vector flags32{ e2->GetShaderFeederValue(ShaderType::PIXEL_SHADER, 32) };
-            flags32[2] = oceandetails_specularpower;
+            flags32[1] = oceandetails_specularpower;
             *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
         }
     }
