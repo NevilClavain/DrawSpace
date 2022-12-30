@@ -92,6 +92,18 @@ const Luna<LuaClass_PlanetConfig>::RegType LuaClass_PlanetConfig::methods[] =
     { "set_bumpdetailslimitsup", &LuaClass_PlanetConfig::LUA_setbumpdetailslimitsup },
     { "set_groundbumpdetailsfactordepthdistance", &LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthdistance },
 
+    { "set_grounddetailbumpnbfracloop", &LuaClass_PlanetConfig::LUA_setgrounddetailbumpnbfracloop },
+    { "set_ultradetailsmaxdistance", &LuaClass_PlanetConfig::LUA_setultradetailsmaxdistance },
+    { "set_groundbumpdetailsfactordepthneard1", &LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthneard1 },
+    { "set_groundbumpdetailsfactordepthneard2", &LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthneard2 },
+    { "enable_grounddetailbump", &LuaClass_PlanetConfig::LUA_enablegrounddetailbump },
+    { "enable_ultradetail", &LuaClass_PlanetConfig::LUA_enableultradetail },
+    { "enable_ultradetailbump", &LuaClass_PlanetConfig::LUA_enableultradetailbump },
+    { "enable_recursiveultradetailtextures", &LuaClass_PlanetConfig::LUA_enablerecursiveultradetailtextures },
+
+
+
+
 
     { "connect_wavepass", &LuaClass_PlanetConfig::LUA_connectwavepass },
     
@@ -177,6 +189,15 @@ int LuaClass_PlanetConfig::LUA_apply(lua_State* p_L)
     entity_rendering_aspect->AddComponent<dsreal>("details_limit_sup", m_planets_details.details_limit_sup);
     entity_rendering_aspect->AddComponent<dsreal>("bump_details_limit_sup", m_planets_details.bump_details_limit_sup );
     entity_rendering_aspect->AddComponent<dsreal>("ground_bump_details_factor_depth_distance", m_planets_details.ground_bump_details_factor_depth_distance);
+
+    entity_rendering_aspect->AddComponent<dsreal>("ground_detail_bump_nb_frac_loop", m_planets_details.ground_detail_bump_nb_frac_loop);
+    entity_rendering_aspect->AddComponent<dsreal>("ultra_details_max_distance", m_planets_details.ultra_details_max_distance);
+    entity_rendering_aspect->AddComponent<dsreal>("ground_bump_details_factor_depth_near_d1", m_planets_details.ground_bump_details_factor_depth_near_d1);
+    entity_rendering_aspect->AddComponent<dsreal>("ground_bump_details_factor_depth_near_d2", m_planets_details.ground_bump_details_factor_depth_near_d2);
+    entity_rendering_aspect->AddComponent<bool>("enable_ground_detail_bump", m_planets_details.enable_ground_detail_bump);
+    entity_rendering_aspect->AddComponent<bool>("enable_ultra_detail", m_planets_details.enable_ultra_detail);
+    entity_rendering_aspect->AddComponent<bool>("enable_ultra_detail_bump", m_planets_details.enable_ultra_detail_bump);
+    entity_rendering_aspect->AddComponent<bool>("enable_recursive_ultra_detail_textures", m_planets_details.enable_recursive_ultra_detail_textures);
 
     entity_rendering_aspect->AddComponent<bool>("enable_landplace_patch", m_planets_details.enable_landplace_patch);
     entity_rendering_aspect->AddComponent<bool>("enable_atmosphere", m_planets_details.enable_atmosphere);
@@ -281,6 +302,16 @@ int LuaClass_PlanetConfig::LUA_cleanup(lua_State* p_L)
     m_rendering_aspect->RemoveComponent<dsreal>("details_limit_sup");
     m_rendering_aspect->RemoveComponent<dsreal>("bump_details_limit_sup");
     m_rendering_aspect->RemoveComponent<dsreal>("ground_bump_details_factor_depth_distance");
+
+    m_rendering_aspect->RemoveComponent<dsreal>("ground_detail_bump_nb_frac_loop");
+    m_rendering_aspect->RemoveComponent<dsreal>("ultra_details_max_distance");
+    m_rendering_aspect->RemoveComponent<dsreal>("ground_bump_details_factor_depth_near_d1");
+    m_rendering_aspect->RemoveComponent<dsreal>("ground_bump_details_factor_depth_near_d2");
+    m_rendering_aspect->RemoveComponent<bool>("enable_ground_detail_bump");
+    m_rendering_aspect->RemoveComponent<bool>("enable_ultra_detail");
+    m_rendering_aspect->RemoveComponent<bool>("enable_ultra_detail_bump");
+    m_rendering_aspect->RemoveComponent<bool>("enable_recursive_ultra_detail_textures");
+
 
     m_rendering_aspect->RemoveComponent<bool>("enable_landplace_patch");
     m_rendering_aspect->RemoveComponent<bool>("enable_atmosphere");
@@ -762,8 +793,8 @@ int LuaClass_PlanetConfig::LUA_enablelight(lua_State* p_L)
         LUA_ERROR("PlanetConfig::enable_light : argument(s) missing");
     }
 
-    int light_index = luaL_checkint(p_L, 1);
-    bool light_state = luaL_checkint(p_L, 2);
+    const auto light_index{ luaL_checkint(p_L, 1) };
+    const auto light_state{ luaL_checkint(p_L, 2) };
 
     std::get<0>(m_planets_details.lights[light_index]) = light_state;
     return 0;
@@ -777,16 +808,17 @@ int LuaClass_PlanetConfig::LUA_setlightcolor(lua_State* p_L)
         LUA_ERROR("PlanetConfig::set_lightcolor : argument(s) missing");
     }
 
-    int light_index = luaL_checkint(p_L, 1);
-    dsreal r = luaL_checknumber(p_L, 2);
-    dsreal g = luaL_checknumber(p_L, 3);
-    dsreal b = luaL_checknumber(p_L, 4);
+    const auto light_index { luaL_checkint(p_L, 1) };
+    const auto r { luaL_checknumber(p_L, 2) };
+    const auto g { luaL_checknumber(p_L, 3) };
+    const auto b { luaL_checknumber(p_L, 4) };
 
     std::array<dsreal, 3> color;
     color[0] = r;
     color[1] = g;
     color[2] = b;
     std::get<1>(m_planets_details.lights[light_index]) = color;
+
     return 0;
 }
 
@@ -798,10 +830,10 @@ int LuaClass_PlanetConfig::LUA_setlightdir(lua_State* p_L)
         LUA_ERROR("PlanetConfig::set_lightdir : argument(s) missing");
     }
 
-    int light_index = luaL_checkint(p_L, 1);
-    dsreal x = luaL_checknumber(p_L, 2);
-    dsreal y = luaL_checknumber(p_L, 3);
-    dsreal z = luaL_checknumber(p_L, 4);
+    const auto light_index{ luaL_checkint(p_L, 1) };
+    const auto x { luaL_checknumber(p_L, 2) };
+    const auto y { luaL_checknumber(p_L, 3) };
+    const auto z { luaL_checknumber(p_L, 4) };
 
     std::array<dsreal, 3> dir;
     dir[0] = x;
@@ -818,7 +850,7 @@ int LuaClass_PlanetConfig::LUA_setreflectionpass(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_reflectionpass : argument(s) missing");
     }
-    dsstring passid = luaL_checkstring(p_L, 1);
+    const auto passid{ luaL_checkstring(p_L, 1) };
     m_planets_details.reflection_pass = passid;
     return 0;
 }
@@ -830,7 +862,7 @@ int LuaClass_PlanetConfig::LUA_setbumppass(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_bumppass : argument(s) missing");
     }
-    dsstring passid = luaL_checkstring(p_L, 1);
+    const auto passid{ luaL_checkstring(p_L, 1) };
     m_planets_details.bump_pass = passid;
     return 0;
 }
@@ -842,7 +874,7 @@ int LuaClass_PlanetConfig::LUA_setmainpass(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_mainpass : argument(s) missing");
     }
-    dsstring passid = luaL_checkstring(p_L, 1);
+    const auto passid{ luaL_checkstring(p_L, 1) };
     m_planets_details.main_pass = passid;
     return 0;
 }
@@ -854,7 +886,7 @@ int LuaClass_PlanetConfig::LUA_setoceanmaskpass(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_mainpass : argument(s) missing");
     }
-    dsstring passid = luaL_checkstring(p_L, 1);
+    const auto passid{ luaL_checkstring(p_L, 1) };
     m_planets_details.oceanmask_pass = passid;
     return 0;
 }
@@ -866,7 +898,7 @@ int LuaClass_PlanetConfig::LUA_setwavepassresol(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_wavepassresol : argument(s) missing");
     }
-    int resol = luaL_checkint(p_L, 1);
+    const auto resol{ luaL_checkint(p_L, 1) };
     m_planets_details.wave_pass_resol = resol;
     return 0;
 }
@@ -878,7 +910,7 @@ int LuaClass_PlanetConfig::LUA_setoceanbumpfactor(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_oceanbumpfactor : argument(s) missing");
     }
-    dsreal bump_factor = luaL_checknumber(p_L, 1);
+    const auto bump_factor{ luaL_checknumber(p_L, 1) };
     m_planets_details.ocean_bump_factor = bump_factor;
     return 0;
 }
@@ -890,7 +922,7 @@ int LuaClass_PlanetConfig::LUA_setdetailsterrainbumpbias(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_detailsterrainbumpbias : argument(s) missing");
     }
-    dsreal value{ luaL_checknumber(p_L, 1) };
+    const auto value{ luaL_checknumber(p_L, 1) };
     m_planets_details.details_terrain_bump_bias = value;
 
     return 0;
@@ -903,7 +935,7 @@ int LuaClass_PlanetConfig::LUA_setdetailsterrainnoisescale(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_detailsterrainnoisescale : argument(s) missing");
     }
-    dsreal value{ luaL_checknumber(p_L, 1) };
+    const auto value{ luaL_checknumber(p_L, 1) };
     m_planets_details.details_terrain_noise_scale = value;
 
     return 0;
@@ -916,7 +948,7 @@ int LuaClass_PlanetConfig::LUA_setleveldisturbancescale(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_leveldisturbancescale : argument(s) missing");
     }
-    dsreal value{ luaL_checknumber(p_L, 1) };
+    const auto value{ luaL_checknumber(p_L, 1) };
     m_planets_details.level_disturbance_scale = value;
 
     return 0;
@@ -929,7 +961,7 @@ int LuaClass_PlanetConfig::LUA_setdetailslimitsup(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_detailslimitsup : argument(s) missing");
     }
-    dsreal value{ luaL_checknumber(p_L, 1) };
+    const auto value{ luaL_checknumber(p_L, 1) };
     m_planets_details.details_limit_sup = value;
 
     return 0;
@@ -942,7 +974,7 @@ int LuaClass_PlanetConfig::LUA_setbumpdetailslimitsup(lua_State* p_L)
     {
         LUA_ERROR("PlanetConfig::set_bumpdetailslimitsup : argument(s) missing");
     }
-    dsreal value{ luaL_checknumber(p_L, 1) };
+    const auto value{ luaL_checknumber(p_L, 1) };
     m_planets_details.bump_details_limit_sup = value;
 
     return 0;
@@ -955,8 +987,112 @@ int LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthdistance(lua_State
     {
         LUA_ERROR("PlanetConfig::set_groundbumpdetailsfactordepthdistance : argument(s) missing");
     }
-    dsreal value{ luaL_checknumber(p_L, 1) };
+    const auto value{ luaL_checknumber(p_L, 1) };
     m_planets_details.ground_bump_details_factor_depth_distance = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setgrounddetailbumpnbfracloop(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_grounddetailbumpnbfracloop : argument(s) missing");
+    }
+    const auto value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.ground_detail_bump_nb_frac_loop = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setultradetailsmaxdistance(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_ultradetailsmaxdistance : argument(s) missing");
+    }
+    const auto value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.ultra_details_max_distance = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthneard1(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_groundbumpdetailsfactordepthneard1 : argument(s) missing");
+    }
+    const auto value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.ground_bump_details_factor_depth_near_d1 = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_setgroundbumpdetailsfactordepthneard2(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::set_groundbumpdetailsfactordepthneard2 : argument(s) missing");
+    }
+    const auto value{ luaL_checknumber(p_L, 1) };
+    m_planets_details.ground_bump_details_factor_depth_near_d2 = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_enablegrounddetailbump(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::enable_grounddetailbump : argument(s) missing");
+    }
+    const auto value{ luaL_checkint(p_L, 1) };
+    m_planets_details.enable_ground_detail_bump = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_enableultradetail(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::enable_ultradetail : argument(s) missing");
+    }
+    const auto value{ luaL_checkint(p_L, 1) };
+    m_planets_details.enable_ultra_detail = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_enableultradetailbump(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::enable_ultradetailbump : argument(s) missing");
+    }
+    const auto value{ luaL_checkint(p_L, 1) };
+    m_planets_details.enable_ultra_detail_bump = value;
+
+    return 0;
+}
+
+int LuaClass_PlanetConfig::LUA_enablerecursiveultradetailtextures(lua_State* p_L)
+{
+    int argc = lua_gettop(p_L);
+    if (argc < 1)
+    {
+        LUA_ERROR("PlanetConfig::enable_recursiveultradetailtextures : argument(s) missing");
+    }
+    const auto value{ luaL_checkint(p_L, 1) };
+    m_planets_details.enable_recursive_ultra_detail_textures = value;
 
     return 0;
 }

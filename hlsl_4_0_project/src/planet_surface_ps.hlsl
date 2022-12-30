@@ -127,6 +127,24 @@ struct PS_INTPUT
 
 #define v_terrain_details_flags             33
 
+// flag 34
+// x->ground_detail_bump_nb_frac_loop
+// y->ultra_details_max_distance
+// z->ground_bump_details_factor_depth_near_d1
+// w->ground_bump_details_factor_depth_near_d2
+
+#define v_terrain_details_flags_2           34
+
+// flag 35
+// x->enable_ground_detail_bump TRUE/FALSE
+// y->enable_ultra_detail TRUE/FALSE
+// z->enable_ultra_detail_bump TRUE/FALSE
+// w->enable_recursive_ultra_detail_textures TRUE/FALSE
+
+#define v_terrain_details_settings          35
+
+
+
 float4 recursive_texture(Texture2D p_texture, SamplerState p_sampler, float2 p_TexCoord, float p_depth, float p_lod_level, bool p_adapt_ultra_details_on_LOD)
 {
     float scaled_depth = p_depth * 0.1;
@@ -170,10 +188,9 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
     float4 final_rock;
     float4 final_snow;
 
-    float4 ultra_details_pixel_color_simple_sampling;
-    float4 ultra_details_pixel_color_recursive_sampling;
+    float4 ultra_details_pixel_color;
 
-
+    if(p_enable_recursive_ultra_detail_textures)
     {
         rocky0 = recursive_texture(Rock0_Texture, Rock0_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
         rocky1 = recursive_texture(Rock1_Texture, Rock1_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
@@ -185,9 +202,9 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
 
         final_snow = recursive_texture(Snow_Texture, Snow_Texture_Sampler, p_UnitPatch_TexCoord, p_pixel_depth, p_lod_level, p_adapt_ultra_details_on_LOD);
 
-        ultra_details_pixel_color_recursive_sampling = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
+        ultra_details_pixel_color = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
     }
-
+    else
     {
         float2 uv;
 
@@ -210,17 +227,8 @@ float4 get_ultradetails_pixelcolor(float2 p_UnitPatch_TexCoord, float4 p_splat_p
 
         final_snow = Snow_Texture.Sample(Snow_Texture_Sampler, p_UnitPatch_TexCoord);
 
-        ultra_details_pixel_color_simple_sampling = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
+        ultra_details_pixel_color = (p_splat_pixel_color.r * final_rock) + (p_splat_pixel_color.g * final_grass) + (p_splat_pixel_color.b * final_snow);
     }
-
-   
-    float recursive_ultra_detail_textures_max_distance = 10.0;
-
-
-    float4 ultra_details_pixel_color = lerp(ultra_details_pixel_color_recursive_sampling, 
-                                            ultra_details_pixel_color_simple_sampling, 
-                                            saturate(p_pixel_depth / recursive_ultra_detail_textures_max_distance));
-
 
     return ultra_details_pixel_color;
 }
@@ -230,20 +238,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     //////////////////////////////////////////////////
     bool ht_mode = false;
 
-    int ground_detail_bump_nb_frac_loop = 4;
-    bool ground_detail_bump = true;
-    bool enable_ultra_detail = true;
-    bool enable_ultra_detail_bump = true;
+    float ground_bump_ultra_details_vector_bias = 0.25;
     bool adapt_ultra_details_on_LOD = true;
-    bool enable_recursive_ultra_detail_textures = true;
-    
-
-    float ultra_details_max_distance = 550; // PARAM ?
-
-    float ground_bump_details_factor_depth_near_d1 = 200.0; //4.0; // PARAM ?
-    float ground_bump_details_factor_depth_near_d2 = 250.0; //15.0; // PARAM ?
-
-    float ground_bump_ultra_details_vector_bias = 0.25; // PARAM ?
 
     //////////////////////////////////////////////////
 
@@ -286,6 +282,16 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float lod_level = flags2.z;
 
 
+    /////////////////////////////////////////////////////////////////////////
+    bool enable_ground_detail_bump = vec[v_terrain_details_settings].x;
+    bool enable_ultra_detail = vec[v_terrain_details_settings].y;
+    bool enable_ultra_detail_bump = vec[v_terrain_details_settings].z;
+    bool enable_recursive_ultra_detail_textures = vec[v_terrain_details_settings].w;
+
+    int ground_detail_bump_nb_frac_loop = vec[v_terrain_details_flags_2].x;
+    float ultra_details_max_distance = vec[v_terrain_details_flags_2].y;
+    float ground_bump_details_factor_depth_near_d1 = vec[v_terrain_details_flags_2].z;
+    float ground_bump_details_factor_depth_near_d2 = vec[v_terrain_details_flags_2].w;
     /////////////////////////////////////////////////////////////////////////
 
     float planet_ray = flags.z;
@@ -428,7 +434,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
         
 
-        if (ground_detail_bump)
+        if (enable_ground_detail_bump)
         {
             ////////////////////////////////////////////////////////////////
             // details bump mapping
