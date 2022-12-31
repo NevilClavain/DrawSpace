@@ -2,7 +2,7 @@
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2022
+* Emmanuel Chaumont Copyright (c) 2013-2023
 *
 * This file is part of DrawSpace.
 *
@@ -104,7 +104,7 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
         }        
     }
 
-    // la "vraie" transformation locale n'est pas locale_mat seule mais locale_mat * m_stack_matrix -> m_stack_matrix utlisée pour empiler les transfo des "attach/detach" successifs
+    // la "vraie" transformation locale n'est pas locale_mat seule mais locale_mat * m_stack_matrix -> m_stack_matrix utlisï¿½e pour empiler les transfo des "attach/detach" successifs
     m_localtransform = locale_mat * m_stack_matrix;
     
     Matrix sp = m_stack_matrix * parent_transform_mat;

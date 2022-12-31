@@ -2,7 +2,7 @@
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2022
+* Emmanuel Chaumont Copyright (c) 2013-2023
 *
 * This file is part of DrawSpace.
 *
@@ -817,7 +817,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     */
 
 
-                    // pour une planete desertique avec oceans, et un peu d'humidité
+                    // pour une planete desertique avec oceans, et un peu d'humiditï¿½
                     /*
                     static const dsreal temp_dec_per_km = 4.0;
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(10.0, 0.0, temp_dec_per_km, beach_limit));
