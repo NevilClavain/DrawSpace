@@ -2,7 +2,7 @@
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2022
+* Emmanuel Chaumont Copyright (c) 2013-2023
 *
 * This file is part of DrawSpace.
 *
@@ -298,7 +298,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 vpos;
 
-    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouvé empiriquement :-p  : pour être indépendant de la taille de la planète
+    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouvï¿½ empiriquement :-p  : pour ï¿½tre indï¿½pendant de la taille de la planï¿½te
 
     //vpos.xyz = input.LocalePos.xyz;
     vpos.w = 1.0;

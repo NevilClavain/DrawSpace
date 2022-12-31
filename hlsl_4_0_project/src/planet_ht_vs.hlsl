@@ -2,7 +2,7 @@
 /*
 *
 * DrawSpace Rendering engine
-* Emmanuel Chaumont Copyright (c) 2013-2022
+* Emmanuel Chaumont Copyright (c) 2013-2023
 *
 * This file is part of DrawSpace.
 *
@@ -46,12 +46,12 @@ cbuffer legacyargs : register(b0)
 #define v_thparams                  42
 // x -> humidity_alt_max : en metres : plus ce seuil altitude sera haut, plus l'humidite pourra se repandre
 // y -> temperature final scale
-// z -> temperature_alt_dec : en degres centigrades; taux de decrementation de temperature au fur et a mesure de l'augmentation de l'altitude -> nombre de degres perdus tout les 1000 mètres
-// w -> beach_lim, en mètres
+// z -> temperature_alt_dec : en degres centigrades; taux de decrementation de temperature au fur et a mesure de l'augmentation de l'altitude -> nombre de degres perdus tout les 1000 mï¿½tres
+// w -> beach_lim, en mï¿½tres
 
 #define v_thparams2                 43
-// x -> lim polar : en latitude "normalisée" : 0.0 = pole, 1.0 = equateur
-// y -> lim tropical : en latitude "normalisée" : 0.0 = pole, 1.0 = equateur
+// x -> lim polar : en latitude "normalisï¿½e" : 0.0 = pole, 1.0 = equateur
+// y -> lim tropical : en latitude "normalisï¿½e" : 0.0 = pole, 1.0 = equateur
 // z -> k polar : de 0.0 a 1.0
 // w -> k tropical : de 0.0 a 1.0
 
@@ -214,20 +214,20 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 	
     float hf = 1.0 - (vert_alt_2 / humidity_alt_max);
 
-    // vertice élevé -> hf = 0
+    // vertice ï¿½levï¿½ -> hf = 0
     // vertice altitude 0 -> hf = 1
 
     color_humidity = lerp(1.0 - hf, hf, color_temp);
 
-    // color_temp (temperature) élevée
-    //      -> vertex = 0.0 : humidité élevée
-    //      -> vertex = humidity_alt_max : humidité faible
+    // color_temp (temperature) ï¿½levï¿½e
+    //      -> vertex = 0.0 : humiditï¿½ ï¿½levï¿½e
+    //      -> vertex = humidity_alt_max : humiditï¿½ faible
     // 
     // color_temp (temperature) basse
-    //      -> vertex = 0.0 : humidité faible
-    //      -> vertex = humidity_alt_max : humidité élevée
+    //      -> vertex = 0.0 : humiditï¿½ faible
+    //      -> vertex = humidity_alt_max : humiditï¿½ ï¿½levï¿½e
 
-    // seuil humidity_alt_max élevé -> l'humidité se "repandra" plus facilement
+    // seuil humidity_alt_max ï¿½levï¿½ -> l'humiditï¿½ se "repandra" plus facilement
 
     
     float beach_lim = norm_latitude * thparams.w;
