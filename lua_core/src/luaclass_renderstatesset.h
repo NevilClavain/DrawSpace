@@ -30,10 +30,6 @@
 
 class LuaClass_RenderStatesSet
 {
-protected:
-    DrawSpace::Core::RenderStatesSet   m_renderstatesset;
-
-
 public:
 	LuaClass_RenderStatesSet( lua_State* p_L );
 	~LuaClass_RenderStatesSet( void );
@@ -44,11 +40,19 @@ public:
     int LUA_updaterenderstatein( lua_State* p_L );
     int LUA_updaterenderstateout( lua_State* p_L );
 
-    DrawSpace::Core::RenderStatesSet& GetRenderStatesSet( void );
+    int LUA_clearrenderstateinextendedargs(lua_State* p_L);
+    int LUA_clearrenderstateoutextendedargs(lua_State* p_L);
+
+    int LUA_pushrenderstateinextendedargs(lua_State* p_L);
+    int LUA_pushrenderstateoutextendedargs(lua_State* p_L);
+
+    DrawSpace::Core::RenderStatesSet GetRenderStatesSet( void ) const;
 
     static const char className[];
     static const Luna<LuaClass_RenderStatesSet>::RegType methods[];
 
+private:
+    DrawSpace::Core::RenderStatesSet   m_renderstatesset;
 };
 
 #endif

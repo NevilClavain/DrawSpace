@@ -29,14 +29,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-dsstring RenderStatesSet::m_rootpath = ".";
-
 RenderStatesSet::RenderStatesSet( void )
-{
-}
-
-RenderStatesSet::RenderStatesSet( const dsstring& p_filepath ) :
-m_path( p_filepath )
 {
 }
 
@@ -56,54 +49,66 @@ void RenderStatesSet::AddRenderStateOut( const RenderState& p_renderstate )
 
 void RenderStatesSet::UpdateRenderStateIn( int p_index,const RenderState& p_renderstate )
 {
-    m_renderstates_in[p_index] = p_renderstate;
+    m_renderstates_in.at(p_index) = p_renderstate;
 }
 
 void RenderStatesSet::UpdateRenderStateOut( int p_index, const RenderState& p_renderstate )
 {
-    m_renderstates_out[p_index] = p_renderstate;
+    m_renderstates_out.at(p_index) = p_renderstate;
 }
 
-bool RenderStatesSet::LoadFromFile( void )
+void RenderStatesSet::UpdateRenderStateInExtendedArgs(int p_index, const std::vector<dsstring>& p_args)
 {
-    return true;
+    m_renderstates_in.at(p_index).SetExtendedArgs(p_args);
 }
 
-dsstring RenderStatesSet::compute_final_path( void )
+void RenderStatesSet::UpdateRenderStateOutExtendedArgs(int p_index, const std::vector<dsstring>& p_args)
 {
-    dsstring final_path = m_rootpath + "/";
-    
-    final_path += m_path;
-    return final_path;
+    m_renderstates_out.at(p_index).SetExtendedArgs(p_args);
 }
 
-void RenderStatesSet::SetRootPath( const dsstring& p_path )
+void RenderStatesSet::ClearRenderStateInExtendedArgs(int p_index)
 {
-    m_rootpath = p_path;
+    m_renderstates_in.at(p_index).ClearExtendedArgs();
 }
 
-
-RenderState RenderStatesSet::GetRenderStateIn( long p_index )
+void RenderStatesSet::ClearRenderStateOutExtendedArgs(int p_index)
 {
-    return m_renderstates_in[p_index];
+    m_renderstates_out.at(p_index).ClearExtendedArgs();
 }
 
-RenderState RenderStatesSet::GetRenderStateOut( long p_index )
+void RenderStatesSet::PushRenderStateInExtendedArgs(int p_index, const dsstring& p_arg)
 {
-    return m_renderstates_out[p_index];
+    m_renderstates_in.at(p_index).PushExtendedArg(p_arg);
 }
 
-long RenderStatesSet::GetRenderStatesInListSize( void )
+void RenderStatesSet::PushRenderStateOutExtendedArgs(int p_index, const dsstring& p_arg)
 {
-    return (long)m_renderstates_in.size();
+    m_renderstates_out.at(p_index).PushExtendedArg(p_arg);
 }
 
-long RenderStatesSet::GetRenderStatesOutListSize( void )
+
+RenderState RenderStatesSet::GetRenderStateIn( long p_index ) const
 {
-    return (long)m_renderstates_out.size();
+    return m_renderstates_in.at(p_index);
 }
 
-void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 )
+RenderState RenderStatesSet::GetRenderStateOut( long p_index ) const
+{
+    return m_renderstates_out.at(p_index);
+}
+
+size_t RenderStatesSet::GetRenderStatesInListSize( void ) const
+{
+    return m_renderstates_in.size();
+}
+
+size_t RenderStatesSet::GetRenderStatesOutListSize( void ) const
+{
+    return m_renderstates_out.size();
+}
+
+void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 ) const
 {
     MD5 md5;
 
@@ -143,7 +148,6 @@ void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 )
     {
         hash_rsargs = md5.digestMemory( (BYTE*)renderstates_arg.c_str(), (int)renderstates_arg.size() );
     }
-
     p_md5 = hash_rs + hash_rsargs + m_renderstate_unique_queue_id;
 }
 

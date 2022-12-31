@@ -33,11 +33,37 @@ namespace Core
 {
 
 class RenderStatesSet
-{
-protected:
+{                                                                            
+public:
 
-    static dsstring                 m_rootpath;
-    dsstring                        m_path;
+    RenderStatesSet( void );  
+    ~RenderStatesSet( void );
+
+    void            SetRenderStateUniqueQueueID(const dsstring& p_id);
+
+    void            AddRenderStateIn( const RenderState& p_renderstate );
+    void            AddRenderStateOut( const RenderState& p_renderstate );
+
+    void            UpdateRenderStateIn( int p_index, const RenderState& p_renderstate );
+    void            UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
+
+    void            UpdateRenderStateInExtendedArgs(int p_index, const std::vector<dsstring>& p_args);
+    void            UpdateRenderStateOutExtendedArgs(int p_index, const std::vector<dsstring>& p_args);
+
+    void            ClearRenderStateInExtendedArgs(int p_index);
+    void            ClearRenderStateOutExtendedArgs(int p_index);
+
+    void            PushRenderStateInExtendedArgs(int p_index, const dsstring& p_arg);
+    void            PushRenderStateOutExtendedArgs(int p_index, const dsstring& p_arg);
+
+    RenderState     GetRenderStateIn( long p_index ) const;
+    RenderState     GetRenderStateOut( long p_index ) const;
+    size_t          GetRenderStatesInListSize( void ) const;
+    size_t          GetRenderStatesOutListSize( void ) const;   
+    void            GetRenderStatesSetMD5( dsstring& p_md5 ) const;
+
+private:
+
 
     std::vector<RenderState>        m_renderstates_in;
     std::vector<RenderState>        m_renderstates_out;
@@ -46,40 +72,8 @@ protected:
                                                                                 // une entree setrenderstates specialement dediee au node associee
                                                                                 // au lieu d'utiliser celle issue du regroupement
                                                                                 // Utile pour le cas ou on doit updater un ou plusieurs renderstate
-                                                                                // pour ce node pendant le rendu
-                                                                                
-
-    dsstring                        compute_final_path( void );
-
-public:
-
-    RenderStatesSet( void );
-    RenderStatesSet( const dsstring& p_filepath );
-    ~RenderStatesSet( void );
-
-    static void SetRootPath( const dsstring& p_path );
-
-    void AddRenderStateIn( const RenderState& p_renderstate );
-    void AddRenderStateOut( const RenderState& p_renderstate );
-
-    void UpdateRenderStateIn( int p_index,const RenderState& p_renderstate );
-    void UpdateRenderStateOut( int p_index, const RenderState& p_renderstate );
-
-    RenderState GetRenderStateIn( long p_index );
-    RenderState GetRenderStateOut( long p_index );
-
-    long GetRenderStatesInListSize( void );
-    long GetRenderStatesOutListSize( void );
-
-    bool LoadFromFile( void );
-
-    void GetRenderStatesSetMD5( dsstring& p_md5 );
-
-    void SetRenderStateUniqueQueueID( const dsstring& p_id );
-
-
+                                                                                // pour ce node pendant le rendu   
 };
-
 }
 }
 #endif

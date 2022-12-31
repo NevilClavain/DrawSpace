@@ -316,8 +316,8 @@ local planet_specific_config_descr =
 
 	-- earth-like planet
 
-	plains_amplitude					         = 130.0,
-	mountains_amplitude					         = 380.0,
+	plains_amplitude					         = 100.0,
+	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,
@@ -440,6 +440,17 @@ local planet_specific_config_descr =
 	details_limit_sup							 = 1.40,
 	bump_details_limit_sup					     = 1.30,
 	ground_bump_details_factor_depth_distance	 = 8000.0,
+
+
+	ground_detail_bump_nb_frac_loop				 = 4,
+	ultra_details_max_distance					 = 550,
+	ground_bump_details_factor_depth_near_d1	 = 200.0,
+	ground_bump_details_factor_depth_near_d2	 = 250.0,
+
+	enable_ground_detail_bump					 = TRUE,
+	enable_ultra_detail							 = TRUE,
+	enable_ultra_detail_bump					 = TRUE,
+	enable_recursive_ultra_detail_textures		 = TRUE
 
 }
 
@@ -1271,7 +1282,21 @@ planet_layers =
 				},
 				rs_in = 
 				{
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ 
+						ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, 
+						value="extended",
+						extended_args = 
+						{
+							"linear",
+							"linear",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear_uvwrap",
+							"linear"
+						}
+					},
 					{ ope=RENDERSTATE_OPE_SETVERTEXTEXTUREFILTERTYPE, value="linear" }
 												
 				},
@@ -1285,7 +1310,13 @@ planet_layers =
 			{
 				[1] = 
 				{
-					{ path='earth_th_pixels_16.jpg', stage=0 }
+					{ path='earth_th_pixels_16.jpg', stage=0 },
+					{ path='splatting.jpg', stage=1 },
+					{ path='TexturesCom_RockGrassy0049_1_seamless_S.jpg', stage=2 },
+					{ path='TexturesCom_RockGrassy0048_1_seamless_S.jpg', stage=3 },					
+					{ path='TexturesCom_Grass0031_1_seamless_S.jpg', stage=4 },
+					{ path='TexturesCom_Grass0103_1_seamless_S.jpg', stage=5 },
+					{ path='TexturesCom_Snow0158_9_seamless_S.jpg', stage=6 }
 				}
 			},
 			vertex_textures =
@@ -1789,7 +1820,7 @@ set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(66.2, -26.093, 100.0, planet_specific_config_descr)
+set_freecam_on_planet(66.2, -26.093, 29.0, planet_specific_config_descr)
 
 
 

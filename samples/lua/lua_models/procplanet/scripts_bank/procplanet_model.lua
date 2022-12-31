@@ -216,6 +216,39 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 	if config_description['ground_bump_details_factor_depth_distance'] ~= nil then
 		planet_specific_configuration:set_groundbumpdetailsfactordepthdistance(config_description['ground_bump_details_factor_depth_distance'])
 	end
+
+	if config_description['ground_detail_bump_nb_frac_loop'] ~= nil then
+		planet_specific_configuration:set_grounddetailbumpnbfracloop(config_description['ground_detail_bump_nb_frac_loop'])
+	end
+
+	if config_description['ultra_details_max_distance'] ~= nil then
+		planet_specific_configuration:set_ultradetailsmaxdistance(config_description['ultra_details_max_distance'])
+	end
+
+	if config_description['ground_bump_details_factor_depth_near_d1'] ~= nil then
+		planet_specific_configuration:set_groundbumpdetailsfactordepthneard1(config_description['ground_bump_details_factor_depth_near_d1'])
+	end
+
+	if config_description['ground_bump_details_factor_depth_near_d2'] ~= nil then
+		planet_specific_configuration:set_groundbumpdetailsfactordepthneard2(config_description['ground_bump_details_factor_depth_near_d2'])
+	end
+
+	if config_description['enable_ground_detail_bump'] ~= nil then
+		planet_specific_configuration:enable_grounddetailbump(config_description['enable_ground_detail_bump'])
+	end
+
+	if config_description['enable_ultra_detail'] ~= nil then
+		planet_specific_configuration:enable_ultradetail(config_description['enable_ultra_detail'])
+	end
+
+	if config_description['enable_ultra_detail_bump'] ~= nil then
+		planet_specific_configuration:enable_ultradetailbump(config_description['enable_ultra_detail_bump'])
+	end
+
+	if config_description['enable_recursive_ultra_detail_textures'] ~= nil then
+		planet_specific_configuration:enable_recursiveultradetailtextures(config_description['enable_recursive_ultra_detail_textures'])
+	end
+
 end
 
 planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
@@ -257,8 +290,17 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
       local rs_in_config = fx_config['rs_in']
       for k2, v2 in pairs(rs_in_config) do
 	    local curr_rs_in = v2
-	    --g:print(curr_rs_in['ope']..'->'..curr_rs_in['value'])
+
 		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+
+		if curr_rs_in['value'] == 'extended' then
+		  if curr_rs_in['extended_args'] ~= nil then
+		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
+			  --g:print("	**-> "..k2.." "..v2)
+			  rss:push_renderstate_in_extendedargs(0, v2)
+			end
+		  end
+		end
 	  end
 
 	  local rs_out_config = fx_config['rs_out']

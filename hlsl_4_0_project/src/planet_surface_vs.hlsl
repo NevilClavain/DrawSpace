@@ -319,6 +319,10 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
         v_position3.w = 1.0;
 
+        
+
+
+
         Output.Position = mul(v_position3, mat[matWorldViewProjection]);
 
         vertex_pos = mul(v_position3, matWorldRot);
@@ -331,12 +335,17 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.LODGlobalPatch_TexCoord.y = lerp(base_uv.y, base_uv.w, Input.TexCoord0.y);
 
     Output.LODGlobalPatch_TexCoord.z = v_alt; // * v_factor;
-    Output.LODGlobalPatch_TexCoord.w = vertex_distance;
+
+    float4 v_position5 = mul(v_position3, mat[matWorldView]);
+    float vertex_distance_with_alt = sqrt(v_position5.x * v_position5.x + v_position5.y * v_position5.y + v_position5.z * v_position5.z);
+
+    Output.LODGlobalPatch_TexCoord.w = vertex_distance_with_alt;
 
 	// conserver aussi les coords textures originales du patch
     Output.UnitPatch_TexCoord = 0.0;
     Output.UnitPatch_TexCoord.x = Input.TexCoord0.x;
     Output.UnitPatch_TexCoord.y = Input.TexCoord0.y;
+    Output.UnitPatch_TexCoord.z = PositionWV.z;
 
 	
     Output.GlobalPatch_TexCoord = 0.0;

@@ -551,7 +551,7 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
             // set ocean details spec power
             Vector flags32{ e2->GetShaderFeederValue(ShaderType::PIXEL_SHADER, 32) };
-            flags32[2] = oceandetails_specularpower;
+            flags32[1] = oceandetails_specularpower;
             *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
         }
     }
@@ -561,82 +561,90 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 {
     //// retrieve specific config....
 
-    dsstring shaders_path{ m_owner->GetComponent<dsstring>("resources_path")->getPurpose() };
+    const auto shaders_path{ m_owner->GetComponent<dsstring>("resources_path")->getPurpose() };
 
-    dsreal planet_ray { m_owner->GetComponent<dsreal>("planet_ray")->getPurpose() };
-    dsreal atmo_thickness { m_owner->GetComponent<dsreal>("atmo_thickness")->getPurpose() };
-    dsreal flatclouds_altitude{ m_owner->GetComponent<dsreal>("flatclouds_altitude")->getPurpose() };
-    dsreal plains_amplitude { m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose() };
-    dsreal mountains_amplitude { m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose() };
-    dsreal vertical_offset { m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose() };
-    dsreal mountains_offset { m_owner->GetComponent<dsreal>("mountains_offset")->getPurpose() };
-    dsreal plains_seed1 { m_owner->GetComponent<dsreal>("plains_seed1")->getPurpose() };
-    dsreal plains_seed2 { m_owner->GetComponent<dsreal>("plains_seed2")->getPurpose() };
-    dsreal mix_seed1 { m_owner->GetComponent<dsreal>("mix_seed1")->getPurpose() };
-    dsreal mix_seed2 { m_owner->GetComponent<dsreal>("mix_seed2")->getPurpose() };
+    const auto planet_ray { m_owner->GetComponent<dsreal>("planet_ray")->getPurpose() };
+    const auto atmo_thickness { m_owner->GetComponent<dsreal>("atmo_thickness")->getPurpose() };
+    const auto flatclouds_altitude{ m_owner->GetComponent<dsreal>("flatclouds_altitude")->getPurpose() };
+    const auto plains_amplitude { m_owner->GetComponent<dsreal>("plains_amplitude")->getPurpose() };
+    const auto mountains_amplitude { m_owner->GetComponent<dsreal>("mountains_amplitude")->getPurpose() };
+    const auto vertical_offset { m_owner->GetComponent<dsreal>("vertical_offset")->getPurpose() };
+    const auto mountains_offset { m_owner->GetComponent<dsreal>("mountains_offset")->getPurpose() };
+    const auto plains_seed1 { m_owner->GetComponent<dsreal>("plains_seed1")->getPurpose() };
+    const auto plains_seed2 { m_owner->GetComponent<dsreal>("plains_seed2")->getPurpose() };
+    const auto mix_seed1 { m_owner->GetComponent<dsreal>("mix_seed1")->getPurpose() };
+    const auto mix_seed2 { m_owner->GetComponent<dsreal>("mix_seed2")->getPurpose() };
 
-    dsreal terrainbump_factor { m_owner->GetComponent<dsreal>("terrainbump_factor")->getPurpose() };
-    dsreal splat_transition_up_relative_alt { m_owner->GetComponent<dsreal>("splat_transition_up_relative_alt")->getPurpose() };
-    dsreal splat_transition_down_relative_alt { m_owner->GetComponent<dsreal>("splat_transition_down_relative_alt")->getPurpose() };
-    int splat_texture_resol { m_owner->GetComponent<int>("splat_texture_resol")->getPurpose() };
+    const auto terrainbump_factor { m_owner->GetComponent<dsreal>("terrainbump_factor")->getPurpose() };
+    const auto splat_transition_up_relative_alt { m_owner->GetComponent<dsreal>("splat_transition_up_relative_alt")->getPurpose() };
+    const auto splat_transition_down_relative_alt { m_owner->GetComponent<dsreal>("splat_transition_down_relative_alt")->getPurpose() };
+    const auto splat_texture_resol { m_owner->GetComponent<int>("splat_texture_resol")->getPurpose() };
 
-    dsreal atmo_kr { m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose() };
-    dsreal fog_alt_limit { m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose() };
-    dsreal fog_density { m_owner->GetComponent<dsreal>("fog_density")->getPurpose() };
+    const auto atmo_kr { m_owner->GetComponent<dsreal>("atmo_kr")->getPurpose() };
+    const auto fog_alt_limit { m_owner->GetComponent<dsreal>("fog_alt_limit")->getPurpose() };
+    const auto fog_density { m_owner->GetComponent<dsreal>("fog_density")->getPurpose() };
 
 
-    dsreal temp_scale{ m_owner->GetComponent<dsreal>("temp_scale")->getPurpose() };
-    dsreal lim_polar{ m_owner->GetComponent<dsreal>("lim_polar")->getPurpose() };
-    dsreal lim_tropical{ m_owner->GetComponent<dsreal>("lim_tropical")->getPurpose() };
-    dsreal k_polar{ m_owner->GetComponent<dsreal>("k_polar")->getPurpose() };
-    dsreal k_tropical{ m_owner->GetComponent<dsreal>("k_tropical")->getPurpose() };
-    dsreal humidity_alt_max{ m_owner->GetComponent<dsreal>("humidity_alt_max")->getPurpose() };
-    dsreal temp_dec_per_km{ m_owner->GetComponent<dsreal>("temp_dec_per_km")->getPurpose() };
-    dsreal beach_limit { m_owner->GetComponent<dsreal>("beach_limit")->getPurpose() };
+    const auto temp_scale{ m_owner->GetComponent<dsreal>("temp_scale")->getPurpose() };
+    const auto lim_polar{ m_owner->GetComponent<dsreal>("lim_polar")->getPurpose() };
+    const auto lim_tropical{ m_owner->GetComponent<dsreal>("lim_tropical")->getPurpose() };
+    const auto k_polar{ m_owner->GetComponent<dsreal>("k_polar")->getPurpose() };
+    const auto k_tropical{ m_owner->GetComponent<dsreal>("k_tropical")->getPurpose() };
+    const auto humidity_alt_max{ m_owner->GetComponent<dsreal>("humidity_alt_max")->getPurpose() };
+    const auto temp_dec_per_km{ m_owner->GetComponent<dsreal>("temp_dec_per_km")->getPurpose() };
+    const auto beach_limit { m_owner->GetComponent<dsreal>("beach_limit")->getPurpose() };
 
-    bool enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
-    bool enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
+    const auto enable_landplace_patch { m_owner->GetComponent<bool>("enable_landplace_patch")->getPurpose() };
+    const auto enable_atmosphere { m_owner->GetComponent<bool>("enable_atmosphere")->getPurpose() };
 
-    int wave_pass_resol { m_owner->GetComponent<int>("wave_pass_resol")->getPurpose() };
-    dsreal ocean_bump_factor{ m_owner->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() };
-
+    const auto wave_pass_resol { m_owner->GetComponent<int>("wave_pass_resol")->getPurpose() };
+    const auto ocean_bump_factor{ m_owner->GetComponent<dsreal>("ocean_bump_factor")->getPurpose() };
 
     m_main_pass = m_owner->GetComponent<dsstring>("main_pass")->getPurpose();
     m_reflection_pass = m_owner->GetComponent<dsstring>("reflection_pass")->getPurpose();
     m_bump_pass = m_owner->GetComponent<dsstring>("bump_pass")->getPurpose();
     m_oceanmask_pass = m_owner->GetComponent<dsstring>("oceanmask_pass")->getPurpose();
 
-    dsstring climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
-    dsstring climate_pshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second };
+    const auto climate_vshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().first };
+    const auto climate_pshader { m_owner->GetComponent<std::pair<dsstring, dsstring>>("climate_shaders")->getPurpose().second };
 
-    bool climate_vshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().first };
-    bool climate_pshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().second };
+    const auto climate_vshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().first };
+    const auto climate_pshader_compiled { m_owner->GetComponent<std::pair<bool, bool>>("climate_shaders_compiled")->getPurpose().second };
 
-    dsstring collision_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisions_shaders")->getPurpose().first };
-    dsstring collision_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisions_shaders")->getPurpose().second };
+    const auto collision_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisions_shaders")->getPurpose().first };
+    const auto collision_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisions_shaders")->getPurpose().second };
 
-    bool collision_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().first };
-    bool collision_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().second };
+    const auto collision_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().first };
+    const auto collision_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisions_shaders_compiled")->getPurpose().second };
 
     m_enable_collisionmeshe_display = m_owner->GetComponent<bool>("enable_collisionmeshe_display")->getPurpose();
 
-    dsstring collisionmeshe_display_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().first };
-    dsstring collisionmeshe_display_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().second };
+    const auto collisionmeshe_display_vshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().first };
+    const auto collisionmeshe_display_pshader{ m_owner->GetComponent<std::pair<dsstring, dsstring>>("collisionmeshe_display_shaders")->getPurpose().second };
 
-    bool collisionmeshe_display_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().first };
-    bool collisionmeshe_display_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().second };
+    const auto collisionmeshe_display_vshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().first };
+    const auto collisionmeshe_display_pshader_compiled{ m_owner->GetComponent<std::pair<bool, bool>>("collisionmeshe_display_shaders_compiled")->getPurpose().second };
 
-    bool enable_oceans{ m_owner->GetComponent<bool>("oceans")->getPurpose() };
+    const auto enable_oceans{ m_owner->GetComponent<bool>("oceans")->getPurpose() };
 
-    dsreal oceandetails_specularpower{ m_owner->GetComponent<dsreal>("oceandetails_specularpower")->getPurpose() };
+    const auto oceandetails_specularpower{ m_owner->GetComponent<dsreal>("oceandetails_specularpower")->getPurpose() };
 
-    dsreal details_terrain_bump_bias{ m_owner->GetComponent<dsreal>("details_terrain_bump_bias")->getPurpose() };
-    dsreal details_terrain_noise_scale{ m_owner->GetComponent<dsreal>("details_terrain_noise_scale")->getPurpose() };
-    dsreal level_disturbance_scale{ m_owner->GetComponent<dsreal>("level_disturbance_scale")->getPurpose() };
-    dsreal details_limit_sup{ m_owner->GetComponent<dsreal>("details_limit_sup")->getPurpose() };
-    dsreal bump_details_limit_sup{ m_owner->GetComponent<dsreal>("bump_details_limit_sup")->getPurpose() };
-    dsreal ground_bump_details_factor_depth_distance{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_distance")->getPurpose() };
+    const auto details_terrain_bump_bias{ m_owner->GetComponent<dsreal>("details_terrain_bump_bias")->getPurpose() };
+    const auto details_terrain_noise_scale{ m_owner->GetComponent<dsreal>("details_terrain_noise_scale")->getPurpose() };
+    const auto level_disturbance_scale{ m_owner->GetComponent<dsreal>("level_disturbance_scale")->getPurpose() };
+    const auto details_limit_sup{ m_owner->GetComponent<dsreal>("details_limit_sup")->getPurpose() };
+    const auto bump_details_limit_sup{ m_owner->GetComponent<dsreal>("bump_details_limit_sup")->getPurpose() };
+    const auto ground_bump_details_factor_depth_distance{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_distance")->getPurpose() };
 
+
+    const auto ground_detail_bump_nb_frac_loop{ m_owner->GetComponent<dsreal>("ground_detail_bump_nb_frac_loop")->getPurpose() };
+    const auto ultra_details_max_distance{ m_owner->GetComponent<dsreal>("ultra_details_max_distance")->getPurpose() };
+    const auto ground_bump_details_factor_depth_near_d1{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_near_d1")->getPurpose() };
+    const auto ground_bump_details_factor_depth_near_d2{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_near_d2")->getPurpose() };
+    const auto enable_ground_detail_bump{ m_owner->GetComponent<bool>("enable_ground_detail_bump")->getPurpose() };
+    const auto enable_ultra_detail{ m_owner->GetComponent<bool>("enable_ultra_detail")->getPurpose() };
+    const auto enable_ultra_detail_bump{ m_owner->GetComponent<bool>("enable_ultra_detail_bump")->getPurpose() };
+    const auto enable_recursive_ultra_detail_textures{ m_owner->GetComponent<bool>("enable_recursive_ultra_detail_textures")->getPurpose() };
 
 
     Texture* wavepass_result_texture{ m_owner->GetComponent<Texture*>("wavepass_result_texture")->getPurpose() };
@@ -982,14 +990,17 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             const Utils::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
 
-
             Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, details_flags);
 
+            Vector details_flags2(ground_detail_bump_nb_frac_loop, ultra_details_max_distance, ground_bump_details_factor_depth_near_d1, ground_bump_details_factor_depth_near_d2);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 34, details_flags2);
+
+            Vector details_settings(enable_ground_detail_bump, enable_ultra_detail, enable_ultra_detail_bump, enable_recursive_ultra_detail_textures);
+            *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 35, details_settings);
+
             return details_binder;
         };
-
-
 
        
         for (auto& pass_id : rcp.second)
