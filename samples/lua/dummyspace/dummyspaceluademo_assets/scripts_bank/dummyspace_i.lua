@@ -582,13 +582,17 @@ bellerophon_passes_bindings =
 		lit_shader_update_func = bellerophon.update_lit_from_scene_env
 	}
 }
---bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = -800.0 }, bellerophon_passes_bindings)
-bellerophon.view.load('ship', {x = 340.0, y = 0.0, z = 4200.0 }, bellerophon_passes_bindings)
+
+local bellerophon_mat = Matrix()
+bellerophon_mat:translation(340.0, 0.0, -800.0)
+--bellerophon_mat:translation(340.0, 0.0, 4200.0)
+bellerophon.view.load('ship', bellerophon_mat, bellerophon_passes_bindings)
+
 
 bellerophon_entity = bellerophon.models['ship'].entity
 
---eg:add_child('root', 'ship', bellerophon_entity)
-eg:add_child('ceres', 'ship', bellerophon_entity)
+eg:add_child('root', 'ship', bellerophon_entity)
+--eg:add_child('ceres', 'ship', bellerophon_entity)
 
 bellerophon_entity:add_aspect(INFOS_ASPECT)
 bellerophon_entity:setup_info( "entity_name", "Bellorophon" )
