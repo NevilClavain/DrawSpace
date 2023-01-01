@@ -62,4 +62,5 @@ install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_vs.hlsl OPTIONAL DE
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/modules/gameroom/lua_commons DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/gameroom/user.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/lua_commons)
+install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/gameroom/app_list.lua OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/lua_commons)
 

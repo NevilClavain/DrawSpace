@@ -3,18 +3,20 @@ gui:set_resourcespath("./guiskins")
 gui:load_scheme("xfskin.scheme")
 gui:load_scheme("AlfiskoSkin.scheme")
 
+include ('app_list.lua')
+
 
 local luaextensions_descriptions = {}
 local luaextensions_memallocs = {}
 
 
-local assets_dir = "planet2luademo_assets"
---local assets_dir = "nebulaeluademo_assets"
---local assets_dir = "textureluademo_assets"
---local assets_dir = "waterluademo_assets"
---local assets_dir = "guiluademo_assets"
---local assets_dir = "dummyspaceluademo_assets"
 
+
+local current_app = 'planet2'
+
+
+
+local assets_dir = app_list[current_app].assets_dir
 g:set_texturesrootpath(assets_dir.."/textures_bank")
 g:set_shadersrootpath(assets_dir.."/shaders_bank")
 g:set_meshesrootpath(assets_dir.."/meshes_bank")
@@ -22,11 +24,16 @@ g:set_scriptsrootpath(assets_dir.."/scripts_bank")
 
 g:enable_shadersdescrinfinalpath(TRUE)
 
-luaextensions_descriptions["mesh"] = g:register_extension("mesh")
-luaextensions_descriptions["skybox"] = g:register_extension("skybox")
-luaextensions_descriptions["impostors"] = g:register_extension("impostors")
-luaextensions_descriptions["planets"] = g:register_extension("planets")
-luaextensions_descriptions["strings"] = g:register_extension("strings")
+luaextensions_descriptions["mesh"]			= g:register_extension("mesh")
+luaextensions_descriptions["skybox"]		= g:register_extension("skybox")
+luaextensions_descriptions["impostors"]		= g:register_extension("impostors")
+luaextensions_descriptions["planets"]		= g:register_extension("planets")
+luaextensions_descriptions["strings"]		= g:register_extension("strings")
+luaextensions_descriptions["revolution"]	= g:register_extension("revolution")
+luaextensions_descriptions["orbit"]			= g:register_extension("orbit")
+luaextensions_descriptions["freemvt"]		= g:register_extension("freemvt")
+luaextensions_descriptions["fpsmvt"]		= g:register_extension("fpsmvt")
+
 
 show_ext=function()
   g:print('########## Active LUA extensions ##########')
@@ -34,7 +41,7 @@ show_ext=function()
     -- memorize total mem allocs foreach extension
     local alloctotalsize = g:get_extensionsalloctotalsize(k)
 
-    g:print('  -> ' .. v)
+    g:print('  -> ' .. v)  
 	luaextensions_memallocs[k] = alloctotalsize
   end
   g:print('###########################################')
@@ -49,23 +56,12 @@ run=function()
 
   g:dump_allextensionsalloc();
 
-  --commons.utils.startup('gui_i.lua')
-  commons.utils.startup('planet2_i.lua')
-  --commons.utils.startup('nebulae_i.lua')
-  --commons.utils.startup('texture_i.lua')
-  --commons.utils.startup('water_i.lua')
-  --commons.utils.startup('dummyspace_i.lua')
+  commons.utils.startup(app_list[current_app].in_file)
 end
 
 stop=function()
 
-
-  --commons.utils.shutdown('gui_r.lua')
-  commons.utils.shutdown('planet2_r.lua')
-  --commons.utils.shutdown('nebulae_r.lua')
-  --commons.utils.shutdown('texture_r.lua')
-  --commons.utils.shutdown('water_r.lua')
-  --commons.utils.shutdown('dummyspace_r.lua')
+  commons.utils.shutdown(app_list[current_app].out_file)
 
   for k,v in pairs(luaextensions_descriptions) do
     -- memorize total mem allocs foreach extension
