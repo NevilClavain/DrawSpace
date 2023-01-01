@@ -12,9 +12,6 @@ commons.procedural.planet = {}
 
 commons.utils.PI = 3.1415927
 
-REFLECTIONS_OFF=0
-REFLECTIONS_ON=1
-
 
 commons.utils.startup=function(startup_lua_file)
 
