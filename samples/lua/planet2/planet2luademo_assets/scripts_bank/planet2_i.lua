@@ -444,7 +444,7 @@ local planet_specific_config_descr =
 
 	ground_detail_bump_nb_frac_loop				 = 4,
 	ultra_details_max_distance					 = 550,
-	ground_bump_details_factor_depth_near_d1	 = 200.0,
+	ground_bump_details_factor_depth_near_d1	 = 60.0,
 	ground_bump_details_factor_depth_near_d2	 = 250.0,
 
 	enable_ground_detail_bump					 = TRUE,
