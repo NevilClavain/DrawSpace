@@ -267,74 +267,6 @@ commons.create_rendered_meshe = function(p_config, p_meshefile, p_meshe_name, re
 end
 
 
---specific to lit shader, so this should be removed 
--- create a table with all required parameters for lit vertex and pixel shaders (lit.vso, lit.pso)
-commons.setup_lit_shader_params = function()
-
-	shaders_params_table = {}
-	
-	shaders_params_table[0] = { param_name = "lights_enabled_v", shader_index = 0, register = 24 }
-	shaders_params_table[1] = { param_name = "light0_dir_v", shader_index = 0, register = 25 }
-	shaders_params_table[2] = { param_name = "flags_v", shader_index = 0, register = 26 }
-	shaders_params_table[3] = { param_name = "reflectorPos", shader_index = 0, register = 27 }
-	shaders_params_table[4] = { param_name = "reflectorNormale", shader_index = 0, register = 28 }
-	shaders_params_table[5] = { param_name = "ambient_color", shader_index = 1, register = 0 }
-	shaders_params_table[6] = { param_name = "lights_enabled", shader_index = 1, register = 1 }
-	shaders_params_table[7] = { param_name = "light0_color", shader_index = 1, register = 2 }
-	shaders_params_table[8] = { param_name = "light0_dir", shader_index = 1, register = 3 }
-	shaders_params_table[9] = { param_name = "flags", shader_index = 1, register = 7 }
-	shaders_params_table[10] = { param_name = "self_emissive", shader_index = 1, register = 8 }
-	shaders_params_table[11] = { param_name = "absorption", shader_index = 1, register = 9 }
-	shaders_params_table[12] = { param_name = "color", shader_index = 1, register = 10 }
-	shaders_params_table[13] = { param_name = "color_source", shader_index = 1, register = 11 }
-	shaders_params_table[14] = { param_name = "fog_color", shader_index = 1, register = 12 }
-	shaders_params_table[15] = { param_name = "flags2", shader_index = 1, register = 13 }
-
-	return shaders_params_table
-end
-
-
---specific to lit shader, so this should be removed 
-commons.update_lights = function( p_pass_id, p_lights_table, p_renderer_tables )
-
-	for k, v in pairs(p_renderer_tables) do
-		
-		local renderer = v
-
-		renderer:set_shaderrealvector( p_pass_id, 'ambient_color', p_lights_table.ambient_light.r, p_lights_table.ambient_light.g, p_lights_table.ambient_light.b, p_lights_table.ambient_light.a )
-		renderer:set_shaderrealvector( p_pass_id, 'lights_enabled', p_lights_table.lights_enabled.x, p_lights_table.lights_enabled.y, p_lights_table.lights_enabled.z, p_lights_table.lights_enabled.w )
-		renderer:set_shaderrealvector( p_pass_id, 'light0_color', p_lights_table.light0.color.r, p_lights_table.light0.color.g, p_lights_table.light0.color.b, p_lights_table.light0.color.a )
-		renderer:set_shaderrealvector( p_pass_id, 'light0_dir', p_lights_table.light0.direction.x, p_lights_table.light0.direction.y, p_lights_table.light0.direction.z, p_lights_table.light0.direction.w )
-
-		renderer:set_shaderrealvector( p_pass_id, 'light0_dir_v', p_lights_table.light0.direction.x, p_lights_table.light0.direction.y, p_lights_table.light0.direction.z, p_lights_table.light0.direction.w )
-		renderer:set_shaderrealvector( p_pass_id, 'lights_enabled_v', p_lights_table.lights_enabled.x, p_lights_table.lights_enabled.y, p_lights_table.lights_enabled.z, p_lights_table.lights_enabled.w )
-	end
-end
-
---specific to lit shader, so this should be removed 
-commons.setup_lit_flags = function( p_pass_id, p_renderer_tables, p_mirror, p_reflector_pos, p_reflector_normale, p_fog_intensity, p_fog_color )
-	for k, v in pairs(p_renderer_tables) do
-		local renderer = v
-
-		renderer:set_shaderrealinvector( p_pass_id, 'flags_v', 0, p_mirror)
-		renderer:set_shaderrealinvector( p_pass_id, 'flags_v', 1, p_fog_intensity)
-
-		renderer:set_shaderrealvector( p_pass_id, 'fog_color', p_fog_color.r, p_fog_color.g, p_fog_color.b, 1.0 )
-		
-		renderer:set_shaderrealvector( p_pass_id, 'reflectorPos', p_reflector_pos.x, p_reflector_pos.y, p_reflector_pos.z, 1.0 )
-		renderer:set_shaderrealvector( p_pass_id, 'reflectorNormale', p_reflector_normale.x, p_reflector_normale.y, p_reflector_normale.z, 1.0 )
-	end
-end
-
---specific to lit shader, so this should be removed 
-commons.setup_lit_flags_simple = function( p_pass_id, p_renderer_tables, p_fog_intensity, p_fog_color )
-	for k, v in pairs(p_renderer_tables) do
-		local renderer = v
-
-		renderer:set_shaderrealinvector( p_pass_id, 'flags_v', 1, p_fog_intensity)
-		renderer:set_shaderrealvector( p_pass_id, 'fog_color', p_fog_color.r, p_fog_color.g, p_fog_color.b, 1.0 )
-	end
-end
 
 commons.update_planet_lights = function( p_lights_table, p_planet_specific_config )
 
@@ -449,7 +381,7 @@ commons.procedural.find_normal_vector=function(vec_in,random_engine,vec_out)
 	vec_out:set_z(zp)
 end
 
-
+--[[
 commons.procedural.planet.read_infos=function(planet_specific_configuration)
 
 	local infos_description = {}
@@ -516,7 +448,7 @@ commons.procedural.planet.read_infos=function(planet_specific_configuration)
 	
 	return infos_description
 end
-
+]]
 
 commons.procedural.nebulae.build_specific_config=function(nebulae_specific_configuration,random_engine)
 

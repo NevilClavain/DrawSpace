@@ -10,6 +10,74 @@ planetmod.requested_rendering_layers = nil
 planetmod.wavepass_name = 'default'
 
 
+planetmod.read_infos=function(planet_specific_configuration)
+
+	local infos_description = {}
+
+	infos_description['delayedSingleSubPassQueueSize'] = planet_specific_configuration:get_outparam("OUT_delayedSingleSubPassQueueSize")
+
+	local views_infos = { planet_specific_configuration:get_outparam("OUT_viewsInfos") }
+
+	local nb_views = views_infos[1]
+
+	local formatted_views_infos = {}
+
+	for i = 0, nb_views-1, 1 do
+		
+		local views_infos_entry = {}
+		local offset = (16 * i) + 2
+		local camera_name = views_infos[offset]
+		local current_lod = views_infos[offset + 1]
+		local relative = views_infos[offset + 2]
+		local rel_alt = views_infos[offset + 3]
+		local alt = views_infos[offset + 4]
+
+		local current_patch_max_height = views_infos[offset + 5]
+		local current_patch_min_height = views_infos[offset + 6]
+		local current_patch_current_height = views_infos[offset + 7]
+
+		local local_camera_pos_x = views_infos[offset + 8]
+		local local_camera_pos_y = views_infos[offset + 9]
+		local local_camera_pos_z = views_infos[offset + 10]
+
+		local longitud = views_infos[offset + 11]
+		local latitud = views_infos[offset + 12]
+
+		local global_camera_pos_x = views_infos[offset + 13]
+		local global_camera_pos_y = views_infos[offset + 14]
+		local global_camera_pos_z = views_infos[offset + 15]
+
+		views_infos_entry['currentLOD'] = current_lod
+		views_infos_entry['relative'] = relative
+		views_infos_entry['relative_altitude'] = rel_alt
+		views_infos_entry['altitude'] = alt
+
+		views_infos_entry['current_patch_max_height'] = current_patch_max_height
+		views_infos_entry['current_patch_min_height'] = current_patch_min_height
+		views_infos_entry['current_patch_current_height'] = current_patch_current_height
+
+		views_infos_entry['local_camera_pos_x'] = local_camera_pos_x
+		views_infos_entry['local_camera_pos_y'] = local_camera_pos_y
+		views_infos_entry['local_camera_pos_z'] = local_camera_pos_z
+
+		views_infos_entry['longitud'] = longitud
+		views_infos_entry['latitud'] = latitud
+
+		views_infos_entry['global_camera_pos_x'] = global_camera_pos_x
+		views_infos_entry['global_camera_pos_y'] = global_camera_pos_y
+		views_infos_entry['global_camera_pos_z'] = global_camera_pos_z
+
+		formatted_views_infos[camera_name] = views_infos_entry
+
+	end
+
+	infos_description['viewsInfos'] = formatted_views_infos
+
+	
+	return infos_description
+end
+
+
 planetmod.setup_specific_config=function(config_description, planet_specific_configuration)
 
 	if config_description['resources_path'] ~= nil then

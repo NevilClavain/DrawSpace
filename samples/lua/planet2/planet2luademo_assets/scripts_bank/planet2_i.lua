@@ -988,7 +988,7 @@ function()
 
   -- display planet infos 
 
-  local planet_infos = commons.procedural.planet.read_infos(resurgam_planet_config)
+  local planet_infos = planetmod.read_infos(resurgam_planet_config)
 
   local current_cam_id
 
