@@ -25,7 +25,7 @@
 #ifndef _D3D11RENDERER_H_
 #define _D3D11RENDERER_H_
 
-#pragma warning( disable : 4005 )
+#pragma warning( disable : 4005 4838 )
 
 #include <d3d11.h>
 #include <d3dx11.h>
@@ -44,8 +44,28 @@
 #include "CEGUIWrapper.h"
 #include <CEGUI\RendererModules\Direct3D11\Renderer.h>
 
-#include "d3d11vertex.h"
-#include "d3d11triangle.h"
+struct d3d11triangle
+{
+    unsigned long vertex1;
+    unsigned long vertex2;
+    unsigned long vertex3;
+};
+
+struct d3d11line
+{
+    unsigned long vertex1;
+    unsigned long vertex2;    
+};
+
+struct d3d11vertex
+{
+    XMFLOAT3 pos;
+    XMFLOAT3 normale;
+    XMFLOAT4 t[9];
+    XMFLOAT3 tangent;
+    XMFLOAT3 binormale;
+
+};
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  dsstring d3dErrStr;

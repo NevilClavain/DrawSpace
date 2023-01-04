@@ -217,7 +217,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     }
 
-    static std::vector<std::pair<D3D_DRIVER_TYPE,dsstring>> driver_type =
+    static const std::vector<std::pair<D3D_DRIVER_TYPE,dsstring>> driver_type =
     {
         { D3D_DRIVER_TYPE_HARDWARE, "HARDWARE initialized"},
         { D3D_DRIVER_TYPE_WARP, "WARP initialized"},

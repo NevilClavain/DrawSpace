@@ -22,74 +22,28 @@
 */
 /* -*-LIC_END-*- */
 
+#pragma warning( disable : 4005 )
 #include <drawspace_commons.h>
 #include <d3dx11.h>
 
 void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str )
 {	
-    switch( p_hRes )
+    static const std::unordered_map<HRESULT, dsstring> translate =
     {
-        case S_OK:
-            p_str = "S_OK";
-            break;
-
-        case S_FALSE:
-            p_str = "S_FALSE";
-            break;
-
-        case E_NOTIMPL:
-            p_str = "E_NOTIMPL";
-            break;
-
-        case E_OUTOFMEMORY:
-            p_str = "E_OUTOFMEMORY";
-            break;
-
-        case E_INVALIDARG:
-            p_str = "E_INVALIDARG";
-            break;
-
-        case E_FAIL:
-            p_str = "E_FAIL";
-            break;
-
-        case D3DERR_WASSTILLDRAWING :
-            p_str = "D3DERR_WASSTILLDRAWING";
-            break;
-
-        case DXGI_ERROR_WAS_STILL_DRAWING:
-            p_str = "DXGI_ERROR_WAS_STILL_DRAWING";
-            break;
-
-        case D3DERR_INVALIDCALL :
-            p_str = "D3DERR_INVALIDCALL";
-            break;
-
-        case DXGI_ERROR_INVALID_CALL:
-            p_str = "DXGI_ERROR_INVALID_CALL";
-            break;
-
-        case D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD:
-            p_str = "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD";
-            break;
-
-        case D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS:
-            p_str = "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS";
-            break;
-
-        case D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS:
-            p_str = "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS";
-            break;
-
-        case D3D11_ERROR_FILE_NOT_FOUND:
-            p_str = "D3D11_ERROR_FILE_NOT_FOUND";
-            break;
-       
-        default:			
-            char err[64];
-            sprintf( err, "Unknown D3D11 error (%.8x)", p_hRes );
-
-            p_str = err;
-            break;
-    }
+        { S_OK, "S_OK"},
+        { S_FALSE, "S_FALSE"},
+        { E_NOTIMPL, "E_NOTIMPL"},
+        { E_OUTOFMEMORY, "E_OUTOFMEMORY"},
+        { E_INVALIDARG, "E_INVALIDARG"},
+        { E_FAIL, "E_FAIL"},
+        { D3DERR_WASSTILLDRAWING, "D3DERR_WASSTILLDRAWING"},
+        { DXGI_ERROR_WAS_STILL_DRAWING, "DXGI_ERROR_WAS_STILL_DRAWING"},
+        { D3DERR_INVALIDCALL, "D3DERR_INVALIDCALL"},
+        { DXGI_ERROR_INVALID_CALL, "DXGI_ERROR_INVALID_CALL"},
+        { D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD, "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD"},
+        { D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS"},
+        { D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS"},
+        { D3D11_ERROR_FILE_NOT_FOUND, "D3D11_ERROR_FILE_NOT_FOUND"},
+    };
+    p_str = translate.at(p_hRes);
 }
