@@ -44,8 +44,7 @@
 
 #include "animationssystem.h"
 
-#include "vertex.h"
-#include "triangle.h"
+#include "primitives.h"
 
 
 struct aiNode;

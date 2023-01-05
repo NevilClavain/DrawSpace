@@ -25,8 +25,7 @@
 #pragma once
 
 #include "drawspace_commons.h"
-#include "vertex.h"
-#include "triangle.h"
+#include "primitives.h"
 #include "vector.h"
 #include "matrix.h"
 
