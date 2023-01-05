@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _DRAWSPACE_COMMONS_H_
-#define _DRAWSPACE_COMMONS_H_
+#pragma once
 
 #include <windows.h>
 #include <string>
@@ -62,5 +61,3 @@ dsstring operator<< ( dsstring& p_s1, bool p_s2 );
 dsstring operator<< ( dsstring& p_s1, DWORD p_s2 );
 dsstring operator<< ( dsstring& p_s1, float p_s2 );
 dsstring operator<< ( dsstring& p_s1, dsreal p_s2 );
-
-#endif

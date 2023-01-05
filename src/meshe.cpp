@@ -36,36 +36,31 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-Meshe::Meshe( void ) : 
-m_render_data( NULL ),
-m_n_gen_mode(NORMALES_COMPUTED),
-m_tb_gen_mode(TB_DISCARDED)
+Meshe::Meshe( void )
 {
     m_normales_transf.Identity();
 }
 
 Meshe::~Meshe( void )
 {
-
 }
 
-
-long Meshe::GetVertexListSize( void ) const
+size_t Meshe::GetVertexListSize( void ) const
 {
-    return (long)m_vertices.size();
+    return m_vertices.size();
 }
 
-long Meshe::GetTrianglesListSize( void ) const
+size_t Meshe::GetTrianglesListSize( void ) const
 {
-    return (long)m_triangles.size();
+    return m_triangles.size();
 }
 
-void Meshe::GetVertex( long p_index, Vertex& p_vertex )
+void Meshe::GetVertex( long p_index, Vertex& p_vertex ) const
 {
     p_vertex = m_vertices[p_index];
 }
 
-void Meshe::GetTriangles( long p_index, Triangle& p_triangle )
+void Meshe::GetTriangles( long p_index, Triangle& p_triangle ) const
 {
     p_triangle = m_triangles[p_index];
 }
@@ -148,7 +143,7 @@ bool Meshe::UpdateVertices( void )
     return true;
 }
 
-void Meshe::GetCenter( Vector& p_vector )
+void Meshe::GetCenter( Vector& p_vector ) const
 {
     dsreal xsum = 0.0;
     dsreal ysum = 0.0;
@@ -167,7 +162,7 @@ void Meshe::GetCenter( Vector& p_vector )
     p_vector[3] = 1.0;
 }
 
-void Meshe::GetAABB( Vector& p_min, Vector& p_max )
+void Meshe::GetAABB( Vector& p_min, Vector& p_max ) const
 {
     if( m_vertices.size() > 0 )
     {
@@ -225,7 +220,7 @@ void Meshe::GetAABB( Vector& p_min, Vector& p_max )
     }
 }
 
-void Meshe::GetMD5( dsstring& p_md5 )
+void Meshe::GetMD5( dsstring& p_md5 ) const
 {
     MD5 md5;
 
@@ -347,12 +342,12 @@ void Meshe::SetRenderData( void* p_renderdata )
     m_render_data = p_renderdata;
 }
 
-void* Meshe::GetRenderData( void )
+void* Meshe::GetRenderData( void ) const
 {
     return m_render_data;
 }
 
-void Meshe::GetPath( dsstring& p_path )
+void Meshe::GetPath( dsstring& p_path ) const
 {
     p_path = m_path;
 }

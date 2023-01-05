@@ -35,16 +35,12 @@ namespace Core
 struct Triangle
 {
 public:
-    long vertex1;
-    long vertex2;
-    long vertex3;
+    long vertex1{ 0 };
+    long vertex2{ 0 };
+    long vertex3{ 0 };
 
-    Triangle( void ) :
-    vertex1( 0 ),
-    vertex2( 0 ),
-    vertex3( 0 )
+    Triangle( void )
     {
-
     }
 
     Triangle( long p_i1, long p_i2, long p_i3 ) :
@@ -52,7 +48,6 @@ public:
     vertex2( p_i2 ),
     vertex3( p_i3 )
     {
-
     }
 };
 }

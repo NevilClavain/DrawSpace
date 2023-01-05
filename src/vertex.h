@@ -45,40 +45,28 @@ private:
         }
     }
 public:
-    dsreal	x;
-    dsreal	y;
-    dsreal	z;
+    dsreal	x{ 0.0 };
+    dsreal	y{ 0.0 };
+    dsreal	z{ 0.0 };
 
-    dsreal	nx;
-    dsreal	ny;
-    dsreal	nz;
+    dsreal	nx{ 0.0 };
+    dsreal	ny{ 0.0 };
+    dsreal	nz{ 0.0 };
 
-    dsreal	tx;
-    dsreal	ty;
-    dsreal	tz;
+    dsreal	tx{ 0.0 };
+    dsreal	ty{ 0.0 };
+    dsreal	tz{ 0.0 };
 
-    dsreal	bx;
-    dsreal	by;
-    dsreal	bz;
+    dsreal	bx{ 0.0 };
+    dsreal	by{ 0.0 };
+    dsreal	bz{ 0.0 };
 
     float	tu[9];
     float	tv[9];
     float	tw[9];
     float	ta[9];
 
-    Vertex( void ):
-    x( 0.0 ),
-    y( 0.0 ),
-    z( 0.0 ),
-    nx( 0.0 ),
-    ny( 0.0 ),
-    nz( 0.0 ),
-    tx( 0.0 ),
-    ty( 0.0 ),
-    tz( 0.0 ),
-    bx( 0.0 ),
-    by( 0.0 ),
-    bz( 0.0 )
+    Vertex( void )
     {
         init_text_coords();
     };
@@ -90,7 +78,6 @@ public:
     {
         init_text_coords();
     }
-
 };
 }
 }

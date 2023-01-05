@@ -753,15 +753,15 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     D3D11_BUFFER_DESC vertexBufferDesc = {0};
     D3D11_BUFFER_DESC indexBufferDesc = {0};
     
-    Core::Meshe* meshe = p_meshe;
+    const auto meshe{ p_meshe };
 
     dsstring hash;
-    p_meshe->GetMD5( hash );
+    meshe->GetMD5( hash );
 
     if( m_meshes_base.count( hash ) > 0 )
     {
         *p_data = (void *)m_meshes_base[hash];
-        p_meshe->SetRenderData( (void *)m_meshes_base[hash] );
+        meshe->SetRenderData( (void *)m_meshes_base[hash] );
         return true;
     }
 
