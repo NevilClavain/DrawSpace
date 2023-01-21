@@ -714,7 +714,7 @@ void D3D11Renderer::BeginTarget( void* p_data, int p_slice_index)
         {
             _DSEXCEPTION("Unexpected slice number - not a 3D texture !")
         }
-        else if (p_slice_index >= ti->rendertextureTargetViews.size())
+        else if ((size_t)p_slice_index >= ti->rendertextureTargetViews.size())
         {
             _DSEXCEPTION("Unexpected slice number!")
         }
@@ -824,12 +824,12 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
     for( long i = 0; i < nb_triangles; i++ )
     {
-        Core::Triangle triangle;
+        Core::TrianglePrimitive<unsigned int> triangle;
         meshe->GetTriangles( i, triangle );
 
-        t[i].vertex1 = triangle.vertex1;
-        t[i].vertex2 = triangle.vertex2;
-        t[i].vertex3 = triangle.vertex3;
+        t[i].vertex1 = triangle.at(0);
+        t[i].vertex2 = triangle.at(1);
+        t[i].vertex3 = triangle.at(2);
     }
 
 	id.pSysMem = t;
@@ -911,12 +911,12 @@ bool D3D11Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p
 
     for( long i = 0; i < nb_triangles; i++ )
     {
-        Core::Triangle triangle;
+        Core::TrianglePrimitive<unsigned int> triangle;
         p_meshe->GetTriangles( i, triangle );
 
-        t[i].vertex1 = triangle.vertex1;
-        t[i].vertex2 = triangle.vertex2;
-        t[i].vertex3 = triangle.vertex3;
+        t[i].vertex1 = triangle.at(0);
+        t[i].vertex2 = triangle.at(1);
+        t[i].vertex3 = triangle.at(2);
     }
 
     m_lpd3ddevcontext->Unmap( meshe_data->vertex_buffer, 0 );

@@ -63,7 +63,8 @@ public:
     void ComputeTBs(void);
 
     void AddVertex( const Vertex& p_vertex );    
-    void AddTriangle( const Triangle& p_triangle, bool p_fastmode = false );
+    //void AddTriangle( const Triangle& p_triangle, bool p_fastmode = false );
+    void AddTriangle(const TrianglePrimitive<unsigned int>& p_triangle, bool p_fastmode = false);
 
     void ClearTriangles( void );
     void ClearVertices( void );
@@ -78,15 +79,15 @@ public:
     void SetTBGenerationMode(TangentBinormalesGenerationMode p_mode);
     void SetNormalesTransf(const Utils::Matrix& p_transf);
     void SetVertices(const std::vector<Vertex>& p_vertices);
-    void SetTriangles(const std::vector<Triangle>& p_triangles);
+    void SetTriangles(const std::vector<TrianglePrimitive<unsigned int>>& p_triangles);
 
 
     size_t GetVertexListSize(void) const;
     size_t GetTrianglesListSize(void) const;
     void GetVertex(long p_index, Vertex& p_vertex) const;
-    void GetTriangles(long p_index, Triangle& p_triangle) const;
+    void GetTriangles(long p_index, TrianglePrimitive<unsigned int>& p_triangle) const;
     std::vector<Vertex> GetVertices(void) const;
-    std::vector<Triangle> GetTriangles(void) const;
+    std::vector<TrianglePrimitive<unsigned int>> GetTriangles(void) const;
     Utils::Matrix GetNormalesTransf( void ) const;
     void* GetRenderData(void) const;
     void GetMD5(dsstring& p_md5) const;
@@ -97,19 +98,19 @@ public:
     TangentBinormalesGenerationMode GetTBGenerationMode(void) const;
 
 private:
-    std::vector<Vertex>                         m_vertices;
-    std::vector<Triangle>                       m_triangles;
+    std::vector<Vertex>                                                     m_vertices;
+    std::vector<TrianglePrimitive<unsigned int>>                            m_triangles;
     // list of triangles for each vertex
-    std::map<long, std::vector<Triangle>>       m_triangles_for_vertex;
+    std::map<long, std::vector<TrianglePrimitive<unsigned int>>>            m_triangles_for_vertex;
 
-    void*                                       m_render_data{ nullptr };
+    void*                                                                   m_render_data{ nullptr };
 
-    dsstring                                    m_path;
+    dsstring                                                                m_path;
 
-    NormalesGenerationMode                      m_n_gen_mode{ NORMALES_COMPUTED };
-    TangentBinormalesGenerationMode             m_tb_gen_mode{ TB_DISCARDED };
+    NormalesGenerationMode                                                  m_n_gen_mode{ NORMALES_COMPUTED };
+    TangentBinormalesGenerationMode                                         m_tb_gen_mode{ TB_DISCARDED };
 
-    Utils::Matrix                               m_normales_transf;
+    Utils::Matrix                                                           m_normales_transf;
 
     void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
         Utils::Vector& p_T, Utils::Vector& p_B, Utils::Vector& p_N);

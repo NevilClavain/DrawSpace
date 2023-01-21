@@ -62,8 +62,9 @@ ViewportQuad::ViewportQuad( dsreal p_width, dsreal p_height, dsreal p_z_offset )
     m_meshe->AddVertex( v2 );
     m_meshe->AddVertex( v3 );
     m_meshe->AddVertex( v4 );
-    m_meshe->AddTriangle( Triangle( 0, 2, 1 ) );
-    m_meshe->AddTriangle( Triangle( 0, 3, 2 ) );
+
+    m_meshe->AddTriangle(TrianglePrimitive<unsigned int>({ 0, 2, 1 }));
+    m_meshe->AddTriangle(TrianglePrimitive<unsigned int>({ 0, 3, 2 }));
 
     // prepare projection matrix
     DrawSpace::Interface::Renderer::Characteristics characteristics;

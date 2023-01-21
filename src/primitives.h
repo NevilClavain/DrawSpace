@@ -79,24 +79,9 @@ public:
     }
 };
 
-struct Triangle
-{
-public:
-    long vertex1{ 0 };
-    long vertex2{ 0 };
-    long vertex3{ 0 };
+template<typename T>
+using TrianglePrimitive = std::array<T,3>;
 
-    Triangle(void)
-    {
-    }
-
-    Triangle(long p_i1, long p_i2, long p_i3) :
-        vertex1(p_i1),
-        vertex2(p_i2),
-        vertex3(p_i3)
-    {
-    }
-};
 }
 }
 

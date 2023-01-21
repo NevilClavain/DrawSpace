@@ -113,8 +113,8 @@ public:
 
         struct MesheData
         {
-            std::vector<Core::Vertex>                         m_vertices;
-            std::vector<Core::Triangle>                       m_triangles;
+            std::vector<Core::Vertex>                               m_vertices;
+            std::vector<Core::TrianglePrimitive<unsigned int>>      m_triangles;
         };
 
         std::map<dsstring, MesheData> m_meshes_data;

@@ -60,9 +60,10 @@ void Meshe::GetVertex( long p_index, Vertex& p_vertex ) const
     p_vertex = m_vertices[p_index];
 }
 
-void Meshe::GetTriangles( long p_index, Triangle& p_triangle ) const
+void Meshe::GetTriangles( long p_index, TrianglePrimitive<unsigned int>& p_triangle ) const
 {
-    p_triangle = m_triangles[p_index];
+    const TrianglePrimitive<unsigned int> triangle{ m_triangles.at(p_index) };
+    p_triangle = triangle;
 }
 
 std::vector<Vertex> Meshe::GetVertices(void) const
@@ -70,7 +71,7 @@ std::vector<Vertex> Meshe::GetVertices(void) const
     return m_vertices;
 }
 
-std::vector<Triangle> Meshe::GetTriangles(void) const
+std::vector<TrianglePrimitive<unsigned int>> Meshe::GetTriangles(void) const
 {
     return m_triangles;
 }
@@ -80,7 +81,7 @@ void Meshe::SetVertices(const std::vector<Vertex>& p_vertices)
     m_vertices = p_vertices;
 }
 
-void Meshe::SetTriangles(const std::vector<Triangle>& p_triangles)
+void Meshe::SetTriangles(const std::vector<TrianglePrimitive<unsigned int>>& p_triangles)
 {
     m_triangles = p_triangles;
 }
@@ -95,15 +96,15 @@ void Meshe::SetVertex( long p_index, const Vertex& p_vertex )
     m_vertices[p_index] = p_vertex;
 }
 
-void Meshe::AddTriangle( const Triangle& p_triangle, bool p_fastmode )
+void Meshe::AddTriangle( const TrianglePrimitive<unsigned int>& p_triangle, bool p_fastmode )
 {
     m_triangles.push_back( p_triangle );
 
     if( !p_fastmode )
     {
-        m_triangles_for_vertex[p_triangle.vertex1].push_back( p_triangle );
-        m_triangles_for_vertex[p_triangle.vertex2].push_back( p_triangle );
-        m_triangles_for_vertex[p_triangle.vertex3].push_back( p_triangle );
+        m_triangles_for_vertex[p_triangle[0]].push_back( p_triangle );
+        m_triangles_for_vertex[p_triangle[1]].push_back( p_triangle );
+        m_triangles_for_vertex[p_triangle[2]].push_back( p_triangle );
     }
 }
 
@@ -125,8 +126,7 @@ bool Meshe::UpdateIndexes( void )
     {       
         return false;
     }
-
-    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    const auto renderer{ SingletonPlugin<Renderer>::GetInstance()->m_interface };
     renderer->UpdateMesheIndexes( this, m_render_data );
     return true;
 }
@@ -138,7 +138,7 @@ bool Meshe::UpdateVertices( void )
         return false;
     }
 
-    Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+    const auto renderer{ SingletonPlugin<Renderer>::GetInstance()->m_interface };
     renderer->UpdateMesheVertices( this, m_render_data );
     return true;
 }
@@ -224,35 +224,36 @@ void Meshe::GetMD5( dsstring& p_md5 ) const
 {
     MD5 md5;
 
-    Vertex* vbuff = new Vertex[m_vertices.size()];
-    Vertex* curr = vbuff;
+    const auto vbuff{ new Vertex[m_vertices.size()] };
+    auto curr{ vbuff };
 
     for( size_t i = 0; i < m_vertices.size(); i++ )
     {
         *curr = m_vertices[i];
         curr++;
     }
-    dsstring hash_v = md5.digestMemory( (BYTE*)vbuff, (int)( m_vertices.size() * sizeof( Vertex ) ) );
 
-    Triangle* tbuff = new Triangle[m_triangles.size()];
-    Triangle* curr2 = tbuff;
+    const dsstring hash_v{ md5.digestMemory((BYTE*)vbuff, (int)(m_vertices.size() * sizeof(Vertex))) };
+
+    auto tbuff{ new TrianglePrimitive<unsigned int>[m_triangles.size()] };
+    TrianglePrimitive<unsigned int>* curr2{ tbuff };
 
     for( size_t i = 0; i < m_triangles.size(); i++ )
     {
-        *curr2 = m_triangles[i];
+        //*curr2 = m_triangles.at(i);
+
+        TrianglePrimitive<unsigned int> triangle{ m_triangles.at(i) };
+        *curr2 = triangle;
         curr2++;
     }
-    dsstring hash_t = md5.digestMemory( (BYTE*)tbuff, (int)( m_triangles.size() * sizeof( Triangle ) ) );
+    const dsstring hash_t{ md5.digestMemory((BYTE*)tbuff, (int)(m_triangles.size() * sizeof(TrianglePrimitive<unsigned int>))) };
 
     p_md5 = hash_v + hash_t;
-
     if (m_path != "")
     {
-        dsstring hash_p{ md5.digestMemory( (BYTE*)m_path.c_str(), m_path.size() ) };
-
+        const dsstring hash_p{ md5.digestMemory( (BYTE*)m_path.c_str(), m_path.size() ) };
         p_md5 += hash_p;
     }
-
 
     delete[] vbuff;
     delete[] tbuff;
@@ -266,14 +267,14 @@ void Meshe::ComputeTBs(void)
         Vector binormales_sum;
         Vector normales_sum;
 
-        std::vector<Triangle> triangles_list = it->second;
+        const auto triangles_list{ it->second };
 
         for (size_t i = 0; i < triangles_list.size(); i++)
         {
-            Triangle triangle = triangles_list[i];
-            Vertex v1 = m_vertices[triangle.vertex1];
-            Vertex v2 = m_vertices[triangle.vertex2];
-            Vertex v3 = m_vertices[triangle.vertex3];
+            const auto triangle{ triangles_list.at(i) };
+            Vertex v1 = m_vertices[triangle[0]];
+            Vertex v2 = m_vertices[triangle[1]];
+            Vertex v3 = m_vertices[triangle[2]];
 
             Vector t, b, n;
             compute_TBN(v1, v2, v3, 0, t, b, n);
@@ -292,7 +293,6 @@ void Meshe::ComputeTBs(void)
         tangents_sum.Scale(1.0 / triangles_list.size());
         tangents_sum.Normalize();
 
-
         m_vertices[it->first].bx = binormales_sum[0];
         m_vertices[it->first].by = binormales_sum[1];
         m_vertices[it->first].bz = binormales_sum[2];
@@ -305,18 +305,17 @@ void Meshe::ComputeTBs(void)
 
 void Meshe::ComputeNormales( void )
 {
-    for (std::map<long, std::vector<Triangle>>::iterator it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it)
+    for (auto it = m_triangles_for_vertex.begin(); it != m_triangles_for_vertex.end(); ++it)
     {
         Vector normales_sum;
-
-        std::vector<Triangle> triangles_list = it->second;
+        const auto triangles_list{ it->second };
 
         for (size_t i = 0; i < triangles_list.size(); i++)
         {
-            Triangle triangle = triangles_list[i];
-            Vertex v1 = m_vertices[triangle.vertex1];
-            Vertex v2 = m_vertices[triangle.vertex2];
-            Vertex v3 = m_vertices[triangle.vertex3];
+            const auto triangle{ triangles_list.at(i) };
+            Vertex v1 = m_vertices[triangle[0]];
+            Vertex v2 = m_vertices[triangle[1]];
+            Vertex v3 = m_vertices[triangle[2]];
 
             Vector d1(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0);
             Vector d2(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0);
@@ -326,7 +325,6 @@ void Meshe::ComputeNormales( void )
 
             normales_sum = normales_sum + res;
         }
-
         normales_sum.Scale(1.0 / triangles_list.size());
         normales_sum.Normalize();
 
@@ -360,8 +358,8 @@ void Meshe::SetPath( const dsstring& p_path )
 void Meshe::compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
                     Vector& p_T, Vector& p_B, Vector& p_N )
 {
-    Vector v2v1( p_v2.x - p_v1.x, p_v2.y- p_v1.y, p_v2.z - p_v1.z, 1.0 );
-    Vector v3v1( p_v3.x - p_v1.x, p_v3.y- p_v1.y, p_v3.z - p_v1.z, 1.0 );
+    const Vector v2v1( p_v2.x - p_v1.x, p_v2.y- p_v1.y, p_v2.z - p_v1.z, 1.0 );
+    const Vector v3v1( p_v3.x - p_v1.x, p_v3.y- p_v1.y, p_v3.z - p_v1.z, 1.0 );
 
     dsreal c2c1t;
     dsreal c2c1b;

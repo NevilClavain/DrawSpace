@@ -348,16 +348,16 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
             for( long j = 0; j < patch_resolution - 1; j++ )
             {
-                Triangle triangle;
+                TrianglePrimitive<unsigned int> triangle;
 
-                triangle.vertex1 = current_index;
-                triangle.vertex2 = current_index + 1;
-                triangle.vertex3 = current_index + patch_resolution;
+                triangle.at(0) = current_index;
+                triangle.at(1) = current_index + 1;
+                triangle.at(2) = current_index + patch_resolution;
                 p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-                triangle.vertex1 = current_index + 1;
-                triangle.vertex2 = current_index + 1 + patch_resolution;
-                triangle.vertex3 = current_index + patch_resolution;
+                triangle.at(0) = current_index + 1;
+                triangle.at(1) = current_index + 1 + patch_resolution;
+                triangle.at(2) = current_index + patch_resolution;
                 p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
                 current_index++;
@@ -381,16 +381,16 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         {
             current_index = ( i * 2 ) + right_skirt_base_index;
 
-            Triangle triangle;
+            TrianglePrimitive<unsigned int> triangle;
 
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + 2;
+            triangle.at(0) = current_index;
+            triangle.at(1) = current_index + 1;
+            triangle.at(2) = current_index + 2;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 3;
-            triangle.vertex3 = current_index + 2;
+            triangle.at(0) = current_index + 1;
+            triangle.at(1) = current_index + 3;
+            triangle.at(2) = current_index + 2;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
 
@@ -402,16 +402,16 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         {
             current_index = ( i * 2 ) + left_skirt_base_index;
 
-            Triangle triangle;
+            TrianglePrimitive<unsigned int> triangle;
 
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + 2;
+            triangle.at(0) = current_index;
+            triangle.at(1) = current_index + 1;
+            triangle.at(2) = current_index + 2;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 3;
-            triangle.vertex3 = current_index + 2;
+            triangle.at(0) = current_index + 1;
+            triangle.at(1) = current_index + 3;
+            triangle.at(2) = current_index + 2;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
 
@@ -421,16 +421,16 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         {
             current_index = i + up_skirt_base_index;
 
-            Triangle triangle;
+            TrianglePrimitive<unsigned int> triangle;
 
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + patch_resolution;
+            triangle.at(0) = current_index;
+            triangle.at(1) = current_index + 1;
+            triangle.at(2) = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 1 + patch_resolution;
-            triangle.vertex3 = current_index + patch_resolution;
+            triangle.at(0) = current_index + 1;
+            triangle.at(1) = current_index + 1 + patch_resolution;
+            triangle.at(2) = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
 
@@ -441,16 +441,16 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
         {
             current_index = i + down_skirt_base_index;
 
-            Triangle triangle;
+            TrianglePrimitive<unsigned int> triangle;
 
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + patch_resolution;
+            triangle.at(0) = current_index;
+            triangle.at(1) = current_index + 1;
+            triangle.at(2) = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );
             
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 1 + patch_resolution;
-            triangle.vertex3 = current_index + patch_resolution;
+            triangle.at(0) = current_index + 1;
+            triangle.at(1) = current_index + 1 + patch_resolution;
+            triangle.at(2) = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle, p_fastmode );            
         }
 

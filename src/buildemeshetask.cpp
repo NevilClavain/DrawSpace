@@ -76,16 +76,16 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
                 _DSEXCEPTION("Face must have exactly 3 indices");
             }
 
-            int i1 = face.mIndices[0];
-            int i2 = face.mIndices[1];
-            int i3 = face.mIndices[2];
+            const unsigned int i1 = face.mIndices[0];
+            const unsigned int i2 = face.mIndices[1];
+            const unsigned int i3 = face.mIndices[2];
 
-            p_destination->AddTriangle(Core::Triangle(i1 + global_index, i2 + global_index, i3 + global_index));
+            p_destination->AddTriangle(Core::TrianglePrimitive<unsigned int>({ i1 + global_index, i2 + global_index, i3 + global_index }));
         }
 
         const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-        bool hasN = meshe->HasNormals();
-        bool hasTB = meshe->HasTangentsAndBitangents();
+        const bool hasN = meshe->HasNormals();
+        const bool hasTB = meshe->HasTangentsAndBitangents();
 
         for (size_t j = 0; j < meshe->mNumVertices; j++)
         {
