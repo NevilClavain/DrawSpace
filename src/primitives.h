@@ -82,6 +82,9 @@ public:
 template<typename T>
 using TrianglePrimitive = std::array<T,3>;
 
+template<typename T>
+using LinePrimitive = std::array<T, 2>;
+
 }
 }
 

@@ -136,7 +136,7 @@ protected:
 	    ID3D11Buffer*                                               vertex_buffer;
 	    ID3D11Buffer*                                               index_buffer;
         int                                                         nb_vertices;
-        int                                                         nb_triangles;
+        int                                                         nb_primitives;
     };
 
 
@@ -182,8 +182,9 @@ protected:
     HWND                                                            m_hwnd;
 
     Characteristics                                                 m_characteristics;
-    int                                                             m_next_nbvertices;
-    int                                                             m_next_nbtriangles;
+    int                                                             m_next_nbvertices{ 0 };
+    int                                                             m_next_nbtriangles{ 0 };
+    int                                                             m_next_nblines{ 0 };
 
     IDXGISwapChain*                                                 m_lpd3dswapchain;
     ID3D11Device*                                                   m_lpd3ddevice;                     
@@ -222,7 +223,7 @@ protected:
     std::map<dsstring, TextureInfos*>                               m_textures_base;
     std::map<dsstring, TextureInfos*>                               m_targettextures_base;
 
-    std::map<dsstring, MesheData*>                                  m_meshes_base;
+    std::map<dsstring, MesheData*>                                  m_meshes_base; // convenient for meshes and linemeshes
     std::map<dsstring, ShadersData*>                                m_shaders_base;
 	
 	std::set<ShaderBytesData*>										m_shadersbytes_base;
@@ -287,6 +288,11 @@ public:
     bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data );
     bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data );
 
+    bool CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** p_data);
+    void RemoveLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void* p_data);
+    bool SetLineMeshe(void* p_data);
+
+
     bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data );
     void DestroyTexture( void* p_data );
     bool SetTexture( void* p_data, int p_stage );
@@ -310,6 +316,10 @@ public:
 	dsstring GetShaderCompilationError(void* p_data);
 	void ReleaseShaderBytes(void* p_data);
 
+    void EnableTrianglesPrimitives(void);
+    void EnableLinesPrimitives(void);
+
+
     bool ApplyRenderStatesIn( void* p_data );
     bool ApplyRenderStatesOut( void* p_data );
 
@@ -320,6 +330,7 @@ public:
 	bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors);
 
 	bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
+    bool DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj);
 
     void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 

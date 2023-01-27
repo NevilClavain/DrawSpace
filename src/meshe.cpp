@@ -240,8 +240,6 @@ void Meshe::GetMD5( dsstring& p_md5 ) const
 
     for( size_t i = 0; i < m_triangles.size(); i++ )
     {
-        //*curr2 = m_triangles.at(i);
-
         TrianglePrimitive<unsigned int> triangle{ m_triangles.at(i) };
         *curr2 = triangle;
         curr2++;

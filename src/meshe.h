@@ -63,7 +63,6 @@ public:
     void ComputeTBs(void);
 
     void AddVertex( const Vertex& p_vertex );    
-    //void AddTriangle( const Triangle& p_triangle, bool p_fastmode = false );
     void AddTriangle(const TrianglePrimitive<unsigned int>& p_triangle, bool p_fastmode = false);
 
     void ClearTriangles( void );

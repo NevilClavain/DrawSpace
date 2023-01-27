@@ -30,7 +30,8 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
-PassSlot::PassSlot(const dsstring& p_pass_name) :
+PassSlot::PassSlot(const dsstring& p_pass_name, PrimitiveType p_primitivetype) :
+    m_primitivetype(p_primitivetype),
     m_pass_name(p_pass_name)
 {
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
@@ -54,5 +55,14 @@ PassSlot::~PassSlot(void)
 
 void PassSlot::on_renderingnode_draw(RenderingNode* p_rendering_node)
 {
-    m_renderer->DrawMeshe(m_world, m_view, m_proj);
+    if (PrimitiveType::TRIANGLE == m_primitivetype)
+    {
+        m_renderer->DrawMeshe(m_world, m_view, m_proj);
+    }
+    else
+    {
+        m_renderer->EnableLinesPrimitives();
+        m_renderer->DrawLineMeshe(m_world, m_view, m_proj);
+        m_renderer->EnableTrianglesPrimitives();;
+    }    
 }

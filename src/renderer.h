@@ -29,6 +29,7 @@
 #include "memalloc.h"
 #include "matrix.h"
 #include "renderingnode.h"
+#include "linemeshe.h"
 
 #include "logconf.h"
 
@@ -96,6 +97,11 @@ public:
     virtual bool UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;
     virtual bool UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* p_data ) = 0;
 
+    virtual bool CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** p_data) = 0;
+    virtual void RemoveLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void* p_data) = 0;
+    virtual bool SetLineMeshe(void* p_data) = 0;
+
+
     virtual bool CreateTexture( DrawSpace::Core::Texture* p_texture, void** p_data ) = 0;
     virtual void DestroyTexture( void* p_data ) = 0;
     virtual bool SetTexture( void* p_data, int p_stage ) = 0;
@@ -125,6 +131,9 @@ public:
 	virtual void ReleaseShaderBytes(void* p_data) = 0;
 	/////////////////////////////////////////////////////
 
+    virtual void EnableTrianglesPrimitives(void) = 0;
+    virtual void EnableLinesPrimitives(void) = 0;
+
 
     virtual bool ApplyRenderStatesIn( void* p_data ) = 0;
     virtual bool ApplyRenderStatesOut( void* p_data ) = 0;
@@ -137,6 +146,7 @@ public:
 	virtual bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors) = 0;
 
 	virtual bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj ) = 0;
+    virtual bool DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj) = 0;
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate ) = 0;
 

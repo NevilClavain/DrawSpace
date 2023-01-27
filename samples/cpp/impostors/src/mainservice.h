@@ -74,6 +74,10 @@ protected:
     DrawSpace::Core::Entity                                                         m_cube2Entity;
     DrawSpace::EntityGraph::EntityNode                                              m_cube2EntityNode;
 
+    DrawSpace::Core::Entity                                                         m_wireframecubeEntity;
+    DrawSpace::EntityGraph::EntityNode                                              m_wireframecubeEntityNode;
+
+
     DrawSpace::Core::Entity                                                         m_mainBodyEntity;
     DrawSpace::EntityGraph::EntityNode                                              m_mainBodyEntityNode;
 
@@ -109,6 +113,8 @@ protected:
     MeshRenderingAspectImpl                                                         m_groundRender;
     MeshRenderingAspectImpl                                                         m_cubeRender;
     MeshRenderingAspectImpl                                                         m_cube2Render;
+    MeshRenderingAspectImpl                                                         m_wireframecubeRender;
+
     MeshRenderingAspectImpl                                                         m_mainBodyRender;
     MeshRenderingAspectImpl                                                         m_feetRender;
 
@@ -158,6 +164,9 @@ protected:
     void create_ground( void );
     void create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,
         DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl& p_rigidBodyTransformAspectImpl);
+
+
+    void create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, MeshRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity);
 
 
     void create_composition(dsreal p_x, dsreal p_y, dsreal p_z, 

@@ -61,23 +61,6 @@ public:
 
     dsstring									m_debug_id;
 
-protected:
-
-    Fx*											m_fx;
-    Texture*									m_textures[NbMaxTextures]; // 32 textures stages max
-    Texture*									m_vertextextures[NbMaxTextures];
-    Meshe*										m_meshe;
-
-    std::map<dsstring, ShadersParams*>			m_shader_params;
-
-	std::map<dsstring, ShadersArrayParam*>		m_shaders_array_params;
-
-    long										m_order;
-
-    BaseCallback<void, RenderingNode*>*			m_handler;
-
-    bool										m_drawing_enabled;
-
 public:
     RenderingNode( void );
     virtual ~RenderingNode( void );
@@ -106,13 +89,13 @@ public:
     }
 
 
-    static  long GetTextureListSize( void );
-    virtual Texture* GetTexture( long p_index );
-    virtual Texture* GetVertexTexture( long p_index );
+    static  long        GetTextureListSize( void );
+    virtual Texture*    GetTexture( long p_index ) const;
+    virtual Texture*    GetVertexTexture( long p_index ) const;
 
     virtual void OnDraw( void );
     virtual void RegisterHandler( BaseCallback<void, RenderingNode*>* p_handler );
-    virtual long GetOrderNumber( void );
+    virtual long GetOrderNumber( void ) const;
     virtual void SetOrderNumber( long p_order );
 
     virtual void AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register );
@@ -129,13 +112,30 @@ public:
 
     virtual void UpdateShaderParams( const dsstring& p_id, ShadersParams& p_params );
 
-    virtual void GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist );
+    virtual void GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist ) const;
 
-	virtual void GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>& p_outlist);
+	virtual void GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>& p_outlist) const;
 
     virtual void SetDrawingState( bool p_drawing );
 
     friend class RenderingQueue;
+
+protected:
+
+    Fx*                                         m_fx{ nullptr };
+    Texture*                                    m_textures[NbMaxTextures]; // 32 textures stages max
+    Texture*                                    m_vertextextures[NbMaxTextures];
+    Meshe*                                      m_meshe{ nullptr };
+
+    std::map<dsstring, ShadersParams*>			m_shader_params;
+
+    std::map<dsstring, ShadersArrayParam*>		m_shaders_array_params;
+
+    long										m_order{ 1000 };
+
+    BaseCallback<void, RenderingNode*>*         m_handler;
+
+    bool										m_drawing_enabled;
 };
 }
 }

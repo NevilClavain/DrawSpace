@@ -344,7 +344,7 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     //////////////////////////////////////////////////////////////////////////
 
     m_lpd3ddevcontext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
+   
 
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory( &sampDesc, sizeof(sampDesc) );
@@ -745,6 +745,8 @@ void D3D11Renderer::EndTarget( void* p_data )
     // rien a faire ici en D3D11...
 }
 
+
+
 bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data )
 {
     DECLARE_D3D11ASSERT_VARS
@@ -850,7 +852,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
 
     meshe_data->nb_vertices = nb_vertices;
-    meshe_data->nb_triangles = nb_triangles;
+    meshe_data->nb_primitives = nb_triangles;
 
     *p_data = (void *)meshe_data;
 
@@ -863,7 +865,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
 void D3D11Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 {
-    MesheData* meshe_data = (MesheData*)p_data;
+    auto meshe_data{ static_cast<MesheData*>(p_data) };
    
     meshe_data->index_buffer->Release();
     meshe_data->vertex_buffer->Release();
@@ -881,16 +883,16 @@ void D3D11Renderer::RemoveMeshe( DrawSpace::Core::Meshe* p_meshe, void* p_data )
 
 bool D3D11Renderer::SetMeshe( void* p_data )
 {
-    MesheData* meshe_data = (MesheData*)p_data;
+    const auto meshe_data{ static_cast<MesheData*>(p_data) };
 
-    UINT stride = sizeof( d3d11vertex );
-    UINT offset = 0;
+    const UINT stride{ sizeof(d3d11vertex) };
+    const UINT offset = 0;
 
     m_lpd3ddevcontext->IASetVertexBuffers( 0, 1, &meshe_data->vertex_buffer, &stride, &offset ); 
     m_lpd3ddevcontext->IASetIndexBuffer( meshe_data->index_buffer, DXGI_FORMAT_R32_UINT, 0 );
 
     m_next_nbvertices = meshe_data->nb_vertices;
-    m_next_nbtriangles = meshe_data->nb_triangles;
+    m_next_nbtriangles = meshe_data->nb_primitives;
 
     return true;
 }
@@ -970,6 +972,139 @@ bool D3D11Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* 
     m_lpd3ddevcontext->Unmap( meshe_data->vertex_buffer, 0 );
     return true;
 }
+
+bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** p_data)
+{
+    DECLARE_D3D11ASSERT_VARS
+
+    const auto meshe{ p_meshe };
+    const auto hash{ meshe->GetMD5() };
+
+    if (m_meshes_base.count(hash) > 0)
+    {
+        *p_data = (void*)m_meshes_base[hash];
+        meshe->SetRenderData((void*)m_meshes_base[hash]);
+        return true;
+    }
+
+    const auto nb_vertices{ meshe->GetVertexListSize() };
+    const auto nb_lines{ meshe->GetLinesListSize() };
+
+    const auto meshe_data{ _DRAWSPACE_NEW_(MesheData, MesheData) };
+
+    // vertex buffer creation
+    const auto v{ new d3d11vertex[nb_vertices] };
+
+    for (long i = 0; i < nb_vertices; i++)
+    {
+        Core::Vertex vertex;
+        meshe->GetVertex(i, vertex);
+
+        v[i].pos.x = (float)vertex.x;
+        v[i].pos.y = (float)vertex.y;
+        v[i].pos.z = (float)vertex.z;
+
+        for (size_t j = 0; j < 9; j++)
+        {
+            v[i].t[j].x = vertex.tu[j];
+            v[i].t[j].y = vertex.tv[j];
+            v[i].t[j].z = vertex.tw[j];
+            v[i].t[j].w = vertex.ta[j];
+        }
+    }
+
+    D3D11_SUBRESOURCE_DATA id = { 0 };
+
+    id.pSysMem = v;
+    id.SysMemPitch = 0;//sizeof( d3d11vertex );
+    id.SysMemSlicePitch = 0;
+
+    D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
+
+    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    vertexBufferDesc.ByteWidth = nb_vertices * sizeof(d3d11vertex);
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDesc.MiscFlags = 0;
+
+    hRes = m_lpd3ddevice->CreateBuffer(&vertexBufferDesc, &id, &meshe_data->vertex_buffer);
+    D3D11_CHECK(CreateBuffer)
+
+    delete[] v;
+
+    // index buffer creation
+
+    const auto t{ new d3d11line[nb_lines] };
+
+    for (long i = 0; i < nb_lines; i++)
+    {
+        Core::LinePrimitive<unsigned int> line;
+        meshe->GetLine(i, line);
+
+        t[i].vertex1 = line.at(0);
+        t[i].vertex2 = line.at(1);
+    }
+
+    id.pSysMem = t;
+
+    id.SysMemPitch = 0;
+    id.SysMemSlicePitch = 0;
+
+    D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+
+    indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    indexBufferDesc.ByteWidth = nb_lines * sizeof(d3d11line);
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    indexBufferDesc.MiscFlags = 0;
+
+    hRes = m_lpd3ddevice->CreateBuffer(&indexBufferDesc, &id, &meshe_data->index_buffer);
+    D3D11_CHECK(CreateBuffer)
+
+    delete[] t;
+
+    meshe_data->nb_vertices = nb_vertices;
+    meshe_data->nb_primitives = nb_lines;
+    *p_data = (void*)meshe_data;
+
+    meshe->SetRenderData((void*)meshe_data);
+    m_meshes_base[hash] = meshe_data;
+
+    return true;
+}
+
+void D3D11Renderer::RemoveLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void* p_data)
+{
+    auto meshe_data{ static_cast<MesheData*>(p_data) };
+
+    meshe_data->index_buffer->Release();
+    meshe_data->vertex_buffer->Release();
+
+    _DRAWSPACE_DELETE_(meshe_data);
+
+    const auto hash{ p_meshe->GetMD5() };
+    if (m_meshes_base.count(hash) > 0)
+    {
+        m_meshes_base.erase(hash);
+    }
+}
+
+bool D3D11Renderer::SetLineMeshe(void* p_data)
+{
+    const auto meshe_data{ static_cast<MesheData*>(p_data) };
+
+    const UINT stride{ sizeof(d3d11vertex) };
+    const UINT offset = 0;
+
+    m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &meshe_data->vertex_buffer, &stride, &offset);
+    m_lpd3ddevcontext->IASetIndexBuffer(meshe_data->index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+    m_next_nbvertices = meshe_data->nb_vertices;
+    m_next_nblines = meshe_data->nb_primitives;
+
+    return true;
+}
+
 
 
 bool D3D11Renderer::create2D_rendertarget(DrawSpace::Core::Texture* p_texture, DXGI_FORMAT p_format, TextureInfos* p_texture_infos)
@@ -1980,6 +2115,19 @@ void D3D11Renderer::ReleaseShaderBytes(void* p_data)
 	_DRAWSPACE_DELETE_(sdata);	
 }
 
+void D3D11Renderer::EnableTrianglesPrimitives(void)
+{
+    DECLARE_D3D11ASSERT_VARS
+    m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void D3D11Renderer::EnableLinesPrimitives(void)
+{
+    DECLARE_D3D11ASSERT_VARS
+    m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+}
+
+
 bool D3D11Renderer::ApplyRenderStatesIn( void* p_data )
 {
 	DrawSpace::Core::Fx* fx = (DrawSpace::Core::Fx*)p_data;
@@ -2159,6 +2307,77 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     m_lpd3ddevcontext->VSSetConstantBuffers( 0, 1, &m_vertexshader_legacyargs_buffer );
     m_lpd3ddevcontext->PSSetConstantBuffers( 0, 1, &m_pixelshader_legacyargs_buffer );
     m_lpd3ddevcontext->DrawIndexed( m_next_nbtriangles * 3, 0, 0 );
+
+    return true;
+}
+
+bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj)
+{
+    // setting transformation
+    DrawSpace::Utils::Matrix final_view;
+    DrawSpace::Utils::Matrix inv;
+    DrawSpace::Utils::Matrix result;
+
+    inv.Identity();
+    inv(2, 2) = -1.0;
+    final_view = p_view * inv;
+
+    Transformation chain;
+    chain.PushMatrix(p_proj);
+    chain.PushMatrix(final_view);
+    chain.PushMatrix(p_world);
+    chain.BuildResult();
+    chain.GetResult(&result);
+    result.Transpose();
+
+    set_vertexshader_constants_mat(0, result);
+    set_pixelshader_constants_mat(100, result);
+
+    //////////////////////////////////////////////////////////////////////
+
+    DrawSpace::Utils::Matrix proj = p_proj;
+    DrawSpace::Utils::Matrix world = p_world;
+    DrawSpace::Utils::Matrix view = p_view;
+    DrawSpace::Utils::Matrix cam = p_view;
+    DrawSpace::Utils::Matrix worldview = world * view;
+    worldview.Transpose();
+
+    set_vertexshader_constants_mat(4, worldview);
+    set_pixelshader_constants_mat(104, worldview);
+
+    //////////////////////////////////////////////////////////////////////
+
+    world.Transpose();
+    view.Transpose();
+    cam.Inverse();
+    cam.Transpose();
+
+    set_vertexshader_constants_mat(8, world);
+    set_vertexshader_constants_mat(12, view);
+
+    set_pixelshader_constants_mat(108, world);
+    set_pixelshader_constants_mat(112, view);
+
+    //////////////////////////////////////////////////////////////////////
+
+    set_vertexshader_constants_mat(16, cam);
+    set_pixelshader_constants_mat(116, cam);
+
+
+    proj.Transpose();
+    set_vertexshader_constants_mat(20, proj);
+    set_pixelshader_constants_mat(120, proj);
+
+    // update des shaders legacy constants buffers...
+
+    m_lpd3ddevcontext->UpdateSubresource(m_vertexshader_legacyargs_buffer, 0, NULL, &m_vertexshader_legacyargs, 0, 0);
+    m_lpd3ddevcontext->UpdateSubresource(m_pixelshader_legacyargs_buffer, 0, NULL, &m_pixelshader_legacyargs, 0, 0);
+
+    ///////////////
+
+    m_lpd3ddevcontext->VSSetConstantBuffers(0, 1, &m_vertexshader_legacyargs_buffer);
+    m_lpd3ddevcontext->PSSetConstantBuffers(0, 1, &m_pixelshader_legacyargs_buffer);
+    m_lpd3ddevcontext->DrawIndexed(m_next_nblines * 2, 0, 0);
 
     return true;
 }

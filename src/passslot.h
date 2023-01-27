@@ -40,6 +40,13 @@ class RenderingNode;
 
 struct PassSlot
 {
+public:
+    enum class PrimitiveType
+    {
+        TRIANGLE,
+        LINE
+    };
+
 private:
     using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<PassSlot, void, DrawSpace::Core::RenderingNode*>;
 
@@ -47,20 +54,20 @@ private:
     DrawSpace::Core::RenderingNode*         m_rendering_node     = { nullptr };
     RenderingNodeDrawCallback*              m_cb                 = { nullptr };
     DrawSpace::Interface::Renderer*         m_renderer           = { nullptr };
+    PrimitiveType                           m_primitivetype      = PrimitiveType::TRIANGLE;
 
     virtual void on_renderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
 
 public:
-
     DrawSpace::Utils::Matrix                           m_world;
     DrawSpace::Utils::Matrix                           m_view;
     DrawSpace::Utils::Matrix                           m_proj;
 
-    PassSlot(const dsstring& p_pass_name);
+    PassSlot(const dsstring& p_pass_name, PrimitiveType p_primitivetype = PrimitiveType::TRIANGLE);
     ~PassSlot(void);
 
     inline DrawSpace::Core::RenderingNode* GetRenderingNode(void) const { return m_rendering_node; };
-    inline dsstring                         GetPassName(void) const { return m_pass_name; };
+    inline dsstring                        GetPassName(void) const { return m_pass_name; };
 };
 }
 }

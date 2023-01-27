@@ -90,6 +90,8 @@ ${CMAKE_SOURCE_DIR}/src/fx.cpp
 ${CMAKE_SOURCE_DIR}/src/fx.h
 ${CMAKE_SOURCE_DIR}/src/meshe.cpp
 ${CMAKE_SOURCE_DIR}/src/meshe.h
+${CMAKE_SOURCE_DIR}/src/linemeshe.cpp
+${CMAKE_SOURCE_DIR}/src/linemeshe.h
 ${CMAKE_SOURCE_DIR}/src/plugin.h
 ${CMAKE_SOURCE_DIR}/src/renderingnode.cpp
 ${CMAKE_SOURCE_DIR}/src/renderingnode.h
