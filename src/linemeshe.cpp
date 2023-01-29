@@ -47,6 +47,11 @@ size_t LineMeshe::GetLinesListSize(void) const
     return m_lines.size();
 }
 
+dsstring LineMeshe::GetName(void) const
+{
+    return m_name;
+}
+
 void LineMeshe::GetVertex(long p_index, Vertex& p_vertex) const
 {
     p_vertex = m_vertices.at(p_index);
@@ -106,6 +111,11 @@ void LineMeshe::SetLines(const std::vector<LinePrimitive<unsigned int>>& p_lines
 void LineMeshe::SetRenderData(void* p_renderdata)
 {
     m_render_data = p_renderdata;
+}
+
+void LineMeshe::SetName(const dsstring& p_name)
+{
+    m_name = p_name;
 }
 
 void* LineMeshe::GetRenderData(void) const

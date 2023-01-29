@@ -846,7 +846,7 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
     rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass", PassSlot::PrimitiveType::LINE);
 
-    auto rnode{ rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
+    const auto rnode{ rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
 
     auto fx { _DRAWSPACE_NEW_(Fx, Fx) };
 
@@ -862,12 +862,59 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
 
     rnode->SetFx(fx);
 
+    const auto linemeshe{ _DRAWSPACE_NEW_(LineMeshe, LineMeshe) };
+    linemeshe->SetName("wireframe_cube");
+
+    // add vertices and lines...
+
+    linemeshe->AddVertex({ -0.5, 0.5, 0.5 } );
+    linemeshe->AddVertex({ 0.5, 0.5, 0.5 });
+    linemeshe->AddVertex({ 0.5, -0.5, 0.5 });
+    linemeshe->AddVertex({ -0.5, -0.5, 0.5 });
+    linemeshe->AddVertex({ -0.5, 0.5, -0.5 });
+    linemeshe->AddVertex({ 0.5, 0.5, -0.5 });
+    linemeshe->AddVertex({ 0.5, -0.5, -0.5 });
+    linemeshe->AddVertex({ -0.5, -0.5, -0.5 });
+
+
+    linemeshe->AddLine({ 0, 1 });
+    linemeshe->AddLine({ 1, 2 });
+    linemeshe->AddLine({ 2, 3 });
+    linemeshe->AddLine({ 3, 0 });
+
+    linemeshe->AddLine({ 4, 5 });
+    linemeshe->AddLine({ 5, 6 });
+    linemeshe->AddLine({ 6, 7 });
+    linemeshe->AddLine({ 7, 4 });
+
+    linemeshe->AddLine({ 0, 4 });
+    linemeshe->AddLine({ 1, 5 });
+    linemeshe->AddLine({ 2, 6 });
+    linemeshe->AddLine({ 3, 7 });
+
+    rnode->SetLineMeshe(linemeshe);
+
+
+    rnode->SetOrderNumber(1100);
+
+    rnode->AddShaderParameter(1, "color", 0);
+    rnode->SetShaderRealVector("color", Vector(1.0, 0.0, 0.0, 0.0));
+
     /////////// resources ////////////////////////////////
 
     auto resources_aspect{ p_entity.AddAspect<ResourcesAspect>() };
 
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(vshader, false, 0));
     resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(pshader, false, 1));
+
+    ////////// transformations ///////////////////////////
+
+    TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+
+    transform_aspect->AddImplementation(0, &m_wireframecube_transformer);
+
+    transform_aspect->AddComponent<Matrix>("pos");
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
 
 }
 

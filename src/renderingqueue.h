@@ -42,13 +42,14 @@ private:
         SHADERS_LIST,
         RS_LIST,
         MESHE_LIST,
+        LINEMESHE_LIST,
         TEXTURE_LIST
     };
 
     using SortCategory = struct
     {
         SortedListType  type;
-        long            stage;  // pour type TEXTURE_LIST
+        long            stage{ 0 };  // pour type TEXTURE_LIST
 
     };
 
@@ -60,6 +61,7 @@ private:
         SET_RENDERSTATES_IN,
         SET_RENDERSTATES_OUT,
         SET_MESHE,
+        SET_LINEMESHE,
         SET_SHADERS_PARAMS,
 		SET_SHADERS_ARRAY_PARAMS,
         DRAW_NODE,
@@ -124,11 +126,13 @@ private:
 
 
     std::map<RenderingNode*, std::pair<void*, dsstring> >                   m_meshe_datas;
+    std::map<RenderingNode*, std::pair<void*, dsstring> >                   m_linemeshe_datas;
 
     long                                                                    m_switches_cost;
 
 
     std::vector<OperationsGroup>                                            m_setmeshe_groups;
+    std::vector<OperationsGroup>                                            m_setlinemeshe_groups;
     std::vector<OperationsGroup>                                            m_setshaders_groups;
 
     std::vector<OperationsGroup>                                            m_setrsin_groups;

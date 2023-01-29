@@ -29,12 +29,7 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-RenderingNode::RenderingNode( void ) : 
-m_order( 10000 ), 
-m_handler( NULL ), 
-m_meshe( NULL ),
-m_fx( NULL ),
-m_drawing_enabled( true )
+RenderingNode::RenderingNode( void )
 { 
     for( long i = 0; i < NbMaxTextures; i++ )
     {

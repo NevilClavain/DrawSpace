@@ -142,6 +142,7 @@ protected:
     DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_ground_transformer;
     DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_cube_transformer;
     DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_cube_transformer2;
+    DrawSpace::AspectImplementations::RawTransformAspectImpl                        m_wireframecube_transformer;
 
     DrawSpace::AspectImplementations::RigidBodyTransformAspectImpl                  m_rigbody_composition_transformer;
     FPSTransformAspectImpl                                                          m_fps_transformer;
