@@ -268,18 +268,18 @@ bool MainService::Init( void )
     m_cube2EntityNode = m_World1EntityNode.AddChild(&m_cube2Entity);
     m_cube2Render.RegisterToRendering(m_rendergraph);
 
-    //ajouter le cube fil de fer a la scene
-    m_wireframecubeEntityNode = m_World1EntityNode.AddChild(&m_wireframecubeEntity);
-    m_wireframecubeRender.RegisterToRendering(m_rendergraph);
-
-
-
     m_mainBodyEntityNode = m_World1EntityNode.AddChild(&m_mainBodyEntity);
     m_mainBodyRender.RegisterToRendering(m_rendergraph);
 
 
     m_feetEntityNode = m_mainBodyEntityNode.AddChild(&m_feetEntity);
     m_feetRender.RegisterToRendering(m_rendergraph);
+
+    //ajouter le cube fil de fer a la scene
+    //m_wireframecubeEntityNode = m_World1EntityNode.AddChild(&m_wireframecubeEntity);
+    m_wireframecubeEntityNode = m_mainBodyEntityNode.AddChild(&m_wireframecubeEntity);
+    m_wireframecubeRender.RegisterToRendering(m_rendergraph);
+
 
 
 
@@ -914,7 +914,7 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
     transform_aspect->AddImplementation(0, &m_wireframecube_transformer);
 
     transform_aspect->AddComponent<Matrix>("pos");
-    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(0.0, -2.0, 0.0);
 
 }
 
