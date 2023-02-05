@@ -34,6 +34,14 @@ spherebump.view.unload('sphere')
 
 destroy_all_cubes()
 
+
+
+
+eg:remove('wireframe_cube')
+model.transformations['wireframe_cube'].transform:release()
+commons.trash.meshe(rg, wireframecube_entity, wireframecube_renderer)
+
+
 objectdistance_renderer:release()
 objectid_renderer:release()
 text_renderer:release()

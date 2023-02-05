@@ -81,12 +81,12 @@ int LuaClass_MeshRendering::LUA_attachtoentity( lua_State* p_L )
         LUA_ERROR( "MesheRendering::attach_toentity : argument(s) missing" );
 	}
 
-    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    auto lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
 
     DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
-    RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
+    const auto rendering_aspect{ entity.GetAspect<RenderingAspect>() };
 
-    if( NULL == rendering_aspect )
+    if( nullptr == rendering_aspect )
     {
         LUA_ERROR( "MesheRendering::attach_toentity : entity has no rendering aspect!" );
     }
@@ -94,7 +94,7 @@ int LuaClass_MeshRendering::LUA_attachtoentity( lua_State* p_L )
     m_entity_rendering_aspect = rendering_aspect;
     m_entity = &entity;
 
-    m_entity_rendering_aspect->AddImplementation( &m_meshe_render, NULL );
+    m_entity_rendering_aspect->AddImplementation( &m_meshe_render, nullptr);
 
     return 0;
 }
@@ -125,7 +125,7 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
         LUA_ERROR("MesheRendering::configure : no attached entity");
     }
 
-    const auto resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+    const auto resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         LUA_ERROR("MesheRendering::configure : attached entity has no resources aspect !");
@@ -157,7 +157,7 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
                     for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontextname))
                     {
                         m_entity_rendering_aspect->AddComponent<PassSlot>(pass_id, pass_id);
-                        auto rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
+                        const auto rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
                         m_renderingnodes[pass_id] = rnode;
 
                         //  on a besoin que d'un seul fx....
@@ -167,7 +167,7 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
                             LUA_ERROR("MesheRendering::configure : missing fx parameters description");
                         }
 
-                        auto fx_params{ render_context.fxparams[0] };
+                        const auto fx_params{ render_context.fxparams[0] };
 
                         auto fx { _DRAWSPACE_NEW_(Fx, Fx) };
                         rnode->SetFx(fx);

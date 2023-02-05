@@ -611,13 +611,61 @@ waterquad_passes_bindings =
 }
 waterquad.view.load('water', waterquad_passes_bindings)
 eg:add_child('root', 'water', waterquad.models['water'].entity)
-
 model.setup_rawtransformationschain(waterquad.models['water'].entity, 'water', 0)
-
-
 model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)
-
 waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass', 'bump_pass', 0)
+
+
+wireframecube_rendering_config = 
+{
+	main_rendering = 
+	{
+		fx = 
+		{
+			shaders = 
+			{
+				{ path='color_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='color_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+
+		rendering_order = 10000,
+
+		shaders_params = 
+		{ 
+			{ param_name = "color", shader_index = 1, register = 0 }
+		}
+	}
+}
+
+wireframe_passes_bindings = 
+{
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = nil
+	}
+}
+
+wireframecube_entity, wireframecube_renderer = commons.create_rendered_linemeshe(wireframecube_rendering_config, "wireframe_cube", wireframe_passes_bindings)
+wireframecube_renderer:register_to_rendering(rg)
+
+eg:add_child('root', 'wireframe_cube', wireframecube_entity)
+
+model.setup_rawtransformationschain(wireframecube_entity, 'wireframe_cube', 0)
+model.move.setpos('wireframe_cube', 0.0, skydome.innerRadius + 15.9, 0.0)
+
+
+
 
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)
