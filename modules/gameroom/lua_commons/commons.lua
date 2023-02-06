@@ -264,7 +264,7 @@ commons.create_rendered_meshe = function(p_config, p_meshefile, p_meshe_name, re
 end
 
 
-commons.create_rendered_linemeshe = function(p_config, p_meshe_name, rendering_passes_array)
+commons.create_rendered_linemeshe = function(p_config, p_meshe_name, rendering_passes_array, p_vertex_array, p_indexes_array)
 
 	local meshe_entity=Entity()
 	meshe_entity:add_aspect(RENDERING_ASPECT)
@@ -335,28 +335,14 @@ commons.create_rendered_linemeshe = function(p_config, p_meshe_name, rendering_p
 		renderconfig:add_rendercontext(rendercontext)
 	end
 
-	linemeshe_renderer:add_vertex(-0.5, 0.5, 0.5)
-	linemeshe_renderer:add_vertex(0.5, 0.5, 0.5)
-	linemeshe_renderer:add_vertex(0.5, -0.5, 0.5)
-	linemeshe_renderer:add_vertex(-0.5, -0.5, 0.5)
-	linemeshe_renderer:add_vertex(-0.5, 0.5, -0.5)
-	linemeshe_renderer:add_vertex(0.5, 0.5, -0.5)
-	linemeshe_renderer:add_vertex(0.5, -0.5, -0.5)
-	linemeshe_renderer:add_vertex(-0.5, -0.5, -0.5)
+	for k, v in pairs(p_vertex_array) do
+		linemeshe_renderer:add_vertex(v[1],v[2],v[3])
+	end
 
-	linemeshe_renderer:add_line(0, 1)
-	linemeshe_renderer:add_line(1, 2)
-	linemeshe_renderer:add_line(2, 3)
-	linemeshe_renderer:add_line(3, 0)
-	linemeshe_renderer:add_line(4, 5)
-	linemeshe_renderer:add_line(5, 6)
-	linemeshe_renderer:add_line(6, 7)
-	linemeshe_renderer:add_line(7, 4)
-	linemeshe_renderer:add_line(0, 4)
-	linemeshe_renderer:add_line(1, 5)
-	linemeshe_renderer:add_line(2, 6)
-	linemeshe_renderer:add_line(3, 7)
+	for k, v in pairs(p_indexes_array) do
 
+		linemeshe_renderer:add_line(v[1],v[2])
+	end
 
 	linemeshe_renderer:configure(renderconfig, p_meshe_name)
 	return meshe_entity, linemeshe_renderer

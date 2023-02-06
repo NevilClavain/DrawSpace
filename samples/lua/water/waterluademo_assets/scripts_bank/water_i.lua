@@ -656,7 +656,35 @@ wireframe_passes_bindings =
 	}
 }
 
-wireframecube_entity, wireframecube_renderer = commons.create_rendered_linemeshe(wireframecube_rendering_config, "wireframe_cube", wireframe_passes_bindings)
+vertex_array = 
+{
+	{-0.5, 0.5, 0.5},
+	{0.5, 0.5, 0.5},
+	{0.5, -0.5, 0.5},
+	{-0.5, -0.5, 0.5},
+	{-0.5, 0.5, -0.5},
+	{0.5, 0.5, -0.5},
+	{0.5, -0.5, -0.5},
+	{-0.5, -0.5, -0.5},
+}
+
+indexes_array = 
+{
+	{ 0, 1 },
+	{ 1, 2 },
+	{ 2, 3 },
+	{ 3, 0 },
+	{ 4, 5 },
+	{ 5, 6 },
+	{ 6, 7 },
+	{ 7, 4 },
+	{ 0, 4 },
+	{ 1, 5 },
+	{ 2, 6 },
+	{ 3, 7 }
+}
+
+wireframecube_entity, wireframecube_renderer = commons.create_rendered_linemeshe(wireframecube_rendering_config, "wireframe_cube", wireframe_passes_bindings, vertex_array, indexes_array)
 wireframecube_renderer:register_to_rendering(rg)
 
 eg:add_child('root', 'wireframe_cube', wireframecube_entity)
