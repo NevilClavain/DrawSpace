@@ -687,6 +687,8 @@ indexes_array =
 wireframecube_entity, wireframecube_renderer = commons.create_rendered_linemeshe(wireframecube_rendering_config, "wireframe_cube", wireframe_passes_bindings, vertex_array, indexes_array)
 wireframecube_renderer:register_to_rendering(rg)
 
+wireframecube_renderer:set_shaderrealvector( "texture_pass", 'color', 1.0, 0.0, 0.0, 1.0 )
+
 eg:add_child('root', 'wireframe_cube', wireframecube_entity)
 
 model.setup_rawtransformationschain(wireframecube_entity, 'wireframe_cube', 0)
