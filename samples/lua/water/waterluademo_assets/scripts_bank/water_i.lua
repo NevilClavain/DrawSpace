@@ -658,14 +658,14 @@ wireframe_passes_bindings =
 
 vertex_array = 
 {
-	{-0.5, 0.5, 0.5},
-	{0.5, 0.5, 0.5},
-	{0.5, -0.5, 0.5},
-	{-0.5, -0.5, 0.5},
-	{-0.5, 0.5, -0.5},
-	{0.5, 0.5, -0.5},
-	{0.5, -0.5, -0.5},
-	{-0.5, -0.5, -0.5},
+	{-0.9999, 0.9999, 0.9999},
+	{0.9999, 0.9999, 0.9999},
+	{0.9999, -0.9999, 0.9999},
+	{-0.9999, -0.9999, 0.9999},
+	{-0.9999, 0.9999, -0.9999},
+	{0.9999, 0.9999, -0.9999},
+	{0.9999, -0.9999, -0.9999},
+	{-0.9999, -0.9999, -0.9999},
 }
 
 indexes_array = 
@@ -689,10 +689,11 @@ wireframecube_renderer:register_to_rendering(rg)
 
 wireframecube_renderer:set_shaderrealvector( "texture_pass", 'color', 1.0, 0.0, 0.0, 1.0 )
 
-eg:add_child('root', 'wireframe_cube', wireframecube_entity)
+eg:add_child('sphere', 'wireframe_cube', wireframecube_entity)
 
-model.setup_rawtransformationschain(wireframecube_entity, 'wireframe_cube', 0)
-model.move.setpos('wireframe_cube', 0.0, skydome.innerRadius + 15.9, 0.0)
+--eg:add_child('root', 'wireframe_cube', wireframecube_entity)
+--model.setup_rawtransformationschain(wireframecube_entity, 'wireframe_cube', 0)
+--model.move.setpos('wireframe_cube', 0.0, skydome.innerRadius + 15.9, 0.0)
 
 
 
