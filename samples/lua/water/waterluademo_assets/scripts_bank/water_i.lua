@@ -611,13 +611,150 @@ waterquad_passes_bindings =
 }
 waterquad.view.load('water', waterquad_passes_bindings)
 eg:add_child('root', 'water', waterquad.models['water'].entity)
-
 model.setup_rawtransformationschain(waterquad.models['water'].entity, 'water', 0)
-
-
 model.move.setpos('water', 0.0, skydome.innerRadius, 0.0)
-
 waterquad.models['water']['renderer']:set_passnodetexturefrompass(rg, 'wave_pass', 'bump_pass', 0)
+
+
+wireframe_rendering_config = 
+{
+	main_rendering = 
+	{
+		fx = 
+		{
+			shaders = 
+			{
+				{ path='color_vs.hlsl',mode=SHADER_NOT_COMPILED },
+				{ path='color_ps.hlsl',mode=SHADER_NOT_COMPILED }
+			},
+			rs_in = 
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true"	}		
+			},
+			rs_out =
+			{
+				{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+			}
+		},
+
+		rendering_order = 10000,
+
+		shaders_params = 
+		{ 
+			{ param_name = "color", shader_index = 1, register = 0 }
+		}
+	}
+}
+
+wireframe_passes_bindings = 
+{
+	binding_0 = 
+	{
+		target_pass_id = 'texture_pass',
+		rendering_id = 'main_rendering',
+		lit_shader_update_func = nil
+	}
+}
+
+
+vertex_array = 
+{
+	{-0.9999, 0.9999, 0.9999},
+	{0.9999, 0.9999, 0.9999},
+	{0.9999, -0.9999, 0.9999},
+	{-0.9999, -0.9999, 0.9999},
+	{-0.9999, 0.9999, -0.9999},
+	{0.9999, 0.9999, -0.9999},
+	{0.9999, -0.9999, -0.9999},
+	{-0.9999, -0.9999, -0.9999},
+}
+
+indexes_array = 
+{
+	{ 0, 1 },
+	{ 1, 2 },
+	{ 2, 3 },
+	{ 3, 0 },
+	{ 4, 5 },
+	{ 5, 6 },
+	{ 6, 7 },
+	{ 7, 4 },
+	{ 0, 4 },
+	{ 1, 5 },
+	{ 2, 6 },
+	{ 3, 7 }
+}
+
+wireframecube_entity, wireframecube_renderer = commons.create_rendered_linemeshe(wireframe_rendering_config, "wireframe_cube", wireframe_passes_bindings, vertex_array, indexes_array)
+wireframecube_renderer:register_to_rendering(rg)
+
+wireframecube_renderer:set_shaderrealvector( "texture_pass", 'color', 1.0, 0.0, 0.0, 1.0 )
+
+eg:add_child('sphere', 'wireframe_cube', wireframecube_entity)
+
+--eg:add_child('root', 'wireframe_cube', wireframecube_entity)
+--model.setup_rawtransformationschain(wireframecube_entity, 'wireframe_cube', 0)
+--model.move.setpos('wireframe_cube', 0.0, skydome.innerRadius + 15.9, 0.0)
+
+
+circle_vertex_array = {}
+circle_indexes_array = {}
+
+circle_ray = 9.0
+
+angle_deg = 0
+angle_x = 0
+angle_z = 0
+
+vertex_index = 1
+
+for angle_deg = 0, 359, 1 do
+
+  --g:print(" -> " .. angle_deg)
+
+  angle_x = circle_ray * g:cos( commons.utils.deg_to_rad(angle_deg) )
+  angle_z = circle_ray * g:sin( commons.utils.deg_to_rad(angle_deg) )
+
+  --g:print(" -> " .. angle_x .. " " .. angle_z)
+
+  current_vertex = { angle_x, 0.0, angle_z }
+
+  circle_vertex_array[vertex_index] = { angle_x, 0.0, angle_z }
+
+  if angle_deg == 359 then
+	circle_indexes_array[vertex_index] = {vertex_index-1, 0}
+  else
+	circle_indexes_array[vertex_index] = {vertex_index-1, vertex_index}
+  end
+  
+
+  vertex_index = vertex_index + 1
+
+end
+
+--[[
+for k,v in pairs(circle_vertex_array) do
+  g:print("-> "..v[1]..", "..v[2].. ", "..v[3])
+end
+
+for k,v in pairs(circle_indexes_array) do
+  g:print("-> "..v[1]..", "..v[2])
+end
+]]
+
+circle_entity, circle_renderer = commons.create_rendered_linemeshe(wireframe_rendering_config, "wireframe_circle", wireframe_passes_bindings, circle_vertex_array, circle_indexes_array)
+circle_renderer:register_to_rendering(rg)
+
+circle_renderer:set_shaderrealvector( "texture_pass", 'color', 0.99, 0.0, 0.99, 1.0 )
+
+eg:add_child('root', 'wireframe_circle', circle_entity)
+
+model.setup_rawtransformationschain(circle_entity, 'wireframe_circle', 0)
+model.move.setpos('wireframe_circle', 0.0, skydome.innerRadius + 15.9, 0.0)
+
+
+
+
 
 
 model.env.setbkcolor('texture_pass', 0.05,0.05,0.09)

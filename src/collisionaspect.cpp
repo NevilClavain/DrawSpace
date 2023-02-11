@@ -95,20 +95,19 @@ btRigidBody* CollisionAspect::Init(void)
 
     for (auto& e : meshecollision_shapes)
     {
-        Meshe meshe = meshecollision_shapes[0]->getPurpose().m_meshe;
-
+        const auto meshe{ meshecollision_shapes[0]->getPurpose().m_meshe };
         auto mesh{ _DRAWSPACE_NEW_(btTriangleMesh, btTriangleMesh) };
 
-        for (long i = 0; i < meshe.GetTrianglesListSize(); i++)
+        for (size_t i = 0; i < meshe.GetTrianglesListSize(); i++)
         {
-            Triangle curr_triangle;
+            TrianglePrimitive<unsigned int> curr_triangle;
             meshe.GetTriangles(i, curr_triangle);
 
             Vertex v1, v2, v3;
 
-            meshe.GetVertex(curr_triangle.vertex1, v1);
-            meshe.GetVertex(curr_triangle.vertex2, v2);
-            meshe.GetVertex(curr_triangle.vertex3, v3);
+            meshe.GetVertex(curr_triangle.at(0), v1);
+            meshe.GetVertex(curr_triangle.at(1), v2);
+            meshe.GetVertex(curr_triangle.at(2), v3);
 
             btVector3 a(v1.x, v1.y, v1.z);
             btVector3 b(v2.x, v2.y, v2.z);

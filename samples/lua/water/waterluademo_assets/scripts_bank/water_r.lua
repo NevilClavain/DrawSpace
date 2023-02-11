@@ -30,9 +30,19 @@ impostors.view.unload('impostors0')
 metalcube.view.unload('cube')
 destroy_all_cubes()
 
+
+commons.trash.meshe(rg, wireframecube_entity, wireframecube_renderer)
+eg:remove('wireframe_cube')
+--model.transformations['wireframe_cube'].transform:release()
+--commons.trash.meshe(rg, wireframecube_entity, wireframecube_renderer)
+
+
 spherebump.view.unload('sphere')
 
-destroy_all_cubes()
+
+
+
+
 
 objectdistance_renderer:release()
 objectid_renderer:release()

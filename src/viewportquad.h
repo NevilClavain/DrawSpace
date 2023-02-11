@@ -26,8 +26,7 @@
 #define _VIEWPORTQUAD_H_
 
 #include "renderingnode.h"
-#include "vertex.h"
-#include "triangle.h"
+#include "primitives.h"
 
 namespace DrawSpace
 {

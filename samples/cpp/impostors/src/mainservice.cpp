@@ -231,6 +231,9 @@ bool MainService::Init( void )
     create_ground();
     create_cube( 0.0, 9.0, 10.0, m_cubeRender, m_cubeEntity, m_rigbody_cube_transformer);
     create_cube(0.0, 15.0, 14.0, m_cube2Render, m_cube2Entity, m_rigbody_cube_transformer2);
+
+    create_wireframe_cube(5.0, 5.0, 0.0, m_wireframecubeRender, m_wireframecubeEntity);
+
     create_composition(-13.0, 28.0, -4.0, m_mainBodyRender, m_mainBodyEntity, m_composition_transformer, m_feetRender, m_feetEntity, m_rigbody_composition_transformer);
     create_screen_impostors();
     create_world_impostor();
@@ -265,14 +268,18 @@ bool MainService::Init( void )
     m_cube2EntityNode = m_World1EntityNode.AddChild(&m_cube2Entity);
     m_cube2Render.RegisterToRendering(m_rendergraph);
 
-
-
     m_mainBodyEntityNode = m_World1EntityNode.AddChild(&m_mainBodyEntity);
     m_mainBodyRender.RegisterToRendering(m_rendergraph);
 
 
     m_feetEntityNode = m_mainBodyEntityNode.AddChild(&m_feetEntity);
     m_feetRender.RegisterToRendering(m_rendergraph);
+
+    //ajouter le cube fil de fer a la scene
+    //m_wireframecubeEntityNode = m_World1EntityNode.AddChild(&m_wireframecubeEntity);
+    m_wireframecubeEntityNode = m_mainBodyEntityNode.AddChild(&m_wireframecubeEntity);
+    m_wireframecubeRender.RegisterToRendering(m_rendergraph);
+
 
 
 
@@ -829,6 +836,86 @@ void MainService::create_collimator_sprite_impostor(void)
 
     ResourcesAspect* resources_aspect{ m_spriteCollimatorEntity.AddAspect<ResourcesAspect>() };
     resources_aspect->AddComponent<std::tuple<Texture*, bool>>("texture", std::make_tuple(impostors_texturepass_rnode->GetTexture(0), false));
+}
+
+void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, MeshRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity)
+{
+    auto rendering_aspect{ p_entity.AddAspect<RenderingAspect>() };
+    auto time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
+
+    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass", PassSlot::PrimitiveType::LINE);
+
+    const auto rnode{ rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
+
+    auto fx { _DRAWSPACE_NEW_(Fx, Fx) };
+
+    const auto vshader{ _DRAWSPACE_NEW_(Shader, Shader("color_vs.hlsl", false)) };
+    const auto pshader{ _DRAWSPACE_NEW_(Shader, Shader("color_ps.hlsl", false)) };
+    fx->AddShader(vshader);
+    fx->AddShader(pshader);
+
+    RenderStatesSet rss;
+    rss.AddRenderStateIn(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "true"));
+    rss.AddRenderStateOut(DrawSpace::Core::RenderState(DrawSpace::Core::RenderState::ENABLEZBUFFER, "false"));
+    fx->SetRenderStates(rss);
+
+    rnode->SetFx(fx);
+
+    const auto linemeshe{ _DRAWSPACE_NEW_(LineMeshe, LineMeshe) };
+    linemeshe->SetName("wireframe_cube");
+
+    // add vertices and lines...
+
+    linemeshe->AddVertex({ -0.5, 0.5, 0.5 } );
+    linemeshe->AddVertex({ 0.5, 0.5, 0.5 });
+    linemeshe->AddVertex({ 0.5, -0.5, 0.5 });
+    linemeshe->AddVertex({ -0.5, -0.5, 0.5 });
+    linemeshe->AddVertex({ -0.5, 0.5, -0.5 });
+    linemeshe->AddVertex({ 0.5, 0.5, -0.5 });
+    linemeshe->AddVertex({ 0.5, -0.5, -0.5 });
+    linemeshe->AddVertex({ -0.5, -0.5, -0.5 });
+
+
+    linemeshe->AddLine({ 0, 1 });
+    linemeshe->AddLine({ 1, 2 });
+    linemeshe->AddLine({ 2, 3 });
+    linemeshe->AddLine({ 3, 0 });
+
+    linemeshe->AddLine({ 4, 5 });
+    linemeshe->AddLine({ 5, 6 });
+    linemeshe->AddLine({ 6, 7 });
+    linemeshe->AddLine({ 7, 4 });
+
+    linemeshe->AddLine({ 0, 4 });
+    linemeshe->AddLine({ 1, 5 });
+    linemeshe->AddLine({ 2, 6 });
+    linemeshe->AddLine({ 3, 7 });
+
+    rnode->SetLineMeshe(linemeshe);
+
+
+    rnode->SetOrderNumber(1100);
+
+    rnode->AddShaderParameter(1, "color", 0);
+    rnode->SetShaderRealVector("color", Vector(1.0, 0.0, 0.0, 0.0));
+
+    /////////// resources ////////////////////////////////
+
+    auto resources_aspect{ p_entity.AddAspect<ResourcesAspect>() };
+
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("vshader", std::make_tuple(vshader, false, 0));
+    resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>("pshader", std::make_tuple(pshader, false, 1));
+
+    ////////// transformations ///////////////////////////
+
+    TransformAspect* transform_aspect = p_entity.AddAspect<TransformAspect>();
+
+    transform_aspect->AddImplementation(0, &m_wireframecube_transformer);
+
+    transform_aspect->AddComponent<Matrix>("pos");
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(0.0, -2.0, 0.0);
+
 }
 
 void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRenderingAspectImpl& p_rendering_aspect_impl, DrawSpace::Core::Entity& p_entity,

@@ -32,27 +32,21 @@ namespace DrawSpace
 {
 namespace Core
 {
-class Fx
+struct Fx
 {
-protected:
-    std::vector<Shader*>                        m_shaders;
-    RenderStatesSet                             m_renderstates;
-
 public:
-    Fx( void );
-    ~Fx( void );
     
-    Shader* GetShader( long p_index );
-    RenderState GetRenderStateIn( long p_index );
-    RenderState GetRenderStateOut( long p_index );
-    long GetShadersListSize( void );
+    Shader* GetShader( long p_index ) const;
+    RenderState GetRenderStateIn( long p_index ) const;
+    RenderState GetRenderStateOut( long p_index ) const;
+    long GetShadersListSize( void ) const;
     void ClearShaders( void );
-    long GetRenderStatesInListSize( void );
-    long GetRenderStatesOutListSize( void );
+    long GetRenderStatesInListSize( void ) const;
+    long GetRenderStatesOutListSize( void ) const;
     void AddShader( Shader* p_shader );
 
-    void GetShadersMD5( dsstring& p_md5 );
-    void GetRenderStatesSetMD5( dsstring& p_md5 );
+    void GetShadersMD5( dsstring& p_md5 ) const;
+    void GetRenderStatesSetMD5( dsstring& p_md5 ) const;
 
 
     void SetRenderStateUniqueQueueID( const dsstring& p_id );
@@ -60,6 +54,10 @@ public:
     void SetRenderStates( const RenderStatesSet& p_renderstates );
 
     RenderStatesSet* GetRenderStatesSetRef( void );
+
+private:
+    std::vector<Shader*>                        m_shaders;
+    RenderStatesSet                             m_renderstates;
 
 };
 }

@@ -146,8 +146,16 @@ void RenderingQueue::Draw( void )
     }
     else
     {
+        int operation_counter{ 0 }; // to help setting breakpoint
         for( auto& curr_operation : *m_current_outputqueue)
         {
+            
+            if(63 == operation_counter)
+            {
+                _asm nop // set breakpoint here
+            }
+            
+           
             switch( curr_operation.type )
             {
                 case SET_TEXTURE:
@@ -194,8 +202,12 @@ void RenderingQueue::Draw( void )
                     break;
 
                 case SET_MESHE:
-
                     renderer->SetMeshe( curr_operation.data );
+                    m_switches_cost++;
+                    break;
+
+                case SET_LINEMESHE:
+                    renderer->SetLineMeshe(curr_operation.data);
                     m_switches_cost++;
                     break;
 
@@ -226,6 +238,8 @@ void RenderingQueue::Draw( void )
                     }
                     break;
             }
+
+            operation_counter++;
         }
     }
 
@@ -321,6 +335,7 @@ void RenderingQueue::UpdateOutputQueue( void )
     build_output_list( m_nodes );
 
     m_setmeshe_groups.clear();
+    m_setlinemeshe_groups.clear();
     m_setshaders_groups.clear();
     m_setrsin_groups.clear();
     m_setrsout_groups.clear();
@@ -355,6 +370,7 @@ void RenderingQueue::UpdateOutputQueueNoOpt( void )
     build_output_list( m_nodes );
 
     m_setmeshe_groups.clear();
+    m_setlinemeshe_groups.clear();
     m_setshaders_groups.clear();
     m_setrsin_groups.clear();
     m_setrsout_groups.clear();
@@ -418,30 +434,14 @@ double RenderingQueue::lists_score( std::map<dsstring, std::vector<RenderingNode
 void RenderingQueue::sort_list( std::vector<RenderingNode*>& p_input_list, std::vector<RenderingNode*>& p_output_list )
 {
     p_output_list.clear();
+    std::vector<SortCategory> todo{ { SHADERS_LIST, 0 }, { RS_LIST, 0 }, { MESHE_LIST, 0 }, { LINEMESHE_LIST, 0 } };
 
-    std::vector<SortCategory> todo;
-    SortCategory category;
-
-    /*
-    category.type = FX_LIST;
-    todo.push_back( category );
-    */
-
-    category.type = SHADERS_LIST;
-    todo.push_back( category );
-
-    category.type = RS_LIST;
-    todo.push_back( category );
-
-    category.type = MESHE_LIST;
-    todo.push_back( category );
-
-    category.type = TEXTURE_LIST;
-    for( category.stage = 0; category.stage < RenderingNode::NbMaxTextures; category.stage++ )
+    // add TEXTURE_LIST entries
+    for (int i = 0; i < RenderingNode::NbMaxTextures; i++)
     {
-        todo.push_back( category );
+        const SortCategory category{ TEXTURE_LIST, i };
+        todo.push_back(category);
     }
-
     sort_step( todo, p_input_list, p_output_list );
 }
 
@@ -453,6 +453,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     std::map<dsstring, std::vector<RenderingNode*>>     shaders_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     rs_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     meshe_lists;
+    std::map<dsstring, std::vector<RenderingNode*>>     linemeshe_lists;
     std::map<dsstring, std::vector<RenderingNode*>>     texture_lists;
     
     SortedListType                                      sel_type;
@@ -466,30 +467,12 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     {
         switch( p_todo[i].type )
         {
-            /*
-            case FX_LIST:
-                {
-                    //long local_occ = 0;
-                    sort_list_by( FX_LIST, 0, p_input_list, fx_lists );
-
-                    double local_score = lists_score( fx_lists );
-                    if( local_score > max_score )
-                    {
-                        max_score = local_score;
-                        selected_lists = fx_lists;
-                        sel_type = FX_LIST;
-                        sel_flag = true;
-                    }
-                }
-                break;
-                */
-
             case SHADERS_LIST:
                 {
                     //long local_occ = 0;
                     sort_list_by( SHADERS_LIST, 0, p_input_list, shaders_lists );
 
-                    double local_score = lists_score( shaders_lists );
+                    const auto local_score{ lists_score(shaders_lists) };
                     if( local_score > max_score )
                     {
                         max_score = local_score;
@@ -505,7 +488,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
                     //long local_occ = 0;
                     sort_list_by( RS_LIST, 0, p_input_list, rs_lists );
 
-                    double local_score = lists_score( rs_lists );
+                    const auto local_score{ lists_score(rs_lists) };
                     if( local_score > max_score )
                     {
                         max_score = local_score;
@@ -516,13 +499,12 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
                 }
                 break;
 
-
             case MESHE_LIST:
                 {
                     //long local_occ = 0;
                     sort_list_by( MESHE_LIST, 0, p_input_list, meshe_lists );
 
-                    double local_score = lists_score( meshe_lists );
+                    const auto local_score{ lists_score(meshe_lists) };
                     if( local_score > max_score )
                     {
                         max_score = local_score;
@@ -533,12 +515,28 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
                 }
                 break;
 
+            case LINEMESHE_LIST:
+                {
+                    //long local_occ = 0;
+                    sort_list_by(LINEMESHE_LIST, 0, p_input_list, linemeshe_lists);
+
+                    const auto local_score{ lists_score(linemeshe_lists) };
+                    if (local_score > max_score)
+                    {
+                        max_score = local_score;
+                        selected_lists = linemeshe_lists;
+                        sel_type = LINEMESHE_LIST;
+                        sel_flag = true;
+                    }
+                }
+                break;
+
             case TEXTURE_LIST:
                 {
                     //long local_occ = 0;
                     sort_list_by( TEXTURE_LIST, p_todo[i].stage, p_input_list, texture_lists );
 
-                    double local_score = lists_score( texture_lists );
+                    const auto local_score { lists_score(texture_lists) };
                     if( local_score > max_score )
                     {
                         max_score = local_score;
@@ -640,7 +638,7 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                         // pas de fx : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
                         sprintf( buff, "%x", (long long)curr_node );
-                        dsstring id = dsstring( "void_fx:" ) + dsstring( buff );
+                        const auto id{ dsstring("void_fx:") + dsstring(buff) };
                         out_lists[id].push_back( curr_node );
                     }
                 }
@@ -661,7 +659,7 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                         // pas de fx : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
                         sprintf( buff, "%x", (long long)curr_node );
-                        dsstring id = dsstring( "void_fx:" ) + dsstring( buff );
+                        const auto id{ dsstring("void_fx:") + dsstring(buff) };
                         out_lists[id].push_back( curr_node );
                     }
                 }
@@ -669,8 +667,7 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
 
             case MESHE_LIST:
                 {
-                    Meshe* curr_meshe = curr_node->GetMeshe();
-
+                    const auto curr_meshe{ curr_node->GetMeshe() };
                     if( curr_meshe )
                     {
                         dsstring curr_meshe_md5;
@@ -682,9 +679,29 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                         // pas de meshe : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
                         sprintf( buff, "%x", (long long)curr_node );
-                        dsstring id = dsstring( "void_meshe:" ) + dsstring( buff );
+                        const auto id{ dsstring("void_meshe:") + dsstring(buff) };
                         out_lists[id].push_back( curr_node );
                     }
+                }
+                break;
+
+            case LINEMESHE_LIST:
+                {
+                    const auto curr_line_meshe{ curr_node->GetLineMeshe() };
+                    if (curr_line_meshe)
+                    {
+                        const auto curr_meshe_md5{ curr_line_meshe->GetMD5() };
+                        out_lists[curr_meshe_md5].push_back(curr_node);
+                    }
+                    else
+                    {
+                        // pas de line meshe : ne doit pas influer sur les comptages de redondances
+                        // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
+                        sprintf(buff, "%x", (long long)curr_node);
+                        const auto id{ dsstring("void_linemeshe:") + dsstring(buff) };
+                        out_lists[id].push_back(curr_node);
+                    }
+
                 }
                 break;
 
@@ -722,7 +739,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     void* sh_data;
     void* rs_data;
     void* tx_data;
-    void* meshe_data;
+    
 
     m_tx_datas.clear();
     m_vtx_datas.clear();
@@ -780,7 +797,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         m_rs_datas[node] = rs_data;
         /////////////////////////////////////////////
 
-        long texture_list_size{ node->GetTextureListSize() };
+        const auto texture_list_size{ node->GetTextureListSize() };
         for( long j = 0; j < texture_list_size; j++ )
         {
             Texture* current_tx = node->GetTexture( j );
@@ -824,7 +841,7 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                     excp_msg += path;
                     _DSEXCEPTION( excp_msg  )
                 }
-                //m_vtx_datas[node].push_back( tx_data );
+
                 dsstring texture_id;
                 current_tx->GetPath( texture_id );
                 std::pair<void*, dsstring> txt_infos( tx_data, texture_id );
@@ -832,17 +849,16 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             }
             else
             {
-                //m_vtx_datas[node].push_back( NULL );
+
                 std::pair<void*, dsstring> txt_infos( NULL, "" );
                 m_vtx_datas[node].push_back( txt_infos );
             }
         }
 
-        Meshe* current_meshe = node->GetMeshe();
-
+        const auto current_meshe{ node->GetMeshe() };
         if( NULL != current_meshe )
         {
-            meshe_data = current_meshe->GetRenderData();
+            auto meshe_data{ current_meshe->GetRenderData() };
 
             dsstring meshe_path;
             current_meshe->GetPath( meshe_path );
@@ -857,9 +873,29 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
                     _DSEXCEPTION( "Cannot create Meshe" )
                 }
             }
-            //m_meshe_datas[node] = meshe_data;
+
             std::pair<void*, dsstring> meshe_infos( meshe_data, meshe_path );
             m_meshe_datas[node] = meshe_infos;
+        }
+
+        const auto current_linemeshe{ node->GetLineMeshe() };
+        if (NULL != current_linemeshe)
+        {
+            auto linemeshe_data{ current_linemeshe->GetRenderData() };
+            const auto linemeshe_name{ current_linemeshe->GetName() };            
+            // optimisation pour les meshes : pas recreer dans le renderer un meshe deja cree (evite la verif via md5 hash, couteuse
+            // pour les gros meshes)
+
+            if (NULL == linemeshe_data)
+            {
+                if (false == renderer->CreateLineMeshe(current_linemeshe, &linemeshe_data))
+                {
+                    _DSEXCEPTION("Cannot create LineMeshe")    
+                }
+            }
+
+            std::pair<void*, dsstring> linemeshe_infos(linemeshe_data, linemeshe_name);
+            m_linemeshe_datas[node] = linemeshe_infos;
         }
     }
 
@@ -920,13 +956,20 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
             }
         }
 
-
         if( m_meshe_datas.count( node ) )
         {
             operation.type = SET_MESHE;
             operation.data = m_meshe_datas[node].first;
             operation.comment = m_meshe_datas[node].second;
             m_back_outputqueue->push_back( operation );
+        }
+
+        if (m_linemeshe_datas.count(node))
+        {
+            operation.type = SET_LINEMESHE;
+            operation.data = m_linemeshe_datas[node].first;
+            operation.comment = m_linemeshe_datas[node].second;
+            m_back_outputqueue->push_back(operation);
         }
 
 		//////Shaders params//////////////
@@ -1126,6 +1169,8 @@ void RenderingQueue::cleanup_output_list( void )
     // etape de creation des groupes
     
     search_op_groups( SET_MESHE, m_setmeshe_groups );
+    search_op_groups(SET_LINEMESHE, m_setlinemeshe_groups);
+
     search_op_groups( SET_SHADERS, m_setshaders_groups );
 
     search_op_groups( SET_RENDERSTATES_IN, m_setrsin_groups );
@@ -1154,6 +1199,19 @@ void RenderingQueue::cleanup_output_list( void )
             }
         }
     }
+
+    // SET_LINEMESHE : pour chaque groupe effacer toutes les entrees sauf le 1er
+    for (size_t i = 0; i < m_setlinemeshe_groups.size(); i++)
+    {
+        if (m_setlinemeshe_groups[i].size() > 1)
+        {
+            for (size_t j = 1; j < m_setlinemeshe_groups[i].size(); j++)
+            {
+                m_back_outputqueue->erase(m_setlinemeshe_groups[i][j].pos);
+            }
+        }
+    }
+
 
     // SET_SHADERS : pour chaque groupe effacer toutes les entrees sauf le 1er
     for( size_t i = 0; i < m_setshaders_groups.size(); i++ )
@@ -1276,6 +1334,12 @@ long RenderingQueue::GetTheoricalSwitchesCost( void ) const
         {
             cost++; //SET_MESHE
         }
+
+        if (node->GetLineMeshe())
+        {
+            cost++; //SET_LINEMESHE
+        }
+
     }
     return cost;
 }

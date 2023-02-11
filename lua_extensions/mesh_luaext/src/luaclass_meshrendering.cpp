@@ -75,18 +75,18 @@ LuaClass_MeshRendering::~LuaClass_MeshRendering( void )
 
 int LuaClass_MeshRendering::LUA_attachtoentity( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 1 )
 	{		
         LUA_ERROR( "MesheRendering::attach_toentity : argument(s) missing" );
 	}
 
-    LuaClass_Entity* lua_ent = Luna<LuaClass_Entity>::check( p_L, 1 );
+    auto lua_ent{ Luna<LuaClass_Entity>::check(p_L, 1) };
 
-    DrawSpace::Core::Entity& entity = lua_ent->GetEntity();
-    RenderingAspect* rendering_aspect = entity.GetAspect<RenderingAspect>();
+    DrawSpace::Core::Entity& entity{ lua_ent->GetEntity() };
+    const auto rendering_aspect{ entity.GetAspect<RenderingAspect>() };
 
-    if( NULL == rendering_aspect )
+    if( nullptr == rendering_aspect )
     {
         LUA_ERROR( "MesheRendering::attach_toentity : entity has no rendering aspect!" );
     }
@@ -94,7 +94,7 @@ int LuaClass_MeshRendering::LUA_attachtoentity( lua_State* p_L )
     m_entity_rendering_aspect = rendering_aspect;
     m_entity = &entity;
 
-    m_entity_rendering_aspect->AddImplementation( &m_meshe_render, NULL );
+    m_entity_rendering_aspect->AddImplementation( &m_meshe_render, nullptr);
 
     return 0;
 }
@@ -112,8 +112,8 @@ int LuaClass_MeshRendering::LUA_detachfromentity( lua_State* p_L )
 
     } LUA_CATCH; 
 
-    m_entity_rendering_aspect = NULL;
-    m_entity = NULL;
+    m_entity_rendering_aspect = nullptr;
+    m_entity = nullptr;
 
     return 0;
 }
@@ -124,39 +124,40 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
     {
         LUA_ERROR("MesheRendering::configure : no attached entity");
     }
-    ResourcesAspect* resources_aspect = m_entity->GetAspect<ResourcesAspect>();
+
+    const auto resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         LUA_ERROR("MesheRendering::configure : attached entity has no resources aspect !");
     }
 
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
     if( argc < 3 )
 	{		
         LUA_ERROR( "MesheRendering::configure : argument(s) missing" );
 	}
 
-    LuaClass_RenderConfig* rcfg = Luna<LuaClass_RenderConfig>::check( p_L, 1 );
-    dsstring meshe_path = luaL_checkstring( p_L, 2 );
-    dsstring meshe_name = luaL_checkstring(p_L, 3);
+    const auto rcfg{ Luna<LuaClass_RenderConfig>::check(p_L, 1) };
+    const auto meshe_path{ luaL_checkstring(p_L, 2) };
+    const auto meshe_name{ luaL_checkstring(p_L, 3) };
 
     // recupere l'aspect rendu s'il existe pour cette entitee
     if( m_entity_rendering_aspect )
     {
         LUA_TRY
         {
-            LuaClass_RenderConfig::Data rcfg_data = rcfg->GetData();
+            const auto rcfg_data{ rcfg->GetData() };
 
             for(size_t i = 0; i < rcfg_data.render_contexts.size(); i++)
             {
-                LuaClass_RenderContext::Data render_context = rcfg_data.render_contexts[i];
+                const auto render_context{ rcfg_data.render_contexts[i] };
 				
 				if (m_rcname_to_passes.end() != m_rcname_to_passes.find(render_context.rendercontextname))
 				{
                     for (auto& pass_id : m_rcname_to_passes.at(render_context.rendercontextname))
                     {
                         m_entity_rendering_aspect->AddComponent<PassSlot>(pass_id, pass_id);
-                        RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
+                        const auto rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(pass_id)->getPurpose().GetRenderingNode() };
                         m_renderingnodes[pass_id] = rnode;
 
                         //  on a besoin que d'un seul fx....
@@ -166,48 +167,48 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
                             LUA_ERROR("MesheRendering::configure : missing fx parameters description");
                         }
 
-                        LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
+                        const auto fx_params{ render_context.fxparams[0] };
 
-                        DrawSpace::Core::Fx* fx = _DRAWSPACE_NEW_(Fx, Fx);
+                        auto fx { _DRAWSPACE_NEW_(Fx, Fx) };
                         rnode->SetFx(fx);
 
                         ///////////////////////// les shaders
-                        size_t nb_shaders = fx_params.shaders.size();
+                        const auto nb_shaders{ fx_params.shaders.size() };
                         for (size_t j = 0; j < nb_shaders; j++)
                         {
-                            std::pair<dsstring, bool> shader_infos = fx_params.shaders[j];
+                            const auto shader_infos{ fx_params.shaders[j] };
 
-                            dsstring shader_path = shader_infos.first;
-                            bool is_compiled = shader_infos.second;
+                            const auto shader_path{ shader_infos.first };
+                            const auto is_compiled{ shader_infos.second };
 
-                            Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled));
+                            auto shader{ _DRAWSPACE_NEW_(Shader, Shader(shader_path, is_compiled)) };
 
-                            dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                            const auto res_id{ dsstring("shader_") + std::to_string((int)shader) };
+
                             resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
                             fx->AddShader(shader);
                         }
 
                         ///////////////////////// les rendestates
 
-                        DrawSpace::Core::RenderStatesSet& rss = fx_params.rss;
+                        const auto rss{ fx_params.rss };
                         fx->SetRenderStates(rss);
-
 
                         ///////////////////////// les textures
 
-                        size_t nb_textures_set = render_context.textures_sets.size();
+                        const auto nb_textures_set{ render_context.textures_sets.size() };
                         if (nb_textures_set > 0)
                         {
-                            LuaClass_TexturesSet::Data textures = render_context.textures_sets[0];
+                            const auto textures{ render_context.textures_sets[0] };
 
                             for (int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++)
                             {
-                                dsstring texture_path = textures.textures[j];
+                                const auto texture_path{ textures.textures[j] };
                                 if (texture_path != "")
                                 {
-                                    Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_path));
+                                    const auto texture{ _DRAWSPACE_NEW_(Texture, Texture(texture_path)) };
 
-                                    dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                                    const auto res_id{ dsstring("texture_") + std::to_string((int)texture) };
                                     resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
                                     rnode->SetTexture(texture, j);
                                 }
@@ -216,27 +217,27 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
 
                         ///////////////////////// les vertex textures
 
-                        size_t nb_vtextures_set = render_context.vertex_textures_sets.size();
+                        const auto nb_vtextures_set{ render_context.vertex_textures_sets.size() };
                         if (nb_vtextures_set > 0)
                         {
-                            LuaClass_TexturesSet::Data vtextures = render_context.vertex_textures_sets[0];
+                            const auto vtextures{ render_context.vertex_textures_sets[0] };
 
                             for (int j = 0; j < DrawSpace::Core::RenderingNode::NbMaxTextures; j++)
                             {
-                                dsstring texture_path = vtextures.textures[j];
+                                const auto texture_path{ vtextures.textures[j] };
                                 if (texture_path != "")
                                 {
                                     //bool status;
-                                    Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_path));
+                                    auto texture{ _DRAWSPACE_NEW_(Texture, Texture(texture_path)) };
 
-                                    dsstring res_id = dsstring("vtexture_") + std::to_string((int)texture);
+                                    const auto res_id{ dsstring("vtexture_") + std::to_string((int)texture) };
                                     resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
                                     rnode->SetVertexTexture(texture, j);
                                 }
                             }
                         }
 
-                        dsstring meshe_res_id = dsstring("meshe_") + pass_id;
+                        const auto meshe_res_id{ dsstring("meshe_") + pass_id };
 
                         resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
                             std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
@@ -276,15 +277,15 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_setshaderreal( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 3 )
 	{		
         LUA_ERROR( "MesheRendering::set_shaderreal : argument(s) missing" );
 	}
 
-    dsstring pass_id = luaL_checkstring( p_L, 1 );
-    dsstring param_id = luaL_checkstring( p_L, 2 );
-    dsreal val = luaL_checknumber( p_L, 3 );
+    const auto pass_id{ luaL_checkstring(p_L, 1) };
+    const auto param_id{ luaL_checkstring(p_L, 2) };
+    const auto val{ luaL_checknumber(p_L, 3) };
 
     if( 0 == m_renderingnodes.count( pass_id ) )
     {
@@ -334,16 +335,16 @@ int LuaClass_MeshRendering::LUA_setshaderrealvector( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_setshaderrealinvector(lua_State* p_L)
 {
-	int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
 	if (argc < 4)
 	{
 		LUA_ERROR("MesheRendering::set_shaderrealinvector : argument(s) missing");
 	}
 
-	dsstring pass_id = luaL_checkstring(p_L, 1);
-	dsstring param_id = luaL_checkstring(p_L, 2);
-	int param_index_in_vector = luaL_checkinteger(p_L, 3);
-	dsreal val = luaL_checknumber(p_L, 4);
+    const auto pass_id{ luaL_checkstring(p_L, 1) };
+    const auto param_id{ luaL_checkstring(p_L, 2) };
+    const auto param_index_in_vector{ luaL_checkinteger(p_L, 3) };
+    const auto val{ luaL_checknumber(p_L, 4) };
 
 	if (0 == m_renderingnodes.count(pass_id))
 	{
@@ -362,7 +363,7 @@ int LuaClass_MeshRendering::LUA_setshaderrealinvector(lua_State* p_L)
 
 int LuaClass_MeshRendering::LUA_setshaderrealmatrix( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 3 )
 	{		
         LUA_ERROR( "MesheRendering::set_shaderrealmatrix : argument(s) missing" );
@@ -389,7 +390,7 @@ int LuaClass_MeshRendering::LUA_setshaderrealmatrix( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_setshaderbool( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 3 )
 	{
         LUA_ERROR( "MesheRendering::set_shaderreal : argument(s) missing" );
@@ -421,7 +422,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
     {
         LUA_ERROR("MesheRendering::cleanup_resources : no attached entity");
     }
-    ResourcesAspect* resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
+    auto resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         LUA_ERROR("MesheRendering::cleanup_resources : attached entity has no resources aspect !");
@@ -432,19 +433,16 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
         for( auto it = m_renderingnodes.begin(); it != m_renderingnodes.end(); ++it )
         {
             it->second->CleanupShaderParams();
-            dsstring id{ it->first };
-            RenderingNode* rnode{ it->second };
-
-            //RenderingNode* rnode{ m_entity_rendering_aspect->GetComponent<PassSlot>(id)->getPurpose().GetRenderingNode() };
-            
-
-            Fx* fx{ rnode->GetFx() };
+            const auto id{ it->first };
+            const auto rnode{ it->second };
+           
+            auto fx{ rnode->GetFx() };
 			if (fx)
 			{
 				for (long i = 0; i < fx->GetShadersListSize(); i++)
 				{
-					Shader* shader = fx->GetShader(i);
-					dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                    auto shader{ fx->GetShader(i) };
+                    const auto res_id{ dsstring("shader_") + std::to_string((int)shader) };
 					resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
 
 					_DRAWSPACE_DELETE_(shader);
@@ -456,7 +454,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
             
             for( int i = 0; i < rnode->GetTextureListSize(); i++ )
             {
-                Texture* texture = rnode->GetTexture( i );
+                auto texture{ rnode->GetTexture(i) };
                 if( texture )
                 {
                     if( 0 == m_external_textures.count( texture ) )
@@ -464,7 +462,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
                         // pas une texture target d'une pass quelconque (car sinon dans ce cas, ce n'est pas a cette classe de 
                         // rdessallouer)
 
-                        dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                        const auto res_id{ dsstring("texture_") + std::to_string((int)texture) };
                         resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
 
                         _DRAWSPACE_DELETE_( texture );
@@ -479,7 +477,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
 
             for( int i = 0; i < rnode->GetTextureListSize(); i++ )
             {
-                Texture* vtexture = rnode->GetVertexTexture( i );
+                auto vtexture{ rnode->GetVertexTexture(i) };
                 if( vtexture )
                 {
                     if( 0 == m_external_textures.count( vtexture ) )
@@ -487,7 +485,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
                         // pas une texture target d'une pass quelconque (car sinon dans ce cas, ce n'est pas a cette classe de 
                         // rdessallouer)
 
-                        dsstring res_id = dsstring("vtexture_") + std::to_string((int)vtexture);
+                        const auto res_id{ dsstring("vtexture_") + std::to_string((int)vtexture) };
                         resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
 
                         _DRAWSPACE_DELETE_( vtexture );
@@ -502,7 +500,7 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
 
             m_entity_rendering_aspect->RemoveComponent<PassSlot>( id );
 
-            dsstring meshe_res_id = dsstring("meshe_") + id;
+            const auto meshe_res_id{ dsstring("meshe_") + id };
 			if (resources_aspect->GetComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id))
 			{
 				resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
@@ -527,13 +525,13 @@ int LuaClass_MeshRendering::LUA_release( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_registertorendering( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 1 )
 	{		
         LUA_ERROR( "MesheRendering::register_to_rendering : argument(s) missing" );
 	}
 
-    LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
+    const auto lua_rg{ Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1) };
 
     m_meshe_render.RegisterToRendering( lua_rg->GetRenderGraph() );
     return 0;
@@ -541,13 +539,13 @@ int LuaClass_MeshRendering::LUA_registertorendering( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_unregisterfromrendering( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 1 )
 	{		
         LUA_ERROR( "MesheRendering::unregister_from_rendering : argument(s) missing" );
 	}
 
-    LuaClass_RenderPassNodeGraph* lua_rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
+    const auto lua_rg{ Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1) };
 
     m_meshe_render.UnregisterFromRendering( lua_rg->GetRenderGraph() );
     return 0;
@@ -555,16 +553,16 @@ int LuaClass_MeshRendering::LUA_unregisterfromrendering( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_setpassnodetexturefrompass( lua_State* p_L )
 {
-	int argc = lua_gettop( p_L );
+    const auto argc{ lua_gettop(p_L) };
 	if( argc < 4 )
 	{		
         LUA_ERROR( "MesheRendering::set_passnodetexturefrompass : argument(s) missing" );
 	}
 
-    LuaClass_RenderPassNodeGraph* rg = Luna<LuaClass_RenderPassNodeGraph>::check( p_L, 1 );
-    dsstring pass_src_id = luaL_checkstring( p_L, 2 );
-    dsstring pass_dest_id = luaL_checkstring( p_L, 3 );
-    int stage = luaL_checkint( p_L, 4 );
+    const auto rg{ Luna<LuaClass_RenderPassNodeGraph>::check(p_L, 1) };
+    const auto pass_src_id{ luaL_checkstring(p_L, 2) };
+    const auto pass_dest_id{ luaL_checkstring(p_L, 3) };
+    const auto stage{ luaL_checkint(p_L, 4) };
 
     if( 0 == m_renderingnodes.count( pass_dest_id ) )
     {
@@ -572,9 +570,8 @@ int LuaClass_MeshRendering::LUA_setpassnodetexturefrompass( lua_State* p_L )
     }
     else
     {
-        Texture* target_texture = rg->GetNode( pass_src_id ).GetTargetTexture();
+        auto target_texture{ rg->GetNode(pass_src_id).GetTargetTexture() };
         m_renderingnodes[pass_dest_id]->SetTexture( target_texture, stage );
-
         m_external_textures.insert( target_texture );
     }
 
@@ -583,13 +580,13 @@ int LuaClass_MeshRendering::LUA_setpassnodetexturefrompass( lua_State* p_L )
 
 int LuaClass_MeshRendering::LUA_setNormaleGenerationMode(lua_State* p_L)
 {
-    int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("MesheRendering::set_normalegenerationmode : argument(s) missing");
     }
 
-    int mode = luaL_checkint(p_L, 1);
+    const auto mode{ luaL_checkint(p_L, 1) };
 
     m_meshe.SetNGenerationMode( static_cast<Meshe::NormalesGenerationMode>(mode));
     return 0;
@@ -597,13 +594,13 @@ int LuaClass_MeshRendering::LUA_setNormaleGenerationMode(lua_State* p_L)
 
 int LuaClass_MeshRendering::LUA_setTBGenerationMode(lua_State* p_L)
 {
-    int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("MesheRendering::set_tbgenerationmode : argument(s) missing");
     }
 
-    int mode = luaL_checkint(p_L, 1);
+    const auto mode{ luaL_checkint(p_L, 1) };
 
     m_meshe.SetTBGenerationMode(static_cast<Meshe::TangentBinormalesGenerationMode>(mode));
     return 0;
@@ -611,13 +608,13 @@ int LuaClass_MeshRendering::LUA_setTBGenerationMode(lua_State* p_L)
 
 int LuaClass_MeshRendering::LUA_setNormaleTransformation(lua_State* p_L)
 {
-    int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("MesheRendering::set_setnormaletransformation : argument(s) missing");
     }
 
-    LuaClass_Matrix* lua_ent = Luna<LuaClass_Matrix>::check(p_L, 1);
+    const auto lua_ent{ Luna<LuaClass_Matrix>::check(p_L, 1) };
 
     m_meshe.SetNormalesTransf(lua_ent->GetMatrix());
     return 0;
@@ -625,14 +622,14 @@ int LuaClass_MeshRendering::LUA_setNormaleTransformation(lua_State* p_L)
 
 int LuaClass_MeshRendering::LUA_setPassForRenderId(lua_State* p_L)
 {
-	int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
 	if (argc < 2)
 	{
 		LUA_ERROR("MesheRendering::set_passforrenderid : argument(s) missing");
 	}
 
-	dsstring rc_id = luaL_checkstring(p_L, 1);
-	dsstring pass_id = luaL_checkstring(p_L, 2);
+    const auto rc_id{ luaL_checkstring(p_L, 1) };
+    const auto pass_id{ luaL_checkstring(p_L, 2) };
 
     m_rcname_to_passes[rc_id].push_back(pass_id);
 

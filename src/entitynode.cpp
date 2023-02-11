@@ -74,7 +74,8 @@ EntityNode EntityNode::AddChild(Entity* p_entity)
 
 void EntityNode::Erase(void)
 {
-    Entity* entity = m_tree_node->data();
+    const auto entity{ m_tree_node->data() };
+
     //entity->OnRemovedFromGraph(m_owner_graph, m_tree_node->data());
 
     std::vector<Entity*> ancestors;

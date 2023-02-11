@@ -264,6 +264,91 @@ commons.create_rendered_meshe = function(p_config, p_meshefile, p_meshe_name, re
 end
 
 
+commons.create_rendered_linemeshe = function(p_config, p_meshe_name, rendering_passes_array, p_vertex_array, p_indexes_array)
+
+	local meshe_entity=Entity()
+	meshe_entity:add_aspect(RENDERING_ASPECT)
+	meshe_entity:add_aspect(TRANSFORM_ASPECT)
+	meshe_entity:add_aspect(RESOURCES_ASPECT)
+
+	local renderconfig=RenderConfig()
+
+	local linemeshe_renderer=LineMeshRendering()
+	linemeshe_renderer:attach_toentity(meshe_entity)
+
+	for k, v in pairs(rendering_passes_array) do
+
+		local layer_entry = v
+
+		local pass_id = layer_entry.target_pass_id
+		local rendering_id = layer_entry.rendering_id
+
+		linemeshe_renderer:set_passforrenderid(rendering_id, pass_id)
+	end
+
+	for k, v in pairs(p_config) do
+		--g:print(k)
+
+		local rendercontext = RenderContext(k)
+
+		local fxparams = FxParams()
+		local fx_config = v['fx']
+
+		local rss=RenderStatesSet()
+
+		local rs_in_config = fx_config['rs_in']
+		for k2, v2 in pairs(rs_in_config) do
+			local curr_rs_in = v2
+			--g:print(curr_rs_in['ope']..'->'..curr_rs_in['value'])
+			rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+		end
+
+		local rs_out_config = fx_config['rs_out']
+		for k2, v2 in pairs(rs_out_config) do
+			local curr_rs_out = v2
+			--g:print(curr_rs_out['ope']..'->'..curr_rs_out['value'])
+			rss:add_renderstate_out(curr_rs_out['ope'], curr_rs_out['value'])
+		end
+		fxparams:set_renderstatesset(rss)
+
+		local shaders_config = fx_config['shaders']
+		for k2, v2 in pairs(shaders_config) do
+			local curr_shader = v2
+			--g:print(curr_shader['path']..'->'..curr_shader['mode'])
+			fxparams:add_shaderfile(curr_shader['path'],curr_shader['mode'])
+		end
+
+		local shaderparams_config = v['shaders_params']
+		for k2, v2 in pairs(shaderparams_config) do
+			local param = v2
+			--g:print(param['param_name']..'->'..param['shader_index']..','..param['register'])
+			rendercontext:add_shaderparam(param['param_name'], param['shader_index'], param['register'])
+		end
+
+		local ro = v['rendering_order']
+		--g:print( 'ro ='..ro )
+	
+		rendercontext:set_renderingorder(ro)
+
+		rendercontext:add_fxparams(fxparams)
+
+		renderconfig:add_rendercontext(rendercontext)
+	end
+
+	for k, v in pairs(p_vertex_array) do
+		linemeshe_renderer:add_vertex(v[1],v[2],v[3])
+	end
+
+	for k, v in pairs(p_indexes_array) do
+
+		linemeshe_renderer:add_line(v[1],v[2])
+	end
+
+	linemeshe_renderer:configure(renderconfig, p_meshe_name)
+	return meshe_entity, linemeshe_renderer
+
+end
+
 
 commons.update_planet_lights = function( p_lights_table, p_planet_specific_config )
 

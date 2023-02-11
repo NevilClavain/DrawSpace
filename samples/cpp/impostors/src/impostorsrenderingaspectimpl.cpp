@@ -153,8 +153,8 @@ void ImpostorsRenderingAspectImpl::build_quads( const PassSlot& p_pass_slot )
 
         size_t index_base = 4 * i;
 
-        meshe->AddTriangle( Triangle( index_base, 3 + index_base, 1 + index_base ) );
-        meshe->AddTriangle( Triangle( 1 + index_base, 3 + index_base, 2 + index_base ) );
+        meshe->AddTriangle(TrianglePrimitive<unsigned int>({ index_base, 3 + index_base, 1 + index_base }));
+        meshe->AddTriangle(TrianglePrimitive<unsigned int>({ 1 + index_base, 3 + index_base, 2 + index_base }));
 
     }    
 }

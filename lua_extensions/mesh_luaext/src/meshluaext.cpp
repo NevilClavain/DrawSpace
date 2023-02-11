@@ -24,6 +24,7 @@
 
 #include "meshluaext.h"
 #include "luaclass_meshrendering.h"
+#include "luaclass_linemeshrendering.h"
 #include "plugin.h"
 #include "memalloc.h"
 
@@ -34,6 +35,7 @@ MeshLuaExtension::MeshLuaExtension(void)
 void MeshLuaExtension::Register(lua_State* p_L)
 {
 	Luna<LuaClass_MeshRendering>::Register(p_L);
+	Luna<LuaClass_LineMeshRendering>::Register(p_L);
 }
 
 void MeshLuaExtension::UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer)

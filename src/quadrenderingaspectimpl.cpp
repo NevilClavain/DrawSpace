@@ -47,7 +47,7 @@ bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity, DrawSpace
 
     Core::RenderingNode* node = quads_nodes[0]->getPurpose();
 
-    Fx* fx = node->GetFx();
+    const auto fx{ node->GetFx() };
 
     if( false == renderer->CreateShaders( fx, &m_sh_data ) )
     {
@@ -107,8 +107,8 @@ bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity, DrawSpace
     node->GetMeshe()->AddVertex( v3 );
     node->GetMeshe()->AddVertex( v4 );
 
-    node->GetMeshe()->AddTriangle( Triangle( 0, 2, 1 ) );
-    node->GetMeshe()->AddTriangle( Triangle( 0, 3, 2 ) );
+    node->GetMeshe()->AddTriangle(TrianglePrimitive<unsigned int>({ 0, 2, 1 }));
+    node->GetMeshe()->AddTriangle(TrianglePrimitive<unsigned int>({ 0, 3, 2 }));
 
     if( false == renderer->CreateMeshe( node->GetMeshe(), &m_meshe_data ) )
     {

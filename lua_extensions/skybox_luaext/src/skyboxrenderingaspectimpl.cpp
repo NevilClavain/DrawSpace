@@ -229,8 +229,8 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
         m_meshes[i]->AddVertex( v3 );
         m_meshes[i]->AddVertex( v4 );
 
-        m_meshes[i]->AddTriangle( Triangle( 0, 3, 1 ) );
-        m_meshes[i]->AddTriangle( Triangle( 1, 3, 2 ) );
+        m_meshes[i]->AddTriangle(TrianglePrimitive<unsigned int>({ 0, 3, 1 }));
+        m_meshes[i]->AddTriangle(TrianglePrimitive<unsigned int>({ 1, 3, 2 }));
     }
 
     

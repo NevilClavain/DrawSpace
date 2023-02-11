@@ -33,35 +33,22 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
-Fx::Fx( void )
-{
-
-}
-
-Fx::~Fx( void )
-{
-
-
-}
-
-Shader* Fx::GetShader( long p_index )
+Shader* Fx::GetShader( long p_index ) const
 {
     return m_shaders[p_index];
 }
 
-RenderState Fx::GetRenderStateIn( long p_index )
+RenderState Fx::GetRenderStateIn( long p_index ) const
 {
-    //return m_renderstates_in[p_index];
     return m_renderstates.GetRenderStateIn( p_index );
 }
 
-RenderState Fx::GetRenderStateOut( long p_index )
+RenderState Fx::GetRenderStateOut( long p_index ) const
 {
-    //return m_renderstates_out[p_index];
     return m_renderstates.GetRenderStateOut( p_index );
 }
 
-long Fx::GetShadersListSize( void )
+long Fx::GetShadersListSize( void ) const
 {
     return (long)m_shaders.size();
 }
@@ -71,15 +58,13 @@ void Fx::ClearShaders( void )
     m_shaders.clear();
 }
 
-long Fx::GetRenderStatesInListSize( void )
+long Fx::GetRenderStatesInListSize( void ) const
 {
-    //return (long)m_renderstates_in.size();
     return m_renderstates.GetRenderStatesInListSize();
 }
 
-long Fx::GetRenderStatesOutListSize( void )
+long Fx::GetRenderStatesOutListSize( void ) const
 {
-    //return (long)m_renderstates_out.size();
     return m_renderstates.GetRenderStatesOutListSize();
 }
 
@@ -95,17 +80,15 @@ void Fx::SetRenderStates( const RenderStatesSet& p_renderstates )
 }
 
 
-void Fx::GetShadersMD5( dsstring& p_md5 )
+void Fx::GetShadersMD5( dsstring& p_md5 ) const
 {
     MD5 md5;
-
-    unsigned char* shaders;
-
-    dsstring hash_shaders = "";
-    size_t total_shaders_data_size = 0;
+   
+    dsstring hash_shaders;
+    size_t total_shaders_data_size{ 0 };
     for( size_t i = 0; i < m_shaders.size(); i++ )
     {
-        size_t shader_data_size = m_shaders[i]->GetDataSize();
+        const auto shader_data_size{ m_shaders[i]->GetDataSize() };
         if(-1 == shader_data_size)
         {
             _DSEXCEPTION( "shader not initialized !");
@@ -114,13 +97,12 @@ void Fx::GetShadersMD5( dsstring& p_md5 )
         total_shaders_data_size += shader_data_size;
     }
 
-    shaders = new unsigned char[total_shaders_data_size];
+    const auto shaders{ new unsigned char[total_shaders_data_size] };
+    auto curr{ shaders };
 
-    unsigned char* curr = shaders;
     for( size_t i = 0; i < m_shaders.size(); i++ )
     {
         memcpy( curr, m_shaders[i]->GetData(), m_shaders[i]->GetDataSize() );
-
         curr += m_shaders[i]->GetDataSize();
     }
 
@@ -129,21 +111,17 @@ void Fx::GetShadersMD5( dsstring& p_md5 )
         hash_shaders = md5.digestMemory( (BYTE*)shaders, (int)( total_shaders_data_size ) );
     }
 
-    delete[] shaders;
-    
+    delete[] shaders;    
     p_md5 = hash_shaders;
 }
 
-void Fx::GetRenderStatesSetMD5( dsstring& p_md5 )
+void Fx::GetRenderStatesSetMD5( dsstring& p_md5 ) const
 {
     m_renderstates.GetRenderStatesSetMD5( p_md5 );
 }
 
-
-
 void Fx::SetRenderStateUniqueQueueID( const dsstring& p_id )
 {
-    //m_renderstate_unique_queue_id = p_id;
     m_renderstates.SetRenderStateUniqueQueueID( p_id );
 }
 

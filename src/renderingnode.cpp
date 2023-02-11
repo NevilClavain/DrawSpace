@@ -29,12 +29,7 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
-RenderingNode::RenderingNode( void ) : 
-m_order( 10000 ), 
-m_handler( NULL ), 
-m_meshe( NULL ),
-m_fx( NULL ),
-m_drawing_enabled( true )
+RenderingNode::RenderingNode( void )
 { 
     for( long i = 0; i < NbMaxTextures; i++ )
     {
@@ -48,7 +43,7 @@ RenderingNode::~RenderingNode( void )
     CleanupShaderParams();
 }
 
-long RenderingNode::GetOrderNumber( void )
+long RenderingNode::GetOrderNumber( void ) const
 {
     return m_order;
 }
@@ -73,12 +68,12 @@ long RenderingNode::GetTextureListSize( void )
     return NbMaxTextures;
 }
 
-Texture* RenderingNode::GetTexture( long p_index )
+Texture* RenderingNode::GetTexture( long p_index ) const
 {
     return m_textures[p_index];
 }
 
-Texture* RenderingNode::GetVertexTexture( long p_index )
+Texture* RenderingNode::GetVertexTexture( long p_index ) const
 {
     return m_vertextextures[p_index];
 }
@@ -122,7 +117,7 @@ void RenderingNode::CleanupShaderArrayParams(void)
 	m_shaders_array_params.clear();
 }
 
-void RenderingNode::GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>& p_outlist)
+void RenderingNode::GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>& p_outlist) const
 {
 	p_outlist = m_shaders_array_params;
 }
@@ -235,7 +230,7 @@ void RenderingNode::UpdateShaderParams( const dsstring& p_id, RenderingNode::Sha
     *( m_shader_params[p_id] ) = p_params;
 }
 
-void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist )
+void RenderingNode::GetShadersParams( std::map<dsstring, ShadersParams*>& p_outlist ) const
 {
     p_outlist = m_shader_params;
 }

@@ -264,7 +264,7 @@ void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patc
 
     for (long i = 0; i < p_patchmeshe.GetTrianglesListSize(); i++)
     {
-        Triangle t;
+        TrianglePrimitive<unsigned int> t;
         p_patchmeshe.GetTriangles(i, t);
         p_outmeshe.AddTriangle(t);
     }

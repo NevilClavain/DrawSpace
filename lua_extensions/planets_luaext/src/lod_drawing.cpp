@@ -1005,16 +1005,16 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 
         for( long j = 0; j < patch_resolution - 1; j++ )
         {
-            Triangle triangle;
+            TrianglePrimitive<unsigned int> triangle;
 
-            triangle.vertex1 = current_index;
-            triangle.vertex2 = current_index + 1;
-            triangle.vertex3 = current_index + patch_resolution;
+            triangle.at(0) = current_index;
+            triangle.at(1) = current_index + 1;
+            triangle.at(2) = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle );
             
-            triangle.vertex1 = current_index + 1;
-            triangle.vertex2 = current_index + 1 + patch_resolution;
-            triangle.vertex3 = current_index + patch_resolution;
+            triangle.at(0) = current_index + 1;
+            triangle.at(1) = current_index + 1 + patch_resolution;
+            triangle.at(2) = current_index + patch_resolution;
             p_meshe_dest->AddTriangle( triangle );
             
             current_index++;
