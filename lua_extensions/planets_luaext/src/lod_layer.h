@@ -57,7 +57,6 @@ public:
 
 private:
 
-    //DrawSpace::Core::Entity*                                    m_owner_entity{ nullptr };
     DrawSpace::EntityGraph::EntityNodeGraph*                    m_entitynodegraph{ nullptr };
 
     Config*                                                     m_config{ nullptr };
@@ -78,11 +77,8 @@ private:
     LOD::Patch*                                                 m_collision_patch{ nullptr };
 
     bool                                                        m_draw_collidinghm{ false };
-    //bool                                                        m_collision_state{ false };
 
     dsstring                                                    m_description; // for debug purpose :)
-
-    //DrawSpace::Aspect::CollisionAspect*                         m_collision_aspect{ nullptr };
 
     dsreal                                                      m_currentpatch_max_height{ -2.0 };
     dsreal                                                      m_currentpatch_min_height{ -2.0 };
