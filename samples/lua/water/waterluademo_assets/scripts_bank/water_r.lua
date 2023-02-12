@@ -34,12 +34,17 @@ destroy_all_cubes()
 commons.trash.meshe(rg, wireframecube_entity, wireframecube_renderer)
 eg:remove('wireframe_cube')
 --model.transformations['wireframe_cube'].transform:release()
---commons.trash.meshe(rg, wireframecube_entity, wireframecube_renderer)
+
 
 
 spherebump.view.unload('sphere')
 
 
+model.transformations['wireframe_circle'].transform:release()
+
+
+commons.trash.meshe(rg, circle_entity, circle_renderer)
+eg:remove('wireframe_circle')
 
 
 
