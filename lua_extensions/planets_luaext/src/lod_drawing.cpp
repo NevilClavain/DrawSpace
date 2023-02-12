@@ -890,30 +890,6 @@ void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state 
     }
 }
 
-/*
-void Drawing::EnableZBufferForLayer(int p_layer_index, bool p_zbuffer)
-{
-    for (auto& e : m_facedrawingnodes)
-    {
-        if (p_layer_index == e->GetLayerIndex())
-        {
-            e->EnableZBuffer(p_zbuffer);
-        }
-    }
-}
-
-void Drawing::ForceCullingForLayer(int p_layer_index, const dsstring& p_culling)
-{
-    for (auto& e : m_facedrawingnodes)
-    {
-        if (p_layer_index == e->GetLayerIndex())
-        {
-            e->ForceCulling(p_culling);
-        }
-    }
-}
-*/
-
 void Drawing::SetRenderStatePerPassTableForLayer(int p_layer_index, const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table)
 {
     for (auto& e : m_facedrawingnodes)
