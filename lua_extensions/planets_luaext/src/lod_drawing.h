@@ -65,7 +65,7 @@ class FaceDrawingNode : public DrawSpace::Core::RenderingNode
 {
 public:
 
-    enum DrawPatchMode
+    enum class DrawPatchMode
     {
         DRAW_ALL,
         DRAW_LANDPLACEPATCH_ONLY,
@@ -78,16 +78,16 @@ public:
         int                             nb_patchs;
     };
 
-protected:
+private:
 
-    DrawSpace::Interface::Renderer*                                                                             m_renderer;
+    DrawSpace::Interface::Renderer*                                                                             m_renderer{ nullptr };
     Config*                                                                                                     m_config;
     std::vector<Patch*>                                                                                         m_display_list;
-    Binder*                                                                                                     m_binder;
+    Binder*                                                                                                     m_binder { nullptr };
     Stats                                                                                                       m_stats;
-    Patch*                                                                                                      m_current_patch;  // le connaitre pour eventuellement le dessiner d'une facon differente
+    Patch*                                                                                                      m_current_patch{ nullptr };  // le connaitre pour eventuellement le dessiner d'une facon differente
     int                                                                                                         m_layer_index;
-    DrawPatchMode                                                                                               m_drawpatch_mode;
+    DrawPatchMode                                                                                               m_drawpatch_mode{ DrawPatchMode::DRAW_ALL };
     DrawSpace::Utils::Vector                                                                                    m_relativehotpoint;
     dsstring                                                                                                    m_current_body_description; // for debug purpose only
 
@@ -133,6 +133,28 @@ public:
 
     void UpdateRelativeHotPoint( const DrawSpace::Utils::Vector p_hotpoint );
 };
+
+
+class NaturalDrawingNode : public DrawSpace::Core::RenderingNode
+{
+public:
+    enum class Type
+    {
+        PLANTS,
+        ROCKS,
+        TREES
+    };
+
+private:
+
+    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+
+public:
+
+    NaturalDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
+    void Draw(void);
+};
+
 
 class Drawing
 {

@@ -43,7 +43,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 using namespace LOD;
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CollisionMesheDrawingNode::CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer):
 m_renderer(p_renderer)
@@ -62,16 +62,13 @@ void CollisionMesheDrawingNode::Draw(const DrawSpace::Utils::Matrix& p_world, co
 }
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, Config* p_config, int p_layer_index ) :
 m_renderer( p_renderer ),
-m_current_patch( NULL ),
 m_config( p_config ),
-m_binder( NULL ),
-m_layer_index( p_layer_index ),
-m_drawpatch_mode( DRAW_ALL )
+m_layer_index( p_layer_index )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -127,7 +124,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     patch_pos[0] = xp;
     patch_pos[1] = yp;
-    patch_pos[2] = ( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode ? 1.0 : 0.0 );
+    patch_pos[2] = (DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode ? 1.0 : 0.0 );
 
 
     Vector globalrel_uvcoords;
@@ -136,7 +133,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     Vector global_uvcoords;
     p_patch->GetGlobalUVCoords( global_uvcoords );
 
-    if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
+    if(DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
     {
         // dilatation des coords uv rel et global suivant le facteur d'echelle du patch landplace
         dsreal middle_x, middle_y;
@@ -198,7 +195,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     Matrix world;
     
-    if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
+    if(DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
     {
         dsreal rot_phi, rot_theta;
 
@@ -358,12 +355,12 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
 
         switch (m_drawpatch_mode)
         {
-            case DRAW_ALL:
+            case DrawPatchMode::DRAW_ALL:
 
                 draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
                 break;
 
-            case DRAW_ALL_BUTLANDPLACEPATCH:
+            case DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH:
 
                 if (!check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel())
                 {
@@ -371,7 +368,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                 }
                 break;
 
-            case DRAW_LANDPLACEPATCH_ONLY:
+            case DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY:
 
                 if(0 == m_display_list[i]->GetLodLevel())
                 {
@@ -386,7 +383,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                 }
                 break;
 
-            case DRAW_MAXLODLEVEL:
+            case DrawPatchMode::DRAW_MAXLODLEVEL:
 
                 int lodlevel{ m_display_list[i]->GetLodLevel() };
                 if (lodlevel <= m_maxlodlevel_to_draw)
@@ -485,6 +482,20 @@ void FaceDrawingNode::SetCurrentPass(const dsstring& p_pass)
 {
     m_current_pass = p_pass;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+NaturalDrawingNode::NaturalDrawingNode(DrawSpace::Interface::Renderer* p_renderer)
+{
+
+}
+
+void NaturalDrawingNode::Draw(void)
+{
+
+}
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -728,12 +739,12 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
             if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
-                node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
                 node_landplace->m_debug_id = "LOWRES_MESHE_node_landplace for layer : " + std::to_string(p_layer_index);
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
-                node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+                node_landplace->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY );
 
                 m_facedrawingnodes.push_back(node_landplace);
             }
@@ -762,13 +773,13 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
             if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
-                node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
-                node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node_skirts->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
                 node_landplace->m_debug_id = "LOWRES_SKIRT_MESHE_node_landplace";
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
-                node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+                node_landplace->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY );
 
                 m_facedrawingnodes.push_back(node_landplace);
             }
@@ -784,7 +795,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
     if (maxlodlevel_to_draw > -1)
     {
-        node->SetDrawPatchMode(FaceDrawingNode::DRAW_MAXLODLEVEL, maxlodlevel_to_draw);
+        node->SetDrawPatchMode(FaceDrawingNode::DrawPatchMode::DRAW_MAXLODLEVEL, maxlodlevel_to_draw);
     }
 
         
