@@ -36,7 +36,7 @@ using namespace DrawSpace::Utils;
 
 bool MeshRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, RenderingQueue* p_passqueue )
 {
-    bool updated_queue = false;
+    bool updated_queue{ false };
 
     ComponentList<PassSlot> pass_slots;
 
@@ -44,19 +44,19 @@ bool MeshRenderingAspectImpl::VisitRenderPassDescr( const dsstring& p_name, Rend
 
     for( size_t i = 0; i < pass_slots.size(); i++ )
     {
-        if( pass_slots[i]->getPurpose().GetPassName() == p_name )
+        if( pass_slots.at(i)->getPurpose().GetPassName() == p_name )
         {
+            const auto rnode{ pass_slots.at(i)->getPurpose().GetRenderingNode() };
             if( m_add_in_rendergraph )
             {
+                rnode->m_debug_id = "meshe_node";
                 // ajout du renderingnode dans la renderingqueue  
-
-                p_passqueue->Add( pass_slots[i]->getPurpose().GetRenderingNode() );
+                p_passqueue->Add( rnode );
             }
             else
             {
                 // suppression du renderingnode de la renderingqueue
-
-                p_passqueue->Remove( pass_slots[i]->getPurpose().GetRenderingNode() );
+                p_passqueue->Remove( rnode );
             }
             updated_queue = true;
         }
@@ -78,7 +78,7 @@ void MeshRenderingAspectImpl::UnregisterFromRendering( RenderPassNodeGraph& p_re
 
 void MeshRenderingAspectImpl::Run( Entity* p_entity )
 {
-    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
+    const auto transform_aspect{ p_entity->GetAspect<TransformAspect>() };
 
     if( transform_aspect )
     {
@@ -99,9 +99,9 @@ void MeshRenderingAspectImpl::Run( Entity* p_entity )
 
         for( size_t i = 0; i < pass_slots.size(); i++ )
         {
-            pass_slots[i]->getPurpose().m_world = world;
-            pass_slots[i]->getPurpose().m_view = view;
-            pass_slots[i]->getPurpose().m_proj = proj;
+            pass_slots.at(i)->getPurpose().m_world = world;
+            pass_slots.at(i)->getPurpose().m_view = view;
+            pass_slots.at(i)->getPurpose().m_proj = proj;
         }
     }
 }
