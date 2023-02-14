@@ -2444,8 +2444,7 @@ bool D3D11Renderer::set_cache_blendstate( void )
 
 void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 {    
-    dsstring arg;
-    p_renderstate->GetArg( arg );
+    const auto arg{ p_renderstate->GetArg() };
 
     static const std::map<dsstring, ID3D11SamplerState*> translate_samplerstate =
     {

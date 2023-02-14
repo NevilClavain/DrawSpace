@@ -79,7 +79,8 @@ private:
         long                                            texture_stage;
 
         RenderingNode*                                  node;
-        dsstring                                        comment; // for debug purpose only
+        //dsstring                                        comment; // for debug purpose only
+        std::vector<dsstring>                           comments;
 
     };
 

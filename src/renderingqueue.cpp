@@ -786,11 +786,11 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         if( m_fx_bases.count( hash ) > 0 )
         {
-            rs_data = (void *)m_fx_bases[hash];
+            rs_data = static_cast<void *>(m_fx_bases.at(hash));
         }
         else
         {
-            rs_data = (void*)current_fx;
+            rs_data = static_cast<void*>(current_fx);
             m_fx_bases[hash] = current_fx;
         }
 
@@ -902,22 +902,34 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
     m_back_outputqueue->clear();
 
     for( size_t i = 0; i < p_input_list.size(); i++ )
-    {
-        Operation operation;
+    {        
         RenderingNode* node = p_input_list[i];
-
+        
         if( m_sh_datas.count( node ) )
         {
+            Operation operation;
             operation.type = SET_SHADERS;
             operation.data = m_sh_datas[node].first;
-            operation.comment = m_sh_datas[node].second;
+
+            operation.comments.push_back(m_sh_datas[node].second);
+
             m_back_outputqueue->push_back( operation );
         }
 
         if( m_rs_datas.count( node ) )
         {
+            Operation operation;
             operation.type = SET_RENDERSTATES_IN;
             operation.data = m_rs_datas[node];
+
+            const auto curr_fx { static_cast<Fx*>(m_rs_datas[node]) };
+            const auto rs{ curr_fx->GetRenderStatesSetRef() };
+
+            for (size_t i = 0; i < rs->GetRenderStatesInListSize(); i++)
+            {
+                operation.comments.push_back(rs->GetRenderStateIn(i).ToString() + " = " + rs->GetRenderStateIn(i).GetArg());
+            }
+
             m_back_outputqueue->push_back( operation );
         }
 
@@ -925,13 +937,12 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
+                Operation operation;
                 operation.type = SET_TEXTURE;
-                //operation.data = m_tx_datas[node][j];
                 operation.data = m_tx_datas[node][j].first;
                 operation.texture_stage = (long)j;
-                operation.comment = m_tx_datas[node][j].second;
+                operation.comments.push_back( m_tx_datas[node][j].second );
                 
-
                 if( operation.data != NULL )
                 {
                     m_back_outputqueue->push_back( operation );
@@ -943,11 +954,11 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             for( size_t j = 0; j < m_vtx_datas[node].size(); j++ )
             {
+                Operation operation;
                 operation.type = SET_VERTEXTEXTURE;
-                //operation.data = m_vtx_datas[node][j];
                 operation.data = m_vtx_datas[node][j].first;
                 operation.texture_stage = (long)j;
-                operation.comment = m_vtx_datas[node][j].second;
+                operation.comments.push_back(m_vtx_datas[node][j].second);
 
                 if( operation.data != NULL )
                 {
@@ -958,17 +969,19 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         if( m_meshe_datas.count( node ) )
         {
+            Operation operation;
             operation.type = SET_MESHE;
             operation.data = m_meshe_datas[node].first;
-            operation.comment = m_meshe_datas[node].second;
+            operation.comments.push_back( m_meshe_datas[node].second );
             m_back_outputqueue->push_back( operation );
         }
 
         if (m_linemeshe_datas.count(node))
         {
+            Operation operation;
             operation.type = SET_LINEMESHE;
             operation.data = m_linemeshe_datas[node].first;
-            operation.comment = m_linemeshe_datas[node].second;
+            operation.comments.push_back( m_linemeshe_datas[node].second );
             m_back_outputqueue->push_back(operation);
         }
 
@@ -979,10 +992,30 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         for(auto& e : node_shaders_params)
         {
+            Operation operation;
             operation.type = SET_SHADERS_PARAMS;
             
             operation.shader_params = e.second;
-            m_back_outputqueue->push_back( operation );
+            
+            dsstring params_descr = "shader index = " + std::to_string(operation.shader_params->shader_index) + " register " + std::to_string(operation.shader_params->param_register);
+
+            if (operation.shader_params->vector)
+            {
+                params_descr += " vector : ";
+
+                params_descr += std::to_string(operation.shader_params->param_values[0]) + " ";
+                params_descr += std::to_string(operation.shader_params->param_values[1]) + " ";
+                params_descr += std::to_string(operation.shader_params->param_values[2]) + " ";
+                params_descr += std::to_string(operation.shader_params->param_values[3]);
+            }
+            else
+            {
+                params_descr += " matrix";
+            }
+
+            operation.comments.push_back(params_descr);
+
+            m_back_outputqueue->push_back(operation);
         }
 
 		//////Shaders arrays params//////////////
@@ -992,29 +1025,35 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
 		for (auto& e: node_shaders_array_params)
 		{
+            Operation operation;
 			operation.type = SET_SHADERS_ARRAY_PARAMS;
 
 			operation.shader_array_param = e.second;
+            dsstring params_descr = "shader index = " + std::to_string(operation.shader_array_param->shader_index) + " begin register " + std::to_string(operation.shader_array_param->begin_register);
+
             m_back_outputqueue->push_back( operation );
 		}
 		
 
 		/////////////////////////////////////////
-
-        operation.type = DRAW_NODE;
-        operation.node = node;
-        operation.comment = node->m_debug_id;
-        m_back_outputqueue->push_back( operation );
+        {
+            Operation operation;
+            operation.type = DRAW_NODE;
+            operation.node = node;
+            operation.comments.push_back( node->m_debug_id );
+            m_back_outputqueue->push_back(operation);
+        }
 
         if( m_tx_datas.count( node ) )
         {
             for( size_t j = 0; j < m_tx_datas[node].size(); j++ )
             {
+                Operation operation;
                 operation.type = UNSET_TEXTURE;
                 //operation.data = m_tx_datas[node][j];
                 operation.data = m_tx_datas[node][j].first;
                 operation.texture_stage = (long)j;
-                operation.comment = m_tx_datas[node][j].second;
+                operation.comments.push_back( m_tx_datas[node][j].second );
 
                 if( operation.data != NULL )
                 {
@@ -1027,11 +1066,12 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
         {
             for( size_t j = 0; j < m_vtx_datas[node].size(); j++ )
             {
+                Operation operation;
                 operation.type = UNSET_VERTEXTEXTURE;
                 //operation.data = m_vtx_datas[node][j];
                 operation.data = m_vtx_datas[node][j].first;
                 operation.texture_stage = (long)j;
-                operation.comment = m_vtx_datas[node][j].second;
+                operation.comments.push_back( m_vtx_datas[node][j].second );
 
                 if( operation.data != NULL )
                 {
@@ -1042,8 +1082,18 @@ void RenderingQueue::build_output_list( std::vector<RenderingNode*>& p_input_lis
 
         if( m_rs_datas.count( node ) )
         {
+            Operation operation;
             operation.type = SET_RENDERSTATES_OUT;
             operation.data = m_rs_datas[node];
+
+            const auto curr_fx{ static_cast<Fx*>(m_rs_datas[node]) };
+            const auto rs{ curr_fx->GetRenderStatesSetRef() };
+
+            for (size_t i = 0; i < rs->GetRenderStatesOutListSize(); i++)
+            {
+                operation.comments.push_back(rs->GetRenderStateOut(i).ToString() + " = " + rs->GetRenderStateOut(i).GetArg());
+            }
+
             m_back_outputqueue->push_back( operation );
         }
     }

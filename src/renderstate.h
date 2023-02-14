@@ -61,8 +61,10 @@ public:
     void ClearExtendedArgs(void);
     void PushExtendedArg(const dsstring& p_arg);
 
+    dsstring ToString(void) const;
+
     Operation GetOperation( void ) const;
-    void GetArg( dsstring& p_arg ) const;
+    dsstring GetArg( void ) const;
     std::vector<dsstring> GetExtendedArgs(void) const;
 
 private:

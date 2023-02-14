@@ -138,9 +138,7 @@ void RenderStatesSet::GetRenderStatesSetMD5( dsstring& p_md5 ) const
     dsstring renderstates_arg = "";
     for( size_t i = 0; i < m_renderstates_in.size(); i++ )
     {
-        dsstring arg;
-        m_renderstates_in[i].GetArg( arg );
-
+        const auto arg{ m_renderstates_in[i].GetArg() };
         renderstates_arg += arg;
     }
 
