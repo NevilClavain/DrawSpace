@@ -1635,6 +1635,53 @@ planet_layers =
 	}
 }
 
+planet_naturaldrawing_layers =
+{
+	--plants_layer = 
+	[0] = 
+	{
+		plants_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='texture_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='texture_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='grass02.png', stage=0}
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 10000
+		}
+	}
+}
+
+planet_naturaldrawing_bindings =
+{
+    binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'plants_main_rendering'
+	}
+}
+
 
 
 if planet_specific_config_descr.enable_oceans == TRUE then
@@ -1693,7 +1740,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	},
   }
 
-  planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, planet_naturaldrawing_bindings, planet_naturaldrawing_layers, 'wave_pass')
 
 else
 
@@ -1720,7 +1767,7 @@ else
 	}
   }
 
-  planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, planet_naturaldrawing_bindings, planet_naturaldrawing_layers, 'wave_pass')
 end
 
 

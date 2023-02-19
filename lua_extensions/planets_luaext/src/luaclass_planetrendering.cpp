@@ -44,7 +44,8 @@ const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[
 {
 	{ "attach_toentity", &LuaClass_PlanetRendering::LUA_attachtoentity },
     { "detach_fromentity", &LuaClass_PlanetRendering::LUA_detachfromentity },
-    { "set_passforrenderid", &LuaClass_PlanetRendering::LUA_setPassForRenderId },
+    { "set_passforplanetlayerrenderid", &LuaClass_PlanetRendering::LUA_setPassForPlanetLayerRenderId },
+    { "set_passfornaturallayerrenderid", &LuaClass_PlanetRendering::LUA_setPassForNaturalLayerRenderId },
     { "configure", &LuaClass_PlanetRendering::LUA_configure },
     { "release", &LuaClass_PlanetRendering::LUA_release },
     { "register_to_rendering", &LuaClass_PlanetRendering::LUA_registertorendering },
@@ -121,154 +122,178 @@ int LuaClass_PlanetRendering::LUA_detachfromentity(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_PlanetRendering::LUA_setPassForRenderId(lua_State* p_L)
+int LuaClass_PlanetRendering::LUA_setPassForPlanetLayerRenderId(lua_State* p_L)
 {
     int argc{ lua_gettop(p_L) };
     if (argc < 2)
     {
-        LUA_ERROR("PlanetRendering::set_passforrenderid : argument(s) missing");
+        LUA_ERROR("PlanetRendering::set_passforplanetlayerrenderid : argument(s) missing");
     }
 
-    dsstring rc_id{ luaL_checkstring(p_L, 1) };
-    dsstring pass_id{ luaL_checkstring(p_L, 2) };
-    m_rcname_to_passes[rc_id].push_back(pass_id);
+    const auto rc_id{ luaL_checkstring(p_L, 1) };
+    const auto pass_id{ luaL_checkstring(p_L, 2) };
+
+    m_planetlayers_rcname_to_passes[rc_id].push_back(pass_id);
 
     return 0;
 }
 
+int LuaClass_PlanetRendering::LUA_setPassForNaturalLayerRenderId(lua_State* p_L)
+{
+    int argc{ lua_gettop(p_L) };
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetRendering::set_passfornaturallayerrenderid : argument(s) missing");
+    }
+
+    const auto rc_id{ luaL_checkstring(p_L, 1) };
+    const auto pass_id{ luaL_checkstring(p_L, 2) };
+
+    m_naturallayers_rcname_to_passes[rc_id].push_back(pass_id);
+
+    return 0;
+}
+
+void LuaClass_PlanetRendering::configure_from_renderlayer(lua_State* p_L, LuaClass_RenderLayer* p_lua_renderlayer, DrawSpace::Aspect::ResourcesAspect* p_resources_aspect, const dsstring& p_comp_prefix )
+{
+    std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>    layers_textures;
+    std::vector<std::map<dsstring, Fx*>>                                                                layers_fx;
+    std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>     layers_shaders_params;
+    std::vector<std::map<dsstring, int>>                                                                layers_ro;
+    std::map<dsstring, int>                                                                             rcname_to_layer_index;
+
+    const auto rcfg_list_size{ p_lua_renderlayer->GetRenderConfigListSize() };
+
+    layers_ro.resize(rcfg_list_size);
+    layers_shaders_params.resize(rcfg_list_size);
+    layers_fx.resize(rcfg_list_size);
+    layers_textures.resize(rcfg_list_size);
+
+    for (int k = 0; k < rcfg_list_size; k++)
+    {
+        const auto render_config{ p_lua_renderlayer->GetRenderConfig(k) };
+        const auto rc_list_size{ render_config.second.render_contexts.size() };
+        const auto cfg_index{ render_config.first };
+
+        std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
+        std::map<dsstring, Fx*> config_fxs;
+        std::map<dsstring, int> config_ros;
+        std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> config_shadersparams;
+
+        for (size_t i = 0; i < rc_list_size; i++)
+        {
+            const LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
+
+            rcname_to_layer_index[render_context.rendercontextname] = cfg_index;  // NB : 'layer' or 'config' -> the same thing
+
+            ///////////////// textures
+
+            const auto textures_set_size = render_context.textures_sets.size();
+            // les N jeux de 32 textures stages
+            std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures;
+            for (int texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++)
+            {
+                std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { nullptr };
+
+                const auto txts_set{ render_context.textures_sets[texture_face_index] };
+
+                for (int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++)
+                {
+                    const auto texture_name{ txts_set.textures[texture_stage_index] };
+                    if (texture_name != "")
+                    {
+                        auto texture{ _DRAWSPACE_NEW_(Texture, Texture(texture_name)) };
+                        const auto res_id{ dsstring("texture_") + std::to_string((int)texture) };
+                        p_resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
+
+                        textures_set[texture_stage_index] = texture;
+                    }
+                }
+                textures.push_back(textures_set);
+            }
+            config_textures[render_context.rendercontextname] = textures;
+
+            ////////////////// fx pour chaque passes
+            if (render_context.fxparams.size() < 1)
+            {
+                cleanup_resources(p_L);
+                LUA_ERROR("Rendering::configure : missing fx parameters description");
+            }
+
+            const LuaClass_FxParams::Data fx_params{ render_context.fxparams[0] };
+            const auto fx{ _DRAWSPACE_NEW_(Fx, Fx) };
+
+            fx->SetRenderStates(fx_params.rss);
+
+            for (size_t j = 0; j < fx_params.shaders.size(); j++)
+            {
+                const auto shader_file_infos{ fx_params.shaders[j] };
+                const auto shader{ _DRAWSPACE_NEW_(Shader, Shader(shader_file_infos.first, shader_file_infos.second)) };
+                const auto res_id{ dsstring("shader_") + std::to_string((int)shader) };
+                p_resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
+                fx->AddShader(shader);
+            }
+
+            config_fxs[render_context.rendercontextname] = fx;
+
+            //////////////// parametres de shaders
+
+            std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
+            for (size_t j = 0; j < render_context.shaders_params.size(); j++)
+            {
+                const auto param{ render_context.shaders_params[j] };
+                texturepass_shaders_params.push_back(param);
+            }
+
+            config_shadersparams[render_context.rendercontextname] = texturepass_shaders_params;
+
+            ///////////////// rendering order
+            config_ros[render_context.rendercontextname] = render_context.rendering_order;
+        }
+
+        layers_textures[cfg_index] = config_textures;
+        layers_fx[cfg_index] = config_fxs;
+        layers_ro[cfg_index] = config_ros;
+        layers_shaders_params[cfg_index] = config_shadersparams;
+    }
+
+    m_entity_rendering_aspect->AddComponent<std::map<dsstring, int>>(p_comp_prefix + "_rcname_to_layer_index", rcname_to_layer_index);
+    m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>(p_comp_prefix + "_textures", layers_textures);
+    m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, Fx*>>>(p_comp_prefix + "_fx", layers_fx);
+    m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>(p_comp_prefix + "_shaders_params", layers_shaders_params);
+    m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, int>>>(p_comp_prefix + "_ro", layers_ro);
+}
+
 int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
 {
-    if (NULL == m_entity)
+    if (nullptr == m_entity)
     {
         LUA_ERROR("PlanetRendering::configure : no attached entity");
     }
-    ResourcesAspect* resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
+    const auto resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         LUA_ERROR("PlanetRendering::configure : attached entity has no resources aspect !");
     }
 
-    int argc{ lua_gettop(p_L) };
-    if (argc < 1)
+    const auto argc{ lua_gettop(p_L) };
+    if (argc < 2)
     {
         LUA_ERROR("PlanetRendering::configure : argument(s) missing");
     }
 
-    LuaClass_RenderLayer* lua_renderlayer{ Luna<LuaClass_RenderLayer>::check(p_L, 1) };
+    const auto lua_planetrenderlayer{ Luna<LuaClass_RenderLayer>::check(p_L, 1) };
+    const auto lua_naturaldrawingrenderlayer{ Luna<LuaClass_RenderLayer>::check(p_L, 2) };
 
     if (m_entity_rendering_aspect)
     {
         LUA_TRY
         {
+            configure_from_renderlayer(p_L, lua_planetrenderlayer, resources_aspect, "planetlayers");
+            m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes", m_planetlayers_rcname_to_passes);
 
-            std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>    layers_textures;
-            std::vector<std::map<dsstring, Fx*>>                                                                layers_fx;
-            std::vector<std::map<dsstring,std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>      layers_shaders_params;
-            std::vector<std::map<dsstring, int>>                                                                layers_ro;
-            std::map<dsstring, int>                                                                             rcname_to_layer_index;
-
-            int rcfg_list_size = lua_renderlayer->GetRenderConfigListSize();
-
-            layers_ro.resize(rcfg_list_size);
-            layers_shaders_params.resize(rcfg_list_size);
-            layers_fx.resize(rcfg_list_size);
-            layers_textures.resize(rcfg_list_size);
-
-            for (int k = 0; k < rcfg_list_size; k++)
-            {
-                auto render_config{ lua_renderlayer->GetRenderConfig(k) };
-                size_t rc_list_size{ render_config.second.render_contexts.size() };
-                int cfg_index{ render_config.first };
-
-
-                std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>> config_textures;
-                std::map<dsstring, Fx*> config_fxs;
-                std::map<dsstring, int> config_ros;
-                std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>> config_shadersparams;
-
-                for (size_t i = 0; i < rc_list_size; i++)
-                {
-                    LuaClass_RenderContext::Data render_context{ render_config.second.render_contexts[i] };
-
-                    rcname_to_layer_index[render_context.rendercontextname] = cfg_index;  // NB : 'layer' or 'config' -> the same thing
-
-                    ///////////////// textures
-
-                    int textures_set_size = render_context.textures_sets.size();
-                    // les N jeux de 32 textures stages
-                    std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures;
-                    for (int texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++)
-                    {
-                        std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { NULL };
-
-                        LuaClass_TexturesSet::Data txts_set = render_context.textures_sets[texture_face_index];
-
-                        for (int texture_stage_index = 0; texture_stage_index < RenderingNode::NbMaxTextures; texture_stage_index++)
-                        {
-                            dsstring texture_name = txts_set.textures[texture_stage_index];
-                            if (texture_name != "")
-                            {
-                                Texture* texture = _DRAWSPACE_NEW_(Texture, Texture(texture_name));
-                                dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
-                                resources_aspect->AddComponent<std::tuple<Texture*, bool>>(res_id, std::make_tuple(texture, false));
-
-                                textures_set[texture_stage_index] = texture;
-                            }
-                        }
-                        textures.push_back(textures_set);
-                    }
-                    config_textures[render_context.rendercontextname] = textures;
-
-                    ////////////////// fx pour chaque passes
-                    if (render_context.fxparams.size() < 1)
-                    {
-                        cleanup_resources(p_L);
-                        LUA_ERROR("Rendering::configure : missing fx parameters description");
-                    }
-                    LuaClass_FxParams::Data fx_params = render_context.fxparams[0];
-
-                    Fx* fx = _DRAWSPACE_NEW_(Fx, Fx);
-
-                    fx->SetRenderStates(fx_params.rss);
-
-                    for (size_t j = 0; j < fx_params.shaders.size(); j++)
-                    {
-                        std::pair<dsstring, bool> shader_file_infos = fx_params.shaders[j];
-                        Shader* shader = _DRAWSPACE_NEW_(Shader, Shader(shader_file_infos.first, shader_file_infos.second));
-                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
-                        resources_aspect->AddComponent<std::tuple<Shader*, bool, int>>(res_id, std::make_tuple(shader, false, j));
-                        fx->AddShader(shader);
-                    }
-
-                    config_fxs[render_context.rendercontextname] = fx;
-
-                    //////////////// parametres de shaders
-
-                    std::vector<std::pair<dsstring, RenderingNode::ShadersParams>> texturepass_shaders_params;
-                    for (size_t j = 0; j < render_context.shaders_params.size(); j++)
-                    {
-                        LuaClass_RenderContext::NamedShaderParam param = render_context.shaders_params[j];
-                        texturepass_shaders_params.push_back(param);
-                    }
-
-                    config_shadersparams[render_context.rendercontextname] = texturepass_shaders_params;
-
-                    ///////////////// rendering order
-                    config_ros[render_context.rendercontextname] = render_context.rendering_order;
-                }
-
-                layers_textures[cfg_index] = config_textures;
-                layers_fx[cfg_index] = config_fxs;
-                layers_ro[cfg_index] = config_ros;
-                layers_shaders_params[cfg_index] = config_shadersparams;
-            }
-
-            m_entity_rendering_aspect->AddComponent<std::map<dsstring, int>>("rcname_to_layer_index", rcname_to_layer_index);
-            m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes", m_rcname_to_passes);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures", layers_textures);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx", layers_fx);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params", layers_shaders_params);
-            m_entity_rendering_aspect->AddComponent<std::vector<std::map<dsstring, int>>>("layers_ro", layers_ro);
+            configure_from_renderlayer(p_L, lua_naturaldrawingrenderlayer, resources_aspect, "naturallayers");
+            m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("naturallayers_rcname_to_passes", m_naturallayers_rcname_to_passes);
 
         } LUA_CATCH;
     }
@@ -345,7 +370,7 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
 
         Component<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>* layers_textures_comp;
 
-        layers_textures_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
+        layers_textures_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures");
         if (layers_textures_comp)
         {
             std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = layers_textures_comp->getPurpose();
@@ -373,14 +398,14 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
                 }
             }
 
-            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures");
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures");
         }
 
         /////////////////// fx
 
         Component<std::vector<std::map<dsstring, Fx*>>>* layers_fx_comp;
 
-        layers_fx_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx");
+        layers_fx_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, Fx*>>>("planetlayers_fx");
         if (layers_fx_comp)
         {
             std::vector<std::map<dsstring, Fx*>> layers_fx = layers_fx_comp->getPurpose();
@@ -402,36 +427,36 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
                     _DRAWSPACE_DELETE_(fx);
                 }
             }
-            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, Fx*>>>("layers_fx");
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, Fx*>>>("planetlayers_fx");
         }
 
         //////////////// args shaders
 
-        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params"))
+        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("planetlayers_shaders_params"))
         {
-            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("layers_shaders_params");
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("planetlayers_shaders_params");
         }
 
         //////////////// rendering orders
 
-        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, int>>>("layers_ro"))
+        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro"))
         {
-            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, int>>>("layers_ro");
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro");
         }
 
         //////////////// rcname_to_passes
 
-        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes"))
+        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes"))
         {
-            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes");
+            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes");
         }
 
 
         //////////////// rcname_to_layer_index
 
-        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index"))
+        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index"))
         {
-            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, int>>("rcname_to_layer_index");
+            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index");
         }
 
     }

@@ -662,12 +662,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_gravity_acc = m_owner->GetComponent<dsreal>("gravity_acc")->getPurpose();
 
-    auto rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes")->getPurpose() };
-    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index")->getPurpose() };
+    auto planetlayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes")->getPurpose() };
+    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index")->getPurpose() };
 
-    auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("layers_fx")->getPurpose() };
-    auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose() };    
-    auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("layers_ro")->getPurpose() };
+    auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("planetlayers_fx")->getPurpose() };
+    auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures")->getPurpose() };    
+    auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro")->getPurpose() };
 
         
     Shader::SetRootPath(shaders_path);
@@ -687,9 +687,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     
     //////////// Resources ///////////////////////////
 
-    Entity* owner_entity{ m_owner->GetOwnerEntity() };
+    const auto owner_entity{ m_owner->GetOwnerEntity() };
 
-    ResourcesAspect* resources_aspect = owner_entity->GetAspect<ResourcesAspect>();
+    const auto resources_aspect{ owner_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
@@ -761,7 +761,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_drawable.Startup(m_owner->GetOwnerEntity());
 
-    for (auto& rcp : rcname_to_passes)
+    for (auto& rcp : planetlayers_rcname_to_passes)
     {
         dsstring rendercontextname{ rcp.first };
 
@@ -1883,7 +1883,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 {
                     if (LOD::cst::OceansLayer == node.second->GetLayerIndex())
                     {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 3);
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DrawPatchMode::DRAW_MAXLODLEVEL, 3);
                     }
                 }
             }            
@@ -1912,11 +1912,10 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 {
                     if (LOD::cst::OceansLayer == node.second->GetLayerIndex())
                     {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_ALL);
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DrawPatchMode::DRAW_ALL);
                     }
                 }
             }
-
         }
     }
     else

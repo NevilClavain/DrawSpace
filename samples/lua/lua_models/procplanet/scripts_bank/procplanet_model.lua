@@ -7,6 +7,9 @@ planetmod.models = {}
 
 planetmod.requested_rendering_layers = nil
 
+planetmod.requested_naturaldrawing_layers = nil
+planetmod.requested_naturaldrawing_bindings = nil
+
 planetmod.wavepass_name = 'default'
 
 
@@ -319,7 +322,7 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 end
 
-planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
+planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, p_naturaldrawing_layers, p_naturadrawing_bindings)
 
   local entity=Entity()
   entity:add_aspect(RENDERING_ASPECT)
@@ -328,19 +331,21 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
   local renderer=PlanetRendering(TimeManagerRef(root_entity))
   renderer:attach_toentity(entity)
 
-  local renderlayer=RenderLayer()
+  -- ###########################################################
 
-  for k, v in pairs(p_rendering_passes_array) do
+  for k, v in pairs(p_planet_bindings) do
 
 	local layer_entry = v
 
 	local pass_id = layer_entry.target_pass_id
 	local rendering_id = layer_entry.rendering_id
 
-	renderer:set_passforrenderid(rendering_id, pass_id) -- to be continued
+	renderer:set_passforplanetlayerrenderid(rendering_id, pass_id)
   end
 
-  for k0, v0 in pairs(p_layers) do
+  local planetrenderlayer=RenderLayer()
+
+  for k0, v0 in pairs(p_planet_layers) do
     --g:print("k0 is "..k0)
 
 	local renderconfig=RenderConfig()
@@ -358,9 +363,7 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
       local rs_in_config = fx_config['rs_in']
       for k2, v2 in pairs(rs_in_config) do
 	    local curr_rs_in = v2
-
 		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
-
 		if curr_rs_in['value'] == 'extended' then
 		  if curr_rs_in['extended_args'] ~= nil then
 		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
@@ -415,11 +418,101 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
 
 	end
 
-	renderlayer:add_renderconfig(renderconfig, k0)
-
+	planetrenderlayer:add_renderconfig(renderconfig, k0)
   end
 
-  renderer:configure(renderlayer)
+  -- ###########################################################
+
+  for k, v in pairs(p_naturadrawing_bindings) do
+
+	local layer_entry = v
+
+	local pass_id = layer_entry.target_pass_id
+	local rendering_id = layer_entry.rendering_id
+
+	renderer:set_passfornaturallayerrenderid(rendering_id, pass_id)
+  end
+
+  local naturaldrawingrenderlayer=RenderLayer()
+
+  for k0, v0 in pairs(p_naturaldrawing_layers) do
+    --g:print("k0 is "..k0)
+
+	local renderconfig=RenderConfig()
+	for k, v in pairs(v0) do
+	  --g:print("	k is "..k)
+
+	  local rendercontext = RenderContext(k)
+
+	  local fxparams = FxParams()
+	  local fx_config = v['fx']
+
+	  local rss=RenderStatesSet()
+
+      local rs_in_config = fx_config['rs_in']
+      for k2, v2 in pairs(rs_in_config) do
+	    local curr_rs_in = v2
+		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+		if curr_rs_in['value'] == 'extended' then
+		  if curr_rs_in['extended_args'] ~= nil then
+		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
+			  --g:print("	**-> "..k2.." "..v2)
+			  rss:push_renderstate_in_extendedargs(0, v2)
+			end
+		  end
+		end
+	  end
+
+	  local rs_out_config = fx_config['rs_out']
+	  for k2, v2 in pairs(rs_out_config) do
+	    local curr_rs_out = v2
+		--g:print(curr_rs_out['ope']..'->'..curr_rs_out['value'])
+		rss:add_renderstate_out(curr_rs_out['ope'], curr_rs_out['value'])
+	  end
+	  fxparams:set_renderstatesset(rss)
+
+	  local shaders_config = fx_config['shaders']
+	  for k2, v2 in pairs(shaders_config) do
+	    local curr_shader = v2
+	    --g:print(curr_shader['path']..'->'..curr_shader['mode'])
+		fxparams:add_shaderfile(curr_shader['path'],curr_shader['mode'])
+	  end
+
+	  local tx_config = v['textures']		
+	  for k2, v2 in ipairs(tx_config) do
+	    --g:print(k2)
+	    local textures = TexturesSet()
+		for k3, v3 in pairs(v2) do
+		  local tx = v3
+		  --g:print(tx['path']..'->'..tx['stage'])
+		  textures:set_texturefiletostage(tx['path'], tx['stage'])
+		end
+		rendercontext:add_texturesset(textures)
+	  end
+
+	  local shaderparams_config = v['shaders_params']
+	  for k2, v2 in pairs(shaderparams_config) do
+	    local param = v2
+		--g:print(param['param_name']..'->'..param['shader_index']..','..param['register'])
+		rendercontext:add_shaderparam(param['param_name'], param['shader_index'], param['register'])
+	  end
+
+	  local ro = v['rendering_order']
+	  --g:print( 'ro ='..ro )
+
+	  rendercontext:set_renderingorder(ro)
+
+	  rendercontext:add_fxparams(fxparams)
+	  renderconfig:add_rendercontext(rendercontext)
+	  
+	end
+
+	naturaldrawingrenderlayer:add_renderconfig(renderconfig, k0)
+  end
+
+
+  -- to be continued...
+  renderer:configure(planetrenderlayer, naturaldrawingrenderlayer)
   return entity, renderer
 end
 
@@ -439,7 +532,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   local entity
   local renderer
 
-  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_rendering_layers, p_passes_bindings)
+  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_rendering_layers, p_passes_bindings, planetmod.requested_naturaldrawing_layers, planetmod.requested_naturaldrawing_bindings)
 
   local specific_config = PlanetConfig()
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
@@ -501,9 +594,12 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_layers, p_planet_specific_config_descr, wavepass_name)
+planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_passes_bindings, p_planet_layers, p_naturaldrawing_bindings, p_naturaldrawing_layers, wavepass_name)
 
   planetmod.requested_rendering_layers = p_planet_layers
+
+  planetmod.requested_naturaldrawing_layers = p_naturaldrawing_layers
+  planetmod.requested_naturaldrawing_bindings = p_naturaldrawing_bindings
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do

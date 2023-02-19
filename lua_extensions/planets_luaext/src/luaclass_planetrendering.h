@@ -38,10 +38,12 @@ class RenderingNode;
 namespace Aspect
 {
 class RenderingAspect;
+class ResourcesAspect;
 }
 };
 
 class PlanetsRenderingAspectImpl;
+class LuaClass_RenderLayer;
 // fwd decls
 
 
@@ -56,9 +58,12 @@ private:
 
     // table de traduction RenderContext name -> Passes Name
     // permet de savoir a quelle passe est attribue un rendercontext
-    std::map<dsstring, std::vector<dsstring>>                                       m_rcname_to_passes;
+    std::map<dsstring, std::vector<dsstring>>                                       m_planetlayers_rcname_to_passes;
+    std::map<dsstring, std::vector<dsstring>>                                       m_naturallayers_rcname_to_passes;
 
     void cleanup_resources(lua_State* p_L);
+
+    void configure_from_renderlayer(lua_State* p_L,  LuaClass_RenderLayer* p_lua_renderlayer, DrawSpace::Aspect::ResourcesAspect* p_resources_aspect, const dsstring& p_comp_prefix);
     
 public:
 
@@ -68,7 +73,8 @@ public:
     int LUA_attachtoentity(lua_State* p_L);
     int LUA_detachfromentity(lua_State* p_L);
 
-    int LUA_setPassForRenderId(lua_State* p_L);
+    int LUA_setPassForPlanetLayerRenderId(lua_State* p_L);
+    int LUA_setPassForNaturalLayerRenderId(lua_State* p_L);
 
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);
