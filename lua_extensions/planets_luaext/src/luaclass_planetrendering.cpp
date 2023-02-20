@@ -45,7 +45,7 @@ const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[
 	{ "attach_toentity", &LuaClass_PlanetRendering::LUA_attachtoentity },
     { "detach_fromentity", &LuaClass_PlanetRendering::LUA_detachfromentity },
     { "set_passforplanetlayerrenderid", &LuaClass_PlanetRendering::LUA_setPassForPlanetLayerRenderId },
-    { "set_passfornaturallayerrenderid", &LuaClass_PlanetRendering::LUA_setPassForNaturalLayerRenderId },
+    { "set_passforfoliagelayerrenderid", &LuaClass_PlanetRendering::LUA_setPassForFoliageLayerRenderId },
     { "configure", &LuaClass_PlanetRendering::LUA_configure },
     { "release", &LuaClass_PlanetRendering::LUA_release },
     { "register_to_rendering", &LuaClass_PlanetRendering::LUA_registertorendering },
@@ -138,18 +138,18 @@ int LuaClass_PlanetRendering::LUA_setPassForPlanetLayerRenderId(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_PlanetRendering::LUA_setPassForNaturalLayerRenderId(lua_State* p_L)
+int LuaClass_PlanetRendering::LUA_setPassForFoliageLayerRenderId(lua_State* p_L)
 {
     int argc{ lua_gettop(p_L) };
     if (argc < 2)
     {
-        LUA_ERROR("PlanetRendering::set_passfornaturallayerrenderid : argument(s) missing");
+        LUA_ERROR("PlanetRendering::set_passforfoliagelayerrenderid : argument(s) missing");
     }
 
     const auto rc_id{ luaL_checkstring(p_L, 1) };
     const auto pass_id{ luaL_checkstring(p_L, 2) };
 
-    m_naturallayers_rcname_to_passes[rc_id].push_back(pass_id);
+    m_foliagelayers_rcname_to_passes[rc_id].push_back(pass_id);
 
     return 0;
 }
@@ -283,7 +283,7 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
     }
 
     const auto lua_planetrenderlayer{ Luna<LuaClass_RenderLayer>::check(p_L, 1) };
-    const auto lua_naturaldrawingrenderlayer{ Luna<LuaClass_RenderLayer>::check(p_L, 2) };
+    const auto lua_foliagerenderlayer{ Luna<LuaClass_RenderLayer>::check(p_L, 2) };
 
     if (m_entity_rendering_aspect)
     {
@@ -292,8 +292,8 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_planetrenderlayer, resources_aspect, "planetlayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes", m_planetlayers_rcname_to_passes);
 
-            configure_from_renderlayer(p_L, lua_naturaldrawingrenderlayer, resources_aspect, "naturallayers");
-            m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("naturallayers_rcname_to_passes", m_naturallayers_rcname_to_passes);
+            configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
+            m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
         } LUA_CATCH;
     }

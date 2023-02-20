@@ -59,7 +59,7 @@ private:
     // table de traduction RenderContext name -> Passes Name
     // permet de savoir a quelle passe est attribue un rendercontext
     std::map<dsstring, std::vector<dsstring>>                                       m_planetlayers_rcname_to_passes;
-    std::map<dsstring, std::vector<dsstring>>                                       m_naturallayers_rcname_to_passes;
+    std::map<dsstring, std::vector<dsstring>>                                       m_foliagelayers_rcname_to_passes;
 
     void cleanup_resources(lua_State* p_L);
 
@@ -74,7 +74,7 @@ public:
     int LUA_detachfromentity(lua_State* p_L);
 
     int LUA_setPassForPlanetLayerRenderId(lua_State* p_L);
-    int LUA_setPassForNaturalLayerRenderId(lua_State* p_L);
+    int LUA_setPassForFoliageLayerRenderId(lua_State* p_L);
 
     int LUA_configure(lua_State* p_L);
     int LUA_release(lua_State* p_L);

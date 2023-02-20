@@ -5,10 +5,10 @@ planetmod.view = {}
 -- stockage des instances modeles : paire {entity, renderer, specific_config}
 planetmod.models = {}
 
-planetmod.requested_rendering_layers = nil
+planetmod.requested_planet_layers = nil
 
-planetmod.requested_naturaldrawing_layers = nil
-planetmod.requested_naturaldrawing_bindings = nil
+planetmod.requested_foliage_layers = nil
+planetmod.requested_foliage_bindings = nil
 
 planetmod.wavepass_name = 'default'
 
@@ -322,7 +322,7 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 end
 
-planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, p_naturaldrawing_layers, p_naturadrawing_bindings)
+planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, p_foliage_layers, p_naturadrawing_bindings)
 
   local entity=Entity()
   entity:add_aspect(RENDERING_ASPECT)
@@ -430,12 +430,12 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 	local pass_id = layer_entry.target_pass_id
 	local rendering_id = layer_entry.rendering_id
 
-	renderer:set_passfornaturallayerrenderid(rendering_id, pass_id)
+	renderer:set_passforfoliagelayerrenderid(rendering_id, pass_id)
   end
 
-  local naturaldrawingrenderlayer=RenderLayer()
+  local foliagerenderlayer=RenderLayer()
 
-  for k0, v0 in pairs(p_naturaldrawing_layers) do
+  for k0, v0 in pairs(p_foliage_layers) do
     --g:print("k0 is "..k0)
 
 	local renderconfig=RenderConfig()
@@ -507,10 +507,10 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 	  
 	end
 
-	naturaldrawingrenderlayer:add_renderconfig(renderconfig, k0)
+	foliagerenderlayer:add_renderconfig(renderconfig, k0)
   end
 
-  renderer:configure(planetrenderlayer, naturaldrawingrenderlayer)
+  renderer:configure(planetrenderlayer, foliagerenderlayer)
   return entity, renderer
 end
 
@@ -530,7 +530,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   local entity
   local renderer
 
-  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_rendering_layers, p_passes_bindings, planetmod.requested_naturaldrawing_layers, planetmod.requested_naturaldrawing_bindings)
+  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_planet_layers, p_passes_bindings, planetmod.requested_foliage_layers, planetmod.requested_foliage_bindings)
 
   local specific_config = PlanetConfig()
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
@@ -592,12 +592,12 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_passes_bindings, p_planet_layers, p_naturaldrawing_bindings, p_naturaldrawing_layers, wavepass_name)
+planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_passes_bindings, p_planet_layers, p_foliage_passes_bindings, p_foliage_layers, wavepass_name)
 
-  planetmod.requested_rendering_layers = p_planet_layers
+  planetmod.requested_planet_layers = p_planet_layers
 
-  planetmod.requested_naturaldrawing_layers = p_naturaldrawing_layers
-  planetmod.requested_naturaldrawing_bindings = p_naturaldrawing_bindings
+  planetmod.requested_foliage_layers = p_foliage_layers
+  planetmod.requested_foliage_bindings = p_foliage_passes_bindings
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do

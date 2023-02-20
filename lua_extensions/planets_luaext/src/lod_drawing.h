@@ -135,7 +135,7 @@ public:
 };
 
 
-class NaturalDrawingNode : public DrawSpace::Core::RenderingNode
+class FoliageDrawingNode : public DrawSpace::Core::RenderingNode
 {
 public:
     enum class Type
@@ -151,7 +151,7 @@ private:
 
 public:
 
-    NaturalDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
+    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
     void Draw(void);
 };
 

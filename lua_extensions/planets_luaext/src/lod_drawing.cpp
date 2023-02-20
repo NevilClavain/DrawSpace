@@ -485,12 +485,12 @@ void FaceDrawingNode::SetCurrentPass(const dsstring& p_pass)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-NaturalDrawingNode::NaturalDrawingNode(DrawSpace::Interface::Renderer* p_renderer)
+FoliageDrawingNode::FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer)
 {
 
 }
 
-void NaturalDrawingNode::Draw(void)
+void FoliageDrawingNode::Draw(void)
 {
 
 }

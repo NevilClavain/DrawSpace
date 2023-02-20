@@ -1635,7 +1635,7 @@ planet_layers =
 	}
 }
 
-planet_naturaldrawing_layers =
+foliage_layers =
 {
 	--plants_layer = 
 	[0] = 
@@ -1673,7 +1673,7 @@ planet_naturaldrawing_layers =
 	}
 }
 
-planet_naturaldrawing_bindings =
+foliage_passes_bindings =
 {
     binding_0 = 
 	{
@@ -1740,7 +1740,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	},
   }
 
-  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, planet_naturaldrawing_bindings, planet_naturaldrawing_layers, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, 'wave_pass')
 
 else
 
@@ -1767,7 +1767,7 @@ else
 	}
   }
 
-  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, planet_naturaldrawing_bindings, planet_naturaldrawing_layers, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, 'wave_pass')
 end
 
 
