@@ -510,8 +510,6 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 	naturaldrawingrenderlayer:add_renderconfig(renderconfig, k0)
   end
 
-
-  -- to be continued...
   renderer:configure(planetrenderlayer, naturaldrawingrenderlayer)
   return entity, renderer
 end
