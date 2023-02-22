@@ -9,6 +9,7 @@ planetmod.requested_planet_layers = nil
 
 planetmod.requested_foliage_layers = nil
 planetmod.requested_foliage_bindings = nil
+planetmod.requested_foliage_meshes = nil
 
 planetmod.wavepass_name = 'default'
 
@@ -322,7 +323,7 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 end
 
-planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, p_foliage_layers, p_naturadrawing_bindings)
+planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, p_foliage_layers, p_foliage_bindings, p_foliage_meshes)
 
   local entity=Entity()
   entity:add_aspect(RENDERING_ASPECT)
@@ -423,7 +424,7 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 
   -- ###########################################################
 
-  for k, v in pairs(p_naturadrawing_bindings) do
+  for k, v in pairs(p_foliage_bindings) do
 
 	local layer_entry = v
 
@@ -510,6 +511,13 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 	foliagerenderlayer:add_renderconfig(renderconfig, k0)
   end
 
+  for k0, v0 in pairs(p_foliage_meshes) do
+    --g:print("k0 is "..k0.. " v0 is "..v0)
+
+	renderer:declare_foliagemeshe( k0, v0)
+
+  end
+
   renderer:configure(planetrenderlayer, foliagerenderlayer)
   return entity, renderer
 end
@@ -530,7 +538,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   local entity
   local renderer
 
-  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_planet_layers, p_passes_bindings, planetmod.requested_foliage_layers, planetmod.requested_foliage_bindings)
+  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_planet_layers, p_passes_bindings, planetmod.requested_foliage_layers, planetmod.requested_foliage_bindings, planetmod.requested_foliage_meshes)
 
   local specific_config = PlanetConfig()
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
@@ -592,12 +600,13 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_passes_bindings, p_planet_layers, p_foliage_passes_bindings, p_foliage_layers, wavepass_name)
+planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_passes_bindings, p_planet_layers, p_foliage_passes_bindings, p_foliage_layers, p_foliage_meshes, p_wavepass_name)
 
   planetmod.requested_planet_layers = p_planet_layers
 
   planetmod.requested_foliage_layers = p_foliage_layers
   planetmod.requested_foliage_bindings = p_foliage_passes_bindings
+  planetmod.requested_foliage_meshes = p_foliage_meshes
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do
@@ -607,7 +616,7 @@ planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_pa
 	end
   end
 
-  planetmod.wavepass_name = wavepass_name
+  planetmod.wavepass_name = p_wavepass_name
 
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')

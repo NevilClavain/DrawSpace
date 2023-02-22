@@ -61,6 +61,8 @@ private:
     std::map<dsstring, std::vector<dsstring>>                                       m_planetlayers_rcname_to_passes;
     std::map<dsstring, std::vector<dsstring>>                                       m_foliagelayers_rcname_to_passes;
 
+    std::map<size_t, dsstring>                                                      m_foliages_meshes;
+
     void cleanup_resources(lua_State* p_L);
 
     void configure_from_renderlayer(lua_State* p_L,  LuaClass_RenderLayer* p_lua_renderlayer, DrawSpace::Aspect::ResourcesAspect* p_resources_aspect, const dsstring& p_comp_prefix);
@@ -81,6 +83,9 @@ public:
 
     int LUA_registertorendering(lua_State* p_L);
     int LUA_unregisterfromrendering(lua_State* p_L);
+
+    int LUA_declarefoliagemeshe(lua_State* p_L);
+
 
 
     DrawSpace::Aspect::RenderingAspect* GetRenderingAspect(void) const;

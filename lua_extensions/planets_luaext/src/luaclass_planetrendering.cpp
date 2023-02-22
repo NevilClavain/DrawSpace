@@ -50,6 +50,7 @@ const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[
     { "release", &LuaClass_PlanetRendering::LUA_release },
     { "register_to_rendering", &LuaClass_PlanetRendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_PlanetRendering::LUA_unregisterfromrendering },
+    { "declare_foliagemeshe", &LuaClass_PlanetRendering::LUA_declarefoliagemeshe },
 
 	{ 0, 0 }
 };
@@ -295,6 +296,8 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliage_meshes", m_foliages_meshes);
+
         } LUA_CATCH;
     }
     else
@@ -311,6 +314,20 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
     return 0;
 }
 
+int LuaClass_PlanetRendering::LUA_declarefoliagemeshe(lua_State* p_L)
+{
+    const auto argc{ lua_gettop(p_L) };
+    if (argc < 2)
+    {
+        LUA_ERROR("PlanetRendering::declare_foliagemeshe : argument(s) missing");
+    }
+    const auto meshe_key{ luaL_checkinteger(p_L, 1) };
+    const auto meshe_path{ luaL_checkstring(p_L, 2) };
+    
+    m_foliages_meshes[meshe_key] = meshe_path;
+    return 0;
+}
+
 int LuaClass_PlanetRendering::LUA_registertorendering(lua_State* p_L)
 {
     if (NULL == m_planet_render)
@@ -318,7 +335,7 @@ int LuaClass_PlanetRendering::LUA_registertorendering(lua_State* p_L)
         LUA_ERROR("PlanetRendering::register_to_rendering : no impostors rendering aspect impl created");
     }
 
-    int argc{ lua_gettop(p_L) };
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("PlanetRendering::register_to_rendering : argument(s) missing");
@@ -337,7 +354,7 @@ int LuaClass_PlanetRendering::LUA_unregisterfromrendering(lua_State* p_L)
         LUA_ERROR("PlanetRendering::unregister_from_rendering : no rendering aspect impl created");
     }
 
-    int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("PlanetRendering::unregister_from_rendering : argument(s) missing");
@@ -367,24 +384,22 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
     {
 
         /////////////////// textures
-
-        Component<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>* layers_textures_comp;
-
-        layers_textures_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures");
-        if (layers_textures_comp)
+       
+        const auto layers_planet_textures_comp{ m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures") };
+        if (layers_planet_textures_comp)
         {
-            std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>> layers_textures = layers_textures_comp->getPurpose();
+            const auto layers_textures{ layers_planet_textures_comp->getPurpose() };
             for (auto& e1 : layers_textures)
             {
                 for (auto& e2 : e1)
                 {
                     for (auto& e3 : e2.second)
                     {
-                        std::array<Texture*, RenderingNode::NbMaxTextures> texture_set = e3;
+                        const auto texture_set{ e3 };
 
                         for (size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++)
                         {
-                            Texture* texture = texture_set[texture_stage_index];
+                            auto texture{ texture_set[texture_stage_index] };
                             if (texture)
                             {
                                 dsstring id;
@@ -401,22 +416,53 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures");
         }
 
+
+        const auto layers_foliage_textures_comp{ m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("foliagelayers_textures") };
+        if (layers_foliage_textures_comp)
+        {
+            const auto layers_textures{ layers_foliage_textures_comp->getPurpose() };
+            for (auto& e1 : layers_textures)
+            {
+                for (auto& e2 : e1)
+                {
+                    for (auto& e3 : e2.second)
+                    {
+                        const auto texture_set{ e3 };
+
+                        for (size_t texture_stage_index = 0; texture_stage_index < texture_set.size(); texture_stage_index++)
+                        {
+                            auto texture{ texture_set[texture_stage_index] };
+                            if (texture)
+                            {
+                                dsstring id;
+                                dsstring res_id = dsstring("texture_") + std::to_string((int)texture);
+                                resources_aspect->RemoveComponent<std::tuple<Texture*, bool>>(res_id);
+
+                                _DRAWSPACE_DELETE_(texture);
+                            }
+                        }
+                    }
+                }
+            }
+
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("foliagelayers_textures");
+        }
+
+
         /////////////////// fx
 
-        Component<std::vector<std::map<dsstring, Fx*>>>* layers_fx_comp;
-
-        layers_fx_comp = m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, Fx*>>>("planetlayers_fx");
-        if (layers_fx_comp)
+        const auto planet_layers_fx_comp{ m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, Fx*>>>("planetlayers_fx") };
+        if (planet_layers_fx_comp)
         {
-            std::vector<std::map<dsstring, Fx*>> layers_fx = layers_fx_comp->getPurpose();
+            std::vector<std::map<dsstring, Fx*>> layers_fx = planet_layers_fx_comp->getPurpose();
             for (auto& e1 : layers_fx)
             {
                 for (auto& e2 : e1)
                 {
-                    Fx* fx = e2.second;
+                    auto fx{ e2.second };
                     for (int j = 0; j < fx->GetShadersListSize(); j++)
                     {
-                        Shader* shader = fx->GetShader(j);
+                        auto shader{ fx->GetShader(j) };
 
                         dsstring id;
                         dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
@@ -430,11 +476,41 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, Fx*>>>("planetlayers_fx");
         }
 
+        const auto foliage_layers_fx_comp{ m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, Fx*>>>("foliagelayers_fx") };
+        if (foliage_layers_fx_comp)
+        {
+            std::vector<std::map<dsstring, Fx*>> layers_fx = foliage_layers_fx_comp->getPurpose();
+            for (auto& e1 : layers_fx)
+            {
+                for (auto& e2 : e1)
+                {
+                    auto fx{ e2.second };
+                    for (int j = 0; j < fx->GetShadersListSize(); j++)
+                    {
+                        auto shader{ fx->GetShader(j) };
+
+                        dsstring id;
+                        dsstring res_id = dsstring("shader_") + std::to_string((int)shader);
+                        resources_aspect->RemoveComponent<std::tuple<Shader*, bool, int>>(res_id);
+
+                        _DRAWSPACE_DELETE_(shader);
+                    }
+                    _DRAWSPACE_DELETE_(fx);
+                }
+            }
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, Fx*>>>("foliagelayers_fx");
+        }
+
         //////////////// args shaders
 
         if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("planetlayers_shaders_params"))
         {
             m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("planetlayers_shaders_params");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("foliagelayers_shaders_params"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, std::vector<std::pair<dsstring, RenderingNode::ShadersParams>>>>>("foliagelayers_shaders_params");
         }
 
         //////////////// rendering orders
@@ -444,11 +520,22 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro");
         }
 
+        if (m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, int>>>("foliagelayers_ro"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::vector<std::map<dsstring, int>>>("foliagelayers_ro");
+        }
+
+
         //////////////// rcname_to_passes
 
         if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes"))
         {
             m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes");
         }
 
 
@@ -457,6 +544,19 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
         if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index"))
         {
             m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<dsstring, int>>("foliagelayers_rcname_to_layer_index"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, int>>("foliagelayers_rcname_to_layer_index");
+        }
+
+
+        // foliage meshes array
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsstring>>("foliage_meshes"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliage_meshes");
         }
 
     }

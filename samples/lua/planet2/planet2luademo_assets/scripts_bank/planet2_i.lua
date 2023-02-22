@@ -1682,6 +1682,12 @@ foliage_passes_bindings =
 	}
 }
 
+foliage_meshes = 
+{
+	-- plants
+	[0] = 'grass03.ac'
+}
+
 
 
 if planet_specific_config_descr.enable_oceans == TRUE then
@@ -1740,7 +1746,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	},
   }
 
-  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, foliage_meshes, 'wave_pass')
 
 else
 

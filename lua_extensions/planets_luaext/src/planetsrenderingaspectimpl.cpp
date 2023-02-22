@@ -662,12 +662,20 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_gravity_acc = m_owner->GetComponent<dsreal>("gravity_acc")->getPurpose();
 
-    auto planetlayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes")->getPurpose() };
-    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index")->getPurpose() };
+    const auto planetlayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes")->getPurpose() };
+    const auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index")->getPurpose() };
 
-    auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("planetlayers_fx")->getPurpose() };
-    auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures")->getPurpose() };    
-    auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro")->getPurpose() };
+    const auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("planetlayers_fx")->getPurpose() };
+    const auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures")->getPurpose() };    
+    const auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro")->getPurpose() };
+
+
+    // auto foliage_meshes
+
+    const auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, dsstring>>("foliage_meshes")->getPurpose() };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         
     Shader::SetRootPath(shaders_path);
@@ -765,7 +773,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     {
         dsstring rendercontextname{ rcp.first };
 
-        int layer{ rcname_to_layer_index[rendercontextname] };
+        const auto layer{ rcname_to_layer_index.at(rendercontextname) };
         LOD::Config::LayerDescriptor ld;
 
         switch (layer)
@@ -901,13 +909,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         }
 
 
-        auto    ros_map{ layers_ro[rcname_to_layer_index[rendercontextname]] };
-        auto    fxs_map{ layers_fx[rcname_to_layer_index[rendercontextname]] };
-        auto    textures_map{ layers_textures[rcname_to_layer_index[rendercontextname]] };
+        const auto      ros_map{ layers_ro.at(rcname_to_layer_index.at(rendercontextname)) };
+        const auto      fxs_map{ layers_fx.at(rcname_to_layer_index.at(rendercontextname)) };
+        const auto      textures_map{ layers_textures.at(rcname_to_layer_index.at(rendercontextname)) };
 
-        int     ro{ ros_map.at(rendercontextname) };
-        Fx*     fx{ fxs_map.at(rendercontextname) };
-        auto    textures{ textures_map.at(rendercontextname) };
+        const auto      ro{ ros_map.at(rendercontextname) };
+        const auto      fx{ fxs_map.at(rendercontextname) };
+        const auto      textures{ textures_map.at(rendercontextname) };
 
         std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
         if (textures.size() > 0)
