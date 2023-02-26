@@ -71,13 +71,13 @@ public:
             _DSEXCEPTION( "Component with same id already exists : " + p_id );
         }
 
-        Component<T>* newcomp = _DRAWSPACE_NEW_WITH_COMMENT( Component<T>, Component<T>, p_id);
+        const auto newcomp{ _DRAWSPACE_NEW_WITH_COMMENT(Component<T>, Component<T>, p_id) };
         newcomp->MakePurpose( (std::forward<Args>(p_args))... );
         m_components[p_id] = newcomp;
 
         // ajout dans m_components_by_type
 
-        const size_t tid = typeid(T).hash_code();
+        const auto tid{ typeid(T).hash_code() };
         m_components_by_type[tid].push_back( newcomp );
 
         newcomp->m_uid = m_uid_count++;
@@ -91,9 +91,9 @@ public:
         {
             _DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
         }
-        Component<T>* comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
+        auto comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
         // suppression dans m_components_by_type
-        const size_t tid{ typeid(T).hash_code() };
+        const auto tid{ typeid(T).hash_code() };
         for( auto it = m_components_by_type.at(tid).begin(); it != m_components_by_type.at(tid).end(); ++it )
         {
             if( m_components.at(p_id) == *it )
@@ -116,14 +116,14 @@ public:
             //_DSEXCEPTION( "Component id not registered in this aspect : " + p_id );
             return NULL;
         }
-		Component<T>* comp = static_cast<Component<T>*>(m_components.at(p_id));
+        const auto comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
         return comp;
     }
 
     template<typename T>
     inline void GetComponentsByType( ComponentList<T>& p_outlist ) const
     {
-        const size_t tid{ typeid(T).hash_code() };
+        const auto tid{ typeid(T).hash_code() };
         if( m_components_by_type.count( tid ) > 0 )
         {
             const auto& list{ m_components_by_type.at(tid) };
@@ -137,7 +137,7 @@ public:
     template<typename T>
     inline void RemoveAllComponentsOfType(void)
     {
-        const size_t tid{ typeid(T).hash_code() };
+        const auto tid{ typeid(T).hash_code() };
         if (m_components_by_type.count(tid) > 0)
         {
             const auto& list{ m_components_by_type.at(tid) };
