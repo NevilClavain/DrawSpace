@@ -1134,15 +1134,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						Core::Meshe* target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
 						MesheCacheEntry& cacheEntry{ (*meshesCache).at(final_asset_path) };
 						
-						const aiScene* scene{ cacheEntry.m_assimp_scene };
-						aiNode* root{ scene->mRootNode };
+						const auto scene{ cacheEntry.m_assimp_scene };
+						const auto root{ scene->mRootNode };
 
-						aiMesh** meshes{ scene->mMeshes };
+						const auto meshes{ scene->mMeshes };
 
-						aiNode* meshe_node = root->FindNode(meshe_id.c_str());
+						const auto meshe_node{ root->FindNode(meshe_id.c_str()) };
 						if (!meshe_node)
 						{
-							_DSEXCEPTION("cannot locate meshe objet " + meshe_id);
+							_DSEXCEPTION("cannot locate meshe id inside the .ac file : " + meshe_id);
 						}
 
 						ResourcesSystem::DumpMeshe(meshe_node, meshes, rs_logger);
