@@ -296,18 +296,18 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliage_meshes", m_foliages_meshes_names);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliage_meshes", m_foliages_meshes_paths);
 
 
             // declare foliage meshes to resources manager
-            for (auto e : m_foliages_meshes_names) {
+            for (auto e : m_foliages_meshes_paths) {
 
                 const auto meshe_path{ e.second };
 
                 const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second };
 
                 resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
-                    std::make_tuple(&m_foliages_meshes.at(e.first), meshe_path, "grass002", false));
+                    std::make_tuple(&m_foliages_meshes.at(e.first), meshe_path, m_foliages_meshes_ids.at(e.first), false));
             }
 
         } LUA_CATCH;
@@ -329,14 +329,16 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 int LuaClass_PlanetRendering::LUA_declarefoliagemeshe(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
-    if (argc < 2)
+    if (argc < 3)
     {
         LUA_ERROR("PlanetRendering::declare_foliagemeshe : argument(s) missing");
     }
     const auto meshe_key{ luaL_checkinteger(p_L, 1) };
     const auto meshe_path{ luaL_checkstring(p_L, 2) };
+    const auto meshe_id{ luaL_checkstring(p_L, 3) };
     
-    m_foliages_meshes_names[meshe_key] = meshe_path;
+    m_foliages_meshes_paths[meshe_key] = meshe_path;
+    m_foliages_meshes_ids[meshe_key] = meshe_id;
     m_foliages_meshes[meshe_key].SetPath(meshe_path);
 
     return 0;
@@ -573,6 +575,13 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliage_meshes");
         }
 
+        for (auto& e : m_foliages_meshes_paths)
+        {
+            const auto meshe_path{ e.second };
+            const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second };
+
+            resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
+        }
     }
 }
 

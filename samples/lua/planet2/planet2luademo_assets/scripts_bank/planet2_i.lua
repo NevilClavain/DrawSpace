@@ -1685,7 +1685,11 @@ foliage_passes_bindings =
 foliage_meshes = 
 {
 	-- plants
-	[0] = 'grass03.ac'
+	[0] = 
+	{	
+		file = 'grass03.ac',
+		mesheid = 'grass02'
+	}
 }
 
 
