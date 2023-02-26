@@ -296,7 +296,19 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliage_meshes", m_foliages_meshes);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliage_meshes", m_foliages_meshes_names);
+
+
+            // declare foliage meshes to resources manager
+            for (auto e : m_foliages_meshes_names) {
+
+                const auto meshe_path{ e.second };
+
+                const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second };
+
+                resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
+                    std::make_tuple(&m_foliages_meshes.at(e.first), meshe_path, "grass002", false));
+            }
 
         } LUA_CATCH;
     }
@@ -324,7 +336,9 @@ int LuaClass_PlanetRendering::LUA_declarefoliagemeshe(lua_State* p_L)
     const auto meshe_key{ luaL_checkinteger(p_L, 1) };
     const auto meshe_path{ luaL_checkstring(p_L, 2) };
     
-    m_foliages_meshes[meshe_key] = meshe_path;
+    m_foliages_meshes_names[meshe_key] = meshe_path;
+    m_foliages_meshes[meshe_key].SetPath(meshe_path);
+
     return 0;
 }
 
