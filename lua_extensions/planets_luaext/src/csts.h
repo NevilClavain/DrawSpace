@@ -29,25 +29,30 @@ namespace LOD
 {
 namespace cst
 {
-    static const int        nbLODRangesMax              = 30;
+    static constexpr int        nbLODRangesMax              = 30;
 
-    static const dsreal     detailsPatchScaling         = 1.0;
+    static constexpr dsreal     detailsPatchScaling         = 1.0;
 
-    static const int        lod0base                    = 19000.0;
-    static const int        nbLODRanges_inertBodies     = 13;
-    static const int        nbLODRanges_freeCameras     = 14;
+    static constexpr int        lod0base                    = 19000.0;
+    static constexpr int        nbLODRanges_inertBodies     = 13;
+    static constexpr int        nbLODRanges_freeCameras     = 14;
 
-    static const int        patchResolution             = 15;
-    static const int        patchHighResolution         = 256;
-    static const int        patchAvgResolution          = 256;
+    static constexpr int        patchResolution             = 15;
+    static constexpr int        patchHighResolution         = 256;
+    static constexpr int        patchAvgResolution          = 256;
 
-    static const dsreal     hotRelativeAlt              = 4.2;
-    static const int        timerPeriod                 = 20;     // ms
+    static constexpr dsreal     hotRelativeAlt              = 4.2;
+    static constexpr int        timerPeriod                 = 20;     // ms
 
-    static const int        SurfaceLayer                = 0;
-    static const int        AtmosphereLayer             = 1;
-    static const int        FlatCloudsLayer             = 2;
-    static const int        OceansLayer                 = 3;
+    static constexpr int        SurfaceLayer                = 0;
+    static constexpr int        AtmosphereLayer             = 1;
+    static constexpr int        FlatCloudsLayer             = 2;
+    static constexpr int        OceansLayer                 = 3;
+
+    // foliage
+
+    static constexpr int        FoliagePlants0Layer         = 0;
+
 
 }
 }
