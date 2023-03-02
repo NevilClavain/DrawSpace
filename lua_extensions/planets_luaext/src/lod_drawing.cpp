@@ -585,6 +585,14 @@ void Drawing::AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::Rend
             p_passqueue->Add(e.second);
         }
     }
+
+    for (auto& e : m_passesfoliagenodes)
+    {
+        if (e.first == p_passname)
+        {
+            p_passqueue->Add(e.second);
+        }
+    }
 }
 
 void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue)
@@ -598,6 +606,14 @@ void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core:
     }
 
     for (auto& e : m_passescollisionsdrawingnodes)
+    {
+        if (e.first == p_passname)
+        {
+            p_passqueue->Remove(e.second);
+        }
+    }
+
+    for (auto& e : m_passesfoliagenodes)
     {
         if (e.first == p_passname)
         {
@@ -719,14 +735,19 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     node_binder->Unbind(); // TO REMOVE
 }
 
+void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node)
+{
+    _asm nop
+}
+
 void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)
 {
 
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+    const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(m_renderer, m_config, p_layer_index)) };
+
     m_facedrawingnodes.push_back( node );
 
     FaceDrawingNode* node_skirts{ nullptr };
-
     FaceDrawingNode* node_landplace{ nullptr };
 
     switch( p_meshe_type )
@@ -797,10 +818,8 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
     {
         node->SetDrawPatchMode(FaceDrawingNode::DrawPatchMode::DRAW_MAXLODLEVEL, maxlodlevel_to_draw);
     }
-
         
-    RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
-
+    const auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_renderingnode_draw)) };
     m_drawing_handlers.push_back( cb );
 
     if( node_skirts )
@@ -822,7 +841,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
     // enregistrer le node patch terrain
     node->RegisterHandler( cb );
       
-    std::pair<dsstring, FaceDrawingNode*> p = std::make_pair( p_pass, node );
+    const auto p{ std::make_pair(p_pass, node) };
     m_passesnodes.push_back( p );
 
     m_nodes[node] = p_orientation;
@@ -872,6 +891,33 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
     m_passescollisionsdrawingnodes.push_back(p);
    
     m_collisionmeshedrawingnodes.push_back(node);
+}
+
+void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::Fx* p_fx,
+                                                int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer)
+{
+    const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer)) };
+    node->m_debug_id = dsstring("Foliage") + std::to_string(p_foliage_layer);
+
+    const auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_foliagerenderingnode_draw)) };
+    m_drawing_handlers.push_back(cb);
+
+    node->RegisterHandler(cb);
+
+    node->SetMeshe(p_meshe);
+    node->SetFx(p_fx);
+    node->SetOrderNumber(p_ro);
+
+    for (size_t stage = 0; stage < p_textures.size(); stage++)
+    {
+        node->SetTexture(p_textures.at(stage), stage);
+    }
+    
+
+    const auto p{ std::make_pair(p_pass, node) };
+    m_passesfoliagenodes.push_back(p);
+
+    m_foliagedrawingnodes.push_back(node);
 }
 
 void Drawing::on_new_collisionmeshe_creation(const DrawSpace::Core::Meshe& p_meshe)

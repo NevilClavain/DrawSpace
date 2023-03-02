@@ -663,16 +663,26 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     m_gravity_acc = m_owner->GetComponent<dsreal>("gravity_acc")->getPurpose();
 
     const auto planetlayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes")->getPurpose() };
-    const auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index")->getPurpose() };
 
+    const auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index")->getPurpose() };
     const auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("planetlayers_fx")->getPurpose() };
     const auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures")->getPurpose() };    
     const auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro")->getPurpose() };
 
 
+    // foliages
+
+    const auto foliagelayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes")->getPurpose() };
+
+    const auto foliagelayers_rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("foliagelayers_rcname_to_layer_index")->getPurpose() };
+    const auto foliagelayers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("foliagelayers_fx")->getPurpose() };
+    const auto foliagelayers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("foliagelayers_textures")->getPurpose() };
+    const auto foliagelayers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("foliagelayers_ro")->getPurpose() };
+
+
     // auto foliage_meshes
 
-    const auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, dsstring>>("foliage_meshes")->getPurpose() };
+    auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes")->getPurpose() };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -909,9 +919,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         }
 
 
-        const auto      ros_map{ layers_ro.at(rcname_to_layer_index.at(rendercontextname)) };
-        const auto      fxs_map{ layers_fx.at(rcname_to_layer_index.at(rendercontextname)) };
-        const auto      textures_map{ layers_textures.at(rcname_to_layer_index.at(rendercontextname)) };
+        const auto      ros_map{ layers_ro.at(layer) };
+        const auto      fxs_map{ layers_fx.at(layer) };
+        const auto      textures_map{ layers_textures.at(layer) };
 
         const auto      ro{ ros_map.at(rendercontextname) };
         const auto      fx{ fxs_map.at(rendercontextname) };
@@ -920,13 +930,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
         if (textures.size() > 0)
         {
-            pass_textures = textures[0];
+            pass_textures = textures.at(0);
         }
 
 
 
         // std::function
-        const auto build_details_binder = [&](bool p_enable_atmosphere = false)
+        const auto build_details_binder{ [&](bool p_enable_atmosphere = false)
         {
             LOD::Binder* details_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
 
@@ -939,7 +949,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             static const dsreal innerRadius{ planet_ray * 1000.0 };
             static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
 
-            const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius* outerRadius, innerRadius* innerRadius);
+            const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius * outerRadius, innerRadius * innerRadius);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 18, atmo_flags);
 
@@ -966,11 +976,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_4);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_4);
 
-            
+
             const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, (p_enable_atmosphere ? 1.0 : 0.0));
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
-            
+
 
             // couleurs fog "sol"
             const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
@@ -1008,7 +1018,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 35, details_settings);
 
             return details_binder;
-        };
+        } };
 
        
         for (auto& pass_id : rcp.second)
@@ -1106,6 +1116,33 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
         }
     }
+
+    //////////// foliages
+
+    for (auto& rcp : foliagelayers_rcname_to_passes)
+    {
+        dsstring rendercontextname{ rcp.first };        
+        const auto foliage_layer{ foliagelayers_rcname_to_layer_index.at(rendercontextname) };
+
+        const auto      ros_map{ foliagelayers_ro.at(foliage_layer) };
+        const auto      fxs_map{ foliagelayers_fx.at(foliage_layer) };
+        const auto      textures_map{ foliagelayers_textures.at(foliage_layer) };
+
+        const auto      ro{ ros_map.at(rendercontextname) };
+        const auto      fx{ fxs_map.at(rendercontextname) };
+        const auto      textures{ textures_map.at(rendercontextname) };
+
+        const auto      meshe{ foliage_meshes.at(foliage_layer) };
+
+        for (auto& pass_id : rcp.second)
+        {
+            m_passes.insert(pass_id);
+            
+            m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, fx, ro, textures.at(0), foliage_layer);
+        }
+    }
+
+    ////////////////////////
 
     ComponentsUpdated();
     

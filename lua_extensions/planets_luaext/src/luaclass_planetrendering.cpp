@@ -296,7 +296,14 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliage_meshes", m_foliages_meshes_paths);
+            /*
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliages_meshes_paths", m_foliages_meshes_paths);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliages_meshes_ids", m_foliages_meshes_ids);
+            */
+
+
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes", m_foliages_meshes);
+
 
 
             // declare foliage meshes to resources manager
@@ -307,7 +314,7 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
                 const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second };
 
                 resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
-                    std::make_tuple(&m_foliages_meshes.at(e.first), meshe_path, m_foliages_meshes_ids.at(e.first), false));
+                    std::make_tuple(m_foliages_meshes.at(e.first), meshe_path, m_foliages_meshes_ids.at(e.first), false));
             }
 
         } LUA_CATCH;
@@ -339,7 +346,8 @@ int LuaClass_PlanetRendering::LUA_declarefoliagemeshe(lua_State* p_L)
     
     m_foliages_meshes_paths[meshe_key] = meshe_path;
     m_foliages_meshes_ids[meshe_key] = meshe_id;
-    m_foliages_meshes[meshe_key].SetPath(meshe_path);
+    m_foliages_meshes[meshe_key] = _DRAWSPACE_NEW_(Meshe, Meshe);
+    m_foliages_meshes.at(meshe_key)->SetPath(meshe_path);
 
     return 0;
 }
@@ -398,6 +406,17 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
 
     if (m_entity_rendering_aspect)
     {
+
+        /////////////////// meshes
+
+        for(auto e : m_foliages_meshes)
+        {
+            _DRAWSPACE_DELETE_(e.second);
+        }
+
+        m_foliages_meshes_paths.clear();
+        m_foliages_meshes_ids.clear();
+        m_foliages_meshes.clear();
 
         /////////////////// textures
        
@@ -569,10 +588,21 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
 
 
         // foliage meshes array
-
-        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsstring>>("foliage_meshes"))
+        /*
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsstring>>("foliages_meshes_paths"))
         {
-            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliage_meshes");
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliages_meshes_paths");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsstring>>("foliages_meshes_ids"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliages_meshes_ids");
+        }
+        */
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes");
         }
 
         for (auto& e : m_foliages_meshes_paths)

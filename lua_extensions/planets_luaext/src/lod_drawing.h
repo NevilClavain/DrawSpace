@@ -170,7 +170,9 @@ protected:
     std::vector<Body*>                                                          m_planetbodies;
 
     std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
+    std::vector<std::pair<dsstring, FoliageDrawingNode*>>                       m_passesfoliagenodes;
     std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
+    std::vector<FoliageDrawingNode*>                                            m_foliagedrawingnodes;
 
     std::vector<std::pair<dsstring, CollisionMesheDrawingNode*>>                m_passescollisionsdrawingnodes;
     std::vector<CollisionMesheDrawingNode*>                                     m_collisionmeshedrawingnodes;
@@ -198,6 +200,9 @@ protected:
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
+
+    void on_foliagerenderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
+
 
     void create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest );
 
@@ -234,6 +239,9 @@ public:
 
     void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw = -1);
     void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
+
+    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::Fx* p_fx, 
+                                        int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer);
 
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;
 
