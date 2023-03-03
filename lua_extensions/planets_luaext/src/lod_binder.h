@@ -57,8 +57,8 @@ public:
 
     Binder( void );
 
-    virtual void Bind( void ) {}; // appelee juste avant le rendu du node
-    virtual void Unbind( void ) {}; // appelee juste apres le rendu du node
+    //virtual void Bind( void ) {}; // appelee juste avant le rendu du node
+    //virtual void Unbind( void ) {}; // appelee juste apres le rendu du node
 
     void BindToShader(void) const;
 

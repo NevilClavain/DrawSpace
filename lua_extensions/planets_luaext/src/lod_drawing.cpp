@@ -682,7 +682,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     face_node->SetCurrentBodyDescription( planetbody->GetDescription() );
 
     Binder* node_binder = face_node->GetBinder();
-    node_binder->Bind();
+
     node_binder->BindToShader();
     
     // recup relative alt de la face
@@ -698,7 +698,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
 
     face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, world, view, proj, true );
-    node_binder->Unbind();
+
 }
 
 // used for subpasses :)
@@ -720,19 +720,18 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node ); 
     face_node->SetCurrentPatch( NULL );
 
-    Binder* node_binder = face_node->GetBinder();
+    const auto node_binder{ face_node->GetBinder() };
 
-    node_binder->Bind(); // TO REMOVE
+
     node_binder->BindToShader();
 
-    Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
-    dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
+    const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
+    const auto rel_alt{ planetbody->GetFace(m_nodes[face_node])->GetRelativeAlt() };
 
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( 1.0, rel_alt, view_pos, world, view, proj, false );   
-    node_binder->Unbind(); // TO REMOVE
+    face_node->Draw( 1.0, rel_alt, view_pos, world, view, proj, false );       
 }
 
 void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node)
