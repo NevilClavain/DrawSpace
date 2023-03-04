@@ -1219,8 +1219,7 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
 
             for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
             {
-                LOD::Layer* layer = m_registered_camerapoints[cam_name].layers[i];
-
+                const auto layer{ m_registered_camerapoints[cam_name].layers[i] };
                 planet_bodies.push_back(layer->GetBody());
             }
             m_drawable.SetCurrentPlanetBodies(planet_bodies);

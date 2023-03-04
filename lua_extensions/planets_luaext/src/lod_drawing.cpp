@@ -733,6 +733,13 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 
 void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node)
 {
+    
+    const auto planetbody{ m_planetbodies.at(cst::SurfaceLayer) };
+    const auto current_patch{ planetbody->GetFace(planetbody->GetCurrentFace())->GetCurrentPatch() };
+
+
+    //////////////////////////////////////////////////
+
     DrawSpace::Utils::Matrix world;
     DrawSpace::Utils::Matrix view;
     DrawSpace::Utils::Matrix proj;
