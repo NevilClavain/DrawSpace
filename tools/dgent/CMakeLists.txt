@@ -41,6 +41,7 @@ target_link_libraries(dgent jsmn physfs drawspace_core)
 
 install(TARGETS dgent CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS dgent CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS dgent CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 
 install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/dgent/renderingluaext.json OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/dgent/transformluaext.json OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)

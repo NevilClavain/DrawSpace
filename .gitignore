@@ -49,6 +49,11 @@ apps/
 *.log
 *.scc
 
+*.tlog
+*.recipe
+*.vcxproj.FileListAbsolute.txt
+*.exp
+
 # Visual C++ cache files
 ipch/
 *.aps
@@ -257,3 +262,43 @@ $RECYCLE.BIN/
 *.opendb
 *.db-shm
 *.db-wal
+
+
+# RelWithDebInfo
+CEGUIWrapper_project/RelWithDebInfo/ceguiwrapper.lib
+drawspacecore_project/RelWithDebInfo/drawspace_core.lib
+lua_core/RelWithDebInfo/lua_core.lib
+lua_extensions/fpsmvt_luaext/RelWithDebInfo/fpsmvt_luaext.dll
+lua_extensions/fpsmvt_luaext/RelWithDebInfo/fpsmvt_luaext.lib
+lua_extensions/freemvt_luaext/RelWithDebInfo/freemvt_luaext.dll
+lua_extensions/freemvt_luaext/RelWithDebInfo/freemvt_luaext.lib
+lua_extensions/impostors_luaext/RelWithDebInfo/impostors_luaext.dll
+lua_extensions/impostors_luaext/RelWithDebInfo/impostors_luaext.lib
+lua_extensions/mesh_luaext/RelWithDebInfo/mesh_luaext.dll
+lua_extensions/mesh_luaext/RelWithDebInfo/mesh_luaext.lib
+lua_extensions/orbit_luaext/RelWithDebInfo/orbit_luaext.dll
+lua_extensions/orbit_luaext/RelWithDebInfo/orbit_luaext.lib
+lua_extensions/planets_luaext/RelWithDebInfo/planets_luaext.dll
+lua_extensions/planets_luaext/RelWithDebInfo/planets_luaext.lib
+lua_extensions/revolution_luaext/RelWithDebInfo/revolution_luaext.dll
+lua_extensions/revolution_luaext/RelWithDebInfo/revolution_luaext.lib
+lua_extensions/skybox_luaext/RelWithDebInfo/skybox_luaext.dll
+lua_extensions/skybox_luaext/RelWithDebInfo/skybox_luaext.lib
+lua_extensions/strings_luaext/RelWithDebInfo/strings_luaext.dll
+lua_extensions/strings_luaext/RelWithDebInfo/strings_luaext.lib
+modules/gameroom_project/RelWithDebInfo/gameroom.dll
+modules/gameroom_project/RelWithDebInfo/gameroom.lib
+plugins/d3d11_project/RelWithDebInfo/drawspaced3d11.dll
+plugins/d3d11_project/RelWithDebInfo/drawspaced3d11.lib
+
+rt_project/RelWithDebInfo/rt.exe
+rt_project/RelWithDebInfo/rt.lib
+
+samples/cpp/impostors/RelWithDebInfo/impostorsdemo.dll
+samples/cpp/impostors/RelWithDebInfo/impostorsdemo.lib
+
+tools/dgent/RelWithDebInfo/dgent.exe
+tools/dgent/RelWithDebInfo/dgent.lib
+
+
+

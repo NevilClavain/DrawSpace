@@ -51,4 +51,5 @@ target_link_libraries(drawspaced3d11 d3d11 d3dx11 dxgi FW1FontWrapper CEGUIBase-
 
 install(TARGETS drawspaced3d11 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS drawspaced3d11 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS drawspaced3d11 CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)

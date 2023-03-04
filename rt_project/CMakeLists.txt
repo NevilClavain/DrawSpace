@@ -49,4 +49,5 @@ target_link_libraries(rt physfs jsmn BulletDynamics_vs2017 BulletCollision_vs201
 
 install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS rt CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/logging/logrt.conf OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
