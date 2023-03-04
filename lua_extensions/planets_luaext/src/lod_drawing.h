@@ -152,7 +152,7 @@ private:
 public:
 
     FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
-    void Draw(void);
+    void Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
 };
 
 

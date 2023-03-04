@@ -485,14 +485,15 @@ void FaceDrawingNode::SetCurrentPass(const dsstring& p_pass)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-FoliageDrawingNode::FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer)
+FoliageDrawingNode::FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer) :
+m_renderer( p_renderer )
 {
 
 }
 
-void FoliageDrawingNode::Draw(void)
+void FoliageDrawingNode::Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
-
+    m_renderer->DrawMeshe(p_world, p_view, p_proj);
 }
 
 
@@ -658,7 +659,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     DrawSpace::Utils::Matrix proj;
     DrawSpace::Utils::Matrix world;
 
-    TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+    const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
     if( !transform_aspect )
     {
         _DSEXCEPTION( "Owner entity has no transform aspect!" );
@@ -668,37 +669,33 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     transform_aspect->GetProjTransform(proj);
     transform_aspect->GetWorldTransform(world);
 
-    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
+    const auto face_node{ static_cast<FaceDrawingNode*>(p_rendering_node) };
 
-    std::vector<Patch*> dl;
-   
-    Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
+    std::vector<Patch*> dl;   
+    const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
 
     planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
-    Patch* current_patch = planetbody->GetFace( m_nodes[face_node] )->GetCurrentPatch();
+    const auto current_patch{ planetbody->GetFace(m_nodes[face_node])->GetCurrentPatch() };
  
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
     face_node->SetCurrentBodyDescription( planetbody->GetDescription() );
 
-    Binder* node_binder = face_node->GetBinder();
+    const auto node_binder{ face_node->GetBinder() };
 
     node_binder->BindToShader();
     
     // recup relative alt de la face
-    dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAltSphere();
+    const auto rel_alt{ planetbody->GetFace(m_nodes[face_node])->GetRelativeAltSphere() };
 
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
-
 
     Vector hotpoint;
     planetbody->GetFace( m_nodes[face_node] )->GetRelativeHotPoint( hotpoint );
     face_node->UpdateRelativeHotPoint( hotpoint );
 
-
     face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, world, view, proj, true );
-
 }
 
 // used for subpasses :)
@@ -736,7 +733,27 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 
 void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node)
 {
-    _asm nop
+    DrawSpace::Utils::Matrix world;
+    DrawSpace::Utils::Matrix view;
+    DrawSpace::Utils::Matrix proj;
+
+    const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
+    if (!transform_aspect)
+    {
+        _DSEXCEPTION("Owner entity has no transform aspect!");
+    }
+
+    //transform_aspect->GetViewTransform(view);
+    transform_aspect->GetProjTransform(proj);
+    //transform_aspect->GetWorldTransform(world);
+
+    view.Identity();
+    world.Translation(0.0, -1.0, -10.0);
+
+    const auto foliage_node{ static_cast<FoliageDrawingNode*>(p_rendering_node) };
+
+    foliage_node->Draw(world, view, proj);
+
 }
 
 void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)
