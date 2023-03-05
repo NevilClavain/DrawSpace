@@ -671,7 +671,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     const auto face_node{ static_cast<FaceDrawingNode*>(p_rendering_node) };
 
-    std::vector<Patch*> dl;   
+    std::vector<Patch*> dl;
     const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
 
     planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
@@ -737,6 +737,18 @@ void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_ren
     const auto planetbody{ m_planetbodies.at(cst::SurfaceLayer) };
     const auto current_patch{ planetbody->GetFace(planetbody->GetCurrentFace())->GetCurrentPatch() };
 
+    std::vector<Patch*> dl;
+    planetbody->GetFace(planetbody->GetCurrentFace())->GetDisplayList(dl);
+
+    /*
+    for (auto e : dl)
+    {
+        if (e == current_patch)
+        {
+            _asm nop
+        }
+    }
+    */
 
     //////////////////////////////////////////////////
 
