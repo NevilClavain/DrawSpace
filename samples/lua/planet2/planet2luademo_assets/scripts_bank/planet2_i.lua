@@ -1646,8 +1646,8 @@ foliage_layers =
 			{
 				shaders = 
 				{
-					{ path='texture_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='texture_ps.hlsl',mode=SHADER_NOT_COMPILED }
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
 				},
 				rs_in = 
 				{
