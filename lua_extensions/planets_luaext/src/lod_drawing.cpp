@@ -109,8 +109,8 @@ void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
                                             const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
 {
-    const dsreal patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
-    const dsreal patch_scale{ cst::detailsPatchScaling };
+    const auto patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
+    const auto patch_scale{ cst::detailsPatchScaling };
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -186,6 +186,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         pixels_flags_2[1] = 1.0;
     }
     */
+    
     
     pixels_flags_2[2] = (dsreal)p_patch->GetLodLevel();
 
@@ -491,12 +492,52 @@ m_renderer( p_renderer )
 
 }
 
-void FoliageDrawingNode::Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
-    m_renderer->DrawMeshe(p_world, p_view, p_proj);
+    const auto current_patch{ p_body->GetFace(p_body->GetCurrentFace())->GetCurrentPatch() };
+
+    std::vector<Patch*> dl;
+    p_body->GetFace(p_body->GetCurrentFace())->GetDisplayList(dl);
+
+    /*
+    for (auto e : dl)
+    {
+        if (e == current_patch)
+        {
+            _asm nop
+        }
+    }
+    */
+
+    //////////////////////////////////////////////////
+
+    draw_foliages_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
 }
 
+void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+{
+    Vector flag0;
+    flag0[0] = p_patch->GetOrientation();
+    flag0[1] = p_patch->GetUnitSideLenght();
 
+    // not used
+    flag0[2] = p_ray;
+    flag0[3] = 0.0;
+
+    Vector patch_pos;
+    dsreal xp, yp;
+    p_patch->GetUnitPos(xp, yp);
+
+    patch_pos[0] = xp;
+    patch_pos[1] = yp;
+    patch_pos[2] = 0.0; // not used
+
+
+    m_renderer->SetFxShaderParams(0, 24, flag0);
+    m_renderer->SetFxShaderParams(0, 25, patch_pos);
+
+    m_renderer->DrawMeshe(p_world, p_view, p_proj);
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -732,25 +773,8 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
 }
 
 void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node)
-{
-    
+{    
     const auto planetbody{ m_planetbodies.at(cst::SurfaceLayer) };
-    const auto current_patch{ planetbody->GetFace(planetbody->GetCurrentFace())->GetCurrentPatch() };
-
-    std::vector<Patch*> dl;
-    planetbody->GetFace(planetbody->GetCurrentFace())->GetDisplayList(dl);
-
-    /*
-    for (auto e : dl)
-    {
-        if (e == current_patch)
-        {
-            _asm nop
-        }
-    }
-    */
-
-    //////////////////////////////////////////////////
 
     DrawSpace::Utils::Matrix world;
     DrawSpace::Utils::Matrix view;
@@ -762,17 +786,13 @@ void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_ren
         _DSEXCEPTION("Owner entity has no transform aspect!");
     }
 
-    //transform_aspect->GetViewTransform(view);
+    transform_aspect->GetViewTransform(view);
     transform_aspect->GetProjTransform(proj);
-    //transform_aspect->GetWorldTransform(world);
-
-    view.Identity();
-    world.Translation(0.0, -1.0, -10.0);
+    transform_aspect->GetWorldTransform(world);
 
     const auto foliage_node{ static_cast<FoliageDrawingNode*>(p_rendering_node) };
 
-    foliage_node->Draw(world, view, proj);
-
+    foliage_node->Draw(planetbody->GetDiameter() / 2.0, planetbody, world, view, proj);
 }
 
 void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)

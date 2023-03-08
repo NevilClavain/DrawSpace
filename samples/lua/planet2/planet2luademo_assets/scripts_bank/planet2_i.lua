@@ -1670,7 +1670,7 @@ foliage_layers =
 			shaders_params = 
 			{
 			},
-			rendering_order = 10000
+			rendering_order = 15000
 		}
 	}
 }

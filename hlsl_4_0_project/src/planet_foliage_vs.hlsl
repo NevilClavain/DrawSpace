@@ -30,6 +30,9 @@ cbuffer legacyargs : register(b0)
 
 #include "mat_input_constants.hlsl"
 
+#define v_flag0                     24
+#define v_patch_translation         25
+
 struct VS_INPUT
 {
     float3 Position : POSITION;
@@ -42,15 +45,58 @@ struct VS_OUTPUT
     float2 TexCoord0 : TEXCOORD0;
 };
 
+#include "spherelod_commons.hlsl"
+
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
     VS_OUTPUT Output;
-    float4 pos;
-    pos.xyz = Input.Position;
-    pos.w = 1.0;
 
-    Output.Position = mul(pos, mat[matWorldViewProjection]);
+    float4 flag0 = vec[v_flag0];
+    float4 patch_translation = vec[v_patch_translation];
+
+
+    float4 inputpos;
+    inputpos.xyz = Input.Position;
+
+    float4 v_position;
+    float4 v_position2;
+    float4 v_position3;
+
+    // swap y and z
+    //float temp = inputpos.y;
+    //inputpos.y = inputpos.z;
+    //inputpos.z = temp;
+
+    inputpos.xyz = ProjectVectorToCube(flag0.x, inputpos.xyz);
+
+
+
+
+
+    // sidelenght scaling
+    //v_position.xyz = inputpos * flag0.y / 2.0;
+
+    // positioning
+    v_position.xy = /*v_position.xy + */ patch_translation.xy;
+    v_position.z = 1.0;
+    v_position.w = 1.0;
+
+    v_position2.w = 1.0;
+    v_position2.xyz = CubeToSphere(ProjectVectorToCube(flag0.x, v_position.xyz));
+
+    // final scaling    
+    v_position3 = v_position2 * flag0.z;
+    v_position3.w = 1.0;
+
+    //Output.Position = mul(v_position3, mat[matWorldViewProjection]);
+
+    inputpos.xyz += v_position3.xyz;
+    inputpos.w = 1.0;
+
+    Output.Position = mul(inputpos, mat[matWorldViewProjection]);
+
+
+
     Output.TexCoord0 = Input.TexCoord0.xy;
-      
     return (Output);
 }

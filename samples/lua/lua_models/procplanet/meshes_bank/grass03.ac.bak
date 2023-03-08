@@ -4,18 +4,18 @@ OBJECT world
 kids 1
 OBJECT poly
 name "grass02"
-loc 5.96046e-08 0.00263661 0.0227021
+loc 5.96046e-08 -0.0200907 -0.00701809
 texture "D:/dev/DrawSpace/samples/lua/lua_models/procplanet/textures_bank/grass02.png"
 crease 45.000000
 numvert 8
-0 2 1
-0 2.38419e-07 -1
-0 2.98023e-07 1
-0 2 -1
+0 -1 2
+0 1 2.38419e-07
+0 -1 2.38419e-07
+0 1 2
 1 0 0
--1 2 1.19209e-07
+-1 -1.78814e-07 2
 -1 0 0
-1 2 0
+1 -5.96046e-08 2
 numsurf 4
 SURF 0x30
 mat 0
