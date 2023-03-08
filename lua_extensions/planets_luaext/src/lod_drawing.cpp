@@ -36,6 +36,8 @@
 
 #include "transformaspect.h"
 
+#include "quaternion.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -516,27 +518,32 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
 void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
-    Vector flag0;
-    flag0[0] = p_patch->GetOrientation();
-    flag0[1] = p_patch->GetUnitSideLenght();
-
-    // not used
-    flag0[2] = p_ray;
-    flag0[3] = 0.0;
-
-    Vector patch_pos;
+    
     dsreal xp, yp;
     p_patch->GetUnitPos(xp, yp);
 
-    patch_pos[0] = xp;
-    patch_pos[1] = yp;
-    patch_pos[2] = 0.0; // not used
+    Vector v1, v2;
+    Patch::XYToXYZ(p_patch->GetOrientation(), xp, yp, v1);
+    v1[3] = 1.0;
 
+    Patch::CubeToSphere(v1, v2);
+    v2[3] = 1.0;
 
-    m_renderer->SetFxShaderParams(0, 24, flag0);
-    m_renderer->SetFxShaderParams(0, 25, patch_pos);
+    // final scaling
+    v2.Scale(p_ray);
 
-    m_renderer->DrawMeshe(p_world, p_view, p_proj);
+    Matrix local_t;
+    local_t.Translation(v2);
+
+    Utils::Quaternion q;
+    q.LookAt(v2, Vector(0.0, 0.0, 0.0, 1.0));
+
+    Matrix local_r;
+    q.RotationMatFrom(local_r);
+
+    Matrix world = local_r * local_t * p_world;
+
+    m_renderer->DrawMeshe(world, p_view, p_proj);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
