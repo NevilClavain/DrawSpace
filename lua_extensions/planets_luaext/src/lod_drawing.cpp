@@ -513,7 +513,12 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
     //////////////////////////////////////////////////
 
-    draw_foliages_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
+    //draw_foliages_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
+
+    for (auto e : dl)
+    {
+        draw_foliages_on_patch(e, p_ray, p_world, p_view, p_proj);
+    }
 }
 
 void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
@@ -530,7 +535,7 @@ void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, co
     v2[3] = 1.0;
 
     // final scaling
-    v2.Scale(p_ray);
+    v2.Scale(p_ray + 100.0);
 
     Matrix local_t;
     local_t.Translation(v2);
