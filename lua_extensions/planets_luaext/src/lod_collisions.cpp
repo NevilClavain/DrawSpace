@@ -43,8 +43,8 @@ m_layer(p_owner)
 
 	// creation/preparation du node
 
-	DrawSpace::Interface::Renderer* renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
-	FaceDrawingNode* node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, p_config, p_node_layer_index)) };
+	auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+	const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, p_config, p_node_layer_index)) };
 
 	node->SetMeshe(LOD::Body::m_patch_meshe);
 	node->SetBinder(p_config->m_layers_descr[p_node_layer_index].groundCollisionsBinder[p_orientation]);
@@ -60,8 +60,7 @@ m_layer(p_owner)
 	m_subpass = m_collidingheightmap_pass;
 	m_subpass_node = node;
 
-	Layer::SubPassCreationHandler* handler{ p_owner->GetSubPassCreationHandler() };
-	
+	const auto handler{ p_owner->GetSubPassCreationHandler() };	
 	if (handler)
 	{
 		(*handler)(this, LOD::SubPass::PERMANENT_SUBPASS);
@@ -73,7 +72,7 @@ m_layer(p_owner)
 
 Collisions::~Collisions(void)
 {
-	FaceDrawingNode* node{ static_cast<FaceDrawingNode *>(m_subpass_node) };
+	auto node{ static_cast<FaceDrawingNode *>(m_subpass_node) };
 	_DRAWSPACE_DELETE_(node);
 
 	_DRAWSPACE_DELETE_(m_collidingheightmap_pass);
@@ -105,22 +104,22 @@ void Collisions::Disable(void)
 	m_enable = false;
 }
 
-DrawSpace::Core::Texture* Collisions::GetHMTexture(void)
+DrawSpace::Core::Texture* Collisions::GetHMTexture(void) const
 {
 	return m_collidingheightmap_texture;;
 }
 
-void* Collisions::GetHMTextureContent(void)
+void* Collisions::GetHMTextureContent(void) const
 {
 	return m_collidingheightmap_content;
 }
 
 DrawSpace::IntermediatePass* Collisions::create_colliding_heightmap_pass(void)
 {
-	dsstring thisname = dsstring("layer_") + std::to_string((int)this);
-	dsstring complete_name = thisname + dsstring("_collisionheightmap_pass");
+	const auto thisname{ dsstring("layer_") + std::to_string((int)this) };
+	const auto complete_name{ thisname + dsstring("_collisionheightmap_pass") };
 
-	IntermediatePass* ipass = _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name));
+	const auto ipass{ _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name)) };
 
 	ipass->SetTargetDimsFromRenderer(false);
 	ipass->SetTargetDims(heightmapTextureSize, heightmapTextureSize);

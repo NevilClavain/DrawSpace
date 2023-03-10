@@ -51,12 +51,12 @@ public:
     Collisions(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index);
     virtual ~Collisions(void);
 
-    virtual void DrawSubPass(void);
-    virtual void SubPassDone(void);
-    virtual void Enable(void);
-    virtual void Disable(void);
-    virtual DrawSpace::Core::Texture* GetHMTexture(void);
-    virtual void* GetHMTextureContent(void);
+    virtual void                        DrawSubPass(void);
+    virtual void                        SubPassDone(void);
+    virtual void                        Enable(void);
+    virtual void                        Disable(void);
+    virtual DrawSpace::Core::Texture*   GetHMTexture(void) const;
+    virtual void*                       GetHMTextureContent(void) const;
 
 };
 }
