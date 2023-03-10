@@ -275,7 +275,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         local_mat = local_scale * local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
 
-        Matrix local_mat_transp = local_mat;
+        auto local_mat_transp{ local_mat };
         local_mat_transp.Transpose();
 
         m_renderer->SetFxShaderMatrix( 0, 29, local_mat_transp );
@@ -289,7 +289,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         //////////////////////////////////////////////////////////////////////////////
 
-        Matrix landplace_normale_mat = local_mat_rot_phi * local_mat_rot_theta * p_world * p_view;
+        auto landplace_normale_mat{ local_mat_rot_phi * local_mat_rot_theta * p_world * p_view };
         landplace_normale_mat.ClearTranslation();
         Vector landplace_normale( 0.0, 0.0, 1.0, 1.0 );
 
@@ -322,22 +322,20 @@ void FaceDrawingNode::UpdateRelativeHotPoint( const Utils::Vector p_hotpoint )
 void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                             const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
 {
-    //ZeroMemory( &m_stats, sizeof( Stats ) );
-
-    Texture* current_texture = NULL;
+    Texture* current_texture{ nullptr };
 
     int min_lod_level = -1;
         
     for( size_t i = 0; i < m_display_list.size(); i++ )
     {
-        int curr_lod_level = m_display_list[i]->GetLodLevel();
+        const auto curr_lod_level{ m_display_list[i]->GetLodLevel() };
         if( -1 == min_lod_level || curr_lod_level < min_lod_level )
         {
             min_lod_level = curr_lod_level;
         }
 
-        Patch* ref_patch = m_display_list[i]->GetTextureReferent();
-        Texture* refpatchtexture = ref_patch->GetDataTexture();
+        const auto ref_patch{ m_display_list[i]->GetTextureReferent() };
+        const auto refpatchtexture{ ref_patch->GetDataTexture() };
 
         if( p_bind_ht_texture && ( refpatchtexture != current_texture ) )
         {
@@ -400,7 +398,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         //apply OUT-renderstate required for current pass...
         if (m_renderstate_per_passes.count(m_current_pass))
         {
-            auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
+            const auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
             for (auto& rs_pair : rs_list)
             {
                 auto rs_out{ rs_pair.second };
@@ -464,7 +462,7 @@ bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Utils::Vector& p_
     dsreal patch_xpos, patch_ypos;
     p_patch->GetPos( patch_xpos, patch_ypos );
 
-    dsreal patch_side_size = p_patch->GetSideLength();
+    const auto patch_side_size{ p_patch->GetSideLength() };
 
     if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
         ( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
@@ -684,7 +682,7 @@ void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
         DrawSpace::Utils::Matrix proj;
         DrawSpace::Utils::Matrix world;
 
-        TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+        const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
         if (!transform_aspect)
         {
             _DSEXCEPTION("Owner entity has no transform aspect!");
@@ -694,8 +692,7 @@ void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
         transform_aspect->GetProjTransform(proj);
         transform_aspect->GetWorldTransform(world);
 
-        CollisionMesheDrawingNode* collisionmeshe_node = static_cast<CollisionMesheDrawingNode*>(p_rendering_node);
-
+        auto collisionmeshe_node{ static_cast<CollisionMesheDrawingNode*>(p_rendering_node) };
         collisionmeshe_node->Draw(world, view, proj);
     }
 }
@@ -767,11 +764,10 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
     view.Identity();
     proj.Perspective( 2.0, 2.0, 1.0, 10.0 );
 
-    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node ); 
+    auto face_node{ static_cast<FaceDrawingNode*>(p_rendering_node) };
     face_node->SetCurrentPatch( NULL );
 
     const auto node_binder{ face_node->GetBinder() };
-
 
     node_binder->BindToShader();
 
@@ -935,7 +931,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
 void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order)
 {
-    CollisionMesheDrawingNode* node{ _DRAWSPACE_NEW_(CollisionMesheDrawingNode, CollisionMesheDrawingNode(m_renderer)) };
+    auto node{ _DRAWSPACE_NEW_(CollisionMesheDrawingNode, CollisionMesheDrawingNode(m_renderer)) };
 
     node->SetFx(p_fx);
     node->m_debug_id = "COLLISIONDISPLAY_MESHE";
@@ -1050,7 +1046,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 {
     int main_patch_nbv = 0;
     dsreal xcurr, ycurr;
-    long patch_resolution = p_patch_resol;
+    const auto patch_resolution{ p_patch_resol };
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
