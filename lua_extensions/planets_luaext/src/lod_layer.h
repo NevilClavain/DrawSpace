@@ -74,7 +74,7 @@ private:
     LOD::HeighmapSubPass*                                       m_heightmaps[6];
     LOD::HeighmapSubPass*                                       m_current_hm{ nullptr };
 
-    LOD::Patch*                                                 m_collision_patch{ nullptr };
+    LOD::Patch*                                                 m_heightmap_source_patche{ nullptr };  // generate heightmap from this patch
 
     bool                                                        m_draw_hm{ false };
 
