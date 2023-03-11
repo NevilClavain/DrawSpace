@@ -76,7 +76,7 @@ private:
 
     LOD::Patch*                                                 m_collision_patch{ nullptr };
 
-    bool                                                        m_draw_collidinghm{ false };
+    bool                                                        m_draw_hm{ false };
 
     dsstring                                                    m_description; // for debug purpose :)
 
@@ -92,7 +92,7 @@ private:
 
     Patch*                                                      m_current_patch{ nullptr };
 
-    void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
+    void build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
 
     /*

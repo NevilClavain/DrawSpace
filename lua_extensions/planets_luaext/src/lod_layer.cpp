@@ -179,7 +179,7 @@ void Layer::Compute(void)
                 std::vector<LOD::Patch*> display_list;
                 display_list.push_back(m_collision_patch);
 
-                m_draw_collidinghm = true;
+                m_draw_hm = true;
 
                 m_current_collisions_hm = m_collisions_hms[curr_patch->GetOrientation()];
                 m_current_collisions_hm->Enable();
@@ -195,7 +195,7 @@ void Layer::Compute(void)
     Vector view_patch_coords;
     const auto curr_face{ m_body->GetCurrentFace() };
 
-    if (curr_face > -1 && !m_draw_collidinghm)
+    if (curr_face > -1 && !m_draw_hm)
     {
         m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatchViewCoords(view_patch_coords);
         const auto new_alt{ get_interpolated_height(view_patch_coords[0], view_patch_coords[1]) };
@@ -207,7 +207,7 @@ void Layer::Compute(void)
     }   
 }
 
-void Layer::build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap)
+void Layer::build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe)
 {    
     dsreal max_height{ 0.0 };
     dsreal min_height{ 1000000000.0 };
@@ -319,14 +319,14 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
 
 void Layer::SubPassDone(LOD::Collisions* p_collider)
 {
-    if (m_draw_collidinghm)
+    if (m_draw_hm)
     {
         m_current_collisions_hm->GetHMTexture()->CopyTextureContent();
 
         const auto heightmap { (float*)m_current_collisions_hm->GetHMTextureContent() };
 
         Meshe final_meshe;
-        build_meshe(*(LOD::Body::GetPatcheMeshe()), m_collision_patch, final_meshe, heightmap);
+        build_meshe(heightmap , *(LOD::Body::GetPatcheMeshe()), m_collision_patch, final_meshe);
         m_hm_meshe = final_meshe;
 
         for (auto& e : m_collision_meshe_creation_handler)
@@ -337,7 +337,7 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
         const auto shape_component_name{ "shape_" + std::to_string((long)this) };
         (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
 
-        m_draw_collidinghm = false;
+        m_draw_hm = false;
         m_current_collisions_hm->Disable();
 
         m_current_collisions_hm = nullptr;    
