@@ -31,25 +31,25 @@ namespace LOD
 class Layer;
 struct Config;
 
-class Collisions : public LOD::SubPass
+class HeighmapSubPass : public LOD::SubPass
 {
 private:
 
     bool                            m_enable{ true };
     Layer*                          m_layer{ nullptr };
-    DrawSpace::Core::Texture*       m_collidingheightmap_texture{ nullptr };
-    void*                           m_collidingheightmap_content{ nullptr };
+    DrawSpace::Core::Texture*       m_heightmap_texture{ nullptr };
+    void*                           m_heightmap_content{ nullptr };
 
-    DrawSpace::IntermediatePass*    m_collidingheightmap_pass{ nullptr };
+    DrawSpace::IntermediatePass*    m_heightmap_pass{ nullptr };
 
-    DrawSpace::IntermediatePass*    create_colliding_heightmap_pass(void);
+    DrawSpace::IntermediatePass*    create_heightmap_pass(void);
 
 public:
 
     static const int heightmapTextureSize = 1024;
 
-    Collisions(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index);
-    virtual ~Collisions(void);
+    HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index);
+    virtual ~HeighmapSubPass(void);
 
     virtual void                        DrawSubPass(void);
     virtual void                        SubPassDone(void);

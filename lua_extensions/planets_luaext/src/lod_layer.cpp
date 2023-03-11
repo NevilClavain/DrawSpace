@@ -26,6 +26,7 @@
 #include "lod_body.h"
 #include "lod_config.h"
 #include "lod_drawing.h"
+#include "lod_heightmapsubpass.h"
 #include "collisionaspect.h"
 #include "entitynodegraph.h"
 
@@ -75,8 +76,8 @@ m_meshe_collision_shape(m_hm_meshe)
     {
         for (int i = 0; i < 6; i++)
         {
-            m_collisions_hms[i] = _DRAWSPACE_NEW_(Collisions, Collisions(this, p_config, i, p_index));
-            m_collisions_hms[i]->Disable();
+            m_heightmaps[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index));
+            m_heightmaps[i]->Disable();
         }
     }
 
@@ -93,7 +94,7 @@ Layer::~Layer(void)
     {
         for (int i = 0; i < 6; i++)
         {
-            _DRAWSPACE_DELETE_(m_collisions_hms[i]);
+            _DRAWSPACE_DELETE_(m_heightmaps[i]);
         }
     }
 }
@@ -181,10 +182,10 @@ void Layer::Compute(void)
 
                 m_draw_hm = true;
 
-                m_current_collisions_hm = m_collisions_hms[curr_patch->GetOrientation()];
-                m_current_collisions_hm->Enable();
+                m_current_hm = m_heightmaps[curr_patch->GetOrientation()];
+                m_current_hm->Enable();
 
-                const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_collisions_hm->GetNode()) };
+                const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
                 node->SetDisplayList(display_list);
             }
         }
@@ -221,9 +222,9 @@ void Layer::build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe
             const auto index { (cst::patchResolution * y) + x };
             p_patchmeshe.GetVertex(index, vertex_in);
 
-            const auto x_input { (x * (Collisions::heightmapTextureSize - 1)) / (cst::patchResolution - 1) };
-            const auto y_input { (y * (Collisions::heightmapTextureSize - 1)) / (cst::patchResolution - 1) };
-            const auto index_hm { (Collisions::heightmapTextureSize * (Collisions::heightmapTextureSize - 1 - y_input)) + x_input };
+            const auto x_input { (x * (HeighmapSubPass::heightmapTextureSize - 1)) / (cst::patchResolution - 1) };
+            const auto y_input { (y * (HeighmapSubPass::heightmapTextureSize - 1)) / (cst::patchResolution - 1) };
+            const auto index_hm { (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_input)) + x_input };
            
             const auto alt { p_heightmap[index_hm] };
 
@@ -317,13 +318,13 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     return Maths::Clamp(m_currentpatch_min_height, m_currentpatch_max_height, a1);
 }
 
-void Layer::SubPassDone(LOD::Collisions* p_collider)
+void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
 {
     if (m_draw_hm)
     {
-        m_current_collisions_hm->GetHMTexture()->CopyTextureContent();
+        m_current_hm->GetHMTexture()->CopyTextureContent();
 
-        const auto heightmap { (float*)m_current_collisions_hm->GetHMTextureContent() };
+        const auto heightmap { (float*)m_current_hm->GetHMTextureContent() };
 
         Meshe final_meshe;
         build_meshe(heightmap , *(LOD::Body::GetPatcheMeshe()), m_collision_patch, final_meshe);
@@ -338,9 +339,8 @@ void Layer::SubPassDone(LOD::Collisions* p_collider)
         (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
 
         m_draw_hm = false;
-        m_current_collisions_hm->Disable();
-
-        m_current_collisions_hm = nullptr;    
+        m_current_hm->Disable();
+        m_current_hm = nullptr;
 
         m_collisions_active = true;
     }

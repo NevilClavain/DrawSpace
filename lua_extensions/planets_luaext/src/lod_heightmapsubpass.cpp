@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "lod_layer.h"
-#include "lod_collisions.h"
+#include "lod_heightmapsubpass.h"
 #include "lod_config.h"
 #include "lod_drawing.h"
 #include "csts.h"
@@ -36,10 +36,10 @@ using namespace LOD;
 using namespace DrawSpace::Core;
 
 
-Collisions::Collisions(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index) :
+HeighmapSubPass::HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index) :
 m_layer(p_owner)
 {
-	m_collidingheightmap_pass = create_colliding_heightmap_pass();
+	m_heightmap_pass = create_heightmap_pass();
 
 	// creation/preparation du node
 
@@ -50,14 +50,14 @@ m_layer(p_owner)
 	node->SetBinder(p_config->m_layers_descr[p_node_layer_index].groundCollisionsBinder[p_orientation]);
 
 	void* tx_data;
-	if (false == renderer->CreateTexture(m_collidingheightmap_pass->GetTargetTexture(), &tx_data))
+	if (false == renderer->CreateTexture(m_heightmap_pass->GetTargetTexture(), &tx_data))
 	{
 		_DSEXCEPTION("failed to create subpasstarget texture in renderer");
 	}
 
-	m_collidingheightmap_pass->GetTargetTexture()->AllocTextureContent();
+	m_heightmap_pass->GetTargetTexture()->AllocTextureContent();
 
-	m_subpass = m_collidingheightmap_pass;
+	m_subpass = m_heightmap_pass;
 	m_subpass_node = node;
 
 	const auto handler{ p_owner->GetSubPassCreationHandler() };	
@@ -65,20 +65,20 @@ m_layer(p_owner)
 	{
 		(*handler)(this, LOD::SubPass::PERMANENT_SUBPASS);
 
-		m_collidingheightmap_texture = m_collidingheightmap_pass->GetTargetTexture();
-		m_collidingheightmap_content = m_collidingheightmap_texture->GetTextureContentPtr();
+		m_heightmap_texture = m_heightmap_pass->GetTargetTexture();
+		m_heightmap_content = m_heightmap_texture->GetTextureContentPtr();
 	}	
 }
 
-Collisions::~Collisions(void)
+HeighmapSubPass::~HeighmapSubPass(void)
 {
 	auto node{ static_cast<FaceDrawingNode *>(m_subpass_node) };
 	_DRAWSPACE_DELETE_(node);
 
-	_DRAWSPACE_DELETE_(m_collidingheightmap_pass);
+	_DRAWSPACE_DELETE_(m_heightmap_pass);
 }
 
-void Collisions::DrawSubPass(void)
+void HeighmapSubPass::DrawSubPass(void)
 {
 	if (m_enable)
 	{
@@ -86,7 +86,7 @@ void Collisions::DrawSubPass(void)
 	}
 }
 
-void Collisions::SubPassDone(void)
+void HeighmapSubPass::SubPassDone(void)
 {
 	if (m_enable)
 	{
@@ -94,30 +94,30 @@ void Collisions::SubPassDone(void)
 	}
 }
 
-void Collisions::Enable(void)
+void HeighmapSubPass::Enable(void)
 {
 	m_enable = true;
 }
 
-void Collisions::Disable(void)
+void HeighmapSubPass::Disable(void)
 {
 	m_enable = false;
 }
 
-DrawSpace::Core::Texture* Collisions::GetHMTexture(void) const
+DrawSpace::Core::Texture* HeighmapSubPass::GetHMTexture(void) const
 {
-	return m_collidingheightmap_texture;;
+	return m_heightmap_texture;;
 }
 
-void* Collisions::GetHMTextureContent(void) const
+void* HeighmapSubPass::GetHMTextureContent(void) const
 {
-	return m_collidingheightmap_content;
+	return m_heightmap_content;
 }
 
-DrawSpace::IntermediatePass* Collisions::create_colliding_heightmap_pass(void)
+DrawSpace::IntermediatePass* HeighmapSubPass::create_heightmap_pass(void)
 {
 	const auto thisname{ dsstring("layer_") + std::to_string((int)this) };
-	const auto complete_name{ thisname + dsstring("_collisionheightmap_pass") };
+	const auto complete_name{ thisname + dsstring("_heightmap_pass") };
 
 	const auto ipass{ _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name)) };
 

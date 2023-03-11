@@ -25,7 +25,6 @@
 #pragma once
 
 #include "lod_patch.h"
-#include "lod_collisions.h"
 #include "collisionaspect.h"
 #include "csts.h"
 
@@ -45,6 +44,7 @@ namespace LOD
 {
 struct Config;
 class Body;
+class HeighmapSubPass;
 
 class Layer
 {
@@ -71,8 +71,8 @@ private:
     dsreal                                                      m_planetray;
     bool                                                        m_collisions;
 
-    LOD::Collisions*                                            m_collisions_hms[6];
-    LOD::Collisions*                                            m_current_collisions_hm{ nullptr };
+    LOD::HeighmapSubPass*                                       m_heightmaps[6];
+    LOD::HeighmapSubPass*                                       m_current_hm{ nullptr };
 
     LOD::Patch*                                                 m_collision_patch{ nullptr };
 
@@ -118,7 +118,7 @@ public:
     void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
     void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
     void                            Compute( void );
-    void                            SubPassDone(LOD::Collisions* p_collider);
+    void                            SubPassDone(LOD::HeighmapSubPass* p_subpass);
     void                            ResetBody(void);
 
     void                            RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler);
