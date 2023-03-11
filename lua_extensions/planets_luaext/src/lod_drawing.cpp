@@ -493,29 +493,38 @@ m_renderer( p_renderer )
 }
 
 void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
-{
-    const auto current_patch{ p_body->GetFace(p_body->GetCurrentFace())->GetCurrentPatch() };
-
-    std::vector<Patch*> dl;
-    p_body->GetFace(p_body->GetCurrentFace())->GetDisplayList(dl);
-
-    /*
-    for (auto e : dl)
+{    
+    const auto current_face{ p_body->GetCurrentFace() };
+    if (current_face > -1)
     {
-        if (e == current_patch)
+        const auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };
+
+        std::vector<Patch*> dl;
+        p_body->GetFace(current_face)->GetDisplayList(dl);
+
+        if (current_patch)
         {
-            _asm nop
+            draw_foliages_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
         }
-    }
-    */
 
-    //////////////////////////////////////////////////
 
-    //draw_foliages_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
+        /*
+        for (auto e : dl)
+        {
+            draw_foliages_on_patch(e, p_ray, p_world, p_view, p_proj);
+        }
+        */
 
-    for (auto e : dl)
-    {
-        draw_foliages_on_patch(e, p_ray, p_world, p_view, p_proj);
+        /*
+        for (auto e : dl)
+        {
+            if (e == current_patch)
+            {
+                _asm nop
+            }
+        }
+        */
+
     }
 }
 
