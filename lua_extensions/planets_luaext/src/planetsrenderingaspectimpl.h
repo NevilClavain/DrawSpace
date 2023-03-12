@@ -155,7 +155,7 @@ protected:
 
     //std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
 
-    std::array<LOD::Binder*, 6>                                     m_planet_collision_binder;
+    std::array<LOD::Binder*, 6>                                     m_heightmap_binder;
 
     DrawSpace::Core::Fx                                             m_climate_fx;
     DrawSpace::Core::Shader*                                        m_climate_vshader{ nullptr };

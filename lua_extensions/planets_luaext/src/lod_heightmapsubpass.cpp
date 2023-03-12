@@ -47,7 +47,7 @@ m_layer(p_owner)
 	const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, p_config, p_node_layer_index)) };
 
 	node->SetMeshe(LOD::Body::m_patch_meshe);
-	node->SetBinder(p_config->m_layers_descr[p_node_layer_index].groundCollisionsBinder[p_orientation]);
+	node->SetBinder(p_config->m_layers_descr[p_node_layer_index].heightmapGenerationBinder[p_orientation]);
 
 	void* tx_data;
 	if (false == renderer->CreateTexture(m_heightmap_pass->GetTargetTexture(), &tx_data))

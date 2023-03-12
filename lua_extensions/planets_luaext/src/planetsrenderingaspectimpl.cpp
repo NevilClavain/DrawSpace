@@ -208,7 +208,7 @@ void PlanetsRenderingAspectImpl::Release(void)
             _DRAWSPACE_DELETE_( e );
         }
 
-        for (auto& e : m_planet_collision_binder)
+        for (auto& e : m_heightmap_binder)
         {
             _DRAWSPACE_DELETE_(e);
         }
@@ -790,6 +790,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             case LOD::cst::SurfaceLayer:
 
+                ld.enable_heighmap_generation = true;
                 ld.enable_collisions = true;
                 ld.enable_datatextures = true;
                 ld.enable_lod = true;
@@ -835,7 +836,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     */
 
 
-                    // pour une planete desertique avec oceans, et un peu d'humidit�
+                    // pour une planete desertique avec oceans, et un peu d'humidite
                     /*
                     static const dsreal temp_dec_per_km = 4.0;
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(10.0, 0.0, temp_dec_per_km, beach_limit));
@@ -852,15 +853,15 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
 
 
-                    LOD::Binder* collisions_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
-                    collisions_binder->SetRenderer(m_renderer);
-                    collisions_binder->SetFx(&m_collisions_fx);
+                    LOD::Binder* heighmap_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+                    heighmap_binder->SetRenderer(m_renderer);
+                    heighmap_binder->SetFx(&m_collisions_fx);
 
-                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
-                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+                    *heighmap_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *heighmap_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
-                    ld.groundCollisionsBinder[i] = collisions_binder;
-                    m_planet_collision_binder[i] = collisions_binder;
+                    ld.heightmapGenerationBinder[i] = heighmap_binder;
+                    m_heightmap_binder[i] = heighmap_binder;
 
                 }
 
@@ -868,6 +869,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 break;
 
             case LOD::cst::AtmosphereLayer:
+
+                ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
@@ -876,7 +879,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 ld.description = "Atmosphere Layer";
                 for (int i = 0; i < 6; i++)
                 {
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.heightmapGenerationBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = NULL;
                 }
 
@@ -884,6 +887,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 break;
 
             case LOD::cst::FlatCloudsLayer:
+
+                ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
@@ -893,7 +898,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int i = 0; i < 6; i++)
                 {
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.heightmapGenerationBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = NULL;
                 }
 
@@ -901,6 +906,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 break;
 
             case LOD::cst::OceansLayer:
+
+                ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = true;
@@ -910,7 +917,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int i = 0; i < 6; i++)
                 {
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.heightmapGenerationBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = NULL;
                 }
 

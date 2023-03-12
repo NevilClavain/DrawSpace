@@ -37,13 +37,14 @@ public:
 
     using LayerDescriptor = struct
     {
+        bool        enable_heighmap_generation;
         bool        enable_collisions;
         bool        enable_datatextures;
         bool        enable_lod;
         long        min_lodlevel;  // valable si enable_lod == true
         dsreal      ray;
 
-        Binder*     groundCollisionsBinder[6];
+        Binder*     heightmapGenerationBinder[6];
         Binder*     patchTexturesBinder[6];
 
         dsstring    description; // for debug purpose only;

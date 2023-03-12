@@ -69,7 +69,9 @@ private:
     std::vector<NewCollisionMesheCreationHandler*>              m_collision_meshe_creation_handler;
 
     dsreal                                                      m_planetray;
-    bool                                                        m_collisions;
+    bool                                                        m_collisions{ false };
+
+    bool                                                        m_heighmaps_generation{ false };
 
     LOD::HeighmapSubPass*                                       m_heightmaps[6];
     LOD::HeighmapSubPass*                                       m_current_hm{ nullptr };

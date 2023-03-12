@@ -52,27 +52,14 @@ m_hot(false),
 m_current_lod(-1),
 m_meshe_collision_shape(m_hm_meshe)
 {
+    m_heighmaps_generation = m_config->m_layers_descr[p_index].enable_heighmap_generation;
 
-    if (m_config->m_layers_descr[p_index].enable_collisions)
+    if (m_config->m_layers_descr[p_index].enable_collisions && m_heighmaps_generation && !p_freecamera)
     {
-        if (p_freecamera)
-        {
-            m_collisions = false;
-        }
-        else
-        {
-            m_collisions = true;
-        }
+        m_collisions = true;
     }
-    else
-    {
-        m_collisions = false;
-    }
-
-
-    m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
-
-    if (m_collisions)
+       
+    if (m_heighmaps_generation)
     {
         for (int i = 0; i < 6; i++)
         {
@@ -80,6 +67,9 @@ m_meshe_collision_shape(m_hm_meshe)
             m_heightmaps[i]->Disable();
         }
     }
+
+
+    m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
     m_body->Initialize();
 
@@ -90,12 +80,13 @@ m_meshe_collision_shape(m_hm_meshe)
 
 Layer::~Layer(void)
 {
-    if (m_collisions)
+    if (m_heighmaps_generation)
     {
         for (int i = 0; i < 6; i++)
         {
             _DRAWSPACE_DELETE_(m_heightmaps[i]);
         }
+
     }
 }
 
@@ -169,7 +160,8 @@ void Layer::Compute(void)
         
         m_heightmap_source_patche = curr_patch;
 
-        if (m_collisions && m_heightmap_source_patche && m_current_lod == 0)
+        //if (m_collisions && m_heightmap_source_patche && m_current_lod == 0)
+        if (m_heighmaps_generation && m_heightmap_source_patche && m_current_lod == 0)
         {
             if (curr_patch->GetOrientation() == m_body->GetCurrentFace())
             {
@@ -330,13 +322,16 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), m_heightmap_source_patche, final_meshe);
         m_hm_meshe = final_meshe;
 
-        for (auto& e : m_collision_meshe_creation_handler)
+        if (m_collisions)
         {
-            (*e)(m_hm_meshe);
-        }
+            for (auto& e : m_collision_meshe_creation_handler)
+            {
+                (*e)(m_hm_meshe);
+            }
 
-        const auto shape_component_name{ "shape_" + std::to_string((long)this) };
-        (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
+            const auto shape_component_name{ "shape_" + std::to_string((long)this) };
+            (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
+        }
 
         m_draw_hm = false;
         m_current_hm->Disable();
