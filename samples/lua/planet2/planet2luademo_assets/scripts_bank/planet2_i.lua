@@ -1652,11 +1652,13 @@ foliage_layers =
 				rs_in = 
 				{
 					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
 					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
 				},
 				rs_out =
 				{
 					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
 					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
 				}
 			},			
