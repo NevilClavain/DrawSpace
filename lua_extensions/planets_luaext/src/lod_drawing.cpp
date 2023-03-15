@@ -37,6 +37,7 @@
 #include "transformaspect.h"
 
 #include "quaternion.h"
+#include "lod_heightmapsubpass.h"
 
 
 using namespace DrawSpace;
@@ -188,6 +189,9 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         pixels_flags_2[1] = 1.0;
     }
     */
+    
+    
+    
     
     
     pixels_flags_2[2] = (dsreal)p_patch->GetLodLevel();
@@ -497,17 +501,37 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
     {
-        const auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };
-
-        std::vector<Patch*> dl;
-        p_body->GetFace(current_face)->GetDisplayList(dl);
-
+        const auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };       
         if (current_patch)
         {
-            draw_foliages_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
+            auto foliage_patch{ current_patch };
+            for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
+            {
+                if (nullptr == foliage_patch->GetParent())
+                {
+                    break;
+                }
+                foliage_patch = foliage_patch->GetParent();
+            }
+
+            if (foliage_patch->HasHeightMap())
+            {
+                const auto hm { foliage_patch->GetHeightMap() };
+
+                // middle of the hm
+                const int x{ 511 };
+                const int y{ 511 };
+
+                const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y)) + x };
+                float hm_height{ hm[index_hm] };
+                                
+                draw_foliages_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, hm_height);
+            }            
         }
 
 
+        //std::vector<Patch*> dl;
+        //p_body->GetFace(current_face)->GetDisplayList(dl);
         /*
         for (auto e : dl)
         {
@@ -528,7 +552,7 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
     }
 }
 
-void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, float p_height)
 {
     
     dsreal xp, yp;
@@ -542,7 +566,8 @@ void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, co
     v2[3] = 1.0;
 
     // final scaling
-    v2.Scale(p_ray + 100.0);
+    v2.Scale(p_ray);
+    v2.Scale(1.0 + (p_height / p_ray));
 
     Matrix local_t;
     local_t.Translation(v2);
@@ -554,6 +579,7 @@ void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, co
     q.RotationMatFrom(local_r);
 
     Matrix world = local_r * local_t * p_world;
+    
 
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }

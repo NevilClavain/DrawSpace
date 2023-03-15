@@ -46,8 +46,8 @@ private:
 
 public:
 
-    //static const int heightmapTextureSize = 1024;
-    static const int heightmapTextureSize = 256;
+    static const int heightmapTextureSize = 1024;
+
 
     HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index);
     virtual ~HeighmapSubPass(void);

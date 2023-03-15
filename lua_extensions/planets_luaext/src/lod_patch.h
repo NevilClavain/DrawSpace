@@ -92,6 +92,8 @@ protected:
 
     int                                     m_nbLODRanges;
 
+    float*                                  m_heightmap = { nullptr };
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
@@ -128,7 +130,11 @@ public:
 
     Patch*                              GetParent(void);
 
-    virtual void                        SubPassDone( void );
+    void                                SubPassDone( void );
+
+    void                                SetHeightMap(float* p_hm);
+    bool                                HasHeightMap(void);
+    float*                              GetHeightMap(void) const;
 
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
 

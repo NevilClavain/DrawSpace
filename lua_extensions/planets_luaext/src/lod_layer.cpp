@@ -149,7 +149,7 @@ void Layer::Compute(void)
     if (m_current_patch != curr_patch)
     {
         m_current_patch = curr_patch;        
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
         {
             if (nullptr == curr_patch->GetParent())
             {
@@ -157,7 +157,7 @@ void Layer::Compute(void)
             }
             curr_patch = curr_patch->GetParent();
         }
-        
+                
         m_heightmap_source_patche = curr_patch;
 
         //if (m_collisions && m_heightmap_source_patche && m_current_lod == 0)
@@ -318,16 +318,53 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
 
         const auto heightmap { (float*)m_current_hm->GetHMTextureContent() };
 
+        ////////////
+
+        /*
+        if (!m_heightmap_source_patche->HasHeightMap())
+        {
+            const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
+            const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
+
+            memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
+
+            m_heightmap_source_patche->SetHeightMap(patch_hm_buffer);
+        }
+        */
+
+        if (m_heightmap_source_patche->HasHeightMap())
+        {
+            auto old_buffer{ m_heightmap_source_patche->GetHeightMap() };
+            _DRAWSPACE_DELETE_N_(old_buffer);
+        }
+
+        const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
+        const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
+        memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
+
+        m_heightmap_source_patche->SetHeightMap(patch_hm_buffer);
+
+
+        ///////////
+
         Meshe final_meshe;
         build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), m_heightmap_source_patche, final_meshe);
         m_hm_meshe = final_meshe;
 
+        for (auto& e : m_collision_meshe_creation_handler)
+        {
+            (*e)(m_hm_meshe);
+        }
+
+
         if (m_collisions)
         {
+            /*
             for (auto& e : m_collision_meshe_creation_handler)
             {
                 (*e)(m_hm_meshe);
             }
+            */
 
             const auto shape_component_name{ "shape_" + std::to_string((long)this) };
             (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);

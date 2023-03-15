@@ -49,8 +49,10 @@ namespace cst
     static constexpr int        FlatCloudsLayer             = 2;
     static constexpr int        OceansLayer                 = 3;
 
-    // foliage
+    // heightmap generation
+    static constexpr int        HeightMapRelativeLOD        = 4;
 
+    // foliage
     static constexpr int        FoliagePlants0Layer         = 0;
 
 

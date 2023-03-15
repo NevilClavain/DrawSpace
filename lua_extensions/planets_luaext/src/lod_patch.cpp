@@ -183,6 +183,10 @@ m_nbLODRanges( p_nbLODRanges )
 Patch::~Patch( void )
 {
     //destroy_color_texture();
+    if (m_heightmap)
+    {
+        _DRAWSPACE_DELETE_N_(m_heightmap);
+    }
 }
 
 void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index )
@@ -708,6 +712,21 @@ void Patch::SubPassDone( void )
             }
         }
     }
+}
+
+void Patch::SetHeightMap(float* p_hm)
+{
+    m_heightmap = p_hm;
+}
+
+bool Patch::HasHeightMap(void)
+{
+    return (m_heightmap != nullptr);
+}
+
+float* Patch::GetHeightMap(void) const
+{
+    return m_heightmap;
 }
 
 void Patch::recurs_update_texture_referent( Patch* p_texture_referent )
