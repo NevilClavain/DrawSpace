@@ -37,6 +37,7 @@ private:
     std::unique_ptr<C> m_distribution;
 
 public:
+    DistributionWrapperImpl(void) = delete;
     template<class... Args>
     DistributionWrapperImpl(Args&&... p_args)
     {
@@ -44,7 +45,7 @@ public:
     }
     
     template<typename T>
-    T Generate( std::default_random_engine& p_generator )
+    inline T Generate( std::default_random_engine& p_generator ) const 
     {        
         return (*m_distribution)(p_generator);
     }    
