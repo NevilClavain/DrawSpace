@@ -302,3 +302,7 @@ tools/dgent/RelWithDebInfo/dgent.lib
 
 
 
+*.cso
+*.bak
+samples/lua/lua_models/procplanet/meshes_bank/grass03.ac.bak
+*.bak

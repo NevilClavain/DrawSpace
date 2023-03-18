@@ -1666,7 +1666,7 @@ foliage_layers =
 			{
 				[1] = 
 				{
-					{ path='grass02.png', stage=0}
+					{ path='green_alpha_tall_grass.png', stage=0}
 				}
 			},
 			shaders_params = 
@@ -1691,8 +1691,8 @@ foliage_meshes =
 	-- plants
 	[0] = 
 	{	
-		file = 'grass03.ac',
-		mesheid = 'grass02'
+		file = 'grassA.ac',
+		mesheid = 'rect'
 	}
 }
 
