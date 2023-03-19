@@ -516,16 +516,13 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
             if (foliage_patch->HasHeightMap())
             {
-                const auto hm { foliage_patch->GetHeightMap() };
-
-                // middle of the hm
-                const int x{ 511 };
-                const int y{ 511 };
-
-                const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y)) + x };
-                float hm_height{ hm[index_hm] };
-                                
-                draw_foliages_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, hm_height);
+                for (dsreal yp = -0.5; yp < 0.5; yp += 0.04)
+                {
+                    for (dsreal xp = -0.5; xp < 0.5; xp += 0.04)
+                    {
+                        draw_foliage_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, xp, yp);
+                    }
+                }
             }            
         }
 
@@ -552,11 +549,34 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
     }
 }
 
-void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, float p_height)
+void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos)
 {
-    
+    const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
+    const dsreal ypos{ p_ypos }; // [-0.5, 0.5 ]
+
+    //// compute height
+
+    const auto hm{ p_patch->GetHeightMap() };
+
+                    // translate to [0.0, 1.0] range for heighmap access
+                    //
+    const auto x_hm{ (int)((xpos + 0.5) * HeighmapSubPass::heightmapTextureSize) };
+    const auto y_hm{ (int)((ypos + 0.5) * HeighmapSubPass::heightmapTextureSize) };
+
+    //const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_hm)) + (HeighmapSubPass::heightmapTextureSize - 1 - x_hm ) };
+
+    const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_hm)) + x_hm };
+
+    const auto hm_height{ hm[index_hm] };
+
+    ////////////////////
+
     dsreal xp, yp;
     p_patch->GetUnitPos(xp, yp);
+
+    const auto patch_unit_sidelenght{ p_patch->GetUnitSideLenght() };
+    xp += patch_unit_sidelenght * xpos;
+    yp += patch_unit_sidelenght * ypos;
 
     Vector v1, v2;
     Patch::XYToXYZ(p_patch->GetOrientation(), xp, yp, v1);
@@ -567,7 +587,7 @@ void FoliageDrawingNode::draw_foliages_on_patch(Patch* p_patch, dsreal p_ray, co
 
     // final scaling
     v2.Scale(p_ray);
-    v2.Scale(1.0 + (p_height / p_ray));
+    v2.Scale(1.0 + (hm_height / p_ray));
 
     Matrix local_t;
     local_t.Translation(v2);

@@ -286,7 +286,7 @@ local planet_specific_config_descr =
 	collision_vshader_compiled			         = FALSE,
 	collision_pshader_compiled			         = FALSE,
 
-    enable_collisionmeshe_display                = TRUE,
+    enable_collisionmeshe_display                = FALSE,
     collisionmeshe_display_vshader               = "color_vs.hlsl",
     collisionmeshe_display_pshader               = "color_ps.hlsl",
     collisionmeshe_display_vshader_compiled      = FALSE,
