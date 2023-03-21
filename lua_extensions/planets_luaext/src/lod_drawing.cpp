@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include <random>
 #include "lod_drawing.h"
 #include "csts.h"
 #include "lod_binder.h"
@@ -501,54 +502,57 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
     {
-        const auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };       
+        auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };       
         if (current_patch)
         {
-            auto foliage_patch{ current_patch };
+            
             for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
             {
-                if (nullptr == foliage_patch->GetParent())
+                if (nullptr == current_patch->GetParent())
                 {
                     break;
                 }
-                foliage_patch = foliage_patch->GetParent();
+                current_patch = current_patch->GetParent();
             }
+            
 
-            if (foliage_patch->HasHeightMap())
+            draw_foliages_batch_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
+
+            for (int i = 0; i < 8; i++)
             {
-                for (dsreal yp = -0.5; yp < 0.5; yp += 0.04)
+                const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>( current_patch->GetNeighbour(i) ) };
+                if (neighbour_patch)
                 {
-                    for (dsreal xp = -0.5; xp < 0.5; xp += 0.04)
-                    {
-                        draw_foliage_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, xp, yp);
-                    }
-                }
-            }            
-        }
-
-
-        //std::vector<Patch*> dl;
-        //p_body->GetFace(current_face)->GetDisplayList(dl);
-        /*
-        for (auto e : dl)
-        {
-            draw_foliages_on_patch(e, p_ray, p_world, p_view, p_proj);
-        }
-        */
-
-        /*
-        for (auto e : dl)
-        {
-            if (e == current_patch)
-            {
-                _asm nop
+                    draw_foliages_batch_on_patch(neighbour_patch->GetContent(), p_ray, p_world, p_view, p_proj);
+                }                
             }
         }
-        */
-
     }
 }
 
+
+// render many foliage meshe
+void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+{
+    auto foliage_patch{ p_patch };
+
+    if (foliage_patch->HasHeightMap())
+    {
+        const auto seed{ 144 };
+        std::default_random_engine rand_engine(seed);
+        std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
+
+        for (int i = 0; i < 25; i++)
+        {
+            const auto xp{ rand_source(rand_engine) };
+            const auto yp{ rand_source(rand_engine) };
+
+            draw_foliage_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, xp, yp);
+        }
+    }
+}
+
+// render one foliage meshe
 void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos)
 {
     const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
@@ -600,7 +604,6 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, con
 
     Matrix world = local_r * local_t * p_world;
     
-
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }
 
