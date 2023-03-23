@@ -150,7 +150,7 @@ void Layer::Compute(void)
     {
         m_current_patch = curr_patch;     
 
-        
+        /*
         for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
         {
             if (nullptr == curr_patch->GetParent())
@@ -159,6 +159,7 @@ void Layer::Compute(void)
             }
             curr_patch = curr_patch->GetParent();
         }
+        */
         
                 
         m_heightmap_source_patche = curr_patch;

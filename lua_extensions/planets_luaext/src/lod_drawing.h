@@ -41,6 +41,7 @@ namespace LOD
 {
 struct Config;
 struct Binder;
+class Layer;
 
 
 class CollisionMesheDrawingNode : public DrawSpace::Core::RenderingNode
@@ -172,6 +173,8 @@ protected:
 
     std::vector<Body*>                                                          m_planetbodies;
 
+    std::vector<LOD::Layer*>                                                    m_layers;
+
     std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
     std::vector<std::pair<dsstring, FoliageDrawingNode*>>                       m_passesfoliagenodes;
     std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
@@ -188,13 +191,13 @@ protected:
     
     std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers; 
         
-    DrawSpace::Interface::Renderer*                                             m_renderer;
+    DrawSpace::Interface::Renderer*                                             m_renderer{ nullptr };
        
     Config*                                                                     m_config;
 
     DrawSpace::Core::Meshe*                                                     m_landplace_meshes[6];
 
-    DrawSpace::Core::Entity*                                                    m_owner_entity;
+    DrawSpace::Core::Entity*                                                    m_owner_entity{ nullptr };
 
     NewCollisionMesheCreationCb*                                                m_newcollisionmeshecreation_cb{ nullptr };
 
@@ -226,14 +229,12 @@ public:
 
     RenderingNodeDrawCallback* GetSingleNodeDrawHandler(void) const;
 
-    void SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies );
+    void SetLayers(const std::vector<LOD::Layer*>& p_layers);
+
     void SetRenderer( DrawSpace::Interface::Renderer * p_renderer );
 
     void SetLayerNodeDrawingState(int p_layer_index, bool p_drawing_state);
-    /*
-    void EnableZBufferForLayer(int p_layer_index, bool p_zbuffer);
-    void ForceCullingForLayer(int p_layer_index, const dsstring& p_culling);
-    */
+
 
     void SetCurrentPass(const dsstring& p_pass);
 

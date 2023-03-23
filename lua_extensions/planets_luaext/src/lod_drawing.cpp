@@ -27,6 +27,7 @@
 #include "csts.h"
 #include "lod_binder.h"
 #include "lod_config.h"
+#include "lod_layer.h"
 
 #include "entity.h"
 #include "renderer.h"
@@ -506,6 +507,7 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
         if (current_patch)
         {
             
+            /*
             for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
             {
                 if (nullptr == current_patch->GetParent())
@@ -514,6 +516,7 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
                 }
                 current_patch = current_patch->GetParent();
             }
+            */
             
 
             draw_foliages_batch_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
@@ -610,9 +613,7 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, con
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Drawing::Drawing( Config* p_config ) :
-m_renderer( NULL ),
-m_config( p_config ),
-m_owner_entity( NULL )
+m_config( p_config )
 {
     m_collisionmeshe.SetPath("Collision display meshe");
 }
@@ -667,9 +668,15 @@ void Drawing::Shutdown(void)
 }
 
 
-void Drawing::SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies )
+void Drawing::SetLayers(const std::vector<LOD::Layer*>& p_layers)
 {
-    m_planetbodies = p_planetbodies;
+    m_layers = p_layers;
+
+    m_planetbodies.clear();
+    for (auto e : m_layers)
+    {
+        m_planetbodies.push_back(e->GetBody());
+    }    
 }
 
 void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )

@@ -1222,6 +1222,15 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
         {
             m_current_camera = &m_registered_camerapoints.at(cam_name);
 
+            std::vector<LOD::Layer*> layers;
+            for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
+            {
+                layers.push_back(m_registered_camerapoints[cam_name].layers[i]);
+            }
+            m_drawable.SetLayers(layers);
+
+            /*
+            
             std::vector<LOD::Body*> planet_bodies;
 
             for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
@@ -1230,6 +1239,7 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
                 planet_bodies.push_back(layer->GetBody());
             }
             m_drawable.SetCurrentPlanetBodies(planet_bodies);
+            */
         }
     }
 }
