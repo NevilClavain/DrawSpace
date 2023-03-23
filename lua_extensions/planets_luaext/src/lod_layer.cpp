@@ -150,16 +150,16 @@ void Layer::Compute(void)
     {
         m_current_patch = curr_patch;     
 
-        /*
-        for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
-        {
-            if (nullptr == curr_patch->GetParent())
-            {
-                break;
-            }
-            curr_patch = curr_patch->GetParent();
-        }
-        */
+        
+        //for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
+        //{
+        //    if (nullptr == curr_patch->GetParent())
+        //    {
+        //        break;
+        //    }
+        //    curr_patch = curr_patch->GetParent();
+        //}
+        
         
                 
         m_heightmap_source_patche = curr_patch;
@@ -323,18 +323,6 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         const auto heightmap { (float*)m_current_hm->GetHMTextureContent() };
 
         ////////////
-
-        /*
-        if (!m_heightmap_source_patche->HasHeightMap())
-        {
-            const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
-            const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
-
-            memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
-
-            m_heightmap_source_patche->SetHeightMap(patch_hm_buffer);
-        }
-        */
 
         if (m_heightmap_source_patche->HasHeightMap())
         {
