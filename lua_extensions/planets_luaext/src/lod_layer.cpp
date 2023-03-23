@@ -351,13 +351,6 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
 
         if (m_collisions)
         {
-            /*
-            for (auto& e : m_collision_meshe_creation_handler)
-            {
-                (*e)(m_hm_meshe);
-            }
-            */
-
             const auto shape_component_name{ "shape_" + std::to_string((long)this) };
             (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
         }
