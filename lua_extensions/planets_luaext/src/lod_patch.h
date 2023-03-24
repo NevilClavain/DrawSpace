@@ -94,6 +94,8 @@ protected:
 
     float*                                  m_heightmap = { nullptr };
 
+    int                                     m_layer_index;
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
@@ -135,6 +137,8 @@ public:
     void                                SetHeightMap(float* p_hm);
     bool                                HasHeightMap(void);
     float*                              GetHeightMap(void) const;
+
+    int                                 GetLayerIndex(void) const;
 
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
 

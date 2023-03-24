@@ -48,7 +48,8 @@ m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
 m_nodeid( p_nodeid ),
 m_subpass_entry_infos_valid( false ),
-m_nbLODRanges( p_nbLODRanges )
+m_nbLODRanges( p_nbLODRanges ),
+m_layer_index( p_layer_index )
 {
     m_enable_datatexture = m_config->m_layers_descr[p_layer_index].enable_datatextures;
 
@@ -187,6 +188,11 @@ Patch::~Patch( void )
     {
         _DRAWSPACE_DELETE_N_(m_heightmap);
     }
+}
+
+int Patch::GetLayerIndex(void) const
+{
+    return m_layer_index;
 }
 
 void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index )
