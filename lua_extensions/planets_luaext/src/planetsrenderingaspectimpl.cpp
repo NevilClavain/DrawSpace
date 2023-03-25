@@ -790,7 +790,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         {
             case LOD::cst::SurfaceLayer:
 
-                ld.enable_heighmap_generation = true;
+                //ld.enable_heighmap_generation = true;
                 ld.enable_collisions = true;
                 ld.enable_datatextures = true;
                 ld.enable_lod = true;
@@ -870,7 +870,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             case LOD::cst::AtmosphereLayer:
 
-                ld.enable_heighmap_generation = false;
+                //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
@@ -888,7 +888,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             case LOD::cst::FlatCloudsLayer:
 
-                ld.enable_heighmap_generation = false;
+                //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = false;
@@ -907,7 +907,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             case LOD::cst::OceansLayer:
 
-                ld.enable_heighmap_generation = false;
+                //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
                 ld.enable_lod = true;

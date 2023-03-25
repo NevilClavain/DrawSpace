@@ -36,8 +36,7 @@ struct Config
 public:
 
     using LayerDescriptor = struct
-    {
-        bool        enable_heighmap_generation;
+    {        
         bool        enable_collisions;
         bool        enable_datatextures;
         bool        enable_lod;

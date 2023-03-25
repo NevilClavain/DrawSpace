@@ -50,24 +50,25 @@ m_subpass_creation_handler(p_subpass_creation_handler),
 m_collision_meshe_update_handler(p_collision_meshe_update_handler),
 m_hot(false),
 m_current_lod(-1),
-m_meshe_collision_shape(m_hm_meshe)
+m_meshe_collision_shape(m_hm_meshe),
+m_layer_index(p_index)
 {
-    m_heighmaps_generation = m_config->m_layers_descr[p_index].enable_heighmap_generation;
+    //m_heighmaps_generation = m_config->m_layers_descr[p_index].enable_heighmap_generation;
 
-    if (m_config->m_layers_descr[p_index].enable_collisions && m_heighmaps_generation && !p_freecamera)
+    if (m_config->m_layers_descr[p_index].enable_collisions /* && m_heighmaps_generation */ && !p_freecamera)
     {
         m_collisions = true;
     }
        
-    if (m_heighmaps_generation)
+    //if (m_heighmaps_generation)
+    if(m_collisions)
     {
         for (int i = 0; i < 6; i++)
         {
-            m_heightmaps[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index));
+            m_heightmaps[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index, HeighmapSubPass::Purpose::FOR_COLLISIONS));
             m_heightmaps[i]->Disable();
         }
     }
-
 
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
@@ -80,15 +81,21 @@ m_meshe_collision_shape(m_hm_meshe)
 
 Layer::~Layer(void)
 {
-    if (m_heighmaps_generation)
+    //if (m_heighmaps_generation)
     {
         for (int i = 0; i < 6; i++)
         {
             _DRAWSPACE_DELETE_(m_heightmaps[i]);
         }
-
     }
 }
+
+/*
+bool Layer::hasHeightmapGeneration(void) const
+{
+    return m_heighmaps_generation;
+}
+*/
 
 Body* Layer::GetBody(void) const
 {
@@ -136,15 +143,106 @@ void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
     m_body->UpdateHotPoint( p_vector );
 }
 
+void Layer::RequestHeightmap(Patch* p_patch)
+{   
+    /*
+    if (m_current_patch != p_patch)
+    {
+        m_current_patch = p_patch;
+
+        
+
+        //const auto curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
+
+        const auto body_curr_face{ m_body->GetCurrentFace() };
+
+        //const auto o1{ curr_patch->GetOrientation() };
+        const auto o2{ p_patch->GetOrientation() };
+
+        const auto patch_layer{ p_patch->GetLayerIndex() };
+
+        if (patch_layer == m_layer_index && body_curr_face == o2 && !m_draw_hm)
+        {
+
+            m_heightmap_source_patche = m_current_patch;
+
+
+            if (m_heighmaps_generation && m_current_lod == 0)
+            {
+
+                // lance la generation de la heightmap
+
+                std::vector<LOD::Patch*> display_list;
+                display_list.push_back(m_heightmap_source_patche);
+
+                m_draw_hm = true;
+
+                m_current_hm = m_heightmaps[m_current_patch->GetOrientation()];
+                m_current_hm->Enable();
+
+                const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
+                node->SetDisplayList(display_list);
+            }
+
+        }
+
+    }
+    */
+}
+
 void Layer::Compute(void)
 {
     m_body->Compute();
 
+
+    const auto current_face_index{ m_body->GetCurrentFace() };
+    m_current_lod = m_body->GetFace(current_face_index)->GetCurrentPatchLOD();
+    const auto curr_patch{ m_body->GetFace(current_face_index)->GetCurrentPatch() };
+
+    if (m_current_patch != curr_patch)
+    {
+        m_current_patch = curr_patch;
+
+        ///// generate new heightmap for collisions
+
+        if (m_collisions && m_current_patch && m_current_lod == 0 && m_current_patch->GetOrientation() == m_body->GetCurrentFace())
+        {
+
+            // adjust hm source
+            m_heightmap_source_patche = m_current_patch;
+            for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
+            {
+                if (nullptr == curr_patch->GetParent())
+                {
+                    break;
+                }
+                m_heightmap_source_patche = m_heightmap_source_patche->GetParent();
+            }
+
+            // launch hm generation
+
+            std::vector<LOD::Patch*> display_list;
+            display_list.push_back(m_heightmap_source_patche);
+
+
+            const auto current_hm{ m_heightmaps[m_current_patch->GetOrientation()] };
+            current_hm->Enable();
+
+            const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
+            node->SetDisplayList(display_list);
+        }
+    }
+
+
+    /*
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    m_current_lod = m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatchLOD();
+    const auto current_face_index{ m_body->GetCurrentFace() };
+       
+    m_current_lod = m_body->GetFace(current_face_index)->GetCurrentPatchLOD();
 
-    auto curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
+    auto curr_patch{ m_body->GetFace(current_face_index)->GetCurrentPatch() };
     
     if (m_current_patch != curr_patch)
     {
@@ -161,28 +259,29 @@ void Layer::Compute(void)
         //}
         
         
-                
-        m_heightmap_source_patche = curr_patch;
-
-        //if (m_collisions && m_heightmap_source_patche && m_current_lod == 0)
-        if (m_heighmaps_generation && m_heightmap_source_patche && m_current_lod == 0)
+        if (!m_draw_hm)
         {
-            if (curr_patch->GetOrientation() == m_body->GetCurrentFace())
+            m_heightmap_source_patche = curr_patch;
+
+            if (m_heighmaps_generation && m_heightmap_source_patche && m_current_lod == 0)
             {
-                // ce patch appartient bien a la face "courante"
+                if (curr_patch->GetOrientation() == m_body->GetCurrentFace())
+                {
+                    // ce patch appartient bien a la face "courante"
 
-                // lance la generation de la heightmap
+                    // lance la generation de la heightmap
 
-                std::vector<LOD::Patch*> display_list;
-                display_list.push_back(m_heightmap_source_patche);
+                    std::vector<LOD::Patch*> display_list;
+                    display_list.push_back(m_heightmap_source_patche);
 
-                m_draw_hm = true;
+                    m_draw_hm = true;
 
-                m_current_hm = m_heightmaps[curr_patch->GetOrientation()];
-                m_current_hm->Enable();
+                    m_current_hm = m_heightmaps[curr_patch->GetOrientation()];
+                    m_current_hm->Enable();
 
-                const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
-                node->SetDisplayList(display_list);
+                    const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
+                    node->SetDisplayList(display_list);
+                }
             }
         }
     }
@@ -201,7 +300,10 @@ void Layer::Compute(void)
         {
             m_currentpatch_current_height = new_alt;
         }
-    }   
+    }
+   
+    */
+    
 }
 
 void Layer::build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe)
@@ -316,11 +418,54 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
 
 void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
 {
-    if (m_draw_hm)
-    {
-        m_current_hm->GetHMTexture()->CopyTextureContent();
 
-        const auto heightmap { (float*)m_current_hm->GetHMTextureContent() };
+    p_subpass->GetHMTexture()->CopyTextureContent();
+    const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
+
+    if (m_heightmap_source_patche->HasHeightMap())
+    {
+        auto old_buffer{ m_heightmap_source_patche->GetHeightMap() };
+        _DRAWSPACE_DELETE_N_(old_buffer);
+    }
+
+    const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
+    const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
+    memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
+
+    m_heightmap_source_patche->SetHeightMap(patch_hm_buffer);
+
+
+
+    Meshe final_meshe;
+    build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), m_heightmap_source_patche, final_meshe);
+    m_hm_meshe = final_meshe;
+
+    for (auto& e : m_collision_meshe_creation_handler)
+    {
+        (*e)(m_hm_meshe);
+    }
+
+    if (HeighmapSubPass::Purpose::FOR_COLLISIONS == p_subpass->GetPurpose())
+    {
+        const auto shape_component_name{ "shape_" + std::to_string((long)this) };
+        (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
+    }
+
+    m_heightmap_source_patche = nullptr;
+    p_subpass->Disable();
+
+    m_collisions_active = true;
+
+
+
+
+    /*
+    if (m_draw_hm && m_heightmap_source_patche)
+    {
+
+        p_subpass->GetHMTexture()->CopyTextureContent();
+
+        const auto heightmap { (float*)p_subpass->GetHMTextureContent() };
 
         ////////////
 
@@ -356,11 +501,13 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         }
 
         m_draw_hm = false;
+        m_heightmap_source_patche = nullptr;
         m_current_hm->Disable();
         m_current_hm = nullptr;
 
         m_collisions_active = true;
     }
+    */
 }
 
 void Layer::ResetBody(void)

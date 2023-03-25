@@ -36,8 +36,9 @@ using namespace LOD;
 using namespace DrawSpace::Core;
 
 
-HeighmapSubPass::HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index) :
-m_layer(p_owner)
+HeighmapSubPass::HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose) :
+m_layer(p_owner),
+m_purpose(p_purpose)
 {
 	m_heightmap_pass = create_heightmap_pass();
 

@@ -71,14 +71,14 @@ public:
     SubPass( void );
     virtual ~SubPass( void );
 
-    virtual void                                        DrawSubPass( void );
-    virtual void                                        SubPassDone( void ) = 0;
+    virtual void                                DrawSubPass( void );
+    virtual void                                SubPassDone( void ) = 0;
 
-    virtual DrawSpace::Core::RenderingNode*             GetNode( void ) const;
-    virtual DrawSpace::IntermediatePass*                GetPass( void ) const;
+    DrawSpace::Core::RenderingNode*             GetNode( void ) const;
+    DrawSpace::IntermediatePass*                GetPass( void ) const;
 
-    virtual void                                        SetTimerReadyFlag( bool p_flag );
-    virtual bool                                        GetTimerReadyFlag( void ) const;
+    void                                        SetTimerReadyFlag( bool p_flag );
+    bool                                        GetTimerReadyFlag( void ) const;
 
 };
 }

@@ -33,6 +33,30 @@ struct Config;
 
 class HeighmapSubPass : public LOD::SubPass
 {
+public:
+
+    enum class Purpose
+    {
+        FOR_COLLISIONS,
+        FOR_FOLIAGE
+    };
+
+
+    static constexpr int heightmapTextureSize = 1024;
+
+    HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose);
+    virtual ~HeighmapSubPass(void);
+
+    void                        DrawSubPass(void);
+    void                        SubPassDone(void);
+    void                        Enable(void);
+    void                        Disable(void);
+    DrawSpace::Core::Texture*   GetHMTexture(void) const;
+    void*                       GetHMTextureContent(void) const;
+
+    inline Purpose              GetPurpose(void) const { return m_purpose; };
+
+
 private:
 
     bool                            m_enable{ true };
@@ -42,22 +66,10 @@ private:
 
     DrawSpace::IntermediatePass*    m_heightmap_pass{ nullptr };
 
+    Purpose                         m_purpose;
+
     DrawSpace::IntermediatePass*    create_heightmap_pass(void);
 
-public:
-
-    static const int heightmapTextureSize = 1024;
-
-
-    HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index);
-    virtual ~HeighmapSubPass(void);
-
-    virtual void                        DrawSubPass(void);
-    virtual void                        SubPassDone(void);
-    virtual void                        Enable(void);
-    virtual void                        Disable(void);
-    virtual DrawSpace::Core::Texture*   GetHMTexture(void) const;
-    virtual void*                       GetHMTextureContent(void) const;
 
 };
 }

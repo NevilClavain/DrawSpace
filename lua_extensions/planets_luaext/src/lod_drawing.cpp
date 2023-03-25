@@ -196,6 +196,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     
     
     
+    
     pixels_flags_2[2] = (dsreal)p_patch->GetLodLevel();
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
@@ -789,8 +790,25 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     std::vector<Patch*> dl;
     const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
 
-    planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
-    const auto current_patch{ planetbody->GetFace(m_nodes[face_node])->GetCurrentPatch() };
+    const auto current_face_index{ m_nodes[face_node] };
+
+    planetbody->GetFace(current_face_index)->GetDisplayList( dl );
+    const auto current_patch{ planetbody->GetFace(current_face_index)->GetCurrentPatch() };
+
+    //////////////////////////////////////////
+    /*
+    if (current_patch)
+    {
+        for (auto e : m_layers)
+        {
+            if (e->hasHeightmapGeneration())
+            {
+                e->RequestHeightmap(current_patch);
+            }
+        }
+    }
+    */
+    //////////////////////////////////////////
  
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );

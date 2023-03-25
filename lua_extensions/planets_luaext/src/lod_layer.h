@@ -71,14 +71,14 @@ private:
     dsreal                                                      m_planetray;
     bool                                                        m_collisions{ false };
 
-    bool                                                        m_heighmaps_generation{ false };
+    //bool                                                        m_heighmaps_generation{ false };
 
     LOD::HeighmapSubPass*                                       m_heightmaps[6];
-    LOD::HeighmapSubPass*                                       m_current_hm{ nullptr };
+    //LOD::HeighmapSubPass*                                       m_current_hm{ nullptr };
 
     LOD::Patch*                                                 m_heightmap_source_patche{ nullptr };  // generate heightmap from this patch
 
-    bool                                                        m_draw_hm{ false };
+    //bool                                                        m_draw_hm{ false };
 
     dsstring                                                    m_description; // for debug purpose :)
 
@@ -94,13 +94,11 @@ private:
 
     Patch*                                                      m_current_patch{ nullptr };
 
+    int                                                         m_layer_index;
+
     void build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
 
-    /*
-    void setup_collider(void);
-    void remove_collider(void);
-    */
 
 public:
     Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body,
@@ -130,5 +128,9 @@ public:
     dsreal                          GetCurrentPatchMaxHeight(void) const;
     dsreal                          GetCurrentPatchMinHeight(void) const;
     dsreal                          GetCurrentPatchCurrentHeight(void) const;
+
+    //bool                            hasHeightmapGeneration(void) const;
+
+    void                            RequestHeightmap(Patch* p_patch);
 };
 }
