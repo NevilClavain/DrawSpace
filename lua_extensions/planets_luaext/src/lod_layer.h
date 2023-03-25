@@ -71,14 +71,13 @@ private:
     dsreal                                                      m_planetray;
     bool                                                        m_collisions{ false };
 
-    //bool                                                        m_heighmaps_generation{ false };
 
-    LOD::HeighmapSubPass*                                       m_heightmaps[6];
-    //LOD::HeighmapSubPass*                                       m_current_hm{ nullptr };
+    LOD::HeighmapSubPass*                                       m_heightmaps_for_collisions[6];
+    
 
     LOD::Patch*                                                 m_heightmap_source_patche{ nullptr };  // generate heightmap from this patch
 
-    //bool                                                        m_draw_hm{ false };
+
 
     dsstring                                                    m_description; // for debug purpose :)
 

@@ -65,8 +65,8 @@ m_layer_index(p_index)
     {
         for (int i = 0; i < 6; i++)
         {
-            m_heightmaps[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index, HeighmapSubPass::Purpose::FOR_COLLISIONS));
-            m_heightmaps[i]->Disable();
+            m_heightmaps_for_collisions[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index, HeighmapSubPass::Purpose::FOR_COLLISIONS));
+            m_heightmaps_for_collisions[i]->Disable();
         }
     }
 
@@ -86,7 +86,7 @@ Layer::~Layer(void)
     {
         for (int i = 0; i < 6; i++)
         {
-            _DRAWSPACE_DELETE_(m_heightmaps[i]);
+            _DRAWSPACE_DELETE_(m_heightmaps_for_collisions[i]);
         }
     }
 }
@@ -178,7 +178,7 @@ void Layer::RequestHeightmap(Patch* p_patch)
 
                 m_draw_hm = true;
 
-                m_current_hm = m_heightmaps[m_current_patch->GetOrientation()];
+                m_current_hm = m_heightmaps_for_collisions[m_current_patch->GetOrientation()];
                 m_current_hm->Enable();
 
                 const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
@@ -226,7 +226,7 @@ void Layer::Compute(void)
             display_list.push_back(m_heightmap_source_patche);
 
 
-            const auto current_hm{ m_heightmaps[m_current_patch->GetOrientation()] };
+            const auto current_hm{ m_heightmaps_for_collisions[m_current_patch->GetOrientation()] };
             current_hm->Enable();
 
             const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
@@ -277,7 +277,7 @@ void Layer::Compute(void)
 
                     m_draw_hm = true;
 
-                    m_current_hm = m_heightmaps[curr_patch->GetOrientation()];
+                    m_current_hm = m_heightmaps_for_collisions[curr_patch->GetOrientation()];
                     m_current_hm->Enable();
 
                     const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
