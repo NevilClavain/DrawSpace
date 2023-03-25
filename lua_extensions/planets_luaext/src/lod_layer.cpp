@@ -82,6 +82,7 @@ m_layer_index(p_index)
 Layer::~Layer(void)
 {
     //if (m_heighmaps_generation)
+    if(m_collisions)
     {
         for (int i = 0; i < 6; i++)
         {
