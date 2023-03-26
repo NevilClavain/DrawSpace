@@ -73,6 +73,8 @@ private:
 
 
     LOD::HeighmapSubPass*                                       m_heightmaps_for_collisions[6];
+
+    LOD::HeighmapSubPass*                                       m_heightmaps_for_foliage[6];
     
 
     dsstring                                                    m_description; // for debug purpose :)

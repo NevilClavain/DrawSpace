@@ -53,14 +53,12 @@ m_current_lod(-1),
 m_meshe_collision_shape(m_hm_meshe),
 m_layer_index(p_index)
 {
-    //m_heighmaps_generation = m_config->m_layers_descr[p_index].enable_heighmap_generation;
 
     if (m_config->m_layers_descr[p_index].enable_collisions /* && m_heighmaps_generation */ && !p_freecamera)
     {
         m_collisions = true;
     }
        
-    //if (m_heighmaps_generation)
     if(m_collisions)
     {
         for (int i = 0; i < 6; i++)
@@ -69,6 +67,16 @@ m_layer_index(p_index)
             m_heightmaps_for_collisions[i]->Disable();
         }
     }
+
+    if (cst::SurfaceLayer == m_layer_index)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            m_heightmaps_for_foliage[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index, HeighmapSubPass::Purpose::FOR_FOLIAGE));
+            m_heightmaps_for_foliage[i]->Disable();
+        }
+    }
+
 
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
@@ -81,12 +89,19 @@ m_layer_index(p_index)
 
 Layer::~Layer(void)
 {
-    //if (m_heighmaps_generation)
     if(m_collisions)
     {
         for (int i = 0; i < 6; i++)
         {
             _DRAWSPACE_DELETE_(m_heightmaps_for_collisions[i]);
+        }
+    }
+
+    if (cst::SurfaceLayer == m_layer_index)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            _DRAWSPACE_DELETE_(m_heightmaps_for_foliage[i]);
         }
     }
 }
