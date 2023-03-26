@@ -75,10 +75,6 @@ private:
     LOD::HeighmapSubPass*                                       m_heightmaps_for_collisions[6];
     
 
-    LOD::Patch*                                                 m_heightmap_source_patche{ nullptr };  // generate heightmap from this patch
-
-
-
     dsstring                                                    m_description; // for debug purpose :)
 
     dsreal                                                      m_currentpatch_max_height{ -2.0 };
@@ -94,6 +90,8 @@ private:
     Patch*                                                      m_current_patch{ nullptr };
 
     int                                                         m_layer_index;
+
+    std::map<LOD::HeighmapSubPass*, Patch*>                     m_heightmap_source_patches;
 
     void build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);

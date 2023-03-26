@@ -210,20 +210,21 @@ void Layer::Compute(void)
         {
 
             // adjust hm source
-            m_heightmap_source_patche = m_current_patch;
+
+            auto heightmap_source_patche{ m_current_patch };
             for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
             {
                 if (nullptr == curr_patch->GetParent())
                 {
                     break;
                 }
-                m_heightmap_source_patche = m_heightmap_source_patche->GetParent();
+                heightmap_source_patche = heightmap_source_patche->GetParent();
             }
 
             // launch hm generation
 
             std::vector<LOD::Patch*> display_list;
-            display_list.push_back(m_heightmap_source_patche);
+            display_list.push_back(heightmap_source_patche);
 
 
             const auto current_hm{ m_heightmaps_for_collisions[m_current_patch->GetOrientation()] };
@@ -231,6 +232,8 @@ void Layer::Compute(void)
 
             const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
             node->SetDisplayList(display_list);
+
+            m_heightmap_source_patches[current_hm] = heightmap_source_patche;
         }
     }
 
@@ -419,13 +422,14 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
 
 void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
 {
-
     p_subpass->GetHMTexture()->CopyTextureContent();
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
 
-    if (m_heightmap_source_patche->HasHeightMap())
+    auto heightmap_source_patche{ m_heightmap_source_patches.at(p_subpass) };
+
+    if (heightmap_source_patche->HasHeightMap())
     {
-        auto old_buffer{ m_heightmap_source_patche->GetHeightMap() };
+        auto old_buffer{ heightmap_source_patche->GetHeightMap() };
         _DRAWSPACE_DELETE_N_(old_buffer);
     }
 
@@ -433,12 +437,11 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
     memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
 
-    m_heightmap_source_patche->SetHeightMap(patch_hm_buffer);
-
-
+    heightmap_source_patche->SetHeightMap(patch_hm_buffer);
 
     Meshe final_meshe;
-    build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), m_heightmap_source_patche, final_meshe);
+
+    build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), heightmap_source_patche, final_meshe);
     m_hm_meshe = final_meshe;
 
     for (auto& e : m_collision_meshe_creation_handler)
@@ -452,7 +455,7 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
     }
 
-    m_heightmap_source_patche = nullptr;
+    m_heightmap_source_patches.erase(p_subpass);
     p_subpass->Disable();
 
     m_collisions_active = true;
