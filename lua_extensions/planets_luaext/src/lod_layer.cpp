@@ -386,8 +386,8 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     const auto x1 { Maths::Floor(((xcoord + 0.5)) * resol) };
     auto y1 { Maths::Floor(((ycoord + 0.5)) * resol) };
 
-    const auto x2 = x1 + 1;
-    auto y2 = y1 + 1;
+    const auto x2{ x1 + 1 };
+    auto y2{ y1 + 1 };
 
     y1 = cst::patchResolution - y1;
     y2 = cst::patchResolution - y2;
