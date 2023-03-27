@@ -25,6 +25,8 @@
 #pragma once
 
 #include "lod_patch.h"
+#include "lod_heightmapsubpass.h"
+
 #include "collisionaspect.h"
 #include "csts.h"
 
@@ -44,7 +46,6 @@ namespace LOD
 {
 struct Config;
 class Body;
-class HeighmapSubPass;
 
 class Layer
 {
@@ -94,9 +95,11 @@ private:
     int                                                         m_layer_index;
 
     std::map<LOD::HeighmapSubPass*, Patch*>                     m_heightmap_source_patches;
-
+   
     void build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
+
+    void generate_heightmap(Patch* p_patch, LOD::HeighmapSubPass::Purpose p_purpose);
 
 
 public:
@@ -128,7 +131,7 @@ public:
     dsreal                          GetCurrentPatchMinHeight(void) const;
     dsreal                          GetCurrentPatchCurrentHeight(void) const;
 
-    //bool                            hasHeightmapGeneration(void) const;
+    int                             GetLayerIndex(void) const;
 
     void                            RequestHeightmap(Patch* p_patch);
 };

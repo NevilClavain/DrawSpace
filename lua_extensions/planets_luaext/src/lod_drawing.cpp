@@ -184,13 +184,13 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     
 
     // uncomment to see current patch
-    /*
+    
     if (p_patch == m_current_patch)
     {
         // highlight current patch
         pixels_flags_2[1] = 1.0;
     }
-    */
+    
     
     
     
@@ -506,30 +506,19 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
     {
         auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };       
         if (current_patch)
-        {
-            
-            /*
-            for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
-            {
-                if (nullptr == current_patch->GetParent())
-                {
-                    break;
-                }
-                current_patch = current_patch->GetParent();
-            }
-            */
-            
-
+        {                      
             draw_foliages_batch_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
 
+            /*
             for (int i = 0; i < 8; i++)
             {
                 const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>( current_patch->GetNeighbour(i) ) };
                 if (neighbour_patch)
                 {
                     draw_foliages_batch_on_patch(neighbour_patch->GetContent(), p_ray, p_world, p_view, p_proj);
-                }                
+                }
             }
+            */
         }
     }
 }
@@ -546,7 +535,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
         std::default_random_engine rand_engine(seed);
         std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
 
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 225; i++)
         {
             const auto xp{ rand_source(rand_engine) };
             const auto yp{ rand_source(rand_engine) };
@@ -796,18 +785,31 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     const auto current_patch{ planetbody->GetFace(current_face_index)->GetCurrentPatch() };
 
     //////////////////////////////////////////
-    /*
+    
     if (current_patch)
     {
         for (auto e : m_layers)
         {
-            if (e->hasHeightmapGeneration())
+            if (cst::SurfaceLayer == e->GetLayerIndex())
             {
+                
                 e->RequestHeightmap(current_patch);
+
+                /*
+                for (int i = 0; i < 8; i++)
+                {
+                    const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>(current_patch->GetNeighbour(i)) };
+                    if (neighbour_patch)
+                    {
+                        e->RequestHeightmap(neighbour_patch->GetContent());
+                    }
+                }
+                */
+
             }
         }
     }
-    */
+    
     //////////////////////////////////////////
  
     face_node->SetCurrentPatch( current_patch );

@@ -26,7 +26,7 @@
 #include "lod_body.h"
 #include "lod_config.h"
 #include "lod_drawing.h"
-#include "lod_heightmapsubpass.h"
+
 #include "collisionaspect.h"
 #include "entitynodegraph.h"
 
@@ -59,7 +59,7 @@ m_layer_index(p_index)
         m_collisions = true;
     }
        
-    if(m_collisions)
+    if (m_collisions)
     {
         for (int i = 0; i < 6; i++)
         {
@@ -76,7 +76,6 @@ m_layer_index(p_index)
             m_heightmaps_for_foliage[i]->Disable();
         }
     }
-
 
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
@@ -161,13 +160,14 @@ void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
 
 void Layer::RequestHeightmap(Patch* p_patch)
 {   
-    /*
+
+    //generate_heightmap(p_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
+
     if (m_current_patch != p_patch)
     {
         m_current_patch = p_patch;
 
         
-
         //const auto curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
 
         const auto body_curr_face{ m_body->GetCurrentFace() };
@@ -177,33 +177,61 @@ void Layer::RequestHeightmap(Patch* p_patch)
 
         const auto patch_layer{ p_patch->GetLayerIndex() };
 
-        if (patch_layer == m_layer_index && body_curr_face == o2 && !m_draw_hm)
+        const auto current_patch_lod_level{ m_current_patch->GetLodLevel() };
+
+        if (patch_layer == m_layer_index && body_curr_face == o2 && current_patch_lod_level == 0)
         {
 
-            m_heightmap_source_patche = m_current_patch;
+            const auto current_hm{ m_heightmaps_for_foliage[m_current_patch->GetOrientation()] };
 
+           
+            // lance la generation de la heightmap
 
-            if (m_heighmaps_generation && m_current_lod == 0)
-            {
+            std::vector<LOD::Patch*> display_list;
+            display_list.push_back(m_current_patch);
 
-                // lance la generation de la heightmap
+            current_hm->Enable();
 
-                std::vector<LOD::Patch*> display_list;
-                display_list.push_back(m_heightmap_source_patche);
-
-                m_draw_hm = true;
-
-                m_current_hm = m_heightmaps_for_collisions[m_current_patch->GetOrientation()];
-                m_current_hm->Enable();
-
-                const auto node{ static_cast<LOD::FaceDrawingNode*>(m_current_hm->GetNode()) };
-                node->SetDisplayList(display_list);
-            }
+            const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
+            node->SetDisplayList(display_list);
+         
+            m_heightmap_source_patches[current_hm] = m_current_patch;
 
         }
 
+    }    
+}
+
+void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpose)
+{
+    // launch hm generation
+
+    std::vector<LOD::Patch*> display_list;
+    display_list.push_back(p_patch);
+
+    //const auto current_hm{ m_heightmaps_for_collisions[m_current_patch->GetOrientation()] };
+
+    LOD::HeighmapSubPass* current_hm{ nullptr };
+
+    switch (p_purpose)
+    {
+        case HeighmapSubPass::Purpose::FOR_COLLISIONS:
+
+            current_hm = m_heightmaps_for_collisions[m_current_patch->GetOrientation()];
+            break;
+
+        case HeighmapSubPass::Purpose::FOR_FOLIAGE:
+
+            current_hm = m_heightmaps_for_foliage[m_current_patch->GetOrientation()];
+            break;
     }
-    */
+
+    current_hm->Enable();
+
+    const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
+    node->SetDisplayList(display_list);
+
+    m_heightmap_source_patches[current_hm] = p_patch;
 }
 
 void Layer::Compute(void)
@@ -229,29 +257,32 @@ void Layer::Compute(void)
             auto heightmap_source_patche{ m_current_patch };
             for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
             {
-                if (nullptr == curr_patch->GetParent())
+                if (nullptr == heightmap_source_patche->GetParent())
                 {
                     break;
                 }
                 heightmap_source_patche = heightmap_source_patche->GetParent();
             }
 
-            // launch hm generation
-
-            std::vector<LOD::Patch*> display_list;
-            display_list.push_back(heightmap_source_patche);
-
-
-            const auto current_hm{ m_heightmaps_for_collisions[m_current_patch->GetOrientation()] };
-            current_hm->Enable();
-
-            const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
-            node->SetDisplayList(display_list);
-
-            m_heightmap_source_patches[current_hm] = heightmap_source_patche;
+            generate_heightmap(heightmap_source_patche, HeighmapSubPass::Purpose::FOR_COLLISIONS);
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Vector view_patch_coords;
+    const auto curr_face{ m_body->GetCurrentFace() };
+
+    if (curr_face > -1)
+    {
+        m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatchViewCoords(view_patch_coords);
+        const auto new_alt{ get_interpolated_height(view_patch_coords[0], view_patch_coords[1]) };
+
+        if (!isnan(new_alt))
+        {
+            m_currentpatch_current_height = new_alt;
+        }
+    }
 
     /*
 
@@ -560,4 +591,9 @@ void Layer::RemoveCollider(void)
 
         m_collisions_active = false;
     }
+}
+
+int Layer::GetLayerIndex(void) const
+{
+    return m_layer_index;
 }
