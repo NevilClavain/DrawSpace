@@ -537,8 +537,8 @@ void Face::UpdateLODComputationResults( void )
 
             m_work_displaylist.push_back( m_rootpatch->GetContent() );
             m_displaylist = m_work_displaylist;
-            m_currentPatch = m_rootpatch->GetContent();
-            m_currentPatchLOD = m_nbLODRanges - 1; //NB_LOD_RANGES - 1;
+            m_work_currentPatch = m_rootpatch->GetContent();
+            m_work_currentPatchLOD = m_nbLODRanges - 1;
         }
         else
         {

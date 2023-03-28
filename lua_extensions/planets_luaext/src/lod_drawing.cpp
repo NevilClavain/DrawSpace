@@ -184,12 +184,13 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     
 
     // uncomment to see current patch
-    
+    /*
     if (p_patch == m_current_patch)
     {
         // highlight current patch
         pixels_flags_2[1] = 1.0;
     }
+    */
     
     
     
@@ -786,29 +787,32 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
     //////////////////////////////////////////
     
+    /*
     if (current_patch)
     {
         for (auto e : m_layers)
         {
             if (cst::SurfaceLayer == e->GetLayerIndex())
             {
+
                 
                 e->RequestHeightmap(current_patch);
 
-                /*
-                for (int i = 0; i < 8; i++)
-                {
-                    const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>(current_patch->GetNeighbour(i)) };
-                    if (neighbour_patch)
-                    {
-                        e->RequestHeightmap(neighbour_patch->GetContent());
-                    }
-                }
-                */
+                
+                //for (int i = 0; i < 8; i++)
+                //{
+                //    const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>(current_patch->GetNeighbour(i)) };
+                //    if (neighbour_patch)
+                //    {
+                //        e->RequestHeightmap(neighbour_patch->GetContent());
+                //    }
+                //}
+                
 
             }
         }
     }
+    */
     
     //////////////////////////////////////////
  
