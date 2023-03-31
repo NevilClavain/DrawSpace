@@ -28,6 +28,8 @@
 #include "plugin.h"
 #include "memalloc.h"
 #include "hub.h"
+#include "logconf.h"
+#include "planetscentraladmin.h"
 
 PlanetsLuaExtension::PlanetsLuaExtension(void)
 {
@@ -57,4 +59,9 @@ void PlanetsLuaExtension::SetHub(DrawSpace::Systems::Hub* p_hub)
 DrawSpace::Systems::Hub* PlanetsLuaExtension::GetHub(void) const
 {
 	return m_hub;
+}
+
+void PlanetsLuaExtension::SetLoggerConfiguration(DrawSpace::Logger::Configuration* p_logconf)
+{
+	PlanetsCentralAdmin::GetInstance()->SetLogconf(p_logconf);
 }

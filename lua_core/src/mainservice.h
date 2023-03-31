@@ -74,6 +74,8 @@ protected:
     std::unordered_map<dsstring, LuaClass_RenderPassNodeGraph*>                     m_rendergraphs; // table des rendergraph
     std::unordered_map<dsstring, LuaClass_EntityNodeGraph*>                         m_entitygraphs;
 
+    DrawSpace::Logger::Configuration*                                               m_logconf{ nullptr };
+
 
     
     DrawSpace::Core::Entity                                                         m_quadEntity;
@@ -230,6 +232,8 @@ public:
 
     void ActivateResourcesSystem(const dsstring& p_context);
     void DeactivateResourcesSystem(void);
+
+    DrawSpace::Logger::Configuration* GetLogConf(void) const;
   
     friend class DrawSpace::Utils::BaseSingleton<MainService>;
 };

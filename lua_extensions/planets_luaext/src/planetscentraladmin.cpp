@@ -39,7 +39,6 @@ using namespace DrawSpace::Utils;
 PlanetsCentralAdmin::PlanetsCentralAdmin(void):
 m_system_evt_cb(this, &PlanetsCentralAdmin::on_system_event)
 {
-
 }
 
 void PlanetsCentralAdmin::Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub)
@@ -67,12 +66,11 @@ void PlanetsCentralAdmin::Unregister(PlanetsRenderingAspectImpl* p_planet)
 
     if (m_hub && 0 == m_planet_renderers.size())
     {
-        std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
+        const auto systems{ m_hub->GetSystems() };
         for (auto& e : systems)
         {
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
-
         m_hub = nullptr;
     }
 }
@@ -85,7 +83,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
         {
             for (auto planet_renderer : m_planet_renderers)
             {
-                dsstring reflexion_pass{ planet_renderer->GetReflectionPassId() };
+                const auto reflexion_pass{ planet_renderer->GetReflectionPassId() };
 
                 auto flatclouds_binder_2{ planet_renderer->GetPlanetFlatCloudsBinder2() };
                 if (flatclouds_binder_2.count(reflexion_pass))
@@ -93,7 +91,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                     auto clouds_binders_array{ flatclouds_binder_2.at(reflexion_pass) };
                     for (auto cloud_binder : clouds_binders_array)
                     {
-                        Vector mirror_flag{ cloud_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
+                        auto mirror_flag{ cloud_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
 
                         // enable mirror flag for this pass
                         mirror_flag[0] = 1.0;
@@ -107,7 +105,7 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
                     auto atmo_binders_array{ atmos_binder_2.at(reflexion_pass) };
                     for (auto atmo_binder : atmo_binders_array)
                     {
-                        Vector mirror_flag{ atmo_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
+                        auto mirror_flag{ atmo_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 61) };
 
                         // enable mirror flag for this pass
                         mirror_flag[0] = 1.0;
@@ -117,4 +115,14 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
             }
         }
     }
+}
+
+void PlanetsCentralAdmin::SetLogconf(DrawSpace::Logger::Configuration* p_logconf)
+{
+    m_logconf = p_logconf;
+}
+
+DrawSpace::Logger::Configuration* PlanetsCentralAdmin:: GetLogconf(void) const
+{
+    return m_logconf;
 }

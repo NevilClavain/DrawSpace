@@ -816,11 +816,13 @@ int LuaClass_Globals::LUA_registerextension(lua_State* p_L)
 {
     dsstring extension_name{ luaL_checkstring(p_L, 1) };
     dsstring extension_description;
-    LuaExtension* extension_instance{ LuaExtLoad::RegisterLuaExtension(extension_name, p_L, extension_description) };
+    const auto extension_instance{ LuaExtLoad::RegisterLuaExtension(extension_name, p_L, extension_description) };
     m_extensions[extension_name] = extension_instance;
 
     Systems::Hub* hub{ MainService::GetInstance()->GetHub() };
     extension_instance->SetHub(hub);
+
+    extension_instance->SetLoggerConfiguration(MainService::GetInstance()->GetLogConf());
 
     lua_pushstring(p_L, extension_description.c_str());
     return 1;

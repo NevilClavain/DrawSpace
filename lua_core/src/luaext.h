@@ -43,6 +43,10 @@ namespace Systems
 {
 class Hub;
 }
+namespace Logger
+{
+class Configuration;
+}
 }
 class LuaExtension
 {
@@ -51,6 +55,8 @@ public:
 	virtual void UpdateRenderer(DrawSpace::Interface::Renderer*) = 0;	
 	virtual dsstring Description(void) const = 0;
 	virtual DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const = 0;
+
+	virtual void SetLoggerConfiguration(DrawSpace::Logger::Configuration* p_logconf) {};
 
 	virtual void SetHub(DrawSpace::Systems::Hub* p_hub) {};
 };

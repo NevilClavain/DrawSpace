@@ -184,13 +184,13 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     
 
     // uncomment to see current patch
-    /*
+    
     if (p_patch == m_current_patch)
     {
         // highlight current patch
         pixels_flags_2[1] = 1.0;
     }
-    */
+    
     
     
     

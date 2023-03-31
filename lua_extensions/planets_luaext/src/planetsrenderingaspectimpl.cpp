@@ -44,6 +44,8 @@
 #include "collisionaspect.h"
 #include "rigidbodytransformaspectimpl.h"
 
+#include "planetscentraladmin.h"
+
 
 
 using namespace DrawSpace;
@@ -79,6 +81,8 @@ const dsstring PlanetsRenderingAspectImpl::CollisionDisplayPShaderComponentName 
 // -> Systems::Hub::SYSTEMS_UPDATE_BEGIN
 // -> Systems::Hub::SYSTEMS_UPDATE_END
 
+DrawSpace::Logger::Sink planet_logger("Planet", DrawSpace::Logger::Configuration::GetInstance());
+
 
 PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void ) :
 m_hub(NULL),
@@ -95,7 +99,7 @@ m_render_evt_cb(this, &PlanetsRenderingAspectImpl::on_render_event)
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
 
-    LOD::Body::BuildMeshes();   
+    LOD::Body::BuildMeshes();
 }
 
 PlanetsRenderingAspectImpl::~PlanetsRenderingAspectImpl(void)
@@ -152,6 +156,15 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
 
 bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
 {
+    const auto logconf{ PlanetsCentralAdmin::GetInstance()->GetLogconf() };
+    
+    logconf->RegisterSink(&planet_logger);
+    planet_logger.SetConfiguration(logconf);
+
+
+
+    _DSDEBUG(planet_logger, dsstring("Init"));
+
     if( m_hub )
     {
         std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();

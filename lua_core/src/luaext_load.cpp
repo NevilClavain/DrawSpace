@@ -65,7 +65,7 @@ LuaExtension* LuaExtLoad::RegisterLuaExtension(const dsstring& p_file, lua_State
     lua_extension->UpdateRenderer(DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface);
     lua_extension->Register(p_L);
 
-    dsstring description{ lua_extension->Description() };
+    const auto description{ lua_extension->Description() };
     p_description = description;
 
     return lua_extension;

@@ -94,7 +94,7 @@ bool MainService::Init( void )
     mousecircularmode_cb = mouse_cbs[0]->getPurpose();
     mousevisible_cb = mouse_cbs[1]->getPurpose();
 
-    DrawSpace::Logger::Configuration* logconf = logconfs[0]->getPurpose();
+    const auto logconf{ logconfs[0]->getPurpose() };
 
     DrawSpace::Core::BaseCallback<void, int>* closeapp_cb;
     closeapp_cb = app_cbs[0]->getPurpose();
@@ -123,9 +123,9 @@ bool MainService::Init( void )
     logconf->RegisterSink(&runner_logger);
     runner_logger.SetConfiguration(logconf);
 
-
-
     m_systemsHub.SetLogConf( logconf );
+
+    m_logconf = logconf;
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -1058,4 +1058,9 @@ void MainService::ActivateResourcesSystem(const dsstring& p_context)
 void MainService::DeactivateResourcesSystem(void)
 {
     m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
+}
+
+DrawSpace::Logger::Configuration* MainService::GetLogConf(void) const
+{
+    return m_logconf;
 }
