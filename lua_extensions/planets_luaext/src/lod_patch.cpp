@@ -735,6 +735,21 @@ float* Patch::GetHeightMap(void) const
     return m_heightmap;
 }
 
+
+dsstring Patch::DumpInfos(void) const
+{
+    dsstring infos;
+
+    infos = ">>>> Patch " + std::to_string((int)this);
+
+    infos += " Orientation = " + std::to_string(m_orientation);
+    infos += " Unit sidelenght = " + std::to_string(m_sidelength);
+    infos += " ray = " + std::to_string(m_ray);
+    infos += " unit pos = " + std::to_string(m_xpos) + " " + std::to_string(m_ypos);
+   
+    return infos;
+}
+
 void Patch::recurs_update_texture_referent( Patch* p_texture_referent )
 {
     m_texture_referent = p_texture_referent;

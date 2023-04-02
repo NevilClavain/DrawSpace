@@ -140,6 +140,8 @@ public:
 
     int                                 GetLayerIndex(void) const;
 
+    dsstring                            DumpInfos(void) const;
+
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
 
     static void                         CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );

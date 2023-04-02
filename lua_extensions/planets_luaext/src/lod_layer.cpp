@@ -243,6 +243,8 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
         dsstring(" hm subpass = ") + std::to_string((int)current_hm) + 
         dsstring(" p_purpose = ") + std::to_string((int)p_purpose)
     );
+
+    _DSDEBUG(planetlayer_logger, p_patch->DumpInfos());
 }
 
 void Layer::Compute(void)

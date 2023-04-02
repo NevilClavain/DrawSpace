@@ -836,11 +836,17 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
 
             if (current_patch2 == current_patch)
             {
-                _DSDEBUG(planetdrawing_logger, dsstring("current patch = ") + std::to_string((int)current_patch));
+                _DSDEBUG(planetdrawing_logger, 
+                    dsstring("current patch = ") + std::to_string((int)current_patch) +
+                    dsstring(" planetbody = ") + std::to_string((int)planetbody) +
+                    dsstring(" planetbody current face = ") + std::to_string(planetbody->GetCurrentFace()) +
+                    dsstring(" face_node = ") + std::to_string((int)face_node)
+                );
+
+                _DSDEBUG(planetdrawing_logger, current_patch->DumpInfos());
             }                        
         }
     }
-
 
     //////////////////////////////////////////
  
