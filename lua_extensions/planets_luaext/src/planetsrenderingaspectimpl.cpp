@@ -1204,8 +1204,7 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
                 manage_gravity_targets();
             }
             else if (DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event)
-            {
-                //manage_bodies();
+            {                
                 manage_camerapoints();
             }
         }
