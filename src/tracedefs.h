@@ -31,11 +31,11 @@
 
 #ifdef _DRAWSPACE_ENABLE_TRACES_
 
-#define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_TRACE, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_TRACE( _logger, __FUNCTION__ << " " << _message )
-#define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_DEBUG, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_DEBUG( _logger, __FUNCTION__ << " " << _message )
-#define _DSWARN( _logger, _message )  _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_WARN, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_WARN( _logger, __FUNCTION__ << " " << _message )
-#define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_ERROR, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_ERROR( _logger, __FUNCTION__ << " " << _message )
-#define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_FATAL, __FUNCTION__ << dsstring( " " ) << _message );          //LOG4CXX_FATAL( _logger, __FUNCTION__ << " " << _message )
+#define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_TRACE, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_DEBUG, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSWARN( _logger, _message )  _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_WARN, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 
 #define _DECLARE_DS_LOGGER( _logger, _name, _confptr ) static DrawSpace::Logger::Sink _logger( _name, _confptr ); //static LoggerPtr _logger(Logger::getLogger( _name ));
 

@@ -35,7 +35,6 @@
 #include "runnersystem.h"
 #include "updatequeuetask.h"
 
-//#include "planetdetailsbinder.h"
 #include <functional>
 
 #include "lod_layer.h"
@@ -156,13 +155,6 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
 
 bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
 {
-    const auto logconf{ PlanetsCentralAdmin::GetInstance()->GetLogconf() };
-    
-    logconf->RegisterSink(&planet_logger);
-    planet_logger.SetConfiguration(logconf);
-
-
-
     _DSDEBUG(planet_logger, dsstring("Init"));
 
     if( m_hub )

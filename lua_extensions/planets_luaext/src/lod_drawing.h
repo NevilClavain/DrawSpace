@@ -203,6 +203,8 @@ protected:
 
     bool                                                                        m_collisionmeshe_valid{ false };
 
+    std::map<FaceDrawingNode*,Patch*>                                           m_current_patchs; // current patch for each FaceDrawingNode
+
     void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
     void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);

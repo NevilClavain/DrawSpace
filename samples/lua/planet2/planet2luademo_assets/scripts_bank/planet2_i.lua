@@ -479,7 +479,7 @@ function( event, resource_path, context )
 
        if context == "init" then
          eg:register_rigidbody(bellerophon_entity)
-         eg:register_rigidbody(spherebump.models['sphere'].entity)
+         --eg:register_rigidbody(spherebump.models['sphere'].entity)
 
          resurgam_planet_config:set_resourcesready( TRUE )
          resurgam_planet_config:updated()
@@ -1246,7 +1246,7 @@ model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spa
 
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
-
+--[[
 spherebump_passes_bindings = 
 {
 	binding_0 = 
@@ -1264,6 +1264,7 @@ spherebump.view.load('sphere', sphere_pos_mat, spherebump_passes_bindings)
 
 
 eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
+]]
 
 
 planet_layers =

@@ -39,6 +39,8 @@ using namespace DrawSpace::Aspect;
 
 using namespace LOD;
 
+DrawSpace::Logger::Sink planetlayer_logger("PlanetLayer", DrawSpace::Logger::Configuration::GetInstance());
+
 Layer::Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body, 
                 Layer::SubPassCreationHandler* p_subpass_creation_handler, 
                 CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
@@ -52,9 +54,8 @@ m_hot(false),
 m_current_lod(-1),
 m_meshe_collision_shape(m_hm_meshe),
 m_layer_index(p_index)
-{
-
-    if (m_config->m_layers_descr[p_index].enable_collisions /* && m_heighmaps_generation */ && !p_freecamera)
+{   
+    if (m_config->m_layers_descr[p_index].enable_collisions && !p_freecamera)
     {
         m_collisions = true;
     }
@@ -84,6 +85,13 @@ m_layer_index(p_index)
     m_description = m_config->m_layers_descr[p_index].description;
 
     memset(m_alt_grid, 0, sizeof(m_alt_grid));
+
+    _DSDEBUG(planetlayer_logger, std::to_string(m_layer_index) + 
+                                    dsstring(" description = ") + m_description + 
+                                    dsstring(" ") + std::to_string((int)this) + 
+                                    dsstring(" freecamera = ") + std::to_string(p_freecamera)
+    
+    );
 }
 
 Layer::~Layer(void)
@@ -104,13 +112,6 @@ Layer::~Layer(void)
         }
     }
 }
-
-/*
-bool Layer::hasHeightmapGeneration(void) const
-{
-    return m_heighmaps_generation;
-}
-*/
 
 Body* Layer::GetBody(void) const
 {
@@ -235,6 +236,13 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     node->SetDisplayList(display_list);
 
     m_heightmap_source_patches[current_hm] = p_patch;
+
+    _DSDEBUG(planetlayer_logger, 
+        dsstring("layer " ) + std::to_string((int)this) +
+        dsstring(" p_patch = ") + std::to_string((int)p_patch) +
+        dsstring(" hm subpass = ") + std::to_string((int)current_hm) + 
+        dsstring(" p_purpose = ") + std::to_string((int)p_purpose)
+    );
 }
 
 void Layer::Compute(void)
@@ -423,6 +431,13 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
 
     auto heightmap_source_patche{ m_heightmap_source_patches.at(p_subpass) };
+
+    _DSDEBUG(planetlayer_logger,
+        dsstring("layer ") + std::to_string((int)this) +
+        dsstring(" patch = ") + std::to_string((int)heightmap_source_patche) +
+        dsstring(" hm subpass = ") + std::to_string((int)p_subpass) +
+        dsstring(" hm purpose = ") + std::to_string((int)p_subpass->GetPurpose())
+    );
 
     if (heightmap_source_patche->HasHeightMap())
     {

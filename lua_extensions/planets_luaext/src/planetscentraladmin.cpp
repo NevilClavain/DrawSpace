@@ -36,6 +36,10 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
+extern DrawSpace::Logger::Sink planet_logger;
+extern DrawSpace::Logger::Sink planetlayer_logger;
+extern DrawSpace::Logger::Sink planetdrawing_logger;
+
 PlanetsCentralAdmin::PlanetsCentralAdmin(void):
 m_system_evt_cb(this, &PlanetsCentralAdmin::on_system_event)
 {
@@ -120,6 +124,17 @@ void PlanetsCentralAdmin::on_system_event(DrawSpace::Interface::System::Event p_
 void PlanetsCentralAdmin::SetLogconf(DrawSpace::Logger::Configuration* p_logconf)
 {
     m_logconf = p_logconf;
+
+    const auto logconf{ PlanetsCentralAdmin::GetInstance()->GetLogconf() };
+
+    logconf->RegisterSink(&planet_logger);
+    planet_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&planetlayer_logger);
+    planetlayer_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&planetdrawing_logger);
+    planetdrawing_logger.SetConfiguration(logconf);
 }
 
 DrawSpace::Logger::Configuration* PlanetsCentralAdmin:: GetLogconf(void) const

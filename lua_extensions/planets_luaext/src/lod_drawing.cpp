@@ -42,11 +42,14 @@
 #include "lod_heightmapsubpass.h"
 
 
+
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 using namespace LOD;
+
+DrawSpace::Logger::Sink planetdrawing_logger("PlanetDrawing", DrawSpace::Logger::Configuration::GetInstance());
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -780,7 +783,9 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     std::vector<Patch*> dl;
     const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
 
+
     const auto current_face_index{ m_nodes[face_node] };
+    
 
     planetbody->GetFace(current_face_index)->GetDisplayList( dl );
     const auto current_patch{ planetbody->GetFace(current_face_index)->GetCurrentPatch() };
@@ -814,6 +819,29 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     }
     */
     
+    //////////////////////////////////////////
+
+    if (m_current_patchs.count(face_node) == 0)
+    {
+        m_current_patchs[face_node] = current_patch;
+    }
+    else
+    {
+        if (m_current_patchs.at(face_node) != current_patch)
+        {
+            m_current_patchs[face_node] = current_patch;
+
+            
+            const auto current_patch2{ planetbody->GetFace(planetbody->GetCurrentFace())->GetCurrentPatch() };
+
+            if (current_patch2 == current_patch)
+            {
+                _DSDEBUG(planetdrawing_logger, dsstring("current patch = ") + std::to_string((int)current_patch));
+            }                        
+        }
+    }
+
+
     //////////////////////////////////////////
  
     face_node->SetCurrentPatch( current_patch );
