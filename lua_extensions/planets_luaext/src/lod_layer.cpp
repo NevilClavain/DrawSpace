@@ -213,21 +213,19 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(p_patch);
 
-    //const auto current_hm{ m_heightmaps_for_collisions[m_current_patch->GetOrientation()] };
-
     LOD::HeighmapSubPass* current_hm{ nullptr };
 
     switch (p_purpose)
     {
-    case HeighmapSubPass::Purpose::FOR_COLLISIONS:
+        case HeighmapSubPass::Purpose::FOR_COLLISIONS:
 
-        current_hm = m_heightmaps_for_collisions[m_current_patch->GetOrientation()];
-        break;
+            current_hm = m_heightmaps_for_collisions[m_current_patch->GetOrientation()];
+            break;
 
-    case HeighmapSubPass::Purpose::FOR_FOLIAGE:
+        case HeighmapSubPass::Purpose::FOR_FOLIAGE:
 
-        current_hm = m_heightmaps_for_foliage[m_current_patch->GetOrientation()];
-        break;
+            current_hm = m_heightmaps_for_foliage[m_current_patch->GetOrientation()];
+            break;
     }
 
     current_hm->Enable();

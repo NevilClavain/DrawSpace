@@ -1864,7 +1864,7 @@ g:print("Planet creation done...")
 
 -- on planet
 
-set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
+set_body_on_planet(66.403, -26.193, 80.0, planet_specific_config_descr)
 
 -- on space
 --bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(-160.0, 0.0, -500.0)
@@ -1882,7 +1882,7 @@ set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
 -- on planet
 
 
-set_freecam_on_planet(66.2, -26.093, 29.0, planet_specific_config_descr)
+set_freecam_on_planet(119.75, -15.16, 74.0, planet_specific_config_descr)
 
 
 
