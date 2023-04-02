@@ -159,53 +159,6 @@ void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
     m_body->UpdateHotPoint(p_vector);
 }
 
-void Layer::RequestHeightmap(Patch* p_patch)
-{   
-   
-    //generate_heightmap(p_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
-
-
-    /*
-    if (m_current_patch != p_patch)
-    {
-        m_current_patch = p_patch;
-
-
-        //const auto curr_patch{ m_body->GetFace(m_body->GetCurrentFace())->GetCurrentPatch() };
-
-        const auto body_curr_face{ m_body->GetCurrentFace() };
-
-        //const auto o1{ curr_patch->GetOrientation() };
-        const auto o2{ p_patch->GetOrientation() };
-
-        const auto patch_layer{ p_patch->GetLayerIndex() };
-
-        const auto current_patch_lod_level{ m_current_patch->GetLodLevel() };
-
-        if (patch_layer == m_layer_index && body_curr_face == o2 && current_patch_lod_level == 0)
-        {
-
-            const auto current_hm{ m_heightmaps_for_foliage[m_current_patch->GetOrientation()] };
-
-
-            // lance la generation de la heightmap
-
-            std::vector<LOD::Patch*> display_list;
-            display_list.push_back(m_current_patch);
-
-            current_hm->Enable();
-
-            const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
-            node->SetDisplayList(display_list);
-
-            m_heightmap_source_patches[current_hm] = m_current_patch;
-
-        }
-
-    }
-    */
-}
-
 void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpose)
 {
     // launch hm generation

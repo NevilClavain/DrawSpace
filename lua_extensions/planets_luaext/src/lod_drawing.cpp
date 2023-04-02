@@ -790,37 +790,6 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     planetbody->GetFace(current_face_index)->GetDisplayList( dl );
     const auto current_patch{ planetbody->GetFace(current_face_index)->GetCurrentPatch() };
 
-    //////////////////////////////////////////
-    
-    /*
-    if (current_patch)
-    {
-        for (auto e : m_layers)
-        {
-            if (cst::SurfaceLayer == e->GetLayerIndex())
-            {
-
-                
-                e->RequestHeightmap(current_patch);
-
-                
-                //for (int i = 0; i < 8; i++)
-                //{
-                //    const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>(current_patch->GetNeighbour(i)) };
-                //    if (neighbour_patch)
-                //    {
-                //        e->RequestHeightmap(neighbour_patch->GetContent());
-                //    }
-                //}
-                
-
-            }
-        }
-    }
-    */
-    
-    //////////////////////////////////////////
-
     if (m_current_patchs.count(face_node) == 0)
     {
         m_current_patchs[face_node] = current_patch;
@@ -830,7 +799,6 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
         if (m_current_patchs.at(face_node) != current_patch)
         {
             m_current_patchs[face_node] = current_patch;
-
             
             const auto current_patch2{ planetbody->GetFace(planetbody->GetCurrentFace())->GetCurrentPatch() };
 

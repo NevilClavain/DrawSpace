@@ -132,7 +132,5 @@ public:
     dsreal                          GetCurrentPatchCurrentHeight(void) const;
 
     int                             GetLayerIndex(void) const;
-
-    void                            RequestHeightmap(Patch* p_patch);
 };
 }
