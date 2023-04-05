@@ -49,8 +49,10 @@ public:
 
     void                        DrawSubPass(void);
     void                        SubPassDone(void);
-    void                        Enable(void);
-    void                        Disable(void);
+
+    //void                        Enable(void);
+    //void                        Disable(void);
+
     DrawSpace::Core::Texture*   GetHMTexture(void) const;
     void*                       GetHMTextureContent(void) const;
 
@@ -59,7 +61,7 @@ public:
 
 private:
 
-    bool                            m_enable{ true };
+    //bool                            m_enable{ true };
     Layer*                          m_layer{ nullptr };
     DrawSpace::Core::Texture*       m_heightmap_texture{ nullptr };
     void*                           m_heightmap_content{ nullptr };

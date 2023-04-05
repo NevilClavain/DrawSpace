@@ -60,6 +60,8 @@ m_layer_index(p_index)
         m_collisions = true;
     }
        
+
+    /*
     if (m_collisions)
     {
         for (int i = 0; i < 6; i++)
@@ -77,6 +79,7 @@ m_layer_index(p_index)
             m_heightmaps_for_foliage[i]->Disable();
         }
     }
+    */
 
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
@@ -96,6 +99,7 @@ m_layer_index(p_index)
 
 Layer::~Layer(void)
 {
+    /*
     if(m_collisions)
     {
         for (int i = 0; i < 6; i++)
@@ -111,6 +115,7 @@ Layer::~Layer(void)
             _DRAWSPACE_DELETE_(m_heightmaps_for_foliage[i]);
         }
     }
+    */
 }
 
 Body* Layer::GetBody(void) const
@@ -166,6 +171,7 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(p_patch);
 
+    /*
     LOD::HeighmapSubPass* current_hm{ nullptr };
 
     switch (p_purpose)
@@ -182,6 +188,10 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     }
 
     current_hm->Enable();
+    */
+
+
+    LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
 
     const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
     node->SetDisplayList(display_list);
@@ -422,7 +432,12 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
 
 
     m_heightmap_source_patches.erase(p_subpass);
-    p_subpass->Disable();
+
+    //p_subpass->Disable();
+    
+    _DRAWSPACE_DELETE_(p_subpass);
+    
+
 
     m_collisions_active = true;
 }

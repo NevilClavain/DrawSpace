@@ -73,9 +73,9 @@ private:
     bool                                                        m_collisions{ false };
 
 
-    LOD::HeighmapSubPass*                                       m_heightmaps_for_collisions[6];
+    //LOD::HeighmapSubPass*                                       m_heightmaps_for_collisions[6];
 
-    LOD::HeighmapSubPass*                                       m_heightmaps_for_foliage[6];
+    //LOD::HeighmapSubPass*                                       m_heightmaps_for_foliage[6];
     
 
     dsstring                                                    m_description; // for debug purpose :)
@@ -95,6 +95,7 @@ private:
     int                                                         m_layer_index;
 
     std::map<LOD::HeighmapSubPass*, Patch*>                     m_heightmap_source_patches;
+
    
     void build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe);
     dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
