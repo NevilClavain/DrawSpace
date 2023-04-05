@@ -60,27 +60,6 @@ m_layer_index(p_index)
         m_collisions = true;
     }
        
-
-    /*
-    if (m_collisions)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            m_heightmaps_for_collisions[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index, HeighmapSubPass::Purpose::FOR_COLLISIONS));
-            m_heightmaps_for_collisions[i]->Disable();
-        }
-    }
-
-    if (cst::SurfaceLayer == m_layer_index)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            m_heightmaps_for_foliage[i] = _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, p_config, i, p_index, HeighmapSubPass::Purpose::FOR_FOLIAGE));
-            m_heightmaps_for_foliage[i]->Disable();
-        }
-    }
-    */
-
     m_planetray = 1000.0 * m_config->m_layers_descr[p_index].ray;
 
     m_body->Initialize();
@@ -92,30 +71,12 @@ m_layer_index(p_index)
     _DSDEBUG(planetlayer_logger, std::to_string(m_layer_index) + 
                                     dsstring(" description = ") + m_description + 
                                     dsstring(" ") + std::to_string((int)this) + 
-                                    dsstring(" freecamera = ") + std::to_string(p_freecamera)
-    
+                                    dsstring(" freecamera = ") + std::to_string(p_freecamera)    
     );
 }
 
 Layer::~Layer(void)
 {
-    /*
-    if(m_collisions)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            _DRAWSPACE_DELETE_(m_heightmaps_for_collisions[i]);
-        }
-    }
-
-    if (cst::SurfaceLayer == m_layer_index)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            _DRAWSPACE_DELETE_(m_heightmaps_for_foliage[i]);
-        }
-    }
-    */
 }
 
 Body* Layer::GetBody(void) const
@@ -170,26 +131,6 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
 
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(p_patch);
-
-    /*
-    LOD::HeighmapSubPass* current_hm{ nullptr };
-
-    switch (p_purpose)
-    {
-        case HeighmapSubPass::Purpose::FOR_COLLISIONS:
-
-            current_hm = m_heightmaps_for_collisions[m_current_patch->GetOrientation()];
-            break;
-
-        case HeighmapSubPass::Purpose::FOR_FOLIAGE:
-
-            current_hm = m_heightmaps_for_foliage[m_current_patch->GetOrientation()];
-            break;
-    }
-
-    current_hm->Enable();
-    */
-
 
     LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
 
@@ -254,9 +195,7 @@ void Layer::Compute(void)
                     heightmap_source_patche = heightmap_source_patche->GetParent();
                 }
 
-                generate_heightmap(heightmap_source_patche, HeighmapSubPass::Purpose::FOR_COLLISIONS);
-                
-
+                generate_heightmap(heightmap_source_patche, HeighmapSubPass::Purpose::FOR_COLLISIONS);               
             }
         }
     }
@@ -372,7 +311,6 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     index_hm = (cst::patchResolution * y2) + x1;
     const auto h4{ m_alt_grid[index_hm] };
 
-
     // calcul des distances du point central vers les 4 coints de bords
     const auto interv { 1.0 / (cst::patchResolution - 1) };
 
@@ -430,15 +368,10 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
     }
 
-
     m_heightmap_source_patches.erase(p_subpass);
-
-    //p_subpass->Disable();
     
     _DRAWSPACE_DELETE_(p_subpass);
     
-
-
     m_collisions_active = true;
 }
 
