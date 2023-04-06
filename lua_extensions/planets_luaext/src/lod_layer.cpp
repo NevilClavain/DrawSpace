@@ -139,6 +139,8 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
 
     m_heightmap_source_patches[current_hm] = p_patch;
 
+    p_patch->SetBusySubpass(true, "HeighmapSubPass for purpose : " + std::to_string((int)p_purpose));
+
     _DSDEBUG(planetlayer_logger, 
         dsstring("layer " ) + std::to_string((int)this) +
         dsstring(" p_patch = ") + std::to_string((int)p_patch) +
@@ -332,6 +334,8 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
 
     auto heightmap_source_patche{ m_heightmap_source_patches.at(p_subpass) };
+
+    heightmap_source_patche->SetBusySubpass(false, "");
 
     _DSDEBUG(planetlayer_logger,
         dsstring("layer ") + std::to_string((int)this) +

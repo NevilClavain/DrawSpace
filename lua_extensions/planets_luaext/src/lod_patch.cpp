@@ -183,10 +183,13 @@ m_layer_index( p_layer_index )
 
 Patch::~Patch( void )
 {
-    //destroy_color_texture();
     if (m_heightmap)
     {
         _DRAWSPACE_DELETE_N_(m_heightmap);
+    }
+
+    if (m_busy_in_subpass)
+    {        
     }
 }
 
@@ -748,6 +751,12 @@ dsstring Patch::DumpInfos(void) const
     infos += " unit pos = " + std::to_string(m_xpos) + " " + std::to_string(m_ypos);
    
     return infos;
+}
+
+void Patch::SetBusySubpass(bool p_state, const dsstring& p_reason)
+{
+    m_busy_in_subpass = p_state;
+    m_busy_in_subpass_reason = p_reason;
 }
 
 void Patch::recurs_update_texture_referent( Patch* p_texture_referent )

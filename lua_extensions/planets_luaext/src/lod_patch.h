@@ -96,6 +96,10 @@ protected:
 
     int                                     m_layer_index;
 
+
+    bool                                    m_busy_in_subpass{ false };
+    dsstring                                m_busy_in_subpass_reason;
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
@@ -141,6 +145,8 @@ public:
     int                                 GetLayerIndex(void) const;
 
     dsstring                            DumpInfos(void) const;
+
+    void                                SetBusySubpass(bool p_state, const dsstring& p_reason);
 
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
 
