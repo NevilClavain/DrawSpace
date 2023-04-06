@@ -122,6 +122,7 @@ public:
     void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
     void                            Compute( void );
     void                            SubPassDone(LOD::HeighmapSubPass* p_subpass);
+    void                            SubPassAborted(LOD::HeighmapSubPass* p_subpass);
     void                            ResetBody(void);
 
     void                            RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler);

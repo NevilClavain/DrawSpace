@@ -84,31 +84,18 @@ HeighmapSubPass::~HeighmapSubPass(void)
 
 void HeighmapSubPass::DrawSubPass(void)
 {
-	//if (m_enable)
-	{
-		SubPass::DrawSubPass();
-	}
+	SubPass::DrawSubPass();
 }
 
 void HeighmapSubPass::SubPassDone(void)
 {
-	//if (m_enable)
-	{
-		m_layer->SubPassDone(this);
-	}
+	m_layer->SubPassDone(this);
 }
 
-/*
-void HeighmapSubPass::Enable(void)
+void HeighmapSubPass::SubPassAborted(void)
 {
-	m_enable = true;
+	m_layer->SubPassAborted(this);
 }
-
-void HeighmapSubPass::Disable(void)
-{
-	m_enable = false;
-}
-*/
 
 DrawSpace::Core::Texture* HeighmapSubPass::GetHMTexture(void) const
 {

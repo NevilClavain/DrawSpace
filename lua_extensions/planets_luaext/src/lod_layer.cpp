@@ -139,7 +139,8 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
 
     m_heightmap_source_patches[current_hm] = p_patch;
 
-    p_patch->SetBusySubpass(true, "HeighmapSubPass for purpose : " + std::to_string((int)p_purpose));
+    //p_patch->SetBusySubpass(true, "HeighmapSubPass for purpose : " + std::to_string((int)p_purpose));
+    p_patch->AddRelatedSubpasses(current_hm);
 
     _DSDEBUG(planetlayer_logger, 
         dsstring("layer " ) + std::to_string((int)this) +
@@ -171,9 +172,9 @@ void Layer::Compute(void)
         {
             if (m_current_patch && m_current_lod == 0 && m_current_patch->GetOrientation() == m_body->GetCurrentFace())
             {               
-                auto heightmap_source_patche{ m_current_patch };
+                auto heightmap_source_patch{ m_current_patch };
 
-                generate_heightmap(heightmap_source_patche, HeighmapSubPass::Purpose::FOR_FOLIAGE);                
+                generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);                
             }
         }
                        
@@ -187,17 +188,17 @@ void Layer::Compute(void)
                 
                 // collisions : adjust hm source
 
-                auto heightmap_source_patche{ m_current_patch };
+                auto heightmap_source_patch{ m_current_patch };
                 for (int i = 0; i < cst::HeightMapRelativeLOD; i++)
                 {
-                    if (nullptr == heightmap_source_patche->GetParent())
+                    if (nullptr == heightmap_source_patch->GetParent())
                     {
                         break;
                     }
-                    heightmap_source_patche = heightmap_source_patche->GetParent();
+                    heightmap_source_patch = heightmap_source_patch->GetParent();
                 }
 
-                generate_heightmap(heightmap_source_patche, HeighmapSubPass::Purpose::FOR_COLLISIONS);               
+                generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_COLLISIONS);               
             }
         }
     }
@@ -333,20 +334,21 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     p_subpass->GetHMTexture()->CopyTextureContent();
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
 
-    auto heightmap_source_patche{ m_heightmap_source_patches.at(p_subpass) };
+    auto heightmap_source_patch{ m_heightmap_source_patches.at(p_subpass) };
 
-    heightmap_source_patche->SetBusySubpass(false, "");
+    //heightmap_source_patch->SetBusySubpass(false, "");
+    heightmap_source_patch->RemoveRelatedSubpasses(p_subpass);
 
     _DSDEBUG(planetlayer_logger,
         dsstring("layer ") + std::to_string((int)this) +
-        dsstring(" patch = ") + std::to_string((int)heightmap_source_patche) +
+        dsstring(" patch = ") + std::to_string((int)heightmap_source_patch) +
         dsstring(" hm subpass = ") + std::to_string((int)p_subpass) +
         dsstring(" hm purpose = ") + std::to_string((int)p_subpass->GetPurpose())
     );
 
-    if (heightmap_source_patche->HasHeightMap())
+    if (heightmap_source_patch->HasHeightMap())
     {
-        auto old_buffer{ heightmap_source_patche->GetHeightMap() };
+        auto old_buffer{ heightmap_source_patch->GetHeightMap() };
         _DRAWSPACE_DELETE_N_(old_buffer);
     }
 
@@ -354,11 +356,11 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
     memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
 
-    heightmap_source_patche->SetHeightMap(patch_hm_buffer);
+    heightmap_source_patch->SetHeightMap(patch_hm_buffer);
 
     Meshe final_meshe;
 
-    build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), heightmap_source_patche, final_meshe);
+    build_meshe(heightmap, *(LOD::Body::GetPatcheMeshe()), heightmap_source_patch, final_meshe);
     m_hm_meshe = final_meshe;
 
     for (auto& e : m_collision_meshe_creation_handler)
@@ -377,6 +379,12 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     _DRAWSPACE_DELETE_(p_subpass);
     
     m_collisions_active = true;
+}
+
+void Layer::SubPassAborted(LOD::HeighmapSubPass* p_subpass)
+{
+    m_heightmap_source_patches.erase(p_subpass);
+    _DRAWSPACE_DELETE_(p_subpass);
 }
 
 void Layer::ResetBody(void)

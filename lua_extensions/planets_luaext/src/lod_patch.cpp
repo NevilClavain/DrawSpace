@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "lod_patch.h"
+#include "lod_heightmapsubpass.h"
 #include "csts.h"
 #include "lod_drawing.h"
 #include "lod_config.h"
@@ -30,6 +31,7 @@
 #include "plugin.h"
 #include "maths.h"
 #include "exceptions.h"
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -188,8 +190,9 @@ Patch::~Patch( void )
         _DRAWSPACE_DELETE_N_(m_heightmap);
     }
 
-    if (m_busy_in_subpass)
-    {        
+    for (auto e : m_related_subpasses)
+    {
+        e->RequestAbortion();
     }
 }
 
@@ -723,6 +726,24 @@ void Patch::SubPassDone( void )
     }
 }
 
+void Patch::SubPassAborted(void)
+{
+    m_subpass_entry_infos_valid = false;
+}
+
+void Patch::AddRelatedSubpasses(HeighmapSubPass* p_subpass)
+{
+    m_related_subpasses.insert(p_subpass);
+}
+
+void Patch::RemoveRelatedSubpasses(HeighmapSubPass* p_subpass)
+{
+    if (m_related_subpasses.count(p_subpass))
+    {
+        m_related_subpasses.erase(p_subpass);
+    }
+}
+
 void Patch::SetHeightMap(float* p_hm)
 {
     m_heightmap = p_hm;
@@ -753,11 +774,6 @@ dsstring Patch::DumpInfos(void) const
     return infos;
 }
 
-void Patch::SetBusySubpass(bool p_state, const dsstring& p_reason)
-{
-    m_busy_in_subpass = p_state;
-    m_busy_in_subpass_reason = p_reason;
-}
 
 void Patch::recurs_update_texture_referent( Patch* p_texture_referent )
 {

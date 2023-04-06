@@ -84,3 +84,13 @@ bool SubPass::GetTimerReadyFlag( void ) const
 {
     return m_timer_ready_flag;
 }
+
+void SubPass::RequestAbortion(void)
+{
+    m_request_for_abort = true;
+}
+
+bool SubPass::IsRequestedForAbortion(void) const
+{
+    return m_request_for_abort;
+}

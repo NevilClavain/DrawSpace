@@ -49,6 +49,7 @@ public:
 
     void                        DrawSubPass(void);
     void                        SubPassDone(void);
+    void                        SubPassAborted(void);
 
     //void                        Enable(void);
     //void                        Disable(void);

@@ -64,6 +64,8 @@ protected:
     DrawSpace::IntermediatePass*                m_subpass;
     bool                                        m_timer_ready_flag;
 
+    bool                                        m_request_for_abort{ false };
+
     static void remove_entry_from_queue( const EntryInfos& p_entryInfos );
 
 public:
@@ -73,12 +75,17 @@ public:
 
     virtual void                                DrawSubPass( void );
     virtual void                                SubPassDone( void ) = 0;
+    virtual void                                SubPassAborted( void ) = 0;
 
     DrawSpace::Core::RenderingNode*             GetNode( void ) const;
     DrawSpace::IntermediatePass*                GetPass( void ) const;
 
     void                                        SetTimerReadyFlag( bool p_flag );
     bool                                        GetTimerReadyFlag( void ) const;
+
+    void                                        RequestAbortion(void);
+
+    bool                                        IsRequestedForAbortion(void) const;
 
 };
 }

@@ -33,6 +33,9 @@ namespace LOD
 {
 struct Config;
 
+// fwd decl
+class HeighmapSubPass;
+
 class Patch : public SubPass
 {
 public:
@@ -97,8 +100,7 @@ protected:
     int                                     m_layer_index;
 
 
-    bool                                    m_busy_in_subpass{ false };
-    dsstring                                m_busy_in_subpass_reason;
+    std::set<HeighmapSubPass*>              m_related_subpasses; // list of subpasses working with this patch
 
     /////////////////////////////////////////////////////////////////////////////////////
 
@@ -133,10 +135,14 @@ public:
 
     void                                DestroyColorTexture(void);
 
+    void                                AddRelatedSubpasses(HeighmapSubPass* p_subpass);
+    void                                RemoveRelatedSubpasses(HeighmapSubPass* p_subpass);
+
 
     Patch*                              GetParent(void);
 
     void                                SubPassDone( void );
+    void                                SubPassAborted(void);
 
     void                                SetHeightMap(float* p_hm);
     bool                                HasHeightMap(void);
@@ -145,8 +151,6 @@ public:
     int                                 GetLayerIndex(void) const;
 
     dsstring                            DumpInfos(void) const;
-
-    void                                SetBusySubpass(bool p_state, const dsstring& p_reason);
 
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
 

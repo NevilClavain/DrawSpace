@@ -1330,18 +1330,25 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
 
     if (m_singleshot_subpasses_stack.size() > 0)
     {
-        LOD::SubPass* sp = m_singleshot_subpasses_stack.back();
-        if (sp->GetTimerReadyFlag())
+        const auto sp{ m_singleshot_subpasses_stack.back() };
+        if (sp->IsRequestedForAbortion())
         {
-            m_singleshot_subpasses_stack.pop_back();
+            sp->SubPassAborted();
+        }
+        else
+        {
+            if (sp->GetTimerReadyFlag())
+            {
+                m_singleshot_subpasses_stack.pop_back();
 
-            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };            
-            rendering_queue->UpdateOutputQueueNoOpt();
-            rendering_queue->FlipOutputQueues();
-            rendering_queue->DeclareReady();
-            
-            sp->DrawSubPass();
-            sp->SubPassDone();
+                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+                rendering_queue->UpdateOutputQueueNoOpt();
+                rendering_queue->FlipOutputQueues();
+                rendering_queue->DeclareReady();
+
+                sp->DrawSubPass();
+                sp->SubPassDone();
+            }
         }
     }
 
@@ -1398,14 +1405,22 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
 
             for (auto& e : singleshot_subpasses)
             {
-                LOD::SubPass* sp = e;
-                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+                const auto sp{ e };
 
-                rendering_queue->FlipOutputQueues();
-                rendering_queue->DeclareReady();
+                if (sp->IsRequestedForAbortion())
+                {
+                    sp->SubPassAborted();
+                }
+                else
+                {
+                    RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
 
-                sp->DrawSubPass();
-                sp->SubPassDone();
+                    rendering_queue->FlipOutputQueues();
+                    rendering_queue->DeclareReady();
+
+                    sp->DrawSubPass();
+                    sp->SubPassDone();
+                }
             }
 
             UpdateQueueTask* task{ static_cast<UpdateQueueTask*>(p_step.GetTask()) };
@@ -1423,12 +1438,14 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         runner_system.RegisterSequence(singleshot_subpasses_sequence_id, singleshot_subpasses_sequence);
     }
 
+    /*
     for (size_t i = 0; i < m_permanent_subpasses.size(); i++)
     {
         LOD::SubPass* sp{ m_permanent_subpasses[i] };
         sp->DrawSubPass();
         sp->SubPassDone();
     }
+    */
 }
 
 void PlanetsRenderingAspectImpl::prepare_permanent_subpasses(void)
