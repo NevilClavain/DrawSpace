@@ -64,7 +64,7 @@ m_purpose(p_purpose)
 	const auto handler{ p_owner->GetSubPassCreationHandler() };	
 	if (handler)
 	{
-		(*handler)(this, LOD::SubPass::IMMEDIATE_SINGLE_SUBPASS);
+		(*handler)(this, LOD::SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS);
 
 		m_heightmap_texture = m_heightmap_pass->GetTargetTexture();
 		m_heightmap_content = m_heightmap_texture->GetTextureContentPtr();

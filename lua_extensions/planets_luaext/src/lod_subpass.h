@@ -37,11 +37,10 @@ public:
     using singleshot_subpasses          = std::list<SubPass*>;
     using permanent_subpasses           = std::vector<SubPass*>;
 
-    using Destination = enum
+    enum class Destination
     {
         DELAYED_SINGLE_SUBPASS      = 0,
-        IMMEDIATE_SINGLE_SUBPASS    = 1,
-        PERMANENT_SUBPASS           = 2    
+        IMMEDIATE_SINGLE_SUBPASS    = 1
     };
 
     using EntryInfos = struct
@@ -50,11 +49,9 @@ public:
 
         singleshot_subpasses_stack*             singleshot_subpasses_stack;
         singleshot_subpasses*                   singleshot_subpasses;
-        permanent_subpasses*                    permanent_subpasses;
 
         singleshot_subpasses_stack::iterator    singleshot_subpasses_stack_position;
         singleshot_subpasses::iterator          singleshot_subpasses_position;
-        permanent_subpasses::iterator           permanent_subpasses_position;
 
     };
 

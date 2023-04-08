@@ -141,11 +141,11 @@ m_layer_index( p_layer_index )
     {
         if( m_lod_level == m_nbLODRanges - 1)
         {
-            prepare_data_texture( m_subpasscreation_handler, SubPass::IMMEDIATE_SINGLE_SUBPASS, p_layer_index );
+            prepare_data_texture( m_subpasscreation_handler, SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS, p_layer_index );
         }
         else if( m_lod_level >= m_nbLODRanges - 8 )
         {
-            prepare_data_texture( m_subpasscreation_handler, SubPass::DELAYED_SINGLE_SUBPASS, p_layer_index );
+            prepare_data_texture( m_subpasscreation_handler, SubPass::Destination::DELAYED_SINGLE_SUBPASS, p_layer_index );
         }
     }
 

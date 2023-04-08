@@ -136,9 +136,6 @@ protected:
 
     LOD::SubPass::singleshot_subpasses_stack                        m_singleshot_subpasses_stack;
     LOD::SubPass::singleshot_subpasses                              m_singleshot_subpasses;
-    LOD::SubPass::permanent_subpasses                               m_permanent_subpasses;
-
-    std::vector<LOD::SubPass*>                                      m_m_permanent_subpasses_to_prepare;
 
     std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
 
@@ -216,8 +213,6 @@ protected:
     void                                        details_control_from_viewer_alt(void);
     void                                        flatclouds_control_from_viewer_alt(void);
     void                                        oceans_control_from_viewer_alt(void);
-
-    void                                        prepare_permanent_subpasses(void);
 
     void                                        setup_collisions_aspect(void);
     void                                        release_collisions_aspect(void);

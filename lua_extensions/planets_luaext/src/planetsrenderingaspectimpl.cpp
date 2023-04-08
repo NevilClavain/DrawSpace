@@ -399,9 +399,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     if (m_owner->GetComponent<bool>("resources_ready")->getPurpose())
     {
-        // we can prepare permanent sub passes (UpdateOutputQueueNoOpt, FlipOutputQueues, DeclareReady) only if all resources has been loaded
-        prepare_permanent_subpasses();
-
         draw_sub_passes();
     }
     
@@ -1437,28 +1434,6 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         singleshot_subpasses_sequence.SetCurrentStep(dsstring("singleshot_subpasses_sequence_step"));
         runner_system.RegisterSequence(singleshot_subpasses_sequence_id, singleshot_subpasses_sequence);
     }
-
-    /*
-    for (size_t i = 0; i < m_permanent_subpasses.size(); i++)
-    {
-        LOD::SubPass* sp{ m_permanent_subpasses[i] };
-        sp->DrawSubPass();
-        sp->SubPassDone();
-    }
-    */
-}
-
-void PlanetsRenderingAspectImpl::prepare_permanent_subpasses(void)
-{
-    for (auto& e : m_m_permanent_subpasses_to_prepare)
-    {
-        LOD::SubPass* sp = e;
-
-        sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
-        sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
-        sp->GetPass()->GetRenderingQueue()->DeclareReady();
-    }
-    m_m_permanent_subpasses_to_prepare.clear();
 }
 
 void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent)
@@ -1505,14 +1480,8 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
     node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
     // on ajoute le node a la queue directement ici
     p_pass->GetPass()->GetRenderingQueue()->Add(node);
-
-    
-    if (LOD::SubPass::PERMANENT_SUBPASS == p_dest)
-    {        
-        m_m_permanent_subpasses_to_prepare.push_back(p_pass);
-    }
-    
-    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+       
+    const auto resources_aspect{ m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
@@ -1522,32 +1491,26 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
     
     ei.singleshot_subpasses_stack = &m_singleshot_subpasses_stack;
     ei.singleshot_subpasses = &m_singleshot_subpasses;
-    ei.permanent_subpasses = &m_permanent_subpasses;
 
     switch (p_dest)
     {
-        case LOD::SubPass::DELAYED_SINGLE_SUBPASS:
+        case LOD::SubPass::Destination::DELAYED_SINGLE_SUBPASS:
             m_singleshot_subpasses_stack.push_front(p_pass);
             ei.singleshot_subpasses_stack_position = m_singleshot_subpasses_stack.begin();
             p_pass->SetTimerReadyFlag( false );
             break;
 
-        case LOD::SubPass::IMMEDIATE_SINGLE_SUBPASS:
+        case LOD::SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS:
             m_singleshot_subpasses.push_back(p_pass);
             ei.singleshot_subpasses_position = m_singleshot_subpasses.end();
             --ei.singleshot_subpasses_position;
-            break;
-
-        case LOD::SubPass::PERMANENT_SUBPASS:
-            m_permanent_subpasses.push_back(p_pass);
-            ei.permanent_subpasses_position = m_permanent_subpasses.end() - 1;
             break;
 
         default:
             _DSEXCEPTION("unknow destination for subpass");
             break;
     }
-    ei.queue_id = p_dest;
+    ei.queue_id = static_cast<int>(p_dest);
     
     return ei;
 }
