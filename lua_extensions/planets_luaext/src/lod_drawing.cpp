@@ -85,18 +85,6 @@ FaceDrawingNode::~FaceDrawingNode( void )
 {
 }
 
-/*
-void FaceDrawingNode::EnableZBuffer(bool p_zbuffer)
-{
-    m_zbuffer_on = p_zbuffer;
-}
-
-void FaceDrawingNode::ForceCulling(const dsstring& p_culling)
-{
-    m_force_culling_arg = p_culling;
-}
-*/
-
 void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
     m_display_list = p_list;
