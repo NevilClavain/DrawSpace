@@ -493,6 +493,7 @@ m_renderer( p_renderer )
 
 void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {    
+    /*
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
     {
@@ -500,17 +501,20 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
         if (current_patch)
         {                      
             draw_foliages_batch_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
+        }
+    }
+    */
 
-            /*
-            for (int i = 0; i < 8; i++)
-            {
-                const auto neighbour_patch{ static_cast<QuadtreeNode<Patch>*>( current_patch->GetNeighbour(i) ) };
-                if (neighbour_patch)
-                {
-                    draw_foliages_batch_on_patch(neighbour_patch->GetContent(), p_ray, p_world, p_view, p_proj);
-                }
-            }
-            */
+    const auto current_face{ p_body->GetCurrentFace() };
+    if (current_face > -1)
+    {
+
+        std::vector<Patch*> dl;
+        p_body->GetFace(p_body->GetCurrentFace())->GetDisplayList(dl);
+
+        for (auto e : dl)
+        {
+            draw_foliages_batch_on_patch(e, p_ray, p_world, p_view, p_proj);
         }
     }
 }
@@ -527,7 +531,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
         std::default_random_engine rand_engine(seed);
         std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
 
-        for (int i = 0; i < 225; i++)
+        for (int i = 0; i < 200; i++)
         {
             const auto xp{ rand_source(rand_engine) };
             const auto yp{ rand_source(rand_engine) };
