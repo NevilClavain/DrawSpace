@@ -37,11 +37,11 @@ class BaseQuadtreeNode
 {
 public:
 
-	static const int    NorthWestNode   = 0;
-	static const int    NorthEastNode   = 1;
-	static const int    SouthEastNode   = 2;
-	static const int    SouthWestNode   = 3;
-	static const int    RootNode        = 4;
+	static constexpr int    NorthWestNode   = 0;
+	static constexpr int    NorthEastNode   = 1;
+	static constexpr int    SouthEastNode   = 2;
+	static constexpr int    SouthWestNode   = 3;
+	static constexpr int    RootNode        = 4;
 
 protected:
 	int                                             m_id;
@@ -56,10 +56,10 @@ public:
 	virtual ~BaseQuadtreeNode( void );
 
 	virtual void SetParent( BaseQuadtreeNode* p_parent );
-    virtual BaseQuadtreeNode* GetParent( void );
+    virtual BaseQuadtreeNode* GetParent( void ) const;
 	virtual bool HasChildren( void );
-	virtual BaseQuadtreeNode* GetChild( int p_id );
-    virtual int GetId( void );
+	virtual BaseQuadtreeNode* GetChild( int p_id ) const;
+    virtual int GetId( void ) const;
 
 	virtual void Split( void ) = 0;
 	virtual void Merge( void ) = 0;
@@ -112,7 +112,7 @@ public:
         (*m_delhandler)( this );
 	}
 
-	Base* GetContent( void )
+	Base* GetContent( void ) const
 	{
 		return m_content;
 	}

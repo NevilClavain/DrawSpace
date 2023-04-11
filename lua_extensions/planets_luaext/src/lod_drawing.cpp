@@ -531,7 +531,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
         std::default_random_engine rand_engine(seed);
         std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
 
-        for (int i = 0; i < 200; i++)
+        for (int i = 0; i < 20; i++)
         {
             const auto xp{ rand_source(rand_engine) };
             const auto yp{ rand_source(rand_engine) };
