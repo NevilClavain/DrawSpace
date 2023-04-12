@@ -492,19 +492,7 @@ m_renderer( p_renderer )
 }
 
 void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
-{    
-    /*
-    const auto current_face{ p_body->GetCurrentFace() };
-    if (current_face > -1)
-    {
-        auto current_patch{ p_body->GetFace(current_face)->GetCurrentPatch() };       
-        if (current_patch)
-        {                      
-            draw_foliages_batch_on_patch(current_patch, p_ray, p_world, p_view, p_proj);
-        }
-    }
-    */
-
+{
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
     {
