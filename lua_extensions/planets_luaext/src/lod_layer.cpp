@@ -179,7 +179,7 @@ void Layer::Compute(void)
 
                 auto parent_patch{ m_current_patch };
 
-                constexpr auto lod_limit{ 4 };
+                constexpr auto lod_limit{ 6 };
 
                 for (int i = 0; i < lod_limit; i++)
                 {
