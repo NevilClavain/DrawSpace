@@ -41,21 +41,28 @@ class Patch : public SubPass
 public:
     using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
-    static const int    NorthNeighbour      = 0;
-    static const int    SouthNeighbour      = 1;
-    static const int    WestNeighbour       = 2;
-    static const int    EastNeighbour       = 3;
-    static const int    NorthWestNeighbour  = 4;
-    static const int    NorthEastNeighbour  = 5;
-    static const int    SouthWestNeighbour  = 6;
-    static const int    SouthEastNeighbour  = 7;
+    static constexpr int    NorthNeighbour      = 0;
+    static constexpr int    SouthNeighbour      = 1;
+    static constexpr int    WestNeighbour       = 2;
+    static constexpr int    EastNeighbour       = 3;
+    static constexpr int    NorthWestNeighbour  = 4;
+    static constexpr int    NorthEastNeighbour  = 5;
+    static constexpr int    SouthWestNeighbour  = 6;
+    static constexpr int    SouthEastNeighbour  = 7;
 
-    static const int    FrontPlanetFace    = 0;
-    static const int    RearPlanetFace     = 1;
-    static const int    LeftPlanetFace     = 2;
-    static const int    RightPlanetFace    = 3;
-    static const int    TopPlanetFace      = 4;
-    static const int    BottomPlanetFace   = 5;
+    static constexpr int    FrontPlanetFace    = 0;
+    static constexpr int    RearPlanetFace     = 1;
+    static constexpr int    LeftPlanetFace     = 2;
+    static constexpr int    RightPlanetFace    = 3;
+    static constexpr int    TopPlanetFace      = 4;
+    static constexpr int    BottomPlanetFace   = 5;
+
+    using FoliagesCoordinates =
+        struct
+    {
+        dsreal x;
+        dsreal y;
+    };
 
 protected:
 
@@ -102,6 +109,8 @@ protected:
 
     std::set<HeighmapSubPass*>              m_related_subpasses; // list of subpasses working with this patch
 
+    std::vector<FoliagesCoordinates>        m_foliagesCoordinates;
+
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
@@ -139,7 +148,7 @@ public:
     void                                RemoveRelatedSubpasses(HeighmapSubPass* p_subpass);
 
 
-    Patch*                              GetParent(void);
+    Patch*                              GetParent(void) const;
 
     void                                SubPassDone( void );
     void                                SubPassAborted(void);
@@ -149,6 +158,8 @@ public:
     float*                              GetHeightMap(void) const;
 
     int                                 GetLayerIndex(void) const;
+
+    std::vector<FoliagesCoordinates>    GetFoliageCoordsList(void) const;
 
     dsstring                            DumpInfos(void) const;
 

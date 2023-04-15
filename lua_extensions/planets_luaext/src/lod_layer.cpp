@@ -179,7 +179,7 @@ void Layer::Compute(void)
 
                 auto parent_patch{ m_current_patch };
 
-                constexpr auto lod_limit{ 6 };
+                constexpr auto lod_limit{ cst::FoliageRootLODLevel };
 
                 for (int i = 0; i < lod_limit; i++)
                 {
@@ -204,25 +204,12 @@ void Layer::Compute(void)
 
                                 const auto sub_patch{ specialized_child->GetContent() };
                                 const auto patch_lod{ sub_patch->GetLodLevel() };
-
-                                /*
-                                if (patch_lod > 0)
-                                {
-                                    browse_patches(sub_patch);
-                                }
-                                else
-                                {
-                                    generate_heightmap(sub_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
-                                }
-                                */
-
+                                
                                 generate_heightmap(sub_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
-
                                 if (patch_lod > 0)
                                 {
                                     browse_patches(sub_patch);
                                 }
-
                             }
                         }
                     }

@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#include <random>
+//#include <random>
 #include "lod_drawing.h"
 #include "csts.h"
 #include "lod_binder.h"
@@ -515,16 +515,13 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 
     if (foliage_patch->HasHeightMap())
     {
-        const auto seed{ 144 };
-        std::default_random_engine rand_engine(seed);
-        std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
-
-        for (int i = 0; i < 20; i++)
+        const auto foliage_coords{ foliage_patch->GetFoliageCoordsList() };
+        if (foliage_coords.size() > 0)
         {
-            const auto xp{ rand_source(rand_engine) };
-            const auto yp{ rand_source(rand_engine) };
-
-            draw_foliage_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, xp, yp);
+            for (const auto& coords : foliage_coords)
+            {
+                draw_foliage_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, coords.x, coords.y);
+            }            
         }
     }
 }
@@ -543,8 +540,6 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, con
                     //
     const auto x_hm{ (int)((xpos + 0.5) * HeighmapSubPass::heightmapTextureSize) };
     const auto y_hm{ (int)((ypos + 0.5) * HeighmapSubPass::heightmapTextureSize) };
-
-    //const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_hm)) + (HeighmapSubPass::heightmapTextureSize - 1 - x_hm ) };
 
     const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_hm)) + x_hm };
 
@@ -779,20 +774,7 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
         if (m_current_patchs.at(face_node) != current_patch)
         {
             m_current_patchs[face_node] = current_patch;
-            
-            const auto current_patch2{ planetbody->GetFace(planetbody->GetCurrentFace())->GetCurrentPatch() };
-
-            if (current_patch2 == current_patch)
-            {
-                _DSDEBUG(planetdrawing_logger, 
-                    dsstring("current patch = ") + std::to_string((int)current_patch) +
-                    dsstring(" planetbody = ") + std::to_string((int)planetbody) +
-                    dsstring(" planetbody current face = ") + std::to_string(planetbody->GetCurrentFace()) +
-                    dsstring(" face_node = ") + std::to_string((int)face_node)
-                );
-
-                _DSDEBUG(planetdrawing_logger, current_patch->DumpInfos());
-            }                        
+                                   
         }
     }
 

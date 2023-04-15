@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include <random>
 #include "lod_patch.h"
 #include "lod_heightmapsubpass.h"
 #include "csts.h"
@@ -137,9 +138,74 @@ m_layer_index( p_layer_index )
         }       
     }
 
+    /////////////////////////////////////////////////////
+
+    if (cst::FoliageRootLODLevel == m_lod_level)
+    {
+        // generate coords list for foliage
+
+        const auto seed{ 144 };
+        std::default_random_engine rand_engine(seed);
+        std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
+
+        for (int i = 0; i < 100; i++)
+        {
+            const auto xp{ rand_source(rand_engine) };
+            const auto yp{ rand_source(rand_engine) };
+
+            m_foliagesCoordinates.push_back({ xp, yp });
+        }
+    }
+    else if (cst::FoliageRootLODLevel > m_lod_level)
+    {
+        // take some foliage coords from parent and convert in local space
+        
+        dsreal local_center_x;
+        dsreal local_center_y;
+
+        for (const auto &coord : p_parent->m_foliagesCoordinates)
+        {
+            switch (p_nodeid)
+            {
+                case BaseQuadtreeNode::NorthWestNode:
+
+                    local_center_x = -0.25;
+                    local_center_y = 0.25;
+                    break;
+
+                case BaseQuadtreeNode::NorthEastNode:
+
+                    local_center_x = 0.25;
+                    local_center_y = 0.25;
+                    break;
+
+                case BaseQuadtreeNode::SouthEastNode:
+
+                    local_center_x = 0.25;
+                    local_center_y = -0.25;
+                    break;
+
+                case BaseQuadtreeNode::SouthWestNode:
+
+                    local_center_x = -0.25;
+                    local_center_y = -0.25;
+                    break;
+            }
+
+            const FoliagesCoordinates local_coords{ (coord.x - local_center_x) / 0.5, (coord.y - local_center_y) / 0.5 };
+
+            if (-0.5 < local_coords.x && local_coords.x <= 0.5 && -0.5 < local_coords.y && local_coords.y <= 0.5)
+            {
+                m_foliagesCoordinates.push_back(local_coords);
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////
+
     if( m_enable_datatexture )
     {
-        if( m_lod_level == m_nbLODRanges - 1)
+        if( m_nbLODRanges - 1 == m_lod_level )
         {
             prepare_data_texture( m_subpasscreation_handler, SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS, p_layer_index );
         }
@@ -194,6 +260,11 @@ Patch::~Patch( void )
     {
         e->RequestAbortion();
     }
+}
+
+std::vector<Patch::FoliagesCoordinates> Patch::GetFoliageCoordsList(void) const
+{
+    return m_foliagesCoordinates;
 }
 
 int Patch::GetLayerIndex(void) const
@@ -684,7 +755,7 @@ DrawSpace::Core::Texture* Patch::GetDataTexture( void ) const
     return NULL;
 }
 
-Patch* Patch::GetParent(void)
+Patch* Patch::GetParent(void) const
 {    
     BaseQuadtreeNode* parent{ m_owner->GetParent() };    
     if (parent)

@@ -53,7 +53,7 @@ namespace cst
     static constexpr int        HeightMapRelativeLOD        = 4;
 
     // foliage
-    static constexpr int        FoliagePlants0Layer         = 0;
+    static constexpr int        FoliageRootLODLevel         = 2;
 
 
 }
