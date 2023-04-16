@@ -125,21 +125,21 @@ void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
     m_body->UpdateHotPoint(p_vector);
 }
 
-void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpose)
+void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass<Layer>::Purpose p_purpose)
 {
     // launch hm generation
 
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(p_patch);
 
-    LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
+    const auto current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass<Layer>, HeighmapSubPass<Layer>(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
 
     const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
     node->SetDisplayList(display_list);
 
     m_heightmap_source_patches[current_hm] = p_patch;
 
-    //p_patch->SetBusySubpass(true, "HeighmapSubPass for purpose : " + std::to_string((int)p_purpose));
+   
     p_patch->AddRelatedSubpasses(current_hm);
 
     _DSDEBUG(planetlayer_logger, 
@@ -172,10 +172,10 @@ void Layer::Compute(void)
         {
             if (m_current_patch && m_current_lod == 0 && m_current_patch->GetOrientation() == m_body->GetCurrentFace())
             {               
-                /*
-                auto heightmap_source_patch{ m_current_patch };
-                generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
-                */
+                
+                //auto heightmap_source_patch{ m_current_patch };
+                //generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
+                
 
                 auto parent_patch{ m_current_patch };
 
@@ -205,7 +205,7 @@ void Layer::Compute(void)
                                 const auto sub_patch{ specialized_child->GetContent() };
                                 const auto patch_lod{ sub_patch->GetLodLevel() };
                                 
-                                generate_heightmap(sub_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
+                                generate_heightmap(sub_patch, HeighmapSubPass<Layer>::Purpose::FOR_FOLIAGE);
                                 if (patch_lod > 0)
                                 {
                                     browse_patches(sub_patch);
@@ -218,7 +218,7 @@ void Layer::Compute(void)
                 browse_patches(parent_patch);
             }
         }
-                       
+                     
         ///// generate new heightmap for collisions
 
         if (m_collisions )
@@ -239,7 +239,7 @@ void Layer::Compute(void)
                     heightmap_source_patch = heightmap_source_patch->GetParent();
                 }
 
-                generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_COLLISIONS);               
+                generate_heightmap(heightmap_source_patch, HeighmapSubPass<Layer>::Purpose::FOR_COLLISIONS);               
             }
         }
     }
@@ -275,9 +275,9 @@ void Layer::build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe
             const auto index { (cst::patchResolution * y) + x };
             p_patchmeshe.GetVertex(index, vertex_in);
 
-            const auto x_input { (x * (HeighmapSubPass::heightmapTextureSize - 1)) / (cst::patchResolution - 1) };
-            const auto y_input { (y * (HeighmapSubPass::heightmapTextureSize - 1)) / (cst::patchResolution - 1) };
-            const auto index_hm { (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_input)) + x_input };
+            const auto x_input { (x * cst::heightmapTextureSize - 1) / (cst::patchResolution - 1) };
+            const auto y_input { (y * cst::heightmapTextureSize - 1) / (cst::patchResolution - 1) };
+            const auto index_hm { (cst::heightmapTextureSize * (cst::heightmapTextureSize - 1 - y_input)) + x_input };
            
             const auto alt { p_heightmap[index_hm] };
 
@@ -370,7 +370,7 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     return Maths::Clamp(m_currentpatch_min_height, m_currentpatch_max_height, a1);
 }
 
-void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
+void Layer::SubPassDone(LOD::HeighmapSubPass<Layer>* p_subpass)
 {
     p_subpass->GetHMTexture()->CopyTextureContent();
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
@@ -393,7 +393,7 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         _DRAWSPACE_DELETE_N_(old_buffer);
     }
 
-    const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
+    const auto hm_buffer_size{ cst::heightmapTextureSize * cst::heightmapTextureSize };
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
     memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
 
@@ -409,7 +409,7 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
         (*e)(m_hm_meshe);
     }
 
-    if (HeighmapSubPass::Purpose::FOR_COLLISIONS == p_subpass->GetPurpose())
+    if (HeighmapSubPass<Layer>::Purpose::FOR_COLLISIONS == p_subpass->GetPurpose())
     {
         const auto shape_component_name{ "shape_" + std::to_string((long)this) };
         (*m_collision_meshe_update_handler)(shape_component_name, m_meshe_collision_shape, true);
@@ -422,7 +422,7 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     m_collisions_active = true;
 }
 
-void Layer::SubPassAborted(LOD::HeighmapSubPass* p_subpass)
+void Layer::SubPassAborted(LOD::HeighmapSubPass<Layer>* p_subpass)
 {
     m_heightmap_source_patches.erase(p_subpass);
     _DRAWSPACE_DELETE_(p_subpass);

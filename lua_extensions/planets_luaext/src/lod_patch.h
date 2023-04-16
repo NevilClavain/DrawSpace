@@ -34,7 +34,7 @@ namespace LOD
 struct Config;
 
 // fwd decl
-class HeighmapSubPass;
+//class HeighmapSubPass;
 
 class Patch : public SubPass
 {
@@ -107,7 +107,8 @@ protected:
     int                                     m_layer_index;
 
 
-    std::set<HeighmapSubPass*>              m_related_subpasses; // list of subpasses working with this patch
+    //std::set<HeighmapSubPass*>              m_related_subpasses; // list of subpasses working with this patch
+    std::set<SubPass*>                      m_related_subpasses; // list of subpasses working with this patch
 
     std::vector<FoliagesCoordinates>        m_foliagesCoordinates;
 
@@ -144,8 +145,8 @@ public:
 
     void                                DestroyColorTexture(void);
 
-    void                                AddRelatedSubpasses(HeighmapSubPass* p_subpass);
-    void                                RemoveRelatedSubpasses(HeighmapSubPass* p_subpass);
+    void                                AddRelatedSubpasses(SubPass* p_subpass);
+    void                                RemoveRelatedSubpasses(SubPass* p_subpass);
 
 
     Patch*                              GetParent(void) const;
