@@ -370,7 +370,7 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     return Maths::Clamp(m_currentpatch_min_height, m_currentpatch_max_height, a1);
 }
 
-void Layer::HMSubPassDone(LOD::HeighmapSubPass<Layer>* p_subpass)
+void Layer::SubPassDone(LOD::HeighmapSubPass<Layer>* p_subpass)
 {
     p_subpass->GetHMTexture()->CopyTextureContent();
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
@@ -422,7 +422,7 @@ void Layer::HMSubPassDone(LOD::HeighmapSubPass<Layer>* p_subpass)
     m_collisions_active = true;
 }
 
-void Layer::HMSubPassAborted(LOD::HeighmapSubPass<Layer>* p_subpass)
+void Layer::SubPassAborted(LOD::HeighmapSubPass<Layer>* p_subpass)
 {
     m_heightmap_source_patches.erase(p_subpass);
     _DRAWSPACE_DELETE_(p_subpass);
