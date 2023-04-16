@@ -28,12 +28,15 @@
 namespace LOD
 {
 // fwd declaration
-class Layer;
 struct Config;
 
 class HeighmapSubPass : public LOD::SubPass
 {
 public:
+
+    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
+    using SubPassDoneHandler = DrawSpace::Core::BaseCallback<void, HeighmapSubPass*>;
+    using SubPassAbortedHandler = DrawSpace::Core::BaseCallback<void, HeighmapSubPass*>;
 
     enum class Purpose
     {
@@ -43,18 +46,17 @@ public:
 
 
     //static constexpr int heightmapTextureSize = 1024;
-
     static constexpr int heightmapTextureSize = 64;
 
-    HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose);
+    HeighmapSubPass(SubPassCreationHandler* p_subpasscreation_handler, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose);
     virtual ~HeighmapSubPass(void);
 
     void                        DrawSubPass(void);
     void                        SubPassDone(void);
     void                        SubPassAborted(void);
 
-    //void                        Enable(void);
-    //void                        Disable(void);
+    void                        RegisterSubpassDoneHandler(SubPassDoneHandler* p_handler);
+    void                        RegisterSubpassAbortedHandler(SubPassDoneHandler* p_handler);
 
     DrawSpace::Core::Texture*   GetHMTexture(void) const;
     void*                       GetHMTextureContent(void) const;
@@ -64,10 +66,11 @@ public:
 
 private:
 
-    //bool                            m_enable{ true };
-    Layer*                          m_layer{ nullptr };
     DrawSpace::Core::Texture*       m_heightmap_texture{ nullptr };
     void*                           m_heightmap_content{ nullptr };
+
+    SubPassDoneHandler*             m_subpassdone_handler{ nullptr };
+    SubPassAbortedHandler*          m_subpassaborted_handler{ nullptr };
 
     DrawSpace::IntermediatePass*    m_heightmap_pass{ nullptr };
 

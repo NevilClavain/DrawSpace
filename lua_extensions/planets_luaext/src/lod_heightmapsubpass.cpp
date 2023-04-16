@@ -22,7 +22,6 @@
 */
 /* -*-LIC_END-*- */
 
-#include "lod_layer.h"
 #include "lod_heightmapsubpass.h"
 #include "lod_config.h"
 #include "lod_drawing.h"
@@ -31,13 +30,14 @@
 #include "renderer.h"
 #include "plugin.h"
 
+#include "exceptions.h"
+
 using namespace DrawSpace;
 using namespace LOD;
 using namespace DrawSpace::Core;
 
 
-HeighmapSubPass::HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose) :
-m_layer(p_owner),
+HeighmapSubPass::HeighmapSubPass(SubPassCreationHandler* p_subpasscreation_handler, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose) :
 m_purpose(p_purpose)
 {
 	m_heightmap_pass = create_heightmap_pass();
@@ -61,7 +61,8 @@ m_purpose(p_purpose)
 	m_subpass = m_heightmap_pass;
 	m_subpass_node = node;
 
-	const auto handler{ p_owner->GetSubPassCreationHandler() };	
+	//const auto handler{ p_owner->GetSubPassCreationHandler() };
+	const auto handler{ p_subpasscreation_handler };
 	if (handler)
 	{
 		(*handler)(this, LOD::SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS);
@@ -82,6 +83,16 @@ HeighmapSubPass::~HeighmapSubPass(void)
 	_DRAWSPACE_DELETE_(m_heightmap_pass);
 }
 
+void HeighmapSubPass::RegisterSubpassDoneHandler(SubPassDoneHandler* p_handler)
+{
+	m_subpassdone_handler = p_handler;
+}
+
+void HeighmapSubPass::RegisterSubpassAbortedHandler(SubPassDoneHandler* p_handler)
+{
+	m_subpassaborted_handler = p_handler;
+}
+
 void HeighmapSubPass::DrawSubPass(void)
 {
 	SubPass::DrawSubPass();
@@ -89,12 +100,18 @@ void HeighmapSubPass::DrawSubPass(void)
 
 void HeighmapSubPass::SubPassDone(void)
 {
-	m_layer->SubPassDone(this);
+	if (m_subpassdone_handler)
+	{
+		(*m_subpassdone_handler)(this);
+	}
 }
 
 void HeighmapSubPass::SubPassAborted(void)
 {
-	m_layer->SubPassAborted(this);
+	if (m_subpassaborted_handler)
+	{
+		(*m_subpassaborted_handler)(this);
+	}
 }
 
 DrawSpace::Core::Texture* HeighmapSubPass::GetHMTexture(void) const

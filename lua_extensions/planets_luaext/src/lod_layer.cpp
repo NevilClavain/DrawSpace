@@ -42,7 +42,8 @@ using namespace LOD;
 DrawSpace::Logger::Sink planetlayer_logger("PlanetLayer", DrawSpace::Logger::Configuration::GetInstance());
 
 Layer::Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body, 
-                Layer::SubPassCreationHandler* p_subpass_creation_handler, 
+                //Layer::SubPassCreationHandler* p_subpass_creation_handler, 
+                HeighmapSubPass::SubPassCreationHandler* p_subpass_creation_handler,
                 CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
                 int p_index, bool p_freecamera) :
 m_entitynodegraph(p_eg),
@@ -53,7 +54,9 @@ m_collision_meshe_update_handler(p_collision_meshe_update_handler),
 m_hot(false),
 m_current_lod(-1),
 m_meshe_collision_shape(m_hm_meshe),
-m_layer_index(p_index)
+m_layer_index(p_index),
+m_subpassDoneCb(this, &Layer::on_subpassdone),
+m_subpassAbortedCb(this, &Layer::on_subpassaborted)
 {   
     if (m_config->m_layers_descr[p_index].enable_collisions && !p_freecamera)
     {
@@ -94,10 +97,12 @@ void Layer::RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHa
     m_collision_meshe_creation_handler.push_back(p_handler);
 }
 
+/*
 Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
 {
     return m_subpass_creation_handler;
 }
+*/
 
 int Layer::GetCurrentLOD(void) const
 {
@@ -132,7 +137,11 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(p_patch);
 
-    LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
+    //LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
+    LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(m_subpass_creation_handler, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
+
+    current_hm->RegisterSubpassDoneHandler(&m_subpassDoneCb);
+    current_hm->RegisterSubpassAbortedHandler(&m_subpassAbortedCb);
 
     const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
     node->SetDisplayList(display_list);
@@ -172,10 +181,6 @@ void Layer::Compute(void)
         {
             if (m_current_patch && m_current_lod == 0 && m_current_patch->GetOrientation() == m_body->GetCurrentFace())
             {               
-                /*
-                auto heightmap_source_patch{ m_current_patch };
-                generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
-                */
 
                 auto parent_patch{ m_current_patch };
 
@@ -370,7 +375,7 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
     return Maths::Clamp(m_currentpatch_min_height, m_currentpatch_max_height, a1);
 }
 
-void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
+void Layer::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
 {
     p_subpass->GetHMTexture()->CopyTextureContent();
     const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
@@ -416,17 +421,18 @@ void Layer::SubPassDone(LOD::HeighmapSubPass* p_subpass)
     }
 
     m_heightmap_source_patches.erase(p_subpass);
-    
+
     _DRAWSPACE_DELETE_(p_subpass);
-    
+
     m_collisions_active = true;
 }
 
-void Layer::SubPassAborted(LOD::HeighmapSubPass* p_subpass)
+void Layer::on_subpassaborted(LOD::HeighmapSubPass* p_subpass)
 {
     m_heightmap_source_patches.erase(p_subpass);
     _DRAWSPACE_DELETE_(p_subpass);
 }
+
 
 void Layer::ResetBody(void)
 {
