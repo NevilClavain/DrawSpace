@@ -102,12 +102,12 @@ public:
 
     inline void SubPassDone(void)
     {
-        m_layer->SubPassDone(this);
+        m_layer->HMSubPassDone(this);
     };
 
     inline void SubPassAborted(void)
     {
-        m_layer->SubPassAborted(this);
+        m_layer->HMSubPassAborted(this);
     };
 
 

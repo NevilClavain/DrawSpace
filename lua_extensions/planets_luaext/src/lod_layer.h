@@ -116,8 +116,8 @@ public:
     void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
     void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
     void                            Compute( void );
-    void                            SubPassDone(LOD::HeighmapSubPass<Layer>* p_subpass);
-    void                            SubPassAborted(LOD::HeighmapSubPass<Layer>* p_subpass);
+    void                            HMSubPassDone(LOD::HeighmapSubPass<Layer>* p_subpass);
+    void                            HMSubPassAborted(LOD::HeighmapSubPass<Layer>* p_subpass);
     void                            ResetBody(void);
 
     void                            RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler);
