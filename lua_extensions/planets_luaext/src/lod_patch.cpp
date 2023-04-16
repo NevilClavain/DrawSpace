@@ -802,12 +802,12 @@ void Patch::SubPassAborted(void)
     m_subpass_entry_infos_valid = false;
 }
 
-void Patch::AddRelatedSubpasses(SubPass* p_subpass)
+void Patch::AddRelatedSubpasses(HeighmapSubPass* p_subpass)
 {
     m_related_subpasses.insert(p_subpass);
 }
 
-void Patch::RemoveRelatedSubpasses(SubPass* p_subpass)
+void Patch::RemoveRelatedSubpasses(HeighmapSubPass* p_subpass)
 {
     if (m_related_subpasses.count(p_subpass))
     {

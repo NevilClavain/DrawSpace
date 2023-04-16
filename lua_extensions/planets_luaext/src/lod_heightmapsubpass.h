@@ -25,19 +25,12 @@
 #pragma once
 #include "lod_subpass.h"
 
-#include "renderer.h"
-#include "plugin.h"
-#include "exceptions.h"
-
-
 namespace LOD
 {
 // fwd declaration
-//class Layer;
+class Layer;
 struct Config;
 
-
-template<typename Owner>
 class HeighmapSubPass : public LOD::SubPass
 {
 public:
@@ -48,90 +41,31 @@ public:
         FOR_FOLIAGE
     };
 
-    HeighmapSubPass(Owner* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose) :
-        m_layer(p_owner),
-        m_purpose(p_purpose)
-    {
-        m_heightmap_pass = create_heightmap_pass();
 
-        // creation/preparation du node
+    //static constexpr int heightmapTextureSize = 1024;
 
-        auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
-        const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, p_config, p_node_layer_index)) };
+    static constexpr int heightmapTextureSize = 64;
 
-        node->SetMeshe(LOD::Body::m_patch_meshe);
-        node->SetBinder(p_config->m_layers_descr[p_node_layer_index].heightmapGenerationBinder[p_orientation]);
+    HeighmapSubPass(Layer* p_owner, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose);
+    virtual ~HeighmapSubPass(void);
 
-        void* tx_data;
-        if (false == renderer->CreateTexture(m_heightmap_pass->GetTargetTexture(), &tx_data))
-        {
-            _DSEXCEPTION("failed to create subpasstarget texture in renderer");
-        }
+    void                        DrawSubPass(void);
+    void                        SubPassDone(void);
+    void                        SubPassAborted(void);
 
-        m_heightmap_pass->GetTargetTexture()->AllocTextureContent();
+    //void                        Enable(void);
+    //void                        Disable(void);
 
-        m_subpass = m_heightmap_pass;
-        m_subpass_node = node;
+    DrawSpace::Core::Texture*   GetHMTexture(void) const;
+    void*                       GetHMTextureContent(void) const;
 
-        const auto handler{ p_owner->GetSubPassCreationHandler() };
-        if (handler)
-        {
-            (*handler)(this, LOD::SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS);
-
-            m_heightmap_texture = m_heightmap_pass->GetTargetTexture();
-            m_heightmap_content = m_heightmap_texture->GetTextureContentPtr();
-        }
-    };
-
-
-    virtual ~HeighmapSubPass(void)
-    {
-        auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
-        renderer->DestroyTexture(m_subpass->GetTargetTexture()->GetRenderData());
-
-        auto node{ static_cast<FaceDrawingNode*>(m_subpass_node) };
-        _DRAWSPACE_DELETE_(node);
-
-        _DRAWSPACE_DELETE_(m_heightmap_pass);
-    };
-
-    inline void DrawSubPass(void)
-    {
-        SubPass::DrawSubPass();
-    };
-
-    inline void SubPassDone(void)
-    {
-        m_layer->SubPassDone(this);
-    };
-
-    inline void SubPassAborted(void)
-    {
-        m_layer->SubPassAborted(this);
-    };
-
-
-    inline DrawSpace::Core::Texture* GetHMTexture(void) const
-    {
-        return m_heightmap_texture;
-    };
-
-
-    inline void* GetHMTextureContent(void) const
-    {
-        return m_heightmap_content;
-    };
-
-    inline Purpose GetPurpose(void) const
-    {
-        return m_purpose;
-    };
+    inline Purpose              GetPurpose(void) const { return m_purpose; };
 
 
 private:
 
-
-    Owner*                          m_layer{ nullptr };
+    //bool                            m_enable{ true };
+    Layer*                          m_layer{ nullptr };
     DrawSpace::Core::Texture*       m_heightmap_texture{ nullptr };
     void*                           m_heightmap_content{ nullptr };
 
@@ -139,23 +73,8 @@ private:
 
     Purpose                         m_purpose;
 
-    inline DrawSpace::IntermediatePass* create_heightmap_pass(void)
-    {
-        const auto thisname{ dsstring("layer_") + std::to_string((int)this) };
-        const auto complete_name{ thisname + dsstring("_heightmap_pass") };
+    DrawSpace::IntermediatePass*    create_heightmap_pass(void);
 
-        const auto ipass{ _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name)) };
-
-        ipass->SetTargetDimsFromRenderer(false);
-        ipass->SetTargetDims(cst::heightmapTextureSize, cst::heightmapTextureSize);
-        ipass->SetRenderPurpose(Texture::RENDERPURPOSE_FLOAT32);
-        ipass->SetRenderTarget(Texture::RENDERTARGET_CPU);
-
-        ipass->Initialize();
-        ipass->GetRenderingQueue()->EnableDepthClearing(true);
-
-        return ipass;
-    }
 
 };
 }

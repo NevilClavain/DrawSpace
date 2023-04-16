@@ -55,8 +55,6 @@ namespace cst
     // foliage
     static constexpr int        FoliageRootLODLevel         = 3;
 
-    //static constexpr int heightmapTextureSize = 1024;
-    static constexpr int heightmapTextureSize = 64;
 
 }
 }

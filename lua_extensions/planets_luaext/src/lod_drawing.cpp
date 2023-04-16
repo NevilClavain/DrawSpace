@@ -538,10 +538,10 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, con
 
                     // translate to [0.0, 1.0] range for heighmap access
                     //
-    const auto x_hm{ (int)((xpos + 0.5) * cst::heightmapTextureSize) };
-    const auto y_hm{ (int)((ypos + 0.5) * cst::heightmapTextureSize) };
+    const auto x_hm{ (int)((xpos + 0.5) * HeighmapSubPass::heightmapTextureSize) };
+    const auto y_hm{ (int)((ypos + 0.5) * HeighmapSubPass::heightmapTextureSize) };
 
-    const auto index_hm{ (cst::heightmapTextureSize * (cst::heightmapTextureSize - 1 - y_hm)) + x_hm };
+    const auto index_hm{ (HeighmapSubPass::heightmapTextureSize * (HeighmapSubPass::heightmapTextureSize - 1 - y_hm)) + x_hm };
 
     const auto hm_height{ hm[index_hm] };
 
