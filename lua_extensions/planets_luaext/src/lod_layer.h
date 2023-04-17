@@ -64,9 +64,7 @@ private:
 
     Config*                                                     m_config{ nullptr };
     Body*                                                       m_body{ nullptr };
-
-
-    //HeighmapSubPass::SubPassCreationHandler*                    m_subpass_creation_handler{ nullptr };
+    
     SubPass::SubPassCreationHandler*                            m_subpass_creation_handler{ nullptr };
 
     CollisionMesheUpdateHandler*                                m_collision_meshe_update_handler{ nullptr };

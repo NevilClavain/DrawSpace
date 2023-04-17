@@ -64,7 +64,11 @@ public:
         dsreal y;
     };
 
-protected:
+private:
+
+    using SubpassDoneCb         = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
+    using SubpassAbortedCb      = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
+
 
     Patch*                                      m_parent;
     Config*                                     m_config;
@@ -113,8 +117,9 @@ protected:
 
     std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
 
-    
-
+    SubpassDoneCb                               m_subpassDoneCb;
+    SubpassAbortedCb                            m_subpassAbortedCb;
+   
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
