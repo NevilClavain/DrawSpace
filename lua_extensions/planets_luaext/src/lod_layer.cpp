@@ -42,8 +42,7 @@ using namespace LOD;
 DrawSpace::Logger::Sink planetlayer_logger("PlanetLayer", DrawSpace::Logger::Configuration::GetInstance());
 
 Layer::Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body, 
-                //Layer::SubPassCreationHandler* p_subpass_creation_handler, 
-                HeighmapSubPass::SubPassCreationHandler* p_subpass_creation_handler,
+                SubPass::SubPassCreationHandler* p_subpass_creation_handler,
                 CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
                 int p_index, bool p_freecamera) :
 m_entitynodegraph(p_eg),
@@ -97,12 +96,6 @@ void Layer::RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHa
     m_collision_meshe_creation_handler.push_back(p_handler);
 }
 
-/*
-Layer::SubPassCreationHandler* Layer::GetSubPassCreationHandler(void) const
-{
-    return m_subpass_creation_handler;
-}
-*/
 
 int Layer::GetCurrentLOD(void) const
 {
@@ -137,7 +130,6 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(p_patch);
 
-    //LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(this, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
     LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(m_subpass_creation_handler, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
 
     current_hm->RegisterSubpassDoneHandler(&m_subpassDoneCb);
@@ -223,7 +215,7 @@ void Layer::Compute(void)
                 browse_patches(parent_patch);
             }
         }
-                       
+                  
         ///// generate new heightmap for collisions
 
         if (m_collisions )

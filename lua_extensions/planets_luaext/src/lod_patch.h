@@ -39,7 +39,7 @@ class HeighmapSubPass;
 class Patch : public SubPass
 {
 public:
-    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
+    //using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
     static constexpr int    NorthNeighbour      = 0;
     static constexpr int    SouthNeighbour      = 1;
@@ -66,61 +66,71 @@ public:
 
 protected:
 
-    Patch*                                  m_parent;
-    Config*                                 m_config;
+    Patch*                                      m_parent;
+    Config*                                     m_config;
 
-    dsreal                                  m_sidelength;
-    dsreal                                  m_xpos;
-    dsreal                                  m_ypos;
-    dsreal                                  m_ray;
+    dsreal                                      m_sidelength;
+    dsreal                                      m_xpos;
+    dsreal                                      m_ypos;
+    dsreal                                      m_ray;
 
-    dsreal                                  m_global_ref_u1;
-    dsreal                                  m_global_ref_v1;
-    dsreal                                  m_global_ref_u2;
-    dsreal                                  m_global_ref_v2;
+    dsreal                                      m_global_ref_u1;
+    dsreal                                      m_global_ref_v1;
+    dsreal                                      m_global_ref_u2;
+    dsreal                                      m_global_ref_v2;
 
-    dsreal                                  m_global_u1;
-    dsreal                                  m_global_v1;
-    dsreal                                  m_global_u2;
-    dsreal                                  m_global_v2;
-
-
-    int                                     m_orientation;
-    int                                     m_nodeid;
-    DrawSpace::Utils::BaseQuadtreeNode*     m_owner;
-    DrawSpace::Utils::BaseQuadtreeNode*     m_neighbours[8];
-    int                                     m_lod_level;
-    DrawSpace::IntermediatePass*            m_datatexture_pass;
-    Patch*                                  m_texture_referent;
-
-    Patch::SubPassCreationHandler*          m_subpasscreation_handler;
-
-    EntryInfos                              m_subpass_entry_infos;
-    bool                                    m_subpass_entry_infos_valid;
-
-    bool                                    m_enable_datatexture;
-
-    int                                     m_nbLODRanges;
-
-    float*                                  m_heightmap = { nullptr };
-
-    int                                     m_layer_index;
+    dsreal                                      m_global_u1;
+    dsreal                                      m_global_v1;
+    dsreal                                      m_global_u2;
+    dsreal                                      m_global_v2;
 
 
-    std::set<HeighmapSubPass*>              m_related_subpasses; // list of subpasses working with this patch
+    int                                         m_orientation;
+    int                                         m_nodeid;
+    DrawSpace::Utils::BaseQuadtreeNode*         m_owner;
+    DrawSpace::Utils::BaseQuadtreeNode*         m_neighbours[8];
+    int                                         m_lod_level;
+    DrawSpace::IntermediatePass*                m_datatexture_pass;
+    Patch*                                      m_texture_referent;
 
-    std::vector<FoliagesCoordinates>        m_foliagesCoordinates;
+    SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };
+
+
+
+    EntryInfos                                  m_subpass_entry_infos;
+    bool                                        m_subpass_entry_infos_valid;
+
+    bool                                        m_enable_datatexture;
+
+    int                                         m_nbLODRanges;
+
+    float*                                      m_heightmap = { nullptr };
+
+    int                                         m_layer_index;
+
+
+    std::set<HeighmapSubPass*>                  m_related_subpasses; // list of subpasses working with this patch
+
+    std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
+
+    
 
     /////////////////////////////////////////////////////////////////////////////////////
 
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
-    void                                    prepare_data_texture( Patch::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index );
-    //void                                    destroy_color_texture( void );
+    void                                    prepare_data_texture(SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index );
+    
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
+
+    void                                    generate_heightmap(void);
+
+    void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
+    void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
+
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, Config* p_config, int p_layer_index, int p_nbLODRanges );
+            SubPass::SubPassCreationHandler* p_handler, Config* p_config, int p_layer_index, int p_nbLODRanges );
 
     virtual ~Patch( void );
    

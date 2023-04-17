@@ -33,7 +33,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace LOD;
 
-Face::Face( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
+Face::Face( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges ) :
 m_config( p_config ),
 m_cb_inst( NULL ),
 m_cb_del( NULL ),

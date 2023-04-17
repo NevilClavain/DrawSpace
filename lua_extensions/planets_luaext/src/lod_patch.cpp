@@ -40,7 +40,8 @@ using namespace DrawSpace::Utils;
 using namespace LOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
-                Patch::SubPassCreationHandler* p_handler, Config* p_config, int p_layer_index, int p_nbLODRanges ) : 
+                SubPass::SubPassCreationHandler* p_handler, 
+                Config* p_config, int p_layer_index, int p_nbLODRanges ) : 
 
 m_orientation( p_orientation ),
 m_ray( p_ray ),
@@ -272,7 +273,7 @@ int Patch::GetLayerIndex(void) const
     return m_layer_index;
 }
 
-void Patch::prepare_data_texture( Patch::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index )
+void Patch::prepare_data_texture( SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index )
 {
     m_datatexture_pass = create_data_texture_pass();
 
@@ -844,6 +845,36 @@ dsstring Patch::DumpInfos(void) const
    
     return infos;
 }
+
+void Patch::generate_heightmap()
+{
+    // launch hm generation
+    /*
+    std::vector<LOD::Patch*> display_list;
+    display_list.push_back(this);
+
+    LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(m_subpass_creation_handler, m_config, p_patch->GetOrientation(), m_layer_index, p_purpose)) };
+
+    current_hm->RegisterSubpassDoneHandler(&m_subpassDoneCb);
+    current_hm->RegisterSubpassAbortedHandler(&m_subpassAbortedCb);
+
+    const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
+    node->SetDisplayList(display_list);
+    
+    //AddRelatedSubpasses(current_hm);
+    */
+}
+
+void Patch::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
+{
+
+}
+
+void Patch::on_subpassaborted(LOD::HeighmapSubPass* p_subpass)
+{
+
+}
+
 
 
 void Patch::recurs_update_texture_referent( Patch* p_texture_referent )

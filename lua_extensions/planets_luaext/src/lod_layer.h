@@ -51,7 +51,6 @@ class Layer
 {
 public:
 
-    //using SubPassCreationHandler            = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
     using CollisionMesheUpdateHandler       = DrawSpace::Core::BaseCallback3<void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
 
     using NewCollisionMesheCreationHandler  = DrawSpace::Core::BaseCallback<void, const DrawSpace::Core::Meshe&>;
@@ -66,8 +65,9 @@ private:
     Config*                                                     m_config{ nullptr };
     Body*                                                       m_body{ nullptr };
 
-    //SubPassCreationHandler*                                     m_subpass_creation_handler{ nullptr };
-    HeighmapSubPass::SubPassCreationHandler*                    m_subpass_creation_handler{ nullptr };
+
+    //HeighmapSubPass::SubPassCreationHandler*                    m_subpass_creation_handler{ nullptr };
+    SubPass::SubPassCreationHandler*                            m_subpass_creation_handler{ nullptr };
 
     CollisionMesheUpdateHandler*                                m_collision_meshe_update_handler{ nullptr };
     bool                                                        m_hot;
@@ -114,7 +114,6 @@ private:
 
 public:
     Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body,
-            //Layer::SubPassCreationHandler* p_subpass_creation_handler, 
             HeighmapSubPass::SubPassCreationHandler* p_subpass_creation_handler,
             CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
             int p_index, bool p_freecamera);

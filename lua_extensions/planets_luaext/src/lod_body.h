@@ -76,7 +76,7 @@ public:
     static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 
-    Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description );
+    Body( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description );
 
     virtual ~Body( void );
 

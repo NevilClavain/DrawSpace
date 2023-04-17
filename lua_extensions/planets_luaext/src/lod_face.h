@@ -80,7 +80,7 @@ protected:
 
     dsreal                                                      m_lodranges[cst::nbLODRangesMax];
 
-    Patch::SubPassCreationHandler*                              m_subpasscreation_handler;
+    SubPass::SubPassCreationHandler*                            m_subpasscreation_handler{ nullptr };
 
     int                                                         m_min_lodlevel;
 
@@ -111,7 +111,7 @@ protected:
 
 public:
 
-    Face( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges );
+    Face( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges );
     virtual ~Face( void );
 
     bool Init( int p_orientation );
