@@ -634,6 +634,11 @@ void Drawing::Shutdown(void)
     {
         _DRAWSPACE_DELETE_(e);
     }
+
+    for (auto& e : m_foliagedrawingnodes)
+    {
+        _DRAWSPACE_DELETE_(e);
+    }
 }
 
 

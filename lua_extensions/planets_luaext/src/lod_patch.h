@@ -118,7 +118,7 @@ private:
     std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
 
     SubpassDoneCb                               m_subpassDoneCb;
-    SubpassAbortedCb                            m_subpassAbortedCb;
+    //SubpassAbortedCb                            m_subpassAbortedCb;
    
     /////////////////////////////////////////////////////////////////////////////////////
 
@@ -130,7 +130,7 @@ private:
     void                                    generate_heightmap(void);
 
     void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
-    void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
+    //void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
 
     
 public:

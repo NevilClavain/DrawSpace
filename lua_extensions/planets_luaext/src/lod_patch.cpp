@@ -54,8 +54,10 @@ m_nodeid( p_nodeid ),
 m_subpass_entry_infos_valid( false ),
 m_nbLODRanges( p_nbLODRanges ),
 m_layer_index( p_layer_index ),
-m_subpassDoneCb(this, &Patch::on_subpassdone),
+m_subpassDoneCb(this, &Patch::on_subpassdone)
+/*,
 m_subpassAbortedCb(this, &Patch::on_subpassaborted)
+*/
 {
     m_enable_datatexture = m_config->m_layers_descr[p_layer_index].enable_datatextures;
 
@@ -250,6 +252,14 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
         m_global_u2 = 1.0;
         m_global_v2 = 1.0;
     }
+
+    /////////////////////////
+    /*
+    if (cst::SurfaceLayer == p_layer_index)
+    {
+        generate_heightmap();
+    } 
+    */
 }
 
 Patch::~Patch( void )
@@ -261,7 +271,7 @@ Patch::~Patch( void )
 
     for (auto e : m_related_subpasses)
     {
-        e->RequestAbortion();
+        _DRAWSPACE_DELETE_(e);
     }
 }
 
@@ -851,32 +861,48 @@ dsstring Patch::DumpInfos(void) const
 void Patch::generate_heightmap()
 {
     // launch hm generation
-    /*
+    
     std::vector<LOD::Patch*> display_list;
     display_list.push_back(this);
 
     LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(m_subpasscreation_handler, m_config, GetOrientation(), m_layer_index, HeighmapSubPass::Purpose::FOR_FOLIAGE)) };
 
     current_hm->RegisterSubpassDoneHandler(&m_subpassDoneCb);
-    current_hm->RegisterSubpassAbortedHandler(&m_subpassAbortedCb);
+    //current_hm->RegisterSubpassAbortedHandler(&m_subpassAbortedCb);
 
     const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
     node->SetDisplayList(display_list);
     
-    //AddRelatedSubpasses(current_hm);
-    
-    */
+    AddRelatedSubpasses(current_hm);      
 }
 
 void Patch::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
 {
+    p_subpass->GetHMTexture()->CopyTextureContent();
+    const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
 
+    if (HasHeightMap())
+    {
+        auto old_buffer{ GetHeightMap() };
+        _DRAWSPACE_DELETE_N_(old_buffer);
+    }
+
+    const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
+    const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
+    memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
+
+    SetHeightMap(patch_hm_buffer);
+
+    RemoveRelatedSubpasses(p_subpass);
+    _DRAWSPACE_DELETE_(p_subpass);
 }
 
+/*
 void Patch::on_subpassaborted(LOD::HeighmapSubPass* p_subpass)
 {
-
+    _DRAWSPACE_DELETE_(p_subpass);
 }
+*/
 
 
 

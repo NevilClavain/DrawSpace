@@ -304,8 +304,6 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
 
             m_entity_rendering_aspect->AddComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes", m_foliages_meshes);
 
-
-
             // declare foliage meshes to resources manager
             for (auto e : m_foliages_meshes_paths) {
 
@@ -413,8 +411,7 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
         {
             _DRAWSPACE_DELETE_(e.second);
         }
-
-        m_foliages_meshes_paths.clear();
+        
         m_foliages_meshes_ids.clear();
         m_foliages_meshes.clear();
 
@@ -612,6 +609,8 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
 
             resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
         }
+        m_foliages_meshes_paths.clear();
+
     }
 }
 

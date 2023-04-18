@@ -168,7 +168,7 @@ void Layer::Compute(void)
         m_current_patch = curr_patch;
        
         ///// generate new heightmap for foliage
-        
+        /*
         if (cst::SurfaceLayer == m_layer_index)
         {
             if (m_current_patch && m_current_lod == 0 && m_current_patch->GetOrientation() == m_body->GetCurrentFace())
@@ -215,7 +215,7 @@ void Layer::Compute(void)
                 browse_patches(parent_patch);
             }
         }
-                  
+        */        
         ///// generate new heightmap for collisions
 
         if (m_collisions )

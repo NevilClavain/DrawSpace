@@ -107,11 +107,11 @@ void HeighmapSubPass::SubPassDone(void)
 }
 
 void HeighmapSubPass::SubPassAborted(void)
-{
+{	
 	if (m_subpassaborted_handler)
 	{
 		(*m_subpassaborted_handler)(this);
-	}
+	}	
 }
 
 DrawSpace::Core::Texture* HeighmapSubPass::GetHMTexture(void) const
