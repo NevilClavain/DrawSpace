@@ -583,20 +583,6 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::map<dsstring, int>>("foliagelayers_rcname_to_layer_index");
         }
 
-
-        // foliage meshes array
-        /*
-        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsstring>>("foliages_meshes_paths"))
-        {
-            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliages_meshes_paths");
-        }
-
-        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsstring>>("foliages_meshes_ids"))
-        {
-            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsstring>>("foliages_meshes_ids");
-        }
-        */
-
         if (m_entity_rendering_aspect->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes"))
         {
             m_entity_rendering_aspect->RemoveComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes");
