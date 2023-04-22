@@ -128,7 +128,7 @@ private:
     
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
 
-    void                                    generate_heightmap(void);
+    //void                                    generate_heightmap(void);
 
     //void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
     //void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
