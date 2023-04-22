@@ -34,7 +34,6 @@ class HeighmapSubPass : public LOD::SubPass
 {
 public:
 
-    //using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
     using SubPassDoneHandler = DrawSpace::Core::BaseCallback<void, HeighmapSubPass*>;
     using SubPassAbortedHandler = DrawSpace::Core::BaseCallback<void, HeighmapSubPass*>;
 

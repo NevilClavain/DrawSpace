@@ -109,7 +109,7 @@ private:
 
     int                                         m_nbLODRanges;
 
-    float*                                      m_heightmap = { nullptr };
+    float*                                      m_heightmap { nullptr };
 
     int                                         m_layer_index;
 
@@ -118,7 +118,7 @@ private:
 
     std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
 
-    SubpassDoneCb                               m_subpassDoneCb;
+    //SubpassDoneCb                               m_subpassDoneCb;
     //SubpassAbortedCb                            m_subpassAbortedCb;
    
     /////////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,7 @@ private:
 
     void                                    generate_heightmap(void);
 
-    void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
+    //void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
     //void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
 
     

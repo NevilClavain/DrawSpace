@@ -53,9 +53,9 @@ m_parent( p_parent ),
 m_nodeid( p_nodeid ),
 //m_subpass_entry_infos_valid( false ),
 m_nbLODRanges( p_nbLODRanges ),
-m_layer_index( p_layer_index ),
-m_subpassDoneCb(this, &Patch::on_subpassdone)
+m_layer_index( p_layer_index )
 /*,
+m_subpassDoneCb(this, &Patch::on_subpassdone),
 m_subpassAbortedCb(this, &Patch::on_subpassaborted)
 */
 {
@@ -870,6 +870,7 @@ void Patch::RemoveRelatedSubpasses(HeighmapSubPass* p_subpass)
     }
 }
 
+
 void Patch::SetHeightMap(float* p_hm)
 {
     m_heightmap = p_hm;
@@ -900,9 +901,10 @@ dsstring Patch::DumpInfos(void) const
     return infos;
 }
 
+/*
 void Patch::generate_heightmap()
 {
-    /*
+    
     // launch hm generation
     
     std::vector<LOD::Patch*> display_list;
@@ -917,10 +919,12 @@ void Patch::generate_heightmap()
     node->SetDisplayList(display_list);
     
     //AddRelatedSubpasses(current_hm);
-    */
+    
 
 }
+*/
 
+/*
 void Patch::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
 {
     p_subpass->GetHMTexture()->CopyTextureContent();
@@ -941,6 +945,7 @@ void Patch::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
     RemoveRelatedSubpasses(p_subpass);
     _DRAWSPACE_DELETE_(p_subpass);
 }
+*/
 
 /*
 void Patch::on_subpassaborted(LOD::HeighmapSubPass* p_subpass)
