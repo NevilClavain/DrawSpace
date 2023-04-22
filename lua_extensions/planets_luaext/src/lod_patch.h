@@ -66,6 +66,8 @@ public:
 
 private:
 
+    static constexpr int        heightmapTextureSize = 64;
+
     using SubpassDoneCb         = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
     using SubpassAbortedCb      = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
 
@@ -94,8 +96,11 @@ private:
     DrawSpace::Utils::BaseQuadtreeNode*         m_owner;
     DrawSpace::Utils::BaseQuadtreeNode*         m_neighbours[8];
     int                                         m_lod_level;
-    DrawSpace::IntermediatePass*                m_datatexture_pass;
+
+    DrawSpace::IntermediatePass*                m_datatexture_pass{ nullptr };
     Patch*                                      m_texture_referent;
+
+    DrawSpace::IntermediatePass*                m_heightmap_pass{ nullptr };
 
     SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };
 
@@ -106,6 +111,7 @@ private:
     std::vector<EntryInfos>                     m_subpass_entry_infos_list;
 
     bool                                        m_enable_datatexture;
+    bool                                        m_enable_foliage;
 
     int                                         m_nbLODRanges;
 
@@ -123,9 +129,12 @@ private:
    
     /////////////////////////////////////////////////////////////////////////////////////
 
+    DrawSpace::IntermediatePass*            create_heightmap_pass(void);
+    void                                    prepare_hm_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index);
+
     DrawSpace::IntermediatePass*            create_data_texture_pass( void );
-    void                                    prepare_data_texture(SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index );
-    
+    void                                    prepare_data_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index);
+
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
 
     //void                                    generate_heightmap(void);

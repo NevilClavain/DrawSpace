@@ -795,6 +795,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 //ld.enable_heighmap_generation = true;
                 ld.enable_collisions = true;
                 ld.enable_datatextures = true;
+                ld.enable_foliage = true;
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -875,6 +876,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
+                ld.enable_foliage = false;
                 ld.enable_lod = false;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray + atmo_thickness;
@@ -893,6 +895,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
+                ld.enable_foliage = false;
                 ld.enable_lod = false;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray + flatclouds_altitude;
@@ -912,6 +915,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
+                ld.enable_foliage = false;
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;

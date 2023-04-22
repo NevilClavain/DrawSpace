@@ -60,6 +60,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
 */
 {
     m_enable_datatexture = m_config->m_layers_descr[p_layer_index].enable_datatextures;
+    m_enable_foliage = m_config->m_layers_descr[p_layer_index].enable_foliage;
 
     for( long i = 0; i < 8; i++ )
     {
@@ -207,17 +208,35 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     }
 
     /////////////////////////////////////////////////////
+    bool register_subpass{ false };
+    SubPass::Destination subpass_dest;
+
+    if (m_nbLODRanges - 1 == m_lod_level)
+    {
+        subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
+    }
+    else if (m_lod_level >= m_nbLODRanges - 8)
+    {
+        subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
+    }
 
     if( m_enable_datatexture )
     {
         if( m_nbLODRanges - 1 == m_lod_level )
         {
-            prepare_data_texture( m_subpasscreation_handler, SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS, p_layer_index );
+            prepare_data_texture( p_layer_index);
+            register_subpass = true;
         }
         else if( m_lod_level >= m_nbLODRanges - 8 )
         {
-            prepare_data_texture( m_subpasscreation_handler, SubPass::Destination::DELAYED_SINGLE_SUBPASS, p_layer_index );
+            prepare_data_texture( p_layer_index);
+            register_subpass = true;
         }
+    }
+
+    if (register_subpass && m_subpasscreation_handler)
+    {
+        m_subpass_entry_infos_list.push_back((*m_subpasscreation_handler)(this, subpass_dest));
     }
 
     if( p_parent )
@@ -285,7 +304,7 @@ int Patch::GetLayerIndex(void) const
     return m_layer_index;
 }
 
-void Patch::prepare_data_texture( SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest, int p_layer_index )
+void Patch::prepare_data_texture( /*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index)
 {
     m_datatexture_pass = create_data_texture_pass();
 
@@ -294,8 +313,8 @@ void Patch::prepare_data_texture( SubPass::SubPassCreationHandler* p_handler, Su
 
     // creation/preparation du node
 
-    DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( renderer, m_config, p_layer_index ) );
+    const auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+    const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, m_config, p_layer_index)) };
             
     node->SetMeshe( Body::m_patch2_meshe );
     node->SetDisplayList( dl );
@@ -310,26 +329,53 @@ void Patch::prepare_data_texture( SubPass::SubPassCreationHandler* p_handler, Su
             
     ////////////////////////
 
-    /*
-    m_subpass = m_datatexture_pass;
-    m_subpass_node = node;
-    */
-
     m_subpass_node_list.push_back(node);
     m_subpass_list.push_back(m_datatexture_pass);
-        
+    
+    /*
     // appel handler pour enregistrer et executer la passe
     
     if( p_handler )
     {
-        /*
-        m_subpass_entry_infos = (*p_handler)( this, p_subpass_dest );
-        m_subpass_entry_infos_valid = true;
-        */
-
         m_subpass_entry_infos_list.push_back((*p_handler)(this, p_subpass_dest));
     }
+    */
 }
+
+void Patch::prepare_hm_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index)
+{
+    m_heightmap_pass = create_heightmap_pass();
+
+    std::vector<Patch*> dl;
+    dl.push_back(this);
+
+
+    // creation/preparation du node
+
+    auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+    const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, m_config, p_layer_index)) };
+
+    node->SetMeshe(LOD::Body::m_patch_meshe);
+    node->SetDisplayList(dl);
+
+    node->SetBinder(m_config->m_layers_descr[p_layer_index].heightmapGenerationBinder[m_orientation]);
+
+    void* tx_data;
+    if (false == renderer->CreateTexture(m_heightmap_pass->GetTargetTexture(), &tx_data))
+    {
+        _DSEXCEPTION("failed to create hm subpasstarget texture in renderer");
+    }
+
+    ////////////////////////
+
+    m_heightmap_pass->GetTargetTexture()->AllocTextureContent();
+
+    m_subpass_node_list.push_back(node);
+    m_subpass_list.push_back(m_heightmap_pass);
+
+}
+
+
 
 void Patch::CleanupSubpasses( void )
 {
@@ -785,17 +831,30 @@ DrawSpace::IntermediatePass* Patch::create_data_texture_pass( void )
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
 
     ipass->SetTargetDimsFromRenderer( false );    
-    //ipass->SetTargetDims( 512, 512 );
-    //ipass->SetTargetDims( 256, 256 );
-    //ipass->SetTargetDims( 128, 128 );
-
     ipass->SetTargetDims( cst::patchHighResolution, cst::patchHighResolution );
-
     ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOATVECTOR );
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( false );
     ipass->GetRenderingQueue()->EnableTargetClearing( false );
+    return ipass;
+}
+
+DrawSpace::IntermediatePass* Patch::create_heightmap_pass(void)
+{
+    const auto thisname{ dsstring("layer_") + std::to_string((int)this) };
+    const auto complete_name{ thisname + dsstring("_heightmap_pass") };
+
+    const auto ipass{ _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name)) };
+
+    ipass->SetTargetDimsFromRenderer(false);
+    ipass->SetTargetDims(heightmapTextureSize, heightmapTextureSize);
+    ipass->SetRenderPurpose(Texture::RENDERPURPOSE_FLOAT32);
+    ipass->SetRenderTarget(Texture::RENDERTARGET_CPU);
+
+    ipass->Initialize();
+    ipass->GetRenderingQueue()->EnableDepthClearing(true);
+
     return ipass;
 }
 

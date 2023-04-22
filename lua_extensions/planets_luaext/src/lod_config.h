@@ -39,6 +39,7 @@ public:
     {        
         bool        enable_collisions;
         bool        enable_datatextures;
+        bool        enable_foliage;
         bool        enable_lod;
         long        min_lodlevel;  // valable si enable_lod == true
         dsreal      ray;
