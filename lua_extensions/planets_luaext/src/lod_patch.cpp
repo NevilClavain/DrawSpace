@@ -46,7 +46,7 @@ Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, Ba
 m_orientation( p_orientation ),
 m_ray( p_ray ),
 m_owner( p_owner ),
-m_datatexture_pass( NULL ),
+m_datatexture_pass( nullptr ),
 m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
@@ -211,6 +211,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     bool register_subpass{ false };
     SubPass::Destination subpass_dest;
 
+    /*
     if (m_nbLODRanges - 1 == m_lod_level)
     {
         subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
@@ -219,6 +220,9 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     {
         subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
     }
+    */
+    subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
+    
 
     if( m_enable_datatexture )
     {
@@ -232,12 +236,22 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
             prepare_data_texture( p_layer_index);
             register_subpass = true;
         }
+
+        
+        if (cst::FoliageRootLODLevel >= m_lod_level)
+        {
+            //prepare_hm_texture(p_layer_index);
+            //register_subpass = true;
+        }
+        
     }
 
     if (register_subpass && m_subpasscreation_handler)
     {
         m_subpass_entry_infos_list.push_back((*m_subpasscreation_handler)(this, subpass_dest));
     }
+
+    /////////////////////////////////////////////////////////////////////
 
     if( p_parent )
     {
@@ -864,7 +878,7 @@ DrawSpace::Core::Texture* Patch::GetDataTexture( void ) const
     {
         return m_datatexture_pass->GetTargetTexture();
     }
-    return NULL;
+    return nullptr;
 }
 
 Patch* Patch::GetParent(void) const
@@ -887,25 +901,28 @@ Patch* Patch::GetTextureReferent( void ) const
 void Patch::SubPassDone( void )
 {
     // subpass effectuee, l'entree dans la queue n'existe donc plus...
-    
-    //m_subpass_entry_infos_valid = false;
-    m_subpass_entry_infos_list.clear();
 
-    if( m_parent )
+    if (m_datatexture_pass)
     {
-        m_texture_referent = this;
-        m_global_ref_u1 = 0.0;
-        m_global_ref_v1 = 0.0;
-        m_global_ref_u2 = 1.0;
-        m_global_ref_v2 = 1.0;
 
-        if( m_owner->HasChildren() )
+        m_subpass_entry_infos_list.clear();
+
+        if (m_parent)
         {
-            for( long i = 0; i < 4; i++ )
+            m_texture_referent = this;
+            m_global_ref_u1 = 0.0;
+            m_global_ref_v1 = 0.0;
+            m_global_ref_u2 = 1.0;
+            m_global_ref_v2 = 1.0;
+
+            if (m_owner->HasChildren())
             {
-                QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>( m_owner->GetChild( i ) );
-           
-                child->GetContent()->recurs_update_texture_referent( m_texture_referent );
+                for (long i = 0; i < 4; i++)
+                {
+                    QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>(m_owner->GetChild(i));
+
+                    child->GetContent()->recurs_update_texture_referent(m_texture_referent);
+                }
             }
         }
     }

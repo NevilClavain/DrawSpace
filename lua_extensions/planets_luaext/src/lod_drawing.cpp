@@ -336,7 +336,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         const auto ref_patch{ m_display_list[i]->GetTextureReferent() };
         const auto refpatchtexture{ ref_patch->GetDataTexture() };
 
-        if( p_bind_ht_texture && ( refpatchtexture != current_texture ) )
+        if( p_bind_ht_texture && refpatchtexture && (refpatchtexture != current_texture))
         {
             m_renderer->SetTexture( refpatchtexture->GetRenderData(), 7 );
             current_texture = refpatchtexture;
