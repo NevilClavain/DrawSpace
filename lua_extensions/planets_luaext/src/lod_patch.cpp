@@ -51,7 +51,7 @@ m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
 m_nodeid( p_nodeid ),
-m_subpass_entry_infos_valid( false ),
+//m_subpass_entry_infos_valid( false ),
 m_nbLODRanges( p_nbLODRanges ),
 m_layer_index( p_layer_index ),
 m_subpassDoneCb(this, &Patch::on_subpassdone)
@@ -310,22 +310,31 @@ void Patch::prepare_data_texture( SubPass::SubPassCreationHandler* p_handler, Su
             
     ////////////////////////
 
+    /*
     m_subpass = m_datatexture_pass;
     m_subpass_node = node;
+    */
+
+    m_subpass_node_list.push_back(node);
+    m_subpass_list.push_back(m_datatexture_pass);
         
     // appel handler pour enregistrer et executer la passe
     
     if( p_handler )
     {
+        /*
         m_subpass_entry_infos = (*p_handler)( this, p_subpass_dest );
         m_subpass_entry_infos_valid = true;
+        */
+
+        m_subpass_entry_infos_list.push_back((*p_handler)(this, p_subpass_dest));
     }
 }
 
-void Patch::DestroyColorTexture( void )
+void Patch::CleanupSubpasses( void )
 {
     // remove texture on renderer side
-
+    /*
     if( m_subpass && m_subpass_node )
     {
         if( m_subpass_entry_infos_valid )
@@ -348,6 +357,37 @@ void Patch::DestroyColorTexture( void )
 
         // remove pass
         _DRAWSPACE_DELETE_( m_subpass );
+    }
+    */
+
+    for (const auto& e : m_subpass_entry_infos_list)
+    {
+        try
+        {
+            remove_entry_from_queue(e);
+        }
+        catch (...)
+        {
+            _DSEXCEPTION("unexpected error while trying to remove subpass queue entry");
+        }
+
+    }
+
+    const auto renderer { SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+
+    for (const auto s : m_subpass_list)
+    {
+        renderer->DestroyTexture(s->GetTargetTexture()->GetRenderData());
+    }
+
+    for (auto n : m_subpass_node_list)
+    {
+        _DRAWSPACE_DELETE_(n);
+    }
+
+    for (auto s : m_subpass_list)
+    {
+        _DRAWSPACE_DELETE_(s);
     }
 }
 
@@ -788,7 +828,9 @@ Patch* Patch::GetTextureReferent( void ) const
 void Patch::SubPassDone( void )
 {
     // subpass effectuee, l'entree dans la queue n'existe donc plus...
-    m_subpass_entry_infos_valid = false;
+    
+    //m_subpass_entry_infos_valid = false;
+    m_subpass_entry_infos_list.clear();
 
     if( m_parent )
     {
@@ -812,7 +854,7 @@ void Patch::SubPassDone( void )
 
 void Patch::SubPassAborted(void)
 {
-    m_subpass_entry_infos_valid = false;
+    //m_subpass_entry_infos_valid = false;
 }
 
 void Patch::AddRelatedSubpasses(HeighmapSubPass* p_subpass)
@@ -860,6 +902,7 @@ dsstring Patch::DumpInfos(void) const
 
 void Patch::generate_heightmap()
 {
+    /*
     // launch hm generation
     
     std::vector<LOD::Patch*> display_list;
@@ -873,7 +916,9 @@ void Patch::generate_heightmap()
     const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
     node->SetDisplayList(display_list);
     
-    AddRelatedSubpasses(current_hm);      
+    //AddRelatedSubpasses(current_hm);
+    */
+
 }
 
 void Patch::on_subpassdone(LOD::HeighmapSubPass* p_subpass)

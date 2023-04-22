@@ -1338,10 +1338,21 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
             {
                 m_singleshot_subpasses_stack.pop_back();
 
+                /*
                 RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
                 rendering_queue->UpdateOutputQueueNoOpt();
                 rendering_queue->FlipOutputQueues();
                 rendering_queue->DeclareReady();
+                */
+
+
+                for (const auto s : sp->GetPassList())
+                {
+                    RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                    rendering_queue->UpdateOutputQueueNoOpt();
+                    rendering_queue->FlipOutputQueues();
+                    rendering_queue->DeclareReady();
+                }
 
                 sp->DrawSubPass();
                 sp->SubPassDone();
@@ -1360,9 +1371,17 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         for (auto& e : m_singleshot_subpasses)
         {
             LOD::SubPass* sp = e;
-            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
 
+            /*
+            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
             singleshot_subpasses_sequence_id = singleshot_subpasses_sequence_id + rendering_queue->GetId() + dsstring("/");
+            */
+
+            for (const auto s : sp->GetPassList())
+            {
+                RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                singleshot_subpasses_sequence_id = singleshot_subpasses_sequence_id + rendering_queue->GetId() + dsstring("/");
+            }
         }
         
         singleshot_subpasses_sequence_step.AddComponent<LOD::SubPass::singleshot_subpasses>("singleshot_subpasses_queues", m_singleshot_subpasses);
@@ -1382,9 +1401,17 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
             for (auto& e : singleshot_subpasses)
             {
                 LOD::SubPass* sp = e;
-                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
 
+                /*
+                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
                 queues.push_back(rendering_queue);
+                */
+
+                for (const auto s : sp->GetPassList())
+                {
+                    RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                    queues.push_back(rendering_queue);
+                }
             }
 
             task->SetTargetDescr(sequence_id);
@@ -1410,10 +1437,18 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
                 }
                 else
                 {
+                    /*
                     RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
-
                     rendering_queue->FlipOutputQueues();
                     rendering_queue->DeclareReady();
+                    */
+
+                    for (const auto s : sp->GetPassList())
+                    {
+                        RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                        rendering_queue->FlipOutputQueues();
+                        rendering_queue->DeclareReady();
+                    }
 
                     sp->DrawSubPass();
                     sp->SubPassDone();
@@ -1476,10 +1511,24 @@ void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_nam
 
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
 {
+    /*
     LOD::FaceDrawingNode* node = static_cast<LOD::FaceDrawingNode*>(p_pass->GetNode());
     node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
     // on ajoute le node a la queue directement ici
     p_pass->GetPass()->GetRenderingQueue()->Add(node);
+    */
+
+    
+    const auto node_list{ p_pass->GetNodeList() };
+    const auto pass_list{ p_pass->GetPassList() };
+    for (size_t i = 0; i < node_list.size(); i++)
+    {
+        const auto node = static_cast<LOD::FaceDrawingNode*>(node_list.at(i));
+        node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
+        // on ajoute le node a la queue directement ici
+        pass_list.at(i)->GetRenderingQueue()->Add(node);
+    }
+    
        
     const auto resources_aspect{ m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)

@@ -1881,15 +1881,13 @@ set_body_on_planet(66.403, -26.193, 80.0, planet_specific_config_descr)
 
 -- on planet
 
-
---set_freecam_on_planet(119.75, -15.16, 74.0, planet_specific_config_descr)
 set_freecam_on_planet(119.72, -14.47, 94.0, planet_specific_config_descr)
 
 
 
 -- in space
 
---model.createmainfreecamera(100, 200, 500)
+--model.createmainfreecamera(100, 200, -40420000.0)
 --eg:add_child('root','model.camera.entity', model.camera.entity)
 
 

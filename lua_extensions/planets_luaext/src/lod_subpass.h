@@ -59,8 +59,12 @@ public:
 
 protected:
 
-    DrawSpace::Core::RenderingNode*             m_subpass_node;
-    DrawSpace::IntermediatePass*                m_subpass;
+    //DrawSpace::Core::RenderingNode*             m_subpass_node;
+    //DrawSpace::IntermediatePass*                m_subpass;
+
+    std::vector< DrawSpace::Core::RenderingNode*>   m_subpass_node_list;
+    std::vector<DrawSpace::IntermediatePass*>       m_subpass_list;
+
     bool                                        m_timer_ready_flag;
 
     bool                                        m_request_for_abort{ false };
@@ -73,11 +77,16 @@ public:
     virtual ~SubPass( void );
 
     virtual void                                DrawSubPass( void );
+
     virtual void                                SubPassDone( void ) = 0;
     virtual void                                SubPassAborted( void ) = 0;
 
-    DrawSpace::Core::RenderingNode*             GetNode( void ) const;
-    DrawSpace::IntermediatePass*                GetPass( void ) const;
+    //DrawSpace::Core::RenderingNode*             GetNode( void ) const;
+    //DrawSpace::IntermediatePass*                GetPass( void ) const;
+
+    std::vector< DrawSpace::Core::RenderingNode*>   GetNodeList(void) const;
+    std::vector<DrawSpace::IntermediatePass*>       GetPassList(void) const;
+
 
     void                                        SetTimerReadyFlag( bool p_flag );
     bool                                        GetTimerReadyFlag( void ) const;

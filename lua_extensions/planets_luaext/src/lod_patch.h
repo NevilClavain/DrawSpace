@@ -101,8 +101,9 @@ private:
 
 
 
-    EntryInfos                                  m_subpass_entry_infos;
-    bool                                        m_subpass_entry_infos_valid;
+    //EntryInfos                                  m_subpass_entry_infos;
+    //bool                                        m_subpass_entry_infos_valid;
+    std::vector<EntryInfos>                     m_subpass_entry_infos_list;
 
     bool                                        m_enable_datatexture;
 
@@ -157,7 +158,7 @@ public:
     void                                ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
     bool                                IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
-    void                                DestroyColorTexture(void);
+    void                                CleanupSubpasses(void);
 
     void                                AddRelatedSubpasses(HeighmapSubPass* p_subpass);
     void                                RemoveRelatedSubpasses(HeighmapSubPass* p_subpass);

@@ -135,8 +135,14 @@ void Layer::generate_heightmap(Patch* p_patch, HeighmapSubPass::Purpose p_purpos
     current_hm->RegisterSubpassDoneHandler(&m_subpassDoneCb);
     current_hm->RegisterSubpassAbortedHandler(&m_subpassAbortedCb);
 
+    /*
     const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
     node->SetDisplayList(display_list);
+    */
+    const auto nodes_list{ current_hm->GetNodeList() };
+    const auto node{ static_cast<LOD::FaceDrawingNode*>(nodes_list.at(0)) };
+    node->SetDisplayList(display_list);
+
 
     m_heightmap_source_patches[current_hm] = p_patch;
 

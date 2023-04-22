@@ -28,8 +28,10 @@ using namespace DrawSpace;
 using namespace LOD;
 
 SubPass::SubPass( void ) :
+/*
 m_subpass( NULL ),
 m_subpass_node( NULL ),
+*/
 m_timer_ready_flag( false )
 {
 }
@@ -40,9 +42,14 @@ SubPass::~SubPass( void )
 
 void SubPass::DrawSubPass( void )
 {
-    m_subpass->GetRenderingQueue()->Draw();
+    //m_subpass->GetRenderingQueue()->Draw();
+    for (const auto s : m_subpass_list)
+    {
+        s->GetRenderingQueue()->Draw();
+    }
 }
 
+/*
 DrawSpace::Core::RenderingNode* SubPass::GetNode( void ) const
 {
     return m_subpass_node;
@@ -51,6 +58,17 @@ DrawSpace::Core::RenderingNode* SubPass::GetNode( void ) const
 DrawSpace::IntermediatePass* SubPass::GetPass( void ) const
 {
     return m_subpass;
+}
+*/
+
+std::vector< DrawSpace::Core::RenderingNode*> SubPass::GetNodeList(void) const
+{
+    return m_subpass_node_list;
+}
+
+std::vector<DrawSpace::IntermediatePass*> SubPass::GetPassList(void) const
+{
+    return m_subpass_list;
 }
 
 void SubPass::remove_entry_from_queue( const EntryInfos& p_entryInfos )

@@ -58,8 +58,13 @@ m_purpose(p_purpose)
 
 	m_heightmap_pass->GetTargetTexture()->AllocTextureContent();
 
+	/*
 	m_subpass = m_heightmap_pass;
 	m_subpass_node = node;
+	*/
+
+	m_subpass_node_list.push_back(node);
+	m_subpass_list.push_back(m_heightmap_pass);
 
 	//const auto handler{ p_owner->GetSubPassCreationHandler() };
 	const auto handler{ p_subpasscreation_handler };
@@ -75,12 +80,31 @@ m_purpose(p_purpose)
 HeighmapSubPass::~HeighmapSubPass(void)
 {
 	auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
+
+	for (const auto s : m_subpass_list)
+	{
+		renderer->DestroyTexture(s->GetTargetTexture()->GetRenderData());
+	}
+
+	for (auto n : m_subpass_node_list)
+	{
+		_DRAWSPACE_DELETE_(n);
+	}
+
+	for (auto s : m_subpass_list)
+	{
+		_DRAWSPACE_DELETE_(s);
+	}
+
+
+	/*
 	renderer->DestroyTexture(m_subpass->GetTargetTexture()->GetRenderData());
 
 	auto node{ static_cast<FaceDrawingNode *>(m_subpass_node) };
 	_DRAWSPACE_DELETE_(node);
 
 	_DRAWSPACE_DELETE_(m_heightmap_pass);
+	*/
 }
 
 void HeighmapSubPass::RegisterSubpassDoneHandler(SubPassDoneHandler* p_handler)

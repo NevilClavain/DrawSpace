@@ -144,7 +144,7 @@ void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
     QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
     
     Patch* patch = node->GetContent();
-    patch->DestroyColorTexture();
+    patch->CleanupSubpasses();
     _DRAWSPACE_DELETE_( patch );
 }
 
