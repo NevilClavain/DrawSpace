@@ -125,7 +125,7 @@ void HeighmapSubPass::SubPassAborted(void)
 
 DrawSpace::Core::Texture* HeighmapSubPass::GetHMTexture(void) const
 {
-	return m_heightmap_texture;;
+	return m_heightmap_texture;
 }
 
 void* HeighmapSubPass::GetHMTextureContent(void) const
