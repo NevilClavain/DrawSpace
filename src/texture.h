@@ -36,6 +36,9 @@ class Texture
 {
 public:
 
+    //////////////////////////////////////////////////////////
+    // pour les textures render targets
+
     using RenderPurpose = enum
     {
         RENDERPURPOSE_COLOR,
@@ -52,6 +55,8 @@ public:
 
     };
 
+    //////////////////////////////////////////////////////////
+    // pour les textures qui ne sont pas des render targets
     using Purpose = enum
     {
         PURPOSE_COLORFROMFILE,
