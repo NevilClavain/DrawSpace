@@ -1818,6 +1818,10 @@ bool D3D11Renderer::CopyTextureContent( void* p_texturedata )
                 bpp = 16;
                 break;
 
+            case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                bpp = 8;
+                break;
+
             default:
                 bpp = -1;
                 break;
