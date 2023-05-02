@@ -1407,6 +1407,12 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
                 format = DXGI_FORMAT_R16G16B16A16_FLOAT;
                 bpp = 8;
                 break;
+
+            case Texture::RENDERPURPOSE_FLOATVECTOR32:
+
+                format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+                bpp = 16;
+                break;
         }
 
         texture_infos = _DRAWSPACE_NEW_(TextureInfos, TextureInfos);
@@ -1435,11 +1441,14 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             ID3D11ShaderResourceView*           textureResourceView;
 
+
             void* data = p_texture->GetData();
             size_t data_size = p_texture->GetDataSize();
 
             hRes = D3DX11CreateShaderResourceViewFromMemory( m_lpd3ddevice, data, data_size, NULL, NULL, &textureResourceView, NULL );
             D3D11_CHECK( D3DX11CreateShaderResourceViewFromMemory )
+
+
 
             dsstring path;
             p_texture->GetPath( path );
