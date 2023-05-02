@@ -142,6 +142,8 @@ private:
     //void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
     //void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
 
+    static float                            half_to_float(unsigned short p_val);
+
     
 public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 

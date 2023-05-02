@@ -211,7 +211,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     bool register_subpass{ false };
     SubPass::Destination subpass_dest;
 
-    /*
+    
     if (m_nbLODRanges - 1 == m_lod_level)
     {
         subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
@@ -219,10 +219,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     else if (m_lod_level >= m_nbLODRanges - 8)
     {
         subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
-    }
-    */
-    subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
-    
+    }    
 
     if( m_enable_datatexture )
     {
@@ -342,6 +339,8 @@ void Patch::prepare_data_texture( /*SubPass::SubPassCreationHandler* p_handler, 
     }
             
     ////////////////////////
+
+    m_datatexture_pass->GetTargetTexture()->AllocTextureContent();
 
     m_subpass_node_list.push_back(node);
     m_subpass_list.push_back(m_datatexture_pass);
@@ -846,7 +845,11 @@ DrawSpace::IntermediatePass* Patch::create_data_texture_pass( void )
 
     ipass->SetTargetDimsFromRenderer( false );    
     ipass->SetTargetDims( cst::patchHighResolution, cst::patchHighResolution );
+
     ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOATVECTOR );
+    //ipass->SetRenderPurpose(Texture::RENDERPURPOSE_FLOATVECTOR32);
+
+    ipass->SetRenderTarget(Texture::RENDERTARGET_CPU);
     
     ipass->Initialize();
     ipass->GetRenderingQueue()->EnableDepthClearing( false );
@@ -902,30 +905,109 @@ void Patch::SubPassDone( void )
 {
     // subpass effectuee, l'entree dans la queue n'existe donc plus...
 
-    if (m_datatexture_pass)
+    m_subpass_entry_infos_list.clear();
+
+    if (m_parent)
     {
+        m_texture_referent = this;
+        m_global_ref_u1 = 0.0;
+        m_global_ref_v1 = 0.0;
+        m_global_ref_u2 = 1.0;
+        m_global_ref_v2 = 1.0;
 
-        m_subpass_entry_infos_list.clear();
-
-        if (m_parent)
+        if (m_owner->HasChildren())
         {
-            m_texture_referent = this;
-            m_global_ref_u1 = 0.0;
-            m_global_ref_v1 = 0.0;
-            m_global_ref_u2 = 1.0;
-            m_global_ref_v2 = 1.0;
-
-            if (m_owner->HasChildren())
+            for (long i = 0; i < 4; i++)
             {
-                for (long i = 0; i < 4; i++)
-                {
-                    QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>(m_owner->GetChild(i));
+                QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>(m_owner->GetChild(i));
 
-                    child->GetContent()->recurs_update_texture_referent(m_texture_referent);
-                }
+                child->GetContent()->recurs_update_texture_referent(m_texture_referent);
             }
         }
     }
+
+    ///////////////////////////////
+
+
+    const auto data_texture{ m_datatexture_pass->GetTargetTexture() };
+    bool status{ data_texture->CopyTextureContent() };
+
+    const auto datamap{ (unsigned short*)data_texture->GetTextureContentPtr() };
+
+    const auto a0{ datamap[0] };
+    const auto a1{ datamap[1] };
+    const auto a2{ datamap[2] };
+    const auto a3{ datamap[3] };
+
+    const auto f_a0{ half_to_float(a0) };
+    const auto f_a1{ half_to_float(a1) };
+    const auto f_a2{ half_to_float(a2) };
+    const auto f_a3{ half_to_float(a3) };
+
+
+
+    _asm nop
+}
+
+float Patch::half_to_float(unsigned short p_val)
+{
+    constexpr unsigned short ZERO = 0x0000;
+
+    /// A static constant for a half float with a value of not-a-number.
+    constexpr unsigned short NOT_A_NUMBER = 0xFFFF;
+
+    /// A static constant for a half float with a value of positive infinity.
+    constexpr unsigned short POSITIVE_INFINITY = 0x7C00;
+
+    /// A static constant for a half float with a value of negative infinity.
+    constexpr unsigned short NEGATIVE_INFINITY = 0xFC00;
+
+    /// A mask which isolates the sign of a half float number.
+    constexpr unsigned short HALF_FLOAT_SIGN_MASK = 0x8000;
+
+    /// A mask which isolates the exponent of a half float number.
+    constexpr unsigned short HALF_FLOAT_EXPONENT_MASK = 0x7C00;
+
+    /// A mask which isolates the significand of a half float number.
+    constexpr unsigned short HALF_FLOAT_SIGNIFICAND_MASK = 0x03FF;
+
+    /// A mask which isolates the sign of a single precision float number.
+    constexpr unsigned long FLOAT_SIGN_MASK = 0x80000000;
+
+    /// A mask which isolates the exponent of a single precision float number.
+    constexpr unsigned long FLOAT_EXPONENT_MASK = 0x7F800000;
+
+    /// A mask which isolates the significand of a single precision float number.
+    constexpr unsigned long FLOAT_SIGNIFICAND_MASK = 0x007FFFFF;
+
+    // Catch special case half floating point values.
+    switch (p_val)
+    {
+        case NOT_A_NUMBER:
+            _DSEXCEPTION("half float conversion : NOT_A_NUMBER");
+            
+        case POSITIVE_INFINITY:
+            _DSEXCEPTION("half float conversion : POSITIVE_INFINITY");
+            
+        case NEGATIVE_INFINITY:
+            _DSEXCEPTION("half float conversion : NEGATIVE_INFINITY");            
+    }
+
+    // Start by computing the significand in single precision format.
+    unsigned long value{ unsigned(p_val & HALF_FLOAT_SIGNIFICAND_MASK) << 13 };
+
+    const register unsigned exponent{ unsigned(p_val & HALF_FLOAT_EXPONENT_MASK) >> 10 };
+
+    if (exponent != 0)
+    {
+        // Add the exponent of the float, converting the offset binary formats of the representations.
+        value |= (((exponent - 15 + 127) << 23) & FLOAT_EXPONENT_MASK);
+    }
+
+    // Add the sign bit.
+    value |= unsigned long(p_val & HALF_FLOAT_SIGN_MASK) << 16;
+
+    return *((float*)&value);
 }
 
 void Patch::SubPassAborted(void)

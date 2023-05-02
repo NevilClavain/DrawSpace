@@ -39,6 +39,7 @@
 #include <sstream>
 #include <iterator>
 #include <mutex>
+#include <limits>
 
 #pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
 #define _DRAWSPACE_ENABLE_TRACES_
