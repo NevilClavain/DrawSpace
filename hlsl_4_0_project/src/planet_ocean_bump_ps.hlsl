@@ -33,6 +33,7 @@ SamplerState SamplerWave            : register(s0);
 
 struct PS_INTPUT 
 {
+    float4 Position                 : SV_POSITION;
     float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
     float4 UnitPatch_TexCoord		: TEXCOORD1;
     float4 GlobalPatch_TexCoord		: TEXCOORD2;
