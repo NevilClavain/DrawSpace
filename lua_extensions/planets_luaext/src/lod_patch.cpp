@@ -211,7 +211,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     bool register_subpass{ false };
     SubPass::Destination subpass_dest;
 
-    
+    /*
     if (m_nbLODRanges - 1 == m_lod_level)
     {
         subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
@@ -219,7 +219,8 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     else if (m_lod_level >= m_nbLODRanges - 8)
     {
         subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
-    }    
+    } 
+    */
 
     if( m_enable_datatexture )
     {
@@ -227,18 +228,22 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
         {
             prepare_data_texture( p_layer_index);
             register_subpass = true;
+            subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
         }
         else if( m_lod_level >= m_nbLODRanges - 8 )
         {
             prepare_data_texture( p_layer_index);
             register_subpass = true;
+            subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
 
         
-        if (cst::FoliageRootLODLevel >= m_lod_level)
+        //if (cst::FoliageRootLODLevel == m_lod_level)
+        if (0 == m_lod_level)
         {
-            //prepare_hm_texture(p_layer_index);
-            //register_subpass = true;
+            prepare_data_texture(p_layer_index);
+            register_subpass = true;
+            subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
         
     }
@@ -901,7 +906,7 @@ Patch* Patch::GetTextureReferent( void ) const
     return m_texture_referent;
 }
 
-void Patch::SubPassDone( void )
+void Patch::SubPassDone(void)
 {
     // subpass effectuee, l'entree dans la queue n'existe donc plus...
 
@@ -934,6 +939,7 @@ void Patch::SubPassDone( void )
 
     const auto datamap{ (unsigned short*)data_texture->GetTextureContentPtr() };
 
+    /*
     const auto a0{ datamap[0] };
     const auto a1{ datamap[1] };
     const auto a2{ datamap[2] };
@@ -944,9 +950,54 @@ void Patch::SubPassDone( void )
     const auto f_a2{ half_to_float(a2) };
     const auto f_a3{ half_to_float(a3) };
 
-
-
     _asm nop
+    */
+
+    constexpr int heighmap_dest_resol{ 64 };
+
+    if (HasHeightMap())
+    {
+        auto old_buffer{ GetHeightMap() };
+        _DRAWSPACE_DELETE_N_(old_buffer);
+    }
+    const auto hm_buffer_size{ heighmap_dest_resol * heighmap_dest_resol };
+    const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
+
+    
+    
+    constexpr int texture_source_resol{ cst::patchHighResolution };
+    
+    constexpr int pixel_step{ texture_source_resol / heighmap_dest_resol };
+
+    int id{ 0 }, jd{ 0 };
+
+    for (int i = 0; i < texture_source_resol; i += pixel_step) {
+
+        jd = 0;
+        for (int j = 0; j < texture_source_resol; j+=pixel_step) {
+
+            const auto offset_src{ (texture_source_resol * i) + j };
+            const auto offset_dst{ (heighmap_dest_resol * id) + jd };
+
+            const auto half_precision_altitude{ datamap[(4 * offset_src) + 3] };
+            const auto altitude{ half_to_float(half_precision_altitude) };
+
+            patch_hm_buffer[offset_dst] = altitude;
+
+            jd++;
+        }
+        id++;
+    }
+
+
+    SetHeightMap(patch_hm_buffer);
+
+    if (m_foliagesCoordinates.size() > 0)
+    {
+        _asm nop
+    }
+
+
 }
 
 float Patch::half_to_float(unsigned short p_val)

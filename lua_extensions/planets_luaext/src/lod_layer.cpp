@@ -390,6 +390,7 @@ void Layer::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
         dsstring(" hm purpose = ") + std::to_string((int)p_subpass->GetPurpose())
     );
 
+   
     if (heightmap_source_patch->HasHeightMap())
     {
         auto old_buffer{ heightmap_source_patch->GetHeightMap() };
@@ -399,8 +400,9 @@ void Layer::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
     const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
     memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
-
+   
     heightmap_source_patch->SetHeightMap(patch_hm_buffer);
+    
 
     Meshe final_meshe;
 
