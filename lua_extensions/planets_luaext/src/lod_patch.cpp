@@ -239,7 +239,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
 
         
         //if (cst::FoliageRootLODLevel == m_lod_level)
-        if (0 == m_lod_level)
+        if (0 == m_lod_level || 1 == m_lod_level)
         {
             prepare_data_texture(p_layer_index);
             register_subpass = true;
