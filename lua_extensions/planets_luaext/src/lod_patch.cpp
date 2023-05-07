@@ -154,7 +154,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
         std::default_random_engine rand_engine(seed);
         std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 400; i++)
         {
             const auto xp{ rand_source(rand_engine) };
             const auto yp{ rand_source(rand_engine) };
@@ -211,17 +211,6 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     bool register_subpass{ false };
     SubPass::Destination subpass_dest;
 
-    /*
-    if (m_nbLODRanges - 1 == m_lod_level)
-    {
-        subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
-    }
-    else if (m_lod_level >= m_nbLODRanges - 8)
-    {
-        subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
-    } 
-    */
-
     if( m_enable_datatexture )
     {
         if( m_nbLODRanges - 1 == m_lod_level )
@@ -237,14 +226,15 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
             subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
 
-        
-        //if (cst::FoliageRootLODLevel == m_lod_level)
+        // enable/disable foliage
+        /*
         if (0 == m_lod_level || 1 == m_lod_level)
         {
             prepare_data_texture(p_layer_index);
             register_subpass = true;
             subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
+        */
         
     }
 
