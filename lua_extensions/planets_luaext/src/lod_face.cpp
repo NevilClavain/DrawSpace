@@ -690,7 +690,9 @@ dsreal Face::GetRelativeAltSphere( void ) const
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
-    m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_diameter / 2.0 ) );
+    //m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_diameter / 2.0 ) );
+    m_relative_alt = p_alt;
+
     m_relative_alt_sphere = p_alt;
     if( m_hot )
     { 
@@ -698,8 +700,8 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         // c'est la fct atan qui est choisie pour son profil.
 
         // ramener dans l'intervale 1.0 - 0.0
-        dsreal factor = Maths::Clamp( 0.0, 1.0, m_relative_alt - 1.0 );
-        dsreal factor2 = atan( 18.0 * factor ) / 1.57;
+        const auto factor { Maths::Clamp(0.0, 1.0, m_relative_alt - 1.0) };
+        const auto factor2 { atan(60.0 * factor) / 1.57 };
 
         m_lod_slipping_sup = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 12, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, factor2 ) );
         m_lod_slipping_inf = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 0, /*NB_LOD_RANGES - 2*/ m_nbLODRanges - 2, factor2 ) );
