@@ -215,26 +215,26 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
     {
         if( m_nbLODRanges - 1 == m_lod_level )
         {
-            prepare_data_texture( p_layer_index);
+            prepare_data_texture(p_layer_index, cst::patchHighResolution);
             register_subpass = true;
             subpass_dest = SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS;
         }
         else if( m_lod_level >= m_nbLODRanges - 8 )
         {
-            prepare_data_texture( p_layer_index);
+            prepare_data_texture(p_layer_index, cst::patchHighResolution);
             register_subpass = true;
             subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
 
         // enable/disable foliage
-        /*
+        
         if (0 == m_lod_level || 1 == m_lod_level)
         {
-            prepare_data_texture(p_layer_index);
+            prepare_data_texture(p_layer_index, cst::patchHighResolution);
             register_subpass = true;
             subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
-        */
+        
         
     }
 
@@ -310,9 +310,9 @@ int Patch::GetLayerIndex(void) const
     return m_layer_index;
 }
 
-void Patch::prepare_data_texture( /*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index)
+void Patch::prepare_data_texture(int p_layer_index, int p_resol)
 {
-    m_datatexture_pass = create_data_texture_pass();
+    m_datatexture_pass = create_data_texture_pass(p_resol);
 
     std::vector<Patch*> dl;
     dl.push_back( this );
@@ -829,7 +829,7 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
     return false;
 }
 
-DrawSpace::IntermediatePass* Patch::create_data_texture_pass( void )
+DrawSpace::IntermediatePass* Patch::create_data_texture_pass(int p_resol)
 {
     char thisname[32];
 
@@ -839,10 +839,9 @@ DrawSpace::IntermediatePass* Patch::create_data_texture_pass( void )
     IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
 
     ipass->SetTargetDimsFromRenderer( false );    
-    ipass->SetTargetDims( cst::patchHighResolution, cst::patchHighResolution );
+    ipass->SetTargetDims(p_resol, p_resol);
 
     ipass->SetRenderPurpose( Texture::RENDERPURPOSE_FLOATVECTOR );
-    //ipass->SetRenderPurpose(Texture::RENDERPURPOSE_FLOATVECTOR32);
 
     ipass->SetRenderTarget(Texture::RENDERTARGET_CPU);
     
@@ -928,20 +927,6 @@ void Patch::SubPassDone(void)
     bool status{ data_texture->CopyTextureContent() };
 
     const auto datamap{ (unsigned short*)data_texture->GetTextureContentPtr() };
-
-    /*
-    const auto a0{ datamap[0] };
-    const auto a1{ datamap[1] };
-    const auto a2{ datamap[2] };
-    const auto a3{ datamap[3] };
-
-    const auto f_a0{ half_to_float(a0) };
-    const auto f_a1{ half_to_float(a1) };
-    const auto f_a2{ half_to_float(a2) };
-    const auto f_a3{ half_to_float(a3) };
-
-    _asm nop
-    */
 
     constexpr int heighmap_dest_resol{ 64 };
 

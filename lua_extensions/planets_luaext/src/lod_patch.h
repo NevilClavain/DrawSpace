@@ -132,8 +132,8 @@ private:
     DrawSpace::IntermediatePass*            create_heightmap_pass(void);
     void                                    prepare_hm_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index);
 
-    DrawSpace::IntermediatePass*            create_data_texture_pass( void );
-    void                                    prepare_data_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index);
+    DrawSpace::IntermediatePass*            create_data_texture_pass(int p_resol);
+    void                                    prepare_data_texture(int p_layer_index, int p_resol);
 
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
 
