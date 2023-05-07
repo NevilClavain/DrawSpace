@@ -305,7 +305,10 @@ local planet_specific_config_descr =
 	mix_seed2							         = 17566.0,
 	terrainbump_factor					         = 16.0,
 	splat_transition_up_relative_alt	         = 1.095,
-	splat_transition_down_relative_alt	         = 1.0040,
+
+	--splat_transition_down_relative_alt	         = 1.0040,
+	splat_transition_down_relative_alt	         = 1.010,
+
 	splat_texture_resol					         = 16,
     zbuffer_activation_relative_alt              = 1.045,
 	atmo_kr								         = 0.0033,
