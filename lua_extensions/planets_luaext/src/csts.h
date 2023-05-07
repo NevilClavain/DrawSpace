@@ -33,7 +33,6 @@ namespace cst
 
     static constexpr dsreal     detailsPatchScaling         = 1.0;
 
-    static constexpr int        lod0base                    = 19000.0;
     static constexpr int        nbLODRanges_inertBodies     = 13;
     static constexpr int        nbLODRanges_freeCameras     = 14;
 

@@ -690,7 +690,6 @@ dsreal Face::GetRelativeAltSphere( void ) const
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
-    //m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_diameter / 2.0 ) );
     m_relative_alt = p_alt;
 
     m_relative_alt_sphere = p_alt;

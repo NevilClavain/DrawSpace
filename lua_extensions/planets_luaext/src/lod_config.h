@@ -50,7 +50,6 @@ public:
         dsstring    description; // for debug purpose only;
     };
 
-    double                          m_lod0base;
     int                             m_nbLODRanges_freeCameras;
     int                             m_nbLODRanges_inertBodies;
 
