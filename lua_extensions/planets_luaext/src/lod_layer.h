@@ -120,7 +120,7 @@ public:
 
     Body*                           GetBody(void) const;
     bool                            GetHotState(void) const;
-    //Layer::SubPassCreationHandler*  GetSubPassCreationHandler(void) const;
+
     int                             GetCurrentLOD(void) const;
     
     void                            SetHotState(bool p_hotstate);
@@ -129,11 +129,7 @@ public:
     void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
     void                            Compute( void );
 
-    /*
-    void                            SubPassDone(LOD::HeighmapSubPass* p_subpass);
-    void                            SubPassAborted(LOD::HeighmapSubPass* p_subpass);
-    */
-
+    
     void                            ResetBody(void);
 
     void                            RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler);

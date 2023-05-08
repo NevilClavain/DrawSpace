@@ -51,13 +51,8 @@ m_config( p_config ),
 m_subpasscreation_handler( p_handler ),
 m_parent( p_parent ),
 m_nodeid( p_nodeid ),
-//m_subpass_entry_infos_valid( false ),
 m_nbLODRanges( p_nbLODRanges ),
 m_layer_index( p_layer_index )
-/*,
-m_subpassDoneCb(this, &Patch::on_subpassdone),
-m_subpassAbortedCb(this, &Patch::on_subpassaborted)
-*/
 {
     m_enable_datatexture = m_config->m_layers_descr[p_layer_index].enable_datatextures;
     m_enable_foliage = m_config->m_layers_descr[p_layer_index].enable_foliage;
@@ -154,7 +149,7 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
         std::default_random_engine rand_engine(seed);
         std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
 
-        for (int i = 0; i < 400; i++)
+        for (int i = 0; i < cst::nbFoliageCoords; i++)
         {
             const auto xp{ rand_source(rand_engine) };
             const auto yp{ rand_source(rand_engine) };
@@ -226,16 +221,13 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
             subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
         }
 
-        // enable/disable foliage
-        
-        if (0 == m_lod_level || 1 == m_lod_level)
-        {
-            prepare_data_texture(p_layer_index, cst::patchHighResolution);
+        // for foliage
+        if (cst::FoliageRootLODLevel >= m_lod_level)
+        {            
+            prepare_data_texture(p_layer_index, cst::patchLowResolution);
             register_subpass = true;
             subpass_dest = SubPass::Destination::DELAYED_SINGLE_SUBPASS;
-        }
-        
-        
+        }               
     }
 
     if (register_subpass && m_subpasscreation_handler)
@@ -277,14 +269,6 @@ m_subpassAbortedCb(this, &Patch::on_subpassaborted)
         m_global_u2 = 1.0;
         m_global_v2 = 1.0;
     }
-
-    /////////////////////////
-    /*
-    if (cst::SurfaceLayer == p_layer_index)
-    {
-        generate_heightmap();
-    } 
-    */
 }
 
 Patch::~Patch( void )
@@ -338,81 +322,13 @@ void Patch::prepare_data_texture(int p_layer_index, int p_resol)
     m_datatexture_pass->GetTargetTexture()->AllocTextureContent();
 
     m_subpass_node_list.push_back(node);
-    m_subpass_list.push_back(m_datatexture_pass);
-    
-    /*
-    // appel handler pour enregistrer et executer la passe
-    
-    if( p_handler )
-    {
-        m_subpass_entry_infos_list.push_back((*p_handler)(this, p_subpass_dest));
-    }
-    */
+    m_subpass_list.push_back(m_datatexture_pass);   
 }
-
-void Patch::prepare_hm_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index)
-{
-    m_heightmap_pass = create_heightmap_pass();
-
-    std::vector<Patch*> dl;
-    dl.push_back(this);
-
-
-    // creation/preparation du node
-
-    auto renderer{ SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
-    const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(renderer, m_config, p_layer_index)) };
-
-    node->SetMeshe(LOD::Body::m_patch_meshe);
-    node->SetDisplayList(dl);
-
-    node->SetBinder(m_config->m_layers_descr[p_layer_index].heightmapGenerationBinder[m_orientation]);
-
-    void* tx_data;
-    if (false == renderer->CreateTexture(m_heightmap_pass->GetTargetTexture(), &tx_data))
-    {
-        _DSEXCEPTION("failed to create hm subpasstarget texture in renderer");
-    }
-
-    ////////////////////////
-
-    m_heightmap_pass->GetTargetTexture()->AllocTextureContent();
-
-    m_subpass_node_list.push_back(node);
-    m_subpass_list.push_back(m_heightmap_pass);
-
-}
-
 
 
 void Patch::CleanupSubpasses( void )
 {
     // remove texture on renderer side
-    /*
-    if( m_subpass && m_subpass_node )
-    {
-        if( m_subpass_entry_infos_valid )
-        {
-            try
-            {
-                remove_entry_from_queue( m_subpass_entry_infos );
-            } 
-            catch( ... )
-            {
-                _DSEXCEPTION( "unexpected error while trying to remove subpass queue entry" );
-            }
-        }
-
-        DrawSpace::Interface::Renderer* renderer = SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
-        renderer->DestroyTexture( m_subpass->GetTargetTexture()->GetRenderData() );
-
-        // remove node
-        _DRAWSPACE_DELETE_( m_subpass_node );
-
-        // remove pass
-        _DRAWSPACE_DELETE_( m_subpass );
-    }
-    */
 
     for (const auto& e : m_subpass_entry_infos_list)
     {
@@ -851,24 +767,6 @@ DrawSpace::IntermediatePass* Patch::create_data_texture_pass(int p_resol)
     return ipass;
 }
 
-DrawSpace::IntermediatePass* Patch::create_heightmap_pass(void)
-{
-    const auto thisname{ dsstring("layer_") + std::to_string((int)this) };
-    const auto complete_name{ thisname + dsstring("_heightmap_pass") };
-
-    const auto ipass{ _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name)) };
-
-    ipass->SetTargetDimsFromRenderer(false);
-    ipass->SetTargetDims(heightmapTextureSize, heightmapTextureSize);
-    ipass->SetRenderPurpose(Texture::RENDERPURPOSE_FLOAT32);
-    ipass->SetRenderTarget(Texture::RENDERTARGET_CPU);
-
-    ipass->Initialize();
-    ipass->GetRenderingQueue()->EnableDepthClearing(true);
-
-    return ipass;
-}
-
 DrawSpace::Core::Texture* Patch::GetDataTexture( void ) const
 {
     if( m_datatexture_pass )
@@ -928,7 +826,7 @@ void Patch::SubPassDone(void)
 
     const auto datamap{ (unsigned short*)data_texture->GetTextureContentPtr() };
 
-    constexpr int heighmap_dest_resol{ 64 };
+    constexpr int heighmap_dest_resol{ cst::patchLowResolution };
 
     if (HasHeightMap())
     {
@@ -938,9 +836,8 @@ void Patch::SubPassDone(void)
     const auto hm_buffer_size{ heighmap_dest_resol * heighmap_dest_resol };
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
 
-    
-    
-    constexpr int texture_source_resol{ cst::patchHighResolution };
+      
+    constexpr int texture_source_resol{ cst::patchLowResolution };
     
     constexpr int pixel_step{ texture_source_resol / heighmap_dest_resol };
 
@@ -1084,60 +981,6 @@ dsstring Patch::DumpInfos(void) const
    
     return infos;
 }
-
-/*
-void Patch::generate_heightmap()
-{
-    
-    // launch hm generation
-    
-    std::vector<LOD::Patch*> display_list;
-    display_list.push_back(this);
-
-    LOD::HeighmapSubPass* current_hm{ _DRAWSPACE_NEW_(HeighmapSubPass, HeighmapSubPass(m_subpasscreation_handler, m_config, GetOrientation(), m_layer_index, HeighmapSubPass::Purpose::FOR_FOLIAGE)) };
-
-    current_hm->RegisterSubpassDoneHandler(&m_subpassDoneCb);
-    //current_hm->RegisterSubpassAbortedHandler(&m_subpassAbortedCb);
-
-    const auto node{ static_cast<LOD::FaceDrawingNode*>(current_hm->GetNode()) };
-    node->SetDisplayList(display_list);
-    
-    //AddRelatedSubpasses(current_hm);
-    
-
-}
-*/
-
-/*
-void Patch::on_subpassdone(LOD::HeighmapSubPass* p_subpass)
-{
-    p_subpass->GetHMTexture()->CopyTextureContent();
-    const auto heightmap{ (float*)p_subpass->GetHMTextureContent() };
-
-    if (HasHeightMap())
-    {
-        auto old_buffer{ GetHeightMap() };
-        _DRAWSPACE_DELETE_N_(old_buffer);
-    }
-
-    const auto hm_buffer_size{ HeighmapSubPass::heightmapTextureSize * HeighmapSubPass::heightmapTextureSize };
-    const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
-    memcpy(patch_hm_buffer, heightmap, hm_buffer_size * sizeof(float));
-
-    SetHeightMap(patch_hm_buffer);
-
-    RemoveRelatedSubpasses(p_subpass);
-    _DRAWSPACE_DELETE_(p_subpass);
-}
-*/
-
-/*
-void Patch::on_subpassaborted(LOD::HeighmapSubPass* p_subpass)
-{
-    _DRAWSPACE_DELETE_(p_subpass);
-}
-*/
-
 
 
 void Patch::recurs_update_texture_referent( Patch* p_texture_referent )

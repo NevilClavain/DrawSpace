@@ -39,6 +39,7 @@ namespace cst
     static constexpr int        patchResolution             = 15;
     static constexpr int        patchHighResolution         = 256;
     static constexpr int        patchAvgResolution          = 256;
+    static constexpr int        patchLowResolution          = 32;
 
     static constexpr dsreal     hotRelativeAlt              = 4.2;
     static constexpr int        timerPeriod                 = 20;     // ms
@@ -52,7 +53,11 @@ namespace cst
     static constexpr int        HeightMapRelativeLOD        = 4;
 
     // foliage
-    static constexpr int        FoliageRootLODLevel         = 3;
+    static constexpr int        FoliageRootLODLevel         = 1;
+    static constexpr int        nbFoliageCoords             = 30;
+
+
+    
 
 
 }

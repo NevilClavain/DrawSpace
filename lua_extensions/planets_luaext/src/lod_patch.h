@@ -66,11 +66,8 @@ public:
 
 private:
 
-    static constexpr int        heightmapTextureSize = 64;
-
     using SubpassDoneCb         = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
     using SubpassAbortedCb      = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
-
 
     Patch*                                      m_parent;
     Config*                                     m_config;
@@ -105,9 +102,6 @@ private:
     SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };
 
 
-
-    //EntryInfos                                  m_subpass_entry_infos;
-    //bool                                        m_subpass_entry_infos_valid;
     std::vector<EntryInfos>                     m_subpass_entry_infos_list;
 
     bool                                        m_enable_datatexture;
@@ -124,23 +118,15 @@ private:
 
     std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
 
-    //SubpassDoneCb                               m_subpassDoneCb;
-    //SubpassAbortedCb                            m_subpassAbortedCb;
    
     /////////////////////////////////////////////////////////////////////////////////////
-
-    DrawSpace::IntermediatePass*            create_heightmap_pass(void);
-    void                                    prepare_hm_texture(/*SubPass::SubPassCreationHandler* p_handler, SubPass::Destination p_subpass_dest,*/ int p_layer_index);
 
     DrawSpace::IntermediatePass*            create_data_texture_pass(int p_resol);
     void                                    prepare_data_texture(int p_layer_index, int p_resol);
 
     void                                    recurs_update_texture_referent( Patch* p_texture_referent );
 
-    //void                                    generate_heightmap(void);
 
-    //void                                    on_subpassdone(LOD::HeighmapSubPass* p_subpass);
-    //void                                    on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
 
     static float                            half_to_float(unsigned short p_val);
 

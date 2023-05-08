@@ -44,7 +44,6 @@ public:
     };
 
 
-    //static constexpr int heightmapTextureSize = 1024;
     static constexpr int heightmapTextureSize = 64;
 
     HeighmapSubPass(SubPassCreationHandler* p_subpasscreation_handler, LOD::Config* p_config, int p_orientation, int p_node_layer_index, Purpose p_purpose);

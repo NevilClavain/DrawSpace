@@ -171,59 +171,9 @@ void Layer::Compute(void)
 
     if (m_current_patch != curr_patch)
     {
-        m_current_patch = curr_patch;
-       
-        ///// generate new heightmap for foliage
-        /*
-        if (cst::SurfaceLayer == m_layer_index)
-        {
-            if (m_current_patch && m_current_lod == 0 && m_current_patch->GetOrientation() == m_body->GetCurrentFace())
-            {               
+        m_current_patch = curr_patch;             
 
-                auto parent_patch{ m_current_patch };
-
-                constexpr auto lod_limit{ cst::FoliageRootLODLevel };
-
-                for (int i = 0; i < lod_limit; i++)
-                {
-                    if (nullptr == parent_patch->GetParent())
-                    {
-                        break;
-                    }
-                    parent_patch = parent_patch->GetParent();
-                }
-
-                // recursive exploration
-                const std::function<void(LOD::Patch*)> browse_patches
-                {
-                    [&](LOD::Patch* p_patch) 
-                    {
-                        const auto owner { p_patch->GetOwner() };
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (owner->HasChildren())
-                            {
-                                const auto specialized_child{ static_cast<QuadtreeNode<Patch>*>(owner->GetChild(i)) };
-
-                                const auto sub_patch{ specialized_child->GetContent() };
-                                const auto patch_lod{ sub_patch->GetLodLevel() };
-                                
-                                generate_heightmap(sub_patch, HeighmapSubPass::Purpose::FOR_FOLIAGE);
-                                if (patch_lod > 0)
-                                {
-                                    browse_patches(sub_patch);
-                                }
-                            }
-                        }
-                    }
-                };
-
-                browse_patches(parent_patch);
-            }
-        }
-        */        
         ///// generate new heightmap for collisions
-
         if (m_collisions )
         {
 
