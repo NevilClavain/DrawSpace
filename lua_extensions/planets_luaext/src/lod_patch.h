@@ -58,7 +58,7 @@ public:
     static constexpr int    BottomPlanetFace   = 5;
 
     using FoliagesCoordinates =
-        struct
+    struct
     {
         dsreal x;
         dsreal y;

@@ -59,12 +59,12 @@ m_layer_index( p_layer_index )
 
     for( long i = 0; i < 8; i++ )
     {
-        m_neighbours[i] = NULL;
+        m_neighbours[i] = nullptr;
     }
 
     dsreal ui1, vi1, ui2, vi2;
 
-    if( NULL == p_parent )
+    if(nullptr == p_parent )
     {
         m_lod_level = m_nbLODRanges - 1;
         m_xpos = m_ypos = 0.0;
@@ -341,7 +341,6 @@ void Patch::CleanupSubpasses( void )
         {
             _DSEXCEPTION("unexpected error while trying to remove subpass queue entry");
         }
-
     }
 
     const auto renderer { SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
@@ -392,19 +391,16 @@ void Patch::SphereToCube( const Vector& p_in, Vector& p_out )
 {
     dsreal nx, ny, nz;
     nx = ny = nz = 0;
+   
+    const auto x { p_in[0] };
+    const auto y { p_in[1] };
+    const auto z { p_in[2] };
 
-    dsreal x, y, z;
+    const auto fx { fabs(p_in[0]) };
+    const auto fy { fabs(p_in[1]) };
+    const auto fz { fabs(p_in[2]) };
 
-    x = p_in[0];
-    y = p_in[1];
-    z = p_in[2];
-
-    dsreal fx, fy, fz;
-    fx = fabs( p_in[0] );
-    fy = fabs( p_in[1] );
-    fz = fabs( p_in[2] );
-
-    int nbIter = 6;
+    constexpr auto nbIter{ 6 };
 
     if( fy >= fx && fy >= fz )
     {
@@ -638,7 +634,7 @@ void Patch::ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::
 
 void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out )
 {
-    DrawSpace::Utils::Vector in = p_in;
+    auto in { p_in };
     DrawSpace::Utils::Vector v2, v3;
 
     // sidelenght scaling
@@ -733,12 +729,11 @@ void Patch::GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vect
 
 bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray )
 {    
-    dsreal xpos = m_xpos * m_ray;
-    dsreal ypos = m_ypos * m_ray;
-    dsreal sidelength = m_sidelength * m_ray;
+    const auto xpos { m_xpos * m_ray };
+    const auto ypos { m_ypos * m_ray };
+    const auto sidelength { m_sidelength * m_ray };
 
     Utils::Vector dist( xpos - p_centerx, ypos - p_centery, 0.0, 0.0 );
-
     if( dist.Length() < p_ray + sidelength )
     {
         return true;
@@ -748,12 +743,9 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
 
 DrawSpace::IntermediatePass* Patch::create_data_texture_pass(int p_resol)
 {
-    char thisname[32];
+    const auto complete_name { std::to_string((int)this) + dsstring("_colortexture_pass") };
 
-    sprintf( thisname, "patch_%x", this );
-
-    dsstring complete_name = dsstring( thisname ) + dsstring( "_colortexture_pass" );
-    IntermediatePass* ipass = _DRAWSPACE_NEW_( IntermediatePass, IntermediatePass( complete_name ) );
+    auto ipass { _DRAWSPACE_NEW_(IntermediatePass, IntermediatePass(complete_name)) };
 
     ipass->SetTargetDimsFromRenderer( false );    
     ipass->SetTargetDims(p_resol, p_resol);
@@ -812,8 +804,7 @@ void Patch::SubPassDone(void)
         {
             for (long i = 0; i < 4; i++)
             {
-                QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>(m_owner->GetChild(i));
-
+                const auto child { static_cast<QuadtreeNode<Patch>*>(m_owner->GetChild(i)) };
                 child->GetContent()->recurs_update_texture_referent(m_texture_referent);
             }
         }
@@ -823,7 +814,7 @@ void Patch::SubPassDone(void)
 
 
     const auto data_texture{ m_datatexture_pass->GetTargetTexture() };
-    bool status{ data_texture->CopyTextureContent() };
+    data_texture->CopyTextureContent();
 
     const auto datamap{ (unsigned short*)data_texture->GetTextureContentPtr() };
 
@@ -837,8 +828,7 @@ void Patch::SubPassDone(void)
     const auto hm_buffer_size{ heighmap_dest_resol * heighmap_dest_resol };
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
       
-    const int texture_source_resol{ m_datatexture_current_resol };
-    
+    const int texture_source_resol{ m_datatexture_current_resol };    
     const int pixel_step{ texture_source_resol / heighmap_dest_resol };
 
     int id{ 0 }, jd{ 0 };
@@ -861,15 +851,7 @@ void Patch::SubPassDone(void)
         id++;
     }
 
-
     SetHeightMap(patch_hm_buffer);
-
-    if (m_foliagesCoordinates.size() > 0)
-    {
-        _asm nop
-    }
-
-
 }
 
 float Patch::half_to_float(unsigned short p_val)
@@ -918,7 +900,6 @@ float Patch::half_to_float(unsigned short p_val)
 
     // Start by computing the significand in single precision format.
     unsigned long value{ unsigned(p_val & HALF_FLOAT_SIGNIFICAND_MASK) << 13 };
-
     const register unsigned exponent{ unsigned(p_val & HALF_FLOAT_EXPONENT_MASK) >> 10 };
 
     if (exponent != 0)
@@ -935,7 +916,6 @@ float Patch::half_to_float(unsigned short p_val)
 
 void Patch::SubPassAborted(void)
 {
-    //m_subpass_entry_infos_valid = false;
 }
 
 void Patch::AddRelatedSubpasses(HeighmapSubPass* p_subpass)
@@ -950,7 +930,6 @@ void Patch::RemoveRelatedSubpasses(HeighmapSubPass* p_subpass)
         m_related_subpasses.erase(p_subpass);
     }
 }
-
 
 void Patch::SetHeightMap(float* p_hm)
 {
