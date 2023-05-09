@@ -97,6 +97,8 @@ private:
     DrawSpace::IntermediatePass*                m_datatexture_pass{ nullptr };
     Patch*                                      m_texture_referent;
 
+    int                                         m_datatexture_current_resol{ 0 };
+
     DrawSpace::IntermediatePass*                m_heightmap_pass{ nullptr };
 
     SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };

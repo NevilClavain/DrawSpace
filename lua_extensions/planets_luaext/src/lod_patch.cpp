@@ -296,6 +296,7 @@ int Patch::GetLayerIndex(void) const
 
 void Patch::prepare_data_texture(int p_layer_index, int p_resol)
 {
+    m_datatexture_current_resol = p_resol;
     m_datatexture_pass = create_data_texture_pass(p_resol);
 
     std::vector<Patch*> dl;
@@ -835,11 +836,10 @@ void Patch::SubPassDone(void)
     }
     const auto hm_buffer_size{ heighmap_dest_resol * heighmap_dest_resol };
     const auto patch_hm_buffer{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(float, float[hm_buffer_size], hm_buffer_size, "heightmap for patch") };
-
       
-    constexpr int texture_source_resol{ cst::patchLowResolution };
+    const int texture_source_resol{ m_datatexture_current_resol };
     
-    constexpr int pixel_step{ texture_source_resol / heighmap_dest_resol };
+    const int pixel_step{ texture_source_resol / heighmap_dest_resol };
 
     int id{ 0 }, jd{ 0 };
 
