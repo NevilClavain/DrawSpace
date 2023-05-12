@@ -1050,7 +1050,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         details_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::SurfaceLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::MesheType::LOWRES_SKIRT_MESHE, LOD::cst::SurfaceLayer, ro);
                     details_binders_2[orientation] = details_binder;
                 }
 
@@ -1069,7 +1069,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
                     LOD::Binder* atmo_binder{ build_details_binder() };
-                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::HIRES_MESHE, LOD::cst::AtmosphereLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::MesheType::HIRES_MESHE, LOD::cst::AtmosphereLayer, ro);
                     atmo_binders_2[orientation] = atmo_binder;
                 }
 
@@ -1088,7 +1088,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         clouds_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::AVGRES_MESHE, LOD::cst::FlatCloudsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::MesheType::AVGRES_MESHE, LOD::cst::FlatCloudsLayer, ro);
                     flatclouds_binders_2[orientation] = clouds_binder;
 
                 }
@@ -1108,17 +1108,17 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     {
                         oceans_binder->SetTexture(wavepass_result_texture, 0);
 
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::MesheType::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
                     else if (m_oceanmask_pass == pass_id)
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::MesheType::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro, 1);
                     }
                     else
                     {
                         // Ocean details specular 
 
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::MesheType::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
 
                     oceans_binders_2[orientation] = oceans_binder;

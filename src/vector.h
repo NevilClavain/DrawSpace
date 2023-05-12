@@ -34,10 +34,6 @@ namespace Utils
 {
 class Vector
 {
-protected:
-
-    dsreal m_vector[4];
-
 public:
 
     Vector( void );
@@ -45,8 +41,6 @@ public:
     Vector( dsreal p_x, dsreal p_y );
 
     ~Vector( void );
-
-    dsreal* GetArray( void );
 
     dsreal operator[]( int p_index ) const
     {
@@ -58,13 +52,17 @@ public:
         return m_vector[p_index];
     };
 
-    dsreal LengthPow2( void );	
-    dsreal Length( void );
+    dsreal LengthPow2( void ) const;	
+    dsreal Length( void ) const;
 
     void Normalize( void );
     void Scale( dsreal p_scale );
 
 	static Vector Lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend);
+
+private:
+    dsreal m_vector[4];
+
 };
 }
 }

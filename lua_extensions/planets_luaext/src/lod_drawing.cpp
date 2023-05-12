@@ -872,7 +872,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
     switch( p_meshe_type )
     {
-        case Body::LOWRES_MESHE:
+        case Body::MesheType::LOWRES_MESHE:
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
@@ -891,7 +891,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             }
             break;
 
-        case Body::AVGRES_MESHE:
+        case Body::MesheType::AVGRES_MESHE:
            
             // node patch terrain
             node->SetMeshe( Body::m_patch3_meshe );
@@ -899,7 +899,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
             break;
 
-        case Body::LOWRES_SKIRT_MESHE:
+        case Body::MesheType::LOWRES_SKIRT_MESHE:
 
             node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
             node_skirts->m_debug_id = "LOWRES_SKIRT_MESHE_skirts for layer : " + std::to_string(p_layer_index);
@@ -926,7 +926,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
             }
             break;
 
-        case Body::HIRES_MESHE:
+        case Body::MesheType::HIRES_MESHE:
 
             //node patch terrain
             node->SetMeshe( Body::m_patch2_meshe );

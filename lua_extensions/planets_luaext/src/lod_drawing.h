@@ -46,20 +46,14 @@ class Layer;
 
 class CollisionMesheDrawingNode : public DrawSpace::Core::RenderingNode
 {
-protected:
-
-    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
-
-
 public:
-
     CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
-
     ~CollisionMesheDrawingNode(void);
 
-
     void Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
-
+    
+private:
+    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
 };
 
 class FaceDrawingNode : public DrawSpace::Core::RenderingNode
@@ -78,33 +72,8 @@ public:
     {
         int                             nb_patchs;
     };
-
-private:
-
-    DrawSpace::Interface::Renderer*                                                                             m_renderer{ nullptr };
-    Config*                                                                                                     m_config;
-    std::vector<Patch*>                                                                                         m_display_list;
-    Binder*                                                                                                     m_binder { nullptr };
-    Stats                                                                                                       m_stats;
-    Patch*                                                                                                      m_current_patch{ nullptr };  // le connaitre pour eventuellement le dessiner d'une facon differente
-    int                                                                                                         m_layer_index;
-    DrawPatchMode                                                                                               m_drawpatch_mode{ DrawPatchMode::DRAW_ALL };
-    DrawSpace::Utils::Vector                                                                                    m_relativehotpoint;
-    dsstring                                                                                                    m_current_body_description; // for debug purpose only
-
-    dsstring                                                                                                    m_current_pass;
-    std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      m_renderstate_per_passes;
-
-    int                                                                                                         m_maxlodlevel_to_draw{ -1 }; // used in pair with DRAW_MAXLODLEVEL
-
-    void                                draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, 
-                                                            const DrawSpace::Utils::Vector& p_invariant_view_pos,
-                                                            const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, 
-                                                            const DrawSpace::Utils::Matrix& p_proj );
-
-    bool                                check_view_in_patch( dsreal p_ray, const DrawSpace::Utils::Vector& p_view, Patch* p_patch );
     
-public:
+
     FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, Config* p_config, int p_layer_index );
     virtual ~FaceDrawingNode( void );
 
@@ -112,7 +81,6 @@ public:
                 const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, bool p_bind_ht_texture );
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
-
 
     void SetCurrentBodyDescription( const dsstring& p_descr );
     
@@ -133,6 +101,31 @@ public:
     void SetCurrentPass(const dsstring& p_pass);
 
     void UpdateRelativeHotPoint( const DrawSpace::Utils::Vector p_hotpoint );
+
+private:
+
+    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+    Config* m_config;
+    std::vector<Patch*>                                                                                         m_display_list;
+    Binder* m_binder{ nullptr };
+    Stats                                                                                                       m_stats;
+    Patch* m_current_patch{ nullptr };  // le connaitre pour eventuellement le dessiner d'une facon differente
+    int                                                                                                         m_layer_index;
+    DrawPatchMode                                                                                               m_drawpatch_mode{ DrawPatchMode::DRAW_ALL };
+    DrawSpace::Utils::Vector                                                                                    m_relativehotpoint;
+    dsstring                                                                                                    m_current_body_description; // for debug purpose only
+
+    dsstring                                                                                                    m_current_pass;
+    std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>      m_renderstate_per_passes;
+
+    int                                                                                                         m_maxlodlevel_to_draw{ -1 }; // used in pair with DRAW_MAXLODLEVEL
+
+    void                                draw_single_patch(Patch* p_patch, dsreal p_ray, dsreal p_rel_alt,
+        const DrawSpace::Utils::Vector& p_invariant_view_pos,
+        const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view,
+        const DrawSpace::Utils::Matrix& p_proj);
+
+    bool                                check_view_in_patch(dsreal p_ray, const DrawSpace::Utils::Vector& p_view, Patch* p_patch);
 };
 
 
@@ -146,6 +139,9 @@ public:
         TREES
     };
 
+    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
+    void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
+
 private:
 
     DrawSpace::Interface::Renderer* m_renderer{ nullptr };
@@ -153,75 +149,19 @@ private:
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
     void draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos);
 
-public:
-
-    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
-    void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
 };
 
 
 class Drawing
 {
+private:
+
+    using NodesSet = std::map<FaceDrawingNode*, int>;
+    using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*>;
+
 public:
 
     using NewCollisionMesheCreationCb = DrawSpace::Core::CallBack<Drawing, void, const DrawSpace::Core::Meshe&>;
-
-protected:
-
-    using NodesSet                  = std::map<FaceDrawingNode*, int>;
-    using RenderingNodeDrawCallback = DrawSpace::Core::CallBack<Drawing, void, DrawSpace::Core::RenderingNode*>;
-
-    std::vector<Body*>                                                          m_planetbodies;
-
-    std::vector<LOD::Layer*>                                                    m_layers;
-
-    std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
-    std::vector<std::pair<dsstring, FoliageDrawingNode*>>                       m_passesfoliagenodes;
-    std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
-    std::vector<FoliageDrawingNode*>                                            m_foliagedrawingnodes;
-
-    std::vector<std::pair<dsstring, CollisionMesheDrawingNode*>>                m_passescollisionsdrawingnodes;
-    std::vector<CollisionMesheDrawingNode*>                                     m_collisionmeshedrawingnodes;
-
-    DrawSpace::Core::Meshe                                                      m_collisionmeshe;
-
-    NodesSet                                                                    m_nodes;
-
-    RenderingNodeDrawCallback*                                                  m_singlenode_draw_handler{ nullptr };
-    
-    std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers; 
-        
-    DrawSpace::Interface::Renderer*                                             m_renderer{ nullptr };
-       
-    Config*                                                                     m_config;
-
-    DrawSpace::Core::Meshe*                                                     m_landplace_meshes[6];
-
-    DrawSpace::Core::Entity*                                                    m_owner_entity{ nullptr };
-
-    NewCollisionMesheCreationCb*                                                m_newcollisionmeshecreation_cb{ nullptr };
-
-    bool                                                                        m_collisionmeshe_valid{ false };
-
-    std::map<FaceDrawingNode*,Patch*>                                           m_current_patchs; // current patch for each FaceDrawingNode
-
-    void on_renderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    void on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-    void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
-
-    void on_foliagerenderingnode_draw( DrawSpace::Core::RenderingNode* p_rendering_node );
-
-
-    void create_landplace_meshe( long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest );
-
-    void create_collision_meshe_from(const DrawSpace::Core::Meshe& p_src_meshe);   // for collision meshe display (debug feature)
-
-    void create_all_landplace_meshes( void );
-    void destroy_all_landplace_meshes( void );
-
-    void on_new_collisionmeshe_creation(const DrawSpace::Core::Meshe& p_meshe);
-
-public:
 
     Drawing( Config* p_config );
     virtual ~Drawing( void );
@@ -257,6 +197,57 @@ public:
 
 
     std::vector<std::pair<dsstring, FaceDrawingNode*>> GetFaceDrawingNode(void) const;
+
+private:
+
+    std::vector<Body*>                                                          m_planetbodies;
+    std::vector<LOD::Layer*>                                                    m_layers;
+
+    std::vector<std::pair<dsstring, FaceDrawingNode*>>                          m_passesnodes;
+    std::vector<std::pair<dsstring, FoliageDrawingNode*>>                       m_passesfoliagenodes;
+    std::vector<FaceDrawingNode*>                                               m_facedrawingnodes;
+    std::vector<FoliageDrawingNode*>                                            m_foliagedrawingnodes;
+
+    std::vector<std::pair<dsstring, CollisionMesheDrawingNode*>>                m_passescollisionsdrawingnodes;
+    std::vector<CollisionMesheDrawingNode*>                                     m_collisionmeshedrawingnodes;
+
+    DrawSpace::Core::Meshe                                                      m_collisionmeshe;
+
+    NodesSet                                                                    m_nodes;
+
+    RenderingNodeDrawCallback* m_singlenode_draw_handler{ nullptr };
+
+    std::vector<RenderingNodeDrawCallback*>                                     m_drawing_handlers;
+
+    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+
+    Config* m_config;
+
+    DrawSpace::Core::Meshe* m_landplace_meshes[6];
+
+    DrawSpace::Core::Entity* m_owner_entity{ nullptr };
+
+    NewCollisionMesheCreationCb* m_newcollisionmeshecreation_cb{ nullptr };
+
+    bool                                                                        m_collisionmeshe_valid{ false };
+
+    std::map<FaceDrawingNode*, Patch*>                                          m_current_patchs; // current patch for each FaceDrawingNode
+
+    void on_renderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
+    void on_rendering_singlenode_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
+    void on_collisionmeshe_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
+
+    void on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
+
+
+    void create_landplace_meshe(long p_patch_resol, int p_orientation, DrawSpace::Core::Meshe* p_meshe_dest);
+
+    void create_collision_meshe_from(const DrawSpace::Core::Meshe& p_src_meshe);   // for collision meshe display (debug feature)
+
+    void create_all_landplace_meshes(void);
+    void destroy_all_landplace_meshes(void);
+
+    void on_new_collisionmeshe_creation(const DrawSpace::Core::Meshe& p_meshe);
 };
 }
 

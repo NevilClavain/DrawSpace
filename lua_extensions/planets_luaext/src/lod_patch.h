@@ -63,77 +63,7 @@ public:
         dsreal x;
         dsreal y;
     };
-
-private:
-
-    using SubpassDoneCb         = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
-    using SubpassAbortedCb      = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
-
-    Patch*                                      m_parent;
-    Config*                                     m_config;
-
-    dsreal                                      m_sidelength;
-    dsreal                                      m_xpos;
-    dsreal                                      m_ypos;
-    dsreal                                      m_ray;
-
-    dsreal                                      m_global_ref_u1;
-    dsreal                                      m_global_ref_v1;
-    dsreal                                      m_global_ref_u2;
-    dsreal                                      m_global_ref_v2;
-
-    dsreal                                      m_global_u1;
-    dsreal                                      m_global_v1;
-    dsreal                                      m_global_u2;
-    dsreal                                      m_global_v2;
-
-
-    int                                         m_orientation;
-    int                                         m_nodeid;
-    DrawSpace::Utils::BaseQuadtreeNode*         m_owner;
-    DrawSpace::Utils::BaseQuadtreeNode*         m_neighbours[8];
-    int                                         m_lod_level;
-
-    DrawSpace::IntermediatePass*                m_datatexture_pass{ nullptr };
-    Patch*                                      m_texture_referent;
-
-    int                                         m_datatexture_current_resol{ 0 };
-
-    DrawSpace::IntermediatePass*                m_heightmap_pass{ nullptr };
-
-    SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };
-
-
-    std::vector<EntryInfos>                     m_subpass_entry_infos_list;
-
-    bool                                        m_enable_datatexture;
-    bool                                        m_enable_foliage;
-
-    int                                         m_nbLODRanges;
-
-    float*                                      m_heightmap { nullptr };
-
-    int                                         m_layer_index;
-
-
-    std::set<HeighmapSubPass*>                  m_related_subpasses; // list of subpasses working with this patch
-
-    std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
-
-   
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    DrawSpace::IntermediatePass*            create_data_texture_pass(int p_resol);
-    void                                    prepare_data_texture(int p_layer_index, int p_resol);
-
-    void                                    recurs_update_texture_referent( Patch* p_texture_referent );
-
-
-
-    static float                            half_to_float(unsigned short p_val);
-
     
-public:
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
             SubPass::SubPassCreationHandler* p_handler, Config* p_config, int p_layer_index, int p_nbLODRanges );
 
@@ -186,7 +116,72 @@ public:
     
     // change les coords d'un vecteur pour obtenir son equivalent dans le repere face front, ou x et y du repere 2D correspondent
     // bien au x et y du repere 3D
-    static void                         ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );       
+    static void                         ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+
+private:
+
+    using SubpassDoneCb = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
+    using SubpassAbortedCb = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
+
+    Patch* m_parent;
+    Config* m_config;
+
+    dsreal                                      m_sidelength;
+    dsreal                                      m_xpos;
+    dsreal                                      m_ypos;
+    dsreal                                      m_ray;
+
+    dsreal                                      m_global_ref_u1;
+    dsreal                                      m_global_ref_v1;
+    dsreal                                      m_global_ref_u2;
+    dsreal                                      m_global_ref_v2;
+
+    dsreal                                      m_global_u1;
+    dsreal                                      m_global_v1;
+    dsreal                                      m_global_u2;
+    dsreal                                      m_global_v2;
+
+
+    int                                         m_orientation;
+    int                                         m_nodeid;
+    DrawSpace::Utils::BaseQuadtreeNode* m_owner;
+    DrawSpace::Utils::BaseQuadtreeNode* m_neighbours[8];
+    int                                         m_lod_level;
+
+    DrawSpace::IntermediatePass* m_datatexture_pass{ nullptr };
+    Patch* m_texture_referent;
+
+    int                                         m_datatexture_current_resol{ 0 };
+
+    DrawSpace::IntermediatePass* m_heightmap_pass{ nullptr };
+
+    SubPass::SubPassCreationHandler* m_subpasscreation_handler{ nullptr };
+
+
+    std::vector<EntryInfos>                     m_subpass_entry_infos_list;
+
+    bool                                        m_enable_datatexture;
+    bool                                        m_enable_foliage;
+
+    int                                         m_nbLODRanges;
+
+    float* m_heightmap{ nullptr };
+
+    int                                         m_layer_index;
+
+
+    std::set<HeighmapSubPass*>                  m_related_subpasses; // list of subpasses working with this patch
+
+    std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    DrawSpace::IntermediatePass* create_data_texture_pass(int p_resol);
+    void                                    prepare_data_texture(int p_layer_index, int p_resol);
+    void                                    recurs_update_texture_referent(Patch* p_texture_referent);
+    static float                            half_to_float(unsigned short p_val);
+
 };
 }
 

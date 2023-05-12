@@ -55,19 +55,14 @@ Vector::~Vector( void )
 
 }
 
-dsreal* Vector::GetArray( void ) 
-{ 
-    return m_vector; 
-};
-
-dsreal Vector::LengthPow2( void )
+dsreal Vector::LengthPow2( void ) const
 {
     return ( ( m_vector[0] * m_vector[0] ) +
              ( m_vector[1] * m_vector[1] ) +
              ( m_vector[2] * m_vector[2] ) );
 }
 
-dsreal Vector::Length( void )
+dsreal Vector::Length( void ) const
 {
     return ( std::sqrt( LengthPow2() ) );
 }
