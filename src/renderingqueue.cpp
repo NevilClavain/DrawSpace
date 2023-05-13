@@ -536,7 +536,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     {
         if(SortedListType::TEXTURE_LIST == sel_type )
         {
-            if( (*it).type == sel_type && (*it).stage == sel_stage )
+            if( it->type == sel_type && it->stage == sel_stage )
             {
                 p_todo.erase( it );
                 break;
@@ -544,7 +544,7 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
         }
         else
         {
-            if( (*it).type == sel_type )
+            if( it->type == sel_type )
             {
                 p_todo.erase( it );
                 break;
@@ -553,10 +553,8 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
     }
 
     // appels recursifs
-    //for( auto it = selected_lists.begin(); it != selected_lists.end(); ++it )
     for (auto e: selected_lists)
     {
-        //if( (*it).second.size() > 2 )
         if (e.second.size() > 2)
         {
             if( p_todo.size() > 0 )
@@ -590,7 +588,6 @@ void RenderingQueue::sort_step( std::vector<SortCategory>& p_todo, std::vector<R
 void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, std::vector<RenderingNode*>& p_in_list, std::map<dsstring, std::vector<RenderingNode*>>& p_out_lists )
 {
     std::map<dsstring, std::vector<RenderingNode*> > out_lists;
-    char buff[64];
 
     for(const auto& curr_node : p_in_list)
     {
@@ -609,8 +606,8 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     {
                         // pas de fx : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
-                        sprintf( buff, "%x", (long long)curr_node );
-                        const auto id{ dsstring("void_fx:") + dsstring(buff) };
+                        
+                        const auto id{ dsstring("void_fx:") + std::to_string((int)curr_node) };
                         out_lists[id].push_back( curr_node );
                     }
                 }
@@ -629,8 +626,7 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     {
                         // pas de fx : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
-                        sprintf( buff, "%x", (long long)curr_node );
-                        const auto id{ dsstring("void_fx:") + dsstring(buff) };
+                        const auto id{ dsstring("void_fx:") + std::to_string((int)curr_node) };
                         out_lists[id].push_back( curr_node );
                     }
                 }
@@ -649,8 +645,8 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     {
                         // pas de meshe : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
-                        sprintf( buff, "%x", (long long)curr_node );
-                        const auto id{ dsstring("void_meshe:") + dsstring(buff) };
+                        
+                        const auto id{ dsstring("void_meshe:") + std::to_string((int)curr_node) };
                         out_lists[id].push_back( curr_node );
                     }
                 }
@@ -668,8 +664,8 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     {
                         // pas de line meshe : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances
-                        sprintf(buff, "%x", (long long)curr_node);
-                        const auto id{ dsstring("void_linemeshe:") + dsstring(buff) };
+
+                        const auto id{ dsstring("void_linemeshe:") + std::to_string((int)curr_node) };
                         out_lists[id].push_back(curr_node);
                     }
 
@@ -683,16 +679,15 @@ void RenderingQueue::sort_list_by( SortedListType p_type, long p_texturestage, s
                     {
                         dsstring curr_txt_md5;
                         curr_tx->GetMD5( curr_txt_md5 );
-                        dsstring stage( itoa( p_texturestage, buff, 10 ) );
-                        dsstring signature = curr_txt_md5 + ":" + stage;
+
+                        dsstring signature = curr_txt_md5 + ":" + std::to_string(p_texturestage);
 
                     }
                     else
                     {
                         // pas de texture pour ce stage : ne doit pas influer sur les comptages de redondances
                         // s'assurer que l'id est unique, empechant ainsi la mise en place de fausses redondances                       
-                        sprintf( buff, "%d:%x", p_texturestage, (long long)curr_node );
-                        dsstring id = dsstring( "void_texture:" ) + dsstring( buff );
+                        const auto id{ dsstring("void_texture:") + std::to_string((int)curr_node) };
                         out_lists[id].push_back( curr_node );
                     }
                 }
