@@ -37,11 +37,11 @@ namespace DrawSpace
 {
 namespace Core
 {
-class RenderingNode
+struct RenderingNode
 {
 public:
-    static const int NeutralOrder = 10000;
-    static const int NbMaxTextures = 32;
+    static constexpr int NeutralOrder = 10000;
+    static constexpr int NbMaxTextures = 32;
 
     using ShadersParams = struct
     {
@@ -132,12 +132,15 @@ public:
     friend class RenderingQueue;
 
 protected:
+    Meshe*                                      m_meshe{ nullptr };
+
+private:
 
     Fx*                                         m_fx{ nullptr };
     Texture*                                    m_textures[NbMaxTextures]; // 32 textures stages max
     Texture*                                    m_vertextextures[NbMaxTextures];
 
-    Meshe*                                      m_meshe{ nullptr };
+    
     LineMeshe*                                  m_linemeshe{ nullptr };
 
     std::map<dsstring, ShadersParams*>			m_shader_params;
