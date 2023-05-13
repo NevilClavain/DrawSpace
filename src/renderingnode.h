@@ -151,7 +151,7 @@ private:
 
     BaseCallback<void, RenderingNode*>*         m_handler{ nullptr };
 
-    bool										m_drawing_enabled{ TRUE };
+    bool										m_drawing_enabled{ true };
 };
 }
 }
