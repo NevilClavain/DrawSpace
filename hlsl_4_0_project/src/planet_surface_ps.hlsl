@@ -620,6 +620,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     else
     {
+        // underwater
         fog_color.rgb = water_color;
         fog_color.a = 1.0;
     }

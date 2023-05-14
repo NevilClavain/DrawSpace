@@ -104,10 +104,10 @@ public:
 
 private:
 
-    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
-    Config* m_config;
+    DrawSpace::Interface::Renderer*                                                                             m_renderer{ nullptr };
+    Config*                                                                                                     m_config;
     std::vector<Patch*>                                                                                         m_display_list;
-    Binder* m_binder{ nullptr };
+    Binder*                                                                                                     m_binder{ nullptr };
     Stats                                                                                                       m_stats;
     Patch* m_current_patch{ nullptr };  // le connaitre pour eventuellement le dessiner d'une facon differente
     int                                                                                                         m_layer_index;
