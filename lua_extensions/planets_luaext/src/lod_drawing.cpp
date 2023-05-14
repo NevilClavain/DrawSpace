@@ -544,6 +544,11 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, con
 
     const auto hm_height{ hm[index_hm] };
 
+    if (hm_height < 0.0)
+    {
+        return;
+    }
+
     ////////////////////
 
     dsreal xp, yp;

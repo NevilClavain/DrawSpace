@@ -724,6 +724,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         final_color.y = 0.0;
     }
 
-    final_color.w = 2.0;
+    final_color.w = SPHERELOD_GROUND_ID;
     return final_color;
 }

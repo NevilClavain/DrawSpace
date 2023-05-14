@@ -28,6 +28,7 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+#include "spherelod_commons.hlsl"
 
 Texture2D txDiffuse         : register(t0);
 SamplerState sam            : register(s0);
@@ -49,5 +50,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         clip(-1.0);
     }
 
-    return color;;
+    color.w = SPHERELOD_FOLIAGE_ID;
+    return color;
 }

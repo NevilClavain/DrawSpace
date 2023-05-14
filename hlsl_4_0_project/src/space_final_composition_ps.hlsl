@@ -28,6 +28,8 @@ cbuffer legacyargs : register(b0)
     Matrix mat[512];
 };
 
+#include "spherelod_commons.hlsl"
+
 // debug mode : 1
 Texture2D txDiffuse                 : register(t0);
 SamplerState SamplerDiffuse         : register(s0);
@@ -68,9 +70,12 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     
     if (debug_mode == 0.0)
     {
+        float4 main_color = 0.0;
+        main_color.rgba = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgba;
+
         float4 mask;
         mask = txOceanMask.Sample(SamplerOceanMask, input.TexCoord0).xyzw;
-        if (mask.y > 0.0)
+        if (mask.y > 0.0 && main_color.w != SPHERELOD_FOLIAGE_ID)
         {
 
             ////////////// PLANET WATER RENDERING
@@ -140,9 +145,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         }
         else
         {
-            float4 main_color = 0.0;
-            main_color.rgba = txDiffuse.Sample(SamplerDiffuse, input.TexCoord0).rgba;
-
             if (relative_alt > 1.0 || !oceans_enabled)
             {
                 scene_color.rgb = main_color.rgb;
@@ -150,7 +152,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             else
             {                
                 // if underwater
-                if (main_color.a < 2.0)
+                if (main_color.a < SPHERELOD_GROUND_ID)
                 {
                     //if pixel from other than planet ground (clouds, atmo, spacebox, ship, objects etc...)
 
@@ -168,7 +170,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
                 }
                 else
                 {                
-                    //pixel from planet ground (identified by alpha == 2.0)
+                    //pixel from planet ground (identified by alpha == SPHERELOD_GROUND_ID)
                     scene_color.rgb = main_color.rgb;
                 }
             }
