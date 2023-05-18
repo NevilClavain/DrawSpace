@@ -98,7 +98,6 @@ struct VS_OUTPUT
     float Fog : FOG;
 };
 
-#include "mat_input_constants.hlsl"
 #include "fbm.hlsl"
 #include "multifbm_height.hlsl"
 #include "spherelod_commons.hlsl"

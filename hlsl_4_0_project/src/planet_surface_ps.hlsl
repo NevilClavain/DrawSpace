@@ -69,7 +69,7 @@ struct PS_INTPUT
     float4 c0_2 : COLOR4;
     float4 c1_2 : COLOR5;
 
-    float Fog : FOG;  
+    float Fog : FOG;
 };
 
 #include "spherelod_commons.hlsl"
