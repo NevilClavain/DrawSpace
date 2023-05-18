@@ -253,6 +253,12 @@ void PlanetsRenderingAspectImpl::Release(void)
             }
         }
 
+        for (auto& e : m_planet_foliage_binder)
+        {
+            _DRAWSPACE_DELETE_(e.second);
+        }
+
+
         if(m_climate_vshader)
         {
             _DRAWSPACE_DELETE_(m_climate_vshader);
@@ -282,6 +288,14 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             _DRAWSPACE_DELETE_(m_collisions_display_pshader);
         }
+
+
+        m_planet_detail_binder_2.clear();
+        m_planet_atmosphere_binder_2.clear();
+        m_planet_flatclouds_binder_2.clear();
+        m_planet_oceans_binder_2.clear();
+        m_planet_foliage_binder.clear();
+
     }
     else
     {
@@ -1192,7 +1206,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer);
             
-            //m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, fx, ro, textures.at(0), foliage_layer);
+
+            m_planet_foliage_binder[pass_id] = foliage_binder;
         }
     }
 

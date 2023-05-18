@@ -150,6 +150,8 @@ protected:
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_oceans_binder_2;
     std::array<LOD::Binder*, 6>                                     m_planet_climate_binder;
 
+    std::map<dsstring, LOD::Binder*>                                m_planet_foliage_binder;
+
     //std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
 
     std::array<LOD::Binder*, 6>                                     m_heightmap_binder;
