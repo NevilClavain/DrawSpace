@@ -140,7 +140,8 @@ public:
     };
    
     FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
-    void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
+    void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+                        const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
 
     void SetBinder(Binder* p_binder);
 
@@ -151,8 +152,11 @@ private:
     DrawSpace::Interface::Renderer*     m_renderer{ nullptr };
     Binder*                             m_binder{ nullptr };
 
-    void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
-    void draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos);
+    void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
+                                        const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
+
+    void draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, 
+                                    const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos);
 };
 
 

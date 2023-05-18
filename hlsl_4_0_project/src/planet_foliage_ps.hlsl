@@ -30,6 +30,33 @@ cbuffer legacyargs : register(b0)
 
 #include "spherelod_commons.hlsl"
 
+#define v_flags                     0
+#define v_flags2                    1
+#define v_viewer_pos                2
+#define v_flags6                    6
+#define v_flags_lights              7
+
+#define v_ambient_color             8
+#define v_light0_dir_local          9
+#define v_light0_dir                10
+#define v_light0_color              11
+
+#define v_light1_dir_local          12
+#define v_light1_dir                13
+#define v_light1_color              14
+
+#define v_light2_dir_local          15
+#define v_light2_dir                16
+#define v_light2_color              17
+
+#define v_atmo_scattering_flag_0    18
+#define v_atmo_scattering_flag_1    19
+#define v_atmo_scattering_flag_2    20
+#define v_atmo_scattering_flag_3    21
+#define v_atmo_scattering_flag_4    22
+#define v_atmo_scattering_flag_5    23
+#define v_atmo_scattering_flag_6    24
+
 Texture2D txDiffuse         : register(t0);
 SamplerState sam            : register(s0);
 
@@ -37,19 +64,29 @@ struct PS_INTPUT
 {
     float4 Position : SV_POSITION;
 	float2 TexCoord0: TEXCOORD0;
+
+    float Fog : FOG;
 };
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
-
     float4 color = txDiffuse.Sample(sam, input.TexCoord0);
-
     if (color.r < 0.1 && color.g < 0.1 && color.b < 0.1)
     {
         clip(-1.0);
     }
 
-    color.w = SPHERELOD_FOLIAGE_ID;
-    return color;
+    float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
+    float4 fog_color = atmo_scattering_flag_6;
+
+    float4 final_color = 1.0;
+    float4 pixel_color = color;
+
+    pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
+
+    final_color.xyz = pixel_color.xyz;
+
+    final_color.w = SPHERELOD_FOLIAGE_ID;
+    return final_color;
 }

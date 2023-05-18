@@ -1159,6 +1159,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             foliage_binder->SetFx(fx);
             foliage_binder->SetRenderer(m_renderer);
 
+            static const dsreal innerRadius{ planet_ray * 1000.0 };
+            static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
+
+            const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius* outerRadius, innerRadius* innerRadius);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
+            
+
             const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, 0.0);
             *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
 

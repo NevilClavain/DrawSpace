@@ -517,7 +517,8 @@ Binder* FoliageDrawingNode::GetBinder(void) const
     return m_binder;
 }
 
-void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+                                const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
@@ -528,14 +529,15 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
         for (auto e : dl)
         {
-            draw_foliages_batch_on_patch(e, p_ray, p_world, p_view, p_proj);
+            draw_foliages_batch_on_patch(e, p_ray, p_invariant_view_pos, p_world, p_view, p_proj);
         }
     }
 }
 
 
 // render many foliage meshe
-void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
+                            const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
     auto foliage_patch{ p_patch };
 
@@ -546,14 +548,15 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
         {
             for (const auto& coords : foliage_coords)
             {
-                draw_foliage_on_patch(foliage_patch, p_ray, p_world, p_view, p_proj, coords.x, coords.y);
+                draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y);
             }            
         }
     }
 }
 
 // render one foliage meshe
-void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos)
+void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, 
+                            const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos)
 {
     const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
     const dsreal ypos{ p_ypos }; // [-0.5, 0.5 ]
@@ -576,6 +579,10 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, con
     }
 
     ////////////////////
+
+    Vector view_pos = p_invariant_view_pos;
+
+    m_renderer->SetFxShaderParams(0, 28, view_pos);
 
     dsreal xp, yp;
     p_patch->GetUnitPos(xp, yp);
@@ -891,8 +898,12 @@ void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_ren
     const auto node_binder{ foliage_node->GetBinder() };
     node_binder->BindToShader();
 
+    Vector view_pos;
+    planetbody->GetInvariantViewerPos(view_pos);
 
-    foliage_node->Draw(planetbody->GetDiameter() / 2.0, planetbody, world, view, proj);
+
+
+    foliage_node->Draw(planetbody->GetDiameter() / 2.0, planetbody, view_pos, world, view, proj);
 }
 
 void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)
