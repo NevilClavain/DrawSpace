@@ -138,17 +138,21 @@ public:
         ROCKS,
         TREES
     };
-
+   
     FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
     void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
 
+    void SetBinder(Binder* p_binder);
+
+    Binder* GetBinder(void) const;
+
 private:
 
-    DrawSpace::Interface::Renderer* m_renderer{ nullptr };
+    DrawSpace::Interface::Renderer*     m_renderer{ nullptr };
+    Binder*                             m_binder{ nullptr };
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
     void draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos);
-
 };
 
 
@@ -186,8 +190,13 @@ public:
     void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw = -1);
     void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
 
+    /*
     void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::Fx* p_fx, 
                                         int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer);
+                                        */
+
+    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer);
+
 
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;
 

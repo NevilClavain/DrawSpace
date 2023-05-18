@@ -948,7 +948,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
 
         // std::function
-        const auto build_details_binder{ [&](bool p_enable_atmosphere = false)
+        const auto build_details_binder{ [&](bool p_enable_atmosphere = false) -> LOD::Binder*
         {
             LOD::Binder* details_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
 
@@ -1129,7 +1129,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         }
     }
 
-    //////////// foliages
 
     for (auto& rcp : foliagelayers_rcname_to_passes)
     {
@@ -1144,13 +1143,49 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         const auto      fx{ fxs_map.at(rendercontextname) };
         const auto      textures{ textures_map.at(rendercontextname) };
 
+        std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
+        if (textures.size() > 0)
+        {
+            pass_textures = textures.at(0);
+        }
+
+
+        //////////// foliages
+
+        const auto build_foliage_binder{ [&](void) -> LOD::Binder*
+        {
+            LOD::Binder* foliage_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+
+            foliage_binder->SetFx(fx);
+            foliage_binder->SetRenderer(m_renderer);
+
+            const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, 0.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
+
+            // couleurs fog "sol"
+            const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
+
+            return foliage_binder;
+        }};
+
+
+
         const auto      meshe{ foliage_meshes.at(foliage_layer) };
 
         for (auto& pass_id : rcp.second)
         {
             m_passes.insert(pass_id);
+
+            LOD::Binder* foliage_binder{ build_foliage_binder() };
+            for (size_t stage = 0; stage < pass_textures.size(); stage++)
+            {
+                foliage_binder->SetTexture(pass_textures[stage], stage);
+            }
+
+            m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer);
             
-            m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, fx, ro, textures.at(0), foliage_layer);
+            //m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, fx, ro, textures.at(0), foliage_layer);
         }
     }
 

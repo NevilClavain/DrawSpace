@@ -491,6 +491,32 @@ m_renderer( p_renderer )
 
 }
 
+void FoliageDrawingNode::SetBinder(Binder* p_binder)
+{
+    m_binder = p_binder;
+
+    SetFx(m_binder->GetFx());
+    for (long i = 0; i < RenderingNode::GetTextureListSize(); i++)
+    {
+        Texture* texture = p_binder->GetTexture(i);
+        if (texture)
+        {
+            SetTexture(texture, i);
+        }
+
+        Texture* vtexture = p_binder->GetVertexTexture(i);
+        if (vtexture)
+        {
+            SetVertexTexture(vtexture, i);
+        }
+    }
+}
+
+Binder* FoliageDrawingNode::GetBinder(void) const
+{
+    return m_binder;
+}
+
 void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
 {
     const auto current_face{ p_body->GetCurrentFace() };
@@ -862,6 +888,10 @@ void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_ren
 
     const auto foliage_node{ static_cast<FoliageDrawingNode*>(p_rendering_node) };
 
+    const auto node_binder{ foliage_node->GetBinder() };
+    node_binder->BindToShader();
+
+
     foliage_node->Draw(planetbody->GetDiameter() / 2.0, planetbody, world, view, proj);
 }
 
@@ -1018,8 +1048,12 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
     m_collisionmeshedrawingnodes.push_back(node);
 }
 
+/*
 void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::Fx* p_fx,
                                                 int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer)
+*/
+
+void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer)
 {
     const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer)) };
     node->m_debug_id = dsstring("Foliage") + std::to_string(p_foliage_layer);
@@ -1030,15 +1064,20 @@ void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::C
     node->RegisterHandler(cb);
 
     node->SetMeshe(p_meshe);
-    node->SetFx(p_fx);
-    node->SetOrderNumber(p_ro);
 
+    //node->SetFx(p_fx);
+   
+    /*
     for (size_t stage = 0; stage < p_textures.size(); stage++)
     {
         node->SetTexture(p_textures.at(stage), stage);
     }
-    
+    */
 
+    node->SetOrderNumber(p_ro);
+
+    node->SetBinder(p_binder);
+    
     const auto p{ std::make_pair(p_pass, node) };
     m_passesfoliagenodes.push_back(p);
 
