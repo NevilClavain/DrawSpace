@@ -39,17 +39,18 @@ LoadFileToAssimpTask::LoadFileToAssimpTask() : ITask("LOADFILETOASSIMP", "")
 void LoadFileToAssimpTask::Execute(void)
 {
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size);
+
+    auto data{ Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size) };
     if (data)
     {
         m_failure = false;
 
-        Assimp::Importer* importer = new Assimp::Importer();
+        const auto importer{ new Assimp::Importer() };
 
-        unsigned int flags = aiProcess_Triangulate |
+        auto flags{ aiProcess_Triangulate |
             aiProcess_JoinIdenticalVertices |
             aiProcess_FlipUVs |
-            aiProcess_SortByPType;
+            aiProcess_SortByPType };
 
         DrawSpace::Core::Meshe::NormalesGenerationMode normales_gen_mode = m_target_meshe->GetNGenerationMode();
         DrawSpace::Core::Meshe::TangentBinormalesGenerationMode tb_gen_mode = m_target_meshe->GetTBGenerationMode();
@@ -77,15 +78,10 @@ void LoadFileToAssimpTask::Execute(void)
                 m_err_descr = dsstring("scene has no meshes : ") + m_final_asset_path;
             }
 
-            aiMesh** meshes;
+            const auto meshes{ scene->mMeshes };
+            const auto nb_meshes{ scene->mNumMeshes };
 
-            int nb_meshes;
-            aiNode* root;
-
-            meshes = scene->mMeshes;
-            nb_meshes = scene->mNumMeshes;
-            root = scene->mRootNode;
-
+            const auto root{ scene->mRootNode };
             if (!root)
             {
                 m_failure = true;
