@@ -62,7 +62,7 @@ void Meshe::GetVertex( long p_index, Vertex& p_vertex ) const
 
 void Meshe::GetTriangles( long p_index, TrianglePrimitive<unsigned int>& p_triangle ) const
 {
-    const TrianglePrimitive<unsigned int> triangle{ m_triangles.at(p_index) };
+    const auto triangle{ m_triangles.at(p_index) };
     p_triangle = triangle;
 }
 
@@ -145,9 +145,9 @@ bool Meshe::UpdateVertices( void )
 
 void Meshe::GetCenter( Vector& p_vector ) const
 {
-    dsreal xsum = 0.0;
-    dsreal ysum = 0.0;
-    dsreal zsum = 0.0;
+    dsreal xsum { 0.0 };
+    dsreal ysum { 0.0 };
+    dsreal zsum { 0.0 };
 
     for( size_t i = 0; i < m_vertices.size(); i++ )
     {
