@@ -850,15 +850,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
         
         for (auto& e : meshes_assets)
         {
-            Meshe* target_meshe = std::get<0>(e->getPurpose());
+			const auto target_meshe{ std::get<0>(e->getPurpose()) };
 
             bool& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {
 				m_all_asset_loaded = false;
 
-				dsstring final_asset_path = compute_meshes_final_path(std::get<1>(e->getPurpose()));
-				dsstring meshe_id = std::get<2>(e->getPurpose());
+				const auto final_asset_path{ compute_meshes_final_path(std::get<1>(e->getPurpose())) };
+				const auto meshe_id { std::get<2>(e->getPurpose()) };
 						
 				if (!m_runner_system.HasSequence(final_asset_path))
 				{
@@ -869,7 +869,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						// if not, setup a new sequence
 
-						_DSDEBUG(rs_logger, dsstring("No entry in m_meshesCache for ") << final_asset_path << dsstring(", loading it with ASSIMP") );
+						_DSDEBUG(rs_logger, dsstring("No entry in m_meshesCache for ") + final_asset_path + dsstring(", loading it with ASSIMP") );
 
 						RunnerSequenceStep load_meshes_step;
 
@@ -922,7 +922,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					}
 					else
 					{
-						_DSDEBUG(rs_logger, dsstring("Entry found in m_meshesCache for ") << final_asset_path);
+						_DSDEBUG(rs_logger, dsstring("Entry found in m_meshesCache for ") + final_asset_path);
 						sequence.SetCurrentStep(dsstring("fillMeshesDescriptionStep"));
 					}
 

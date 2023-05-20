@@ -121,8 +121,8 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
                 v_out.tv[0] = texCoord[1];
             }
 
-            if (hasN && (normales_gen_mode == Core::Meshe::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NORMALES_FROMLOADER ||
-                normales_gen_mode == Core::Meshe::NORMALES_AUTO_SMOOTH || normales_gen_mode == Core::Meshe::NORMALES_FROMLOADER_SMOOTH))
+            if (hasN && (normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER ||
+                normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER_SMOOTH))
             {
                 // model has its own normales, so use it
                 v_out.nx = meshe->mNormals[j][0];
@@ -130,7 +130,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
                 v_out.nz = meshe->mNormals[j][2];
             }
 
-            if (hasTB && (tb_gen_mode == Core::Meshe::TB_AUTO || tb_gen_mode == Core::Meshe::TB_FROMLOADER))
+            if (hasTB && (tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_AUTO || tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_FROMLOADER))
             {
                 // model has its own tangent and binormales, so use it
 
@@ -146,13 +146,13 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
             p_destination->AddVertex(v_out);
         }
 
-        if (normales_gen_mode == Core::Meshe::NORMALES_COMPUTED ||
-            ((normales_gen_mode == Core::Meshe::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NORMALES_AUTO_SMOOTH) && !hasN))
+        if (normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_COMPUTED ||
+            ((normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH) && !hasN))
         {
             p_destination->ComputeNormales();
         }
 
-        if (tb_gen_mode == Core::Meshe::TB_COMPUTED || tb_gen_mode == Core::Meshe::TB_AUTO && !hasTB)
+        if (tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_COMPUTED || tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_AUTO && !hasTB)
         {
             size_t numUVChannels{ meshe->GetNumUVChannels() };
             if (numUVChannels > 0)

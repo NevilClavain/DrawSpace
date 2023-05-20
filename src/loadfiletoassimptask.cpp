@@ -54,16 +54,16 @@ void LoadFileToAssimpTask::Execute(void)
         DrawSpace::Core::Meshe::NormalesGenerationMode normales_gen_mode = m_target_meshe->GetNGenerationMode();
         DrawSpace::Core::Meshe::TangentBinormalesGenerationMode tb_gen_mode = m_target_meshe->GetTBGenerationMode();
 
-        if (DrawSpace::Core::Meshe::NORMALES_AUTO == normales_gen_mode || DrawSpace::Core::Meshe::NORMALES_FROMLOADER == normales_gen_mode)
+        if (DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_AUTO == normales_gen_mode || DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER == normales_gen_mode)
         {
             flags |= aiProcess_GenNormals;
         }
-        else if (DrawSpace::Core::Meshe::NORMALES_AUTO_SMOOTH == normales_gen_mode || DrawSpace::Core::Meshe::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
+        else if (DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH == normales_gen_mode || DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
         {
             flags |= aiProcess_GenSmoothNormals;
         }
 
-        if (DrawSpace::Core::Meshe::TB_AUTO == tb_gen_mode || DrawSpace::Core::Meshe::TB_FROMLOADER == tb_gen_mode)
+        if (DrawSpace::Core::Meshe::TangentBinormalesGenerationMode::TB_AUTO == tb_gen_mode || DrawSpace::Core::Meshe::TangentBinormalesGenerationMode::TB_FROMLOADER == tb_gen_mode)
         {
             flags |= aiProcess_CalcTangentSpace;
         }

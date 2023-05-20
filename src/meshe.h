@@ -38,6 +38,7 @@ class Meshe
 {
 public:
 
+    /*
     using NormalesGenerationMode = enum
     {
         NORMALES_DISCARDED,
@@ -49,6 +50,25 @@ public:
     };
 
     using TangentBinormalesGenerationMode = enum
+    {
+        TB_DISCARDED,
+        TB_AUTO,
+        TB_FROMLOADER,
+        TB_COMPUTED
+    };
+    */
+
+    enum class NormalesGenerationMode
+    {
+        NORMALES_DISCARDED,
+        NORMALES_AUTO,
+        NORMALES_AUTO_SMOOTH,
+        NORMALES_FROMLOADER,
+        NORMALES_FROMLOADER_SMOOTH,
+        NORMALES_COMPUTED
+    };
+
+    enum class TangentBinormalesGenerationMode
     {
         TB_DISCARDED,
         TB_AUTO,
@@ -106,8 +126,8 @@ private:
 
     dsstring                                                                m_path;
 
-    NormalesGenerationMode                                                  m_n_gen_mode{ NORMALES_COMPUTED };
-    TangentBinormalesGenerationMode                                         m_tb_gen_mode{ TB_DISCARDED };
+    NormalesGenerationMode                                                  m_n_gen_mode{ NormalesGenerationMode::NORMALES_COMPUTED };
+    TangentBinormalesGenerationMode                                         m_tb_gen_mode{ TangentBinormalesGenerationMode::TB_DISCARDED };
 
     Utils::Matrix                                                           m_normales_transf;
 
