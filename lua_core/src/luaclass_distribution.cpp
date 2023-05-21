@@ -41,7 +41,7 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
         LUA_ERROR("Distribution::Distribution : argument(s) missing");
     }
 
-    const auto distribution_type{ luaL_checkstring(p_L, 1) };
+    const std::string distribution_type{ luaL_checkstring(p_L, 1) };
 
     if("uniform_int_distribution" == distribution_type)
     {
