@@ -25,6 +25,11 @@
 #include "buildemeshetask.h"
 #include "resourcessystem.h"
 #include "passslot.h"
+#include "tracedefs.h"
+
+using namespace DrawSpace::Core;
+
+DrawSpace::Logger::Sink bmt_logger("BuildeMesheTask", DrawSpace::Logger::Configuration::GetInstance());
 
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
@@ -51,12 +56,36 @@ void BuildMesheTask::SetMeshesIOInfos(aiMesh** m_source_meshes, Core::Meshe* p_t
 }
 
 void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
-{
+{   
     const auto anims_aspect { p_entity->GetAspect<Aspect::AnimationsAspect>() };
     const dsstring name { p_ai_node->mName.C_Str() };
 
+    _DSDEBUG(bmt_logger, dsstring("name = ") + name);
+
     const auto normales_gen_mode { p_destination->GetNGenerationMode() };
+  
+    static const std::map<Meshe::NormalesGenerationMode, dsstring> normales_gen_mode_text
+    {
+        { Meshe::NormalesGenerationMode::NORMALES_DISCARDED, "NORMALES_DISCARDED" },
+        { Meshe::NormalesGenerationMode::NORMALES_AUTO, "NORMALES_AUTO" },
+        { Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH, "NORMALES_AUTO_SMOOTH" },
+        { Meshe::NormalesGenerationMode::NORMALES_FROMLOADER, "NORMALES_FROMLOADER" },
+        { Meshe::NormalesGenerationMode::NORMALES_FROMLOADER_SMOOTH, "NORMALES_FROMLOADER_SMOOTH" },
+        { Meshe::NormalesGenerationMode::NORMALES_COMPUTED, "NORMALES_COMPUTED" },
+    };
+    _DSDEBUG(bmt_logger, dsstring("normales_gen_mode = ") + normales_gen_mode_text.at(normales_gen_mode));
+
     const auto tb_gen_mode { p_destination->GetTBGenerationMode() };
+
+    static const std::map<Meshe::TangentBinormalesGenerationMode, dsstring> tbn_gen_mode_text
+    {
+        { Meshe::TangentBinormalesGenerationMode::TB_DISCARDED, "TB_DISCARDED" },
+        { Meshe::TangentBinormalesGenerationMode::TB_AUTO, "TB_AUTO" },
+        { Meshe::TangentBinormalesGenerationMode::TB_FROMLOADER, "TB_FROMLOADER" },
+        { Meshe::TangentBinormalesGenerationMode::TB_COMPUTED, "TB_COMPUTED" }
+    };
+    _DSDEBUG(bmt_logger, dsstring("tbn_gen_mode = ") + tbn_gen_mode_text.at(tb_gen_mode));
+
 
     const auto nb_meshes{ p_ai_node->mNumMeshes };
     int global_index = 0;
@@ -146,6 +175,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
         if (normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_COMPUTED ||
             ((normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH) && !hasN))
         {
+            _DSDEBUG(bmt_logger, dsstring("Computing normales..."));
             p_destination->ComputeNormales();
         }
 

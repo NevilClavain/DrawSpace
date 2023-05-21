@@ -51,6 +51,7 @@ static const dsstring console_welcome = "Console: input ready (release build)";
 extern DrawSpace::Logger::Sink aspect_logger;
 extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
 extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
+extern DrawSpace::Logger::Sink bmt_logger;
 
 extern DrawSpace::Logger::Sink runner_logger;
 
@@ -113,6 +114,10 @@ bool MainService::Init( void )
 
     logconf->RegisterSink(&rs_logger);
     rs_logger.SetConfiguration(logconf);
+
+    logconf->RegisterSink(&bmt_logger);
+    bmt_logger.SetConfiguration(logconf);
+
 
     logconf->RegisterSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
@@ -491,7 +496,7 @@ void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::Resourc
 {
     for (auto it = m_resourceevent_lua_callbacks.begin(); it != m_resourceevent_lua_callbacks.end(); ++it)
     {
-        LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_resource, p_context);
+        LuaContext::GetInstance()->CallLuaFunc(it->second, static_cast<int>(p_event), p_resource, p_context);
     }
 }
 
