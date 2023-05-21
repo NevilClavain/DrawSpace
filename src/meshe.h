@@ -38,26 +38,6 @@ class Meshe
 {
 public:
 
-    /*
-    using NormalesGenerationMode = enum
-    {
-        NORMALES_DISCARDED,
-        NORMALES_AUTO,
-		NORMALES_AUTO_SMOOTH,
-        NORMALES_FROMLOADER,
-		NORMALES_FROMLOADER_SMOOTH,
-        NORMALES_COMPUTED
-    };
-
-    using TangentBinormalesGenerationMode = enum
-    {
-        TB_DISCARDED,
-        TB_AUTO,
-        TB_FROMLOADER,
-        TB_COMPUTED
-    };
-    */
-
     enum class NormalesGenerationMode
     {
         NORMALES_DISCARDED,
