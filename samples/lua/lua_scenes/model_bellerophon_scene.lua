@@ -26,7 +26,11 @@
 			lit_shader_update_func = bellerophon.update_lit_from_scene_env
 		}
 	}
-	bellerophon.view.load('b', {x = 0.0, y = 0.0, z = 0.0 }, bellerophon_passes_bindings)
+
+	local pos_mat = Matrix()
+	pos_mat:translation(0.0, 0.0, 0.0)
+
+	bellerophon.view.load('b', pos_mat, bellerophon_passes_bindings)
 	eg:add_child('root', 'b', bellerophon.models['b'].entity)
 	model.setup_rawtransformationschain(bellerophon.models['b'].entity, 'b', 1)
 		
