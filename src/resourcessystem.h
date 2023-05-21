@@ -88,7 +88,7 @@ class ResourcesSystem : public Interface::System
 {
 public:
 
-    enum ResourceEvent
+    enum class ResourceEvent
     {
         BLOB_LOAD,
         BLOB_LOADED,
@@ -145,8 +145,7 @@ private:
     std::map<dsstring, MesheCacheEntry>                                 m_meshesCache;
 
 
-	DrawSpace::Interface::Renderer*										m_renderer;
-
+    DrawSpace::Interface::Renderer*                                     m_renderer{ nullptr };
     RunnerSystem&                                                       m_runner_system;
 
     bool                                                                m_all_asset_loaded{ false };

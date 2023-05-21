@@ -78,7 +78,6 @@ m_runner_system(p_runner)
 
 	// create bc_cache dir if not exists
 	check_bc_cache_presence();
-
 }
 
 void ResourcesSystem::Activate(const dsstring& p_context)
@@ -106,18 +105,18 @@ void ResourcesSystem::notify_event(ResourceEvent p_event, const dsstring& p_path
 {
 	static const std::map<ResourceEvent, dsstring> event_to_string 
 	{
-		{ BLOB_LOAD, "BLOB_LOAD"},
-		{ BLOB_LOADED, "BLOB_LOADED"},
-		{ SHADERCACHE_CREATION, "SHADERCACHE_CREATION"},
-		{ SHADER_COMPILATION, "SHADER_COMPILATION"},
-		{ SHADER_COMPILED, "SHADER_COMPILED"},
-		{ ALL_ASSETS_LOADED, "ALL_ASSETS_LOADED"},
+		{ ResourceEvent::BLOB_LOAD, "BLOB_LOAD"},
+		{ ResourceEvent::BLOB_LOADED, "BLOB_LOADED"},
+		{ ResourceEvent::SHADERCACHE_CREATION, "SHADERCACHE_CREATION"},
+		{ ResourceEvent::SHADER_COMPILATION, "SHADER_COMPILATION"},
+		{ ResourceEvent::SHADER_COMPILED, "SHADER_COMPILED"},
+		{ ResourceEvent::ALL_ASSETS_LOADED, "ALL_ASSETS_LOADED"},
 	};
 
-	dsstring event_str{ event_to_string.at(p_event) };
+	const auto event_str{ event_to_string.at(p_event) };
 	dsstring resource{ p_path };
 
-	_DSDEBUG(rs_logger, dsstring("resources => ") << event_str << dsstring( " " ) << resource);
+	_DSDEBUG(rs_logger, dsstring("resources => ") + event_str + dsstring( " " ) + resource);
 
 	for (auto& e : m_evt_handlers)
 	{
@@ -160,14 +159,14 @@ void ResourcesSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 
 		if (m_all_asset_loaded)
 		{
-			notify_event(ALL_ASSETS_LOADED, "");
+			notify_event(ResourceEvent::ALL_ASSETS_LOADED, "");
 		}
 	}
 }
 
 void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 {
-    ResourcesAspect* resources_aspect = p_entity->GetAspect<ResourcesAspect>();
+	const auto resources_aspect{ p_entity->GetAspect<ResourcesAspect>() };
     if (resources_aspect)
     {
         ComponentList<std::tuple<Texture*, bool>> textures_assets;
@@ -175,7 +174,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
         for(auto& e : textures_assets)
         {
-            bool& loaded = std::get<1>( e->getPurpose() );
+			auto& loaded{ std::get<1>(e->getPurpose()) };
             if( !loaded )
             {	
 				m_all_asset_loaded = false;
@@ -200,26 +199,25 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						load_texture_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							const auto task_id{ final_asset_path };
 
-							const dsstring task_id{ final_asset_path };
-
-							LoadFileTask* task = _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask);
+							const auto task{ _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask) };
 							task->SetTargetDescr(task_id);
 							task->SetActionDescr("LOADASSETFILE");
 							task->SetFinalAssetPath(final_asset_path);
 							p_step.SetTask(task);
 
-							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
+							resource_system->NotifyEvent(ResourceEvent::BLOB_LOAD, final_asset_path);
 						});
 
 						load_texture_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto texturesCache{ p_step.GetComponent < std::map<dsstring, Blob>*>("&m_texturesCache")->getPurpose() };
-							LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto texturesCache{ p_step.GetComponent < std::map<dsstring, Blob>*>("&m_texturesCache")->getPurpose() };
+							auto task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
 
 							if (task->Failed())
 							{
@@ -227,8 +225,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							}
 
 							Blob blob;
-							long size = task->GetSize();
-							void* data = task->GetData();
+							const long size { task->GetSize() };
+							auto data{ task->GetData() };
 							blob.data = data;
 							blob.size = size;
 
@@ -249,10 +247,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
 						loaded = true;
-
-
 					}
-
 				}
 				else
 				{
@@ -261,11 +256,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
 						loaded = true;
-
-						notify_event(BLOB_LOADED, final_asset_path);
+						notify_event(ResourceEvent::BLOB_LOADED, final_asset_path);
 						
 						std::get<0>(e->getPurpose())->SetData(m_texturesCache.at(final_asset_path).data, m_texturesCache.at(final_asset_path).size);
-
 
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<dsstring>("final_asset_path");						
 						m_runner_system.GetSequence(final_asset_path).GetStep("loadTextureStep").RemoveComponent<ResourcesSystem*>("ResourcesSystem");
@@ -282,22 +275,22 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
         for (auto& e : shaders_assets)
         {
-            bool& loaded = std::get<1>(e->getPurpose());
+			auto& loaded{ std::get<1>(e->getPurpose()) };
             if (!loaded)
             {
 				m_all_asset_loaded = false;
 
 				dsstring asset_path;
 				std::get<0>(e->getPurpose())->GetBasePath(asset_path);
-				dsstring final_asset_path = compute_shaders_final_path(asset_path);
-				dsstring final_asset_dir = compute_shaders_final_path("");
-				Shader* shader{ std::get<0>(e->getPurpose()) };
-				int shader_type{ std::get<2>(e->getPurpose()) };
+				const dsstring final_asset_path{ compute_shaders_final_path(asset_path) };
+				const dsstring final_asset_dir{ compute_shaders_final_path("") };
+				auto shader{ std::get<0>(e->getPurpose()) };
+				const auto shader_type{ std::get<2>(e->getPurpose()) };
 
 				// shader key id
 				std::vector<dsstring> items;
 				SplitString(asset_path, items, '.');
-				dsstring shader_id{ items[0] };
+				const auto shader_id{ items[0] };
 
 				if (!m_runner_system.HasSequence(final_asset_path))
 				{
@@ -323,45 +316,43 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						load_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto final_asset_dir{ p_step.GetComponent<dsstring>("final_asset_dir")->getPurpose() };
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto final_asset_dir{ p_step.GetComponent<dsstring>("final_asset_dir")->getPurpose() };
+							const auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							const dsstring task_id{ final_asset_path };
+							const auto task_id{ final_asset_path };
 
-							LoadShaderFileTask* task{ _DRAWSPACE_NEW_(LoadShaderFileTask, LoadShaderFileTask) };
+							const auto task{ _DRAWSPACE_NEW_(LoadShaderFileTask, LoadShaderFileTask) };
 							task->SetTargetDescr(task_id);
 							task->SetActionDescr("LOADASSETFILE");
 							task->SetFinalAssetPath(final_asset_path);
 							task->SetFinalAssetDir(final_asset_dir);
 							p_step.SetTask(task);
 
-
-							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
+							resource_system->NotifyEvent(ResourceEvent::BLOB_LOAD, final_asset_path);
 						});
 
 						load_shader_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							Shader* shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-
-							LoadShaderFileTask* task{ static_cast<LoadShaderFileTask*>(p_step.GetTask()) };
+							auto shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
+							const auto shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							auto task{ static_cast<LoadShaderFileTask*>(p_step.GetTask()) };
 
 							if (task->Failed())
 							{
 								_DSEXCEPTION("LoadShaderFileTask Failed for shader : " + final_asset_path);
 							}
 
-							long size = task->GetSize();
-							void* data = task->GetData();
+							const auto size{ task->GetSize() };
+							auto data{ task->GetData() };
 
 							_DRAWSPACE_DELETE_(task);
 
 							
 							if (shader->IsCompiled())
 							{
-								auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
+								const auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
 
 								Blob blob;
 								blob.data = data;
@@ -374,8 +365,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							else
 							{
 								MD5 md5;
-								dsstring hash_shader{ md5.digestMemory((BYTE*)data, size) };
-								dsstring shaderInfos_path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
+								const auto hash_shader{ md5.digestMemory((BYTE*)data, size) };
+								const auto shaderInfos_path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
 
 								if (FileSystem::Exists(shaderInfos_path))
 								{
@@ -408,8 +399,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						});
 
-						dsstring bcMd5FileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcMd5FileName };
-						dsstring bcCodeFileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcCodeFileName };
+						const auto bcMd5FileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcMd5FileName };
+						const auto bcCodeFileName_path{ bcCacheName + dsstring("\\") + shader_id.c_str() + dsstring("\\") + bcCodeFileName };
 
 						read_shader_md5_step.AddComponent<dsstring>("shader_id", shader_id);
 						read_shader_md5_step.AddComponent<dsstring>("bcMd5FileName_path", bcMd5FileName_path);
@@ -419,36 +410,33 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						read_shader_md5_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
-							dsstring bcMd5FileName_path{ p_step.GetComponent<dsstring>("bcMd5FileName_path")->getPurpose() };
-							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+							const auto shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							const auto bcMd5FileName_path{ p_step.GetComponent<dsstring>("bcMd5FileName_path")->getPurpose() };
+							const auto hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
 
-							ReadShaderMD5Task* task = _DRAWSPACE_NEW_(ReadShaderMD5Task, ReadShaderMD5Task);
-
+							const auto task{ _DRAWSPACE_NEW_(ReadShaderMD5Task, ReadShaderMD5Task) };
 							task->SetShaderId(shader_id);
 							task->SetFilePath(bcMd5FileName_path);
 							task->SetTargetDescr(bcMd5FileName_path);
 							task->SetCompareMD5(hash_shader);
 
 							p_step.SetTask(task);
-
 						});
 
 						read_shader_md5_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
-							Shader* shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
+							const auto shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+							const auto shader{ p_step.GetComponent<Shader*>("shader")->getPurpose() };
 
-							ReadShaderMD5Task* task{ static_cast<ReadShaderMD5Task*>(p_step.GetTask()) };
-
+							auto task{ static_cast<ReadShaderMD5Task*>(p_step.GetTask()) };
 							if (task->Failed())
 							{
 								_DSEXCEPTION("ReadShaderMD5Task Failed for shader : " + final_asset_path);
 							}
 
-							bool md5_equals{ task->MD5AreEquals() };
+							const auto md5_equals{ task->MD5AreEquals() };
 							_DRAWSPACE_DELETE_(task);
 
 							if (md5_equals)
@@ -458,7 +446,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								p_seq.SetCurrentStep("loadShaderbcStep");
 
 								// and release shader source code...
-								void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
+								auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
 								_DRAWSPACE_DELETE_N_(text);
 							}
 							else
@@ -467,8 +455,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 								// forward shader source text to next step....
 
-								void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
-								long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+								const auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
+								const auto text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
 
 								p_seq.GetStep("compileShaderStep").AddComponent<void*>("text", text);
 								p_seq.GetStep("compileShaderStep").AddComponent<long>("text_size", text_size);
@@ -485,9 +473,9 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						load_shaderbc_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring bcCodeFileName_path{ p_step.GetComponent<dsstring>("bcCodeFileName_path")->getPurpose() };
+							const auto bcCodeFileName_path{ p_step.GetComponent<dsstring>("bcCodeFileName_path")->getPurpose() };
 
-							LoadFileTask* task = _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask);
+							const auto task{ _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask) };
 							task->SetTargetDescr(bcCodeFileName_path);
 							task->SetActionDescr("LOADBCSHADERFILE");
 							task->SetFinalAssetPath(bcCodeFileName_path);
@@ -498,19 +486,18 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						load_shaderbc_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
 
-							LoadFileTask* task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
-
+							auto task{ static_cast<LoadFileTask*>(p_step.GetTask()) };
 							if (task->Failed())
 							{
 								_DSEXCEPTION("load_shaderbc_step Failed for shader : " + final_asset_path);
 							}
 
 							Blob blob;
-							long size{ task->GetSize() };
-							void* data{ task->GetData() };
+							const auto size{ task->GetSize() };
+							const auto data{ task->GetData() };
 							blob.data = data;
 							blob.size = size;
 
@@ -531,23 +518,23 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						
 						compile_shader_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
-							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 
-							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
-							long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
-							int shader_type{ p_step.GetComponent<int>("shader_type")->getPurpose() };
+							const auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							const auto text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+							const auto shader_type{ p_step.GetComponent<int>("shader_type")->getPurpose() };
 
-							DrawSpace::Interface::Renderer* renderer{ p_step.GetComponent<DrawSpace::Interface::Renderer*>("Renderer")->getPurpose() };
+							const auto renderer{ p_step.GetComponent<DrawSpace::Interface::Renderer*>("Renderer")->getPurpose() };
 
-							dsstring final_asset_dir{ p_step.GetComponent<dsstring>("final_asset_dir")->getPurpose() };
-							dsstring asset_path{ p_step.GetComponent<dsstring>("asset_path")->getPurpose() };
+							const auto final_asset_dir{ p_step.GetComponent<dsstring>("final_asset_dir")->getPurpose() };
+							const auto asset_path{ p_step.GetComponent<dsstring>("asset_path")->getPurpose() };
 
-							resource_system->NotifyEvent(SHADER_COMPILATION, final_asset_path);
+							resource_system->NotifyEvent(ResourceEvent::SHADER_COMPILATION, final_asset_path);
 
-							const dsstring task_id{ final_asset_path };
+							const auto task_id{ final_asset_path };
 
-							CompileShaderTask* task = _DRAWSPACE_NEW_(CompileShaderTask, CompileShaderTask);
+							const auto task{ _DRAWSPACE_NEW_(CompileShaderTask, CompileShaderTask) };
 
 							task->SetTargetDescr(task_id);
 							task->SetShaderText(text, text_size, shader_type);
@@ -559,34 +546,34 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						compile_shader_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							CompileShaderTask* task{ static_cast<CompileShaderTask*>(p_step.GetTask()) };
+							auto task{ static_cast<CompileShaderTask*>(p_step.GetTask()) };
 							if (task->Failed())
 							{
 								_DSEXCEPTION("compile_shader_step Failed for shader : " + final_asset_path + dsstring(" reason : ") + task->GetCompilationError());
 							}
 
 							// get blob
-							long bc_length{ task->GetShaderByteCodeLength() };
-							void* bc{ task->GetShaderByteCode() };
+							const auto bc_length{ task->GetShaderByteCodeLength() };
+							const auto bc{ task->GetShaderByteCode() };
 
 							_DRAWSPACE_DELETE_(task);
 
-							resource_system->NotifyEvent(SHADER_COMPILED, final_asset_path);
+							resource_system->NotifyEvent(ResourceEvent::SHADER_COMPILED, final_asset_path);
 
 							p_seq.GetStep("updateShaderStep").AddComponent<void*>("bc", bc);
 							p_seq.GetStep("updateShaderStep").AddComponent<long>("bc_length", bc_length);
 
-							dsstring hash_shader { p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+							const auto hash_shader { p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
 
 							p_seq.GetStep("updateShaderStep").AddComponent<dsstring>("hash_shader", hash_shader);
 
 							// forward shader source text to next step....
 
-							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
-							long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+							const auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							const auto text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
 
 							p_seq.GetStep("updateShaderStep").AddComponent<void*>("text", text);
 							p_seq.GetStep("updateShaderStep").AddComponent<long>("text_size", text_size);
@@ -607,21 +594,19 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						update_shaderbc_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
-							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							const auto hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
 
-							long bc_length{ p_step.GetComponent<long>("bc_length")->getPurpose() };
-							void* bc{ p_step.GetComponent<void*>("bc")->getPurpose() };
+							const auto bc_length{ p_step.GetComponent<long>("bc_length")->getPurpose() };
+							const auto bc{ p_step.GetComponent<void*>("bc")->getPurpose() };
 
-							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
-							long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+							const auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							const auto text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
 
+							const auto task_id{ final_asset_path };
 
-							const dsstring task_id{ final_asset_path };
-
-							UpdateBCFilesTask* task = _DRAWSPACE_NEW_(UpdateBCFilesTask, UpdateBCFilesTask);
-
+							auto task{ _DRAWSPACE_NEW_(UpdateBCFilesTask, UpdateBCFilesTask) };
 							task->SetTargetDescr(task_id);
 							task->SetShaderId(shader_id);
 							task->SetHash(hash_shader);
@@ -633,18 +618,18 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						update_shaderbc_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
-							UpdateBCFilesTask* task{ static_cast<UpdateBCFilesTask*>(p_step.GetTask()) };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto shadersCache{ p_step.GetComponent<std::map<dsstring, Blob>*>("&m_shadersCache")->getPurpose() };
+							auto task{ static_cast<UpdateBCFilesTask*>(p_step.GetTask()) };
 
 							Blob blob;
-							long size = { p_step.GetComponent<long>("bc_length")->getPurpose() };
-							void* data = { p_step.GetComponent<void*>("bc")->getPurpose() };
+							const auto size { p_step.GetComponent<long>("bc_length")->getPurpose() };
+							const auto data { p_step.GetComponent<void*>("bc")->getPurpose() };
 							blob.data = data;
 							blob.size = size;
 
 							// and release shader source code...
-							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
 							_DRAWSPACE_DELETE_N_(text);
 
 							// update cache
@@ -660,11 +645,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						create_directory_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
 
-							const dsstring task_id{ final_asset_path };
-							CreateDirectoryTask* task = _DRAWSPACE_NEW_(CreateDirectoryTask, CreateDirectoryTask);
+							const auto task_id{ final_asset_path };
+							const auto task{ _DRAWSPACE_NEW_(CreateDirectoryTask, CreateDirectoryTask) };
 							task->SetTargetDescr(task_id);
 							task->SetShaderId(shader_id);
 							p_step.SetTask(task);
@@ -672,13 +657,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						create_directory_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							dsstring shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
-							CreateDirectoryTask* task{ static_cast<CreateDirectoryTask*>(p_step.GetTask()) };
+							const auto shader_id{ p_step.GetComponent<dsstring>("shader_id")->getPurpose() };
+							auto task{ static_cast<CreateDirectoryTask*>(p_step.GetTask()) };
 							_DRAWSPACE_DELETE_(task);
 
-							void* text{ p_step.GetComponent<void*>("text")->getPurpose() };
-							long text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
-							dsstring hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
+							const auto text{ p_step.GetComponent<void*>("text")->getPurpose() };
+							const auto text_size{ p_step.GetComponent<long>("text_size")->getPurpose() };
+							const auto hash_shader{ p_step.GetComponent<dsstring>("hash_shader")->getPurpose() };
 
 							p_seq.GetStep("compileShaderStep").AddComponent<void*>("text", text);
 							p_seq.GetStep("compileShaderStep").AddComponent<long>("text_size", text_size);
@@ -719,7 +704,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
 						loaded = true;
-						notify_event(BLOB_LOADED, final_asset_path);
+						notify_event(ResourceEvent::BLOB_LOADED, final_asset_path);
 
 						shader->SetData(m_shadersCache.at(final_asset_path).data, m_shadersCache.at(final_asset_path).size);
 						shader->SetCompilationFlag(true); //shader now contains compiled shader
@@ -852,7 +837,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
         {
 			const auto target_meshe{ std::get<0>(e->getPurpose()) };
 
-            bool& loaded = std::get<3>(e->getPurpose());
+            auto& loaded = std::get<3>(e->getPurpose());
             if (!loaded)
             {
 				m_all_asset_loaded = false;
@@ -880,31 +865,31 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						load_meshes_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
 							
-							auto target_meshe{ p_step.GetComponent<Meshe*>("target_meshe")->getPurpose() };
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							const auto target_meshe{ p_step.GetComponent<Meshe*>("target_meshe")->getPurpose() };
+							const auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							const dsstring task_id{ final_asset_path };
+							const auto task_id{ final_asset_path };
 
-							LoadFileToAssimpTask* task =_DRAWSPACE_NEW_(LoadFileToAssimpTask, LoadFileToAssimpTask);
+							const auto task{ _DRAWSPACE_NEW_(LoadFileToAssimpTask, LoadFileToAssimpTask) };
 							task->SetTargetDescr(task_id);
 							task->SetFinalAssetPath(final_asset_path);
 							task->SetTargetMeshe(target_meshe);
 							p_step.SetTask(task);
 
-							resource_system->NotifyEvent(BLOB_LOAD, final_asset_path);
+							resource_system->NotifyEvent(ResourceEvent::BLOB_LOAD, final_asset_path);
 							
 						});
 
 						load_meshes_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 						{
-							auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-							auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
+							const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+							const auto resource_system{ p_step.GetComponent<ResourcesSystem*>("ResourcesSystem")->getPurpose() };
 
-							auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+							const auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 							
-							LoadFileToAssimpTask* task{ static_cast<LoadFileToAssimpTask*>(p_step.GetTask()) };
+							auto task{ static_cast<LoadFileToAssimpTask*>(p_step.GetTask()) };
 
 							MesheCacheEntry mesheCacheEntry(task->GetImporter(), task->GetScene());
 
@@ -912,7 +897,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							
 							_DRAWSPACE_DELETE_(task);
 
-							resource_system->NotifyEvent(BLOB_LOADED, final_asset_path);
+							resource_system->NotifyEvent(ResourceEvent::BLOB_LOADED, final_asset_path);
 
 							p_seq.SetCurrentStep("fillMeshesDescriptionStep");
 						});
@@ -926,7 +911,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						sequence.SetCurrentStep(dsstring("fillMeshesDescriptionStep"));
 					}
 
-					AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+					const auto anims_aspect{ p_entity->GetAspect<AnimationsAspect>() };
 
 					//register next sequence
 
@@ -942,15 +927,15 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					{
 						ResourcesAspect::MeshesFileDescription mesheFileDescription;
 
-						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
-						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+						const auto rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
+						const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						const auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
 
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
+						const auto scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
 						
 
 						_DSTRACE((*rs_logger), dsstring("************************************SCENE INFOS***********************************"));
-						_DSTRACE((*rs_logger), dsstring("resources = ") << final_asset_path);
+						_DSTRACE((*rs_logger), dsstring("resources = ") + final_asset_path);
 						
 						_DSTRACE((*rs_logger), dsstring("scene HasMeshes ") << scene->HasMeshes());
 						_DSTRACE((*rs_logger), dsstring("scene num Meshes ") << scene->mNumMeshes);
@@ -979,7 +964,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						p_seq.AddComponent<ResourcesAspect::MeshesFileDescription>("mesheFileDescription", mesheFileDescription);
 
-						aiNode* root{ scene->mRootNode };
+						const auto root{ scene->mRootNode };
 
 						_DSTRACE((*rs_logger), dsstring("************************************NODE HIERARCHY BEGIN***********************************"));
 
@@ -987,9 +972,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						_DSTRACE((*rs_logger), dsstring("************************************NODE HIERARCHY END*************************************"));
 
-						const dsstring task_id{ final_asset_path };
-
-						FillMeshesOwnerNamesTask* task = _DRAWSPACE_NEW_(FillMeshesOwnerNamesTask, FillMeshesOwnerNamesTask);
+						const auto task_id{ final_asset_path };
+						const auto task{ _DRAWSPACE_NEW_(FillMeshesOwnerNamesTask, FillMeshesOwnerNamesTask) };
 
 						task->SetTargetDescr(task_id);
 						task->SetNbMeshes(scene->mNumMeshes);
@@ -1001,18 +985,18 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					fill_meshes_description_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
-						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
-						AnimationsAspect* anims_aspect{ p_step.GetComponent<AnimationsAspect*>("anims_aspect")->getPurpose() };
+						const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						const auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+						const auto anims_aspect{ p_step.GetComponent<AnimationsAspect*>("anims_aspect")->getPurpose() };
 
-						FillMeshesOwnerNamesTask* task{ static_cast<FillMeshesOwnerNamesTask*>(p_step.GetTask()) };
+						auto task{ static_cast<FillMeshesOwnerNamesTask*>(p_step.GetTask()) };
 
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
+						const auto scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
 
 						// associe a aiMesh** meshes -> meshes_node_owner_names[i] -> contient le nom du node proprietaire du meshes[i]
-						std::vector<dsstring> meshes_node_owner_names{ task->GetNodesNamesList() };
+						const auto meshes_node_owner_names{ task->GetNodesNamesList() };
 
-						aiMesh** meshes{ scene->mMeshes };
+						const auto meshes{ scene->mMeshes };
 
 						// ICI : remplir les descriptions meshes a partir du tableau aiMesh** meshes;
 						for (unsigned int i = 0; i < scene->mNumMeshes; i++)
@@ -1036,12 +1020,12 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					
 						if (anims_aspect)
 						{
-							_DSDEBUG(rs_logger, dsstring("Animation aspect detected for ") << final_asset_path);
+							_DSDEBUG(rs_logger, dsstring("Animation aspect detected for ") + final_asset_path);
 							p_seq.SetCurrentStep("fillMeshesAnimationsStep");
 						}
 						else
 						{
-							_DSDEBUG(rs_logger, dsstring("No animation aspect for ") << final_asset_path << dsstring(", building meshe..."));
+							_DSDEBUG(rs_logger, dsstring("No animation aspect for ") + final_asset_path + dsstring(", building meshe..."));
 							p_seq.SetCurrentStep("buildMesheStep");
 						}						
 					});
@@ -1056,12 +1040,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					fill_meshes_animations_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
-						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
-						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						const aiScene* scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
-						AnimationsAspect* anims_aspect{ p_step.GetComponent<AnimationsAspect*>("anims_aspect")->getPurpose() };
-
+						const auto rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
+						const auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+						const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						const auto scene{ (*meshesCache).at(final_asset_path).m_assimp_scene };
+						const auto anims_aspect{ p_step.GetComponent<AnimationsAspect*>("anims_aspect")->getPurpose() };
 
 						_DSTRACE((*rs_logger), dsstring("************************************Animations list BEGIN***********************************"));
 						_DSTRACE((*rs_logger), final_asset_path);
@@ -1070,7 +1053,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						{
 							_DSTRACE((*rs_logger), dsstring("Animation ") << i);
 
-							aiAnimation* animation = scene->mAnimations[i];
+							const auto animation{ scene->mAnimations[i] };
 
 							_DSTRACE((*rs_logger), dsstring("Name = ") << animation->mName.C_Str());
 							_DSTRACE((*rs_logger), dsstring("TicksPerSeconds = ") << animation->mTicksPerSecond);
@@ -1114,8 +1097,6 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					RunnerSequenceStep build_meshe_step;
 
-
-
 					build_meshe_step.AddComponent<Entity*>("entity", p_entity);
 					build_meshe_step.AddComponent<dsstring>("meshe_id", meshe_id);
 					build_meshe_step.AddComponent<Core::Meshe*>("target_meshe", target_meshe);
@@ -1126,13 +1107,13 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					build_meshe_step.SetRunHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
-						DrawSpace::Logger::Sink* rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
-						Entity* entity{ p_step.GetComponent<Entity*>("entity")->getPurpose() };
-						auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
-						dsstring meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
-						Core::Meshe* target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
-						MesheCacheEntry& cacheEntry{ (*meshesCache).at(final_asset_path) };
+						const auto rs_logger{ p_step.GetComponent<DrawSpace::Logger::Sink*>("&rs_logger")->getPurpose() };
+						const auto entity{ p_step.GetComponent<Entity*>("entity")->getPurpose() };
+						const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						const auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+						const auto meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
+						const auto target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
+						const auto cacheEntry{ (*meshesCache).at(final_asset_path) };
 						
 						const auto scene{ cacheEntry.m_assimp_scene };
 						const auto root{ scene->mRootNode };
@@ -1149,11 +1130,11 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						if (0 == cacheEntry.m_meshes_data.count(meshe_id))
 						{
-							_DSDEBUG((*rs_logger), dsstring("No vertices/triangles found in cache for ") << final_asset_path << dsstring(" meshe ") << meshe_id  );
+							_DSDEBUG((*rs_logger), dsstring("No vertices/triangles found in cache for ") + final_asset_path + dsstring(" meshe ") + meshe_id  );
 							// no data found in cache
 
-							const dsstring task_id{ final_asset_path };
-							BuildMesheTask* task = _DRAWSPACE_NEW_(BuildMesheTask, BuildMesheTask);
+							const auto task_id{ final_asset_path };
+							const auto task = _DRAWSPACE_NEW_(BuildMesheTask, BuildMesheTask);
 							task->SetTargetDescr(task_id);
 
 							task->SetEntity(entity);
@@ -1162,7 +1143,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						}
 						else
 						{
-							_DSDEBUG((*rs_logger), dsstring("Vertices/triangles data found in cache for ") << final_asset_path << dsstring(" meshe ") << meshe_id);
+							_DSDEBUG((*rs_logger), dsstring("Vertices/triangles data found in cache for ") + final_asset_path + dsstring(" meshe ") + meshe_id);
 							// data found in cache for this meshe id, use it
 							target_meshe->SetVertices(cacheEntry.m_meshes_data.at(meshe_id).m_vertices);
 							target_meshe->SetTriangles(cacheEntry.m_meshes_data.at(meshe_id).m_triangles);
@@ -1171,19 +1152,19 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 					build_meshe_step.SetStepCompletedHandler([](RunnerSequenceStep& p_step, RunnerSequence& p_seq)
 					{
-						auto				final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
-						ResourcesAspect*	resource_aspect{ p_step.GetComponent<ResourcesAspect*>("resources_aspect")->getPurpose() };
-						Core::Meshe*		target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
-						auto				meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
-						dsstring			meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
+						const auto final_asset_path{ p_step.GetComponent<dsstring>("final_asset_path")->getPurpose() };
+						const auto resource_aspect{ p_step.GetComponent<ResourcesAspect*>("resources_aspect")->getPurpose() };
+						const auto target_meshe{ p_step.GetComponent<Core::Meshe*>("target_meshe")->getPurpose() };
+						const auto meshesCache{ p_step.GetComponent<std::map<dsstring, MesheCacheEntry>*>("&m_meshesCache")->getPurpose() };
+						auto meshe_id{ p_step.GetComponent<dsstring>("meshe_id")->getPurpose() };
 
-						BuildMesheTask* task{ static_cast<BuildMesheTask*>(p_step.GetTask()) };
+						auto task{ static_cast<BuildMesheTask*>(p_step.GetTask()) };
 						_DRAWSPACE_DELETE_(task);
 
-						ResourcesAspect::MeshesFileDescription mesheFileDescription{ p_seq.GetComponent< ResourcesAspect::MeshesFileDescription>("mesheFileDescription")->getPurpose() };
+						const auto mesheFileDescription{ p_seq.GetComponent<ResourcesAspect::MeshesFileDescription>("mesheFileDescription")->getPurpose() };
 						resource_aspect->AddMeshesFileDescription(mesheFileDescription);
 
-						MesheCacheEntry& cacheEntry{ (*meshesCache).at(final_asset_path) };
+						auto& cacheEntry{ (*meshesCache).at(final_asset_path) };
 
 						// store triangles/vertices data in cache if not already present						
 						if (0 == cacheEntry.m_meshes_data.count(meshe_id))
@@ -1208,7 +1189,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 					if (m_runner_system.IsSequenceCompleted(final_asset_path))
 					{
 						loaded = true;
-						dsstring meshe_unique_id = final_asset_path + "/" + meshe_id;
+						const auto meshe_unique_id{ final_asset_path + "/" + meshe_id };
 
 						if (m_runner_system.GetSequence(final_asset_path).HasStep("loadMeshesStep"))
 						{
@@ -1244,7 +1225,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						m_runner_system.RemoveSequence(final_asset_path);
 
-						AnimationsAspect* anims_aspect = p_entity->GetAspect<AnimationsAspect>();
+						const auto anims_aspect{ p_entity->GetAspect<AnimationsAspect>() };
 						if (anims_aspect)
 						{
 							anims_aspect->GetComponent<bool>("ready")->getPurpose() = true;
@@ -1266,7 +1247,6 @@ void ResourcesSystem::DumpAssimpSceneNode(aiNode* p_ai_node, int depth, DrawSpac
     _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2);
     _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3);
     _DSTRACE((*p_rs_logger), spacing + dsstring("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4);
-
 
     for( size_t i = 0; i < p_ai_node->mNumChildren; i++)
     {
@@ -1303,17 +1283,17 @@ Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_m
 
 void ResourcesSystem::DumpMeshe(aiNode* p_ai_node, aiMesh** p_meshes, DrawSpace::Logger::Sink* p_rs_logger)
 {
-	unsigned int nb_meshes = p_ai_node->mNumMeshes;
+	const auto nb_meshes{ p_ai_node->mNumMeshes };
 
 	_DSTRACE((*p_rs_logger), dsstring("************************************MESHE INFOS***********************************"));
-	dsstring name = p_ai_node->mName.C_Str();
+	const auto name{ p_ai_node->mName.C_Str() };
 	_DSTRACE((*p_rs_logger), dsstring("owner node = ") + name);
 	_DSTRACE((*p_rs_logger), dsstring("nb_meshes = ") << nb_meshes);
 	
-	unsigned int* indexes = p_ai_node->mMeshes;
+	const auto indexes{ p_ai_node->mMeshes };
 	for (unsigned int i = 0; i < nb_meshes; i++)
 	{
-		aiMesh* meshe = p_meshes[indexes[i]];
+		const auto meshe{ p_meshes[indexes[i]] };
 
 		_DSTRACE(rs_logger, dsstring(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MESHE ") << i );		
 		_DSTRACE(rs_logger, dsstring("name = ") << dsstring(meshe->mName.C_Str()));
@@ -1329,7 +1309,7 @@ void ResourcesSystem::DumpMeshe(aiNode* p_ai_node, aiMesh** p_meshes, DrawSpace:
 
 		for (size_t j = 0; j < meshe->mNumBones; j++)
 		{
-			aiBone* bone = meshe->mBones[j];
+			const auto bone{ meshe->mBones[j] };
 
 			_DSTRACE(rs_logger, dsstring("Bone ") << j);
 			_DSTRACE(rs_logger, dsstring("  -> name = ") << bone->mName.C_Str());
@@ -1338,7 +1318,6 @@ void ResourcesSystem::DumpMeshe(aiNode* p_ai_node, aiMesh** p_meshes, DrawSpace:
 			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
 			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
 			_DSTRACE(rs_logger, dsstring("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
-
 		}
 	}
 
@@ -1347,29 +1326,28 @@ void ResourcesSystem::DumpMeshe(aiNode* p_ai_node, aiMesh** p_meshes, DrawSpace:
 
 dsstring ResourcesSystem::compute_textures_final_path(const dsstring& p_path) const
 {
-    dsstring final_path = m_textures_rootpath + "/";
+	auto final_path{ m_textures_rootpath + "/" };
     final_path += p_path;
     return final_path;
 }
 
 dsstring ResourcesSystem::compute_shaders_final_path(const dsstring& p_path) const
 {
-    dsstring final_path = m_shaders_rootpath + "/";
+	auto final_path{ m_shaders_rootpath + "/" };
     if (m_addshaderspath)
     {
-        Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
+		const auto renderer{ SingletonPlugin<Renderer>::GetInstance()->m_interface };
         dsstring m_shader_descr;
         renderer->GetShadersDescr(m_shader_descr);
         final_path += m_shader_descr + "/";
     }
     final_path += p_path;
-
     return final_path;
 }
 
 dsstring ResourcesSystem::compute_meshes_final_path(const dsstring& p_path) const
 {
-    dsstring final_path = m_meshes_rootpath + "/";
+	auto final_path{ m_meshes_rootpath + "/" };
     final_path += p_path;
     return final_path;
 }
@@ -1400,8 +1378,7 @@ void ResourcesSystem::ReleaseAssets(void)
 
 void ResourcesSystem::ReleaseShaderAsset(const dsstring& p_asset)
 {
-    dsstring final_asset_path = compute_shaders_final_path(p_asset);
-
+	const auto final_asset_path{ compute_shaders_final_path(p_asset) };
     if( m_shadersCache.count(final_asset_path) )
     {
         _DRAWSPACE_DELETE_N_(m_shadersCache.at(final_asset_path).data);
@@ -1413,7 +1390,7 @@ void ResourcesSystem::LoadTexture(DrawSpace::Core::Texture* p_texture)
 {
     dsstring asset_path;
     p_texture->GetBasePath(asset_path);
-    dsstring final_asset_path = compute_textures_final_path(asset_path);
+	const auto final_asset_path{ compute_textures_final_path(asset_path) };
 
 	updateAssetFromCache<Texture>(p_texture, m_texturesCache, final_asset_path);
 }
@@ -1422,8 +1399,8 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 {
 	dsstring asset_path;
 	p_shader->GetBasePath(asset_path);
-	dsstring final_asset_path = compute_shaders_final_path(asset_path);
-	dsstring final_asset_dir = compute_shaders_final_path("");
+	const auto final_asset_path{ compute_shaders_final_path(asset_path) };
+	const auto final_asset_dir{ compute_shaders_final_path("") };
 
 	if (p_shader->IsCompiled())
 	{
@@ -1446,7 +1423,7 @@ void ResourcesSystem::check_bc_cache_presence(void) const
 	}
 	else
 	{
-		notify_event(SHADERCACHE_CREATION, "");
+		notify_event(ResourceEvent::SHADERCACHE_CREATION, "");
 		FileSystem::CreateDirectory(bcCacheName);
 	}
 }
@@ -1478,14 +1455,14 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	}
 	//compute source text checksum
 	MD5 md5;
-	dsstring hash_shader{ md5.digestMemory((BYTE*)text, text_size) };
+	const auto hash_shader{ md5.digestMemory((BYTE*)text, text_size) };
 
 	// shader key id
 	std::vector<dsstring> items;
 	SplitString(p_asset_path, items, '.');
-	dsstring shader_id{ items[0] };
+	const auto shader_id{ items[0] };
 
-	dsstring path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
+	const auto path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
 
 	if (FileSystem::Exists(path))
 	{
@@ -1510,7 +1487,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 		long md5filesize;
 		unsigned char* md5Buf = { static_cast<unsigned char*>( FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize) ) };
 
-		dsstring stored_md5((char*)md5Buf, md5filesize);
+		const dsstring stored_md5((char*)md5Buf, md5filesize);
 
 		if (stored_md5 == hash_shader)
 		{
@@ -1518,7 +1495,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 			{
 				// OK, can load bc.code file or get from m_shadersCache
 
-				notify_event(BLOB_LOAD, p_final_asset_path);
+				notify_event(ResourceEvent::BLOB_LOAD, p_final_asset_path);
 
 				bc = FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcCodeFileName, &bc_length);
 				if (NULL == bc)
@@ -1526,7 +1503,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 					_DSEXCEPTION(dsstring("unexpected error while reading code file : ") + shader_id);
 				}
 
-				notify_event(BLOB_LOADED, p_final_asset_path);
+				notify_event(ResourceEvent::BLOB_LOADED, p_final_asset_path);
 
 				Blob blob{ bc, bc_length };
 				m_shadersCache[p_final_asset_path] = blob;
@@ -1541,12 +1518,12 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 		{
 			// crc changed, update all,
 
-			notify_event(SHADER_COMPILATION, p_final_asset_path);
+			notify_event(ResourceEvent::SHADER_COMPILATION, p_final_asset_path);
 
 			// try to compile...
 			void* bytecode_handle;
 
-			bool comp_status{ m_renderer->CreateShaderBytes((char*)text, text_size, p_shader_type, p_asset_path, p_final_asset_dir, &bytecode_handle) };
+			const auto comp_status{ m_renderer->CreateShaderBytes((char*)text, text_size, p_shader_type, p_asset_path, p_final_asset_dir, &bytecode_handle) };
 			if (!comp_status)
 			{
 				dsstring err_compil{ m_renderer->GetShaderCompilationError(bytecode_handle) };
@@ -1563,7 +1540,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 			update_bc_md5file(path, hash_shader);
 			update_bc_codefile(path, bc, bc_length);
 
-			notify_event(SHADER_COMPILED, p_final_asset_path);
+			notify_event(ResourceEvent::SHADER_COMPILED, p_final_asset_path);
 
 			// update shader & m_shadersCache with bytecode
 
@@ -1571,7 +1548,6 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 			m_shadersCache[p_final_asset_path] = blob;
 
 			p_shader->SetData(bc, bc_length);
-
 		}
 
 		_DRAWSPACE_DELETE_N_(md5Buf);
@@ -1580,7 +1556,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	{
 		// shader entry does not exists, create all...
 
-		notify_event(SHADER_COMPILATION, p_final_asset_path);
+		notify_event(ResourceEvent::SHADER_COMPILATION, p_final_asset_path);
 
 		// try to compile...
 		void* bytecode_handle;
@@ -1604,7 +1580,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 		update_bc_md5file(path, hash_shader);
 		update_bc_codefile(path, bc, bc_length);
 
-		notify_event(SHADER_COMPILED, p_final_asset_path);
+		notify_event(ResourceEvent::SHADER_COMPILED, p_final_asset_path);
 
 		// update shader & m_shadersCache with bytecode
 
