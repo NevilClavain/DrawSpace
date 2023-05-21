@@ -35,7 +35,7 @@ class Renderer;
 }
 namespace Core
 {
-class RenderingNode;
+struct RenderingNode;
 
 
 struct PassSlot
