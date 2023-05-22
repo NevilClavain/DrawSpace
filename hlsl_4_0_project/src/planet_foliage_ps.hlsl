@@ -81,6 +81,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float4 final_color = 1.0;
     float4 lit_color = 0.0;
+    
+
     float4 pixel_color = color;
 
 
@@ -95,11 +97,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 light0_color = vec[v_light0_color];
     
 
-    //float4 light0_dir = { -1.0, 0.0, 0.0, 1.0 };
-    //float4 light0_color = 1.0;
-
-
-
     if (flags_lights.y > 0.0)
     {
         lit_color += clamp(dot(world_normale.xyz, light0_dir.xyz), 0.0, 1.0) * light0_color;
@@ -107,10 +104,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 
 
-    //pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
-
+    pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));    
     final_color.xyz = pixel_color.xyz * lit_color.xyz;
-    final_color.xyz = saturate(lerp(fog_color, final_color.xyz, input.Fog));
+
+
 
     final_color.w = SPHERELOD_FOLIAGE_ID;
     return final_color;
