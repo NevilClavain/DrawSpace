@@ -87,10 +87,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
 
     pos.xyz = pos.xzy; // swap y and z 
 
+
+
     Output.Position = mul(pos, mat[matWorldViewProjection]);
     Output.TexCoord0 = Input.TexCoord0.xy;
 
-    Output.Normale.xyz = normalize(Input.Normal.xyz);
+    Output.Normale.xyz = normalize(Input.Normal.xzy); // swap y and z 
     Output.Normale.w = 1.0;
 
     //// fog ////
