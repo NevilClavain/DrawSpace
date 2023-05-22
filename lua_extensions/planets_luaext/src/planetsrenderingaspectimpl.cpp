@@ -571,6 +571,11 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
         }
     }
+
+    for (auto& e : m_planet_foliage_binder)
+    {
+        lights_updater(*(e.second));
+    }
 }
 
 void PlanetsRenderingAspectImpl::init_rendering_objects(void)
@@ -1178,14 +1183,43 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius* outerRadius, innerRadius* innerRadius);
             *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
-            
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 18, atmo_flags);
+
+            static const dsreal scaleDepth{ 0.25 };
+            const Utils::Vector atmo_flags_1(scaleDepth, 1.0 / scaleDepth, 1.0 / (outerRadius - innerRadius), (1.0 / (outerRadius - innerRadius)) / scaleDepth);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, atmo_flags_1);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 19, atmo_flags_1);
+
+            const Utils::Vector waveLength(0.650, 0.570, 0.475, 0.0);
+            const Utils::Vector atmo_flags_2((1.0 / pow(waveLength[0], 4.0)), (1.0 / pow(waveLength[1], 4.0)), (1.0 / pow(waveLength[2], 4.0)), 0.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 44, atmo_flags_2);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 20, atmo_flags_2);
+
+            static const dsreal atmoKm{ 0.0010 };
+            const Utils::Vector atmo_flags_3(atmo_kr, atmoKm, 4.0 * atmo_kr * 3.1415927, 4.0 * atmoKm * 3.1415927);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 45, atmo_flags_3);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 21, atmo_flags_3);
+
+            static const dsreal skyfromspace_ESun{ 8.7 };
+            static const dsreal skyfromatmo_ESun{ 70.0 };
+            static const dsreal groundfromspace_ESun{ 24.0 };
+            static const dsreal groundfromatmo_ESun{ 12.0 };
+            const Utils::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_4);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_4);
+
 
             const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, 0.0);
             *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+
 
             // couleurs fog "sol"
             const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
             *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
+
+
 
             return foliage_binder;
         }};

@@ -29,11 +29,9 @@ cbuffer legacyargs : register(b0)
 };
 
 #include "spherelod_commons.hlsl"
+#include "mat_input_constants.hlsl"
+#include "generic_rendering.hlsl"
 
-#define v_flags                     0
-#define v_flags2                    1
-#define v_viewer_pos                2
-#define v_flags6                    6
 #define v_flags_lights              7
 
 #define v_ambient_color             8
@@ -62,8 +60,9 @@ SamplerState sam            : register(s0);
 
 struct PS_INTPUT 
 {
-    float4 Position : SV_POSITION;
-	float2 TexCoord0: TEXCOORD0;
+    float4 Position  : SV_POSITION;
+	float2 TexCoord0 : TEXCOORD0;
+    float4 Normale   : TEXCOORD1;
 
     float Fog : FOG;
 };
@@ -81,11 +80,37 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 fog_color = atmo_scattering_flag_6;
 
     float4 final_color = 1.0;
+    float4 lit_color = 0.0;
     float4 pixel_color = color;
 
-    pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
 
-    final_color.xyz = pixel_color.xyz;
+    //// lit computing
+    float4x4 mat_World = mat[matWorld_ps];
+    float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
+
+    float4 flags_lights = vec[v_flags_lights];
+
+    
+    float4 light0_dir = vec[v_light0_dir];
+    float4 light0_color = vec[v_light0_color];
+    
+
+    //float4 light0_dir = { -1.0, 0.0, 0.0, 1.0 };
+    //float4 light0_color = 1.0;
+
+
+
+    if (flags_lights.y > 0.0)
+    {
+        lit_color += clamp(dot(world_normale.xyz, light0_dir.xyz), 0.0, 1.0) * light0_color;
+    }
+
+
+
+    //pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
+
+    final_color.xyz = pixel_color.xyz * lit_color.xyz;
+    final_color.xyz = saturate(lerp(fog_color, final_color.xyz, input.Fog));
 
     final_color.w = SPHERELOD_FOLIAGE_ID;
     return final_color;

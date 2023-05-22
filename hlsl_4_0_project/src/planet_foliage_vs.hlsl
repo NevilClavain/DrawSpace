@@ -32,32 +32,21 @@ cbuffer legacyargs : register(b0)
 
 struct VS_INPUT
 {
-    float3 Position : POSITION;
-    float4 TexCoord0 : TEXCOORD0;
+    float3 Position     : POSITION;
+    float3 Normal       : NORMALE;
+    float4 TexCoord0    : TEXCOORD0;
 };
 
 struct VS_OUTPUT
 {
-    float4 Position : SV_POSITION;
-    float2 TexCoord0 : TEXCOORD0;
+    float4 Position     : SV_POSITION;
+    float2 TexCoord0    : TEXCOORD0;
+    float4 Normale      : TEXCOORD1;
 
-    float Fog : FOG;
+    float Fog           : FOG;
 };
 
-#define v_flag0                     24
-#define v_patch_translation         25
-#define v_base_uv                   26
-#define v_base_uv_global            27
 #define v_viewer_pos                28
-
-#define matLandPlacePatchLocalPos   29
-
-#define v_landplacepatch_normale    33
-
-#define matPlanetWorld              34
-
-#define v_landscape_control         40
-#define v_seeds                     41
 
 #define v_atmo_scattering_flag_0    42
 #define v_atmo_scattering_flag_1    43
@@ -82,8 +71,7 @@ struct VS_OUTPUT
 #define v_light2_dir                59
 #define v_light2_color              60
 
-#define v_flag6                     62
-#define v_flag63                    63
+
 
 #include "spherelod_commons.hlsl"
 #include "atmospheric_scattering.hlsl"
@@ -102,6 +90,8 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     Output.Position = mul(pos, mat[matWorldViewProjection]);
     Output.TexCoord0 = Input.TexCoord0.xy;
 
+    Output.Normale.xyz = normalize(Input.Normal.xyz);
+    Output.Normale.w = 1.0;
 
     //// fog ////
 
