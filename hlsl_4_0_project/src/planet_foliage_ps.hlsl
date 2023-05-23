@@ -32,6 +32,9 @@ cbuffer legacyargs : register(b0)
 #include "mat_input_constants.hlsl"
 #include "generic_rendering.hlsl"
 
+// xyz local pos from planet center 0,0,0
+#define v_local_pos_vector          3
+
 #define v_flags_lights              7
 
 #define v_ambient_color             8
@@ -55,6 +58,9 @@ cbuffer legacyargs : register(b0)
 #define v_atmo_scattering_flag_5    23
 #define v_atmo_scattering_flag_6    24
 
+
+
+
 Texture2D txDiffuse         : register(t0);
 SamplerState sam            : register(s0);
 
@@ -75,36 +81,53 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     {
         clip(-1.0);
     }
+    float4 pixel_color = color;
 
     float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
     float4 fog_color = atmo_scattering_flag_6;
+    pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
 
     float4 final_color = 1.0;
-    float4 lit_color = 0.0;
+    float4 lit_color = 0.0;    
+
+    
     
 
-    float4 pixel_color = color;
+    float4x4 mat_World = mat[matWorld_ps];
+    float4 flags_lights = vec[v_flags_lights];
+    float4 light0_dir = vec[v_light0_dir];
+    float4 light0_color = vec[v_light0_color];
+    float4 light0_dir_local = vec[v_light0_dir_local];
 
 
     //// lit computing
-    float4x4 mat_World = mat[matWorld_ps];
+    /*
     float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
-
-    float4 flags_lights = vec[v_flags_lights];
-
-    
-    float4 light0_dir = vec[v_light0_dir];
-    float4 light0_color = vec[v_light0_color];
-    
 
     if (flags_lights.y > 0.0)
     {
-        lit_color += clamp(dot(world_normale.xyz, light0_dir.xyz), 0.0, 1.0) * light0_color;
+        lit_color += clamp(dot(world_normale.xyz, normalize(light0_dir.xyz)), 0.0, 1.0) * light0_color;
+    }
+    */
+
+    ///////////////////
+
+    float4 local_pos_vector = vec[v_local_pos_vector];
+    float4 n_local_pos_vector;
+    n_local_pos_vector.xyz = normalize(local_pos_vector.xyz);
+    n_local_pos_vector.w = 1.0;
+
+    //float4 world_pos_vector = TransformedNormaleForLights(n_local_pos_vector, mat_World);
+
+    if (flags_lights.y > 0.0)
+    {
+        lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0);
     }
 
 
+    ///////////////////
 
-    pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));    
+    
     final_color.xyz = pixel_color.xyz * lit_color.xyz;
 
 

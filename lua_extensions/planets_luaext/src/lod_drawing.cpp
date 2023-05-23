@@ -556,7 +556,9 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 
 // render one foliage meshe
 void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, 
-                            const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos)
+                            const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+                            const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, 
+                            dsreal p_xpos, dsreal p_ypos)
 {
     const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
     const dsreal ypos{ p_ypos }; // [-0.5, 0.5 ]
@@ -602,6 +604,8 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     v2.Scale(p_ray);
     v2.Scale(1.0 + (hm_height / p_ray));
 
+    m_renderer->SetFxShaderParams(1, 3, v2);
+
     Matrix local_t;
     local_t.Translation(v2);
 
@@ -612,7 +616,7 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     q.RotationMatFrom(local_r);
 
     Matrix world = local_r * local_t * p_world;
-    
+       
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }
 

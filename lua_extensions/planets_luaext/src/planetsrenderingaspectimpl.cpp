@@ -395,6 +395,11 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 light_updater(e2, world);
             }
         }
+
+        for (auto& e : m_planet_foliage_binder)
+        {
+            light_updater(e.second, world);
+        }
     }
     else
     {
