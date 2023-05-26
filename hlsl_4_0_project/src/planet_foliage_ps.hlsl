@@ -34,6 +34,7 @@ cbuffer legacyargs : register(b0)
 
 // xyz local pos from planet center 0,0,0
 #define v_local_pos_vector          3
+#define v_lit_model                 4
 
 #define v_flags_lights              7
 
@@ -88,9 +89,13 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
 
     float4 final_color = 1.0;
-    float4 lit_color = 0.0;    
 
-    
+
+    // global lit : simple illumination -> (light_dir) dot (local pos on planet surface)
+    float4 global_lit_color;
+
+    // detailed lit : "classic" lit model -> (light_dir) dot (model interpolated normale)
+    float4 detail_lit_color;
     
 
     float4x4 mat_World = mat[matWorld_ps];
@@ -99,8 +104,24 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 light0_color = vec[v_light0_color];
     float4 light0_dir_local = vec[v_light0_dir_local];
 
+    bool global_lit_model = vec[v_lit_model].x;
+    bool detail_lit_model = vec[v_lit_model].y;
 
-    //// lit computing
+
+    if (global_lit_model)
+    {
+        global_lit_color = 0.0;
+    }
+    else
+    {
+        global_lit_color = 1.0;
+    }
+
+    // temporaire
+    detail_lit_color = 1.0;
+
+
+    ///////////////////Detail lit computing//////////////////////////
     /*
     float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
 
@@ -110,25 +131,25 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     */
 
-    ///////////////////
+    ///////////////////Global lit computing//////////////////////////
 
-    float4 local_pos_vector = vec[v_local_pos_vector];
-    float4 n_local_pos_vector;
-    n_local_pos_vector.xyz = normalize(local_pos_vector.xyz);
-    n_local_pos_vector.w = 1.0;
-
-    //float4 world_pos_vector = TransformedNormaleForLights(n_local_pos_vector, mat_World);
-
-    if (flags_lights.y > 0.0)
+    if (global_lit_model)
     {
-        lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0);
-    }
+        float4 local_pos_vector = vec[v_local_pos_vector];
+        float4 n_local_pos_vector;
+        n_local_pos_vector.xyz = normalize(local_pos_vector.xyz);
+        n_local_pos_vector.w = 1.0;
 
+        if (flags_lights.y > 0.0)
+        {
+            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0);
+        }
+    }
 
     ///////////////////
 
     
-    final_color.xyz = pixel_color.xyz * lit_color.xyz;
+    final_color.xyz = pixel_color.xyz * global_lit_color.xyz * detail_lit_color.xyz;
 
 
 

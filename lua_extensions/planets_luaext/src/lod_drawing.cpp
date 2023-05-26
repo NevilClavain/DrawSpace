@@ -555,10 +555,10 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 }
 
 // render one foliage meshe
-void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, 
-                            const DrawSpace::Utils::Vector& p_invariant_view_pos, 
-                            const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj, 
-                            dsreal p_xpos, dsreal p_ypos)
+void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
+    const DrawSpace::Utils::Vector& p_invariant_view_pos,
+    const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj,
+    dsreal p_xpos, dsreal p_ypos)
 {
     const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
     const dsreal ypos{ p_ypos }; // [-0.5, 0.5 ]
@@ -567,8 +567,8 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
 
     const auto hm{ p_patch->GetHeightMap() };
 
-                    // translate to [0.0, 1.0] range for heighmap access
-                    //
+    // translate to [0.0, 1.0] range for heighmap access
+    //
     const auto x_hm{ (int)((xpos + 0.5) * cst::patchLowResolution) };
     const auto y_hm{ (int)((ypos + 0.5) * cst::patchLowResolution) };
     const auto index_hm{ (cst::patchLowResolution * (cst::patchLowResolution - 1 - y_hm)) + x_hm };
@@ -605,6 +605,12 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     v2.Scale(1.0 + (hm_height / p_ray));
 
     m_renderer->SetFxShaderParams(1, 3, v2);
+
+
+    // lit model
+    // enable global lit, disable detailed lit
+    Vector lit_model(1.0, 0.0, 0.0, 0.0);
+    m_renderer->SetFxShaderParams(1, 4, lit_model);
 
     Matrix local_t;
     local_t.Translation(v2);
