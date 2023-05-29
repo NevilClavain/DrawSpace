@@ -117,19 +117,27 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         global_lit_color = 1.0;
     }
 
-    // temporaire
-    detail_lit_color = 1.0;
+    if (detail_lit_model)
+    {
+        detail_lit_color = 0.0;
+    }
+    else
+    {
+        detail_lit_color = 1.0;
+    }
 
 
     ///////////////////Detail lit computing//////////////////////////
-    /*
-    float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
-
-    if (flags_lights.y > 0.0)
+    
+    if (detail_lit_model)
     {
-        lit_color += clamp(dot(world_normale.xyz, normalize(light0_dir.xyz)), 0.0, 1.0) * light0_color;
+        float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
+        if (flags_lights.y > 0.0)
+        {
+            detail_lit_color += clamp(dot(world_normale.xyz, normalize(light0_dir.xyz)), 0.0, 1.0) * light0_color;
+        }
     }
-    */
+    
 
     ///////////////////Global lit computing//////////////////////////
 

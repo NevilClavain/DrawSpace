@@ -609,7 +609,8 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
 
     // lit model
     // enable global lit, disable detailed lit
-    Vector lit_model(1.0, 0.0, 0.0, 0.0);
+    //Vector lit_model(1.0, 0.0, 0.0, 0.0);
+    Vector lit_model(1.0, 1.0, 0.0, 0.0);
     m_renderer->SetFxShaderParams(1, 4, lit_model);
 
     Matrix local_t;
