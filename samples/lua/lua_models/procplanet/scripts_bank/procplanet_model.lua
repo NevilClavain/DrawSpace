@@ -51,6 +51,10 @@ planetmod.read_infos=function(planet_specific_configuration)
 		local global_camera_pos_y = views_infos[offset + 14]
 		local global_camera_pos_z = views_infos[offset + 15]
 
+		local temperature = views_infos[offset + 16]
+		local humidity = views_infos[offset + 17]
+
+
 		views_infos_entry['currentLOD'] = current_lod
 		views_infos_entry['relative'] = relative
 		views_infos_entry['relative_altitude'] = rel_alt
@@ -70,6 +74,10 @@ planetmod.read_infos=function(planet_specific_configuration)
 		views_infos_entry['global_camera_pos_x'] = global_camera_pos_x
 		views_infos_entry['global_camera_pos_y'] = global_camera_pos_y
 		views_infos_entry['global_camera_pos_z'] = global_camera_pos_z
+
+		views_infos_entry['temperature'] = temperature
+		views_infos_entry['humidity'] = humidity
+
 
 		formatted_views_infos[camera_name] = views_infos_entry
 

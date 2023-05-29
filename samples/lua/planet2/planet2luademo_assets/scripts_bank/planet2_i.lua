@@ -1019,8 +1019,13 @@ function()
   local longitud_camera_pos = planet_infos["viewsInfos"][current_cam_id]["longitud"]
   local latitud_camera_pos = planet_infos["viewsInfos"][current_cam_id]["latitud"]
 
+  local temperature = planet_infos["viewsInfos"][current_cam_id]["temperature"]
+  local humidity = planet_infos["viewsInfos"][current_cam_id]["humidity"]
+
+
   --text6_renderer:update(10, 180, 255, 0, 0, "local pos: "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
-  text6_renderer:update(10, 180, 255, 0, 0, "long = "..longitud_camera_pos.." lat = "..latitud_camera_pos.." - pos = "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
+  text6_renderer:update(10, 180, 255, 0, 0, "temp = "..temperature.." humidity = "..humidity.." long = "..longitud_camera_pos.." lat = "..latitud_camera_pos.." - pos = "..
+							local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
 
 
   local planet_light_level = planetmod.compute_lights_level(global_camera_pos)
