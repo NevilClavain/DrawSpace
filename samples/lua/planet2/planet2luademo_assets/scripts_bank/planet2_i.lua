@@ -1670,8 +1670,8 @@ foliage_layers =
 			{
 				[1] = 
 				{
-					--{ path='green_alpha_tall_grass.png', stage=0 }
-					{ path='marbre.jpg', stage=0 }
+					{ path='green_alpha_tall_grass.png', stage=0 }
+					--{ path='marbre.jpg', stage=0 }
 				}
 			},
 			shaders_params = 
@@ -1696,13 +1696,13 @@ foliage_meshes =
 	-- plants
 	[0] = 
 	{	
-		--[[
 		file = 'grassA.ac',
 		mesheid = 'rect'
-		]]
-
+		
+		--[[
 		file = 'sphere.ac',
 		mesheid = 'sphere'
+		]]
 
 	}
 }
