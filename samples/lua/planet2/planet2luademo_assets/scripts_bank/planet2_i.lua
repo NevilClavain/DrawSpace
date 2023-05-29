@@ -1942,6 +1942,7 @@ model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
 
 model.env.light.setstate( TRUE )
 model.env.light.setdir(-1.0, 0.0, 0.0)
+model.env.light.setcolor(0.99, 0.99, 0.99)
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 -- model.env.ambientlight.setcolor(0.0, 0.0, 0.0)
 
