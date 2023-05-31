@@ -214,5 +214,7 @@ private:
     PlanetDetails                       m_planets_details;
     DrawSpace::Aspect::RenderingAspect* m_rendering_aspect{ nullptr };
 
-    using ViewOutInfos = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector>>;
+    using ViewOutInfos = std::map<dsstring, std::tuple<int, bool, 
+                                                        dsreal, dsreal, dsreal, dsreal, dsreal, 
+                                                        DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, dsreal, dsreal>>;
 };

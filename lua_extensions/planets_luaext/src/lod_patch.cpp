@@ -842,7 +842,15 @@ void Patch::SubPassDone(void)
             const auto offset_dst{ (heighmap_dest_resol * id) + jd };
 
             const auto half_precision_altitude{ datamap[(4 * offset_src) + 3] };
+
+            const auto half_precision_temperature{ datamap[(4 * offset_src)] };
+            const auto half_precision_humidity{ datamap[(4 * offset_src) + 1] };
+
             const auto altitude{ half_to_float(half_precision_altitude) };
+
+            // TEMPORARY : do an average computation
+            m_current_temperature = half_to_float(half_precision_temperature);
+            m_current_humidity = half_to_float(half_precision_humidity);
 
             patch_hm_buffer[offset_dst] = altitude;
 
@@ -852,6 +860,13 @@ void Patch::SubPassDone(void)
     }
 
     SetHeightMap(patch_hm_buffer);
+
+    ///////////
+
+    /*
+    m_current_temperature = 0.111;
+    m_current_humidity = 0.222;
+    */
 }
 
 float Patch::half_to_float(unsigned short p_val)
@@ -944,6 +959,16 @@ bool Patch::HasHeightMap(void)
 float* Patch::GetHeightMap(void) const
 {
     return m_heightmap;
+}
+
+dsreal Patch::GetTemperature(void) const
+{
+    return m_current_temperature;
+}
+
+dsreal Patch::GetHumidity(void) const
+{
+    return m_current_humidity;
 }
 
 

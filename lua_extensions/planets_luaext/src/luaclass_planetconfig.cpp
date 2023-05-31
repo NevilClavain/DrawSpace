@@ -1100,6 +1100,9 @@ int LuaClass_PlanetConfig::LUA_getoutparam(lua_State* p_L)
             const auto locale_camera_pos{ std::get<7>(e.second) };
             const auto locale_camera_longlat_pos{ std::get<8>(e.second) };
             const auto global_camera_pos{ std::get<9>(e.second) };
+            const auto temp{ std::get<10>(e.second) };
+            const auto humidity{ std::get<11>(e.second) };
+
 
             lua_pushstring(p_L, camera_name.c_str()); nb_ret++;
             lua_pushinteger(p_L, currentLOD); nb_ret++;
@@ -1121,9 +1124,6 @@ int LuaClass_PlanetConfig::LUA_getoutparam(lua_State* p_L)
             lua_pushnumber(p_L, global_camera_pos[0]); nb_ret++;
             lua_pushnumber(p_L, global_camera_pos[1]); nb_ret++;
             lua_pushnumber(p_L, global_camera_pos[2]); nb_ret++;
-
-            const auto temp{ 0.44 };
-            const auto humidity{ 0.66 };
 
             lua_pushnumber(p_L, temp); nb_ret++;
             lua_pushnumber(p_L, humidity); nb_ret++;

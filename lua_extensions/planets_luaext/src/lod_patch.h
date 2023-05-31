@@ -39,7 +39,6 @@ class HeighmapSubPass;
 class Patch : public SubPass
 {
 public:
-    //using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
 
     static constexpr int    NorthNeighbour      = 0;
     static constexpr int    SouthNeighbour      = 1;
@@ -106,6 +105,9 @@ public:
 
     std::vector<FoliagesCoordinates>    GetFoliageCoordsList(void) const;
 
+    dsreal                              GetTemperature(void) const;
+    dsreal                              GetHumidity(void) const;
+
     dsstring                            DumpInfos(void) const;
 
     static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
@@ -123,8 +125,8 @@ private:
     using SubpassDoneCb = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
     using SubpassAbortedCb = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
 
-    Patch* m_parent;
-    Config* m_config;
+    Patch*                                      m_parent;
+    Config*                                     m_config;
 
     dsreal                                      m_sidelength;
     dsreal                                      m_xpos;
@@ -144,18 +146,18 @@ private:
 
     int                                         m_orientation;
     int                                         m_nodeid;
-    DrawSpace::Utils::BaseQuadtreeNode* m_owner;
-    DrawSpace::Utils::BaseQuadtreeNode* m_neighbours[8];
+    DrawSpace::Utils::BaseQuadtreeNode*         m_owner;
+    DrawSpace::Utils::BaseQuadtreeNode*         m_neighbours[8];
     int                                         m_lod_level;
 
-    DrawSpace::IntermediatePass* m_datatexture_pass{ nullptr };
-    Patch* m_texture_referent;
+    DrawSpace::IntermediatePass*                m_datatexture_pass{ nullptr };
+    Patch*                                      m_texture_referent;
 
     int                                         m_datatexture_current_resol{ 0 };
 
-    DrawSpace::IntermediatePass* m_heightmap_pass{ nullptr };
+    DrawSpace::IntermediatePass*                m_heightmap_pass{ nullptr };
 
-    SubPass::SubPassCreationHandler* m_subpasscreation_handler{ nullptr };
+    SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };
 
 
     std::vector<EntryInfos>                     m_subpass_entry_infos_list;
@@ -174,10 +176,13 @@ private:
 
     std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
 
+    dsreal                                      m_current_temperature{ -1.0 };
+    dsreal                                      m_current_humidity{ -1.0 };
+
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    DrawSpace::IntermediatePass* create_data_texture_pass(int p_resol);
+    DrawSpace::IntermediatePass*            create_data_texture_pass(int p_resol);
     void                                    prepare_data_texture(int p_layer_index, int p_resol);
     void                                    recurs_update_texture_referent(Patch* p_texture_referent);
     static float                            half_to_float(unsigned short p_val);

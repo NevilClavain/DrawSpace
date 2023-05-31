@@ -318,7 +318,7 @@ local planet_specific_config_descr =
 
 
 	-- earth-like planet
-
+	
 	plains_amplitude					         = 100.0,
 	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
@@ -332,7 +332,7 @@ local planet_specific_config_descr =
 	temp_dec_per_km								 = 180.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = TRUE,
-
+	
 
 	-- oceanic planet
 	--[[
@@ -390,8 +390,8 @@ local planet_specific_config_descr =
 
 	-- arid planet, no oceans, no humidity
 	--[[
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 13000.0,
+	plains_amplitude					         = 100.0,
+	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,
@@ -402,13 +402,13 @@ local planet_specific_config_descr =
 	humidity_alt_max							 = 0.5,
 	temp_dec_per_km								 = 3.0,
 	beach_limit							         = 6.0,
-	enable_oceans                                = FALSE,
+	enable_oceans                                = TRUE,
 	]]
 
 	-- hot planet, with humidity
 	--[[
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 13000.0,
+	plains_amplitude					         = 100.0,
+	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,

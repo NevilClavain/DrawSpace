@@ -107,7 +107,16 @@ protected:
     using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
     using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
 
-    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector>>;
+    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    DrawSpace::Utils::Vector, 
+                                                                    DrawSpace::Utils::Vector, 
+                                                                    DrawSpace::Utils::Vector,
+                                                                    dsreal,dsreal>>;
 
     static const dsstring ClimateVShaderComponentName;
     static const dsstring ClimatePShaderComponentName;

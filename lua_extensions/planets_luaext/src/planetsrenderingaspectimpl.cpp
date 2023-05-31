@@ -428,15 +428,19 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     ViewOutInfos registeredCameraInfos;
     for(auto& e : m_registered_camerapoints)
     {
-        int currentLOD = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentLOD();
-        bool relative = e.second.layers[LOD::cst::SurfaceLayer]->GetHotState();
-        dsreal rel_alt = 0.0;
-        rel_alt = e.second.relative_alt;
-        dsreal altitude = e.second.layers[LOD::cst::SurfaceLayer]->GetBody()->GetHotPointAltitud();
+        const auto currentLOD{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentLOD() };
+        const auto relative{ e.second.layers[LOD::cst::SurfaceLayer]->GetHotState() };
+        const auto rel_alt{ e.second.relative_alt };
 
-        dsreal current_patch_max_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMaxHeight();
-        dsreal current_patch_min_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMinHeight();
-        dsreal current_patch_current_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchCurrentHeight();
+        const auto altitude{ e.second.layers[LOD::cst::SurfaceLayer]->GetBody()->GetHotPointAltitud() };
+
+        const auto current_patch_max_height{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMaxHeight() };
+        const auto current_patch_min_height{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMinHeight() };
+        const auto current_patch_current_height{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchCurrentHeight() };
+
+        const auto current_patch_t{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchTemperature() };
+        const auto current_patch_h{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchHumidity() };
+
 
         Vector locale_camera_pos{ e.second.locale_camera_pos_from_planet };
         Vector longlat_pos{ e.second.locale_camera_long_lat };
@@ -451,7 +455,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                                                             current_patch_current_height, 
                                                             locale_camera_pos,
                                                             longlat_pos,
-                                                            global_camera_pos);
+                                                            global_camera_pos,
+                                                            current_patch_t, current_patch_h);
     }
 
     m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
@@ -838,41 +843,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, temp_scale, temp_dec_per_km, beach_limit));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
                     *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
-
-
-                    // pour une planete temperee
-
-                    /*
-                    static const dsreal temp_dec_per_km = 8.0;
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(90.0, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
-                    * 
-                    */
-                    
-                                        
-                    // pour une planete aride sans oceans
-                    /*
-                    static const dsreal temp_dec_per_km = 2.0;
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(0.0, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.25, 0.33, 0.85, 0.99));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(false, 0, 0, 0));
-                    */
-
-
-                    // pour une planete desertique avec oceans, et un peu d'humidite
-                    /*
-                    static const dsreal temp_dec_per_km = 4.0;
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(10.0, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.40, 0.42, 0.85, 0.99));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(true, 0, 0, 0));
-                    */
-
-
-
 
                     ld.patchTexturesBinder[i] = climate_binder;
                     m_planet_climate_binder[i] = climate_binder;

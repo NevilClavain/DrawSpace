@@ -29,7 +29,7 @@ planetmod.read_infos=function(planet_specific_configuration)
 	for i = 0, nb_views-1, 1 do
 		
 		local views_infos_entry = {}
-		local offset = (16 * i) + 2
+		local offset = (18 * i) + 2
 		local camera_name = views_infos[offset]
 		local current_lod = views_infos[offset + 1]
 		local relative = views_infos[offset + 2]

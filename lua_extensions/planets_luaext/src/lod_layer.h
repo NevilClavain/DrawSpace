@@ -85,19 +85,23 @@ public:
 
     int                             GetLayerIndex(void) const;
 
+    dsreal                          GetCurrentPatchTemperature(void) const;
+    dsreal                          GetCurrentPatchHumidity(void) const;
+
+
 private:
 
     using SubpassDoneCb = DrawSpace::Core::CallBack<Layer, void, HeighmapSubPass*>;
     using SubpassAbortedCb = DrawSpace::Core::CallBack<Layer, void, HeighmapSubPass*>;
 
-    DrawSpace::EntityGraph::EntityNodeGraph* m_entitynodegraph{ nullptr };
+    DrawSpace::EntityGraph::EntityNodeGraph*                    m_entitynodegraph{ nullptr };
 
     Config* m_config{ nullptr };
     Body* m_body{ nullptr };
 
-    SubPass::SubPassCreationHandler* m_subpass_creation_handler{ nullptr };
+    SubPass::SubPassCreationHandler*                            m_subpass_creation_handler{ nullptr };
 
-    CollisionMesheUpdateHandler* m_collision_meshe_update_handler{ nullptr };
+    CollisionMesheUpdateHandler*                                m_collision_meshe_update_handler{ nullptr };
     bool                                                        m_hot;
     int                                                         m_current_lod;
 
@@ -113,6 +117,9 @@ private:
     dsreal                                                      m_currentpatch_max_height{ -2.0 };
     dsreal                                                      m_currentpatch_min_height{ -2.0 };
     dsreal                                                      m_currentpatch_current_height{ -2.0 };
+
+    dsreal                                                      m_currentpatch_temperature{ -0.666 };
+    dsreal                                                      m_currentpatch_humidity{ -0.666 };
 
     dsreal                                                      m_alt_grid[cst::patchResolution * cst::patchResolution];
 

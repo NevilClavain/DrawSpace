@@ -168,10 +168,9 @@ void Layer::Compute(void)
     m_current_lod = m_body->GetFace(current_face_index)->GetCurrentPatchLOD();
     const auto curr_patch{ m_body->GetFace(current_face_index)->GetCurrentPatch() };
 
-
     if (m_current_patch != curr_patch)
     {
-        m_current_patch = curr_patch;             
+        m_current_patch = curr_patch;
 
         ///// generate new heightmap for collisions
         if (m_collisions )
@@ -195,6 +194,12 @@ void Layer::Compute(void)
                 generate_heightmap(heightmap_source_patch, HeighmapSubPass::Purpose::FOR_COLLISIONS);               
             }
         }
+    }
+
+    if (m_current_patch)
+    {
+        m_currentpatch_temperature = m_current_patch->GetTemperature();
+        m_currentpatch_humidity = m_current_patch->GetHumidity();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -405,6 +410,17 @@ dsreal Layer::GetCurrentPatchCurrentHeight(void) const
 {
     return m_currentpatch_current_height;
 }
+
+dsreal Layer::GetCurrentPatchTemperature(void) const
+{
+    return m_currentpatch_temperature;
+}
+
+dsreal Layer::GetCurrentPatchHumidity(void) const
+{
+    return m_currentpatch_humidity;
+}
+
 
 void Layer::RemoveCollider(void)
 {
