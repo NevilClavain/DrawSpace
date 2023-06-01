@@ -1022,9 +1022,12 @@ function()
   local temperature = planet_infos["viewsInfos"][current_cam_id]["temperature"]
   local humidity = planet_infos["viewsInfos"][current_cam_id]["humidity"]
 
+  local display_temp = g:format_real(temperature * 100.0,0)
+  local display_humidity = g:format_real(humidity * 100.0,0)
+
 
   --text6_renderer:update(10, 180, 255, 0, 0, "local pos: "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
-  text6_renderer:update(10, 180, 255, 0, 0, "temp = "..temperature.." humidity = "..humidity.." long = "..longitud_camera_pos.." lat = "..latitud_camera_pos.." - pos = "..
+  text6_renderer:update(10, 180, 255, 0, 0, "base temp = "..display_temp.." %% humidity = "..display_humidity.." %% long = "..longitud_camera_pos.." lat = "..latitud_camera_pos.." - pos = "..
 							local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
 
 
