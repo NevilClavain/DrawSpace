@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include <random>
+#include <numeric>
 #include "lod_patch.h"
 #include "lod_heightmapsubpass.h"
 #include "csts.h"
@@ -833,6 +834,9 @@ void Patch::SubPassDone(void)
 
     int id{ 0 }, jd{ 0 };
 
+    std::vector<dsreal> acc_temperature;
+    std::vector<dsreal> acc_humidity;
+
     for (int i = 0; i < texture_source_resol; i += pixel_step) {
 
         jd = 0;
@@ -849,8 +853,11 @@ void Patch::SubPassDone(void)
             const auto altitude{ half_to_float(half_precision_altitude) };
 
             // TEMPORARY : do an average computation
-            m_current_temperature = half_to_float(half_precision_temperature);
-            m_current_humidity = half_to_float(half_precision_humidity);
+            const auto current_point_temperature{ half_to_float(half_precision_temperature) };
+            const auto current_point_humidity{ half_to_float(half_precision_humidity) };
+
+            acc_temperature.push_back(current_point_temperature);
+            acc_humidity.push_back(current_point_humidity);
 
             patch_hm_buffer[offset_dst] = altitude;
 
@@ -863,10 +870,13 @@ void Patch::SubPassDone(void)
 
     ///////////
 
-    /*
-    m_current_temperature = 0.111;
-    m_current_humidity = 0.222;
-    */
+    const std::function<dsreal(dsreal, dsreal)> add_real
+    {
+        [](dsreal a, dsreal b)->dsreal { return a + b; }
+    };
+
+    m_current_temperature = std::accumulate(acc_temperature.begin(), acc_temperature.end(), 0.0, add_real) / acc_temperature.size();
+    m_current_humidity = std::accumulate(acc_humidity.begin(), acc_humidity.end(), 0.0, add_real) / acc_humidity.size();
 }
 
 float Patch::half_to_float(unsigned short p_val)
@@ -915,7 +925,7 @@ float Patch::half_to_float(unsigned short p_val)
 
     // Start by computing the significand in single precision format.
     unsigned long value{ unsigned(p_val & HALF_FLOAT_SIGNIFICAND_MASK) << 13 };
-    const register unsigned exponent{ unsigned(p_val & HALF_FLOAT_EXPONENT_MASK) >> 10 };
+    const auto exponent{ unsigned(p_val & HALF_FLOAT_EXPONENT_MASK) >> 10 };
 
     if (exponent != 0)
     {
