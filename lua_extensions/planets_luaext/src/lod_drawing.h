@@ -131,14 +131,7 @@ private:
 
 class FoliageDrawingNode : public DrawSpace::Core::RenderingNode
 {
-public:
-    enum class Type
-    {
-        PLANTS,
-        ROCKS,
-        TREES
-    };
-   
+public:   
     FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
     void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                         const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);

@@ -1649,7 +1649,7 @@ planet_layers =
 
 foliage_layers =
 {
-	--plants_layer = 
+	-- grass
 	[0] = 
 	{
 		plants_main_rendering = 
@@ -1690,18 +1690,11 @@ foliage_layers =
 	}
 }
 
-foliage_passes_bindings =
-{
-    binding_0 = 
-	{
-        target_pass_id = 'texture_pass',
-		rendering_id = 'plants_main_rendering'
-	}
-}
+
 
 foliage_meshes = 
 {
-	-- plants
+	-- grass
 	[0] = 
 	{	
 		file = 'grassA.ac',
@@ -1715,6 +1708,17 @@ foliage_meshes =
 	}
 }
 
+
+
+
+foliage_passes_bindings =
+{
+    binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'plants_main_rendering'
+	}
+}
 
 
 if planet_specific_config_descr.enable_oceans == TRUE then
