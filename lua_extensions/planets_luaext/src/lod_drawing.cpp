@@ -1084,20 +1084,8 @@ void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::C
     m_drawing_handlers.push_back(cb);
 
     node->RegisterHandler(cb);
-
     node->SetMeshe(p_meshe);
-
-    //node->SetFx(p_fx);
-   
-    /*
-    for (size_t stage = 0; stage < p_textures.size(); stage++)
-    {
-        node->SetTexture(p_textures.at(stage), stage);
-    }
-    */
-
     node->SetOrderNumber(p_ro);
-
     node->SetBinder(p_binder);
     
     const auto p{ std::make_pair(p_pass, node) };
