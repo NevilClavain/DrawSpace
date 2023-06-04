@@ -190,7 +190,7 @@ void PlanetsRenderingAspectImpl::Release(void)
     {
         /////////////// release collisions stuff...
         
-        for (auto& camera : m_registered_camerapoints)
+        for (const auto& camera : m_registered_camerapoints)
         {
             for (auto& camera_layer : camera.second.layers)
             {
@@ -203,7 +203,7 @@ void PlanetsRenderingAspectImpl::Release(void)
         //////////////////////////////////////
 
         std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
-        for (auto& e : systems)
+        for (const auto& e : systems)
         {
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
@@ -219,43 +219,49 @@ void PlanetsRenderingAspectImpl::Release(void)
         }
 
 
-        for (auto& e : m_planet_detail_binder_2)
+        for (const auto& e : m_planet_detail_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 auto binder{ e2 };
                 _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_atmosphere_binder_2)
+        for (const auto& e : m_planet_atmosphere_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 auto binder{ e2 };
                 _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_flatclouds_binder_2)
+        for (const auto& e : m_planet_flatclouds_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
-                _DRAWSPACE_DELETE_(e2);
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_oceans_binder_2)
+        for (const auto& e : m_planet_oceans_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
-                _DRAWSPACE_DELETE_(e2);
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
             }
         }
 
         for (auto& e : m_planet_foliage_binder)
         {
-            _DRAWSPACE_DELETE_(e.second);
+            for (const auto& e2 : e.second)
+            {
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
+            }
         }
 
 
@@ -364,33 +370,33 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
         };
 
-        for (auto& e : m_planet_detail_binder_2)
+        for (const auto& e : m_planet_detail_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_atmosphere_binder_2)
+        for (const auto& e : m_planet_atmosphere_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_flatclouds_binder_2)
+        for (const auto& e : m_planet_flatclouds_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_oceans_binder_2)
+        for (const auto& e : m_planet_oceans_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
@@ -398,7 +404,10 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
         for (auto& e : m_planet_foliage_binder)
         {
-            light_updater(e.second, world);
+            for (const auto& e2 : e.second)
+            {
+                light_updater(e2, world);
+            }
         }
     }
     else
@@ -530,9 +539,9 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
     ///////////////////////////////////////////////////////////////////////////
    
-    for (auto& e : m_planet_detail_binder_2)
+    for (const auto& e : m_planet_detail_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
 
@@ -546,9 +555,9 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
-    for (auto& e : m_planet_atmosphere_binder_2)
+    for (const auto& e : m_planet_atmosphere_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
         }
@@ -556,17 +565,17 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
     m_drawable.SetLayerNodeDrawingState(LOD::cst::AtmosphereLayer, enable_atmosphere);
 
-    for (auto& e : m_planet_flatclouds_binder_2)
+    for (const auto& e : m_planet_flatclouds_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
         }
     }
 
-    for (auto& e : m_planet_oceans_binder_2)
+    for (const auto& e : m_planet_oceans_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
 
@@ -582,9 +591,12 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
-    for (auto& e : m_planet_foliage_binder)
+    for (const auto& e : m_planet_foliage_binder)
     {
-        lights_updater(*(e.second));
+        for (const auto& e2 : e.second)
+        {
+            lights_updater(*e2);
+        }
     }
 }
 
@@ -1215,8 +1227,14 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer);
             
-
-            m_planet_foliage_binder[pass_id] = foliage_binder;
+            if (0 == m_planet_foliage_binder.count(pass_id))
+            {
+                m_planet_foliage_binder[pass_id].push_back( foliage_binder );
+            }
+            else
+            {
+                m_planet_foliage_binder.at(pass_id).push_back(foliage_binder);
+            }
         }
     }
 

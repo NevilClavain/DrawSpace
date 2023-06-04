@@ -1652,7 +1652,7 @@ foliage_layers =
 	-- grass
 	[0] = 
 	{
-		plants_main_rendering = 
+		grass_main_rendering = 
 		{
 			fx = 
 			{
@@ -1679,7 +1679,45 @@ foliage_layers =
 				[1] = 
 				{
 					{ path='green_alpha_tall_grass.png', stage=0 }
-					--{ path='marbre.jpg', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
+	},
+
+	-- debug marble sphere
+	[1] = 
+	{
+		debugmarblesphere_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='marbre.jpg', stage=0 }
 				}
 			},
 			shaders_params = 
@@ -1698,26 +1736,32 @@ foliage_meshes =
 	[0] = 
 	{	
 		file = 'grassA.ac',
-		mesheid = 'rect'
-		
-		--[[
+		mesheid = 'rect'		
+	},
+	-- debug marble sphere
+	[1] = 
+	{
 		file = 'sphere.ac',
 		mesheid = 'sphere'
-		]]
-
 	}
 }
 
 
-
-
 foliage_passes_bindings =
 {
+
     binding_0 = 
 	{
         target_pass_id = 'texture_pass',
-		rendering_id = 'plants_main_rendering'
+		rendering_id = 'grass_main_rendering'
+	},
+
+    binding_1 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'debugmarblesphere_main_rendering'
 	}
+
 }
 
 
