@@ -1649,8 +1649,46 @@ planet_layers =
 
 foliage_layers =
 {
-	-- grass
+	-- debug marble sphere
 	[0] = 
+	{
+		debugmarblesphere_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='marbre.jpg', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
+	},
+	-- grass
+	[1] = 
 	{
 		grass_main_rendering = 
 		{
@@ -1688,61 +1726,24 @@ foliage_layers =
 		}
 	},
 
-	-- debug marble sphere
-	[1] = 
-	{
-		debugmarblesphere_main_rendering = 
-		{
-			fx = 
-			{
-				shaders = 
-				{
-					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
-					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
-				},
-				rs_in = 
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
-					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
-				},
-				rs_out =
-				{
-					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
-					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
-					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
-				}
-			},			
-			textures = 
-			{
-				[1] = 
-				{
-					{ path='marbre.jpg', stage=0 }
-				}
-			},
-			shaders_params = 
-			{
-			},
-			rendering_order = 15000
-		}
-	}
 }
 
 
 
 foliage_meshes = 
 {
-	-- grass
-	[0] = 
-	{	
-		file = 'grassA.ac',
-		mesheid = 'rect'		
-	},
 	-- debug marble sphere
-	[1] = 
+	[0] = 
 	{
 		file = 'sphere.ac',
 		mesheid = 'sphere'
+	},
+
+	-- grass
+	[1] = 
+	{	
+		file = 'grassA.ac',
+		mesheid = 'rect'		
 	}
 }
 
