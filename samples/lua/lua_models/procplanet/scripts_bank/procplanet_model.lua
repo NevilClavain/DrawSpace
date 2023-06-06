@@ -522,8 +522,8 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
   for k0, v0 in pairs(p_foliage_params) do
     --g:print("k0 is "..k0.. " v0 is "..v0)
 
-	local file = v0.file
-	local mesheid = v0.mesheid
+	local file = v0.meshe.file
+	local mesheid = v0.meshe.id
 	g:print("v0 is "..file.." "..mesheid)
 
 	renderer:declare_foliageparameters( k0, file, mesheid)

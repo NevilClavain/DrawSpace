@@ -1735,15 +1735,21 @@ foliage_parameters =
 	-- debug marble sphere
 	[0] = 
 	{
-		file = 'sphere.ac',
-		mesheid = 'sphere'
+		meshe = 
+		{
+			file = 'sphere.ac',
+			id = 'sphere'
+		}
 	},
 
 	-- grass
 	[1] = 
 	{	
-		file = 'grassA.ac',
-		mesheid = 'rect'		
+		meshe = 
+		{
+			file = 'grassA.ac',
+			id = 'rect'
+		}
 	}
 }
 
