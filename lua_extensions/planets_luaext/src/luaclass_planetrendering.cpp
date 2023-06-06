@@ -50,7 +50,7 @@ const Luna<LuaClass_PlanetRendering>::RegType LuaClass_PlanetRendering::methods[
     { "release", &LuaClass_PlanetRendering::LUA_release },
     { "register_to_rendering", &LuaClass_PlanetRendering::LUA_registertorendering },
     { "unregister_from_rendering", &LuaClass_PlanetRendering::LUA_unregisterfromrendering },
-    { "declare_foliagemeshe", &LuaClass_PlanetRendering::LUA_declarefoliagemeshe },
+    { "declare_foliageparameters", &LuaClass_PlanetRendering::LUA_declarefoliageparams },
 
 	{ 0, 0 }
 };
@@ -331,12 +331,12 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
     return 0;
 }
 
-int LuaClass_PlanetRendering::LUA_declarefoliagemeshe(lua_State* p_L)
+int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
     if (argc < 3)
     {
-        LUA_ERROR("PlanetRendering::declare_foliagemeshe : argument(s) missing");
+        LUA_ERROR("PlanetRendering::declare_foliageparams : argument(s) missing");
     }
     const auto meshe_key{ luaL_checkinteger(p_L, 1) };
     const auto meshe_path{ luaL_checkstring(p_L, 2) };

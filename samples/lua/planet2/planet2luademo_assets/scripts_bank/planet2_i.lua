@@ -1730,7 +1730,7 @@ foliage_layers =
 
 
 
-foliage_meshes = 
+foliage_parameters = 
 {
 	-- debug marble sphere
 	[0] = 
@@ -1822,7 +1822,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	},
   }
 
-  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, foliage_meshes, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, foliage_parameters, 'wave_pass')
 
 else
 

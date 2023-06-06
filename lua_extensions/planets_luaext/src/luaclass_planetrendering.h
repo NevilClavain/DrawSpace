@@ -86,7 +86,7 @@ public:
     int LUA_registertorendering(lua_State* p_L);
     int LUA_unregisterfromrendering(lua_State* p_L);
 
-    int LUA_declarefoliagemeshe(lua_State* p_L);
+    int LUA_declarefoliageparams(lua_State* p_L);
 
 
 
