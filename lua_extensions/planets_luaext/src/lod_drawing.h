@@ -140,10 +140,19 @@ public:
 
     Binder* GetBinder(void) const;
 
+    void SetGlobalLitState(bool p_state);
+    void SetDetailedLitState(bool p_state);
+
+    bool GetGlobalLitState() const;
+    bool GetDetailedLitState() const;
+
 private:
 
     DrawSpace::Interface::Renderer*     m_renderer{ nullptr };
     Binder*                             m_binder{ nullptr };
+
+    bool                                m_global_lit{ false };
+    bool                                m_detailed_lit{ false };
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
                                         const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
@@ -192,7 +201,7 @@ public:
                                         int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer);
                                         */
 
-    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer);
+    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit);
 
 
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;

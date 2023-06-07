@@ -727,6 +727,10 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes")->getPurpose() };
 
+    auto foliage_global_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_global_lits")->getPurpose() };
+    auto foliage_detailed_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_detailed_lits")->getPurpose() };
+    // to be continued...
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1213,7 +1217,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
 
 
-        const auto      meshe{ foliage_meshes.at(foliage_layer) };
+        const auto meshe{ foliage_meshes.at(foliage_layer) };
+        const auto global_lit{ foliage_global_lits.at(foliage_layer) };
+        const auto detailed_lit{ foliage_detailed_lits.at(foliage_layer) };
 
         for (auto& pass_id : rcp.second)
         {
@@ -1225,7 +1231,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 foliage_binder->SetTexture(pass_textures[stage], stage);
             }
 
-            m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer);
+            m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer, global_lit, detailed_lit);
             
             if (0 == m_planet_foliage_binder.count(pass_id))
             {

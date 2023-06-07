@@ -1739,7 +1739,10 @@ foliage_parameters =
 		{
 			file = 'sphere.ac',
 			id = 'sphere'
-		}
+		},
+
+		global_lit = TRUE,
+		detailed_lit = TRUE
 	},
 
 	-- grass
@@ -1749,7 +1752,10 @@ foliage_parameters =
 		{
 			file = 'grassA.ac',
 			id = 'rect'
-		}
+		},
+
+		global_lit = TRUE,
+		detailed_lit = FALSE
 	}
 }
 

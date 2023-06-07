@@ -524,9 +524,13 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 
 	local file = v0.meshe.file
 	local mesheid = v0.meshe.id
+
+	local global_lit = v0.global_lit;
+	local detailed_lit = v0.detailed_lit;
+
 	g:print("v0 is "..file.." "..mesheid)
 
-	renderer:declare_foliageparameters( k0, file, mesheid)
+	renderer:declare_foliageparameters( k0, file, mesheid, global_lit, detailed_lit)
 
   end
 

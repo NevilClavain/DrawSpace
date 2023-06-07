@@ -609,8 +609,11 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
 
     // lit model
     // enable global lit, disable detailed lit
-    Vector lit_model(1.0, 0.0, 0.0, 0.0);
+    //Vector lit_model(1.0, 0.0, 0.0, 0.0);
     //Vector lit_model(1.0, 1.0, 0.0, 0.0);
+
+    Vector lit_model(m_global_lit, m_detailed_lit, 0.0, 0.0);
+
     m_renderer->SetFxShaderParams(1, 4, lit_model);
 
     Matrix local_t;
@@ -625,6 +628,26 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     Matrix world = local_r * local_t * p_world;
        
     m_renderer->DrawMeshe(world, p_view, p_proj);
+}
+
+void FoliageDrawingNode::SetGlobalLitState(bool p_state)
+{
+    m_global_lit = p_state;
+}
+
+void FoliageDrawingNode::SetDetailedLitState(bool p_state)
+{
+    m_detailed_lit = p_state;
+}
+
+bool FoliageDrawingNode::GetGlobalLitState() const
+{
+    return m_global_lit;
+}
+
+bool FoliageDrawingNode::GetDetailedLitState() const
+{
+    return m_detailed_lit;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1070,12 +1093,8 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
     m_collisionmeshedrawingnodes.push_back(node);
 }
 
-/*
-void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::Fx* p_fx,
-                                                int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer)
-*/
 
-void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer)
+void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit)
 {
     const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer)) };
     node->m_debug_id = dsstring("Foliage") + std::to_string(p_foliage_layer);
@@ -1087,6 +1106,9 @@ void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::C
     node->SetMeshe(p_meshe);
     node->SetOrderNumber(p_ro);
     node->SetBinder(p_binder);
+
+    node->SetDetailedLitState(p_detailed_lit);
+    node->SetGlobalLitState(p_global_lit);
     
     const auto p{ std::make_pair(p_pass, node) };
     m_passesfoliagenodes.push_back(p);

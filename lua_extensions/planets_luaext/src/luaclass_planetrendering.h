@@ -63,6 +63,9 @@ private:
 
     std::map<size_t, dsstring>                                                      m_foliages_meshes_paths;
     std::map<size_t, dsstring>                                                      m_foliages_meshes_ids;
+    std::map<size_t, bool>                                                          m_foliages_global_lits;
+    std::map<size_t, bool>                                                          m_foliages_detailed_lits;
+
     std::map<size_t, DrawSpace::Core::Meshe*>                                       m_foliages_meshes;
 
     void cleanup_resources(lua_State* p_L);

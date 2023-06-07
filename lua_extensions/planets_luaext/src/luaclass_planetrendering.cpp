@@ -296,13 +296,10 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
-            /*
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliages_meshes_paths", m_foliages_meshes_paths);
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsstring>>("foliages_meshes_ids", m_foliages_meshes_ids);
-            */
-
-
             m_entity_rendering_aspect->AddComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes", m_foliages_meshes);
+
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_global_lits", m_foliages_global_lits);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_detailed_lits", m_foliages_detailed_lits);
 
             // declare foliage meshes to resources manager
             for (auto e : m_foliages_meshes_paths) {
@@ -334,16 +331,24 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
-    if (argc < 3)
+    if (argc < 5)
     {
         LUA_ERROR("PlanetRendering::declare_foliageparams : argument(s) missing");
     }
     const auto meshe_key{ luaL_checkinteger(p_L, 1) };
     const auto meshe_path{ luaL_checkstring(p_L, 2) };
     const auto meshe_id{ luaL_checkstring(p_L, 3) };
+
+    const auto global_lit{ (bool)luaL_checkinteger(p_L, 4) };
+    const auto detailed_lit{ (bool)luaL_checkinteger(p_L, 5) };
+
     
     m_foliages_meshes_paths[meshe_key] = meshe_path;
     m_foliages_meshes_ids[meshe_key] = meshe_id;
+    m_foliages_global_lits[meshe_key] = global_lit;
+    m_foliages_detailed_lits[meshe_key] = detailed_lit;
+
+
     m_foliages_meshes[meshe_key] = _DRAWSPACE_NEW_(Meshe, Meshe);
     m_foliages_meshes.at(meshe_key)->SetPath(meshe_path);
 
@@ -414,6 +419,9 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
         
         m_foliages_meshes_ids.clear();
         m_foliages_meshes.clear();
+        m_foliages_global_lits.clear();
+        m_foliages_detailed_lits.clear();
+
 
         /////////////////// textures
        
