@@ -1742,7 +1742,8 @@ foliage_parameters =
 		},
 
 		global_lit = TRUE,
-		detailed_lit = TRUE
+		detailed_lit = TRUE,
+		local_seed = 100
 	},
 
 	-- grass
@@ -1755,7 +1756,8 @@ foliage_parameters =
 		},
 
 		global_lit = TRUE,
-		detailed_lit = FALSE
+		detailed_lit = FALSE,
+		local_seed = 101
 	}
 }
 

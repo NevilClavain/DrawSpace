@@ -142,9 +142,7 @@ public:
 
     void SetGlobalLitState(bool p_state);
     void SetDetailedLitState(bool p_state);
-
-    bool GetGlobalLitState() const;
-    bool GetDetailedLitState() const;
+    void SetLocalSeed(int p_seed);
 
 private:
 
@@ -153,6 +151,8 @@ private:
 
     bool                                m_global_lit{ false };
     bool                                m_detailed_lit{ false };
+
+    int                                 m_local_seed{ 0 };
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
                                         const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
@@ -196,12 +196,8 @@ public:
     void RegisterSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw = -1);
     void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
 
-    /*
-    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, DrawSpace::Core::Fx* p_fx, 
-                                        int p_ro, const std::array<DrawSpace::Core::Texture*, DrawSpace::Core::RenderingNode::NbMaxTextures>& p_textures, int p_foliage_layer);
-                                        */
 
-    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit);
+    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit, bool p_local_seed);
 
 
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;

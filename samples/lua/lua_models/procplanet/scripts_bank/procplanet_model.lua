@@ -528,9 +528,11 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 	local global_lit = v0.global_lit;
 	local detailed_lit = v0.detailed_lit;
 
-	g:print("v0 is "..file.." "..mesheid)
+	local local_seed = v0.local_seed;
 
-	renderer:declare_foliageparameters( k0, file, mesheid, global_lit, detailed_lit)
+	g:print("v0 is "..file.." "..mesheid.." local_seed = "..local_seed)
+
+	renderer:declare_foliageparameters( k0, file, mesheid, global_lit, detailed_lit, local_seed)
 
   end
 

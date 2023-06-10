@@ -300,6 +300,8 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
 
             m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_global_lits", m_foliages_global_lits);
             m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_detailed_lits", m_foliages_detailed_lits);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, int>>("foliages_local_seeds", m_foliages_local_seeds);
+            
 
             // declare foliage meshes to resources manager
             for (auto e : m_foliages_meshes_paths) {
@@ -331,7 +333,7 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
-    if (argc < 5)
+    if (argc < 6)
     {
         LUA_ERROR("PlanetRendering::declare_foliageparams : argument(s) missing");
     }
@@ -342,11 +344,14 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     const auto global_lit{ (bool)luaL_checkinteger(p_L, 4) };
     const auto detailed_lit{ (bool)luaL_checkinteger(p_L, 5) };
 
+    const auto local_seed{ luaL_checkinteger(p_L, 6) };
+
     
     m_foliages_meshes_paths[meshe_key] = meshe_path;
     m_foliages_meshes_ids[meshe_key] = meshe_id;
     m_foliages_global_lits[meshe_key] = global_lit;
     m_foliages_detailed_lits[meshe_key] = detailed_lit;
+    m_foliages_local_seeds[meshe_key] = local_seed;
 
 
     m_foliages_meshes[meshe_key] = _DRAWSPACE_NEW_(Meshe, Meshe);
@@ -421,6 +426,7 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
         m_foliages_meshes.clear();
         m_foliages_global_lits.clear();
         m_foliages_detailed_lits.clear();
+        m_foliages_local_seeds.clear();
 
 
         /////////////////// textures

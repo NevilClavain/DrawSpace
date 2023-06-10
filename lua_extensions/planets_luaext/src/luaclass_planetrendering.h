@@ -33,7 +33,7 @@ namespace DrawSpace
 namespace Core
 {
 class Entity;
-class RenderingNode;
+struct RenderingNode;
 }
 namespace Aspect
 {
@@ -65,6 +65,7 @@ private:
     std::map<size_t, dsstring>                                                      m_foliages_meshes_ids;
     std::map<size_t, bool>                                                          m_foliages_global_lits;
     std::map<size_t, bool>                                                          m_foliages_detailed_lits;
+    std::map<size_t, int>                                                           m_foliages_local_seeds;
 
     std::map<size_t, DrawSpace::Core::Meshe*>                                       m_foliages_meshes;
 

@@ -640,15 +640,11 @@ void FoliageDrawingNode::SetDetailedLitState(bool p_state)
     m_detailed_lit = p_state;
 }
 
-bool FoliageDrawingNode::GetGlobalLitState() const
+void FoliageDrawingNode::SetLocalSeed(int p_seed)
 {
-    return m_global_lit;
+    m_local_seed = p_seed;
 }
 
-bool FoliageDrawingNode::GetDetailedLitState() const
-{
-    return m_detailed_lit;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1094,7 +1090,7 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
 }
 
 
-void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit)
+void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit, bool p_local_seed)
 {
     const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer)) };
     node->m_debug_id = dsstring("Foliage") + std::to_string(p_foliage_layer);
@@ -1109,6 +1105,7 @@ void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::C
 
     node->SetDetailedLitState(p_detailed_lit);
     node->SetGlobalLitState(p_global_lit);
+    node->SetLocalSeed(p_local_seed);
     
     const auto p{ std::make_pair(p_pass, node) };
     m_passesfoliagenodes.push_back(p);
