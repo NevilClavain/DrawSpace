@@ -85,8 +85,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 pixel_color = color;
 
     float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
-    float4 fog_color = atmo_scattering_flag_6;
-    pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
+    float3 fog_color = atmo_scattering_flag_6.xyz;
+    //pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
+
+    
 
     float4 final_color = 1.0;
 
@@ -153,7 +155,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
             detail_lit_color += clamp(dot(world_normale.xyz, normalize(light1_dir.xyz)), 0.0, 1.0) * light1_color;
         }
 
-        if (flags_lights.z > 0.0)
+        if (flags_lights.w > 0.0)
         {
             detail_lit_color += clamp(dot(world_normale.xyz, normalize(light2_dir.xyz)), 0.0, 1.0) * light2_color;
         }
@@ -171,16 +173,26 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
         if (flags_lights.y > 0.0)
         {
-            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0);
+            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0) * light0_color;
         }
+
+        if (flags_lights.z > 0.0)
+        {
+            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light1_dir_local.xyz)), 0.0, 1.0) * light1_color;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light2_dir_local.xyz)), 0.0, 1.0) * light2_color;
+        }
+
     }
 
     ///////////////////
 
-    
     final_color.xyz = pixel_color.xyz * global_lit_color.xyz * detail_lit_color.xyz;
 
-
+    //final_color.xyz = saturate(lerp(fog_color, final_color.xyz, input.Fog));
 
     final_color.w = SPHERELOD_FOLIAGE_ID;
     return final_color;
