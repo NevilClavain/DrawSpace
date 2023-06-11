@@ -84,12 +84,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     }
     float4 pixel_color = color;
 
-    float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
-    float3 fog_color = atmo_scattering_flag_6.xyz;
     //pixel_color = saturate(lerp(fog_color, pixel_color, input.Fog));
 
     
-
+    
     float4 final_color = 1.0;
 
 
@@ -138,6 +136,10 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         detail_lit_color = 1.0;
     }
 
+    float4 local_pos_vector = vec[v_local_pos_vector];
+    float4 n_local_pos_vector;
+    n_local_pos_vector.xyz = normalize(local_pos_vector.xyz);
+    n_local_pos_vector.w = 1.0;
 
     ///////////////////Detail lit computing//////////////////////////
     
@@ -166,11 +168,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     if (global_lit_model)
     {
-        float4 local_pos_vector = vec[v_local_pos_vector];
-        float4 n_local_pos_vector;
-        n_local_pos_vector.xyz = normalize(local_pos_vector.xyz);
-        n_local_pos_vector.w = 1.0;
-
         if (flags_lights.y > 0.0)
         {
             global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0) * light0_color;
@@ -190,9 +187,28 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     ///////////////////
 
-    final_color.xyz = pixel_color.xyz * global_lit_color.xyz * detail_lit_color.xyz;
+    float3 lit_color;
+    lit_color = pixel_color.xyz * saturate(global_lit_color.xyz) * saturate(detail_lit_color.xyz);
 
-    //final_color.xyz = saturate(lerp(fog_color, final_color.xyz, input.Fog));
+
+
+    float4 atmo_scattering_flag_6 = vec[v_atmo_scattering_flag_6];
+    float3 fog_color = atmo_scattering_flag_6.xyz;
+    //////////////// compute fog intensity attenuation from global lit        
+    float lit_factor = 0.0;
+    if (flags_lights.y > 0.0)
+    {
+        lit_factor += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0);
+    }    
+
+
+    /////////////////////////////////////////////////////////////////////////
+
+    float3 fogged_lit_color;
+    fogged_lit_color = saturate(lerp(fog_color, lit_color, input.Fog));
+
+    final_color.xyz = saturate(lerp(lit_color, fogged_lit_color, saturate(lit_factor)));
+
 
     final_color.w = SPHERELOD_FOLIAGE_ID;
     return final_color;
