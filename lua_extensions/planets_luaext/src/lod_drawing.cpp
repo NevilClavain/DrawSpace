@@ -51,6 +51,9 @@ using namespace LOD;
 
 DrawSpace::Logger::Sink planetdrawing_logger("PlanetDrawing", DrawSpace::Logger::Configuration::GetInstance());
 
+
+std::set<int> FoliageDrawingNode::m_seeds;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CollisionMesheDrawingNode::CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer):
@@ -523,7 +526,6 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
     {
-
         std::vector<Patch*> dl;
         p_body->GetFace(p_body->GetCurrentFace())->GetDisplayList(dl);
 
@@ -543,13 +545,26 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 
     if (foliage_patch->HasHeightMap())
     {
+        /*
         const auto foliage_coords{ foliage_patch->GetFoliageCoordsList() };
         if (foliage_coords.size() > 0)
         {
             for (const auto& coords : foliage_coords)
             {
                 draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y);
-            }            
+            }
+        }
+        */
+
+
+        const auto foliages_coords{ foliage_patch->GetFoliageCoordsList() };
+        if (foliages_coords.count(m_local_seed) > 0)
+        {
+            const auto foliage_coords{ foliages_coords.at(m_local_seed) };
+            for (const auto& coords : foliage_coords)
+            {
+                draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y);
+            }
         }
     }
 }
@@ -640,9 +655,16 @@ void FoliageDrawingNode::SetDetailedLitState(bool p_state)
     m_detailed_lit = p_state;
 }
 
-void FoliageDrawingNode::SetLocalSeed(int p_seed)
+void FoliageDrawingNode::RegisterFoliageSeed(int p_seed)
 {
+    m_seeds.insert(p_seed);
     m_local_seed = p_seed;
+}
+
+
+const std::set<int>& FoliageDrawingNode::GetLocalSeeds(void)
+{
+    return m_seeds;
 }
 
 
@@ -1105,7 +1127,7 @@ void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::C
 
     node->SetDetailedLitState(p_detailed_lit);
     node->SetGlobalLitState(p_global_lit);
-    node->SetLocalSeed(p_local_seed);
+    node->RegisterFoliageSeed(p_local_seed);
     
     const auto p{ std::make_pair(p_pass, node) };
     m_passesfoliagenodes.push_back(p);

@@ -142,7 +142,11 @@ public:
 
     void SetGlobalLitState(bool p_state);
     void SetDetailedLitState(bool p_state);
-    void SetLocalSeed(int p_seed);
+
+    void RegisterFoliageSeed(int p_seed);
+
+    static const std::set<int>& GetLocalSeeds(void);
+    
 
 private:
 
@@ -152,7 +156,12 @@ private:
     bool                                m_global_lit{ false };
     bool                                m_detailed_lit{ false };
 
+    // seed for this type of foliage
     int                                 m_local_seed{ 0 };
+    // table of seeds/id foreach type of foliage
+    static std::set<int>                m_seeds;
+
+
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
                                         const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);

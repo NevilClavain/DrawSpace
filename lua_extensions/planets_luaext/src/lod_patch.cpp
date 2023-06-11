@@ -146,17 +146,32 @@ m_layer_index( p_layer_index )
     {
         // generate coords list for foliage
 
-        const auto seed{ 144 };
-        std::default_random_engine rand_engine(seed);
-        std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
+        const auto foliage_seeds{ FoliageDrawingNode::GetLocalSeeds() };
+        // to be continued...
 
-        for (int i = 0; i < cst::nbFoliageCoords; i++)
-        {
-            const auto xp{ rand_source(rand_engine) };
-            const auto yp{ rand_source(rand_engine) };
+        const auto patch_seed{ 144 };
 
-            m_foliagesCoordinates.push_back({ xp, yp });
-        }
+        for (auto local_seed : foliage_seeds)
+        {           
+            const auto final_seed{ patch_seed * local_seed };
+
+            std::default_random_engine rand_engine(final_seed);
+            std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
+
+            std::vector<FoliagesCoordinates> coordinates;
+
+            for (int i = 0; i < cst::nbFoliageCoords; i++)
+            {
+                const auto xp{ rand_source(rand_engine) };
+                const auto yp{ rand_source(rand_engine) };
+
+                //m_foliagesCoordinates.push_back({ xp, yp });
+
+                coordinates.push_back({ xp, yp });
+            }
+
+            m_foliagesCoordinates[local_seed] = coordinates;
+        }        
     }
     else if (cst::FoliageRootLODLevel > m_lod_level)
     {
@@ -165,6 +180,7 @@ m_layer_index( p_layer_index )
         dsreal local_center_x;
         dsreal local_center_y;
 
+        /*
         for (const auto &coord : p_parent->m_foliagesCoordinates)
         {
             switch (p_nodeid)
@@ -200,6 +216,50 @@ m_layer_index( p_layer_index )
             {
                 m_foliagesCoordinates.push_back(local_coords);
             }
+        }
+        */
+
+        for (const auto& parent_coordinates : p_parent->m_foliagesCoordinates)
+        {
+            std::vector<FoliagesCoordinates> coordinates;
+
+            for (const auto& coord : parent_coordinates.second)
+            {
+                switch (p_nodeid)
+                {
+                    case BaseQuadtreeNode::NorthWestNode:
+
+                        local_center_x = -0.25;
+                        local_center_y = 0.25;
+                        break;
+
+                    case BaseQuadtreeNode::NorthEastNode:
+
+                        local_center_x = 0.25;
+                        local_center_y = 0.25;
+                        break;
+
+                    case BaseQuadtreeNode::SouthEastNode:
+
+                        local_center_x = 0.25;
+                        local_center_y = -0.25;
+                        break;
+
+                    case BaseQuadtreeNode::SouthWestNode:
+
+                        local_center_x = -0.25;
+                        local_center_y = -0.25;
+                        break;
+                }
+
+                const FoliagesCoordinates local_coords{ (coord.x - local_center_x) / 0.5, (coord.y - local_center_y) / 0.5 };
+                if (-0.5 < local_coords.x && local_coords.x <= 0.5 && -0.5 < local_coords.y && local_coords.y <= 0.5)
+                {
+                    coordinates.push_back(local_coords);
+                }
+            }
+
+            m_foliagesCoordinates[parent_coordinates.first] = coordinates;
         }
     }
 
@@ -285,7 +345,7 @@ Patch::~Patch( void )
     }
 }
 
-std::vector<Patch::FoliagesCoordinates> Patch::GetFoliageCoordsList(void) const
+std::map<int,std::vector<Patch::FoliagesCoordinates>> Patch::GetFoliageCoordsList(void) const
 {
     return m_foliagesCoordinates;
 }

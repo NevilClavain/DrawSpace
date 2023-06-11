@@ -68,124 +68,126 @@ public:
 
     virtual ~Patch( void );
    
-    DrawSpace::Utils::BaseQuadtreeNode* GetNeighbour( int p_id ) const;
-    dsreal                              GetSideLength( void ) const ;
-    dsreal                              GetUnitSideLenght( void ) const ;
-    int                                 GetOrientation( void ) const ;
-    dsreal                              GetTriangleSideLength( void ) const;
-    void                                GetGlobalRelUVCoords(DrawSpace::Utils::Vector& p_uv) const;
-    void                                GetGlobalUVCoords(DrawSpace::Utils::Vector& p_uv) const ;
-    void                                GetPos( dsreal& p_xpos, dsreal& p_ypos ) const;
-    void                                GetUnitPos( dsreal& p_xpos, dsreal& p_ypos ) const;
-    DrawSpace::Utils::BaseQuadtreeNode* GetOwner( void ) const;
-    int                                 GetLodLevel( void ) const;
-    DrawSpace::Core::Texture*           GetDataTexture( void ) const;
-    Patch*                              GetTextureReferent( void ) const;
+    DrawSpace::Utils::BaseQuadtreeNode*                 GetNeighbour( int p_id ) const;
+    dsreal                                              GetSideLength( void ) const ;
+    dsreal                                              GetUnitSideLenght( void ) const ;
+    int                                                 GetOrientation( void ) const ;
+    dsreal                                              GetTriangleSideLength( void ) const;
+    void                                                GetGlobalRelUVCoords(DrawSpace::Utils::Vector& p_uv) const;
+    void                                                GetGlobalUVCoords(DrawSpace::Utils::Vector& p_uv) const ;
+    void                                                GetPos( dsreal& p_xpos, dsreal& p_ypos ) const;
+    void                                                GetUnitPos( dsreal& p_xpos, dsreal& p_ypos ) const;
+    DrawSpace::Utils::BaseQuadtreeNode*                 GetOwner( void ) const;
+    int                                                 GetLodLevel( void ) const;
+    DrawSpace::Core::Texture*                           GetDataTexture( void ) const;
+    Patch*                                              GetTextureReferent( void ) const;
   
-    void                                SetNeighbour(DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id);
-    void                                ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
-    bool                                IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
+    void                                                SetNeighbour(DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id);
+    void                                                ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    bool                                                IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
-    void                                CleanupSubpasses(void);
+    void                                                CleanupSubpasses(void);
 
-    void                                AddRelatedSubpasses(HeighmapSubPass* p_subpass);
-    void                                RemoveRelatedSubpasses(HeighmapSubPass* p_subpass);
+    void                                                AddRelatedSubpasses(HeighmapSubPass* p_subpass);
+    void                                                RemoveRelatedSubpasses(HeighmapSubPass* p_subpass);
 
 
-    Patch*                              GetParent(void) const;
+    Patch*                                              GetParent(void) const;
 
-    void                                SubPassDone( void );
-    void                                SubPassAborted(void);
+    void                                                SubPassDone( void );
+    void                                                SubPassAborted(void);
 
-    void                                SetHeightMap(float* p_hm);
-    bool                                HasHeightMap(void);
-    float*                              GetHeightMap(void) const;
+    void                                                SetHeightMap(float* p_hm);
+    bool                                                HasHeightMap(void);
+    float*                                              GetHeightMap(void) const;
 
-    int                                 GetLayerIndex(void) const;
+    int                                                 GetLayerIndex(void) const;
 
-    std::vector<FoliagesCoordinates>    GetFoliageCoordsList(void) const;
+    std::map<int, std::vector<FoliagesCoordinates>>     GetFoliageCoordsList(void) const;
 
-    dsreal                              GetTemperature(void) const;
-    dsreal                              GetHumidity(void) const;
+    dsreal                                              GetTemperature(void) const;
+    dsreal                                              GetHumidity(void) const;
 
-    dsstring                            DumpInfos(void) const;
+    dsstring                                            DumpInfos(void) const;
 
-    static void                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
+    static void                                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
 
-    static void                         CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
-    static void                         SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
-    static void                         XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Utils::Vector& p_out );
+    static void                                         CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    static void                                         SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    static void                                         XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Utils::Vector& p_out );
     
     // change les coords d'un vecteur pour obtenir son equivalent dans le repere face front, ou x et y du repere 2D correspondent
     // bien au x et y du repere 3D
-    static void                         ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    static void                                         ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
 
 private:
 
     using SubpassDoneCb = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
     using SubpassAbortedCb = DrawSpace::Core::CallBack<Patch, void, HeighmapSubPass*>;
 
-    Patch*                                      m_parent;
-    Config*                                     m_config;
+    Patch*                                          m_parent;
+    Config*                                         m_config;
 
-    dsreal                                      m_sidelength;
-    dsreal                                      m_xpos;
-    dsreal                                      m_ypos;
-    dsreal                                      m_ray;
+    dsreal                                          m_sidelength;
+    dsreal                                          m_xpos;
+    dsreal                                          m_ypos;
+    dsreal                                          m_ray;
 
-    dsreal                                      m_global_ref_u1;
-    dsreal                                      m_global_ref_v1;
-    dsreal                                      m_global_ref_u2;
-    dsreal                                      m_global_ref_v2;
+    dsreal                                          m_global_ref_u1;
+    dsreal                                          m_global_ref_v1;
+    dsreal                                          m_global_ref_u2;
+    dsreal                                          m_global_ref_v2;
 
-    dsreal                                      m_global_u1;
-    dsreal                                      m_global_v1;
-    dsreal                                      m_global_u2;
-    dsreal                                      m_global_v2;
-
-
-    int                                         m_orientation;
-    int                                         m_nodeid;
-    DrawSpace::Utils::BaseQuadtreeNode*         m_owner;
-    DrawSpace::Utils::BaseQuadtreeNode*         m_neighbours[8];
-    int                                         m_lod_level;
-
-    DrawSpace::IntermediatePass*                m_datatexture_pass{ nullptr };
-    Patch*                                      m_texture_referent;
-
-    int                                         m_datatexture_current_resol{ 0 };
-
-    DrawSpace::IntermediatePass*                m_heightmap_pass{ nullptr };
-
-    SubPass::SubPassCreationHandler*            m_subpasscreation_handler{ nullptr };
+    dsreal                                          m_global_u1;
+    dsreal                                          m_global_v1;
+    dsreal                                          m_global_u2;
+    dsreal                                          m_global_v2;
 
 
-    std::vector<EntryInfos>                     m_subpass_entry_infos_list;
+    int                                             m_orientation;
+    int                                             m_nodeid;
+    DrawSpace::Utils::BaseQuadtreeNode*             m_owner;
+    DrawSpace::Utils::BaseQuadtreeNode*             m_neighbours[8];
+    int                                             m_lod_level;
 
-    bool                                        m_enable_datatexture;
-    bool                                        m_enable_foliage;
+    DrawSpace::IntermediatePass*                    m_datatexture_pass{ nullptr };
+    Patch*                                          m_texture_referent;
 
-    int                                         m_nbLODRanges;
+    int                                             m_datatexture_current_resol{ 0 };
 
-    float* m_heightmap{ nullptr };
+    DrawSpace::IntermediatePass*                    m_heightmap_pass{ nullptr };
 
-    int                                         m_layer_index;
+    SubPass::SubPassCreationHandler*                m_subpasscreation_handler{ nullptr };
 
 
-    std::set<HeighmapSubPass*>                  m_related_subpasses; // list of subpasses working with this patch
+    std::vector<EntryInfos>                         m_subpass_entry_infos_list;
 
-    std::vector<FoliagesCoordinates>            m_foliagesCoordinates;
+    bool                                            m_enable_datatexture;
+    bool                                            m_enable_foliage;
 
-    dsreal                                      m_current_temperature{ -1.0 };
-    dsreal                                      m_current_humidity{ -1.0 };
+    int                                             m_nbLODRanges;
+
+    float*                                          m_heightmap{ nullptr };
+
+    int                                             m_layer_index;
+
+
+    std::set<HeighmapSubPass*>                      m_related_subpasses; // list of subpasses working with this patch
+
+    //std::vector<FoliagesCoordinates>              m_foliagesCoordinates;
+
+    std::map<int,std::vector<FoliagesCoordinates>>  m_foliagesCoordinates;
+
+    dsreal                                          m_current_temperature{ -1.0 };
+    dsreal                                          m_current_humidity{ -1.0 };
 
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    DrawSpace::IntermediatePass*            create_data_texture_pass(int p_resol);
-    void                                    prepare_data_texture(int p_layer_index, int p_resol);
-    void                                    recurs_update_texture_referent(Patch* p_texture_referent);
-    static float                            half_to_float(unsigned short p_val);
+    DrawSpace::IntermediatePass*                    create_data_texture_pass(int p_resol);
+    void                                            prepare_data_texture(int p_layer_index, int p_resol);
+    void                                            recurs_update_texture_referent(Patch* p_texture_referent);
+    static float                                    half_to_float(unsigned short p_val);
 
 };
 }
