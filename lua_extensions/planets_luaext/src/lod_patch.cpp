@@ -147,8 +147,7 @@ m_layer_index( p_layer_index )
         // generate coords list for foliage
 
         const auto foliage_seeds{ FoliageDrawingNode::GetLocalSeeds() };
-        // to be continued...
-
+        
         const auto patch_seed{ 144 };
 
         for (auto local_seed : foliage_seeds)
@@ -180,44 +179,6 @@ m_layer_index( p_layer_index )
         dsreal local_center_x;
         dsreal local_center_y;
 
-        /*
-        for (const auto &coord : p_parent->m_foliagesCoordinates)
-        {
-            switch (p_nodeid)
-            {
-                case BaseQuadtreeNode::NorthWestNode:
-
-                    local_center_x = -0.25;
-                    local_center_y = 0.25;
-                    break;
-
-                case BaseQuadtreeNode::NorthEastNode:
-
-                    local_center_x = 0.25;
-                    local_center_y = 0.25;
-                    break;
-
-                case BaseQuadtreeNode::SouthEastNode:
-
-                    local_center_x = 0.25;
-                    local_center_y = -0.25;
-                    break;
-
-                case BaseQuadtreeNode::SouthWestNode:
-
-                    local_center_x = -0.25;
-                    local_center_y = -0.25;
-                    break;
-            }
-
-            const FoliagesCoordinates local_coords{ (coord.x - local_center_x) / 0.5, (coord.y - local_center_y) / 0.5 };
-
-            if (-0.5 < local_coords.x && local_coords.x <= 0.5 && -0.5 < local_coords.y && local_coords.y <= 0.5)
-            {
-                m_foliagesCoordinates.push_back(local_coords);
-            }
-        }
-        */
 
         for (const auto& parent_coordinates : p_parent->m_foliagesCoordinates)
         {
