@@ -54,11 +54,5 @@ namespace cst
 
     // foliage
     static constexpr int        FoliageRootLODLevel         = 2;
-    static constexpr int        nbFoliageCoords             = 30;
-
-
-    
-
-
 }
 }

@@ -156,18 +156,22 @@ m_layer_index( p_layer_index )
 
             std::default_random_engine rand_engine(final_seed);
             std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
-
             std::vector<FoliagesCoordinates> coordinates;
 
-            for (int i = 0; i < cst::nbFoliageCoords; i++)
+
+            //////////////////////////////////////////////
+
+            for (int i = 0; i < 10; i++)
             {
                 const auto xp{ rand_source(rand_engine) };
                 const auto yp{ rand_source(rand_engine) };
-
-                //m_foliagesCoordinates.push_back({ xp, yp });
-
                 coordinates.push_back({ xp, yp });
             }
+
+            //////////////////////////////////////////////
+
+
+
 
             m_foliagesCoordinates[local_seed] = coordinates;
         }        
