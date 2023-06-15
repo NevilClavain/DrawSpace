@@ -148,30 +148,64 @@ m_layer_index( p_layer_index )
 
         const auto foliage_seeds{ FoliageDrawingNode::GetLocalSeeds() };
         
-        const auto patch_seed{ 144 };
+        // compute unique seed from patch pos infos
+        
+        const auto patch_seed{ (int)(m_xpos * 1000) * 100000 + (int)(m_ypos * 1000) };
 
         for (auto local_seed : foliage_seeds)
         {           
-            const auto final_seed{ patch_seed * local_seed };
+            const auto final_seed{ (patch_seed * 1000) + local_seed };
 
             std::default_random_engine rand_engine(final_seed);
-            std::uniform_real_distribution<dsreal> rand_source(-0.5, 0.5);
             std::vector<FoliagesCoordinates> coordinates;
 
 
             //////////////////////////////////////////////
 
-            for (int i = 0; i < 10; i++)
+            constexpr int nb_poles_min{ 2 };
+            constexpr int nb_poles_max{ 12 };
+            constexpr dsreal min_pole_ray{ 0.01 };
+            constexpr dsreal max_pole_ray{ 0.08 };
+            constexpr int nbpoints_per_pole_min{ 2 };
+            constexpr int nbpoints_per_pole_miax{ 8 };
+
+
+            std::uniform_int_distribution<int> nb_poles_rand_source(nb_poles_min, nb_poles_max);
+            std::uniform_int_distribution<int> nbpoints_per_pole_rand_source(nbpoints_per_pole_min, nbpoints_per_pole_miax);
+
+            const auto nb_poles{ nb_poles_rand_source(rand_engine) };
+            const auto nbpoints_per_pole{ nbpoints_per_pole_rand_source(rand_engine) };
+
+            std::uniform_real_distribution<dsreal> poles_coords_rand_source(-0.5, 0.5);
+
+            for (int i = 0; i < nb_poles; i++)
             {
-                const auto xp{ rand_source(rand_engine) };
-                const auto yp{ rand_source(rand_engine) };
-                coordinates.push_back({ xp, yp });
+                const auto xpole_center{ poles_coords_rand_source(rand_engine) };
+                const auto ypole_center{ poles_coords_rand_source(rand_engine) };
+
+                std::uniform_real_distribution<dsreal> theta_rand_source(0.0, PI / 2.0);
+                std::uniform_real_distribution<dsreal> r_rand_source(min_pole_ray, max_pole_ray);
+                std::uniform_int_distribution<int> xy_signs_rand_source(1, 2);
+
+                for (int j = 0; j < nbpoints_per_pole; j++)
+                {
+                    const auto theta{ theta_rand_source(rand_engine) };
+                    const auto ray{ r_rand_source(rand_engine) };
+                    const auto xp{ ray * std::cos(theta) * std::pow(-1, xy_signs_rand_source(rand_engine)) };
+                    const auto yp{ ray * std::sin(theta) * std::pow(-1, xy_signs_rand_source(rand_engine)) };
+
+                    auto xfinal{ xp + xpole_center };
+                    auto yfinal{ yp + ypole_center };
+
+                    //
+                    if (xfinal < 0.5 && xfinal > -0.5 && yfinal < 0.5 && yfinal > -0.5)
+                    {
+                        coordinates.push_back({ xfinal, yfinal });
+                    }                    
+                }
             }
 
             //////////////////////////////////////////////
-
-
-
 
             m_foliagesCoordinates[local_seed] = coordinates;
         }        
