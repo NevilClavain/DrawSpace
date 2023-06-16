@@ -530,9 +530,29 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 
 	local local_seed = v0.local_seed;
 
-	g:print("v0 is "..file.." "..mesheid.." local_seed = "..local_seed)
+	--g:print("v0 is "..file.." "..mesheid.." local_seed = "..local_seed)
 
-	renderer:declare_foliageparameters( k0, file, mesheid, global_lit, detailed_lit, local_seed)
+	local temperature_range_min = v0.temperature_range.min
+	local temperature_range_max = v0.temperature_range.max
+
+	local humidity_range_min = v0.humidity_range.min
+	local humidity_range_max = v0.humidity_range.max
+
+	local nb_poles_min = v0.random_params.nb_poles.min
+	local nb_poles_max = v0.random_params.nb_poles.max
+
+	local pole_ray_min = v0.random_params.pole_ray.min
+	local pole_ray_max = v0.random_params.pole_ray.max
+
+	local nbpoints_per_pole_min = v0.random_params.nbpoints_per_pole.min
+	local nbpoints_per_pole_max = v0.random_params.nbpoints_per_pole.max
+
+	renderer:declare_foliageparameters( k0, file, mesheid, global_lit, detailed_lit, local_seed,
+		temperature_range_min, temperature_range_max,
+		humidity_range_min, humidity_range_max,
+		nb_poles_min, nb_poles_max,
+		pole_ray_min, pole_ray_max,
+		nbpoints_per_pole_min, nbpoints_per_pole_max)
 
   end
 

@@ -333,7 +333,7 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
-    if (argc < 6)
+    if (argc < 16)
     {
         LUA_ERROR("PlanetRendering::declare_foliageparams : argument(s) missing");
     }
@@ -345,6 +345,22 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     const auto detailed_lit{ (bool)luaL_checkinteger(p_L, 5) };
 
     const auto local_seed{ luaL_checkinteger(p_L, 6) };
+
+    const auto temperature_range_min{ luaL_checknumber( p_L, 7 ) };
+    const auto temperature_range_max{ luaL_checknumber( p_L, 8 ) };
+
+    const auto humidity_range_min{ luaL_checknumber( p_L, 9 ) };
+    const auto humidity_range_max{ luaL_checknumber( p_L, 10 ) };
+
+    const auto nb_poles_min{ luaL_checkinteger(p_L, 11) };
+    const auto nb_poles_max{ luaL_checkinteger(p_L, 12) };
+
+    const auto pole_ray_min{ luaL_checkinteger(p_L, 13) };
+    const auto pole_ray_max{ luaL_checkinteger(p_L, 14) };
+
+    const auto nbpoints_per_pole_min{ luaL_checkinteger(p_L, 15) };
+    const auto nbpoints_per_pole_max{ luaL_checkinteger(p_L, 16) };
+    // to be continued...
 
     
     m_foliages_meshes_paths[meshe_key] = meshe_path;

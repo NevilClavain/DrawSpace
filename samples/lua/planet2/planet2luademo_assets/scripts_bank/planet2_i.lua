@@ -1743,7 +1743,40 @@ foliage_parameters =
 
 		global_lit = TRUE,
 		detailed_lit = TRUE,
-		local_seed = 100
+		local_seed = 100,
+
+		temperature_range = 
+		{
+			min = 0.0,
+			max = 0.9,
+		},
+
+		humidity_range = 
+		{
+			min = 0.0,
+			max = 0.9,
+		},
+
+		random_params = 
+		{
+			nb_poles = 
+			{
+				min = 2,
+				max = 12
+			},
+
+			pole_ray = 
+			{
+				min = 0.01,
+				max = 0.08
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 2,
+				max = 8
+			}
+		}
 	},
 
 	-- grass
@@ -1757,7 +1790,40 @@ foliage_parameters =
 
 		global_lit = TRUE,
 		detailed_lit = FALSE,
-		local_seed = 101
+		local_seed = 101,
+
+		temperature_range = 
+		{
+			min = 0.0,
+			max = 0.9,
+		},
+
+		humidity_range = 
+		{
+			min = 0.0,
+			max = 0.9,
+		},
+
+		random_params = 
+		{
+			nb_poles = 
+			{
+				min = 2,
+				max = 12
+			},
+
+			pole_ray = 
+			{
+				min = 0.01,
+				max = 0.08
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 2,
+				max = 8
+			}
+		}
 	}
 }
 
