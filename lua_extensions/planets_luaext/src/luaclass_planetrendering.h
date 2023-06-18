@@ -51,6 +51,21 @@ class LuaClass_PlanetRendering
 {
 private:
 
+    struct FoliageConfig
+    {
+        FoliageConfig(void)                = default;
+        // not copyable;
+        FoliageConfig(const FoliageConfig&)       = delete;
+        FoliageConfig(FoliageConfig&&)            = delete;
+
+        dsstring                    foliages_meshes_paths;
+        dsstring                    foliages_meshes_ids;
+        bool                        foliages_global_lits;
+        bool                        foliages_detailed_lits;
+        int                         foliages_local_seeds;
+        DrawSpace::Core::Meshe*     foliages_meshes{ nullptr };
+    };
+
     PlanetsRenderingAspectImpl*         m_planet_render{ nullptr };
     DrawSpace::Aspect::RenderingAspect* m_entity_rendering_aspect{ nullptr };
     DrawSpace::Core::Entity*            m_entity{ nullptr };
@@ -61,13 +76,7 @@ private:
     std::map<dsstring, std::vector<dsstring>>                                       m_planetlayers_rcname_to_passes;
     std::map<dsstring, std::vector<dsstring>>                                       m_foliagelayers_rcname_to_passes;
 
-    std::map<size_t, dsstring>                                                      m_foliages_meshes_paths;
-    std::map<size_t, dsstring>                                                      m_foliages_meshes_ids;
-    std::map<size_t, bool>                                                          m_foliages_global_lits;
-    std::map<size_t, bool>                                                          m_foliages_detailed_lits;
-    std::map<size_t, int>                                                           m_foliages_local_seeds;
-
-    std::map<size_t, DrawSpace::Core::Meshe*>                                       m_foliages_meshes;
+    std::map<size_t, FoliageConfig>                                                        m_foliage_configs;
 
     void cleanup_resources(lua_State* p_L);
 

@@ -296,23 +296,48 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             configure_from_renderlayer(p_L, lua_foliagerenderlayer, resources_aspect, "foliagelayers");
             m_entity_rendering_aspect->AddComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes", m_foliagelayers_rcname_to_passes);
 
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes", m_foliages_meshes);
+            std::map<size_t, DrawSpace::Core::Meshe*> foliage_meshes;
+            for (const auto& e : m_foliage_configs) 
+            {
+                foliage_meshes[e.first] = e.second.foliages_meshes;
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes", foliage_meshes);
 
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_global_lits", m_foliages_global_lits);
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_detailed_lits", m_foliages_detailed_lits);
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, int>>("foliages_local_seeds", m_foliages_local_seeds);
+            std::map<size_t, bool> foliages_global_lits;
+            for (const auto& e : m_foliage_configs)
+            {
+                foliages_global_lits[e.first] = e.second.foliages_global_lits;
+            }
+
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_global_lits", foliages_global_lits);
+
+            std::map<size_t, bool> foliages_detailed_lits;
+            for (const auto& e : m_foliage_configs)
+            {
+                foliages_detailed_lits[e.first] = e.second.foliages_detailed_lits;
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, bool>>("foliages_detailed_lits", foliages_detailed_lits);
+
+            std::map<size_t, int> foliages_local_seeds;
+            for (const auto& e : m_foliage_configs)
+            {
+                foliages_local_seeds[e.first] = e.second.foliages_local_seeds;
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, int>>("foliages_local_seeds", foliages_local_seeds);
+
             
-
             // declare foliage meshes to resources manager
-            for (auto e : m_foliages_meshes_paths) {
 
-                const auto meshe_path{ e.second };
+            for (const auto& e : m_foliage_configs) 
+            {
 
-                const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second };
+                const auto meshe_path{ e.second.foliages_meshes_paths };
+                const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second.foliages_meshes_paths };
 
                 resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
-                    std::make_tuple(m_foliages_meshes.at(e.first), meshe_path, m_foliages_meshes_ids.at(e.first), false));
+                    std::make_tuple(e.second.foliages_meshes, meshe_path, e.second.foliages_meshes_ids, false));
             }
+
 
         } LUA_CATCH;
     }
@@ -361,18 +386,17 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     const auto nbpoints_per_pole_min{ luaL_checkinteger(p_L, 15) };
     const auto nbpoints_per_pole_max{ luaL_checkinteger(p_L, 16) };
     // to be continued...
+   
+    m_foliage_configs[meshe_key].foliages_meshes_paths = meshe_path;
+    m_foliage_configs.at(meshe_key).foliages_meshes_ids = meshe_id;
+    m_foliage_configs.at(meshe_key).foliages_global_lits = global_lit;
+    m_foliage_configs.at(meshe_key).foliages_detailed_lits = detailed_lit;
+    m_foliage_configs.at(meshe_key).foliages_local_seeds = local_seed;
 
+    const auto meshe{ _DRAWSPACE_NEW_(Meshe, Meshe) };
+    meshe->SetPath(meshe_path);
+    m_foliage_configs.at(meshe_key).foliages_meshes = meshe;
     
-    m_foliages_meshes_paths[meshe_key] = meshe_path;
-    m_foliages_meshes_ids[meshe_key] = meshe_id;
-    m_foliages_global_lits[meshe_key] = global_lit;
-    m_foliages_detailed_lits[meshe_key] = detailed_lit;
-    m_foliages_local_seeds[meshe_key] = local_seed;
-
-
-    m_foliages_meshes[meshe_key] = _DRAWSPACE_NEW_(Meshe, Meshe);
-    m_foliages_meshes.at(meshe_key)->SetPath(meshe_path);
-
     return 0;
 }
 
@@ -418,33 +442,19 @@ int LuaClass_PlanetRendering::LUA_unregisterfromrendering(lua_State* p_L)
 
 void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
 {
-    if (NULL == m_entity)
+    if (nullptr == m_entity)
     {
         LUA_ERROR("PlanetRendering::cleanup_resources : no attached entity");
     }
-    ResourcesAspect* resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
+
+    const auto resources_aspect{ m_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         LUA_ERROR("PlanetRendering::cleanup_resources : attached entity has no resources aspect !");
     }
 
     if (m_entity_rendering_aspect)
-    {
-
-        /////////////////// meshes
-
-        for(auto e : m_foliages_meshes)
-        {
-            _DRAWSPACE_DELETE_(e.second);
-        }
-        
-        m_foliages_meshes_ids.clear();
-        m_foliages_meshes.clear();
-        m_foliages_global_lits.clear();
-        m_foliages_detailed_lits.clear();
-        m_foliages_local_seeds.clear();
-
-
+    {      
         /////////////////// textures
        
         const auto layers_planet_textures_comp{ m_entity_rendering_aspect->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures") };
@@ -618,14 +628,18 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes");
         }
 
-        for (auto& e : m_foliages_meshes_paths)
+        for (auto& e : m_foliage_configs)
         {
-            const auto meshe_path{ e.second };
-            const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second };
+            _DRAWSPACE_DELETE_(e.second.foliages_meshes);
+
+            const auto meshe_path{ e.second.foliages_meshes_paths };
+            const auto meshe_res_id{ std::to_string(e.first) + dsstring("_") + e.second.foliages_meshes_paths };
 
             resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
+
         }
-        m_foliages_meshes_paths.clear();
+
+        m_foliage_configs.clear();
 
     }
 }
