@@ -29,6 +29,9 @@
 #include "lod_patch.h"
 #include "lod_body.h"
 
+//fwd decl
+struct FoliageConfig;
+
 namespace DrawSpace
 {
 namespace Core
@@ -132,18 +135,22 @@ private:
 class FoliageDrawingNode : public DrawSpace::Core::RenderingNode
 {
 public:   
-    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer);
+    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer, const FoliageConfig& p_config);
+
+
     void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                         const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
 
+    
+    Binder* GetBinder(void) const;
     void SetBinder(Binder* p_binder);
 
-    Binder* GetBinder(void) const;
-
+    
+    /*
     void SetGlobalLitState(bool p_state);
     void SetDetailedLitState(bool p_state);
-
     void RegisterFoliageSeed(int p_seed);
+    */
 
     static const std::set<int>& GetLocalSeeds(void);
     
@@ -158,9 +165,9 @@ private:
 
     // seed for this type of foliage
     int                                 m_local_seed{ 0 };
+
     // table of seeds/id foreach type of foliage
     static std::set<int>                m_seeds;
-
 
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
@@ -206,7 +213,7 @@ public:
     void RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order);
 
 
-    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit, bool p_local_seed);
+    void RegisterFoliageSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_ro, int p_foliage_layer, const FoliageConfig& p_foliage_config);
 
 
     NewCollisionMesheCreationCb* GetNewCollisionMesheCreationCb(void) const;

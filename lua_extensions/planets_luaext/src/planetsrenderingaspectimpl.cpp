@@ -45,6 +45,8 @@
 
 #include "planetscentraladmin.h"
 
+#include "foliage_config.h"
+
 
 
 using namespace DrawSpace;
@@ -723,7 +725,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     const auto foliagelayers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("foliagelayers_ro")->getPurpose() };
 
 
-    // auto foliage_meshes
+    // foliage_meshes
 
     auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes")->getPurpose() };
 
@@ -731,6 +733,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     auto foliage_detailed_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_detailed_lits")->getPurpose() };
 
     auto foliages_local_seeds{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_local_seeds")->getPurpose() };
+    
+    // to be continued...
     
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1225,6 +1229,16 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
         const auto local_seed{ foliages_local_seeds.at(foliage_layer) };
 
+
+        FoliageConfig foliage_config;
+
+        foliage_config.foliages_global_lits = global_lit;
+        foliage_config.foliages_detailed_lits = detailed_lit;
+        foliage_config.foliages_local_seeds = local_seed;
+        foliage_config.foliages_meshes = meshe;
+        // to be continued ...
+
+
         for (auto& pass_id : rcp.second)
         {
             m_passes.insert(pass_id);
@@ -1235,7 +1249,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 foliage_binder->SetTexture(pass_textures[stage], stage);
             }
 
-            m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer, global_lit, detailed_lit, local_seed);
+            //m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer, global_lit, detailed_lit, local_seed);
+            m_drawable.RegisterFoliageSinglePassSlot(pass_id, foliage_binder, ro, foliage_layer, foliage_config);
             
             if (0 == m_planet_foliage_binder.count(pass_id))
             {

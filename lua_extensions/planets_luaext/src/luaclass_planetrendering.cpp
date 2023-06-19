@@ -325,6 +325,42 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             }
             m_entity_rendering_aspect->AddComponent<std::map<size_t, int>>("foliages_local_seeds", foliages_local_seeds);
 
+
+            std::map<size_t, std::pair<dsreal, dsreal>> temperature_range;
+            for (const auto& e : m_foliage_configs)
+            {
+                temperature_range[e.first] = std::make_pair(e.second.temperature_range_min, e.second.temperature_range_max);
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_temperature_range", temperature_range);
+
+            std::map<size_t, std::pair<dsreal, dsreal>> humidity_range;
+            for (const auto& e : m_foliage_configs)
+            {
+                humidity_range[e.first] = std::make_pair(e.second.humidity_range_min, e.second.humidity_range_max);
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_humidity_range", humidity_range);
+
+            std::map<size_t, std::pair<int, int>> nb_poles;
+            for (const auto& e : m_foliage_configs)
+            {
+                nb_poles[e.first] = std::make_pair(e.second.nb_poles_min, e.second.nb_poles_max);
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<int, int>>>("foliages_nb_poles", nb_poles);
+
+            std::map<size_t, std::pair<dsreal, dsreal>> pole_ray;
+            for (const auto& e : m_foliage_configs)
+            {
+                pole_ray[e.first] = std::make_pair(e.second.pole_ray_min, e.second.pole_ray_max);
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray", humidity_range);
+
+            std::map<size_t, std::pair<int, int>> nbpoints_per_pole_range;
+            for (const auto& e : m_foliage_configs)
+            {
+                nbpoints_per_pole_range[e.first] = std::make_pair(e.second.nbpoints_per_pole_min, e.second.nbpoints_per_pole_max);
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range", nb_poles);
+
             
             // declare foliage meshes to resources manager
 
@@ -380,11 +416,12 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     const auto nb_poles_min{ luaL_checkinteger(p_L, 11) };
     const auto nb_poles_max{ luaL_checkinteger(p_L, 12) };
 
-    const auto pole_ray_min{ luaL_checkinteger(p_L, 13) };
-    const auto pole_ray_max{ luaL_checkinteger(p_L, 14) };
+    const auto pole_ray_min{ luaL_checknumber(p_L, 13) };
+    const auto pole_ray_max{ luaL_checknumber(p_L, 14) };
 
     const auto nbpoints_per_pole_min{ luaL_checkinteger(p_L, 15) };
     const auto nbpoints_per_pole_max{ luaL_checkinteger(p_L, 16) };
+
     // to be continued...
    
     m_foliage_configs[meshe_key].foliages_meshes_paths = meshe_path;
@@ -392,6 +429,21 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     m_foliage_configs.at(meshe_key).foliages_global_lits = global_lit;
     m_foliage_configs.at(meshe_key).foliages_detailed_lits = detailed_lit;
     m_foliage_configs.at(meshe_key).foliages_local_seeds = local_seed;
+    
+    m_foliage_configs.at(meshe_key).temperature_range_min = temperature_range_min;
+    m_foliage_configs.at(meshe_key).temperature_range_max = temperature_range_max;
+
+    m_foliage_configs.at(meshe_key).humidity_range_min = humidity_range_min;
+    m_foliage_configs.at(meshe_key).humidity_range_max = humidity_range_max;
+
+    m_foliage_configs.at(meshe_key).pole_ray_min = pole_ray_min;
+    m_foliage_configs.at(meshe_key).pole_ray_max = pole_ray_max;
+
+    m_foliage_configs.at(meshe_key).nbpoints_per_pole_min = nbpoints_per_pole_min;
+    m_foliage_configs.at(meshe_key).nbpoints_per_pole_max = nbpoints_per_pole_max;
+
+
+
 
     const auto meshe{ _DRAWSPACE_NEW_(Meshe, Meshe) };
     meshe->SetPath(meshe_path);

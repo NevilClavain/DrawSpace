@@ -41,6 +41,8 @@
 #include "quaternion.h"
 #include "lod_heightmapsubpass.h"
 
+#include "foliage_config.h"
+
 
 
 using namespace DrawSpace;
@@ -488,9 +490,16 @@ void FaceDrawingNode::SetCurrentPass(const dsstring& p_pass)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-FoliageDrawingNode::FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer) :
+FoliageDrawingNode::FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer, const FoliageConfig& p_config) :
 m_renderer( p_renderer )
 {
+    SetMeshe(p_config.foliages_meshes);
+
+    m_global_lit = p_config.foliages_global_lits;
+    m_detailed_lit = p_config.foliages_detailed_lits;
+
+    m_seeds.insert(p_config.foliages_local_seeds);
+    m_local_seed = p_config.foliages_local_seeds;
 
 }
 
@@ -645,6 +654,7 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }
 
+/*
 void FoliageDrawingNode::SetGlobalLitState(bool p_state)
 {
     m_global_lit = p_state;
@@ -660,7 +670,7 @@ void FoliageDrawingNode::RegisterFoliageSeed(int p_seed)
     m_seeds.insert(p_seed);
     m_local_seed = p_seed;
 }
-
+*/
 
 const std::set<int>& FoliageDrawingNode::GetLocalSeeds(void)
 {
@@ -1112,22 +1122,22 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
 }
 
 
-void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, DrawSpace::Core::Meshe* p_meshe, Binder* p_binder, int p_ro, int p_foliage_layer, bool p_global_lit, bool p_detailed_lit, bool p_local_seed)
+void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_ro, int p_foliage_layer, const FoliageConfig& p_foliage_config)
 {
-    const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer)) };
+    const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer, p_foliage_config)) };
     node->m_debug_id = dsstring("Foliage") + std::to_string(p_foliage_layer);
 
     const auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_foliagerenderingnode_draw)) };
     m_drawing_handlers.push_back(cb);
 
     node->RegisterHandler(cb);
-    node->SetMeshe(p_meshe);
+    //node->SetMeshe(p_foliage_config.foliages_meshes);
     node->SetOrderNumber(p_ro);
     node->SetBinder(p_binder);
 
-    node->SetDetailedLitState(p_detailed_lit);
-    node->SetGlobalLitState(p_global_lit);
-    node->RegisterFoliageSeed(p_local_seed);
+    //node->SetDetailedLitState(p_foliage_config.foliages_detailed_lits);
+    //node->SetGlobalLitState(p_foliage_config.foliages_global_lits);
+    //node->RegisterFoliageSeed(p_foliage_config.foliages_local_seeds);
     
     const auto p{ std::make_pair(p_pass, node) };
     m_passesfoliagenodes.push_back(p);

@@ -27,6 +27,8 @@
 #include "luna.h"
 #include "renderingaspect.h"
 
+#include "foliage_config.h"
+
 // fwd decls
 namespace DrawSpace
 {
@@ -50,21 +52,6 @@ class LuaClass_RenderLayer;
 class LuaClass_PlanetRendering
 {
 private:
-
-    struct FoliageConfig
-    {
-        FoliageConfig(void)                = default;
-        // not copyable;
-        FoliageConfig(const FoliageConfig&)       = delete;
-        FoliageConfig(FoliageConfig&&)            = delete;
-
-        dsstring                    foliages_meshes_paths;
-        dsstring                    foliages_meshes_ids;
-        bool                        foliages_global_lits;
-        bool                        foliages_detailed_lits;
-        int                         foliages_local_seeds;
-        DrawSpace::Core::Meshe*     foliages_meshes{ nullptr };
-    };
 
     PlanetsRenderingAspectImpl*         m_planet_render{ nullptr };
     DrawSpace::Aspect::RenderingAspect* m_entity_rendering_aspect{ nullptr };
