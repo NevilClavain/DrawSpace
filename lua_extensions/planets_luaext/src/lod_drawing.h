@@ -140,21 +140,13 @@ public:
 
     void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                         const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
-
     
     Binder* GetBinder(void) const;
     void SetBinder(Binder* p_binder);
 
-    
-    /*
-    void SetGlobalLitState(bool p_state);
-    void SetDetailedLitState(bool p_state);
-    void RegisterFoliageSeed(int p_seed);
-    */
-
+   
     static const std::set<int>& GetLocalSeeds(void);
     
-
 private:
 
     DrawSpace::Interface::Renderer*     m_renderer{ nullptr };

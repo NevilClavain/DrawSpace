@@ -554,17 +554,6 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 
     if (foliage_patch->HasHeightMap())
     {
-        /*
-        const auto foliage_coords{ foliage_patch->GetFoliageCoordsList() };
-        if (foliage_coords.size() > 0)
-        {
-            for (const auto& coords : foliage_coords)
-            {
-                draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y);
-            }
-        }
-        */
-
 
         const auto foliages_coords{ foliage_patch->GetFoliageCoordsList() };
         if (foliages_coords.count(m_local_seed) > 0)
@@ -653,24 +642,6 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
        
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }
-
-/*
-void FoliageDrawingNode::SetGlobalLitState(bool p_state)
-{
-    m_global_lit = p_state;
-}
-
-void FoliageDrawingNode::SetDetailedLitState(bool p_state)
-{
-    m_detailed_lit = p_state;
-}
-
-void FoliageDrawingNode::RegisterFoliageSeed(int p_seed)
-{
-    m_seeds.insert(p_seed);
-    m_local_seed = p_seed;
-}
-*/
 
 const std::set<int>& FoliageDrawingNode::GetLocalSeeds(void)
 {
