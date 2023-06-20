@@ -152,9 +152,9 @@ m_layer_index( p_layer_index )
         
         const auto patch_seed{ (int)(m_xpos * 1000) * 100000 + (int)(m_ypos * 1000) };
 
-        for (auto local_seed : foliage_seeds)
+        for (const auto local_seed : foliage_seeds)
         {           
-            const auto final_seed{ (patch_seed * 1000) + local_seed };
+            const auto final_seed{ (patch_seed * 1000) + local_seed.first };
 
             std::default_random_engine rand_engine(final_seed);
             std::vector<FoliagesCoordinates> coordinates;
@@ -162,16 +162,18 @@ m_layer_index( p_layer_index )
 
             //////////////////////////////////////////////
 
-            constexpr int nb_poles_min{ 2 };
-            constexpr int nb_poles_max{ 12 };
-            constexpr dsreal min_pole_ray{ 0.01 };
-            constexpr dsreal max_pole_ray{ 0.08 };
-            constexpr int nbpoints_per_pole_min{ 2 };
-            constexpr int nbpoints_per_pole_miax{ 8 };
+            const auto coords_generation_params{ local_seed.second };
+
+            const int nb_poles_min{ coords_generation_params.nb_poles_min };
+            const int nb_poles_max{ coords_generation_params.nb_poles_max };
+            const dsreal min_pole_ray{ coords_generation_params.pole_ray_min };
+            const dsreal max_pole_ray{ coords_generation_params.pole_ray_max };
+            const int nbpoints_per_pole_min{ coords_generation_params.nbpoints_per_pole_min };
+            const int nbpoints_per_pole_max{ coords_generation_params.nbpoints_per_pole_max };
 
 
             std::uniform_int_distribution<int> nb_poles_rand_source(nb_poles_min, nb_poles_max);
-            std::uniform_int_distribution<int> nbpoints_per_pole_rand_source(nbpoints_per_pole_min, nbpoints_per_pole_miax);
+            std::uniform_int_distribution<int> nbpoints_per_pole_rand_source(nbpoints_per_pole_min, nbpoints_per_pole_max);
 
             const auto nb_poles{ nb_poles_rand_source(rand_engine) };
             const auto nbpoints_per_pole{ nbpoints_per_pole_rand_source(rand_engine) };
@@ -207,7 +209,7 @@ m_layer_index( p_layer_index )
 
             //////////////////////////////////////////////
 
-            m_foliagesCoordinates[local_seed] = coordinates;
+            m_foliagesCoordinates[local_seed.first] = coordinates;
         }        
     }
     else if (cst::FoliageRootLODLevel > m_lod_level)

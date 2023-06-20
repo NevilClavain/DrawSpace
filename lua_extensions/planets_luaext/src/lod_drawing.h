@@ -135,8 +135,20 @@ private:
 class FoliageDrawingNode : public DrawSpace::Core::RenderingNode
 {
 public:   
-    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer, const FoliageConfig& p_config);
 
+    struct CoordsGenerationParams
+    {
+        int                         nb_poles_min;
+        int                         nb_poles_max;
+
+        dsreal                      pole_ray_min;
+        dsreal                      pole_ray_max;
+
+        int                         nbpoints_per_pole_min;
+        int                         nbpoints_per_pole_max;
+    };
+
+    FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer, const FoliageConfig& p_config);
 
     void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
                         const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj);
@@ -145,21 +157,23 @@ public:
     void SetBinder(Binder* p_binder);
 
    
-    static const std::set<int>& GetLocalSeeds(void);
+    static const std::map<int, CoordsGenerationParams>& GetLocalSeeds(void);
     
 private:
 
-    DrawSpace::Interface::Renderer*     m_renderer{ nullptr };
-    Binder*                             m_binder{ nullptr };
+    DrawSpace::Interface::Renderer*                 m_renderer{ nullptr };
+    Binder*                                         m_binder{ nullptr };
 
-    bool                                m_global_lit{ false };
-    bool                                m_detailed_lit{ false };
+    bool                                            m_global_lit{ false };
+    bool                                            m_detailed_lit{ false };
 
     // seed for this type of foliage
-    int                                 m_local_seed{ 0 };
+    int                                             m_local_seed{ 0 };
 
     // table of seeds/id foreach type of foliage
-    static std::set<int>                m_seeds;
+    //static std::set<int>                m_seeds;
+
+    static std::map<int, CoordsGenerationParams>    m_seeds;
 
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 

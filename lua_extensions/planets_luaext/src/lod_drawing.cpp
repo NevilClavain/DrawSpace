@@ -54,7 +54,7 @@ using namespace LOD;
 DrawSpace::Logger::Sink planetdrawing_logger("PlanetDrawing", DrawSpace::Logger::Configuration::GetInstance());
 
 
-std::set<int> FoliageDrawingNode::m_seeds;
+std::map<int, FoliageDrawingNode::CoordsGenerationParams> FoliageDrawingNode::m_seeds;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -498,7 +498,14 @@ m_renderer( p_renderer )
     m_global_lit = p_config.foliages_global_lits;
     m_detailed_lit = p_config.foliages_detailed_lits;
 
-    m_seeds.insert(p_config.foliages_local_seeds);
+    const CoordsGenerationParams coords_generation_params
+    {
+        p_config.nb_poles_min, p_config.nb_poles_max,
+        p_config.pole_ray_min, p_config.pole_ray_max,
+        p_config.nbpoints_per_pole_min, p_config.nbpoints_per_pole_max
+    };
+
+    m_seeds[p_config.foliages_local_seeds] = coords_generation_params;
     m_local_seed = p_config.foliages_local_seeds;
 
 }
@@ -643,7 +650,7 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }
 
-const std::set<int>& FoliageDrawingNode::GetLocalSeeds(void)
+const std::map<int, FoliageDrawingNode::CoordsGenerationParams>& FoliageDrawingNode::GetLocalSeeds(void)
 {
     return m_seeds;
 }

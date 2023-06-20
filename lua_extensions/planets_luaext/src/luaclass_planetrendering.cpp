@@ -352,14 +352,14 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             {
                 pole_ray[e.first] = std::make_pair(e.second.pole_ray_min, e.second.pole_ray_max);
             }
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray", humidity_range);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray", pole_ray);
 
             std::map<size_t, std::pair<int, int>> nbpoints_per_pole_range;
             for (const auto& e : m_foliage_configs)
             {
                 nbpoints_per_pole_range[e.first] = std::make_pair(e.second.nbpoints_per_pole_min, e.second.nbpoints_per_pole_max);
             }
-            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range", nb_poles);
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range", nbpoints_per_pole_range);
 
             
             // declare foliage meshes to resources manager
@@ -422,7 +422,6 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     const auto nbpoints_per_pole_min{ luaL_checkinteger(p_L, 15) };
     const auto nbpoints_per_pole_max{ luaL_checkinteger(p_L, 16) };
 
-    // to be continued...
    
     m_foliage_configs[meshe_key].foliages_meshes_paths = meshe_path;
     m_foliage_configs.at(meshe_key).foliages_meshes_ids = meshe_id;
@@ -438,6 +437,10 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 
     m_foliage_configs.at(meshe_key).pole_ray_min = pole_ray_min;
     m_foliage_configs.at(meshe_key).pole_ray_max = pole_ray_max;
+
+    m_foliage_configs.at(meshe_key).nb_poles_min = nb_poles_min;
+    m_foliage_configs.at(meshe_key).nb_poles_max = nb_poles_max;
+
 
     m_foliage_configs.at(meshe_key).nbpoints_per_pole_min = nbpoints_per_pole_min;
     m_foliage_configs.at(meshe_key).nbpoints_per_pole_max = nbpoints_per_pole_max;

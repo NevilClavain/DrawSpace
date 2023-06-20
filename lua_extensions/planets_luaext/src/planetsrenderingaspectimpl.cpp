@@ -727,16 +727,21 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     // foliage_meshes
 
-    auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes")->getPurpose() };
+    const auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes")->getPurpose() };
 
-    auto foliage_global_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_global_lits")->getPurpose() };
-    auto foliage_detailed_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_detailed_lits")->getPurpose() };
+    const auto foliage_global_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_global_lits")->getPurpose() };
+    const auto foliage_detailed_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_detailed_lits")->getPurpose() };
 
-    auto foliages_local_seeds{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_local_seeds")->getPurpose() };
+    const auto foliages_local_seeds{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_local_seeds")->getPurpose() };
     
-    // to be continued...
-    
+    const auto foliages_temperature_range{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_temperature_range")->getPurpose() };
+    const auto foliages_humidity_range{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_humidity_range")->getPurpose() };
 
+    const auto foliages_nb_poles{ m_owner->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nb_poles")->getPurpose() };
+    const auto foliages_pole_ray{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray")->getPurpose() };
+
+    const auto foliages_nbpoints_per_pole_range{ m_owner->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range")->getPurpose() };
+ 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1236,8 +1241,23 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         foliage_config.foliages_detailed_lits = detailed_lit;
         foliage_config.foliages_local_seeds = local_seed;
         foliage_config.foliages_meshes = meshe;
+        
         // to be continued ...
 
+        foliage_config.temperature_range_min = foliages_temperature_range.at(foliage_layer).first;
+        foliage_config.temperature_range_max = foliages_temperature_range.at(foliage_layer).second;
+
+        foliage_config.humidity_range_min = foliages_temperature_range.at(foliage_layer).first;
+        foliage_config.humidity_range_max = foliages_temperature_range.at(foliage_layer).second;
+        
+        foliage_config.nb_poles_min = foliages_nb_poles.at(foliage_layer).first;
+        foliage_config.nb_poles_max = foliages_nb_poles.at(foliage_layer).second;
+
+        foliage_config.pole_ray_min = foliages_pole_ray.at(foliage_layer).first;
+        foliage_config.pole_ray_max = foliages_pole_ray.at(foliage_layer).second;
+
+        foliage_config.nbpoints_per_pole_min = foliages_nbpoints_per_pole_range.at(foliage_layer).first;
+        foliage_config.nbpoints_per_pole_max = foliages_nbpoints_per_pole_range.at(foliage_layer).second;
 
         for (auto& pass_id : rcp.second)
         {
@@ -1249,7 +1269,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 foliage_binder->SetTexture(pass_textures[stage], stage);
             }
 
-            //m_drawable.RegisterFoliageSinglePassSlot(pass_id, meshe, foliage_binder, ro, foliage_layer, global_lit, detailed_lit, local_seed);
             m_drawable.RegisterFoliageSinglePassSlot(pass_id, foliage_binder, ro, foliage_layer, foliage_config);
             
             if (0 == m_planet_foliage_binder.count(pass_id))

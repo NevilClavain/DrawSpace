@@ -1761,20 +1761,20 @@ foliage_parameters =
 		{
 			nb_poles = 
 			{
-				min = 2,
-				max = 12
+				min = 0,
+				max = 1
 			},
 
 			pole_ray = 
 			{
 				min = 0.01,
-				max = 0.08
+				max = 0.6
 			},
 
 			nbpoints_per_pole =
 			{
-				min = 2,
-				max = 8
+				min = 1,
+				max = 3
 			}
 		}
 	},
