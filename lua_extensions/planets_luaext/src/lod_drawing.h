@@ -170,6 +170,12 @@ private:
     // seed for this type of foliage
     int                                             m_local_seed{ 0 };
 
+    dsreal                                          m_temperature_range_min;
+    dsreal                                          m_temperature_range_max;
+
+    dsreal                                          m_humidity_range_min;
+    dsreal                                          m_humidity_range_max;
+
     // table of seeds/id foreach type of foliage
     //static std::set<int>                m_seeds;
 

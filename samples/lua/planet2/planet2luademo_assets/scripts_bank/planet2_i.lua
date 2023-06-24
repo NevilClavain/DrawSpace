@@ -1733,6 +1733,7 @@ foliage_layers =
 foliage_parameters = 
 {
 	-- debug marble sphere
+	--[[
 	[0] = 
 	{
 		meshe = 
@@ -1748,13 +1749,13 @@ foliage_parameters =
 		temperature_range = 
 		{
 			min = 0.0,
-			max = 0.9,
+			max = 1.0,
 		},
 
 		humidity_range = 
 		{
 			min = 0.0,
-			max = 0.9,
+			max = 1.0,
 		},
 
 		random_params = 
@@ -1778,6 +1779,7 @@ foliage_parameters =
 			}
 		}
 	},
+	]]
 
 	-- grass
 	[1] = 
@@ -1794,14 +1796,14 @@ foliage_parameters =
 
 		temperature_range = 
 		{
-			min = 0.0,
-			max = 0.9,
+			min = 0.3,
+			max = 1.0,
 		},
 
 		humidity_range = 
 		{
-			min = 0.0,
-			max = 0.9,
+			min = 0.65,
+			max = 1.0,
 		},
 
 		random_params = 
@@ -1835,13 +1837,15 @@ foliage_passes_bindings =
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'grass_main_rendering'
-	},
+	}--,
 
+	--[[
     binding_1 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'debugmarblesphere_main_rendering'
 	}
+	]]
 
 }
 

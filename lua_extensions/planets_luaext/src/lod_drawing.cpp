@@ -508,6 +508,11 @@ m_renderer( p_renderer )
     m_seeds[p_config.foliages_local_seeds] = coords_generation_params;
     m_local_seed = p_config.foliages_local_seeds;
 
+    m_temperature_range_min = p_config.temperature_range_min;
+    m_temperature_range_max = p_config.temperature_range_max;
+
+    m_humidity_range_min = p_config.humidity_range_min;
+    m_humidity_range_max = p_config.humidity_range_max;
 }
 
 void FoliageDrawingNode::SetBinder(Binder* p_binder)
@@ -547,7 +552,16 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
         for (auto e : dl)
         {
-            draw_foliages_batch_on_patch(e, p_ray, p_invariant_view_pos, p_world, p_view, p_proj);
+            const auto patch_temperature{ e->GetTemperature() };
+            const auto patch_humidity{ e->GetHumidity() };
+
+            const bool temperature_in_range{ m_temperature_range_min < patch_temperature && patch_temperature < m_temperature_range_max };
+            const bool humidity_in_range{ m_humidity_range_min < patch_humidity && patch_humidity < m_humidity_range_max };
+
+            if (temperature_in_range && humidity_in_range)
+            {                       
+                draw_foliages_batch_on_patch(e, p_ray, p_invariant_view_pos, p_world, p_view, p_proj);
+            }
         }
     }
 }

@@ -1242,13 +1242,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         foliage_config.foliages_local_seeds = local_seed;
         foliage_config.foliages_meshes = meshe;
         
-        // to be continued ...
-
+        
         foliage_config.temperature_range_min = foliages_temperature_range.at(foliage_layer).first;
         foliage_config.temperature_range_max = foliages_temperature_range.at(foliage_layer).second;
 
-        foliage_config.humidity_range_min = foliages_temperature_range.at(foliage_layer).first;
-        foliage_config.humidity_range_max = foliages_temperature_range.at(foliage_layer).second;
+        foliage_config.humidity_range_min = foliages_humidity_range.at(foliage_layer).first;
+        foliage_config.humidity_range_max = foliages_humidity_range.at(foliage_layer).second;
         
         foliage_config.nb_poles_min = foliages_nb_poles.at(foliage_layer).first;
         foliage_config.nb_poles_max = foliages_nb_poles.at(foliage_layer).second;
