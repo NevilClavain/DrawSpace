@@ -1770,7 +1770,7 @@ foliage_layers =
 foliage_parameters = 
 {
 	-- debug marble sphere
-	--[[
+	
 	[0] = 
 	{
 		meshe = 
@@ -1816,7 +1816,7 @@ foliage_parameters =
 			}
 		}
 	},
-	]]
+	
 
 	-- grass
 	[1] = 
@@ -1880,13 +1880,13 @@ foliage_parameters =
 
 		temperature_range = 
 		{
-			min = 0.3,
+			min = 0.48,
 			max = 1.0,
 		},
 
 		humidity_range = 
 		{
-			min = 0.45,
+			min = 0.38,
 			max = 1.0,
 		},
 
@@ -1901,13 +1901,13 @@ foliage_parameters =
 			pole_ray = 
 			{
 				min = 0.01,
-				max = 0.2
+				max = 0.6
 			},
 
 			nbpoints_per_pole =
 			{
-				min = 6,
-				max = 20
+				min = 1,
+				max = 5
 			}
 		}
 	}
@@ -1917,14 +1917,13 @@ foliage_parameters =
 foliage_passes_bindings =
 {
 
-	--[[
+	
 	
     binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'debugmarblesphere_main_rendering'
-	}
-	]]
+	},
 
     binding_1 = 
 	{
@@ -2122,7 +2121,7 @@ set_body_on_planet(66.403, -26.193, 80.0, planet_specific_config_descr)
 
 -- on planet
 
-set_freecam_on_planet(112.64111, 2.26944, 4.9, planet_specific_config_descr)
+set_freecam_on_planet(112.82, 2.23, 5.2, planet_specific_config_descr)
 
 
 

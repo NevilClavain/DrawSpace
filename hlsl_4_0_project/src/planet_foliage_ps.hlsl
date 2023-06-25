@@ -141,28 +141,26 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     n_local_pos_vector.xyz = normalize(local_pos_vector.xyz);
     n_local_pos_vector.w = 1.0;
 
-    ///////////////////Detail lit computing//////////////////////////
-    
-    if (detail_lit_model)
+
+    float4 global_lit_source0;
+    float4 global_lit_source1;
+    float4 global_lit_source2;
+
+    if (flags_lights.y > 0.0)
     {
-        float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
-
-        if (flags_lights.y > 0.0)
-        {
-            detail_lit_color += clamp(dot(world_normale.xyz, normalize(light0_dir.xyz)), 0.0, 1.0) * light0_color;
-        }
-
-        if (flags_lights.z > 0.0)
-        {
-            detail_lit_color += clamp(dot(world_normale.xyz, normalize(light1_dir.xyz)), 0.0, 1.0) * light1_color;
-        }
-
-        if (flags_lights.w > 0.0)
-        {
-            detail_lit_color += clamp(dot(world_normale.xyz, normalize(light2_dir.xyz)), 0.0, 1.0) * light2_color;
-        }
+        global_lit_source0 = saturate(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)));
     }
-    
+
+    if (flags_lights.z > 0.0)
+    {
+        global_lit_source1 = saturate(dot(n_local_pos_vector.xyz, normalize(light1_dir_local.xyz)));
+    }
+
+    if (flags_lights.w > 0.0)
+    {
+        global_lit_source2 = saturate(dot(n_local_pos_vector.xyz, normalize(light2_dir_local.xyz)));
+    }
+
 
     ///////////////////Global lit computing//////////////////////////
 
@@ -170,21 +168,44 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     {
         if (flags_lights.y > 0.0)
         {
-            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light0_dir_local.xyz)), 0.0, 1.0) * light0_color;
+            global_lit_color += global_lit_source0 * light0_color;
         }
 
         if (flags_lights.z > 0.0)
         {
-            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light1_dir_local.xyz)), 0.0, 1.0) * light1_color;
+            global_lit_color += global_lit_source1 * light1_color;
         }
 
         if (flags_lights.w > 0.0)
         {
-            global_lit_color += clamp(dot(n_local_pos_vector.xyz, normalize(light2_dir_local.xyz)), 0.0, 1.0) * light2_color;
+            global_lit_color += global_lit_source2 * light2_color;
         }
-
     }
 
+    ///////////////////Detail lit computing//////////////////////////
+
+    const float ambient_light_ratio = 0.20f;
+    
+    if (detail_lit_model)
+    {
+        float4 world_normale = TransformedNormaleForLights(input.Normale, mat_World);
+
+        if (flags_lights.y > 0.0)
+        {
+            detail_lit_color += saturate(dot(world_normale.xyz, normalize(light0_dir.xyz)) + saturate(ambient_light_ratio * global_lit_source0)) * light0_color;
+        }
+
+        if (flags_lights.z > 0.0)
+        {
+            detail_lit_color += saturate(dot(world_normale.xyz, normalize(light1_dir.xyz)) + saturate(ambient_light_ratio * global_lit_source1)) * light1_color;
+        }
+
+        if (flags_lights.w > 0.0)
+        {
+            detail_lit_color += saturate(dot(world_normale.xyz, normalize(light2_dir.xyz)) + saturate(ambient_light_ratio * global_lit_source2)) * light2_color;
+        }
+    }
+    
     ///////////////////
 
     float3 lit_color;
