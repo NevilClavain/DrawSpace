@@ -575,14 +575,13 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 
     if (foliage_patch->HasHeightMap())
     {
-
         const auto foliages_coords{ foliage_patch->GetFoliageCoordsList() };
         if (foliages_coords.count(m_local_seed) > 0)
         {
             const auto foliage_coords{ foliages_coords.at(m_local_seed) };
             for (const auto& coords : foliage_coords)
             {
-                draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y);
+                draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y, coords.orientation);
             }
         }
     }
@@ -592,7 +591,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     const DrawSpace::Utils::Vector& p_invariant_view_pos,
     const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj,
-    dsreal p_xpos, dsreal p_ypos)
+    dsreal p_xpos, dsreal p_ypos, dsreal p_orientation)
 {
     const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
     const dsreal ypos{ p_ypos }; // [-0.5, 0.5 ]
@@ -650,6 +649,15 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
 
     m_renderer->SetFxShaderParams(1, 4, lit_model);
 
+    //////////////////////////////////////////////////////////
+
+    // axe vertical de l'objet, ici c'est l'axe z ! :-p
+    Matrix vertical_rot;
+    vertical_rot.Rotation(Vector(0.0, 0.0, 1.0, 1.0), p_orientation);
+
+
+
+
     Matrix local_t;
     local_t.Translation(v2);
 
@@ -659,7 +667,7 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     Matrix local_r;
     q.RotationMatFrom(local_r);
 
-    Matrix world = local_r * local_t * p_world;
+    Matrix world = vertical_rot * local_r * local_t * p_world;
        
     m_renderer->DrawMeshe(world, p_view, p_proj);
 }

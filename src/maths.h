@@ -22,15 +22,11 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MATHS_H_
-#define _MATHS_H_
+#pragma once
 
 #include <math.h>
 #include "vector.h"
 
-#ifndef PI
-#define PI 3.1415927
-#endif
 
 namespace DrawSpace
 {
@@ -40,21 +36,23 @@ class Maths
 {
 public:
 
-	static double	Square( dsreal a )						    { return a * a; };
-	static int		Floor( dsreal a )							{ return ((int)a - (a < 0 && a != (int)a)); };
-	static int		Ceiling( dsreal a )						    { return ((int)a + (a > 0 && a != (int)a)); };
+	static constexpr dsreal	pi{ 3.1415927 };
 
-	static double	Min( dsreal a, dsreal b )					{ return (a < b ? a : b); };
-	static double	Max( dsreal a, dsreal b )					{ return (a > b ? a : b); };
-	static double	Abs( dsreal a )							    { return (a < 0 ? -a : a); };
-	static double	Clamp( dsreal a, dsreal b, dsreal x )		{ return (x < a ? a : (x > b ? b : x)); };
-	static double	Lerp( dsreal a, dsreal b, dsreal x )		{ return a + x * (b - a); };
-	static double	Cubic( dsreal a )							{ return a * a * (3 - 2*a); };
-	static double	Pulse( dsreal a, dsreal b, dsreal x )		{ return (double)((x >= a) - (x >= b)); };
-	static double	Gamma( dsreal a, dsreal g )				    { return pow(a, 1/g); };
-	static double	Expose( dsreal l, dsreal k )				{ return (1 - exp(-l * k)); };
-	static double	DegToRad( dsreal ang )					    { return ( ( ang * PI ) / 180.0 ); };
-    static double	RadToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / PI ); };
+	static double		Square( dsreal a )						    { return a * a; };
+	static int			Floor( dsreal a )							{ return ((int)a - (a < 0 && a != (int)a)); };
+	static int			Ceiling( dsreal a )						    { return ((int)a + (a > 0 && a != (int)a)); };
+
+	static double		Min( dsreal a, dsreal b )					{ return (a < b ? a : b); };
+	static double		Max( dsreal a, dsreal b )					{ return (a > b ? a : b); };
+	static double		Abs( dsreal a )							    { return (a < 0 ? -a : a); };
+	static double		Clamp( dsreal a, dsreal b, dsreal x )		{ return (x < a ? a : (x > b ? b : x)); };
+	static double		Lerp( dsreal a, dsreal b, dsreal x )		{ return a + x * (b - a); };
+	static double		Cubic( dsreal a )							{ return a * a * (3 - 2*a); };
+	static double		Pulse( dsreal a, dsreal b, dsreal x )		{ return (double)((x >= a) - (x >= b)); };
+	static double		Gamma( dsreal a, dsreal g )				    { return pow(a, 1/g); };
+	static double		Expose( dsreal l, dsreal k )				{ return (1 - exp(-l * k)); };
+	static double		DegToRad( dsreal ang )					    { return ( ( ang * pi ) / 180.0 ); };
+    static double		RadToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / pi ); };
 
 
 	static void		SphericaltoCartesian( const Vector& p_in, Vector& p_out )
@@ -70,14 +68,14 @@ public:
 		if( p_in[1] > 0.0 && 0.0 == p_in[0] && 0.0 == p_in[2] )
 		{
 			p_out[0] = p_in[1];
-			p_out[2] = PI / 2.0;
+			p_out[2] = pi / 2.0;
 			p_out[1] = 0.0;
 			return;
 		}
 		else if( p_in[1] < 0.0 && 0.0 == p_in[0] && 0.0 == p_in[2] )
 		{
 			p_out[0] = -p_in[1];
-			p_out[2] = -PI / 2.0;
+			p_out[2] = -pi / 2.0;
 			p_out[1] = 0.0;
 			return;
 		}
@@ -142,5 +140,3 @@ public:
 };
 }
 }
-
-#endif

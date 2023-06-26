@@ -87,7 +87,7 @@ public:
 			m_quat[0] = 0.0;
 			m_quat[1] = 1.0;
 			m_quat[2] = 0.0;
-			m_quat[3] = PI;
+			m_quat[3] = Utils::Maths::pi;
 		}
 		else if (Utils::Maths::Abs(dot - (1.0)) < 0.000001)
 		{

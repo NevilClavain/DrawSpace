@@ -61,6 +61,7 @@ public:
     {
         dsreal x;
         dsreal y;
+        dsreal orientation;
     };
     
     Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 

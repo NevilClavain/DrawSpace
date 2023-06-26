@@ -185,9 +185,11 @@ m_layer_index( p_layer_index )
                 const auto xpole_center{ poles_coords_rand_source(rand_engine) };
                 const auto ypole_center{ poles_coords_rand_source(rand_engine) };
 
-                std::uniform_real_distribution<dsreal> theta_rand_source(0.0, PI / 2.0);
+                std::uniform_real_distribution<dsreal> theta_rand_source(0.0, Utils::Maths::pi / 2.0);
                 std::uniform_real_distribution<dsreal> r_rand_source(min_pole_ray, max_pole_ray);
                 std::uniform_int_distribution<int> xy_signs_rand_source(1, 2);
+
+                std::uniform_real_distribution<dsreal> orientation_source(0.0, Utils::Maths::pi);
 
                 for (int j = 0; j < nbpoints_per_pole; j++)
                 {
@@ -202,7 +204,8 @@ m_layer_index( p_layer_index )
                     //
                     if (xfinal < 0.5 && xfinal > -0.5 && yfinal < 0.5 && yfinal > -0.5)
                     {
-                        coordinates.push_back({ xfinal, yfinal });
+                        const auto orientation_angle{ orientation_source(rand_engine) };
+                        coordinates.push_back({ xfinal, yfinal, orientation_angle });
                     }                    
                 }
             }
