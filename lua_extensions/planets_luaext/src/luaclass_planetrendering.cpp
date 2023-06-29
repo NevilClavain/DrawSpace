@@ -683,6 +683,46 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
             m_entity_rendering_aspect->RemoveComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes");
         }
 
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, bool>>("foliages_global_lits"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, bool>>("foliages_global_lits");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, bool>>("foliages_detailed_lits"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, bool>>("foliages_detailed_lits");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, int>>("foliages_local_seeds"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, int>>("foliages_local_seeds");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_temperature_range"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_temperature_range");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_humidity_range"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_humidity_range");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nb_poles"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, std::pair<int, int>>>("foliages_nb_poles");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range");
+        }
+
         for (auto& e : m_foliage_configs)
         {
             _DRAWSPACE_DELETE_(e.second.foliages_meshes);
