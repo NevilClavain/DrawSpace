@@ -1797,6 +1797,8 @@ foliage_parameters =
 
 		random_params = 
 		{
+			appearance = 0.99,
+
 			nb_poles = 
 			{
 				min = 0,
@@ -1845,6 +1847,8 @@ foliage_parameters =
 
 		random_params = 
 		{
+			appearance = 1.0,
+
 			nb_poles = 
 			{
 				min = 2,
@@ -1892,6 +1896,8 @@ foliage_parameters =
 
 		random_params = 
 		{
+			appearance = 0.0001,
+
 			nb_poles = 
 			{
 				min = 0,

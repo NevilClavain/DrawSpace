@@ -191,6 +191,8 @@ m_layer_index( p_layer_index )
 
                 std::uniform_real_distribution<dsreal> orientation_source(0.0, Utils::Maths::pi);
 
+                std::uniform_real_distribution<dsreal> appearance_threshold_source(0.0, 1.0);
+
                 for (int j = 0; j < nbpoints_per_pole; j++)
                 {
                     const auto theta{ theta_rand_source(rand_engine) };
@@ -205,7 +207,9 @@ m_layer_index( p_layer_index )
                     if (xfinal < 0.5 && xfinal > -0.5 && yfinal < 0.5 && yfinal > -0.5)
                     {
                         const auto orientation_angle{ orientation_source(rand_engine) };
-                        coordinates.push_back({ xfinal, yfinal, orientation_angle });
+                        const auto appearance_threshold{ appearance_threshold_source(rand_engine) };
+
+                        coordinates.push_back({ xfinal, yfinal, orientation_angle, appearance_threshold });
                     }                    
                 }
             }

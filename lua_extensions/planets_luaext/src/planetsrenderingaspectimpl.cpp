@@ -741,6 +741,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     const auto foliages_pole_ray{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray")->getPurpose() };
 
     const auto foliages_nbpoints_per_pole_range{ m_owner->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range")->getPurpose() };
+
+    const auto foliages_appearances{ m_owner->GetComponent<std::map<size_t, dsreal>>("foliages_appearances")->getPurpose() };
  
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1258,6 +1260,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         foliage_config.nbpoints_per_pole_min = foliages_nbpoints_per_pole_range.at(foliage_layer).first;
         foliage_config.nbpoints_per_pole_max = foliages_nbpoints_per_pole_range.at(foliage_layer).second;
 
+        foliage_config.appearance = foliages_appearances.at(foliage_layer);
+
         for (auto& pass_id : rcp.second)
         {
             m_passes.insert(pass_id);
@@ -1608,7 +1612,8 @@ void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_nam
         m_entitynodegraph->UnregisterCollider(m_owner_entity);
     }
     
-    DrawSpace::Aspect::CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+    const auto collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+
     if (p_addcomponent)
     {
         if (!collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>(component_name))
@@ -1651,6 +1656,7 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
     
     const auto node_list{ p_pass->GetNodeList() };
     const auto pass_list{ p_pass->GetPassList() };
+
     for (size_t i = 0; i < node_list.size(); i++)
     {
         const auto node = static_cast<LOD::FaceDrawingNode*>(node_list.at(i));

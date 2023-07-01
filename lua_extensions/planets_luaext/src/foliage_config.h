@@ -48,6 +48,8 @@ struct FoliageConfig
     int                         foliages_local_seeds;
     DrawSpace::Core::Meshe*     foliages_meshes{ nullptr };
 
+    dsreal                      appearance;
+
     dsreal                      temperature_range_min;
     dsreal                      temperature_range_max;
 

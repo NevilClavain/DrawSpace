@@ -361,6 +361,13 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             }
             m_entity_rendering_aspect->AddComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range", nbpoints_per_pole_range);
 
+            std::map<size_t, dsreal> appearances;
+            for (const auto& e : m_foliage_configs)
+            {
+                appearances[e.first] = e.second.appearance;
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsreal>>("foliages_appearances", appearances);
+
             
             // declare foliage meshes to resources manager
 
@@ -394,7 +401,7 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
-    if (argc < 16)
+    if (argc < 17)
     {
         LUA_ERROR("PlanetRendering::declare_foliageparams : argument(s) missing");
     }
@@ -422,6 +429,8 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     const auto nbpoints_per_pole_min{ luaL_checkinteger(p_L, 15) };
     const auto nbpoints_per_pole_max{ luaL_checkinteger(p_L, 16) };
 
+    const auto appearance{ luaL_checknumber(p_L, 17) };
+
    
     m_foliage_configs[meshe_key].foliages_meshes_paths = meshe_path;
     m_foliage_configs.at(meshe_key).foliages_meshes_ids = meshe_id;
@@ -445,7 +454,7 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     m_foliage_configs.at(meshe_key).nbpoints_per_pole_min = nbpoints_per_pole_min;
     m_foliage_configs.at(meshe_key).nbpoints_per_pole_max = nbpoints_per_pole_max;
 
-
+    m_foliage_configs.at(meshe_key).appearance = appearance;
 
 
     const auto meshe{ _DRAWSPACE_NEW_(Meshe, Meshe) };
@@ -722,6 +731,12 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
         {
             m_entity_rendering_aspect->RemoveComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range");
         }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsreal>>("foliages_appearances"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsreal>>("foliages_appearances");
+        }
+
 
         for (auto& e : m_foliage_configs)
         {

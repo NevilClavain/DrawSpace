@@ -525,12 +525,14 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 	local file = v0.meshe.file
 	local mesheid = v0.meshe.id
 
-	local global_lit = v0.global_lit;
-	local detailed_lit = v0.detailed_lit;
+	local global_lit = v0.global_lit
+	local detailed_lit = v0.detailed_lit
 
-	local local_seed = v0.local_seed;
+	local local_seed = v0.local_seed
 
 	--g:print("v0 is "..file.." "..mesheid.." local_seed = "..local_seed)
+
+	local appearance = v0.random_params.appearance
 
 	local temperature_range_min = v0.temperature_range.min
 	local temperature_range_max = v0.temperature_range.max
@@ -552,7 +554,7 @@ planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, 
 		humidity_range_min, humidity_range_max,
 		nb_poles_min, nb_poles_max,
 		pole_ray_min, pole_ray_max,
-		nbpoints_per_pole_min, nbpoints_per_pole_max)
+		nbpoints_per_pole_min, nbpoints_per_pole_max, appearance)
 
   end
 

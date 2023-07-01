@@ -513,6 +513,9 @@ m_renderer( p_renderer )
 
     m_humidity_range_min = p_config.humidity_range_min;
     m_humidity_range_max = p_config.humidity_range_max;
+
+    m_appearance = p_config.appearance;
+
 }
 
 void FoliageDrawingNode::SetBinder(Binder* p_binder)
@@ -576,12 +579,18 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
     if (foliage_patch->HasHeightMap())
     {
         const auto foliages_coords{ foliage_patch->GetFoliageCoordsList() };
+
         if (foliages_coords.count(m_local_seed) > 0)
         {
             const auto foliage_coords{ foliages_coords.at(m_local_seed) };
             for (const auto& coords : foliage_coords)
             {
-                draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y, coords.orientation);
+                const auto must_appear{ m_appearance > coords.appearance_threshold };
+
+                if (must_appear) 
+                {
+                    draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y, coords.orientation);
+                }                
             }
         }
     }
@@ -1131,13 +1140,8 @@ void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, Binder* p_bi
     m_drawing_handlers.push_back(cb);
 
     node->RegisterHandler(cb);
-    //node->SetMeshe(p_foliage_config.foliages_meshes);
     node->SetOrderNumber(p_ro);
     node->SetBinder(p_binder);
-
-    //node->SetDetailedLitState(p_foliage_config.foliages_detailed_lits);
-    //node->SetGlobalLitState(p_foliage_config.foliages_global_lits);
-    //node->RegisterFoliageSeed(p_foliage_config.foliages_local_seeds);
     
     const auto p{ std::make_pair(p_pass, node) };
     m_passesfoliagenodes.push_back(p);

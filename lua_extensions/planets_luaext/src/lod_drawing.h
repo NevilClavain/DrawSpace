@@ -176,6 +176,8 @@ private:
     dsreal                                          m_humidity_range_min;
     dsreal                                          m_humidity_range_max;
 
+    dsreal                                          m_appearance;
+
     // table of seeds/id foreach type of foliage
     //static std::set<int>                m_seeds;
 
