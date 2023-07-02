@@ -585,7 +585,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
             const auto foliage_coords{ foliages_coords.at(m_local_seed) };
             for (const auto& coords : foliage_coords)
             {
-                const auto must_appear{ m_appearance > coords.appearance_threshold };
+                const auto must_appear{ coords.appearance_threshold > 1.0 - m_appearance };
 
                 if (must_appear) 
                 {

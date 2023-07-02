@@ -55,10 +55,17 @@ public:
     static constexpr int    RightPlanetFace    = 3;
     static constexpr int    TopPlanetFace      = 4;
     static constexpr int    BottomPlanetFace   = 5;
-
-    using FoliagesCoordinates =
-    struct
+    
+    struct FoliagesCoordinates
     {
+        FoliagesCoordinates(dsreal p_x, dsreal p_y, dsreal p_orientation, dsreal p_appearance_threshold) :
+            x(p_x),
+            y(p_y),
+            orientation(p_orientation),
+            appearance_threshold(p_appearance_threshold)
+        {
+        };
+
         dsreal x;
         dsreal y;
         dsreal orientation;

@@ -260,7 +260,7 @@ m_layer_index( p_layer_index )
                         break;
                 }
 
-                const FoliagesCoordinates local_coords{ (coord.x - local_center_x) / 0.5, (coord.y - local_center_y) / 0.5 };
+                const FoliagesCoordinates local_coords{ (coord.x - local_center_x) / 0.5, (coord.y - local_center_y) / 0.5, coord.orientation, coord.appearance_threshold };
                 if (-0.5 < local_coords.x && local_coords.x <= 0.5 && -0.5 < local_coords.y && local_coords.y <= 0.5)
                 {
                     coordinates.push_back(local_coords);

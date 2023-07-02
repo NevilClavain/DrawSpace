@@ -1896,7 +1896,7 @@ foliage_parameters =
 
 		random_params = 
 		{
-			appearance = 0.0001,
+			appearance = 0.04,
 
 			nb_poles = 
 			{
