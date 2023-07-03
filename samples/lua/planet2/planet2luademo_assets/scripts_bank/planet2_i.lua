@@ -1869,7 +1869,8 @@ foliage_parameters =
 		}
 	},
 
-	-- tree
+
+	-- tree forests
 	[2] = 
 	{	
 		meshe = 
@@ -1896,24 +1897,24 @@ foliage_parameters =
 
 		random_params = 
 		{
-			appearance = 0.04,
+			appearance = 0.05,
 
 			nb_poles = 
 			{
-				min = 0,
-				max = 1
+				min = 4,
+				max = 8
 			},
 
 			pole_ray = 
 			{
-				min = 0.01,
-				max = 0.6
+				min = 0.5,
+				max = 0.99
 			},
 
 			nbpoints_per_pole =
 			{
-				min = 1,
-				max = 5
+				min = 20,
+				max = 30
 			}
 		}
 	}
@@ -1922,9 +1923,6 @@ foliage_parameters =
 
 foliage_passes_bindings =
 {
-
-	
-	
     binding_0 = 
 	{
         target_pass_id = 'texture_pass',
@@ -1942,6 +1940,7 @@ foliage_passes_bindings =
         target_pass_id = 'texture_pass',
 		rendering_id = 'tree_main_rendering'
 	}
+
 }
 
 
