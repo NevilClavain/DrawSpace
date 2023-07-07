@@ -1762,6 +1762,44 @@ foliage_layers =
 			},
 			rendering_order = 15000
 		}
+	}, 
+
+	[3] = 
+	{
+		isolated_tree_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='tree2_tex.png', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
 	}
 }
 
@@ -1770,7 +1808,7 @@ foliage_layers =
 foliage_parameters = 
 {
 	-- debug marble sphere
-	
+	--[[
 	[0] = 
 	{
 		meshe = 
@@ -1818,7 +1856,7 @@ foliage_parameters =
 			}
 		}
 	},
-	
+	]]
 
 	-- grass
 	[1] = 
@@ -1917,17 +1955,69 @@ foliage_parameters =
 				max = 30
 			}
 		}
-	}
+	},
+
+	-- iolated tree
+	[3] = 
+	{	
+		meshe = 
+		{
+			file = 'tree0.ac',
+			id = 'Plane.001'
+		},
+
+		global_lit = TRUE,
+		detailed_lit = TRUE,
+		local_seed = 103,
+
+		temperature_range = 
+		{
+			min = 0.48,
+			max = 1.0,
+		},
+
+		humidity_range = 
+		{
+			min = 0.38,
+			max = 1.0,
+		},
+
+		random_params = 
+		{
+			appearance = 0.20,
+
+			nb_poles = 
+			{
+				min = 1,
+				max = 1
+			},
+
+			pole_ray = 
+			{
+				min = 0.02,
+				max = 0.08
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 1,
+				max = 1
+			}
+		}
+	},
+
 }
 
 
 foliage_passes_bindings =
 {
+	--[[
     binding_0 = 
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'debugmarblesphere_main_rendering'
 	},
+	]]
 
     binding_1 = 
 	{
@@ -1939,6 +2029,12 @@ foliage_passes_bindings =
 	{
         target_pass_id = 'texture_pass',
 		rendering_id = 'tree_main_rendering'
+	},
+
+    binding_3 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'isolated_tree_main_rendering'
 	}
 
 }
