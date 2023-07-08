@@ -446,11 +446,11 @@ local planet_specific_config_descr =
 
 
 	ground_detail_bump_nb_frac_loop				 = 4,
-	ultra_details_max_distance					 = 550,
+	ultra_details_max_distance					 = 4550,
 	ground_bump_details_factor_depth_near_d1	 = 60.0,
 	ground_bump_details_factor_depth_near_d2	 = 250.0,
 
-	enable_ground_detail_bump					 = TRUE,
+	enable_ground_detail_bump					 = FALSE,
 	enable_ultra_detail							 = TRUE,
 	enable_ultra_detail_bump					 = TRUE,
 	enable_recursive_ultra_detail_textures		 = TRUE
@@ -733,9 +733,9 @@ function( key )
       elseif tab == TRUE then
         model.camera.mvt:update(speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif space == TRUE then
-        model.camera.mvt:update(speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(speed_factor * 0.06, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
-        model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(speed_factor * 0.6 ,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
 	  
 	else
@@ -752,9 +752,9 @@ function( key )
       elseif tab == TRUE then
         model.camera.mvt:update(-speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif space == TRUE then
-        model.camera.mvt:update(-speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(-speed_factor * 0.06, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
-        model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(-speed_factor * 0.6, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
 	  
 	else
@@ -1923,13 +1923,13 @@ foliage_parameters =
 
 		temperature_range = 
 		{
-			min = 0.48,
+			min = 0.3,
 			max = 1.0,
 		},
 
 		humidity_range = 
 		{
-			min = 0.38,
+			min = 0.40,
 			max = 1.0,
 		},
 
@@ -1972,13 +1972,13 @@ foliage_parameters =
 
 		temperature_range = 
 		{
-			min = 0.48,
+			min = 0.3,
 			max = 1.0,
 		},
 
 		humidity_range = 
 		{
-			min = 0.38,
+			min = 0.40,
 			max = 1.0,
 		},
 
