@@ -368,6 +368,12 @@ int LuaClass_PlanetRendering::LUA_configure(lua_State* p_L)
             }
             m_entity_rendering_aspect->AddComponent<std::map<size_t, dsreal>>("foliages_appearances", appearances);
 
+            std::map<size_t, dsreal> altitude_max;
+            for (const auto& e : m_foliage_configs)
+            {
+                altitude_max[e.first] = e.second.altitud_max;
+            }
+            m_entity_rendering_aspect->AddComponent<std::map<size_t, dsreal>>("foliages_altitud_max", altitude_max);
             
             // declare foliage meshes to resources manager
 
@@ -401,7 +407,7 @@ int LuaClass_PlanetRendering::LUA_release(lua_State* p_L)
 int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 {
     const auto argc{ lua_gettop(p_L) };
-    if (argc < 17)
+    if (argc < 18)
     {
         LUA_ERROR("PlanetRendering::declare_foliageparams : argument(s) missing");
     }
@@ -431,6 +437,8 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
 
     const auto appearance{ luaL_checknumber(p_L, 17) };
 
+    const auto altitud_max{ luaL_checknumber(p_L, 18) };
+
    
     m_foliage_configs[meshe_key].foliages_meshes_paths = meshe_path;
     m_foliage_configs.at(meshe_key).foliages_meshes_ids = meshe_id;
@@ -455,6 +463,8 @@ int LuaClass_PlanetRendering::LUA_declarefoliageparams(lua_State* p_L)
     m_foliage_configs.at(meshe_key).nbpoints_per_pole_max = nbpoints_per_pole_max;
 
     m_foliage_configs.at(meshe_key).appearance = appearance;
+
+    m_foliage_configs.at(meshe_key).altitud_max = altitud_max;
 
 
     const auto meshe{ _DRAWSPACE_NEW_(Meshe, Meshe) };
@@ -735,6 +745,11 @@ void LuaClass_PlanetRendering::cleanup_resources(lua_State* p_L)
         if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsreal>>("foliages_appearances"))
         {
             m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsreal>>("foliages_appearances");
+        }
+
+        if (m_entity_rendering_aspect->GetComponent<std::map<size_t, dsreal>>("foliages_altitud_max"))
+        {
+            m_entity_rendering_aspect->RemoveComponent<std::map<size_t, dsreal>>("foliages_altitud_max");
         }
 
 

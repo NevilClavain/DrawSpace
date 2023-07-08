@@ -743,6 +743,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     const auto foliages_nbpoints_per_pole_range{ m_owner->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range")->getPurpose() };
 
     const auto foliages_appearances{ m_owner->GetComponent<std::map<size_t, dsreal>>("foliages_appearances")->getPurpose() };
+
+    const auto foliages_altitud_max{ m_owner->GetComponent<std::map<size_t, dsreal>>("foliages_altitud_max")->getPurpose() };
  
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1261,6 +1263,8 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         foliage_config.nbpoints_per_pole_max = foliages_nbpoints_per_pole_range.at(foliage_layer).second;
 
         foliage_config.appearance = foliages_appearances.at(foliage_layer);
+
+        foliage_config.altitud_max = foliages_altitud_max.at(foliage_layer);
 
         for (auto& pass_id : rcp.second)
         {

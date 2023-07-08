@@ -1821,6 +1821,8 @@ foliage_parameters =
 		detailed_lit = TRUE,
 		local_seed = 100,
 
+		altitud_max = -1.0,
+
 		temperature_range = 
 		{
 			min = 0.0,
@@ -1870,6 +1872,8 @@ foliage_parameters =
 		global_lit = TRUE,
 		detailed_lit = FALSE,
 		local_seed = 101,
+
+		altitud_max = -1.0,
 
 		temperature_range = 
 		{
@@ -1921,6 +1925,8 @@ foliage_parameters =
 		detailed_lit = TRUE,
 		local_seed = 102,
 
+		altitud_max = 100.0,
+
 		temperature_range = 
 		{
 			min = 0.3,
@@ -1969,6 +1975,8 @@ foliage_parameters =
 		global_lit = TRUE,
 		detailed_lit = TRUE,
 		local_seed = 103,
+
+		altitud_max = 100.0,
 
 		temperature_range = 
 		{

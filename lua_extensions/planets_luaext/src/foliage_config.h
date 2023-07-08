@@ -50,6 +50,8 @@ struct FoliageConfig
 
     dsreal                      appearance;
 
+    dsreal                      altitud_max;
+
     dsreal                      temperature_range_min;
     dsreal                      temperature_range_max;
 

@@ -516,6 +516,7 @@ m_renderer( p_renderer )
 
     m_appearance = p_config.appearance;
 
+    m_altitud_max = p_config.altitud_max;
 }
 
 void FoliageDrawingNode::SetBinder(Binder* p_binder)
@@ -607,7 +608,7 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
 
     //// compute height
 
-    const auto hm{ p_patch->GetHeightMap() };
+    const auto hm { p_patch->GetHeightMap() };
 
     // translate to [0.0, 1.0] range for heighmap access
     //
@@ -618,6 +619,11 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     const auto hm_height{ hm[index_hm] };
 
     if (hm_height < 0.0)
+    {
+        return;
+    }
+
+    if (m_altitud_max != -1.0 && hm_height > m_altitud_max)
     {
         return;
     }

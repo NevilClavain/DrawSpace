@@ -178,6 +178,8 @@ private:
 
     dsreal                                          m_appearance;
 
+    dsreal                                          m_altitud_max;
+
     // table of seeds/id foreach type of foliage
     //static std::set<int>                m_seeds;
 
