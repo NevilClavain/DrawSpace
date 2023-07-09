@@ -289,33 +289,12 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:set_detailslimitsup(config_description['details_limit_sup'])
 	end
 
-	if config_description['bump_details_limit_sup'] ~= nil then
-		planet_specific_configuration:set_bumpdetailslimitsup(config_description['bump_details_limit_sup'])
-	end
 
-	if config_description['ground_bump_details_factor_depth_distance'] ~= nil then
-		planet_specific_configuration:set_groundbumpdetailsfactordepthdistance(config_description['ground_bump_details_factor_depth_distance'])
-	end
-
-	if config_description['ground_detail_bump_nb_frac_loop'] ~= nil then
-		planet_specific_configuration:set_grounddetailbumpnbfracloop(config_description['ground_detail_bump_nb_frac_loop'])
-	end
 
 	if config_description['ultra_details_max_distance'] ~= nil then
 		planet_specific_configuration:set_ultradetailsmaxdistance(config_description['ultra_details_max_distance'])
 	end
 
-	if config_description['ground_bump_details_factor_depth_near_d1'] ~= nil then
-		planet_specific_configuration:set_groundbumpdetailsfactordepthneard1(config_description['ground_bump_details_factor_depth_near_d1'])
-	end
-
-	if config_description['ground_bump_details_factor_depth_near_d2'] ~= nil then
-		planet_specific_configuration:set_groundbumpdetailsfactordepthneard2(config_description['ground_bump_details_factor_depth_near_d2'])
-	end
-
-	if config_description['enable_ground_detail_bump'] ~= nil then
-		planet_specific_configuration:enable_grounddetailbump(config_description['enable_ground_detail_bump'])
-	end
 
 	if config_description['enable_ultra_detail'] ~= nil then
 		planet_specific_configuration:enable_ultradetail(config_description['enable_ultra_detail'])

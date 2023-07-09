@@ -122,21 +122,19 @@ struct PS_INTPUT
 
 // flag 33
 // x->details_limit_sup
-// y->bump_details_limit_sup
-// z->ground_bump_details_factor_depth_distance
+
 
 #define v_terrain_details_flags             33
 
 // flag 34
-// x->ground_detail_bump_nb_frac_loop
+
 // y->ultra_details_max_distance
-// z->ground_bump_details_factor_depth_near_d1
-// w->ground_bump_details_factor_depth_near_d2
+
 
 #define v_terrain_details_flags_2           34
 
 // flag 35
-// x->enable_ground_detail_bump TRUE/FALSE
+
 // y->enable_ultra_detail TRUE/FALSE
 // z->enable_ultra_detail_bump TRUE/FALSE
 // w->enable_recursive_ultra_detail_textures TRUE/FALSE
@@ -283,24 +281,24 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
 
     /////////////////////////////////////////////////////////////////////////
-    bool enable_ground_detail_bump = vec[v_terrain_details_settings].x;
+
+
+    
     bool enable_ultra_detail = vec[v_terrain_details_settings].y;
     bool enable_ultra_detail_bump = vec[v_terrain_details_settings].z;
     bool enable_recursive_ultra_detail_textures = vec[v_terrain_details_settings].w;
 
-    int ground_detail_bump_nb_frac_loop = vec[v_terrain_details_flags_2].x;
+
     float ultra_details_max_distance = vec[v_terrain_details_flags_2].y;
-    float ground_bump_details_factor_depth_near_d1 = vec[v_terrain_details_flags_2].z;
-    float ground_bump_details_factor_depth_near_d2 = vec[v_terrain_details_flags_2].w;
+
     /////////////////////////////////////////////////////////////////////////
 
     float planet_ray = flags.z;
 
     float4 vpos;
 
-    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouv� empiriquement :-p  : pour �tre ind�pendant de la taille de la plan�te
+    vpos.xyz = (planet_ray / 1000.0) * input.LocalePos; // trouve empiriquement :-p  : pour etre independant de la taille de la planete
 
-    //vpos.xyz = input.LocalePos.xyz;
     vpos.w = 1.0;
 
 
@@ -349,15 +347,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float details_limit_sup = terrain_details_flags.x;
     float ground_details_factor_alt = saturate((details_limit_sup - relative_alt) / (details_limit_sup - 1.0));
 
-    float bump_details_limit_sup = terrain_details_flags.y;
-    float ground_bump_details_factor_alt = saturate((bump_details_limit_sup - relative_alt) / (bump_details_limit_sup - 1.0));
-
-    float ground_bump_details_factor_depth_distance = terrain_details_flags.z;
-
-    float ground_bump_details_factor_depth_far = 1.0 - saturate( pixel_distance / ground_bump_details_factor_depth_distance);
-
-    float ground_bump_details_factor_depth_near = 
-        saturate((pixel_distance - ground_bump_details_factor_depth_near_d1) / (ground_bump_details_factor_depth_near_d2 - ground_bump_details_factor_depth_near_d1));
 
     float4 splat_pixel_color = 0.0;
     float4 ultra_details_pixel_color = 0.0;
@@ -434,58 +423,6 @@ float4 ps_main(PS_INTPUT input) : SV_Target
         texel_pos.y += k * -avg.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
         
 
-        if (enable_ground_detail_bump)
-        {
-            ////////////////////////////////////////////////////////////////
-            // details bump mapping
-
-            float details_terrain_noise_scale = terrain_bump_flag.z;
-
-            float4 vpos_scaled = vpos * details_terrain_noise_scale;
-
-            float4 vpos_up = vpos_scaled;
-            float4 vpos_down = vpos_scaled;
-            float4 vpos_left = vpos_scaled;
-            float4 vpos_right = vpos_scaled;
-
-            float step = 1.0;
-
-            vpos_up.z += step;
-            vpos_down.z -= step;
-
-            vpos_left.x -= step;
-            vpos_right.x += step;
-
-
-            float lacunarity = 4.0;
-            float roughness = 1.46;
-
-            float lacunarity_mask = 4.0;
-            float roughness_mask = 1.46;
-
-            float details_mask = clamp(Fractal_fBm_classic_perlin(0.025 * details_terrain_noise_scale * vpos.xyz, 4, lacunarity_mask, roughness_mask, 0.0), 0.35, 0.999);
-
-
-            float ground_bump_details_control = details_mask * ground_bump_details_factor_depth_far * ground_bump_details_factor_depth_near * ground_bump_details_factor_alt;
-
-            if (ground_bump_details_control > 0.0)
-            {
-                float res = Fractal_fBm_classic_perlin(vpos_scaled.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-                float res_up = Fractal_fBm_classic_perlin(vpos_up.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-                float res_down = Fractal_fBm_classic_perlin(vpos_down.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-                float res_right = Fractal_fBm_classic_perlin(vpos_right.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-                float res_left = Fractal_fBm_classic_perlin(vpos_left.xyz, ground_detail_bump_nb_frac_loop, lacunarity, roughness, 0.0);
-
-                float details_terrain_bump_bias = terrain_bump_flag.y;
-
-                float4 normale_delta_for_details = bump_bias_vector_from_height_values(res, res_left, res_right, res_up, res_down, details_terrain_bump_bias);
-
-                texel_pos.x += ground_bump_details_control * normale_delta_for_details.x;
-                texel_pos.y += ground_bump_details_control * -normale_delta_for_details.y; // inversion sur l'axe y, car pour le repere u,v des textures l'axe v (y) est vers le bas
-            }
-           
-            ////////////////////////////////////////////////////////////////
-        }
 
         if(enable_ultra_detail_bump)
         {                       

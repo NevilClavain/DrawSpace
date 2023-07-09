@@ -90,14 +90,11 @@ public:
     int LUA_setdetailsterrainnoisescale(lua_State* p_L);
     int LUA_setleveldisturbancescale(lua_State* p_L);
     int LUA_setdetailslimitsup(lua_State* p_L);
-    int LUA_setbumpdetailslimitsup(lua_State* p_L);
-    int LUA_setgroundbumpdetailsfactordepthdistance(lua_State* p_L);
 
-    int LUA_setgrounddetailbumpnbfracloop(lua_State* p_L);
+
+
     int LUA_setultradetailsmaxdistance(lua_State* p_L);
-    int LUA_setgroundbumpdetailsfactordepthneard1(lua_State* p_L);
-    int LUA_setgroundbumpdetailsfactordepthneard2(lua_State* p_L);
-    int LUA_enablegrounddetailbump(lua_State* p_L);
+
     int LUA_enableultradetail(lua_State* p_L);
     int LUA_enableultradetailbump(lua_State* p_L);
     int LUA_enablerecursiveultradetailtextures(lua_State* p_L);
@@ -194,15 +191,13 @@ private:
         dsreal      details_terrain_bump_bias;
         dsreal      details_terrain_noise_scale;
         dsreal      level_disturbance_scale;
-        dsreal      details_limit_sup;
-        dsreal      bump_details_limit_sup;
-        dsreal      ground_bump_details_factor_depth_distance;
 
-        dsreal      ground_detail_bump_nb_frac_loop;
+        dsreal      details_limit_sup;
+
+
         dsreal      ultra_details_max_distance;
-        dsreal      ground_bump_details_factor_depth_near_d1;
-        dsreal      ground_bump_details_factor_depth_near_d2;
-        dsreal      enable_ground_detail_bump;
+
+
         dsreal      enable_ultra_detail;
         dsreal      enable_ultra_detail_bump;
         dsreal      enable_recursive_ultra_detail_textures;

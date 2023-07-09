@@ -440,17 +440,12 @@ local planet_specific_config_descr =
 
 	details_terrain_noise_scale					 = 40.0,
 	level_disturbance_scale						 = 0.24,
+
+
 	details_limit_sup							 = 1.40,
-	bump_details_limit_sup					     = 1.30,
-	ground_bump_details_factor_depth_distance	 = 8000.0,
 
-
-	ground_detail_bump_nb_frac_loop				 = 4,
 	ultra_details_max_distance					 = 4550,
-	ground_bump_details_factor_depth_near_d1	 = 60.0,
-	ground_bump_details_factor_depth_near_d2	 = 250.0,
 
-	enable_ground_detail_bump					 = FALSE,
 	enable_ultra_detail							 = TRUE,
 	enable_ultra_detail_bump					 = TRUE,
 	enable_recursive_ultra_detail_textures		 = TRUE

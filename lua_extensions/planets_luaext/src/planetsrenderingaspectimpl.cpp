@@ -678,15 +678,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     const auto details_terrain_noise_scale{ m_owner->GetComponent<dsreal>("details_terrain_noise_scale")->getPurpose() };
     const auto level_disturbance_scale{ m_owner->GetComponent<dsreal>("level_disturbance_scale")->getPurpose() };
     const auto details_limit_sup{ m_owner->GetComponent<dsreal>("details_limit_sup")->getPurpose() };
-    const auto bump_details_limit_sup{ m_owner->GetComponent<dsreal>("bump_details_limit_sup")->getPurpose() };
-    const auto ground_bump_details_factor_depth_distance{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_distance")->getPurpose() };
 
-
-    const auto ground_detail_bump_nb_frac_loop{ m_owner->GetComponent<dsreal>("ground_detail_bump_nb_frac_loop")->getPurpose() };
     const auto ultra_details_max_distance{ m_owner->GetComponent<dsreal>("ultra_details_max_distance")->getPurpose() };
-    const auto ground_bump_details_factor_depth_near_d1{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_near_d1")->getPurpose() };
-    const auto ground_bump_details_factor_depth_near_d2{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_near_d2")->getPurpose() };
-    const auto enable_ground_detail_bump{ m_owner->GetComponent<bool>("enable_ground_detail_bump")->getPurpose() };
+
     const auto enable_ultra_detail{ m_owner->GetComponent<bool>("enable_ultra_detail")->getPurpose() };
     const auto enable_ultra_detail_bump{ m_owner->GetComponent<bool>("enable_ultra_detail_bump")->getPurpose() };
     const auto enable_recursive_ultra_detail_textures{ m_owner->GetComponent<bool>("enable_recursive_ultra_detail_textures")->getPurpose() };
@@ -1045,13 +1039,13 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             const Utils::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
 
-            Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
+            Vector details_flags(details_limit_sup, 0, 0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, details_flags);
 
-            Vector details_flags2(ground_detail_bump_nb_frac_loop, ultra_details_max_distance, ground_bump_details_factor_depth_near_d1, ground_bump_details_factor_depth_near_d2);
+            Vector details_flags2(0, ultra_details_max_distance, 0, 0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 34, details_flags2);
 
-            Vector details_settings(enable_ground_detail_bump, enable_ultra_detail, enable_ultra_detail_bump, enable_recursive_ultra_detail_textures);
+            Vector details_settings(0.0, enable_ultra_detail, enable_ultra_detail_bump, enable_recursive_ultra_detail_textures);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 35, details_settings);
 
             return details_binder;
