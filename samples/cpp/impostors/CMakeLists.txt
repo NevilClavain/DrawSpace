@@ -38,6 +38,7 @@ include_directories(${assimp_include_dir})
 link_directories(${assimp_lib_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 
 file(
         GLOB_RECURSE
@@ -49,7 +50,7 @@ file(
 
 add_library(${sample_name} SHARED ${source_files})
 
-target_link_libraries(${sample_name} physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core)
+target_link_libraries(${sample_name} physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger)
 
 install(TARGETS ${sample_name} CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

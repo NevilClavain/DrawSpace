@@ -82,6 +82,9 @@ ALL_BUILD.vcxproj*
 /drawspacecore_project/CMakeFiles/
 /drawspacecore_project/*.sln
 /drawspacecore_project/*.vcxproj*
+/CORE_logger/CMakeFiles/
+/CORE_logger/*.sln
+/CORE_logger/*.vcxproj*
 /CEGUIWrapper_project/CMakeFiles/
 /CEGUIWrapper_project/*.sln
 /CEGUIWrapper_project/*.vcxproj*

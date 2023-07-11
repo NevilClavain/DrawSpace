@@ -58,6 +58,9 @@ set(assimp_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/lib/x86)
 
 # core, plugins and runtimes
 add_subdirectory(drawspacecore_project)
+
+add_subdirectory(CORE_logger)
+
 add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
 # add_subdirectory(Plugins/d3d9_project)

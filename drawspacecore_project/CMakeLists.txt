@@ -28,6 +28,8 @@ include_directories(${assimp_include_dir})
 include_directories(${bullet_include_dir})
 include_directories(${jsonjsmn_include_dir})
 
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+
 file(
         GLOB_RECURSE
         source_files
@@ -36,18 +38,6 @@ file(
 		
 )
 
-source_group(logging FILES
-${CMAKE_SOURCE_DIR}/src/logchain.cpp 
-${CMAKE_SOURCE_DIR}/src/logchain.h 
-${CMAKE_SOURCE_DIR}/src/logconf.cpp 
-${CMAKE_SOURCE_DIR}/src/logconf.h
-${CMAKE_SOURCE_DIR}/src/logoutput.h
-${CMAKE_SOURCE_DIR}/src/logsink.cpp 
-${CMAKE_SOURCE_DIR}/src/logsink.h
-${CMAKE_SOURCE_DIR}/src/logoutputfile.cpp 
-${CMAKE_SOURCE_DIR}/src/logoutputfile.h
-${CMAKE_SOURCE_DIR}/src/logging.h
-)
 
 source_group(aspect FILES 
 ${CMAKE_SOURCE_DIR}/src/animationsaspect.cpp 

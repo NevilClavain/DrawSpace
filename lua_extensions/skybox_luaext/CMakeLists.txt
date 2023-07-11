@@ -39,6 +39,7 @@ include_directories(${bullet_include_dir})
 link_directories(${bullet_lib_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
 
 file(
@@ -50,7 +51,7 @@ file(
 )
 
 add_library(skybox_luaext SHARED ${source_files})
-target_link_libraries(skybox_luaext drawspace_core lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
+target_link_libraries(skybox_luaext drawspace_core CORE_logger lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
 install(TARGETS skybox_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS skybox_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS skybox_luaext CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)

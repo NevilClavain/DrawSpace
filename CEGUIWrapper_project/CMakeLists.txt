@@ -26,6 +26,7 @@ project(cegui_wrapper)
 include_directories(${cegui_include_dir})
 include_directories(${jsonjsmn_include_dir})
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 
 file(
         GLOB_RECURSE

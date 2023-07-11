@@ -21,34 +21,22 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(revolution_luaext)
-
-include_directories(${lua_include_dir})
-link_directories(${lua_lib_dir})
-
-
-link_directories(${physfs_lib_dir})
-
-link_directories(${jsonjsmn_lib_dir})
-
-link_directories(${assimp_lib_dir})
-
-link_directories(${bullet_lib_dir})
+project(CORE_logger)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
+include_directories(${physfs_include_dir})
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/lua_extensions/revolution_luaext/src/*.h
-        ${CMAKE_SOURCE_DIR}/lua_extensions/revolution_luaext/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/CORE_logger/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_logger/src/*.cpp		
 )
 
-add_library(revolution_luaext SHARED ${source_files})
-target_link_libraries(revolution_luaext drawspace_core CORE_logger lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
-install(TARGETS revolution_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS revolution_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS revolution_luaext CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+
+add_definitions( -D_FROMCMAKE )
+
+add_library(CORE_logger ${source_files})
+
+
+
