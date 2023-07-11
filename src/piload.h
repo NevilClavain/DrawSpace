@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PILOAD_H_
-#define _PILOAD_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "module_root.h"
@@ -43,4 +42,4 @@ public:
 }
 }
 
-#endif
+

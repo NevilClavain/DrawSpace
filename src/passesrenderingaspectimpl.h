@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PASSESRENDERINGASPECTIMPL_H_
-#define _PASSESRENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "renderingaspectimpl.h"
 #include "renderpassnodegraph.h"
@@ -50,4 +49,3 @@ public:
 }
 }
 
-#endif

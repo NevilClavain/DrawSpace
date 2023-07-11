@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _CALLBACK_H_
-#define _CALLBACK_H_
+#pragma once
 
 namespace DrawSpace
 {
@@ -176,4 +175,3 @@ public:
 }
 }
 
-#endif

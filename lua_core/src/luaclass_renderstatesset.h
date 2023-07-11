@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERSTATESSET_H_
-#define _LUACLASS_RENDERSTATESSET_H_
+#pragma once
 
 #include "luna.h"
 #include "renderstatesset.h"
@@ -55,4 +54,3 @@ private:
     DrawSpace::Core::RenderStatesSet   m_renderstatesset;
 };
 
-#endif

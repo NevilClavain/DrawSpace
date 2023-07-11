@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERCONTEXT_H_
-#define _LUACLASS_RENDERCONTEXT_H_
+#pragma once
 
 #include "luna.h"
 #include "renderingnode.h"
@@ -74,5 +73,3 @@ public:
     static const char className[];
     static const Luna<LuaClass_RenderContext>::RegType methods[];
 };
-
-#endif

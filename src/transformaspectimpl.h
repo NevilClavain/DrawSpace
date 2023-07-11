@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRANSFORMASPECTIMPL_H_
-#define _TRANSFORMASPECTIMPL_H_
+#pragma once
 
 #include "matrix.h"
 #include "timemanager.h"
@@ -59,5 +58,3 @@ public:
 }
 }
 }
-
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#pragma once
 
 #include <cmath>
 #include "drawspace_commons.h"
@@ -72,5 +71,3 @@ DrawSpace::Utils::Vector operator+ ( DrawSpace::Utils::Vector p_vA, DrawSpace::U
 
 DrawSpace::Utils::Vector ProdVec( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
 
-
-#endif

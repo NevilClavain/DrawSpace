@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _CAMERAASPECT_H_
-#define _CAMERAASPECT_H_
+#pragma once
 
 #include "componentcontainer.h"
 
@@ -35,4 +34,3 @@ struct CameraAspect : public Core::ComponentContainer {};
 }
 }
 
-#endif

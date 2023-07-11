@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _SERVICEASPECTIMPL_H_
-#define _SERVICEASPECTIMPL_H_
+#pragma once
 
 #include "drawspace_commons.h"
 
@@ -64,5 +63,3 @@ public:
 }
 }
 }
-
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _QUADTREE_H_
-#define _QUADTREE_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "memalloc.h"
@@ -198,4 +197,3 @@ public:
 }
 }
 
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGASPECT_H_
-#define _RENDERINGASPECT_H_
+#pragma once
 
 #include "componentcontainer.h"
 #include "renderingaspectimpl.h"
@@ -60,4 +59,3 @@ public:
 }
 }
 
-#endif

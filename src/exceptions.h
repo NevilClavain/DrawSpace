@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _EXCEPTIONS_H_
-#define _EXCEPTIONS_H_
+#pragma once
 
 #include "drawspace_commons.h"
 
@@ -34,4 +33,3 @@
     message += __FUNCTION__;\
     throw dsexception( message.c_str() ); }
 
-#endif

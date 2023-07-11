@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LOGCONF_H_
-#define _LOGCONF_H_
+#pragma once
 
 #include <map>
 #include "drawspace_commons.h"
@@ -74,5 +73,3 @@ public:
 }
 }
 
-
-#endif

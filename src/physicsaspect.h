@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PHYSICSASPECT_H_
-#define _PHYSICSASPECT_H_
+#pragma once
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
@@ -77,4 +76,3 @@ public:
 }
 }
 
-#endif

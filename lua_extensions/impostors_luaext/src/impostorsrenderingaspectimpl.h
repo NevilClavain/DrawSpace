@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _IMPOSTORSRENDERINGASPECTIMPL_H_
-#define _IMPOSTORSRENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "renderingaspectimpl.h"
 #include "renderer.h"
@@ -94,4 +93,4 @@ public:
 
     void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
 };
-#endif
+

@@ -44,7 +44,7 @@ ${CMAKE_SOURCE_DIR}/src/logsink.cpp
 ${CMAKE_SOURCE_DIR}/src/logsink.h
 ${CMAKE_SOURCE_DIR}/src/logoutputfile.cpp 
 ${CMAKE_SOURCE_DIR}/src/logoutputfile.h
-${CMAKE_SOURCE_DIR}/src/tracedefs.h
+${CMAKE_SOURCE_DIR}/src/logging.h
 )
 
 source_group(aspect FILES 

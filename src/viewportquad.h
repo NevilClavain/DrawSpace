@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _VIEWPORTQUAD_H_
-#define _VIEWPORTQUAD_H_
+#pragma once
 
 #include "renderingnode.h"
 #include "primitives.h"
@@ -48,4 +47,5 @@ public:
     void OnDraw( void );
 };
 }
-#endif
+
+

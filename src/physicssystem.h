@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PHYSICSSYSTEM_H_
-#define _PHYSICSSYSTEM_H_
+#pragma once
 
 #include "systems.h"
 #include "entitynodegraph.h"
@@ -53,4 +52,3 @@ public:
 }
 }
 
-#endif

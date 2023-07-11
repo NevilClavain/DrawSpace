@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _HUB_H_
-#define _HUB_H_
+#pragma once
 
 #include "transformsystem.h"
 #include "timesystem.h"
@@ -111,4 +110,4 @@ public:
 }
 }
 
-#endif
+

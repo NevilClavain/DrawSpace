@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRANSFORMASPECT_H_
-#define _TRANSFORMASPECT_H_
+#pragma once
 
 #include "transformaspectimpl.h"
 #include "timemanager.h"
@@ -86,4 +85,3 @@ public:
 }
 }
 
-#endif

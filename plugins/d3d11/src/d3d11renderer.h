@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _D3D11RENDERER_H_
-#define _D3D11RENDERER_H_
+#pragma once
 
 #pragma warning( disable : 4005 4838 )
 
@@ -389,4 +388,3 @@ public:
 
 };
 
-#endif

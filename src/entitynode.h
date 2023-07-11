@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _ENTITYNODE_H_
-#define _ENTITYNODE_H_
+#pragma once
 
 #include "st_tree.h"
 #include "entity.h"
@@ -72,4 +71,3 @@ public:
 }
 }
 
-#endif

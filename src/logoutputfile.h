@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LOGOUTPUTFILE_H_
-#define _LOGOUTPUTFILE_H_
+#pragma once
 
 #include <mutex>
 #include "drawspace_commons.h"
@@ -56,4 +55,3 @@ public:
 }
 }
 
-#endif

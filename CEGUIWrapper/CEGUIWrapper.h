@@ -28,8 +28,7 @@
 #include "callback.h"
 #include "jsonparser.h"
 
-#ifndef _CEGUIWRAPPER_H_
-#define _CEGUIWRAPPER_H_
+#pragma once
 
 class CEGUIWrapper
 {
@@ -138,4 +137,4 @@ public:
     void InitTest( void );
 };
 
-#endif
+

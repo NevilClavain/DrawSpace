@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERSTATE_H_
-#define _RENDERSTATE_H_
+#pragma once
 
 #include <vector>
 #include "drawspace_commons.h"
@@ -77,4 +76,3 @@ private:
 }
 }
 
-#endif

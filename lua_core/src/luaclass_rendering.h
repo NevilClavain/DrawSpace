@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERING_H_
-#define _LUACLASS_RENDERING_H_
+#pragma once
 
 #include "luna.h"
 #include "renderingaspectimpl.h"
@@ -86,4 +85,3 @@ public:
     static const Luna<LuaClass_Rendering>::RegType methods[];
 };
 
-#endif

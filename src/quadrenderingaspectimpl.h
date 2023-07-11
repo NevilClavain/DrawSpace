@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _QUADRENDERINGASPECTIMPL_H_
-#define _QUADRENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "renderingaspectimpl.h"
 #include "renderer.h"
@@ -59,4 +58,4 @@ public:
 }
 }
 
-#endif
+

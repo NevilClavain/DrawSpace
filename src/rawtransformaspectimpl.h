@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RAWTRANSFORMASPECTIMPL_H_
-#define _RAWTRANSFORMASPECTIMPL_H_
+#pragma once
 
 #include "transformaspectimpl.h"
 
@@ -38,4 +37,4 @@ public:
 };
 }
 }
-#endif
+

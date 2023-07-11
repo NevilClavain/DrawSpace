@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "memalloc.h"
@@ -208,4 +207,3 @@ public:
 }
 }
 
-#endif

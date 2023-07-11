@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _SHADER_H_
-#define _SHADER_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "vector.h"
@@ -81,4 +80,3 @@ public:
 }
 }
 
-#endif

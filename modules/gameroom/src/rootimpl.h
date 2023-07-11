@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _ROOTIMPL_H_
-#define _ROOTIMPL_H_
+#pragma once
 
 #include "module_root.h"
 
@@ -40,4 +39,3 @@ public:
     DrawSpace::Interface::AspectImplementations::ServiceAspectImpl* InstanciateServiceAspectImpl( const dsstring& p_id );
 };
 
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _QUATERNION_H_
-#define _QUATERNION_H_
+#pragma once
 
 #include "matrix.h"
 #include "vector.h"
@@ -162,4 +161,3 @@ public:
 
 DrawSpace::Utils::Quaternion operator* ( DrawSpace::Utils::Quaternion p_qA, DrawSpace::Utils::Quaternion p_qB );
 
-#endif

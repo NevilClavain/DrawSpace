@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERPASSNODEGRAPH_H_
-#define _LUACLASS_RENDERPASSNODEGRAPH_H_
+#pragma once
 
 #include "renderpassnodegraph.h"
 #include "passesrenderingaspectimpl.h"
@@ -100,4 +99,3 @@ public:
 
 };
 
-#endif

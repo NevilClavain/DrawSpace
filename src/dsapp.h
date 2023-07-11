@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _DSAPP_H_
-#define _DSAPP_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "jsonparser.h"
@@ -168,5 +167,4 @@ public:
 
 };
 
-#endif
 

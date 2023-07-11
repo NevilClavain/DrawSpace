@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MISC_UTILS_H_
-#define _MISC_UTILS_H_
+#pragma once
 
 #include "drawspace_commons.h"
 
@@ -51,5 +50,3 @@ namespace Utils
 	}
 }
 }
-
-#endif

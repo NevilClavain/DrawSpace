@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TIMEASPECT_H_
-#define _TIMEASPECT_H_
+#pragma once
 
 #include "componentcontainer.h"
 #include "timemanager.h"
@@ -292,4 +291,3 @@ public:
 }
 }
 
-#endif

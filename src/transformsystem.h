@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRANSFORMSYSTEM_H_
-#define _TRANSFORMSYSTEM_H_
+#pragma once
 
 #include "systems.h"
 #include "entitynodegraph.h"
@@ -54,4 +53,3 @@ public:
 }
 }
 
-#endif

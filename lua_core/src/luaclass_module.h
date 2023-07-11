@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_MODULE_H_
-#define _LUACLASS_MODULE_H_
+#pragma once
 
 #include "luna.h"
 #include "module_root.h"
@@ -51,4 +50,3 @@ public:
     static const Luna<LuaClass_Module>::RegType methods[];
 };
 
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGNODE_H_
-#define _RENDERINGNODE_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "matrix.h"
@@ -156,4 +155,3 @@ private:
 }
 }
 
-#endif

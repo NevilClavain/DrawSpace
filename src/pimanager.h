@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PIMANAGER_H_
-#define _PIMANAGER_H_
+#pragma once
 
 #include "drawspace_commons.h"
 
@@ -83,6 +82,6 @@ public:
 
 #include "PIManager_impl.h"
 
-#endif
+
 
 

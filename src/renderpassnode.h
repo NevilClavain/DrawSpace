@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERPASSNODE_H_
-#define _RENDERPASSNODE_H_
+#pragma once
 
 #include "st_tree.h"
 #include "texture.h"
@@ -115,6 +114,4 @@ public:
 
 }
 }
-
-#endif
 

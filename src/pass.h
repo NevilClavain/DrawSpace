@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PASS_H_
-#define _PASS_H_
+#pragma once
 
 #include "texture.h"
 #include "renderingqueue.h"
@@ -107,4 +106,3 @@ public:
 };
 }
 
-#endif

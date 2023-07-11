@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_MATRIX_H_
-#define _LUACLASS_MATRIX_H_
+#pragma once
 
 #include "luna.h"
 #include "matrix.h"
@@ -63,4 +62,3 @@ public:
     static const Luna<LuaClass_Matrix>::RegType methods[];
 };
 
-#endif

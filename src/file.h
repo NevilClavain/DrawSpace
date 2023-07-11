@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _FILE_H_
-#define _FILE_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "Physfs.h"
@@ -81,4 +80,4 @@ public:
 };
 }
 }
-#endif
+

@@ -24,8 +24,7 @@
 
 // Curiously recurring template pattern for singleton :-D
 
-#ifndef _CRTP_SINGLETON_H_
-#define _CRTP_SINGLETON_H_
+#pragma once
 
 namespace DrawSpace
 {
@@ -56,4 +55,4 @@ public:
 template <class T>
 T* DrawSpace::Utils::BaseSingleton<T>::m_instance;
 
-#endif
+

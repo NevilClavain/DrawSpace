@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TEXTURE_H_
-#define _TEXTURE_H_
+#pragma once
 
 #include "drawspace_commons.h"
 
@@ -141,4 +140,3 @@ public:
 }
 }
 
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGASPECTIMPL_H_
-#define _RENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "entity.h"
 #include "renderingqueue.h"
@@ -86,4 +85,3 @@ public:
 }
 
 
-#endif

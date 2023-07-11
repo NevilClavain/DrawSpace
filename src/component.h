@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _COMPONENT_H_
-#define _COMPONENT_H_
+#pragma once
 
 #include <memory>
 #include "drawspace_commons.h"
@@ -62,4 +61,3 @@ public:
 }
 }
 
-#endif

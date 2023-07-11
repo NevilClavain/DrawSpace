@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _JSONPARSER_H_
-#define _JSONPARSER_H_
+#pragma once
 
 #include <jsmn.h>
 #include "drawspace_commons.h"
@@ -90,4 +89,3 @@ public:
 }
 }
 
-#endif

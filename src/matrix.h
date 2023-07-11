@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
+#pragma once
 
 #include <cmath>
 #include "vector.h"
@@ -253,4 +252,4 @@ public:
 
 DrawSpace::Utils::Matrix operator* ( DrawSpace::Utils::Matrix p_mA, DrawSpace::Utils::Matrix p_mB );
 
-#endif
+
