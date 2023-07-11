@@ -22,14 +22,10 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRACESDEFS_H_
-#define _TRACESDEFS_H_
+#pragma once
 
 #include "drawspace_commons.h"
-
 #include "logconf.h"
-
-#ifdef _DRAWSPACE_ENABLE_TRACES_
 
 #define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_TRACE, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 #define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_DEBUG, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
@@ -41,19 +37,4 @@
 
 #define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::GetInstance()->Run( _file_, "   " ); //PropertyConfigurator::configure( _file_ );  
 
-#else
 
-#define _DSTRACE( _logger, _message )
-#define _DSDEBUG( _logger, _message )
-#define _DSINFO( _logger, _message )
-#define _DSWARN( _logger, _message )
-#define _DSERROR( _logger, _message )
-#define _DSFATAL( _logger, _message )
-
-#define _DECLARE_DS_LOGGER( _logger, _name )
-
-#define _INIT_LOGGER( _file_ )
-
-#endif
-
-#endif

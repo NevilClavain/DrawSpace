@@ -30,7 +30,7 @@
 
 
 #pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
-#define _DRAWSPACE_ENABLE_TRACES_
+
 
 using dsstring		= std::string;
 using dswstring		= std::wstring;
