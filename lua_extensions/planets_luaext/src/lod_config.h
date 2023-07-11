@@ -24,7 +24,7 @@
 
 #pragma once
 
-
+#include <map>
 #include "drawspace_commons.h"
 
 namespace LOD

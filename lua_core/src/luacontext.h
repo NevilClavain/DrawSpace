@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACONTEXT_H_
-#define _LUACONTEXT_H_
+#pragma once
+
+#include <functional>
 
 #include "drawspace_commons.h"
 #include "exceptions.h"
@@ -122,4 +123,3 @@ public:
     friend class DrawSpace::Utils::BaseSingleton<LuaContext>;
 };
 
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LOGSINK_H_
-#define _LOGSINK_H_
+#pragma once
 
 #include "drawspace_commons.h"
 #include "logoutput.h"
@@ -78,4 +77,3 @@ public:
 }
 
 
-#endif

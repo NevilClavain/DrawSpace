@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "task.h"
 #include "file.h"
 #include "filesystem.h"

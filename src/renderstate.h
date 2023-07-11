@@ -25,6 +25,7 @@
 #ifndef _RENDERSTATE_H_
 #define _RENDERSTATE_H_
 
+#include <vector>
 #include "drawspace_commons.h"
 
 namespace DrawSpace

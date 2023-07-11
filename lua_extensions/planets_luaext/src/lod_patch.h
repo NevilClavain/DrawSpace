@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <set>
+
 #include "vector.h"
 #include "quadtree.h"
 #include "lod_subpass.h"

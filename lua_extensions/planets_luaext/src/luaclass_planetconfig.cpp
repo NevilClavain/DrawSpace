@@ -22,6 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
+#include <functional>
+#include <array>
+
 #include "luacontext.h"
 #include "luaclass_planetconfig.h"
 #include "renderingaspect.h"

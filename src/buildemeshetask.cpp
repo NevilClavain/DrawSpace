@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include <array>
 #include "buildemeshetask.h"
 #include "resourcessystem.h"
 #include "passslot.h"

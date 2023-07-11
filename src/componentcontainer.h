@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include "component.h"
 #include "exceptions.h"
 #include "memalloc.h"

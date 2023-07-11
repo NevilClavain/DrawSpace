@@ -24,6 +24,9 @@
 
 #pragma once
 
+#include <map>
+#include <vector>
+
 #include "drawspace_commons.h"
 #include "luna.h"
 

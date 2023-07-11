@@ -22,6 +22,8 @@
 */
 /* -*-LIC_END-*- */
 
+#include <cmath>
+
 #include "timemanager.h"
 using namespace DrawSpace::Utils;
 

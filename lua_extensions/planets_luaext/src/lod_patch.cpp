@@ -24,6 +24,8 @@
 
 #include <random>
 #include <numeric>
+#include <functional>
+
 #include "lod_patch.h"
 #include "lod_heightmapsubpass.h"
 #include "csts.h"

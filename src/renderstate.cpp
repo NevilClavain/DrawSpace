@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#include "renderstate.h"
+#include <unordered_map>
 
+#include "renderstate.h"
 
 using namespace DrawSpace::Core;
 

@@ -22,9 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TIMEMANAGER_H_
-#define _TIMEMANAGER_H_
+#pragma once
 
+#include <set>
 #include "drawspace_commons.h"
 #include "callback.h"
 
@@ -105,4 +105,3 @@ public:
 }
 }
 
-#endif

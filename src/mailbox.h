@@ -23,6 +23,9 @@
 /* -*-LIC_END-*- */
 
 #pragma once
+
+#include <list>
+#include <mutex>
 #include "drawspace_commons.h"
 
 #define _push_code_ \

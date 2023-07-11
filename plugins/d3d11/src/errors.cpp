@@ -23,6 +23,8 @@
 /* -*-LIC_END-*- */
 
 #pragma warning( disable : 4005 )
+
+#include <unordered_map>
 #include <drawspace_commons.h>
 #include <d3dx11.h>
 

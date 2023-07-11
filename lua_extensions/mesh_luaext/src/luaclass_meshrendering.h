@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <set>
+
 #include "luna.h"
 #include "meshrenderingaspectimpl.h"
 

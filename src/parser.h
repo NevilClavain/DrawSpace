@@ -22,9 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PARSER_H_
-#define _PARSER_H_
+#pragma once
 
+#include <vector>
 #include "drawspace_commons.h"
 
 #define _PARSER_UNEXPECTED_KEYWORD_ error_message( p_line_num, "unexpected keyword" );
@@ -59,4 +59,3 @@ public:
 }
 }
 
-#endif

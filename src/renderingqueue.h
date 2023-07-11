@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGQUEUE_H_
-#define _RENDERINGQUEUE_H_
+#pragma once
+
+#include <map>
 
 #include "drawspace_commons.h"
 #include "renderingnode.h"
@@ -83,7 +84,7 @@ private:
         TEXTURE_LIST
     };
 
-    using SortCategory = struct
+    struct SortCategory
     {
         SortedListType  type;
         long            stage{ 0 };  // pour type TEXTURE_LIST
@@ -206,4 +207,3 @@ private:
 }
 }
 
-#endif

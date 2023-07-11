@@ -25,6 +25,7 @@
 #ifndef _LOGCONF_H_
 #define _LOGCONF_H_
 
+#include <map>
 #include "drawspace_commons.h"
 #include "logoutput.h"
 #include "logsink.h"

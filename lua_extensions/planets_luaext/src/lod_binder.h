@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <unordered_map>
 
 #include "drawspace_commons.h"
 #include "fx.h"

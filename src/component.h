@@ -25,6 +25,7 @@
 #ifndef _COMPONENT_H_
 #define _COMPONENT_H_
 
+#include <memory>
 #include "drawspace_commons.h"
 
 namespace DrawSpace

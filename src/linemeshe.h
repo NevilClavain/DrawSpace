@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <vector>
 #include "drawspace_commons.h"
 #include "primitives.h"
 

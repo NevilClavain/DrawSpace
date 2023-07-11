@@ -23,6 +23,8 @@
 /* -*-LIC_END-*- */
 
 #pragma once
+
+#include <map>
 #include "drawspace_commons.h"
 
 //fwd decl

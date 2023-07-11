@@ -26,20 +26,8 @@
 
 #include <windows.h>
 #include <string>
-#include <map>
-#include <vector>
-#include <set>
 #include <exception>
-#include <memory>
-#include <unordered_map>
-#include <typeinfo>
-#include <algorithm>
-#include <functional>
-#include <array>
-#include <sstream>
-#include <iterator>
-#include <mutex>
-#include <limits>
+
 
 #pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
 #define _DRAWSPACE_ENABLE_TRACES_

@@ -25,6 +25,7 @@
 #ifndef _LOGOUTPUTFILE_H_
 #define _LOGOUTPUTFILE_H_
 
+#include <mutex>
 #include "drawspace_commons.h"
 #include "logoutput.h"
 #include "file.h"

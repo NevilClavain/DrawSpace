@@ -22,9 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRANSFORMATION_H_
-#define _TRANSFORMATION_H_
+#pragma once
 
+#include <vector>
 #include "drawspace_commons.h"
 #include "Matrix.h"
 
@@ -62,4 +62,3 @@ public:
 }
 }
 
-#endif

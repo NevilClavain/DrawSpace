@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MEMALLOC_H_
-#define _MEMALLOC_H_
+#pragma once
+
+#include <map>
 
 #include "drawspace_commons.h"
 #include "tracedefs.h"
@@ -93,4 +94,3 @@ public:
 }
 }
 
-#endif

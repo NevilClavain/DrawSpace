@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <set>
 #include "componentcontainer.h"
 
 namespace DrawSpace

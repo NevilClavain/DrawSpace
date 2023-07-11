@@ -22,9 +22,12 @@
 */
 /* -*-LIC_END-*- */
 
+#include <list>
+#include <regex>
+
+
 #include "loadshaderfiletask.h"
 #include "memalloc.h"
-#include <regex>
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
