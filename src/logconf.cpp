@@ -111,23 +111,23 @@ bool Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
 
         if( "TRACE" == p_words[2] )
         {
-            sink_entry.level = Sink::LEVEL_TRACE;
+            sink_entry.level = Sink::Level::LEVEL_TRACE;
         }
         else if( "DEBUG" == p_words[2] )
         {
-            sink_entry.level = Sink::LEVEL_DEBUG;
+            sink_entry.level = Sink::Level::LEVEL_DEBUG;
         }
         else if( "WARN" == p_words[2] )
         {
-            sink_entry.level = Sink::LEVEL_WARN;
+            sink_entry.level = Sink::Level::LEVEL_WARN;
         }
         else if( "ERROR" == p_words[2] )
         {
-            sink_entry.level = Sink::LEVEL_ERROR;
+            sink_entry.level = Sink::Level::LEVEL_ERROR;
         }
         else if( "FATAL" == p_words[2] )
         {
-            sink_entry.level = Sink::LEVEL_FATAL;
+            sink_entry.level = Sink::Level::LEVEL_FATAL;
         }
         else
         {

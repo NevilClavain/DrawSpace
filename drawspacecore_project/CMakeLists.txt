@@ -36,7 +36,9 @@ file(
 		
 )
 
-source_group(logging FILES 
+source_group(logging FILES
+${CMAKE_SOURCE_DIR}/src/logchain.cpp 
+${CMAKE_SOURCE_DIR}/src/logchain.h 
 ${CMAKE_SOURCE_DIR}/src/logconf.cpp 
 ${CMAKE_SOURCE_DIR}/src/logconf.h
 ${CMAKE_SOURCE_DIR}/src/logoutput.h

@@ -89,7 +89,7 @@ void Matrix::Rotation( const Vector& p_axis, dsreal p_angle )
     m_matrix[3][2] = 0;
     m_matrix[3][3] = 1;
 
-    m_configinfos.type = CONFIG_ROTATION;
+    m_configinfos.type = ConfigurationType::CONFIG_ROTATION;
 
     m_configinfos.values = p_axis;
     m_configinfos.values[3] = p_angle;
@@ -128,7 +128,7 @@ void Matrix::MatrixMult( Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes )
         }
     }
 
-    p_mRes->m_configinfos.type = CONFIG_UNDETERMINED;
+    p_mRes->m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
 }
 
 

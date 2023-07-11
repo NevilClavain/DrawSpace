@@ -53,7 +53,7 @@ EntityNode::EntityNode( EntityNode::EntityTree::node_type* p_node, /*std::vector
     std::set<EntityNode::EventsHandler*> nodesevt_handlers = m_owner_graph->m_nodesevt_handlers;
     for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {
-        (**it )( EntityNode::ADDED_IN_TREE, m_tree_node->data() );
+        (**it )( EntityNode::Event::ADDED_IN_TREE, m_tree_node->data() );
     }
 }
 
@@ -99,7 +99,7 @@ void EntityNode::Erase(void)
     std::set<EntityNode::EventsHandler*> nodesevt_handlers{ m_owner_graph->m_nodesevt_handlers };
     for( auto it = nodesevt_handlers.begin(); it != nodesevt_handlers.end(); ++it )
     {
-        (**it )( EntityNode::REMOVED_FROM_TREE, entity );
+        (**it )( EntityNode::Event::REMOVED_FROM_TREE, entity );
     }
 
     // also signal the removed entity to entity graph

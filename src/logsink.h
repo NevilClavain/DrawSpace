@@ -37,7 +37,7 @@ class Sink
 {
 public:
 
-    typedef enum
+    enum class Level
     {
         LEVEL_FATAL,
         LEVEL_ERROR,
@@ -45,7 +45,7 @@ public:
         LEVEL_DEBUG,
         LEVEL_TRACE,
 
-    } Level;
+    };
 
 protected:
 

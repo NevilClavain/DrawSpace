@@ -1386,7 +1386,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
         CameraAspect* camera_aspect                 { p_entity->GetAspect<CameraAspect>() };
         TransformAspect* transformation_aspect      { p_entity->GetAspect<TransformAspect>() };
        
-        if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
+        if (DrawSpace::EntityGraph::EntityNode::Event::ADDED_IN_TREE == p_event)
         {
             if (camera_aspect)
             {

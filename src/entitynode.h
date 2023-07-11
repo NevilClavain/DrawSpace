@@ -37,12 +37,11 @@ class EntityNode
 {
 public:
 
-    typedef enum
+    enum class Event
     {
         ADDED_IN_TREE,
 		REMOVED_FROM_TREE,
-
-    } Event;
+    };
 
     using EventsHandler = DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>;
    

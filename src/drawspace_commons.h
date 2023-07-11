@@ -28,9 +28,7 @@
 #include <string>
 #include <exception>
 
-
 #pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
-
 
 using dsstring		= std::string;
 using dswstring		= std::wstring;
@@ -39,13 +37,4 @@ using dstime		= __time64_t;
 using dsexception	= std::exception;
 
 
-dsstring operator<< ( dsstring& p_s1, dsstring& p_s2 );
-dsstring operator<< ( dsstring& p_s1, const char* p_s2 );
-dsstring operator<< ( const char* p_s1, dsstring& p_s2 );
-dsstring operator<< ( dsstring& p_s1, int p_s2 );
-dsstring operator<< ( dsstring& p_s1, size_t p_s2 );
-dsstring operator<< ( dsstring& p_s1, void* p_s2 );
-dsstring operator<< ( dsstring& p_s1, bool p_s2 );
-dsstring operator<< ( dsstring& p_s1, DWORD p_s2 );
-dsstring operator<< ( dsstring& p_s1, float p_s2 );
-dsstring operator<< ( dsstring& p_s1, dsreal p_s2 );
+

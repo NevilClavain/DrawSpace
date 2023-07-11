@@ -26,15 +26,16 @@
 
 #include "drawspace_commons.h"
 #include "logconf.h"
+#include "logchain.h"
 
-#define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_TRACE, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_DEBUG, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSWARN( _logger, _message )  _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_WARN, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_TRACE, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_DEBUG, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSWARN( _logger, _message )  _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_WARN, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 
-#define _DECLARE_DS_LOGGER( _logger, _name, _confptr ) static DrawSpace::Logger::Sink _logger( _name, _confptr ); //static LoggerPtr _logger(Logger::getLogger( _name ));
+#define _DECLARE_DS_LOGGER( _logger, _name, _confptr ) static DrawSpace::Logger::Sink _logger( _name, _confptr );
 
-#define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::GetInstance()->Run( _file_, "   " ); //PropertyConfigurator::configure( _file_ );  
+#define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::GetInstance()->Run( _file_, "   " ); 
 
 

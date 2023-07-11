@@ -30,7 +30,7 @@ using namespace DrawSpace;
 
 Logger::Sink::Sink( const dsstring& p_name, Logger::Configuration* p_conf ) : 
 m_name( p_name ),
-m_current_level( LEVEL_WARN ),
+m_current_level( Level::LEVEL_WARN ),
 m_state( false ),
 m_output( NULL ),
 m_conf( p_conf )
@@ -61,23 +61,23 @@ void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
     {
         dsstring level;
 
-        if( p_level == LEVEL_FATAL )
+        if( p_level == Level::LEVEL_FATAL )
         {
             level = "FATAL";
         }
-        else if( p_level == LEVEL_ERROR )
+        else if( p_level == Level::LEVEL_ERROR )
         {
             level = "ERROR";
         }
-        else if( p_level == LEVEL_WARN )
+        else if( p_level == Level::LEVEL_WARN )
         {
             level = "WARN";
         }
-        else if( p_level == LEVEL_DEBUG )
+        else if( p_level == Level::LEVEL_DEBUG )
         {
             level = "DEBUG";
         }
-        else if( p_level == LEVEL_TRACE )
+        else if( p_level == Level::LEVEL_TRACE )
         {
             level = "TRACE";
         }

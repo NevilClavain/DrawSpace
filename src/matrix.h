@@ -35,7 +35,7 @@ class Matrix
 {
 public:
 
-    typedef enum
+    enum class ConfigurationType
     {
         CONFIG_UNDETERMINED,
         CONFIG_ZERO,
@@ -44,7 +44,7 @@ public:
         CONFIG_SCALING,
         CONFIG_ROTATION
 
-    } ConfigurationType;
+    };
 
     typedef struct
     {
@@ -90,7 +90,7 @@ public:
         m_matrix[3][2] = 0.0;
         m_matrix[3][3] = 0.0;
 
-        m_configinfos.type = CONFIG_ZERO;
+        m_configinfos.type = ConfigurationType::CONFIG_ZERO;
 
         m_configinfos.values[0] = 0.0;
         m_configinfos.values[1] = 0.0;
@@ -106,7 +106,7 @@ public:
 
     dsreal& operator()( int p_row, int p_col )
     {
-        m_configinfos.type = CONFIG_UNDETERMINED;
+        m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
         return m_matrix[p_row][p_col];
     };
 
@@ -118,7 +118,7 @@ public:
         m_matrix[2][2] = 1.0;
         m_matrix[3][3] = 1.0;
 
-        m_configinfos.type = CONFIG_IDENTITY;
+        m_configinfos.type = ConfigurationType::CONFIG_IDENTITY;
 
         m_configinfos.values[0] = 0.0;
         m_configinfos.values[1] = 0.0;
@@ -134,7 +134,7 @@ public:
         m_matrix[3][1] = p_y;
         m_matrix[3][2] = p_z;
 
-        m_configinfos.type = CONFIG_TRANSLATION;
+        m_configinfos.type = ConfigurationType::CONFIG_TRANSLATION;
         m_configinfos.values[0] = p_x;
         m_configinfos.values[1] = p_y;
         m_configinfos.values[2] = p_z;
@@ -149,7 +149,7 @@ public:
         m_matrix[3][1] = p_pos[1];
         m_matrix[3][2] = p_pos[2];
 
-        m_configinfos.type = CONFIG_TRANSLATION;
+        m_configinfos.type = ConfigurationType::CONFIG_TRANSLATION;
         m_configinfos.values[0] = p_pos[0];
         m_configinfos.values[1] = p_pos[1];
         m_configinfos.values[2] = p_pos[2];
@@ -181,7 +181,7 @@ public:
         m_matrix[3][1] = msave[1][3];
         m_matrix[3][2] = msave[2][3];
 
-        m_configinfos.type = CONFIG_UNDETERMINED;
+        m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
     }
 
     void Perspective( dsreal p_w, dsreal p_h, dsreal p_zn, dsreal p_zf )
@@ -193,7 +193,7 @@ public:
         m_matrix[3][2] = - p_zn * m_matrix[2][2];
         m_matrix[2][3] = 1.0f;
 
-        m_configinfos.type = CONFIG_UNDETERMINED;
+        m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
     }
 
     void Scale( dsreal p_sx, dsreal p_sy, dsreal p_sz )
@@ -204,7 +204,7 @@ public:
         m_matrix[2][2] = p_sz;
         m_matrix[3][3] = 1.0;
 
-        m_configinfos.type = CONFIG_SCALING;
+        m_configinfos.type = ConfigurationType::CONFIG_SCALING;
         m_configinfos.values[0] = p_sx;
         m_configinfos.values[1] = p_sy;
         m_configinfos.values[2] = p_sz;
@@ -220,7 +220,7 @@ public:
         m_matrix[2][2] = p_pos[2];
         m_matrix[3][3] = 1.0;
 
-        m_configinfos.type = CONFIG_SCALING;
+        m_configinfos.type = ConfigurationType::CONFIG_SCALING;
         m_configinfos.values[0] = p_pos[0];
         m_configinfos.values[1] = p_pos[1];
         m_configinfos.values[2] = p_pos[2];
@@ -235,7 +235,7 @@ public:
         m_matrix[3][1] = 0.0;
         m_matrix[3][2] = 0.0;
 
-        m_configinfos.type = CONFIG_UNDETERMINED;
+        m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
     }
 
     void Rotation( const Vector& p_axis, dsreal p_angle );
