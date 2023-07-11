@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "componentcontainer.h"
-#include "tracedefs.h"
+#include "logging.h"
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;

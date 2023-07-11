@@ -26,7 +26,7 @@
 #include "logsink.h"
 #include "logconf.h"
 #include "logoutput.h"
-#include "tracedefs.h"
+#include "logging.h"
 
 DrawSpace::Logger::Sink runner_logger("Runner", DrawSpace::Logger::Configuration::GetInstance());
 

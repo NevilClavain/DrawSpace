@@ -22,9 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_GLOBALS_H_
-#define _LUACLASS_GLOBALS_H_
+#pragma once
 
+#include <map>
 #include "luna.h"
 
 //fwd decl
@@ -134,4 +134,3 @@ public:
     static const Luna<LuaClass_Globals>::RegType methods[];
 };
 
-#endif

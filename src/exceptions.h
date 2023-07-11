@@ -26,7 +26,7 @@
 #define _EXCEPTIONS_H_
 
 #include "drawspace_commons.h"
-#include "tracedefs.h"
+
 
 #define _DSEXCEPTION( _msg ) { \
     dsstring message = _msg;\

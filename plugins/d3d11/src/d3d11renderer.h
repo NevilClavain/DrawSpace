@@ -32,7 +32,7 @@
 #include <xnamath.h>
 
 #include <memalloc.h>
-#include <tracedefs.h>
+#include <logging.h>
 #include <renderer.h>
 #include <parser.h>
 #include <fx.h>

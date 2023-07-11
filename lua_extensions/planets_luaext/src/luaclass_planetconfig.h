@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <map>
 #include "luna.h"
 #include "misc_utils.h"
 #include "vector.h"

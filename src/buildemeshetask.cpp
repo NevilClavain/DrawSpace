@@ -26,7 +26,7 @@
 #include "buildemeshetask.h"
 #include "resourcessystem.h"
 #include "passslot.h"
-#include "tracedefs.h"
+#include "logging.h"
 
 using namespace DrawSpace::Core;
 

@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "dsapp.h"
-#include "tracedefs.h"
+#include "logging.h"
 #include "plugin.h"
 #include "module_root.h"
 
