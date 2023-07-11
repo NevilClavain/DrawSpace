@@ -44,12 +44,11 @@
 #pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
 #define _DRAWSPACE_ENABLE_TRACES_
 
-#define dsstring    std::string
-#define dswstring   std::wstring
-#define dsreal      double
-#define dslonglong  long long
-#define dstime      __time64_t
-#define dsexception std::exception
+using dsstring		= std::string;
+using dswstring		= std::wstring;
+using dsreal		= double;
+using dstime		= __time64_t;
+using dsexception	= std::exception;
 
 
 dsstring operator<< ( dsstring& p_s1, dsstring& p_s2 );
