@@ -45,10 +45,7 @@ dsAppClient::dsAppClient( void ) :
 m_mousecursor_visible( true ),
 m_service( NULL )
 {    
-    //_INIT_LOGGER( "logrt.conf" )
-
     // init logger
-
     DrawSpace::Parser::run("logrt.conf", " ", DrawSpace::Logger::Configuration::on_new_line);
 
     m_mouse_visible_cb = _DRAWSPACE_NEW_( MouseVisibleCallback, MouseVisibleCallback( this, &dsAppClient::on_mouse_visible ) );
