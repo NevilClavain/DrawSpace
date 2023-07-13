@@ -23,10 +23,14 @@
 /* -*-LIC_END-*- */
 
 #include "logconf.h"
+
+#include "logoutput.h"
 #include "logoutputfile.h"
 #include "exceptions.h"
 
-DrawSpace::Logger::Configuration* DrawSpace::Logger::Configuration::m_instance = NULL;
+DrawSpace::Logger::Configuration* DrawSpace::Logger::Configuration::m_instance = nullptr;
+
+
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
@@ -35,10 +39,6 @@ using namespace DrawSpace::Logger;
 
 Logger::Configuration::Configuration( void )
 {
-    /*
-    m_base_tick = GetTickCount();
-    m_last_tick = m_base_tick;
-    */
     QueryPerformanceFrequency( &m_freq );
     QueryPerformanceCounter( &m_base_tick );
     m_last_tick = m_base_tick;
@@ -46,13 +46,13 @@ Logger::Configuration::Configuration( void )
 
 Logger::Configuration::~Configuration( void )
 {
-    for( std::map<dsstring, Output*>::iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+    for (auto& e : m_outputs)
     {
-        delete it->second;
+        delete e.second;
     }
 }
 
-Logger::Configuration* Logger::Configuration::GetInstance( void )
+Logger::Configuration* Logger::Configuration::getInstance( void )
 {
     if( !m_instance )
     {
@@ -61,7 +61,7 @@ Logger::Configuration* Logger::Configuration::GetInstance( void )
     return m_instance;
 }
 
-void Logger::Configuration::RemoveInstance( void )
+void Logger::Configuration::removeInstance( void )
 {
     if( m_instance )
     {
@@ -69,29 +69,24 @@ void Logger::Configuration::RemoveInstance( void )
     }
 }
 
-bool Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words )
+
+void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words )
 {
     if( "logger" == p_words[0] )
     {
         if( p_words.size() < 5 )
         {
-            char comment[128];
-            sprintf( comment, "log configuration file : missing params for sink, line %d", p_line_num );
-            _DSEXCEPTION( comment );   
-            return false;
+            _DSEXCEPTION("log configuration file : missing params for sink, line " + std::to_string(p_line_num));
         }
 
-        if( 0 == m_outputs.count( p_words[4] ) )
+        if( 0 == Configuration::getInstance()->m_outputs.count( p_words[4] ) )
         {
-            char comment[128];
-            sprintf( comment, "log configuration file : unknown output name for sink, line %d", p_line_num );
-            _DSEXCEPTION( comment );   
-            return false;
+            _DSEXCEPTION("log configuration file : unknown output name for sink, line " + std::to_string(p_line_num));
         }
 
         SinkEntry sink_entry;
 
-        sink_entry.output = m_outputs[p_words[4]];
+        sink_entry.output = Configuration::getInstance()->m_outputs[p_words[4]];
         
         if( "on" == p_words[3] )
         {
@@ -103,10 +98,7 @@ bool Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
         }
         else
         {
-            char comment[128];
-            sprintf( comment, "log configuration file : bad state for sink, line %d", p_line_num );
-            _DSEXCEPTION( comment );   
-            return false;
+            _DSEXCEPTION("log configuration file : bad state for sink, line " + std::to_string(p_line_num));
         }
 
         if( "TRACE" == p_words[2] )
@@ -131,16 +123,12 @@ bool Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
         }
         else
         {
-            char comment[128];
-            sprintf( comment, "log configuration file : unknown level keyword for sink, line %d", p_line_num );
-            _DSEXCEPTION( comment );   
-            return false;
+            _DSEXCEPTION("log configuration file : unknown level keyword for sink, line " + std::to_string(p_line_num));
         }
 
-
-        if( m_sinks.count( p_words[1] ) > 0 )
+        if(Configuration::getInstance()->m_sinks.count( p_words[1] ) > 0 )
         {
-            sink_entry.sink = m_sinks[p_words[1]].sink;
+            sink_entry.sink = Configuration::getInstance()->m_sinks[p_words[1]].sink;
 
             sink_entry.sink->SetCurrentLevel( sink_entry.level );
             sink_entry.sink->SetState( sink_entry.state );
@@ -148,40 +136,33 @@ bool Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
         }
         else
         {
-            sink_entry.sink = NULL;
+            sink_entry.sink = nullptr;
         }
 
-        m_sinks[p_words[1]] = sink_entry;
+        Configuration::getInstance()->m_sinks[p_words[1]] = sink_entry;
     }
     else if( "output" == p_words[0] )
     {
         if( p_words.size() < 5 )
         {
-            char comment[128];
-            sprintf( comment, "log configuration file : missing params for output, line %d", p_line_num );
-            _DSEXCEPTION( comment );   
-            return false;
+            _DSEXCEPTION("log configuration file : missing params for output, line " + std::to_string(p_line_num));
         }
 
         if( "file" == p_words[1] )
         {
-            OutputFile* of = new OutputFile( p_words[3] );
-            of->SetFlushPeriod( atoi( p_words[4].c_str() ) );
-            m_outputs[p_words[2]] = of;
+            const auto of{ new OutputFile(p_words[3]) };
+            of->SetFlushPeriod( std::atoi( p_words[4].c_str() ) );
+            Configuration::getInstance()->m_outputs[p_words[2]] = of;
         }
         else
         {
-            char comment[128];
-            sprintf( comment, "log configuration file : unknown class for output, line %d", p_line_num );
-            _DSEXCEPTION( comment );   
-            return false;
+            _DSEXCEPTION("log configuration file : unknown class for output, line  " + std::to_string(p_line_num));
         }
     }
 
-    return true;
 }
 
-void Logger::Configuration::RegisterSink( Sink* p_sink )
+void Logger::Configuration::registerSink( Sink* p_sink )
 {
     dsstring name;
     p_sink->GetName( name );
@@ -190,10 +171,11 @@ void Logger::Configuration::RegisterSink( Sink* p_sink )
     {
         // entry exists
 
-        m_sinks[name].sink = p_sink;
-        p_sink->SetState( m_sinks[name].state );
-        p_sink->SetCurrentLevel( m_sinks[name].level );
-        p_sink->RegisterOutput( m_sinks[name].output );
+        m_sinks.at(name).sink = p_sink;
+
+        p_sink->SetCurrentLevel(m_sinks.at(name).level);
+        p_sink->SetState( m_sinks.at(name).state );
+        p_sink->RegisterOutput( m_sinks.at(name).output );
     }
     else
     {
@@ -205,19 +187,14 @@ void Logger::Configuration::RegisterSink( Sink* p_sink )
     }
 }
 
-void Logger::Configuration::UpdateTick( void )
+void Logger::Configuration::updateTick( void )
 {
-    //m_last_tick = GetTickCount();
-
     QueryPerformanceCounter( &m_last_tick );
 }
 
-LONGLONG Logger::Configuration::GetLastTick( void )
+LONGLONG Logger::Configuration::getLastTick( void ) const
 {
-    //return ( m_last_tick - m_base_tick );
-
-    LONGLONG elapsed = m_last_tick.QuadPart - m_base_tick.QuadPart;
-
+    LONGLONG elapsed{ m_last_tick.QuadPart - m_base_tick.QuadPart };
 
     //
     // We now have the elapsed number of ticks, along with the

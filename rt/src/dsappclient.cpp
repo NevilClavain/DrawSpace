@@ -29,20 +29,27 @@
 #include "module_root.h"
 #include "plugin.h"
 
+#include "parser.h"
+
 dsAppClient* dsAppClient::m_instance = NULL;
 
 using namespace DrawSpace::Interface::Module;
 using namespace DrawSpace::Aspect;
 
 
-_DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::GetInstance() )
+_DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::getInstance() )
+
 
 
 dsAppClient::dsAppClient( void ) :
 m_mousecursor_visible( true ),
 m_service( NULL )
 {    
-    _INIT_LOGGER( "logrt.conf" )
+    //_INIT_LOGGER( "logrt.conf" )
+
+    // init logger
+
+    DrawSpace::Parser::run("logrt.conf", " ", DrawSpace::Logger::Configuration::on_new_line);
 
     m_mouse_visible_cb = _DRAWSPACE_NEW_( MouseVisibleCallback, MouseVisibleCallback( this, &dsAppClient::on_mouse_visible ) );
     m_mouse_circularmode_update_cb = _DRAWSPACE_NEW_( MouseCircularModeupdateCallback, MouseCircularModeupdateCallback( this, &dsAppClient::on_mousecircularmode_update ) );
@@ -77,7 +84,7 @@ bool dsAppClient::OnIdleAppInit( void )
         ServiceAspect* service_aspect = m_rootEntity.AddAspect<ServiceAspect>();
 
         // quelques parametres a passer au service...
-        service_aspect->AddComponent<DrawSpace::Logger::Configuration*>("logconf", DrawSpace::Logger::Configuration::GetInstance());
+        service_aspect->AddComponent<DrawSpace::Logger::Configuration*>("logconf", DrawSpace::Logger::Configuration::getInstance());
         service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>("mousecircularmode_cb", m_mouse_circularmode_update_cb);
         service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, bool>*>("mousevisible_cb", m_mouse_visible_cb);
         service_aspect->AddComponent<DrawSpace::Core::BaseCallback<void, int>*>("closeapp_cb", m_close_app_cb);

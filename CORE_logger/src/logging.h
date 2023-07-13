@@ -36,6 +36,6 @@
 
 #define _DECLARE_DS_LOGGER( _logger, _name, _confptr ) static DrawSpace::Logger::Sink _logger( _name, _confptr );
 
-#define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::GetInstance()->Run( _file_, "   " ); 
+#define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::getInstance()->Run( _file_, "   " ); 
 
 

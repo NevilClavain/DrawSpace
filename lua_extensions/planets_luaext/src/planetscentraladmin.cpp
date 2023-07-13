@@ -127,13 +127,13 @@ void PlanetsCentralAdmin::SetLogconf(DrawSpace::Logger::Configuration* p_logconf
 
     const auto logconf{ PlanetsCentralAdmin::GetInstance()->GetLogconf() };
 
-    logconf->RegisterSink(&planet_logger);
+    logconf->registerSink(&planet_logger);
     planet_logger.SetConfiguration(logconf);
 
-    logconf->RegisterSink(&planetlayer_logger);
+    logconf->registerSink(&planetlayer_logger);
     planetlayer_logger.SetConfiguration(logconf);
 
-    logconf->RegisterSink(&planetdrawing_logger);
+    logconf->registerSink(&planetdrawing_logger);
     planetdrawing_logger.SetConfiguration(logconf);
 }
 

@@ -51,7 +51,7 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
 using namespace LOD;
 
-DrawSpace::Logger::Sink planetdrawing_logger("PlanetDrawing", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink planetdrawing_logger("PlanetDrawing", DrawSpace::Logger::Configuration::getInstance());
 
 
 std::map<int, FoliageDrawingNode::CoordsGenerationParams> FoliageDrawingNode::m_seeds;

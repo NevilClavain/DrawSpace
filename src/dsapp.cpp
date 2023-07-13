@@ -38,7 +38,7 @@ extern "C" {
 }
 
 
-_DECLARE_DS_LOGGER( logger, "App", DrawSpace::Logger::Configuration::GetInstance() )
+_DECLARE_DS_LOGGER( logger, "App", DrawSpace::Logger::Configuration::getInstance() )
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
@@ -400,7 +400,7 @@ void App::IdleApp( void )
         {
             if( m_app_ready )
             {
-                DrawSpace::Logger::Configuration::GetInstance()->UpdateTick();
+                DrawSpace::Logger::Configuration::getInstance()->updateTick();
                 process_input_events();
                 OnRenderFrame();		
             }
@@ -413,7 +413,7 @@ bool App::InitRenderer( void )
     _DSDEBUG( logger, "begin" )
     DrawSpace::Interface::Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
-    if( false == renderer->Init( m_hwnd, m_w_fullscreen, m_w_width, m_w_height, DrawSpace::Logger::Configuration::GetInstance() ) )
+    if( false == renderer->Init( m_hwnd, m_w_fullscreen, m_w_width, m_w_height, DrawSpace::Logger::Configuration::getInstance() ) )
     {
         _DSDEBUG( logger, "end FAIL" )
         return false;

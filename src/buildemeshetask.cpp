@@ -30,7 +30,7 @@
 
 using namespace DrawSpace::Core;
 
-DrawSpace::Logger::Sink bmt_logger("BuildeMesheTask", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink bmt_logger("BuildeMesheTask", DrawSpace::Logger::Configuration::getInstance());
 
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;

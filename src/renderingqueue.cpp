@@ -31,7 +31,7 @@
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Interface;
 
-DrawSpace::Logger::Sink rd_logger("RenderingQueue", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink rd_logger("RenderingQueue", DrawSpace::Logger::Configuration::getInstance());
 
 RenderingQueue::RenderingQueue(const dsstring& p_id) :
 m_target( nullptr ),

@@ -24,7 +24,7 @@
 
 #include "memalloc.h"
 
-_DECLARE_DS_LOGGER( logger, "MemAlloc", DrawSpace::Logger::Configuration::GetInstance() )
+_DECLARE_DS_LOGGER( logger, "MemAlloc", DrawSpace::Logger::Configuration::getInstance() )
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;

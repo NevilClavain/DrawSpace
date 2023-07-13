@@ -51,7 +51,7 @@
 
 #include "runnersystem.h"
 
-DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink rs_logger("ResourcesSystem", DrawSpace::Logger::Configuration::getInstance());
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;

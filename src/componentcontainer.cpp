@@ -30,7 +30,7 @@ using namespace DrawSpace::Core;
 
 int ComponentContainer::m_uid_count;
 
-DrawSpace::Logger::Sink aspect_logger("ComponentContainer", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink aspect_logger("ComponentContainer", DrawSpace::Logger::Configuration::getInstance());
 
 void ComponentContainer::logComponent(const dsstring& p_comment, const dsstring& p_id, BaseComponent* p_instance) const
 {

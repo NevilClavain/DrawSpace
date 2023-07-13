@@ -82,7 +82,7 @@ const dsstring PlanetsRenderingAspectImpl::CollisionDisplayPShaderComponentName 
 // -> Systems::Hub::SYSTEMS_UPDATE_BEGIN
 // -> Systems::Hub::SYSTEMS_UPDATE_END
 
-DrawSpace::Logger::Sink planet_logger("Planet", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink planet_logger("Planet", DrawSpace::Logger::Configuration::getInstance());
 
 
 PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void ) :

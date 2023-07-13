@@ -25,51 +25,64 @@
 #pragma once
 
 #include <map>
+#include <vector>
+#include <functional>
+
 #include "drawspace_commons.h"
-#include "logoutput.h"
 #include "logsink.h"
-#include "parser.h"
+
+//#include "parser.h"
 
 namespace DrawSpace
 {
-namespace Logger
-{
-class Configuration : public DrawSpace::Utils::Parser
-{
-protected:
-
-    typedef struct
+    namespace Logger
     {
-        Sink*       sink;
-        bool        state;
-        Sink::Level level;
-        Output*     output;
+        // fwd decl
+        class Output;
 
-    } SinkEntry;
+        class Configuration// : public DrawSpace::Utils::Parser
+        {
+        public:
+            ~Configuration( void );
 
-    static Configuration*           m_instance;
+            static Configuration*   getInstance( void );
+            static void             removeInstance( void );
 
-    std::map<dsstring, Output*>     m_outputs;
-    std::map<dsstring, SinkEntry>   m_sinks;
+            void                    registerSink( Sink* p_sink );
+            void                    updateTick( void );
+            LONGLONG                getLastTick( void ) const;
 
-    LARGE_INTEGER                   m_base_tick;
-    LARGE_INTEGER                   m_last_tick;
-    LARGE_INTEGER                   m_freq;
 
-    Configuration( void );
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
+            static void on_new_line(const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words);
 
-public:
-    ~Configuration( void );
+        private:
 
-    static Configuration* GetInstance( void );
-    static void RemoveInstance( void );
+            struct SinkEntry
+            {
+                Sink*       sink;
+                bool        state;
+                Sink::Level level;
+                Output*     output;
+            };
 
-    void RegisterSink( Sink* p_sink );
-    void UpdateTick( void );
-    LONGLONG GetLastTick( void );
+            static Configuration*           m_instance;
+
+
+            
+
+            
+
+            std::map<dsstring, Output*>     m_outputs;
+            std::map<dsstring, SinkEntry>   m_sinks;
+
+            LARGE_INTEGER                   m_base_tick;
+            LARGE_INTEGER                   m_last_tick;
+            LARGE_INTEGER                   m_freq;
+
+            Configuration(void);
+            
    
-};
-}
+        };
+    }
 }
 

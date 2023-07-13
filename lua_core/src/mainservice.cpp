@@ -106,26 +106,26 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////
         
-    logconf->RegisterSink( &logger );
+    logconf->registerSink( &logger );
     logger.SetConfiguration( logconf );
 
-    logconf->RegisterSink(&aspect_logger);
+    logconf->registerSink(&aspect_logger);
     aspect_logger.SetConfiguration(logconf);
 
-    logconf->RegisterSink(&rs_logger);
+    logconf->registerSink(&rs_logger);
     rs_logger.SetConfiguration(logconf);
 
-    logconf->RegisterSink(&bmt_logger);
+    logconf->registerSink(&bmt_logger);
     bmt_logger.SetConfiguration(logconf);
 
 
-    logconf->RegisterSink( MemAlloc::GetLogSink() );
+    logconf->registerSink( MemAlloc::GetLogSink() );
     MemAlloc::GetLogSink()->SetConfiguration( logconf );
 
-    logconf->RegisterSink(&rd_logger);
+    logconf->registerSink(&rd_logger);
     rd_logger.SetConfiguration(logconf);
 
-    logconf->RegisterSink(&runner_logger);
+    logconf->registerSink(&runner_logger);
     runner_logger.SetConfiguration(logconf);
 
     m_systemsHub.SetLogConf( logconf );

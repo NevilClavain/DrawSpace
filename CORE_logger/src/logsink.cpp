@@ -37,7 +37,7 @@ m_conf( p_conf )
 {
     if( p_conf )
     {
-        p_conf->RegisterSink( this );
+        p_conf->registerSink( this );
     }
 }
 
@@ -89,7 +89,7 @@ void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
 
         if( m_conf )
         {
-            double timestamp_in_second = m_conf->GetLastTick() / 1000000.0;
+            double timestamp_in_second = m_conf->getLastTick() / 1000000.0;
             sprintf(timestamp, "%.6f", timestamp_in_second);
         }
         else
@@ -103,7 +103,7 @@ void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
 
     if( m_conf )
     {
-        m_conf->UpdateTick();
+        m_conf->updateTick();
     }
 }
 

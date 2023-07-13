@@ -39,7 +39,7 @@ using namespace DrawSpace::Aspect;
 
 using namespace LOD;
 
-DrawSpace::Logger::Sink planetlayer_logger("PlanetLayer", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink planetlayer_logger("PlanetLayer", DrawSpace::Logger::Configuration::getInstance());
 
 Layer::Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body, 
                 SubPass::SubPassCreationHandler* p_subpass_creation_handler,

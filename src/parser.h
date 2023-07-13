@@ -25,11 +25,27 @@
 #pragma once
 
 #include <vector>
+#include <functional>
+
 #include "drawspace_commons.h"
 
-#define _PARSER_UNEXPECTED_KEYWORD_ error_message( p_line_num, "unexpected keyword" );
-#define _PARSER_MISSING_ARG__ error_message( p_line_num, "missing argument" );
 
+namespace DrawSpace
+{
+
+    namespace Parser
+    {
+        using ParserCallback = std::function<void(const dsstring&, long, const std::vector<dsstring>&)>;
+
+        void run(const dsstring& p_filepath, 
+                    const dsstring& p_separators, 
+                    const ParserCallback& p_callback
+                );
+    }
+
+}
+
+/*
 namespace DrawSpace
 {
 namespace Utils
@@ -43,7 +59,7 @@ protected:
     void split_line( const dsstring& p_line, const dsstring& p_separators, std::vector<dsstring>& p_words );
     void split_text( const dsstring& p_text, std::vector<dsstring>& p_lines );
 
-    virtual bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words ) = 0;
+    virtual bool on_new_line( const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words ) = 0;
 
 
     virtual void error_message( long p_line_num, const dsstring& p_msg );
@@ -58,4 +74,5 @@ public:
 };
 }
 }
+*/
 

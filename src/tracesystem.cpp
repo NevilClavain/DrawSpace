@@ -58,7 +58,7 @@ dsstring ClassDump::m_text;
 
 void TraceSystem::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
 {
-    p_logconf->RegisterSink( &logger );
+    p_logconf->registerSink( &logger );
     logger.SetConfiguration( p_logconf );
 }
 

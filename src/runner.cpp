@@ -28,7 +28,7 @@
 #include "logoutput.h"
 #include "logging.h"
 
-DrawSpace::Logger::Sink runner_logger("Runner", DrawSpace::Logger::Configuration::GetInstance());
+DrawSpace::Logger::Sink runner_logger("Runner", DrawSpace::Logger::Configuration::getInstance());
 
 using namespace DrawSpace;
 using namespace DrawSpace::Interface;
