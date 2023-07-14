@@ -31,7 +31,7 @@
 
 class PlanetsRenderingAspectImpl;
 
-class PlanetsCentralAdmin : public DrawSpace::Utils::BaseSingleton<PlanetsCentralAdmin>
+class PlanetsCentralAdmin : public DrawSpace::Singleton<PlanetsCentralAdmin>
 {
 private:
 

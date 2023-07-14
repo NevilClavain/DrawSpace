@@ -58,7 +58,7 @@ extern "C" {
             }
 
 
-class LuaContext : public DrawSpace::Utils::BaseSingleton<LuaContext>
+class LuaContext : public DrawSpace::Singleton<LuaContext>
 {
 protected:
 	LuaContext( void );
@@ -120,6 +120,6 @@ public:
 
 	static int Include(lua_State* p_L);
 
-    friend class DrawSpace::Utils::BaseSingleton<LuaContext>;
+    friend class DrawSpace::Singleton<LuaContext>;
 };
 

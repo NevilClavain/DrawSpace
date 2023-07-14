@@ -162,7 +162,7 @@ int LuaClass_Gui::LUA_showgui( lua_State* p_L )
 
     bool disp = luaL_checkint( p_L, 1 );
 
-    MainService::GetInstance()->RequestGuiDisplay( disp );
+    MainService::getInstance()->RequestGuiDisplay( disp );
 
     return 0;
 }
@@ -277,13 +277,13 @@ int LuaClass_Gui::LUA_onmouserightbuttonup(lua_State* p_L )
 
 int LuaClass_Gui::LUA_addpushbuttonclickedcb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterGuiPushButtonClickedCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterGuiPushButtonClickedCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Gui::LUA_removepushbuttonclickedcb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterGuiPushButtonClickedCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterGuiPushButtonClickedCallback( p_cbid ); } );
     return 0;
 }
 

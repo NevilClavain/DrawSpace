@@ -36,14 +36,14 @@ using namespace DrawSpace::Threading;
 
 void Runner::mainloop(void)
 {
-	Runner::GetInstance()->m_cont = true;
+	Runner::getInstance()->m_cont = true;
 
 	_DSDEBUG(runner_logger, dsstring("<<< Runner begin >>>"));
 
 	do
 	{
-		Mailbox<ITask*>* mb_in{ &Runner::GetInstance()->m_mailbox_in };
-		Mailbox<std::pair<dsstring, dsstring>>* mb_out{ &Runner::GetInstance()->m_mailbox_out };
+		Mailbox<ITask*>* mb_in{ &Runner::getInstance()->m_mailbox_in };
+		Mailbox<std::pair<dsstring, dsstring>>* mb_out{ &Runner::getInstance()->m_mailbox_out };
 		int mbsize{ mb_in->GetBoxSize() };
 
 		if (mbsize > 0)
@@ -72,7 +72,7 @@ void Runner::mainloop(void)
 			Sleep(idle_duration_ms);
 		}
 
-	} while (Runner::GetInstance()->m_cont);
+	} while (Runner::getInstance()->m_cont);
 
 	_DSDEBUG(runner_logger, dsstring("<<< Runner end >>>"));
 }

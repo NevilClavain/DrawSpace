@@ -91,10 +91,10 @@ int LuaClass_PlanetRendering::LUA_attachtoentity(lua_State* p_L)
     m_entity = &entity;
 
     m_planet_render = _DRAWSPACE_NEW_(PlanetsRenderingAspectImpl, PlanetsRenderingAspectImpl);
-    m_planet_render->SetHub(PlanetsLuaExtension::GetInstance()->GetHub());
+    m_planet_render->SetHub(PlanetsLuaExtension::getInstance()->GetHub());
     m_entity_rendering_aspect->AddImplementation(m_planet_render, m_tm);
 
-    PlanetsCentralAdmin::GetInstance()->Register(m_planet_render, PlanetsLuaExtension::GetInstance()->GetHub());
+    PlanetsCentralAdmin::getInstance()->Register(m_planet_render, PlanetsLuaExtension::getInstance()->GetHub());
 
     return 0;
 }
@@ -114,7 +114,7 @@ int LuaClass_PlanetRendering::LUA_detachfromentity(lua_State* p_L)
 
     if (m_planet_render)
     {
-        PlanetsCentralAdmin::GetInstance()->Unregister(m_planet_render);
+        PlanetsCentralAdmin::getInstance()->Unregister(m_planet_render);
         _DRAWSPACE_DELETE_(m_planet_render);
     }
 

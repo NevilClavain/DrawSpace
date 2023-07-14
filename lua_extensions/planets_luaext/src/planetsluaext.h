@@ -35,7 +35,7 @@ class Configuration;
 }
 }
 
-class PlanetsLuaExtension : public LuaExtension, public DrawSpace::Utils::BaseSingleton<PlanetsLuaExtension>
+class PlanetsLuaExtension : public LuaExtension, public DrawSpace::Singleton<PlanetsLuaExtension>
 {
 private:
 	DrawSpace::Systems::Hub* m_hub{ nullptr };

@@ -32,12 +32,14 @@ namespace DrawSpace
 {
 namespace Threading
 {
-struct Runner : public DrawSpace::Utils::BaseSingleton<Runner>
+struct Runner : public DrawSpace::Singleton<Runner>
 {
-public:
+public:	
+
 	Mailbox<Interface::ITask*>						m_mailbox_in;
 	Mailbox<std::pair<dsstring, dsstring>>			m_mailbox_out;
 private:
+
 	mutable std::unique_ptr<std::thread>			m_thread;
 	bool											m_cont;
 
@@ -50,6 +52,7 @@ public:
 	void Startup(void);
 	void Join(void) const;
 
+
 	friend struct RunnerKiller;
 };
 
@@ -61,7 +64,7 @@ struct RunnerKiller : public Interface::ITask
 
 	inline void Execute(void)
 	{
-		Runner::GetInstance()->m_cont = false;
+		Runner::getInstance()->m_cont = false;
 	}
 };
 }

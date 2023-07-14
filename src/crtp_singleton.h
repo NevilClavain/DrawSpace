@@ -28,31 +28,28 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
-
-template<class T>
-class BaseSingleton
-{
-protected:
-    static T* m_instance;
-
-public:
-    static T* GetInstance(void)
+    template<class T>
+    class Singleton
     {
-        if (!m_instance)
+    public:
+        ~Singleton() = default;
+
+        static T* getInstance(void)
         {
-            //static T t;
-            //m_instance = &t;
-            m_instance = new T;
-        }
-        return m_instance;
+            if (!m_instance)
+            {
+                m_instance = new T;
+            }
+            return m_instance;
+        };
+
+    protected:
+        Singleton() = default;
+        static T* m_instance;
     };
-};
-}
 }
 
 template <class T>
-T* DrawSpace::Utils::BaseSingleton<T>::m_instance;
+T* DrawSpace::Singleton<T>::m_instance;
 
 

@@ -29,6 +29,6 @@ extern "C"
 {
 __declspec(dllexport) LuaExtension* PIFactory( void )
 {
-    return PlanetsLuaExtension::GetInstance();
+    return PlanetsLuaExtension::getInstance();
 }
 }

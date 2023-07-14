@@ -57,14 +57,14 @@ LuaClass_EntityNodeGraph::LuaClass_EntityNodeGraph( lua_State* p_L )
 	}
 
     dsstring id = luaL_checkstring( p_L, 1 );
-    MainService::GetInstance()->RegisterEntityGraph( id, this );
+    MainService::getInstance()->RegisterEntityGraph( id, this );
 
     m_id = id;
 }
 
 LuaClass_EntityNodeGraph::~LuaClass_EntityNodeGraph( void )
 {
-    MainService::GetInstance()->UnregisterEntityGraph( m_id );
+    MainService::getInstance()->UnregisterEntityGraph( m_id );
 }
 
 DrawSpace::EntityGraph::EntityNode& LuaClass_EntityNodeGraph::GetEntityNode( const dsstring& p_id )

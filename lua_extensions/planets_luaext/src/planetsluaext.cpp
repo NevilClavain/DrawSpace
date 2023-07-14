@@ -63,5 +63,5 @@ DrawSpace::Systems::Hub* PlanetsLuaExtension::GetHub(void) const
 
 void PlanetsLuaExtension::SetLoggerConfiguration(DrawSpace::Logger::Configuration* p_logconf)
 {
-	PlanetsCentralAdmin::GetInstance()->SetLogconf(p_logconf);
+	PlanetsCentralAdmin::getInstance()->SetLogconf(p_logconf);
 }

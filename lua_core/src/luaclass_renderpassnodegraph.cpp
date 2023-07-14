@@ -78,8 +78,8 @@ m_renderpass_event_cb( this, &LuaClass_RenderPassNodeGraph::on_renderpass_event)
 
     dsstring id = luaL_checkstring( p_L, 1 );
     m_passes_render.SetRendergraph( &m_rendergraph );
-    MainService::GetInstance()->RegisterRenderGraph( id, this );
-    m_rendergraph.SetSystemsHub(MainService::GetInstance()->GetHub());
+    MainService::getInstance()->RegisterRenderGraph( id, this );
+    m_rendergraph.SetSystemsHub(MainService::getInstance()->GetHub());
 
     m_id = id;
 
@@ -88,7 +88,7 @@ m_renderpass_event_cb( this, &LuaClass_RenderPassNodeGraph::on_renderpass_event)
 
 LuaClass_RenderPassNodeGraph::~LuaClass_RenderPassNodeGraph( void )
 {
-    MainService::GetInstance()->UnregisterRenderGraph( m_id );
+    MainService::getInstance()->UnregisterRenderGraph( m_id );
 	m_rendergraph.UnregisterRenderPassEvtHandler(&m_renderpass_event_cb);
 }
 
@@ -350,7 +350,7 @@ int LuaClass_RenderPassNodeGraph::LUA_removepassviewportquad( lua_State* p_L )
 
 int LuaClass_RenderPassNodeGraph::LUA_configurepassviewportquadresources( lua_State* p_L )
 {
-    DrawSpace::Systems::Hub* hub = MainService::GetInstance()->GetHub();
+    DrawSpace::Systems::Hub* hub = MainService::getInstance()->GetHub();
 	Systems::ResourcesSystem& resources_system = hub->GetSystem<Systems::ResourcesSystem>("ResourcesSystem");
 
 	int argc = lua_gettop( p_L );
@@ -510,7 +510,7 @@ void LuaClass_RenderPassNodeGraph::on_renderpass_event(DrawSpace::RenderGraph::R
 {
 	for (auto& it = m_renderpassevent_lua_callbacks.begin(); it != m_renderpassevent_lua_callbacks.end(); ++it)
 	{
-		LuaContext::GetInstance()->CallLuaFunc(it->second, static_cast<int>(p_event), p_passname);
+		LuaContext::getInstance()->CallLuaFunc(it->second, static_cast<int>(p_event), p_passname);
 	}
 }
 

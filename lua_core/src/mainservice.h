@@ -49,7 +49,7 @@ class Root;
 }
 }
 
-class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public DrawSpace::Utils::BaseSingleton<MainService>
+class MainService : public DrawSpace::Interface::AspectImplementations::ServiceAspectImpl, public DrawSpace::Singleton<MainService>
 {
 protected:
 
@@ -235,6 +235,6 @@ public:
 
     DrawSpace::Logger::Configuration* GetLogConf(void) const;
   
-    friend class DrawSpace::Utils::BaseSingleton<MainService>;
+    friend class DrawSpace::Singleton<MainService>;
 };
 
