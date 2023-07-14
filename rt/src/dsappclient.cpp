@@ -46,7 +46,7 @@ m_mousecursor_visible( true ),
 m_service( NULL )
 {    
     // init logger
-    DrawSpace::Parser::run("logrt.conf", " ", DrawSpace::Logger::Configuration::on_new_line);
+    DrawSpace::Parser::run("logrt.conf", " ", DrawSpace::Logger::Configuration::getInstance()->getParserCallback());
 
     m_mouse_visible_cb = _DRAWSPACE_NEW_( MouseVisibleCallback, MouseVisibleCallback( this, &dsAppClient::on_mouse_visible ) );
     m_mouse_circularmode_update_cb = _DRAWSPACE_NEW_( MouseCircularModeupdateCallback, MouseCircularModeupdateCallback( this, &dsAppClient::on_mousecircularmode_update ) );

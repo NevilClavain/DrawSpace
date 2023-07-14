@@ -40,7 +40,7 @@ namespace DrawSpace
         // fwd decl
         class Output;
 
-        class Configuration// : public DrawSpace::Utils::Parser
+        class Configuration
         {
         public:
             ~Configuration( void );
@@ -52,10 +52,12 @@ namespace DrawSpace
             void                    updateTick( void );
             LONGLONG                getLastTick( void ) const;
 
+            using ParserCallback = std::function<void(const dsstring&, long, const std::vector<dsstring>&)>;
 
-            static void on_new_line(const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words);
+            ParserCallback getParserCallback(void) const;
 
         private:
+            Configuration(void);
 
             struct SinkEntry
             {
@@ -67,11 +69,6 @@ namespace DrawSpace
 
             static Configuration*           m_instance;
 
-
-            
-
-            
-
             std::map<dsstring, Output*>     m_outputs;
             std::map<dsstring, SinkEntry>   m_sinks;
 
@@ -79,9 +76,7 @@ namespace DrawSpace
             LARGE_INTEGER                   m_last_tick;
             LARGE_INTEGER                   m_freq;
 
-            Configuration(void);
-            
-   
+            static void on_new_line(const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words);              
         };
     }
 }

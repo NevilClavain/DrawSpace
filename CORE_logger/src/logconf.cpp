@@ -69,6 +69,11 @@ void Logger::Configuration::removeInstance( void )
     }
 }
 
+Logger::Configuration::ParserCallback Logger::Configuration::getParserCallback(void) const
+{
+    const ParserCallback cb{ &on_new_line };
+    return cb;
+}
 
 void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words )
 {
