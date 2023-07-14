@@ -24,7 +24,7 @@
 
 #pragma once
 #include "drawspace_commons.h"
-#include "crtp_singleton.h"
+#include "singleton.h"
 #include "luaext.h"
 
 

@@ -25,7 +25,7 @@
 #pragma once
 
 #include "luaext.h"
-#include "crtp_singleton.h"
+#include "singleton.h"
 
 namespace DrawSpace
 {

@@ -29,7 +29,7 @@
 #include "drawspace_commons.h"
 #include "exceptions.h"
 
-#include "crtp_singleton.h"
+#include "singleton.h"
 
 extern "C" {
 #include "lua.h"

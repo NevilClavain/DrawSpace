@@ -25,7 +25,7 @@
 #pragma once
 #include "task.h"
 #include "mailbox.h"
-#include "crtp_singleton.h"
+#include "singleton.h"
 #include "task.h"
 
 namespace DrawSpace

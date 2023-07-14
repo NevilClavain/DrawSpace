@@ -27,7 +27,7 @@
 #include "resourcessystem.h"
 #include "animationssystem.h"
 #include "serviceaspectimpl.h"
-#include "crtp_singleton.h"
+#include "singleton.h"
 
 #include "luaclass_renderpassnodegraph.h"
 #include "luaclass_entitynodegraph.h"

@@ -228,7 +228,6 @@ ${CMAKE_SOURCE_DIR}/src/timemanager.cpp
 ${CMAKE_SOURCE_DIR}/src/timemanager.h
 ${CMAKE_SOURCE_DIR}/src/vector.cpp
 ${CMAKE_SOURCE_DIR}/src/vector.h
-${CMAKE_SOURCE_DIR}/src/crtp_singleton.h
 )
 
 add_definitions(-DBT_USE_DOUBLE_PRECISION )
