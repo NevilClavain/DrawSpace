@@ -28,7 +28,7 @@
 #include <vector>
 #include <functional>
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "logsink.h"
 
 //#include "parser.h"

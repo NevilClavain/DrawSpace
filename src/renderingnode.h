@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "matrix.h"
 #include "fx.h"
 #include "texture.h"

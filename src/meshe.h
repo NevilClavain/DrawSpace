@@ -27,7 +27,7 @@
 #include <vector>
 #include <map>
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "primitives.h"
 #include "vector.h"
 #include "matrix.h"

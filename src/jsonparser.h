@@ -25,7 +25,7 @@
 #pragma once
 
 #include <jsmn.h>
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "callback.h"
 
 namespace DrawSpace

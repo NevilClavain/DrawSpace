@@ -27,7 +27,7 @@
 #pragma once
 
 #include <windows.h>
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 dsstring operator<< (dsstring& p_s1, dsstring& p_s2);
 dsstring operator<< (dsstring& p_s1, const char* p_s2);

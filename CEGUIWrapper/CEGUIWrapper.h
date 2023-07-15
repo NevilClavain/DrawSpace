@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include <CEGUI\CEGUI.h>
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "vector.h"
 #include "callback.h"
 #include "jsonparser.h"

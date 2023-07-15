@@ -25,7 +25,7 @@
 #pragma once
 
 #include <array>
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 namespace DrawSpace
 {

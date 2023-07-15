@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "memalloc.h"
 
 namespace DrawSpace

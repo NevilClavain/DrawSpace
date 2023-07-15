@@ -25,7 +25,7 @@
 #pragma once
 
 #include <mutex>
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "logoutput.h"
 #include "file.h"
 

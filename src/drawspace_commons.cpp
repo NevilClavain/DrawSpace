@@ -22,5 +22,5 @@
 */
 /* -*-LIC_END-*- */
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 

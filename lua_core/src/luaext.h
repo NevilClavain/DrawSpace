@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 #define __LUAEXT_DESCRIPTION__( __description_text__ ) dsstring Description(void) const { return __description_text__; };
 

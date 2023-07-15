@@ -26,7 +26,7 @@
 
 #include <list>
 #include <mutex>
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 #define _push_code_ \
 	m_mutex.lock();\

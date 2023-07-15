@@ -26,7 +26,7 @@
 
 #include <functional>
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "exceptions.h"
 
 #include "singleton.h"

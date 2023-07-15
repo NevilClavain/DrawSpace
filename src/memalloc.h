@@ -26,7 +26,7 @@
 
 #include <map>
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "logging.h"
 
 #define _DRAWSPACE_NEW_( __type__, __item__ ) DrawSpace::Utils::MemAlloc::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )

@@ -26,7 +26,7 @@
 
 #include <unordered_map>
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "fx.h"
 #include "texture.h"
 #include "shader.h"

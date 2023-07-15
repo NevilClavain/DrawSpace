@@ -24,38 +24,17 @@
 
 #pragma once
 
-#include <map>
-#include "ds_types.h"
+#include <windows.h>
+#include <string>
+#include <exception>
 
-//fwd decl
-class Folder;
+#pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 )
 
-using SubstitutionTable = std::map<dsstring, dsstring>;
+using dsstring		= std::string;
+using dswstring		= std::wstring;
+using dsreal		= double;
+using dstime		= __time64_t;
+using dsexception	= std::exception;
 
-class ISubstitutionContainer
-{
-protected:
-	virtual void run(const Folder& p_folder) const = 0;
 
-	friend Folder& operator>>(Folder& p_in, const ISubstitutionContainer& p_obj);
-};
 
-template<class T>
-class SubstitutionContainer : public ISubstitutionContainer
-{
-private:
-	SubstitutionTable m_substitution_table;
-
-protected:
-	void run(const Folder& p_folder) const
-	{
-		const T substitution_method(m_substitution_table);
-		substitution_method.Process(p_folder);
-	}
-
-public:
-	SubstitutionContainer(const SubstitutionTable& p_table):
-	m_substitution_table(p_table)
-	{
-	}
-};
