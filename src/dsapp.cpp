@@ -37,8 +37,7 @@ extern "C" {
 	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
-
-_DECLARE_DS_LOGGER( logger, "App", DrawSpace::Logger::Configuration::getInstance() )
+static DrawSpace::Logger::Sink logger("App", DrawSpace::Logger::Configuration::getInstance());
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;

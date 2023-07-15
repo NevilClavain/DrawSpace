@@ -59,7 +59,7 @@ protected:
     Logger::Configuration*  m_conf;
 
 public:
-    Sink( const dsstring& p_name, Configuration* p_conf );
+    Sink( const dsstring& p_name, Configuration* p_conf = nullptr );
     ~Sink( void );
 
     void SetCurrentLevel( Level p_level );

@@ -37,7 +37,7 @@ using namespace DrawSpace::Utils;
 
 extern void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str );
 
-_DECLARE_DS_LOGGER( logger, "d3d11", NULL )
+static DrawSpace::Logger::Sink logger("d3d11");
 
 
 

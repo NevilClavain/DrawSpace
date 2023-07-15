@@ -41,7 +41,7 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 
-_DECLARE_DS_LOGGER( logger, "test_impostors_mainservice", NULL )
+static DrawSpace::Logger::Sink logger("test_impostors_mainservice");
 
 
 extern DrawSpace::Logger::Sink aspect_logger;

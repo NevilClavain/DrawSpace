@@ -36,10 +36,7 @@ dsAppClient* dsAppClient::m_instance = NULL;
 using namespace DrawSpace::Interface::Module;
 using namespace DrawSpace::Aspect;
 
-
-_DECLARE_DS_LOGGER( logger, "vmapp", DrawSpace::Logger::Configuration::getInstance() )
-
-
+static DrawSpace::Logger::Sink logger("vmapp", DrawSpace::Logger::Configuration::getInstance());
 
 dsAppClient::dsAppClient( void ) :
 m_mousecursor_visible( true ),

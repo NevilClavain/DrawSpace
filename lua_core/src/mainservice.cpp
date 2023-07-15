@@ -40,7 +40,7 @@ using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 
-_DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
+static DrawSpace::Logger::Sink logger("gameroom_mainservice");
 
 #ifdef _DEBUG
 static const dsstring console_welcome = "Console: input ready (debug build)";

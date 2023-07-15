@@ -36,7 +36,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Systems;
 
-_DECLARE_DS_LOGGER( logger, "tracesystem", NULL )
+static DrawSpace::Logger::Sink logger("tracesystem");
 
 class ClassDump
 {

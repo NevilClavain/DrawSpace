@@ -34,8 +34,4 @@
 #define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 #define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 
-#define _DECLARE_DS_LOGGER( _logger, _name, _confptr ) static DrawSpace::Logger::Sink _logger( _name, _confptr );
-
-#define _INIT_LOGGER( _file_ ) DrawSpace::Logger::Configuration::getInstance()->Run( _file_, "   " ); 
-
 
