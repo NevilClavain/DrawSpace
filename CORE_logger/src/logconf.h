@@ -63,13 +63,13 @@ namespace DrawSpace
                 Sink::Level level;
                 Output*     output;
             };
+            
+            std::map<dsstring, std::unique_ptr<Output>>     m_outputs;
+            std::map<dsstring, SinkEntry>                   m_sinks;
 
-            std::map<dsstring, Output*>     m_outputs;
-            std::map<dsstring, SinkEntry>   m_sinks;
-
-            LARGE_INTEGER                   m_base_tick;
-            LARGE_INTEGER                   m_last_tick;
-            LARGE_INTEGER                   m_freq;
+            LARGE_INTEGER                                   m_base_tick;
+            LARGE_INTEGER                                   m_last_tick;
+            LARGE_INTEGER                                   m_freq;
 
             static void on_new_line(const dsstring& p_line, long p_line_num, const std::vector<dsstring>& p_words);              
         };

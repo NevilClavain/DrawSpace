@@ -64,7 +64,7 @@ void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
 
         SinkEntry sink_entry;
 
-        sink_entry.output = Configuration::getInstance()->m_outputs[p_words[4]];
+        sink_entry.output = Configuration::getInstance()->m_outputs[p_words[4]].get();
         
         if( "on" == p_words[3] )
         {
@@ -128,16 +128,15 @@ void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
 
         if( "file" == p_words[1] )
         {
-            const auto of{ new OutputFile(p_words[3]) };
-            of->SetFlushPeriod( std::atoi( p_words[4].c_str() ) );
-            Configuration::getInstance()->m_outputs[p_words[2]] = of;
+            Configuration::getInstance()->m_outputs[p_words[2]] = std::make_unique<OutputFile>(p_words[3]);
+            const auto& of{ Configuration::getInstance()->m_outputs[p_words[2]] };
+            of.get()->SetFlushPeriod(std::atoi(p_words[4].c_str()));
         }
         else
         {
             _DSEXCEPTION("log configuration file : unknown class for output, line  " + std::to_string(p_line_num));
         }
     }
-
 }
 
 void Logger::Configuration::registerSink( Sink* p_sink )
