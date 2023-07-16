@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <memory>
+
 namespace DrawSpace
 {
     template<class T>
@@ -38,18 +40,19 @@ namespace DrawSpace
         {
             if (!m_instance)
             {
-                m_instance = new T;
+                m_instance = std::make_unique<T>();
             }
-            return m_instance;
+            return m_instance.get();
         };
 
     protected:
         Singleton() = default;
-        static T* m_instance;
+        static std::unique_ptr<T> m_instance;
     };
 }
 
 template <class T>
-T* DrawSpace::Singleton<T>::m_instance;
+std::unique_ptr<T> DrawSpace::Singleton<T>::m_instance;
+
 
 

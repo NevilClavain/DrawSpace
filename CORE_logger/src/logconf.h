@@ -31,7 +31,7 @@
 #include "ds_types.h"
 #include "logsink.h"
 
-//#include "parser.h"
+#include "singleton.h"
 
 namespace DrawSpace
 {
@@ -40,13 +40,11 @@ namespace DrawSpace
         // fwd decl
         class Output;
 
-        class Configuration
+        class Configuration : public Singleton<Configuration>
         {
         public:
-            ~Configuration( void );
-
-            static Configuration*   getInstance( void );
-            static void             removeInstance( void );
+            Configuration(void);
+            ~Configuration( void ) = default;
 
             void                    registerSink( Sink* p_sink );
             void                    updateTick( void );
@@ -57,8 +55,7 @@ namespace DrawSpace
             ParserCallback getParserCallback(void) const;
 
         private:
-            Configuration(void);
-
+            
             struct SinkEntry
             {
                 Sink*       sink;
@@ -66,8 +63,6 @@ namespace DrawSpace
                 Sink::Level level;
                 Output*     output;
             };
-
-            static Configuration*           m_instance;
 
             std::map<dsstring, Output*>     m_outputs;
             std::map<dsstring, SinkEntry>   m_sinks;

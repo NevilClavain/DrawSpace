@@ -28,9 +28,6 @@
 #include "logoutputfile.h"
 #include "exceptions.h"
 
-DrawSpace::Logger::Configuration* DrawSpace::Logger::Configuration::m_instance = nullptr;
-
-
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
@@ -44,30 +41,6 @@ Logger::Configuration::Configuration( void )
     m_last_tick = m_base_tick;
 }
 
-Logger::Configuration::~Configuration( void )
-{
-    for (auto& e : m_outputs)
-    {
-        delete e.second;
-    }
-}
-
-Logger::Configuration* Logger::Configuration::getInstance( void )
-{
-    if( !m_instance )
-    {
-        m_instance = new Configuration();
-    }
-    return m_instance;
-}
-
-void Logger::Configuration::removeInstance( void )
-{
-    if( m_instance )
-    {
-        delete m_instance;
-    }
-}
 
 Logger::Configuration::ParserCallback Logger::Configuration::getParserCallback(void) const
 {

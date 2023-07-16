@@ -61,7 +61,7 @@ extern "C" {
 class LuaContext : public DrawSpace::Singleton<LuaContext>
 {
 protected:
-	LuaContext( void );
+	
 
 	lua_State*					m_L;
 	std::string					m_error;
@@ -79,6 +79,7 @@ protected:
     }
 
 public:	
+    LuaContext(void);
 	~LuaContext( void );
 
     void SetRootPath( const dsstring& p_path );
