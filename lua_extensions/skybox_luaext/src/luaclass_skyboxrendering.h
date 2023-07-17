@@ -33,7 +33,7 @@ namespace DrawSpace
 namespace Core
 {
 class Entity;
-class RenderingNode;
+struct RenderingNode;
 }
 namespace Aspect
 {

@@ -2130,13 +2130,11 @@ void D3D11Renderer::ReleaseShaderBytes(void* p_data)
 
 void D3D11Renderer::EnableTrianglesPrimitives(void)
 {
-    DECLARE_D3D11ASSERT_VARS
     m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void D3D11Renderer::EnableLinesPrimitives(void)
 {
-    DECLARE_D3D11ASSERT_VARS
     m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 }
 
