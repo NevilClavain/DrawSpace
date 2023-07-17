@@ -25,7 +25,7 @@
 #pragma warning( disable : 4005 )
 
 #include <unordered_map>
-#include <drawspace_commons.h>
+#include <ds_types.h>
 #include <d3dx11.h>
 
 void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str )

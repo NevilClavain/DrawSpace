@@ -170,7 +170,7 @@ void LuaClass_PlanetRendering::configure_from_renderlayer(lua_State* p_L, LuaCla
     layers_fx.resize(rcfg_list_size);
     layers_textures.resize(rcfg_list_size);
 
-    for (int k = 0; k < rcfg_list_size; k++)
+    for (size_t k = 0; k < rcfg_list_size; k++)
     {
         const auto render_config{ p_lua_renderlayer->GetRenderConfig(k) };
         const auto rc_list_size{ render_config.second.render_contexts.size() };
@@ -192,7 +192,7 @@ void LuaClass_PlanetRendering::configure_from_renderlayer(lua_State* p_L, LuaCla
             const auto textures_set_size = render_context.textures_sets.size();
             // les N jeux de 32 textures stages
             std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>> textures;
-            for (int texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++)
+            for (size_t texture_face_index = 0; texture_face_index < textures_set_size; texture_face_index++)
             {
                 std::array<Texture*, RenderingNode::NbMaxTextures> textures_set = { nullptr };
 

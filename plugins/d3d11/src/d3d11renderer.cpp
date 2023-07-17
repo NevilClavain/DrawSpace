@@ -995,7 +995,7 @@ bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** 
     // vertex buffer creation
     const auto v{ new d3d11vertex[nb_vertices] };
 
-    for (long i = 0; i < nb_vertices; i++)
+    for (size_t i = 0; i < nb_vertices; i++)
     {
         Core::Vertex vertex;
         meshe->GetVertex(i, vertex);
@@ -1036,7 +1036,7 @@ bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** 
 
     const auto t{ new d3d11line[nb_lines] };
 
-    for (long i = 0; i < nb_lines; i++)
+    for (size_t i = 0; i < nb_lines; i++)
     {
         Core::LinePrimitive<unsigned int> line;
         meshe->GetLine(i, line);

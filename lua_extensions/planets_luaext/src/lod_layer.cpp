@@ -267,7 +267,7 @@ void Layer::build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe
         }
     }
 
-    for (long i = 0; i < p_patchmeshe.GetTrianglesListSize(); i++)
+    for (size_t i = 0; i < p_patchmeshe.GetTrianglesListSize(); i++)
     {
         TrianglePrimitive<unsigned int> t;
         p_patchmeshe.GetTriangles(i, t);

@@ -1058,7 +1058,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             if (LOD::cst::SurfaceLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> details_binders;
                 std::array<LOD::Binder*, 6> details_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
@@ -1082,7 +1081,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
             else if (LOD::cst::AtmosphereLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> atmo_binders;
                 std::array<LOD::Binder*, 6> atmo_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
@@ -1096,7 +1094,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
             else if (LOD::cst::FlatCloudsLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> flatclouds_binders;
                 std::array<LOD::Binder*, 6>         flatclouds_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
@@ -1116,7 +1113,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
             else if (LOD::cst::OceansLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> oceans_binders;
                 std::array<LOD::Binder*, 6>         oceans_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)

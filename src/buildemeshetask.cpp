@@ -196,7 +196,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
         //////////// transformation des normales
         auto n_transf { p_destination->GetNormalesTransf() };
 
-        for (long j = 0; j < p_destination->GetVertexListSize(); j++)
+        for (size_t j = 0; j < p_destination->GetVertexListSize(); j++)
         {
             DrawSpace::Core::Vertex vertex;
             p_destination->GetVertex(j, vertex);
@@ -294,7 +294,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
             //////
 
-            for (long j = 0; j < p_destination->GetVertexListSize(); j++)
+            for (size_t j = 0; j < p_destination->GetVertexListSize(); j++)
             {
                 DrawSpace::Core::Vertex vertex;
                 p_destination->GetVertex(j, vertex);

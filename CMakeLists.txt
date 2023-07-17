@@ -28,6 +28,8 @@ set(CMAKE_CXX_STANDARD 17)
 # disable ZERO_CHECK project generation
 set(CMAKE_SUPPRESS_REGENERATION true)
 
+add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+
 # 3rd-parts localisations
 set(physfs_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/physfs-2.0.3/sdk/include)
 set(physfs_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/physfs-2.0.3/sdk/lib/x86)

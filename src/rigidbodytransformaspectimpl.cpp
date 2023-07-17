@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "ds_types.h"
 #include "physicsaspect.h"
 #include "transformaspect.h"
 #include "matrix.h"

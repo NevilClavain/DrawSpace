@@ -1066,8 +1066,9 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 	{
 		LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 	}
-	int index = luaL_checkint(p_L, 1);
-	dsstring section = luaL_checkstring(p_L, 2);
+
+	size_t index{ (size_t)luaL_checkint(p_L, 1) };
+	const dsstring section{ luaL_checkstring(p_L, 2) };
 
 	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
 	if (!resources_aspect)
@@ -1112,7 +1113,7 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 				LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 			}
 
-			int index = luaL_checkint(p_L, 3) - 1; // lua-style index [1 to n]
+			const size_t index{ (size_t)luaL_checkint(p_L, 3) - 1 }; // lua-style index [1 to n]
 
 			if (index >= 0 && index < mesheFileDescription.meshes_descriptions.size())
 			{
@@ -1153,7 +1154,7 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 				LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 			}
 
-			int index = luaL_checkint(p_L, 3) - 1; // lua-style index [1 to n]
+			size_t index = { (size_t)luaL_checkint(p_L, 3) - 1 }; // lua-style index [1 to n]
 
 			if (index >= 0 && index < mesheFileDescription.anims_descriptions.size())
 			{
