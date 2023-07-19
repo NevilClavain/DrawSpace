@@ -62,62 +62,55 @@ void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
             _DSEXCEPTION("log configuration file : unknown output name for sink, line " + std::to_string(p_line_num));
         }
 
-        SinkEntry sink_entry;
+        const auto output{ Configuration::getInstance()->m_outputs[p_words[4]].get() };
 
-        sink_entry.output = Configuration::getInstance()->m_outputs[p_words[4]].get();
-        
-        if( "on" == p_words[3] )
+        bool state{ false };
+        if ("on" == p_words[3])
         {
-            sink_entry.state = true;
+            state = true;
         }
-        else if( "off" == p_words[3] )
+        else if ("off" == p_words[3])
         {
-            sink_entry.state = false;
+            state = false;
         }
         else
         {
             _DSEXCEPTION("log configuration file : bad state for sink, line " + std::to_string(p_line_num));
         }
 
-        if( "TRACE" == p_words[2] )
+        static const std::map<dsstring, Sink::Level> str_to_level =
         {
-            sink_entry.level = Sink::Level::LEVEL_TRACE;
-        }
-        else if( "DEBUG" == p_words[2] )
+            { "TRACE", Sink::Level::LEVEL_TRACE},
+            { "DEBUG", Sink::Level::LEVEL_DEBUG},
+            { "WARN", Sink::Level::LEVEL_WARN},
+            { "ERROR", Sink::Level::LEVEL_ERROR},
+            { "FATAL", Sink::Level::LEVEL_FATAL}
+        };
+
+        const auto lvl{ str_to_level.at(p_words[2]) };
+
+       
+        if (Configuration::getInstance()->m_sinks_infos.count(p_words[1]) > 0)
         {
-            sink_entry.level = Sink::Level::LEVEL_DEBUG;
+            auto& sink_info{ Configuration::getInstance()->m_sinks_infos[p_words[1]] };
+
+            const auto sink{ std::get<0>( Configuration::getInstance()->m_sinks_infos.at(p_words[1]) ) };
+
+            sink->SetCurrentLevel(lvl);
+            sink->SetState(state);
+            sink->RegisterOutput(output);
+
+            //Configuration::getInstance()->m_sinks_infos[p_words[1]] = std::make_tuple(sink, state, lvl, output);
+
+            std::get<1>(sink_info) = state;
+            std::get<2>(sink_info) = lvl;
+            std::get<3>(sink_info) = output;
         }
-        else if( "WARN" == p_words[2] )
-        {
-            sink_entry.level = Sink::Level::LEVEL_WARN;
-        }
-        else if( "ERROR" == p_words[2] )
-        {
-            sink_entry.level = Sink::Level::LEVEL_ERROR;
-        }
-        else if( "FATAL" == p_words[2] )
-        {
-            sink_entry.level = Sink::Level::LEVEL_FATAL;
-        }
+
         else
         {
-            _DSEXCEPTION("log configuration file : unknown level keyword for sink, line " + std::to_string(p_line_num));
+            Configuration::getInstance()->m_sinks_infos[p_words[1]] = std::make_tuple(nullptr, state, lvl, output);
         }
-
-        if(Configuration::getInstance()->m_sinks.count( p_words[1] ) > 0 )
-        {
-            sink_entry.sink = Configuration::getInstance()->m_sinks[p_words[1]].sink;
-
-            sink_entry.sink->SetCurrentLevel( sink_entry.level );
-            sink_entry.sink->SetState( sink_entry.state );
-            sink_entry.sink->RegisterOutput( sink_entry.output );
-        }
-        else
-        {
-            sink_entry.sink = nullptr;
-        }
-
-        Configuration::getInstance()->m_sinks[p_words[1]] = sink_entry;
     }
     else if( "output" == p_words[0] )
     {
@@ -144,23 +137,35 @@ void Logger::Configuration::registerSink( Sink* p_sink )
     dsstring name;
     p_sink->GetName( name );
 
-    if( m_sinks.count( name ) > 0 )
+    //if( m_sinks.count( name ) > 0 )
+
+    if (m_sinks_infos.count(name) > 0)
     {
         // entry exists
-
+        /*
         m_sinks.at(name).sink = p_sink;
 
         p_sink->SetCurrentLevel(m_sinks.at(name).level);
         p_sink->SetState( m_sinks.at(name).state );
         p_sink->RegisterOutput( m_sinks.at(name).output );
+        */
+
+        p_sink->SetCurrentLevel(std::get<2>(m_sinks_infos.at(name)));
+        p_sink->SetState(std::get<1>(m_sinks_infos.at(name)));
+        p_sink->RegisterOutput(std::get<3>(m_sinks_infos.at(name)));
+
     }
     else
     {
         // entry does not exists, create it
 
+        /*
         SinkEntry sink_entry;
         sink_entry.sink = p_sink;
         m_sinks[name] = sink_entry;
+        */
+
+        m_sinks_infos[name] = std::make_tuple(p_sink, false, Sink::Level::LEVEL_FATAL, nullptr);
     }
 }
 

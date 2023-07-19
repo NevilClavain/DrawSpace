@@ -54,18 +54,12 @@ namespace DrawSpace
 
             ParserCallback getParserCallback(void) const;
 
-        private:
-            
-            struct SinkEntry
-            {
-                Sink*       sink;
-                bool        state;
-                Sink::Level level;
-                Output*     output;
-            };
-            
+        private:                   
             std::map<dsstring, std::unique_ptr<Output>>     m_outputs;
-            std::map<dsstring, SinkEntry>                   m_sinks;
+
+            using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;
+
+            std::map<dsstring, SinkInfos>                   m_sinks_infos;
 
             LARGE_INTEGER                                   m_base_tick;
             LARGE_INTEGER                                   m_last_tick;
