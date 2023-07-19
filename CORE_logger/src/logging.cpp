@@ -23,7 +23,7 @@
 */
 /* -*-LIC_END-*- */
 
-#include "logchain.h"
+#include "logging.h"
 
 
 dsstring operator<< (dsstring& p_s1, dsstring& p_s2)
@@ -43,44 +43,35 @@ dsstring operator<< (const char* p_s1, dsstring& p_s2)
 
 dsstring operator<< (dsstring& p_s1, int p_s2)
 {
-	char buff[32];
-	return dsstring(p_s1) + dsstring(itoa(p_s2, buff, 10));
+	return dsstring(p_s1) + std::to_string(p_s2);
 }
 
 dsstring operator<< (dsstring& p_s1, size_t p_s2)
 {
-	char buff[32];
-	return dsstring(p_s1) + dsstring(itoa((unsigned int)p_s2, buff, 10));
+	return dsstring(p_s1) + std::to_string(p_s2);
 }
 
 dsstring operator<< (dsstring& p_s1, void* p_s2)
 {
-	char buff[32];
-	return dsstring(p_s1) + dsstring(itoa((unsigned int)p_s2, buff, 10));
+	return dsstring(p_s1) + std::to_string((unsigned int)p_s2);
 }
 
 dsstring operator<< (dsstring& p_s1, bool p_s2)
 {
-	char buff[32];
-	return dsstring(p_s1) + dsstring(itoa((unsigned int)p_s2, buff, 10));
+	return dsstring(p_s1) + std::to_string((unsigned int)p_s2);
 }
 
 dsstring operator<< (dsstring& p_s1, DWORD p_s2)
 {
-	char buff[32];
-	return dsstring(p_s1) + dsstring(itoa((unsigned int)p_s2, buff, 10));
+	return dsstring(p_s1) + std::to_string((unsigned int)p_s2);
 }
 
 dsstring operator<< (dsstring& p_s1, float p_s2)
 {
-	char buff[32];
-	sprintf(buff, "%f", p_s2);
-	return dsstring(p_s1) + dsstring(buff);
+	return dsstring(p_s1) + std::to_string(p_s2);
 }
 
 dsstring operator<< (dsstring& p_s1, dsreal p_s2)
 {
-	char buff[32];
-	sprintf(buff, "%f", p_s2);
-	return dsstring(p_s1) + dsstring(buff);
+	return dsstring(p_s1) + std::to_string(p_s2);
 }
