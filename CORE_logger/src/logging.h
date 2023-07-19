@@ -34,14 +34,14 @@
 #define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 #define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 
-dsstring operator<< (dsstring& p_s1, dsstring& p_s2);
-dsstring operator<< (dsstring& p_s1, const char* p_s2);
-dsstring operator<< (const char* p_s1, dsstring& p_s2);
-dsstring operator<< (dsstring& p_s1, int p_s2);
-dsstring operator<< (dsstring& p_s1, size_t p_s2);
-dsstring operator<< (dsstring& p_s1, void* p_s2);
-dsstring operator<< (dsstring& p_s1, bool p_s2);
-dsstring operator<< (dsstring& p_s1, DWORD p_s2);
-dsstring operator<< (dsstring& p_s1, float p_s2);
-dsstring operator<< (dsstring& p_s1, dsreal p_s2);
+dsstring operator<< (const dsstring& p_s1, const dsstring& p_s2);
+dsstring operator<< (const dsstring& p_s1, const char* p_s2);
+dsstring operator<< (const char* p_s1, const dsstring& p_s2);
+dsstring operator<< (const dsstring& p_s1, int p_s2);
+dsstring operator<< (const dsstring& p_s1, size_t p_s2);
+dsstring operator<< (const dsstring& p_s1, void* p_s2);
+dsstring operator<< (const dsstring& p_s1, bool p_s2);
+dsstring operator<< (const dsstring& p_s1, DWORD p_s2);
+dsstring operator<< (const dsstring& p_s1, float p_s2);
+dsstring operator<< (const dsstring& p_s1, dsreal p_s2);
 
