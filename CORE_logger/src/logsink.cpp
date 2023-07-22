@@ -85,7 +85,7 @@ void Logger::Sink::logIt( Level p_level, const dsstring& p_trace )
         }
 
         dsstring final_trace = timestamp + dsstring( " " ) + thread_id + dsstring( " " ) + m_name + dsstring( " " ) + level + dsstring( " " ) + dsstring( "[ " ) + p_trace + dsstring( " ]" ) + dsstring( "\n" );
-        m_output->LogIt( final_trace );
+        m_output->logIt( final_trace );
     }
 
     if( m_conf )

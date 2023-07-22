@@ -33,12 +33,9 @@ namespace Logger
 class Output
 {
 public:
-    virtual ~Output( void ) { };
-
-    virtual void LogIt( const dsstring& p_trace ) = 0;
-    virtual void Flush( void ) = 0;
-    virtual void SetFlushPeriod( long p_period ) = 0;
-       
+    virtual void logIt( const dsstring& p_trace ) = 0;
+    virtual void flush( void ) = 0;
+    virtual void setFlushPeriod( long p_period ) = 0;       
 };
 }
 }

@@ -123,7 +123,7 @@ void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
         {
             Configuration::getInstance()->m_outputs[p_words[2]] = std::make_unique<OutputFile>(p_words[3]);
             const auto& of{ Configuration::getInstance()->m_outputs[p_words[2]] };
-            of.get()->SetFlushPeriod(std::atoi(p_words[4].c_str()));
+            of.get()->setFlushPeriod(std::atoi(p_words[4].c_str()));
         }
         else
         {

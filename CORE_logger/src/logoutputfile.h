@@ -31,27 +31,27 @@
 
 namespace DrawSpace
 {
-namespace Logger
-{
-class OutputFile : public Output
-{
-protected:
+    namespace Logger
+    {
+        class OutputFile : public Output
+        {
+        public:
 
-    DrawSpace::Utils::File* m_file;
-    long                    m_flush_period;
-    long                    m_period_count;
-    std::mutex	            m_mutex;
+            OutputFile( const dsstring& p_filename );
 
-public:
+            ~OutputFile(void) = default;
 
-    OutputFile( const dsstring& p_filename );
-    virtual ~OutputFile( void );
+            void logIt( const dsstring& p_trace );
+            void flush( void );
+            void setFlushPeriod( long p_period );    
 
-    void LogIt( const dsstring& p_trace );
-    void Flush( void );
-    void SetFlushPeriod( long p_period );    
-   
-};
-}
+        private:
+
+            std::unique_ptr<DrawSpace::Utils::File>     m_file;
+            long                                        m_flush_period{ 0 };
+            long                                        m_period_count{ 0 };
+            std::mutex	                                m_mutex;   
+        };
+    }
 }
 

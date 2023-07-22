@@ -31,15 +31,10 @@ Logger::OutputFile::OutputFile( const dsstring& p_filename ) :
 m_flush_period( 0 ),
 m_period_count( 0 )
 {
-    m_file = new File( p_filename, File::CREATENEWTEXT );
+    m_file = std::make_unique<File>(p_filename, File::CREATENEWTEXT);
 }
 
-Logger::OutputFile::~OutputFile( void )
-{
-    delete m_file;
-}
-
-void Logger::OutputFile::LogIt( const dsstring& p_trace )
+void Logger::OutputFile::logIt( const dsstring& p_trace )
 {
     m_mutex.lock();
 
@@ -59,14 +54,14 @@ void Logger::OutputFile::LogIt( const dsstring& p_trace )
     m_mutex.unlock();
 }
 
-void Logger::OutputFile::Flush( void )
+void Logger::OutputFile::flush( void )
 {
     m_mutex.lock();
     m_file->Flush();
     m_mutex.unlock();
 }
 
-void Logger::OutputFile::SetFlushPeriod( long p_period )
+void Logger::OutputFile::setFlushPeriod( long p_period )
 {
     m_mutex.lock();
     m_flush_period = p_period;
