@@ -288,8 +288,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 				const auto shader_type{ std::get<2>(e->getPurpose()) };
 
 				// shader key id
-				std::vector<dsstring> items;
-				SplitString(asset_path, items, '.');
+				const auto items{ splitString<std::vector<dsstring>>(asset_path, '.')  };
+
 				const auto shader_id{ items[0] };
 
 				if (!m_runner_system.HasSequence(final_asset_path))
@@ -1458,8 +1458,12 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	const auto hash_shader{ md5.digestMemory((BYTE*)text, text_size) };
 
 	// shader key id
+	/*
 	std::vector<dsstring> items;
-	SplitString(p_asset_path, items, '.');
+	splitString(p_asset_path, items, '.');
+	*/
+
+	const auto items{ splitString<std::vector<dsstring>>(p_asset_path, '.') };
 	const auto shader_id{ items[0] };
 
 	const auto path{ bcCacheName + dsstring("\\") + shader_id.c_str() };

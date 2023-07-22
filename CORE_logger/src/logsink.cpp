@@ -23,6 +23,8 @@
 /* -*-LIC_END-*- */
 
 #include <sstream>
+#include <iomanip> // setprecision
+
 #include "logsink.h"
 #include "logconf.h"
 
@@ -66,22 +68,23 @@ void Logger::Sink::logIt( Level p_level, const dsstring& p_trace )
        
         std::stringstream stream;
         stream << std::hex << GetCurrentThreadId();
-
         const std::string thread_id( std::string("[" ) + stream.str() + std::string("]"));
 
-
-        char timestamp[32];
+        dsstring timestamp;
         if( m_conf )
         {
-            double timestamp_in_second = m_conf->getLastTick() / 1000000.0;
-            sprintf(timestamp, "%.6f", timestamp_in_second);
+            const auto timestamp_in_second{ m_conf->getLastTick() / 1000000.0 };            
+            const auto precision{ 6 };
+            std::stringstream stream;
+            stream << std::fixed << std::setprecision(precision) << timestamp_in_second;
+            timestamp = stream.str();
         }
         else
         {
-            sprintf( timestamp, "??????????" );
+            timestamp = "??????????";            
         }
 
-        dsstring final_trace = dsstring( timestamp ) + dsstring( " " ) + dsstring( thread_id ) + dsstring( " " ) + m_name + dsstring( " " ) + level + dsstring( " " ) + dsstring( "[ " ) + p_trace + dsstring( " ]" ) + dsstring( "\n" );
+        dsstring final_trace = timestamp + dsstring( " " ) + thread_id + dsstring( " " ) + m_name + dsstring( " " ) + level + dsstring( " " ) + dsstring( "[ " ) + p_trace + dsstring( " ]" ) + dsstring( "\n" );
         m_output->LogIt( final_trace );
     }
 

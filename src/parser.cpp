@@ -30,7 +30,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
 
-static std::vector<std::string> split(const std::string& s, const std::string& seperators)
+static std::vector<dsstring> split(const std::string& s, const std::string& seperators)
 {
     std::vector<std::string> output;
     std::string::size_type prev_pos{ 0 };
