@@ -42,7 +42,7 @@ namespace DrawSpace
             ~OutputFile(void) = default;
 
             void logIt( const dsstring& p_trace );
-            void flush( void );
+            //void flush( void );
             void setFlushPeriod( long p_period );    
 
         private:

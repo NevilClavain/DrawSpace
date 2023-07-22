@@ -43,8 +43,7 @@ void Logger::OutputFile::logIt( const dsstring& p_trace )
     if( m_period_count == m_flush_period )
     {
         m_file->Flush();
-        m_period_count = 0;
-       
+        m_period_count = 0;       
     }
     else
     {
@@ -54,12 +53,14 @@ void Logger::OutputFile::logIt( const dsstring& p_trace )
     m_mutex.unlock();
 }
 
+/*
 void Logger::OutputFile::flush( void )
 {
     m_mutex.lock();
     m_file->Flush();
     m_mutex.unlock();
 }
+*/
 
 void Logger::OutputFile::setFlushPeriod( long p_period )
 {
