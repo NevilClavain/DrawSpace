@@ -59,7 +59,7 @@ dsstring ClassDump::m_text;
 void TraceSystem::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
 {
     p_logconf->registerSink( &logger );
-    logger.SetConfiguration( p_logconf );
+    logger.setConfiguration( p_logconf );
 }
 
 void TraceSystem::run( EntityGraph::EntityNodeGraph* p_entitygraph )

@@ -96,9 +96,9 @@ void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
 
             const auto sink{ std::get<0>( Configuration::getInstance()->m_sinks_infos.at(p_words[1]) ) };
 
-            sink->SetCurrentLevel(lvl);
-            sink->SetState(state);
-            sink->RegisterOutput(output);
+            sink->setCurrentLevel(lvl);
+            sink->setState(state);
+            sink->registerOutput(output);
 
             //Configuration::getInstance()->m_sinks_infos[p_words[1]] = std::make_tuple(sink, state, lvl, output);
 
@@ -135,7 +135,7 @@ void Logger::Configuration::on_new_line( const dsstring& p_line, long p_line_num
 void Logger::Configuration::registerSink( Sink* p_sink )
 {
     dsstring name;
-    p_sink->GetName( name );
+    p_sink->getName( name );
 
     //if( m_sinks.count( name ) > 0 )
 
@@ -150,9 +150,9 @@ void Logger::Configuration::registerSink( Sink* p_sink )
         p_sink->RegisterOutput( m_sinks.at(name).output );
         */
 
-        p_sink->SetCurrentLevel(std::get<2>(m_sinks_infos.at(name)));
-        p_sink->SetState(std::get<1>(m_sinks_infos.at(name)));
-        p_sink->RegisterOutput(std::get<3>(m_sinks_infos.at(name)));
+        p_sink->setCurrentLevel(std::get<2>(m_sinks_infos.at(name)));
+        p_sink->setState(std::get<1>(m_sinks_infos.at(name)));
+        p_sink->registerOutput(std::get<3>(m_sinks_infos.at(name)));
 
     }
     else

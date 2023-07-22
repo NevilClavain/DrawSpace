@@ -22,17 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
+#include <sstream>
 #include "logsink.h"
 #include "logconf.h"
 
 using namespace DrawSpace;
 
-
 Logger::Sink::Sink( const dsstring& p_name, Logger::Configuration* p_conf ) : 
 m_name( p_name ),
-m_current_level( Level::LEVEL_WARN ),
-m_state( false ),
-m_output( NULL ),
 m_conf( p_conf )
 {
     if( p_conf )
@@ -41,52 +38,39 @@ m_conf( p_conf )
     }
 }
 
-Logger::Sink::~Sink( void )
-{
-}
-
-void Logger::Sink::SetCurrentLevel( Logger::Sink::Level p_level )
+void Logger::Sink::setCurrentLevel( Logger::Sink::Level p_level )
 {
     m_current_level = p_level;
 }
 
-void Logger::Sink::SetState( bool p_state )
+void Logger::Sink::setState( bool p_state )
 {
     m_state = p_state;
 }
 
-void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
+void Logger::Sink::logIt( Level p_level, const dsstring& p_trace )
 {
     if( p_level <= m_current_level && m_state && m_output )
-    {
-        dsstring level;
+    {        
+        static const std::map<Level, dsstring> lvl_to_string
+        {
+            { Level::LEVEL_FATAL, "FATAL"},
+            { Level::LEVEL_ERROR, "ERROR"},
+            { Level::LEVEL_WARN, "WARN"},
+            { Level::LEVEL_DEBUG, "DEBUG"},
+            { Level::LEVEL_TRACE, "TRACE"},
 
-        if( p_level == Level::LEVEL_FATAL )
-        {
-            level = "FATAL";
-        }
-        else if( p_level == Level::LEVEL_ERROR )
-        {
-            level = "ERROR";
-        }
-        else if( p_level == Level::LEVEL_WARN )
-        {
-            level = "WARN";
-        }
-        else if( p_level == Level::LEVEL_DEBUG )
-        {
-            level = "DEBUG";
-        }
-        else if( p_level == Level::LEVEL_TRACE )
-        {
-            level = "TRACE";
-        }
+        };
 
-        char thread_id[16];
-        sprintf( thread_id, "[%.8x]", GetCurrentThreadId() );
+        const auto level{ lvl_to_string.at(p_level) };
+       
+        std::stringstream stream;
+        stream << std::hex << GetCurrentThreadId();
+
+        const std::string thread_id( std::string("[" ) + stream.str() + std::string("]"));
+
 
         char timestamp[32];
-
         if( m_conf )
         {
             double timestamp_in_second = m_conf->getLastTick() / 1000000.0;
@@ -107,17 +91,17 @@ void Logger::Sink::LogIt( Level p_level, const dsstring& p_trace )
     }
 }
 
-void Logger::Sink::RegisterOutput( Logger::Output* p_output )
+void Logger::Sink::registerOutput( Logger::Output* p_output )
 {
     m_output = p_output;
 }
 
-void Logger::Sink::GetName( dsstring& p_name ) const
+void Logger::Sink::getName( dsstring& p_name ) const
 {
     p_name = m_name;
 }
 
-void Logger::Sink::SetConfiguration( Logger::Configuration* p_conf )
+void Logger::Sink::setConfiguration( Logger::Configuration* p_conf )
 {
     m_conf = p_conf;
 }

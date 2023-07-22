@@ -136,10 +136,10 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
     _DSDEBUG( logger, "begin" )
 
     p_logconf->registerSink( &logger );
-    logger.SetConfiguration( p_logconf );
+    logger.setConfiguration( p_logconf );
 
     p_logconf->registerSink( MemAlloc::GetLogSink() );
-    MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
+    MemAlloc::GetLogSink()->setConfiguration( p_logconf );
 
 
     _DSDEBUG( logger, "D3D11 init begin" )

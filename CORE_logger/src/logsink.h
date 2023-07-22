@@ -29,51 +29,46 @@
 
 namespace DrawSpace
 {
-namespace Logger
-{
-class Configuration;
-
-class Sink
-{
-public:
-
-    enum class Level
+    namespace Logger
     {
-        LEVEL_FATAL,
-        LEVEL_ERROR,
-        LEVEL_WARN,
-        LEVEL_DEBUG,
-        LEVEL_TRACE,
+        class Configuration;
 
-    };
+        struct Sink
+        {
+        public:
+            enum class Level
+            {
+                LEVEL_FATAL,
+                LEVEL_ERROR,
+                LEVEL_WARN,
+                LEVEL_DEBUG,
+                LEVEL_TRACE,
+            };
 
-protected:
+            Sink( const dsstring& p_name, Configuration* p_conf = nullptr );
+            ~Sink(void) = default;
 
-    Level                   m_current_level;
-    bool                    m_state;
+            void setCurrentLevel( Level p_level );
+            void setState( bool p_state );
 
-    Output*                 m_output;
+            void logIt( Level p_level, const dsstring& p_trace );
 
-    dsstring                m_name;
+            void registerOutput( Output* p_output );
 
-    Logger::Configuration*  m_conf;
+            void getName( dsstring& p_name ) const;
+            void setConfiguration( Logger::Configuration* p_conf );
 
-public:
-    Sink( const dsstring& p_name, Configuration* p_conf = nullptr );
-    ~Sink( void );
+        private:
 
-    void SetCurrentLevel( Level p_level );
-    void SetState( bool p_state );
+            Level                   m_current_level{ Level::LEVEL_FATAL };
+            bool                    m_state{ false };
 
-    void LogIt( Level p_level, const dsstring& p_trace );
+            Output*                 m_output{ nullptr };
+            Logger::Configuration*  m_conf{ nullptr };
 
-    void RegisterOutput( Output* p_output );
-
-    void GetName( dsstring& p_name ) const;
-    void SetConfiguration( Logger::Configuration* p_conf );
-      
-};
-}
+            dsstring                m_name;      
+        };
+    }
 }
 
 

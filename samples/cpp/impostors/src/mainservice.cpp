@@ -94,22 +94,22 @@ bool MainService::Init( void )
 
         
     logconf->registerSink( &logger );
-    logger.SetConfiguration( logconf );
+    logger.setConfiguration( logconf );
 
     logconf->registerSink(&aspect_logger);
-    aspect_logger.SetConfiguration(logconf);
+    aspect_logger.setConfiguration(logconf);
 
     logconf->registerSink(&rs_logger);
-    rs_logger.SetConfiguration(logconf);
+    rs_logger.setConfiguration(logconf);
 
     logconf->registerSink( MemAlloc::GetLogSink() );
-    MemAlloc::GetLogSink()->SetConfiguration( logconf );
+    MemAlloc::GetLogSink()->setConfiguration( logconf );
 
     logconf->registerSink(&rd_logger);
-    rd_logger.SetConfiguration(logconf);
+    rd_logger.setConfiguration(logconf);
 
     logconf->registerSink(&runner_logger);
-    runner_logger.SetConfiguration(logconf);
+    runner_logger.setConfiguration(logconf);
 
     /////////////////////////////////////////////////////////////////////////////////
 

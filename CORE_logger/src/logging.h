@@ -28,11 +28,11 @@
 #include "ds_types.h"
 #include "logconf.h"
 
-#define _DSTRACE( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_TRACE, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSDEBUG( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_DEBUG, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSWARN( _logger, _message )  _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_WARN, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSERROR( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
-#define _DSFATAL( _logger, _message ) _logger.LogIt( DrawSpace::Logger::Sink::Level::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSTRACE( _logger, _message ) _logger.logIt( DrawSpace::Logger::Sink::Level::LEVEL_TRACE, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSDEBUG( _logger, _message ) _logger.logIt( DrawSpace::Logger::Sink::Level::LEVEL_DEBUG, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSWARN( _logger, _message )  _logger.logIt( DrawSpace::Logger::Sink::Level::LEVEL_WARN, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSERROR( _logger, _message ) _logger.logIt( DrawSpace::Logger::Sink::Level::LEVEL_ERROR, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
+#define _DSFATAL( _logger, _message ) _logger.logIt( DrawSpace::Logger::Sink::Level::LEVEL_FATAL, dsstring(__FUNCTION__) + dsstring( " " ) + _message );
 
 dsstring operator<< (const dsstring& p_s1, const dsstring& p_s2);
 dsstring operator<< (const dsstring& p_s1, const char* p_s2);

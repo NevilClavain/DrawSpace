@@ -29,9 +29,8 @@
 #include <functional>
 
 #include "ds_types.h"
-#include "logsink.h"
-
 #include "singleton.h"
+#include "logsink.h"
 
 namespace DrawSpace
 {
@@ -39,7 +38,7 @@ namespace DrawSpace
     {
         // fwd decl
         class Output;
-
+        
         class Configuration : public Singleton<Configuration>
         {
         public:
