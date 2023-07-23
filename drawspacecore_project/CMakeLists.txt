@@ -205,7 +205,6 @@ ${CMAKE_SOURCE_DIR}/src/filesystem.cpp
 ${CMAKE_SOURCE_DIR}/src/filesystem.h
 ${CMAKE_SOURCE_DIR}/src/jsonparser.cpp
 ${CMAKE_SOURCE_DIR}/src/jsonparser.h
-${CMAKE_SOURCE_DIR}/src/maths.cpp
 ${CMAKE_SOURCE_DIR}/src/maths.h
 ${CMAKE_SOURCE_DIR}/src/matrix.cpp
 ${CMAKE_SOURCE_DIR}/src/matrix.h
