@@ -37,6 +37,8 @@ link_directories(${assimp_lib_dir})
 include_directories(${bullet_include_dir})
 link_directories(${bullet_lib_dir})
 
+include_directories(${st_tree_include_dir})
+
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)

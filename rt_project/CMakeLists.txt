@@ -37,6 +37,8 @@ link_directories(${physfs_lib_dir})
 include_directories(${bullet_include_dir})
 link_directories(${bullet_lib_dir})
 
+include_directories(${st_tree_include_dir})
+
 file(
         GLOB_RECURSE
         source_files
