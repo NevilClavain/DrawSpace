@@ -27,6 +27,7 @@ include_directories(${physfs_include_dir})
 include_directories(${assimp_include_dir})
 include_directories(${bullet_include_dir})
 include_directories(${jsonjsmn_include_dir})
+include_directories(${md5_include_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 

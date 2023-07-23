@@ -33,11 +33,12 @@ include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
 include_directories(${physfs_include_dir})
 link_directories(${physfs_lib_dir})
-
+include_directories(${md5_include_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CEGUIWrapper)
+
 
 file(
         GLOB_RECURSE

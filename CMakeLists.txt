@@ -58,6 +58,8 @@ set(bullet_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/bullet-2.87/sdk/lib/x86)
 set(assimp_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/include)
 set(assimp_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/lib/x86)
 
+set(md5_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/md5/sdk/include)
+
 # core, plugins and runtimes
 add_subdirectory(drawspacecore_project)
 
