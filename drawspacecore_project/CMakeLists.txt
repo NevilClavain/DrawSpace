@@ -40,6 +40,10 @@ file(
 		
 )
 
+source_group(commons FILES
+${CMAKE_SOURCE_DIR}/src/ds_types.h
+${CMAKE_SOURCE_DIR}/src/exceptions.h
+)
 
 source_group(aspect FILES 
 ${CMAKE_SOURCE_DIR}/src/animationsaspect.cpp 
@@ -200,7 +204,6 @@ ${CMAKE_SOURCE_DIR}/src/runner.cpp
 )
 
 source_group(utils FILES
-${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/file.cpp
 ${CMAKE_SOURCE_DIR}/src/file.h
 ${CMAKE_SOURCE_DIR}/src/filesystem.cpp

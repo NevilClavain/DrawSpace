@@ -26,10 +26,16 @@
 
 #include "ds_types.h"
 
+namespace DrawSpace
+{
+    namespace Commons
+    {
+        inline void exception(const dsstring& p_msg, const dsstring& p_func)
+        {
+            const auto message{ p_msg + dsstring(" @ ") + dsstring(p_func)};
+            throw dsexception(message.c_str());
+        }
+    }
+}
 
-#define _DSEXCEPTION( _msg ) { \
-    dsstring message = _msg;\
-    message += " @ ";\
-    message += __FUNCTION__;\
-    throw dsexception( message.c_str() ); }
-
+#define _DSEXCEPTION( _msg ) DrawSpace::Commons::exception(_msg, __FUNCTION__);
