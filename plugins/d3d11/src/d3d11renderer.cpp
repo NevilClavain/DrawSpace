@@ -776,7 +776,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     d3d11vertex* v = new d3d11vertex[nb_vertices];
     for( long i = 0; i < nb_vertices; i++ )
     {
-        Core::Vertex vertex;
+        Commons::Vertex vertex;
         meshe->GetVertex( i, vertex );
      
 
@@ -826,7 +826,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
     for( long i = 0; i < nb_triangles; i++ )
     {
-        Core::TrianglePrimitive<unsigned int> triangle;
+        Commons::TrianglePrimitive<unsigned int> triangle;
         meshe->GetTriangles( i, triangle );
 
         t[i].vertex1 = triangle.at(0);
@@ -913,7 +913,7 @@ bool D3D11Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p
 
     for( long i = 0; i < nb_triangles; i++ )
     {
-        Core::TrianglePrimitive<unsigned int> triangle;
+        Commons::TrianglePrimitive<unsigned int> triangle;
         p_meshe->GetTriangles( i, triangle );
 
         t[i].vertex1 = triangle.at(0);
@@ -941,7 +941,7 @@ bool D3D11Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* 
 
     for( long i = 0; i < nb_vertices; i++ )
     {
-        Core::Vertex vertex;
+        Commons::Vertex vertex;
         p_meshe->GetVertex( i, vertex );
 
         v[i].pos.x = (float)vertex.x;
@@ -997,7 +997,7 @@ bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** 
 
     for (size_t i = 0; i < nb_vertices; i++)
     {
-        Core::Vertex vertex;
+        Commons::Vertex vertex;
         meshe->GetVertex(i, vertex);
 
         v[i].pos.x = (float)vertex.x;
@@ -1038,7 +1038,7 @@ bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** 
 
     for (size_t i = 0; i < nb_lines; i++)
     {
-        Core::LinePrimitive<unsigned int> line;
+        Commons::LinePrimitive<unsigned int> line;
         meshe->GetLine(i, line);
 
         t[i].vertex1 = line.at(0);

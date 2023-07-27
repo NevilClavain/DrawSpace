@@ -108,7 +108,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
             const auto i2 { face.mIndices[1] };
             const auto i3 { face.mIndices[2] };
 
-            p_destination->AddTriangle(Core::TrianglePrimitive<unsigned int>({ i1 + global_index, i2 + global_index, i3 + global_index }));
+            p_destination->AddTriangle(Commons::TrianglePrimitive<unsigned int>({ i1 + global_index, i2 + global_index, i3 + global_index }));
         }
 
         const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
@@ -118,7 +118,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
         for (size_t j = 0; j < meshe->mNumVertices; j++)
         {
             const auto v_in { meshe->mVertices[j] };
-            DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
+            DrawSpace::Commons::Vertex v_out(v_in[0], v_in[1], v_in[2]);
 
             if (anims_aspect)
             {
@@ -198,7 +198,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
         for (size_t j = 0; j < p_destination->GetVertexListSize(); j++)
         {
-            DrawSpace::Core::Vertex vertex;
+            DrawSpace::Commons::Vertex vertex;
             p_destination->GetVertex(j, vertex);
 
             Utils::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
@@ -237,7 +237,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
                     const auto weight { bone->mWeights[k].mWeight };
                     const auto vert_index { bone->mWeights[k].mVertexId };
 
-                    DrawSpace::Core::Vertex vertex;
+                    DrawSpace::Commons::Vertex vertex;
                     p_destination->GetVertex(vert_index, vertex);
 
                     if (vertex.tu[4] == -1.0)
@@ -296,7 +296,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
             for (size_t j = 0; j < p_destination->GetVertexListSize(); j++)
             {
-                DrawSpace::Core::Vertex vertex;
+                DrawSpace::Commons::Vertex vertex;
                 p_destination->GetVertex(j, vertex);
 
                 const auto sum{ vertex.tu[5] + vertex.tv[5] + vertex.tw[5] + vertex.ta[5] +

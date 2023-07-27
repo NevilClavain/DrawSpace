@@ -103,9 +103,8 @@ void dsAppClient::OnClose( void )
 {
     _DSDEBUG(logger, dsstring("RT shutdown..."))
 
-    //m_serviceSystem.Release( &m_entitygraph );
 
-    ServiceAspect* service_aspect = m_rootEntity.GetAspect<ServiceAspect>();
+    const auto service_aspect{ m_rootEntity.GetAspect<ServiceAspect>() };
     service_aspect->RemoveImplementation(m_service);
 }
 

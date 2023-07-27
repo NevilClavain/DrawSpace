@@ -30,50 +30,50 @@
 
 namespace DrawSpace
 {
-namespace Core
-{
+    using namespace Commons;
+    namespace Core
+    {
+        class LineMeshe
+        {
+        public:
 
-class LineMeshe
-{
-public:
+            LineMeshe(void);
+            ~LineMeshe(void);
 
-    LineMeshe(void);
-    ~LineMeshe(void);
+            size_t GetVertexListSize(void) const;
+            size_t GetLinesListSize(void) const;
 
-    size_t GetVertexListSize(void) const;
-    size_t GetLinesListSize(void) const;
+            void GetVertex(long p_index, Vertex& p_vertex) const;
+            void GetLine(long p_index, LinePrimitive<unsigned int>& p_triangle) const;
+            dsstring GetName(void) const;
+            std::vector<Vertex> GetVertices(void) const;
+            std::vector<LinePrimitive<unsigned int>> GetLines(void) const;
+            void* LineMeshe::GetRenderData(void) const;
+            dsstring GetMD5(void) const;
 
-    void GetVertex(long p_index, Vertex& p_vertex) const;
-    void GetLine(long p_index, LinePrimitive<unsigned int>& p_triangle) const;
-    dsstring GetName(void) const;
-    std::vector<Vertex> GetVertices(void) const;
-    std::vector<LinePrimitive<unsigned int>> GetLines(void) const;
-    void* LineMeshe::GetRenderData(void) const;
-    dsstring GetMD5(void) const;
+            void ClearLines(void);
+            void ClearVertices(void);
 
-    void ClearLines(void);
-    void ClearVertices(void);
+            void AddVertex(const Vertex& p_vertex);
+            void AddLine(const LinePrimitive<unsigned int>& p_line);
+            void SetVertex(long p_index, const Vertex& p_vertex);
 
-    void AddVertex(const Vertex& p_vertex);
-    void AddLine(const LinePrimitive<unsigned int>& p_line);
-    void SetVertex(long p_index, const Vertex& p_vertex);
+            void SetName(const dsstring& p_name);
 
-    void SetName(const dsstring& p_name);
+            void SetRenderData(void* p_renderdata);
 
-    void SetRenderData(void* p_renderdata);
+            void SetVertices(const std::vector<Vertex>& p_vertices);
 
-    void SetVertices(const std::vector<Vertex>& p_vertices);
+            void SetLines(const std::vector<LinePrimitive<unsigned int>>& p_lines);
 
-    void SetLines(const std::vector<LinePrimitive<unsigned int>>& p_lines);
+        private:
 
-private:
+            std::vector<Vertex>                                                     m_vertices;
+            std::vector<LinePrimitive<unsigned int>>                                m_lines;
+            void*                                                                   m_render_data{ nullptr };
+            dsstring                                                                m_name;
 
-    std::vector<Vertex>                                                     m_vertices;
-    std::vector<LinePrimitive<unsigned int>>                                m_lines;
-    void*                                                                   m_render_data{ nullptr };
-    dsstring                                                                m_name;
+        };
 
-};
-
-}
+    }
 }
