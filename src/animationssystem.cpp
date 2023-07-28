@@ -142,23 +142,23 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 		Utils::Matrix rot_interpolated;
 		if (p_node.rotations_keys.size() < 2)
 		{
-			p_node.rotations_keys[0].value.RotationMatFrom(rot_interpolated);
+			p_node.rotations_keys[0].value.rotationMatFrom(rot_interpolated);
 			r_computed = true;
 		}
 		else
 		{
 			if (p_current_tick < p_node.rotations_keys[0].time_tick)
 			{
-				Quaternion q_interpolated = p_node.rotations_keys[0].value;
-				q_interpolated.RotationMatFrom(rot_interpolated);
+				Maths::Quaternion q_interpolated = p_node.rotations_keys[0].value;
+				q_interpolated.rotationMatFrom(rot_interpolated);
 
 				r_computed = true;
 			}
 			else if (p_current_tick >= p_node.rotations_keys[p_node.rotations_keys.size() - 1].time_tick)
 			{
 
-				Quaternion q_interpolated = p_node.rotations_keys[p_node.rotations_keys.size() - 1].value;
-				q_interpolated.RotationMatFrom(rot_interpolated);
+				Maths::Quaternion q_interpolated = p_node.rotations_keys[p_node.rotations_keys.size() - 1].value;
+				q_interpolated.rotationMatFrom(rot_interpolated);
 
 				r_computed = true;
 			}
@@ -173,8 +173,8 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 
 						dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
 
-						Quaternion q_interpolated = Utils::Quaternion::Lerp(kA.value, kB.value, blend);
-						q_interpolated.RotationMatFrom(rot_interpolated);
+						Maths::Quaternion q_interpolated = Maths::Quaternion::lerp(kA.value, kB.value, blend);
+						q_interpolated.rotationMatFrom(rot_interpolated);
 						r_computed = true;
 						break;
 					}
@@ -578,7 +578,7 @@ void AnimationsSystem::apply_animation_last_key(AnimationsAspect* p_anims_aspect
 
 			if (node_animation.rotations_keys.size() > 0)
 			{
-				node_animation.rotations_keys[node_animation.rotations_keys.size() - 1].value.RotationMatFrom(rotation);
+				node_animation.rotations_keys[node_animation.rotations_keys.size() - 1].value.rotationMatFrom(rotation);
 			}
 
 			//////////////////// scaling interpolation

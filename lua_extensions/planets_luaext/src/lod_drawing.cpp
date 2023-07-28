@@ -677,11 +677,11 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     Matrix local_t;
     local_t.Translation(v2);
 
-    Utils::Quaternion q;
-    q.LookAt(v2, Vector(0.0, 0.0, 0.0, 1.0));
+    Maths::Quaternion q;
+    q.lookAt(v2, Vector(0.0, 0.0, 0.0, 1.0));
 
     Matrix local_r;
-    q.RotationMatFrom(local_r);
+    q.rotationMatFrom(local_r);
 
     Matrix world = vertical_rot * local_r * local_t * p_world;
        

@@ -50,6 +50,8 @@ ${CMAKE_SOURCE_DIR}/src/maths.h
 
 source_group(maths FILES
 ${CMAKE_SOURCE_DIR}/src/maths.h
+${CMAKE_SOURCE_DIR}/src/quaternion.h
+${CMAKE_SOURCE_DIR}/src/quaternion.cpp
 )
 
 source_group(aspect FILES 
@@ -232,8 +234,6 @@ ${CMAKE_SOURCE_DIR}/src/pimanager.h
 ${CMAKE_SOURCE_DIR}/src/pimanager_impl.h
 ${CMAKE_SOURCE_DIR}/src/quadtree.cpp
 ${CMAKE_SOURCE_DIR}/src/quadtree.h
-${CMAKE_SOURCE_DIR}/src/quaternion.cpp
-${CMAKE_SOURCE_DIR}/src/quaternion.h
 ${CMAKE_SOURCE_DIR}/src/timemanager.cpp
 ${CMAKE_SOURCE_DIR}/src/timemanager.h
 ${CMAKE_SOURCE_DIR}/src/vector.cpp

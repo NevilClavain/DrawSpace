@@ -70,7 +70,7 @@ struct VectorKey
 struct QuaternionKey
 {
 	dsreal								time_tick;
-	Utils::Quaternion					value;
+	Maths::Quaternion					value;
 };
 
 struct NodeAnimation

@@ -41,7 +41,6 @@
 
 
 using namespace DrawSpace;
-using namespace DrawSpace::Commons;
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
@@ -712,16 +711,16 @@ int LuaClass_Globals::LUA_rotatequaternionx(lua_State* p_L)
     LuaClass_Vector*        lua_axis_vector     { Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion*    lua_quat            { Luna<LuaClass_Quaternion>::check(p_L, 3) };
 
-    Quaternion q, qres;
+    Maths::Quaternion q, qres;
 
-    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    q.rotationAxis(lua_axis_vector->getVector(), angle_rad);
     qres = lua_quat->GetQuaternion() * q; 
 
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
     Utils::Matrix orientation;
-    qres.RotationMatFrom(orientation);
+    qres.rotationMatFrom(orientation);
 
     // update input axis vector
     Vector out_axis_vector(orientation(0, 0), orientation(0, 1), orientation(0, 2), 1.0);
@@ -744,16 +743,16 @@ int LuaClass_Globals::LUA_rotatequaterniony(lua_State* p_L)
     LuaClass_Vector*        lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion*    lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
 
-    Quaternion q, qres;
+    Maths::Quaternion q, qres;
 
-    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    q.rotationAxis(lua_axis_vector->getVector(), angle_rad);
     qres = lua_quat->GetQuaternion() * q;
 
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
     Utils::Matrix orientation;
-    qres.RotationMatFrom(orientation);
+    qres.rotationMatFrom(orientation);
 
     // update input axis vector
     Vector out_axis_vector(orientation(1, 0), orientation(1, 1), orientation(1, 2), 1.0);
@@ -776,16 +775,16 @@ int LuaClass_Globals::LUA_rotatequaternionz(lua_State* p_L)
     LuaClass_Vector* lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion* lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
 
-    Quaternion q, qres;
+    Maths::Quaternion q, qres;
 
-    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    q.rotationAxis(lua_axis_vector->getVector(), angle_rad);
     qres = lua_quat->GetQuaternion() * q;
 
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
     Utils::Matrix orientation;
-    qres.RotationMatFrom(orientation);
+    qres.rotationMatFrom(orientation);
 
     // update input axis vector
     Vector out_axis_vector(orientation(2, 0), orientation(2, 1), orientation(2, 2), 1.0);

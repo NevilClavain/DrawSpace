@@ -168,7 +168,7 @@ int LuaClass_Matrix::LUA_rotationfromquaternion(lua_State* p_L)
 	}
 
 	LuaClass_Quaternion* lua_quat = Luna<LuaClass_Quaternion>::check(p_L, 1);
-	lua_quat->GetQuaternion().RotationMatFrom(m_matrix);
+	lua_quat->GetQuaternion().rotationMatFrom(m_matrix);
 
 	return 0;
 }

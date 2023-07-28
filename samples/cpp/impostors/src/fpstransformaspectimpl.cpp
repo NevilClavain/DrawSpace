@@ -67,9 +67,9 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
     bool y_mvt = flags[0]->getPurpose();
 
 	// les quaternions
-    Utils::Quaternion		    qyaw;
-	Utils::Quaternion		    qpitch;
-    Utils::Quaternion		    current_res;
+    Maths::Quaternion		    qyaw;
+    Maths::Quaternion		    qpitch;
+    Maths::Quaternion		    current_res;
 
     // les sorties
     Utils::Matrix			    orientation;
@@ -80,11 +80,11 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
 	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
 
 
-	qyaw.RotationAxis( yaxis, angle_yaw );
-	qpitch.RotationAxis( xaxis, angle_pitch );
+	qyaw.rotationAxis( yaxis, angle_yaw );
+	qpitch.rotationAxis( xaxis, angle_pitch );
 
 	current_res = qpitch * qyaw;
-	current_res.RotationMatFrom( orientation );
+	current_res.rotationMatFrom( orientation );
 
     orientation.Transform( &local_speed, &gs );
 

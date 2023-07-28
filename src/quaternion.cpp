@@ -24,11 +24,11 @@
 
 #include "quaternion.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 Quaternion::Quaternion(void)
 {
-    Zero();
+    zero();
 }
 
 Quaternion::Quaternion(dsreal p_x, dsreal p_y, dsreal p_z, dsreal p_w)
@@ -39,18 +39,14 @@ Quaternion::Quaternion(dsreal p_x, dsreal p_y, dsreal p_z, dsreal p_w)
 	m_quat[3] = p_w;
 }
 
-Quaternion::~Quaternion(void)
-{
-}
-
-Quaternion Quaternion::Lerp(const Quaternion& p_q1, const Quaternion& p_q2, dsreal p_blend)
+Quaternion Quaternion::lerp(const Quaternion& p_q1, const Quaternion& p_q2, dsreal p_blend)
 {
 	Quaternion q1 = p_q1;
 	Quaternion q2 = p_q2;
 	Quaternion result;
 	
-	q1.Normalize();
-	q2.Normalize();
+	q1.normalize();
+	q2.normalize();
 
 	dsreal dot_product = p_q1[0] * p_q2[0] + p_q1[1] * p_q2[1] + p_q1[2] * p_q2[2] + p_q1[3] * p_q2[3];
 	dsreal one_minus_blend = 1.0 - p_blend;
@@ -62,7 +58,7 @@ Quaternion Quaternion::Lerp(const Quaternion& p_q1, const Quaternion& p_q2, dsre
 	result[2] = p_q1[2] * one_minus_blend + p_blend * sign * p_q2[2];
 	result[3] = p_q1[3] * one_minus_blend + p_blend * sign * p_q2[3];
 
-	result.Normalize();
+	result.normalize();
 	return result;
 }
 
