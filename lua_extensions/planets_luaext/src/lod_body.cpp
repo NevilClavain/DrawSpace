@@ -98,7 +98,7 @@ void Body::Compute( void )
     /////////////////////////////////////////
 
     // alignment_factor_limit augmente au fur et a mesure qu'on approche l'altitude zero
-    const auto alignment_factor_limit { 0.25 * DrawSpace::Maths::Clamp(0.0, 1.0, (3.0 - m_relative_alt) / 3.0) };
+    const auto alignment_factor_limit { 0.25 * DrawSpace::Maths::clamp(0.0, 1.0, (3.0 - m_relative_alt) / 3.0) };
     if( m_enable_cdlod )
     {
         for( long i = 0; i < 6; i++ )

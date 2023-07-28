@@ -592,7 +592,7 @@ int LuaClass_Globals::LUA_clamp(lua_State* p_L)
     dsreal b = luaL_checknumber(p_L, 2);
     dsreal x = luaL_checknumber(p_L, 3);
 
-    lua_pushnumber(p_L, Maths::Clamp(a, b, x));
+    lua_pushnumber(p_L, Maths::clamp(a, b, x));
     return 1;
 }
 
@@ -665,10 +665,10 @@ int LuaClass_Globals::LUA_ctos(lua_State* p_L)
 
     Vector c(x, y, z, 1.0);
     Vector s;
-    Maths::CartesiantoSpherical(c, s);
+    Maths::cartesiantoSpherical(c, s);
        
-    dsreal longit{ Maths::RadToDeg(s[1]) };
-    dsreal latit{ Maths::RadToDeg(s[2]) };
+    dsreal longit{ Maths::radToDeg(s[1]) };
+    dsreal latit{ Maths::radToDeg(s[2]) };
 
     lua_pushnumber(p_L, s[0]);
     lua_pushnumber(p_L, longit);
@@ -685,12 +685,12 @@ int LuaClass_Globals::LUA_stoc(lua_State* p_L)
     }
 
     dsreal r = luaL_checknumber(p_L, 1);
-    dsreal t = Maths::DegToRad(luaL_checknumber(p_L, 2));
-    dsreal p = Maths::DegToRad(luaL_checknumber(p_L, 3));
+    dsreal t = Maths::degToRad(luaL_checknumber(p_L, 2));
+    dsreal p = Maths::degToRad(luaL_checknumber(p_L, 3));
 
     Vector s(r, t, p, 1.0);
     Vector c;
-    Maths::SphericaltoCartesian(s, c);
+    Maths::sphericaltoCartesian(s, c);
 
     lua_pushnumber(p_L, c[0]);
     lua_pushnumber(p_L, c[1]);
@@ -707,7 +707,7 @@ int LuaClass_Globals::LUA_rotatequaternionx(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LuaClass_Vector*        lua_axis_vector     { Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion*    lua_quat            { Luna<LuaClass_Quaternion>::check(p_L, 3) };
@@ -739,7 +739,7 @@ int LuaClass_Globals::LUA_rotatequaterniony(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LuaClass_Vector*        lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion*    lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
@@ -771,7 +771,7 @@ int LuaClass_Globals::LUA_rotatequaternionz(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LuaClass_Vector* lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion* lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };

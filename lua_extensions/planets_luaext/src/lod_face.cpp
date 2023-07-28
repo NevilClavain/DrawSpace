@@ -678,11 +678,11 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         // c'est la fct atan qui est choisie pour son profil.
 
         // ramener dans l'intervale 1.0 - 0.0
-        const auto factor { Maths::Clamp(0.0, 1.0, m_relative_alt - 1.0) };
+        const auto factor { Maths::clamp(0.0, 1.0, m_relative_alt - 1.0) };
         const auto factor2 { atan(60.0 * factor) / 1.57 };
 
-        m_lod_slipping_sup = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 12, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, factor2 ) );
-        m_lod_slipping_inf = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 0, /*NB_LOD_RANGES - 2*/ m_nbLODRanges - 2, factor2 ) );
+        m_lod_slipping_sup = Maths::clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::lerp( 12, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, factor2 ) );
+        m_lod_slipping_inf = Maths::clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::lerp( 0, /*NB_LOD_RANGES - 2*/ m_nbLODRanges - 2, factor2 ) );
     }
 }
 

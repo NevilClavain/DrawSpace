@@ -294,7 +294,7 @@ int LuaClass_FreeMovementTransform::LUA_rotateX(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LUA_TRY
     {
@@ -336,7 +336,7 @@ int LuaClass_FreeMovementTransform::LUA_rotateY(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LUA_TRY
     {
@@ -378,7 +378,7 @@ int LuaClass_FreeMovementTransform::LUA_rotateZ(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LUA_TRY
     {

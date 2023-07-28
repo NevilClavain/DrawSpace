@@ -211,9 +211,9 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Vector sphere_pos;
         Vector spos;
 
-        Maths::CubeToSphere( cube_pos, sphere_pos );
+        Maths::cubeToSphere( cube_pos, sphere_pos );
 
-        Maths::CartesiantoSpherical( sphere_pos, spos );
+        Maths::cartesiantoSpherical( sphere_pos, spos );
 
         rot_phi = spos[2];
         rot_theta = spos[1];
@@ -299,7 +299,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Vector landplace_normale( 0.0, 0.0, 1.0, 1.0 );
 
         Vector landplace_normale_orient;
-        Maths::VectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
+        Maths::vectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
 
         Vector landplace_normale_t;
 
@@ -1243,7 +1243,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
             Vector v( xcurr, ycurr, 0.0, 1.0 );
 
 
-            Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
+            Maths::vectorPlanetOrientation( p_orientation, v, v_orient );
 
 
             vertex.x = v_orient[0];

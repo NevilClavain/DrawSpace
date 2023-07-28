@@ -52,7 +52,7 @@ void OrbitTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_tra
     dsreal a = 1.0;
     dsreal b = excentricity;
 
-    dsreal rad_ang = Maths::DegToRad(orbit_angle);
+    dsreal rad_ang = Maths::degToRad(orbit_angle);
     dsreal x = a * cos(rad_ang);
     dsreal z = b * sin(rad_ang);
 
@@ -63,13 +63,14 @@ void OrbitTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_tra
     orbit.Translation(x, 0.0, z);
 
     Matrix revol_ax;
-    revol_ax.Rotation(Vector(1.0, 0.0, 0.0, 1.0), Maths::DegToRad(revol_axe_inclination)); // inclinaison de l'objet en orbite ( les saisons, pour une planete !!)
+    revol_ax.Rotation(Vector(1.0, 0.0, 0.0, 1.0), Maths::degToRad(revol_axe_inclination)); // inclinaison de l'objet en orbite ( les saisons, pour une planete !!)
 
     Matrix orbit_tilt;
-    orbit_tilt.Rotation(Vector(0.0, 0.0, 1.0, 1.0), Maths::DegToRad(orbit_tilt_angle));
+    orbit_tilt.Rotation(Vector(0.0, 0.0, 1.0, 1.0), Maths::degToRad(orbit_tilt_angle));
 
     Matrix orbit_pan;
-    orbit_pan.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::DegToRad(orbit_pan_angle));
+    orbit_pan.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::degToRad(orbit_pan_angle));
+    orbit_pan.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::degToRad(orbit_pan_angle));
 
     p_out_base_transform = revol_ax * orbit * orbit_tilt * orbit_pan;
 

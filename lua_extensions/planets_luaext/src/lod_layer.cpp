@@ -293,8 +293,8 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
 
     const auto resol{ cst::patchResolution };
 
-    const auto x1 { Maths::Floor(((xcoord + 0.5)) * resol) };
-    auto y1 { Maths::Floor(((ycoord + 0.5)) * resol) };
+    const auto x1 { Maths::floor(((xcoord + 0.5)) * resol) };
+    auto y1 { Maths::floor(((ycoord + 0.5)) * resol) };
 
     const auto x2{ x1 + 1 };
     auto y2{ y1 + 1 };
@@ -324,9 +324,9 @@ dsreal Layer::get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y)
 
     const auto unit_x { (xcoord - xg1) / interv };
     const auto unit_y { (ycoord - yg1) / interv };
-    const auto a1 { Maths::Lerp(Maths::Lerp(h1, h4, unit_y), Maths::Lerp(h2, h3, unit_y), unit_x) };
+    const auto a1 { Maths::lerp(Maths::lerp(h1, h4, unit_y), Maths::lerp(h2, h3, unit_y), unit_x) };
 
-    return Maths::Clamp(m_currentpatch_min_height, m_currentpatch_max_height, a1);
+    return Maths::clamp(m_currentpatch_min_height, m_currentpatch_max_height, a1);
 }
 
 void Layer::on_subpassdone(LOD::HeighmapSubPass* p_subpass)

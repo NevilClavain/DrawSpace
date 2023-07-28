@@ -36,31 +36,31 @@ namespace DrawSpace
 	{
 		static constexpr dsreal	pi{ 3.1415927 };
 
-		static double		Square( dsreal a )						    { return a * a; };
-		static int			Floor( dsreal a )							{ return ((int)a - (a < 0 && a != (int)a)); };
-		static int			Ceiling( dsreal a )						    { return ((int)a + (a > 0 && a != (int)a)); };
+		static double		square( dsreal a )						    { return a * a; };
+		static int			floor( dsreal a )							{ return ((int)a - (a < 0 && a != (int)a)); };
+		static int			ceiling( dsreal a )						    { return ((int)a + (a > 0 && a != (int)a)); };
 
-		static double		Min( dsreal a, dsreal b )					{ return (a < b ? a : b); };
-		static double		Max( dsreal a, dsreal b )					{ return (a > b ? a : b); };
-		static double		Abs( dsreal a )							    { return (a < 0 ? -a : a); };
-		static double		Clamp( dsreal a, dsreal b, dsreal x )		{ return (x < a ? a : (x > b ? b : x)); };
-		static double		Lerp( dsreal a, dsreal b, dsreal x )		{ return a + x * (b - a); };
-		static double		Cubic( dsreal a )							{ return a * a * (3 - 2*a); };
-		static double		Pulse( dsreal a, dsreal b, dsreal x )		{ return (double)((x >= a) - (x >= b)); };
-		static double		Gamma( dsreal a, dsreal g )				    { return pow(a, 1/g); };
-		static double		Expose( dsreal l, dsreal k )				{ return (1 - exp(-l * k)); };
-		static double		DegToRad( dsreal ang )					    { return ( ( ang * pi ) / 180.0 ); };
-		static double		RadToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / pi ); };
+		static double		getMin( dsreal a, dsreal b )					{ return (a < b ? a : b); };
+		static double		getMax( dsreal a, dsreal b )					{ return (a > b ? a : b); };
+		static double		abs( dsreal a )							    { return (a < 0 ? -a : a); };
+		static double		clamp( dsreal a, dsreal b, dsreal x )		{ return (x < a ? a : (x > b ? b : x)); };
+		static double		lerp( dsreal a, dsreal b, dsreal x )		{ return a + x * (b - a); };
+		static double		cubic( dsreal a )							{ return a * a * (3 - 2*a); };
+		static double		pulse( dsreal a, dsreal b, dsreal x )		{ return (double)((x >= a) - (x >= b)); };
+		static double		gamma( dsreal a, dsreal g )				    { return pow(a, 1/g); };
+		static double		expose( dsreal l, dsreal k )				{ return (1 - exp(-l * k)); };
+		static double		degToRad( dsreal ang )					    { return ( ( ang * pi ) / 180.0 ); };
+		static double		radToDeg( dsreal ang )					    { return ( ( ang * 180.0 ) / pi ); };
 
 
-		static void	SphericaltoCartesian( const Vector& p_in, Vector& p_out )
+		static void	sphericaltoCartesian( const Vector& p_in, Vector& p_out )
 		{
 			p_out[2] = ( p_in[0] * cos( p_in[2] ) * cos( p_in[1] ) );
 			p_out[0] = ( p_in[0] * cos( p_in[2] ) * sin( p_in[1] ) );
 			p_out[1] = ( p_in[0] * sin( p_in[2] ) );
 		}
 	
-		static void	CartesiantoSpherical( Vector& p_in, Vector& p_out )
+		static void	cartesiantoSpherical( Vector& p_in, Vector& p_out )
 		{
 			// cas particulier
 			if( p_in[1] > 0.0 && 0.0 == p_in[0] && 0.0 == p_in[2] )
@@ -83,7 +83,7 @@ namespace DrawSpace
 			p_out[1] = atan2( p_in[0], p_in[2] );
 		}
 
-		static void CubeToSphere( Vector& p_in, Vector& p_out )
+		static void cubeToSphere( Vector& p_in, Vector& p_out )
 		{
 			float xtemp = p_in[0];
 			float ytemp = p_in[1];
@@ -94,7 +94,7 @@ namespace DrawSpace
 			p_out[2] = ztemp * sqrt( 1.0 - xtemp * xtemp * 0.5 - ytemp * ytemp * 0.5 + xtemp * xtemp * ytemp * ytemp / 3.0 );
 		}
 
-		static void VectorPlanetOrientation( int p_orientation, Vector& p_in, Vector& p_out )
+		static void vectorPlanetOrientation( int p_orientation, Vector& p_in, Vector& p_out )
 		{
 			Vector res;
 

@@ -72,7 +72,7 @@ void RevolutionTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* 
     dsreal revol_duration{ p_transformaspect->GetComponent<dsreal>("revol_duration")->getPurpose() }; //unite : 1.0 jour terrestre (24h)
 
     Matrix revol_rotation;
-    revol_rotation.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::DegToRad(angle));
+    revol_rotation.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::degToRad(angle));
 
     p_out_base_transform = revol_rotation;
     dsreal revol_angle{ compute_revolution_angle(revol_duration, angle) };
