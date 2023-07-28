@@ -39,7 +39,7 @@ namespace DrawSpace
         // fwd decl
         class Output;
         
-        class Configuration : public Singleton<Configuration>
+        class Configuration : public Commons::Singleton<Configuration>
         {
         public:
             Configuration(void);

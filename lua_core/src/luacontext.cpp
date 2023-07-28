@@ -162,7 +162,7 @@ int LuaContext::ExecuteFromFile( const dsstring& p_filepath )
 	return global_status;
 }
 
-dsstring LuaContext::GetLastError( void )
+dsstring LuaContext::GetLastError( void ) const
 {
     return m_error;
 }

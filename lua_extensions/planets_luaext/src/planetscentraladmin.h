@@ -31,8 +31,17 @@
 
 class PlanetsRenderingAspectImpl;
 
-class PlanetsCentralAdmin : public DrawSpace::Singleton<PlanetsCentralAdmin>
+class PlanetsCentralAdmin : public DrawSpace::Commons::Singleton<PlanetsCentralAdmin>
 {
+	public:
+	PlanetsCentralAdmin(void);
+
+	void Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub);
+	void Unregister(PlanetsRenderingAspectImpl* p_planet);
+
+	void SetLogconf(DrawSpace::Logger::Configuration* p_logconf);
+	DrawSpace::Logger::Configuration* GetLogconf(void) const;
+
 private:
 
 	using SystemsEvtCb = DrawSpace::Core::CallBack2<PlanetsCentralAdmin, void, DrawSpace::Interface::System::Event, dsstring>;
@@ -42,16 +51,7 @@ private:
 	SystemsEvtCb								m_system_evt_cb;
 	std::set<PlanetsRenderingAspectImpl*>		m_planet_renderers;
 
-	void on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);	
-
-public:
-	PlanetsCentralAdmin(void);
-
-	void Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub);
-	void Unregister(PlanetsRenderingAspectImpl* p_planet);
-
-	void SetLogconf(DrawSpace::Logger::Configuration* p_logconf);
-	DrawSpace::Logger::Configuration* GetLogconf(void) const;
+	void on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
 
 };
 

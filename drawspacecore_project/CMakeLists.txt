@@ -44,6 +44,7 @@ source_group(commons FILES
 ${CMAKE_SOURCE_DIR}/src/ds_types.h
 ${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/primitives.h
+${CMAKE_SOURCE_DIR}/src/singleton.h
 )
 
 source_group(aspect FILES 

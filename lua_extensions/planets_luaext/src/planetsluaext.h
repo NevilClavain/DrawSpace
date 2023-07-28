@@ -29,17 +29,14 @@
 
 namespace DrawSpace
 {
-namespace Logger
-{
-class Configuration;
-}
+	namespace Logger
+	{
+		class Configuration;
+	}
 }
 
-class PlanetsLuaExtension : public LuaExtension, public DrawSpace::Singleton<PlanetsLuaExtension>
+class PlanetsLuaExtension : public LuaExtension, public DrawSpace::Commons::Singleton<PlanetsLuaExtension>
 {
-private:
-	DrawSpace::Systems::Hub* m_hub{ nullptr };
-
 public:
 	PlanetsLuaExtension(void);
 
@@ -54,6 +51,10 @@ public:
 
 
 	__LUAEXT_DESCRIPTION__("Procedural planets rendering extension")
+
+private:
+	DrawSpace::Systems::Hub* m_hub{ nullptr };
+
 };
 
 
