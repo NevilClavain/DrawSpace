@@ -46,6 +46,7 @@
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
@@ -298,7 +299,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Vector landplace_normale( 0.0, 0.0, 1.0, 1.0 );
 
         Vector landplace_normale_orient;
-        Utils::Maths::VectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
+        Maths::VectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
 
         Vector landplace_normale_t;
 
@@ -1242,7 +1243,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
             Vector v( xcurr, ycurr, 0.0, 1.0 );
 
 
-            Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
+            Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
 
 
             vertex.x = v_orient[0];

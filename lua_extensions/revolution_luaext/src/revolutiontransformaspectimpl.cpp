@@ -28,6 +28,7 @@
 #include "transformaspect.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;

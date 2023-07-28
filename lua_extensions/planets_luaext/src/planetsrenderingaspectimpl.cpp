@@ -1892,8 +1892,8 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             Maths::CartesiantoSpherical(locale_camera_pos_from_planet, spherical);
 
             camera.second.locale_camera_long_lat[0] = spherical[0];
-            camera.second.locale_camera_long_lat[1] = Utils::Maths::RadToDeg( spherical[1] );
-            camera.second.locale_camera_long_lat[2] = Utils::Maths::RadToDeg( spherical[2] );
+            camera.second.locale_camera_long_lat[1] = Maths::RadToDeg( spherical[1] );
+            camera.second.locale_camera_long_lat[2] = Maths::RadToDeg( spherical[2] );
 
             camera.second.global_camera_pos_from_planet = camera_pos_from_planet;
 

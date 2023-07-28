@@ -32,6 +32,7 @@ namespace DrawSpace
 {
 namespace Utils
 {
+using namespace DrawSpace::Commons;
 class Quaternion
 {
 protected:
@@ -81,14 +82,14 @@ public:
 
 		dsreal dot{ forward * forwardVector };
 
-		if (Utils::Maths::Abs(dot - (-1.0)) < 0.000001)
+		if (Maths::Abs(dot - (-1.0)) < 0.000001)
 		{
 			m_quat[0] = 0.0;
 			m_quat[1] = 1.0;
 			m_quat[2] = 0.0;
-			m_quat[3] = Utils::Maths::pi;
+			m_quat[3] = Maths::pi;
 		}
-		else if (Utils::Maths::Abs(dot - (1.0)) < 0.000001)
+		else if (Maths::Abs(dot - (1.0)) < 0.000001)
 		{
 			Identity();
 		}

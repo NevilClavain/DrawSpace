@@ -41,6 +41,8 @@
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Commons;
+
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 
@@ -663,7 +665,7 @@ int LuaClass_Globals::LUA_ctos(lua_State* p_L)
 
     Vector c(x, y, z, 1.0);
     Vector s;
-    Utils::Maths::CartesiantoSpherical(c, s);
+    Maths::CartesiantoSpherical(c, s);
        
     dsreal longit{ Maths::RadToDeg(s[1]) };
     dsreal latit{ Maths::RadToDeg(s[2]) };
@@ -688,7 +690,7 @@ int LuaClass_Globals::LUA_stoc(lua_State* p_L)
 
     Vector s(r, t, p, 1.0);
     Vector c;
-    Utils::Maths::SphericaltoCartesian(s, c);
+    Maths::SphericaltoCartesian(s, c);
 
     lua_pushnumber(p_L, c[0]);
     lua_pushnumber(p_L, c[1]);
