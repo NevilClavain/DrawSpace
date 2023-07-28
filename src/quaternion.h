@@ -32,7 +32,6 @@ namespace DrawSpace
 {
 namespace Utils
 {
-using namespace DrawSpace::Commons;
 class Quaternion
 {
 protected:
