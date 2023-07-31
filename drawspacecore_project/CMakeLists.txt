@@ -45,13 +45,14 @@ ${CMAKE_SOURCE_DIR}/src/ds_types.h
 ${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/primitives.h
 ${CMAKE_SOURCE_DIR}/src/singleton.h
-${CMAKE_SOURCE_DIR}/src/maths.h
 )
 
 source_group(maths FILES
 ${CMAKE_SOURCE_DIR}/src/maths.h
 ${CMAKE_SOURCE_DIR}/src/quaternion.h
 ${CMAKE_SOURCE_DIR}/src/quaternion.cpp
+${CMAKE_SOURCE_DIR}/src/matrix.cpp
+${CMAKE_SOURCE_DIR}/src/matrix.h
 )
 
 source_group(aspect FILES 
@@ -219,8 +220,6 @@ ${CMAKE_SOURCE_DIR}/src/filesystem.cpp
 ${CMAKE_SOURCE_DIR}/src/filesystem.h
 ${CMAKE_SOURCE_DIR}/src/jsonparser.cpp
 ${CMAKE_SOURCE_DIR}/src/jsonparser.h
-${CMAKE_SOURCE_DIR}/src/matrix.cpp
-${CMAKE_SOURCE_DIR}/src/matrix.h
 ${CMAKE_SOURCE_DIR}/src/md5.h
 ${CMAKE_SOURCE_DIR}/src/memalloc.cpp
 ${CMAKE_SOURCE_DIR}/src/memalloc.h

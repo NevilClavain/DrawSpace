@@ -31,6 +31,163 @@ Matrix::Matrix( void )
     zero();
 }
 
+void Matrix::zero(void)
+{
+    m_matrix[0][0] = 0.0;
+    m_matrix[0][1] = 0.0;
+    m_matrix[0][2] = 0.0;
+    m_matrix[0][3] = 0.0;
+
+    m_matrix[1][0] = 0.0;
+    m_matrix[1][1] = 0.0;
+    m_matrix[1][2] = 0.0;
+    m_matrix[1][3] = 0.0;
+
+    m_matrix[2][0] = 0.0;
+    m_matrix[2][1] = 0.0;
+    m_matrix[2][2] = 0.0;
+    m_matrix[2][3] = 0.0;
+
+    m_matrix[3][0] = 0.0;
+    m_matrix[3][1] = 0.0;
+    m_matrix[3][2] = 0.0;
+    m_matrix[3][3] = 0.0;
+
+    m_configinfos.type = ConfigurationType::CONFIG_ZERO;
+
+    m_configinfos.values[0] = 0.0;
+    m_configinfos.values[1] = 0.0;
+    m_configinfos.values[2] = 0.0;
+    m_configinfos.values[3] = 0.0;
+}
+
+void Matrix::identity(void)
+{
+    zero();
+    m_matrix[0][0] = 1.0;
+    m_matrix[1][1] = 1.0;
+    m_matrix[2][2] = 1.0;
+    m_matrix[3][3] = 1.0;
+
+    m_configinfos.type = ConfigurationType::CONFIG_IDENTITY;
+
+    m_configinfos.values[0] = 0.0;
+    m_configinfos.values[1] = 0.0;
+    m_configinfos.values[2] = 0.0;
+    m_configinfos.values[3] = 0.0;
+}
+
+void Matrix::translation(dsreal p_x, dsreal p_y, dsreal p_z)
+{
+    identity();
+    m_matrix[3][0] = p_x;
+    m_matrix[3][1] = p_y;
+    m_matrix[3][2] = p_z;
+
+    m_configinfos.type = ConfigurationType::CONFIG_TRANSLATION;
+    m_configinfos.values[0] = p_x;
+    m_configinfos.values[1] = p_y;
+    m_configinfos.values[2] = p_z;
+    m_configinfos.values[3] = 0.0;
+
+}
+
+void Matrix::translation(const Utils::Vector& p_pos)
+{
+    identity();
+    m_matrix[3][0] = p_pos[0];
+    m_matrix[3][1] = p_pos[1];
+    m_matrix[3][2] = p_pos[2];
+
+    m_configinfos.type = ConfigurationType::CONFIG_TRANSLATION;
+    m_configinfos.values[0] = p_pos[0];
+    m_configinfos.values[1] = p_pos[1];
+    m_configinfos.values[2] = p_pos[2];
+    m_configinfos.values[3] = 0.0;
+
+}
+
+void Matrix::perspective(dsreal p_w, dsreal p_h, dsreal p_zn, dsreal p_zf)
+{
+    zero();
+    m_matrix[0][0] = 2.0f * p_zn / p_w;
+    m_matrix[1][1] = 2.0f * p_zn / p_h;
+    m_matrix[2][2] = p_zf / (p_zf - p_zn);
+    m_matrix[3][2] = -p_zn * m_matrix[2][2];
+    m_matrix[2][3] = 1.0f;
+
+    m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
+}
+
+
+void Matrix::transpose(void)
+{
+    dsreal msave[4][4];
+
+    memcpy(&msave, m_matrix, 16 * sizeof(dsreal));
+
+    m_matrix[0][1] = msave[1][0];
+    m_matrix[0][2] = msave[2][0];
+    m_matrix[0][3] = msave[3][0];
+
+    m_matrix[1][0] = msave[0][1];
+
+    m_matrix[1][2] = msave[2][1];
+    m_matrix[1][3] = msave[3][1];
+
+    m_matrix[2][0] = msave[0][2];
+    m_matrix[2][1] = msave[1][2];
+
+    m_matrix[2][3] = msave[3][2];
+
+    m_matrix[3][0] = msave[0][3];
+    m_matrix[3][1] = msave[1][3];
+    m_matrix[3][2] = msave[2][3];
+
+    m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
+}
+
+void Matrix::scale(dsreal p_sx, dsreal p_sy, dsreal p_sz)
+{
+    zero();
+    m_matrix[0][0] = p_sx;
+    m_matrix[1][1] = p_sy;
+    m_matrix[2][2] = p_sz;
+    m_matrix[3][3] = 1.0;
+
+    m_configinfos.type = ConfigurationType::CONFIG_SCALING;
+    m_configinfos.values[0] = p_sx;
+    m_configinfos.values[1] = p_sy;
+    m_configinfos.values[2] = p_sz;
+    m_configinfos.values[3] = 0.0;
+
+}
+
+void Matrix::scale(const Utils::Vector& p_pos)
+{
+    zero();
+    m_matrix[0][0] = p_pos[0];
+    m_matrix[1][1] = p_pos[1];
+    m_matrix[2][2] = p_pos[2];
+    m_matrix[3][3] = 1.0;
+
+    m_configinfos.type = ConfigurationType::CONFIG_SCALING;
+    m_configinfos.values[0] = p_pos[0];
+    m_configinfos.values[1] = p_pos[1];
+    m_configinfos.values[2] = p_pos[2];
+    m_configinfos.values[3] = 0.0;
+
+}
+
+
+void Matrix::clearTranslation(void)
+{
+    m_matrix[3][0] = 0.0;
+    m_matrix[3][1] = 0.0;
+    m_matrix[3][2] = 0.0;
+
+    m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
+}
 
 void Matrix::inverse( void )
 {
