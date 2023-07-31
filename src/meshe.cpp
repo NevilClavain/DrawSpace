@@ -38,7 +38,7 @@ using namespace DrawSpace::Interface;
 
 Meshe::Meshe( void )
 {
-    m_normales_transf.Identity();
+    m_normales_transf.identity();
 }
 
 Meshe::~Meshe( void )
@@ -416,12 +416,12 @@ Meshe::TangentBinormalesGenerationMode Meshe::GetTBGenerationMode(void) const
     return m_tb_gen_mode;
 }
 
-void Meshe::SetNormalesTransf(const Utils::Matrix& p_transf)
+void Meshe::SetNormalesTransf(const Maths::Matrix& p_transf)
 {
     m_normales_transf = p_transf;
 }
 
-Utils::Matrix Meshe::GetNormalesTransf(void) const
+Maths::Matrix Meshe::GetNormalesTransf(void) const
 {
     return m_normales_transf;
 }

@@ -33,6 +33,7 @@ using namespace DrawSpace::Aspect;
 
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 #define SB_DIM 0.5
 
@@ -245,10 +246,10 @@ SkyboxRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
         m_rendering_node[i]->m_debug_id = "skybox_node";
     }
 
-    m_world.Identity();
+    m_world.identity();
     
-    m_view.Identity();
-    m_proj.Identity();
+    m_view.identity();
+    m_proj.identity();
 }
 
 SkyboxRenderingAspectImpl::PassSlot::~PassSlot( void )
@@ -333,11 +334,11 @@ void SkyboxRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     {
         Matrix world;        
         transform_aspect->GetWorldTransform( world );
-        world.ClearTranslation();
+        world.clearTranslation();
 
         Matrix view;
         transform_aspect->GetViewTransform( view );
-        view.ClearTranslation();
+        view.clearTranslation();
 
         Matrix proj;
         transform_aspect->GetProjTransform( proj ); 

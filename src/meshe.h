@@ -81,7 +81,7 @@ namespace DrawSpace
             void SetPath( const dsstring& p_path );
             void SetNGenerationMode(NormalesGenerationMode p_mode);    
             void SetTBGenerationMode(TangentBinormalesGenerationMode p_mode);
-            void SetNormalesTransf(const Utils::Matrix& p_transf);
+            void SetNormalesTransf(const Maths::Matrix& p_transf);
             void SetVertices(const std::vector<Vertex>& p_vertices);
             void SetTriangles(const std::vector<TrianglePrimitive<unsigned int>>& p_triangles);
 
@@ -92,7 +92,7 @@ namespace DrawSpace
             void GetTriangles(long p_index, TrianglePrimitive<unsigned int>& p_triangle) const;
             std::vector<Vertex> GetVertices(void) const;
             std::vector<TrianglePrimitive<unsigned int>> GetTriangles(void) const;
-            Utils::Matrix GetNormalesTransf( void ) const;
+            Maths::Matrix GetNormalesTransf( void ) const;
             void* GetRenderData(void) const;
             void GetMD5(dsstring& p_md5) const;
             void GetPath(dsstring& p_path) const;
@@ -114,7 +114,7 @@ namespace DrawSpace
             NormalesGenerationMode                                                  m_n_gen_mode{ NormalesGenerationMode::NORMALES_COMPUTED };
             TangentBinormalesGenerationMode                                         m_tb_gen_mode{ TangentBinormalesGenerationMode::TB_DISCARDED };
 
-            Utils::Matrix                                                           m_normales_transf;
+            Maths::Matrix                                                           m_normales_transf;
 
             void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
                 Utils::Vector& p_T, Utils::Vector& p_B, Utils::Vector& p_N);

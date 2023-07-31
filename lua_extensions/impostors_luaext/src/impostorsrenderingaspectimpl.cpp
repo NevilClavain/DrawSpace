@@ -31,6 +31,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 
 ImpostorsRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
@@ -44,9 +45,9 @@ m_cb( _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( thi
 
     m_rendering_node->m_debug_id = "impostors_node";
 
-    m_world.Identity();
-    m_view.Identity();
-    m_proj.Identity();
+    m_world.identity();
+    m_view.identity();
+    m_proj.identity();
 }
 
 ImpostorsRenderingAspectImpl::PassSlot::~PassSlot( void )

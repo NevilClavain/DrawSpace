@@ -38,15 +38,15 @@ class TimeAspect;
 class TransformAspect : public Core::ComponentContainer
 {
 protected:
-    DrawSpace::Utils::Matrix                                                            m_worldtransform;
-    DrawSpace::Utils::Matrix                                                            m_worldtransformfromphysicworld;
-    DrawSpace::Utils::Matrix                                                            m_localtransform;
+    DrawSpace::Maths::Matrix                                                            m_worldtransform;
+    DrawSpace::Maths::Matrix                                                            m_worldtransformfromphysicworld;
+    DrawSpace::Maths::Matrix                                                            m_localtransform;
 
-    DrawSpace::Utils::Matrix                                                            m_stack_matrix;
+    DrawSpace::Maths::Matrix                                                            m_stack_matrix;
 
     // transfos view et proj "distribuees" par le worldsystem
-    DrawSpace::Utils::Matrix                                                            m_dispatched_viewtransform;
-    DrawSpace::Utils::Matrix                                                            m_dispatched_projtransform;
+    DrawSpace::Maths::Matrix                                                            m_dispatched_viewtransform;
+    DrawSpace::Maths::Matrix                                                            m_dispatched_projtransform;
 
     std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*>    m_impls_list;
 
@@ -58,17 +58,17 @@ public:
     void AddImplementation(int p_order, DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl);   
     void RemoveAllImplementations(void);
     
-    void GetWorldTransform( DrawSpace::Utils::Matrix& p_worldtransform ) const;
-    void GetLocalTransform(DrawSpace::Utils::Matrix& p_localtransform) const;
-    void GetWorldTransformFromPhysicWorld( DrawSpace::Utils::Matrix& p_worldtransform ) const;
-    void GetStackMatrix(DrawSpace::Utils::Matrix& p_stack) const;
+    void GetWorldTransform( DrawSpace::Maths::Matrix& p_worldtransform ) const;
+    void GetLocalTransform(DrawSpace::Maths::Matrix& p_localtransform) const;
+    void GetWorldTransformFromPhysicWorld( DrawSpace::Maths::Matrix& p_worldtransform ) const;
+    void GetStackMatrix(DrawSpace::Maths::Matrix& p_stack) const;
 
-    void GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const;
-    void GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform ) const;
+    void GetViewTransform( DrawSpace::Maths::Matrix& p_viewtransform ) const;
+    void GetProjTransform( DrawSpace::Maths::Matrix& p_projtransform ) const;
 	TimeAspect* GetTimeAspectRef(void) const;
 
     void ComputeTransforms( Core::Entity* p_parent, Core::Entity* p_entity );
-    void DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj );
+    void DispatchViewProj( const DrawSpace::Maths::Matrix& p_view, DrawSpace::Maths::Matrix& p_proj );
 
     void SetTimeAspect( TimeAspect* p_time_aspect );
 

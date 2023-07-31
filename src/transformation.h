@@ -38,8 +38,8 @@ class Transformation
 {
 protected:
 
-	std::vector<DrawSpace::Utils::Matrix>	m_matrix_chain;
-    DrawSpace::Utils::Matrix	            m_result;
+	std::vector<DrawSpace::Maths::Matrix>	m_matrix_chain;
+    DrawSpace::Maths::Matrix	            m_result;
 
 public:
 	Transformation( void );
@@ -47,16 +47,16 @@ public:
 
 	~Transformation( void );
 
-	void    PushMatrix( const DrawSpace::Utils::Matrix& p_matrix );
+	void    PushMatrix( const DrawSpace::Maths::Matrix& p_matrix );
 	void    BuildResult( void );
-	void	GetResult( DrawSpace::Utils::Matrix* p_res );
+	void	GetResult( DrawSpace::Maths::Matrix* p_res );
 	void	ClearAll( void );
-    void    GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list );
-    void    UpdateMatrix( size_t p_index, const DrawSpace::Utils::Matrix& p_mat );
+    void    GetMatrixChain( std::vector<DrawSpace::Maths::Matrix>& p_list );
+    void    UpdateMatrix( size_t p_index, const DrawSpace::Maths::Matrix& p_mat );
 
 
-    void    GetBaseTransform( DrawSpace::Utils::Matrix& p_mat );
-    void    SetFinalTransform( const DrawSpace::Utils::Matrix& p_mat ) { };
+    void    GetBaseTransform( DrawSpace::Maths::Matrix& p_mat );
+    void    SetFinalTransform( const DrawSpace::Maths::Matrix& p_mat ) { };
     
 };
 }

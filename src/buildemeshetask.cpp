@@ -204,7 +204,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
             Utils::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
             Utils::Vector nt;
 
-            n_transf.Transform(&n, &nt);
+            n_transf.transform(&n, &nt);
 
             vertex.nx = nt[0];
             vertex.ny = nt[1];

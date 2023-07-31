@@ -31,6 +31,7 @@
 
 
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 const char LuaClass_Quaternion::className[] = "Quaternion";
 const Luna<LuaClass_Quaternion>::RegType LuaClass_Quaternion::methods[] =

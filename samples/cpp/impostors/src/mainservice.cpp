@@ -40,6 +40,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 static DrawSpace::Logger::Sink logger("test_impostors_mainservice");
 
@@ -493,7 +494,7 @@ void MainService::create_skybox(void)
 
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
-    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
+    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().scale( 100.0, 100.0, 100.0 );
         
 }
 
@@ -575,7 +576,7 @@ void MainService::create_world_impostor( void )
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( -15.0, 2.0, -12.0, 1.0) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().translation( Vector( -15.0, 2.0, -12.0, 1.0) );
 
 }
 
@@ -698,7 +699,7 @@ void MainService::create_screen_impostors( void )
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().translation( Vector( 0.0, 6.0, -12.0, 1.0) );
 }
 
 void MainService::create_sprite_impostor(void)
@@ -914,7 +915,7 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
     transform_aspect->AddImplementation(0, &m_wireframecube_transformer);
 
     transform_aspect->AddComponent<Matrix>("pos");
-    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(0.0, -2.0, 0.0);
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(0.0, -2.0, 0.0);
 
 }
 
@@ -975,7 +976,7 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRendering
     transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
 
     Matrix cube_attitude;
-    cube_attitude.Translation(p_x, p_y, p_z);
+    cube_attitude.translation(p_x, p_y, p_z);
     transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
     transform_aspect->AddComponent<dsreal>("mass", 7.0);
 }
@@ -1043,8 +1044,8 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("main_box", Vector(1.5, 1.0, 1.0, 1.0));
 
-        Utils::Matrix feet_pos;
-        feet_pos.Translation(1.22307, -3.31759, 0.01);
+        Maths::Matrix feet_pos;
+        feet_pos.translation(1.22307, -3.31759, 0.01);
 
         transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("feet", Vector(0.1, 2.5, 0.2, 1.0), feet_pos);
 
@@ -1053,7 +1054,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         
 
         Matrix cube_attitude;
-        cube_attitude.Translation(p_x, p_y, p_z);
+        cube_attitude.translation(p_x, p_y, p_z);
         transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
         transform_aspect->AddComponent<dsreal>("mass", 7.0);
     }
@@ -1106,7 +1107,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         transform_aspect->AddImplementation(0, &p_transform_impl);
 
         transform_aspect->AddComponent<Matrix>("pos");
-        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
+        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().identity();
         
 
     }
@@ -1163,7 +1164,7 @@ void MainService::create_ground( void )
   
     transform_aspect->AddImplementation(0, &m_ground_transformer);
     transform_aspect->AddComponent<Matrix>("pos");
-    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(0.0, -4.0, 0.0, 1.0));
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(0.0, -4.0, 0.0, 1.0));
 
 
     CollisionAspect* collision_aspect{ m_groundEntity.AddAspect<CollisionAspect>() };
@@ -1185,7 +1186,7 @@ void MainService::create_camera( void )
     transform_aspect->AddComponent<Vector>( "speed" );
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 30.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().translation( Vector( 0.0, 2.0, 30.0, 1.0 ) );
 
     transform_aspect->AddComponent<bool>( "ymvt", true );
 
@@ -1195,7 +1196,7 @@ void MainService::create_camera( void )
 
     DrawSpace::Interface::Renderer::Characteristics characteristics;
     m_renderer->GetRenderCharacteristics( characteristics );
-    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
+    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
 
 }
 

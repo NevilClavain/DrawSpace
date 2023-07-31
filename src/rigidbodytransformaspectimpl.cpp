@@ -31,6 +31,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
@@ -38,18 +39,18 @@ using namespace DrawSpace::Utils;
 
 RigidBodyTransformAspectImpl::RigidBodyTransformAspectImpl(void)
 {
-    m_stack_matrix_inv.Identity();
+    m_stack_matrix_inv.identity();
     m_memorized_vectors = false;
 
-    m_last_local_transf.Identity();
+    m_last_local_transf.identity();
 }
 
-void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
+void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transformaspect, Maths::Matrix& p_out_base_transform)
 {
     if (m_initialized)
     {
         btScalar                 bt_matrix[16];
-        DrawSpace::Utils::Matrix local_transf;
+        DrawSpace::Maths::Matrix local_transf;
 
         m_motionState->m_graphicsWorldTrans.getOpenGLMatrix(bt_matrix);
         convert_matrix_from_bt(bt_matrix, local_transf);
@@ -95,8 +96,8 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
                 if (Force::LOCALE == applied_force.m_mode)
                 {
                     Matrix local_rot = local_transf;
-                    local_rot.ClearTranslation();
-                    local_rot.Transform(&force_v, &final_force_v);
+                    local_rot.clearTranslation();
+                    local_rot.transform(&force_v, &final_force_v);
                 }
                 else
                 {
@@ -125,8 +126,8 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
                 if (Torque::LOCALE == applied_torque.m_mode)
                 {
                     Matrix local_rot = local_transf;
-                    local_rot.ClearTranslation();
-                    local_rot.Transform(&torque_v, &final_torque_v);
+                    local_rot.clearTranslation();
+                    local_rot.transform(&torque_v, &final_torque_v);
                 }
                 else
                 {
@@ -165,7 +166,7 @@ btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspe
     }
     else
     {
-        attitude_mat.Identity();
+        attitude_mat.identity();
     }
 
     ComponentList<dsreal> reals;
@@ -202,7 +203,7 @@ btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspe
 
         btBoxShape* shape = _DRAWSPACE_NEW_(btBoxShape, btBoxShape(btVector3(box_dims[0], box_dims[1], box_dims[2])));
 
-        Utils::Matrix transf = e->getPurpose().GetTransform();
+        Maths::Matrix transf = e->getPurpose().GetTransform();
 
         m_collisionShapesList.push_back(std::make_pair(shape, transf));
     }
@@ -212,7 +213,7 @@ btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspe
         dsreal sphere_radius = spherecollision_shapes[0]->getPurpose().GetRay();;
         btSphereShape* shape = _DRAWSPACE_NEW_(btSphereShape, btSphereShape(sphere_radius));
 
-        Utils::Matrix transf = e->getPurpose().GetTransform();
+        Maths::Matrix transf = e->getPurpose().GetTransform();
 
         m_collisionShapesList.push_back(std::make_pair(shape, transf));
     }
@@ -379,7 +380,7 @@ void RigidBodyTransformAspectImpl::convert_matrix_to_bt(const Matrix& p_mat, btS
     bt_matrix[15] = p_mat(3, 3);
 }
 
-void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, Utils::Matrix& p_mat)
+void RigidBodyTransformAspectImpl::convert_matrix_from_bt(btScalar* bt_matrix, Maths::Matrix& p_mat)
 {
     p_mat(0, 0) = bt_matrix[0];
     p_mat(0, 1) = bt_matrix[1];
@@ -410,11 +411,11 @@ void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAs
 
     Matrix parent_transform{ p_parent_transform };
 
-    parent_transform.ClearTranslation();
-    parent_transform.Inverse();
+    parent_transform.clearTranslation();
+    parent_transform.inverse();
 
-    parent_transform.Transform(&angularspeed_mem, &m_mem_angularspeed);
-    parent_transform.Transform(&linearspeed_mem, &m_mem_linearspeed);
+    parent_transform.transform(&angularspeed_mem, &m_mem_angularspeed);
+    parent_transform.transform(&linearspeed_mem, &m_mem_linearspeed);
 
 
     Matrix stack_mat;
@@ -432,7 +433,7 @@ void RigidBodyTransformAspectImpl::OnAddedInGraph(DrawSpace::Aspect::TransformAs
     mats[0]->getPurpose() = new_local_mat;
 
     m_stack_matrix_inv = stack_mat;
-    m_stack_matrix_inv.Inverse();
+    m_stack_matrix_inv.inverse();
 }
 
 void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Matrix& p_parent_transform)
@@ -444,17 +445,17 @@ void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::Transfo
 
     Matrix parent_transform{ p_parent_transform };
 
-    parent_transform.ClearTranslation();
+    parent_transform.clearTranslation();
     
-    parent_transform.Transform(&angularspeed_mem, &m_mem_angularspeed);
-    parent_transform.Transform(&linearspeed_mem, &m_mem_linearspeed);
+    parent_transform.transform(&angularspeed_mem, &m_mem_angularspeed);
+    parent_transform.transform(&linearspeed_mem, &m_mem_linearspeed);
 
 
 
     Matrix stack_mat;
     p_transformaspect->GetStackMatrix(stack_mat);
 
-    stack_mat.Inverse();
+    stack_mat.inverse();
 
     ComponentList<Matrix> mats;
     p_transformaspect->GetComponentsByType<Matrix>(mats);
@@ -468,10 +469,10 @@ void RigidBodyTransformAspectImpl::OnRemovedFromGraph(DrawSpace::Aspect::Transfo
     mats[0]->getPurpose() = new_local_mat;
 
     m_stack_matrix_inv = stack_mat;
-    m_stack_matrix_inv.Inverse();
+    m_stack_matrix_inv.inverse();
 }
 
-DrawSpace::Utils::Matrix RigidBodyTransformAspectImpl::GetLastLocalTransform(void) const
+DrawSpace::Maths::Matrix RigidBodyTransformAspectImpl::GetLastLocalTransform(void) const
 {
     return m_last_local_transf;
 }

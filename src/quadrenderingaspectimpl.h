@@ -43,7 +43,7 @@ private:
     void*                                   m_tx_data;
     void*                                   m_meshe_data;
 
-    Utils::Matrix                           m_proj;
+    Maths::Matrix                           m_proj;
 
 public:
     QuadRenderingAspectImpl( void );

@@ -55,6 +55,7 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::EntityGraph;
 
@@ -320,14 +321,14 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         transform_aspect->GetWorldTransform( world );
 
         //std::function
-        const auto light_updater = [](LOD::Binder* p_binder, const Utils::Matrix& p_global_transform)
+        const auto light_updater = [](LOD::Binder* p_binder, const Maths::Matrix& p_global_transform)
         {
             auto planet_final_transform = p_global_transform;
-            planet_final_transform.ClearTranslation();
+            planet_final_transform.clearTranslation();
                         
-            *p_binder << LOD::ShaderFeeder<DrawSpace::Utils::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
+            *p_binder << LOD::ShaderFeeder<DrawSpace::Maths::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
 
-            planet_final_transform.Transpose();
+            planet_final_transform.transpose();
 
             const auto light_flags{ p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 50) };
            
@@ -337,7 +338,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 53);
                 light_dir.Normalize();
 
-                planet_final_transform.Transform(&light_dir, &light_local_dir);
+                planet_final_transform.transform(&light_dir, &light_local_dir);
                 light_local_dir.Normalize();
 
                 *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 52, light_local_dir);
@@ -350,7 +351,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 56);
                 light_dir.Normalize();
 
-                planet_final_transform.Transform(&light_dir, &light_local_dir);
+                planet_final_transform.transform(&light_dir, &light_local_dir);
                 light_local_dir.Normalize();
 
                 *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 55, light_local_dir);
@@ -363,7 +364,7 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 59);
                 light_dir.Normalize();
 
-                planet_final_transform.Transform(&light_dir, &light_local_dir);
+                planet_final_transform.transform(&light_dir, &light_local_dir);
                 light_local_dir.Normalize();
 
                 *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 58, light_local_dir);
@@ -1859,7 +1860,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
     planet_world_inv(3, 2) = 0.0;
 
     // matrix inversion
-    planet_world_inv.Inverse();
+    planet_world_inv.inverse();
 
     for(auto& camera: m_registered_camerapoints)
     {
@@ -1880,7 +1881,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
 
             DrawSpace::Utils::Vector locale_camera_pos_from_planet;
 
-            planet_world_inv.Transform(&camera_pos_from_planet, &locale_camera_pos_from_planet);
+            planet_world_inv.transform(&camera_pos_from_planet, &locale_camera_pos_from_planet);
 
             dsreal rel_alt = (locale_camera_pos_from_planet.Length() / m_planet_ray);
 

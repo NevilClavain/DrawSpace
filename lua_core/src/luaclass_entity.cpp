@@ -43,6 +43,7 @@
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
@@ -625,7 +626,7 @@ int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
     }
 
     Matrix proj;
-    proj.Perspective( w, h, zn, zf );
+    proj.perspective( w, h, zn, zf );
     camera_aspect->AddComponent<Matrix>( "camera_proj", proj );
     camera_aspect->AddComponent<dsstring>( "camera_name", camera_name );
 

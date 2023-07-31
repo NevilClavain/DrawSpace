@@ -37,7 +37,7 @@ protected:
 
     void*                                   m_renderer_meshe_data;
 
-    DrawSpace::Utils::Matrix                m_projection;
+    DrawSpace::Maths::Matrix                m_projection;
 
     dsreal                                  m_z_offset;
 

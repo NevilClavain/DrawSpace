@@ -58,6 +58,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 
@@ -1254,9 +1255,9 @@ void ResourcesSystem::DumpAssimpSceneNode(aiNode* p_ai_node, int depth, DrawSpac
     }
 }
 
-Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat)
+Maths::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat)
 {
-	Utils::Matrix mat;
+	Maths::Matrix mat;
 
 	mat(0, 0) = p_in_mat.a1;
 	mat(0, 1) = p_in_mat.b1;

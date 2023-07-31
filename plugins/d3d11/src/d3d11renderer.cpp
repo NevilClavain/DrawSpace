@@ -2188,7 +2188,7 @@ bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, Draw
 	return false;
 }
 
-bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat )
+bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Maths::Matrix& p_mat )
 {
 	switch( p_shader_index )
 	{
@@ -2250,15 +2250,15 @@ bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, c
 	return true;
 }
 
-bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
+bool D3D11Renderer::DrawMeshe( DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj )
 {
 
     // setting transformation
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix result;
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    DrawSpace::Maths::Matrix result;
 
-    inv.Identity();
+    inv.identity();
     inv( 2, 2 ) = -1.0;
     final_view = p_view * inv;
 
@@ -2268,29 +2268,29 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     chain.PushMatrix( p_world );
     chain.BuildResult();
     chain.GetResult( &result );
-    result.Transpose();
+    result.transpose();
 
     set_vertexshader_constants_mat( 0, result );
     set_pixelshader_constants_mat( 100, result );
     
     //////////////////////////////////////////////////////////////////////
 
-    DrawSpace::Utils::Matrix proj = p_proj;
-    DrawSpace::Utils::Matrix world = p_world;
-    DrawSpace::Utils::Matrix view = p_view;
-    DrawSpace::Utils::Matrix cam = p_view;
-    DrawSpace::Utils::Matrix worldview = world * view;
-    worldview.Transpose();
+    DrawSpace::Maths::Matrix proj = p_proj;
+    DrawSpace::Maths::Matrix world = p_world;
+    DrawSpace::Maths::Matrix view = p_view;
+    DrawSpace::Maths::Matrix cam = p_view;
+    DrawSpace::Maths::Matrix worldview = world * view;
+    worldview.transpose();
     
     set_vertexshader_constants_mat( 4, worldview );
     set_pixelshader_constants_mat( 104, worldview );
 
 	//////////////////////////////////////////////////////////////////////
     
-    world.Transpose();
-    view.Transpose();
-    cam.Inverse();
-    cam.Transpose();
+    world.transpose();
+    view.transpose();
+    cam.inverse();
+    cam.transpose();
 
     set_vertexshader_constants_mat( 8, world );
     set_vertexshader_constants_mat( 12, view );
@@ -2304,7 +2304,7 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     set_pixelshader_constants_mat( 116, cam );
 
 
-    proj.Transpose();
+    proj.transpose();
     set_vertexshader_constants_mat( 20, proj );
     set_pixelshader_constants_mat( 120, proj );
 
@@ -2322,14 +2322,14 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     return true;
 }
 
-bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj)
+bool D3D11Renderer::DrawLineMeshe(DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj)
 {
     // setting transformation
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix result;
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    DrawSpace::Maths::Matrix result;
 
-    inv.Identity();
+    inv.identity();
     inv(2, 2) = -1.0;
     final_view = p_view * inv;
 
@@ -2339,29 +2339,29 @@ bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::U
     chain.PushMatrix(p_world);
     chain.BuildResult();
     chain.GetResult(&result);
-    result.Transpose();
+    result.transpose();
 
     set_vertexshader_constants_mat(0, result);
     set_pixelshader_constants_mat(100, result);
 
     //////////////////////////////////////////////////////////////////////
 
-    DrawSpace::Utils::Matrix proj = p_proj;
-    DrawSpace::Utils::Matrix world = p_world;
-    DrawSpace::Utils::Matrix view = p_view;
-    DrawSpace::Utils::Matrix cam = p_view;
-    DrawSpace::Utils::Matrix worldview = world * view;
-    worldview.Transpose();
+    DrawSpace::Maths::Matrix proj = p_proj;
+    DrawSpace::Maths::Matrix world = p_world;
+    DrawSpace::Maths::Matrix view = p_view;
+    DrawSpace::Maths::Matrix cam = p_view;
+    DrawSpace::Maths::Matrix worldview = world * view;
+    worldview.transpose();
 
     set_vertexshader_constants_mat(4, worldview);
     set_pixelshader_constants_mat(104, worldview);
 
     //////////////////////////////////////////////////////////////////////
 
-    world.Transpose();
-    view.Transpose();
-    cam.Inverse();
-    cam.Transpose();
+    world.transpose();
+    view.transpose();
+    cam.inverse();
+    cam.transpose();
 
     set_vertexshader_constants_mat(8, world);
     set_vertexshader_constants_mat(12, view);
@@ -2375,7 +2375,7 @@ bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::U
     set_pixelshader_constants_mat(116, cam);
 
 
-    proj.Transpose();
+    proj.transpose();
     set_vertexshader_constants_mat(20, proj);
     set_pixelshader_constants_mat(120, proj);
 
@@ -2815,7 +2815,7 @@ void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawS
     m_pixelshader_legacyargs.vector[p_startreg].w = p_vec[3]; 
 }
 
-void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat )
+void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat )
 {
     for( int i = 0; i < 4; i++ )
     {
@@ -2826,7 +2826,7 @@ void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const Draw
     }
 }
 
-void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat )
+void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat )
 {
     for( int i = 0; i < 4; i++ )
     {
@@ -2861,22 +2861,22 @@ void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_po
 	);
 }
 
-void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
+void D3D11Renderer::PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix proj;
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    DrawSpace::Maths::Matrix proj;
 
     DrawSpace::Utils::Vector res;
     DrawSpace::Utils::Vector point = p_point;
 
-    inv.Identity();
+    inv.identity();
     inv( 2, 2 ) = -1.0;
 
     final_view = p_view * inv;
 
     DrawSpace::Utils::Vector point2;
-    final_view.Transform( &point, &point2 );
+    final_view.transform( &point, &point2 );
 
     p_outz = point2[2];
 
@@ -2885,7 +2885,7 @@ void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace:
         point2[2] = 1.0;
     }
 
-    p_proj.Transform( &point2, &res );
+    p_proj.transform( &point2, &res );
 
     p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / ( res[2] + 1.0 ) );
     p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );

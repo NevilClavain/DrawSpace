@@ -59,9 +59,9 @@ private:
     virtual void on_renderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node);
 
 public:
-    DrawSpace::Utils::Matrix                           m_world;
-    DrawSpace::Utils::Matrix                           m_view;
-    DrawSpace::Utils::Matrix                           m_proj;
+    DrawSpace::Maths::Matrix                           m_world;
+    DrawSpace::Maths::Matrix                           m_view;
+    DrawSpace::Maths::Matrix                           m_proj;
 
     PassSlot(const dsstring& p_pass_name, PrimitiveType p_primitivetype = PrimitiveType::TRIANGLE);
     ~PassSlot(void);

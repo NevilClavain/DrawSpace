@@ -211,7 +211,7 @@ public:
 
     void NotifyEvent(ResourceEvent p_event, const dsstring& p_path) const;
 
-	static Utils::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat);
+	static Maths::Matrix ResourcesSystem::ConvertFromAssimpMatrix(const aiMatrix4x4& p_in_mat);
 
     //////// direct API, useful for non-entity client //////
 

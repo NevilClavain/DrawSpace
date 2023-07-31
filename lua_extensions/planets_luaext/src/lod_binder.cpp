@@ -106,7 +106,7 @@ Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vecto
     return p_in;
 }
 
-Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj)
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Matrix>& p_obj)
 { 
     p_in.m_matrix_shaders_feeders[p_obj.Hash()] = p_obj;
     return p_in;

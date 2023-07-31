@@ -41,7 +41,7 @@ class RigidBodyTransformAspectImpl : public DrawSpace::Interface::AspectImplemen
 {
 protected:
 
-    DrawSpace::Utils::Matrix                                    m_last_local_transf;
+    DrawSpace::Maths::Matrix                                    m_last_local_transf;
 
     btDiscreteDynamicsWorld*                                    m_world{ nullptr };
     Aspect::PhysicsAspect*                                      m_physical_aspect_owner{ nullptr };
@@ -50,21 +50,21 @@ protected:
     btRigidBody*                                                m_rigidBody{ nullptr };
 
     btCollisionShape*                                           m_collisionShape{ false };
-    std::vector<std::pair<btCollisionShape*, Utils::Matrix>>    m_collisionShapesList;
+    std::vector<std::pair<btCollisionShape*, Maths::Matrix>>    m_collisionShapesList;
 
     btCompoundShape*                                            m_compoundShape{ nullptr };
 
     btDefaultMotionState*                                       m_motionState{ nullptr };
 
-    Utils::Matrix                                               m_stack_matrix_inv;
+    Maths::Matrix                                               m_stack_matrix_inv;
 
     bool                                                        m_memorized_vectors;
     Utils::Vector                                               m_mem_linearspeed;
     Utils::Vector                                               m_mem_angularspeed;
 
 
-    void convert_matrix_to_bt(const Utils::Matrix& p_mat, btScalar* bt_matrix);
-    void convert_matrix_from_bt(btScalar* bt_matrix, Utils::Matrix& p_mat);
+    void convert_matrix_to_bt(const Maths::Matrix& p_mat, btScalar* bt_matrix);
+    void convert_matrix_from_bt(btScalar* bt_matrix, Maths::Matrix& p_mat);
 
 
 public:
@@ -73,42 +73,42 @@ public:
     {
         BoxCollisionShape(const Utils::Vector& p_box) : m_box(p_box)
         {
-            m_transformation.Identity();
+            m_transformation.identity();
         };
 
-        BoxCollisionShape(const Utils::Vector& p_box, const Utils::Matrix& p_mat) :
+        BoxCollisionShape(const Utils::Vector& p_box, const Maths::Matrix& p_mat) :
             m_box(p_box),
             m_transformation(p_mat)
         {
         };
 
-        Utils::Matrix GetTransform(void) const { return m_transformation; };
+        Maths::Matrix GetTransform(void) const { return m_transformation; };
         Utils::Vector GetPos(void) const { return m_box; };
 
     private:
         Utils::Vector m_box;
-        Utils::Matrix m_transformation;
+        Maths::Matrix m_transformation;
     };
 
     struct SphereCollisionShape
     {
         SphereCollisionShape(dsreal p_ray) : m_ray(p_ray)
         {
-            m_transformation.Identity();
+            m_transformation.identity();
         };
 
-        SphereCollisionShape(dsreal p_ray, const Utils::Matrix& p_mat) :
+        SphereCollisionShape(dsreal p_ray, const Maths::Matrix& p_mat) :
             m_ray(p_ray),
             m_transformation(p_mat)
         {
         };
 
-        Utils::Matrix GetTransform(void) const { return m_transformation; };
+        Maths::Matrix GetTransform(void) const { return m_transformation; };
 
         dsreal GetRay(void) const { return m_ray; };
     private:
         dsreal m_ray;
-        Utils::Matrix m_transformation;
+        Maths::Matrix m_transformation;
     };
 
     struct CompoundCollisionShape {};
@@ -188,10 +188,10 @@ public:
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     RigidBodyTransformAspectImpl( void );
-    void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform);
+    void GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Maths::Matrix& p_out_base_transform);
     
-    void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_parent_transform);
-    void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_parent_transform);
+    void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Maths::Matrix& p_parent_transform);
+    void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Maths::Matrix& p_parent_transform);
 
     btRigidBody* Init(Aspect::TransformAspect* p_transformaspect);
     btRigidBody* GetRigidBody(void) const;
@@ -200,7 +200,7 @@ public:
 
     void Release(void);
 
-    DrawSpace::Utils::Matrix GetLastLocalTransform(void) const;
+    DrawSpace::Maths::Matrix GetLastLocalTransform(void) const;
 };
 }
 }

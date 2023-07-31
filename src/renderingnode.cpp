@@ -27,6 +27,7 @@
 #include "exceptions.h"
 
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Utils;
 
 RenderingNode::RenderingNode( void )

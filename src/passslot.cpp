@@ -41,10 +41,10 @@ PassSlot::PassSlot(const dsstring& p_pass_name, PrimitiveType p_primitivetype) :
     m_cb = _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &PassSlot::on_renderingnode_draw));
     m_rendering_node->RegisterHandler(m_cb);
 
-    m_world.Identity();
+    m_world.identity();
 
-    m_view.Identity();
-    m_proj.Identity();
+    m_view.identity();
+    m_proj.identity();
 }
 
 PassSlot::~PassSlot(void)

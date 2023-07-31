@@ -40,6 +40,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 const char LuaClass_RenderPassNodeGraph::className[] = "RenderPassNodeGraph";
 const Luna<LuaClass_RenderPassNodeGraph>::RegType LuaClass_RenderPassNodeGraph::methods[] =
@@ -630,7 +631,7 @@ int LuaClass_RenderPassNodeGraph::LUA_setviewportquadshaderrealmatrix(lua_State*
 			LUA_TRY
 			{
 				Matrix mat = lua_mat->GetMatrix();
-				mat.Transpose();
+				mat.transpose();
 				vpq->SetShaderRealMatrix(param_id, mat);
 
 			} LUA_CATCH;

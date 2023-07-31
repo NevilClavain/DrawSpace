@@ -30,12 +30,13 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 FPSTransformAspectImpl::FPSTransformAspectImpl( void )
 {
 }
 
-void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform )
+void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform )
 {
     if( NULL == m_time_aspect )
     {
@@ -72,7 +73,7 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
     Maths::Quaternion		    current_res;
 
     // les sorties
-    Utils::Matrix			    orientation;
+    Maths::Matrix			    orientation;
 
 	Vector gs;
 
@@ -86,7 +87,7 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
 	current_res = qpitch * qyaw;
 	current_res.rotationMatFrom( orientation );
 
-    orientation.Transform( &local_speed, &gs );
+    orientation.transform( &local_speed, &gs );
 
 
     TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory( pos( 3, 0 ) );

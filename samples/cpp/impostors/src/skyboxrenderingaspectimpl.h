@@ -58,9 +58,9 @@ public:
 
     public:
 
-        DrawSpace::Utils::Matrix                m_world;
-        DrawSpace::Utils::Matrix                m_view;
-        DrawSpace::Utils::Matrix                m_proj;
+        DrawSpace::Maths::Matrix                m_world;
+        DrawSpace::Maths::Matrix                m_view;
+        DrawSpace::Maths::Matrix                m_proj;
       
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );

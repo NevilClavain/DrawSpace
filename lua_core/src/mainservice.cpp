@@ -38,6 +38,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Systems;
 
 static DrawSpace::Logger::Sink logger("gameroom_mainservice");
@@ -624,11 +625,11 @@ void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res
 
     
     transform_aspect->AddComponent<Matrix>( "quad_scaling" );
-    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().Scale( 1.0, 1.0, 1.0 );
+    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().scale( 1.0, 1.0, 1.0 );
     
 
     transform_aspect->AddComponent<Matrix>( "quad_pos" );
-    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, -0.5, -1.0 );
+    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().translation( 0.0, -0.5, -1.0 );
 
     // shaders quad charges dans le plugin graphique (QuadRenderingAspectImpl::Init()), on a plus besoin des data chargees des shaders : les liberer/retirer du resources system
     p_res_system->ReleaseShaderAsset(console_shader_vs);

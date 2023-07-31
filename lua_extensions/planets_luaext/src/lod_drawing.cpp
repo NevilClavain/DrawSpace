@@ -49,6 +49,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 using namespace LOD;
 
@@ -68,7 +69,7 @@ CollisionMesheDrawingNode::~CollisionMesheDrawingNode(void)
 {
 }
 
-void CollisionMesheDrawingNode::Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+void CollisionMesheDrawingNode::Draw(const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     // red color
     m_renderer->SetFxShaderParams(1, 0, Utils::Vector(1.0, 0.0, 0.0, 1.0));
@@ -109,7 +110,7 @@ void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
 }
 
 void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
-                                            const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
+                                            const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj )
 {
     const auto patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
     const auto patch_scale{ cst::detailsPatchScaling };
@@ -224,55 +225,55 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Matrix local_mat_rot_theta;
         Matrix local_mat_rot_phi;
        
-        local_scale.Scale( Vector( patch_scale * patch_dim, patch_scale * patch_dim, patch_scale * patch_dim, 1.0 ) );
+        local_scale.scale( Vector( patch_scale * patch_dim, patch_scale * patch_dim, patch_scale * patch_dim, 1.0 ) );
 
         switch( p_patch->GetOrientation() )
         {   
             case Patch::FrontPlanetFace:
                 
-                local_mat_trans.Translation( 0.0, 0.0, p_ray );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, 0.0, p_ray );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
             case Patch::RightPlanetFace:
                 
-                local_mat_trans.Translation( p_ray, 0.0, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( p_ray, 0.0, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_phi );
 
                 break;
 
             case Patch::LeftPlanetFace:
                 
-                local_mat_trans.Translation( -p_ray, 0.0, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( -p_ray, 0.0, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_phi );
                 break;
 
             case Patch::RearPlanetFace:
                 
-                local_mat_trans.Translation( 0.0, 0.0, -p_ray );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, 0.0, -p_ray );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
             case Patch::TopPlanetFace:
 
-                local_mat_trans.Translation( 0.0, p_ray, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, p_ray, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
 
             case Patch::BottomPlanetFace:
 
-                local_mat_trans.Translation( 0.0, -p_ray, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, -p_ray, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
@@ -281,21 +282,21 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         local_mat = local_scale * local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
 
         auto local_mat_transp{ local_mat };
-        local_mat_transp.Transpose();
+        local_mat_transp.transpose();
 
         m_renderer->SetFxShaderMatrix( 0, 29, local_mat_transp );
 
         world = local_mat * p_world;
         
         Matrix world = p_world;
-        world.Transpose();
+        world.transpose();
         m_renderer->SetFxShaderMatrix( 0, 34, world );
 
 
         //////////////////////////////////////////////////////////////////////////////
 
         auto landplace_normale_mat{ local_mat_rot_phi * local_mat_rot_theta * p_world * p_view };
-        landplace_normale_mat.ClearTranslation();
+        landplace_normale_mat.clearTranslation();
         Vector landplace_normale( 0.0, 0.0, 1.0, 1.0 );
 
         Vector landplace_normale_orient;
@@ -303,7 +304,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         Vector landplace_normale_t;
 
-        landplace_normale_mat.Transform( &landplace_normale_orient, &landplace_normale_t );
+        landplace_normale_mat.transform( &landplace_normale_orient, &landplace_normale_t );
 
         m_renderer->SetFxShaderParams( 0, 33, landplace_normale_t );
 
@@ -325,7 +326,7 @@ void FaceDrawingNode::UpdateRelativeHotPoint( const Utils::Vector p_hotpoint )
 }
 
 void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
-                            const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
+                            const Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
 {
     Texture* current_texture{ nullptr };
 
@@ -547,7 +548,7 @@ Binder* FoliageDrawingNode::GetBinder(void) const
 }
 
 void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
-                                const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+                                const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     const auto current_face{ p_body->GetCurrentFace() };
     if (current_face > -1)
@@ -574,7 +575,7 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
 // render many foliage meshe
 void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
-                            const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+                            const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     auto foliage_patch{ p_patch };
 
@@ -601,7 +602,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 // render one foliage meshe
 void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     const DrawSpace::Utils::Vector& p_invariant_view_pos,
-    const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj,
+    const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj,
     dsreal p_xpos, dsreal p_ypos, dsreal p_orientation)
 {
     const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
@@ -669,13 +670,13 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
 
     // axe vertical de l'objet, ici c'est l'axe z ! :-p
     Matrix vertical_rot;
-    vertical_rot.Rotation(Vector(0.0, 0.0, 1.0, 1.0), p_orientation);
+    vertical_rot.rotation(Vector(0.0, 0.0, 1.0, 1.0), p_orientation);
 
 
 
 
     Matrix local_t;
-    local_t.Translation(v2);
+    local_t.translation(v2);
 
     Maths::Quaternion q;
     q.lookAt(v2, Vector(0.0, 0.0, 0.0, 1.0));
@@ -832,9 +833,9 @@ void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
 {
     if (m_collisionmeshe_valid)
     {
-        DrawSpace::Utils::Matrix view;
-        DrawSpace::Utils::Matrix proj;
-        DrawSpace::Utils::Matrix world;
+        DrawSpace::Maths::Matrix view;
+        DrawSpace::Maths::Matrix proj;
+        DrawSpace::Maths::Matrix world;
 
         const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
         if (!transform_aspect)
@@ -859,9 +860,9 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
         return;
     }
 
-    DrawSpace::Utils::Matrix view;
-    DrawSpace::Utils::Matrix proj;
-    DrawSpace::Utils::Matrix world;
+    DrawSpace::Maths::Matrix view;
+    DrawSpace::Maths::Matrix proj;
+    DrawSpace::Maths::Matrix world;
 
     const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
     if( !transform_aspect )
@@ -929,13 +930,13 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
         return;
     }
 
-    DrawSpace::Utils::Matrix world;
-    DrawSpace::Utils::Matrix view;
-    DrawSpace::Utils::Matrix proj;
+    DrawSpace::Maths::Matrix world;
+    DrawSpace::Maths::Matrix view;
+    DrawSpace::Maths::Matrix proj;
 
-    world.Translation( 0.0, 0.0, -1.0 );
-    view.Identity();
-    proj.Perspective( 2.0, 2.0, 1.0, 10.0 );
+    world.translation( 0.0, 0.0, -1.0 );
+    view.identity();
+    proj.perspective( 2.0, 2.0, 1.0, 10.0 );
 
     auto face_node{ static_cast<FaceDrawingNode*>(p_rendering_node) };
     face_node->SetCurrentPatch( NULL );
@@ -957,9 +958,9 @@ void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_ren
 {    
     const auto planetbody{ m_planetbodies.at(cst::SurfaceLayer) };
 
-    DrawSpace::Utils::Matrix world;
-    DrawSpace::Utils::Matrix view;
-    DrawSpace::Utils::Matrix proj;
+    DrawSpace::Maths::Matrix world;
+    DrawSpace::Maths::Matrix view;
+    DrawSpace::Maths::Matrix proj;
 
     const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
     if (!transform_aspect)

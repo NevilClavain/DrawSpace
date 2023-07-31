@@ -32,6 +32,7 @@ using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 double RevolutionTransformAspectImpl::compute_revolution_angle(double p_revolution_duration, double p_curr_angle)
 {
@@ -66,13 +67,13 @@ double RevolutionTransformAspectImpl::compute_revolution_angle(double p_revoluti
     return curr_angle;
 }
 
-void RevolutionTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform)
+void RevolutionTransformAspectImpl::GetLocaleTransform(Aspect::TransformAspect* p_transformaspect, Maths::Matrix& p_out_base_transform)
 {
     dsreal angle{ p_transformaspect->GetComponent<dsreal>("revol_angle")->getPurpose()};
     dsreal revol_duration{ p_transformaspect->GetComponent<dsreal>("revol_duration")->getPurpose() }; //unite : 1.0 jour terrestre (24h)
 
     Matrix revol_rotation;
-    revol_rotation.Rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::degToRad(angle));
+    revol_rotation.rotation(Vector(0.0, 1.0, 0.0, 1.0), Maths::degToRad(angle));
 
     p_out_base_transform = revol_rotation;
     dsreal revol_angle{ compute_revolution_angle(revol_duration, angle) };

@@ -28,6 +28,7 @@
 #include "passslot.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::Aspect;
@@ -55,7 +56,7 @@ void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsA
 											std::vector<AnimationsAspect::BoneOutput>& p_bones_output, 
 											const std::map<dsstring, int>& p_bones_mapping, 
 											AnimationsAspect::Node p_node,
-											const DrawSpace::Utils::Matrix& p_parent_transform)
+											const DrawSpace::Maths::Matrix& p_parent_transform)
 {
 	Matrix locale_node_transform = p_node.locale_transform;
 	Matrix global_transformation = locale_node_transform * p_parent_transform;
@@ -74,12 +75,12 @@ void AnimationsSystem::read_bones_hierarchy(const std::map<dsstring, AnimationsA
 	}
 }
 
-void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const
+void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Maths::Matrix& p_out_matrix) const
 {
 	//////////////////// translations interpolation
 
-	Utils::Matrix translation;
-	translation.Identity();
+	Maths::Matrix translation;
+	translation.identity();
 
 	bool t_computed = false;
 	bool r_computed = false;
@@ -129,17 +130,17 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 			_DSEXCEPTION( "Position interpolation failed !" )
 		}
 
-		translation.Translation(v_interpolated);
+		translation.translation(v_interpolated);
 	}
 	
 	//////////////////// rotations interpolation
 
-	Utils::Matrix rotation;
-	rotation.Identity();
+	Maths::Matrix rotation;
+	rotation.identity();
 	
 	if (p_node.rotations_keys.size() > 0)
 	{
-		Utils::Matrix rot_interpolated;
+		Maths::Matrix rot_interpolated;
 		if (p_node.rotations_keys.size() < 2)
 		{
 			p_node.rotations_keys[0].value.rotationMatFrom(rot_interpolated);
@@ -193,8 +194,8 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 	
 	//////////////////// scaling interpolation
 
-	Utils::Matrix scaling;
-	scaling.Identity();
+	Maths::Matrix scaling;
+	scaling.identity();
 	
 	if (p_node.scaling_keys.size() > 0)
 	{
@@ -245,7 +246,7 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 			_DSEXCEPTION("Scaling interpolation failed !")
 		}
 
-		scaling.Scale(v_interpolated);
+		scaling.scale(v_interpolated);
 	}
 
 	///////////////////////
@@ -273,7 +274,7 @@ bool AnimationsSystem::animation_step(const dsstring& p_animation_id, const Anim
 
 		for (auto& e : p_animation.channels)
 		{
-			Utils::Matrix bone_locale_transform;
+			Maths::Matrix bone_locale_transform;
 			compute_node_animationresult_matrix(e.second, nb_ticks, bone_locale_transform);
 
 			if (p_nodes.count(e.second.node_name))
@@ -485,8 +486,8 @@ void AnimationsSystem::send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect
 	auto bones_output = p_anims_aspect->GetComponent<std::vector<AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose();
 	dsstring root_bone_id = p_anims_aspect->GetComponent<dsstring>("nodes_root_id")->getPurpose();
 
-	Utils::Matrix mid;
-	mid.Identity();
+	Maths::Matrix mid;
+	mid.identity();
 	if (root_bone_id != "")
 	{
 		read_bones_hierarchy(bones, bones_output, bones_mapping, bones.at(root_bone_id), mid);
@@ -563,18 +564,18 @@ void AnimationsSystem::apply_animation_last_key(AnimationsAspect* p_anims_aspect
 
 			//////////////////// translations
 
-			Utils::Matrix translation;
-			translation.Identity();
+			Maths::Matrix translation;
+			translation.identity();
 
 			if (node_animation.position_keys.size() > 0)
 			{
-				translation.Translation(node_animation.position_keys[node_animation.position_keys.size() - 1].value);
+				translation.translation(node_animation.position_keys[node_animation.position_keys.size() - 1].value);
 			}
 
 			//////////////////// rotations
 
-			Utils::Matrix rotation;
-			rotation.Identity();
+			Maths::Matrix rotation;
+			rotation.identity();
 
 			if (node_animation.rotations_keys.size() > 0)
 			{
@@ -583,15 +584,15 @@ void AnimationsSystem::apply_animation_last_key(AnimationsAspect* p_anims_aspect
 
 			//////////////////// scaling interpolation
 
-			Utils::Matrix scaling;
-			scaling.Identity();
+			Maths::Matrix scaling;
+			scaling.identity();
 
 			if (node_animation.scaling_keys.size() > 0)
 			{
-				scaling.Scale(node_animation.scaling_keys[node_animation.scaling_keys.size() - 1].value);
+				scaling.scale(node_animation.scaling_keys[node_animation.scaling_keys.size() - 1].value);
 			}
 
-			Utils::Matrix final_mat;
+			Maths::Matrix final_mat;
 			final_mat = scaling * rotation * translation;
 
 			if (bones.count(node_animation.node_name))

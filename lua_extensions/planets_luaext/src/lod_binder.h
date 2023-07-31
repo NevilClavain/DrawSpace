@@ -49,7 +49,7 @@ private:
     DrawSpace::Core::Fx*                                            m_fx{ nullptr };
 
     std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Vector>> m_vector_shaders_feeders;
-    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Matrix>> m_matrix_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Maths::Matrix>> m_matrix_shaders_feeders;
 
 protected:
     DrawSpace::Interface::Renderer*                                 m_renderer{ nullptr };
@@ -73,7 +73,7 @@ public:
     DrawSpace::Utils::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
 
     friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj);
-    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Matrix>& p_obj);
 };
 }
 

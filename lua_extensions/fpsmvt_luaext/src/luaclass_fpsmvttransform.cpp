@@ -31,6 +31,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 const char LuaClass_FPSMovementTransform::className[] = "FPSMovementTransform";
@@ -89,7 +90,7 @@ int LuaClass_FPSMovementTransform::LUA_configure( lua_State* p_L )
             transform_aspect->AddComponent<Vector>("speed");
             transform_aspect->AddComponent<Matrix>("pos");
 
-            transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(x, y, z, 1.0));
+            transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(x, y, z, 1.0));
 
             transform_aspect->AddComponent<bool>("ymvt", static_cast<bool>( ymvt ) );
 
@@ -155,7 +156,7 @@ int LuaClass_FPSMovementTransform::LUA_update(lua_State* p_L)
         m_entity_transform_aspect->GetComponent<dsreal>("yaw")->getPurpose() = yaw;
         m_entity_transform_aspect->GetComponent<dsreal>("pitch")->getPurpose() = pitch;
 
-        m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(x, y, z, 1.0));
+        m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(x, y, z, 1.0));
 
         m_entity_transform_aspect->GetComponent<bool>("ymvt")->getPurpose() = ymvt;
 
@@ -206,7 +207,7 @@ int LuaClass_FPSMovementTransform::LUA_read(lua_State* p_L)
     return 9;
 }
 
-void LuaClass_FPSMovementTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform)
+void LuaClass_FPSMovementTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform)
 {
     if (NULL == m_time_aspect)
     {
@@ -243,7 +244,7 @@ void LuaClass_FPSMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Transf
     Maths::Quaternion		    current_res;
 
     // les sorties
-    Utils::Matrix			    orientation;
+    Maths::Matrix			    orientation;
 
     Vector gs;
 
@@ -256,7 +257,7 @@ void LuaClass_FPSMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Transf
     current_res = qpitch * qyaw;
     current_res.rotationMatFrom(orientation);
 
-    orientation.Transform(&local_speed, &gs);
+    orientation.transform(&local_speed, &gs);
 
     TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory(pos(3, 0));
     TimeAspect::TimeScalar pos_31 = m_time_aspect->TimeScalarFactory(pos(3, 1));

@@ -39,8 +39,8 @@ protected:
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     int                                 m_step;   
-    DrawSpace::Utils::Matrix            m_viewtransform_todispatch;
-    DrawSpace::Utils::Matrix            m_projtransform_todispatch;
+    DrawSpace::Maths::Matrix            m_viewtransform_todispatch;
+    DrawSpace::Maths::Matrix            m_projtransform_todispatch;
 
 public:
     TransformSystem( void );

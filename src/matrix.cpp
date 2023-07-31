@@ -24,50 +24,47 @@
 
 #include "matrix.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 Matrix::Matrix( void )
 {
-    Zero();
+    zero();
 }
 
-Matrix::~Matrix( void )
-{
-}
 
-void Matrix::Inverse( void )
+void Matrix::inverse( void )
 {
     Matrix t;
     Matrix res;
 
-    t.Translation( -m_matrix[3][0], -m_matrix[3][1], -m_matrix[3][2] );
+    t.translation( -m_matrix[3][0], -m_matrix[3][1], -m_matrix[3][2] );
 
-    ClearTranslation();
-    Transpose();
-    MatrixMult( &t, this, &res );
+    clearTranslation();
+    transpose();
+    matrixMult( &t, this, &res );
 
     memcpy( &m_matrix, &res.m_matrix, 16 * sizeof( dsreal ) );
 }
 
-void Matrix::Rotation( const Vector& p_axis, dsreal p_angle )
+void Matrix::rotation( const Utils::Vector& p_axis, dsreal p_angle )
 {
-    dsreal c = std::cos( p_angle );
-    dsreal s = std::sin( p_angle );
-    dsreal omc = (1 - c);
+    const auto c{ std::cos(p_angle) };
+    const auto s{ std::sin(p_angle) };
+    const auto omc{ (1 - c) };
 
-    Vector axis = p_axis;
+    auto axis{ p_axis };
 
     axis.Normalize();
 
-    dsreal x = axis[0];
-    dsreal y = axis[1];
-    dsreal z = axis[2];	
-    dsreal xs = x * s;
-    dsreal ys = y * s;
-    dsreal zs = z * s;
-    dsreal xyomc = x * y * omc;
-    dsreal xzomc = x * z * omc;
-    dsreal yzomc = y * z * omc;
+    const dsreal x{ axis[0] };
+    const dsreal y{ axis[1] };
+    const dsreal z{ axis[2] };
+    const dsreal xs{ x * s };
+    const dsreal ys{ y * s };
+    const dsreal zs{ z * s };
+    const dsreal xyomc { x * y * omc };
+    const dsreal xzomc { x * z * omc };
+    const dsreal yzomc { y * z * omc };
 
     m_matrix[0][0] = x * x * omc + c;
     m_matrix[0][1] = xyomc + zs;
@@ -95,7 +92,7 @@ void Matrix::Rotation( const Vector& p_axis, dsreal p_angle )
     m_configinfos.values[3] = p_angle;
 }
 
-void Matrix::Transform( Vector* p_vec_in, Vector* p_vec_out ) const
+void Matrix::transform( Utils::Vector* p_vec_in, Utils::Vector* p_vec_out ) const
 {
     (*p_vec_out)[0] = (*p_vec_in)[0] * m_matrix[0][0] +
                       (*p_vec_in)[1] * m_matrix[1][0] +
@@ -114,12 +111,11 @@ void Matrix::Transform( Vector* p_vec_in, Vector* p_vec_out ) const
 }
 
 
-void Matrix::MatrixMult( Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes )
+void Matrix::matrixMult( Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes )
 {
-    int i, j;
-    for( i = 0; i < 4; i++)
+    for( int i = 0; i < 4; i++)
     {
-        for( j = 0; j < 4; j++ )
+        for( int j = 0; j < 4; j++ )
         {
             p_mRes->m_matrix[i][j] = p_mA->m_matrix[i][0] * p_mB->m_matrix[0][j] +
                                      p_mA->m_matrix[i][1] * p_mB->m_matrix[1][j] +
@@ -135,10 +131,10 @@ void Matrix::MatrixMult( Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes )
 Matrix operator* ( Matrix p_mA, Matrix p_mB )
 {
     Matrix res;
-    int i, j;
-    for( i = 0; i < 4; i++)
+
+    for( int i = 0; i < 4; i++)
     {
-        for( j = 0; j < 4; j++ )
+        for( int j = 0; j < 4; j++ )
         {
             res( i, j ) = p_mA( i, 0 ) * p_mB( 0, j ) +
                           p_mA( i, 1 ) * p_mB( 1, j ) +

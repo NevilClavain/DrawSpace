@@ -49,7 +49,7 @@ public:
 
         bool						vector; // si true, "param_values" est valide, sinon c'est "mat"
         Utils::Vector				param_values;
-        Utils::Matrix				mat;
+        Maths::Matrix				mat;
     };
 
 	using ShadersArrayParam = struct
@@ -112,7 +112,7 @@ public:
     virtual void SetShaderReal( const dsstring& p_id, dsreal p_value );
     virtual void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
 	virtual void SetShaderRealInVector(const dsstring& p_id, int p_index_in_vector, dsreal p_value );
-    virtual void SetShaderRealMatrix( const dsstring& p_id, const Utils::Matrix& p_value );
+    virtual void SetShaderRealMatrix( const dsstring& p_id, const Maths::Matrix& p_value );
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
     virtual void CleanupShaderParams( void );
 

@@ -719,7 +719,7 @@ int LuaClass_Globals::LUA_rotatequaternionx(lua_State* p_L)
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
-    Utils::Matrix orientation;
+    Maths::Matrix orientation;
     qres.rotationMatFrom(orientation);
 
     // update input axis vector
@@ -751,7 +751,7 @@ int LuaClass_Globals::LUA_rotatequaterniony(lua_State* p_L)
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
-    Utils::Matrix orientation;
+    Maths::Matrix orientation;
     qres.rotationMatFrom(orientation);
 
     // update input axis vector
@@ -783,7 +783,7 @@ int LuaClass_Globals::LUA_rotatequaternionz(lua_State* p_L)
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
-    Utils::Matrix orientation;
+    Maths::Matrix orientation;
     qres.rotationMatFrom(orientation);
 
     // update input axis vector

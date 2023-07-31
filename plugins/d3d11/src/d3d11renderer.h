@@ -242,8 +242,8 @@ protected:
     void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
     void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
 
-    void set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat );
-    void set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat );
+    void set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat );
+    void set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat );
 
 
     HRESULT D3D11Renderer::compile_shader_from_mem( void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut );
@@ -324,12 +324,12 @@ public:
 
 
     bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
-    bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat );
+    bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Maths::Matrix& p_mat );
 
 	bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors);
 
-	bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj );
-    bool DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj);
+	bool DrawMeshe( DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj );
+    bool DrawLineMeshe(DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj);
 
     void SetRenderState( DrawSpace::Core::RenderState* p_renderstate );
 
@@ -337,7 +337,7 @@ public:
 
     void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
 
-    void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
+    void PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
     bool GUI_InitSubSystem( void );
     void GUI_ReleaseSubSystem( void );
