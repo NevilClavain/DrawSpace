@@ -21,29 +21,22 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(lua_core)
-
-include_directories(${lua_include_dir})
-include_directories(${physfs_include_dir})
-include_directories(${assimp_include_dir})
-include_directories(${bullet_include_dir})
-include_directories(${jsonjsmn_include_dir})
-include_directories(${st_tree_include_dir})
+project(CORE_maths)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${physfs_include_dir})
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/lua_core/src/*.h
-        ${CMAKE_SOURCE_DIR}/lua_core/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/CORE_maths/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_maths/src/*.cpp		
 )
+
 
 add_definitions( -D_FROMCMAKE )
 
-add_library(lua_core ${source_files})
+add_library(CORE_maths ${source_files})
+
 
 

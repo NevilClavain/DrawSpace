@@ -37,6 +37,7 @@ include_directories(${md5_include_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 include_directories(${CMAKE_SOURCE_DIR}/CEGUIWrapper)
 
 
@@ -49,7 +50,7 @@ file(
 )
 
 add_library(drawspaced3d11 SHARED ${source_files})
-target_link_libraries(drawspaced3d11 d3d11 d3dx11 dxgi FW1FontWrapper CEGUIBase-0 CEGUIDirect3D11Renderer-0 jsmn physfs ceguiwrapper drawspace_core CORE_logger)
+target_link_libraries(drawspaced3d11 d3d11 d3dx11 dxgi FW1FontWrapper CEGUIBase-0 CEGUIDirect3D11Renderer-0 jsmn physfs ceguiwrapper drawspace_core CORE_logger CORE_maths)
 
 install(TARGETS drawspaced3d11 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS drawspaced3d11 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

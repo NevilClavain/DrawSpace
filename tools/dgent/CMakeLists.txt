@@ -25,6 +25,8 @@ project(dgent)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+
 
 include_directories(${jsonjsmn_include_dir})
 
@@ -39,7 +41,7 @@ file(
 )
 
 add_executable(dgent ${source_files})
-target_link_libraries(dgent jsmn physfs drawspace_core CORE_logger)
+target_link_libraries(dgent jsmn physfs drawspace_core CORE_logger CORE_maths)
 
 install(TARGETS dgent CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS dgent CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

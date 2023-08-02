@@ -85,6 +85,9 @@ ALL_BUILD.vcxproj*
 /CORE_logger/CMakeFiles/
 /CORE_logger/*.sln
 /CORE_logger/*.vcxproj*
+/CORE_maths/CMakeFiles/
+/CORE_maths/*.sln
+/CORE_maths/*.vcxproj*
 /CEGUIWrapper_project/CMakeFiles/
 /CEGUIWrapper_project/*.sln
 /CEGUIWrapper_project/*.vcxproj*

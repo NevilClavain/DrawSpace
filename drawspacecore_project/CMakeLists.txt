@@ -31,6 +31,7 @@ include_directories(${md5_include_dir})
 include_directories(${st_tree_include_dir})
 
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 
 file(
         GLOB_RECURSE
@@ -45,16 +46,6 @@ ${CMAKE_SOURCE_DIR}/src/ds_types.h
 ${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/primitives.h
 ${CMAKE_SOURCE_DIR}/src/singleton.h
-)
-
-source_group(maths FILES
-${CMAKE_SOURCE_DIR}/src/maths.h
-${CMAKE_SOURCE_DIR}/src/quaternion.h
-${CMAKE_SOURCE_DIR}/src/quaternion.cpp
-${CMAKE_SOURCE_DIR}/src/matrix.cpp
-${CMAKE_SOURCE_DIR}/src/matrix.h
-${CMAKE_SOURCE_DIR}/src/vector.cpp
-${CMAKE_SOURCE_DIR}/src/vector.h
 )
 
 source_group(aspect FILES 

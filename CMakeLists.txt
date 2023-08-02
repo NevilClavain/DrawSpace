@@ -66,6 +66,7 @@ set(st_tree_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/st_tree/sdk/include)
 add_subdirectory(drawspacecore_project)
 
 add_subdirectory(CORE_logger)
+add_subdirectory(CORE_maths)
 
 add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
