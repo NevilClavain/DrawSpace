@@ -76,10 +76,10 @@ public:
         DrawSpace::Core::Entity*            owner_entity; // l'entite possedant l'aspect camera
         dsstring                            camera_name;
 
-        DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
-        DrawSpace::Utils::Vector            locale_camera_long_lat;
+        DrawSpace::Maths::Vector            locale_camera_pos_from_planet;
+        DrawSpace::Maths::Vector            locale_camera_long_lat;
 
-        DrawSpace::Utils::Vector            global_camera_pos_from_planet;
+        DrawSpace::Maths::Vector            global_camera_pos_from_planet;
 
         bool                                relative_alt_valid;
         dsreal                              relative_alt;
@@ -113,9 +113,9 @@ protected:
                                                                     dsreal, 
                                                                     dsreal, 
                                                                     dsreal, 
-                                                                    DrawSpace::Utils::Vector, 
-                                                                    DrawSpace::Utils::Vector, 
-                                                                    DrawSpace::Utils::Vector,
+                                                                    DrawSpace::Maths::Vector,
+                                                                    DrawSpace::Maths::Vector,
+                                                                    DrawSpace::Maths::Vector,
                                                                     dsreal,dsreal>>;
 
     static const dsstring ClimateVShaderComponentName;

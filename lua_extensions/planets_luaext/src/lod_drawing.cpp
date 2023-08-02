@@ -72,7 +72,7 @@ CollisionMesheDrawingNode::~CollisionMesheDrawingNode(void)
 void CollisionMesheDrawingNode::Draw(const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     // red color
-    m_renderer->SetFxShaderParams(1, 0, Utils::Vector(1.0, 0.0, 0.0, 1.0));
+    m_renderer->SetFxShaderParams(1, 0, Maths::Vector(1.0, 0.0, 0.0, 1.0));
     m_renderer->DrawMeshe(p_world, p_view, p_proj);
 }
 
@@ -109,7 +109,7 @@ void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
     m_current_body_description = p_descr;
 }
 
-void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
+void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Maths::Vector& p_invariant_view_pos,
                                             const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj )
 {
     const auto patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
@@ -320,12 +320,12 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     //m_stats.nb_patchs++;       
 }
 
-void FaceDrawingNode::UpdateRelativeHotPoint( const Utils::Vector p_hotpoint )
+void FaceDrawingNode::UpdateRelativeHotPoint( const Maths::Vector p_hotpoint )
 {
     m_relativehotpoint = p_hotpoint;
 }
 
-void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Maths::Vector& p_invariant_view_pos,
                             const Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
 {
     Texture* current_texture{ nullptr };
@@ -455,15 +455,15 @@ int FaceDrawingNode::GetLayerIndex( void ) const
     return m_layer_index;
 }
 
-bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Utils::Vector& p_view, Patch* p_patch )
+bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Maths::Vector& p_view, Patch* p_patch )
 {
     Vector viewer;
     Patch::ConvertVectorToFrontFaceCoords( p_patch->GetOrientation(), p_view, viewer );
  
-    viewer.Normalize();
+    viewer.normalize();
     Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );    
-    projected_viewer.Scale( p_ray );
+    projected_viewer.scale( p_ray );
 
     dsreal patch_xpos, patch_ypos;
     p_patch->GetPos( patch_xpos, patch_ypos );
@@ -547,7 +547,7 @@ Binder* FoliageDrawingNode::GetBinder(void) const
     return m_binder;
 }
 
-void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Maths::Vector& p_invariant_view_pos,
                                 const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     const auto current_face{ p_body->GetCurrentFace() };
@@ -575,7 +575,7 @@ void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::
 
 // render many foliage meshe
 void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
-                            const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
+                            const DrawSpace::Maths::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     auto foliage_patch{ p_patch };
 
@@ -601,7 +601,7 @@ void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_r
 
 // render one foliage meshe
 void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
-    const DrawSpace::Utils::Vector& p_invariant_view_pos,
+    const DrawSpace::Maths::Vector& p_invariant_view_pos,
     const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj,
     dsreal p_xpos, dsreal p_ypos, dsreal p_orientation)
 {
@@ -651,8 +651,8 @@ void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
     v2[3] = 1.0;
 
     // final scaling
-    v2.Scale(p_ray);
-    v2.Scale(1.0 + (hm_height / p_ray));
+    v2.scale(p_ray);
+    v2.scale(1.0 + (hm_height / p_ray));
 
     m_renderer->SetFxShaderParams(1, 3, v2);
 

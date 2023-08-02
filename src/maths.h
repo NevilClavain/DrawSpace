@@ -30,8 +30,6 @@
 
 namespace DrawSpace
 {
-	using namespace Utils;
-
 	namespace Maths
 	{
 		static constexpr dsreal	pi{ 3.1415927 };
@@ -78,7 +76,7 @@ namespace DrawSpace
 				return;
 			}
 		
-			p_out[0] = p_in.Length();
+			p_out[0] = p_in.length();
 			p_out[2] = asin( p_in[1] / p_out[0] );		
 			p_out[1] = atan2( p_in[0], p_in[2] );
 		}

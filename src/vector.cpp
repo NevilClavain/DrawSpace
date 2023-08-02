@@ -24,7 +24,7 @@
 
 #include "vector.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 Vector::Vector( void )
 {
@@ -50,50 +50,45 @@ Vector::Vector( dsreal p_x, dsreal p_y )
     m_vector[3] = 1.0;
 }
 
-Vector::~Vector( void )
-{
-
-}
-
-dsreal Vector::LengthPow2( void ) const
+dsreal Vector::lengthPow2( void ) const
 {
     return ( ( m_vector[0] * m_vector[0] ) +
              ( m_vector[1] * m_vector[1] ) +
              ( m_vector[2] * m_vector[2] ) );
 }
 
-dsreal Vector::Length( void ) const
+dsreal Vector::length( void ) const
 {
-    return ( std::sqrt( LengthPow2() ) );
+    return ( std::sqrt( lengthPow2() ) );
 }
 
-void Vector::Normalize( void )
+void Vector::normalize( void )
 {
-    double len = Length();
-    if( Length() > 0.0 )
+    const double len{ length() };
+    if( len > 0.0 )
     {
-        double mag = 1.0 / Length();
+        double mag = 1.0 / len;
         m_vector[0] *= mag;
         m_vector[1] *= mag;
         m_vector[2] *= mag;
     }
 }
 
-void Vector::Scale( dsreal p_scale )
+void Vector::scale( dsreal p_scale )
 {
     m_vector[0] *= p_scale;
     m_vector[1] *= p_scale;
     m_vector[2] *= p_scale;
 }
 
-dsreal operator* ( Vector p_vA, Vector p_vB )
+dsreal operator* ( const Vector& p_vA, const Vector& p_vB )
 {
     return ( ( p_vA[0] * p_vB[0] ) +
              ( p_vA[1] * p_vB[1] ) +
              ( p_vA[2] * p_vB[2] ) );				
 }
 
-Vector ProdVec( Vector p_vA, Vector p_vB )
+Vector Vector::prodVec( const Vector& p_vA, const Vector& p_vB )
 {
     Vector res;
 
@@ -105,7 +100,7 @@ Vector ProdVec( Vector p_vA, Vector p_vB )
     return res;
 }
 
-Vector Vector::Lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend)
+Vector Vector::lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend)
 {
 	Vector out;
 
@@ -117,7 +112,7 @@ Vector Vector::Lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend)
 	return out;
 }
 
-Vector operator+ ( Vector p_vA, Vector p_vB )
+Vector operator+ ( const Vector& p_vA, const Vector& p_vB )
 {
     Vector res;
 

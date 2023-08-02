@@ -49,7 +49,7 @@ namespace DrawSpace
             struct ConfigurationInfo
             {
                 ConfigurationType   type;
-                Utils::Vector       values;
+                Maths::Vector       values;
             };
 
 
@@ -71,17 +71,17 @@ namespace DrawSpace
 
             void identity(void);
             void translation(dsreal p_x, dsreal p_y, dsreal p_z);
-            void translation(const Utils::Vector& p_pos);
+            void translation(const Maths::Vector& p_pos);
             void transpose(void);
             void perspective(dsreal p_w, dsreal p_h, dsreal p_zn, dsreal p_zf);
 
             void scale(dsreal p_sx, dsreal p_sy, dsreal p_sz);
-            void scale(const Utils::Vector& p_pos);
+            void scale(const Maths::Vector& p_pos);
             void clearTranslation(void);
 
-            void rotation( const Utils::Vector& p_axis, dsreal p_angle );
+            void rotation( const Maths::Vector& p_axis, dsreal p_angle );
             void inverse( void );
-            void transform(Utils::Vector* p_vec_in, Utils::Vector* p_vec_out ) const;
+            void transform(Maths::Vector* p_vec_in, Maths::Vector* p_vec_out ) const;
 
             dsreal* getArray( void ) const 
             { 

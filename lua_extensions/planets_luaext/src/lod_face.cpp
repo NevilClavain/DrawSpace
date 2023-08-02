@@ -32,6 +32,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace LOD;
 
 Face::Face( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges ) :
@@ -421,7 +422,7 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
     }
 }
 
-void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
+void Face::UpdateRelativeHotpoint( const DrawSpace::Maths::Vector& p_point )
 {
     m_relative_hotpoint = p_point;
     compute_cubeface_hotpoint();    
@@ -447,7 +448,7 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node )
     return false;
 }
 
-void Face::GetCurrentPatchViewCoords( DrawSpace::Utils::Vector& p_outcoords ) const
+void Face::GetCurrentPatchViewCoords( DrawSpace::Maths::Vector& p_outcoords ) const
 {
     p_outcoords = m_currentPatchViewCoords;
 }
@@ -540,7 +541,7 @@ bool Face::ComputeAlignmentFactor( void )
 
     Patch::GetNormalVector( m_orientation, face_dir );
     auto norm_hp { m_relative_hotpoint };
-    norm_hp.Normalize();
+    norm_hp.normalize();
     m_alignment_factor = norm_hp * face_dir;
 
     if( m_alignment_factor < 0 )
@@ -562,10 +563,10 @@ void Face::compute_cubeface_hotpoint( void )
 
     Patch::ConvertVectorToFrontFaceCoords( m_orientation, m_relative_hotpoint, viewer );
  
-    viewer.Normalize();
+    viewer.normalize();
     Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );    
-    projected_viewer.Scale( m_diameter / 2.0 );
+    projected_viewer.scale( m_diameter / 2.0 );
 
     m_cubeface_hotpoint = projected_viewer;
 }
@@ -746,12 +747,12 @@ void Face::recursive_merge( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch )
     }
 }
 
-void Face::GetCurrentCubeFaceHotPoint( DrawSpace::Utils::Vector& p_cubeface_hotpoint ) const
+void Face::GetCurrentCubeFaceHotPoint( DrawSpace::Maths::Vector& p_cubeface_hotpoint ) const
 {
     p_cubeface_hotpoint = m_cubeface_hotpoint;
 }
 
-void Face::GetRelativeHotPoint( DrawSpace::Utils::Vector& p_rhotpoint ) const
+void Face::GetRelativeHotPoint( DrawSpace::Maths::Vector& p_rhotpoint ) const
 {
     p_rhotpoint = m_relative_hotpoint;
 }

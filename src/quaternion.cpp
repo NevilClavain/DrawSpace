@@ -61,7 +61,7 @@ void Quaternion::lookAt(const Vector& p_source, const Vector& p_dest)
 		p_dest[2] - p_source[2],
 		0.0);
 
-	forwardVector.Normalize();
+	forwardVector.normalize();
 	Vector forward(0.0, 0.0, -1.0, 0.0);
 
 	const auto dot{ forward * forwardVector };
@@ -80,8 +80,8 @@ void Quaternion::lookAt(const Vector& p_source, const Vector& p_dest)
 	else
 	{
 		const auto rotAngle{ std::acos(dot) };
-		auto rotAxis{ ProdVec(forward, forwardVector) };
-		rotAxis.Normalize();
+		auto rotAxis{ Vector::prodVec(forward, forwardVector) };
+		rotAxis.normalize();
 
 		rotationAxis(rotAxis, rotAngle);
 	}
@@ -89,7 +89,7 @@ void Quaternion::lookAt(const Vector& p_source, const Vector& p_dest)
 
 void Quaternion::rotationAxis(Vector& p_axis, dsreal p_angle)
 {
-	p_axis.Normalize();
+	p_axis.normalize();
 
 	const auto sin_a{ std::sin(p_angle / 2.0) };
 

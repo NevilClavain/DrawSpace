@@ -48,7 +48,7 @@ private:
 
     DrawSpace::Core::Fx*                                            m_fx{ nullptr };
 
-    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Vector>> m_vector_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Maths::Vector>> m_vector_shaders_feeders;
     std::unordered_map<int, ShaderFeeder<DrawSpace::Maths::Matrix>> m_matrix_shaders_feeders;
 
 protected:
@@ -70,9 +70,9 @@ public:
     DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
     DrawSpace::Core::Fx*        GetFx( void ) const;
     
-    DrawSpace::Utils::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
+    DrawSpace::Maths::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
 
-    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Vector>& p_obj);
     friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Matrix>& p_obj);
 };
 }

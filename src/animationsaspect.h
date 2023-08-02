@@ -64,7 +64,7 @@ struct BoneOutput
 struct VectorKey
 {
 	dsreal								time_tick;
-	Utils::Vector						value;
+	Maths::Vector						value;
 };
 
 struct QuaternionKey

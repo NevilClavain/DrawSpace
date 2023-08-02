@@ -96,8 +96,8 @@ namespace DrawSpace
             void* GetRenderData(void) const;
             void GetMD5(dsstring& p_md5) const;
             void GetPath(dsstring& p_path) const;
-            void GetCenter(DrawSpace::Utils::Vector& p_vector) const;
-            void GetAABB(Utils::Vector& p_min, Utils::Vector& p_max) const;
+            void GetCenter(DrawSpace::Maths::Vector& p_vector) const;
+            void GetAABB(Maths::Vector& p_min, Maths::Vector& p_max) const;
             NormalesGenerationMode GetNGenerationMode(void) const;
             TangentBinormalesGenerationMode GetTBGenerationMode(void) const;
 
@@ -117,7 +117,7 @@ namespace DrawSpace
             Maths::Matrix                                                           m_normales_transf;
 
             void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
-                Utils::Vector& p_T, Utils::Vector& p_B, Utils::Vector& p_N);
+                Maths::Vector& p_T, Maths::Vector& p_B, Maths::Vector& p_N);
         };
     }
 }

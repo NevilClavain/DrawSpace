@@ -89,7 +89,7 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 	
 	if (p_node.position_keys.size() > 0)
 	{
-		Utils::Vector v_interpolated;
+		Maths::Vector v_interpolated;
 		if (p_node.position_keys.size() < 2)
 		{
 			v_interpolated = p_node.position_keys[0].value;
@@ -117,7 +117,7 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 						AnimationsAspect::VectorKey kB = p_node.position_keys[i + 1];
 
 						dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
-						v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
+						v_interpolated = Maths::Vector::lerp(kA.value, kB.value, blend);
 						t_computed = true;
 						break;
 					}
@@ -199,7 +199,7 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 	
 	if (p_node.scaling_keys.size() > 0)
 	{
-		Utils::Vector v_interpolated;
+		Maths::Vector v_interpolated;
 		if (p_node.scaling_keys.size() < 2)
 		{
 			v_interpolated = p_node.scaling_keys[0].value;
@@ -231,7 +231,7 @@ void AnimationsSystem::compute_node_animationresult_matrix(const AnimationsAspec
 						AnimationsAspect::VectorKey kB = p_node.scaling_keys[i + 1];
 
 						dsreal blend = (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick);
-						v_interpolated = Utils::Vector::Lerp(kA.value, kB.value, blend);
+						v_interpolated = Maths::Vector::lerp(kA.value, kB.value, blend);
 
 						s_computed = true;
 						break;
@@ -504,8 +504,8 @@ void AnimationsSystem::send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect
 
 		// decomposer les matrices en triplet de 3 vectors et stocker
 
-		std::vector<Utils::Vector> bones_0;
-		std::vector<Utils::Vector> bones_1;
+		std::vector<Maths::Vector> bones_0;
+		std::vector<Maths::Vector> bones_1;
 
 		int vec_count = 0;
 
@@ -517,7 +517,7 @@ void AnimationsSystem::send_bones_to_shaders(DrawSpace::Aspect::AnimationsAspect
 				{
 					_DSEXCEPTION("Too many bones");
 				}
-				Utils::Vector columns;
+				Maths::Vector columns;
 				columns[0] = bones_output[i].final_transformation(0, col);
 				columns[1] = bones_output[i].final_transformation(1, col);
 				columns[2] = bones_output[i].final_transformation(2, col);

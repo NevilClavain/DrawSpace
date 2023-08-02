@@ -59,8 +59,8 @@ protected:
     Maths::Matrix                                               m_stack_matrix_inv;
 
     bool                                                        m_memorized_vectors;
-    Utils::Vector                                               m_mem_linearspeed;
-    Utils::Vector                                               m_mem_angularspeed;
+    Maths::Vector                                               m_mem_linearspeed;
+    Maths::Vector                                               m_mem_angularspeed;
 
 
     void convert_matrix_to_bt(const Maths::Matrix& p_mat, btScalar* bt_matrix);
@@ -71,22 +71,22 @@ public:
 
     struct BoxCollisionShape
     {
-        BoxCollisionShape(const Utils::Vector& p_box) : m_box(p_box)
+        BoxCollisionShape(const Maths::Vector& p_box) : m_box(p_box)
         {
             m_transformation.identity();
         };
 
-        BoxCollisionShape(const Utils::Vector& p_box, const Maths::Matrix& p_mat) :
+        BoxCollisionShape(const Maths::Vector& p_box, const Maths::Matrix& p_mat) :
             m_box(p_box),
             m_transformation(p_mat)
         {
         };
 
         Maths::Matrix GetTransform(void) const { return m_transformation; };
-        Utils::Vector GetPos(void) const { return m_box; };
+        Maths::Vector GetPos(void) const { return m_box; };
 
     private:
-        Utils::Vector m_box;
+        Maths::Vector m_box;
         Maths::Matrix m_transformation;
     };
 
@@ -125,13 +125,13 @@ public:
         };
 
     protected:
-        DrawSpace::Utils::Vector    m_force_dir;
+        DrawSpace::Maths::Vector    m_force_dir;
         dsreal                      m_force_scale;
         Mode                        m_mode;
         bool                        m_enabled;
 
     public:
-        Force(const DrawSpace::Utils::Vector& p_dir, Mode p_mode = LOCALE, bool p_enabled = false) :
+        Force(const DrawSpace::Maths::Vector& p_dir, Mode p_mode = LOCALE, bool p_enabled = false) :
             m_force_dir(p_dir),
             m_mode(p_mode),
             m_enabled(p_enabled),
@@ -142,7 +142,7 @@ public:
             m_enabled(false),
             m_force_scale(1.0) {}
 
-        inline void UpdateForce(const DrawSpace::Utils::Vector& p_dir) { m_force_dir = p_dir; }
+        inline void UpdateForce(const DrawSpace::Maths::Vector& p_dir) { m_force_dir = p_dir; }
         inline void UpdateForceScale(dsreal p_scale) { m_force_scale = p_scale; }
         inline void Enable(void) { m_enabled = true; }
         inline void Disable(void) { m_enabled = false; }
@@ -160,13 +160,13 @@ public:
         };
 
     protected:
-        DrawSpace::Utils::Vector    m_torque_axis;
+        DrawSpace::Maths::Vector    m_torque_axis;
         dsreal                      m_torque_scale;
         Mode                        m_mode;
         bool                        m_enabled;
 
     public:
-        Torque(const DrawSpace::Utils::Vector& p_axis, Mode p_mode = LOCALE, bool p_enabled = false) :
+        Torque(const DrawSpace::Maths::Vector& p_axis, Mode p_mode = LOCALE, bool p_enabled = false) :
             m_torque_axis(p_axis),
             m_mode(p_mode),
             m_enabled(p_enabled),
@@ -177,7 +177,7 @@ public:
             m_enabled(false),
             m_torque_scale(1.0) {}
 
-        inline void UpdateForce(const DrawSpace::Utils::Vector& p_axis) { m_torque_axis = p_axis; }
+        inline void UpdateForce(const DrawSpace::Maths::Vector& p_axis) { m_torque_axis = p_axis; }
         inline void UpdateForceScale(dsreal p_scale) { m_torque_scale = p_scale; }
         inline void Enable(void) { m_enabled = true; }
         inline void Disable(void) { m_enabled = false; }

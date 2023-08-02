@@ -474,7 +474,7 @@ void Body::DestroyMeshes( void )
     _DRAWSPACE_DELETE_(m_patch_meshe);
 }
 
-void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
+void Body::UpdateHotPoint( const DrawSpace::Maths::Vector& p_hotpoint )
 {    
     const auto hotpoint{ p_hotpoint };
     for( long i = 0; i < 6; i++ )
@@ -483,15 +483,15 @@ void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
     }
 
     // compute altitud
-    m_hotpoint_altitud = hotpoint.Length() - ( m_diameter / 2.0 );
+    m_hotpoint_altitud = hotpoint.length() - ( m_diameter / 2.0 );
 }
 
-void Body::UpdateInvariantViewerPos( const DrawSpace::Utils::Vector& p_pos )
+void Body::UpdateInvariantViewerPos( const DrawSpace::Maths::Vector& p_pos )
 {
     m_invariant_viewerpos = p_pos;
 }
 
-void Body::GetInvariantViewerPos( DrawSpace::Utils::Vector& p_pos ) const
+void Body::GetInvariantViewerPos( DrawSpace::Maths::Vector& p_pos ) const
 {
     p_pos = m_invariant_viewerpos;
 }

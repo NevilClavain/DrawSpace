@@ -39,7 +39,7 @@ public:
     {
         dsreal                      width_scale;
         dsreal                      height_scale;
-        DrawSpace::Utils::Vector    localpos;
+        DrawSpace::Maths::Vector    localpos;
         dsreal                      u1, v1;
         dsreal                      u2, v2;
         dsreal                      u3, v3;

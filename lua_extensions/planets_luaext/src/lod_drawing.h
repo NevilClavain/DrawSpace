@@ -80,7 +80,7 @@ public:
     FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, Config* p_config, int p_layer_index );
     virtual ~FaceDrawingNode( void );
 
-    void Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+    void Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Maths::Vector& p_invariant_view_pos,
                 const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj, bool p_bind_ht_texture );
 
     void SetDisplayList( const std::vector<Patch*>& p_list );
@@ -103,7 +103,7 @@ public:
 
     void SetCurrentPass(const dsstring& p_pass);
 
-    void UpdateRelativeHotPoint( const DrawSpace::Utils::Vector p_hotpoint );
+    void UpdateRelativeHotPoint( const DrawSpace::Maths::Vector p_hotpoint );
 
 private:
 
@@ -115,7 +115,7 @@ private:
     Patch* m_current_patch{ nullptr };  // le connaitre pour eventuellement le dessiner d'une facon differente
     int                                                                                                         m_layer_index;
     DrawPatchMode                                                                                               m_drawpatch_mode{ DrawPatchMode::DRAW_ALL };
-    DrawSpace::Utils::Vector                                                                                    m_relativehotpoint;
+    DrawSpace::Maths::Vector                                                                                    m_relativehotpoint;
     dsstring                                                                                                    m_current_body_description; // for debug purpose only
 
     dsstring                                                                                                    m_current_pass;
@@ -124,11 +124,11 @@ private:
     int                                                                                                         m_maxlodlevel_to_draw{ -1 }; // used in pair with DRAW_MAXLODLEVEL
 
     void                                draw_single_patch(Patch* p_patch, dsreal p_ray, dsreal p_rel_alt,
-        const DrawSpace::Utils::Vector& p_invariant_view_pos,
+        const DrawSpace::Maths::Vector& p_invariant_view_pos,
         const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view,
         const DrawSpace::Maths::Matrix& p_proj);
 
-    bool                                check_view_in_patch(dsreal p_ray, const DrawSpace::Utils::Vector& p_view, Patch* p_patch);
+    bool                                check_view_in_patch(dsreal p_ray, const DrawSpace::Maths::Vector& p_view, Patch* p_patch);
 };
 
 
@@ -150,7 +150,7 @@ public:
 
     FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer, const FoliageConfig& p_config);
 
-    void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
+    void Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Maths::Vector& p_invariant_view_pos,
                         const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj);
     
     Binder* GetBinder(void) const;
@@ -187,10 +187,10 @@ private:
 
 
     void draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
-                                        const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj);
+                                        const DrawSpace::Maths::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj);
 
     void draw_foliage_on_patch(Patch* p_patch, dsreal p_ray, 
-                                    const DrawSpace::Utils::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos, dsreal p_orientation);
+                                    const DrawSpace::Maths::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj, dsreal p_xpos, dsreal p_ypos, dsreal p_orientation);
 };
 
 

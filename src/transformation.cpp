@@ -28,7 +28,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Maths;
-using namespace DrawSpace::Utils;
+
 
 Transformation::Transformation( void )
 {

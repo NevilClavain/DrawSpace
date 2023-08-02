@@ -212,5 +212,5 @@ private:
 
     using ViewOutInfos = std::map<dsstring, std::tuple<int, bool, 
                                                         dsreal, dsreal, dsreal, dsreal, dsreal, 
-                                                        DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, dsreal, dsreal>>;
+                                                        DrawSpace::Maths::Vector, DrawSpace::Maths::Vector, DrawSpace::Maths::Vector, dsreal, dsreal>>;
 };

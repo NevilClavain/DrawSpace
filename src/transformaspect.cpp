@@ -240,7 +240,7 @@ void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
     }   
 }
 
-bool TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
+bool TransformAspect::ProjectLocalPoint(const DrawSpace::Maths::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
 {
     
     DrawSpace::Maths::Matrix final_view;
@@ -268,7 +268,7 @@ bool TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_
 }
 
 
-dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Utils::Vector& p_local_point)
+dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Maths::Vector& p_local_point)
 {
     DrawSpace::Maths::Matrix final_view;
     DrawSpace::Maths::Matrix inv;
@@ -287,5 +287,5 @@ dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Utils::Vec
     Vector t_local_point;
     result.transform(&local_point, &t_local_point);
 
-    return t_local_point.Length();
+    return t_local_point.length();
 }

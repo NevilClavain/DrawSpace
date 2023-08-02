@@ -76,9 +76,9 @@ public:
     void OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Core::Entity* p_parent_entity);
 
 
-    bool ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy);
+    bool ProjectLocalPoint(const DrawSpace::Maths::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy);
 
-    dsreal LocalPointDistanceFromCamera(const DrawSpace::Utils::Vector& p_local_point);
+    dsreal LocalPointDistanceFromCamera(const DrawSpace::Maths::Vector& p_local_point);
 
     std::map<int, DrawSpace::Interface::AspectImplementations::TransformAspectImpl*> GetTransformAspectImplsList(void) const;
 };

@@ -239,8 +239,8 @@ protected:
 
     dsstring                                                        m_driver_type;
 
-    void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
-    void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec );
+    void set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Maths::Vector& p_vec );
+    void set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Maths::Vector& p_vec );
 
     void set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat );
     void set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat );
@@ -323,10 +323,10 @@ public:
     bool ApplyRenderStatesOut( void* p_data );
 
 
-    bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector );
+    bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Maths::Vector& p_vector );
     bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Maths::Matrix& p_mat );
 
-	bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors);
+	bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Maths::Vector>& p_vectors);
 
 	bool DrawMeshe( DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj );
     bool DrawLineMeshe(DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj);
@@ -337,7 +337,7 @@ public:
 
     void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... );
 
-    void PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
+    void PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Maths::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz );
 
     bool GUI_InitSubSystem( void );
     void GUI_ReleaseSubSystem( void );
@@ -382,7 +382,7 @@ public:
     void GUI_SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos );
     void GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image );
     void GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale );
-    void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle );
+    void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Maths::Vector& p_axis, dsreal p_deg_angle );
 
     void GUI_InitTest( void ); // temporaire
 

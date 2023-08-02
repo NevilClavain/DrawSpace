@@ -36,6 +36,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 using namespace LOD;
@@ -114,12 +115,12 @@ void Layer::UpdateRelativeAlt(dsreal p_alt)
     m_body->UpdateRelativeAlt(p_alt);
 }
 
-void Layer::UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos)
+void Layer::UpdateInvariantViewerPos(const DrawSpace::Maths::Vector& p_pos)
 {
     m_body->UpdateInvariantViewerPos(p_pos);
 }
 
-void Layer::UpdateHotPoint(const DrawSpace::Utils::Vector& p_vector)
+void Layer::UpdateHotPoint(const DrawSpace::Maths::Vector& p_vector)
 {
     m_body->UpdateHotPoint(p_vector);
 }
@@ -257,8 +258,8 @@ void Layer::build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe
 
             //v_out.Scale(m_planetray + alt);
 
-            v_out.Scale(m_planetray);
-            v_out.Scale(1.0 + (alt / m_planetray));
+            v_out.scale(m_planetray);
+            v_out.scale(1.0 + (alt / m_planetray));
 
             vertex_out.x = v_out[0];
             vertex_out.y = v_out[1];

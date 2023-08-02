@@ -44,6 +44,7 @@ using namespace DrawSpace;
 
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 
 const char LuaClass_Globals::className[] = "Globals";

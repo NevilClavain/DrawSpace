@@ -47,16 +47,16 @@ public:
     dsreal                                  GetAlignmentFactor(void) const;
     void                                    GetDisplayList(std::vector<Patch*>& p_displaylist) const;
     Patch*                                  GetCurrentPatch(void) const;
-    void                                    GetCurrentPatchViewCoords(DrawSpace::Utils::Vector& p_outcoords) const;
+    void                                    GetCurrentPatchViewCoords(DrawSpace::Maths::Vector& p_outcoords) const;
     int                                     GetCurrentPatchLOD(void) const;
     Patch*                                  GetRootPatch(void) const;
     dsreal                                  GetRelativeAlt(void) const;
     dsreal                                  GetRelativeAltSphere(void) const;
-    void                                    GetCurrentCubeFaceHotPoint(DrawSpace::Utils::Vector& p_cubeface_hotpoint) const;
-    void                                    GetRelativeHotPoint(DrawSpace::Utils::Vector& p_rhotpoint) const;
+    void                                    GetCurrentCubeFaceHotPoint(DrawSpace::Maths::Vector& p_cubeface_hotpoint) const;
+    void                                    GetRelativeHotPoint(DrawSpace::Maths::Vector& p_rhotpoint) const;
     
     // appele par Body::UpdateHotPoint()
-    void                                    UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point );
+    void                                    UpdateRelativeHotpoint( const DrawSpace::Maths::Vector& p_point );
 
     // appele par Body::UpdateRelativeAlt()
     void                                    UpdateRelativeAlt(dsreal p_alt);
@@ -98,7 +98,7 @@ private:
     std::vector<Patch*>                                         m_work_displaylist;
 
     Patch* m_currentPatch{ nullptr };
-    DrawSpace::Utils::Vector                                    m_currentPatchViewCoords;
+    DrawSpace::Maths::Vector                                    m_currentPatchViewCoords;
     int                                                         m_currentPatchLOD{ -1 };
 
     Patch* m_work_currentPatch;
@@ -106,9 +106,9 @@ private:
 
     int                                                         m_orientation;
     dsreal                                                      m_diameter;
-    DrawSpace::Utils::Vector                                    m_relative_hotpoint;
-    DrawSpace::Utils::Vector                                    m_cubeface_hotpoint;
-    DrawSpace::Utils::Vector                                    m_work_cubeface_hotpoint;
+    DrawSpace::Maths::Vector                                    m_relative_hotpoint;
+    DrawSpace::Maths::Vector                                    m_cubeface_hotpoint;
+    DrawSpace::Maths::Vector                                    m_work_cubeface_hotpoint;
     dsreal                                                      m_alignment_factor;
     bool                                                        m_hot{ false };
     dsreal                                                      m_relative_alt{ 0.0 };

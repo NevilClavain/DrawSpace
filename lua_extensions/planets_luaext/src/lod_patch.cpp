@@ -41,6 +41,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace LOD;
 
 Patch::Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, BaseQuadtreeNode* p_owner, 
@@ -655,7 +656,7 @@ void Patch::XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, Vector& p_out )
     }
 }
 
-void Patch::ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out )
+void Patch::ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out )
 {
     if( p_orientation == Patch::FrontPlanetFace )
     {
@@ -707,13 +708,13 @@ void Patch::ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::
     }
 }
 
-void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out )
+void Patch::ProjectVertex( const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out )
 {
     auto in { p_in };
-    DrawSpace::Utils::Vector v2, v3;
+    DrawSpace::Maths::Vector v2, v3;
 
     // sidelenght scaling
-    in.Scale( m_sidelength / 2.0 );
+    in.scale( m_sidelength / 2.0 );
 
     // patch positionning
     in[0] = in[0] + m_xpos;
@@ -730,7 +731,7 @@ void Patch::ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Util
     p_out = v3;
 }
 
-void Patch::GetGlobalRelUVCoords( DrawSpace::Utils::Vector& p_uv ) const
+void Patch::GetGlobalRelUVCoords( DrawSpace::Maths::Vector& p_uv ) const
 {
     p_uv[0] = m_global_ref_u1;
     p_uv[1] = m_global_ref_v1;
@@ -738,7 +739,7 @@ void Patch::GetGlobalRelUVCoords( DrawSpace::Utils::Vector& p_uv ) const
     p_uv[3] = m_global_ref_v2;
 }
 
-void Patch::GetGlobalUVCoords( DrawSpace::Utils::Vector& p_uv ) const
+void Patch::GetGlobalUVCoords( DrawSpace::Maths::Vector& p_uv ) const
 {
     p_uv[0] = m_global_u1;
     p_uv[1] = m_global_v1;
@@ -746,7 +747,7 @@ void Patch::GetGlobalUVCoords( DrawSpace::Utils::Vector& p_uv ) const
     p_uv[3] = m_global_v2;
 }
 
-void Patch::GetNormalVector( int p_orientation, DrawSpace::Utils::Vector& p_vector )
+void Patch::GetNormalVector( int p_orientation, DrawSpace::Maths::Vector& p_vector )
 {
     Vector face_dir;
     switch( p_orientation )
@@ -808,8 +809,8 @@ bool Patch::IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_r
     const auto ypos { m_ypos * m_ray };
     const auto sidelength { m_sidelength * m_ray };
 
-    Utils::Vector dist( xpos - p_centerx, ypos - p_centery, 0.0, 0.0 );
-    if( dist.Length() < p_ray + sidelength )
+    Maths::Vector dist( xpos - p_centerx, ypos - p_centery, 0.0, 0.0 );
+    if( dist.length() < p_ray + sidelength )
     {
         return true;
     }

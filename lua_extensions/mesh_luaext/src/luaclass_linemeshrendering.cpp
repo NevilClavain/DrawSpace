@@ -37,8 +37,9 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
-//using namespace DrawSpace::AspectImplementations;
+
 
 
 const char LuaClass_LineMeshRendering::className[] = "LineMeshRendering";

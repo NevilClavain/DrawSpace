@@ -67,22 +67,22 @@ public:
 
     struct BoxCollisionShape
     {
-        BoxCollisionShape(const Utils::Vector& p_box) : m_box(p_box)
+        BoxCollisionShape(const Maths::Vector& p_box) : m_box(p_box)
         {
             m_transformation.identity();
         };
 
-        BoxCollisionShape(const Utils::Vector& p_box, const Maths::Matrix& p_mat) :
+        BoxCollisionShape(const Maths::Vector& p_box, const Maths::Matrix& p_mat) :
             m_box(p_box),
             m_transformation(p_mat)
         {
         };
 
         Maths::Matrix GetTransform(void) const { return m_transformation; };
-        Utils::Vector GetPos(void) const { return m_box; };
+        Maths::Vector GetPos(void) const { return m_box; };
 
     private:
-        Utils::Vector m_box;
+        Maths::Vector m_box;
         Maths::Matrix m_transformation;
     };
 

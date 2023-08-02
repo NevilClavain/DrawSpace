@@ -89,7 +89,7 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
             if (applied_force.m_enabled)
             {
                 Vector force_v = applied_force.m_force_dir;
-                force_v.Scale(applied_force.m_force_scale);
+                force_v.scale(applied_force.m_force_scale);
 
                 Vector final_force_v;
 
@@ -119,7 +119,7 @@ void RigidBodyTransformAspectImpl::GetLocaleTransform(TransformAspect* p_transfo
             if (applied_torque.m_enabled)
             {
                 Vector torque_v = applied_torque.m_torque_axis;
-                torque_v.Scale(applied_torque.m_torque_scale);
+                torque_v.scale(applied_torque.m_torque_scale);
 
                 Vector final_torque_v;
 
@@ -198,7 +198,7 @@ btRigidBody* RigidBodyTransformAspectImpl::Init(TransformAspect* p_transformaspe
 
     for (auto& e : boxcollision_shapes)
     {
-        DrawSpace::Utils::Vector box_dims;
+        DrawSpace::Maths::Vector box_dims;
         box_dims = e->getPurpose().GetPos();
 
         btBoxShape* shape = _DRAWSPACE_NEW_(btBoxShape, btBoxShape(btVector3(box_dims[0], box_dims[1], box_dims[2])));

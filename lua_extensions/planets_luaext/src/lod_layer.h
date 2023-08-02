@@ -68,8 +68,8 @@ public:
     
     void                            SetHotState(bool p_hotstate);
     void                            UpdateRelativeAlt(dsreal p_alt);
-    void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
-    void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
+    void                            UpdateInvariantViewerPos(const DrawSpace::Maths::Vector& p_pos);
+    void                            UpdateHotPoint( const DrawSpace::Maths::Vector& p_vector );
     void                            Compute( void );
 
     

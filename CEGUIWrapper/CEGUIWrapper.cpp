@@ -899,7 +899,7 @@ void CEGUIWrapper::SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale 
     m_spritesTable[p_spriteName]->setSize( us );
 }
 
-void CEGUIWrapper::SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle )
+void CEGUIWrapper::SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Maths::Vector& p_axis, dsreal p_deg_angle )
 {
     if( 0 == m_spritesTable.count( p_spriteName ) )
     {

@@ -29,7 +29,7 @@
 #include "maths.h"
 #include "transformaspect.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 const char LuaClass_Matrix::className[] = "Matrix";

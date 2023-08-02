@@ -92,7 +92,7 @@ void Matrix::translation(dsreal p_x, dsreal p_y, dsreal p_z)
 
 }
 
-void Matrix::translation(const Utils::Vector& p_pos)
+void Matrix::translation(const Maths::Vector& p_pos)
 {
     identity();
     m_matrix[3][0] = p_pos[0];
@@ -163,7 +163,7 @@ void Matrix::scale(dsreal p_sx, dsreal p_sy, dsreal p_sz)
 
 }
 
-void Matrix::scale(const Utils::Vector& p_pos)
+void Matrix::scale(const Maths::Vector& p_pos)
 {
     zero();
     m_matrix[0][0] = p_pos[0];
@@ -203,7 +203,7 @@ void Matrix::inverse( void )
     memcpy( &m_matrix, &res.m_matrix, 16 * sizeof( dsreal ) );
 }
 
-void Matrix::rotation( const Utils::Vector& p_axis, dsreal p_angle )
+void Matrix::rotation( const Maths::Vector& p_axis, dsreal p_angle )
 {
     const auto c{ std::cos(p_angle) };
     const auto s{ std::sin(p_angle) };
@@ -211,7 +211,7 @@ void Matrix::rotation( const Utils::Vector& p_axis, dsreal p_angle )
 
     auto axis{ p_axis };
 
-    axis.Normalize();
+    axis.normalize();
 
     const dsreal x{ axis[0] };
     const dsreal y{ axis[1] };
@@ -249,7 +249,7 @@ void Matrix::rotation( const Utils::Vector& p_axis, dsreal p_angle )
     m_configinfos.values[3] = p_angle;
 }
 
-void Matrix::transform( Utils::Vector* p_vec_in, Utils::Vector* p_vec_out ) const
+void Matrix::transform(Maths::Vector* p_vec_in, Maths::Vector* p_vec_out ) const
 {
     (*p_vec_out)[0] = (*p_vec_in)[0] * m_matrix[0][0] +
                       (*p_vec_in)[1] * m_matrix[1][0] +

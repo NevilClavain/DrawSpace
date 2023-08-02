@@ -34,6 +34,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Interface;
 
 Meshe::Meshe( void )
@@ -282,14 +283,14 @@ void Meshe::ComputeTBs(void)
             tangents_sum = tangents_sum + t;
         }
 
-        normales_sum.Scale(1.0 / triangles_list.size());
-        normales_sum.Normalize();
+        normales_sum.scale(1.0 / triangles_list.size());
+        normales_sum.normalize();
 
-        binormales_sum.Scale(1.0 / triangles_list.size());
-        binormales_sum.Normalize();
+        binormales_sum.scale(1.0 / triangles_list.size());
+        binormales_sum.normalize();
 
-        tangents_sum.Scale(1.0 / triangles_list.size());
-        tangents_sum.Normalize();
+        tangents_sum.scale(1.0 / triangles_list.size());
+        tangents_sum.normalize();
 
         m_vertices[it->first].bx = binormales_sum[0];
         m_vertices[it->first].by = binormales_sum[1];
@@ -318,13 +319,13 @@ void Meshe::ComputeNormales( void )
             Vector d1(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, 1.0);
             Vector d2(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z, 1.0);
 
-            Vector res = ProdVec(d1, d2);
-            res.Normalize();
+            Vector res = Vector::prodVec(d1, d2);
+            res.normalize();
 
             normales_sum = normales_sum + res;
         }
-        normales_sum.Scale(1.0 / triangles_list.size());
-        normales_sum.Normalize();
+        normales_sum.scale(1.0 / triangles_list.size());
+        normales_sum.normalize();
 
         m_vertices[it->first].nx = normales_sum[0];
         m_vertices[it->first].ny = normales_sum[1];
@@ -385,11 +386,11 @@ void Meshe::compute_TBN( const Vertex& p_v1, const Vertex& p_v2, const Vertex& p
     b[2] = ( ( -c3c1t * v2v1[2] ) + ( c2c1t * v3v1[2] ) ) / det;
     b[3] = 1.0;
 
-    n = ProdVec( b, t );
+    n = Vector::prodVec( b, t );
 
-    t.Normalize();
-    b.Normalize();
-    n.Normalize();
+    t.normalize();
+    b.normalize();
+    n.normalize();
 
     p_T = t;
     p_B = b;

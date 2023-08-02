@@ -28,7 +28,7 @@
 
 namespace LOD
 {
-template<typename T = DrawSpace::Utils::Vector>
+template<typename T = DrawSpace::Maths::Vector>
 struct ShaderFeeder
 {
 private:

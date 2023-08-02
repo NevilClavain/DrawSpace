@@ -38,6 +38,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 const char LuaClass_Impostors::className[] = "Impostors";

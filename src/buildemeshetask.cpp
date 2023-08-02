@@ -201,8 +201,8 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
             DrawSpace::Commons::Vertex vertex;
             p_destination->GetVertex(j, vertex);
 
-            Utils::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
-            Utils::Vector nt;
+            Maths::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
+            Maths::Vector nt;
 
             n_transf.transform(&n, &nt);
 

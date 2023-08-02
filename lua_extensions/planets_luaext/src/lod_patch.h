@@ -84,8 +84,8 @@ public:
     dsreal                                              GetUnitSideLenght( void ) const ;
     int                                                 GetOrientation( void ) const ;
     dsreal                                              GetTriangleSideLength( void ) const;
-    void                                                GetGlobalRelUVCoords(DrawSpace::Utils::Vector& p_uv) const;
-    void                                                GetGlobalUVCoords(DrawSpace::Utils::Vector& p_uv) const ;
+    void                                                GetGlobalRelUVCoords(DrawSpace::Maths::Vector& p_uv) const;
+    void                                                GetGlobalUVCoords(DrawSpace::Maths::Vector& p_uv) const ;
     void                                                GetPos( dsreal& p_xpos, dsreal& p_ypos ) const;
     void                                                GetUnitPos( dsreal& p_xpos, dsreal& p_ypos ) const;
     DrawSpace::Utils::BaseQuadtreeNode*                 GetOwner( void ) const;
@@ -94,7 +94,7 @@ public:
     Patch*                                              GetTextureReferent( void ) const;
   
     void                                                SetNeighbour(DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id);
-    void                                                ProjectVertex( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    void                                                ProjectVertex( const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out );
     bool                                                IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
     void                                                CleanupSubpasses(void);
@@ -121,15 +121,15 @@ public:
 
     dsstring                                            DumpInfos(void) const;
 
-    static void                                         GetNormalVector(int p_orientation, DrawSpace::Utils::Vector& p_vector);
+    static void                                         GetNormalVector(int p_orientation, DrawSpace::Maths::Vector& p_vector);
 
-    static void                                         CubeToSphere( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
-    static void                                         SphereToCube( const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
-    static void                                         XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Utils::Vector& p_out );
+    static void                                         CubeToSphere( const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out );
+    static void                                         SphereToCube( const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out );
+    static void                                         XYToXYZ( int p_orientation, dsreal p_x, dsreal p_y, DrawSpace::Maths::Vector& p_out );
     
     // change les coords d'un vecteur pour obtenir son equivalent dans le repere face front, ou x et y du repere 2D correspondent
     // bien au x et y du repere 3D
-    static void                                         ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Utils::Vector& p_in, DrawSpace::Utils::Vector& p_out );
+    static void                                         ConvertVectorToFrontFaceCoords( int p_orientation, const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out );
 
 private:
 

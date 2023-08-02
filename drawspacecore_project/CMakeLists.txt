@@ -53,6 +53,8 @@ ${CMAKE_SOURCE_DIR}/src/quaternion.h
 ${CMAKE_SOURCE_DIR}/src/quaternion.cpp
 ${CMAKE_SOURCE_DIR}/src/matrix.cpp
 ${CMAKE_SOURCE_DIR}/src/matrix.h
+${CMAKE_SOURCE_DIR}/src/vector.cpp
+${CMAKE_SOURCE_DIR}/src/vector.h
 )
 
 source_group(aspect FILES 
@@ -235,8 +237,6 @@ ${CMAKE_SOURCE_DIR}/src/quadtree.cpp
 ${CMAKE_SOURCE_DIR}/src/quadtree.h
 ${CMAKE_SOURCE_DIR}/src/timemanager.cpp
 ${CMAKE_SOURCE_DIR}/src/timemanager.h
-${CMAKE_SOURCE_DIR}/src/vector.cpp
-${CMAKE_SOURCE_DIR}/src/vector.h
 )
 
 add_definitions(-DBT_USE_DOUBLE_PRECISION )

@@ -75,7 +75,7 @@ btRigidBody* CollisionAspect::Init(void)
 
     for (auto& e : boxcollision_shapes)
     {
-        DrawSpace::Utils::Vector box_dims;
+        DrawSpace::Maths::Vector box_dims;
         box_dims = e->getPurpose().GetPos();
 
         btBoxShape* shape = _DRAWSPACE_NEW_(btBoxShape, btBoxShape(btVector3(box_dims[0], box_dims[1], box_dims[2])));

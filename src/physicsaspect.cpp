@@ -35,6 +35,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Interface::AspectImplementations;
 

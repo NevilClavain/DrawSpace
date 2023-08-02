@@ -29,8 +29,6 @@
 #include "luaclass_matrix.h"
 
 
-
-using namespace DrawSpace::Utils;
 using namespace DrawSpace::Maths;
 
 const char LuaClass_Quaternion::className[] = "Quaternion";

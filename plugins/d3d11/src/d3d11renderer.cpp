@@ -2165,7 +2165,7 @@ bool D3D11Renderer::ApplyRenderStatesOut( void* p_data )
     return true;
 }
 
-bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector )
+bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Maths::Vector& p_vector )
 {
 	switch( p_shader_index )
 	{
@@ -2211,7 +2211,7 @@ bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, Draw
 	return false;
 }
 
-bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors)
+bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Maths::Vector>& p_vectors)
 {
 	if (p_vectors.size() > NbMaxVectorForShadersBuffers)
 	{
@@ -2799,7 +2799,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
     }
 }
 
-void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec )
+void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Maths::Vector& p_vec )
 {
     m_vertexshader_legacyargs.vector[p_startreg].x = p_vec[0];
     m_vertexshader_legacyargs.vector[p_startreg].y = p_vec[1];
@@ -2807,7 +2807,7 @@ void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const Draw
     m_vertexshader_legacyargs.vector[p_startreg].w = p_vec[3];
 }
 
-void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec )
+void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Maths::Vector& p_vec )
 {
     m_pixelshader_legacyargs.vector[p_startreg].x = p_vec[0];
     m_pixelshader_legacyargs.vector[p_startreg].y = p_vec[1];
@@ -2861,21 +2861,21 @@ void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_po
 	);
 }
 
-void D3D11Renderer::PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
+void D3D11Renderer::PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Maths::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {
     DrawSpace::Maths::Matrix final_view;
     DrawSpace::Maths::Matrix inv;
     DrawSpace::Maths::Matrix proj;
 
-    DrawSpace::Utils::Vector res;
-    DrawSpace::Utils::Vector point = p_point;
+    DrawSpace::Maths::Vector res;
+    DrawSpace::Maths::Vector point = p_point;
 
     inv.identity();
     inv( 2, 2 ) = -1.0;
 
     final_view = p_view * inv;
 
-    DrawSpace::Utils::Vector point2;
+    DrawSpace::Maths::Vector point2;
     final_view.transform( &point, &point2 );
 
     p_outz = point2[2];
@@ -3159,7 +3159,7 @@ void D3D11Renderer::GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_s
     m_guisubsystem.SetSpriteScale( p_spriteName, p_scale );
 }
 
-void D3D11Renderer::GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle )
+void D3D11Renderer::GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Maths::Vector& p_axis, dsreal p_deg_angle )
 {
     m_guisubsystem.SetSpriteRotation( p_spriteName, p_axis, p_deg_angle );
 }

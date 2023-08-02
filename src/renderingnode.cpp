@@ -97,7 +97,7 @@ void RenderingNode::AddShaderArrayParameter(long p_shader_index, const dsstring&
 	m_shaders_array_params[p_id] = sap;
 }
 
-void RenderingNode::SetShaderArrayParameter(const dsstring& p_id, const std::vector<DrawSpace::Utils::Vector>& p_array)
+void RenderingNode::SetShaderArrayParameter(const dsstring& p_id, const std::vector<DrawSpace::Maths::Vector>& p_array)
 {
 	if (m_shaders_array_params.count(p_id) > 0)
 	{

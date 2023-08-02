@@ -62,7 +62,7 @@ public:
     Face*                           GetFace(int p_faceid) const;
     dsreal                          GetHotPointAltitud(void) const;
     int                             GetCurrentFace(void) const;
-    void                            GetInvariantViewerPos(DrawSpace::Utils::Vector& p_pos) const;
+    void                            GetInvariantViewerPos(DrawSpace::Maths::Vector& p_pos) const;
     dsreal                          GetDiameter(void) const;
     dsstring                        GetDescription(void) const;
     dsreal                          GetRelativeAlt(void) const;
@@ -71,9 +71,9 @@ public:
     void                            Initialize(void);
     void                            Compute( void );
     
-    void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
+    void                            UpdateHotPoint( const DrawSpace::Maths::Vector& p_hotpoint );
     void                            UpdateRelativeAlt(dsreal p_alt);
-    void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
+    void                            UpdateInvariantViewerPos(const DrawSpace::Maths::Vector& p_pos);
 
     void                            SetHotState( bool p_hotstate );
     
@@ -97,7 +97,7 @@ private:
 
     bool                                                                        m_enable_cdlod;
 
-    DrawSpace::Utils::Vector                                                    m_invariant_viewerpos; //relatif au centre planete
+    DrawSpace::Maths::Vector                                                    m_invariant_viewerpos; //relatif au centre planete
 
     dsstring                                                                    m_description; // for debug purpose only;
 

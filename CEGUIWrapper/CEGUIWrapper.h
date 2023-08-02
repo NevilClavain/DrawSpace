@@ -131,7 +131,7 @@ public:
     void SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos );
     void SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image );
     void SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale );
-    void SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle );
+    void SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Maths::Vector& p_axis, dsreal p_deg_angle );
     
     // temporaire, pour tests divers :-D
     void InitTest( void );

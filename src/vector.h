@@ -29,45 +29,47 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
-class Vector
-{
-public:
-
-    Vector( void );
-    Vector( dsreal p_x, dsreal p_y, dsreal p_z, dsreal p_w );
-    Vector( dsreal p_x, dsreal p_y );
-
-    ~Vector( void );
-
-    dsreal operator[]( int p_index ) const
+    namespace Maths
     {
-        return m_vector[p_index];
-    };
+        class Vector
+        {
+        public:
 
-    dsreal& operator[]( int p_index )
-    {
-        return m_vector[p_index];
-    };
+            Vector( void );
+            Vector( dsreal p_x, dsreal p_y, dsreal p_z, dsreal p_w );
+            Vector( dsreal p_x, dsreal p_y );
 
-    dsreal LengthPow2( void ) const;	
-    dsreal Length( void ) const;
+            ~Vector(void) = default;
 
-    void Normalize( void );
-    void Scale( dsreal p_scale );
+            dsreal operator[]( int p_index ) const
+            {
+                return m_vector[p_index];
+            };
 
-	static Vector Lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend);
+            dsreal& operator[]( int p_index )
+            {
+                return m_vector[p_index];
+            };
 
-private:
-    dsreal m_vector[4];
+            dsreal lengthPow2( void ) const;	
+            dsreal length( void ) const;
 
-};
+            void normalize( void );
+            void scale( dsreal p_scale );
+
+	        static Vector lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend);
+
+            static Vector prodVec(const DrawSpace::Maths::Vector& p_vA, const DrawSpace::Maths::Vector& p_vB);
+
+        private:
+            dsreal m_vector[4];
+
+        };
+    }
 }
-}
 
-dsreal operator* ( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
-DrawSpace::Utils::Vector operator+ ( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
+dsreal operator* ( const DrawSpace::Maths::Vector& p_vA, const DrawSpace::Maths::Vector& p_vB );
+DrawSpace::Maths::Vector operator+ ( const DrawSpace::Maths::Vector& p_vA, const DrawSpace::Maths::Vector& p_vB );
 
-DrawSpace::Utils::Vector ProdVec( DrawSpace::Utils::Vector p_vA, DrawSpace::Utils::Vector p_vB );
+
 
