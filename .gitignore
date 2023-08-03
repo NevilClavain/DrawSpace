@@ -88,6 +88,9 @@ ALL_BUILD.vcxproj*
 /CORE_maths/CMakeFiles/
 /CORE_maths/*.sln
 /CORE_maths/*.vcxproj*
+/CORE_parser/CMakeFiles/
+/CORE_parser/*.sln
+/CORE_parser/*.vcxproj*
 /CEGUIWrapper_project/CMakeFiles/
 /CEGUIWrapper_project/*.sln
 /CEGUIWrapper_project/*.vcxproj*

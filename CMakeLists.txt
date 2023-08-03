@@ -67,6 +67,7 @@ add_subdirectory(drawspacecore_project)
 
 add_subdirectory(CORE_logger)
 add_subdirectory(CORE_maths)
+add_subdirectory(CORE_parser)
 
 add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
