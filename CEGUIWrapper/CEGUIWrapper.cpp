@@ -27,7 +27,7 @@
 #include "memalloc.h"
 
 using namespace CEGUI;
-using namespace DrawSpace::Utils;
+
 
 CEGUIWrapper::CEGUIWrapper( void ) :
 m_ready( false ),
@@ -219,12 +219,12 @@ void CEGUIWrapper::LoadLayout( const dsstring& p_layout_path, const dsstring& p_
 
     ////
     
-    JSONParser parser;
+    DrawSpace::JSONParser parser;
     int token_index = 1;
 
-    parser.ParseFromFile( p_widgets_path );
+    parser.parseFromFile( p_widgets_path );
 
-    if( JSMN_OBJECT == parser.GetTokenType( 0 ) )
+    if( JSMN_OBJECT == parser.getTokenType( 0 ) )
     {
         recurs_register_widgets( parser, token_index, p_layout_path, "" );
     }
@@ -244,17 +244,17 @@ void CEGUIWrapper::UnloadAllLayouts( void )
     wmgr.destroyAllWindows();
 }
 
-void CEGUIWrapper::recurs_register_widgets( JSONParser& p_parser, int& p_token_index, const dsstring& p_layout_path, const dsstring& p_parent )
+void CEGUIWrapper::recurs_register_widgets(DrawSpace::JSONParser& p_parser, int& p_token_index, const dsstring& p_layout_path, const dsstring& p_parent )
 {
-    int type0 = p_parser.GetTokenType( p_token_index );
-    int size0 = p_parser.GetTokenSize( p_token_index );
-    int type1 = p_parser.GetTokenType( p_token_index + 1 );
-    int size1 = p_parser.GetTokenSize( p_token_index + 1 );
+    int type0 = p_parser.getTokenType( p_token_index );
+    int size0 = p_parser.getTokenSize( p_token_index );
+    int type1 = p_parser.getTokenType( p_token_index + 1 );
+    int size1 = p_parser.getTokenSize( p_token_index + 1 );
 
     if( JSMN_STRING == type0 )
     {
         dsstring widget_name;
-        p_parser.GetTokenString( p_token_index, widget_name );
+        p_parser.getTokenString( p_token_index, widget_name );
 
         p_token_index++;
 

@@ -27,22 +27,17 @@
 #include "file.h"
 #include "exceptions.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace;
 
-JSONParser::JSONParser( void ) : 
-m_parse_success( false )
+JSONParser::JSONParser( void )
 {
 	jsmn_init( &m_parser );
 }
 
-JSONParser::~JSONParser( void )
-{
-}
-
-int JSONParser::Parse( const dsstring& p_str )
+int JSONParser::parse( const dsstring& p_str )
 {
 	m_parse_success = false;
-	int r = jsmn_parse( &m_parser, p_str.c_str(), p_str.size(), m_tokens, max_tokens );
+    const auto r{ jsmn_parse(&m_parser, p_str.c_str(), p_str.size(), m_tokens, max_tokens) };
 	if( r > -1 )
 	{
 		m_nb_tokens = r;
@@ -52,7 +47,7 @@ int JSONParser::Parse( const dsstring& p_str )
 	return r;
 }
 
-int JSONParser::GetTokenType( int p_index ) const
+int JSONParser::getTokenType( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
@@ -62,20 +57,20 @@ int JSONParser::GetTokenType( int p_index ) const
 	return m_tokens[p_index].type;
 }
 
-void JSONParser::GetTokenString( int p_index, dsstring& p_out_tokentext ) const
+void JSONParser::getTokenString( int p_index, dsstring& p_out_tokentext ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
         _DSEXCEPTION("JSONParser::GetTokenString");
 	}
 
-	int start = m_tokens[p_index].start;
-	int end = m_tokens[p_index].end;
+    const auto start{ m_tokens[p_index].start };
+    const auto end{ m_tokens[p_index].end };
 
 	p_out_tokentext = m_text.substr( start, end - start );
 }
 
-int JSONParser::GetTokenSize( int p_index ) const
+int JSONParser::getTokenSize( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
@@ -85,39 +80,37 @@ int JSONParser::GetTokenSize( int p_index ) const
 	return m_tokens[p_index].size;
 }
 
-void JSONParser::ParseFromFile( const dsstring& p_filepath )
+void JSONParser::parseFromFile( const dsstring& p_filepath )
 {
     long fsize;
-    void* content = DrawSpace::Utils::File::LoadAndAllocBinaryFile( p_filepath, &fsize );
+    auto content{ DrawSpace::Utils::File::LoadAndAllocBinaryFile(p_filepath, &fsize) };
     if( !content )
     {
         _DSEXCEPTION( "Cannot open JSON file : " + p_filepath );
     }
 
-    char* text = new char[fsize + 1];
+    const auto text{ new char[fsize + 1] };
+
     memcpy( text, content, fsize );
     text[fsize] = 0;
 
-    int r = Parse( static_cast<char*>( text ) );
+    const auto r{ parse(static_cast<char*>(text)) };
 
     _DRAWSPACE_DELETE_N_( content );
     delete[] text;
 
-
     if( r < 0 )
     {
-        char comment[6];
-        sprintf( comment, "%d", r );
-        _DSEXCEPTION( "JSON parse : failed with code " + dsstring( comment ) );
+        _DSEXCEPTION("JSON parse : failed with code " + std::to_string(r) );
     }
 }
 
-void JSONParser::AnalyzeTokens( UserData* p_user_data, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler )
+void JSONParser::analyzeTokens( UserData* p_user_data, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler )
 {
     m_index = 0;
-    int size = GetTokenSize( m_index );
+    const auto size{ getTokenSize(m_index) };
     
-    if( JSMN_OBJECT == GetTokenType( m_index ) )
+    if( JSMN_OBJECT == getTokenType( m_index ) )
     {
         m_index++;
         for( int i = 0; i < size; i++ )
@@ -134,17 +127,17 @@ void JSONParser::AnalyzeTokens( UserData* p_user_data, ObjectContentEventHandler
 JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_data, const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler )
 {
     dsstring id;
-    GetTokenString( m_index, id );
+    getTokenString( m_index, id );
     m_index++;
 
-    int content_type = GetTokenType( m_index );
-    int content_size = GetTokenSize( m_index );
+    const auto content_type{ getTokenType(m_index) };
+    const auto content_size{ getTokenSize(m_index) };
 
     switch( content_type )
     {
         case JSMN_OBJECT:
         {
-            JSONParser::UserData* sub_user_data = (*p_object_handler)( p_user_data, p_owner_id, id, JSON_NODE_PARSE_BEGIN );
+            JSONParser::UserData* sub_user_data = (*p_object_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_BEGIN );
             m_index++;
             
             for( int i = 0; i < content_size; i++ )
@@ -152,34 +145,33 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
                 recurs_analyze( sub_user_data, id, p_object_handler, p_array_handler, p_array_object_handler, p_string_handler, p_num_handler );
             }
 
-            (*p_object_handler)( sub_user_data, p_owner_id, id, JSON_NODE_PARSE_END );
+            (*p_object_handler)( sub_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_END );
         }
         break;
 
         case JSMN_ARRAY:
         {
-            JSONParser::UserData* sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, JSON_NODE_PARSE_BEGIN );
+            JSONParser::UserData* sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_BEGIN );
             m_index++;
 
             for( int i = 0; i < content_size; i++ )
             {                
-                int sub_content_type = GetTokenType( m_index );
-                int sub_content_size = GetTokenSize( m_index );
+                const auto sub_content_type{ getTokenType(m_index) };
+                const auto sub_content_size{ getTokenSize(m_index) };
 
                 if( JSMN_OBJECT == sub_content_type )
                 {
-                    char comment[32];
-                    sprintf( comment, "%s_%d", id.c_str(), i );
-
-                    sub_user_data = (*p_array_object_handler)( sub_user_data, id, i, JSON_NODE_PARSE_BEGIN );
+                    sub_user_data = (*p_array_object_handler)( sub_user_data, id, i, ParseState::JSON_NODE_PARSE_BEGIN );
                     m_index++;
 
+
+                    const dsstring comment{ id + "_" + std::to_string(i) };
                     for( int j = 0; j < sub_content_size; j++ )
                     {
                         recurs_analyze( sub_user_data, comment, p_object_handler, p_array_handler, p_array_object_handler, p_string_handler, p_num_handler );
                     }
 
-                    sub_user_data = (*p_array_object_handler)( sub_user_data, id, i, JSON_NODE_PARSE_END );
+                    sub_user_data = (*p_array_object_handler)( sub_user_data, id, i, ParseState::JSON_NODE_PARSE_END );
                 }
                 else
                 {
@@ -188,7 +180,7 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
                 }
             }
 
-            sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, JSON_NODE_PARSE_END );
+            sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_END );
         }
         break;
 
@@ -196,7 +188,7 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
         {
             dsstring value;
                
-            GetTokenString( m_index, value );
+            getTokenString( m_index, value );
             (*p_string_handler)( p_user_data, p_owner_id, id, value );
             m_index++;
         }
@@ -206,7 +198,7 @@ JSONParser::UserData* JSONParser::recurs_analyze( JSONParser::UserData* p_user_d
         {
             dsstring value;
                        
-            GetTokenString( m_index, value );
+            getTokenString( m_index, value );
 
             dsreal fval = std::stof( value );
             (*p_num_handler)( p_user_data, p_owner_id, id, fval );

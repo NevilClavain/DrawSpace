@@ -527,7 +527,7 @@ m_fullscreen( p_fullscreen )
 
 void App::Config::ParseFromFile( const dsstring& p_filepath )
 {
-    Utils::JSONParser::ParseFromFile( p_filepath );
+    JSONParser::parseFromFile( p_filepath );
 
     // check tokens
 
@@ -537,19 +537,19 @@ void App::Config::ParseFromFile( const dsstring& p_filepath )
 	int type1, size1;
 	dsstring token_text1;
 
-    if( JSMN_OBJECT == GetTokenType( 0 ) )
+    if( JSMN_OBJECT == getTokenType( 0 ) )
     {
-        for( int i = 0; i < GetTokenSize( 0 ); i++ )
+        for( int i = 0; i < getTokenSize( 0 ); i++ )
         {
             int tkindex = ( 2 * i ) + 1;
 
-	        type0 = GetTokenType( tkindex );
-	        size0 = GetTokenSize( tkindex );
-	        GetTokenString( tkindex, token_text0 );
+	        type0 = getTokenType( tkindex );
+	        size0 = getTokenSize( tkindex );
+	        getTokenString( tkindex, token_text0 );
 
-	        type1 = GetTokenType( tkindex + 1);
-	        size1 = GetTokenSize( tkindex + 1 );
-	        GetTokenString( tkindex + 1, token_text1 );
+	        type1 = getTokenType( tkindex + 1);
+	        size1 = getTokenSize( tkindex + 1 );
+	        getTokenString( tkindex + 1, token_text1 );
 
             
             if( "renderplugin" == token_text0 )

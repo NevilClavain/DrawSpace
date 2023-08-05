@@ -30,62 +30,59 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
-class JSONParser
-{
-public:
-
-    using ParseState = enum
+    class JSONParser
     {
-        JSON_NODE_PARSE_BEGIN,
-        JSON_NODE_PARSE_END,
-    };
+    public:
 
-    struct UserData abstract {};
 
-    template<typename T>
-    struct UserDataImpl : public UserData
-    {
-        T m_data;
-    };
+        enum class ParseState
+        {
+            JSON_NODE_PARSE_BEGIN,
+            JSON_NODE_PARSE_END
+        };
 
-    using ObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, ParseState>;
-    using ArrayObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, int, ParseState>;
-    using ArrayContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, ParseState>;
-    using StringContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, const dsstring&>;
-    using NumericContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, dsreal>;
+        struct UserData abstract {};
+
+        template<typename T>
+        struct UserDataImpl : public UserData
+        {
+            T m_data;
+        };
+
+        using ObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, ParseState>;
+        using ArrayObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, int, ParseState>;
+        using ArrayContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, ParseState>;
+        using StringContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, const dsstring&>;
+        using NumericContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const dsstring&, const dsstring&, dsreal>;
     
+	    JSONParser( void );
+        ~JSONParser(void) = default;
 
-private:
-	static const int max_tokens = 1024;
+	    int		    parse( const dsstring& p_str );
+        void        parseFromFile( const dsstring& p_filepath );
+	    int		    getTokenType( int p_index ) const;
+	    int		    getTokenSize( int p_index ) const;
+	    void	    getTokenString( int p_index, dsstring& p_out_tokentext ) const;
 
-	jsmn_parser     m_parser;
+        void        analyzeTokens( UserData* p_user_data, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
 
-	jsmntok_t	    m_tokens[max_tokens];
+    private:
 
-	int			    m_nb_tokens; // significatif seulement apres avoir appele Parse() sans erreur;
-	bool		    m_parse_success;
+        static constexpr    int max_tokens{ 1024 };
 
-	std::string     m_text;
+        jsmntok_t	        m_tokens[max_tokens];
+        jsmn_parser         m_parser;
+        
+        int			        m_nb_tokens     { -1 }; // significatif seulement apres avoir appele Parse() sans erreur;
+        bool		        m_parse_success { false };
 
-    int             m_index;
+        std::string         m_text;
 
-    UserData*   recurs_analyze( UserData* p_user_data, const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
+        int                 m_index         { -1 };
 
-public:
-	JSONParser( void );
-	~JSONParser( void );
+        UserData* recurs_analyze(UserData* p_user_data, const std::string& p_owner_id, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler);
 
-	int		    Parse( const dsstring& p_str );
-    void        ParseFromFile( const dsstring& p_filepath );
-	int		    GetTokenType( int p_index ) const;
-	int		    GetTokenSize( int p_index ) const;
-	void	    GetTokenString( int p_index, dsstring& p_out_tokentext ) const;
+    };
 
-    void        AnalyzeTokens( UserData* p_user_data, ObjectContentEventHandler* p_object_handler, ArrayContentEventHandler* p_array_handler, ArrayObjectContentEventHandler* p_array_object_handler, StringContentEventHandler* p_string_handler, NumericContentEventHandler* p_num_handler );
-
-};
-}
 }
 
