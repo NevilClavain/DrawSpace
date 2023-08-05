@@ -28,6 +28,7 @@ include_directories(${jsonjsmn_include_dir})
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_jsonparser/src)
 
 file(
         GLOB_RECURSE
