@@ -28,6 +28,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_parser/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_jsonparser/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
 
 include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
@@ -51,7 +52,7 @@ file(
 )
 
 add_executable(rt WIN32 ${source_files})
-target_link_libraries(rt physfs jsmn BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger CORE_maths CORE_parser CORE_jsonparser)
+target_link_libraries(rt physfs jsmn BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger CORE_maths CORE_parser CORE_jsonparser CORE_timemanager)
 
 install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

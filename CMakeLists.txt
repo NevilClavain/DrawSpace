@@ -70,6 +70,7 @@ add_subdirectory(CORE_maths)
 add_subdirectory(CORE_parser)
 add_subdirectory(CORE_jsonparser)
 add_subdirectory(CORE_filesystem)
+add_subdirectory(CORE_timemanager)
 
 add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
