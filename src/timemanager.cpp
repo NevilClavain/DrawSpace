@@ -82,7 +82,7 @@ void TimeManager::reset( void )
 
 void TimeManager::update( void )
 {
-    long current_tick = ::GetTickCount();
+    const auto current_tick{ ::GetTickCount() };
 
     if( m_last_tick )
     {
@@ -111,7 +111,7 @@ void TimeManager::update( void )
         // timers management
         for( auto it = m_timers.begin(); it != m_timers.end(); ++it )
         {
-            Timer* timer = (*it);
+            const auto timer{ (*it) };
 
             if( timer->m_state && !timer->m_freeze )
             {
@@ -148,8 +148,8 @@ void TimeManager::angleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
     
     // on veut, a partir de la vitesse en degres/s fixee, trouver
     // la vitesse en degres / frame -> on fait donc (deg/sec)/(frame/sec) 
-    dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps; 
-    dsreal angle = *p_angle;
+    const dsreal angleSpeedDegPerFrame{ p_angleSpeed / m_fps };
+    dsreal angle{ *p_angle };
 
     angle += angleSpeedDegPerFrame;
     angle = std::fmod( angle, 360.0 );
@@ -163,8 +163,8 @@ void TimeManager::angleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
 
     // on veut, a partir de la vitesse en degres/s fixee, trouver
     // la vitesse en degres / frame -> on fait donc (deg/sec)/(frame/sec) 
-    dsreal angleSpeedDegPerFrame = p_angleSpeed / m_fps;      
-    dsreal angle = *p_angle;
+    const dsreal angleSpeedDegPerFrame{ p_angleSpeed / m_fps };
+    dsreal angle{ *p_angle };
 
     angle -= angleSpeedDegPerFrame;
     angle = std::fmod( angle, 360.0 );
@@ -183,7 +183,7 @@ void TimeManager::translationSpeedInc( dsreal *p_translation, dsreal p_speed )
 
     // on veut, a partir de la vitesse en unites/s fixee, trouver
     // la vitesse en unite / frame -> on fait donc (unit/sec)/(frame/sec)
-    dsreal translationSpeedUnitPerFrame = p_speed / m_fps;
+    const dsreal translationSpeedUnitPerFrame{ p_speed / m_fps };
     *p_translation += translationSpeedUnitPerFrame;
 }
 
@@ -193,7 +193,7 @@ void TimeManager::translationSpeedDec( dsreal *p_translation, dsreal p_speed )
 
     // on veut, a partir de la vitesse en unites/s fixee, trouver
     // la vitesse en unite / frame -> on fait donc (unit/sec)/(frame/sec)
-    dsreal translationSpeedUnitPerFrame = p_speed / m_fps;
+    const dsreal translationSpeedUnitPerFrame{ p_speed / m_fps };
     *p_translation -= translationSpeedUnitPerFrame;
 }
 
