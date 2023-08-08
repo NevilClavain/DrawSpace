@@ -176,7 +176,7 @@ bool MainService::Init( void )
 
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
-    time_aspect->AddComponent<TimeManager>("time_manager");
+    time_aspect->AddComponent<DrawSpace::TimeManager>("time_manager");
     time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::TimeScale::NORMAL_TIME);
     time_aspect->AddComponent<dsstring>("output_formated_datetime", "...");
     time_aspect->AddComponent<dstime>("time", 0);
@@ -192,18 +192,18 @@ bool MainService::Init( void )
 
     RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     m_passesRender.SetRendergraph( &m_rendergraph );
 
 
-    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
 
 
-    rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>("entityId", 0, 0, 0, 255, 0, "Entity0");
 
-    rendering_aspect->AddImplementation(&m_entityDistanceTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_entityDistanceTextRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>("entityDistance", 0, 0, 0, 255, 0, "?");
 
 
@@ -403,7 +403,7 @@ void MainService::create_skybox(void)
     RenderingAspect* rendering_aspect{ m_skyboxEntity.AddAspect<RenderingAspect>() };
     TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_skyboxRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     std::map<dsstring, int>                                 rcname_to_layer_index   { { "main_rendering", 0 } };
     std::map<dsstring, std::vector<dsstring>>               rcname_to_passes        { { "main_rendering", { { "texture_pass" } } } };
@@ -504,7 +504,7 @@ void MainService::create_world_impostor( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation( &m_worldImpostorsRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    rendering_aspect->AddImplementation( &m_worldImpostorsRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose() );
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -587,7 +587,7 @@ void MainService::create_screen_impostors( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation( &m_impostorsRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_impostorsRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -707,7 +707,7 @@ void MainService::create_sprite_impostor(void)
     RenderingAspect* rendering_aspect{ m_spriteEntity.AddAspect<RenderingAspect>() };
     TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&m_spriteRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_spriteRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
 
     ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
@@ -769,7 +769,7 @@ void MainService::create_collimator_sprite_impostor(void)
     RenderingAspect* rendering_aspect{ m_spriteCollimatorEntity.AddAspect<RenderingAspect>() };
     TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&m_spriteCollimatorRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_spriteCollimatorRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
 
     DrawSpace::Interface::Renderer* renderer{ DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
@@ -844,7 +844,7 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
     auto rendering_aspect{ p_entity.AddAspect<RenderingAspect>() };
     auto time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass", PassSlot::PrimitiveType::LINE);
 
     const auto rnode{ rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
@@ -925,7 +925,7 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRendering
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
@@ -993,7 +993,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
         TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-        rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+        rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
         rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
@@ -1064,7 +1064,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         RenderingAspect* rendering_aspect = p_entity_2.AddAspect<RenderingAspect>();
         TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-        rendering_aspect->AddImplementation(&p_rendering_aspect_impl_2, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+        rendering_aspect->AddImplementation(&p_rendering_aspect_impl_2, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
         rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
@@ -1120,7 +1120,7 @@ void MainService::create_ground( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<PassSlot>( "texturepass_slot", "texture_pass" );
 

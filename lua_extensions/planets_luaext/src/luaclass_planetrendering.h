@@ -56,7 +56,7 @@ private:
     PlanetsRenderingAspectImpl*         m_planet_render{ nullptr };
     DrawSpace::Aspect::RenderingAspect* m_entity_rendering_aspect{ nullptr };
     DrawSpace::Core::Entity*            m_entity{ nullptr };
-    DrawSpace::Utils::TimeManager*      m_tm{ nullptr };
+    DrawSpace::TimeManager*             m_tm{ nullptr };
 
     // table de traduction RenderContext name -> Passes Name
     // permet de savoir a quelle passe est attribue un rendercontext

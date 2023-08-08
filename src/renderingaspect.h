@@ -29,10 +29,7 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
 class TimeManager;
-}
 
 namespace Aspect
 {
@@ -45,7 +42,7 @@ protected:
 public:
     RenderingAspect( void );
 
-    void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl, DrawSpace::Utils::TimeManager* p_timemanager );
+    void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl, DrawSpace::TimeManager* p_timemanager );
     void RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
 
     void Run( Core::Entity* p_owner_entity, bool p_drawtextlements );

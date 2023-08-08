@@ -89,7 +89,7 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    bool Init(DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
+    bool Init(DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager) { return true; };
     void Release(void) {};
     void Run(DrawSpace::Core::Entity* p_entity);
     void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph) {};

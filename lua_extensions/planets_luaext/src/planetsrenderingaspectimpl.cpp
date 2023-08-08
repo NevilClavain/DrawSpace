@@ -156,7 +156,7 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
     release_rendering_objects();
 }
 
-bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
+bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager)
 {
     _DSDEBUG(planet_logger, dsstring("Init"));
 
@@ -178,11 +178,11 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpa
 
     m_timemanager = p_timemanager;
 
-    m_timer.SetHandler(&m_timer_cb);
-    m_timer.SetPeriod(LOD::cst::timerPeriod);
-    m_timemanager->RegisterTimer(&m_timer);
+    m_timer.setHandler(&m_timer_cb);
+    m_timer.setPeriod(LOD::cst::timerPeriod);
+    m_timemanager->registerTimer(&m_timer);
 
-    m_timer.SetState(true);
+    m_timer.setState(true);
 
     return true;
 }
@@ -1441,7 +1441,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
     }
 }
 
-void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
+void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Timer* p_timer)
 {
     if (m_singleshot_subpasses_stack.size() > 0)
     {

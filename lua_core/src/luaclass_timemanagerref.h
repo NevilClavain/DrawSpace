@@ -28,22 +28,19 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
 class TimeManager;
-}
 }
 
 class LuaClass_TimeManagerRef
 {
 private:
-    DrawSpace::Utils::TimeManager* m_tm;
+    DrawSpace::TimeManager* m_tm;
 
 public:
     LuaClass_TimeManagerRef(lua_State* p_L);
     ~LuaClass_TimeManagerRef(void);
 
-    DrawSpace::Utils::TimeManager* GetTimeManager() const;
+    DrawSpace::TimeManager* GetTimeManager() const;
 
     static const char className[];
     static const Luna<LuaClass_TimeManagerRef>::RegType methods[];

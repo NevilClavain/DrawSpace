@@ -50,7 +50,7 @@ public:
 
     bool IsText( void ) override { return true; };
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager);
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager);
     void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};

@@ -52,7 +52,7 @@ LuaClass_TimeManagerRef::LuaClass_TimeManagerRef(lua_State* p_L)
             LUA_ERROR("TimeManagerRef::TimeManagerRef : time aspect doesnt exists in specified entity!");
         }
 
-        m_tm = &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose();
+        m_tm = &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose();
 
     }
     else
@@ -65,7 +65,7 @@ LuaClass_TimeManagerRef::~LuaClass_TimeManagerRef(void)
 {
 }
 
-DrawSpace::Utils::TimeManager* LuaClass_TimeManagerRef::GetTimeManager() const
+DrawSpace::TimeManager* LuaClass_TimeManagerRef::GetTimeManager() const
 {
     return m_tm;
 }

@@ -104,7 +104,7 @@ protected:
     using NodesEventsCb             = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>;
     using SubPassCreationCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack3<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
-    using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
+    using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Timer*>;
     using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
 
     using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, 
@@ -135,8 +135,8 @@ protected:
     DrawSpace::EntityGraph::EntityNodeGraph*                        m_entitynodegraph{ nullptr };
     TimerCb                                                         m_timer_cb;
     RenderPassEventCb                                               m_render_evt_cb;
-    DrawSpace::Utils::Timer                                         m_timer;
-    DrawSpace::Utils::TimeManager*                                  m_timemanager{ nullptr };;
+    DrawSpace::Timer                                                m_timer;
+    DrawSpace::TimeManager*                                         m_timemanager{ nullptr };;
 
     DrawSpace::Core::Entity*                                        m_owner_entity{ nullptr };
 
@@ -207,7 +207,7 @@ protected:
 
     void                                        update_shader_params(void); // for all passes
 
-    void                                        on_timer(DrawSpace::Utils::Timer* p_timer);
+    void                                        on_timer(DrawSpace::Timer* p_timer);
     void                                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
     void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, DrawSpace::Core::Entity* p_entity);
     void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, DrawSpace::Core::Entity* p_entity);
@@ -242,7 +242,7 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager );
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager );
     void Release(void);
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph);

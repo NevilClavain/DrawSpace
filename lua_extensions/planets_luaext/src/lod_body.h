@@ -37,7 +37,7 @@ struct Config;
 class Body
 {
 public:
-    using BodyTimerCb = DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>;
+    using BodyTimerCb = DrawSpace::Core::CallBack<Body, void, DrawSpace::Timer*>;
 
     enum class MesheType
     {

@@ -52,7 +52,7 @@ private:
     std::map<dsstring, std::vector<dsstring>>						    m_rcname_to_passes;
 
     size_t                                                              m_total_mem_allocs;
-    DrawSpace::Utils::TimeManager*                                      m_tm;
+    DrawSpace::TimeManager*                                             m_tm;
 
     void cleanup_resources( lua_State* p_L );
 

@@ -25,21 +25,10 @@
 #include <cmath>
 
 #include "timemanager.h"
-using namespace DrawSpace::Utils;
+using namespace DrawSpace;
 
-Timer::Timer( void ) :
-m_handler( NULL ),
-m_state( false ),
-m_period( 1000 ),
-m_freeze( false )
-{
 
-}
-Timer::~Timer( void )
-{
-}
-
-void Timer::SetState( bool p_state )
+void Timer::setState( bool p_state )
 {
     m_state = p_state;
     m_prev_tick = -1;
@@ -47,7 +36,7 @@ void Timer::SetState( bool p_state )
     m_freeze = false;
 }
 
-void Timer::Suspend( bool p_suspend )
+void Timer::suspend( bool p_suspend )
 {
     m_freeze = p_suspend;
     if( p_suspend )
@@ -56,12 +45,12 @@ void Timer::Suspend( bool p_suspend )
     }
 }
 
-void Timer::SetPeriod( long p_period )
+void Timer::setPeriod( long p_period )
 {
     m_period = p_period;
 }
 
-void Timer::SetHandler( TimerHandler* p_handler )
+void Timer::setHandler( TimerHandler* p_handler )
 {
     m_handler = p_handler;
 }
@@ -78,15 +67,10 @@ void Timer::expired( void )
 
 TimeManager::TimeManager( void )
 {
-    Reset();
+    reset();
 }
 
-TimeManager::~TimeManager( void )
-{
-
-}
-
-void TimeManager::Reset( void )
+void TimeManager::reset( void )
 {
     m_last_tick         = 0;
 	m_current_tick		= 0;
@@ -96,9 +80,9 @@ void TimeManager::Reset( void )
     m_last_deltatime    = 0;
 }
 
-void TimeManager::Update( void )
+void TimeManager::update( void )
 {
-    long current_tick = GetTickCount();
+    long current_tick = ::GetTickCount();
 
     if( m_last_tick )
     {
@@ -152,13 +136,13 @@ void TimeManager::Update( void )
     }
 }
 
-long TimeManager::GetFPS( void ) const
+long TimeManager::getFPS( void ) const
 {
     return m_fps;
 }
 
 //vitesse en degres par seconde
-void TimeManager::AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
+void TimeManager::angleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
 {
     if( !m_ready ) return;
     
@@ -173,7 +157,7 @@ void TimeManager::AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed )
     *p_angle = angle;
 }
 
-void TimeManager::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
+void TimeManager::angleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
 {
     if( !m_ready ) return;
 
@@ -193,7 +177,7 @@ void TimeManager::AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed )
     *p_angle = angle;   
 }
 
-void TimeManager::TranslationSpeedInc( dsreal *p_translation, dsreal p_speed )
+void TimeManager::translationSpeedInc( dsreal *p_translation, dsreal p_speed )
 {
     if( !m_ready ) return;
 
@@ -203,7 +187,7 @@ void TimeManager::TranslationSpeedInc( dsreal *p_translation, dsreal p_speed )
     *p_translation += translationSpeedUnitPerFrame;
 }
 
-void TimeManager::TranslationSpeedDec( dsreal *p_translation, dsreal p_speed )
+void TimeManager::translationSpeedDec( dsreal *p_translation, dsreal p_speed )
 {
     if( !m_ready ) return;
 
@@ -213,7 +197,7 @@ void TimeManager::TranslationSpeedDec( dsreal *p_translation, dsreal p_speed )
     *p_translation -= translationSpeedUnitPerFrame;
 }
 
-dsreal TimeManager::ConvertUnitPerSecFramePerSec( dsreal p_speed )
+dsreal TimeManager::convertUnitPerSecFramePerSec( dsreal p_speed )
 {
     if( !m_ready ) 
     {
@@ -222,27 +206,27 @@ dsreal TimeManager::ConvertUnitPerSecFramePerSec( dsreal p_speed )
     return ( p_speed / m_fps );
 }
 
-bool TimeManager::IsReady( void ) const
+bool TimeManager::isReady( void ) const
 {
     return m_ready;
 }
 
-long TimeManager::GetLastDeltaTime( void ) const
+long TimeManager::getLastDeltaTime( void ) const
 {
     return m_last_deltatime;
 }
 
-long TimeManager::GetCurrentTick(void) const
+long TimeManager::getCurrentTick(void) const
 {
 	return m_current_tick;
 }
 
-void TimeManager::RegisterTimer( Timer* p_timer )
+void TimeManager::registerTimer( Timer* p_timer )
 {
     m_timers.insert( p_timer );
 }
 
-void TimeManager::UnregisterTimer( Timer* p_timer )
+void TimeManager::unregisterTimer( Timer* p_timer )
 {
     if( m_timers.count( p_timer ) )
     {

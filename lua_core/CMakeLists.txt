@@ -33,6 +33,7 @@ include_directories(${st_tree_include_dir})
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 
 
 file(

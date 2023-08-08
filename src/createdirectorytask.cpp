@@ -37,7 +37,7 @@ CreateDirectoryTask::CreateDirectoryTask() : ITask("CREATEDIRECTORY", "")
 void CreateDirectoryTask::Execute(void)
 {
     dsstring path{ bcCacheName + dsstring("\\") + m_shader_id.c_str() };
-    DrawSpace::Utils::FileSystem::CreateDirectory(path);
+    DrawSpace::FileSystem::createDirectory(path);
 }
 
 void CreateDirectoryTask::SetShaderId(const dsstring& p_shader_id)

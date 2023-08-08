@@ -28,18 +28,14 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
-namespace FileSystem
-{
-    bool Exists(const dsstring& p_path);
-    bool IsDirectory(const dsstring& p_path);
-    void CreateDirectory(const dsstring& p_path);
-    long FileSize(FILE* p_fp);
+    namespace FileSystem
+    {
+        bool exists(const dsstring& p_path);
+        bool isDirectory(const dsstring& p_path);
+        void createDirectory(const dsstring& p_path);
+        long fileSize(FILE* p_fp);
 
-    void* LoadAndAllocFile(const dsstring& p_file, long* p_size);
-    void WriteFile(const dsstring& p_file, void* p_data, long p_size);
-    
-}
-}
+        void* loadAndAllocFile(const dsstring& p_file, long* p_size);
+        void writeFile(const dsstring& p_file, void* p_data, long p_size);    
+    }
 }

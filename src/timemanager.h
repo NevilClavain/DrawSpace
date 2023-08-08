@@ -30,78 +30,73 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
-class Timer
-{
-public:
-    typedef Core::BaseCallback<void, Timer*> TimerHandler;
+    class Timer
+    {
+    public:
+        using TimerHandler = Core::BaseCallback<void, Timer*>;
 
-protected:
+        Timer( void ) = default;
+        ~Timer( void ) = default;
 
-    bool            m_state;
-    long            m_period; // ms
-    TimerHandler*   m_handler;
-    long            m_tick_count;
-    long            m_prev_tick;
-    bool            m_freeze;
+        void    setState( bool p_state );
+        void    suspend( bool p_suspend );
+        void    setPeriod( long p_period );
+        void    setHandler( TimerHandler* p_handler );
 
-    void expired( void );
+    private:
 
-public:
+        bool            m_state         { false };
+        long            m_period        { 1000 }; // ms
+        TimerHandler*   m_handler       { nullptr };
+        long            m_tick_count;
+        long            m_prev_tick;
+        bool            m_freeze        { false };
 
-    Timer( void );
-    ~Timer( void );
+        void            expired(void);
 
-    void    SetState( bool p_state );
-    void    Suspend( bool p_suspend );
-    void    SetPeriod( long p_period );
-    void    SetHandler( TimerHandler* p_handler );
+        friend class TimeManager;
+    };
 
-    friend class TimeManager;
-};
+    class TimeManager
+    {
+    public:
+        TimeManager( void ); 
+        ~TimeManager( void ) = default;
 
-class TimeManager
-{
-protected:
+        void    reset( void );
 
-    long    m_last_tick;	
-    long    m_frame_count;
-    long    m_fps;
-    bool    m_ready;
-    long    m_last_deltatime;
-	long    m_current_tick;
+        void    update( void );
 
-    using TimerHandler = Core::BaseCallback<void, const dsstring&>;
+        //vitesse en degres par seconde
+        void    angleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed );
+        void    angleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed );
 
-    std::set<Timer*>    m_timers;
+        void    translationSpeedInc( dsreal *p_translation, dsreal p_speed );
+        void    translationSpeedDec( dsreal *p_translation, dsreal p_speed );
 
-public:
-    TimeManager( void ); 
-    ~TimeManager( void );
+        dsreal  convertUnitPerSecFramePerSec( dsreal p_speed );
 
-    void    Reset( void );
+        bool    isReady( void ) const ;
+        long    getLastDeltaTime( void ) const ;
+	    long    getCurrentTick(void) const;
+	    long    getFPS(void) const;
 
-    void    Update( void );
+        void    registerTimer( Timer* p_timer );
+        void    unregisterTimer( Timer* p_timer );
 
-    //vitesse en degres par seconde
-    void    AngleSpeedInc( dsreal *p_angle, dsreal p_angleSpeed );
-    void    AngleSpeedDec( dsreal *p_angle, dsreal p_angleSpeed );
+    private:
 
-    void    TranslationSpeedInc( dsreal *p_translation, dsreal p_speed );
-    void    TranslationSpeedDec( dsreal *p_translation, dsreal p_speed );
+        using TimerHandler = Core::BaseCallback<void, const dsstring&>;
 
-    dsreal  ConvertUnitPerSecFramePerSec( dsreal p_speed );
+        long    m_last_tick;
+        long    m_frame_count;
+        long    m_fps;
+        bool    m_ready             { false };
+        long    m_last_deltatime;
+        long    m_current_tick;
+   
+        std::set<Timer*>    m_timers;
 
-    bool    IsReady( void ) const ;
-    long    GetLastDeltaTime( void ) const ;
-	long    GetCurrentTick(void) const;
-	long    GetFPS(void) const;
-
-    void    RegisterTimer( Timer* p_timer );
-    void    UnregisterTimer( Timer* p_timer );
-
-};
-}
+    };
 }
 

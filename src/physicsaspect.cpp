@@ -196,7 +196,7 @@ void PhysicsAspect::StepSimulation( void )
          _DSEXCEPTION( "No Time manager associated with TimeAspect!!!" )
     }
 
-    if( !tm->IsReady() )
+    if( !tm->isReady() )
     {
         return;
     }
@@ -242,7 +242,7 @@ void PhysicsAspect::StepSimulation( void )
        
         int world_nb_steps = ints[1]->getPurpose();
 
-        dsreal fps = (dsreal)tm->GetFPS() / reals[0]->getPurpose();;
+        dsreal fps = (dsreal)tm->getFPS() / reals[0]->getPurpose();;
 
 
         btScalar ts = 1.0 / fps;

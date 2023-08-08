@@ -27,43 +27,43 @@
 #include "exceptions.h"
 
 
-bool DrawSpace::Utils::FileSystem::Exists(const dsstring& p_path)
+bool DrawSpace::FileSystem::exists(const dsstring& p_path)
 {
-    DWORD dwAttrib = GetFileAttributes(p_path.c_str());
+    const auto dwAttrib{ GetFileAttributes(p_path.c_str()) };
     return (dwAttrib != INVALID_FILE_ATTRIBUTES);
 }
 
-bool DrawSpace::Utils::FileSystem::IsDirectory(const dsstring& p_path)
+bool DrawSpace::FileSystem::isDirectory(const dsstring& p_path)
 {
-    DWORD dwAttrib = GetFileAttributes(p_path.c_str());
+    const auto dwAttrib{ GetFileAttributes(p_path.c_str()) };
     return (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-void DrawSpace::Utils::FileSystem::CreateDirectory(const dsstring& p_path)
+void DrawSpace::FileSystem::createDirectory(const dsstring& p_path)
 {
-    if(!::CreateDirectory(p_path.c_str(), NULL))
+    if(!::CreateDirectory(p_path.c_str(), nullptr))
     {
         _DSEXCEPTION("Failed to create directory : " + p_path);
     }
 }
 
-long DrawSpace::Utils::FileSystem::FileSize(FILE* p_fp)
-{
-    long current_pos;
-    current_pos = ftell(p_fp);
+long DrawSpace::FileSystem::fileSize(FILE* p_fp)
+{  
+    const auto current_pos{ ftell(p_fp) };
     fseek(p_fp, 0, SEEK_END);
-    long size = ftell(p_fp);
+    const auto size{ ftell(p_fp) };
     fseek(p_fp, current_pos, SEEK_SET);
     return size;
 }
 
-void* DrawSpace::Utils::FileSystem::LoadAndAllocFile(const dsstring& p_file, long* p_size)
+void* DrawSpace::FileSystem::loadAndAllocFile(const dsstring& p_file, long* p_size)
 {
-    void* ptr = NULL;
-    FILE* fp{ fopen(p_file.c_str(), "rb") };
+    void* ptr{ nullptr };
+    auto fp{ fopen(p_file.c_str(), "rb") };
+
     if (fp)
     {
-        unsigned long fs = FileSize(fp);
+        const auto fs{ fileSize(fp) };
         ptr = (void*)_DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[fs], fs, p_file);
         if (ptr)
         {
@@ -78,7 +78,7 @@ void* DrawSpace::Utils::FileSystem::LoadAndAllocFile(const dsstring& p_file, lon
     return ptr;
 }
 
-void DrawSpace::Utils::FileSystem::WriteFile(const dsstring& p_file, void* p_data, long p_size)
+void DrawSpace::FileSystem::writeFile(const dsstring& p_file, void* p_data, long p_size)
 {
     FILE* fp{ fopen(p_file.c_str(), "wb") };
     if (fp)

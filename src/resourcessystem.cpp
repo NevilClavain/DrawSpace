@@ -369,7 +369,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 								const auto hash_shader{ md5.digestMemory((BYTE*)data, size) };
 								const auto shaderInfos_path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
 
-								if (FileSystem::Exists(shaderInfos_path))
+								if (FileSystem::exists(shaderInfos_path))
 								{
 									// read md5 file content...
 
@@ -1415,9 +1415,9 @@ void ResourcesSystem::LoadShader(Core::Shader* p_shader, int p_shader_type)
 
 void ResourcesSystem::check_bc_cache_presence(void) const
 {
-	if (FileSystem::Exists(bcCacheName))
+	if (FileSystem::exists(bcCacheName))
 	{
-		if (!FileSystem::IsDirectory(bcCacheName))
+		if (!FileSystem::isDirectory(bcCacheName))
 		{
 			_DSEXCEPTION("unexpected bc_cache element");
 		}
@@ -1425,18 +1425,18 @@ void ResourcesSystem::check_bc_cache_presence(void) const
 	else
 	{
 		notify_event(ResourceEvent::SHADERCACHE_CREATION, "");
-		FileSystem::CreateDirectory(bcCacheName);
+		FileSystem::createDirectory(bcCacheName);
 	}
 }
 
 void ResourcesSystem::update_bc_md5file(const dsstring& p_path, const dsstring& p_hash)
 {
-	FileSystem::WriteFile(p_path + dsstring("\\") + bcMd5FileName, (void*)p_hash.c_str(), p_hash.length());
+	FileSystem::writeFile(p_path + dsstring("\\") + bcMd5FileName, (void*)p_hash.c_str(), p_hash.length());
 }
 
 void ResourcesSystem::update_bc_codefile(const dsstring& p_path, void* p_bc, int p_size)
 {
-	FileSystem::WriteFile(p_path + dsstring("\\") + bcCodeFileName, p_bc, p_size);
+	FileSystem::writeFile(p_path + dsstring("\\") + bcCodeFileName, p_bc, p_size);
 }
 
 void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring& p_asset_path, const dsstring& p_final_asset_path, const dsstring& p_final_asset_dir, int p_shader_type)
@@ -1469,28 +1469,28 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 	const auto path{ bcCacheName + dsstring("\\") + shader_id.c_str() };
 
-	if (FileSystem::Exists(path))
+	if (FileSystem::exists(path))
 	{
-		if (!FileSystem::IsDirectory(path))
+		if (!FileSystem::isDirectory(path))
 		{
 			_DSEXCEPTION("ResourcesSystem : expecting directory for bytecode " + shader_id);
 		}
 
 		// check bc code presence...
-		if (!FileSystem::Exists(path + dsstring("\\") + bcCodeFileName))
+		if (!FileSystem::exists(path + dsstring("\\") + bcCodeFileName))
 		{
 			_DSEXCEPTION("ResourcesSystem : cannot find bytecode for " + shader_id);
 		}
 
 		// check bc md5 presence...
-		if (!FileSystem::Exists(path + dsstring("\\") + bcMd5FileName))
+		if (!FileSystem::exists(path + dsstring("\\") + bcMd5FileName))
 		{
 			_DSEXCEPTION("ResourcesSystem : cannot find md5 for " + shader_id);
 		}
 
 		///////////////////////////////////
 		long md5filesize;
-		unsigned char* md5Buf = { static_cast<unsigned char*>( FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize) ) };
+		unsigned char* md5Buf = { static_cast<unsigned char*>( FileSystem::loadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize) ) };
 
 		const dsstring stored_md5((char*)md5Buf, md5filesize);
 
@@ -1502,7 +1502,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 				notify_event(ResourceEvent::BLOB_LOAD, p_final_asset_path);
 
-				bc = FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcCodeFileName, &bc_length);
+				bc = FileSystem::loadAndAllocFile(path + dsstring("\\") + bcCodeFileName, &bc_length);
 				if (NULL == bc)
 				{
 					_DSEXCEPTION(dsstring("unexpected error while reading code file : ") + shader_id);
@@ -1580,7 +1580,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 
 		m_renderer->ReleaseShaderBytes(bytecode_handle);
 
-		FileSystem::CreateDirectory(path);
+		FileSystem::createDirectory(path);
 
 		update_bc_md5file(path, hash_shader);
 		update_bc_codefile(path, bc, bc_length);

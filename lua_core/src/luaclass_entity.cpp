@@ -212,7 +212,7 @@ int LuaClass_Entity::LUA_configuretimemmanager( lua_State* p_L )
 
     LUA_TRY
     {
-        time_aspect->AddComponent<TimeManager>( "time_manager" );
+        time_aspect->AddComponent<DrawSpace::TimeManager>( "time_manager" );
         time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", static_cast<TimeAspect::TimeScale>( time_scale ) );
         time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
         time_aspect->AddComponent<dstime>( "time", 0 );
@@ -310,7 +310,7 @@ int LuaClass_Entity::LUA_releasetimemmanager( lua_State* p_L )
 
     LUA_TRY
     {
-        time_aspect->RemoveComponent<TimeManager>( "time_manager" );
+        time_aspect->RemoveComponent<DrawSpace::TimeManager>( "time_manager" );
         time_aspect->RemoveComponent<TimeAspect::TimeScale>( "time_scale" );
         time_aspect->RemoveComponent<dsstring>( "output_formated_datetime" );
         time_aspect->RemoveComponent<dstime>( "time" );
