@@ -28,6 +28,7 @@
 #include "luaclass_matrix.h"
 
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 const char LuaClass_RawTransform::className[] = "RawTransform";

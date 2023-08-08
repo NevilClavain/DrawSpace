@@ -35,13 +35,13 @@ const Luna<LuaClass_Distribution>::RegType LuaClass_Distribution::methods[] =
 
 LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
 {    
-    int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("Distribution::Distribution : argument(s) missing");
     }
 
-    dsstring distribution_type = luaL_checkstring(p_L, 1);
+    const std::string distribution_type{ luaL_checkstring(p_L, 1) };
 
     if("uniform_int_distribution" == distribution_type)
     {
@@ -50,8 +50,8 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
             LUA_ERROR("Distribution::Distribution : argument(s) missing");
         }
 
-        int min = luaL_checkint(p_L, 2);
-        int max = luaL_checkint(p_L, 3);
+        const auto min{ luaL_checkint(p_L, 2) };
+        const auto max{ luaL_checkint(p_L, 3) };
         m_distribution = std::make_unique<DistributionWrapperImpl<std::uniform_int_distribution<int>>>(min, max);
         m_distribution_type = distribution_type;
     }
@@ -62,8 +62,8 @@ LuaClass_Distribution::LuaClass_Distribution(lua_State* p_L)
             LUA_ERROR("Distribution::Distribution : argument(s) missing");
         }
 
-        dsreal min = luaL_checknumber(p_L, 2);
-        dsreal max = luaL_checknumber(p_L, 3);
+        const auto min{ luaL_checknumber(p_L, 2) };
+        const auto max{ luaL_checknumber(p_L, 3) };
         m_distribution = std::make_unique<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>>(min, max);
         m_distribution_type = distribution_type;
     }
@@ -80,28 +80,29 @@ LuaClass_Distribution::~LuaClass_Distribution(void)
 
 int LuaClass_Distribution::LUA_generate(lua_State* p_L)
 {
-    int argc = lua_gettop(p_L);
+    const auto argc{ lua_gettop(p_L) };
     if (argc < 1)
     {
         LUA_ERROR("Distribution::generate : argument(s) missing");
     }
-    LuaClass_RandomEngine* lua_random_engine = Luna<LuaClass_RandomEngine>::check(p_L, 1);
+
+    const auto lua_random_engine{ Luna<LuaClass_RandomEngine>::check(p_L, 1) };
 
     if("uniform_int_distribution" == m_distribution_type)
     {
-        DistributionWrapper* dw = m_distribution.get();
-        DistributionWrapperImpl<std::uniform_int_distribution<int>>* distribution = static_cast<DistributionWrapperImpl<std::uniform_int_distribution<int>>*>(dw);
+        auto dw{ m_distribution.get() };
+        const auto distribution{ static_cast<DistributionWrapperImpl<std::uniform_int_distribution<int>>*>(dw) };
 
-        int val = distribution->Generate<int>(lua_random_engine->GetRandomEngine());
+        const auto val{ distribution->Generate<int>(lua_random_engine->GetRandomEngine()) };
         lua_pushinteger(p_L, val);
 
     }
     else if("uniform_real_distribution" == m_distribution_type)
     {
-        DistributionWrapper* dw = m_distribution.get();
-        DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>* distribution = static_cast<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>*>(dw);
+        auto dw{ m_distribution.get() };
+        const auto distribution{ static_cast<DistributionWrapperImpl<std::uniform_real_distribution<dsreal>>*>(dw) };
 
-        dsreal val = distribution->Generate<dsreal>(lua_random_engine->GetRandomEngine());
+        const auto val{ distribution->Generate<dsreal>(lua_random_engine->GetRandomEngine()) };
         lua_pushnumber(p_L, val);
     }
     else

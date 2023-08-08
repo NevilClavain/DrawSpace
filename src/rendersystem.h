@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERSYSTEM_H_
-#define _RENDERSYSTEM_H_
+#pragma once
 
 #include "systems.h"
 #include "entitynodegraph.h"
@@ -59,4 +58,3 @@ public:
 }
 }
 
-#endif

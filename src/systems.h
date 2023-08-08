@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _SYSTEMS_H_
-#define _SYSTEMS_H_
+#pragma once
 
 #include "entitynodegraph.h"
 
@@ -81,5 +80,3 @@ public:
 };
 }
 }
-
-#endif

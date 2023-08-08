@@ -24,6 +24,9 @@
 
 #define UNDERWATER_GROUND_AMPLITUDE_FACTOR 7.0
 
+#define SPHERELOD_GROUND_ID 2.0
+#define SPHERELOD_FOLIAGE_ID 3.0
+
 float3 ProjectVectorToCube( int p_orientation, float3 p_vector )
 {
     float3 res;

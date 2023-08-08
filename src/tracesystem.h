@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRACESYSTEM_H_
-#define _TRACESYSTEM_H_
+#pragma once
 
 #include "systems.h"
 #include "entitynodegraph.h"
@@ -48,4 +47,4 @@ public:
 }
 }
 
-#endif
+

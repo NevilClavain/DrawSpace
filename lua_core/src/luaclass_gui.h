@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_GUI_H_
-#define _LUACLASS_GUI_H_
+#pragma once
 
 #include "luna.h"
 #include "renderer.h"
@@ -73,4 +72,3 @@ public:
 
 };
 
-#endif

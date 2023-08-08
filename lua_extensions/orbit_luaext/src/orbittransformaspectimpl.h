@@ -32,5 +32,5 @@ private:
     dsreal compute_orbit_angle(dsreal p_orbit_duration, dstime p_currtime);
     
 public:    
-    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
+    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform);
 };

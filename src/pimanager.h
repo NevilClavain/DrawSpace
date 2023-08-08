@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PIMANAGER_H_
-#define _PIMANAGER_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 enum class PluginManagerStatus
 {
@@ -83,6 +82,6 @@ public:
 
 #include "PIManager_impl.h"
 
-#endif
+
 
 

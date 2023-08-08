@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _DSAPP_H_
-#define _DSAPP_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "jsonparser.h"
 #include "renderer.h"
 
@@ -35,7 +34,7 @@ class App
 {
 protected:
 
-    class Config : public DrawSpace::Utils::JSONParser
+    class Config : public DrawSpace::JSONParser
     {
     protected:
         //bool on_new_line( const dsstring& p_line, long p_line_num, std::vector<dsstring>& p_words );
@@ -168,5 +167,4 @@ public:
 
 };
 
-#endif
 

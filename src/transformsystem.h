@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRANSFORMSYSTEM_H_
-#define _TRANSFORMSYSTEM_H_
+#pragma once
 
 #include "systems.h"
 #include "entitynodegraph.h"
@@ -40,8 +39,8 @@ protected:
     void run(EntityGraph::EntityNodeGraph* p_entitygraph);
 
     int                                 m_step;   
-    DrawSpace::Utils::Matrix            m_viewtransform_todispatch;
-    DrawSpace::Utils::Matrix            m_projtransform_todispatch;
+    DrawSpace::Maths::Matrix            m_viewtransform_todispatch;
+    DrawSpace::Maths::Matrix            m_projtransform_todispatch;
 
 public:
     TransformSystem( void );
@@ -54,4 +53,3 @@ public:
 }
 }
 
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _HUB_H_
-#define _HUB_H_
+#pragma once
 
 #include "transformsystem.h"
 #include "timesystem.h"
@@ -41,6 +40,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
+
 class Hub : public Interface::System
 {
 public:
@@ -77,7 +77,7 @@ public:
     dsstring GetSystemId(void) const { return "HubSystem"; };
     
 	template<typename T>
-	inline T& GetSystem(const dsstring& p_id) const
+	T& GetSystem(const dsstring& p_id) const
 	{
 		for (const auto& e : m_systems)
 		{
@@ -86,14 +86,15 @@ public:
 				try
 				{
 					return dynamic_cast<T&>(*e);
-
 				}
 				catch (std::bad_cast& p_bc)
 				{
 					_DSEXCEPTION("bad cast : " << dsstring( p_bc.what() ) << " " << p_id.c_str());
 				}
 			}
-		}		
+		}
+
+        _DSEXCEPTION("Unknown systrm id ");
 	}
 
     void EnableGUI( bool p_state );
@@ -111,4 +112,4 @@ public:
 }
 }
 
-#endif
+

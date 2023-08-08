@@ -35,16 +35,6 @@ namespace Systems
 {
 struct BuildMesheTask : public Interface::ITask
 {
-private:
-
-    Core::Entity*   m_entity;
-    dsstring        m_meshe_id;
-    aiNode*         m_meshe_node;
-    aiMesh**        m_meshes;
-    Core::Meshe*    m_target_meshe;
-
-    void build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
-
 public:
 
     BuildMesheTask();
@@ -52,6 +42,16 @@ public:
     void Execute(void);
     void SetEntity(Core::Entity* p_entity);
     void SetMeshesIOInfos(aiMesh** m_source_meshes, Core::Meshe* p_target_meshe, aiNode* p_meshe_node);
+
+private:
+
+    Core::Entity* m_entity{ nullptr };
+    dsstring        m_meshe_id;
+    aiNode* m_meshe_node{ nullptr };
+    aiMesh** m_meshes{ nullptr };
+    Core::Meshe* m_target_meshe{ nullptr };
+
+    void build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination);
 
 };
 

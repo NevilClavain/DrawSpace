@@ -55,76 +55,76 @@ protected:
 	btRigidBody*												m_rigidBody{ nullptr };
 	btDefaultMotionState*										m_motionState{ nullptr };
 
-	std::vector<std::pair<btCollisionShape*, Utils::Matrix>>    m_collisionShapesList;
+	std::vector<std::pair<btCollisionShape*, Maths::Matrix>>    m_collisionShapesList;
     btCollisionShape*                                           m_collisionShape{ nullptr };
     btCompoundShape*                                            m_compoundShape{ nullptr };
 
-	void convert_matrix_to_bt(const Utils::Matrix& p_mat, btScalar* bt_matrix);
-	void convert_matrix_from_bt(btScalar* bt_matrix, Utils::Matrix& p_mat);
+	void convert_matrix_to_bt(const Maths::Matrix& p_mat, btScalar* bt_matrix);
+	void convert_matrix_from_bt(btScalar* bt_matrix, Maths::Matrix& p_mat);
 
 
 public:
 
     struct BoxCollisionShape
     {
-        BoxCollisionShape(const Utils::Vector& p_box) : m_box(p_box)
+        BoxCollisionShape(const Maths::Vector& p_box) : m_box(p_box)
         {
-            m_transformation.Identity();
+            m_transformation.identity();
         };
 
-        BoxCollisionShape(const Utils::Vector& p_box, const Utils::Matrix& p_mat) :
+        BoxCollisionShape(const Maths::Vector& p_box, const Maths::Matrix& p_mat) :
             m_box(p_box),
             m_transformation(p_mat)
         {
         };
 
-        Utils::Matrix GetTransform(void) const { return m_transformation; };
-        Utils::Vector GetPos(void) const { return m_box; };
+        Maths::Matrix GetTransform(void) const { return m_transformation; };
+        Maths::Vector GetPos(void) const { return m_box; };
 
     private:
-        Utils::Vector m_box;
-        Utils::Matrix m_transformation;
+        Maths::Vector m_box;
+        Maths::Matrix m_transformation;
     };
 
     struct SphereCollisionShape
     {
         SphereCollisionShape(dsreal p_ray) : m_ray(p_ray)
         {
-            m_transformation.Identity();
+            m_transformation.identity();
         };
 
-        SphereCollisionShape(dsreal p_ray, const Utils::Matrix& p_mat) :
+        SphereCollisionShape(dsreal p_ray, const Maths::Matrix& p_mat) :
             m_ray(p_ray),
             m_transformation(p_mat)
         {
         };
 
-        Utils::Matrix GetTransform(void) const { return m_transformation; };
+        Maths::Matrix GetTransform(void) const { return m_transformation; };
 
         dsreal GetRay(void) const { return m_ray; };
     private:
         dsreal m_ray;
-        Utils::Matrix m_transformation;
+        Maths::Matrix m_transformation;
     };
 
     struct MesheCollisionShape
     {
         MesheCollisionShape(Core::Meshe& p_meshe) : m_meshe(p_meshe)
         {
-            m_transformation.Identity();
+            m_transformation.identity();
         };
-        MesheCollisionShape(Core::Meshe& p_meshe, const Utils::Matrix& p_mat) :
+        MesheCollisionShape(Core::Meshe& p_meshe, const Maths::Matrix& p_mat) :
             m_meshe(p_meshe),
             m_transformation(p_mat)
         {
-            m_transformation.Identity();
+            m_transformation.identity();
         };
 
-        Utils::Matrix GetTransform(void) const { return m_transformation; };
+        Maths::Matrix GetTransform(void) const { return m_transformation; };
 
         Core::Meshe& m_meshe;
     public:
-        Utils::Matrix m_transformation;
+        Maths::Matrix m_transformation;
     };
 
     struct CompoundCollisionShape {};

@@ -22,13 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACONTEXT_H_
-#define _LUACONTEXT_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include <functional>
+
+#include "ds_types.h"
 #include "exceptions.h"
 
-#include "crtp_singleton.h"
+#include "singleton.h"
 
 extern "C" {
 #include "lua.h"
@@ -57,27 +58,10 @@ extern "C" {
             }
 
 
-class LuaContext : public DrawSpace::Utils::BaseSingleton<LuaContext>
+class LuaContext : public DrawSpace::Commons::Singleton<LuaContext>
 {
-protected:
-	LuaContext( void );
-
-	lua_State*					m_L;
-	std::string					m_error;
-
-    dsstring                    m_rootpath;
-
-    inline void push_luafunc_arg( int p_val )
-    {
-        lua_pushinteger( m_L, p_val );
-    }
-
-    inline void push_luafunc_arg( const std::string& p_val )
-    {
-        lua_pushstring( m_L, p_val.c_str() );
-    }
-
 public:	
+    LuaContext(void);
 	~LuaContext( void );
 
     void SetRootPath( const dsstring& p_path );
@@ -87,7 +71,7 @@ public:
 
 	bool Execute( const dsstring& p_script );
 	int ExecuteFromFile( const dsstring& p_filepath );
-	dsstring GetLastError( void );
+	dsstring GetLastError( void ) const;
     
     template<class... Args>
     void CallLuaFunc( int p_regindex, Args&&... p_args )
@@ -119,7 +103,23 @@ public:
 
 	static int Include(lua_State* p_L);
 
-    friend class DrawSpace::Utils::BaseSingleton<LuaContext>;
+    friend class DrawSpace::Commons::Singleton<LuaContext>;
+
+private:
+
+    lua_State*                  m_L{ nullptr };
+    std::string					m_error;
+
+    dsstring                    m_rootpath;
+
+    void push_luafunc_arg(int p_val)
+    {
+        lua_pushinteger(m_L, p_val);
+    }
+
+    void push_luafunc_arg(const std::string& p_val)
+    {
+        lua_pushstring(m_L, p_val.c_str());
+    }
 };
 
-#endif

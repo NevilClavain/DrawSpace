@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RAWTRANSFORMASPECTIMPL_H_
-#define _RAWTRANSFORMASPECTIMPL_H_
+#pragma once
 
 #include "transformaspectimpl.h"
 
@@ -34,8 +33,8 @@ namespace AspectImplementations
 class RawTransformAspectImpl : public DrawSpace::Interface::AspectImplementations::TransformAspectImpl
 {
 public:
-    virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform );
+    virtual void GetLocaleTransform( Aspect::TransformAspect* p_transformaspect, Maths::Matrix& p_out_base_transform );
 };
 }
 }
-#endif
+

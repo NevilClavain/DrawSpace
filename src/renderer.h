@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "memalloc.h"
 #include "matrix.h"
 #include "renderingnode.h"
@@ -140,13 +139,13 @@ public:
 
 
 
-    virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector ) = 0;
-    virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat ) = 0;
+    virtual bool SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Maths::Vector& p_vector ) = 0;
+    virtual bool SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Maths::Matrix& p_mat ) = 0;
 
-	virtual bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors) = 0;
+	virtual bool SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Maths::Vector>& p_vectors) = 0;
 
-	virtual bool DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj ) = 0;
-    virtual bool DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj) = 0;
+	virtual bool DrawMeshe( DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj ) = 0;
+    virtual bool DrawLineMeshe(DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj) = 0;
 
     virtual void SetRenderState( DrawSpace::Core::RenderState* p_renderstate ) = 0;
 
@@ -154,7 +153,7 @@ public:
 
     virtual void DrawText( long p_r, long p_g, long p_b, int p_posX, int p_posY, const char* p_format, ... ) = 0;
 
-    virtual void PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz ) = 0;
+    virtual void PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Maths::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz ) = 0;
 
     virtual bool GUI_InitSubSystem( void ) = 0;
     virtual void GUI_ReleaseSubSystem( void ) = 0;
@@ -200,7 +199,7 @@ public:
     virtual void GUI_SetSpritePosition( const dsstring& p_spriteName, dsreal p_xpos, dsreal p_ypos ) = 0;
     virtual void GUI_SetSpriteImage( const dsstring& p_spriteName, const dsstring& p_image ) = 0;
     virtual void GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_scale ) = 0;
-    virtual void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle ) = 0;
+    virtual void GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Maths::Vector& p_axis, dsreal p_deg_angle ) = 0;
 
     virtual void GUI_InitTest( void ) = 0; // temporaire
 
@@ -208,4 +207,3 @@ public:
 }
 }
 
-#endif

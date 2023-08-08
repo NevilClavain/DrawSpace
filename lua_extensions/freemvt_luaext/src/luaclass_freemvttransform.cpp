@@ -30,8 +30,10 @@
 #include "quaternion.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 const char LuaClass_FreeMovementTransform::className[] = "FreeMovementTransform";
@@ -98,13 +100,13 @@ int LuaClass_FreeMovementTransform::LUA_configure( lua_State* p_L )
             transform_aspect->AddComponent<Vector>("rot_axis_z", Vector(0.0, 0.0, 1.0, 1.0));
 
             transform_aspect->AddComponent<Matrix>("pos");
-            transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(initial_posx, initial_posy, initial_posz, 1.0));
+            transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(initial_posx, initial_posy, initial_posz, 1.0));
 
             transform_aspect->AddComponent<Vector>("localpos");
             transform_aspect->AddComponent<Vector>("globalpos");
 
-            transform_aspect->AddComponent<Quaternion>("quat");
-            transform_aspect->GetComponent<Quaternion>("quat")->getPurpose().Identity();
+            transform_aspect->AddComponent<Maths::Quaternion>("quat");
+            transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose().identity();
 
         } LUA_CATCH;
     }
@@ -133,7 +135,7 @@ int LuaClass_FreeMovementTransform::LUA_release( lua_State* p_L )
     m_entity_transform_aspect->RemoveComponent<Vector>("rot_axis_y");
     m_entity_transform_aspect->RemoveComponent<Vector>("rot_axis_z");
     m_entity_transform_aspect->RemoveComponent<Matrix>("pos");
-    m_entity_transform_aspect->RemoveComponent<Quaternion>("quat");
+    m_entity_transform_aspect->RemoveComponent<Maths::Quaternion>("quat");
 
     m_entity_transform_aspect->RemoveComponent<Vector>("localpos");
     m_entity_transform_aspect->RemoveComponent<Vector>("globalpos");
@@ -174,7 +176,7 @@ int LuaClass_FreeMovementTransform::LUA_update(lua_State* p_L)
         m_entity_transform_aspect->GetComponent<dsreal>("rspeed_y")->getPurpose() = roty_speed;
         m_entity_transform_aspect->GetComponent<dsreal>("rspeed_z")->getPurpose() = rotz_speed;
 
-        m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(posx, posy, posz, 1.0));
+        m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(posx, posy, posz, 1.0));
 
         Matrix localpos_mat;
         m_entity_transform_aspect->GetLocalTransform(localpos_mat);
@@ -212,7 +214,7 @@ int LuaClass_FreeMovementTransform::LUA_setpos(lua_State* p_L)
 
     LUA_TRY
     {
-        m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(posx, posy, posz, 1.0));
+        m_entity_transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(posx, posy, posz, 1.0));
 
     } LUA_CATCH;
 
@@ -238,8 +240,8 @@ int LuaClass_FreeMovementTransform::LUA_lookat(lua_State* p_L)
     const Vector& source{ lua_source->getVector() };
     const Vector& dest{ lua_dest->getVector() };
     
-    Quaternion& quat{ m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() };
-    quat.LookAt(source, dest);
+    Maths::Quaternion& quat{ m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() };
+    quat.lookAt(source, dest);
 
     return 0;
 }
@@ -293,27 +295,27 @@ int LuaClass_FreeMovementTransform::LUA_rotateX(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LUA_TRY
     {
         // quaternion resultat courant
-        Quaternion current_res { m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() };
-        Quaternion q, qres;
+        Maths::Quaternion current_res { m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() };
+        Maths::Quaternion q;
 
         Vector rot_axis_x { m_entity_transform_aspect->GetComponent<Vector>("rot_axis_x")->getPurpose() };
        
-        q.RotationAxis(rot_axis_x, angle_rad);
-        qres = current_res * q;
+        q.rotationAxis(rot_axis_x, angle_rad);
+        const auto qres{ current_res * q };
         current_res = qres;
 
-        Utils::Matrix orientation;
-        current_res.RotationMatFrom(orientation);
+        Maths::Matrix orientation;
+        current_res.rotationMatFrom(orientation);
         rot_axis_x[0] = orientation(0, 0);
         rot_axis_x[1] = orientation(0, 1);
         rot_axis_x[2] = orientation(0, 2);
 
-        m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() = current_res;
+        m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() = current_res;
         m_entity_transform_aspect->GetComponent<Vector>("rot_axis_x")->getPurpose() = rot_axis_x;
 
     } LUA_CATCH;
@@ -335,27 +337,27 @@ int LuaClass_FreeMovementTransform::LUA_rotateY(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LUA_TRY
     {
         // quaternion resultat courant
-        Quaternion current_res { m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() };
-        Quaternion q, qres;
+        Maths::Quaternion current_res { m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() };
+        Maths::Quaternion q;
 
         Vector rot_axis_y { m_entity_transform_aspect->GetComponent<Vector>("rot_axis_y")->getPurpose() };
 
-        q.RotationAxis(rot_axis_y, angle_rad);
-        qres = current_res * q;
+        q.rotationAxis(rot_axis_y, angle_rad);
+        const auto qres{ current_res * q };
         current_res = qres;
 
-        Utils::Matrix orientation;
-        current_res.RotationMatFrom(orientation);
+        Maths::Matrix orientation;
+        current_res.rotationMatFrom(orientation);
         rot_axis_y[0] = orientation(1, 0);
         rot_axis_y[1] = orientation(1, 1);
         rot_axis_y[2] = orientation(1, 2);
 
-        m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() = current_res;
+        m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() = current_res;
         m_entity_transform_aspect->GetComponent<Vector>("rot_axis_y")->getPurpose() = rot_axis_y;
 
     } LUA_CATCH;
@@ -377,27 +379,27 @@ int LuaClass_FreeMovementTransform::LUA_rotateZ(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LUA_TRY
     {
         // quaternion resultat courant
-        Quaternion current_res { m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() };
-        Quaternion q, qres;
+        Maths::Quaternion current_res { m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() };
+        Maths::Quaternion q;
 
         Vector rot_axis_z { m_entity_transform_aspect->GetComponent<Vector>("rot_axis_z")->getPurpose() };
 
-        q.RotationAxis(rot_axis_z, angle_rad);
-        qres = current_res * q;
+        q.rotationAxis(rot_axis_z, angle_rad);
+        const auto qres{ current_res * q };
         current_res = qres;
 
-        Utils::Matrix orientation;
-        current_res.RotationMatFrom(orientation);
+        Maths::Matrix orientation;
+        current_res.rotationMatFrom(orientation);
         rot_axis_z[0] = orientation(2, 0);
         rot_axis_z[1] = orientation(2, 1);
         rot_axis_z[2] = orientation(2, 2);
 
-        m_entity_transform_aspect->GetComponent<Quaternion>("quat")->getPurpose() = current_res;
+        m_entity_transform_aspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() = current_res;
         m_entity_transform_aspect->GetComponent<Vector>("rot_axis_z")->getPurpose() = rot_axis_z;
 
     } LUA_CATCH;
@@ -406,7 +408,7 @@ int LuaClass_FreeMovementTransform::LUA_rotateZ(lua_State* p_L)
 }
 
 
-void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform)
+void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform)
 {
     if (NULL == m_time_aspect)
     {
@@ -447,15 +449,15 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
     Vector rot_axis_z = vectors[3]->getPurpose();
 
     // quaternion resultat courant
-    Quaternion	                current_res{ p_transformaspect->GetComponent<Quaternion>("quat")->getPurpose() };
+    Maths::Quaternion	        current_res{ p_transformaspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() };
 
-    Utils::Matrix			    orientation;
+    Maths::Matrix			    orientation;
     Vector                      gs;
 
     ////////////////////////////////////////
 
 
-    Quaternion q, qres;
+    Maths::Quaternion q;
     dsreal fps;
 
 
@@ -465,11 +467,11 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
 
 
     fps = m_time_aspect->ConvertUnitPerSecFramePerSec(rspeed_x);
-    q.RotationAxis(rot_axis_x, fps);
-    qres = current_res * q;
+    q.rotationAxis(rot_axis_x, fps);
+    auto qres{ current_res * q };
     current_res = qres;
 
-    current_res.RotationMatFrom(orientation);
+    current_res.rotationMatFrom(orientation);
     rot_axis_x[0] = orientation(0, 0);
     rot_axis_x[1] = orientation(0, 1);
     rot_axis_x[2] = orientation(0, 2);
@@ -478,11 +480,11 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
     /////////////////Axe Y /////////////////////////////
 
     fps = m_time_aspect->ConvertUnitPerSecFramePerSec(rspeed_y);
-    q.RotationAxis(rot_axis_y, fps);
+    q.rotationAxis(rot_axis_y, fps);
     qres = current_res * q;
     current_res = qres;
 
-    current_res.RotationMatFrom(orientation);
+    current_res.rotationMatFrom(orientation);
     rot_axis_y[0] = orientation(1, 0);
     rot_axis_y[1] = orientation(1, 1);
     rot_axis_y[2] = orientation(1, 2);
@@ -491,11 +493,11 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
 
 
     fps = m_time_aspect->ConvertUnitPerSecFramePerSec(rspeed_z);
-    q.RotationAxis(rot_axis_z, fps);
+    q.rotationAxis(rot_axis_z, fps);
     qres = current_res * q;
     current_res = qres;
 
-    current_res.RotationMatFrom(orientation);
+    current_res.rotationMatFrom(orientation);
     rot_axis_z[0] = orientation(2, 0);
     rot_axis_z[1] = orientation(2, 1);
     rot_axis_z[2] = orientation(2, 2);
@@ -505,7 +507,7 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
 
     ////////////////////////////////////////
 
-    orientation.Transform(&local_speed, &gs);
+    orientation.transform(&local_speed, &gs);
 
     TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory(pos(3, 0));
     TimeAspect::TimeScalar pos_31 = m_time_aspect->TimeScalarFactory(pos(3, 1));
@@ -522,7 +524,7 @@ void LuaClass_FreeMovementTransform::GetLocaleTransform(DrawSpace::Aspect::Trans
     p_out_base_transform = orientation * pos;
 
     p_transformaspect->GetComponent<Matrix>("pos")->getPurpose() = pos;
-    p_transformaspect->GetComponent<Quaternion>("quat")->getPurpose() = current_res;
+    p_transformaspect->GetComponent<Maths::Quaternion>("quat")->getPurpose() = current_res;
 
     vectors[1]->getPurpose() = rot_axis_x;
     vectors[2]->getPurpose() = rot_axis_y;

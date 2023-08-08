@@ -29,23 +29,14 @@
 #include "exceptions.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace LOD;
 
-Face::Face( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges ) : 
+Face::Face( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges ) :
 m_config( p_config ),
-m_cb_inst( NULL ),
-m_cb_del( NULL ),
-m_cb_merge( NULL ),
-m_cb_split( NULL ),
-m_rootpatch( NULL ), 
-m_currentleaf( NULL ),
-m_currentPatch( NULL ),
-m_currentPatchLOD( -1 ),
-m_hot( false ),
-m_relative_alt( 0.0 ),
-m_relative_alt_sphere( 0.0 ),
 m_subpasscreation_handler( p_handler ),
 m_layer_index( p_layer_index ),
 m_nbLODRanges( p_nbLODRanges )
@@ -91,18 +82,16 @@ bool Face::Init( int p_orientation )
 {
     m_orientation = p_orientation;
 
-    InstanciationCallback* cb_inst = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodeinstanciation ) );
-    DeletionCallback* cb_del = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodedeletion ) );
-    InstanciationCallback* cb_merge = _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodemerge ) );
-    DeletionCallback* cb_split = _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodesplit ) );
+    const auto cb_inst { _DRAWSPACE_NEW_(InstanciationCallback, InstanciationCallback(this, &Face::on_nodeinstanciation)) };
+    const auto cb_del { _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodedeletion ) ) };
+    const auto cb_merge { _DRAWSPACE_NEW_( InstanciationCallback, InstanciationCallback( this, &Face::on_nodemerge ) ) };
+    const auto cb_split { _DRAWSPACE_NEW_( DeletionCallback, DeletionCallback( this, &Face::on_nodesplit ) ) };
 
-    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );
-    
+    m_rootpatch = _DRAWSPACE_NEW_( QuadtreeNode<Patch>, QuadtreeNode<Patch>( cb_inst, cb_del, cb_split, cb_merge ) );    
     m_cb_inst = cb_inst;
     m_cb_del = cb_del;
     m_cb_merge = cb_merge;
     m_cb_split = cb_split;
-
     init_lodranges();
 
     return true;
@@ -110,53 +99,52 @@ bool Face::Init( int p_orientation )
 
 void Face::init_lodranges( void )
 {
-    dsreal k = 1.0;
-    for( int i = /*NB_LOD_RANGES*/ m_nbLODRanges - 1; i >= 0; i--)
+    auto k { 1.0 };    
+    for (int i = m_nbLODRanges - 1; i >= 0; i--)
     {
-        m_lodranges[i] = k * m_diameter / 2.0;        
+        m_lodranges.insert(m_lodranges.begin(), k * m_diameter / 2.0);
         k *= 0.5;
     }
 }
 
 void Face::on_nodeinstanciation( BaseQuadtreeNode* p_node )
 {
-    if( NULL == m_rootpatch )
+    if( nullptr == m_rootpatch )
     {
-        QuadtreeNode<Patch>* root = static_cast<QuadtreeNode<Patch>*>( p_node );
+        const auto root { static_cast<QuadtreeNode<Patch>*>(p_node) };
+        const auto patch { _DRAWSPACE_NEW_(Patch, Patch(m_diameter / 2.0, m_orientation, nullptr, -1,
+                           root, m_subpasscreation_handler, m_config, m_layer_index, m_nbLODRanges)) };
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, NULL, -1, 
-                                                        root, m_subpasscreation_handler, m_config, m_layer_index, m_nbLODRanges ) );
         root->SetContent( patch );      
     }
     else
     {
-        QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
-        QuadtreeNode<Patch>* parent = static_cast<QuadtreeNode<Patch>*>( node->GetParent() );
+        const auto node { static_cast<QuadtreeNode<Patch>*>(p_node) };
+        const auto parent { static_cast<QuadtreeNode<Patch>*>(node->GetParent()) };
 
-        Patch* patch = _DRAWSPACE_NEW_( Patch, Patch( m_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(), 
-                                                        node, m_subpasscreation_handler, m_config, m_layer_index, m_nbLODRanges ) );
+        const auto patch { _DRAWSPACE_NEW_(Patch, Patch(m_diameter / 2.0, m_orientation, parent->GetContent(), node->GetId(),
+                                                        node, m_subpasscreation_handler, m_config, m_layer_index, m_nbLODRanges)) };
         node->SetContent( patch );      
     }
 }
 
 void Face::on_nodedeletion( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {    
-    QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
-    
-    Patch* patch = node->GetContent();
-    patch->DestroyColorTexture();
+    const auto node { static_cast<QuadtreeNode<Patch>*>(p_node) };    
+    auto patch { node->GetContent() };
+    patch->CleanupSubpasses();
     _DRAWSPACE_DELETE_( patch );
 }
 
 void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 {
-    QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
-    Patch* patch = node->GetContent();
+    const auto node { static_cast<QuadtreeNode<Patch>*>(p_node) };
+    const auto patch { node->GetContent() };
 
-    QuadtreeNode<Patch>* nw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::NorthWestNode ) );
-    QuadtreeNode<Patch>* ne_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::NorthEastNode ) );
-    QuadtreeNode<Patch>* se_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthEastNode ) );
-    QuadtreeNode<Patch>* sw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthWestNode ) );
+    const auto nw_child_node { static_cast<QuadtreeNode<Patch>*>(node->GetChild(BaseQuadtreeNode::NorthWestNode)) };
+    const auto ne_child_node { static_cast<QuadtreeNode<Patch>*>(node->GetChild(BaseQuadtreeNode::NorthEastNode)) };
+    const auto se_child_node { static_cast<QuadtreeNode<Patch>*>(node->GetChild(BaseQuadtreeNode::SouthEastNode)) };
+    const auto sw_child_node { static_cast<QuadtreeNode<Patch>*>(node->GetChild(BaseQuadtreeNode::SouthWestNode)) };
 
     nw_child_node->GetContent()->SetNeighbour( ne_child_node, Patch::EastNeighbour );
     nw_child_node->GetContent()->SetNeighbour( sw_child_node, Patch::SouthNeighbour );
@@ -182,10 +170,8 @@ void Face::on_nodesplit( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 
 void Face::set_border_neighbours( QuadtreeNode<Patch>* p_node )
 {
-    QuadtreeNode<Patch>* parent;
     BaseQuadtreeNode* parent_neighb;
-
-    parent = static_cast<QuadtreeNode<Patch>*>( p_node->GetParent() );
+    const auto parent { static_cast<QuadtreeNode<Patch>*>(p_node->GetParent()) };
 
     switch( p_node->GetId() )
     {
@@ -315,15 +301,15 @@ void Face::set_border_neighbours( QuadtreeNode<Patch>* p_node )
     }
 }
 
-void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
+void Face::on_nodemerge(DrawSpace::Utils::BaseQuadtreeNode* p_node)
 {
-    QuadtreeNode<Patch>* node = static_cast<QuadtreeNode<Patch>*>( p_node );
-    Patch* patch = node->GetContent();
+    const auto node{ static_cast<QuadtreeNode<Patch>*>(p_node) };
+    const auto patch{ node->GetContent() };
 
-    QuadtreeNode<Patch>* nw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::NorthWestNode ) );
-    QuadtreeNode<Patch>* ne_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::NorthEastNode ) );
-    QuadtreeNode<Patch>* se_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthEastNode ) );
-    QuadtreeNode<Patch>* sw_child_node = static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthWestNode ) );
+    const auto nw_child_node { static_cast<QuadtreeNode<Patch>*>(node->GetChild(BaseQuadtreeNode::NorthWestNode)) };
+    const auto ne_child_node { static_cast<QuadtreeNode<Patch>*>(node->GetChild(BaseQuadtreeNode::NorthEastNode)) };
+    const auto se_child_node { static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthEastNode ) ) };
+    const auto sw_child_node { static_cast<QuadtreeNode<Patch>*>( node->GetChild( BaseQuadtreeNode::SouthWestNode ) ) };
 
     unset_border_neighbours( nw_child_node );
     unset_border_neighbours( ne_child_node );
@@ -333,10 +319,8 @@ void Face::on_nodemerge( DrawSpace::Utils::BaseQuadtreeNode* p_node )
 
 void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_node )
 {
-    QuadtreeNode<Patch>* parent;
     BaseQuadtreeNode* parent_neighb;
-
-    parent = static_cast<QuadtreeNode<Patch>*>( p_node->GetParent() );
+    const auto parent { static_cast<QuadtreeNode<Patch>*>(p_node->GetParent()) };
 
     switch( p_node->GetId() )
     {
@@ -345,21 +329,21 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthWestNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::WestNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::EastNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::EastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthEastNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthWestNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthEastNeighbour );
                 }
             }
             break;
@@ -369,21 +353,21 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthEastNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::EastNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::WestNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::WestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthWestNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::NorthEastNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthWestNeighbour );
                 }
             }
             break;
@@ -393,21 +377,21 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::EastNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::WestNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::WestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthWestNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::SouthNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthEastNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::SouthEastNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthWestNeighbour );
                 }
             }
             break;
@@ -417,28 +401,28 @@ void Face::unset_border_neighbours( DrawSpace::Utils::QuadtreeNode<Patch>* p_nod
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::WestNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::EastNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::SouthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::SouthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::EastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::SouthEastNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::SouthNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthNeighbour );
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthWestNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthWestNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthWestNeighbour );
                 }
 
                 parent_neighb = parent->GetContent()->GetNeighbour( Patch::SouthWestNeighbour );
                 if( parent_neighb && parent_neighb->HasChildren() )
                 {
-                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( NULL, Patch::NorthEastNeighbour );
+                    static_cast<QuadtreeNode<Patch>*>( parent_neighb->GetChild( BaseQuadtreeNode::NorthEastNode ) )->GetContent()->SetNeighbour( nullptr, Patch::NorthEastNeighbour );
                 }
             }
             break;
     }
 }
 
-void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
+void Face::UpdateRelativeHotpoint( const DrawSpace::Maths::Vector& p_point )
 {
     m_relative_hotpoint = p_point;
     compute_cubeface_hotpoint();    
@@ -446,9 +430,8 @@ void Face::UpdateRelativeHotpoint( const DrawSpace::Utils::Vector& p_point )
 
 bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node )
 {
-    Vector projected_viewer = m_cubeface_hotpoint;
-
-    Patch* current_patch = static_cast<QuadtreeNode<Patch>*>( p_node )->GetContent();
+    const auto projected_viewer{ m_cubeface_hotpoint };
+    const auto current_patch { static_cast<QuadtreeNode<Patch>*>(p_node)->GetContent() };
 
     dsreal patch_xpos, patch_ypos;
     current_patch->GetPos( patch_xpos, patch_ypos );
@@ -465,7 +448,7 @@ bool Face::is_hotpoint_bound_in_node( BaseQuadtreeNode* p_node )
     return false;
 }
 
-void Face::GetCurrentPatchViewCoords( DrawSpace::Utils::Vector& p_outcoords ) const
+void Face::GetCurrentPatchViewCoords( DrawSpace::Maths::Vector& p_outcoords ) const
 {
     p_outcoords = m_currentPatchViewCoords;
 }
@@ -504,7 +487,7 @@ QuadtreeNode<Patch>* Face::find_leaf_under( QuadtreeNode<Patch>* p_current )
         }
         return p_current;
     }
-    return NULL;
+    return nullptr;
 }
 
 void Face::UpdateLODComputationParams( void )
@@ -519,7 +502,7 @@ void Face::Compute( void )
     if( m_hot )
     {
         m_work_displaylist.clear();
-        m_work_currentPatch = NULL;
+        m_work_currentPatch = nullptr;
 
         recursive_build_displaylist( m_rootpatch, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1 );
     }
@@ -527,9 +510,9 @@ void Face::Compute( void )
 
 void Face::UpdateLODComputationResults( void )
 {
-    if( NULL == m_work_currentPatch )
+    if( nullptr == m_work_currentPatch )
     {
-        if( m_currentPatch == NULL )
+        if( m_currentPatch == nullptr )
         {
             // si c'est la 1ere exe du CDLOD apres passage en "HOT"
 
@@ -537,8 +520,8 @@ void Face::UpdateLODComputationResults( void )
 
             m_work_displaylist.push_back( m_rootpatch->GetContent() );
             m_displaylist = m_work_displaylist;
-            m_currentPatch = m_rootpatch->GetContent();
-            m_currentPatchLOD = m_nbLODRanges - 1; //NB_LOD_RANGES - 1;
+            m_work_currentPatch = m_rootpatch->GetContent();
+            m_work_currentPatchLOD = m_nbLODRanges - 1;
         }
         else
         {
@@ -557,8 +540,8 @@ bool Face::ComputeAlignmentFactor( void )
     Vector face_dir;
 
     Patch::GetNormalVector( m_orientation, face_dir );
-    Vector norm_hp = m_relative_hotpoint;
-    norm_hp.Normalize();
+    auto norm_hp { m_relative_hotpoint };
+    norm_hp.normalize();
     m_alignment_factor = norm_hp * face_dir;
 
     if( m_alignment_factor < 0 )
@@ -580,15 +563,13 @@ void Face::compute_cubeface_hotpoint( void )
 
     Patch::ConvertVectorToFrontFaceCoords( m_orientation, m_relative_hotpoint, viewer );
  
-    viewer.Normalize();
+    viewer.normalize();
     Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );    
-    projected_viewer.Scale( m_diameter / 2.0 );
+    projected_viewer.scale( m_diameter / 2.0 );
 
     m_cubeface_hotpoint = projected_viewer;
 }
-
-
 
 DrawSpace::Utils::QuadtreeNode<Patch>* Face::GetCurrentLeaf( void ) const
 {
@@ -611,16 +592,16 @@ void Face::SetHotState( bool p_hotstate )
     ResetDisplayList();
     if( !m_hot )
     {
-        m_currentPatch = NULL;
+        m_currentPatch = nullptr;
     }
 }
 
 // coeur algo CDLOD
 bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_lodlevel )
 {
-    QuadtreeNode<Patch>* patch_node = static_cast<QuadtreeNode<Patch>*>( p_current_node );
+    const auto patch_node { static_cast<QuadtreeNode<Patch>*>(p_current_node) };
 
-    if( !patch_node->GetContent()->IsCircleIntersection( m_work_cubeface_hotpoint[0], m_work_cubeface_hotpoint[1], m_lodranges[p_lodlevel] ) )
+    if( !patch_node->GetContent()->IsCircleIntersection( m_work_cubeface_hotpoint[0], m_work_cubeface_hotpoint[1], m_lodranges.at(p_lodlevel) ) )
     {
         return false;
     }
@@ -641,7 +622,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
     }
     else
     {
-        if( !patch_node->GetContent()->IsCircleIntersection( m_work_cubeface_hotpoint[0], m_work_cubeface_hotpoint[1], m_lodranges[p_lodlevel - 1] ) )
+        if( !patch_node->GetContent()->IsCircleIntersection( m_work_cubeface_hotpoint[0], m_work_cubeface_hotpoint[1], m_lodranges.at(p_lodlevel - 1) ) )
         {
             if( p_lodlevel <= m_work_lod_slipping_sup )
             {
@@ -661,8 +642,7 @@ bool Face::recursive_build_displaylist( BaseQuadtreeNode* p_current_node, int p_
 
             for( int i = 0; i < 4; i++ )
             {
-                BaseQuadtreeNode* sub = patch_node->GetChild( i );
-
+                const auto sub { patch_node->GetChild(i) };
                 if( !recursive_build_displaylist( sub, p_lodlevel - 1 ) )
                 {
                     if( p_lodlevel - 1 <= m_work_lod_slipping_sup )
@@ -690,7 +670,8 @@ dsreal Face::GetRelativeAltSphere( void ) const
 
 void Face::UpdateRelativeAlt( dsreal p_alt )
 {
-    m_relative_alt = p_alt - ( m_config->m_lod0base / ( m_diameter / 2.0 ) );
+    m_relative_alt = p_alt;
+
     m_relative_alt_sphere = p_alt;
     if( m_hot )
     { 
@@ -698,11 +679,11 @@ void Face::UpdateRelativeAlt( dsreal p_alt )
         // c'est la fct atan qui est choisie pour son profil.
 
         // ramener dans l'intervale 1.0 - 0.0
-        dsreal factor = Maths::Clamp( 0.0, 1.0, m_relative_alt - 1.0 );
-        dsreal factor2 = atan( 18.0 * factor ) / 1.57;
+        const auto factor { Maths::clamp(0.0, 1.0, m_relative_alt - 1.0) };
+        const auto factor2 { atan(60.0 * factor) / 1.57 };
 
-        m_lod_slipping_sup = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 12, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, factor2 ) );
-        m_lod_slipping_inf = Maths::Clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::Lerp( 0, /*NB_LOD_RANGES - 2*/ m_nbLODRanges - 2, factor2 ) );
+        m_lod_slipping_sup = Maths::clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::lerp( 12, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, factor2 ) );
+        m_lod_slipping_inf = Maths::clamp( m_min_lodlevel, /*NB_LOD_RANGES - 1*/ m_nbLODRanges - 1, Maths::lerp( 0, /*NB_LOD_RANGES - 2*/ m_nbLODRanges - 2, factor2 ) );
     }
 }
 
@@ -727,12 +708,11 @@ void Face::recursive_split( BaseQuadtreeNode* p_currpatch, int p_dest_depth, int
     {
         return;
     }
-
     p_currpatch->Split();
 
     for( int i = 0; i < 4; i++ )
     {
-        BaseQuadtreeNode* child = p_currpatch->GetChild( i );
+        const auto child { p_currpatch->GetChild(i) };
         recursive_split( child, p_dest_depth, p_current_depth + 1 );
     }
 }
@@ -760,20 +740,19 @@ void Face::recursive_merge( DrawSpace::Utils::BaseQuadtreeNode* p_currpatch )
     {
         for( int i = 0; i < 4; i++ )
         {
-            BaseQuadtreeNode* child = p_currpatch->GetChild( i );
+            const auto child { p_currpatch->GetChild(i) };
             recursive_merge( child );
         }
-
         p_currpatch->Merge();
     }
 }
 
-void Face::GetCurrentCubeFaceHotPoint( DrawSpace::Utils::Vector& p_cubeface_hotpoint ) const
+void Face::GetCurrentCubeFaceHotPoint( DrawSpace::Maths::Vector& p_cubeface_hotpoint ) const
 {
     p_cubeface_hotpoint = m_cubeface_hotpoint;
 }
 
-void Face::GetRelativeHotPoint( DrawSpace::Utils::Vector& p_rhotpoint ) const
+void Face::GetRelativeHotPoint( DrawSpace::Maths::Vector& p_rhotpoint ) const
 {
     p_rhotpoint = m_relative_hotpoint;
 }

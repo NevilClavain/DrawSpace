@@ -22,10 +22,10 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERSTATE_H_
-#define _RENDERSTATE_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include <vector>
+#include "ds_types.h"
 
 namespace DrawSpace
 {
@@ -61,8 +61,10 @@ public:
     void ClearExtendedArgs(void);
     void PushExtendedArg(const dsstring& p_arg);
 
+    dsstring ToString(void) const;
+
     Operation GetOperation( void ) const;
-    void GetArg( dsstring& p_arg ) const;
+    dsstring GetArg( void ) const;
     std::vector<dsstring> GetExtendedArgs(void) const;
 
 private:
@@ -74,4 +76,3 @@ private:
 }
 }
 
-#endif

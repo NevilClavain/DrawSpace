@@ -32,5 +32,5 @@ private:
     double compute_revolution_angle(double p_revolution_duration, double p_curr_angle);
 
 public:    
-    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
+    virtual void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform);
 };

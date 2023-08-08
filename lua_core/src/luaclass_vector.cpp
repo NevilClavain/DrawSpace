@@ -26,7 +26,7 @@
 #include "luaclass_vector.h"
 #include "maths.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 const char LuaClass_Vector::className[] = "Vector";
 const Luna<LuaClass_Vector>::RegType LuaClass_Vector::methods[] =
@@ -60,11 +60,11 @@ LuaClass_Vector::LuaClass_Vector(lua_State* p_L)
         dsreal y = luaL_checknumber(p_L, 2);
         dsreal z = luaL_checknumber(p_L, 3);
         dsreal w = luaL_checknumber(p_L, 4);
-        m_vector = std::make_unique<DrawSpace::Utils::Vector>( x, y, z, w );
+        m_vector = std::make_unique<DrawSpace::Maths::Vector>( x, y, z, w );
     }
     else
     {
-        m_vector = std::make_unique<DrawSpace::Utils::Vector>();
+        m_vector = std::make_unique<DrawSpace::Maths::Vector>();
     }    
 }
 
@@ -146,19 +146,19 @@ int LuaClass_Vector::LUA_setw(lua_State* p_L)
 
 int LuaClass_Vector::LUA_lengthpow2(lua_State* p_L)
 {
-    lua_pushnumber(p_L, m_vector->LengthPow2());
+    lua_pushnumber(p_L, m_vector->lengthPow2());
     return 1;
 }
 
 int LuaClass_Vector::LUA_length(lua_State* p_L)
 {
-    lua_pushnumber(p_L, m_vector->Length());
+    lua_pushnumber(p_L, m_vector->length());
     return 1;
 }
 
 int LuaClass_Vector::LUA_normalize(lua_State* p_L)
 {
-    m_vector->Normalize();
+    m_vector->normalize();
     return 0;
 }
 
@@ -170,7 +170,7 @@ int LuaClass_Vector::LUA_scale(lua_State* p_L)
         LUA_ERROR("Vector::scale : argument(s) missing");
     }
 
-    m_vector->Scale(luaL_checknumber(p_L, 1));
+    m_vector->scale(luaL_checknumber(p_L, 1));
     return 0;
 }
 
@@ -200,7 +200,7 @@ int LuaClass_Vector::LUA_crossproductwith(lua_State* p_L)
     LuaClass_Vector* vectorA = Luna<LuaClass_Vector>::check(p_L, 1);
     LuaClass_Vector* vectorB = Luna<LuaClass_Vector>::check(p_L, 2);
 
-    *m_vector = ProdVec(vectorA->getVector(), vectorB->getVector());
+    *m_vector = Vector::prodVec(vectorA->getVector(), vectorB->getVector());
     return 0;
 }
 
@@ -253,12 +253,12 @@ int LuaClass_Vector::LUA_subwith(lua_State* p_L)
 
 /////////////////////////////////////////////////////////////////////
 
-DrawSpace::Utils::Vector LuaClass_Vector::getVector(void) const
+DrawSpace::Maths::Vector LuaClass_Vector::getVector(void) const
 {
     return *m_vector;
 }
 
-void LuaClass_Vector::setVector(const DrawSpace::Utils::Vector& p_vector)
+void LuaClass_Vector::setVector(const DrawSpace::Maths::Vector& p_vector)
 {
     *m_vector = p_vector;
 }

@@ -5,7 +5,11 @@ planetmod.view = {}
 -- stockage des instances modeles : paire {entity, renderer, specific_config}
 planetmod.models = {}
 
-planetmod.requested_rendering_layers = nil
+planetmod.requested_planet_layers = nil
+
+planetmod.requested_foliage_layers = nil
+planetmod.requested_foliage_bindings = nil
+planetmod.requested_foliage_params = nil
 
 planetmod.wavepass_name = 'default'
 
@@ -25,7 +29,7 @@ planetmod.read_infos=function(planet_specific_configuration)
 	for i = 0, nb_views-1, 1 do
 		
 		local views_infos_entry = {}
-		local offset = (16 * i) + 2
+		local offset = (18 * i) + 2
 		local camera_name = views_infos[offset]
 		local current_lod = views_infos[offset + 1]
 		local relative = views_infos[offset + 2]
@@ -47,6 +51,10 @@ planetmod.read_infos=function(planet_specific_configuration)
 		local global_camera_pos_y = views_infos[offset + 14]
 		local global_camera_pos_z = views_infos[offset + 15]
 
+		local temperature = views_infos[offset + 16]
+		local humidity = views_infos[offset + 17]
+
+
 		views_infos_entry['currentLOD'] = current_lod
 		views_infos_entry['relative'] = relative
 		views_infos_entry['relative_altitude'] = rel_alt
@@ -66,6 +74,10 @@ planetmod.read_infos=function(planet_specific_configuration)
 		views_infos_entry['global_camera_pos_x'] = global_camera_pos_x
 		views_infos_entry['global_camera_pos_y'] = global_camera_pos_y
 		views_infos_entry['global_camera_pos_z'] = global_camera_pos_z
+
+		views_infos_entry['temperature'] = temperature
+		views_infos_entry['humidity'] = humidity
+
 
 		formatted_views_infos[camera_name] = views_infos_entry
 
@@ -277,33 +289,12 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 		planet_specific_configuration:set_detailslimitsup(config_description['details_limit_sup'])
 	end
 
-	if config_description['bump_details_limit_sup'] ~= nil then
-		planet_specific_configuration:set_bumpdetailslimitsup(config_description['bump_details_limit_sup'])
-	end
 
-	if config_description['ground_bump_details_factor_depth_distance'] ~= nil then
-		planet_specific_configuration:set_groundbumpdetailsfactordepthdistance(config_description['ground_bump_details_factor_depth_distance'])
-	end
-
-	if config_description['ground_detail_bump_nb_frac_loop'] ~= nil then
-		planet_specific_configuration:set_grounddetailbumpnbfracloop(config_description['ground_detail_bump_nb_frac_loop'])
-	end
 
 	if config_description['ultra_details_max_distance'] ~= nil then
 		planet_specific_configuration:set_ultradetailsmaxdistance(config_description['ultra_details_max_distance'])
 	end
 
-	if config_description['ground_bump_details_factor_depth_near_d1'] ~= nil then
-		planet_specific_configuration:set_groundbumpdetailsfactordepthneard1(config_description['ground_bump_details_factor_depth_near_d1'])
-	end
-
-	if config_description['ground_bump_details_factor_depth_near_d2'] ~= nil then
-		planet_specific_configuration:set_groundbumpdetailsfactordepthneard2(config_description['ground_bump_details_factor_depth_near_d2'])
-	end
-
-	if config_description['enable_ground_detail_bump'] ~= nil then
-		planet_specific_configuration:enable_grounddetailbump(config_description['enable_ground_detail_bump'])
-	end
 
 	if config_description['enable_ultra_detail'] ~= nil then
 		planet_specific_configuration:enable_ultradetail(config_description['enable_ultra_detail'])
@@ -319,7 +310,7 @@ planetmod.setup_specific_config=function(config_description, planet_specific_con
 
 end
 
-planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
+planetmod.create_rendered_planet = function(p_planet_layers, p_planet_bindings, p_foliage_layers, p_foliage_bindings, p_foliage_params)
 
   local entity=Entity()
   entity:add_aspect(RENDERING_ASPECT)
@@ -328,19 +319,21 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
   local renderer=PlanetRendering(TimeManagerRef(root_entity))
   renderer:attach_toentity(entity)
 
-  local renderlayer=RenderLayer()
+  -- ###########################################################
 
-  for k, v in pairs(p_rendering_passes_array) do
+  for k, v in pairs(p_planet_bindings) do
 
 	local layer_entry = v
 
 	local pass_id = layer_entry.target_pass_id
 	local rendering_id = layer_entry.rendering_id
 
-	renderer:set_passforrenderid(rendering_id, pass_id) -- to be continued
+	renderer:set_passforplanetlayerrenderid(rendering_id, pass_id)
   end
 
-  for k0, v0 in pairs(p_layers) do
+  local planetrenderlayer=RenderLayer()
+
+  for k0, v0 in pairs(p_planet_layers) do
     --g:print("k0 is "..k0)
 
 	local renderconfig=RenderConfig()
@@ -358,9 +351,7 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
       local rs_in_config = fx_config['rs_in']
       for k2, v2 in pairs(rs_in_config) do
 	    local curr_rs_in = v2
-
 		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
-
 		if curr_rs_in['value'] == 'extended' then
 		  if curr_rs_in['extended_args'] ~= nil then
 		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
@@ -415,11 +406,140 @@ planetmod.create_rendered_planet = function(p_layers, p_rendering_passes_array)
 
 	end
 
-	renderlayer:add_renderconfig(renderconfig, k0)
+	planetrenderlayer:add_renderconfig(renderconfig, k0)
+  end
+
+  -- ###########################################################
+
+  for k, v in pairs(p_foliage_bindings) do
+
+	local layer_entry = v
+
+	local pass_id = layer_entry.target_pass_id
+	local rendering_id = layer_entry.rendering_id
+
+	renderer:set_passforfoliagelayerrenderid(rendering_id, pass_id)
+  end
+
+  local foliagerenderlayer=RenderLayer()
+
+  for k0, v0 in pairs(p_foliage_layers) do
+    --g:print("k0 is "..k0)
+
+	local renderconfig=RenderConfig()
+	for k, v in pairs(v0) do
+	  --g:print("	k is "..k)
+
+	  local rendercontext = RenderContext(k)
+
+	  local fxparams = FxParams()
+	  local fx_config = v['fx']
+
+	  local rss=RenderStatesSet()
+
+      local rs_in_config = fx_config['rs_in']
+      for k2, v2 in pairs(rs_in_config) do
+	    local curr_rs_in = v2
+		rss:add_renderstate_in(curr_rs_in['ope'], curr_rs_in['value'])
+		if curr_rs_in['value'] == 'extended' then
+		  if curr_rs_in['extended_args'] ~= nil then
+		    for k2, v2 in pairs(curr_rs_in['extended_args']) do
+			  --g:print("	**-> "..k2.." "..v2)
+			  rss:push_renderstate_in_extendedargs(0, v2)
+			end
+		  end
+		end
+	  end
+
+	  local rs_out_config = fx_config['rs_out']
+	  for k2, v2 in pairs(rs_out_config) do
+	    local curr_rs_out = v2
+		--g:print(curr_rs_out['ope']..'->'..curr_rs_out['value'])
+		rss:add_renderstate_out(curr_rs_out['ope'], curr_rs_out['value'])
+	  end
+	  fxparams:set_renderstatesset(rss)
+
+	  local shaders_config = fx_config['shaders']
+	  for k2, v2 in pairs(shaders_config) do
+	    local curr_shader = v2
+	    --g:print(curr_shader['path']..'->'..curr_shader['mode'])
+		fxparams:add_shaderfile(curr_shader['path'],curr_shader['mode'])
+	  end
+
+	  local tx_config = v['textures']		
+	  for k2, v2 in ipairs(tx_config) do
+	    --g:print(k2)
+	    local textures = TexturesSet()
+		for k3, v3 in pairs(v2) do
+		  local tx = v3
+		  --g:print(tx['path']..'->'..tx['stage'])
+		  textures:set_texturefiletostage(tx['path'], tx['stage'])
+		end
+		rendercontext:add_texturesset(textures)
+	  end
+
+	  local shaderparams_config = v['shaders_params']
+	  for k2, v2 in pairs(shaderparams_config) do
+	    local param = v2
+		--g:print(param['param_name']..'->'..param['shader_index']..','..param['register'])
+		rendercontext:add_shaderparam(param['param_name'], param['shader_index'], param['register'])
+	  end
+
+	  local ro = v['rendering_order']
+	  --g:print( 'ro ='..ro )
+
+	  rendercontext:set_renderingorder(ro)
+
+	  rendercontext:add_fxparams(fxparams)
+	  renderconfig:add_rendercontext(rendercontext)
+	  
+	end
+
+	foliagerenderlayer:add_renderconfig(renderconfig, k0)
+  end
+
+  for k0, v0 in pairs(p_foliage_params) do
+    --g:print("k0 is "..k0.. " v0 is "..v0)
+
+	local file = v0.meshe.file
+	local mesheid = v0.meshe.id
+
+	local global_lit = v0.global_lit
+	local detailed_lit = v0.detailed_lit
+
+	local local_seed = v0.local_seed
+
+	local altitud_max = v0.altitud_max
+
+	--g:print("v0 is "..file.." "..mesheid.." local_seed = "..local_seed)
+
+	local appearance = v0.random_params.appearance
+
+	local temperature_range_min = v0.temperature_range.min
+	local temperature_range_max = v0.temperature_range.max
+
+	local humidity_range_min = v0.humidity_range.min
+	local humidity_range_max = v0.humidity_range.max
+
+	local nb_poles_min = v0.random_params.nb_poles.min
+	local nb_poles_max = v0.random_params.nb_poles.max
+
+	local pole_ray_min = v0.random_params.pole_ray.min
+	local pole_ray_max = v0.random_params.pole_ray.max
+
+	local nbpoints_per_pole_min = v0.random_params.nbpoints_per_pole.min
+	local nbpoints_per_pole_max = v0.random_params.nbpoints_per_pole.max
+
+	renderer:declare_foliageparameters( k0, file, mesheid, global_lit, detailed_lit, local_seed,
+		temperature_range_min, temperature_range_max,
+		humidity_range_min, humidity_range_max,
+		nb_poles_min, nb_poles_max,
+		pole_ray_min, pole_ray_max,
+		nbpoints_per_pole_min, nbpoints_per_pole_max, appearance, altitud_max)
 
   end
 
-  renderer:configure(renderlayer)
+  renderer:configure(planetrenderlayer, foliagerenderlayer)
   return entity, renderer
 end
 
@@ -439,7 +559,7 @@ planetmod.createmodelview = function(p_rendergraph, p_entity_id, p_passes_bindin
   local entity
   local renderer
 
-  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_rendering_layers, p_passes_bindings)
+  entity,renderer=planetmod.create_rendered_planet(planetmod.requested_planet_layers, p_passes_bindings, planetmod.requested_foliage_layers, planetmod.requested_foliage_bindings, planetmod.requested_foliage_params)
 
   local specific_config = PlanetConfig()
   planetmod.setup_specific_config(p_planet_specific_config_descr, specific_config)
@@ -501,9 +621,13 @@ planetmod.view.unload = function(p_entity_id)
 
 end
 
-planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_layers, p_planet_specific_config_descr, wavepass_name)
+planetmod.view.load = function(p_entity_id, p_planet_specific_config_descr, p_passes_bindings, p_planet_layers, p_foliage_passes_bindings, p_foliage_layers, p_foliage_params, p_wavepass_name)
 
-  planetmod.requested_rendering_layers = p_planet_layers
+  planetmod.requested_planet_layers = p_planet_layers
+
+  planetmod.requested_foliage_layers = p_foliage_layers
+  planetmod.requested_foliage_bindings = p_foliage_passes_bindings
+  planetmod.requested_foliage_params = p_foliage_params
 
   local found_id = FALSE
   for k, v in pairs(spaceboxmod.models) do
@@ -513,7 +637,7 @@ planetmod.view.load = function(p_entity_id, p_passes_bindings, p_planet_layers, 
 	end
   end
 
-  planetmod.wavepass_name = wavepass_name
+  planetmod.wavepass_name = p_wavepass_name
 
   if found_id == TRUE then
     g:print('Entity '..p_entity_id..' already exists')

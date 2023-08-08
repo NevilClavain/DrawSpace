@@ -28,6 +28,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Aspect;
@@ -47,8 +48,8 @@ void TransformSystem::run( EntityNodeGraph* p_entitygraph )
     m_step = 0;
     p_entitygraph->AcceptSystemRootToLeaf( this );
 
-    m_viewtransform_todispatch.Identity();
-    m_projtransform_todispatch.Identity();
+    m_viewtransform_todispatch.identity();
+    m_projtransform_todispatch.identity();
 
     Entity* curr_entity_camera = p_entitygraph->GetCurrentCameraEntity();
 
@@ -66,7 +67,7 @@ void TransformSystem::run( EntityNodeGraph* p_entitygraph )
             {
                 Matrix camera_world_transform;
                 transform_aspect->GetWorldTransform( camera_world_transform );
-                camera_world_transform.Inverse();
+                camera_world_transform.inverse();
 
                 m_viewtransform_todispatch = camera_world_transform;
             }

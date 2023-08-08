@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGNODE_H_
-#define _RENDERINGNODE_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "matrix.h"
 #include "fx.h"
 #include "texture.h"
@@ -37,11 +36,11 @@ namespace DrawSpace
 {
 namespace Core
 {
-class RenderingNode
+struct RenderingNode
 {
 public:
-    static const int NeutralOrder = 10000;
-    static const int NbMaxTextures = 32;
+    static constexpr int NeutralOrder = 10000;
+    static constexpr int NbMaxTextures = 32;
 
     using ShadersParams = struct
     {
@@ -49,15 +48,15 @@ public:
         long						param_register;
 
         bool						vector; // si true, "param_values" est valide, sinon c'est "mat"
-        Utils::Vector				param_values;
-        Utils::Matrix				mat;
+        Maths::Vector				param_values;
+        Maths::Matrix				mat;
     };
 
 	using ShadersArrayParam = struct
 	{
 		long						shader_index;
 		long						begin_register;
-		std::vector<Utils::Vector>	array;
+		std::vector<Maths::Vector>	array;
 	};
 
     dsstring									m_debug_id;
@@ -111,14 +110,14 @@ public:
 
     virtual void AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register );
     virtual void SetShaderReal( const dsstring& p_id, dsreal p_value );
-    virtual void SetShaderRealVector( const dsstring& p_id, const Utils::Vector& p_value );
+    virtual void SetShaderRealVector( const dsstring& p_id, const Maths::Vector& p_value );
 	virtual void SetShaderRealInVector(const dsstring& p_id, int p_index_in_vector, dsreal p_value );
-    virtual void SetShaderRealMatrix( const dsstring& p_id, const Utils::Matrix& p_value );
+    virtual void SetShaderRealMatrix( const dsstring& p_id, const Maths::Matrix& p_value );
     virtual void SetShaderBool( const dsstring& p_id, bool p_value );
     virtual void CleanupShaderParams( void );
 
 	virtual void AddShaderArrayParameter(long p_shader_index, const dsstring& p_id, long p_begin_register);
-	virtual void SetShaderArrayParameter(const dsstring& p_id, const std::vector<Utils::Vector>& p_array);
+	virtual void SetShaderArrayParameter(const dsstring& p_id, const std::vector<Maths::Vector>& p_array);
 	virtual void CleanupShaderArrayParams(void);
 
     virtual void UpdateShaderParams( const dsstring& p_id, ShadersParams& p_params );
@@ -132,12 +131,15 @@ public:
     friend class RenderingQueue;
 
 protected:
+    Meshe*                                      m_meshe{ nullptr };
+
+private:
 
     Fx*                                         m_fx{ nullptr };
     Texture*                                    m_textures[NbMaxTextures]; // 32 textures stages max
     Texture*                                    m_vertextextures[NbMaxTextures];
 
-    Meshe*                                      m_meshe{ nullptr };
+    
     LineMeshe*                                  m_linemeshe{ nullptr };
 
     std::map<dsstring, ShadersParams*>			m_shader_params;
@@ -148,9 +150,8 @@ protected:
 
     BaseCallback<void, RenderingNode*>*         m_handler{ nullptr };
 
-    bool										m_drawing_enabled{ TRUE };
+    bool										m_drawing_enabled{ true };
 };
 }
 }
 
-#endif

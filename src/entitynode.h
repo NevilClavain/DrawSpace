@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _ENTITYNODE_H_
-#define _ENTITYNODE_H_
+#pragma once
 
 #include "st_tree.h"
 #include "entity.h"
@@ -38,12 +37,11 @@ class EntityNode
 {
 public:
 
-    typedef enum
+    enum class Event
     {
         ADDED_IN_TREE,
 		REMOVED_FROM_TREE,
-
-    } Event;
+    };
 
     using EventsHandler = DrawSpace::Core::BaseCallback2<void, Event, Core::Entity*>;
    
@@ -72,4 +70,3 @@ public:
 }
 }
 
-#endif

@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "luna.h"
 
 #include "transformaspectimpl.h"
@@ -57,7 +57,7 @@ public:
     int LUA_read(lua_State* p_L);
 
 
-    void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform);
+    void GetLocaleTransform(DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform);
 
     static const char className[];
     static const Luna<LuaClass_FPSMovementTransform>::RegType methods[];

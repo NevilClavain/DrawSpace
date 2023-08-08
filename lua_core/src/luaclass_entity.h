@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_ENTITY_H_
-#define _LUACLASS_ENTITY_H_
+#pragma once
 
 #include "entity.h"
 #include "luna.h"
@@ -122,4 +121,3 @@ public:
     static const Luna<LuaClass_Entity>::RegType methods[];
 };
 
-#endif

@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#include "renderstate.h"
+#include <unordered_map>
 
+#include "renderstate.h"
 
 using namespace DrawSpace::Core;
 
@@ -62,15 +63,14 @@ void RenderState::PushExtendedArg(const dsstring& p_arg)
     m_extendedargs.push_back(p_arg);
 }
 
-
 RenderState::Operation RenderState::GetOperation( void ) const
 {
     return m_operation;
 }
 
-void RenderState::GetArg( dsstring& p_arg ) const
+dsstring RenderState::GetArg(void) const
 {
-    p_arg = m_arg;
+    return m_arg;
 }
 
 std::vector<dsstring> RenderState::GetExtendedArgs(void) const
@@ -78,3 +78,21 @@ std::vector<dsstring> RenderState::GetExtendedArgs(void) const
     return m_extendedargs;
 }
 
+dsstring RenderState::ToString(void) const
+{
+    static const std::unordered_map<Operation, dsstring> translate =
+    {
+        { NONE, "NONE" },
+        { SETCULLING, "SETCULLING" },
+        { ENABLEZBUFFER, "ENABLEZBUFFER" },
+        { SETTEXTUREFILTERTYPE, "SETTEXTUREFILTERTYPE" },
+        { SETVERTEXTEXTUREFILTERTYPE, "SETVERTEXTEXTUREFILTERTYPE" },
+        { SETFILLMODE, "SETFILLMODE" },
+        { ALPHABLENDENABLE, "ALPHABLENDENABLE" },
+        { ALPHABLENDOP, "ALPHABLENDOP" },
+        { ALPHABLENDFUNC, "ALPHABLENDFUNC" },
+        { ALPHABLENDDEST, "ALPHABLENDDEST" },
+        { ALPHABLENDSRC, "ALPHABLENDSRC" }
+    };
+    return translate.at(m_operation);
+}

@@ -40,8 +40,9 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
-_DECLARE_DS_LOGGER( logger, "test_impostors_mainservice", NULL )
+static DrawSpace::Logger::Sink logger("test_impostors_mainservice");
 
 
 extern DrawSpace::Logger::Sink aspect_logger;
@@ -93,23 +94,23 @@ bool MainService::Init( void )
     ////////////////////////////////////////////////////////
 
         
-    logconf->RegisterSink( &logger );
-    logger.SetConfiguration( logconf );
+    logconf->registerSink( &logger );
+    logger.setConfiguration( logconf );
 
-    logconf->RegisterSink(&aspect_logger);
-    aspect_logger.SetConfiguration(logconf);
+    logconf->registerSink(&aspect_logger);
+    aspect_logger.setConfiguration(logconf);
 
-    logconf->RegisterSink(&rs_logger);
-    rs_logger.SetConfiguration(logconf);
+    logconf->registerSink(&rs_logger);
+    rs_logger.setConfiguration(logconf);
 
-    logconf->RegisterSink( MemAlloc::GetLogSink() );
-    MemAlloc::GetLogSink()->SetConfiguration( logconf );
+    logconf->registerSink( MemAlloc::GetLogSink() );
+    MemAlloc::GetLogSink()->setConfiguration( logconf );
 
-    logconf->RegisterSink(&rd_logger);
-    rd_logger.SetConfiguration(logconf);
+    logconf->registerSink(&rd_logger);
+    rd_logger.setConfiguration(logconf);
 
-    logconf->RegisterSink(&runner_logger);
-    runner_logger.SetConfiguration(logconf);
+    logconf->registerSink(&runner_logger);
+    runner_logger.setConfiguration(logconf);
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -175,7 +176,7 @@ bool MainService::Init( void )
 
     TimeAspect* time_aspect = m_rootEntity.AddAspect<TimeAspect>();
 
-    time_aspect->AddComponent<TimeManager>("time_manager");
+    time_aspect->AddComponent<DrawSpace::TimeManager>("time_manager");
     time_aspect->AddComponent<TimeAspect::TimeScale>("time_scale", TimeAspect::TimeScale::NORMAL_TIME);
     time_aspect->AddComponent<dsstring>("output_formated_datetime", "...");
     time_aspect->AddComponent<dstime>("time", 0);
@@ -191,18 +192,18 @@ bool MainService::Init( void )
 
     RenderingAspect* rendering_aspect = m_rootEntity.AddAspect<RenderingAspect>();
 
-    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_passesRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     m_passesRender.SetRendergraph( &m_rendergraph );
 
 
-    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_textRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>( "fps", 10, 20, 255, 100, 100, "..." );
 
 
-    rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_entityIdTextRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>("entityId", 0, 0, 0, 255, 0, "Entity0");
 
-    rendering_aspect->AddImplementation(&m_entityDistanceTextRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_entityDistanceTextRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<StringRenderingAspectImpl::TextDisplay>("entityDistance", 0, 0, 0, 255, 0, "?");
 
 
@@ -402,7 +403,7 @@ void MainService::create_skybox(void)
     RenderingAspect* rendering_aspect{ m_skyboxEntity.AddAspect<RenderingAspect>() };
     TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&m_skyboxRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_skyboxRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     std::map<dsstring, int>                                 rcname_to_layer_index   { { "main_rendering", 0 } };
     std::map<dsstring, std::vector<dsstring>>               rcname_to_passes        { { "main_rendering", { { "texture_pass" } } } };
@@ -493,7 +494,7 @@ void MainService::create_skybox(void)
 
     transform_aspect->AddComponent<Matrix>( "skybox_scaling" );
 
-    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().Scale( 100.0, 100.0, 100.0 );
+    transform_aspect->GetComponent<Matrix>( "skybox_scaling" )->getPurpose().scale( 100.0, 100.0, 100.0 );
         
 }
 
@@ -503,7 +504,7 @@ void MainService::create_world_impostor( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation( &m_worldImpostorsRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose() );
+    rendering_aspect->AddImplementation( &m_worldImpostorsRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose() );
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -575,7 +576,7 @@ void MainService::create_world_impostor( void )
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( -15.0, 2.0, -12.0, 1.0) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().translation( Vector( -15.0, 2.0, -12.0, 1.0) );
 
 }
 
@@ -586,7 +587,7 @@ void MainService::create_screen_impostors( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation( &m_impostorsRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_impostorsRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -698,7 +699,7 @@ void MainService::create_screen_impostors( void )
 
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 6.0, -12.0, 1.0) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().translation( Vector( 0.0, 6.0, -12.0, 1.0) );
 }
 
 void MainService::create_sprite_impostor(void)
@@ -706,7 +707,7 @@ void MainService::create_sprite_impostor(void)
     RenderingAspect* rendering_aspect{ m_spriteEntity.AddAspect<RenderingAspect>() };
     TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&m_spriteRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_spriteRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
 
     ImpostorsRenderingAspectImpl::ImpostorDescriptor id;
@@ -768,7 +769,7 @@ void MainService::create_collimator_sprite_impostor(void)
     RenderingAspect* rendering_aspect{ m_spriteCollimatorEntity.AddAspect<RenderingAspect>() };
     TimeAspect* time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&m_spriteCollimatorRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&m_spriteCollimatorRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<ImpostorsRenderingAspectImpl::PassSlot>("texturepass_slot", "texture_pass");
 
     DrawSpace::Interface::Renderer* renderer{ DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface };
@@ -843,7 +844,7 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
     auto rendering_aspect{ p_entity.AddAspect<RenderingAspect>() };
     auto time_aspect{ m_rootEntity.GetAspect<TimeAspect>() };
 
-    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
     rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass", PassSlot::PrimitiveType::LINE);
 
     const auto rnode{ rendering_aspect->GetComponent<PassSlot>("texturepass_slot")->getPurpose().GetRenderingNode() };
@@ -914,7 +915,7 @@ void MainService::create_wireframe_cube(dsreal p_x, dsreal p_y, dsreal p_z, Mesh
     transform_aspect->AddImplementation(0, &m_wireframecube_transformer);
 
     transform_aspect->AddComponent<Matrix>("pos");
-    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(0.0, -2.0, 0.0);
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(0.0, -2.0, 0.0);
 
 }
 
@@ -924,7 +925,7 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRendering
     RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
@@ -975,7 +976,7 @@ void MainService::create_cube( dsreal p_x, dsreal p_y, dsreal p_z, MeshRendering
     transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("shape", Vector(0.5, 0.5, 0.5, 1.0));
 
     Matrix cube_attitude;
-    cube_attitude.Translation(p_x, p_y, p_z);
+    cube_attitude.translation(p_x, p_y, p_z);
     transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
     transform_aspect->AddComponent<dsreal>("mass", 7.0);
 }
@@ -992,7 +993,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         RenderingAspect* rendering_aspect = p_entity.AddAspect<RenderingAspect>();
         TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-        rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+        rendering_aspect->AddImplementation(&p_rendering_aspect_impl, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
         rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
@@ -1043,8 +1044,8 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
 
         transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("main_box", Vector(1.5, 1.0, 1.0, 1.0));
 
-        Utils::Matrix feet_pos;
-        feet_pos.Translation(1.22307, -3.31759, 0.01);
+        Maths::Matrix feet_pos;
+        feet_pos.translation(1.22307, -3.31759, 0.01);
 
         transform_aspect->AddComponent<RigidBodyTransformAspectImpl::BoxCollisionShape>("feet", Vector(0.1, 2.5, 0.2, 1.0), feet_pos);
 
@@ -1053,7 +1054,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         
 
         Matrix cube_attitude;
-        cube_attitude.Translation(p_x, p_y, p_z);
+        cube_attitude.translation(p_x, p_y, p_z);
         transform_aspect->AddComponent<Matrix>("attitude", cube_attitude);
         transform_aspect->AddComponent<dsreal>("mass", 7.0);
     }
@@ -1063,7 +1064,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         RenderingAspect* rendering_aspect = p_entity_2.AddAspect<RenderingAspect>();
         TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-        rendering_aspect->AddImplementation(&p_rendering_aspect_impl_2, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+        rendering_aspect->AddImplementation(&p_rendering_aspect_impl_2, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
         rendering_aspect->AddComponent<PassSlot>("texturepass_slot", "texture_pass");
 
@@ -1106,7 +1107,7 @@ void MainService::create_composition(dsreal p_x, dsreal p_y, dsreal p_z,
         transform_aspect->AddImplementation(0, &p_transform_impl);
 
         transform_aspect->AddComponent<Matrix>("pos");
-        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Identity();
+        transform_aspect->GetComponent<Matrix>("pos")->getPurpose().identity();
         
 
     }
@@ -1119,7 +1120,7 @@ void MainService::create_ground( void )
 
     TimeAspect* time_aspect = m_rootEntity.GetAspect<TimeAspect>();
 
-    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<TimeManager>("time_manager")->getPurpose());
+    rendering_aspect->AddImplementation( &m_groundRender, &time_aspect->GetComponent<DrawSpace::TimeManager>("time_manager")->getPurpose());
 
     rendering_aspect->AddComponent<PassSlot>( "texturepass_slot", "texture_pass" );
 
@@ -1163,7 +1164,7 @@ void MainService::create_ground( void )
   
     transform_aspect->AddImplementation(0, &m_ground_transformer);
     transform_aspect->AddComponent<Matrix>("pos");
-    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().Translation(Vector(0.0, -4.0, 0.0, 1.0));
+    transform_aspect->GetComponent<Matrix>("pos")->getPurpose().translation(Vector(0.0, -4.0, 0.0, 1.0));
 
 
     CollisionAspect* collision_aspect{ m_groundEntity.AddAspect<CollisionAspect>() };
@@ -1185,7 +1186,7 @@ void MainService::create_camera( void )
     transform_aspect->AddComponent<Vector>( "speed" );
     transform_aspect->AddComponent<Matrix>( "pos" );
 
-    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().Translation( Vector( 0.0, 2.0, 30.0, 1.0 ) );
+    transform_aspect->GetComponent<Matrix>( "pos" )->getPurpose().translation( Vector( 0.0, 2.0, 30.0, 1.0 ) );
 
     transform_aspect->AddComponent<bool>( "ymvt", true );
 
@@ -1195,7 +1196,7 @@ void MainService::create_camera( void )
 
     DrawSpace::Interface::Renderer::Characteristics characteristics;
     m_renderer->GetRenderCharacteristics( characteristics );
-    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
+    camera_aspect->GetComponent<Matrix>( "camera_proj" )->getPurpose().perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 100000.0 );
 
 }
 

@@ -30,7 +30,7 @@
 class LuaClass_Vector
 {
 protected:
-    std::unique_ptr<DrawSpace::Utils::Vector>        m_vector;
+    std::unique_ptr<DrawSpace::Maths::Vector>        m_vector;
 
 public:
     LuaClass_Vector(lua_State* p_L);
@@ -58,8 +58,8 @@ public:
     int LUA_addwith(lua_State* p_L);
     int LUA_subwith(lua_State* p_L);
 
-    DrawSpace::Utils::Vector getVector( void ) const;
-    void setVector(const DrawSpace::Utils::Vector& p_vector);
+    DrawSpace::Maths::Vector getVector( void ) const;
+    void setVector(const DrawSpace::Maths::Vector& p_vector);
 
     static const char className[];
     static const Luna<LuaClass_Vector>::RegType methods[];

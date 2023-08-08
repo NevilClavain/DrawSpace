@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _SERVICEASPECT_H_
-#define _SERVICEASPECT_H_
+#pragma once
 
 #include "componentcontainer.h"
 #include "serviceaspectimpl.h"
@@ -62,4 +61,4 @@ public:
 }
 }
 
-#endif
+

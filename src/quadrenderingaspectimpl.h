@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _QUADRENDERINGASPECTIMPL_H_
-#define _QUADRENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "renderingaspectimpl.h"
 #include "renderer.h"
@@ -44,14 +43,14 @@ private:
     void*                                   m_tx_data;
     void*                                   m_meshe_data;
 
-    Utils::Matrix                           m_proj;
+    Maths::Matrix                           m_proj;
 
 public:
     QuadRenderingAspectImpl( void );
 
     bool IsText( void ) override { return true; };
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager);
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager);
     void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph) {};
@@ -59,4 +58,4 @@ public:
 }
 }
 
-#endif
+

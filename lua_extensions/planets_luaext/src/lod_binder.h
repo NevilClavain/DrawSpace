@@ -24,8 +24,9 @@
 
 #pragma once
 
+#include <unordered_map>
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "fx.h"
 #include "texture.h"
 #include "shader.h"
@@ -47,8 +48,8 @@ private:
 
     DrawSpace::Core::Fx*                                            m_fx{ nullptr };
 
-    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Vector>> m_vector_shaders_feeders;
-    std::unordered_map<int, ShaderFeeder<DrawSpace::Utils::Matrix>> m_matrix_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Maths::Vector>> m_vector_shaders_feeders;
+    std::unordered_map<int, ShaderFeeder<DrawSpace::Maths::Matrix>> m_matrix_shaders_feeders;
 
 protected:
     DrawSpace::Interface::Renderer*                                 m_renderer{ nullptr };
@@ -56,9 +57,6 @@ protected:
 public:
 
     Binder( void );
-
-    virtual void Bind( void ) {}; // appelee juste avant le rendu du node
-    virtual void Unbind( void ) {}; // appelee juste apres le rendu du node
 
     void BindToShader(void) const;
 
@@ -72,10 +70,10 @@ public:
     DrawSpace::Core::Texture*   GetVertexTexture( long p_index ) const;
     DrawSpace::Core::Fx*        GetFx( void ) const;
     
-    DrawSpace::Utils::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
+    DrawSpace::Maths::Vector    GetShaderFeederValue(DrawSpace::Core::ShaderType p_shader_type, int p_register);
 
-    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj);
-    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Vector>& p_obj);
+    friend Binder& operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Matrix>& p_obj);
 };
 }
 

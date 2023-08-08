@@ -28,8 +28,10 @@ using namespace DrawSpace;
 using namespace LOD;
 
 SubPass::SubPass( void ) :
+/*
 m_subpass( NULL ),
 m_subpass_node( NULL ),
+*/
 m_timer_ready_flag( false )
 {
 }
@@ -40,9 +42,14 @@ SubPass::~SubPass( void )
 
 void SubPass::DrawSubPass( void )
 {
-    m_subpass->GetRenderingQueue()->Draw();
+    //m_subpass->GetRenderingQueue()->Draw();
+    for (const auto s : m_subpass_list)
+    {
+        s->GetRenderingQueue()->Draw();
+    }
 }
 
+/*
 DrawSpace::Core::RenderingNode* SubPass::GetNode( void ) const
 {
     return m_subpass_node;
@@ -52,26 +59,36 @@ DrawSpace::IntermediatePass* SubPass::GetPass( void ) const
 {
     return m_subpass;
 }
+*/
+
+std::vector< DrawSpace::Core::RenderingNode*> SubPass::GetNodeList(void) const
+{
+    return m_subpass_node_list;
+}
+
+std::vector<DrawSpace::IntermediatePass*> SubPass::GetPassList(void) const
+{
+    return m_subpass_list;
+}
 
 void SubPass::remove_entry_from_queue( const EntryInfos& p_entryInfos )
 {
-    switch( p_entryInfos.queue_id )
+    const auto passDestination{ static_cast<Destination>(p_entryInfos.queue_id) };
+
+    switch(passDestination)
     {        
-        case DELAYED_SINGLE_SUBPASS:
-
-            p_entryInfos.singleshot_subpasses_stack->erase( p_entryInfos.singleshot_subpasses_stack_position );
-            break;
-
-        case IMMEDIATE_SINGLE_SUBPASS:
+        case Destination::DELAYED_SINGLE_SUBPASS:
             {
-                auto it = p_entryInfos.singleshot_subpasses_position;
-                p_entryInfos.singleshot_subpasses->erase( it );
+                p_entryInfos.singleshot_subpasses_stack->erase(p_entryInfos.singleshot_subpasses_stack_position);
             }
             break;
 
-        case PERMANENT_SUBPASS:
-            p_entryInfos.permanent_subpasses->erase( p_entryInfos.permanent_subpasses_position );
-            break;    
+        case Destination::IMMEDIATE_SINGLE_SUBPASS:
+            {
+                const auto it{ p_entryInfos.singleshot_subpasses_position };
+                p_entryInfos.singleshot_subpasses->erase( it );
+            }
+            break;
     }
 }
 
@@ -83,4 +100,14 @@ void SubPass::SetTimerReadyFlag( bool p_flag )
 bool SubPass::GetTimerReadyFlag( void ) const
 {
     return m_timer_ready_flag;
+}
+
+void SubPass::RequestAbortion(void)
+{
+    m_request_for_abort = true;
+}
+
+bool SubPass::IsRequestedForAbortion(void) const
+{
+    return m_request_for_abort;
 }

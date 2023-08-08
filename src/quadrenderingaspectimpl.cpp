@@ -27,6 +27,7 @@
 #include "transformaspect.h"
 
 using namespace DrawSpace;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
@@ -38,7 +39,7 @@ QuadRenderingAspectImpl::QuadRenderingAspectImpl( void )
 {
 }
 
-bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
+bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager)
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
 
@@ -118,7 +119,7 @@ bool QuadRenderingAspectImpl::Init( DrawSpace::Core::Entity* p_entity, DrawSpace
     // construire un matrice projection classique
     DrawSpace::Interface::Renderer::Characteristics characteristics;
     renderer->GetRenderCharacteristics( characteristics );
-    m_proj.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 10.0 );
+    m_proj.perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 10.0 );
 
 
     return true;
@@ -184,7 +185,7 @@ void QuadRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         }
 
         Matrix view;
-        view.Identity();
+        view.identity();
         renderer->DrawMeshe( world, view, m_proj );
 
         renderer->ApplyRenderStatesOut( fx );

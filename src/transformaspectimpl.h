@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TRANSFORMASPECTIMPL_H_
-#define _TRANSFORMASPECTIMPL_H_
+#pragma once
 
 #include "matrix.h"
 #include "timemanager.h"
@@ -51,13 +50,11 @@ public:
 
     virtual void SetTimeAspect( Aspect::TimeAspect* p_time_aspect ) { m_time_aspect = p_time_aspect; };
 
-    virtual void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_parent_transform) {};
-    virtual void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Utils::Matrix& p_parent_transform) {};
+    virtual void OnAddedInGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Maths::Matrix& p_parent_transform) {};
+    virtual void OnRemovedFromGraph(DrawSpace::Aspect::TransformAspect* p_transformaspect, const Maths::Matrix& p_parent_transform) {};
 
-    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Utils::Matrix& p_out_base_transform ) = 0;
+    virtual void GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, Maths::Matrix& p_out_base_transform ) = 0;
 };
 }
 }
 }
-
-#endif

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERSTATESSET_H_
-#define _RENDERSTATESSET_H_
+#pragma once
 
 #include "renderstate.h"
 
@@ -76,4 +75,3 @@ private:
 };
 }
 }
-#endif

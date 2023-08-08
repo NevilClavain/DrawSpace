@@ -32,16 +32,15 @@ namespace LOD
 class SubPass abstract
 {
 public:
-
+  
     using singleshot_subpasses_stack    = std::list<SubPass*>;
     using singleshot_subpasses          = std::list<SubPass*>;
     using permanent_subpasses           = std::vector<SubPass*>;
 
-    using Destination = enum
+    enum class Destination
     {
         DELAYED_SINGLE_SUBPASS      = 0,
-        IMMEDIATE_SINGLE_SUBPASS    = 1,
-        PERMANENT_SUBPASS           = 2    
+        IMMEDIATE_SINGLE_SUBPASS    = 1
     };
 
     using EntryInfos = struct
@@ -50,19 +49,25 @@ public:
 
         singleshot_subpasses_stack*             singleshot_subpasses_stack;
         singleshot_subpasses*                   singleshot_subpasses;
-        permanent_subpasses*                    permanent_subpasses;
 
         singleshot_subpasses_stack::iterator    singleshot_subpasses_stack_position;
         singleshot_subpasses::iterator          singleshot_subpasses_position;
-        permanent_subpasses::iterator           permanent_subpasses_position;
 
     };
 
+    using SubPassCreationHandler = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
+
 protected:
 
-    DrawSpace::Core::RenderingNode*             m_subpass_node;
-    DrawSpace::IntermediatePass*                m_subpass;
+    //DrawSpace::Core::RenderingNode*             m_subpass_node;
+    //DrawSpace::IntermediatePass*                m_subpass;
+
+    std::vector< DrawSpace::Core::RenderingNode*>   m_subpass_node_list;
+    std::vector<DrawSpace::IntermediatePass*>       m_subpass_list;
+
     bool                                        m_timer_ready_flag;
+
+    bool                                        m_request_for_abort{ false };
 
     static void remove_entry_from_queue( const EntryInfos& p_entryInfos );
 
@@ -71,14 +76,24 @@ public:
     SubPass( void );
     virtual ~SubPass( void );
 
-    virtual void                                        DrawSubPass( void );
-    virtual void                                        SubPassDone( void ) = 0;
+    virtual void                                DrawSubPass( void );
 
-    virtual DrawSpace::Core::RenderingNode*             GetNode( void ) const;
-    virtual DrawSpace::IntermediatePass*                GetPass( void ) const;
+    virtual void                                SubPassDone( void ) = 0;
+    virtual void                                SubPassAborted( void ) = 0;
 
-    virtual void                                        SetTimerReadyFlag( bool p_flag );
-    virtual bool                                        GetTimerReadyFlag( void ) const;
+    //DrawSpace::Core::RenderingNode*             GetNode( void ) const;
+    //DrawSpace::IntermediatePass*                GetPass( void ) const;
+
+    std::vector< DrawSpace::Core::RenderingNode*>   GetNodeList(void) const;
+    std::vector<DrawSpace::IntermediatePass*>       GetPassList(void) const;
+
+
+    void                                        SetTimerReadyFlag( bool p_flag );
+    bool                                        GetTimerReadyFlag( void ) const;
+
+    void                                        RequestAbortion(void);
+
+    bool                                        IsRequestedForAbortion(void) const;
 
 };
 }

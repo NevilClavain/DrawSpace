@@ -27,20 +27,21 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
+
 
 Transformation::Transformation( void )
 {
-    m_result.Identity();
+    m_result.identity();
 }
 
 Transformation::Transformation( int p_nbmat )
 {
-    m_result.Identity();
+    m_result.identity();
     for( int i = 0; i < p_nbmat; i++ )
     {
         Matrix ident;
-        ident.Identity();
+        ident.identity();
         PushMatrix( ident );
     }
 }
@@ -69,7 +70,7 @@ void Transformation::BuildResult( void )
             Matrix res, current;
 
             current = m_matrix_chain[i];
-            Matrix::MatrixMult( &current, &stack, &res );
+            Matrix::matrixMult( &current, &stack, &res );
             stack = res;
         }
         m_result = stack;
@@ -83,11 +84,11 @@ void Transformation::GetResult( Matrix* p_res )
 
 void Transformation::ClearAll( void )
 {
-    m_result.Identity();
+    m_result.identity();
     m_matrix_chain.clear();
 }
 
-void Transformation::GetMatrixChain( std::vector<DrawSpace::Utils::Matrix>& p_list )
+void Transformation::GetMatrixChain( std::vector<DrawSpace::Maths::Matrix>& p_list )
 {
     p_list = m_matrix_chain;
 }
@@ -103,7 +104,7 @@ void Transformation::UpdateMatrix( size_t p_index, const Matrix& p_mat )
 }
 
 
-void Transformation::GetBaseTransform( DrawSpace::Utils::Matrix& p_mat )
+void Transformation::GetBaseTransform( DrawSpace::Maths::Matrix& p_mat )
 {
     p_mat = m_result;
 }

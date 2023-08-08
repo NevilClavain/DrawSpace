@@ -68,7 +68,7 @@ protected:
 	static void read_bones_hierarchy(const std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes,
 		std::vector<DrawSpace::Aspect::AnimationsAspect::BoneOutput>& p_bones_output,
 		const std::map<dsstring, int>& p_bones_mapping, DrawSpace::Aspect::AnimationsAspect::Node p_node,
-		const DrawSpace::Utils::Matrix& p_parent_transform);
+		const DrawSpace::Maths::Matrix& p_parent_transform);
 
 
 	void run_animations_pool(DrawSpace::Aspect::AnimationsAspect::AnimationsPool& p_animations_pool, DrawSpace::Aspect::AnimationsAspect* p_anims_aspect,
@@ -78,7 +78,7 @@ protected:
 	bool animation_step(const dsstring& p_animation_id, const DrawSpace::Aspect::AnimationsAspect::AnimationRoot& p_animation,
 						DrawSpace::Aspect::AnimationsAspect* p_anims_aspect, std::map<dsstring, DrawSpace::Aspect::AnimationsAspect::Node>& p_nodes);
 
-	void compute_node_animationresult_matrix(const DrawSpace::Aspect::AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Utils::Matrix& p_out_matrix) const;
+	void compute_node_animationresult_matrix(const DrawSpace::Aspect::AnimationsAspect::NodeAnimation& p_node, dsreal p_current_tick, Maths::Matrix& p_out_matrix) const;
 
 
 	static void apply_animation_last_key(DrawSpace::Aspect::AnimationsAspect* p_anims_aspect);

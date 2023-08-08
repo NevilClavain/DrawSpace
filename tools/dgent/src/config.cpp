@@ -28,17 +28,17 @@
 std::string Config::extract_token(int p_tkindex) const
 {
     dsstring token_text;
-    DrawSpace::Utils::JSONParser::GetTokenString(p_tkindex, token_text);
+    DrawSpace::JSONParser::getTokenString(p_tkindex, token_text);
     return token_text;
 }
 
 void Config::ParseFromFile(const dsstring& p_filepath)
 {
-	DrawSpace::Utils::JSONParser::ParseFromFile(p_filepath);
+	DrawSpace::JSONParser::parseFromFile(p_filepath);
 
-    if (JSMN_OBJECT == DrawSpace::Utils::JSONParser::GetTokenType(0))
+    if (JSMN_OBJECT == DrawSpace::JSONParser::getTokenType(0))
     {
-        const int token_size{ DrawSpace::Utils::JSONParser::GetTokenSize(0) };
+        const int token_size{ DrawSpace::JSONParser::getTokenSize(0) };
         for (int i = 0; i < token_size; i++)
         {
             const int tkindex{ (2 * i) + 1 };

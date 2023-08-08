@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <set>
+
 #include "luna.h"
 #include "meshrenderingaspectimpl.h"
 
@@ -46,6 +48,9 @@ private:
     // via LUA_configure() mais allouees et appartenant a des entitees exterieures
     // (typiquement : textures target d'une rendering passe)
     std::set<DrawSpace::Core::Texture*>                             m_external_textures;
+
+
+    dsstring                                                        m_meshe_resource_id;
 
     void cleanup_resources( lua_State* p_L );
 

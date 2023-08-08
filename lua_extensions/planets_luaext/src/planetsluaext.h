@@ -25,13 +25,18 @@
 #pragma once
 
 #include "luaext.h"
-#include "crtp_singleton.h"
+#include "singleton.h"
 
-class PlanetsLuaExtension : public LuaExtension, public DrawSpace::Utils::BaseSingleton<PlanetsLuaExtension>
+namespace DrawSpace
 {
-private:
-	DrawSpace::Systems::Hub* m_hub{ nullptr };
+	namespace Logger
+	{
+		class Configuration;
+	}
+}
 
+class PlanetsLuaExtension : public LuaExtension, public DrawSpace::Commons::Singleton<PlanetsLuaExtension>
+{
 public:
 	PlanetsLuaExtension(void);
 
@@ -39,11 +44,17 @@ public:
 	void						UpdateRenderer(DrawSpace::Interface::Renderer* p_renderer);
 	DrawSpace::Utils::MemAlloc* GetMemAllocInstance(void) const;
 
-	void SetHub(DrawSpace::Systems::Hub* p_hub);
-	DrawSpace::Systems::Hub* GetHub(void) const;
+	void						SetHub(DrawSpace::Systems::Hub* p_hub);
+	DrawSpace::Systems::Hub*	GetHub(void) const;
+
+	void						SetLoggerConfiguration(DrawSpace::Logger::Configuration* p_logconf);
 
 
 	__LUAEXT_DESCRIPTION__("Procedural planets rendering extension")
+
+private:
+	DrawSpace::Systems::Hub* m_hub{ nullptr };
+
 };
 
 

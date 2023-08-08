@@ -23,7 +23,10 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "drawspace_commons.h"
+
+#include <list>
+#include <mutex>
+#include "ds_types.h"
 
 #define _push_code_ \
 	m_mutex.lock();\

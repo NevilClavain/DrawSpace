@@ -33,6 +33,7 @@ SamplerState SamplerWave            : register(s0);
 
 struct PS_INTPUT 
 {
+    float4 Position                 : SV_POSITION;
     float4 LODGlobalPatch_TexCoord	: TEXCOORD0;
     float4 UnitPatch_TexCoord		: TEXCOORD1;
     float4 GlobalPatch_TexCoord		: TEXCOORD2;
@@ -114,7 +115,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float bump_bias_transition_high = 1.008;
     float bump_bias_transition_low = 1.004;
-    float wave_scale = 0.35;
+    //float wave_scale = 0.35;
+    float wave_scale = 2000.0;
     
     if (relative_alt > 1.0)
     {
@@ -143,7 +145,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 
     float2 uvcoords = input.GlobalPatch_TexCoord.xy * wave_scale;
   
-    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, uvcoords * pow(2.0, lod_level - 1), bump_bias);
+    np = compute_water_bump_vector(bump_flag.x, WaveTexture, SamplerWave, uvcoords /* * pow(2.0, lod_level - 1)*/, bump_bias);
 
     float4 np2;
     np2.x = np.x;

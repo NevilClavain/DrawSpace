@@ -49,11 +49,11 @@ void UpdateBCFilesTask::Execute(void)
 {
     dsstring path{ bcCacheName + dsstring("/") + m_shader_id.c_str() };
 
-    DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcMd5FileName, (void*)m_hash.c_str(), m_hash.length());
-    DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + bcCodeFileName, m_bc, m_bc_length);
+    DrawSpace::FileSystem::writeFile(path + dsstring("\\") + bcMd5FileName, (void*)m_hash.c_str(), m_hash.length());
+    DrawSpace::FileSystem::writeFile(path + dsstring("\\") + bcCodeFileName, m_bc, m_bc_length);
 
 
-    DrawSpace::Utils::FileSystem::WriteFile(path + dsstring("\\") + m_shader_id + sourceFileNameExt, m_text, m_text_size);
+    DrawSpace::FileSystem::writeFile(path + dsstring("\\") + m_shader_id + sourceFileNameExt, m_text, m_text_size);
 
 }
 

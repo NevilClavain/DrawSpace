@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _MISC_UTILS_H_
-#define _MISC_UTILS_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 
 namespace DrawSpace
@@ -40,16 +39,17 @@ namespace Utils
     dsstring    WString2String( const dswstring& p_s );
 
 	template <class Container>
-	void		SplitString(const dsstring& str, Container& cont, char delim = ' ')
+	Container splitString(const dsstring& str, char delim = ' ')
 	{
+		Container cont;
 		std::stringstream ss(str);
 		std::string token;
 		while (std::getline(ss, token, delim))
 		{
 			cont.push_back(token);
 		}
+
+		return cont;
 	}
 }
 }
-
-#endif

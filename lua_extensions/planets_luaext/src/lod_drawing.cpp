@@ -22,10 +22,12 @@
 */
 /* -*-LIC_END-*- */
 
+//#include <random>
 #include "lod_drawing.h"
 #include "csts.h"
 #include "lod_binder.h"
 #include "lod_config.h"
+#include "lod_layer.h"
 
 #include "entity.h"
 #include "renderer.h"
@@ -36,14 +38,27 @@
 
 #include "transformaspect.h"
 
+#include "quaternion.h"
+#include "lod_heightmapsubpass.h"
+
+#include "foliage_config.h"
+
+
 
 using namespace DrawSpace;
+using namespace DrawSpace::Commons;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 using namespace LOD;
 
+DrawSpace::Logger::Sink planetdrawing_logger("PlanetDrawing", DrawSpace::Logger::Configuration::getInstance());
 
+
+std::map<int, FoliageDrawingNode::CoordsGenerationParams> FoliageDrawingNode::m_seeds;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CollisionMesheDrawingNode::CollisionMesheDrawingNode(DrawSpace::Interface::Renderer* p_renderer):
 m_renderer(p_renderer)
@@ -54,24 +69,21 @@ CollisionMesheDrawingNode::~CollisionMesheDrawingNode(void)
 {
 }
 
-void CollisionMesheDrawingNode::Draw(const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj)
+void CollisionMesheDrawingNode::Draw(const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
 {
     // red color
-    m_renderer->SetFxShaderParams(1, 0, Utils::Vector(1.0, 0.0, 0.0, 1.0));
+    m_renderer->SetFxShaderParams(1, 0, Maths::Vector(1.0, 0.0, 0.0, 1.0));
     m_renderer->DrawMeshe(p_world, p_view, p_proj);
 }
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 FaceDrawingNode::FaceDrawingNode( DrawSpace::Interface::Renderer* p_renderer, Config* p_config, int p_layer_index ) :
 m_renderer( p_renderer ),
-m_current_patch( NULL ),
 m_config( p_config ),
-m_binder( NULL ),
-m_layer_index( p_layer_index ),
-m_drawpatch_mode( DRAW_ALL )
+m_layer_index( p_layer_index )
 {
     ZeroMemory( &m_stats, sizeof( Stats ) );
 }
@@ -79,18 +91,6 @@ m_drawpatch_mode( DRAW_ALL )
 FaceDrawingNode::~FaceDrawingNode( void )
 {
 }
-
-/*
-void FaceDrawingNode::EnableZBuffer(bool p_zbuffer)
-{
-    m_zbuffer_on = p_zbuffer;
-}
-
-void FaceDrawingNode::ForceCulling(const dsstring& p_culling)
-{
-    m_force_culling_arg = p_culling;
-}
-*/
 
 void FaceDrawingNode::SetDisplayList( const std::vector<Patch*>& p_list )
 {
@@ -109,11 +109,11 @@ void FaceDrawingNode::SetCurrentBodyDescription(const dsstring& p_descr)
     m_current_body_description = p_descr;
 }
 
-void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos,
-                                            const DrawSpace::Utils::Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const DrawSpace::Utils::Matrix& p_proj )
+void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Maths::Vector& p_invariant_view_pos,
+                                            const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj )
 {
-    const dsreal patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
-    const dsreal patch_scale{ cst::detailsPatchScaling };
+    const auto patch_dim{ p_patch->GetUnitSideLenght() / 2.0 * p_ray };
+    const auto patch_scale{ cst::detailsPatchScaling };
 
     Vector flag0;
     flag0[0] = p_patch->GetOrientation();
@@ -127,7 +127,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     patch_pos[0] = xp;
     patch_pos[1] = yp;
-    patch_pos[2] = ( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode ? 1.0 : 0.0 );
+    patch_pos[2] = (DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode ? 1.0 : 0.0 );
 
 
     Vector globalrel_uvcoords;
@@ -136,7 +136,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     Vector global_uvcoords;
     p_patch->GetGlobalUVCoords( global_uvcoords );
 
-    if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
+    if(DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
     {
         // dilatation des coords uv rel et global suivant le facteur d'echelle du patch landplace
         dsreal middle_x, middle_y;
@@ -190,6 +190,12 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     }
     */
     
+    
+    
+    
+    
+    
+    
     pixels_flags_2[2] = (dsreal)p_patch->GetLodLevel();
 
     m_renderer->SetFxShaderParams( 1, 0, pixels_flags );
@@ -198,7 +204,7 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
     Matrix world;
     
-    if( DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
+    if(DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY == m_drawpatch_mode )
     {
         dsreal rot_phi, rot_theta;
 
@@ -206,9 +212,9 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Vector sphere_pos;
         Vector spos;
 
-        Maths::CubeToSphere( cube_pos, sphere_pos );
+        Maths::cubeToSphere( cube_pos, sphere_pos );
 
-        Maths::CartesiantoSpherical( sphere_pos, spos );
+        Maths::cartesiantoSpherical( sphere_pos, spos );
 
         rot_phi = spos[2];
         rot_theta = spos[1];
@@ -219,55 +225,55 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
         Matrix local_mat_rot_theta;
         Matrix local_mat_rot_phi;
        
-        local_scale.Scale( Vector( patch_scale * patch_dim, patch_scale * patch_dim, patch_scale * patch_dim, 1.0 ) );
+        local_scale.scale( Vector( patch_scale * patch_dim, patch_scale * patch_dim, patch_scale * patch_dim, 1.0 ) );
 
         switch( p_patch->GetOrientation() )
         {   
             case Patch::FrontPlanetFace:
                 
-                local_mat_trans.Translation( 0.0, 0.0, p_ray );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, 0.0, p_ray );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
             case Patch::RightPlanetFace:
                 
-                local_mat_trans.Translation( p_ray, 0.0, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( p_ray, 0.0, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_phi );
 
                 break;
 
             case Patch::LeftPlanetFace:
                 
-                local_mat_trans.Translation( -p_ray, 0.0, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( -p_ray, 0.0, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_phi );
                 break;
 
             case Patch::RearPlanetFace:
                 
-                local_mat_trans.Translation( 0.0, 0.0, -p_ray );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, 0.0, -p_ray );
+                local_mat_rot_theta.rotation( Vector( 0.0, 1.0, 0.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( 1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
             case Patch::TopPlanetFace:
 
-                local_mat_trans.Translation( 0.0, p_ray, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, p_ray, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 0.0, -1.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
 
             case Patch::BottomPlanetFace:
 
-                local_mat_trans.Translation( 0.0, -p_ray, 0.0 );
-                local_mat_rot_theta.Rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_theta );        
-                local_mat_rot_phi.Rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
+                local_mat_trans.translation( 0.0, -p_ray, 0.0 );
+                local_mat_rot_theta.rotation( Vector( 0.0, 0.0, 1.0, 1.0 ), rot_theta );        
+                local_mat_rot_phi.rotation( Vector( -1.0, 0.0, 0.0, 1.0 ), rot_phi );
 
                 break;
 
@@ -275,30 +281,30 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
 
         local_mat = local_scale * local_mat_trans * local_mat_rot_phi * local_mat_rot_theta;
 
-        Matrix local_mat_transp = local_mat;
-        local_mat_transp.Transpose();
+        auto local_mat_transp{ local_mat };
+        local_mat_transp.transpose();
 
         m_renderer->SetFxShaderMatrix( 0, 29, local_mat_transp );
 
         world = local_mat * p_world;
         
         Matrix world = p_world;
-        world.Transpose();
+        world.transpose();
         m_renderer->SetFxShaderMatrix( 0, 34, world );
 
 
         //////////////////////////////////////////////////////////////////////////////
 
-        Matrix landplace_normale_mat = local_mat_rot_phi * local_mat_rot_theta * p_world * p_view;
-        landplace_normale_mat.ClearTranslation();
+        auto landplace_normale_mat{ local_mat_rot_phi * local_mat_rot_theta * p_world * p_view };
+        landplace_normale_mat.clearTranslation();
         Vector landplace_normale( 0.0, 0.0, 1.0, 1.0 );
 
         Vector landplace_normale_orient;
-        Utils::Maths::VectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
+        Maths::vectorPlanetOrientation( p_patch->GetOrientation(), landplace_normale, landplace_normale_orient );
 
         Vector landplace_normale_t;
 
-        landplace_normale_mat.Transform( &landplace_normale_orient, &landplace_normale_t );
+        landplace_normale_mat.transform( &landplace_normale_orient, &landplace_normale_t );
 
         m_renderer->SetFxShaderParams( 0, 33, landplace_normale_t );
 
@@ -314,32 +320,30 @@ void FaceDrawingNode::draw_single_patch( Patch* p_patch, dsreal p_ray, dsreal p_
     //m_stats.nb_patchs++;       
 }
 
-void FaceDrawingNode::UpdateRelativeHotPoint( const Utils::Vector p_hotpoint )
+void FaceDrawingNode::UpdateRelativeHotPoint( const Maths::Vector p_hotpoint )
 {
     m_relativehotpoint = p_hotpoint;
 }
 
-void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Utils::Vector& p_invariant_view_pos, 
-                            const Matrix& p_world, const DrawSpace::Utils::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
+void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Maths::Vector& p_invariant_view_pos,
+                            const Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const Matrix& p_proj, bool p_bind_ht_texture )
 {
-    //ZeroMemory( &m_stats, sizeof( Stats ) );
-
-    Texture* current_texture = NULL;
+    Texture* current_texture{ nullptr };
 
     int min_lod_level = -1;
         
     for( size_t i = 0; i < m_display_list.size(); i++ )
     {
-        int curr_lod_level = m_display_list[i]->GetLodLevel();
+        const auto curr_lod_level{ m_display_list[i]->GetLodLevel() };
         if( -1 == min_lod_level || curr_lod_level < min_lod_level )
         {
             min_lod_level = curr_lod_level;
         }
 
-        Patch* ref_patch = m_display_list[i]->GetTextureReferent();
-        Texture* refpatchtexture = ref_patch->GetDataTexture();
+        const auto ref_patch{ m_display_list[i]->GetTextureReferent() };
+        const auto refpatchtexture{ ref_patch->GetDataTexture() };
 
-        if( p_bind_ht_texture && ( refpatchtexture != current_texture ) )
+        if( p_bind_ht_texture && refpatchtexture && (refpatchtexture != current_texture))
         {
             m_renderer->SetTexture( refpatchtexture->GetRenderData(), 7 );
             current_texture = refpatchtexture;
@@ -358,12 +362,12 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
 
         switch (m_drawpatch_mode)
         {
-            case DRAW_ALL:
+            case DrawPatchMode::DRAW_ALL:
 
                 draw_single_patch(m_display_list[i], p_ray, p_rel_alt, p_invariant_view_pos, p_world, p_view, p_proj);
                 break;
 
-            case DRAW_ALL_BUTLANDPLACEPATCH:
+            case DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH:
 
                 if (!check_view_in_patch(p_ray, m_relativehotpoint, m_display_list[i]) && 0 == m_display_list[i]->GetLodLevel() || 0 != m_display_list[i]->GetLodLevel())
                 {
@@ -371,7 +375,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                 }
                 break;
 
-            case DRAW_LANDPLACEPATCH_ONLY:
+            case DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY:
 
                 if(0 == m_display_list[i]->GetLodLevel())
                 {
@@ -386,7 +390,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
                 }
                 break;
 
-            case DRAW_MAXLODLEVEL:
+            case DrawPatchMode::DRAW_MAXLODLEVEL:
 
                 int lodlevel{ m_display_list[i]->GetLodLevel() };
                 if (lodlevel <= m_maxlodlevel_to_draw)
@@ -400,7 +404,7 @@ void FaceDrawingNode::Draw( dsreal p_ray, dsreal p_rel_alt, const DrawSpace::Uti
         //apply OUT-renderstate required for current pass...
         if (m_renderstate_per_passes.count(m_current_pass))
         {
-            auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
+            const auto& rs_list{ m_renderstate_per_passes.at(m_current_pass) };
             for (auto& rs_pair : rs_list)
             {
                 auto rs_out{ rs_pair.second };
@@ -451,20 +455,20 @@ int FaceDrawingNode::GetLayerIndex( void ) const
     return m_layer_index;
 }
 
-bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Utils::Vector& p_view, Patch* p_patch )
+bool FaceDrawingNode::check_view_in_patch( dsreal p_ray, const Maths::Vector& p_view, Patch* p_patch )
 {
     Vector viewer;
     Patch::ConvertVectorToFrontFaceCoords( p_patch->GetOrientation(), p_view, viewer );
  
-    viewer.Normalize();
+    viewer.normalize();
     Vector projected_viewer;
     Patch::SphereToCube( viewer, projected_viewer );    
-    projected_viewer.Scale( p_ray );
+    projected_viewer.scale( p_ray );
 
     dsreal patch_xpos, patch_ypos;
     p_patch->GetPos( patch_xpos, patch_ypos );
 
-    dsreal patch_side_size = p_patch->GetSideLength();
+    const auto patch_side_size{ p_patch->GetSideLength() };
 
     if( ( patch_xpos - ( patch_side_size * 0.5 ) ) <= projected_viewer[0] && ( patch_xpos + ( patch_side_size * 0.5 ) ) >= projected_viewer[0] &&
         ( patch_ypos - ( patch_side_size * 0.5 ) ) <= projected_viewer[1] && ( patch_ypos + ( patch_side_size * 0.5 ) ) >= projected_viewer[1] )
@@ -488,10 +492,213 @@ void FaceDrawingNode::SetCurrentPass(const dsstring& p_pass)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+FoliageDrawingNode::FoliageDrawingNode(DrawSpace::Interface::Renderer* p_renderer, const FoliageConfig& p_config) :
+m_renderer( p_renderer )
+{
+    SetMeshe(p_config.foliages_meshes);
+
+    m_global_lit = p_config.foliages_global_lits;
+    m_detailed_lit = p_config.foliages_detailed_lits;
+
+    const CoordsGenerationParams coords_generation_params
+    {
+        p_config.nb_poles_min, p_config.nb_poles_max,
+        p_config.pole_ray_min, p_config.pole_ray_max,
+        p_config.nbpoints_per_pole_min, p_config.nbpoints_per_pole_max
+    };
+
+    m_seeds[p_config.foliages_local_seeds] = coords_generation_params;
+    m_local_seed = p_config.foliages_local_seeds;
+
+    m_temperature_range_min = p_config.temperature_range_min;
+    m_temperature_range_max = p_config.temperature_range_max;
+
+    m_humidity_range_min = p_config.humidity_range_min;
+    m_humidity_range_max = p_config.humidity_range_max;
+
+    m_appearance = p_config.appearance;
+
+    m_altitud_max = p_config.altitud_max;
+}
+
+void FoliageDrawingNode::SetBinder(Binder* p_binder)
+{
+    m_binder = p_binder;
+
+    SetFx(m_binder->GetFx());
+    for (long i = 0; i < RenderingNode::GetTextureListSize(); i++)
+    {
+        Texture* texture = p_binder->GetTexture(i);
+        if (texture)
+        {
+            SetTexture(texture, i);
+        }
+
+        Texture* vtexture = p_binder->GetVertexTexture(i);
+        if (vtexture)
+        {
+            SetVertexTexture(vtexture, i);
+        }
+    }
+}
+
+Binder* FoliageDrawingNode::GetBinder(void) const
+{
+    return m_binder;
+}
+
+void FoliageDrawingNode::Draw(dsreal p_ray, LOD::Body* p_body, const DrawSpace::Maths::Vector& p_invariant_view_pos,
+                                const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
+{
+    const auto current_face{ p_body->GetCurrentFace() };
+    if (current_face > -1)
+    {
+        std::vector<Patch*> dl;
+        p_body->GetFace(p_body->GetCurrentFace())->GetDisplayList(dl);
+
+        for (auto e : dl)
+        {
+            const auto patch_temperature{ e->GetTemperature() };
+            const auto patch_humidity{ e->GetHumidity() };
+
+            const bool temperature_in_range{ m_temperature_range_min < patch_temperature && patch_temperature < m_temperature_range_max };
+            const bool humidity_in_range{ m_humidity_range_min < patch_humidity && patch_humidity < m_humidity_range_max };
+
+            if (temperature_in_range && humidity_in_range)
+            {                       
+                draw_foliages_batch_on_patch(e, p_ray, p_invariant_view_pos, p_world, p_view, p_proj);
+            }
+        }
+    }
+}
+
+
+// render many foliage meshe
+void FoliageDrawingNode::draw_foliages_batch_on_patch(Patch* p_patch, dsreal p_ray, 
+                            const DrawSpace::Maths::Vector& p_invariant_view_pos, const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj)
+{
+    auto foliage_patch{ p_patch };
+
+    if (foliage_patch->HasHeightMap())
+    {
+        const auto foliages_coords{ foliage_patch->GetFoliageCoordsList() };
+
+        if (foliages_coords.count(m_local_seed) > 0)
+        {
+            const auto foliage_coords{ foliages_coords.at(m_local_seed) };
+            for (const auto& coords : foliage_coords)
+            {
+                const auto must_appear{ coords.appearance_threshold > 1.0 - m_appearance };
+
+                if (must_appear) 
+                {
+                    draw_foliage_on_patch(foliage_patch, p_ray, p_invariant_view_pos, p_world, p_view, p_proj, coords.x, coords.y, coords.orientation);
+                }                
+            }
+        }
+    }
+}
+
+// render one foliage meshe
+void FoliageDrawingNode::draw_foliage_on_patch(Patch* p_patch, dsreal p_ray,
+    const DrawSpace::Maths::Vector& p_invariant_view_pos,
+    const DrawSpace::Maths::Matrix& p_world, const DrawSpace::Maths::Matrix& p_view, const DrawSpace::Maths::Matrix& p_proj,
+    dsreal p_xpos, dsreal p_ypos, dsreal p_orientation)
+{
+    const dsreal xpos{ p_xpos }; // [-0.5, 0.5 ]
+    const dsreal ypos{ p_ypos }; // [-0.5, 0.5 ]
+
+    //// compute height
+
+    const auto hm { p_patch->GetHeightMap() };
+
+    // translate to [0.0, 1.0] range for heighmap access
+    //
+    const auto x_hm{ (int)((xpos + 0.5) * cst::patchLowResolution) };
+    const auto y_hm{ (int)((ypos + 0.5) * cst::patchLowResolution) };
+    const auto index_hm{ (cst::patchLowResolution * (cst::patchLowResolution - 1 - y_hm)) + x_hm };
+
+    const auto hm_height{ hm[index_hm] };
+
+    if (hm_height < 0.0)
+    {
+        return;
+    }
+
+    if (m_altitud_max != -1.0 && hm_height > m_altitud_max)
+    {
+        return;
+    }
+
+    ////////////////////
+
+    Vector view_pos = p_invariant_view_pos;
+
+    m_renderer->SetFxShaderParams(0, 28, view_pos);
+
+    dsreal xp, yp;
+    p_patch->GetUnitPos(xp, yp);
+
+    const auto patch_unit_sidelenght{ p_patch->GetUnitSideLenght() };
+    xp += patch_unit_sidelenght * xpos;
+    yp += patch_unit_sidelenght * ypos;
+
+    Vector v1, v2;
+    Patch::XYToXYZ(p_patch->GetOrientation(), xp, yp, v1);
+    v1[3] = 1.0;
+
+    Patch::CubeToSphere(v1, v2);
+    v2[3] = 1.0;
+
+    // final scaling
+    v2.scale(p_ray);
+    v2.scale(1.0 + (hm_height / p_ray));
+
+    m_renderer->SetFxShaderParams(1, 3, v2);
+
+
+    // lit model
+    // enable global lit, disable detailed lit
+    //Vector lit_model(1.0, 0.0, 0.0, 0.0);
+    //Vector lit_model(1.0, 1.0, 0.0, 0.0);
+
+    Vector lit_model(m_global_lit, m_detailed_lit, 0.0, 0.0);
+
+    m_renderer->SetFxShaderParams(1, 4, lit_model);
+
+    //////////////////////////////////////////////////////////
+
+    // axe vertical de l'objet, ici c'est l'axe z ! :-p
+    Matrix vertical_rot;
+    vertical_rot.rotation(Vector(0.0, 0.0, 1.0, 1.0), p_orientation);
+
+
+
+
+    Matrix local_t;
+    local_t.translation(v2);
+
+    Maths::Quaternion q;
+    q.lookAt(v2, Vector(0.0, 0.0, 0.0, 1.0));
+
+    Matrix local_r;
+    q.rotationMatFrom(local_r);
+
+    Matrix world = vertical_rot * local_r * local_t * p_world;
+       
+    m_renderer->DrawMeshe(world, p_view, p_proj);
+}
+
+const std::map<int, FoliageDrawingNode::CoordsGenerationParams>& FoliageDrawingNode::GetLocalSeeds(void)
+{
+    return m_seeds;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Drawing::Drawing( Config* p_config ) :
-m_renderer( NULL ),
-m_config( p_config ),
-m_owner_entity( NULL )
+m_config( p_config )
 {
     m_collisionmeshe.SetPath("Collision display meshe");
 }
@@ -543,12 +750,23 @@ void Drawing::Shutdown(void)
     {
         _DRAWSPACE_DELETE_(e);
     }
+
+    for (auto& e : m_foliagedrawingnodes)
+    {
+        _DRAWSPACE_DELETE_(e);
+    }
 }
 
 
-void Drawing::SetCurrentPlanetBodies( const std::vector<Body*>& p_planetbodies )
+void Drawing::SetLayers(const std::vector<LOD::Layer*>& p_layers)
 {
-    m_planetbodies = p_planetbodies;
+    m_layers = p_layers;
+
+    m_planetbodies.clear();
+    for (auto e : m_layers)
+    {
+        m_planetbodies.push_back(e->GetBody());
+    }    
 }
 
 void Drawing::SetRenderer( DrawSpace::Interface::Renderer* p_renderer )
@@ -574,6 +792,14 @@ void Drawing::AddInRendergraph(const dsstring& p_passname, DrawSpace::Core::Rend
             p_passqueue->Add(e.second);
         }
     }
+
+    for (auto& e : m_passesfoliagenodes)
+    {
+        if (e.first == p_passname)
+        {
+            p_passqueue->Add(e.second);
+        }
+    }
 }
 
 void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core::RenderingQueue* p_passqueue)
@@ -593,17 +819,25 @@ void Drawing::RemoveFromRendergraph(const dsstring& p_passname, DrawSpace::Core:
             p_passqueue->Remove(e.second);
         }
     }
+
+    for (auto& e : m_passesfoliagenodes)
+    {
+        if (e.first == p_passname)
+        {
+            p_passqueue->Remove(e.second);
+        }
+    }
 }
 
 void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
 {
     if (m_collisionmeshe_valid)
     {
-        DrawSpace::Utils::Matrix view;
-        DrawSpace::Utils::Matrix proj;
-        DrawSpace::Utils::Matrix world;
+        DrawSpace::Maths::Matrix view;
+        DrawSpace::Maths::Matrix proj;
+        DrawSpace::Maths::Matrix world;
 
-        TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+        const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
         if (!transform_aspect)
         {
             _DSEXCEPTION("Owner entity has no transform aspect!");
@@ -613,8 +847,7 @@ void Drawing::on_collisionmeshe_draw(RenderingNode* p_rendering_node)
         transform_aspect->GetProjTransform(proj);
         transform_aspect->GetWorldTransform(world);
 
-        CollisionMesheDrawingNode* collisionmeshe_node = static_cast<CollisionMesheDrawingNode*>(p_rendering_node);
-
+        auto collisionmeshe_node{ static_cast<CollisionMesheDrawingNode*>(p_rendering_node) };
         collisionmeshe_node->Draw(world, view, proj);
     }
 }
@@ -627,11 +860,11 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
         return;
     }
 
-    DrawSpace::Utils::Matrix view;
-    DrawSpace::Utils::Matrix proj;
-    DrawSpace::Utils::Matrix world;
+    DrawSpace::Maths::Matrix view;
+    DrawSpace::Maths::Matrix proj;
+    DrawSpace::Maths::Matrix world;
 
-    TransformAspect* transform_aspect = m_owner_entity->GetAspect<TransformAspect>();
+    const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
     if( !transform_aspect )
     {
         _DSEXCEPTION( "Owner entity has no transform aspect!" );
@@ -641,37 +874,52 @@ void Drawing::on_renderingnode_draw( RenderingNode* p_rendering_node )
     transform_aspect->GetProjTransform(proj);
     transform_aspect->GetWorldTransform(world);
 
-    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node );
+    const auto face_node{ static_cast<FaceDrawingNode*>(p_rendering_node) };
 
     std::vector<Patch*> dl;
-   
-    Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
+    const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
 
-    planetbody->GetFace( m_nodes[face_node] )->GetDisplayList( dl );
-    Patch* current_patch = planetbody->GetFace( m_nodes[face_node] )->GetCurrentPatch();
+
+    const auto current_face_index{ m_nodes[face_node] };
+    
+
+    planetbody->GetFace(current_face_index)->GetDisplayList( dl );
+    const auto current_patch{ planetbody->GetFace(current_face_index)->GetCurrentPatch() };
+
+    if (m_current_patchs.count(face_node) == 0)
+    {
+        m_current_patchs[face_node] = current_patch;
+    }
+    else
+    {
+        if (m_current_patchs.at(face_node) != current_patch)
+        {
+            m_current_patchs[face_node] = current_patch;
+                                   
+        }
+    }
+
+    //////////////////////////////////////////
  
     face_node->SetCurrentPatch( current_patch );
     face_node->SetDisplayList( dl );
     face_node->SetCurrentBodyDescription( planetbody->GetDescription() );
 
-    Binder* node_binder = face_node->GetBinder();
-    node_binder->Bind();
+    const auto node_binder{ face_node->GetBinder() };
+
     node_binder->BindToShader();
     
     // recup relative alt de la face
-    dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAltSphere();
+    const auto rel_alt{ planetbody->GetFace(m_nodes[face_node])->GetRelativeAltSphere() };
 
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
-
 
     Vector hotpoint;
     planetbody->GetFace( m_nodes[face_node] )->GetRelativeHotPoint( hotpoint );
     face_node->UpdateRelativeHotPoint( hotpoint );
 
-
     face_node->Draw( planetbody->GetDiameter() / 2.0, rel_alt, view_pos, world, view, proj, true );
-    node_binder->Unbind();
 }
 
 // used for subpasses :)
@@ -682,45 +930,74 @@ void Drawing::on_rendering_singlenode_draw( DrawSpace::Core::RenderingNode* p_re
         return;
     }
 
-    DrawSpace::Utils::Matrix world;
-    DrawSpace::Utils::Matrix view;
-    DrawSpace::Utils::Matrix proj;
+    DrawSpace::Maths::Matrix world;
+    DrawSpace::Maths::Matrix view;
+    DrawSpace::Maths::Matrix proj;
 
-    world.Translation( 0.0, 0.0, -1.0 );
-    view.Identity();
-    proj.Perspective( 2.0, 2.0, 1.0, 10.0 );
+    world.translation( 0.0, 0.0, -1.0 );
+    view.identity();
+    proj.perspective( 2.0, 2.0, 1.0, 10.0 );
 
-    FaceDrawingNode* face_node = static_cast<FaceDrawingNode*>( p_rendering_node ); 
+    auto face_node{ static_cast<FaceDrawingNode*>(p_rendering_node) };
     face_node->SetCurrentPatch( NULL );
 
-    Binder* node_binder = face_node->GetBinder();
+    const auto node_binder{ face_node->GetBinder() };
 
-    node_binder->Bind(); // TO REMOVE
     node_binder->BindToShader();
 
-    Body* planetbody = m_planetbodies[face_node->GetLayerIndex()];
-    dsreal rel_alt = planetbody->GetFace( m_nodes[face_node] )->GetRelativeAlt();
+    const auto planetbody{ m_planetbodies[face_node->GetLayerIndex()] };
+    const auto rel_alt{ planetbody->GetFace(m_nodes[face_node])->GetRelativeAlt() };
 
     Vector view_pos;
     planetbody->GetInvariantViewerPos( view_pos );
 
-    face_node->Draw( 1.0, rel_alt, view_pos, world, view, proj, false );   
-    node_binder->Unbind(); // TO REMOVE
+    face_node->Draw( 1.0, rel_alt, view_pos, world, view, proj, false );       
+}
+
+void Drawing::on_foliagerenderingnode_draw(DrawSpace::Core::RenderingNode* p_rendering_node)
+{    
+    const auto planetbody{ m_planetbodies.at(cst::SurfaceLayer) };
+
+    DrawSpace::Maths::Matrix world;
+    DrawSpace::Maths::Matrix view;
+    DrawSpace::Maths::Matrix proj;
+
+    const auto transform_aspect{ m_owner_entity->GetAspect<TransformAspect>() };
+    if (!transform_aspect)
+    {
+        _DSEXCEPTION("Owner entity has no transform aspect!");
+    }
+
+    transform_aspect->GetViewTransform(view);
+    transform_aspect->GetProjTransform(proj);
+    transform_aspect->GetWorldTransform(world);
+
+    const auto foliage_node{ static_cast<FoliageDrawingNode*>(p_rendering_node) };
+
+    const auto node_binder{ foliage_node->GetBinder() };
+    node_binder->BindToShader();
+
+    Vector view_pos;
+    planetbody->GetInvariantViewerPos(view_pos);
+
+
+
+    foliage_node->Draw(planetbody->GetDiameter() / 2.0, planetbody, view_pos, world, view, proj);
 }
 
 void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, int p_orientation, Body::MesheType p_meshe_type, int p_layer_index, int p_rendering_order, int maxlodlevel_to_draw)
 {
 
-    FaceDrawingNode* node = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
+    const auto node{ _DRAWSPACE_NEW_(FaceDrawingNode, FaceDrawingNode(m_renderer, m_config, p_layer_index)) };
+
     m_facedrawingnodes.push_back( node );
 
     FaceDrawingNode* node_skirts{ nullptr };
-
     FaceDrawingNode* node_landplace{ nullptr };
 
     switch( p_meshe_type )
     {
-        case Body::LOWRES_MESHE:
+        case Body::MesheType::LOWRES_MESHE:
 
             // node patch terrain
             node->SetMeshe( Body::m_patch_meshe );
@@ -728,18 +1005,18 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
             if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
-                node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
                 node_landplace->m_debug_id = "LOWRES_MESHE_node_landplace for layer : " + std::to_string(p_layer_index);
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
-                node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+                node_landplace->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY );
 
                 m_facedrawingnodes.push_back(node_landplace);
             }
             break;
 
-        case Body::AVGRES_MESHE:
+        case Body::MesheType::AVGRES_MESHE:
            
             // node patch terrain
             node->SetMeshe( Body::m_patch3_meshe );
@@ -747,7 +1024,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
             break;
 
-        case Body::LOWRES_SKIRT_MESHE:
+        case Body::MesheType::LOWRES_SKIRT_MESHE:
 
             node_skirts = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
             node_skirts->m_debug_id = "LOWRES_SKIRT_MESHE_skirts for layer : " + std::to_string(p_layer_index);
@@ -762,19 +1039,19 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
             if( m_config->m_landplace_patch && p_layer_index == LOD::cst::SurfaceLayer)
             {
-                node->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
-                node_skirts->SetDrawPatchMode( FaceDrawingNode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH );
+                node_skirts->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_ALL_BUTLANDPLACEPATCH );
 
                 node_landplace = _DRAWSPACE_NEW_( FaceDrawingNode, FaceDrawingNode( m_renderer, m_config, p_layer_index ) );
                 node_landplace->m_debug_id = "LOWRES_SKIRT_MESHE_node_landplace";
                 node_landplace->SetMeshe( m_landplace_meshes[p_orientation] );
-                node_landplace->SetDrawPatchMode( FaceDrawingNode::DRAW_LANDPLACEPATCH_ONLY );
+                node_landplace->SetDrawPatchMode( FaceDrawingNode::DrawPatchMode::DRAW_LANDPLACEPATCH_ONLY );
 
                 m_facedrawingnodes.push_back(node_landplace);
             }
             break;
 
-        case Body::HIRES_MESHE:
+        case Body::MesheType::HIRES_MESHE:
 
             //node patch terrain
             node->SetMeshe( Body::m_patch2_meshe );
@@ -784,12 +1061,10 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
     if (maxlodlevel_to_draw > -1)
     {
-        node->SetDrawPatchMode(FaceDrawingNode::DRAW_MAXLODLEVEL, maxlodlevel_to_draw);
+        node->SetDrawPatchMode(FaceDrawingNode::DrawPatchMode::DRAW_MAXLODLEVEL, maxlodlevel_to_draw);
     }
-
         
-    RenderingNodeDrawCallback* cb = _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( this, &Drawing::on_renderingnode_draw ) );
-
+    const auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_renderingnode_draw)) };
     m_drawing_handlers.push_back( cb );
 
     if( node_skirts )
@@ -811,7 +1086,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
     // enregistrer le node patch terrain
     node->RegisterHandler( cb );
       
-    std::pair<dsstring, FaceDrawingNode*> p = std::make_pair( p_pass, node );
+    const auto p{ std::make_pair(p_pass, node) };
     m_passesnodes.push_back( p );
 
     m_nodes[node] = p_orientation;
@@ -838,7 +1113,7 @@ void Drawing::RegisterSinglePassSlot( const dsstring& p_pass, Binder* p_binder, 
 
 void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, DrawSpace::Core::Fx* p_fx, long p_rendering_order)
 {
-    CollisionMesheDrawingNode* node{ _DRAWSPACE_NEW_(CollisionMesheDrawingNode, CollisionMesheDrawingNode(m_renderer)) };
+    auto node{ _DRAWSPACE_NEW_(CollisionMesheDrawingNode, CollisionMesheDrawingNode(m_renderer)) };
 
     node->SetFx(p_fx);
     node->m_debug_id = "COLLISIONDISPLAY_MESHE";
@@ -861,6 +1136,25 @@ void Drawing::RegisterSinglePassSlotForCollisionDisplay(const dsstring& p_pass, 
     m_passescollisionsdrawingnodes.push_back(p);
    
     m_collisionmeshedrawingnodes.push_back(node);
+}
+
+
+void Drawing::RegisterFoliageSinglePassSlot(const dsstring& p_pass, Binder* p_binder, int p_ro, int p_foliage_layer, const FoliageConfig& p_foliage_config)
+{
+    const auto node{ _DRAWSPACE_NEW_(FoliageDrawingNode, FoliageDrawingNode(m_renderer, p_foliage_config)) };
+    node->m_debug_id = dsstring("Foliage") + std::to_string(p_foliage_layer);
+
+    const auto cb{ _DRAWSPACE_NEW_(RenderingNodeDrawCallback, RenderingNodeDrawCallback(this, &Drawing::on_foliagerenderingnode_draw)) };
+    m_drawing_handlers.push_back(cb);
+
+    node->RegisterHandler(cb);
+    node->SetOrderNumber(p_ro);
+    node->SetBinder(p_binder);
+    
+    const auto p{ std::make_pair(p_pass, node) };
+    m_passesfoliagenodes.push_back(p);
+
+    m_foliagedrawingnodes.push_back(node);
 }
 
 void Drawing::on_new_collisionmeshe_creation(const DrawSpace::Core::Meshe& p_meshe)
@@ -889,30 +1183,6 @@ void Drawing::SetLayerNodeDrawingState( int p_layer_index, bool p_drawing_state 
         }
     }
 }
-
-/*
-void Drawing::EnableZBufferForLayer(int p_layer_index, bool p_zbuffer)
-{
-    for (auto& e : m_facedrawingnodes)
-    {
-        if (p_layer_index == e->GetLayerIndex())
-        {
-            e->EnableZBuffer(p_zbuffer);
-        }
-    }
-}
-
-void Drawing::ForceCullingForLayer(int p_layer_index, const dsstring& p_culling)
-{
-    for (auto& e : m_facedrawingnodes)
-    {
-        if (p_layer_index == e->GetLayerIndex())
-        {
-            e->ForceCulling(p_culling);
-        }
-    }
-}
-*/
 
 void Drawing::SetRenderStatePerPassTableForLayer(int p_layer_index, const std::map<dsstring, std::vector<std::pair<DrawSpace::Core::RenderState, DrawSpace::Core::RenderState>>>& p_table)
 {
@@ -950,7 +1220,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
 {
     int main_patch_nbv = 0;
     dsreal xcurr, ycurr;
-    long patch_resolution = p_patch_resol;
+    const auto patch_resolution{ p_patch_resol };
 
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
@@ -974,7 +1244,7 @@ void Drawing::create_landplace_meshe( long p_patch_resol, int p_orientation, Dra
             Vector v( xcurr, ycurr, 0.0, 1.0 );
 
 
-            Utils::Maths::VectorPlanetOrientation( p_orientation, v, v_orient );
+            Maths::vectorPlanetOrientation( p_orientation, v, v_orient );
 
 
             vertex.x = v_orient[0];

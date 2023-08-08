@@ -24,7 +24,10 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
+#include <map>
+#include <vector>
+
+#include "ds_types.h"
 #include "luna.h"
 
 // fwd decls
@@ -33,7 +36,7 @@ namespace DrawSpace
 namespace Core
 {
 class Entity;
-class RenderingNode;
+struct RenderingNode;
 }
 namespace Aspect
 {

@@ -37,7 +37,7 @@ using namespace DrawSpace::Utils;
 
 extern void TranslateD3DD11Error( HRESULT p_hRes, dsstring &p_str );
 
-_DECLARE_DS_LOGGER( logger, "d3d11", NULL )
+static DrawSpace::Logger::Sink logger("d3d11");
 
 
 
@@ -135,11 +135,11 @@ bool D3D11Renderer::Init( HWND p_hwnd, bool p_fullscreen, long p_w_width, long p
 
     _DSDEBUG( logger, "begin" )
 
-    p_logconf->RegisterSink( &logger );
-    logger.SetConfiguration( p_logconf );
+    p_logconf->registerSink( &logger );
+    logger.setConfiguration( p_logconf );
 
-    p_logconf->RegisterSink( MemAlloc::GetLogSink() );
-    MemAlloc::GetLogSink()->SetConfiguration( p_logconf );
+    p_logconf->registerSink( MemAlloc::GetLogSink() );
+    MemAlloc::GetLogSink()->setConfiguration( p_logconf );
 
 
     _DSDEBUG( logger, "D3D11 init begin" )
@@ -776,7 +776,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
     d3d11vertex* v = new d3d11vertex[nb_vertices];
     for( long i = 0; i < nb_vertices; i++ )
     {
-        Core::Vertex vertex;
+        Commons::Vertex vertex;
         meshe->GetVertex( i, vertex );
      
 
@@ -826,7 +826,7 @@ bool D3D11Renderer::CreateMeshe( DrawSpace::Core::Meshe* p_meshe, void** p_data 
 
     for( long i = 0; i < nb_triangles; i++ )
     {
-        Core::TrianglePrimitive<unsigned int> triangle;
+        Commons::TrianglePrimitive<unsigned int> triangle;
         meshe->GetTriangles( i, triangle );
 
         t[i].vertex1 = triangle.at(0);
@@ -913,7 +913,7 @@ bool D3D11Renderer::UpdateMesheIndexes( DrawSpace::Core::Meshe* p_meshe, void* p
 
     for( long i = 0; i < nb_triangles; i++ )
     {
-        Core::TrianglePrimitive<unsigned int> triangle;
+        Commons::TrianglePrimitive<unsigned int> triangle;
         p_meshe->GetTriangles( i, triangle );
 
         t[i].vertex1 = triangle.at(0);
@@ -941,7 +941,7 @@ bool D3D11Renderer::UpdateMesheVertices( DrawSpace::Core::Meshe* p_meshe, void* 
 
     for( long i = 0; i < nb_vertices; i++ )
     {
-        Core::Vertex vertex;
+        Commons::Vertex vertex;
         p_meshe->GetVertex( i, vertex );
 
         v[i].pos.x = (float)vertex.x;
@@ -995,9 +995,9 @@ bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** 
     // vertex buffer creation
     const auto v{ new d3d11vertex[nb_vertices] };
 
-    for (long i = 0; i < nb_vertices; i++)
+    for (size_t i = 0; i < nb_vertices; i++)
     {
-        Core::Vertex vertex;
+        Commons::Vertex vertex;
         meshe->GetVertex(i, vertex);
 
         v[i].pos.x = (float)vertex.x;
@@ -1036,9 +1036,9 @@ bool D3D11Renderer::CreateLineMeshe(DrawSpace::Core::LineMeshe* p_meshe, void** 
 
     const auto t{ new d3d11line[nb_lines] };
 
-    for (long i = 0; i < nb_lines; i++)
+    for (size_t i = 0; i < nb_lines; i++)
     {
-        Core::LinePrimitive<unsigned int> line;
+        Commons::LinePrimitive<unsigned int> line;
         meshe->GetLine(i, line);
 
         t[i].vertex1 = line.at(0);
@@ -1407,6 +1407,12 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
                 format = DXGI_FORMAT_R16G16B16A16_FLOAT;
                 bpp = 8;
                 break;
+
+            case Texture::RENDERPURPOSE_FLOATVECTOR32:
+
+                format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+                bpp = 16;
+                break;
         }
 
         texture_infos = _DRAWSPACE_NEW_(TextureInfos, TextureInfos);
@@ -1435,11 +1441,14 @@ bool D3D11Renderer::CreateTexture( DrawSpace::Core::Texture* p_texture, void** p
         {
             ID3D11ShaderResourceView*           textureResourceView;
 
+
             void* data = p_texture->GetData();
             size_t data_size = p_texture->GetDataSize();
 
             hRes = D3DX11CreateShaderResourceViewFromMemory( m_lpd3ddevice, data, data_size, NULL, NULL, &textureResourceView, NULL );
             D3D11_CHECK( D3DX11CreateShaderResourceViewFromMemory )
+
+
 
             dsstring path;
             p_texture->GetPath( path );
@@ -1818,6 +1827,10 @@ bool D3D11Renderer::CopyTextureContent( void* p_texturedata )
                 bpp = 16;
                 break;
 
+            case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                bpp = 8;
+                break;
+
             default:
                 bpp = -1;
                 break;
@@ -2117,13 +2130,11 @@ void D3D11Renderer::ReleaseShaderBytes(void* p_data)
 
 void D3D11Renderer::EnableTrianglesPrimitives(void)
 {
-    DECLARE_D3D11ASSERT_VARS
     m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void D3D11Renderer::EnableLinesPrimitives(void)
 {
-    DECLARE_D3D11ASSERT_VARS
     m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 }
 
@@ -2154,7 +2165,7 @@ bool D3D11Renderer::ApplyRenderStatesOut( void* p_data )
     return true;
 }
 
-bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Utils::Vector& p_vector )
+bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, DrawSpace::Maths::Vector& p_vector )
 {
 	switch( p_shader_index )
 	{
@@ -2177,7 +2188,7 @@ bool D3D11Renderer::SetFxShaderParams( int p_shader_index, long p_register, Draw
 	return false;
 }
 
-bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Utils::Matrix& p_mat )
+bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, DrawSpace::Maths::Matrix& p_mat )
 {
 	switch( p_shader_index )
 	{
@@ -2200,7 +2211,7 @@ bool D3D11Renderer::SetFxShaderMatrix( int p_shader_index, long p_register, Draw
 	return false;
 }
 
-bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Utils::Vector>& p_vectors)
+bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, const std::vector<DrawSpace::Maths::Vector>& p_vectors)
 {
 	if (p_vectors.size() > NbMaxVectorForShadersBuffers)
 	{
@@ -2239,15 +2250,15 @@ bool D3D11Renderer::SetShaderVectorBuffer(int p_shader_index, long p_register, c
 	return true;
 }
 
-bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj )
+bool D3D11Renderer::DrawMeshe( DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj )
 {
 
     // setting transformation
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix result;
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    DrawSpace::Maths::Matrix result;
 
-    inv.Identity();
+    inv.identity();
     inv( 2, 2 ) = -1.0;
     final_view = p_view * inv;
 
@@ -2257,29 +2268,29 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     chain.PushMatrix( p_world );
     chain.BuildResult();
     chain.GetResult( &result );
-    result.Transpose();
+    result.transpose();
 
     set_vertexshader_constants_mat( 0, result );
     set_pixelshader_constants_mat( 100, result );
     
     //////////////////////////////////////////////////////////////////////
 
-    DrawSpace::Utils::Matrix proj = p_proj;
-    DrawSpace::Utils::Matrix world = p_world;
-    DrawSpace::Utils::Matrix view = p_view;
-    DrawSpace::Utils::Matrix cam = p_view;
-    DrawSpace::Utils::Matrix worldview = world * view;
-    worldview.Transpose();
+    DrawSpace::Maths::Matrix proj = p_proj;
+    DrawSpace::Maths::Matrix world = p_world;
+    DrawSpace::Maths::Matrix view = p_view;
+    DrawSpace::Maths::Matrix cam = p_view;
+    DrawSpace::Maths::Matrix worldview = world * view;
+    worldview.transpose();
     
     set_vertexshader_constants_mat( 4, worldview );
     set_pixelshader_constants_mat( 104, worldview );
 
 	//////////////////////////////////////////////////////////////////////
     
-    world.Transpose();
-    view.Transpose();
-    cam.Inverse();
-    cam.Transpose();
+    world.transpose();
+    view.transpose();
+    cam.inverse();
+    cam.transpose();
 
     set_vertexshader_constants_mat( 8, world );
     set_vertexshader_constants_mat( 12, view );
@@ -2293,7 +2304,7 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     set_pixelshader_constants_mat( 116, cam );
 
 
-    proj.Transpose();
+    proj.transpose();
     set_vertexshader_constants_mat( 20, proj );
     set_pixelshader_constants_mat( 120, proj );
 
@@ -2311,14 +2322,14 @@ bool D3D11Renderer::DrawMeshe( DrawSpace::Utils::Matrix p_world, DrawSpace::Util
     return true;
 }
 
-bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj)
+bool D3D11Renderer::DrawLineMeshe(DrawSpace::Maths::Matrix p_world, DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj)
 {
     // setting transformation
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix result;
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    DrawSpace::Maths::Matrix result;
 
-    inv.Identity();
+    inv.identity();
     inv(2, 2) = -1.0;
     final_view = p_view * inv;
 
@@ -2328,29 +2339,29 @@ bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::U
     chain.PushMatrix(p_world);
     chain.BuildResult();
     chain.GetResult(&result);
-    result.Transpose();
+    result.transpose();
 
     set_vertexshader_constants_mat(0, result);
     set_pixelshader_constants_mat(100, result);
 
     //////////////////////////////////////////////////////////////////////
 
-    DrawSpace::Utils::Matrix proj = p_proj;
-    DrawSpace::Utils::Matrix world = p_world;
-    DrawSpace::Utils::Matrix view = p_view;
-    DrawSpace::Utils::Matrix cam = p_view;
-    DrawSpace::Utils::Matrix worldview = world * view;
-    worldview.Transpose();
+    DrawSpace::Maths::Matrix proj = p_proj;
+    DrawSpace::Maths::Matrix world = p_world;
+    DrawSpace::Maths::Matrix view = p_view;
+    DrawSpace::Maths::Matrix cam = p_view;
+    DrawSpace::Maths::Matrix worldview = world * view;
+    worldview.transpose();
 
     set_vertexshader_constants_mat(4, worldview);
     set_pixelshader_constants_mat(104, worldview);
 
     //////////////////////////////////////////////////////////////////////
 
-    world.Transpose();
-    view.Transpose();
-    cam.Inverse();
-    cam.Transpose();
+    world.transpose();
+    view.transpose();
+    cam.inverse();
+    cam.transpose();
 
     set_vertexshader_constants_mat(8, world);
     set_vertexshader_constants_mat(12, view);
@@ -2364,7 +2375,7 @@ bool D3D11Renderer::DrawLineMeshe(DrawSpace::Utils::Matrix p_world, DrawSpace::U
     set_pixelshader_constants_mat(116, cam);
 
 
-    proj.Transpose();
+    proj.transpose();
     set_vertexshader_constants_mat(20, proj);
     set_pixelshader_constants_mat(120, proj);
 
@@ -2444,8 +2455,7 @@ bool D3D11Renderer::set_cache_blendstate( void )
 
 void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate )
 {    
-    dsstring arg;
-    p_renderstate->GetArg( arg );
+    const auto arg{ p_renderstate->GetArg() };
 
     static const std::map<dsstring, ID3D11SamplerState*> translate_samplerstate =
     {
@@ -2789,7 +2799,7 @@ void D3D11Renderer::SetRenderState( DrawSpace::Core::RenderState* p_renderstate 
     }
 }
 
-void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec )
+void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const DrawSpace::Maths::Vector& p_vec )
 {
     m_vertexshader_legacyargs.vector[p_startreg].x = p_vec[0];
     m_vertexshader_legacyargs.vector[p_startreg].y = p_vec[1];
@@ -2797,7 +2807,7 @@ void D3D11Renderer::set_vertexshader_constants_vec( DWORD p_startreg, const Draw
     m_vertexshader_legacyargs.vector[p_startreg].w = p_vec[3];
 }
 
-void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Utils::Vector& p_vec )
+void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawSpace::Maths::Vector& p_vec )
 {
     m_pixelshader_legacyargs.vector[p_startreg].x = p_vec[0];
     m_pixelshader_legacyargs.vector[p_startreg].y = p_vec[1];
@@ -2805,7 +2815,7 @@ void D3D11Renderer::set_pixelshader_constants_vec( DWORD p_startreg, const DrawS
     m_pixelshader_legacyargs.vector[p_startreg].w = p_vec[3]; 
 }
 
-void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat )
+void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat )
 {
     for( int i = 0; i < 4; i++ )
     {
@@ -2816,7 +2826,7 @@ void D3D11Renderer::set_vertexshader_constants_mat( DWORD p_startreg, const Draw
     }
 }
 
-void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Utils::Matrix& p_mat )
+void D3D11Renderer::set_pixelshader_constants_mat( DWORD p_startreg, const DrawSpace::Maths::Matrix& p_mat )
 {
     for( int i = 0; i < 4; i++ )
     {
@@ -2851,22 +2861,22 @@ void D3D11Renderer::DrawText( long p_r, long p_g, long p_b, int p_posX, int p_po
 	);
 }
 
-void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace::Utils::Matrix p_proj, DrawSpace::Utils::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
+void D3D11Renderer::PointProjection( DrawSpace::Maths::Matrix p_view, DrawSpace::Maths::Matrix p_proj, DrawSpace::Maths::Vector& p_point, dsreal& p_outx, dsreal& p_outy, dsreal& p_outz )
 {
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    DrawSpace::Utils::Matrix proj;
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    DrawSpace::Maths::Matrix proj;
 
-    DrawSpace::Utils::Vector res;
-    DrawSpace::Utils::Vector point = p_point;
+    DrawSpace::Maths::Vector res;
+    DrawSpace::Maths::Vector point = p_point;
 
-    inv.Identity();
+    inv.identity();
     inv( 2, 2 ) = -1.0;
 
     final_view = p_view * inv;
 
-    DrawSpace::Utils::Vector point2;
-    final_view.Transform( &point, &point2 );
+    DrawSpace::Maths::Vector point2;
+    final_view.transform( &point, &point2 );
 
     p_outz = point2[2];
 
@@ -2875,7 +2885,7 @@ void D3D11Renderer::PointProjection( DrawSpace::Utils::Matrix p_view, DrawSpace:
         point2[2] = 1.0;
     }
 
-    p_proj.Transform( &point2, &res );
+    p_proj.transform( &point2, &res );
 
     p_outx = 0.5 * m_characteristics.width_viewport * ( res[0] / ( res[2] + 1.0 ) );
     p_outy = 0.5 * m_characteristics.height_viewport * ( res[1] / ( res[2] + 1.0 ) );
@@ -3149,7 +3159,7 @@ void D3D11Renderer::GUI_SetSpriteScale( const dsstring& p_spriteName, dsreal p_s
     m_guisubsystem.SetSpriteScale( p_spriteName, p_scale );
 }
 
-void D3D11Renderer::GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Utils::Vector& p_axis, dsreal p_deg_angle )
+void D3D11Renderer::GUI_SetSpriteRotation( const dsstring& p_spriteName, const DrawSpace::Maths::Vector& p_axis, dsreal p_deg_angle )
 {
     m_guisubsystem.SetSpriteRotation( p_spriteName, p_axis, p_deg_angle );
 }

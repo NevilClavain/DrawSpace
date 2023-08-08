@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PILOAD_H_
-#define _PILOAD_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "module_root.h"
 
 namespace DrawSpace
@@ -43,4 +42,4 @@ public:
 }
 }
 
-#endif
+

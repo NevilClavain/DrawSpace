@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_TEXTURESSET_H_
-#define _LUACLASS_TEXTURESSET_H_
+#pragma once
 
 #include "luna.h"
 #include "renderingnode.h"
@@ -54,4 +53,4 @@ public:
     static const Luna<LuaClass_TexturesSet>::RegType methods[];    
 };
 
-#endif
+

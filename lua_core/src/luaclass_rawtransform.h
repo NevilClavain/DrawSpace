@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_FPSRAWTRANSFOR_H_
-#define _LUACLASS_FPSRAWTRANSFOR_H_
+#pragma once
 
 #include "luna.h"
 #include "rawtransformaspectimpl.h"
@@ -52,4 +51,3 @@ public:
 
 };
 
-#endif

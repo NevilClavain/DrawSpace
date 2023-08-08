@@ -22,10 +22,10 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _COMPONENT_H_
-#define _COMPONENT_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include <memory>
+#include "ds_types.h"
 
 namespace DrawSpace
 {
@@ -61,4 +61,3 @@ public:
 }
 }
 
-#endif

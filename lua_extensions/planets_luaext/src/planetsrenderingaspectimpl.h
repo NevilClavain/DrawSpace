@@ -76,10 +76,10 @@ public:
         DrawSpace::Core::Entity*            owner_entity; // l'entite possedant l'aspect camera
         dsstring                            camera_name;
 
-        DrawSpace::Utils::Vector            locale_camera_pos_from_planet;
-        DrawSpace::Utils::Vector            locale_camera_long_lat;
+        DrawSpace::Maths::Vector            locale_camera_pos_from_planet;
+        DrawSpace::Maths::Vector            locale_camera_long_lat;
 
-        DrawSpace::Utils::Vector            global_camera_pos_from_planet;
+        DrawSpace::Maths::Vector            global_camera_pos_from_planet;
 
         bool                                relative_alt_valid;
         dsreal                              relative_alt;
@@ -104,10 +104,19 @@ protected:
     using NodesEventsCb             = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::EntityGraph::EntityNode::Event, DrawSpace::Core::Entity*>;
     using SubPassCreationCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, LOD::SubPass::EntryInfos, LOD::SubPass*, LOD::SubPass::Destination>;
     using CollisionMesheUpdateCb    = DrawSpace::Core::CallBack3<PlanetsRenderingAspectImpl, void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
-    using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Utils::Timer*>;
+    using TimerCb                   = DrawSpace::Core::CallBack<PlanetsRenderingAspectImpl, void, DrawSpace::Timer*>;
     using RenderPassEventCb         = DrawSpace::Core::CallBack2<PlanetsRenderingAspectImpl, void, DrawSpace::RenderGraph::RenderPassNodeGraph::RenderPassEvent, const dsstring&>;
 
-    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, dsreal, dsreal, dsreal, dsreal, dsreal, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, DrawSpace::Utils::Vector>>;
+    using ViewOutInfos              = std::map<dsstring, std::tuple<int, bool, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    dsreal, 
+                                                                    DrawSpace::Maths::Vector,
+                                                                    DrawSpace::Maths::Vector,
+                                                                    DrawSpace::Maths::Vector,
+                                                                    dsreal,dsreal>>;
 
     static const dsstring ClimateVShaderComponentName;
     static const dsstring ClimatePShaderComponentName;
@@ -126,8 +135,8 @@ protected:
     DrawSpace::EntityGraph::EntityNodeGraph*                        m_entitynodegraph{ nullptr };
     TimerCb                                                         m_timer_cb;
     RenderPassEventCb                                               m_render_evt_cb;
-    DrawSpace::Utils::Timer                                         m_timer;
-    DrawSpace::Utils::TimeManager*                                  m_timemanager{ nullptr };;
+    DrawSpace::Timer                                                m_timer;
+    DrawSpace::TimeManager*                                         m_timemanager{ nullptr };;
 
     DrawSpace::Core::Entity*                                        m_owner_entity{ nullptr };
 
@@ -136,9 +145,6 @@ protected:
 
     LOD::SubPass::singleshot_subpasses_stack                        m_singleshot_subpasses_stack;
     LOD::SubPass::singleshot_subpasses                              m_singleshot_subpasses;
-    LOD::SubPass::permanent_subpasses                               m_permanent_subpasses;
-
-    std::vector<LOD::SubPass*>                                      m_m_permanent_subpasses_to_prepare;
 
     std::map<dsstring, RegisteredCamera>                            m_registered_camerapoints;
 
@@ -153,9 +159,13 @@ protected:
     std::map<dsstring, std::array<LOD::Binder*, 6>>                 m_planet_oceans_binder_2;
     std::array<LOD::Binder*, 6>                                     m_planet_climate_binder;
 
-    //std::array<MultiFractalBinder*, 6>                              m_planet_collision_binder;
+    //std::map<dsstring, LOD::Binder*>                                m_planet_foliage_binder;
 
-    std::array<LOD::Binder*, 6>                                     m_planet_collision_binder;
+    std::map<dsstring, std::vector<LOD::Binder*>>                   m_planet_foliage_binder;
+
+    
+
+    std::array<LOD::Binder*, 6>                                     m_heightmap_binder;
 
     DrawSpace::Core::Fx                                             m_climate_fx;
     DrawSpace::Core::Shader*                                        m_climate_vshader{ nullptr };
@@ -197,7 +207,7 @@ protected:
 
     void                                        update_shader_params(void); // for all passes
 
-    void                                        on_timer(DrawSpace::Utils::Timer* p_timer);
+    void                                        on_timer(DrawSpace::Timer* p_timer);
     void                                        on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
     void                                        on_cameras_event(DrawSpace::EntityGraph::EntityNodeGraph::CameraEvent p_event, DrawSpace::Core::Entity* p_entity);
     void                                        on_nodes_event(DrawSpace::EntityGraph::EntityNode::Event p_event, DrawSpace::Core::Entity* p_entity);
@@ -217,8 +227,6 @@ protected:
     void                                        flatclouds_control_from_viewer_alt(void);
     void                                        oceans_control_from_viewer_alt(void);
 
-    void                                        prepare_permanent_subpasses(void);
-
     void                                        setup_collisions_aspect(void);
     void                                        release_collisions_aspect(void);
 
@@ -234,7 +242,7 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager );
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager );
     void Release(void);
     void Run( DrawSpace::Core::Entity* p_entity );
     void SetEntityNodeGraph(DrawSpace::EntityGraph::EntityNodeGraph* p_entitynodegraph);

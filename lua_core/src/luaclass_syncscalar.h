@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_SYNCSCALAR_H_
-#define _LUACLASS_SYNCSCALAR_H_
+#pragma once
 
 #include "timeaspect.h"
 #include "luna.h"
@@ -46,5 +45,3 @@ public:
     static const char className[];
     static const Luna<LuaClass_SyncScalar>::RegType methods[];
 };
-
-#endif

@@ -31,6 +31,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 
 ImpostorsRenderingAspectImpl::PassSlot::PassSlot( const dsstring& p_pass_name ) :
@@ -42,14 +43,16 @@ m_cb( _DRAWSPACE_NEW_( RenderingNodeDrawCallback, RenderingNodeDrawCallback( thi
     m_rendering_node->SetMeshe( _DRAWSPACE_NEW_( Meshe, Meshe ) );
     m_rendering_node->RegisterHandler( m_cb );
 
-    m_world.Identity();
-    m_view.Identity();
-    m_proj.Identity();
+    m_rendering_node->m_debug_id = "impostors_node";
+
+    m_world.identity();
+    m_view.identity();
+    m_proj.identity();
 }
 
 ImpostorsRenderingAspectImpl::PassSlot::~PassSlot( void )
 {
-    Meshe* meshe = m_rendering_node->GetMeshe();
+    auto meshe{ m_rendering_node->GetMeshe() };
     _DRAWSPACE_DELETE_( meshe );
     _DRAWSPACE_DELETE_( m_rendering_node );
     _DRAWSPACE_DELETE_( m_cb );
@@ -71,7 +74,7 @@ void ImpostorsRenderingAspectImpl::build_quads( const PassSlot& p_pass_slot )
     ComponentList<ImpostorDescriptor> impostors;
     m_owner->GetComponentsByType<ImpostorDescriptor>( impostors );
     
-    Meshe* meshe = p_pass_slot.GetRenderingNode()->GetMeshe();
+    const auto meshe{ p_pass_slot.GetRenderingNode()->GetMeshe() };
 
     for( size_t i = 0; i < impostors.size(); ++i )
     {
@@ -206,8 +209,7 @@ void ImpostorsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGra
 
 void ImpostorsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 {
-    TransformAspect* transform_aspect = p_entity->GetAspect<TransformAspect>();
-
+    const auto transform_aspect{ p_entity->GetAspect<TransformAspect>() };
     if( transform_aspect )
     {
         Matrix world;

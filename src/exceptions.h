@@ -22,16 +22,20 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _EXCEPTIONS_H_
-#define _EXCEPTIONS_H_
+#pragma once
 
-#include "drawspace_commons.h"
-#include "tracedefs.h"
+#include "ds_types.h"
 
-#define _DSEXCEPTION( _msg ) { \
-    dsstring message = _msg;\
-    message += " @ ";\
-    message += __FUNCTION__;\
-    throw dsexception( message.c_str() ); }
+namespace DrawSpace
+{
+    namespace Commons
+    {
+        inline void exception(const dsstring& p_msg, const dsstring& p_func)
+        {
+            const auto message{ p_msg + dsstring(" @ ") + dsstring(p_func)};
+            throw dsexception(message.c_str());
+        }
+    }
+}
 
-#endif
+#define _DSEXCEPTION( _msg ) DrawSpace::Commons::exception(_msg, __FUNCTION__);

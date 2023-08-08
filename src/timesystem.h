@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TIMESYSTEM_H_
-#define _TIMESYSTEM_H_
+#pragma once
 
 #include "systems.h"
 #include "timemanager.h"
@@ -52,4 +51,3 @@ public:
 }
 }
 
-#endif

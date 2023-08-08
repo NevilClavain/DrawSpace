@@ -29,8 +29,7 @@
 #include "luaclass_matrix.h"
 
 
-
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 const char LuaClass_Quaternion::className[] = "Quaternion";
 const Luna<LuaClass_Quaternion>::RegType LuaClass_Quaternion::methods[] =
@@ -56,13 +55,13 @@ LuaClass_Quaternion::~LuaClass_Quaternion(void)
 
 int LuaClass_Quaternion::LUA_zero(lua_State* p_L)
 {
-	m_quat.Zero();
+	m_quat.zero();
 	return 0;
 }
 
 int LuaClass_Quaternion::LUA_identity(lua_State* p_L)
 {
-	m_quat.Identity();
+	m_quat.identity();
 	return 0;
 }
 
@@ -79,7 +78,7 @@ int LuaClass_Quaternion::LUA_lookat(lua_State* p_L)
 
 	const Vector& source{ lua_source->getVector() };
 	const Vector& dest{ lua_dest->getVector() };
-	m_quat.LookAt(source, dest);
+	m_quat.lookAt(source, dest);
 	
 	return 0;
 }
@@ -98,14 +97,14 @@ int LuaClass_Quaternion::LUA_rotationaxis(lua_State* p_L)
 
 	dsreal ang = luaL_checknumber(p_L, 4);
 
-	m_quat.RotationAxis(Vector(x, y, z, 1.0), ang);
+	m_quat.rotationAxis(Vector(x, y, z, 1.0), ang);
 
 	return 0;
 }
 
 int LuaClass_Quaternion::LUA_normalize(lua_State* p_L)
 {
-	m_quat.Normalize();
+	m_quat.normalize();
 	return 0;
 }
 
@@ -122,7 +121,7 @@ int LuaClass_Quaternion::LUA_storelerp(lua_State* p_L)
 
 	dsreal blend_factor = luaL_checknumber(p_L, 3);
 
-	m_quat = Quaternion::Lerp(lua_q1->GetQuaternion(), lua_q2->GetQuaternion(), blend_factor);
+	m_quat = DrawSpace::Maths::Quaternion::lerp(lua_q1->GetQuaternion(), lua_q2->GetQuaternion(), blend_factor);
 
 	return 0;
 }
@@ -138,18 +137,18 @@ int LuaClass_Quaternion::LUA_rotationmatfrom(lua_State* p_L)
 	LuaClass_Matrix* lua_mat{ Luna<LuaClass_Matrix>::check(p_L, 1) };
 
 	Matrix out_mat;
-	m_quat.RotationMatFrom(out_mat);
+	m_quat.rotationMatFrom(out_mat);
 	lua_mat->SetMatrix(out_mat);
 
 	return 0;
 }
 
-DrawSpace::Utils::Quaternion LuaClass_Quaternion::GetQuaternion(void) const
+DrawSpace::Maths::Quaternion LuaClass_Quaternion::GetQuaternion(void) const
 {
 	return m_quat;
 }
 
-void LuaClass_Quaternion::SetQuaternion(const DrawSpace::Utils::Quaternion& p_quat)
+void LuaClass_Quaternion::SetQuaternion(const DrawSpace::Maths::Quaternion& p_quat)
 {
 	m_quat = p_quat;
 }

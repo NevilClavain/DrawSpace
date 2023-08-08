@@ -39,31 +39,32 @@ LoadFileToAssimpTask::LoadFileToAssimpTask() : ITask("LOADFILETOASSIMP", "")
 void LoadFileToAssimpTask::Execute(void)
 {
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size);
+
+    auto data{ Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size) };
     if (data)
     {
         m_failure = false;
 
-        Assimp::Importer* importer = new Assimp::Importer();
+        const auto importer{ new Assimp::Importer() };
 
-        unsigned int flags = aiProcess_Triangulate |
+        auto flags{ aiProcess_Triangulate |
             aiProcess_JoinIdenticalVertices |
             aiProcess_FlipUVs |
-            aiProcess_SortByPType;
+            aiProcess_SortByPType };
 
         DrawSpace::Core::Meshe::NormalesGenerationMode normales_gen_mode = m_target_meshe->GetNGenerationMode();
         DrawSpace::Core::Meshe::TangentBinormalesGenerationMode tb_gen_mode = m_target_meshe->GetTBGenerationMode();
 
-        if (DrawSpace::Core::Meshe::NORMALES_AUTO == normales_gen_mode || DrawSpace::Core::Meshe::NORMALES_FROMLOADER == normales_gen_mode)
+        if (DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_AUTO == normales_gen_mode || DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER == normales_gen_mode)
         {
             flags |= aiProcess_GenNormals;
         }
-        else if (DrawSpace::Core::Meshe::NORMALES_AUTO_SMOOTH == normales_gen_mode || DrawSpace::Core::Meshe::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
+        else if (DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH == normales_gen_mode || DrawSpace::Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER_SMOOTH == normales_gen_mode)
         {
             flags |= aiProcess_GenSmoothNormals;
         }
 
-        if (DrawSpace::Core::Meshe::TB_AUTO == tb_gen_mode || DrawSpace::Core::Meshe::TB_FROMLOADER == tb_gen_mode)
+        if (DrawSpace::Core::Meshe::TangentBinormalesGenerationMode::TB_AUTO == tb_gen_mode || DrawSpace::Core::Meshe::TangentBinormalesGenerationMode::TB_FROMLOADER == tb_gen_mode)
         {
             flags |= aiProcess_CalcTangentSpace;
         }
@@ -77,15 +78,10 @@ void LoadFileToAssimpTask::Execute(void)
                 m_err_descr = dsstring("scene has no meshes : ") + m_final_asset_path;
             }
 
-            aiMesh** meshes;
+            const auto meshes{ scene->mMeshes };
+            const auto nb_meshes{ scene->mNumMeshes };
 
-            int nb_meshes;
-            aiNode* root;
-
-            meshes = scene->mMeshes;
-            nb_meshes = scene->mNumMeshes;
-            root = scene->mRootNode;
-
+            const auto root{ scene->mRootNode };
             if (!root)
             {
                 m_failure = true;

@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_RENDERING_H_
-#define _LUACLASS_RENDERING_H_
+#pragma once
 
 #include "luna.h"
 #include "renderingaspectimpl.h"
@@ -53,7 +52,7 @@ private:
     std::map<dsstring, std::vector<dsstring>>						    m_rcname_to_passes;
 
     size_t                                                              m_total_mem_allocs;
-    DrawSpace::Utils::TimeManager*                                      m_tm;
+    DrawSpace::TimeManager*                                             m_tm;
 
     void cleanup_resources( lua_State* p_L );
 
@@ -86,4 +85,3 @@ public:
     static const Luna<LuaClass_Rendering>::RegType methods[];
 };
 
-#endif

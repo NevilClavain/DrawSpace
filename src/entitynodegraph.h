@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _ENTITYNODEGRAPH_H_
-#define _ENTITYNODEGRAPH_H_
+#pragma once
 
 #include "entitynode.h"
 #include <queue>
@@ -126,4 +125,4 @@ public:
 }
 }
 
-#endif
+

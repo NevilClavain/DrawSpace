@@ -43,7 +43,7 @@ void RunnerSequenceStep::run(RunnerSequence& p_sequence)
         {
             m_state = State::WAITFORTASK;
 
-            Threading::Runner* runner{ Threading::Runner::GetInstance() };
+            Threading::Runner* runner{ Threading::Runner::getInstance() };
             runner->m_mailbox_in.Push<Interface::ITask*>(m_task);
         }
         else
@@ -168,7 +168,7 @@ void RunnerSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
         e.second.run();
     }
 
-    Threading::Runner* runner{ Threading::Runner::GetInstance() };
+    Threading::Runner* runner{ Threading::Runner::getInstance() };
     int nb_tasks_done{ runner->m_mailbox_out.GetBoxSize() };
 
     for (int i = 0; i < nb_tasks_done; ++i)
@@ -181,14 +181,14 @@ void RunnerSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 void RunnerSystem::StartupRunner(void)
 {
     //startup runner thread
-    Runner::GetInstance()->Startup();
+    Runner::getInstance()->Startup();
 }
 
 void RunnerSystem::ShutdownRunner(void)
 {
     // stop and join runner
 
-    Runner* runner{ Runner::GetInstance() };
+    Runner* runner{ Runner::getInstance() };
 
     runner->m_mailbox_in.Push<Interface::ITask*>(&RunnerKiller());
     runner->Join();

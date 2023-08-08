@@ -38,8 +38,14 @@ link_directories(${jsonjsmn_lib_dir})
 include_directories(${assimp_include_dir})
 link_directories(${assimp_lib_dir})
 
+include_directories(${st_tree_include_dir})
+
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
 
 file(
         GLOB_RECURSE
@@ -51,9 +57,10 @@ file(
 )
 
 add_library(gameroom SHARED ${source_files})
-target_link_libraries(gameroom lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core lua_core)
+target_link_libraries(gameroom lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_timemanager lua_core)
 install(TARGETS gameroom CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS gameroom CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS gameroom CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/mat_input_constants.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)
 install(FILES ${CMAKE_SOURCE_DIR}/hlsl_4_0_project/src/color_ps.hlsl OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/console_data/shaders_bank/hlsl_4_0)

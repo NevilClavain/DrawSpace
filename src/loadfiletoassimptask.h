@@ -40,33 +40,32 @@ namespace Core
 }
 namespace Systems
 {
-    struct LoadFileToAssimpTask : public Interface::ITask
-    {
-    private:
+struct LoadFileToAssimpTask : public Interface::ITask
+{
+public:
 
-        bool                                m_failure;
-        dsstring                            m_err_descr;
+    LoadFileToAssimpTask();
 
-        dsstring                            m_final_asset_path;
+    void Execute(void);
+    void SetFinalAssetPath(const dsstring& p_final_asset_path);
 
-        DrawSpace::Core::Meshe* m_target_meshe;
-        const aiScene* m_scene{ nullptr };
-        Assimp::Importer* m_importer{ nullptr };
+    void SetTargetMeshe(DrawSpace::Core::Meshe* p_meshe);
 
-    public:
+    bool Failed(void) const;
 
-        LoadFileToAssimpTask();
+    const aiScene* GetScene(void) const;
 
-        void Execute(void);
-        void SetFinalAssetPath(const dsstring& p_final_asset_path);
+    Assimp::Importer* GetImporter(void) const;
 
-        void SetTargetMeshe(DrawSpace::Core::Meshe* p_meshe);
+private:
 
-        bool Failed(void) const;
+    bool                                m_failure{ false };
+    dsstring                            m_err_descr;
+    dsstring                            m_final_asset_path;
 
-        const aiScene* GetScene(void) const;
-
-        Assimp::Importer* GetImporter(void) const;
-    };
+    DrawSpace::Core::Meshe*             m_target_meshe{ nullptr };
+    const aiScene*                      m_scene{ nullptr };
+    Assimp::Importer*                   m_importer{ nullptr };
+};
 }
 }

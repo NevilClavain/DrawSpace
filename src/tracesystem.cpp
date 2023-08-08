@@ -36,7 +36,7 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::EntityGraph;
 using namespace DrawSpace::Systems;
 
-_DECLARE_DS_LOGGER( logger, "tracesystem", NULL )
+static DrawSpace::Logger::Sink logger("tracesystem");
 
 class ClassDump
 {
@@ -58,8 +58,8 @@ dsstring ClassDump::m_text;
 
 void TraceSystem::SetLogConf( DrawSpace::Logger::Configuration* p_logconf )
 {
-    p_logconf->RegisterSink( &logger );
-    logger.SetConfiguration( p_logconf );
+    p_logconf->registerSink( &logger );
+    logger.setConfiguration( p_logconf );
 }
 
 void TraceSystem::run( EntityGraph::EntityNodeGraph* p_entitygraph )

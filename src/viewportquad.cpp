@@ -70,7 +70,7 @@ ViewportQuad::ViewportQuad( dsreal p_width, dsreal p_height, dsreal p_z_offset )
     DrawSpace::Interface::Renderer::Characteristics characteristics;
     DrawSpace::Interface::Renderer* renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     renderer->GetRenderCharacteristics( characteristics );
-    m_projection.Perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 10.0 );
+    m_projection.perspective( characteristics.width_viewport, characteristics.height_viewport, 1.0, 10.0 );
 }
 
 ViewportQuad::~ViewportQuad( void )
@@ -81,11 +81,11 @@ ViewportQuad::~ViewportQuad( void )
 void ViewportQuad::OnDraw( void )
 {
     Renderer* renderer = SingletonPlugin<Renderer>::GetInstance()->m_interface;
-    DrawSpace::Utils::Matrix view;
-    view.Identity();
+    DrawSpace::Maths::Matrix view;
+    view.identity();
 
-    DrawSpace::Utils::Matrix pos;
-    pos.Identity();
+    DrawSpace::Maths::Matrix pos;
+    pos.identity();
 
     renderer->DrawMeshe( pos, view, m_projection );
 }

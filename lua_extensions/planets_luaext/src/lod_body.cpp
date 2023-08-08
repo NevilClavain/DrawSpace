@@ -43,9 +43,7 @@ Meshe* Body::m_patch3_meshe = NULL;  // patch terrains moyenne resolution
 Meshe* Body::m_skirt_meshe = NULL;  //les jupes terrains
 
 
-Body::Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description) :
-m_current_face( -1 ),
-m_relative_alt( 0.0 ),
+Body::Body( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description) :
 m_config( p_config ),
 m_description(p_description)
 {
@@ -81,9 +79,8 @@ void Body::Compute( void )
         m_faces[i]->ComputeAlignmentFactor();
     }
 
-    int curr_face = 0;
-    dsreal af = m_faces[0]->GetAlignmentFactor();
-
+    int curr_face{ 0 };
+    auto af{ m_faces[0]->GetAlignmentFactor() };
     for( long i = 1; i < 6; i++ )
     {
         if( m_faces[i]->GetAlignmentFactor() > af )
@@ -100,11 +97,8 @@ void Body::Compute( void )
 
     /////////////////////////////////////////
 
-    double alignment_factor_limit;
-
     // alignment_factor_limit augmente au fur et a mesure qu'on approche l'altitude zero
-    alignment_factor_limit = 0.25 * DrawSpace::Utils::Maths::Clamp( 0.0, 1.0, ( 3.0 - m_relative_alt ) / 3.0 );
-
+    const auto alignment_factor_limit { 0.25 * DrawSpace::Maths::clamp(0.0, 1.0, (3.0 - m_relative_alt) / 3.0) };
     if( m_enable_cdlod )
     {
         for( long i = 0; i < 6; i++ )
@@ -138,9 +132,9 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
     // on travaille sur une sphere de rayon = 1.0, donc diametre = 2.0
     dsreal interval = 2.0 / ( patch_resolution - 1 );
 
-    float delta_uv0 = 1.0f / ( patch_resolution - 1 );
-    float current_u0 = 0.0f;
-    float current_v0 = 0.0f;
+    const auto delta_uv0 { 1.0f / (patch_resolution - 1) };
+    auto current_u0 { 0.0f };
+    auto current_v0 { 0.0f };
 
     if( !p_skirt )
     {
@@ -174,11 +168,8 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
     }
     ///////////////////////////////////////////////////////////////////////////////////
     
-    //if( p_skirt )
     else
-    {
-        
-
+    {       
         // vertices jupe droite
 
         current_u0 = 0.0f;
@@ -373,8 +364,7 @@ void Body::build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest
 
         // triangles jupe droite
 
-        int right_skirt_base_index = main_patch_nbv;
-
+        const auto right_skirt_base_index{ main_patch_nbv };
         current_index = 0;
 
         for( long i = 0; i < patch_resolution - 1; i++ )
@@ -484,24 +474,24 @@ void Body::DestroyMeshes( void )
     _DRAWSPACE_DELETE_(m_patch_meshe);
 }
 
-void Body::UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint )
+void Body::UpdateHotPoint( const DrawSpace::Maths::Vector& p_hotpoint )
 {    
-    DrawSpace::Utils::Vector hotpoint = p_hotpoint;
+    const auto hotpoint{ p_hotpoint };
     for( long i = 0; i < 6; i++ )
     {
         m_faces[i]->UpdateRelativeHotpoint( hotpoint );
     }
 
     // compute altitud
-    m_hotpoint_altitud = hotpoint.Length() - ( m_diameter / 2.0 );
+    m_hotpoint_altitud = hotpoint.length() - ( m_diameter / 2.0 );
 }
 
-void Body::UpdateInvariantViewerPos( const DrawSpace::Utils::Vector& p_pos )
+void Body::UpdateInvariantViewerPos( const DrawSpace::Maths::Vector& p_pos )
 {
     m_invariant_viewerpos = p_pos;
 }
 
-void Body::GetInvariantViewerPos( DrawSpace::Utils::Vector& p_pos ) const
+void Body::GetInvariantViewerPos( DrawSpace::Maths::Vector& p_pos ) const
 {
     p_pos = m_invariant_viewerpos;
 }
@@ -514,7 +504,7 @@ DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
 
 Patch* Body::GetFaceCurrentLeaf( int p_faceid ) const
 {
-    QuadtreeNode<Patch>* current_leaf = m_faces[p_faceid]->GetCurrentLeaf();
+    const auto current_leaf{ m_faces[p_faceid]->GetCurrentLeaf() };
     return current_leaf->GetContent();
 }
 

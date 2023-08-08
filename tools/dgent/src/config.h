@@ -26,7 +26,7 @@
 #include "jsonparser.h"
 #include "substitution.h"
 
-struct Config : public DrawSpace::Utils::JSONParser
+struct Config : public DrawSpace::JSONParser
 {
 private:
 	std::string							m_template_path;

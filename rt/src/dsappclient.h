@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _DSAPPCLIENT_H_
-#define _DSAPPCLIENT_H_
+#pragma once
 
 #include <dsapp.h>
 #include "servicesystem.h"
@@ -103,5 +102,5 @@ public:
     virtual void        OnAppEvent( WPARAM p_wParam, LPARAM p_lParam );
 };
 
-#endif
+
 

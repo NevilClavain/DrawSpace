@@ -41,36 +41,36 @@ struct Node
 	dsstring				id;
 	dsstring				parent_id;
 	std::vector<dsstring>	children;
-	Utils::Matrix			locale_transform;
+	Maths::Matrix			locale_transform;
 
 	Node(void)
 	{
-		locale_transform.Identity();
+		locale_transform.identity();
 	}
 };
 
 struct BoneOutput
 {
-	Utils::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
-	Utils::Matrix final_transformation;
+	Maths::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
+	Maths::Matrix final_transformation;
 
 	BoneOutput(void)
 	{
-		offset_matrix.Identity();
-		final_transformation.Identity();
+		offset_matrix.identity();
+		final_transformation.identity();
 	}
 };
 
 struct VectorKey
 {
 	dsreal								time_tick;
-	Utils::Vector						value;
+	Maths::Vector						value;
 };
 
 struct QuaternionKey
 {
 	dsreal								time_tick;
-	Utils::Quaternion					value;
+	Maths::Quaternion					value;
 };
 
 struct NodeAnimation

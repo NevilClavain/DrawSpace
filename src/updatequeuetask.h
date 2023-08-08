@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <vector>
 #include "task.h"
 
 namespace DrawSpace

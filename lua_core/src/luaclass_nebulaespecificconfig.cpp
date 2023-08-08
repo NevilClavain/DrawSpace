@@ -94,8 +94,8 @@ int LuaClass_NebulaeSpecificConfig::LUA_cleanup(lua_State* p_L)
 
 int LuaClass_NebulaeSpecificConfig::LUA_createbloc(lua_State* p_L)
 {
-    Utils::Vector   default_color(0.0, 0.0, 0.0, 1.0);
-    Utils::Vector   default_pos(0.0, 0.0, 0.0, 1.0);
+    Maths::Vector   default_color(0.0, 0.0, 0.0, 1.0);
+    Maths::Vector   default_pos(0.0, 0.0, 0.0, 1.0);
     UVPairList      default_textureuvpair;
     UVPairList      default_maskuvpair;
 
@@ -124,7 +124,7 @@ int LuaClass_NebulaeSpecificConfig::LUA_setbloccolor(lua_State* p_L)
         LUA_ERROR("Distribution::set_bloccolor : bad index");
     }
 
-    Utils::Vector& color = std::get<0>( m_dataModel[bloc_index] );
+    Maths::Vector& color = std::get<0>( m_dataModel[bloc_index] );
     color[0] = r;
     color[1] = g;
     color[2] = b;
@@ -150,7 +150,7 @@ int LuaClass_NebulaeSpecificConfig::LUA_setblocposition(lua_State* p_L)
         LUA_ERROR("Distribution::set_blocposition : bad index");
     }
 
-    Utils::Vector& pos = std::get<1>(m_dataModel[bloc_index]);
+    Maths::Vector& pos = std::get<1>(m_dataModel[bloc_index]);
     pos[0] = x;
     pos[1] = y;
     pos[2] = z;

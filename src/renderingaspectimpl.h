@@ -22,18 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGASPECTIMPL_H_
-#define _RENDERINGASPECTIMPL_H_
+#pragma once
 
 #include "entity.h"
 #include "renderingqueue.h"
 
 namespace DrawSpace
 {
-namespace Utils
-{
 class TimeManager;
-}
 
 namespace Aspect
 {
@@ -75,7 +71,7 @@ public:
 
     virtual void ComponentsUpdated( void ) {};
 
-    virtual bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager ) = 0;
+    virtual bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager ) = 0;
     virtual void Release( void ) = 0;
     virtual void Run( DrawSpace::Core::Entity* p_entity ) = 0;
 
@@ -86,4 +82,3 @@ public:
 }
 
 
-#endif

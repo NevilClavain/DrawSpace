@@ -23,8 +23,8 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "drawspace_commons.h"
-#include "crtp_singleton.h"
+#include "ds_types.h"
+#include "singleton.h"
 #include "luaext.h"
 
 

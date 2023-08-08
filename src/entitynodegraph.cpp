@@ -98,7 +98,7 @@ void EntityNodeGraph::RegisterNodesEvtHandler( EntityNode::EventsHandler* p_hand
     // balancer la liste des nodes deja enregistres
     for( auto it = m_tree.begin(); it != m_tree.end(); ++it )
     {
-        (*p_handler)( EntityNode::ADDED_IN_TREE, it->data() );
+        (*p_handler)( EntityNode::Event::ADDED_IN_TREE, it->data() );
     }
 }
 

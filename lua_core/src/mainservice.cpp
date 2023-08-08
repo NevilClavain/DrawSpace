@@ -38,9 +38,10 @@ using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Systems;
 
-_DECLARE_DS_LOGGER( logger, "gameroom_mainservice", NULL )
+static DrawSpace::Logger::Sink logger("gameroom_mainservice");
 
 #ifdef _DEBUG
 static const dsstring console_welcome = "Console: input ready (debug build)";
@@ -51,6 +52,7 @@ static const dsstring console_welcome = "Console: input ready (release build)";
 extern DrawSpace::Logger::Sink aspect_logger;
 extern DrawSpace::Logger::Sink rs_logger;       //resource system logger
 extern DrawSpace::Logger::Sink rd_logger;       //renderingqueue system logger
+extern DrawSpace::Logger::Sink bmt_logger;
 
 extern DrawSpace::Logger::Sink runner_logger;
 
@@ -94,7 +96,7 @@ bool MainService::Init( void )
     mousecircularmode_cb = mouse_cbs[0]->getPurpose();
     mousevisible_cb = mouse_cbs[1]->getPurpose();
 
-    DrawSpace::Logger::Configuration* logconf = logconfs[0]->getPurpose();
+    const auto logconf{ logconfs[0]->getPurpose() };
 
     DrawSpace::Core::BaseCallback<void, int>* closeapp_cb;
     closeapp_cb = app_cbs[0]->getPurpose();
@@ -105,27 +107,31 @@ bool MainService::Init( void )
 
     ////////////////////////////////////////////////////////
         
-    logconf->RegisterSink( &logger );
-    logger.SetConfiguration( logconf );
+    logconf->registerSink( &logger );
+    logger.setConfiguration( logconf );
 
-    logconf->RegisterSink(&aspect_logger);
-    aspect_logger.SetConfiguration(logconf);
+    logconf->registerSink(&aspect_logger);
+    aspect_logger.setConfiguration(logconf);
 
-    logconf->RegisterSink(&rs_logger);
-    rs_logger.SetConfiguration(logconf);
+    logconf->registerSink(&rs_logger);
+    rs_logger.setConfiguration(logconf);
 
-    logconf->RegisterSink( MemAlloc::GetLogSink() );
-    MemAlloc::GetLogSink()->SetConfiguration( logconf );
-
-    logconf->RegisterSink(&rd_logger);
-    rd_logger.SetConfiguration(logconf);
-
-    logconf->RegisterSink(&runner_logger);
-    runner_logger.SetConfiguration(logconf);
+    logconf->registerSink(&bmt_logger);
+    bmt_logger.setConfiguration(logconf);
 
 
+    logconf->registerSink( MemAlloc::GetLogSink() );
+    MemAlloc::GetLogSink()->setConfiguration( logconf );
+
+    logconf->registerSink(&rd_logger);
+    rd_logger.setConfiguration(logconf);
+
+    logconf->registerSink(&runner_logger);
+    runner_logger.setConfiguration(logconf);
 
     m_systemsHub.SetLogConf( logconf );
+
+    m_logconf = logconf;
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -154,7 +160,7 @@ bool MainService::Init( void )
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    LuaContext::GetInstance()->Startup();
+    LuaContext::getInstance()->Startup();
     buil_lua_prerequisites();
    
     /////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +202,7 @@ void MainService::Release( void )
 {
     _DSDEBUG( logger, dsstring("MainService : shutdown...") );
     m_systemsHub.ShutdownRunner();
-    LuaContext::GetInstance()->Shutdown();
+    LuaContext::getInstance()->Shutdown();
     m_systemsHub.ReleaseAssets();
 }
 
@@ -254,7 +260,7 @@ void MainService::OnKeyPress( long p_key )
 	{
 		for (auto it = m_keypress_lua_callbacks.begin(); it != m_keypress_lua_callbacks.end(); ++it)
 		{
-			LuaContext::GetInstance()->CallLuaFunc(it->second, p_key);
+			LuaContext::getInstance()->CallLuaFunc(it->second, p_key);
 		}
 	}
 }
@@ -324,7 +330,7 @@ void MainService::OnEndKeyPress( long p_key )
 	{
 		for (auto it = m_endkeypress_lua_callbacks.begin(); it != m_endkeypress_lua_callbacks.end(); ++it)
 		{
-			LuaContext::GetInstance()->CallLuaFunc(it->second, p_key);
+			LuaContext::getInstance()->CallLuaFunc(it->second, p_key);
 		}
 	}
 }
@@ -398,7 +404,7 @@ void MainService::OnChar( long p_char, long p_scan )
     {
         for( auto it = m_onchar_lua_callbacks.begin(); it != m_onchar_lua_callbacks.end(); ++it )
         {
-            LuaContext::GetInstance()->CallLuaFunc( it->second, p_char, p_scan );
+            LuaContext::getInstance()->CallLuaFunc( it->second, p_char, p_scan );
         }       
     }
 }
@@ -411,7 +417,7 @@ void MainService::OnMouseMove( long p_xm, long p_ym, long p_dx, long p_dy )
     }
     for( auto it = m_mousemove_lua_callbacks.begin(); it != m_mousemove_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym, p_dx, p_dy );
+        LuaContext::getInstance()->CallLuaFunc( it->second, p_xm, p_ym, p_dx, p_dy );
     }
 }
 
@@ -427,7 +433,7 @@ void MainService::OnMouseLeftButtonDown( long p_xm, long p_ym )
     }
     for( auto it = m_mouseleftbuttondown_lua_callbacks.begin(); it != m_mouseleftbuttondown_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+        LuaContext::getInstance()->CallLuaFunc( it->second, p_xm, p_ym );
     }
 }
 
@@ -439,7 +445,7 @@ void MainService::OnMouseLeftButtonUp( long p_xm, long p_ym )
     }
     for( auto it = m_mouseleftbuttonup_lua_callbacks.begin(); it != m_mouseleftbuttonup_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+        LuaContext::getInstance()->CallLuaFunc( it->second, p_xm, p_ym );
     }
 }
 
@@ -451,7 +457,7 @@ void MainService::OnMouseRightButtonDown( long p_xm, long p_ym )
     }
     for( auto it = m_mouserightbuttondown_lua_callbacks.begin(); it != m_mouserightbuttondown_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+        LuaContext::getInstance()->CallLuaFunc( it->second, p_xm, p_ym );
     }
 }
 
@@ -463,7 +469,7 @@ void MainService::OnMouseRightButtonUp( long p_xm, long p_ym )
     }
     for( auto it = m_mouserightbuttonup_lua_callbacks.begin(); it != m_mouserightbuttonup_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_xm, p_ym );
+        LuaContext::getInstance()->CallLuaFunc( it->second, p_xm, p_ym );
     }
 }
 
@@ -475,7 +481,7 @@ void MainService::on_guipushbutton_clicked( const dsstring& p_layout, const dsst
 {
     for( auto it = m_guipushbuttonclicked_lua_callbacks.begin(); it != m_guipushbuttonclicked_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second, p_layout, p_widget_id );
+        LuaContext::getInstance()->CallLuaFunc( it->second, p_layout, p_widget_id );
     }
 }
 
@@ -483,7 +489,7 @@ void MainService::on_animation_event(const dsstring& p_event_id, AnimationsSyste
 {
 	for (auto it = m_animationevent_lua_callbacks.begin(); it != m_animationevent_lua_callbacks.end(); ++it)
 	{
-		LuaContext::GetInstance()->CallLuaFunc(it->second, p_event_id, p_event, p_animation_name);
+		LuaContext::getInstance()->CallLuaFunc(it->second, p_event_id, p_event, p_animation_name);
 	}
 }
 
@@ -491,15 +497,15 @@ void MainService::on_resource_event(DrawSpace::Systems::ResourcesSystem::Resourc
 {
     for (auto it = m_resourceevent_lua_callbacks.begin(); it != m_resourceevent_lua_callbacks.end(); ++it)
     {
-        LuaContext::GetInstance()->CallLuaFunc(it->second, p_event, p_resource, p_context);
+        LuaContext::getInstance()->CallLuaFunc(it->second, static_cast<int>(p_event), p_resource, p_context);
     }
 }
 
 void MainService::process_console_command( const dsstring& p_cmd )
 {
-    if( false == LuaContext::GetInstance()->Execute( p_cmd ) )
+    if( false == LuaContext::getInstance()->Execute( p_cmd ) )
     {
-        dsstring lua_err = LuaContext::GetInstance()->GetLastError();
+        dsstring lua_err = LuaContext::getInstance()->GetLastError();
 
 		// cleanup error message : remove CR chars
 		lua_err.erase(std::remove(lua_err.begin(), lua_err.end(), 0x0d), lua_err.end());
@@ -511,15 +517,15 @@ void MainService::process_console_command( const dsstring& p_cmd )
     {
         if( m_request_lua_reset )
         {
-            LuaContext::GetInstance()->Execute( "root_entity:release_timemanager()" );
+            LuaContext::getInstance()->Execute( "root_entity:release_timemanager()" );
 
             DrawSpace::EntityGraph::EntityNode& root_entity_node = m_entitygraphs["eg"]->GetEntityNode( "root" );
             DrawSpace::Core::Entity* root_entity = root_entity_node.GetEntity();
             RenderingAspect* rendering_aspect = root_entity->GetAspect<RenderingAspect>();
             rendering_aspect->RemoveComponent<std::vector<StringRenderingAspectImpl::TextDisplay>>( "console_lines" );
 
-            LuaContext::GetInstance()->Shutdown();
-            LuaContext::GetInstance()->Startup();
+            LuaContext::getInstance()->Shutdown();
+            LuaContext::getInstance()->Startup();
             buil_lua_prerequisites();
             m_request_lua_reset = false;
         }
@@ -619,11 +625,11 @@ void MainService::create_console_quad(DrawSpace::Systems::ResourcesSystem* p_res
 
     
     transform_aspect->AddComponent<Matrix>( "quad_scaling" );
-    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().Scale( 1.0, 1.0, 1.0 );
+    transform_aspect->GetComponent<Matrix>( "quad_scaling" )->getPurpose().scale( 1.0, 1.0, 1.0 );
     
 
     transform_aspect->AddComponent<Matrix>( "quad_pos" );
-    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().Translation( 0.0, -0.5, -1.0 );
+    transform_aspect->GetComponent<Matrix>( "quad_pos" )->getPurpose().translation( 0.0, -0.5, -1.0 );
 
     // shaders quad charges dans le plugin graphique (QuadRenderingAspectImpl::Init()), on a plus besoin des data chargees des shaders : les liberer/retirer du resources system
     p_res_system->ReleaseShaderAsset(console_shader_vs);
@@ -635,7 +641,7 @@ void MainService::execute_lua_run_cbs( void )
 {
     for( auto it = m_run_lua_callbacks.begin(); it != m_run_lua_callbacks.end(); ++it )
     {
-        LuaContext::GetInstance()->CallLuaFunc( it->second );
+        LuaContext::getInstance()->CallLuaFunc( it->second );
     }
 }
 
@@ -885,10 +891,10 @@ void MainService::RequestConsolePrint( const dsstring& p_msg )
 
 int MainService::RequestLuaFileExec(const dsstring& p_path)
 {
-	int status = LuaContext::GetInstance()->ExecuteFromFile(p_path);
+	int status = LuaContext::getInstance()->ExecuteFromFile(p_path);
 	if (-2 == status)
 	{
-		dsstring lua_err = LuaContext::GetInstance()->GetLastError();
+		dsstring lua_err = LuaContext::getInstance()->GetLastError();
 
 	    // erreur dans le script... on est potentiellement dans un etat merdique (operations du script pas menees jusqu'au bout puisque l'interpreteur n'est pas alle au bout)
 	    // on prefere arreter toute l'appli...
@@ -933,13 +939,13 @@ void MainService::buil_lua_prerequisites( void )
     /// paths resources par defaut....
     Shader::EnableShadersDescrInFinalPath( true );
     Shader::SetRootPath( "console_data/shaders_bank" );
-    LuaContext::GetInstance()->SetRootPath( "lua_commons" );
+    LuaContext::getInstance()->SetRootPath( "lua_commons" );
     //File::MountVirtualFS( "test_data.bank" );
 
 
     m_console_ready = false;
 
-    if( -1 == LuaContext::GetInstance()->ExecuteFromFile( "gameroom.lua" ) )
+    if( -1 == LuaContext::getInstance()->ExecuteFromFile( "gameroom.lua" ) )
     {
         _DSEXCEPTION( "Unable to open gameroom.lua" );
     }
@@ -1058,4 +1064,9 @@ void MainService::ActivateResourcesSystem(const dsstring& p_context)
 void MainService::DeactivateResourcesSystem(void)
 {
     m_systemsHub.GetSystem<DrawSpace::Systems::ResourcesSystem>("ResourcesSystem").Deactivate();
+}
+
+DrawSpace::Logger::Configuration* MainService::GetLogConf(void) const
+{
+    return m_logconf;
 }

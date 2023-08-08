@@ -22,8 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _FX_H_
-#define _FX_H_
+#pragma once 
+
+#include <vector>
 
 #include "renderstatesset.h"
 #include "shader.h"
@@ -62,4 +63,4 @@ private:
 };
 }
 }
-#endif
+

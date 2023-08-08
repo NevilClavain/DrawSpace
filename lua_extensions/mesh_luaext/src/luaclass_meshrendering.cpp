@@ -39,6 +39,7 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 
@@ -141,6 +142,13 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
     const auto meshe_path{ luaL_checkstring(p_L, 2) };
     const auto meshe_name{ luaL_checkstring(p_L, 3) };
 
+    
+    m_meshe_resource_id = meshe_path;
+    resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(m_meshe_resource_id,
+        std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
+
+    m_meshe.SetPath(meshe_path);
+    
     // recupere l'aspect rendu s'il existe pour cette entitee
     if( m_entity_rendering_aspect )
     {
@@ -236,13 +244,6 @@ int LuaClass_MeshRendering::LUA_configure( lua_State* p_L )
                                 }
                             }
                         }
-
-                        const auto meshe_res_id{ dsstring("meshe_") + pass_id };
-
-                        resources_aspect->AddComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id,
-                            std::make_tuple(&m_meshe, meshe_path, meshe_name, false));
-
-                        m_meshe.SetPath(meshe_path);
 
                         rnode->SetMeshe(&m_meshe);
 
@@ -499,13 +500,13 @@ void LuaClass_MeshRendering::cleanup_resources( lua_State* p_L )
             }
 
             m_entity_rendering_aspect->RemoveComponent<PassSlot>( id );
-
-            const auto meshe_res_id{ dsstring("meshe_") + id };
-			if (resources_aspect->GetComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id))
-			{
-				resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(meshe_res_id);
-			}
         }
+
+        if (resources_aspect->GetComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(m_meshe_resource_id))
+        {
+            resources_aspect->RemoveComponent<std::tuple<Meshe*, dsstring, dsstring, bool>>(m_meshe_resource_id);
+        }
+
         m_renderingnodes.clear();
 
         m_meshe.ClearTriangles();

@@ -22,12 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
+#include "ds_types.h"
 #include "collisionaspect.h"
 #include "physicsaspect.h"
 #include "transformaspect.h"
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
@@ -51,7 +53,7 @@ btRigidBody* CollisionAspect::Init(void)
     }
 
     Matrix attitude_mat;
-    attitude_mat.Identity();
+    attitude_mat.identity();
 
     btScalar    btmat[16];
     btTransform bt_transform;
@@ -73,12 +75,12 @@ btRigidBody* CollisionAspect::Init(void)
 
     for (auto& e : boxcollision_shapes)
     {
-        DrawSpace::Utils::Vector box_dims;
+        DrawSpace::Maths::Vector box_dims;
         box_dims = e->getPurpose().GetPos();
 
         btBoxShape* shape = _DRAWSPACE_NEW_(btBoxShape, btBoxShape(btVector3(box_dims[0], box_dims[1], box_dims[2])));
 
-        Utils::Matrix transf = e->getPurpose().GetTransform();
+        Maths::Matrix transf = e->getPurpose().GetTransform();
 
         m_collisionShapesList.push_back(std::make_pair(shape, transf));
     }
@@ -88,7 +90,7 @@ btRigidBody* CollisionAspect::Init(void)
         dsreal sphere_radius = spherecollision_shapes[0]->getPurpose().GetRay();;
         btSphereShape* shape = _DRAWSPACE_NEW_(btSphereShape, btSphereShape(sphere_radius));
 
-        Utils::Matrix transf = e->getPurpose().GetTransform();
+        Maths::Matrix transf = e->getPurpose().GetTransform();
 
         m_collisionShapesList.push_back(std::make_pair(shape, transf));
     }
@@ -118,7 +120,7 @@ btRigidBody* CollisionAspect::Init(void)
 
         btBvhTriangleMeshShape* shape = _DRAWSPACE_NEW_(btBvhTriangleMeshShape, btBvhTriangleMeshShape(mesh, true, true));
 
-        Utils::Matrix transf = e->getPurpose().GetTransform();
+        Maths::Matrix transf = e->getPurpose().GetTransform();
 
         m_collisionShapesList.push_back(std::make_pair(shape, transf));
 
@@ -286,7 +288,7 @@ void CollisionAspect::convert_matrix_to_bt(const Matrix& p_mat, btScalar* bt_mat
     bt_matrix[15] = p_mat(3, 3);
 }
 
-void CollisionAspect::convert_matrix_from_bt(btScalar* bt_matrix, Utils::Matrix& p_mat)
+void CollisionAspect::convert_matrix_from_bt(btScalar* bt_matrix, Maths::Matrix& p_mat)
 {
     p_mat(0, 0) = bt_matrix[0];
     p_mat(0, 1) = bt_matrix[1];

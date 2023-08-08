@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_SYNCANGLE_H_
-#define _LUACLASS_SYNCANGLE_H_
+#pragma once
 
 #include "timeaspect.h"
 #include "luna.h"
@@ -48,4 +47,3 @@ public:
     static const Luna<LuaClass_SyncAngle>::RegType methods[];
 };
 
-#endif

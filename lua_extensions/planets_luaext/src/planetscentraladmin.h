@@ -24,30 +24,34 @@
 
 #pragma once
 
-#include "drawspace_commons.h"
-#include "crtp_singleton.h"
+#include "ds_types.h"
+#include "singleton.h"
 #include "hub.h"
+#include "logconf.h"
 
 class PlanetsRenderingAspectImpl;
 
-class PlanetsCentralAdmin : public DrawSpace::Utils::BaseSingleton<PlanetsCentralAdmin>
+class PlanetsCentralAdmin : public DrawSpace::Commons::Singleton<PlanetsCentralAdmin>
 {
+	public:
+	PlanetsCentralAdmin(void);
+
+	void Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub);
+	void Unregister(PlanetsRenderingAspectImpl* p_planet);
+
+	void SetLogconf(DrawSpace::Logger::Configuration* p_logconf);
+	DrawSpace::Logger::Configuration* GetLogconf(void) const;
+
 private:
 
 	using SystemsEvtCb = DrawSpace::Core::CallBack2<PlanetsCentralAdmin, void, DrawSpace::Interface::System::Event, dsstring>;
 
 	DrawSpace::Systems::Hub*					m_hub{ nullptr };
+	DrawSpace::Logger::Configuration*			m_logconf{ nullptr };
 	SystemsEvtCb								m_system_evt_cb;
 	std::set<PlanetsRenderingAspectImpl*>		m_planet_renderers;
 
 	void on_system_event(DrawSpace::Interface::System::Event p_event, dsstring p_id);
-	void check_is_planet_relative(PlanetsRenderingAspectImpl* planet_renderer);
-
-public:
-	PlanetsCentralAdmin(void);
-
-	void Register(PlanetsRenderingAspectImpl* p_planet, DrawSpace::Systems::Hub* p_hub);
-	void Unregister(PlanetsRenderingAspectImpl* p_planet);
 
 };
 

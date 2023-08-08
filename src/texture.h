@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TEXTURE_H_
-#define _TEXTURE_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 
 namespace DrawSpace
 {
@@ -36,12 +35,16 @@ class Texture
 {
 public:
 
+    //////////////////////////////////////////////////////////
+    // pour les textures render targets
+
     using RenderPurpose = enum
     {
         RENDERPURPOSE_COLOR,
         RENDERPURPOSE_FLOAT,
         RENDERPURPOSE_FLOAT32,
         RENDERPURPOSE_FLOATVECTOR,
+        RENDERPURPOSE_FLOATVECTOR32,
 
     };
 
@@ -52,6 +55,8 @@ public:
 
     };
 
+    //////////////////////////////////////////////////////////
+    // pour les textures qui ne sont pas des render targets
     using Purpose = enum
     {
         PURPOSE_COLORFROMFILE,
@@ -135,4 +140,3 @@ public:
 }
 }
 
-#endif

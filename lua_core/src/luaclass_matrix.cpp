@@ -29,7 +29,7 @@
 #include "maths.h"
 #include "transformaspect.h"
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 
 const char LuaClass_Matrix::className[] = "Matrix";
@@ -63,13 +63,13 @@ LuaClass_Matrix::~LuaClass_Matrix( void )
 
 int LuaClass_Matrix::LUA_zero( lua_State* p_L )
 {
-    m_matrix.Zero();
+    m_matrix.zero();
     return 0;
 }
 
 int LuaClass_Matrix::LUA_identity( lua_State* p_L )
 {
-    m_matrix.Identity();
+    m_matrix.identity();
     return 0;
 }
 
@@ -85,13 +85,13 @@ int LuaClass_Matrix::LUA_translation( lua_State* p_L )
     dsreal y = luaL_checknumber( p_L, 2 );
     dsreal z = luaL_checknumber( p_L, 3 );
 
-    m_matrix.Translation( x, y, z );
+    m_matrix.translation( x, y, z );
     return 0;
 }
 
 int LuaClass_Matrix::LUA_transpose( lua_State* p_L )
 {
-    m_matrix.Transpose();
+    m_matrix.transpose();
     return 0;
 }
 
@@ -108,7 +108,7 @@ int LuaClass_Matrix::LUA_perspective( lua_State* p_L )
     dsreal zn = luaL_checknumber( p_L, 3 );
     dsreal zf = luaL_checknumber( p_L, 4 );
 
-    m_matrix.Perspective( w, h, zn, zf );
+    m_matrix.perspective( w, h, zn, zf );
     return 0;
 }
 
@@ -124,13 +124,13 @@ int LuaClass_Matrix::LUA_scale( lua_State* p_L )
     dsreal y = luaL_checknumber( p_L, 2 );
     dsreal z = luaL_checknumber( p_L, 3 );
 
-    m_matrix.Scale( x, y, z );
+    m_matrix.scale( x, y, z );
     return 0;
 }
 
 int LuaClass_Matrix::LUA_cleartranslation( lua_State* p_L )
 {
-    m_matrix.ClearTranslation();
+    m_matrix.clearTranslation();
     return 0;
 }
 
@@ -148,14 +148,14 @@ int LuaClass_Matrix::LUA_rotation( lua_State* p_L )
 
     dsreal ang = luaL_checknumber( p_L, 4 );
 
-    m_matrix.Rotation( Vector( x, y, z, 1.0 ), ang );
+    m_matrix.rotation( Vector( x, y, z, 1.0 ), ang );
 
     return 0;
 }
 
 int LuaClass_Matrix::LUA_inverse( lua_State* p_L )
 {
-    m_matrix.Inverse();
+    m_matrix.inverse();
     return 0;
 }
 
@@ -168,7 +168,7 @@ int LuaClass_Matrix::LUA_rotationfromquaternion(lua_State* p_L)
 	}
 
 	LuaClass_Quaternion* lua_quat = Luna<LuaClass_Quaternion>::check(p_L, 1);
-	lua_quat->GetQuaternion().RotationMatFrom(m_matrix);
+	lua_quat->GetQuaternion().rotationMatFrom(m_matrix);
 
 	return 0;
 }
@@ -222,12 +222,12 @@ int LuaClass_Matrix::LUA_storeproduct( lua_State* p_L )
     return 0;
 }
 
-DrawSpace::Utils::Matrix LuaClass_Matrix::GetMatrix( void ) const
+DrawSpace::Maths::Matrix LuaClass_Matrix::GetMatrix( void ) const
 {
     return m_matrix;
 }
 
-void LuaClass_Matrix::SetMatrix(const DrawSpace::Utils::Matrix& p_mat)
+void LuaClass_Matrix::SetMatrix(const DrawSpace::Maths::Matrix& p_mat)
 {
 	m_matrix = p_mat;
 }

@@ -27,6 +27,14 @@ include_directories(${physfs_include_dir})
 include_directories(${assimp_include_dir})
 include_directories(${bullet_include_dir})
 include_directories(${jsonjsmn_include_dir})
+include_directories(${md5_include_dir})
+include_directories(${st_tree_include_dir})
+
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_jsonparser/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
 
 file(
         GLOB_RECURSE
@@ -36,15 +44,11 @@ file(
 		
 )
 
-source_group(logging FILES 
-${CMAKE_SOURCE_DIR}/src/logconf.cpp 
-${CMAKE_SOURCE_DIR}/src/logconf.h
-${CMAKE_SOURCE_DIR}/src/logoutput.h
-${CMAKE_SOURCE_DIR}/src/logsink.cpp 
-${CMAKE_SOURCE_DIR}/src/logsink.h
-${CMAKE_SOURCE_DIR}/src/logoutputfile.cpp 
-${CMAKE_SOURCE_DIR}/src/logoutputfile.h
-${CMAKE_SOURCE_DIR}/src/tracedefs.h
+source_group(commons FILES
+${CMAKE_SOURCE_DIR}/src/ds_types.h
+${CMAKE_SOURCE_DIR}/src/exceptions.h
+${CMAKE_SOURCE_DIR}/src/primitives.h
+${CMAKE_SOURCE_DIR}/src/singleton.h
 )
 
 source_group(aspect FILES 
@@ -206,17 +210,12 @@ ${CMAKE_SOURCE_DIR}/src/runner.cpp
 )
 
 source_group(utils FILES
-${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/file.cpp
 ${CMAKE_SOURCE_DIR}/src/file.h
 ${CMAKE_SOURCE_DIR}/src/filesystem.cpp
 ${CMAKE_SOURCE_DIR}/src/filesystem.h
 ${CMAKE_SOURCE_DIR}/src/jsonparser.cpp
 ${CMAKE_SOURCE_DIR}/src/jsonparser.h
-${CMAKE_SOURCE_DIR}/src/maths.cpp
-${CMAKE_SOURCE_DIR}/src/maths.h
-${CMAKE_SOURCE_DIR}/src/matrix.cpp
-${CMAKE_SOURCE_DIR}/src/matrix.h
 ${CMAKE_SOURCE_DIR}/src/md5.h
 ${CMAKE_SOURCE_DIR}/src/memalloc.cpp
 ${CMAKE_SOURCE_DIR}/src/memalloc.h
@@ -230,13 +229,8 @@ ${CMAKE_SOURCE_DIR}/src/pimanager.h
 ${CMAKE_SOURCE_DIR}/src/pimanager_impl.h
 ${CMAKE_SOURCE_DIR}/src/quadtree.cpp
 ${CMAKE_SOURCE_DIR}/src/quadtree.h
-${CMAKE_SOURCE_DIR}/src/quaternion.cpp
-${CMAKE_SOURCE_DIR}/src/quaternion.h
 ${CMAKE_SOURCE_DIR}/src/timemanager.cpp
 ${CMAKE_SOURCE_DIR}/src/timemanager.h
-${CMAKE_SOURCE_DIR}/src/vector.cpp
-${CMAKE_SOURCE_DIR}/src/vector.h
-${CMAKE_SOURCE_DIR}/src/crtp_singleton.h
 )
 
 add_definitions(-DBT_USE_DOUBLE_PRECISION )

@@ -24,6 +24,11 @@ cmake_minimum_required(VERSION 3.0)
 project(dgent)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_jsonparser/src)
+
+
 include_directories(${jsonjsmn_include_dir})
 
 link_directories(${jsonjsmn_lib_dir})
@@ -37,10 +42,11 @@ file(
 )
 
 add_executable(dgent ${source_files})
-target_link_libraries(dgent jsmn physfs drawspace_core)
+target_link_libraries(dgent jsmn physfs drawspace_core CORE_logger CORE_maths CORE_jsonparser)
 
 install(TARGETS dgent CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS dgent CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS dgent CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 
 install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/dgent/renderingluaext.json OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/dgent/transformluaext.json OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)

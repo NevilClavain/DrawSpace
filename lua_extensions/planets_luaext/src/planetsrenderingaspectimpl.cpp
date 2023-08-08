@@ -35,7 +35,6 @@
 #include "runnersystem.h"
 #include "updatequeuetask.h"
 
-//#include "planetdetailsbinder.h"
 #include <functional>
 
 #include "lod_layer.h"
@@ -43,6 +42,10 @@
 
 #include "collisionaspect.h"
 #include "rigidbodytransformaspectimpl.h"
+
+#include "planetscentraladmin.h"
+
+#include "foliage_config.h"
 
 
 
@@ -52,6 +55,7 @@ using namespace DrawSpace::Aspect;
 using namespace DrawSpace::AspectImplementations;
 using namespace DrawSpace::RenderGraph;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Systems;
 using namespace DrawSpace::EntityGraph;
 
@@ -79,6 +83,8 @@ const dsstring PlanetsRenderingAspectImpl::CollisionDisplayPShaderComponentName 
 // -> Systems::Hub::SYSTEMS_UPDATE_BEGIN
 // -> Systems::Hub::SYSTEMS_UPDATE_END
 
+DrawSpace::Logger::Sink planet_logger("Planet", DrawSpace::Logger::Configuration::getInstance());
+
 
 PlanetsRenderingAspectImpl::PlanetsRenderingAspectImpl( void ) :
 m_hub(NULL),
@@ -95,7 +101,7 @@ m_render_evt_cb(this, &PlanetsRenderingAspectImpl::on_render_event)
     m_renderer = DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Renderer>::GetInstance()->m_interface;
     m_drawable.SetRenderer(m_renderer);
 
-    LOD::Body::BuildMeshes();   
+    LOD::Body::BuildMeshes();
 }
 
 PlanetsRenderingAspectImpl::~PlanetsRenderingAspectImpl(void)
@@ -150,8 +156,10 @@ void PlanetsRenderingAspectImpl::UnregisterFromRendering( DrawSpace::RenderGraph
     release_rendering_objects();
 }
 
-bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager)
+bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager)
 {
+    _DSDEBUG(planet_logger, dsstring("Init"));
+
     if( m_hub )
     {
         std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
@@ -170,11 +178,11 @@ bool PlanetsRenderingAspectImpl::Init(DrawSpace::Core::Entity* p_entity, DrawSpa
 
     m_timemanager = p_timemanager;
 
-    m_timer.SetHandler(&m_timer_cb);
-    m_timer.SetPeriod(LOD::cst::timerPeriod);
-    m_timemanager->RegisterTimer(&m_timer);
+    m_timer.setHandler(&m_timer_cb);
+    m_timer.setPeriod(LOD::cst::timerPeriod);
+    m_timemanager->registerTimer(&m_timer);
 
-    m_timer.SetState(true);
+    m_timer.setState(true);
 
     return true;
 }
@@ -185,7 +193,7 @@ void PlanetsRenderingAspectImpl::Release(void)
     {
         /////////////// release collisions stuff...
         
-        for (auto& camera : m_registered_camerapoints)
+        for (const auto& camera : m_registered_camerapoints)
         {
             for (auto& camera_layer : camera.second.layers)
             {
@@ -198,7 +206,7 @@ void PlanetsRenderingAspectImpl::Release(void)
         //////////////////////////////////////
 
         std::vector<DrawSpace::Interface::System*> systems = m_hub->GetSystems();
-        for (auto& e : systems)
+        for (const auto& e : systems)
         {
             e->UnregisterSystemEvtHandler(&m_system_evt_cb);
         }
@@ -208,45 +216,57 @@ void PlanetsRenderingAspectImpl::Release(void)
             _DRAWSPACE_DELETE_( e );
         }
 
-        for (auto& e : m_planet_collision_binder)
+        for (auto& e : m_heightmap_binder)
         {
             _DRAWSPACE_DELETE_(e);
         }
 
 
-        for (auto& e : m_planet_detail_binder_2)
+        for (const auto& e : m_planet_detail_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 auto binder{ e2 };
                 _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_atmosphere_binder_2)
+        for (const auto& e : m_planet_atmosphere_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 auto binder{ e2 };
                 _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_flatclouds_binder_2)
+        for (const auto& e : m_planet_flatclouds_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
-                _DRAWSPACE_DELETE_(e2);
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
             }
         }
 
-        for (auto& e : m_planet_oceans_binder_2)
+        for (const auto& e : m_planet_oceans_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
-                _DRAWSPACE_DELETE_(e2);
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
             }
         }
+
+        for (auto& e : m_planet_foliage_binder)
+        {
+            for (const auto& e2 : e.second)
+            {
+                auto binder{ e2 };
+                _DRAWSPACE_DELETE_(binder);
+            }
+        }
+
 
         if(m_climate_vshader)
         {
@@ -277,6 +297,14 @@ void PlanetsRenderingAspectImpl::Release(void)
         {
             _DRAWSPACE_DELETE_(m_collisions_display_pshader);
         }
+
+
+        m_planet_detail_binder_2.clear();
+        m_planet_atmosphere_binder_2.clear();
+        m_planet_flatclouds_binder_2.clear();
+        m_planet_oceans_binder_2.clear();
+        m_planet_foliage_binder.clear();
+
     }
     else
     {
@@ -293,25 +321,25 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
         transform_aspect->GetWorldTransform( world );
 
         //std::function
-        const auto light_updater = [](LOD::Binder* p_binder, const Utils::Matrix& p_global_transform)
+        const auto light_updater = [](LOD::Binder* p_binder, const Maths::Matrix& p_global_transform)
         {
             auto planet_final_transform = p_global_transform;
-            planet_final_transform.ClearTranslation();
+            planet_final_transform.clearTranslation();
                         
-            *p_binder << LOD::ShaderFeeder<DrawSpace::Utils::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
+            *p_binder << LOD::ShaderFeeder<DrawSpace::Maths::Matrix>(ShaderType::PIXEL_SHADER, 25, planet_final_transform);
 
-            planet_final_transform.Transpose();
+            planet_final_transform.transpose();
 
             const auto light_flags{ p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 50) };
            
             if (light_flags[1])
             {
-                Utils::Vector light_local_dir, light_dir;
+                Maths::Vector light_local_dir, light_dir;
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 53);
-                light_dir.Normalize();
+                light_dir.normalize();
 
-                planet_final_transform.Transform(&light_dir, &light_local_dir);
-                light_local_dir.Normalize();
+                planet_final_transform.transform(&light_dir, &light_local_dir);
+                light_local_dir.normalize();
 
                 *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 52, light_local_dir);
                 *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 9, light_local_dir);
@@ -319,12 +347,12 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
             if (light_flags[2])
             {
-                Utils::Vector light_local_dir, light_dir;
+                Maths::Vector light_local_dir, light_dir;
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 56);
-                light_dir.Normalize();
+                light_dir.normalize();
 
-                planet_final_transform.Transform(&light_dir, &light_local_dir);
-                light_local_dir.Normalize();
+                planet_final_transform.transform(&light_dir, &light_local_dir);
+                light_local_dir.normalize();
 
                 *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 55, light_local_dir);
                 *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 12, light_local_dir);
@@ -332,12 +360,12 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
             if (light_flags[3])
             {
-                Utils::Vector light_local_dir, light_dir;
+                Maths::Vector light_local_dir, light_dir;
                 light_dir = p_binder->GetShaderFeederValue(ShaderType::VERTEX_SHADER, 59);
-                light_dir.Normalize();
+                light_dir.normalize();
 
-                planet_final_transform.Transform(&light_dir, &light_local_dir);
-                light_local_dir.Normalize();
+                planet_final_transform.transform(&light_dir, &light_local_dir);
+                light_local_dir.normalize();
 
                 *p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 58, light_local_dir);
                 *p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 15, light_local_dir);
@@ -345,33 +373,41 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
         };
 
-        for (auto& e : m_planet_detail_binder_2)
+        for (const auto& e : m_planet_detail_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_atmosphere_binder_2)
+        for (const auto& e : m_planet_atmosphere_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_flatclouds_binder_2)
+        for (const auto& e : m_planet_flatclouds_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
         }
 
-        for (auto& e : m_planet_oceans_binder_2)
+        for (const auto& e : m_planet_oceans_binder_2)
         {
-            for (auto& e2 : e.second)
+            for (const auto& e2 : e.second)
+            {
+                light_updater(e2, world);
+            }
+        }
+
+        for (auto& e : m_planet_foliage_binder)
+        {
+            for (const auto& e2 : e.second)
             {
                 light_updater(e2, world);
             }
@@ -394,9 +430,6 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
 
     if (m_owner->GetComponent<bool>("resources_ready")->getPurpose())
     {
-        // we can prepare permanent sub passes (UpdateOutputQueueNoOpt, FlipOutputQueues, DeclareReady) only if all resources has been loaded
-        prepare_permanent_subpasses();
-
         draw_sub_passes();
     }
     
@@ -407,15 +440,19 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
     ViewOutInfos registeredCameraInfos;
     for(auto& e : m_registered_camerapoints)
     {
-        int currentLOD = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentLOD();
-        bool relative = e.second.layers[LOD::cst::SurfaceLayer]->GetHotState();
-        dsreal rel_alt = 0.0;
-        rel_alt = e.second.relative_alt;
-        dsreal altitude = e.second.layers[LOD::cst::SurfaceLayer]->GetBody()->GetHotPointAltitud();
+        const auto currentLOD{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentLOD() };
+        const auto relative{ e.second.layers[LOD::cst::SurfaceLayer]->GetHotState() };
+        const auto rel_alt{ e.second.relative_alt };
 
-        dsreal current_patch_max_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMaxHeight();
-        dsreal current_patch_min_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMinHeight();
-        dsreal current_patch_current_height = e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchCurrentHeight();
+        const auto altitude{ e.second.layers[LOD::cst::SurfaceLayer]->GetBody()->GetHotPointAltitud() };
+
+        const auto current_patch_max_height{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMaxHeight() };
+        const auto current_patch_min_height{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchMinHeight() };
+        const auto current_patch_current_height{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchCurrentHeight() };
+
+        const auto current_patch_t{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchTemperature() };
+        const auto current_patch_h{ e.second.layers[LOD::cst::SurfaceLayer]->GetCurrentPatchHumidity() };
+
 
         Vector locale_camera_pos{ e.second.locale_camera_pos_from_planet };
         Vector longlat_pos{ e.second.locale_camera_long_lat };
@@ -430,7 +467,8 @@ void PlanetsRenderingAspectImpl::Run( DrawSpace::Core::Entity* p_entity )
                                                             current_patch_current_height, 
                                                             locale_camera_pos,
                                                             longlat_pos,
-                                                            global_camera_pos);
+                                                            global_camera_pos,
+                                                            current_patch_t, current_patch_h);
     }
 
     m_owner->GetComponent<ViewOutInfos>("OUT_viewsInfos")->getPurpose() = registeredCameraInfos;
@@ -463,40 +501,40 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
     // std::function
     const auto lights_updater = [&](LOD::Binder& p_binder)
     {
-        const Utils::Vector light_flags(std::get<0>(ambient), std::get<0>(dir0), std::get<0>(dir1), std::get<0>(dir2));
+        const Maths::Vector light_flags(std::get<0>(ambient), std::get<0>(dir0), std::get<0>(dir1), std::get<0>(dir2));
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 50, light_flags);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 7, light_flags);
 
-        const Utils::Vector ambient_color(std::get<1>(ambient)[0], std::get<1>(ambient)[1], std::get<1>(ambient)[2], 1.0);
+        const Maths::Vector ambient_color(std::get<1>(ambient)[0], std::get<1>(ambient)[1], std::get<1>(ambient)[2], 1.0);
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 51, ambient_color);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 8, ambient_color);
 
 
-        Utils::Vector light_dir_0(-std::get<2>(dir0)[0], -std::get<2>(dir0)[1], -std::get<2>(dir0)[2], 1.0);
-        light_dir_0.Normalize();
+        Maths::Vector light_dir_0(-std::get<2>(dir0)[0], -std::get<2>(dir0)[1], -std::get<2>(dir0)[2], 1.0);
+        light_dir_0.normalize();
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 53, light_dir_0);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 10, light_dir_0);
 
-        const Utils::Vector light_color_0(std::get<1>(dir0)[0], std::get<1>(dir0)[1], std::get<1>(dir0)[2], 1.0);
+        const Maths::Vector light_color_0(std::get<1>(dir0)[0], std::get<1>(dir0)[1], std::get<1>(dir0)[2], 1.0);
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 54, light_color_0);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 11, light_color_0);
 
 
-        Utils::Vector light_dir_1(-std::get<2>(dir1)[0], -std::get<2>(dir1)[1], -std::get<2>(dir1)[2], 1.0);
-        light_dir_1.Normalize();
+        Maths::Vector light_dir_1(-std::get<2>(dir1)[0], -std::get<2>(dir1)[1], -std::get<2>(dir1)[2], 1.0);
+        light_dir_1.normalize();
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 56, light_dir_1);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 13, light_dir_1);
 
-        const Utils::Vector light_color_1(std::get<1>(dir1)[0], std::get<1>(dir1)[1], std::get<1>(dir1)[2], 1.0);
+        const Maths::Vector light_color_1(std::get<1>(dir1)[0], std::get<1>(dir1)[1], std::get<1>(dir1)[2], 1.0);
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 57, light_color_1);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 14, light_color_1);
 
-        Utils::Vector light_dir_2(-std::get<2>(dir2)[0], -std::get<2>(dir2)[1], -std::get<2>(dir2)[2], 1.0);
-        light_dir_2.Normalize();
+        Maths::Vector light_dir_2(-std::get<2>(dir2)[0], -std::get<2>(dir2)[1], -std::get<2>(dir2)[2], 1.0);
+        light_dir_2.normalize();
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 59, light_dir_2);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 16, light_dir_2);
 
-        const Utils::Vector light_color_2(std::get<1>(dir2)[0], std::get<1>(dir2)[1], std::get<1>(dir2)[2], 1.0);
+        const Maths::Vector light_color_2(std::get<1>(dir2)[0], std::get<1>(dir2)[1], std::get<1>(dir2)[2], 1.0);
         p_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 60, light_color_2);
         p_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 17, light_color_2);
 
@@ -504,9 +542,9 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
     ///////////////////////////////////////////////////////////////////////////
    
-    for (auto& e : m_planet_detail_binder_2)
+    for (const auto& e : m_planet_detail_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
 
@@ -520,9 +558,9 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
         }
     }
 
-    for (auto& e : m_planet_atmosphere_binder_2)
+    for (const auto& e : m_planet_atmosphere_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
         }
@@ -530,17 +568,17 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
 
     m_drawable.SetLayerNodeDrawingState(LOD::cst::AtmosphereLayer, enable_atmosphere);
 
-    for (auto& e : m_planet_flatclouds_binder_2)
+    for (const auto& e : m_planet_flatclouds_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
         }
     }
 
-    for (auto& e : m_planet_oceans_binder_2)
+    for (const auto& e : m_planet_oceans_binder_2)
     {
-        for (auto& e2 : e.second)
+        for (const auto& e2 : e.second)
         {
             lights_updater(*e2);
 
@@ -553,6 +591,14 @@ void PlanetsRenderingAspectImpl::ComponentsUpdated(void)
             Vector flags32{ e2->GetShaderFeederValue(ShaderType::PIXEL_SHADER, 32) };
             flags32[1] = oceandetails_specularpower;
             *e2 << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
+        }
+    }
+
+    for (const auto& e : m_planet_foliage_binder)
+    {
+        for (const auto& e2 : e.second)
+        {
+            lights_updater(*e2);
         }
     }
 }
@@ -633,15 +679,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     const auto details_terrain_noise_scale{ m_owner->GetComponent<dsreal>("details_terrain_noise_scale")->getPurpose() };
     const auto level_disturbance_scale{ m_owner->GetComponent<dsreal>("level_disturbance_scale")->getPurpose() };
     const auto details_limit_sup{ m_owner->GetComponent<dsreal>("details_limit_sup")->getPurpose() };
-    const auto bump_details_limit_sup{ m_owner->GetComponent<dsreal>("bump_details_limit_sup")->getPurpose() };
-    const auto ground_bump_details_factor_depth_distance{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_distance")->getPurpose() };
 
-
-    const auto ground_detail_bump_nb_frac_loop{ m_owner->GetComponent<dsreal>("ground_detail_bump_nb_frac_loop")->getPurpose() };
     const auto ultra_details_max_distance{ m_owner->GetComponent<dsreal>("ultra_details_max_distance")->getPurpose() };
-    const auto ground_bump_details_factor_depth_near_d1{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_near_d1")->getPurpose() };
-    const auto ground_bump_details_factor_depth_near_d2{ m_owner->GetComponent<dsreal>("ground_bump_details_factor_depth_near_d2")->getPurpose() };
-    const auto enable_ground_detail_bump{ m_owner->GetComponent<bool>("enable_ground_detail_bump")->getPurpose() };
+
     const auto enable_ultra_detail{ m_owner->GetComponent<bool>("enable_ultra_detail")->getPurpose() };
     const auto enable_ultra_detail_bump{ m_owner->GetComponent<bool>("enable_ultra_detail_bump")->getPurpose() };
     const auto enable_recursive_ultra_detail_textures{ m_owner->GetComponent<bool>("enable_recursive_ultra_detail_textures")->getPurpose() };
@@ -662,12 +702,47 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_gravity_acc = m_owner->GetComponent<dsreal>("gravity_acc")->getPurpose();
 
-    auto rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("rcname_to_passes")->getPurpose() };
-    auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("rcname_to_layer_index")->getPurpose() };
+    const auto planetlayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("planetlayers_rcname_to_passes")->getPurpose() };
 
-    auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("layers_fx")->getPurpose() };
-    auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("layers_textures")->getPurpose() };    
-    auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("layers_ro")->getPurpose() };
+    const auto rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("planetlayers_rcname_to_layer_index")->getPurpose() };
+    const auto layers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("planetlayers_fx")->getPurpose() };
+    const auto layers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("planetlayers_textures")->getPurpose() };    
+    const auto layers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("planetlayers_ro")->getPurpose() };
+
+
+    // foliages
+
+    const auto foliagelayers_rcname_to_passes{ m_owner->GetComponent<std::map<dsstring, std::vector<dsstring>>>("foliagelayers_rcname_to_passes")->getPurpose() };
+
+    const auto foliagelayers_rcname_to_layer_index{ m_owner->GetComponent<std::map<dsstring, int>>("foliagelayers_rcname_to_layer_index")->getPurpose() };
+    const auto foliagelayers_fx{ m_owner->GetComponent<std::vector<std::map<dsstring,Fx*>>>("foliagelayers_fx")->getPurpose() };
+    const auto foliagelayers_textures{ m_owner->GetComponent<std::vector<std::map<dsstring, std::vector<std::array<Texture*, RenderingNode::NbMaxTextures>>>>>("foliagelayers_textures")->getPurpose() };
+    const auto foliagelayers_ro{ m_owner->GetComponent<std::vector<std::map<dsstring, int>>>("foliagelayers_ro")->getPurpose() };
+
+
+    // foliage_meshes
+
+    const auto foliage_meshes{ m_owner->GetComponent<std::map<size_t, DrawSpace::Core::Meshe*>>("foliages_meshes")->getPurpose() };
+
+    const auto foliage_global_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_global_lits")->getPurpose() };
+    const auto foliage_detailed_lits{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_detailed_lits")->getPurpose() };
+
+    const auto foliages_local_seeds{ m_owner->GetComponent<std::map<size_t, bool>>("foliages_local_seeds")->getPurpose() };
+    
+    const auto foliages_temperature_range{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_temperature_range")->getPurpose() };
+    const auto foliages_humidity_range{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_humidity_range")->getPurpose() };
+
+    const auto foliages_nb_poles{ m_owner->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nb_poles")->getPurpose() };
+    const auto foliages_pole_ray{ m_owner->GetComponent<std::map<size_t, std::pair<dsreal, dsreal>>>("foliages_pole_ray")->getPurpose() };
+
+    const auto foliages_nbpoints_per_pole_range{ m_owner->GetComponent<std::map<size_t, std::pair<int, int>>>("foliages_nbpoints_per_pole_range")->getPurpose() };
+
+    const auto foliages_appearances{ m_owner->GetComponent<std::map<size_t, dsreal>>("foliages_appearances")->getPurpose() };
+
+    const auto foliages_altitud_max{ m_owner->GetComponent<std::map<size_t, dsreal>>("foliages_altitud_max")->getPurpose() };
+ 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         
     Shader::SetRootPath(shaders_path);
@@ -687,9 +762,9 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
     
     //////////// Resources ///////////////////////////
 
-    Entity* owner_entity{ m_owner->GetOwnerEntity() };
+    const auto owner_entity{ m_owner->GetOwnerEntity() };
 
-    ResourcesAspect* resources_aspect = owner_entity->GetAspect<ResourcesAspect>();
+    const auto resources_aspect{ owner_entity->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
@@ -754,26 +829,27 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
     m_config.m_landplace_patch = enable_landplace_patch;
 
-    m_config.m_lod0base = LOD::cst::lod0base;
     m_config.m_nbLODRanges_inertBodies = LOD::cst::nbLODRanges_inertBodies;
     m_config.m_nbLODRanges_freeCameras = LOD::cst::nbLODRanges_freeCameras;
 
 
     m_drawable.Startup(m_owner->GetOwnerEntity());
 
-    for (auto& rcp : rcname_to_passes)
+    for (auto& rcp : planetlayers_rcname_to_passes)
     {
         dsstring rendercontextname{ rcp.first };
 
-        int layer{ rcname_to_layer_index[rendercontextname] };
+        const auto layer{ rcname_to_layer_index.at(rendercontextname) };
         LOD::Config::LayerDescriptor ld;
 
         switch (layer)
         {
             case LOD::cst::SurfaceLayer:
 
+                //ld.enable_heighmap_generation = true;
                 ld.enable_collisions = true;
                 ld.enable_datatextures = true;
+                ld.enable_foliage = true;
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -786,63 +862,28 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     climate_binder->SetRenderer(m_renderer);
                     climate_binder->SetFx(&m_climate_fx);
 
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Maths::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Maths::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
 
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(humidity_alt_max, temp_scale, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
-
-
-                    // pour une planete temperee
-
-                    /*
-                    static const dsreal temp_dec_per_km = 8.0;
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(90.0, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.48, 0.87, 0.45, 0.75));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(enable_oceans, 0, 0, 0));
-                    * 
-                    */
-                    
-                                        
-                    // pour une planete aride sans oceans
-                    /*
-                    static const dsreal temp_dec_per_km = 2.0;
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(0.0, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.25, 0.33, 0.85, 0.99));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(false, 0, 0, 0));
-                    */
-
-
-                    // pour une planete desertique avec oceans, et un peu d'humidit�
-                    /*
-                    static const dsreal temp_dec_per_km = 4.0;
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Utils::Vector(10.0, 0.0, temp_dec_per_km, beach_limit));
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Utils::Vector(0.40, 0.42, 0.85, 0.99));
-
-                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Utils::Vector(true, 0, 0, 0));
-                    */
-
-
-
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, Maths::Vector(humidity_alt_max, temp_scale, temp_dec_per_km, beach_limit));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, Maths::Vector(lim_polar, lim_tropical, k_polar, k_tropical));
+                    *climate_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, Maths::Vector(enable_oceans, 0, 0, 0));
 
                     ld.patchTexturesBinder[i] = climate_binder;
                     m_planet_climate_binder[i] = climate_binder;
 
 
 
-                    LOD::Binder* collisions_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
-                    collisions_binder->SetRenderer(m_renderer);
-                    collisions_binder->SetFx(&m_collisions_fx);
+                    LOD::Binder* heighmap_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+                    heighmap_binder->SetRenderer(m_renderer);
+                    heighmap_binder->SetFx(&m_collisions_fx);
 
-                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
-                    *collisions_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+                    *heighmap_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Maths::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+                    *heighmap_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Maths::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
-                    ld.groundCollisionsBinder[i] = collisions_binder;
-                    m_planet_collision_binder[i] = collisions_binder;
+                    ld.heightmapGenerationBinder[i] = heighmap_binder;
+                    m_heightmap_binder[i] = heighmap_binder;
 
                 }
 
@@ -850,15 +891,18 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 break;
 
             case LOD::cst::AtmosphereLayer:
+
+                //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
+                ld.enable_foliage = false;
                 ld.enable_lod = false;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray + atmo_thickness;
                 ld.description = "Atmosphere Layer";
                 for (int i = 0; i < 6; i++)
                 {
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.heightmapGenerationBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = NULL;
                 }
 
@@ -866,8 +910,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 break;
 
             case LOD::cst::FlatCloudsLayer:
+
+                //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
+                ld.enable_foliage = false;
                 ld.enable_lod = false;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray + flatclouds_altitude;
@@ -875,7 +922,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int i = 0; i < 6; i++)
                 {
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.heightmapGenerationBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = NULL;
                 }
 
@@ -883,8 +930,11 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                 break;
 
             case LOD::cst::OceansLayer:
+
+                //ld.enable_heighmap_generation = false;
                 ld.enable_collisions = false;
                 ld.enable_datatextures = false;
+                ld.enable_foliage = false;
                 ld.enable_lod = true;
                 ld.min_lodlevel = 0;
                 ld.ray = planet_ray;
@@ -892,7 +942,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
                 for (int i = 0; i < 6; i++)
                 {
-                    ld.groundCollisionsBinder[i] = NULL;
+                    ld.heightmapGenerationBinder[i] = NULL;
                     ld.patchTexturesBinder[i] = NULL;
                 }
 
@@ -901,52 +951,52 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
         }
 
 
-        auto    ros_map{ layers_ro[rcname_to_layer_index[rendercontextname]] };
-        auto    fxs_map{ layers_fx[rcname_to_layer_index[rendercontextname]] };
-        auto    textures_map{ layers_textures[rcname_to_layer_index[rendercontextname]] };
+        const auto      ros_map{ layers_ro.at(layer) };
+        const auto      fxs_map{ layers_fx.at(layer) };
+        const auto      textures_map{ layers_textures.at(layer) };
 
-        int     ro{ ros_map.at(rendercontextname) };
-        Fx*     fx{ fxs_map.at(rendercontextname) };
-        auto    textures{ textures_map.at(rendercontextname) };
+        const auto      ro{ ros_map.at(rendercontextname) };
+        const auto      fx{ fxs_map.at(rendercontextname) };
+        const auto      textures{ textures_map.at(rendercontextname) };
 
         std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
         if (textures.size() > 0)
         {
-            pass_textures = textures[0];
+            pass_textures = textures.at(0);
         }
 
 
 
         // std::function
-        const auto build_details_binder = [&](bool p_enable_atmosphere = false)
+        const auto build_details_binder{ [&](bool p_enable_atmosphere = false) -> LOD::Binder*
         {
             LOD::Binder* details_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
 
             details_binder->SetFx(fx);
             details_binder->SetRenderer(m_renderer);
 
-            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Utils::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
-            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Utils::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 40, Maths::Vector(plains_amplitude, mountains_amplitude, vertical_offset, mountains_offset));
+            *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 41, Maths::Vector(plains_seed1, plains_seed2, mix_seed1, mix_seed2));
 
             static const dsreal innerRadius{ planet_ray * 1000.0 };
             static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
 
-            const Utils::Vector atmo_flags(outerRadius, innerRadius, outerRadius* outerRadius, innerRadius* innerRadius);
+            const Maths::Vector atmo_flags(outerRadius, innerRadius, outerRadius * outerRadius, innerRadius * innerRadius);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 18, atmo_flags);
 
             static const dsreal scaleDepth{ 0.25 };
-            const Utils::Vector atmo_flags_1(scaleDepth, 1.0 / scaleDepth, 1.0 / (outerRadius - innerRadius), (1.0 / (outerRadius - innerRadius)) / scaleDepth);
+            const Maths::Vector atmo_flags_1(scaleDepth, 1.0 / scaleDepth, 1.0 / (outerRadius - innerRadius), (1.0 / (outerRadius - innerRadius)) / scaleDepth);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, atmo_flags_1);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 19, atmo_flags_1);
 
-            const Utils::Vector waveLength(0.650, 0.570, 0.475, 0.0);
-            const Utils::Vector atmo_flags_2((1.0 / pow(waveLength[0], 4.0)), (1.0 / pow(waveLength[1], 4.0)), (1.0 / pow(waveLength[2], 4.0)), 0.0);
+            const Maths::Vector waveLength(0.650, 0.570, 0.475, 0.0);
+            const Maths::Vector atmo_flags_2((1.0 / pow(waveLength[0], 4.0)), (1.0 / pow(waveLength[1], 4.0)), (1.0 / pow(waveLength[2], 4.0)), 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 44, atmo_flags_2);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 20, atmo_flags_2);
 
             static const dsreal atmoKm{ 0.0010 };
-            const Utils::Vector atmo_flags_3(atmo_kr, atmoKm, 4.0 * atmo_kr * 3.1415927, 4.0 * atmoKm * 3.1415927);
+            const Maths::Vector atmo_flags_3(atmo_kr, atmoKm, 4.0 * atmo_kr * 3.1415927, 4.0 * atmoKm * 3.1415927);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 45, atmo_flags_3);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 21, atmo_flags_3);
 
@@ -954,53 +1004,53 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             static const dsreal skyfromatmo_ESun{ 70.0 };
             static const dsreal groundfromspace_ESun{ 24.0 };
             static const dsreal groundfromatmo_ESun{ 12.0 };
-            const Utils::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
+            const Maths::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_4);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_4);
 
-            
-            const Utils::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, (p_enable_atmosphere ? 1.0 : 0.0));
+
+            const Maths::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, (p_enable_atmosphere ? 1.0 : 0.0));
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
-            
+
 
             // couleurs fog "sol"
-            const Utils::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
+            const Maths::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
 
             static const dsreal ocean_details_alt{ 1.0010 };
-            const Utils::Vector flags6(splat_texture_resol, splat_transition_up_relative_alt, splat_transition_down_relative_alt, ocean_details_alt);
+            const Maths::Vector flags6(splat_texture_resol, splat_transition_up_relative_alt, splat_transition_down_relative_alt, ocean_details_alt);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 62, flags6);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 6, flags6);
 
-            const Utils::Vector mirror_flag(0.0, innerRadius, 0.0, 0.0);
+            const Maths::Vector mirror_flag(0.0, innerRadius, 0.0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 61, mirror_flag);
 
 
-            const Utils::Vector flags63(enable_oceans, 0.0, 0.0, 0.0);
+            const Maths::Vector flags63(enable_oceans, 0.0, 0.0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 63, flags63);
 
-            const Utils::Vector water_bump_flags(wave_pass_resol, ocean_bump_factor, 0, 0);
+            const Maths::Vector water_bump_flags(wave_pass_resol, ocean_bump_factor, 0, 0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 30, water_bump_flags);
 
-            const Utils::Vector terrain_bump_flag(terrainbump_factor, details_terrain_bump_bias, details_terrain_noise_scale, level_disturbance_scale);
+            const Maths::Vector terrain_bump_flag(terrainbump_factor, details_terrain_bump_bias, details_terrain_noise_scale, level_disturbance_scale);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 31, terrain_bump_flag);
 
-            const Utils::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
+            const Maths::Vector flags32(enable_oceans, oceandetails_specularpower, 0.0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 32, flags32);
 
-            Vector details_flags(details_limit_sup, bump_details_limit_sup, ground_bump_details_factor_depth_distance, 0.0);
+            Vector details_flags(details_limit_sup, 0, 0, 0.0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 33, details_flags);
 
-            Vector details_flags2(ground_detail_bump_nb_frac_loop, ultra_details_max_distance, ground_bump_details_factor_depth_near_d1, ground_bump_details_factor_depth_near_d2);
+            Vector details_flags2(0, ultra_details_max_distance, 0, 0);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 34, details_flags2);
 
-            Vector details_settings(enable_ground_detail_bump, enable_ultra_detail, enable_ultra_detail_bump, enable_recursive_ultra_detail_textures);
+            Vector details_settings(0.0, enable_ultra_detail, enable_ultra_detail_bump, enable_recursive_ultra_detail_textures);
             *details_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 35, details_settings);
 
             return details_binder;
-        };
+        } };
 
        
         for (auto& pass_id : rcp.second)
@@ -1009,7 +1059,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
 
             if (LOD::cst::SurfaceLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> details_binders;
                 std::array<LOD::Binder*, 6> details_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
@@ -1020,7 +1069,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         details_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::SurfaceLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, details_binder, orientation, LOD::Body::MesheType::LOWRES_SKIRT_MESHE, LOD::cst::SurfaceLayer, ro);
                     details_binders_2[orientation] = details_binder;
                 }
 
@@ -1033,13 +1082,12 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
             else if (LOD::cst::AtmosphereLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> atmo_binders;
                 std::array<LOD::Binder*, 6> atmo_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
                 {
                     LOD::Binder* atmo_binder{ build_details_binder() };
-                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::HIRES_MESHE, LOD::cst::AtmosphereLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, atmo_binder, orientation, LOD::Body::MesheType::HIRES_MESHE, LOD::cst::AtmosphereLayer, ro);
                     atmo_binders_2[orientation] = atmo_binder;
                 }
 
@@ -1047,7 +1095,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
             else if (LOD::cst::FlatCloudsLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> flatclouds_binders;
                 std::array<LOD::Binder*, 6>         flatclouds_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
@@ -1058,7 +1105,7 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                         clouds_binder->SetTexture(pass_textures[stage], stage);
                     }
 
-                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::AVGRES_MESHE, LOD::cst::FlatCloudsLayer, ro);
+                    m_drawable.RegisterSinglePassSlot(pass_id, clouds_binder, orientation, LOD::Body::MesheType::AVGRES_MESHE, LOD::cst::FlatCloudsLayer, ro);
                     flatclouds_binders_2[orientation] = clouds_binder;
 
                 }
@@ -1067,7 +1114,6 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
             else if (LOD::cst::OceansLayer == layer)
             {
-                std::array<PlanetDetailsBinder*, 6> oceans_binders;
                 std::array<LOD::Binder*, 6>         oceans_binders_2;
 
                 for (int orientation = 0; orientation < 6; orientation++)
@@ -1078,17 +1124,17 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
                     {
                         oceans_binder->SetTexture(wavepass_result_texture, 0);
 
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::MesheType::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
                     else if (m_oceanmask_pass == pass_id)
                     {
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro, 1);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::MesheType::LOWRES_SKIRT_MESHE, LOD::cst::OceansLayer, ro, 1);
                     }
                     else
                     {
                         // Ocean details specular 
 
-                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
+                        m_drawable.RegisterSinglePassSlot(pass_id, oceans_binder, orientation, LOD::Body::MesheType::LOWRES_MESHE, LOD::cst::OceansLayer, ro);
                     }
 
                     oceans_binders_2[orientation] = oceans_binder;
@@ -1098,6 +1144,143 @@ void PlanetsRenderingAspectImpl::init_rendering_objects(void)
             }
         }
     }
+
+
+    for (auto& rcp : foliagelayers_rcname_to_passes)
+    {
+        dsstring rendercontextname{ rcp.first };        
+        const auto foliage_layer{ foliagelayers_rcname_to_layer_index.at(rendercontextname) };
+
+        const auto      ros_map{ foliagelayers_ro.at(foliage_layer) };
+        const auto      fxs_map{ foliagelayers_fx.at(foliage_layer) };
+        const auto      textures_map{ foliagelayers_textures.at(foliage_layer) };
+
+        const auto      ro{ ros_map.at(rendercontextname) };
+        const auto      fx{ fxs_map.at(rendercontextname) };
+        const auto      textures{ textures_map.at(rendercontextname) };
+
+        std::array<Texture*, RenderingNode::NbMaxTextures> pass_textures;
+        if (textures.size() > 0)
+        {
+            pass_textures = textures.at(0);
+        }
+
+
+        //////////// foliages
+
+        const auto build_foliage_binder{ [&](void) -> LOD::Binder*
+        {
+            LOD::Binder* foliage_binder{ _DRAWSPACE_NEW_(LOD::Binder, LOD::Binder) };
+
+            foliage_binder->SetFx(fx);
+            foliage_binder->SetRenderer(m_renderer);
+
+            static const dsreal innerRadius{ planet_ray * 1000.0 };
+            static const dsreal outerRadius{ innerRadius + (atmo_thickness * 1000.0) };
+
+            const Maths::Vector atmo_flags(outerRadius, innerRadius, outerRadius* outerRadius, innerRadius* innerRadius);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 42, atmo_flags);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 18, atmo_flags);
+
+            static const dsreal scaleDepth{ 0.25 };
+            const Maths::Vector atmo_flags_1(scaleDepth, 1.0 / scaleDepth, 1.0 / (outerRadius - innerRadius), (1.0 / (outerRadius - innerRadius)) / scaleDepth);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 43, atmo_flags_1);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 19, atmo_flags_1);
+
+            const Maths::Vector waveLength(0.650, 0.570, 0.475, 0.0);
+            const Maths::Vector atmo_flags_2((1.0 / pow(waveLength[0], 4.0)), (1.0 / pow(waveLength[1], 4.0)), (1.0 / pow(waveLength[2], 4.0)), 0.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 44, atmo_flags_2);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 20, atmo_flags_2);
+
+            static const dsreal atmoKm{ 0.0010 };
+            const Maths::Vector atmo_flags_3(atmo_kr, atmoKm, 4.0 * atmo_kr * 3.1415927, 4.0 * atmoKm * 3.1415927);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 45, atmo_flags_3);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 21, atmo_flags_3);
+
+            static const dsreal skyfromspace_ESun{ 8.7 };
+            static const dsreal skyfromatmo_ESun{ 70.0 };
+            static const dsreal groundfromspace_ESun{ 24.0 };
+            static const dsreal groundfromatmo_ESun{ 12.0 };
+            const Maths::Vector atmo_flags_4(skyfromspace_ESun, skyfromatmo_ESun, groundfromspace_ESun, groundfromatmo_ESun);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 46, atmo_flags_4);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 22, atmo_flags_4);
+
+
+            const Maths::Vector atmo_flags_5(3.5 * atmo_thickness * 1000.0, fog_alt_limit, fog_density, 0.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 47, atmo_flags_5);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 23, atmo_flags_5);
+
+
+            // couleurs fog "sol"
+            const Maths::Vector atmo_flags_6(0.45, 0.63, 0.78, 1.0);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::VERTEX_SHADER, 48, atmo_flags_6);
+            *foliage_binder << LOD::ShaderFeeder(ShaderType::PIXEL_SHADER, 24, atmo_flags_6);
+
+
+
+            return foliage_binder;
+        }};
+
+
+
+        const auto meshe{ foliage_meshes.at(foliage_layer) };
+        const auto global_lit{ foliage_global_lits.at(foliage_layer) };
+        const auto detailed_lit{ foliage_detailed_lits.at(foliage_layer) };
+
+        const auto local_seed{ foliages_local_seeds.at(foliage_layer) };
+
+
+        FoliageConfig foliage_config;
+
+        foliage_config.foliages_global_lits = global_lit;
+        foliage_config.foliages_detailed_lits = detailed_lit;
+        foliage_config.foliages_local_seeds = local_seed;
+        foliage_config.foliages_meshes = meshe;
+        
+        
+        foliage_config.temperature_range_min = foliages_temperature_range.at(foliage_layer).first;
+        foliage_config.temperature_range_max = foliages_temperature_range.at(foliage_layer).second;
+
+        foliage_config.humidity_range_min = foliages_humidity_range.at(foliage_layer).first;
+        foliage_config.humidity_range_max = foliages_humidity_range.at(foliage_layer).second;
+        
+        foliage_config.nb_poles_min = foliages_nb_poles.at(foliage_layer).first;
+        foliage_config.nb_poles_max = foliages_nb_poles.at(foliage_layer).second;
+
+        foliage_config.pole_ray_min = foliages_pole_ray.at(foliage_layer).first;
+        foliage_config.pole_ray_max = foliages_pole_ray.at(foliage_layer).second;
+
+        foliage_config.nbpoints_per_pole_min = foliages_nbpoints_per_pole_range.at(foliage_layer).first;
+        foliage_config.nbpoints_per_pole_max = foliages_nbpoints_per_pole_range.at(foliage_layer).second;
+
+        foliage_config.appearance = foliages_appearances.at(foliage_layer);
+
+        foliage_config.altitud_max = foliages_altitud_max.at(foliage_layer);
+
+        for (auto& pass_id : rcp.second)
+        {
+            m_passes.insert(pass_id);
+
+            LOD::Binder* foliage_binder{ build_foliage_binder() };
+            for (size_t stage = 0; stage < pass_textures.size(); stage++)
+            {
+                foliage_binder->SetTexture(pass_textures[stage], stage);
+            }
+
+            m_drawable.RegisterFoliageSinglePassSlot(pass_id, foliage_binder, ro, foliage_layer, foliage_config);
+            
+            if (0 == m_planet_foliage_binder.count(pass_id))
+            {
+                m_planet_foliage_binder[pass_id].push_back( foliage_binder );
+            }
+            else
+            {
+                m_planet_foliage_binder.at(pass_id).push_back(foliage_binder);
+            }
+        }
+    }
+
+    ////////////////////////
 
     ComponentsUpdated();
     
@@ -1147,8 +1330,7 @@ void PlanetsRenderingAspectImpl::on_system_event(DrawSpace::Interface::System::E
                 manage_gravity_targets();
             }
             else if (DrawSpace::Interface::System::Event::SYSTEM_RUN_END == p_event)
-            {
-                //manage_bodies();
+            {                
                 manage_camerapoints();
             }
         }
@@ -1170,15 +1352,24 @@ void PlanetsRenderingAspectImpl::on_cameras_event(DrawSpace::EntityGraph::Entity
         {
             m_current_camera = &m_registered_camerapoints.at(cam_name);
 
+            std::vector<LOD::Layer*> layers;
+            for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
+            {
+                layers.push_back(m_registered_camerapoints[cam_name].layers[i]);
+            }
+            m_drawable.SetLayers(layers);
+
+            /*
+            
             std::vector<LOD::Body*> planet_bodies;
 
             for (size_t i = 0; i < m_registered_camerapoints[cam_name].layers.size(); i++)
             {
-                LOD::Layer* layer = m_registered_camerapoints[cam_name].layers[i];
-
+                const auto layer{ m_registered_camerapoints[cam_name].layers[i] };
                 planet_bodies.push_back(layer->GetBody());
             }
             m_drawable.SetCurrentPlanetBodies(planet_bodies);
+            */
         }
     }
 }
@@ -1192,7 +1383,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
         CameraAspect* camera_aspect                 { p_entity->GetAspect<CameraAspect>() };
         TransformAspect* transformation_aspect      { p_entity->GetAspect<TransformAspect>() };
        
-        if (DrawSpace::EntityGraph::EntityNode::ADDED_IN_TREE == p_event)
+        if (DrawSpace::EntityGraph::EntityNode::Event::ADDED_IN_TREE == p_event)
         {
             if (camera_aspect)
             {
@@ -1250,7 +1441,7 @@ void PlanetsRenderingAspectImpl::on_nodes_event(DrawSpace::EntityGraph::EntityNo
     }
 }
 
-void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Utils::Timer* p_timer)
+void PlanetsRenderingAspectImpl::on_timer(DrawSpace::Timer* p_timer)
 {
     if (m_singleshot_subpasses_stack.size() > 0)
     {
@@ -1265,18 +1456,36 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
 
     if (m_singleshot_subpasses_stack.size() > 0)
     {
-        LOD::SubPass* sp = m_singleshot_subpasses_stack.back();
-        if (sp->GetTimerReadyFlag())
+        const auto sp{ m_singleshot_subpasses_stack.back() };
+        if (sp->IsRequestedForAbortion())
         {
-            m_singleshot_subpasses_stack.pop_back();
+            sp->SubPassAborted();
+        }
+        else
+        {
+            if (sp->GetTimerReadyFlag())
+            {
+                m_singleshot_subpasses_stack.pop_back();
 
-            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };            
-            rendering_queue->UpdateOutputQueueNoOpt();
-            rendering_queue->FlipOutputQueues();
-            rendering_queue->DeclareReady();
-            
-            sp->DrawSubPass();
-            sp->SubPassDone();
+                /*
+                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+                rendering_queue->UpdateOutputQueueNoOpt();
+                rendering_queue->FlipOutputQueues();
+                rendering_queue->DeclareReady();
+                */
+
+
+                for (const auto s : sp->GetPassList())
+                {
+                    RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                    rendering_queue->UpdateOutputQueueNoOpt();
+                    rendering_queue->FlipOutputQueues();
+                    rendering_queue->DeclareReady();
+                }
+
+                sp->DrawSubPass();
+                sp->SubPassDone();
+            }
         }
     }
 
@@ -1291,9 +1500,17 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         for (auto& e : m_singleshot_subpasses)
         {
             LOD::SubPass* sp = e;
-            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
 
+            /*
+            RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
             singleshot_subpasses_sequence_id = singleshot_subpasses_sequence_id + rendering_queue->GetId() + dsstring("/");
+            */
+
+            for (const auto s : sp->GetPassList())
+            {
+                RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                singleshot_subpasses_sequence_id = singleshot_subpasses_sequence_id + rendering_queue->GetId() + dsstring("/");
+            }
         }
         
         singleshot_subpasses_sequence_step.AddComponent<LOD::SubPass::singleshot_subpasses>("singleshot_subpasses_queues", m_singleshot_subpasses);
@@ -1313,9 +1530,17 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
             for (auto& e : singleshot_subpasses)
             {
                 LOD::SubPass* sp = e;
-                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
 
+                /*
+                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
                 queues.push_back(rendering_queue);
+                */
+
+                for (const auto s : sp->GetPassList())
+                {
+                    RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                    queues.push_back(rendering_queue);
+                }
             }
 
             task->SetTargetDescr(sequence_id);
@@ -1333,14 +1558,30 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
 
             for (auto& e : singleshot_subpasses)
             {
-                LOD::SubPass* sp = e;
-                RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+                const auto sp{ e };
 
-                rendering_queue->FlipOutputQueues();
-                rendering_queue->DeclareReady();
+                if (sp->IsRequestedForAbortion())
+                {
+                    sp->SubPassAborted();
+                }
+                else
+                {
+                    /*
+                    RenderingQueue* rendering_queue{ sp->GetPass()->GetRenderingQueue() };
+                    rendering_queue->FlipOutputQueues();
+                    rendering_queue->DeclareReady();
+                    */
 
-                sp->DrawSubPass();
-                sp->SubPassDone();
+                    for (const auto s : sp->GetPassList())
+                    {
+                        RenderingQueue* rendering_queue{ s->GetRenderingQueue() };
+                        rendering_queue->FlipOutputQueues();
+                        rendering_queue->DeclareReady();
+                    }
+
+                    sp->DrawSubPass();
+                    sp->SubPassDone();
+                }
             }
 
             UpdateQueueTask* task{ static_cast<UpdateQueueTask*>(p_step.GetTask()) };
@@ -1357,26 +1598,6 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
         singleshot_subpasses_sequence.SetCurrentStep(dsstring("singleshot_subpasses_sequence_step"));
         runner_system.RegisterSequence(singleshot_subpasses_sequence_id, singleshot_subpasses_sequence);
     }
-
-    for (size_t i = 0; i < m_permanent_subpasses.size(); i++)
-    {
-        LOD::SubPass* sp{ m_permanent_subpasses[i] };
-        sp->DrawSubPass();
-        sp->SubPassDone();
-    }
-}
-
-void PlanetsRenderingAspectImpl::prepare_permanent_subpasses(void)
-{
-    for (auto& e : m_m_permanent_subpasses_to_prepare)
-    {
-        LOD::SubPass* sp = e;
-
-        sp->GetPass()->GetRenderingQueue()->UpdateOutputQueueNoOpt();
-        sp->GetPass()->GetRenderingQueue()->FlipOutputQueues();
-        sp->GetPass()->GetRenderingQueue()->DeclareReady();
-    }
-    m_m_permanent_subpasses_to_prepare.clear();
 }
 
 void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_name, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape p_shape, bool p_addcomponent)
@@ -1386,7 +1607,8 @@ void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_nam
         m_entitynodegraph->UnregisterCollider(m_owner_entity);
     }
     
-    DrawSpace::Aspect::CollisionAspect* collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+    const auto collision_aspect{ m_owner_entity->GetAspect<CollisionAspect>() };
+
     if (p_addcomponent)
     {
         if (!collision_aspect->GetComponent<CollisionAspect::MesheCollisionShape>(component_name))
@@ -1419,18 +1641,27 @@ void PlanetsRenderingAspectImpl::on_collisionmeshe_update(dsstring component_nam
 
 LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::SubPass* p_pass, LOD::SubPass::Destination p_dest)
 {
+    /*
     LOD::FaceDrawingNode* node = static_cast<LOD::FaceDrawingNode*>(p_pass->GetNode());
     node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
     // on ajoute le node a la queue directement ici
     p_pass->GetPass()->GetRenderingQueue()->Add(node);
+    */
 
     
-    if (LOD::SubPass::PERMANENT_SUBPASS == p_dest)
-    {        
-        m_m_permanent_subpasses_to_prepare.push_back(p_pass);
+    const auto node_list{ p_pass->GetNodeList() };
+    const auto pass_list{ p_pass->GetPassList() };
+
+    for (size_t i = 0; i < node_list.size(); i++)
+    {
+        const auto node = static_cast<LOD::FaceDrawingNode*>(node_list.at(i));
+        node->RegisterHandler(m_drawable.GetSingleNodeDrawHandler());
+        // on ajoute le node a la queue directement ici
+        pass_list.at(i)->GetRenderingQueue()->Add(node);
     }
     
-    ResourcesAspect* resources_aspect = m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>();
+       
+    const auto resources_aspect{ m_owner->GetOwnerEntity()->GetAspect<ResourcesAspect>() };
     if (!resources_aspect)
     {
         _DSEXCEPTION("Planet : resources aspect required for planet entity")
@@ -1440,32 +1671,26 @@ LOD::SubPass::EntryInfos PlanetsRenderingAspectImpl::on_subpasscreation(LOD::Sub
     
     ei.singleshot_subpasses_stack = &m_singleshot_subpasses_stack;
     ei.singleshot_subpasses = &m_singleshot_subpasses;
-    ei.permanent_subpasses = &m_permanent_subpasses;
 
     switch (p_dest)
     {
-        case LOD::SubPass::DELAYED_SINGLE_SUBPASS:
+        case LOD::SubPass::Destination::DELAYED_SINGLE_SUBPASS:
             m_singleshot_subpasses_stack.push_front(p_pass);
             ei.singleshot_subpasses_stack_position = m_singleshot_subpasses_stack.begin();
             p_pass->SetTimerReadyFlag( false );
             break;
 
-        case LOD::SubPass::IMMEDIATE_SINGLE_SUBPASS:
+        case LOD::SubPass::Destination::IMMEDIATE_SINGLE_SUBPASS:
             m_singleshot_subpasses.push_back(p_pass);
             ei.singleshot_subpasses_position = m_singleshot_subpasses.end();
             --ei.singleshot_subpasses_position;
-            break;
-
-        case LOD::SubPass::PERMANENT_SUBPASS:
-            m_permanent_subpasses.push_back(p_pass);
-            ei.permanent_subpasses_position = m_permanent_subpasses.end() - 1;
             break;
 
         default:
             _DSEXCEPTION("unknow destination for subpass");
             break;
     }
-    ei.queue_id = p_dest;
+    ei.queue_id = static_cast<int>(p_dest);
     
     return ei;
 }
@@ -1592,8 +1817,8 @@ void PlanetsRenderingAspectImpl::manage_gravity_targets(void)
                 // gravity vector : from rigid body pos to planet center (which is 0,0,0 in planet physic world)
                 Vector grav_to_planet(-m(3, 0), -m(3, 1), -m(3, 2), 1.0);
 
-                grav_to_planet.Normalize();
-                grav_to_planet.Scale(m_gravity_acc);
+                grav_to_planet.normalize();
+                grav_to_planet.scale(m_gravity_acc);
 
                 dsstring gravity_force_comp_name{ dsstring("planet_gravity_") + std::to_string( (int)this )};
 
@@ -1635,7 +1860,7 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
     planet_world_inv(3, 2) = 0.0;
 
     // matrix inversion
-    planet_world_inv.Inverse();
+    planet_world_inv.inverse();
 
     for(auto& camera: m_registered_camerapoints)
     {
@@ -1647,29 +1872,29 @@ void PlanetsRenderingAspectImpl::manage_camerapoints(void)
             Matrix camera_world;
             camera_transform_aspect->GetWorldTransform(camera_world);
 
-            DrawSpace::Utils::Vector camera_pos_from_planet;
+            DrawSpace::Maths::Vector camera_pos_from_planet;
             camera_pos_from_planet[0] = camera_world(3, 0) - planet_world(3, 0);
             camera_pos_from_planet[1] = camera_world(3, 1) - planet_world(3, 1);
             camera_pos_from_planet[2] = camera_world(3, 2) - planet_world(3, 2);
             camera_pos_from_planet[3] = 1.0;
 
 
-            DrawSpace::Utils::Vector locale_camera_pos_from_planet;
+            DrawSpace::Maths::Vector locale_camera_pos_from_planet;
 
-            planet_world_inv.Transform(&camera_pos_from_planet, &locale_camera_pos_from_planet);
+            planet_world_inv.transform(&camera_pos_from_planet, &locale_camera_pos_from_planet);
 
-            dsreal rel_alt = (locale_camera_pos_from_planet.Length() / m_planet_ray);
+            dsreal rel_alt = (locale_camera_pos_from_planet.length() / m_planet_ray);
 
             camera.second.relative_alt_valid = true;
             camera.second.relative_alt = rel_alt;
 
             camera.second.locale_camera_pos_from_planet = locale_camera_pos_from_planet;
             Vector spherical;
-            Maths::CartesiantoSpherical(locale_camera_pos_from_planet, spherical);
+            Maths::cartesiantoSpherical(locale_camera_pos_from_planet, spherical);
 
             camera.second.locale_camera_long_lat[0] = spherical[0];
-            camera.second.locale_camera_long_lat[1] = Utils::Maths::RadToDeg( spherical[1] );
-            camera.second.locale_camera_long_lat[2] = Utils::Maths::RadToDeg( spherical[2] );
+            camera.second.locale_camera_long_lat[1] = Maths::radToDeg( spherical[1] );
+            camera.second.locale_camera_long_lat[2] = Maths::radToDeg( spherical[2] );
 
             camera.second.global_camera_pos_from_planet = camera_pos_from_planet;
 
@@ -1883,7 +2108,7 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 {
                     if (LOD::cst::OceansLayer == node.second->GetLayerIndex())
                     {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_MAXLODLEVEL, 3);
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DrawPatchMode::DRAW_MAXLODLEVEL, 3);
                     }
                 }
             }            
@@ -1912,11 +2137,10 @@ void PlanetsRenderingAspectImpl::oceans_control_from_viewer_alt(void)
                 {
                     if (LOD::cst::OceansLayer == node.second->GetLayerIndex())
                     {
-                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DRAW_ALL);
+                        node.second->SetDrawPatchMode(LOD::FaceDrawingNode::DrawPatchMode::DRAW_ALL);
                     }
                 }
             }
-
         }
     }
     else

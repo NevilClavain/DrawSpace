@@ -31,7 +31,7 @@ class LuaClass_Quaternion
 {
 protected:
 
-	DrawSpace::Utils::Quaternion        m_quat;
+	DrawSpace::Maths::Quaternion        m_quat;
 
 public:
 	LuaClass_Quaternion(lua_State* p_L);
@@ -46,8 +46,8 @@ public:
 	int LUA_rotationmatfrom(lua_State* p_L);
 
 
-	DrawSpace::Utils::Quaternion GetQuaternion(void) const;
-	void SetQuaternion(const DrawSpace::Utils::Quaternion& p_quat);
+	DrawSpace::Maths::Quaternion GetQuaternion(void) const;
+	void SetQuaternion(const DrawSpace::Maths::Quaternion& p_quat);
 
 	static const char className[];
 	static const Luna<LuaClass_Quaternion>::RegType methods[];

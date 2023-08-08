@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERPASSNODEGRAPH_H_
-#define _RENDERPASSNODEGRAPH_H_
+#pragma once
 
 #include "renderpassnode.h"
 #include "renderingaspectimpl.h"
@@ -100,4 +99,3 @@ public:
 }
 }
 
-#endif

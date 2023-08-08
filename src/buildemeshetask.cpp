@@ -22,9 +22,15 @@
 */
 /* -*-LIC_END-*- */
 
+#include <array>
 #include "buildemeshetask.h"
 #include "resourcessystem.h"
 #include "passslot.h"
+#include "logging.h"
+
+using namespace DrawSpace::Core;
+
+DrawSpace::Logger::Sink bmt_logger("BuildeMesheTask", DrawSpace::Logger::Configuration::getInstance());
 
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
@@ -51,47 +57,68 @@ void BuildMesheTask::SetMeshesIOInfos(aiMesh** m_source_meshes, Core::Meshe* p_t
 }
 
 void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMesh** p_meshes, Core::Meshe* p_destination)
-{
-    Aspect::AnimationsAspect* anims_aspect = p_entity->GetAspect<Aspect::AnimationsAspect>();
+{   
+    const auto anims_aspect { p_entity->GetAspect<Aspect::AnimationsAspect>() };
+    const dsstring name { p_ai_node->mName.C_Str() };
 
-    dsstring name = p_ai_node->mName.C_Str();
+    _DSDEBUG(bmt_logger, dsstring("name = ") + name);
 
-    Core::Meshe::NormalesGenerationMode normales_gen_mode = p_destination->GetNGenerationMode();
-    Core::Meshe::TangentBinormalesGenerationMode tb_gen_mode = p_destination->GetTBGenerationMode();
+    const auto normales_gen_mode { p_destination->GetNGenerationMode() };
+  
+    static const std::map<Meshe::NormalesGenerationMode, dsstring> normales_gen_mode_text
+    {
+        { Meshe::NormalesGenerationMode::NORMALES_DISCARDED, "NORMALES_DISCARDED" },
+        { Meshe::NormalesGenerationMode::NORMALES_AUTO, "NORMALES_AUTO" },
+        { Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH, "NORMALES_AUTO_SMOOTH" },
+        { Meshe::NormalesGenerationMode::NORMALES_FROMLOADER, "NORMALES_FROMLOADER" },
+        { Meshe::NormalesGenerationMode::NORMALES_FROMLOADER_SMOOTH, "NORMALES_FROMLOADER_SMOOTH" },
+        { Meshe::NormalesGenerationMode::NORMALES_COMPUTED, "NORMALES_COMPUTED" },
+    };
+    _DSDEBUG(bmt_logger, dsstring("normales_gen_mode = ") + normales_gen_mode_text.at(normales_gen_mode));
 
-    unsigned int nb_meshes = p_ai_node->mNumMeshes;
+    const auto tb_gen_mode { p_destination->GetTBGenerationMode() };
+
+    static const std::map<Meshe::TangentBinormalesGenerationMode, dsstring> tbn_gen_mode_text
+    {
+        { Meshe::TangentBinormalesGenerationMode::TB_DISCARDED, "TB_DISCARDED" },
+        { Meshe::TangentBinormalesGenerationMode::TB_AUTO, "TB_AUTO" },
+        { Meshe::TangentBinormalesGenerationMode::TB_FROMLOADER, "TB_FROMLOADER" },
+        { Meshe::TangentBinormalesGenerationMode::TB_COMPUTED, "TB_COMPUTED" }
+    };
+    _DSDEBUG(bmt_logger, dsstring("tbn_gen_mode = ") + tbn_gen_mode_text.at(tb_gen_mode));
+
+
+    const auto nb_meshes{ p_ai_node->mNumMeshes };
     int global_index = 0;
 
-    unsigned int* indexes = p_ai_node->mMeshes;
+    const auto indexes{ p_ai_node->mMeshes };
     for (unsigned int i = 0; i < nb_meshes; i++)
     {
-        aiMesh* meshe = p_meshes[indexes[i]];
-
+        const auto meshe { p_meshes[indexes[i]] };
         for (size_t j = 0; j < meshe->mNumFaces; j++)
         {
-            aiFace face = meshe->mFaces[j];
+            const auto face{ meshe->mFaces[j] };
 
             if (face.mNumIndices != 3)
             {
                 _DSEXCEPTION("Face must have exactly 3 indices");
             }
 
-            const unsigned int i1 = face.mIndices[0];
-            const unsigned int i2 = face.mIndices[1];
-            const unsigned int i3 = face.mIndices[2];
+            const auto i1 { face.mIndices[0] };
+            const auto i2 { face.mIndices[1] };
+            const auto i3 { face.mIndices[2] };
 
-            p_destination->AddTriangle(Core::TrianglePrimitive<unsigned int>({ i1 + global_index, i2 + global_index, i3 + global_index }));
+            p_destination->AddTriangle(Commons::TrianglePrimitive<unsigned int>({ i1 + global_index, i2 + global_index, i3 + global_index }));
         }
 
         const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-        const bool hasN = meshe->HasNormals();
-        const bool hasTB = meshe->HasTangentsAndBitangents();
+        const auto hasN { meshe->HasNormals() };
+        const auto hasTB { meshe->HasTangentsAndBitangents() };
 
         for (size_t j = 0; j < meshe->mNumVertices; j++)
         {
-            aiVector3D v_in = meshe->mVertices[j];
-
-            DrawSpace::Core::Vertex v_out(v_in[0], v_in[1], v_in[2]);
+            const auto v_in { meshe->mVertices[j] };
+            DrawSpace::Commons::Vertex v_out(v_in[0], v_in[1], v_in[2]);
 
             if (anims_aspect)
             {
@@ -116,13 +143,13 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
             if (meshe->GetNumUVChannels() > 0)
             {
-                aiVector3D texCoord = meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D;
+                const auto texCoord{ meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : Zero3D };
                 v_out.tu[0] = texCoord[0];
                 v_out.tv[0] = texCoord[1];
             }
 
-            if (hasN && (normales_gen_mode == Core::Meshe::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NORMALES_FROMLOADER ||
-                normales_gen_mode == Core::Meshe::NORMALES_AUTO_SMOOTH || normales_gen_mode == Core::Meshe::NORMALES_FROMLOADER_SMOOTH))
+            if (hasN && (normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER ||
+                normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_FROMLOADER_SMOOTH))
             {
                 // model has its own normales, so use it
                 v_out.nx = meshe->mNormals[j][0];
@@ -130,7 +157,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
                 v_out.nz = meshe->mNormals[j][2];
             }
 
-            if (hasTB && (tb_gen_mode == Core::Meshe::TB_AUTO || tb_gen_mode == Core::Meshe::TB_FROMLOADER))
+            if (hasTB && (tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_AUTO || tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_FROMLOADER))
             {
                 // model has its own tangent and binormales, so use it
 
@@ -146,15 +173,16 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
             p_destination->AddVertex(v_out);
         }
 
-        if (normales_gen_mode == Core::Meshe::NORMALES_COMPUTED ||
-            ((normales_gen_mode == Core::Meshe::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NORMALES_AUTO_SMOOTH) && !hasN))
+        if (normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_COMPUTED ||
+            ((normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO || normales_gen_mode == Core::Meshe::NormalesGenerationMode::NORMALES_AUTO_SMOOTH) && !hasN))
         {
+            _DSDEBUG(bmt_logger, dsstring("Computing normales..."));
             p_destination->ComputeNormales();
         }
 
-        if (tb_gen_mode == Core::Meshe::TB_COMPUTED || tb_gen_mode == Core::Meshe::TB_AUTO && !hasTB)
+        if (tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_COMPUTED || tb_gen_mode == Core::Meshe::TangentBinormalesGenerationMode::TB_AUTO && !hasTB)
         {
-            size_t numUVChannels{ meshe->GetNumUVChannels() };
+            const auto numUVChannels{ meshe->GetNumUVChannels() };
             if (numUVChannels > 0)
             {
                 p_destination->ComputeTBs();
@@ -166,17 +194,17 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
         }
 
         //////////// transformation des normales
-        Utils::Matrix n_transf = p_destination->GetNormalesTransf();
+        auto n_transf { p_destination->GetNormalesTransf() };
 
-        for (long j = 0; j < p_destination->GetVertexListSize(); j++)
+        for (size_t j = 0; j < p_destination->GetVertexListSize(); j++)
         {
-            DrawSpace::Core::Vertex vertex;
+            DrawSpace::Commons::Vertex vertex;
             p_destination->GetVertex(j, vertex);
 
-            Utils::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
-            Utils::Vector nt;
+            Maths::Vector n(vertex.nx, vertex.ny, vertex.nz, 1.0);
+            Maths::Vector nt;
 
-            n_transf.Transform(&n, &nt);
+            n_transf.transform(&n, &nt);
 
             vertex.nx = nt[0];
             vertex.ny = nt[1];
@@ -195,7 +223,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
             for (size_t j = 0; j < meshe->mNumBones; j++)
             {
-                aiBone* bone = meshe->mBones[j];
+                const auto bone { meshe->mBones[j] };
 
                 Aspect::AnimationsAspect::BoneOutput bone_output;
                 bone_output.offset_matrix = ResourcesSystem::ConvertFromAssimpMatrix(bone->mOffsetMatrix);
@@ -206,10 +234,10 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
                 for (size_t k = 0; k < bone->mNumWeights; k++)
                 {
-                    float weight = bone->mWeights[k].mWeight;
-                    int vert_index = bone->mWeights[k].mVertexId;
+                    const auto weight { bone->mWeights[k].mWeight };
+                    const auto vert_index { bone->mWeights[k].mVertexId };
 
-                    DrawSpace::Core::Vertex vertex;
+                    DrawSpace::Commons::Vertex vertex;
                     p_destination->GetVertex(vert_index, vertex);
 
                     if (vertex.tu[4] == -1.0)
@@ -266,13 +294,13 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
 
             //////
 
-            for (long j = 0; j < p_destination->GetVertexListSize(); j++)
+            for (size_t j = 0; j < p_destination->GetVertexListSize(); j++)
             {
-                DrawSpace::Core::Vertex vertex;
+                DrawSpace::Commons::Vertex vertex;
                 p_destination->GetVertex(j, vertex);
 
-                float sum = vertex.tu[5] + vertex.tv[5] + vertex.tw[5] + vertex.ta[5] +
-                    vertex.tu[7] + vertex.tv[7] + vertex.tw[7] + vertex.ta[7];
+                const auto sum{ vertex.tu[5] + vertex.tv[5] + vertex.tw[5] + vertex.ta[5] +
+                    vertex.tu[7] + vertex.tv[7] + vertex.tw[7] + vertex.ta[7] };
 
                 if (sum < 0.95)
                 {
@@ -286,7 +314,7 @@ void BuildMesheTask::build_meshe(Core::Entity* p_entity, aiNode* p_ai_node, aiMe
             anims_aspect->GetComponent<std::vector<Aspect::AnimationsAspect::BoneOutput>>("bones_outputs")->getPurpose() = bones_outputs;
             anims_aspect->GetComponent<std::map<dsstring, int>>("bones_mapping")->getPurpose() = bones_mapping;
 
-            Aspect::RenderingAspect* rendering_aspect = p_entity->GetAspect <Aspect::RenderingAspect>();
+            const auto rendering_aspect{ p_entity->GetAspect <Aspect::RenderingAspect>() };
             if (!rendering_aspect)
             {
                 _DSEXCEPTION("an entity with AnimationsAspect must also have a RenderingAspect");

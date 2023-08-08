@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _VIEWPORTQUAD_H_
-#define _VIEWPORTQUAD_H_
+#pragma once
 
 #include "renderingnode.h"
 #include "primitives.h"
@@ -38,7 +37,7 @@ protected:
 
     void*                                   m_renderer_meshe_data;
 
-    DrawSpace::Utils::Matrix                m_projection;
+    DrawSpace::Maths::Matrix                m_projection;
 
     dsreal                                  m_z_offset;
 
@@ -48,4 +47,5 @@ public:
     void OnDraw( void );
 };
 }
-#endif
+
+

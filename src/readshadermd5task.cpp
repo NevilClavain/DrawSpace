@@ -45,7 +45,7 @@ void ReadShaderMD5Task::Execute(void)
     dsstring path{ bcCacheName + dsstring("/") + m_shader_id.c_str() };
 
     long md5filesize;
-    unsigned char* md5Buf = { static_cast<unsigned char*>(Utils::FileSystem::LoadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize)) };
+    unsigned char* md5Buf = { static_cast<unsigned char*>(FileSystem::loadAndAllocFile(path + dsstring("\\") + bcMd5FileName, &md5filesize)) };
 
     if (md5Buf)
     {

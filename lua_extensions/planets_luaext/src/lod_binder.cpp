@@ -87,7 +87,7 @@ void Binder::BindToShader(void) const
     }
 }
 
-DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderType p_shader_type, int p_register)
+DrawSpace::Maths::Vector Binder::GetShaderFeederValue(ShaderType p_shader_type, int p_register)
 {
     const auto key{ LOD::ComputeHash(p_shader_type, p_register) };
     if (m_vector_shaders_feeders.count(key))
@@ -100,13 +100,13 @@ DrawSpace::Utils::Vector Binder::GetShaderFeederValue(ShaderType p_shader_type, 
     }
 }
 
-Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Vector>& p_obj)
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Vector>& p_obj)
 {
     p_in.m_vector_shaders_feeders[p_obj.Hash()] = p_obj;
     return p_in;
 }
 
-Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Utils::Matrix>& p_obj)
+Binder& LOD::operator<<(Binder& p_in, const ShaderFeeder<DrawSpace::Maths::Matrix>& p_obj)
 { 
     p_in.m_matrix_shaders_feeders[p_obj.Hash()] = p_obj;
     return p_in;

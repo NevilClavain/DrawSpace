@@ -39,7 +39,7 @@ public:
     {
         dsreal                      width_scale;
         dsreal                      height_scale;
-        DrawSpace::Utils::Vector    localpos;
+        DrawSpace::Maths::Vector    localpos;
         dsreal                      u1, v1;
         dsreal                      u2, v2;
         dsreal                      u3, v3;
@@ -60,9 +60,9 @@ public:
 
     public:
 
-        DrawSpace::Utils::Matrix                           m_world;
-        DrawSpace::Utils::Matrix                           m_view;
-        DrawSpace::Utils::Matrix                           m_proj;
+        DrawSpace::Maths::Matrix                           m_world;
+        DrawSpace::Maths::Matrix                           m_view;
+        DrawSpace::Maths::Matrix                           m_proj;
 
         PassSlot( const dsstring& p_pass_name );
         ~PassSlot( void );
@@ -87,7 +87,7 @@ public:
     void RegisterToRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
     void UnregisterFromRendering( DrawSpace::RenderGraph::RenderPassNodeGraph& p_rendergraph );
 
-    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::Utils::TimeManager* p_timemanager) { return true; };
+    bool Init( DrawSpace::Core::Entity* p_entity, DrawSpace::TimeManager* p_timemanager) { return true; };
     void Release(void) {};
     void Run( DrawSpace::Core::Entity* p_entity );
 

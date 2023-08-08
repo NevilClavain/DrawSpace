@@ -24,8 +24,8 @@
 
 #pragma once
 
-
-#include "drawspace_commons.h"
+#include <map>
+#include "ds_types.h"
 
 namespace LOD
 {
@@ -36,20 +36,20 @@ struct Config
 public:
 
     using LayerDescriptor = struct
-    {
+    {        
         bool        enable_collisions;
         bool        enable_datatextures;
+        bool        enable_foliage;
         bool        enable_lod;
         long        min_lodlevel;  // valable si enable_lod == true
         dsreal      ray;
 
-        Binder*     groundCollisionsBinder[6];
+        Binder*     heightmapGenerationBinder[6];
         Binder*     patchTexturesBinder[6];
 
         dsstring    description; // for debug purpose only;
     };
 
-    double                          m_lod0base;
     int                             m_nbLODRanges_freeCameras;
     int                             m_nbLODRanges_inertBodies;
 

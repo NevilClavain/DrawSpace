@@ -22,18 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _RENDERINGASPECT_H_
-#define _RENDERINGASPECT_H_
+#pragma once
 
 #include "componentcontainer.h"
 #include "renderingaspectimpl.h"
 
 namespace DrawSpace
 {
-namespace Utils
-{
 class TimeManager;
-}
 
 namespace Aspect
 {
@@ -46,7 +42,7 @@ protected:
 public:
     RenderingAspect( void );
 
-    void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl, DrawSpace::Utils::TimeManager* p_timemanager );
+    void AddImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl, DrawSpace::TimeManager* p_timemanager );
     void RemoveImplementation( DrawSpace::Interface::AspectImplementations::RenderingAspectImpl* p_impl );
 
     void Run( Core::Entity* p_owner_entity, bool p_drawtextlements );
@@ -60,4 +56,3 @@ public:
 }
 }
 
-#endif

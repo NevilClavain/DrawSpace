@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _TIMEASPECT_H_
-#define _TIMEASPECT_H_
+#pragma once
 
 #include "componentcontainer.h"
 #include "timemanager.h"
@@ -58,12 +57,12 @@ public:
     {
     private:
         dsreal                  m_value;
-        Utils::TimeManager*     m_tm;
+        TimeManager*            m_tm;
         dsreal*                 m_timefactor;
         bool*                   m_freeze;
 
         // seul TimeAspect appelle ce ctor
-        TimeAngle( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
+        TimeAngle( dsreal p_initval, TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
         m_value( p_initval ),
         m_tm( p_tm ),
         m_timefactor( p_timefactor ),
@@ -93,9 +92,9 @@ public:
                 return;
             }
 
-            if( m_tm->IsReady() )
+            if( m_tm->isReady() )
             {
-                m_tm->AngleSpeedInc( &m_value, p_delta * (*m_timefactor) );
+                m_tm->angleSpeedInc( &m_value, p_delta * (*m_timefactor) );
             }
         }
         void Decrease( dsreal p_delta )
@@ -110,9 +109,9 @@ public:
                 return;
             }
 
-            if( m_tm->IsReady() )
+            if( m_tm->isReady() )
             {
-                m_tm->AngleSpeedDec( &m_value, p_delta * (*m_timefactor) );
+                m_tm->angleSpeedDec( &m_value, p_delta * (*m_timefactor) );
             }
         }
         void operator +=( dsreal p_delta )
@@ -133,12 +132,12 @@ public:
     {
     private:
         dsreal                  m_value;
-        Utils::TimeManager*     m_tm;
+        TimeManager*            m_tm;
         dsreal*                 m_timefactor;
         bool*                   m_freeze;
 
         // seul TimeAspect appelle ce ctor
-        TimeScalar( dsreal p_initval, Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
+        TimeScalar( dsreal p_initval, TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze ) :
         m_value( p_initval ),
         m_tm( p_tm ),
         m_timefactor( p_timefactor ),
@@ -169,9 +168,9 @@ public:
                 return;
             }
 
-            if( m_tm->IsReady() )
+            if( m_tm->isReady() )
             {
-                m_tm->TranslationSpeedInc( &m_value, p_delta * (*m_timefactor) );
+                m_tm->translationSpeedInc( &m_value, p_delta * (*m_timefactor) );
             }
         }
         void Decrease( dsreal p_delta )
@@ -186,9 +185,9 @@ public:
                 return;
             }
 
-            if( m_tm->IsReady() )
+            if( m_tm->isReady() )
             {
-                m_tm->TranslationSpeedDec( &m_value, p_delta * (*m_timefactor) );
+                m_tm->translationSpeedDec( &m_value, p_delta * (*m_timefactor) );
             }
         }
         void operator +=( dsreal p_delta )
@@ -208,14 +207,14 @@ public:
 	class TimeMark
 	{
 	private:
-		Utils::TimeManager*		m_tm;
+		TimeManager*		    m_tm;
 		dsreal*					m_timefactor;
 		bool*					m_freeze;
 		long                    m_previous_tick; // for freeze case
 		long					m_timecounter;
 
 		// seul TimeAspect appelle ce ctor
-		TimeMark(Utils::TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze) :			
+		TimeMark(TimeManager* p_tm, dsreal* p_timefactor, bool* p_freeze) :			
 			m_tm(p_tm),
 			m_timefactor(p_timefactor),
 			m_freeze(p_freeze),
@@ -242,16 +241,16 @@ public:
 
 protected:
 
-    typedef DrawSpace::Core::CallBack<TimeAspect, void, DrawSpace::Utils::Timer*> TimerCb;
+    typedef DrawSpace::Core::CallBack<TimeAspect, void, DrawSpace::Timer*> TimerCb;
 
     static const int        m_base_timestep = 8;
 
-    Utils::TimeManager*     m_tm;    
+    TimeManager*            m_tm;    
     TimeScale               m_mode;
     dsreal                  m_time_factor;  // calcul...
 
     TimerCb*                m_timercb;
-    DrawSpace::Utils::Timer m_timer;
+    DrawSpace::Timer        m_timer;
     long                    m_time_period;
     bool                    m_active;
 
@@ -267,7 +266,7 @@ protected:
 
     void get_tm( void );
 
-    void on_timer( DrawSpace::Utils::Timer* p_timer );
+    void on_timer( DrawSpace::Timer* p_timer );
 
     void set_time_factor( TimeAspect::TimeScale p_scale );
 
@@ -292,4 +291,3 @@ public:
 }
 }
 
-#endif

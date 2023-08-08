@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_ENTITYNODEGRAPH_H_
-#define _LUACLASS_ENTITYNODEGRAPH_H_
+#pragma once
 
 #include "entitynodegraph.h"
 #include "luna.h"
@@ -62,5 +61,3 @@ public:
     static const char className[];
     static const Luna<LuaClass_EntityNodeGraph>::RegType methods[];
 };
-
-#endif

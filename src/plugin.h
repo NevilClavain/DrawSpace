@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _PLUGIN_H_
-#define _PLUGIN_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "memalloc.h"
 
 namespace DrawSpace
@@ -60,4 +59,4 @@ public:
 };
 }
 }
-#endif
+

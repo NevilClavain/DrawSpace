@@ -28,6 +28,8 @@ set(CMAKE_CXX_STANDARD 17)
 # disable ZERO_CHECK project generation
 set(CMAKE_SUPPRESS_REGENERATION true)
 
+add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+
 # 3rd-parts localisations
 set(physfs_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/physfs-2.0.3/sdk/include)
 set(physfs_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/physfs-2.0.3/sdk/lib/x86)
@@ -56,8 +58,20 @@ set(bullet_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/bullet-2.87/sdk/lib/x86)
 set(assimp_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/include)
 set(assimp_lib_dir ${CMAKE_SOURCE_DIR}/thirdparts/Assimp-4.1.0/sdk/lib/x86)
 
+set(md5_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/md5/sdk/include)
+
+set(st_tree_include_dir ${CMAKE_SOURCE_DIR}/thirdparts/st_tree/sdk/include)
+
 # core, plugins and runtimes
 add_subdirectory(drawspacecore_project)
+
+add_subdirectory(CORE_logger)
+add_subdirectory(CORE_maths)
+add_subdirectory(CORE_parser)
+add_subdirectory(CORE_jsonparser)
+add_subdirectory(CORE_filesystem)
+add_subdirectory(CORE_timemanager)
+
 add_subdirectory(CEGUIWrapper_project)
 add_subdirectory(Plugins/d3d11_project)
 # add_subdirectory(Plugins/d3d9_project)

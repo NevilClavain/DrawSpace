@@ -35,7 +35,7 @@ private:
 
     // data model
     using UVPairList    = std::vector<std::pair<int,int>>;
-    using Bloc          = std::tuple<DrawSpace::Utils::Vector, DrawSpace::Utils::Vector, dsreal, UVPairList, UVPairList>;
+    using Bloc          = std::tuple<DrawSpace::Maths::Vector, DrawSpace::Maths::Vector, dsreal, UVPairList, UVPairList>;
     using DataModel     = std::vector<Bloc>;
 
     DataModel   m_dataModel;

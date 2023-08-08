@@ -25,7 +25,8 @@
 #pragma once
 
 #include "lod_patch.h"
-#include "lod_collisions.h"
+#include "lod_heightmapsubpass.h"
+
 #include "collisionaspect.h"
 #include "csts.h"
 
@@ -50,63 +51,11 @@ class Layer
 {
 public:
 
-    using SubPassCreationHandler        = DrawSpace::Core::BaseCallback2<SubPass::EntryInfos, SubPass*, SubPass::Destination>;
-    using CollisionMesheUpdateHandler   = DrawSpace::Core::BaseCallback3<void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
+    using CollisionMesheUpdateHandler       = DrawSpace::Core::BaseCallback3<void, dsstring, DrawSpace::Aspect::CollisionAspect::MesheCollisionShape, bool>;
+    using NewCollisionMesheCreationHandler  = DrawSpace::Core::BaseCallback<void, const DrawSpace::Core::Meshe&>;
 
-    using NewCollisionMesheCreationHandler = DrawSpace::Core::BaseCallback<void, const DrawSpace::Core::Meshe&>;
-
-private:
-
-    //DrawSpace::Core::Entity*                                    m_owner_entity{ nullptr };
-    DrawSpace::EntityGraph::EntityNodeGraph*                    m_entitynodegraph{ nullptr };
-
-    Config*                                                     m_config{ nullptr };
-    Body*                                                       m_body{ nullptr };
-    SubPassCreationHandler*                                     m_subpass_creation_handler{ nullptr };
-    CollisionMesheUpdateHandler*                                m_collision_meshe_update_handler{ nullptr };
-    bool                                                        m_hot;
-    int                                                         m_current_lod;
-
-    std::vector<NewCollisionMesheCreationHandler*>              m_collision_meshe_creation_handler;
-
-    dsreal                                                      m_planetray;
-    bool                                                        m_collisions;
-
-    LOD::Collisions*                                            m_collisions_hms[6];
-    LOD::Collisions*                                            m_current_collisions_hm{ nullptr };
-
-    LOD::Patch*                                                 m_collision_patch{ nullptr };
-
-    bool                                                        m_draw_collidinghm{ false };
-    //bool                                                        m_collision_state{ false };
-
-    dsstring                                                    m_description; // for debug purpose :)
-
-    //DrawSpace::Aspect::CollisionAspect*                         m_collision_aspect{ nullptr };
-
-    dsreal                                                      m_currentpatch_max_height{ -2.0 };
-    dsreal                                                      m_currentpatch_min_height{ -2.0 };
-    dsreal                                                      m_currentpatch_current_height{ -2.0 };
-
-    dsreal                                                      m_alt_grid[cst::patchResolution * cst::patchResolution];
-
-    DrawSpace::Core::Meshe                                      m_hm_meshe; // meshe produced with heightmap result and used in bullet
-    DrawSpace::Aspect::CollisionAspect::MesheCollisionShape     m_meshe_collision_shape;
-    bool                                                        m_collisions_active{ false };
-
-    Patch*                                                      m_current_patch{ nullptr };
-
-    void build_meshe(DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe, float* p_heightmap);
-    dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
-
-    /*
-    void setup_collider(void);
-    void remove_collider(void);
-    */
-
-public:
     Layer(DrawSpace::EntityGraph::EntityNodeGraph* p_eg, Config* p_config, Body* p_body,
-            Layer::SubPassCreationHandler* p_subpass_creation_handler, 
+            HeighmapSubPass::SubPassCreationHandler* p_subpass_creation_handler,
             CollisionMesheUpdateHandler* p_collision_meshe_update_handler,
             int p_index, bool p_freecamera);
 
@@ -114,15 +63,16 @@ public:
 
     Body*                           GetBody(void) const;
     bool                            GetHotState(void) const;
-    Layer::SubPassCreationHandler*  GetSubPassCreationHandler(void) const;
+
     int                             GetCurrentLOD(void) const;
     
     void                            SetHotState(bool p_hotstate);
     void                            UpdateRelativeAlt(dsreal p_alt);
-    void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
-    void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_vector );
+    void                            UpdateInvariantViewerPos(const DrawSpace::Maths::Vector& p_pos);
+    void                            UpdateHotPoint( const DrawSpace::Maths::Vector& p_vector );
     void                            Compute( void );
-    void                            SubPassDone(LOD::Collisions* p_collider);
+
+    
     void                            ResetBody(void);
 
     void                            RegisterNewCollisionMesheCreationHandler(NewCollisionMesheCreationHandler* p_handler);
@@ -132,5 +82,67 @@ public:
     dsreal                          GetCurrentPatchMaxHeight(void) const;
     dsreal                          GetCurrentPatchMinHeight(void) const;
     dsreal                          GetCurrentPatchCurrentHeight(void) const;
+
+    int                             GetLayerIndex(void) const;
+
+    dsreal                          GetCurrentPatchTemperature(void) const;
+    dsreal                          GetCurrentPatchHumidity(void) const;
+
+
+private:
+
+    using SubpassDoneCb = DrawSpace::Core::CallBack<Layer, void, HeighmapSubPass*>;
+    using SubpassAbortedCb = DrawSpace::Core::CallBack<Layer, void, HeighmapSubPass*>;
+
+    DrawSpace::EntityGraph::EntityNodeGraph*                    m_entitynodegraph{ nullptr };
+
+    Config* m_config{ nullptr };
+    Body* m_body{ nullptr };
+
+    SubPass::SubPassCreationHandler*                            m_subpass_creation_handler{ nullptr };
+
+    CollisionMesheUpdateHandler*                                m_collision_meshe_update_handler{ nullptr };
+    bool                                                        m_hot;
+    int                                                         m_current_lod;
+
+    std::vector<NewCollisionMesheCreationHandler*>              m_collision_meshe_creation_handler;
+
+    dsreal                                                      m_planetray;
+    bool                                                        m_collisions{ false };
+
+
+
+    dsstring                                                    m_description; // for debug purpose :)
+
+    dsreal                                                      m_currentpatch_max_height{ -2.0 };
+    dsreal                                                      m_currentpatch_min_height{ -2.0 };
+    dsreal                                                      m_currentpatch_current_height{ -2.0 };
+
+    dsreal                                                      m_currentpatch_temperature{ -0.666 };
+    dsreal                                                      m_currentpatch_humidity{ -0.666 };
+
+    dsreal                                                      m_alt_grid[cst::patchResolution * cst::patchResolution];
+
+    DrawSpace::Core::Meshe                                      m_hm_meshe; // meshe produced with heightmap result and used in bullet
+    DrawSpace::Aspect::CollisionAspect::MesheCollisionShape     m_meshe_collision_shape;
+    bool                                                        m_collisions_active{ false };
+
+    Patch* m_current_patch{ nullptr };
+
+    int                                                         m_layer_index;
+
+    std::map<LOD::HeighmapSubPass*, Patch*>                     m_heightmap_source_patches;
+
+    SubpassDoneCb                                               m_subpassDoneCb;
+    SubpassAbortedCb                                            m_subpassAbortedCb;
+
+
+    void build_meshe(float* p_heightmap, DrawSpace::Core::Meshe& p_patchmeshe, LOD::Patch* p_patch, DrawSpace::Core::Meshe& p_outmeshe);
+    dsreal get_interpolated_height(dsreal p_coord_x, dsreal p_coord_y);
+
+    void generate_heightmap(Patch* p_patch, LOD::HeighmapSubPass::Purpose p_purpose);
+
+    void on_subpassdone(LOD::HeighmapSubPass* p_subpass);
+    void on_subpassaborted(LOD::HeighmapSubPass* p_subpass);
 };
 }

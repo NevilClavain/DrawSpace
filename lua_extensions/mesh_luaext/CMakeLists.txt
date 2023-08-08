@@ -38,8 +38,14 @@ link_directories(${assimp_lib_dir})
 include_directories(${bullet_include_dir})
 link_directories(${bullet_lib_dir})
 
+include_directories(${st_tree_include_dir})
+
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
 include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
+
 
 file(
         GLOB_RECURSE
@@ -50,6 +56,7 @@ file(
 )
 
 add_library(mesh_luaext SHARED ${source_files})
-target_link_libraries(mesh_luaext drawspace_core lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
+target_link_libraries(mesh_luaext drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_timemanager lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
 install(TARGETS mesh_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS mesh_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS mesh_luaext CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)

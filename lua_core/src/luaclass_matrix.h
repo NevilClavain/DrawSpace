@@ -22,8 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _LUACLASS_MATRIX_H_
-#define _LUACLASS_MATRIX_H_
+#pragma once
 
 #include "luna.h"
 #include "matrix.h"
@@ -32,7 +31,7 @@ class LuaClass_Matrix
 {
 protected:
 
-    DrawSpace::Utils::Matrix        m_matrix;
+    DrawSpace::Maths::Matrix        m_matrix;
 
 public:
 	LuaClass_Matrix( lua_State* p_L );
@@ -54,8 +53,8 @@ public:
 
     int LUA_storeproduct( lua_State* p_L );
 
-    DrawSpace::Utils::Matrix GetMatrix( void ) const;
-    void SetMatrix(const DrawSpace::Utils::Matrix& p_mat);
+    DrawSpace::Maths::Matrix GetMatrix( void ) const;
+    void SetMatrix(const DrawSpace::Maths::Matrix& p_mat);
 
 	int LUA_storeentitytransformation(lua_State* p_L);
 
@@ -63,4 +62,3 @@ public:
     static const Luna<LuaClass_Matrix>::RegType methods[];
 };
 
-#endif

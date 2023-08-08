@@ -27,6 +27,7 @@
 #include "exceptions.h"
 
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Utils;
 
 RenderingNode::RenderingNode( void )
@@ -90,13 +91,13 @@ void RenderingNode::RegisterHandler( BaseCallback<void, RenderingNode*>* p_handl
 
 void RenderingNode::AddShaderArrayParameter(long p_shader_index, const dsstring& p_id, long p_begin_register)
 {
-	ShadersArrayParam* sap = _DRAWSPACE_NEW_(ShadersArrayParam, ShadersArrayParam);
+    const auto sap{ _DRAWSPACE_NEW_(ShadersArrayParam, ShadersArrayParam) };
 	sap->begin_register = p_begin_register;
 	sap->shader_index = p_shader_index;
 	m_shaders_array_params[p_id] = sap;
 }
 
-void RenderingNode::SetShaderArrayParameter(const dsstring& p_id, const std::vector<DrawSpace::Utils::Vector>& p_array)
+void RenderingNode::SetShaderArrayParameter(const dsstring& p_id, const std::vector<DrawSpace::Maths::Vector>& p_array)
 {
 	if (m_shaders_array_params.count(p_id) > 0)
 	{
@@ -126,7 +127,7 @@ void RenderingNode::GetShadersArrayParams(std::map<dsstring, ShadersArrayParam*>
 
 void RenderingNode::AddShaderParameter( long p_shader_index, const dsstring& p_id, long p_register )
 {
-    ShadersParams* sp = _DRAWSPACE_NEW_( ShadersParams, ShadersParams );
+    const auto sp{ _DRAWSPACE_NEW_(ShadersParams, ShadersParams) };
 
     sp->shader_index = p_shader_index;
     sp->param_register = p_register;

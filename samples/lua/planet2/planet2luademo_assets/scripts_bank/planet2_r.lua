@@ -1,6 +1,6 @@
 
 eg:unregister_rigidbody(bellerophon_entity)
-eg:unregister_rigidbody(spherebump.models['sphere'].entity)
+--eg:unregister_rigidbody(spherebump.models['sphere'].entity)
 
 g:signal_rendersceneend("eg")
 
@@ -13,7 +13,7 @@ collimator_table['collimator_freecam'].collimator_objectid_renderer:release()
 
 
 spaceboxmod.view.unload('spacebox0')
-spherebump.view.unload('sphere')
+--spherebump.view.unload('sphere')
 
 
 camera2_entity:release_info("referent_body")

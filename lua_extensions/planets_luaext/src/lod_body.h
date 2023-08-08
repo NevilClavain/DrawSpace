@@ -37,9 +37,9 @@ struct Config;
 class Body
 {
 public:
-    using BodyTimerCb = DrawSpace::Core::CallBack<Body, void, DrawSpace::Utils::Timer*>;
+    using BodyTimerCb = DrawSpace::Core::CallBack<Body, void, DrawSpace::Timer*>;
 
-    enum MesheType
+    enum class MesheType
     {
         LOWRES_MESHE,
         AVGRES_MESHE,
@@ -47,36 +47,13 @@ public:
         LOWRES_SKIRT_MESHE,    
     };
 
-protected:
-
-    Config*                                                                     m_config;
-
-    dsreal                                                                      m_diameter;    
-    dsreal                                                                      m_hotpoint_altitud;
-    
-    Face*                                                                       m_faces[6];
-
-    int                                                                         m_current_face;
-
-    double                                                                      m_relative_alt;
-
-    bool                                                                        m_enable_cdlod;
-
-    DrawSpace::Utils::Vector                                                    m_invariant_viewerpos; //relatif au centre planete
-
-    dsstring                                                                    m_description; // for debug purpose only;
-
-    static void build_meshe( long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt );
-
-public:
-
     static DrawSpace::Core::Meshe*                                              m_patch_meshe; //patch terrains
     static DrawSpace::Core::Meshe*                                              m_patch2_meshe; // patch terrains haute resolution
     static DrawSpace::Core::Meshe*                                              m_patch3_meshe; // patch terrains moyenne resolution
     static DrawSpace::Core::Meshe*                                              m_skirt_meshe; //les jupes terrains
 
 
-    Body( Config* p_config, int p_layer_index, Patch::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description );
+    Body( Config* p_config, int p_layer_index, SubPass::SubPassCreationHandler* p_handler, int p_nbLODRanges, const dsstring& p_description );
 
     virtual ~Body( void );
 
@@ -85,7 +62,7 @@ public:
     Face*                           GetFace(int p_faceid) const;
     dsreal                          GetHotPointAltitud(void) const;
     int                             GetCurrentFace(void) const;
-    void                            GetInvariantViewerPos(DrawSpace::Utils::Vector& p_pos) const;
+    void                            GetInvariantViewerPos(DrawSpace::Maths::Vector& p_pos) const;
     dsreal                          GetDiameter(void) const;
     dsstring                        GetDescription(void) const;
     dsreal                          GetRelativeAlt(void) const;
@@ -94,9 +71,9 @@ public:
     void                            Initialize(void);
     void                            Compute( void );
     
-    void                            UpdateHotPoint( const DrawSpace::Utils::Vector& p_hotpoint );
+    void                            UpdateHotPoint( const DrawSpace::Maths::Vector& p_hotpoint );
     void                            UpdateRelativeAlt(dsreal p_alt);
-    void                            UpdateInvariantViewerPos(const DrawSpace::Utils::Vector& p_pos);
+    void                            UpdateInvariantViewerPos(const DrawSpace::Maths::Vector& p_pos);
 
     void                            SetHotState( bool p_hotstate );
     
@@ -105,5 +82,25 @@ public:
     static void                     BuildMeshes(void);
     static void                     DestroyMeshes(void);
     static DrawSpace::Core::Meshe*  GetPatcheMeshe(void);
+
+private:
+
+    Config* m_config{ nullptr };
+
+    dsreal                                                                      m_diameter;
+    dsreal                                                                      m_hotpoint_altitud;
+
+    Face* m_faces[6];
+
+    int                                                                         m_current_face{ -1 };
+    double                                                                      m_relative_alt{ 0.0 };
+
+    bool                                                                        m_enable_cdlod;
+
+    DrawSpace::Maths::Vector                                                    m_invariant_viewerpos; //relatif au centre planete
+
+    dsstring                                                                    m_description; // for debug purpose only;
+
+    static void build_meshe(long p_patch_resol, DrawSpace::Core::Meshe* p_meshe_dest, bool p_fastmode, bool p_skirt);
 };
 }

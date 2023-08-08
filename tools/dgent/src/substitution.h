@@ -23,7 +23,9 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "drawspace_commons.h"
+
+#include <map>
+#include "ds_types.h"
 
 //fwd decl
 class Folder;

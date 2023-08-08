@@ -31,6 +31,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
@@ -38,13 +39,13 @@ using namespace DrawSpace::Interface;
 TransformAspect::TransformAspect( void ) :
 m_time_aspect( NULL )
 {
-    m_worldtransform.Identity();
-    m_worldtransformfromphysicworld.Identity();
-    m_localtransform.Identity();
+    m_worldtransform.identity();
+    m_worldtransformfromphysicworld.identity();
+    m_localtransform.identity();
 
-    m_dispatched_viewtransform.Identity();
-    m_dispatched_projtransform.Identity();
-    m_stack_matrix.Identity();
+    m_dispatched_viewtransform.identity();
+    m_dispatched_projtransform.identity();
+    m_stack_matrix.identity();
 }
 
 void TransformAspect::AddImplementation(int p_order, DrawSpace::Interface::AspectImplementations::TransformAspectImpl* p_impl)
@@ -71,7 +72,7 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 {
     Matrix locale_mat;
 
-    locale_mat.Identity();
+    locale_mat.identity();
 
     // operation : pour une liste de N matrices
     // [N] * [N-1] * [N - 2] * ..... * [2] * [1] * [0]
@@ -84,15 +85,15 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
 
         e.second->GetLocaleTransform(this, current);
 
-        Matrix::MatrixMult(&current, &locale_mat, &res);
+        Matrix::matrixMult(&current, &locale_mat, &res);
         locale_mat = res;
     }
 
     Matrix parent_transform_mat;
-    parent_transform_mat.Identity();
+    parent_transform_mat.identity();
 
     Matrix parent_transform_mat_fromphysicworld;
-    parent_transform_mat_fromphysicworld.Identity();
+    parent_transform_mat_fromphysicworld.identity();
 
     if( p_parent )
     {
@@ -114,7 +115,7 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     PhysicsAspect* physics_aspect{ p_entity->GetAspect<PhysicsAspect>() };
     if (physics_aspect)
     {
-        m_worldtransformfromphysicworld.Identity();
+        m_worldtransformfromphysicworld.identity();
     }
     else
     {
@@ -123,7 +124,7 @@ void TransformAspect::ComputeTransforms( Entity* p_parent, Entity* p_entity )
     }
 }
 
-void TransformAspect::DispatchViewProj( const DrawSpace::Utils::Matrix& p_view, DrawSpace::Utils::Matrix& p_proj )
+void TransformAspect::DispatchViewProj( const DrawSpace::Maths::Matrix& p_view, DrawSpace::Maths::Matrix& p_proj )
 {
     m_dispatched_viewtransform = p_view;
     m_dispatched_projtransform = p_proj;
@@ -134,7 +135,7 @@ void TransformAspect::GetWorldTransform( Matrix& p_worldtransform ) const
     p_worldtransform = m_worldtransform;
 }
 
-void TransformAspect::GetLocalTransform(DrawSpace::Utils::Matrix& p_localtransform) const
+void TransformAspect::GetLocalTransform(DrawSpace::Maths::Matrix& p_localtransform) const
 {
     p_localtransform = m_localtransform;
 }
@@ -144,17 +145,17 @@ void TransformAspect::GetWorldTransformFromPhysicWorld(Matrix& p_worldtransform)
     p_worldtransform = m_worldtransformfromphysicworld;
 }
 
-void TransformAspect::GetStackMatrix(DrawSpace::Utils::Matrix& p_stack) const
+void TransformAspect::GetStackMatrix(DrawSpace::Maths::Matrix& p_stack) const
 {
     p_stack = m_stack_matrix;
 }
 
-void TransformAspect::GetViewTransform( DrawSpace::Utils::Matrix& p_viewtransform ) const
+void TransformAspect::GetViewTransform( DrawSpace::Maths::Matrix& p_viewtransform ) const
 {
     p_viewtransform = m_dispatched_viewtransform;
 }
 
-void TransformAspect::GetProjTransform( DrawSpace::Utils::Matrix& p_projtransform ) const
+void TransformAspect::GetProjTransform( DrawSpace::Maths::Matrix& p_projtransform ) const
 {
     p_projtransform = m_dispatched_projtransform;
 }
@@ -182,7 +183,7 @@ void TransformAspect::SetTimeAspect( TimeAspect* p_time_aspect )
 void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
     Matrix parent_transform_mat;
-    parent_transform_mat.Identity();
+    parent_transform_mat.identity();
 
     TransformAspect* parent_transform_aspect{ p_parent_entity->GetAspect<TransformAspect>() };
 
@@ -192,7 +193,7 @@ void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodeg
 
         parent_transform_mat = parent_transform;
        
-        parent_transform.Inverse();
+        parent_transform.inverse();
 
         Matrix current_stack_matrix{ m_stack_matrix };
         m_stack_matrix = current_stack_matrix * parent_transform;
@@ -208,7 +209,7 @@ void TransformAspect::OnAddedInGraph(EntityGraph::EntityNodeGraph* p_entitynodeg
 void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entitynodegraph, Entity* p_parent_entity)
 {
     Matrix parent_transform_mat;
-    parent_transform_mat.Identity();
+    parent_transform_mat.identity();
 
     if (p_parent_entity)
     {
@@ -239,16 +240,16 @@ void TransformAspect::OnRemovedFromGraph(EntityGraph::EntityNodeGraph* p_entityn
     }   
 }
 
-bool TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
+bool TransformAspect::ProjectLocalPoint(const DrawSpace::Maths::Vector& p_local_point, dsreal& p_posx, dsreal& p_posy)
 {
     
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    inv.Identity();
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    inv.identity();
     inv(2, 2) = -1.0;
     final_view = m_dispatched_viewtransform * inv;
 
-    DrawSpace::Utils::Matrix result;
+    DrawSpace::Maths::Matrix result;
     Transformation chain;
     chain.PushMatrix(m_dispatched_projtransform);
     chain.PushMatrix(final_view);
@@ -258,7 +259,7 @@ bool TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_
 
     Vector local_point = p_local_point;
     Vector t_local_point;
-    result.Transform(&local_point, &t_local_point);
+    result.transform(&local_point, &t_local_point);
 
     p_posx = (t_local_point[0] / (t_local_point[2] + 1.0));
     p_posy = (t_local_point[1] / (t_local_point[2] + 1.0));
@@ -267,15 +268,15 @@ bool TransformAspect::ProjectLocalPoint(const DrawSpace::Utils::Vector& p_local_
 }
 
 
-dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Utils::Vector& p_local_point)
+dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Maths::Vector& p_local_point)
 {
-    DrawSpace::Utils::Matrix final_view;
-    DrawSpace::Utils::Matrix inv;
-    inv.Identity();
+    DrawSpace::Maths::Matrix final_view;
+    DrawSpace::Maths::Matrix inv;
+    inv.identity();
     inv(2, 2) = -1.0;
     final_view = m_dispatched_viewtransform * inv;
 
-    DrawSpace::Utils::Matrix result;
+    DrawSpace::Maths::Matrix result;
     Transformation chain;
     chain.PushMatrix(final_view);
     chain.PushMatrix(m_worldtransform);
@@ -284,7 +285,7 @@ dsreal TransformAspect::LocalPointDistanceFromCamera(const DrawSpace::Utils::Vec
 
     Vector local_point = p_local_point;
     Vector t_local_point;
-    result.Transform(&local_point, &t_local_point);
+    result.transform(&local_point, &t_local_point);
 
-    return t_local_point.Length();
+    return t_local_point.length();
 }

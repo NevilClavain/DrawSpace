@@ -162,7 +162,7 @@ int LuaContext::ExecuteFromFile( const dsstring& p_filepath )
 	return global_status;
 }
 
-dsstring LuaContext::GetLastError( void )
+dsstring LuaContext::GetLastError( void ) const
 {
     return m_error;
 }
@@ -231,7 +231,7 @@ int LuaContext::Include(lua_State* p_L)
 	}
 
 	dsstring path = luaL_checkstring(p_L, 1);
-	int status = MainService::GetInstance()->RequestLuaFileExec(path);
+	int status = MainService::getInstance()->RequestLuaFileExec(path);
 
 	if (-1 == status)
 	{

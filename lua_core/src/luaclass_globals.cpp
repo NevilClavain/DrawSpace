@@ -41,8 +41,10 @@
 
 
 using namespace DrawSpace;
+
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 
 const char LuaClass_Globals::className[] = "Globals";
@@ -132,13 +134,13 @@ LuaClass_Globals::~LuaClass_Globals( void )
 
 int LuaClass_Globals::LUA_quit( lua_State* p_L )
 {
-    MainService::GetInstance()->RequestClose();
+    MainService::getInstance()->RequestClose();
     return 0;
 }
 
 int LuaClass_Globals::LUA_clearconsole( lua_State* p_L )
 {
-    MainService::GetInstance()->RequestClearConsole();
+    MainService::getInstance()->RequestClearConsole();
     return 0;
 }
 
@@ -152,7 +154,7 @@ int LuaClass_Globals::LUA_print( lua_State* p_L )
 
 	dsstring msg = luaL_checkstring( p_L, 1 );
 
-    MainService::GetInstance()->RequestConsolePrint( msg );
+    MainService::getInstance()->RequestConsolePrint( msg );
     return 0;
 }
 
@@ -165,147 +167,147 @@ int LuaClass_Globals::LUA_dofile( lua_State* p_L )
 	}
 
 	dsstring path = luaL_checkstring( p_L, 1 );
-	MainService::GetInstance()->RequestLuaFileExec(path);
+	MainService::getInstance()->RequestLuaFileExec(path);
 
     return 0;
 }
 
 int LuaClass_Globals::LUA_dumpmem( lua_State* p_L )
 {
-    MainService::GetInstance()->RequestMemAllocDump();
+    MainService::getInstance()->RequestMemAllocDump();
     return 0;
 }
 
 int LuaClass_Globals::LUA_addappruncb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterRunCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterRunCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removeappruncb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterRunCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterRunCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addkeydowncb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterKeyPressCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterKeyPressCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removekeydowncb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterKeyPressCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterKeyPressCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addkeyupcb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterEndKeyPressCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterEndKeyPressCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removekeyupcb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterEndKeyPressCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterEndKeyPressCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addoncharcb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterOnCharCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterOnCharCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removeoncharcb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterOnCharCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterOnCharCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmousemovecb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseMoveCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterMouseMoveCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemousemovecb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseMoveCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterMouseMoveCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmouseleftbuttondowncb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseLeftButtonDownCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterMouseLeftButtonDownCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouseleftbuttondowncb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseLeftButtonDownCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterMouseLeftButtonDownCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmouseleftbuttonupcb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseLeftButtonUpCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterMouseLeftButtonUpCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouseleftbuttonupcb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseLeftButtonUpCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterMouseLeftButtonUpCallback( p_cbid ); } );
     return 0;
 }
 
 
 int LuaClass_Globals::LUA_addmouserightbuttondowncb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseRightButtonDownCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterMouseRightButtonDownCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouserightbuttondowncb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseRightButtonDownCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterMouseRightButtonDownCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addmouserightbuttonupcb( lua_State* p_L )
 {
-    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::GetInstance()->RegisterMouseRightButtonUpCallback( p_cbid, p_reffunc ); } );
+    LuaContext::AddCallback( p_L, []( const std::string& p_cbid, int p_reffunc ) { MainService::getInstance()->RegisterMouseRightButtonUpCallback( p_cbid, p_reffunc ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_removemouserightbuttonupcb( lua_State* p_L )
 {
-    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::GetInstance()->UnregisterMouseRightButtonUpCallback( p_cbid ); } );
+    LuaContext::RemoveCallback( p_L, []( const std::string& p_cbid )->int { return MainService::getInstance()->UnregisterMouseRightButtonUpCallback( p_cbid ); } );
     return 0;
 }
 
 int LuaClass_Globals::LUA_addanimationeventcb(lua_State* p_L)
 {
-	LuaContext::AddCallback(p_L, [](const std::string& p_cbid, int p_reffunc) { MainService::GetInstance()->RegisterAnimationEventCallback(p_cbid, p_reffunc); });
+	LuaContext::AddCallback(p_L, [](const std::string& p_cbid, int p_reffunc) { MainService::getInstance()->RegisterAnimationEventCallback(p_cbid, p_reffunc); });
 	return 0;
 }
 
 int LuaClass_Globals::LUA_removeanimationeventcb(lua_State* p_L)
 {
-	LuaContext::RemoveCallback(p_L, [](const std::string& p_cbid)->int { return MainService::GetInstance()->UnregisterAnimationEventCallback(p_cbid); });
+	LuaContext::RemoveCallback(p_L, [](const std::string& p_cbid)->int { return MainService::getInstance()->UnregisterAnimationEventCallback(p_cbid); });
 	return 0;
 }
 
 int LuaClass_Globals::LUA_addresourceeventcb(lua_State* p_L)
 {
-    LuaContext::AddCallback(p_L, [](const std::string& p_cbid, int p_reffunc) { MainService::GetInstance()->RegisterResourceEventCallback(p_cbid, p_reffunc); });
+    LuaContext::AddCallback(p_L, [](const std::string& p_cbid, int p_reffunc) { MainService::getInstance()->RegisterResourceEventCallback(p_cbid, p_reffunc); });
     return 0;
 }
 
 int LuaClass_Globals::LUA_removeresourceeventcb(lua_State* p_L)
 {
-    LuaContext::RemoveCallback(p_L, [](const std::string& p_cbid)->int { return MainService::GetInstance()->UnregisterResourceEventCallback(p_cbid); });
+    LuaContext::RemoveCallback(p_L, [](const std::string& p_cbid)->int { return MainService::getInstance()->UnregisterResourceEventCallback(p_cbid); });
     return 0;
 }
 
@@ -318,7 +320,7 @@ int LuaClass_Globals::LUA_showmousecursor( lua_State* p_L )
 	}
 
     bool disp = luaL_checkint( p_L, 1 );
-    MainService::GetInstance()->RequestMouseCursorDisplayState( disp );
+    MainService::getInstance()->RequestMouseCursorDisplayState( disp );
 
     return 0;
 }
@@ -332,7 +334,7 @@ int LuaClass_Globals::LUA_setmousecursorcircularmode( lua_State* p_L )
 	}
 
     bool disp = luaL_checkint( p_L, 1 );
-    MainService::GetInstance()->RequestMouseCursorCircularMode( disp );
+    MainService::getInstance()->RequestMouseCursorCircularMode( disp );
 
     return 0;
 }
@@ -352,7 +354,7 @@ int LuaClass_Globals::LUA_log(lua_State* p_L)
     }
     int level = luaL_checkint(p_L, 1);
     dsstring log = luaL_checkstring(p_L, 2);
-    MainService::GetInstance()->RequestLog( level, log );
+    MainService::getInstance()->RequestLog( level, log );
 
     return 0;
 }
@@ -388,7 +390,7 @@ int LuaClass_Globals::LUA_breakpoint(lua_State* p_L)
 
 int LuaClass_Globals::LUA_reset( lua_State* p_L )
 {
-    MainService::GetInstance()->RequestLuaStackReset();
+    MainService::getInstance()->RequestLuaStackReset();
     return 0;
 }
 
@@ -466,7 +468,7 @@ int LuaClass_Globals::LUA_setscriptsrootpath( lua_State* p_L )
 
 	dsstring path = luaL_checkstring( p_L, 1 );
 
-    LuaContext::GetInstance()->SetRootPath( path );
+    LuaContext::getInstance()->SetRootPath( path );
 
     return 0;
 }
@@ -508,7 +510,7 @@ int LuaClass_Globals::LUA_signalrenderscenebegin( lua_State* p_L )
 
     dsstring entitygraph_id = luaL_checkstring( p_L, 1 );
 
-    MainService::GetInstance()->RequestSignalRenderSceneBegin( entitygraph_id );
+    MainService::getInstance()->RequestSignalRenderSceneBegin( entitygraph_id );
     return 0;
 }
 
@@ -522,7 +524,7 @@ int LuaClass_Globals::LUA_signalrendersceneend( lua_State* p_L )
 
     dsstring entitygraph_id = luaL_checkstring( p_L, 1 );
 
-    MainService::GetInstance()->RequestSignalRenderSceneEnd( entitygraph_id );
+    MainService::getInstance()->RequestSignalRenderSceneEnd( entitygraph_id );
     return 0;
 }
 
@@ -543,7 +545,7 @@ int LuaClass_Globals::LUA_dsexception(lua_State* p_L)
 
 int LuaClass_Globals::LUA_releaseassets(lua_State* p_L)
 {
-    MainService::GetInstance()->RequestReleaseAssets();
+    MainService::getInstance()->RequestReleaseAssets();
     return 0;
 }
 
@@ -590,7 +592,7 @@ int LuaClass_Globals::LUA_clamp(lua_State* p_L)
     dsreal b = luaL_checknumber(p_L, 2);
     dsreal x = luaL_checknumber(p_L, 3);
 
-    lua_pushnumber(p_L, Maths::Clamp(a, b, x));
+    lua_pushnumber(p_L, Maths::clamp(a, b, x));
     return 1;
 }
 
@@ -663,10 +665,10 @@ int LuaClass_Globals::LUA_ctos(lua_State* p_L)
 
     Vector c(x, y, z, 1.0);
     Vector s;
-    Utils::Maths::CartesiantoSpherical(c, s);
+    Maths::cartesiantoSpherical(c, s);
        
-    dsreal longit{ Maths::RadToDeg(s[1]) };
-    dsreal latit{ Maths::RadToDeg(s[2]) };
+    dsreal longit{ Maths::radToDeg(s[1]) };
+    dsreal latit{ Maths::radToDeg(s[2]) };
 
     lua_pushnumber(p_L, s[0]);
     lua_pushnumber(p_L, longit);
@@ -683,12 +685,12 @@ int LuaClass_Globals::LUA_stoc(lua_State* p_L)
     }
 
     dsreal r = luaL_checknumber(p_L, 1);
-    dsreal t = Maths::DegToRad(luaL_checknumber(p_L, 2));
-    dsreal p = Maths::DegToRad(luaL_checknumber(p_L, 3));
+    dsreal t = Maths::degToRad(luaL_checknumber(p_L, 2));
+    dsreal p = Maths::degToRad(luaL_checknumber(p_L, 3));
 
     Vector s(r, t, p, 1.0);
     Vector c;
-    Utils::Maths::SphericaltoCartesian(s, c);
+    Maths::sphericaltoCartesian(s, c);
 
     lua_pushnumber(p_L, c[0]);
     lua_pushnumber(p_L, c[1]);
@@ -705,21 +707,21 @@ int LuaClass_Globals::LUA_rotatequaternionx(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LuaClass_Vector*        lua_axis_vector     { Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion*    lua_quat            { Luna<LuaClass_Quaternion>::check(p_L, 3) };
 
-    Quaternion q, qres;
+    Maths::Quaternion q, qres;
 
-    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    q.rotationAxis(lua_axis_vector->getVector(), angle_rad);
     qres = lua_quat->GetQuaternion() * q; 
 
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
-    Utils::Matrix orientation;
-    qres.RotationMatFrom(orientation);
+    Maths::Matrix orientation;
+    qres.rotationMatFrom(orientation);
 
     // update input axis vector
     Vector out_axis_vector(orientation(0, 0), orientation(0, 1), orientation(0, 2), 1.0);
@@ -737,21 +739,21 @@ int LuaClass_Globals::LUA_rotatequaterniony(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LuaClass_Vector*        lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion*    lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
 
-    Quaternion q, qres;
+    Maths::Quaternion q, qres;
 
-    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    q.rotationAxis(lua_axis_vector->getVector(), angle_rad);
     qres = lua_quat->GetQuaternion() * q;
 
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
-    Utils::Matrix orientation;
-    qres.RotationMatFrom(orientation);
+    Maths::Matrix orientation;
+    qres.rotationMatFrom(orientation);
 
     // update input axis vector
     Vector out_axis_vector(orientation(1, 0), orientation(1, 1), orientation(1, 2), 1.0);
@@ -769,21 +771,21 @@ int LuaClass_Globals::LUA_rotatequaternionz(lua_State* p_L)
     }
 
     dsreal angle_deg{ luaL_checknumber(p_L, 1) };
-    dsreal angle_rad{ Maths::DegToRad(angle_deg) };
+    dsreal angle_rad{ Maths::degToRad(angle_deg) };
 
     LuaClass_Vector* lua_axis_vector{ Luna<LuaClass_Vector>::check(p_L, 2) };
     LuaClass_Quaternion* lua_quat{ Luna<LuaClass_Quaternion>::check(p_L, 3) };
 
-    Quaternion q, qres;
+    Maths::Quaternion q, qres;
 
-    q.RotationAxis(lua_axis_vector->getVector(), angle_rad);
+    q.rotationAxis(lua_axis_vector->getVector(), angle_rad);
     qres = lua_quat->GetQuaternion() * q;
 
     // update input quaternion
     lua_quat->SetQuaternion(qres);
 
-    Utils::Matrix orientation;
-    qres.RotationMatFrom(orientation);
+    Maths::Matrix orientation;
+    qres.rotationMatFrom(orientation);
 
     // update input axis vector
     Vector out_axis_vector(orientation(2, 0), orientation(2, 1), orientation(2, 2), 1.0);
@@ -802,13 +804,13 @@ int LuaClass_Globals::LUA_activateresourcessystem(lua_State* p_L)
 
     dsstring contextid = luaL_checkstring(p_L, 1);
 
-    MainService::GetInstance()->ActivateResourcesSystem(contextid);
+    MainService::getInstance()->ActivateResourcesSystem(contextid);
     return 0;
 }
 
 int LuaClass_Globals::LUA_deactivateresourcessystem(lua_State* p_L)
 {
-    MainService::GetInstance()->DeactivateResourcesSystem();
+    MainService::getInstance()->DeactivateResourcesSystem();
     return 0;
 }
 
@@ -816,11 +818,13 @@ int LuaClass_Globals::LUA_registerextension(lua_State* p_L)
 {
     dsstring extension_name{ luaL_checkstring(p_L, 1) };
     dsstring extension_description;
-    LuaExtension* extension_instance{ LuaExtLoad::RegisterLuaExtension(extension_name, p_L, extension_description) };
+    const auto extension_instance{ LuaExtLoad::RegisterLuaExtension(extension_name, p_L, extension_description) };
     m_extensions[extension_name] = extension_instance;
 
-    Systems::Hub* hub{ MainService::GetInstance()->GetHub() };
+    Systems::Hub* hub{ MainService::getInstance()->GetHub() };
     extension_instance->SetHub(hub);
+
+    extension_instance->SetLoggerConfiguration(MainService::getInstance()->GetLogConf());
 
     lua_pushstring(p_L, extension_description.c_str());
     return 1;
@@ -833,9 +837,9 @@ int LuaClass_Globals::LUA_dumpallextensionsalloc(lua_State* p_L)
         LuaExtension* extension_instance{ e.second };
 
         dsstring luaext_name = e.first;
-        _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << luaext_name << dsstring("lua extension mem allocs*******************"));
+        _DSDEBUG(MainService::getInstance()->RequestLogger(), dsstring("BEGIN*******************Dumping ") << luaext_name << dsstring("lua extension mem allocs*******************"));
         extension_instance->GetMemAllocInstance()->DumpContent();
-        _DSDEBUG(MainService::GetInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
+        _DSDEBUG(MainService::getInstance()->RequestLogger(), dsstring("END**************************************************************************************"));
     }
     return 0;
 }

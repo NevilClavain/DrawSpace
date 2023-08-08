@@ -22,10 +22,9 @@
 */
 /* -*-LIC_END-*- */
 
-#ifndef _FILE_H_
-#define _FILE_H_
+#pragma once
 
-#include "drawspace_commons.h"
+#include "ds_types.h"
 #include "Physfs.h"
 
 namespace DrawSpace
@@ -81,4 +80,4 @@ public:
 };
 }
 }
-#endif
+

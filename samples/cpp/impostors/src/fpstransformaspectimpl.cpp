@@ -30,12 +30,13 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Aspect;
 using namespace DrawSpace::Utils;
+using namespace DrawSpace::Maths;
 
 FPSTransformAspectImpl::FPSTransformAspectImpl( void )
 {
 }
 
-void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Utils::Matrix& p_out_base_transform )
+void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAspect* p_transformaspect, DrawSpace::Maths::Matrix& p_out_base_transform )
 {
     if( NULL == m_time_aspect )
     {
@@ -67,12 +68,12 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
     bool y_mvt = flags[0]->getPurpose();
 
 	// les quaternions
-    Utils::Quaternion		    qyaw;
-	Utils::Quaternion		    qpitch;
-    Utils::Quaternion		    current_res;
+    Maths::Quaternion		    qyaw;
+    Maths::Quaternion		    qpitch;
+    Maths::Quaternion		    current_res;
 
     // les sorties
-    Utils::Matrix			    orientation;
+    Maths::Matrix			    orientation;
 
 	Vector gs;
 
@@ -80,13 +81,13 @@ void FPSTransformAspectImpl::GetLocaleTransform( DrawSpace::Aspect::TransformAsp
 	Vector xaxis( 1.0, 0.0, 0.0, 1.0 );
 
 
-	qyaw.RotationAxis( yaxis, angle_yaw );
-	qpitch.RotationAxis( xaxis, angle_pitch );
+	qyaw.rotationAxis( yaxis, angle_yaw );
+	qpitch.rotationAxis( xaxis, angle_pitch );
 
 	current_res = qpitch * qyaw;
-	current_res.RotationMatFrom( orientation );
+	current_res.rotationMatFrom( orientation );
 
-    orientation.Transform( &local_speed, &gs );
+    orientation.transform( &local_speed, &gs );
 
 
     TimeAspect::TimeScalar pos_30 = m_time_aspect->TimeScalarFactory( pos( 3, 0 ) );

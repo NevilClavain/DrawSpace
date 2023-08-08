@@ -305,7 +305,10 @@ local planet_specific_config_descr =
 	mix_seed2							         = 17566.0,
 	terrainbump_factor					         = 16.0,
 	splat_transition_up_relative_alt	         = 1.095,
-	splat_transition_down_relative_alt	         = 1.0040,
+
+	--splat_transition_down_relative_alt	         = 1.0040,
+	splat_transition_down_relative_alt	         = 1.010,
+
 	splat_texture_resol					         = 16,
     zbuffer_activation_relative_alt              = 1.045,
 	atmo_kr								         = 0.0033,
@@ -315,7 +318,7 @@ local planet_specific_config_descr =
 
 
 	-- earth-like planet
-
+	
 	plains_amplitude					         = 100.0,
 	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
@@ -329,7 +332,7 @@ local planet_specific_config_descr =
 	temp_dec_per_km								 = 180.0,
 	beach_limit							         = 2.0,
 	enable_oceans                                = TRUE,
-
+	
 
 	-- oceanic planet
 	--[[
@@ -387,8 +390,8 @@ local planet_specific_config_descr =
 
 	-- arid planet, no oceans, no humidity
 	--[[
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 13000.0,
+	plains_amplitude					         = 100.0,
+	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,
@@ -399,13 +402,13 @@ local planet_specific_config_descr =
 	humidity_alt_max							 = 0.5,
 	temp_dec_per_km								 = 3.0,
 	beach_limit							         = 6.0,
-	enable_oceans                                = FALSE,
+	enable_oceans                                = TRUE,
 	]]
 
 	-- hot planet, with humidity
 	--[[
-	plains_amplitude					         = 600.0,
-	mountains_amplitude					         = 13000.0,
+	plains_amplitude					         = 100.0,
+	mountains_amplitude					         = 320.0,
 	vertical_offset						         = 20.0,
 	mountains_offset					         = 0.0,
 	temp_scale									 = 1.0,
@@ -437,17 +440,12 @@ local planet_specific_config_descr =
 
 	details_terrain_noise_scale					 = 40.0,
 	level_disturbance_scale						 = 0.24,
+
+
 	details_limit_sup							 = 1.40,
-	bump_details_limit_sup					     = 1.30,
-	ground_bump_details_factor_depth_distance	 = 8000.0,
 
+	ultra_details_max_distance					 = 4550,
 
-	ground_detail_bump_nb_frac_loop				 = 4,
-	ultra_details_max_distance					 = 550,
-	ground_bump_details_factor_depth_near_d1	 = 60.0,
-	ground_bump_details_factor_depth_near_d2	 = 250.0,
-
-	enable_ground_detail_bump					 = TRUE,
 	enable_ultra_detail							 = TRUE,
 	enable_ultra_detail_bump					 = TRUE,
 	enable_recursive_ultra_detail_textures		 = TRUE
@@ -479,7 +477,7 @@ function( event, resource_path, context )
 
        if context == "init" then
          eg:register_rigidbody(bellerophon_entity)
-         eg:register_rigidbody(spherebump.models['sphere'].entity)
+         --eg:register_rigidbody(spherebump.models['sphere'].entity)
 
          resurgam_planet_config:set_resourcesready( TRUE )
          resurgam_planet_config:updated()
@@ -730,9 +728,9 @@ function( key )
       elseif tab == TRUE then
         model.camera.mvt:update(speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif space == TRUE then
-        model.camera.mvt:update(speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(speed_factor * 0.06, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
-        model.camera.mvt:update(speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(speed_factor * 0.6 ,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
 	  
 	else
@@ -749,9 +747,9 @@ function( key )
       elseif tab == TRUE then
         model.camera.mvt:update(-speed_factor * 150.0, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       elseif space == TRUE then
-        model.camera.mvt:update(-speed_factor * 0.01, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(-speed_factor * 0.06, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       else
-        model.camera.mvt:update(-speed_factor,mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
+        model.camera.mvt:update(-speed_factor * 0.6, mvt_info[1],mvt_info[2],mvt_info[3],0,0,0)
       end
 	  
 	else
@@ -1016,8 +1014,16 @@ function()
   local longitud_camera_pos = planet_infos["viewsInfos"][current_cam_id]["longitud"]
   local latitud_camera_pos = planet_infos["viewsInfos"][current_cam_id]["latitud"]
 
+  local temperature = planet_infos["viewsInfos"][current_cam_id]["temperature"]
+  local humidity = planet_infos["viewsInfos"][current_cam_id]["humidity"]
+
+  local display_temp = g:format_real(temperature * 100.0,0)
+  local display_humidity = g:format_real(humidity * 100.0,0)
+
+
   --text6_renderer:update(10, 180, 255, 0, 0, "local pos: "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
-  text6_renderer:update(10, 180, 255, 0, 0, "long = "..longitud_camera_pos.." lat = "..latitud_camera_pos.." - pos = "..local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
+  text6_renderer:update(10, 180, 255, 0, 0, "base temp = "..display_temp.." %% humidity = "..display_humidity.." %% long = "..longitud_camera_pos.." lat = "..latitud_camera_pos.." - pos = "..
+							local_camera_pos:get_x().." "..local_camera_pos:get_y().." "..local_camera_pos:get_z())
 
 
   local planet_light_level = planetmod.compute_lights_level(global_camera_pos)
@@ -1246,7 +1252,7 @@ model.setup_rawtransformationschain(spaceboxmod.models['spacebox0'].entity, 'spa
 
 eg:add_child('root', 'spacebox0', spaceboxmod.models['spacebox0'].entity)
 
-
+--[[
 spherebump_passes_bindings = 
 {
 	binding_0 = 
@@ -1264,6 +1270,7 @@ spherebump.view.load('sphere', sphere_pos_mat, spherebump_passes_bindings)
 
 
 eg:add_child('root', 'sphere', spherebump.models['sphere'].entity)
+]]
 
 
 planet_layers =
@@ -1635,6 +1642,405 @@ planet_layers =
 	}
 }
 
+foliage_layers =
+{
+	-- debug marble sphere
+	[0] = 
+	{
+		debugmarblesphere_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='marbre.jpg', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
+	},
+	-- grass
+	[1] = 
+	{
+		grass_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='green_alpha_tall_grass.png', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
+	},
+
+	[2] = 
+	{
+		tree_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='tree2_tex.png', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
+	}, 
+
+	[3] = 
+	{
+		isolated_tree_main_rendering = 
+		{
+			fx = 
+			{
+				shaders = 
+				{
+					{ path='planet_foliage_vs.hlsl',mode=SHADER_NOT_COMPILED },
+					{ path='planet_foliage_ps.hlsl',mode=SHADER_NOT_COMPILED }
+				},
+				rs_in = 
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="true" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="linear" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="none" }
+				},
+				rs_out =
+				{
+					{ ope=RENDERSTATE_OPE_ENABLEZBUFFER, value="false" },
+					{ ope=RENDERSTATE_OPE_SETTEXTUREFILTERTYPE, value="none" },
+					{ ope=RENDERSTATE_OPE_SETCULLING, value="cw" }
+				}
+			},			
+			textures = 
+			{
+				[1] = 
+				{
+					{ path='tree2_tex.png', stage=0 }
+				}
+			},
+			shaders_params = 
+			{
+			},
+			rendering_order = 15000
+		}
+	}
+}
+
+
+
+foliage_parameters = 
+{
+	-- debug marble sphere
+	--[[
+	[0] = 
+	{
+		meshe = 
+		{
+			file = 'sphere.ac',
+			id = 'sphere'
+		},
+
+		global_lit = TRUE,
+		detailed_lit = TRUE,
+		local_seed = 100,
+
+		altitud_max = -1.0,
+
+		temperature_range = 
+		{
+			min = 0.0,
+			max = 1.0,
+		},
+
+		humidity_range = 
+		{
+			min = 0.0,
+			max = 1.0,
+		},
+
+		random_params = 
+		{
+			appearance = 0.99,
+
+			nb_poles = 
+			{
+				min = 0,
+				max = 1
+			},
+
+			pole_ray = 
+			{
+				min = 0.01,
+				max = 0.6
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 1,
+				max = 3
+			}
+		}
+	},
+	]]
+
+	-- grass
+	[1] = 
+	{	
+		meshe = 
+		{
+			file = 'grassA.ac',
+			id = 'rect'
+		},
+
+		global_lit = TRUE,
+		detailed_lit = FALSE,
+		local_seed = 101,
+
+		altitud_max = -1.0,
+
+		temperature_range = 
+		{
+			min = 0.3,
+			max = 1.0,
+		},
+
+		humidity_range = 
+		{
+			min = 0.40,
+			max = 1.0,
+		},
+
+		random_params = 
+		{
+			appearance = 1.0,
+
+			nb_poles = 
+			{
+				min = 2,
+				max = 12
+			},
+
+			pole_ray = 
+			{
+				min = 0.01,
+				max = 0.08
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 2,
+				max = 8
+			}
+		}
+	},
+
+
+	-- tree forests
+	[2] = 
+	{	
+		meshe = 
+		{
+			file = 'tree0.ac',
+			id = 'Plane.001'
+		},
+
+		global_lit = TRUE,
+		detailed_lit = TRUE,
+		local_seed = 102,
+
+		altitud_max = 100.0,
+
+		temperature_range = 
+		{
+			min = 0.3,
+			max = 1.0,
+		},
+
+		humidity_range = 
+		{
+			min = 0.40,
+			max = 1.0,
+		},
+
+		random_params = 
+		{
+			appearance = 0.05,
+
+			nb_poles = 
+			{
+				min = 4,
+				max = 8
+			},
+
+			pole_ray = 
+			{
+				min = 0.5,
+				max = 0.99
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 20,
+				max = 30
+			}
+		}
+	},
+
+	-- iolated tree
+	[3] = 
+	{	
+		meshe = 
+		{
+			file = 'tree0.ac',
+			id = 'Plane.001'
+		},
+
+		global_lit = TRUE,
+		detailed_lit = TRUE,
+		local_seed = 103,
+
+		altitud_max = 100.0,
+
+		temperature_range = 
+		{
+			min = 0.3,
+			max = 1.0,
+		},
+
+		humidity_range = 
+		{
+			min = 0.40,
+			max = 1.0,
+		},
+
+		random_params = 
+		{
+			appearance = 0.20,
+
+			nb_poles = 
+			{
+				min = 1,
+				max = 1
+			},
+
+			pole_ray = 
+			{
+				min = 0.02,
+				max = 0.08
+			},
+
+			nbpoints_per_pole =
+			{
+				min = 1,
+				max = 1
+			}
+		}
+	},
+
+}
+
+
+foliage_passes_bindings =
+{
+	--[[
+    binding_0 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'debugmarblesphere_main_rendering'
+	},
+	]]
+
+    binding_1 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'grass_main_rendering'
+	},
+
+    binding_2 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'tree_main_rendering'
+	},
+
+    binding_3 = 
+	{
+        target_pass_id = 'texture_pass',
+		rendering_id = 'isolated_tree_main_rendering'
+	}
+
+}
 
 
 if planet_specific_config_descr.enable_oceans == TRUE then
@@ -1693,7 +2099,7 @@ if planet_specific_config_descr.enable_oceans == TRUE then
 	},
   }
 
-  planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, foliage_parameters, 'wave_pass')
 
 else
 
@@ -1720,7 +2126,7 @@ else
 	}
   }
 
-  planetmod.view.load(planet_name, planet_passes_bindings, planet_layers, planet_specific_config_descr, 'wave_pass')
+  planetmod.view.load(planet_name, planet_specific_config_descr, planet_passes_bindings, planet_layers, foliage_passes_bindings, foliage_layers, 'wave_pass')
 end
 
 
@@ -1802,7 +2208,7 @@ g:print("Planet creation done...")
 
 -- on planet
 
-set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
+set_body_on_planet(66.403, -26.193, 80.0, planet_specific_config_descr)
 
 -- on space
 --bellerophon_entity, bellerophon_rigibody_transform = create_ship_at_pos(-160.0, 0.0, -500.0)
@@ -1819,14 +2225,13 @@ set_body_on_planet(66.403, -26.193, 60.0, planet_specific_config_descr)
 
 -- on planet
 
-
-set_freecam_on_planet(66.2, -26.093, 29.0, planet_specific_config_descr)
+set_freecam_on_planet(112.82, 2.23, 5.2, planet_specific_config_descr)
 
 
 
 -- in space
 
---model.createmainfreecamera(100, 200, 500)
+--model.createmainfreecamera(100, 200, -40420000.0)
 --eg:add_child('root','model.camera.entity', model.camera.entity)
 
 
@@ -1871,6 +2276,7 @@ model.env.setbkcolor('texture_pass', 0.0,0.0,0.0)
 
 model.env.light.setstate( TRUE )
 model.env.light.setdir(-1.0, 0.0, 0.0)
+model.env.light.setcolor(0.99, 0.99, 0.99)
 model.env.ambientlight.setcolor(0.1, 0.1, 0.1)
 -- model.env.ambientlight.setcolor(0.0, 0.0, 0.0)
 

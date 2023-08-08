@@ -43,6 +43,7 @@
 
 
 using namespace DrawSpace;
+using namespace DrawSpace::Maths;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Aspect;
@@ -211,7 +212,7 @@ int LuaClass_Entity::LUA_configuretimemmanager( lua_State* p_L )
 
     LUA_TRY
     {
-        time_aspect->AddComponent<TimeManager>( "time_manager" );
+        time_aspect->AddComponent<DrawSpace::TimeManager>( "time_manager" );
         time_aspect->AddComponent<TimeAspect::TimeScale>( "time_scale", static_cast<TimeAspect::TimeScale>( time_scale ) );
         time_aspect->AddComponent<dsstring>( "output_formated_datetime", "..." );
         time_aspect->AddComponent<dstime>( "time", 0 );
@@ -309,7 +310,7 @@ int LuaClass_Entity::LUA_releasetimemmanager( lua_State* p_L )
 
     LUA_TRY
     {
-        time_aspect->RemoveComponent<TimeManager>( "time_manager" );
+        time_aspect->RemoveComponent<DrawSpace::TimeManager>( "time_manager" );
         time_aspect->RemoveComponent<TimeAspect::TimeScale>( "time_scale" );
         time_aspect->RemoveComponent<dsstring>( "output_formated_datetime" );
         time_aspect->RemoveComponent<dstime>( "time" );
@@ -625,7 +626,7 @@ int LuaClass_Entity::LUA_configurecamera( lua_State* p_L )
     }
 
     Matrix proj;
-    proj.Perspective( w, h, zn, zf );
+    proj.perspective( w, h, zn, zf );
     camera_aspect->AddComponent<Matrix>( "camera_proj", proj );
     camera_aspect->AddComponent<dsstring>( "camera_name", camera_name );
 
@@ -1066,8 +1067,9 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 	{
 		LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 	}
-	int index = luaL_checkint(p_L, 1);
-	dsstring section = luaL_checkstring(p_L, 2);
+
+	size_t index{ (size_t)luaL_checkint(p_L, 1) };
+	const dsstring section{ luaL_checkstring(p_L, 2) };
 
 	ResourcesAspect* resources_aspect = m_entity.GetAspect<ResourcesAspect>();
 	if (!resources_aspect)
@@ -1112,7 +1114,7 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 				LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 			}
 
-			int index = luaL_checkint(p_L, 3) - 1; // lua-style index [1 to n]
+			const size_t index{ (size_t)luaL_checkint(p_L, 3) - 1 }; // lua-style index [1 to n]
 
 			if (index >= 0 && index < mesheFileDescription.meshes_descriptions.size())
 			{
@@ -1153,7 +1155,7 @@ int LuaClass_Entity::LUA_readmeshesfiledescription(lua_State* p_L)
 				LUA_ERROR("Entity::read_meshesfiledescription : argument(s) missing");
 			}
 
-			int index = luaL_checkint(p_L, 3) - 1; // lua-style index [1 to n]
+			size_t index = { (size_t)luaL_checkint(p_L, 3) - 1 }; // lua-style index [1 to n]
 
 			if (index >= 0 && index < mesheFileDescription.anims_descriptions.size())
 			{

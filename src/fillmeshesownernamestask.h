@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <vector>
 #include <assimp/scene.h>           // Output data structure
 #include "task.h"
 

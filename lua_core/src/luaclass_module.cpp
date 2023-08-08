@@ -63,7 +63,7 @@ int LuaClass_Module::LUA_load( lua_State* p_L )
     {
         LUA_ERROR( "fail to load module" );
     }
-    m_mod_root->SetHub( MainService::GetInstance()->GetHub() );
+    m_mod_root->SetHub( MainService::getInstance()->GetHub() );
 
     return 0;
 }
