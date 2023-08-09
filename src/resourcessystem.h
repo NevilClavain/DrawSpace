@@ -170,7 +170,7 @@ private:
             void* data;
 
             // load it
-            data = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &size);
+            data = File::loadAndAllocBinaryFile(p_final_asset_path, &size);
             if (!data)
             {
                 _DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);

@@ -27,31 +27,28 @@
 #include "exceptions.h"
 
 
-using namespace DrawSpace::Utils;
+using namespace DrawSpace;
 
-File::FSMode File::m_fsMode = File::LOCALFILESYSTEM;
+File::FSMode File::m_fsMode = File::FSMode::LOCALFILESYSTEM;
 dsstring File::m_virtualFsArchiveName;
 
-File::File( const dsstring& p_filename, Mode p_mode ) : 
-m_fp( NULL ),
-m_vfp( NULL ),
-m_current_pos( 0 )
+File::File( const dsstring& p_filename, Mode p_mode )
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
-        if( CREATENEW == p_mode )
+        if(Mode::CREATENEW == p_mode )
         {
             m_fp = fopen( p_filename.c_str(), "wb" );
         }
-        else if( OPENEXISTINGB == p_mode )
+        else if(Mode::OPENEXISTINGB == p_mode )
         {
             m_fp = fopen( p_filename.c_str(), "rb" );
         }	
-        else if( CREATENEWTEXT == p_mode )
+        else if(Mode::CREATENEWTEXT == p_mode )
         {
             m_fp = fopen( p_filename.c_str(), "wt" );
         }
-        else if( OPENEXISTINGTEXT == p_mode )
+        else if(Mode::OPENEXISTINGTEXT == p_mode )
         {
             m_fp = fopen( p_filename.c_str(), "r" );
         }
@@ -63,7 +60,7 @@ m_current_pos( 0 )
     }
     else // VIRTUALFILESYSTEM
     {
-        if( OPENEXISTINGB == p_mode || OPENEXISTINGTEXT == p_mode )
+        if(Mode::OPENEXISTINGB == p_mode || Mode::OPENEXISTINGTEXT == p_mode )
         {
             m_vfp = PHYSFS_openRead( p_filename.c_str() );
 
@@ -79,12 +76,9 @@ m_current_pos( 0 )
     }
 }
 
-File::File(const dsstring& p_filename, const dsstring& p_mode) :
-m_fp(NULL),
-m_vfp(NULL),
-m_current_pos(0)
+File::File(const dsstring& p_filename, const dsstring& p_mode)
 {
-    if (LOCALFILESYSTEM == m_fsMode)
+    if (FSMode::LOCALFILESYSTEM == m_fsMode)
     {
         m_fp = fopen(p_filename.c_str(), p_mode.c_str());
 
@@ -114,12 +108,12 @@ m_current_pos(0)
 
 File::~File( void )
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
         if( m_fp )
         {
             fclose( m_fp );
-            m_fp = NULL;
+            m_fp = nullptr;
         }
     }
     else // VIRTUALFILESYSTEM
@@ -127,13 +121,13 @@ File::~File( void )
         if( m_vfp )
         {
             PHYSFS_close( m_vfp );
-            m_vfp = NULL;
+            m_vfp = nullptr;
         }    
     }
 }
-void File::Puts( const dsstring& p_string )
+void File::puts( const dsstring& p_string )
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
         if( m_fp )
         {
@@ -146,9 +140,9 @@ void File::Puts( const dsstring& p_string )
     }
 }
 
-bool File::Gets( char* p_buff, int p_nbToRead )
+bool File::gets( char* p_buff, int p_nbToRead )
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
         if( m_fp )
         {
@@ -168,10 +162,10 @@ bool File::Gets( char* p_buff, int p_nbToRead )
         if( m_vfp )
         {
             char c;
-            char* buff = p_buff;
+            auto buff{ p_buff };
             int real_size;
-            bool cont = true;
-            int cc = 0;
+            bool cont{ true };
+            int cc{ 0 };
 
             while( cont && cc < p_nbToRead )
             {
@@ -187,7 +181,6 @@ bool File::Gets( char* p_buff, int p_nbToRead )
                     cont = false;
                 }
             }
-
             *buff = 0;
 
             if( 0 == real_size )
@@ -204,9 +197,9 @@ bool File::Gets( char* p_buff, int p_nbToRead )
     return false;
 }
 
-void File::Flush( void )
+void File::flush( void )
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
         if( m_fp )
         {
@@ -230,9 +223,9 @@ void File::Flush( void )
     }
 }
 
-size_t File::FileSize( void ) const
+size_t File::fileSize( void ) const
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
         if( m_fp )
         {
@@ -259,18 +252,18 @@ size_t File::FileSize( void ) const
 
 long File::fileSize( FILE *p_fp )
 {
-    long current_pos;
-    current_pos = ftell( p_fp );
+    const auto current_pos{ ftell(p_fp) };
     fseek( p_fp, 0, SEEK_END );
-    long size = ftell( p_fp );
+    const auto size{ ftell(p_fp) };
     fseek( p_fp, current_pos, SEEK_SET );
+
     return size;
 }
 
-size_t File::Read(void* p_buffer, size_t p_size, size_t p_count)
+size_t File::read(void* p_buffer, size_t p_size, size_t p_count)
 {
     size_t status = 0;
-    if (LOCALFILESYSTEM == m_fsMode)
+    if (FSMode::LOCALFILESYSTEM == m_fsMode)
     {
         if (m_fp)
         {
@@ -295,10 +288,10 @@ size_t File::Read(void* p_buffer, size_t p_size, size_t p_count)
     return status;
 }
 
-size_t File::Write(const void* p_buffer, size_t p_size, size_t p_count)
+size_t File::write(const void* p_buffer, size_t p_size, size_t p_count)
 {
     size_t status = 0;
-    if (LOCALFILESYSTEM == m_fsMode)
+    if (FSMode::LOCALFILESYSTEM == m_fsMode)
     {
         if (m_fp)
         {
@@ -323,9 +316,9 @@ size_t File::Write(const void* p_buffer, size_t p_size, size_t p_count)
     return status;
 }
 
-bool File::Seek(size_t p_offset, int p_origin)
+bool File::seek(size_t p_offset, int p_origin)
 {
-    if (LOCALFILESYSTEM == m_fsMode)
+    if (FSMode::LOCALFILESYSTEM == m_fsMode)
     {
         if (m_fp)
         {
@@ -342,7 +335,7 @@ bool File::Seek(size_t p_offset, int p_origin)
         if (m_vfp)
         {
             PHYSFS_uint64 final_offset = 0;
-            long fsize = PHYSFS_fileLength(m_vfp);
+            const auto fsize{ PHYSFS_fileLength(m_vfp) };
 
             switch(p_origin)
             {
@@ -371,9 +364,9 @@ bool File::Seek(size_t p_offset, int p_origin)
     }
 }
 
-size_t File::Tell() const
+size_t File::tell() const
 {
-    if (LOCALFILESYSTEM == m_fsMode)
+    if (FSMode::LOCALFILESYSTEM == m_fsMode)
     {
         if (m_fp)
         {
@@ -397,13 +390,12 @@ size_t File::Tell() const
     }
 }
 
-void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
+void* File::loadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
 {
-    if( LOCALFILESYSTEM == m_fsMode )
+    if(FSMode::LOCALFILESYSTEM == m_fsMode )
     {
-        void* ptr = NULL;
-        FILE* fp;
-        fp = fopen( p_file.c_str(), "rb" );
+        void* ptr{ nullptr };
+        const auto fp{ fopen(p_file.c_str(), "rb") };
         if( fp )
         {
             unsigned long fs = fileSize( fp );
@@ -422,18 +414,18 @@ void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
     }
     else // VIRTUALFILESYSTEM
     {
-        void* ptr = NULL;
+        void* ptr{ nullptr };
 
-        PHYSFS_file* vfile = PHYSFS_openRead( p_file.c_str() );
-        if( NULL == vfile )
+        PHYSFS_file* vfile{ PHYSFS_openRead(p_file.c_str()) };
+        if( nullptr == vfile )
         {
             _DSEXCEPTION( dsstring( "cannot open file from virtual filesystem : " ) + p_file );
         }
         PHYSFS_sint64 file_size = PHYSFS_fileLength( vfile );
 
-        unsigned char *vFileBuf;
-        vFileBuf = _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT( unsigned char, unsigned char[file_size], file_size, p_file );
-        int length_read = PHYSFS_read( vfile, vFileBuf, 1, file_size );
+        unsigned char* vFileBuf{ _DRAWSPACE_NEW_EXPLICIT_SIZE_WITH_COMMENT(unsigned char, unsigned char[file_size], file_size, p_file) };
+
+        const auto length_read{ PHYSFS_read(vfile, vFileBuf, 1, file_size) };
 
         if( length_read != file_size )
         {
@@ -449,27 +441,27 @@ void* File::LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size )
     }
 }
 
-void File::MountVirtualFS( const dsstring& p_virtualFsArchiveName )
+void File::mountVirtualFS( const dsstring& p_virtualFsArchiveName )
 {
-    if( m_fsMode != VIRTUALFILESYSTEM )
+    if( m_fsMode != FSMode::VIRTUALFILESYSTEM )
     {
-        PHYSFS_init( NULL );
+        PHYSFS_init( nullptr );
 
-        int status = PHYSFS_mount( p_virtualFsArchiveName.c_str(), NULL, 1 );
+        const auto status{ PHYSFS_mount(p_virtualFsArchiveName.c_str(), nullptr, 1) };
         if( !status )
         {
             _DSEXCEPTION( dsstring( "Cannot mount virtual filesystem archive : " ) + p_virtualFsArchiveName );
         }
 
-        m_fsMode = VIRTUALFILESYSTEM;
+        m_fsMode = FSMode::VIRTUALFILESYSTEM;
     }
 }
 
-void File::UnmountVirtualFS( void )
+void File::unmountVirtualFS( void )
 {
-    if( VIRTUALFILESYSTEM == m_fsMode )
+    if(FSMode::VIRTUALFILESYSTEM == m_fsMode )
     {
         PHYSFS_deinit();
-        m_fsMode = LOCALFILESYSTEM;
+        m_fsMode = FSMode::LOCALFILESYSTEM;
     }
 }

@@ -30,7 +30,6 @@
 
 
 using namespace DrawSpace;
-using namespace DrawSpace::Utils;
 using namespace DrawSpace::Logger;
 
 

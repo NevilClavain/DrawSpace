@@ -103,7 +103,7 @@ bool Shader::LoadFromFile( void )
         _DSEXCEPTION( "Shader filepath not initialized!" );
     }
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile( compute_final_path(), &size );
+    void* data = File::loadAndAllocBinaryFile( compute_final_path(), &size );
     if( !data )
     {
         //return false;

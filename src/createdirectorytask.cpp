@@ -25,7 +25,6 @@
 #include "createdirectorytask.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
 
 const dsstring CreateDirectoryTask::bcCacheName{ "bc_cache" };

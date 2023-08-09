@@ -483,7 +483,7 @@ int LuaClass_Globals::LUA_setvirtualfs( lua_State* p_L )
 
 	dsstring path = luaL_checkstring( p_L, 1 );
 
-    File::MountVirtualFS( path );
+    File::mountVirtualFS( path );
     return 0;
 }
 

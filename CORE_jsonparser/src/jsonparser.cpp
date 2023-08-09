@@ -83,7 +83,7 @@ int JSONParser::getTokenSize( int p_index ) const
 void JSONParser::parseFromFile( const dsstring& p_filepath )
 {
     long fsize;
-    auto content{ DrawSpace::Utils::File::LoadAndAllocBinaryFile(p_filepath, &fsize) };
+    auto content{ DrawSpace::File::loadAndAllocBinaryFile(p_filepath, &fsize) };
     if( !content )
     {
         _DSEXCEPTION( "Cannot open JSON file : " + p_filepath );

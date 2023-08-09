@@ -26,9 +26,7 @@
 #include "parser.h"
 #include "file.h"
 
-
 using namespace DrawSpace;
-using namespace DrawSpace::Utils;
 
 static std::vector<dsstring> split(const std::string& s, const std::string& seperators)
 {
@@ -52,12 +50,12 @@ void Parser::run(const dsstring& p_filepath, const dsstring& p_separators, const
 {
     long line_count{ 0 };
 
-    File file(p_filepath, File::OPENEXISTINGTEXT);
+    File file(p_filepath, File::Mode::OPENEXISTINGTEXT);
     constexpr int lineMaxSize{ 1024 };
 
     char line[lineMaxSize];
 
-    while (file.Gets(line, lineMaxSize))
+    while (file.gets(line, lineMaxSize))
     {
         line_count++;
         // supprimer le retour chariot en fin de ligne

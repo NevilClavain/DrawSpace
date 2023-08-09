@@ -29,55 +29,55 @@
 
 namespace DrawSpace
 {
-namespace Utils
-{
-class File
-{
-public:
-    enum FSMode
+    class File
     {
-        LOCALFILESYSTEM,
-        VIRTUALFILESYSTEM,
+    public:
+        enum class FSMode
+        {
+            LOCALFILESYSTEM,
+            VIRTUALFILESYSTEM,
+        };
+
+
+        enum class Mode
+        {
+            CREATENEW,
+            OPENEXISTINGB,
+            CREATENEWTEXT,
+            OPENEXISTINGTEXT,
+        };
+
+        File( const dsstring& p_filename, Mode p_mode );
+        File( const dsstring& p_filename, const dsstring& p_mode );
+        ~File( void );
+
+        static void mountVirtualFS( const dsstring& p_virtualFsArchiveName );
+        static void unmountVirtualFS( void );
+
+        size_t fileSize( void ) const;
+
+        void puts( const dsstring& p_string );
+        bool gets( char* p_buff, int p_nbToRead );
+
+        void flush( void );
+        size_t read(void* p_buffer, size_t p_size, size_t p_count);
+        size_t write(const void* p_buffer, size_t p_size, size_t p_count);
+        bool seek(size_t p_offset, int p_origin);
+        size_t tell() const;
+
+        static void* loadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
+
+    private:
+
+        FILE*               m_fp{ nullptr };
+        PHYSFS_file*        m_vfp{ nullptr };
+
+        int                 m_current_pos{ 0 }; // used for VIRTUALFILESYSTEM only
+
+        static FSMode       m_fsMode;
+        static dsstring     m_virtualFsArchiveName;
+
+        static long	        fileSize(FILE* p_fp);
     };
-
-private:
-    static FSMode       m_fsMode;
-    static dsstring     m_virtualFsArchiveName;
-    FILE*               m_fp{ nullptr };
-    PHYSFS_file*        m_vfp{ nullptr };
-
-    int                 m_current_pos; // used for VIRTUALFILESYSTEM only
-    static long	        fileSize( FILE *p_fp );
-
-public:
-    enum Mode
-    {
-        CREATENEW,
-        OPENEXISTINGB,
-        CREATENEWTEXT,
-        OPENEXISTINGTEXT,
-    };
-
-    File( const dsstring& p_filename, Mode p_mode );
-    File( const dsstring& p_filename, const dsstring& p_mode );
-    ~File( void );
-
-    static void MountVirtualFS( const dsstring& p_virtualFsArchiveName );
-    static void UnmountVirtualFS( void );
-
-    size_t FileSize( void ) const;
-
-    void Puts( const dsstring& p_string );
-    bool Gets( char* p_buff, int p_nbToRead );
-
-    void Flush( void );
-    size_t Read(void* p_buffer, size_t p_size, size_t p_count);
-    size_t Write(const void* p_buffer, size_t p_size, size_t p_count);
-    bool Seek(size_t p_offset, int p_origin);
-    size_t Tell() const;
-
-    static void* LoadAndAllocBinaryFile( const dsstring& p_file, long* p_size );
-};
-}
 }
 

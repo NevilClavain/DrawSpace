@@ -136,7 +136,7 @@ int LuaContext::ExecuteFromFile( const dsstring& p_filepath )
 
     dsstring final_path = m_rootpath + + "/" + p_filepath;
 
-    void* content = DrawSpace::Utils::File::LoadAndAllocBinaryFile( final_path, &fsize );
+    void* content = DrawSpace::File::loadAndAllocBinaryFile( final_path, &fsize );
     if( !content )
     {
         global_status = -1;

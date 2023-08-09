@@ -47,7 +47,7 @@ namespace DrawSpace
 
         private:
 
-            std::unique_ptr<DrawSpace::Utils::File>     m_file;
+            std::unique_ptr<DrawSpace::File>            m_file;
             long                                        m_flush_period{ 0 };
             long                                        m_period_count{ 0 };
             std::mutex	                                m_mutex;   

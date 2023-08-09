@@ -97,7 +97,7 @@ bool Texture::LoadFromFile(void)
     }
 
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile(compute_final_path(), &size);
+    void* data = File::loadAndAllocBinaryFile(compute_final_path(), &size);
     if (!data)
     {
         return false;

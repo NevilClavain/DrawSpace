@@ -25,24 +25,24 @@
 #include "logoutputfile.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Utils;
+
 
 Logger::OutputFile::OutputFile( const dsstring& p_filename ) :
 m_flush_period( 0 ),
 m_period_count( 0 )
 {
-    m_file = std::make_unique<File>(p_filename, File::CREATENEWTEXT);
+    m_file = std::make_unique<File>(p_filename, File::Mode::CREATENEWTEXT);
 }
 
 void Logger::OutputFile::logIt( const dsstring& p_trace )
 {
     m_mutex.lock();
 
-    m_file->Puts( p_trace );
+    m_file->puts( p_trace );
 
     if( m_period_count == m_flush_period )
     {
-        m_file->Flush();
+        m_file->flush();
         m_period_count = 0;       
     }
     else

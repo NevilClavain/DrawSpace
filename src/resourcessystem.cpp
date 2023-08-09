@@ -1449,7 +1449,7 @@ void ResourcesSystem::manage_shader_in_bccache(Shader* p_shader, const dsstring&
 	long text_size;
 	void* text;
 
-	text = Utils::File::LoadAndAllocBinaryFile(p_final_asset_path, &text_size);
+	text = File::loadAndAllocBinaryFile(p_final_asset_path, &text_size);
 	if (!text)
 	{
 		_DSEXCEPTION("ResourcesSystem : failed to load " + p_final_asset_path);

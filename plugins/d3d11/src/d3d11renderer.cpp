@@ -56,7 +56,7 @@ HRESULT __stdcall D3D10Include::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileN
 	void* data;
 
 	// load it
-	data = Utils::File::LoadAndAllocBinaryFile(final_path, &size);
+	data = File::loadAndAllocBinaryFile(final_path, &size);
 	if (!data)
 	{
 		return S_FALSE;

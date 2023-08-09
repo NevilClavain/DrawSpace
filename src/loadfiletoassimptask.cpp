@@ -40,7 +40,7 @@ void LoadFileToAssimpTask::Execute(void)
 {
     long size;
 
-    auto data{ Utils::File::LoadAndAllocBinaryFile(m_final_asset_path, &size) };
+    auto data{ File::loadAndAllocBinaryFile(m_final_asset_path, &size) };
     if (data)
     {
         m_failure = false;

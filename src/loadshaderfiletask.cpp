@@ -96,7 +96,7 @@ void LoadShaderFileTask::recurs_browse_shader_source(const dsstring& p_filepath,
 
  
     long size;
-    void* data = Utils::File::LoadAndAllocBinaryFile(p_filepath, &size);
+    void* data = File::loadAndAllocBinaryFile(p_filepath, &size);
     if (data)
     {
         m_blocs.push_back(data);
