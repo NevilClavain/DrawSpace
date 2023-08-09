@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.0)
 project(CORE_logger)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_file/src)
 include_directories(${physfs_include_dir})
 
 file(

@@ -44,6 +44,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_file/src)
 
 file(
         GLOB_RECURSE
@@ -55,7 +56,7 @@ file(
 
 add_library(${sample_name} SHARED ${source_files})
 
-target_link_libraries(${sample_name} physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_timemanager)
+target_link_libraries(${sample_name} physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_timemanager CORE_file)
 
 install(TARGETS ${sample_name} CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS ${sample_name} CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

@@ -25,6 +25,7 @@ project(CORE_jsonparser)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_file/src)
 include_directories(${physfs_include_dir})
 
 include_directories(${jsonjsmn_include_dir})

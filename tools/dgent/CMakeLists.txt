@@ -42,7 +42,7 @@ file(
 )
 
 add_executable(dgent ${source_files})
-target_link_libraries(dgent jsmn physfs drawspace_core CORE_logger CORE_maths CORE_jsonparser)
+target_link_libraries(dgent jsmn physfs drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_file)
 
 install(TARGETS dgent CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS dgent CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

@@ -21,40 +21,24 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(rt)
+project(CORE_file)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_parser/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_jsonparser/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
-
-include_directories(${jsonjsmn_include_dir})
-link_directories(${jsonjsmn_lib_dir})
-
-include_directories(${assimp_include_dir})
-
 include_directories(${physfs_include_dir})
-link_directories(${physfs_lib_dir})
 
-include_directories(${bullet_include_dir})
-link_directories(${bullet_lib_dir})
-
-include_directories(${st_tree_include_dir})
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/rt/src/*.h
-        ${CMAKE_SOURCE_DIR}/rt/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/CORE_file/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_file/src/*.cpp		
 )
 
-add_executable(rt WIN32 ${source_files})
-target_link_libraries(rt physfs jsmn BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 drawspace_core CORE_logger CORE_maths CORE_parser CORE_jsonparser CORE_timemanager CORE_file)
 
-install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS rt CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
-install(FILES ${CMAKE_SOURCE_DIR}/config_deployment/logging/logrt.conf OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+add_definitions( -D_FROMCMAKE )
+
+add_library(CORE_file ${source_files})
+
+
+
