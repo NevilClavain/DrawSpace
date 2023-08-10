@@ -36,6 +36,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_jsonparser/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_file/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
 
 file(
         GLOB_RECURSE
@@ -203,35 +204,19 @@ ${CMAKE_SOURCE_DIR}/src/buildemeshetask.h
 ${CMAKE_SOURCE_DIR}/src/systems.h
 )
 
-source_group(threading FILES
-${CMAKE_SOURCE_DIR}/src/task.h
-${CMAKE_SOURCE_DIR}/src/mailbox.h
-${CMAKE_SOURCE_DIR}/src/runner.h
-${CMAKE_SOURCE_DIR}/src/runner.cpp
-)
 
 source_group(utils FILES
-${CMAKE_SOURCE_DIR}/src/file.cpp
-${CMAKE_SOURCE_DIR}/src/file.h
-${CMAKE_SOURCE_DIR}/src/filesystem.cpp
-${CMAKE_SOURCE_DIR}/src/filesystem.h
-${CMAKE_SOURCE_DIR}/src/jsonparser.cpp
-${CMAKE_SOURCE_DIR}/src/jsonparser.h
 ${CMAKE_SOURCE_DIR}/src/md5.h
 ${CMAKE_SOURCE_DIR}/src/memalloc.cpp
 ${CMAKE_SOURCE_DIR}/src/memalloc.h
 ${CMAKE_SOURCE_DIR}/src/misc_utils.cpp
 ${CMAKE_SOURCE_DIR}/src/misc_utils.h
-${CMAKE_SOURCE_DIR}/src/parser.cpp
-${CMAKE_SOURCE_DIR}/src/parser.h
 ${CMAKE_SOURCE_DIR}/src/piload.cpp
 ${CMAKE_SOURCE_DIR}/src/piload.h
 ${CMAKE_SOURCE_DIR}/src/pimanager.h
 ${CMAKE_SOURCE_DIR}/src/pimanager_impl.h
 ${CMAKE_SOURCE_DIR}/src/quadtree.cpp
 ${CMAKE_SOURCE_DIR}/src/quadtree.h
-${CMAKE_SOURCE_DIR}/src/timemanager.cpp
-${CMAKE_SOURCE_DIR}/src/timemanager.h
 )
 
 add_definitions(-DBT_USE_DOUBLE_PRECISION )

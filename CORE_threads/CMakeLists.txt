@@ -21,43 +21,24 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(planets_luaext)
-
-include_directories(${lua_include_dir})
-link_directories(${lua_lib_dir})
-
-include_directories(${physfs_include_dir})
-link_directories(${physfs_lib_dir})
-
-link_directories(${jsonjsmn_lib_dir})
-
-include_directories(${assimp_include_dir})
-link_directories(${assimp_lib_dir})
-
-include_directories(${bullet_include_dir})
-link_directories(${bullet_lib_dir})
-
-include_directories(${st_tree_include_dir})
+project(CORE_threads)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_timemanager/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_file/src)
-include_directories(${CMAKE_SOURCE_DIR}/lua_core/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
+
+
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/lua_extensions/planets_luaext/src/*.h
-        ${CMAKE_SOURCE_DIR}/lua_extensions/planets_luaext/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/CORE_threads/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_threads/src/*.cpp		
 )
 
-add_library(planets_luaext SHARED ${source_files})
-target_link_libraries(planets_luaext drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_filesystem CORE_timemanager CORE_file CORE_threads lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
-install(TARGETS planets_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS planets_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS planets_luaext CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+
+add_definitions( -D_FROMCMAKE )
+
+add_library(CORE_threads ${source_files})
+
+
+

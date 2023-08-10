@@ -51,7 +51,7 @@ file(
 )
 
 add_library(freemvt_luaext SHARED ${source_files})
-target_link_libraries(freemvt_luaext drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_timemanager CORE_file lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
+target_link_libraries(freemvt_luaext drawspace_core CORE_logger CORE_maths CORE_jsonparser CORE_filesystem CORE_timemanager CORE_file CORE_threads lua physfs jsmn assimp-vc140-mt BulletDynamics_vs2017 BulletCollision_vs2017 LinearMath_vs2017 lua_core)
 install(TARGETS freemvt_luaext CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS freemvt_luaext CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS freemvt_luaext CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
