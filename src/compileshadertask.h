@@ -36,7 +36,7 @@ class Renderer;
 
 namespace Systems
 {
-struct CompileShaderTask : public Interface::ITask
+struct CompileShaderTask : public Task
 {
 private:
 
@@ -54,13 +54,13 @@ private:
 
     // shader bytecode buffer infos...
     long                            m_bc_length;
-    void* m_bc{ nullptr };
+    void*                           m_bc{ nullptr };
 
 public:
 
     CompileShaderTask();
 
-    void Execute(void);
+    void execute(void);
     void SetShaderText(void* p_text, long p_text_size, int p_shadertype);
     void SetShaderDirs(const dsstring& p_final_asset_dir, const dsstring& p_asset_path);
     void SetRenderer(DrawSpace::Interface::Renderer* p_renderer);

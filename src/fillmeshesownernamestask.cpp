@@ -27,11 +27,11 @@
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
 
-FillMeshesOwnerNamesTask::FillMeshesOwnerNamesTask() : ITask("FILLMESHESOWNERNAMES", "")
+FillMeshesOwnerNamesTask::FillMeshesOwnerNamesTask() : Task("FILLMESHESOWNERNAMES", "")
 {
 }
 
-void FillMeshesOwnerNamesTask::Execute(void)
+void FillMeshesOwnerNamesTask::execute(void)
 {
     m_meshes_node_owner_names.resize(m_nb_meshes);
     fill_scene_node(m_root);

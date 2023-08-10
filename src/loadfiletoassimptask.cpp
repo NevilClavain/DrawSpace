@@ -28,15 +28,13 @@
 #include "memalloc.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Utils;
-using namespace DrawSpace::Interface;
 using namespace DrawSpace::Systems;
 
-LoadFileToAssimpTask::LoadFileToAssimpTask() : ITask("LOADFILETOASSIMP", "")
+LoadFileToAssimpTask::LoadFileToAssimpTask() : Task("LOADFILETOASSIMP", "")
 {
 }
 
-void LoadFileToAssimpTask::Execute(void)
+void LoadFileToAssimpTask::execute(void)
 {
     long size;
 

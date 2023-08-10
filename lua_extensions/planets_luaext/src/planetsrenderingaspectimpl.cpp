@@ -1543,8 +1543,8 @@ void PlanetsRenderingAspectImpl::draw_sub_passes(void)
                 }
             }
 
-            task->SetTargetDescr(sequence_id);
-            task->SetActionDescr("UPDATE_SINGLESHOT_SUBPASS_QUEUES");
+            task->setTargetDescr(sequence_id);
+            task->setActionDescr("UPDATE_SINGLESHOT_SUBPASS_QUEUES");
             task->SetRenderingQueue(queues);
             task->DisableOpt(true);
 

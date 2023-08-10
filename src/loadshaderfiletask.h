@@ -34,7 +34,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct LoadShaderFileTask : public Interface::ITask
+struct LoadShaderFileTask : public Task
 {
 private:
 
@@ -57,7 +57,7 @@ public:
     LoadShaderFileTask();
     ~LoadShaderFileTask();
 
-    void Execute(void);
+    void execute(void);
 
     void SetFinalAssetPath(const dsstring& p_final_asset_path);
     void SetFinalAssetDir(const dsstring& p_final_asset_dir);

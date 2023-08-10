@@ -31,8 +31,7 @@
 DrawSpace::Logger::Sink runner_logger("Runner", DrawSpace::Logger::Configuration::getInstance());
 
 using namespace DrawSpace;
-using namespace DrawSpace::Interface;
-using namespace DrawSpace::Threading;
+
 
 void Runner::mainloop(void)
 {
@@ -42,26 +41,26 @@ void Runner::mainloop(void)
 
 	do
 	{
-		Mailbox<ITask*>* mb_in{ &Runner::getInstance()->m_mailbox_in };
-		Mailbox<std::pair<dsstring, dsstring>>* mb_out{ &Runner::getInstance()->m_mailbox_out };
-		int mbsize{ mb_in->GetBoxSize() };
+		auto mb_in{ &Runner::getInstance()->m_mailbox_in };
+		auto mb_out{ &Runner::getInstance()->m_mailbox_out };
+		const auto mbsize{ mb_in->getBoxSize() };
 
 		if (mbsize > 0)
 		{
-			ITask* current{ nullptr };
+			Task* current{ nullptr };
 			do
 			{
-				current = mb_in->PopNext<ITask*>(nullptr);
+				current = mb_in->popNext<Task*>(nullptr);
 				if (current)
 				{
-					auto task_target{ current->GetTargetDescr() };
-					auto task_action{ current->GetActionDescr() };
+					auto task_target{ current->getTargetDescr() };
+					auto task_action{ current->getActionDescr() };
 
-					dsstring exec_trace = dsstring("<<< Runner executing : ") + task_action + dsstring(" ") + task_target + dsstring(" >>>");
+					const dsstring exec_trace{ dsstring("<<< Runner executing : ") + task_action + dsstring(" ") + task_target + dsstring(" >>>") };
 					_DSDEBUG(runner_logger, exec_trace);
-					current->Execute();
+					current->execute();
 					_DSDEBUG(runner_logger, dsstring("<<< Task execution done >>>"));
-					mb_out->Push<std::pair<dsstring, dsstring>>(std::make_pair(task_action, task_target));
+					mb_out->push<std::pair<dsstring, dsstring>>(std::make_pair(task_action, task_target));
 				}
 
 			} while (current);
@@ -69,7 +68,7 @@ void Runner::mainloop(void)
 		else
 		{
 			// idle for a little time...
-			Sleep(idle_duration_ms);
+			::Sleep(idle_duration_ms);
 		}
 
 	} while (Runner::getInstance()->m_cont);
@@ -77,12 +76,12 @@ void Runner::mainloop(void)
 	_DSDEBUG(runner_logger, dsstring("<<< Runner end >>>"));
 }
 
-void Runner::Startup(void)
+void Runner::startup(void)
 {	
 	m_thread = std::make_unique<std::thread>(Runner::mainloop);
 };
 
-void Runner::Join(void) const
+void Runner::join(void) const
 {
 	if (m_thread.get())
 	{

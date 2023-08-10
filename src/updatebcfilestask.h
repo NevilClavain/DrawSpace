@@ -30,7 +30,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct UpdateBCFilesTask : public Interface::ITask
+struct UpdateBCFilesTask : public Task
 {
 private:
 
@@ -56,7 +56,7 @@ public:
 
     void SetShaderText(void* p_text, long p_text_size);
 
-    void Execute(void);
+    void execute(void);
     void SetBC(void* p_bc, long p_bc_length);
     void SetHash(const dsstring& p_hash);
     void SetShaderId(const dsstring& p_shader_id);

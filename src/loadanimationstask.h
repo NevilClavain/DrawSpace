@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct LoadAnimationsTask : public Interface::ITask
+struct LoadAnimationsTask : public Task
 {
 private:
 
@@ -46,7 +46,7 @@ public:
 
     LoadAnimationsTask();
 
-    void Execute(void);
+    void execute(void);
     void SetScene(const aiScene* p_scene);
     void SetAnimAspect(Aspect::AnimationsAspect* p_aspect);
 };

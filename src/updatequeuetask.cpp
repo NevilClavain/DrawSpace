@@ -29,11 +29,11 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 
 
-UpdateQueueTask::UpdateQueueTask() : ITask("", "")
+UpdateQueueTask::UpdateQueueTask() : Task("", "")
 {
 }
 
-void UpdateQueueTask::Execute(void)
+void UpdateQueueTask::execute(void)
 {
 	for (auto& queue : m_renderingqueues)
 	{

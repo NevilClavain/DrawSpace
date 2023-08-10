@@ -189,8 +189,8 @@ void RenderPassNodeGraph::ProcessSignals( void )
                     queues.push_back(pass->m_renderingqueue);
                 }
 
-                task->SetTargetDescr(sequence_id);
-                task->SetActionDescr("UPDATEQUEUES");
+                task->setTargetDescr(sequence_id);
+                task->setActionDescr("UPDATEQUEUES");
                 task->SetRenderingQueue(queues);
                 
                 p_step.SetTask(task);

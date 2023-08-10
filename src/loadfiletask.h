@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct LoadFileTask : public Interface::ITask
+struct LoadFileTask : public Task
 {
 private:
     // execution data
@@ -46,7 +46,7 @@ public:
 
     LoadFileTask();
 
-    void Execute(void);
+    void execute(void);
 
     void SetFinalAssetPath(const dsstring& p_final_asset_path);
     bool Failed(void) const;

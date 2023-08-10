@@ -206,8 +206,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							const auto task_id{ final_asset_path };
 
 							const auto task{ _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask) };
-							task->SetTargetDescr(task_id);
-							task->SetActionDescr("LOADASSETFILE");
+							task->setTargetDescr(task_id);
+							task->setActionDescr("LOADASSETFILE");
 							task->SetFinalAssetPath(final_asset_path);
 							p_step.SetTask(task);
 
@@ -324,8 +324,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							const auto task_id{ final_asset_path };
 
 							const auto task{ _DRAWSPACE_NEW_(LoadShaderFileTask, LoadShaderFileTask) };
-							task->SetTargetDescr(task_id);
-							task->SetActionDescr("LOADASSETFILE");
+							task->setTargetDescr(task_id);
+							task->setActionDescr("LOADASSETFILE");
 							task->SetFinalAssetPath(final_asset_path);
 							task->SetFinalAssetDir(final_asset_dir);
 							p_step.SetTask(task);
@@ -418,7 +418,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							const auto task{ _DRAWSPACE_NEW_(ReadShaderMD5Task, ReadShaderMD5Task) };
 							task->SetShaderId(shader_id);
 							task->SetFilePath(bcMd5FileName_path);
-							task->SetTargetDescr(bcMd5FileName_path);
+							task->setTargetDescr(bcMd5FileName_path);
 							task->SetCompareMD5(hash_shader);
 
 							p_step.SetTask(task);
@@ -477,8 +477,8 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							const auto bcCodeFileName_path{ p_step.GetComponent<dsstring>("bcCodeFileName_path")->getPurpose() };
 
 							const auto task{ _DRAWSPACE_NEW_(LoadFileTask, LoadFileTask) };
-							task->SetTargetDescr(bcCodeFileName_path);
-							task->SetActionDescr("LOADBCSHADERFILE");
+							task->setTargetDescr(bcCodeFileName_path);
+							task->setActionDescr("LOADBCSHADERFILE");
 							task->SetFinalAssetPath(bcCodeFileName_path);
 
 							p_step.SetTask(task);
@@ -537,7 +537,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							const auto task{ _DRAWSPACE_NEW_(CompileShaderTask, CompileShaderTask) };
 
-							task->SetTargetDescr(task_id);
+							task->setTargetDescr(task_id);
 							task->SetShaderText(text, text_size, shader_type);
 							task->SetShaderDirs(final_asset_dir, asset_path);
 							task->SetRenderer(renderer);
@@ -608,7 +608,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							const auto task_id{ final_asset_path };
 
 							auto task{ _DRAWSPACE_NEW_(UpdateBCFilesTask, UpdateBCFilesTask) };
-							task->SetTargetDescr(task_id);
+							task->setTargetDescr(task_id);
 							task->SetShaderId(shader_id);
 							task->SetHash(hash_shader);
 							task->SetBC(bc, bc_length);
@@ -651,7 +651,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							const auto task_id{ final_asset_path };
 							const auto task{ _DRAWSPACE_NEW_(CreateDirectoryTask, CreateDirectoryTask) };
-							task->SetTargetDescr(task_id);
+							task->setTargetDescr(task_id);
 							task->SetShaderId(shader_id);
 							p_step.SetTask(task);
 						});
@@ -874,7 +874,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 							const auto task_id{ final_asset_path };
 
 							const auto task{ _DRAWSPACE_NEW_(LoadFileToAssimpTask, LoadFileToAssimpTask) };
-							task->SetTargetDescr(task_id);
+							task->setTargetDescr(task_id);
 							task->SetFinalAssetPath(final_asset_path);
 							task->SetTargetMeshe(target_meshe);
 							p_step.SetTask(task);
@@ -976,7 +976,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 						const auto task_id{ final_asset_path };
 						const auto task{ _DRAWSPACE_NEW_(FillMeshesOwnerNamesTask, FillMeshesOwnerNamesTask) };
 
-						task->SetTargetDescr(task_id);
+						task->setTargetDescr(task_id);
 						task->SetNbMeshes(scene->mNumMeshes);
 						task->SetRoot(root);
 
@@ -1079,7 +1079,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 						LoadAnimationsTask* task = _DRAWSPACE_NEW_(LoadAnimationsTask, LoadAnimationsTask);
 
-						task->SetTargetDescr(task_id);
+						task->setTargetDescr(task_id);
 						task->SetAnimAspect(anims_aspect);
 						task->SetScene(scene);
 
@@ -1136,7 +1136,7 @@ void ResourcesSystem::VisitEntity(Entity* p_parent, Entity* p_entity)
 
 							const auto task_id{ final_asset_path };
 							const auto task = _DRAWSPACE_NEW_(BuildMesheTask, BuildMesheTask);
-							task->SetTargetDescr(task_id);
+							task->setTargetDescr(task_id);
 
 							task->SetEntity(entity);
 							task->SetMeshesIOInfos(meshes, target_meshe, meshe_node);

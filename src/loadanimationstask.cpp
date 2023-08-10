@@ -29,11 +29,11 @@ using namespace DrawSpace;
 using namespace DrawSpace::Systems;
 
 
-LoadAnimationsTask::LoadAnimationsTask() : ITask("LOADANIMATIONS", "")
+LoadAnimationsTask::LoadAnimationsTask() : Task("LOADANIMATIONS", "")
 {
 }
 
-void LoadAnimationsTask::Execute(void)
+void LoadAnimationsTask::execute(void)
 {
     std::map<dsstring, Aspect::AnimationsAspect::Node> scene_nodes;
     aiNode* root{ m_scene->mRootNode };

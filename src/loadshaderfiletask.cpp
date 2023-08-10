@@ -31,10 +31,9 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Utils;
-using namespace DrawSpace::Interface;
 using namespace DrawSpace::Systems;
 
-LoadShaderFileTask::LoadShaderFileTask() : ITask("", "")
+LoadShaderFileTask::LoadShaderFileTask() : Task("", "")
 {
 }
 
@@ -43,7 +42,7 @@ LoadShaderFileTask::~LoadShaderFileTask()
     release_blocs();
 }
 
-void LoadShaderFileTask::Execute(void)
+void LoadShaderFileTask::execute(void)
 {
     dsstring shader_source;
     recurs_browse_shader_source(m_final_asset_path, shader_source);

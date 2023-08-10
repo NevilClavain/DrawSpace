@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct CreateDirectoryTask : public Interface::ITask
+struct CreateDirectoryTask : public Task
 {
 private:
 
@@ -44,7 +44,7 @@ public:
 
     CreateDirectoryTask();
 
-    void Execute(void);
+    void execute(void);
     void SetShaderId(const dsstring& p_shader_id);
 };
 }

@@ -33,7 +33,7 @@ namespace Core
 {
 class RenderingQueue; // fwd class declaration
 
-struct UpdateQueueTask : public Interface::ITask
+struct UpdateQueueTask : public Task
 {
 private:
     // execution data
@@ -43,7 +43,7 @@ private:
 public:
 
     UpdateQueueTask( void );
-    void Execute(void);
+    void execute(void);
 
     void SetRenderingQueue(const std::vector<DrawSpace::Core::RenderingQueue*> p_renderingqueues);
     void DisableOpt(bool p_disable);

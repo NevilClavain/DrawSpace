@@ -25,14 +25,13 @@
 #include "loadfiletask.h"
 
 using namespace DrawSpace;
-using namespace DrawSpace::Interface;
 using namespace DrawSpace::Systems;
 
-LoadFileTask::LoadFileTask() : ITask("", "")
+LoadFileTask::LoadFileTask() : Task("", "")
 {
 }
 
-void LoadFileTask::Execute(void)
+void LoadFileTask::execute(void)
 {
     long size;
     void* data = File::loadAndAllocBinaryFile(m_final_asset_path, &size);

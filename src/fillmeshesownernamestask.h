@@ -32,7 +32,7 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct FillMeshesOwnerNamesTask : public Interface::ITask
+struct FillMeshesOwnerNamesTask : public Task
 {
 private:
 
@@ -46,7 +46,7 @@ public:
 
     FillMeshesOwnerNamesTask();
 
-    void                    Execute(void);
+    void                    execute(void);
     void                    SetNbMeshes(int p_nb_meshes);
     void                    SetRoot(aiNode* p_root);
     std::vector<dsstring>   GetNodesNamesList(void) const;

@@ -35,7 +35,7 @@ const dsstring UpdateBCFilesTask::bcCodeFileName{ "bc.code" };
 const dsstring UpdateBCFilesTask::sourceFileNameExt{ ".hlsl" };
 
 
-UpdateBCFilesTask::UpdateBCFilesTask() : ITask("UPDATEBCFILES", "")
+UpdateBCFilesTask::UpdateBCFilesTask() : Task("UPDATEBCFILES", "")
 {
 }
 
@@ -45,7 +45,7 @@ void UpdateBCFilesTask::SetShaderText(void* p_text, long p_text_size)
     m_text = p_text;
 }
 
-void UpdateBCFilesTask::Execute(void)
+void UpdateBCFilesTask::execute(void)
 {
     dsstring path{ bcCacheName + dsstring("/") + m_shader_id.c_str() };
 

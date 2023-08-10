@@ -33,13 +33,13 @@ namespace DrawSpace
 {
 namespace Systems
 {
-struct BuildMesheTask : public Interface::ITask
+struct BuildMesheTask : public Task
 {
 public:
 
     BuildMesheTask();
 
-    void Execute(void);
+    void execute(void);
     void SetEntity(Core::Entity* p_entity);
     void SetMeshesIOInfos(aiMesh** m_source_meshes, Core::Meshe* p_target_meshe, aiNode* p_meshe_node);
 

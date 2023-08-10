@@ -35,11 +35,11 @@ DrawSpace::Logger::Sink bmt_logger("BuildeMesheTask", DrawSpace::Logger::Configu
 using namespace DrawSpace;
 using namespace DrawSpace::Systems;
 
-BuildMesheTask::BuildMesheTask() : ITask("BUILDMESHE", "")
+BuildMesheTask::BuildMesheTask() : Task("BUILDMESHE", "")
 {
 }
 
-void BuildMesheTask::Execute(void)
+void BuildMesheTask::execute(void)
 {
     build_meshe(m_entity, m_meshe_node, m_meshes, m_target_meshe);
 }

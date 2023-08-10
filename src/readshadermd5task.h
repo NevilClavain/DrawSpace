@@ -31,7 +31,7 @@ namespace DrawSpace
 namespace Systems
 {
 
-struct ReadShaderMD5Task : public Interface::ITask
+struct ReadShaderMD5Task : public Task
 {
 private:
 
@@ -54,7 +54,7 @@ public:
 
     ReadShaderMD5Task();
 
-    void Execute(void);
+    void execute(void);
 
     void SetShaderId(const dsstring& p_shader_id);
     void SetFilePath(const dsstring& p_filepath);

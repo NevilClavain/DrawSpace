@@ -27,40 +27,39 @@
 
 namespace DrawSpace
 {
-namespace Interface
-{
-struct ITask
-{
-protected:
-	dsstring	m_action_descr;
-	dsstring	m_target_descr;
-public:
-	ITask(const dsstring& p_action_descr, const dsstring& p_target_descr) :
-	m_action_descr(p_action_descr),
-	m_target_descr(p_target_descr)
+	struct Task
 	{
+	public:
+		Task(const dsstring& p_action_descr, const dsstring& p_target_descr) :
+		m_action_descr(p_action_descr),
+		m_target_descr(p_target_descr)
+		{
+		};
+		virtual void execute(void) = 0;
+
+		dsstring getTargetDescr(void) const
+		{
+			return m_target_descr;
+		};
+
+		dsstring getActionDescr(void) const
+		{
+			return m_action_descr;
+		};
+
+		inline void setTargetDescr(const dsstring& p_target_descr)
+		{
+			m_target_descr = p_target_descr;
+		}
+
+		inline void setActionDescr(const dsstring& p_action_descr)
+		{
+			m_action_descr = p_action_descr;
+		}
+
+	private:
+		dsstring	m_action_descr;
+		dsstring	m_target_descr;
+
 	};
-	virtual void Execute(void) = 0;
-
-	dsstring GetTargetDescr(void) const
-	{
-		return m_target_descr;
-	};
-
-	dsstring GetActionDescr(void) const
-	{
-		return m_action_descr;
-	};
-
-	inline void SetTargetDescr(const dsstring& p_target_descr)
-	{
-		m_target_descr = p_target_descr;
-	}
-
-	inline void SetActionDescr(const dsstring& p_action_descr)
-	{
-		m_action_descr = p_action_descr;
-	}
-};
-}
 }

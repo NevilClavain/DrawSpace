@@ -29,7 +29,7 @@ using namespace DrawSpace;
 using namespace DrawSpace::Core;
 using namespace DrawSpace::Utils;
 using namespace DrawSpace::Systems;
-using namespace DrawSpace::Threading;
+
 
 std::set<std::pair<dsstring, dsstring>> RunnerSystem::m_finished_tasks;
 
@@ -43,8 +43,8 @@ void RunnerSequenceStep::run(RunnerSequence& p_sequence)
         {
             m_state = State::WAITFORTASK;
 
-            Threading::Runner* runner{ Threading::Runner::getInstance() };
-            runner->m_mailbox_in.Push<Interface::ITask*>(m_task);
+            Runner* runner{ Runner::getInstance() };
+            runner->m_mailbox_in.push<Task*>(m_task);
         }
         else
         {
@@ -56,7 +56,7 @@ void RunnerSequenceStep::run(RunnerSequence& p_sequence)
     {
         for (auto& e : RunnerSystem::m_finished_tasks)
         {
-            if (m_task->GetActionDescr() == e.first && m_task->GetTargetDescr() == e.second)
+            if (m_task->getActionDescr() == e.first && m_task->getTargetDescr() == e.second)
             {
                 m_state = State::COMPLETED;
                 m_stepcompleted_handler(*this, p_sequence);
@@ -84,12 +84,12 @@ void RunnerSequenceStep::SetStepCompletedHandler(const std::function<void(Runner
     m_stepcompleted_handler = p_stepcompleted_handler;
 }
 
-void RunnerSequenceStep::SetTask(Interface::ITask* p_task)
+void RunnerSequenceStep::SetTask(Task* p_task)
 {
     m_task = p_task;
 }
 
-Interface::ITask* RunnerSequenceStep::GetTask(void) const
+Task* RunnerSequenceStep::GetTask(void) const
 {
     return m_task;
 }
@@ -168,12 +168,12 @@ void RunnerSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
         e.second.run();
     }
 
-    Threading::Runner* runner{ Threading::Runner::getInstance() };
-    int nb_tasks_done{ runner->m_mailbox_out.GetBoxSize() };
+    Runner* runner{ Runner::getInstance() };
+    int nb_tasks_done{ runner->m_mailbox_out.getBoxSize() };
 
     for (int i = 0; i < nb_tasks_done; ++i)
     {
-        auto task_descr{ runner->m_mailbox_out.PopNext<std::pair<std::string, std::string>>(std::make_pair<dsstring, dsstring>("","")) };
+        auto task_descr{ runner->m_mailbox_out.popNext<std::pair<std::string, std::string>>(std::make_pair<dsstring, dsstring>("","")) };
         m_finished_tasks.insert(std::make_pair(task_descr.first, task_descr.second));
     }
 }
@@ -181,7 +181,7 @@ void RunnerSystem::run(EntityGraph::EntityNodeGraph* p_entitygraph)
 void RunnerSystem::StartupRunner(void)
 {
     //startup runner thread
-    Runner::getInstance()->Startup();
+    Runner::getInstance()->startup();
 }
 
 void RunnerSystem::ShutdownRunner(void)
@@ -190,8 +190,8 @@ void RunnerSystem::ShutdownRunner(void)
 
     Runner* runner{ Runner::getInstance() };
 
-    runner->m_mailbox_in.Push<Interface::ITask*>(&RunnerKiller());
-    runner->Join();
+    runner->m_mailbox_in.push<Task*>(&RunnerKiller());
+    runner->join();
 }
 
 void RunnerSystem::RegisterSequence(const dsstring& p_sequenceid, RunnerSequence& p_sequence)

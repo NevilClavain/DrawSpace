@@ -29,11 +29,11 @@ using namespace DrawSpace::Systems;
 
 const dsstring CreateDirectoryTask::bcCacheName{ "bc_cache" };
 
-CreateDirectoryTask::CreateDirectoryTask() : ITask("CREATEDIRECTORY", "")
+CreateDirectoryTask::CreateDirectoryTask() : Task("CREATEDIRECTORY", "")
 {
 }
 
-void CreateDirectoryTask::Execute(void)
+void CreateDirectoryTask::execute(void)
 {
     dsstring path{ bcCacheName + dsstring("\\") + m_shader_id.c_str() };
     DrawSpace::FileSystem::createDirectory(path);

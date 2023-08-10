@@ -34,11 +34,11 @@ const dsstring ReadShaderMD5Task::bcCacheName{ "bc_cache" };
 const dsstring ReadShaderMD5Task::bcMd5FileName{ "bc.md5" };
 
 
-ReadShaderMD5Task::ReadShaderMD5Task() : ITask("READMD5SHADERFILE", "")
+ReadShaderMD5Task::ReadShaderMD5Task() : Task("READMD5SHADERFILE", "")
 {
 }
 
-void ReadShaderMD5Task::Execute(void)
+void ReadShaderMD5Task::execute(void)
 {
     m_failure = false;
 

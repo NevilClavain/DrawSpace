@@ -31,11 +31,11 @@ using namespace DrawSpace::Utils;
 using namespace DrawSpace::Interface;
 using namespace DrawSpace::Systems;
 
-CompileShaderTask::CompileShaderTask() : ITask("COMPILESHADER", "")
+CompileShaderTask::CompileShaderTask() : Task("COMPILESHADER", "")
 {
 }
 
-void CompileShaderTask::Execute(void)
+void CompileShaderTask::execute(void)
 {
     m_failure = false;
 

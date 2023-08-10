@@ -29,10 +29,7 @@
 
 namespace DrawSpace
 {
-namespace Interface
-{
-struct ITask;
-}
+struct Task;
 
 namespace Systems
 {
@@ -55,7 +52,7 @@ private:
     std::function<void(RunnerSequenceStep&, RunnerSequence&)>           m_stepcompleted_handler;
 
     State                                                               m_state{ State::RUNNING };
-    Interface::ITask*                                                   m_task{ nullptr };
+    Task*                                                               m_task{ nullptr };
     dsstring                                                            m_name; // for debug purpose
    
     void run(RunnerSequence& p_sequence);
@@ -65,8 +62,8 @@ public:
     State GetState(void) const;
     void  SetRunHandler(const std::function<void(RunnerSequenceStep&, RunnerSequence&)>& p_run_handler);
     void  SetStepCompletedHandler(const std::function<void(RunnerSequenceStep&, RunnerSequence&)>& p_stepcompleted_handler);
-    void  SetTask(Interface::ITask* p_task);
-    Interface::ITask* RunnerSequenceStep::GetTask(void) const;
+    void  SetTask(Task* p_task);
+    Task* RunnerSequenceStep::GetTask(void) const;
 
     friend class RunnerSequence;
 };

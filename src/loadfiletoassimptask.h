@@ -40,13 +40,13 @@ namespace Core
 }
 namespace Systems
 {
-struct LoadFileToAssimpTask : public Interface::ITask
+struct LoadFileToAssimpTask : public Task
 {
 public:
 
     LoadFileToAssimpTask();
 
-    void Execute(void);
+    void execute(void);
     void SetFinalAssetPath(const dsstring& p_final_asset_path);
 
     void SetTargetMeshe(DrawSpace::Core::Meshe* p_meshe);

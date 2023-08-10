@@ -30,40 +30,37 @@
 
 namespace DrawSpace
 {
-	namespace Threading
+	struct Runner : public DrawSpace::Commons::Singleton<Runner>
 	{
-		struct Runner : public DrawSpace::Commons::Singleton<Runner>
+	public:	
+
+		Mailbox<Task*>									m_mailbox_in;
+		Mailbox<std::pair<dsstring, dsstring>>			m_mailbox_out;
+
+		void startup(void);
+		void join(void) const;
+
+	private:
+
+		mutable std::unique_ptr<std::thread>			m_thread;
+		bool											m_cont;
+
+		static void mainloop(void);
+
+		static constexpr unsigned int idle_duration_ms{ 50 };
+		friend struct RunnerKiller;
+	};
+
+	struct RunnerKiller : public Task
+	{
+		RunnerKiller(void) : Task("KILL", "Runner")
 		{
-		public:	
+		}
 
-			Mailbox<Interface::ITask*>						m_mailbox_in;
-			Mailbox<std::pair<dsstring, dsstring>>			m_mailbox_out;
-
-			void Startup(void);
-			void Join(void) const;
-
-		private:
-
-			mutable std::unique_ptr<std::thread>			m_thread;
-			bool											m_cont;
-
-			static void mainloop(void);
-
-			static constexpr unsigned int idle_duration_ms{ 50 };
-
-			friend struct RunnerKiller;
-		};
-
-		struct RunnerKiller : public Interface::ITask
+		void execute(void)
 		{
-			RunnerKiller(void) : Interface::ITask("KILL", "Runner")
-			{
-			}
+			Runner::getInstance()->m_cont = false;
+		}
+	};
 
-			void Execute(void)
-			{
-				Runner::getInstance()->m_cont = false;
-			}
-		};
-}
 }
