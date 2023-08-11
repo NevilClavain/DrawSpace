@@ -437,12 +437,12 @@ void Patch::CleanupSubpasses( void )
     }
 }
 
-void Patch::SetNeighbour( DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id )
+void Patch::SetNeighbour( DrawSpace::BaseQuadtreeNode* p_patch, int p_id )
 {
     m_neighbours[p_id] = p_patch;
 }
 
-DrawSpace::Utils::BaseQuadtreeNode* Patch::GetNeighbour( int p_id ) const
+DrawSpace::BaseQuadtreeNode* Patch::GetNeighbour( int p_id ) const
 {
     return m_neighbours[p_id];
 }
@@ -847,12 +847,12 @@ DrawSpace::Core::Texture* Patch::GetDataTexture( void ) const
 
 Patch* Patch::GetParent(void) const
 {    
-    BaseQuadtreeNode* parent{ m_owner->GetParent() };    
+    BaseQuadtreeNode* parent{ m_owner->getParent() };    
     if (parent)
     {
         QuadtreeNode<Patch>* node{ nullptr };
         node = static_cast<QuadtreeNode<Patch>*>(parent);
-        return node->GetContent();
+        return node->getContent();
     }
     return nullptr;
 }
@@ -876,12 +876,12 @@ void Patch::SubPassDone(void)
         m_global_ref_u2 = 1.0;
         m_global_ref_v2 = 1.0;
 
-        if (m_owner->HasChildren())
+        if (m_owner->hasChildren())
         {
             for (long i = 0; i < 4; i++)
             {
-                const auto child { static_cast<QuadtreeNode<Patch>*>(m_owner->GetChild(i)) };
-                child->GetContent()->recurs_update_texture_referent(m_texture_referent);
+                const auto child { static_cast<QuadtreeNode<Patch>*>(m_owner->getChild(i)) };
+                child->getContent()->recurs_update_texture_referent(m_texture_referent);
             }
         }
     }
@@ -1123,12 +1123,12 @@ void Patch::recurs_update_texture_referent( Patch* p_texture_referent )
     m_global_ref_u2 = ( ui2 * ( m_parent->m_global_ref_u2 - m_parent->m_global_ref_u1 ) ) + m_parent->m_global_ref_u1;
     m_global_ref_v2 = ( vi2 * ( m_parent->m_global_ref_v2 - m_parent->m_global_ref_v1 ) ) + m_parent->m_global_ref_v1;
 
-    if( m_owner->HasChildren() )
+    if( m_owner->hasChildren() )
     {
         for( long i = 0; i < 4; i++ )
         {
-            QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>( m_owner->GetChild( i ) );           
-            child->GetContent()->recurs_update_texture_referent( p_texture_referent );
+            QuadtreeNode<Patch>* child = static_cast<QuadtreeNode<Patch>*>( m_owner->getChild( i ) );
+            child->getContent()->recurs_update_texture_referent( p_texture_referent );
         }
     }
 }

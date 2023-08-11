@@ -505,7 +505,7 @@ DrawSpace::Core::Meshe* Body::GetPatcheMeshe( void )
 Patch* Body::GetFaceCurrentLeaf( int p_faceid ) const
 {
     const auto current_leaf{ m_faces[p_faceid]->GetCurrentLeaf() };
-    return current_leaf->GetContent();
+    return current_leaf->getContent();
 }
 
 dsreal Body::GetHotPointAltitud( void ) const

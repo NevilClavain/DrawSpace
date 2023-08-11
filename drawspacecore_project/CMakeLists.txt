@@ -215,7 +215,6 @@ ${CMAKE_SOURCE_DIR}/src/piload.cpp
 ${CMAKE_SOURCE_DIR}/src/piload.h
 ${CMAKE_SOURCE_DIR}/src/pimanager.h
 ${CMAKE_SOURCE_DIR}/src/pimanager_impl.h
-${CMAKE_SOURCE_DIR}/src/quadtree.cpp
 ${CMAKE_SOURCE_DIR}/src/quadtree.h
 )
 

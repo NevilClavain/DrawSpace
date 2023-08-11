@@ -74,12 +74,12 @@ public:
         dsreal appearance_threshold;
     };
     
-    Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::Utils::BaseQuadtreeNode* p_owner, 
+    Patch( dsreal p_ray, int p_orientation, Patch* p_parent, int p_nodeid, DrawSpace::BaseQuadtreeNode* p_owner, 
             SubPass::SubPassCreationHandler* p_handler, Config* p_config, int p_layer_index, int p_nbLODRanges );
 
     virtual ~Patch( void );
    
-    DrawSpace::Utils::BaseQuadtreeNode*                 GetNeighbour( int p_id ) const;
+    DrawSpace::BaseQuadtreeNode*                        GetNeighbour( int p_id ) const;
     dsreal                                              GetSideLength( void ) const ;
     dsreal                                              GetUnitSideLenght( void ) const ;
     int                                                 GetOrientation( void ) const ;
@@ -88,12 +88,12 @@ public:
     void                                                GetGlobalUVCoords(DrawSpace::Maths::Vector& p_uv) const ;
     void                                                GetPos( dsreal& p_xpos, dsreal& p_ypos ) const;
     void                                                GetUnitPos( dsreal& p_xpos, dsreal& p_ypos ) const;
-    DrawSpace::Utils::BaseQuadtreeNode*                 GetOwner( void ) const;
+    DrawSpace::BaseQuadtreeNode*                        GetOwner( void ) const;
     int                                                 GetLodLevel( void ) const;
     DrawSpace::Core::Texture*                           GetDataTexture( void ) const;
     Patch*                                              GetTextureReferent( void ) const;
   
-    void                                                SetNeighbour(DrawSpace::Utils::BaseQuadtreeNode* p_patch, int p_id);
+    void                                                SetNeighbour(DrawSpace::BaseQuadtreeNode* p_patch, int p_id);
     void                                                ProjectVertex( const DrawSpace::Maths::Vector& p_in, DrawSpace::Maths::Vector& p_out );
     bool                                                IsCircleIntersection( dsreal p_centerx, dsreal p_centery, dsreal p_ray );
 
@@ -157,8 +157,8 @@ private:
 
     int                                             m_orientation;
     int                                             m_nodeid;
-    DrawSpace::Utils::BaseQuadtreeNode*             m_owner;
-    DrawSpace::Utils::BaseQuadtreeNode*             m_neighbours[8];
+    DrawSpace::BaseQuadtreeNode*                    m_owner;
+    DrawSpace::BaseQuadtreeNode*                    m_neighbours[8];
     int                                             m_lod_level;
 
     DrawSpace::IntermediatePass*                    m_datatexture_pass{ nullptr };

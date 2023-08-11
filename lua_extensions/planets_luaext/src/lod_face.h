@@ -43,7 +43,7 @@ public:
 
     bool Init( int p_orientation );
 
-    DrawSpace::Utils::QuadtreeNode<Patch>*  GetCurrentLeaf(void) const;
+    DrawSpace::QuadtreeNode<Patch>*         GetCurrentLeaf(void) const;
     dsreal                                  GetAlignmentFactor(void) const;
     void                                    GetDisplayList(std::vector<Patch*>& p_displaylist) const;
     Patch*                                  GetCurrentPatch(void) const;
@@ -79,21 +79,21 @@ public:
     void                                    Reset( void ); // merge all
     
 private:
-    using InstanciationCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>;
-    using DeletionCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>;
-    using SplitCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>;
-    using MergeCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::Utils::BaseQuadtreeNode*>;
+    using InstanciationCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::BaseQuadtreeNode*>;
+    using DeletionCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::BaseQuadtreeNode*>;
+    using SplitCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::BaseQuadtreeNode*>;
+    using MergeCallback = DrawSpace::Core::CallBack<Face, void, DrawSpace::BaseQuadtreeNode*>;
 
     InstanciationCallback* m_cb_inst{ nullptr };
     DeletionCallback* m_cb_del{ nullptr };
     InstanciationCallback* m_cb_merge{ nullptr };
     DeletionCallback* m_cb_split{ nullptr };
 
-    DrawSpace::Utils::QuadtreeNode<Patch>* m_rootpatch{ nullptr };
+    DrawSpace::QuadtreeNode<Patch>* m_rootpatch{ nullptr };
 
     Config* m_config;
 
-    DrawSpace::Utils::QuadtreeNode<Patch>* m_currentleaf{ nullptr };
+    DrawSpace::QuadtreeNode<Patch>*                             m_currentleaf{ nullptr };
     std::vector<Patch*>                                         m_displaylist;
     std::vector<Patch*>                                         m_work_displaylist;
 
@@ -130,26 +130,26 @@ private:
 
     int                                                         m_nbLODRanges;
 
-    void on_nodeinstanciation(DrawSpace::Utils::BaseQuadtreeNode* p_node);
-    void on_nodedeletion(DrawSpace::Utils::BaseQuadtreeNode* p_node);
-    void on_nodesplit(DrawSpace::Utils::BaseQuadtreeNode* p_node);
-    void on_nodemerge(DrawSpace::Utils::BaseQuadtreeNode* p_node);
+    void on_nodeinstanciation(DrawSpace::BaseQuadtreeNode* p_node);
+    void on_nodedeletion(DrawSpace::BaseQuadtreeNode* p_node);
+    void on_nodesplit(DrawSpace::BaseQuadtreeNode* p_node);
+    void on_nodemerge(DrawSpace::BaseQuadtreeNode* p_node);
 
-    void set_border_neighbours(DrawSpace::Utils::QuadtreeNode<Patch>* p_node);
-    void unset_border_neighbours(DrawSpace::Utils::QuadtreeNode<Patch>* p_node);
+    void set_border_neighbours(DrawSpace::QuadtreeNode<Patch>* p_node);
+    void unset_border_neighbours(DrawSpace::QuadtreeNode<Patch>* p_node);
 
-    bool is_hotpoint_bound_in_node(DrawSpace::Utils::BaseQuadtreeNode* p_node);
-    DrawSpace::Utils::QuadtreeNode<Patch>* find_leaf_under(DrawSpace::Utils::QuadtreeNode<Patch>* p_current);
+    bool is_hotpoint_bound_in_node(DrawSpace::BaseQuadtreeNode* p_node);
+    DrawSpace::QuadtreeNode<Patch>* find_leaf_under(DrawSpace::QuadtreeNode<Patch>* p_current);
 
     void compute_cubeface_hotpoint(void);
 
-    bool recursive_build_displaylist(DrawSpace::Utils::BaseQuadtreeNode* p_current_node, int p_lodlevel);
+    bool recursive_build_displaylist(DrawSpace::BaseQuadtreeNode* p_current_node, int p_lodlevel);
 
     void init_lodranges(void);
 
-    void recursive_split(DrawSpace::Utils::BaseQuadtreeNode* p_currpatch, int p_dest_depth, int p_current_depth);
+    void recursive_split(DrawSpace::BaseQuadtreeNode* p_currpatch, int p_dest_depth, int p_current_depth);
 
-    void recursive_merge(DrawSpace::Utils::BaseQuadtreeNode* p_currpatch);
+    void recursive_merge(DrawSpace::BaseQuadtreeNode* p_currpatch);
 
 
 };
