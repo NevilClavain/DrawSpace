@@ -1,6 +1,6 @@
 # -*-LIC_BEGIN-*-
 #                                                                          
-# renderMe
+# renderMe grafx framework
 # Emmanuel Chaumont Copyright (c) 2023
 #                                                                          
 # This file is part of renderMe.                                          
@@ -59,6 +59,7 @@ set(md5_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/md5/sdk/include)
 
 set(st_tree_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/st_tree/sdk/include)
 
+add_subdirectory(console_tests/console_helloworld)
 
 
 

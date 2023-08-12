@@ -180,9 +180,20 @@ ALL_BUILD.vcxproj*
 /tools/dgent/CMakeFiles/
 
 
+################## renderME + ##########################################
+
+/renderme/apps/
+
 /renderme/CMakeFiles/
 /renderme/*.sln
 /renderme/*.vcxproj*
+
+/renderme/console_tests/console_helloworld/CMakeFiles/
+/renderme/console_tests/console_helloworld/*.sln
+/renderme/console_tests/console_helloworld/*.vcxproj*
+
+################## renderME - ##########################################
+
 
 
 # ReSharper is a .NET coding add-in
