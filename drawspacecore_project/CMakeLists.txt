@@ -51,6 +51,7 @@ ${CMAKE_SOURCE_DIR}/src/ds_types.h
 ${CMAKE_SOURCE_DIR}/src/exceptions.h
 ${CMAKE_SOURCE_DIR}/src/primitives.h
 ${CMAKE_SOURCE_DIR}/src/singleton.h
+${CMAKE_SOURCE_DIR}/src/quadtree.h
 )
 
 source_group(aspect FILES 
@@ -215,7 +216,6 @@ ${CMAKE_SOURCE_DIR}/src/piload.cpp
 ${CMAKE_SOURCE_DIR}/src/piload.h
 ${CMAKE_SOURCE_DIR}/src/pimanager.h
 ${CMAKE_SOURCE_DIR}/src/pimanager_impl.h
-${CMAKE_SOURCE_DIR}/src/quadtree.h
 )
 
 add_definitions(-DBT_USE_DOUBLE_PRECISION )
