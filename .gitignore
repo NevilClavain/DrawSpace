@@ -179,6 +179,12 @@ ALL_BUILD.vcxproj*
 /tools/dgent/*.vcxproj*
 /tools/dgent/CMakeFiles/
 
+
+/renderme/CMakeFiles/
+/renderme/*.sln
+/renderme/*.vcxproj*
+
+
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
