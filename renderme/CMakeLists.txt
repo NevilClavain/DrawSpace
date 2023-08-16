@@ -59,7 +59,11 @@ set(md5_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/md5/sdk/include)
 
 set(st_tree_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/st_tree/sdk/include)
 
+
+
+
 add_subdirectory(console_tests/console_helloworld)
+add_subdirectory(console_tests/console_jsonparser)
 
 
 
