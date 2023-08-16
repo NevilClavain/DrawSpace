@@ -193,9 +193,9 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_helloworld/*.vcxproj*
 
 
-/renderme/console_tests/console_jsonparsser/CMakeFiles/
-/renderme/console_tests/console_jsonparsser/*.sln
-/renderme/console_tests/console_jsonparsser/*.vcxproj*
+/renderme/console_tests/console_jsonparser/CMakeFiles/
+/renderme/console_tests/console_jsonparser/*.sln
+/renderme/console_tests/console_jsonparser/*.vcxproj*
 
 ################## renderME - ##########################################
 
