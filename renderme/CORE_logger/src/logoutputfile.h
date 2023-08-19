@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,34 +22,36 @@
 */
 /* -*-LIC_END-*- */
 
-
-// Curiously recurring template pattern for singleton :-D
-
 #pragma once
-#include <memory>
+
+#include <mutex>
+
+#include "logoutput.h"
+#include "file.h"
 
 namespace renderMe
 {
-    template<class T>
-    class Singleton
+    namespace Logger
     {
-    public:
-        ~Singleton() = default;
-
-        static T* getInstance(void)
+        class OutputFile : public Output
         {
-            if (!m_instance)
-            {
-                m_instance = std::make_unique<T>();
-            }
-            return m_instance.get();
-        };
+        public:
 
-    protected:
-        Singleton() = default;
-        static std::unique_ptr<T> m_instance;
-    };
+            OutputFile( const std::string& p_filename );
+
+            ~OutputFile(void) = default;
+
+            void logIt( const std::string& p_trace );
+            //void flush( void );
+            void setFlushPeriod( long p_period );    
+
+        private:
+
+            std::unique_ptr<File>                       m_file;
+            long                                        m_flush_period{ 0 };
+            long                                        m_period_count{ 0 };
+            std::mutex	                                m_mutex;   
+        };
+    }
 }
 
-template <class T>
-std::unique_ptr<T> renderMe::Singleton<T>::m_instance;

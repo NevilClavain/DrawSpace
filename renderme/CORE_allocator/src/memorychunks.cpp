@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,34 +22,38 @@
 */
 /* -*-LIC_END-*- */
 
+#include "memorychunks.h"
 
-// Curiously recurring template pattern for singleton :-D
+using namespace renderMe;
 
-#pragma once
-#include <memory>
-
-namespace renderMe
+void MemoryChunks::dumpContent(void)
 {
-    template<class T>
-    class Singleton
-    {
-    public:
-        ~Singleton() = default;
-
-        static T* getInstance(void)
-        {
-            if (!m_instance)
-            {
-                m_instance = std::make_unique<T>();
-            }
-            return m_instance.get();
-        };
-
-    protected:
-        Singleton() = default;
-        static std::unique_ptr<T> m_instance;
-    };
+	//TODO : log
 }
 
-template <class T>
-std::unique_ptr<T> renderMe::Singleton<T>::m_instance;
+void MemoryChunks::unregister(void* p_ptr)
+{
+    if (m_chunks.count(p_ptr) > 0)
+    {
+        //TODO : log
+
+        m_totalSize -= m_chunks.at(p_ptr).size;
+        m_chunks.erase(p_ptr);
+    }
+    else
+    {
+        // TODO : log a warning
+    }
+}
+
+size_t MemoryChunks::getTotalSize(void) const
+{
+	return m_totalSize;
+}
+
+void MemoryChunks::register_bloc(void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment)
+{
+    const chunk c{ p_size, p_item, p_funcname, p_line, p_filename, p_comment };
+    m_chunks[p_ptr] = c;
+    m_totalSize += p_size;
+}

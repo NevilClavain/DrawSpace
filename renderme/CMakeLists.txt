@@ -31,8 +31,6 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
 # 3rd-parts localisations
-set(physfs_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/physfs-2.0.3/sdk/include)
-set(physfs_lib_dir ${CMAKE_SOURCE_DIR}/../thirdparts/physfs-2.0.3/sdk/lib/x86)
 
 set(lua_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/lua-1.5/sdk/include)
 set(lua_lib_dir ${CMAKE_SOURCE_DIR}/../thirdparts/lua-1.5/sdk/lib/x86)
@@ -59,6 +57,11 @@ set(md5_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/md5/sdk/include)
 
 set(st_tree_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/st_tree/sdk/include)
 
+
+add_subdirectory(CORE_allocator)
+add_subdirectory(CORE_logger)
+add_subdirectory(CORE_file)
+add_subdirectory(CORE_filesystem)
 
 
 

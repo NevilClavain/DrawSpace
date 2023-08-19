@@ -192,10 +192,26 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_helloworld/*.sln
 /renderme/console_tests/console_helloworld/*.vcxproj*
 
-
 /renderme/console_tests/console_jsonparser/CMakeFiles/
 /renderme/console_tests/console_jsonparser/*.sln
 /renderme/console_tests/console_jsonparser/*.vcxproj*
+
+
+/renderme/CORE_allocator/CMakeFiles/
+/renderme/CORE_allocator/*.sln
+/renderme/CORE_allocator/*.vcxproj*
+
+/renderme/CORE_logger/CMakeFiles/
+/renderme/CORE_logger/*.sln
+/renderme/CORE_logger/*.vcxproj*
+
+/renderme/CORE_file/CMakeFiles/
+/renderme/CORE_file/*.sln
+/renderme/CORE_file/*.vcxproj*
+
+/renderme/CORE_filesystem/CMakeFiles/
+/renderme/CORE_filesystem/*.sln
+/renderme/CORE_filesystem/*.vcxproj*
 
 ################## renderME - ##########################################
 

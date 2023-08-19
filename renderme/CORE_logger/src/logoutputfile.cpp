@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,13 +22,49 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
+#include "logoutputfile.h"
 
-#pragma warning( disable : 4231 4996 4311 4800 4244 4305 4477 5033)
+using namespace renderMe;
 
-namespace renderMe
+Logger::OutputFile::OutputFile( const std::string& p_filename ) :
+m_flush_period( 0 ),
+m_period_count( 0 )
 {
-	using real = double;
-	using time = __time64_t;
-	using exception = std::exception;
+    m_file = std::make_unique<File>(p_filename, File::Mode::CREATENEWTEXT);
 }
+
+void Logger::OutputFile::logIt( const std::string& p_trace )
+{
+    m_mutex.lock();
+
+    m_file->puts( p_trace );
+
+    if( m_period_count == m_flush_period )
+    {
+        m_file->flush();
+        m_period_count = 0;       
+    }
+    else
+    {
+        m_period_count++;
+    }
+
+    m_mutex.unlock();
+}
+
+/*
+void Logger::OutputFile::flush( void )
+{
+    m_mutex.lock();
+    m_file->Flush();
+    m_mutex.unlock();
+}
+*/
+
+void Logger::OutputFile::setFlushPeriod( long p_period )
+{
+    m_mutex.lock();
+    m_flush_period = p_period;
+    m_mutex.unlock();
+}
+

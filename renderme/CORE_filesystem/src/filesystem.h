@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,34 +22,17 @@
 */
 /* -*-LIC_END-*- */
 
-
-// Curiously recurring template pattern for singleton :-D
-
 #pragma once
-#include <memory>
+
+#include <string>
 
 namespace renderMe
 {
-    template<class T>
-    class Singleton
+    namespace FileSystem
     {
-    public:
-        ~Singleton() = default;
-
-        static T* getInstance(void)
-        {
-            if (!m_instance)
-            {
-                m_instance = std::make_unique<T>();
-            }
-            return m_instance.get();
-        };
-
-    protected:
-        Singleton() = default;
-        static std::unique_ptr<T> m_instance;
-    };
+        bool exists(const std::string& p_path);
+        bool isDirectory(const std::string& p_path);
+        void createDirectory(const std::string& p_path);
+        long fileSize(FILE* p_fp);  
+    }
 }
-
-template <class T>
-std::unique_ptr<T> renderMe::Singleton<T>::m_instance;

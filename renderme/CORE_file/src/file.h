@@ -23,34 +23,41 @@
 */
 /* -*-LIC_END-*- */
 
-
-// Curiously recurring template pattern for singleton :-D
-
 #pragma once
-#include <memory>
+
+#include <string>
 
 namespace renderMe
 {
-    template<class T>
-    class Singleton
+    class File
     {
     public:
-        ~Singleton() = default;
 
-        static T* getInstance(void)
+        enum class Mode
         {
-            if (!m_instance)
-            {
-                m_instance = std::make_unique<T>();
-            }
-            return m_instance.get();
+            CREATENEW,
+            OPENEXISTINGB,
+            CREATENEWTEXT,
+            OPENEXISTINGTEXT,
         };
 
-    protected:
-        Singleton() = default;
-        static std::unique_ptr<T> m_instance;
+        File( const std::string& p_filename, Mode p_mode );
+        File( const std::string& p_filename, const std::string& p_mode );
+        ~File( void );
+
+        void puts( const std::string& p_string );
+        bool gets( char* p_buff, int p_nbToRead );
+
+        void flush( void );
+        size_t read(void* p_buffer, size_t p_size, size_t p_count);
+        size_t write(const void* p_buffer, size_t p_size, size_t p_count);
+        bool seek(size_t p_offset, int p_origin);
+        size_t tell() const;
+
+    private:
+
+        FILE*               m_fp{ nullptr };
+        int                 m_current_pos{ 0 }; // used for VIRTUALFILESYSTEM only
     };
 }
 
-template <class T>
-std::unique_ptr<T> renderMe::Singleton<T>::m_instance;
