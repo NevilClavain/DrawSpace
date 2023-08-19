@@ -28,19 +28,19 @@
 
 using namespace renderMe::core;
 
-bool FileSystem::exists(const std::string& p_path)
+bool fileSystem::exists(const std::string& p_path)
 {
     const auto dwAttrib{ GetFileAttributes(p_path.c_str()) };
     return (dwAttrib != INVALID_FILE_ATTRIBUTES);
 }
 
-bool FileSystem::isDirectory(const std::string& p_path)
+bool fileSystem::isDirectory(const std::string& p_path)
 {
     const auto dwAttrib{ GetFileAttributes(p_path.c_str()) };
     return (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-void FileSystem::createDirectory(const std::string& p_path)
+void fileSystem::createDirectory(const std::string& p_path)
 {
     if(!::CreateDirectory(p_path.c_str(), nullptr))
     {
@@ -48,7 +48,7 @@ void FileSystem::createDirectory(const std::string& p_path)
     }
 }
 
-long FileSystem::fileSize(FILE* p_fp)
+long fileSystem::fileSize(FILE* p_fp)
 {  
     const auto current_pos{ ftell(p_fp) };
     fseek(p_fp, 0, SEEK_END);

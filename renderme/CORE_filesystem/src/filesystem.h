@@ -30,7 +30,7 @@ namespace renderMe
 {
     namespace core
     {
-        namespace FileSystem
+        namespace fileSystem
         {
             bool exists(const std::string& p_path);
             bool isDirectory(const std::string& p_path);
