@@ -35,38 +35,41 @@
 
 namespace renderMe
 {
-    namespace Logger
+    namespace core
     {
-        // fwd decl
-        class Output;
-        
-        class Configuration : public Singleton<Configuration>
+        namespace logger
         {
-        public:
-            Configuration(void);
-            ~Configuration( void ) = default;
+            // fwd decl
+            class Output;
 
-            void                    registerSink( Sink* p_sink );
-            void                    updateTick( void );
-            LONGLONG                getLastTick( void ) const;
+            class Configuration : public Singleton<Configuration>
+            {
+            public:
+                Configuration(void);
+                ~Configuration(void) = default;
 
-            using ParserCallback = std::function<void(const std::string&, long, const std::vector<std::string>&)>;
+                void                    registerSink(Sink* p_sink);
+                void                    updateTick(void);
+                LONGLONG                getLastTick(void) const;
 
-            ParserCallback getParserCallback(void) const;
+                using ParserCallback = std::function<void(const std::string&, long, const std::vector<std::string>&)>;
 
-        private:                   
-            std::map<std::string, std::unique_ptr<Output>>     m_outputs;
+                ParserCallback getParserCallback(void) const;
 
-            using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;
+            private:
+                std::map<std::string, std::unique_ptr<Output>>     m_outputs;
 
-            std::map<std::string, SinkInfos>                   m_sinks_infos;
+                using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;
 
-            LARGE_INTEGER                                   m_base_tick;
-            LARGE_INTEGER                                   m_last_tick;
-            LARGE_INTEGER                                   m_freq;
+                std::map<std::string, SinkInfos>                   m_sinks_infos;
 
-            static void on_new_line(const std::string& p_line, long p_line_num, const std::vector<std::string>& p_words);              
-        };
+                LARGE_INTEGER                                   m_base_tick;
+                LARGE_INTEGER                                   m_last_tick;
+                LARGE_INTEGER                                   m_freq;
+
+                static void on_new_line(const std::string& p_line, long p_line_num, const std::vector<std::string>& p_words);
+            };
+        }
     }
 }
 

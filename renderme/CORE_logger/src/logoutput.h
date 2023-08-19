@@ -28,15 +28,18 @@
 
 namespace renderMe
 {
-    namespace Logger
+    namespace core
     {
-        class Output
+        namespace logger
         {
-        public:
-            virtual void logIt( const std::string& p_trace ) = 0;
-            //virtual void flush( void ) = 0;
-            virtual void setFlushPeriod( long p_period ) = 0;       
-        };
+            class Output
+            {
+            public:
+                virtual void logIt(const std::string& p_trace) = 0;
+                //virtual void flush( void ) = 0;
+                virtual void setFlushPeriod(long p_period) = 0;
+            };
+        }
     }
 }
 

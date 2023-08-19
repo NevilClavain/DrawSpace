@@ -29,35 +29,38 @@
 
 namespace renderMe
 {
-    class File
+    namespace core
     {
-    public:
-
-        enum class Mode
+        class File
         {
-            CREATENEW,
-            OPENEXISTINGB,
-            CREATENEWTEXT,
-            OPENEXISTINGTEXT,
+        public:
+
+            enum class Mode
+            {
+                CREATENEW,
+                OPENEXISTINGB,
+                CREATENEWTEXT,
+                OPENEXISTINGTEXT,
+            };
+
+            File(const std::string& p_filename, Mode p_mode);
+            File(const std::string& p_filename, const std::string& p_mode);
+            ~File(void);
+
+            void puts(const std::string& p_string);
+            bool gets(char* p_buff, int p_nbToRead);
+
+            void flush(void);
+            size_t read(void* p_buffer, size_t p_size, size_t p_count);
+            size_t write(const void* p_buffer, size_t p_size, size_t p_count);
+            bool seek(size_t p_offset, int p_origin);
+            size_t tell() const;
+
+        private:
+
+            FILE* m_fp{ nullptr };
+            int                 m_current_pos{ 0 }; // used for VIRTUALFILESYSTEM only
         };
-
-        File( const std::string& p_filename, Mode p_mode );
-        File( const std::string& p_filename, const std::string& p_mode );
-        ~File( void );
-
-        void puts( const std::string& p_string );
-        bool gets( char* p_buff, int p_nbToRead );
-
-        void flush( void );
-        size_t read(void* p_buffer, size_t p_size, size_t p_count);
-        size_t write(const void* p_buffer, size_t p_size, size_t p_count);
-        bool seek(size_t p_offset, int p_origin);
-        size_t tell() const;
-
-    private:
-
-        FILE*               m_fp{ nullptr };
-        int                 m_current_pos{ 0 }; // used for VIRTUALFILESYSTEM only
-    };
+    }
 }
 

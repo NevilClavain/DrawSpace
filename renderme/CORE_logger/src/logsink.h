@@ -28,45 +28,48 @@
 
 namespace renderMe
 {
-    namespace Logger
+    namespace core
     {
-        class Configuration;
-
-        struct Sink
+        namespace logger
         {
-        public:
-            enum class Level
+            class Configuration;
+
+            struct Sink
             {
-                LEVEL_FATAL,
-                LEVEL_ERROR,
-                LEVEL_WARN,
-                LEVEL_DEBUG,
-                LEVEL_TRACE,
+            public:
+                enum class Level
+                {
+                    LEVEL_FATAL,
+                    LEVEL_ERROR,
+                    LEVEL_WARN,
+                    LEVEL_DEBUG,
+                    LEVEL_TRACE,
+                };
+
+                Sink(const std::string& p_name, Configuration* p_conf = nullptr);
+                ~Sink(void) = default;
+
+                void setCurrentLevel(Level p_level);
+                void setState(bool p_state);
+
+                void logIt(Level p_level, const std::string& p_trace);
+
+                void registerOutput(Output* p_output);
+
+                void getName(std::string& p_name) const;
+                void setConfiguration(Configuration* p_conf);
+
+            private:
+
+                Level                   m_current_level{ Level::LEVEL_FATAL };
+                bool                    m_state{ false };
+
+                Output* m_output{ nullptr };
+                Configuration* m_conf{ nullptr };
+
+                std::string             m_name;
             };
-
-            Sink( const std::string& p_name, Configuration* p_conf = nullptr );
-            ~Sink(void) = default;
-
-            void setCurrentLevel( Level p_level );
-            void setState( bool p_state );
-
-            void logIt( Level p_level, const std::string& p_trace );
-
-            void registerOutput( Output* p_output );
-
-            void getName( std::string& p_name ) const;
-            void setConfiguration( Logger::Configuration* p_conf );
-
-        private:
-
-            Level                   m_current_level{ Level::LEVEL_FATAL };
-            bool                    m_state{ false };
-
-            Output*                 m_output{ nullptr };
-            Logger::Configuration*  m_conf{ nullptr };
-
-            std::string                m_name;      
-        };
+        }
     }
 }
 

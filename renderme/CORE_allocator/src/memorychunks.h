@@ -31,44 +31,47 @@
 
 namespace renderMe
 {
-	class MemoryChunks : public Singleton<MemoryChunks>
-	{
-	public:
-        ~MemoryChunks(void) = default;
-
-        void dumpContent(void);
-
-        template <typename base>
-        base* Register(base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment = "")
+    namespace core
+    {
+        class MemoryChunks : public Singleton<MemoryChunks>
         {
-            base* t = p_ptr;
-            register_bloc(t, p_size, p_item, p_funcname, p_line, p_filename, p_comment);
+        public:
+            ~MemoryChunks(void) = default;
 
-            return t;
+            void dumpContent(void);
+
+            template <typename base>
+            base* Register(base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment = "")
+            {
+                base* t = p_ptr;
+                register_bloc(t, p_size, p_item, p_funcname, p_line, p_filename, p_comment);
+
+                return t;
+            };
+
+            void    unregister(void* p_ptr);
+            size_t  getTotalSize(void) const;
+
+
+        private:
+
+            struct chunk
+            {
+                size_t          size;
+                std::string     item;
+                std::string     func;
+                long            linenum;
+                std::string     file;
+                std::string     comment;
+            };
+
+            std::map<void*, chunk>  m_chunks;
+            size_t                  m_totalSize{ 0 };
+
+            MemoryChunks(void) = default;
+
+            void register_bloc(void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment);
+
         };
-
-        void    unregister(void* p_ptr);
-        size_t  getTotalSize(void) const;
-
-    
-    private:
-
-        struct chunk
-        {
-            size_t          size;
-            std::string     item;
-            std::string     func;
-            long            linenum;
-            std::string     file;
-            std::string     comment;
-        };
-
-        std::map<void*, chunk>  m_chunks;
-        size_t                  m_totalSize{ 0 };
-
-        MemoryChunks(void) = default;
-
-        void register_bloc(void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment);
-
-	};
+    }
 }

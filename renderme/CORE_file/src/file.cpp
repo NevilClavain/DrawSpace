@@ -28,7 +28,7 @@
 
 #pragma warning( disable : 4996 4244 )
 
-using namespace renderMe;
+using namespace renderMe::core;
 
 
 

@@ -24,16 +24,16 @@
 
 #include "logoutputfile.h"
 
-using namespace renderMe;
+using namespace renderMe::core;
 
-Logger::OutputFile::OutputFile( const std::string& p_filename ) :
+logger::OutputFile::OutputFile( const std::string& p_filename ) :
 m_flush_period( 0 ),
 m_period_count( 0 )
 {
     m_file = std::make_unique<File>(p_filename, File::Mode::CREATENEWTEXT);
 }
 
-void Logger::OutputFile::logIt( const std::string& p_trace )
+void logger::OutputFile::logIt( const std::string& p_trace )
 {
     m_mutex.lock();
 
@@ -53,7 +53,7 @@ void Logger::OutputFile::logIt( const std::string& p_trace )
 }
 
 /*
-void Logger::OutputFile::flush( void )
+void logger::OutputFile::flush( void )
 {
     m_mutex.lock();
     m_file->Flush();
@@ -61,7 +61,7 @@ void Logger::OutputFile::flush( void )
 }
 */
 
-void Logger::OutputFile::setFlushPeriod( long p_period )
+void logger::OutputFile::setFlushPeriod( long p_period )
 {
     m_mutex.lock();
     m_flush_period = p_period;

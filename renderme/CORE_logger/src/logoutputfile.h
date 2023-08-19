@@ -31,27 +31,30 @@
 
 namespace renderMe
 {
-    namespace Logger
+    namespace core
     {
-        class OutputFile : public Output
+        namespace logger
         {
-        public:
+            class OutputFile : public Output
+            {
+            public:
 
-            OutputFile( const std::string& p_filename );
+                OutputFile(const std::string& p_filename);
 
-            ~OutputFile(void) = default;
+                ~OutputFile(void) = default;
 
-            void logIt( const std::string& p_trace );
-            //void flush( void );
-            void setFlushPeriod( long p_period );    
+                void logIt(const std::string& p_trace);
+                //void flush( void );
+                void setFlushPeriod(long p_period);
 
-        private:
+            private:
 
-            std::unique_ptr<File>                       m_file;
-            long                                        m_flush_period{ 0 };
-            long                                        m_period_count{ 0 };
-            std::mutex	                                m_mutex;   
-        };
+                std::unique_ptr<File>                       m_file;
+                long                                        m_flush_period{ 0 };
+                long                                        m_period_count{ 0 };
+                std::mutex	                                m_mutex;
+            };
+        }
     }
 }
 

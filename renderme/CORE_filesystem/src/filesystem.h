@@ -28,11 +28,14 @@
 
 namespace renderMe
 {
-    namespace FileSystem
+    namespace core
     {
-        bool exists(const std::string& p_path);
-        bool isDirectory(const std::string& p_path);
-        void createDirectory(const std::string& p_path);
-        long fileSize(FILE* p_fp);  
+        namespace FileSystem
+        {
+            bool exists(const std::string& p_path);
+            bool isDirectory(const std::string& p_path);
+            void createDirectory(const std::string& p_path);
+            long fileSize(FILE* p_fp);
+        }
     }
 }

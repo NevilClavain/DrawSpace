@@ -27,11 +27,11 @@
 
 #include "memorychunks.h"
 
-#define _NEW_CHUNK_( __type__, __item__ ) renderMe::MemoryChunks::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
-#define _NEW_CHUNK_WITH_COMMENT( __type__, __item__, __comment__ ) renderMe::MemoryChunks::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
+#define _NEW_CHUNK_( __type__, __item__ ) renderMe::core::MemoryChunks::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__ )
+#define _NEW_CHUNK_WITH_COMMENT( __type__, __item__, __comment__ ) renderMe::core::MemoryChunks::GetInstance()->Register<__type__>( new __item__, sizeof( __type__ ), #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
 
-#define _NEW_CHUNK_EXPLICIT_SIZE_( __type__, __item__, __size__ ) renderMe::MemoryChunks::GetInstance()->Register<__type__>( new __item__, __size__, #__item__, __FUNCTION__, __LINE__, __FILE__ )
-#define _NEW_CHUNK_EXPLICIT_SIZE_WITH_COMMENT( __type__, __item__, __size__, __comment__ ) renderMe::MemoryChunks::GetInstance()->Register<__type__>( new __item__, __size__, #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
+#define _NEW_CHUNK_EXPLICIT_SIZE_( __type__, __item__, __size__ ) renderMe::core::MemoryChunks::GetInstance()->Register<__type__>( new __item__, __size__, #__item__, __FUNCTION__, __LINE__, __FILE__ )
+#define _NEW_CHUNK_EXPLICIT_SIZE_WITH_COMMENT( __type__, __item__, __size__, __comment__ ) renderMe::core::MemoryChunks::GetInstance()->Register<__type__>( new __item__, __size__, #__item__, __FUNCTION__, __LINE__, __FILE__, __comment__ )
 
-#define _DELETE_CHUNK_( __ptr__ ) delete __ptr__; renderMe::MemoryChunks::GetInstance()->Unregister( __ptr__ ); __ptr__ = nullptr
-#define _DELETE_CHUNK_N_( __ptr__ ) delete[] __ptr__; renderMe::MemoryChunks::GetInstance()->Unregister( __ptr__ ); __ptr__ = nullptr
+#define _DELETE_CHUNK_( __ptr__ ) delete __ptr__; renderMe::core::MemoryChunks::GetInstance()->Unregister( __ptr__ ); __ptr__ = nullptr
+#define _DELETE_CHUNK_N_( __ptr__ ) delete[] __ptr__; renderMe::core::MemoryChunks::GetInstance()->Unregister( __ptr__ ); __ptr__ = nullptr

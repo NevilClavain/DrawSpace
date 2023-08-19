@@ -29,12 +29,15 @@
 
 namespace renderMe
 {
-    void exception(const std::string& p_msg, const std::string& p_func)
+    namespace core
     {
-        const auto message{ p_msg + std::string(" @ ") + std::string(p_func) };
-        throw std::exception(message.c_str());
+        void exception(const std::string& p_msg, const std::string& p_func)
+        {
+            const auto message{ p_msg + std::string(" @ ") + std::string(p_func) };
+            throw std::exception(message.c_str());
+        }
     }
 }
 
-#define _EXCEPTION( _msg ) renderMe::exception(_msg, __FUNCTION__);
+#define _EXCEPTION( _msg ) renderMe::core::exception(_msg, __FUNCTION__);
 

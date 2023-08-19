@@ -24,7 +24,7 @@
 
 #include "memorychunks.h"
 
-using namespace renderMe;
+using namespace renderMe::core;
 
 void MemoryChunks::dumpContent(void)
 {

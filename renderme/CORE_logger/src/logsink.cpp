@@ -28,9 +28,9 @@
 #include "logsink.h"
 #include "logconf.h"
 
-using namespace renderMe;
+using namespace renderMe::core;
 
-Logger::Sink::Sink( const std::string& p_name, Logger::Configuration* p_conf ) : 
+logger::Sink::Sink( const std::string& p_name, logger::Configuration* p_conf ) :
 m_name( p_name ),
 m_conf( p_conf )
 {
@@ -40,17 +40,17 @@ m_conf( p_conf )
     }
 }
 
-void Logger::Sink::setCurrentLevel( Logger::Sink::Level p_level )
+void logger::Sink::setCurrentLevel(logger::Sink::Level p_level )
 {
     m_current_level = p_level;
 }
 
-void Logger::Sink::setState( bool p_state )
+void logger::Sink::setState( bool p_state )
 {
     m_state = p_state;
 }
 
-void Logger::Sink::logIt( Level p_level, const std::string& p_trace )
+void logger::Sink::logIt( Level p_level, const std::string& p_trace )
 {
     if( p_level <= m_current_level && m_state && m_output )
     {        
@@ -94,17 +94,17 @@ void Logger::Sink::logIt( Level p_level, const std::string& p_trace )
     }
 }
 
-void Logger::Sink::registerOutput( Logger::Output* p_output )
+void logger::Sink::registerOutput(logger::Output* p_output )
 {
     m_output = p_output;
 }
 
-void Logger::Sink::getName( std::string& p_name ) const
+void logger::Sink::getName( std::string& p_name ) const
 {
     p_name = m_name;
 }
 
-void Logger::Sink::setConfiguration( Logger::Configuration* p_conf )
+void logger::Sink::setConfiguration(logger::Configuration* p_conf )
 {
     m_conf = p_conf;
 }

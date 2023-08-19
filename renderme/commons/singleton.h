@@ -31,26 +31,29 @@
 
 namespace renderMe
 {
-    template<class T>
-    class Singleton
+    namespace core
     {
-    public:
-        ~Singleton() = default;
-
-        static T* getInstance(void)
+        template<class T>
+        class Singleton
         {
-            if (!m_instance)
-            {
-                m_instance = std::make_unique<T>();
-            }
-            return m_instance.get();
-        };
+        public:
+            ~Singleton() = default;
 
-    protected:
-        Singleton() = default;
-        static std::unique_ptr<T> m_instance;
-    };
+            static T* getInstance(void)
+            {
+                if (!m_instance)
+                {
+                    m_instance = std::make_unique<T>();
+                }
+                return m_instance.get();
+            };
+
+        protected:
+            Singleton() = default;
+            static std::unique_ptr<T> m_instance;
+        };
+    }
 }
 
 template <class T>
-std::unique_ptr<T> renderMe::Singleton<T>::m_instance;
+std::unique_ptr<T> renderMe::core::Singleton<T>::m_instance;

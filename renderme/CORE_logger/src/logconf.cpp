@@ -28,9 +28,9 @@
 #include "logoutputfile.h"
 #include "exceptions.h"
 
-using namespace renderMe;
+using namespace renderMe::core;
 
-Logger::Configuration::Configuration( void )
+logger::Configuration::Configuration( void )
 {
     QueryPerformanceFrequency( &m_freq );
     QueryPerformanceCounter( &m_base_tick );
@@ -38,13 +38,13 @@ Logger::Configuration::Configuration( void )
 }
 
 
-Logger::Configuration::ParserCallback Logger::Configuration::getParserCallback(void) const
+logger::Configuration::ParserCallback logger::Configuration::getParserCallback(void) const
 {
     const ParserCallback cb{ &on_new_line };
     return cb;
 }
 
-void Logger::Configuration::on_new_line( const std::string& p_line, long p_line_num, const std::vector<std::string>& p_words )
+void logger::Configuration::on_new_line( const std::string& p_line, long p_line_num, const std::vector<std::string>& p_words )
 {
     if( "logger" == p_words[0] )
     {
@@ -126,7 +126,7 @@ void Logger::Configuration::on_new_line( const std::string& p_line, long p_line_
     }
 }
 
-void Logger::Configuration::registerSink( Sink* p_sink )
+void logger::Configuration::registerSink( Sink* p_sink )
 {
     std::string name;
     p_sink->getName( name );
@@ -147,12 +147,12 @@ void Logger::Configuration::registerSink( Sink* p_sink )
     }
 }
 
-void Logger::Configuration::updateTick( void )
+void logger::Configuration::updateTick( void )
 {
     QueryPerformanceCounter( &m_last_tick );
 }
 
-LONGLONG Logger::Configuration::getLastTick( void ) const
+LONGLONG logger::Configuration::getLastTick( void ) const
 {
     LONGLONG elapsed{ m_last_tick.QuadPart - m_base_tick.QuadPart };
 
