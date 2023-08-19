@@ -62,6 +62,7 @@ add_subdirectory(CORE_allocator)
 add_subdirectory(CORE_logger)
 add_subdirectory(CORE_file)
 add_subdirectory(CORE_filesystem)
+add_subdirectory(CORE_json)
 
 
 
