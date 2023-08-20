@@ -58,18 +58,22 @@ namespace renderMe
 
             void load(void)
             {
-                const auto fp{ fopen(m_path.c_str(), "rb") };
+                static_assert(sizeof(T) == 1, "unexpected type");
+
+                const auto fp{ ::fopen(m_path.c_str(), "rb") };
                 if (fp)
                 {
-                    const auto fs{ fileSystem::fileSize(fp) };
+                    const auto fs{ fileSystem::fileSize(fp)};
                  
                     m_data.release();
-                    m_data = std::make_unique<T>(fs);
+                    m_data = std::make_unique<T[]>(fs * sizeof(T));
                     
-                    const auto dstPtr{ m_data.get() };
-                    m_dataSize = fread((void*)dstPtr, fs, 1, fp) * fs;
+                    auto dstPtr{ m_data.get() };
 
-                    fclose(fp);
+                    ::fread((void*)dstPtr, fs, 1, fp);
+                    ::fclose(fp);
+
+                    m_dataSize = fs;
                 }
                 else
                 {
@@ -90,7 +94,7 @@ namespace renderMe
         private:
 
             std::string             m_path;
-            std::unique_ptr<T>      m_data;
+            std::unique_ptr<T[]>    m_data;
             size_t                  m_dataSize{ 0 };
 
         };

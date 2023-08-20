@@ -25,18 +25,25 @@
 
 #include <iostream>
 #include "filesystem.h"
+#include "exceptions.h"
 
 int main( int argc, char* argv[] )
 {    
 	std::cout << "JSON parser\n";
 
+	try 
+	{
+		renderMe::core::fileContent<char> fc("./console_jsonparser_assets/appgraphics.conf");
 
-	renderMe::core::fileContent<char> fc("./console_jsonparser_assets/appgraphics.conf");
+		fc.load();
 
-	fc.load();
-
-	const auto dataSize{ fc.getDataSize() };
-	const auto data{ fc.getData() };
+		const auto dataSize{ fc.getDataSize() };
+		const auto data{ fc.getData() };
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << e.what() << "\n";
+	}
 
     return 0;
 }
