@@ -24,9 +24,19 @@
 /* -*-LIC_END-*- */
 
 #include <iostream>
+#include "filesystem.h"
 
 int main( int argc, char* argv[] )
 {    
 	std::cout << "JSON parser\n";
+
+
+	renderMe::core::fileContent<char> fc("./console_jsonparser_assets/appgraphics.conf");
+
+	fc.load();
+
+	const auto dataSize{ fc.getDataSize() };
+	const auto data{ fc.getData() };
+
     return 0;
 }

@@ -26,11 +26,7 @@
 #include "file.h"
 #include "exceptions.h"
 
-#pragma warning( disable : 4996 4244 )
-
 using namespace renderMe::core;
-
-
 
 File::File( const std::string& p_filename, Mode p_mode )
 {

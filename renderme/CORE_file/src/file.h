@@ -27,6 +27,8 @@
 
 #include <string>
 
+#pragma warning( disable : 4996 4244 )
+
 namespace renderMe
 {
     namespace core
@@ -58,8 +60,7 @@ namespace renderMe
 
         private:
 
-            FILE* m_fp{ nullptr };
-            int                 m_current_pos{ 0 }; // used for VIRTUALFILESYSTEM only
+            FILE*           m_fp{ nullptr };
         };
     }
 }

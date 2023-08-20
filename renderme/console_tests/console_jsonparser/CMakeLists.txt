@@ -23,6 +23,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(console_jsonparser)
 
+include_directories(${CMAKE_SOURCE_DIR}/commons)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+
 file(
         GLOB_RECURSE
         source_files
@@ -32,7 +35,14 @@ file(
 
 add_executable(console_jsonparser ${source_files})
 
+target_link_libraries(console_jsonparser CORE_filesystem)
+
+
 install(TARGETS console_jsonparser CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS console_jsonparser CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS console_jsonparser CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/console_tests/console_jsonparser/console_jsonparser_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
 
