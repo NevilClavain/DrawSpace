@@ -42,7 +42,7 @@ namespace renderMe
                 JSON_NODE_PARSE_END
             };
 
-            struct UserData abstract {};
+            //struct UserData abstract {};
 
 
 
@@ -59,16 +59,7 @@ namespace renderMe
 
             int		    parse(const std::string& p_str);
 
-            //void        parseFromFile(const std::string& p_filepath);
 
-
-            void        analyzeTokens(/*UserData* p_user_data
-                                        ,ObjectContentEventHandler* p_object_handler, 
-                                        ArrayContentEventHandler* p_array_handler, 
-                                        ArrayObjectContentEventHandler* p_array_object_handler, 
-                                        StringContentEventHandler* p_string_handler, 
-                                        NumericContentEventHandler* p_num_handler
-                                        */);
 
         private:
 
@@ -88,7 +79,15 @@ namespace renderMe
             int		            get_token_size(int p_index) const;
             void	            get_token_string(int p_index, std::string& p_out_tokentext) const;
 
-            UserData* recurs_analyze(
+            void                analyzeTokens(/*UserData* p_user_data
+                                    ,ObjectContentEventHandler* p_object_handler,
+                                    ArrayContentEventHandler* p_array_handler,
+                                    ArrayObjectContentEventHandler* p_array_object_handler,
+                                    StringContentEventHandler* p_string_handler,
+                                    NumericContentEventHandler* p_num_handler
+                                    */);
+
+            void recurs_analyze(
                                         /*
                                         UserData* p_user_data, 
                                         const std::string& p_owner_id, 

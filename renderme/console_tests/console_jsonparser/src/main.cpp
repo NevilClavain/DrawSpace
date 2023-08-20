@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include "filesystem.h"
+#include "jsonparser.h"
 #include "exceptions.h"
 
 int main( int argc, char* argv[] )
@@ -34,15 +35,20 @@ int main( int argc, char* argv[] )
 	try 
 	{
 		renderMe::core::fileContent<char> fc("./console_jsonparser_assets/appgraphics.conf");
-
 		fc.load();
 
 		const auto dataSize{ fc.getDataSize() };
-		const auto data{ fc.getData() };
+		const std::string data(fc.getData(), dataSize);
+
+		renderMe::core::JSONParser parser;
+
+		const auto parseStatus{ parser.parse(data) };
+
 	}
 	catch (const std::exception& e)
 	{
-		std::cout << e.what() << "\n";
+		const auto what{ e.what() };
+		std::cout << what << "\n";
 	}
 
     return 0;

@@ -25,6 +25,10 @@ project(console_jsonparser)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
+include_directories(${jsonjsmn_include_dir})
+
+link_directories(${jsonjsmn_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -35,7 +39,7 @@ file(
 
 add_executable(console_jsonparser ${source_files})
 
-target_link_libraries(console_jsonparser CORE_filesystem)
+target_link_libraries(console_jsonparser CORE_filesystem CORE_json jsmn)
 
 
 install(TARGETS console_jsonparser CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)

@@ -47,6 +47,8 @@ int JSONParser::parse( const std::string& p_str )
 		m_nb_tokens = r;
 		m_parse_success = true;
 		m_text = p_str;
+
+        analyzeTokens();
 	}
 	return r;
 }
@@ -84,33 +86,6 @@ int JSONParser::get_token_size( int p_index ) const
 	return m_tokens[p_index].size;
 }
 
-/*
-void JSONParser::parseFromFile( const std::string& p_filepath )
-{
-    long fsize;
-    auto content{ DrawSpace::File::loadAndAllocBinaryFile(p_filepath, &fsize) };
-    if( !content )
-    {
-        _EXCEPTION( "Cannot open JSON file : " + p_filepath );
-    }
-
-    const auto text{ new char[fsize + 1] };
-
-    memcpy( text, content, fsize );
-    text[fsize] = 0;
-
-    const auto r{ parse(static_cast<char*>(text)) };
-
-    _DRAWSPACE_DELETE_N_( content );
-    delete[] text;
-
-    if( r < 0 )
-    {
-        _EXCEPTION("JSON parse : failed with code " + std::to_string(r) );
-    }
-}
-*/
-
 void JSONParser::analyzeTokens( 
                                 /*
                                 UserData* p_user_data, 
@@ -141,7 +116,7 @@ void JSONParser::analyzeTokens(
     }    
 }
 
-JSONParser::UserData* JSONParser::recurs_analyze( 
+void JSONParser::recurs_analyze( 
     
                                                 /*
                                                     JSONParser::UserData* p_user_data, 
@@ -234,7 +209,7 @@ JSONParser::UserData* JSONParser::recurs_analyze(
                        
             get_token_string( m_index, value );
 
-            double fval = std::stof( value );
+            //double fval = std::stof( value );
 
             //(*p_num_handler)( p_user_data, p_owner_id, id, fval );
 
@@ -242,6 +217,4 @@ JSONParser::UserData* JSONParser::recurs_analyze(
         }
         break;
     }
-
-    return NULL;
 }
