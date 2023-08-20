@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#include "jsonparser.h"
+#include "json.h"
 
 /*
 #include "memalloc.h"
@@ -33,12 +33,12 @@
 
 using namespace renderMe::core;
 
-JSONParser::JSONParser( void )
+json::json( void )
 {
 	jsmn_init( &m_parser );
 }
 
-int JSONParser::parse( const std::string& p_str )
+int json::parse( const std::string& p_str )
 {
 	m_parse_success = false;
     const auto r{ jsmn_parse(&m_parser, p_str.c_str(), p_str.size(), m_tokens, max_tokens) };
@@ -53,21 +53,21 @@ int JSONParser::parse( const std::string& p_str )
 	return r;
 }
 
-int JSONParser::get_token_type( int p_index ) const
+int json::get_token_type( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-        _EXCEPTION("JSONParser::GetTokenType");
+        _EXCEPTION("json::GetTokenType");
 	}
 
 	return m_tokens[p_index].type;
 }
 
-void JSONParser::get_token_string( int p_index, std::string& p_out_tokentext ) const
+void json::get_token_string( int p_index, std::string& p_out_tokentext ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-        _EXCEPTION("JSONParser::GetTokenString");
+        _EXCEPTION("json::GetTokenString");
 	}
 
     const auto start{ m_tokens[p_index].start };
@@ -76,17 +76,17 @@ void JSONParser::get_token_string( int p_index, std::string& p_out_tokentext ) c
 	p_out_tokentext = m_text.substr( start, end - start );
 }
 
-int JSONParser::get_token_size( int p_index ) const
+int json::get_token_size( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-        _EXCEPTION("JSONParser::GetTokenSize");
+        _EXCEPTION("json::GetTokenSize");
 	}
 
 	return m_tokens[p_index].size;
 }
 
-void JSONParser::analyzeTokens( 
+void json::analyzeTokens( 
                                 /*
                                 UserData* p_user_data, 
                                 ObjectContentEventHandler* p_object_handler, 
@@ -116,10 +116,10 @@ void JSONParser::analyzeTokens(
     }    
 }
 
-void JSONParser::recurs_analyze( 
+void json::recurs_analyze( 
     
                                                 /*
-                                                    JSONParser::UserData* p_user_data, 
+                                                    json::UserData* p_user_data, 
                                                     const std::string& p_owner_id, 
                                                         ObjectContentEventHandler* p_object_handler, 
                                                         ArrayContentEventHandler* p_array_handler, 
@@ -140,7 +140,7 @@ void JSONParser::recurs_analyze(
     {
         case JSMN_OBJECT:
         {
-            //JSONParser::UserData* sub_user_data = (*p_object_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_BEGIN );
+            //json::UserData* sub_user_data = (*p_object_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_BEGIN );
             m_index++;
             
             for( int i = 0; i < content_size; i++ )
@@ -156,7 +156,7 @@ void JSONParser::recurs_analyze(
 
         case JSMN_ARRAY:
         {
-            //JSONParser::UserData* sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_BEGIN );
+            //json::UserData* sub_user_data = (*p_array_handler)( p_user_data, p_owner_id, id, ParseState::JSON_NODE_PARSE_BEGIN );
             m_index++;
 
             for( int i = 0; i < content_size; i++ )

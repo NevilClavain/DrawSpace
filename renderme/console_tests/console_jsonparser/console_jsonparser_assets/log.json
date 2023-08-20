@@ -1,0 +1,20 @@
+{ 
+	"outputs" :
+	[
+		{
+			"type" : "file",
+			"id" : "file0",
+			"path" : "rt_traces.out"
+		}
+	],
+	
+	"loggers" : 
+	[
+		{		
+			"source" : "App",
+			"level" : "TRACE",
+			"state" : "on",
+			"output" : "file0"	
+		}
+	]
+}

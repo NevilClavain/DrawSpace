@@ -32,7 +32,7 @@ namespace renderMe
     namespace core
     {
 
-        class JSONParser
+        class json
         {
         public:
 
@@ -54,8 +54,8 @@ namespace renderMe
             using NumericContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const std::string&, const std::string&, dsreal>;
             */
 
-            JSONParser(void);
-            ~JSONParser(void) = default;
+            json(void);
+            ~json(void) = default;
 
             int		    parse(const std::string& p_str);
 

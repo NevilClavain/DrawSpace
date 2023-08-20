@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include "filesystem.h"
-#include "jsonparser.h"
+#include "json.h"
 #include "exceptions.h"
 
 int main( int argc, char* argv[] )
@@ -34,13 +34,13 @@ int main( int argc, char* argv[] )
 
 	try 
 	{
-		renderMe::core::fileContent<char> fc("./console_jsonparser_assets/appgraphics.conf");
+		renderMe::core::fileContent<char> fc("./console_jsonparser_assets/log.json");
 		fc.load();
 
 		const auto dataSize{ fc.getDataSize() };
 		const std::string data(fc.getData(), dataSize);
 
-		renderMe::core::JSONParser parser;
+		renderMe::core::json parser;
 
 		const auto parseStatus{ parser.parse(data) };
 
