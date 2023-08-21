@@ -35,8 +35,18 @@ namespace renderMe
         class json
         {
         public:
-            using parserCallback = std::function<void(jsmntype_t, const std::string&, const std::string&)>;
 
+            enum class Event
+            {
+                OBJECT_BEGIN,
+                ARRAY_BEGIN,
+                OBJECT_END,
+                ARRAY_END,
+                STRING,
+                PRIMITIVE
+            };
+
+            using parserCallback = std::function<void(Event, const std::string&, const std::string&)>;
             json(void);
             ~json(void) = default;
 
@@ -58,12 +68,12 @@ namespace renderMe
 
             int                 m_index{ -1 };
 
-            parserCallback      m_parserCallback{ [](jsmntype_t, const std::string&, const std::string&) {} };
+            parserCallback      m_parserCallback{ [](Event, const std::string&, const std::string&) {} };
 
 
             jsmntype_t		    get_token_type(int p_index) const;
             size_t		        get_token_size(int p_index) const;
-            void	            get_token_string(int p_index, std::string& p_out_tokentext) const;
+            std::string	        get_token_string(int p_index) const;
 
             void                analyze_tokens(void);
             void                recurs_analyze(void);

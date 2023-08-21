@@ -68,7 +68,7 @@ jsmntype_t json::get_token_type( int p_index ) const
 	return m_tokens[p_index].type;
 }
 
-void json::get_token_string( int p_index, std::string& p_out_tokentext ) const
+std::string json::get_token_string( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
@@ -78,7 +78,7 @@ void json::get_token_string( int p_index, std::string& p_out_tokentext ) const
     const auto start{ m_tokens[p_index].start };
     const auto end{ m_tokens[p_index].end };
 
-	p_out_tokentext = m_text.substr( start, end - start );
+	return m_text.substr( start, end - start );
 }
 
 size_t json::get_token_size( int p_index ) const
@@ -112,8 +112,7 @@ void json::analyze_tokens(void)
 
 void json::recurs_analyze(void)
 {
-    std::string id;
-    get_token_string( m_index, id );
+    const auto id{ get_token_string(m_index) };
     m_index++;
 
     const auto content_type{ get_token_type(m_index) };
@@ -123,20 +122,22 @@ void json::recurs_analyze(void)
     {
         case JSMN_OBJECT:
         {
-            m_parserCallback(content_type, id, "");
+            m_parserCallback(Event::OBJECT_BEGIN, id, "");
             m_index++;
 
             for( size_t i = 0; i < content_size; i++ )
             {
                 recurs_analyze();
             }
-            
+
+            m_parserCallback(Event::OBJECT_END, id, "");
         }
         break;
 
         case JSMN_ARRAY:
         {
-            m_parserCallback(content_type, id, "");
+            m_parserCallback(Event::ARRAY_BEGIN, id, "");
+
             m_index++;
 
             for( size_t i = 0; i < content_size; i++ )
@@ -159,27 +160,25 @@ void json::recurs_analyze(void)
                     _EXCEPTION( "JSON Array content must be a JSON Object" )
                 }
             }
+
+            m_parserCallback(Event::ARRAY_END, id, "");
         }
         break;
 
         case JSMN_STRING:
-        {
-            std::string value;
-               
-            get_token_string( m_index, value );
+        {      
+            const auto value{ get_token_string(m_index) };
 
-            m_parserCallback(content_type, id, value);
+            m_parserCallback(Event::STRING, id, value);
             m_index++;
         }
         break;
 
         case JSMN_PRIMITIVE:
-        {
-            std::string value;
-                       
-            get_token_string( m_index, value );
+        {            
+            const auto value{ get_token_string(m_index) };
 
-            m_parserCallback(content_type, id, value);
+            m_parserCallback(Event::PRIMITIVE, id, value);
             m_index++;
         }
         break;

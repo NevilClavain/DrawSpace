@@ -42,28 +42,39 @@ int main( int argc, char* argv[] )
 
 		renderMe::core::json jsonParser;
 
-		jsonParser.setCallback([] (jsmntype_t p_type, const std::string& p_id, const std::string& p_value)
+		jsonParser.setCallback([] (renderMe::core::json::Event p_event, const std::string& p_id, const std::string& p_value)
 		{
-			switch (p_type)
+			switch (p_event)
 			{
-				case JSMN_OBJECT:
+				case renderMe::core::json::Event::OBJECT_BEGIN:
 
-					std::cout << ">> object of id : " << p_id << "\n";
+					std::cout << ">> begin object of id : " << p_id << "\n";
 					break;
 
-				case JSMN_ARRAY:
+				case renderMe::core::json::Event::OBJECT_END:
 
-					std::cout << ">> array of id : " << p_id << "\n";
+					std::cout << ">> end object of id : " << p_id << "\n";
 					break;
 
-				case JSMN_STRING:
 
-					std::cout << ">> string of id : " << p_id <<  " with value = " << p_value << "\n";
+				case renderMe::core::json::Event::ARRAY_BEGIN:
+
+					std::cout << ">> begin array of id : " << p_id << "\n";
 					break;
 
-				case JSMN_PRIMITIVE:
+				case renderMe::core::json::Event::ARRAY_END:
 
-					std::cout << ">> primitive of id : " << p_id << " with value = " << p_value << "\n";
+					std::cout << ">> end array of id : " << p_id << "\n";
+					break;
+
+				case renderMe::core::json::Event::STRING:
+
+					std::cout << "	>> string of id : " << p_id <<  " with value = " << p_value << "\n";
+					break;
+
+				case renderMe::core::json::Event::PRIMITIVE:
+
+					std::cout << "	>> primitive of id : " << p_id << " with value = " << p_value << "\n";
 					break;
 			}
 		});
