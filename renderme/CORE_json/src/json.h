@@ -26,40 +26,23 @@
 
 #include <jsmn.h>
 #include <string>
+#include <functional>
 
 namespace renderMe
 {
     namespace core
     {
-
         class json
         {
         public:
-
-            enum class ParseState
-            {
-                JSON_NODE_PARSE_BEGIN,
-                JSON_NODE_PARSE_END
-            };
-
-            //struct UserData abstract {};
-
-
-
-            /*
-            using ObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const std::string&, const std::string&, ParseState>;
-            using ArrayObjectContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const std::string&, int, ParseState>;
-            using ArrayContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const std::string&, const std::string&, ParseState>;
-            using StringContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const std::string&, const std::string&, const std::string&>;
-            using NumericContentEventHandler = DrawSpace::Core::BaseCallback4<UserData*, UserData*, const std::string&, const std::string&, dsreal>;
-            */
+            using parserCallback = std::function<void(jsmntype_t, const std::string&, const std::string&)>;
 
             json(void);
             ~json(void) = default;
 
             int		    parse(const std::string& p_str);
 
-
+            void        setCallback(const parserCallback& p_cb);
 
         private:
 
@@ -75,29 +58,15 @@ namespace renderMe
 
             int                 m_index{ -1 };
 
-            int		            get_token_type(int p_index) const;
-            int		            get_token_size(int p_index) const;
+            parserCallback      m_parserCallback{ [](jsmntype_t, const std::string&, const std::string&) {} };
+
+
+            jsmntype_t		    get_token_type(int p_index) const;
+            size_t		        get_token_size(int p_index) const;
             void	            get_token_string(int p_index, std::string& p_out_tokentext) const;
 
-            void                analyzeTokens(/*UserData* p_user_data
-                                    ,ObjectContentEventHandler* p_object_handler,
-                                    ArrayContentEventHandler* p_array_handler,
-                                    ArrayObjectContentEventHandler* p_array_object_handler,
-                                    StringContentEventHandler* p_string_handler,
-                                    NumericContentEventHandler* p_num_handler
-                                    */);
-
-            void recurs_analyze(
-                                        /*
-                                        UserData* p_user_data, 
-                                        const std::string& p_owner_id, 
-                                        ObjectContentEventHandler* p_object_handler, 
-                                        ArrayContentEventHandler* p_array_handler, 
-                                        ArrayObjectContentEventHandler* p_array_object_handler, 
-                                        StringContentEventHandler* p_string_handler, 
-                                        NumericContentEventHandler* p_num_handler
-            
-                                    */);
+            void                analyze_tokens(void);
+            void                recurs_analyze(void);
 
         };
 

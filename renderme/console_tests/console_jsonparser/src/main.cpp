@@ -32,7 +32,7 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "JSON parser\n";
 
-	try 
+	try
 	{
 		renderMe::core::fileContent<char> fc("./console_jsonparser_assets/log.json");
 		fc.load();
@@ -40,9 +40,37 @@ int main( int argc, char* argv[] )
 		const auto dataSize{ fc.getDataSize() };
 		const std::string data(fc.getData(), dataSize);
 
-		renderMe::core::json parser;
+		renderMe::core::json jsonParser;
 
-		const auto parseStatus{ parser.parse(data) };
+		jsonParser.setCallback([] (jsmntype_t p_type, const std::string& p_id, const std::string& p_value)
+		{
+			switch (p_type)
+			{
+				case JSMN_OBJECT:
+
+					std::cout << ">> object of id : " << p_id << "\n";
+					break;
+
+				case JSMN_ARRAY:
+
+					std::cout << ">> array of id : " << p_id << "\n";
+					break;
+
+				case JSMN_STRING:
+
+					std::cout << ">> string of id : " << p_id <<  " with value = " << p_value << "\n";
+					break;
+
+				case JSMN_PRIMITIVE:
+
+					std::cout << ">> primitive of id : " << p_id << " with value = " << p_value << "\n";
+					break;
+			}
+		});
+
+		const auto parseStatus{ jsonParser.parse(data) };
+
+		std::cout << "Parser status = " << (parseStatus > -1 ? "OK" : "KO") << "\n";
 
 	}
 	catch (const std::exception& e)
