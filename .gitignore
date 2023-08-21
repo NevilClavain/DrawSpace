@@ -196,6 +196,9 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_jsonparser/*.sln
 /renderme/console_tests/console_jsonparser/*.vcxproj*
 
+/renderme/console_tests/console_logger/CMakeFiles/
+/renderme/console_tests/console_logger/*.sln
+/renderme/console_tests/console_logger/*.vcxproj*
 
 /renderme/CORE_allocator/CMakeFiles/
 /renderme/CORE_allocator/*.sln

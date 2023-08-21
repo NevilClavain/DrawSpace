@@ -64,10 +64,9 @@ add_subdirectory(CORE_file)
 add_subdirectory(CORE_filesystem)
 add_subdirectory(CORE_json)
 
-
-
 add_subdirectory(console_tests/console_helloworld)
 add_subdirectory(console_tests/console_jsonparser)
+add_subdirectory(console_tests/console_logger)
 
 
 

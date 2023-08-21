@@ -21,11 +21,12 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(console_jsonparser)
+project(console_logger)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${jsonjsmn_include_dir})
 
 link_directories(${jsonjsmn_lib_dir})
@@ -33,19 +34,17 @@ link_directories(${jsonjsmn_lib_dir})
 file(
         GLOB_RECURSE
         source_files
-        ${CMAKE_SOURCE_DIR}/console_tests/console_jsonparser/src/*.cpp
+        ${CMAKE_SOURCE_DIR}/console_tests/console_logger/src/*.cpp
 		
 )
 
-add_executable(console_jsonparser ${source_files})
+add_executable(console_logger ${source_files})
 
-target_link_libraries(console_jsonparser CORE_filesystem CORE_json jsmn)
+target_link_libraries(console_logger CORE_filesystem CORE_file CORE_json CORE_logger jsmn)
 
+install(TARGETS console_logger CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS console_logger CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS console_logger CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 
-install(TARGETS console_jsonparser CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS console_jsonparser CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS console_jsonparser CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/console_tests/console_jsonparser/console_jsonparser_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/console_tests/console_logger/console_logger_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
