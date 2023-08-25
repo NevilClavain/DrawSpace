@@ -42,7 +42,7 @@ int main( int argc, char* argv[] )
 
 		renderMe::core::json jsonParser;
 
-		jsonParser.setCallback([] (renderMe::core::json::Event p_event, const std::string& p_id, const std::string& p_value)
+		jsonParser.setCallback([] (renderMe::core::json::Event p_event, const std::string& p_id, int p_index, const std::string& p_value)
 		{
 			switch (p_event)
 			{

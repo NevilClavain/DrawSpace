@@ -122,7 +122,7 @@ void json::recurs_analyze(void)
     {
         case JSMN_OBJECT:
         {
-            m_parserCallback(Event::OBJECT_BEGIN, id, "");
+            m_parserCallback(Event::OBJECT_BEGIN, id, unused, "");
             m_index++;
 
             for( size_t i = 0; i < content_size; i++ )
@@ -130,13 +130,13 @@ void json::recurs_analyze(void)
                 recurs_analyze();
             }
 
-            m_parserCallback(Event::OBJECT_END, id, "");
+            m_parserCallback(Event::OBJECT_END, id, unused, "");
         }
         break;
 
         case JSMN_ARRAY:
         {
-            m_parserCallback(Event::ARRAY_BEGIN, id, "");
+            m_parserCallback(Event::ARRAY_BEGIN, id, unused, "");
 
             m_index++;
 
@@ -148,12 +148,14 @@ void json::recurs_analyze(void)
                 if( JSMN_OBJECT == sub_content_type )
                 {
                     m_index++;
+                    m_parserCallback(Event::OBJECT_BEGIN, id, i, "");
 
-                    const std::string comment{ id + "_" + std::to_string(i) };
                     for( size_t j = 0; j < sub_content_size; j++ )
                     {
                         recurs_analyze();
                     }
+
+                    m_parserCallback(Event::OBJECT_END, id, i, "");
                 }
                 else
                 {
@@ -161,7 +163,7 @@ void json::recurs_analyze(void)
                 }
             }
 
-            m_parserCallback(Event::ARRAY_END, id, "");
+            m_parserCallback(Event::ARRAY_END, id, unused, "");
         }
         break;
 
@@ -169,7 +171,7 @@ void json::recurs_analyze(void)
         {      
             const auto value{ get_token_string(m_index) };
 
-            m_parserCallback(Event::STRING, id, value);
+            m_parserCallback(Event::STRING, id, unused, value);
             m_index++;
         }
         break;
@@ -178,7 +180,7 @@ void json::recurs_analyze(void)
         {            
             const auto value{ get_token_string(m_index) };
 
-            m_parserCallback(Event::PRIMITIVE, id, value);
+            m_parserCallback(Event::PRIMITIVE, id, unused, value);
             m_index++;
         }
         break;

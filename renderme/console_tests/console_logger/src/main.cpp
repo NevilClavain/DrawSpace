@@ -32,10 +32,36 @@
 #include "logsink.h"
 #include "logconf.h"
 
-static renderMe::core::logger::Sink appLogger("vmapp", renderMe::core::logger::Configuration::getInstance());
+static renderMe::core::logger::Sink appLogger("MyTestApp", renderMe::core::logger::Configuration::getInstance());
 
 int main( int argc, char* argv[] )
 {    
 	std::cout << "Logger test\n";
+
+	try
+	{
+		renderMe::core::fileContent<char> fc("./console_logger_assets/log_conf.json");
+		fc.load();
+
+		const auto dataSize{ fc.getDataSize() };
+		const std::string data(fc.getData(), dataSize);
+
+		renderMe::core::json jsonParser;
+
+		// init logger
+
+		jsonParser.setCallback(renderMe::core::logger::Configuration::getInstance()->getParserCallback());
+
+		const auto parseStatus{ jsonParser.parse(data) };
+
+		std::cout << "Parser status = " << (parseStatus > -1 ? "OK" : "KO") << "\n";
+
+	}
+	catch (const std::exception& e)
+	{
+		const auto what{ e.what() };
+		std::cout << what << "\n";
+	}
+
     return 0;
 }

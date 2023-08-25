@@ -32,6 +32,7 @@
 
 #include "singleton.h"
 #include "logsink.h"
+#include "json.h"
 
 namespace renderMe
 {
@@ -52,22 +53,42 @@ namespace renderMe
                 void                    updateTick(void);
                 LONGLONG                getLastTick(void) const;
 
-                using ParserCallback = std::function<void(const std::string&, long, const std::vector<std::string>&)>;
+                using ParserCallback = std::function<void(renderMe::core::json::Event, const std::string&, int, const std::string&)>;
 
-                ParserCallback getParserCallback(void) const;
+                ParserCallback          getParserCallback(void);
 
             private:
-                std::map<std::string, std::unique_ptr<Output>>     m_outputs;
+                std::map<std::string, std::unique_ptr<Output>>      m_outputs;
 
                 using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;
+                std::map<std::string, SinkInfos>                    m_sinks_infos;
 
-                std::map<std::string, SinkInfos>                   m_sinks_infos;
+                LARGE_INTEGER                                       m_base_tick;
+                LARGE_INTEGER                                       m_last_tick;
+                LARGE_INTEGER                                       m_freq;
 
-                LARGE_INTEGER                                   m_base_tick;
-                LARGE_INTEGER                                   m_last_tick;
-                LARGE_INTEGER                                   m_freq;
+                //// JSON parsing working members
 
-                static void on_new_line(const std::string& p_line, long p_line_num, const std::vector<std::string>& p_words);
+                enum class ParsingState
+                {
+                    IDLE,
+                    RECORD_CONFIG,
+                    RECORD_LOGGER
+                };
+
+                ParsingState                                        m_parsing_state{ ParsingState::IDLE };
+
+                std::string                                         m_mem_output_type;
+                std::string                                         m_mem_output_id;
+                std::string                                         m_mem_output_path;
+
+                std::string                                         m_mem_logger_source;
+                Sink::Level                                         m_mem_logger_level;
+                bool                                                m_mem_logger_state;
+                std::string                                         m_mem_logger_output;
+
+
+                //static void on_json_event(renderMe::core::json::Event p_event, const std::string& p_id, const std::string& p_value);
             };
         }
     }

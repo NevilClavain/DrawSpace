@@ -46,7 +46,10 @@ namespace renderMe
                 PRIMITIVE
             };
 
-            using parserCallback = std::function<void(Event, const std::string&, const std::string&)>;
+            static constexpr int unused{ -1 };
+
+            using parserCallback = std::function<void(Event, const std::string&, int p_index, const std::string&)>;
+
             json(void);
             ~json(void) = default;
 
@@ -68,7 +71,7 @@ namespace renderMe
 
             int                 m_index{ -1 };
 
-            parserCallback      m_parserCallback{ [](Event, const std::string&, const std::string&) {} };
+            parserCallback      m_parserCallback{ [](Event, const std::string&, int p_index, const std::string&) {} };
 
 
             jsmntype_t		    get_token_type(int p_index) const;

@@ -4,7 +4,7 @@
 		{
 			"type" : "file",
 			"id" : "file0",
-			"path" : "rt_traces.out"
+			"path" : "loggertest_traces.out"
 		}
 	],
 	
