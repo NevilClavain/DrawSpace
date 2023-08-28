@@ -31,6 +31,7 @@
 
 #include "logsink.h"
 #include "logconf.h"
+#include "logging.h"
 
 static renderMe::core::logger::Sink appLogger("MyTestApp", renderMe::core::logger::Configuration::getInstance());
 
@@ -51,10 +52,17 @@ int main( int argc, char* argv[] )
 		// init logger
 
 		jsonParser.setCallback(renderMe::core::logger::Configuration::getInstance()->getParserCallback());
-
 		const auto parseStatus{ jsonParser.parse(data) };
-
 		std::cout << "Parser status = " << (parseStatus > -1 ? "OK" : "KO") << "\n";
+
+		_RENDERME_DEBUG(appLogger, "hello from logger test !");
+		_RENDERME_TRACE(appLogger, "trace log with a value : " + std::to_string(666));
+
+		_RENDERME_TRACE(appLogger, "trace log with another value : " << 42 );
+
+		_RENDERME_WARN(appLogger, "this is a warning : " << 3.1415 );
+
+
 
 	}
 	catch (const std::exception& e)

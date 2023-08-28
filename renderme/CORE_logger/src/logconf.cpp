@@ -76,7 +76,26 @@ logger::Configuration::ParserCallback logger::Configuration::getParserCallback(v
                     }
                     else if ("loggers" == p_id)
                     {
-                     
+                        const auto output{ this->m_outputs.at(m_mem_logger_output).get() };
+
+                        if (this->m_sinks_infos.count(this->m_mem_logger_source))
+                        {
+                            auto& sink_info{ this->m_sinks_infos[this->m_mem_logger_source] };
+
+                            const auto sink{ std::get<0>(this->m_sinks_infos.at(this->m_mem_logger_source)) };
+
+                            sink->setCurrentLevel(m_mem_logger_level);
+                            sink->setState(m_mem_logger_state);
+                            sink->registerOutput(output);
+
+                            std::get<1>(sink_info) = m_mem_logger_state;
+                            std::get<2>(sink_info) = m_mem_logger_level;
+                            std::get<3>(sink_info) = output;
+                        }
+                        else
+                        {
+                            this->m_sinks_infos[this->m_mem_logger_source] = std::make_tuple(nullptr, m_mem_logger_state, m_mem_logger_level, output);
+                        }
                     }
                     break;
 
