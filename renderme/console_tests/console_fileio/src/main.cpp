@@ -31,19 +31,44 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "file IO tests \n";
 
-	// read/write of human readable data...
+	{
+		// read/write of human readable data...
 
-	const std::string textOut("abcdefghijklmnopqrstuvwxyz1234567890");
+		const std::string textOut("abcdefghijklmnopqrstuvwxyz1234567890");
 
-	renderMe::core::fileContent<const char> writer("./mytext.txt");
-	writer.save(textOut.c_str(), textOut.size());
+		renderMe::core::fileContent<const char> writer("./mytext.txt");
+		writer.save(textOut.c_str(), textOut.size());
 
-	renderMe::core::fileContent<const char> reader("./mytext.txt");
-	reader.load();
+		renderMe::core::fileContent<char> reader("./mytext.txt");
+		reader.load();
 
-	const std::string textIn(reader.getData(), reader.getDataSize());
+		const std::string textIn(reader.getData(), reader.getDataSize());
 
-	std::cout << "text is : " << textIn << "\n";
+		std::cout << "text is : " << textIn << "\n";
+	}
+
+	{
+		// read/write of double buffer data...
+
+		const double dataOut[]{ 0.1, 0.3, 0.666, 0.75, 3.1415927 };
+
+		renderMe::core::fileContent<const double> writer("./mydata.dat");
+		writer.save(dataOut, 5);
+
+		renderMe::core::fileContent<double> reader("./mydata.dat");
+		reader.load();
+
+		const auto nbElements = reader.getDataSize() / sizeof(const double);
+		std::cout << "nb of doubles = " << nbElements << "\n";
+
+		auto ptr{ reader.getData() };
+
+		for (size_t i = 0; i < nbElements; i++)
+		{
+			std::cout << *ptr << "\n";
+			ptr++;
+		}
+	}
 
     return 0;
 }
