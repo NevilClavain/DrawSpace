@@ -61,9 +61,6 @@ int main( int argc, char* argv[] )
 		_RENDERME_TRACE(appLogger, "trace log with another value : " << 42 );
 
 		_RENDERME_WARN(appLogger, "this is a warning : " << 3.1415 );
-
-
-
 	}
 	catch (const std::exception& e)
 	{

@@ -24,25 +24,57 @@
 
 #include "memorychunks.h"
 
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
+
 using namespace renderMe::core;
+
+static logger::Sink memAllocLogger("MemAlloc", logger::Configuration::getInstance());
 
 void MemoryChunks::dumpContent(void)
 {
-	//TODO : log
+    _RENDERME_DEBUG(memAllocLogger, std::string("Allocations total size : ") << (unsigned int)m_totalSize << std::string (" byte(s)"))
+
+    long count{ 1 };
+
+    for(auto e : m_chunks)
+    {
+        _RENDERME_DEBUG(memAllocLogger, 
+                        std::string("--> ") << count 
+                                        
+                        << std::string("/ ptr = ") << e.first 
+                        << std::string(" size = ") << e.second.size 
+            
+                        << std::string(" object = ") << e.second.item.c_str() 
+                        << std::string(" in function : ") << e.second.func.c_str() << std::string(" ") << e.second.file.c_str() 
+                                        
+                        << std::string(", line ") << e.second.linenum 
+                        << std::string(" comment = [") << e.second.comment 
+            
+                        << std::string("]"))    
+        count++;
+    }
+
 }
 
 void MemoryChunks::unregister(void* p_ptr)
 {
     if (m_chunks.count(p_ptr) > 0)
     {
-        //TODO : log
+        _RENDERME_TRACE(memAllocLogger, 
+                        std::string("ptr = ") << p_ptr << 
+                        std::string(" size = ") << m_chunks[p_ptr].size <<
+                        std::string(" object = ") << m_chunks[p_ptr].item.c_str() << 
+                        std::string(" in function : ") << m_chunks[p_ptr].func.c_str() << std::string(" ") << m_chunks[p_ptr].file.c_str() << 
+                        std::string(", line ") << m_chunks[p_ptr].linenum)
 
         m_totalSize -= m_chunks.at(p_ptr).size;
         m_chunks.erase(p_ptr);
     }
     else
     {
-        // TODO : log a warning
+        _RENDERME_WARN(memAllocLogger, std::string("no mem bloc ") << p_ptr << std::string("(already unallocated ?)"))
     }
 }
 
@@ -56,4 +88,7 @@ void MemoryChunks::register_bloc(void* p_ptr, size_t p_size, const std::string& 
     const chunk c{ p_size, p_item, p_funcname, p_line, p_filename, p_comment };
     m_chunks[p_ptr] = c;
     m_totalSize += p_size;
+
+    _RENDERME_TRACE(memAllocLogger, std::string("ptr = ") << p_ptr << std::string(" size = ") << p_size << std::string(" object = ") << p_item.c_str() << std::string(" in function : ") << p_funcname.c_str()
+        << std::string(" ") << p_filename.c_str() << std::string(", line ") << p_line)
 }
