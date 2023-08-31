@@ -200,6 +200,10 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_logger/*.sln
 /renderme/console_tests/console_logger/*.vcxproj*
 
+/renderme/console_tests/console_fileio/CMakeFiles/
+/renderme/console_tests/console_fileio/*.sln
+/renderme/console_tests/console_fileio/*.vcxproj*
+
 /renderme/CORE_allocator/CMakeFiles/
 /renderme/CORE_allocator/*.sln
 /renderme/CORE_allocator/*.vcxproj*

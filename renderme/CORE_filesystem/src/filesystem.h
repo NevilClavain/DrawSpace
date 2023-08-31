@@ -58,8 +58,6 @@ namespace renderMe
 
             void load(void)
             {
-                static_assert(sizeof(T) == 1, "unexpected type");
-
                 const auto fp{ ::fopen(m_path.c_str(), "rb") };
                 if (fp)
                 {
@@ -70,7 +68,7 @@ namespace renderMe
                     
                     auto dstPtr{ m_data.get() };
 
-                    ::fread((void*)dstPtr, fs, 1, fp);
+                    ::fread((void*)dstPtr, sizeof(T), fs, fp);
                     ::fclose(fp);
 
                     m_dataSize = fs;
@@ -78,6 +76,20 @@ namespace renderMe
                 else
                 {
                     _EXCEPTION("Cannot open " + m_path);
+                }
+            }
+
+            void save(T* p_buffer, size_t p_buffersize)
+            {
+                const auto fp{ ::fopen(m_path.c_str(), "wb") };
+                if (fp)
+                {
+                    ::fwrite(p_buffer, p_buffersize, sizeof(T), fp);
+                    ::fclose(fp);
+                }
+                else
+                {
+                    _EXCEPTION("Cannot create " + m_path);
                 }
             }
 
