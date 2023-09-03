@@ -48,7 +48,7 @@ namespace renderMe
 
             static constexpr int unused{ -1 };
 
-            using ParserCallback = std::function<void(Event, const std::string&, int p_index, const std::string&)>;
+            using ParserCallback = std::function<void(Event, const std::string&, int, const std::string&)>;
 
             json(void);
             ~json(void) = default;

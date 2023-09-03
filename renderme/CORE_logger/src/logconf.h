@@ -84,9 +84,6 @@ namespace renderMe
                 Sink::Level                                         m_mem_logger_level;
                 bool                                                m_mem_logger_state;
                 std::string                                         m_mem_logger_output;
-
-
-                //static void on_json_event(renderMe::core::json::Event p_event, const std::string& p_id, const std::string& p_value);
             };
         }
     }
