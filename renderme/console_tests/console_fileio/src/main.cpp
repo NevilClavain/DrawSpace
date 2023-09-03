@@ -39,7 +39,7 @@ int main( int argc, char* argv[] )
 		renderMe::core::fileContent<const char> writer("./mytext.txt");
 		writer.save(textOut.c_str(), textOut.size());
 
-		renderMe::core::fileContent<char> reader("./mytext.txt");
+		renderMe::core::fileContent<const char> reader("./mytext.txt");
 		reader.load();
 
 		const std::string textIn(reader.getData(), reader.getDataSize());
@@ -55,7 +55,7 @@ int main( int argc, char* argv[] )
 		renderMe::core::fileContent<const double> writer("./mydata.dat");
 		writer.save(dataOut, 5);
 
-		renderMe::core::fileContent<double> reader("./mydata.dat");
+		renderMe::core::fileContent<const double> reader("./mydata.dat");
 		reader.load();
 
 		const auto nbElements = reader.getDataSize() / sizeof(const double);
