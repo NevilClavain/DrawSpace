@@ -53,7 +53,7 @@ int json::parse( const std::string& p_str )
 	return r;
 }
 
-void json::setCallback(const parserCallback& p_cb)
+void json::setCallback(const ParserCallback& p_cb)
 {
     m_parserCallback = p_cb;
 }

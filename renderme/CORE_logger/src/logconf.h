@@ -53,9 +53,9 @@ namespace renderMe
                 void                    updateTick(void);
                 LONGLONG                getLastTick(void) const;
 
-                using ParserCallback = std::function<void(renderMe::core::json::Event, const std::string&, int, const std::string&)>;
+                //using ParserCallback = std::function<void(renderMe::core::json::Event, const std::string&, int, const std::string&)>;
 
-                ParserCallback          getParserCallback(void);
+                json::ParserCallback          getParserCallback(void);
 
             private:
                 std::map<std::string, std::unique_ptr<Output>>      m_outputs;

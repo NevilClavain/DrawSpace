@@ -38,9 +38,9 @@ logger::Configuration::Configuration( void )
 }
 
 
-logger::Configuration::ParserCallback logger::Configuration::getParserCallback(void)
+json::ParserCallback logger::Configuration::getParserCallback(void)
 {
-    const ParserCallback cb
+    const json::ParserCallback cb
     {
         [&, this](renderMe::core::json::Event p_event, const std::string& p_id, int p_index, const std::string& p_value)
         {
