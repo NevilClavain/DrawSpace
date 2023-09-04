@@ -38,10 +38,23 @@ public:
 		m_callbacks.push_back(p_callback);
 	}
 
-
 protected:
 	std::vector<Callback> m_callbacks;
 
+};
+
+
+template<class Emiter>
+class EventSubscriber
+{
+public:
+	virtual typename Emiter::Callback getCallback() const
+	{
+		return m_cb;
+	}
+
+protected:
+	typename Emiter::Callback m_cb;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -68,29 +81,22 @@ public:
 };
 
 
-class Subscriber1
+class Subscriber1 : public EventSubscriber<Processing>
 {
 public:
 
-	Subscriber1() = default;
-	~Subscriber1() = default;
-
-
-	Processing::Callback onProcessing(void)
+	Subscriber1() 
 	{
-		const Processing::Callback cb
+		m_cb = [&, this](const std::string& p_id, int p_ivalue, double p_dvalue)
 		{
-			[&, this](const std::string& p_id, int p_ivalue, double p_dvalue)
-			{
-				this->m_memId = p_id;
-				this->m_memInt = p_ivalue;
-				this->m_memDouble = p_dvalue;
+			this->m_memId = p_id;
+			this->m_memInt = p_ivalue;
+			this->m_memDouble = p_dvalue;
 
-				display_values();
-			}
+			display_values();
 		};
-		return cb;
 	}
+	~Subscriber1() = default;
 
 private:
 
@@ -115,12 +121,10 @@ int main( int argc, char* argv[] )
 	Processing		caller;
 	Subscriber1		subscriber;
 
-	caller.registerSubscriber(subscriber.onProcessing());
+	caller.registerSubscriber(subscriber.getCallback());
 
 	caller.processSomething();
 
-
-	Event<int, float, const std::string&> cs;
 
     return 0;
 }
