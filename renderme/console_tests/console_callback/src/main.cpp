@@ -27,43 +27,46 @@
 #include <functional>
 #include <vector>
 
-class Caller
+template<class... Args>
+class Event
 {
 public:
-	Caller() = default;
-	~Caller() = default;
+	using Callback = std::function<void(Args&&...)>;
 
-	enum class Event
-	{
-		EVT1,
-		EVT2,
-		EVT3
-	};
-
-	using processingCallback = std::function<void(Event, const std::string&, int, double)>;
-
-	void processSomething()
-	{
-		std::cout << "Caller : Processing begin...\n";
-
-		for (const auto& call : m_callbacks)
-		{
-			call(Event::EVT2, "myId", 666, 3.1415927);
-		}
-
-		std::cout << "Caller : Processing end...\n";
-	}
-
-	void registerSubscriber(const processingCallback& p_callback)
+	void registerSubscriber(const Callback& p_callback)
 	{
 		m_callbacks.push_back(p_callback);
 	}
 
-private:
 
-	std::vector<processingCallback> m_callbacks;
-	
+protected:
+	std::vector<Callback> m_callbacks;
+
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+class Processing : public Event<const std::string&, int, double>
+{
+public:
+	Processing() = default;
+	~Processing() = default;
+
+	void processSomething()
+	{
+		std::cout << "Processing : Processing begin...\n";
+
+		
+		for (const auto& call : m_callbacks)
+		{
+			call("myId", 666, 3.1415927);
+		}
+		
+
+		std::cout << "Processing : Processing end...\n";
+	}	
+};
+
 
 class Subscriber1
 {
@@ -73,13 +76,12 @@ public:
 	~Subscriber1() = default;
 
 
-	Caller::processingCallback onProcessing(void)
+	Processing::Callback onProcessing(void)
 	{
-		const Caller::processingCallback cb
+		const Processing::Callback cb
 		{
-			[&, this](Caller::Event p_evt, const std::string& p_id, int p_ivalue, double p_dvalue)
+			[&, this](const std::string& p_id, int p_ivalue, double p_dvalue)
 			{
-				this->m_memEvent = p_evt;
 				this->m_memId = p_id;
 				this->m_memInt = p_ivalue;
 				this->m_memDouble = p_dvalue;
@@ -92,14 +94,14 @@ public:
 
 private:
 
-	Caller::Event	m_memEvent;
-	std::string		m_memId;
-	int				m_memInt;
-	double			m_memDouble;
+	
+	std::string			m_memId;
+	int					m_memInt;
+	double				m_memDouble;
 
 	void display_values()
 	{
-		std::cout << "Subscriber1 -> " << (int)m_memEvent << " " << m_memId << " " << m_memInt << " " << m_memDouble << "\n";
+		std::cout << "Subscriber1 -> " << " " << m_memId << " " << m_memInt << " " << m_memDouble << "\n";
 	}
 };
 
@@ -110,12 +112,15 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "callback system test...\n";
 
-	Caller		caller;
-	Subscriber1 subscriber;
+	Processing		caller;
+	Subscriber1		subscriber;
 
 	caller.registerSubscriber(subscriber.onProcessing());
 
 	caller.processSomething();
+
+
+	Event<int, float, const std::string&> cs;
 
     return 0;
 }
