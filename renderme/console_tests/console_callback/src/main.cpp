@@ -44,19 +44,6 @@ protected:
 };
 
 
-template<class Emiter>
-class EventSubscriber
-{
-public:
-	virtual typename Emiter::Callback getCallback() const
-	{
-		return m_cb;
-	}
-
-protected:
-	typename Emiter::Callback m_cb;
-};
-
 /////////////////////////////////////////////////////////////////////////////
 
 class Processing : public Event<const std::string&, int, double>
@@ -81,7 +68,7 @@ public:
 };
 
 
-class Subscriber1 : public EventSubscriber<Processing>
+class Subscriber1
 {
 public:
 
@@ -98,17 +85,24 @@ public:
 	}
 	~Subscriber1() = default;
 
+	Processing::Callback getCallback() const
+	{
+		return m_cb;
+	}
+
 private:
 
+	Processing::Callback	m_cb;
 	
-	std::string			m_memId;
-	int					m_memInt;
-	double				m_memDouble;
+	std::string				m_memId;
+	int						m_memInt;
+	double					m_memDouble;
 
 	void display_values()
 	{
 		std::cout << "Subscriber1 -> " << " " << m_memId << " " << m_memInt << " " << m_memDouble << "\n";
 	}
+
 };
 
 
