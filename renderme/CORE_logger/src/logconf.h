@@ -43,7 +43,7 @@ namespace renderMe
             // fwd decl
             class Output;
 
-            class Configuration : public Singleton<Configuration>
+            class Configuration : public property::Singleton<Configuration>
             {
             public:
                 Configuration(void);

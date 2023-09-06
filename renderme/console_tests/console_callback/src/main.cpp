@@ -30,7 +30,7 @@
 #include "event.h"
 
 
-class Processing : public renderMe::core::Event<const std::string&, int, double>
+class Processing : public renderMe::property::Event<const std::string&, int, double>
 {
 public:
 	Processing() = default;

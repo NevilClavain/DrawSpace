@@ -33,7 +33,7 @@ namespace renderMe
 {
     namespace core
     {
-        class MemoryChunks : public Singleton<MemoryChunks>
+        class MemoryChunks : public property::Singleton<MemoryChunks>
         {
         public:
             ~MemoryChunks(void) = default;

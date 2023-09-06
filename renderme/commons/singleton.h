@@ -31,7 +31,7 @@
 
 namespace renderMe
 {
-    namespace core
+    namespace property
     {
         template<class T>
         class Singleton
@@ -56,4 +56,4 @@ namespace renderMe
 }
 
 template <class T>
-std::unique_ptr<T> renderMe::core::Singleton<T>::m_instance;
+std::unique_ptr<T> renderMe::property::Singleton<T>::m_instance;

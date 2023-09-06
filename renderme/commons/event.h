@@ -31,7 +31,7 @@
 
 namespace renderMe
 {
-    namespace core
+    namespace property
     {
 		template<class... Args>
 		class Event
