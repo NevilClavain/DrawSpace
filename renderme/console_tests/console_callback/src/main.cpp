@@ -27,26 +27,10 @@
 #include <functional>
 #include <vector>
 
-template<class... Args>
-class Event
-{
-public:
-	using Callback = std::function<void(Args&&...)>;
-
-	void registerSubscriber(const Callback& p_callback)
-	{
-		m_callbacks.push_back(p_callback);
-	}
-
-protected:
-	std::vector<Callback> m_callbacks;
-
-};
+#include "event.h"
 
 
-/////////////////////////////////////////////////////////////////////////////
-
-class Processing : public Event<const std::string&, int, double>
+class Processing : public renderMe::core::Event<const std::string&, int, double>
 {
 public:
 	Processing() = default;

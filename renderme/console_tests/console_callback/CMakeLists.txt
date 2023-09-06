@@ -23,6 +23,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(console_callback)
 
+include_directories(${CMAKE_SOURCE_DIR}/commons)
+
 file(
         GLOB_RECURSE
         source_files
