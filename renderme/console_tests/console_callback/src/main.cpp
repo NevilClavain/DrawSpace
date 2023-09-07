@@ -27,10 +27,10 @@
 #include <functional>
 #include <vector>
 
-#include "event.h"
+#include "eventsource.h"
 
 
-class Processing : public renderMe::property::Event<const std::string&, int, double>
+class Processing : public renderMe::property::EventSource<const std::string&, int, double>
 {
 public:
 	Processing() = default;

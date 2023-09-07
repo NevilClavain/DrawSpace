@@ -34,7 +34,7 @@ namespace renderMe
     namespace property
     {
 		template<class... Args>
-		class Event
+		class EventSource
 		{
 		public:
 			using Callback = std::function<void(Args&&...)>;
