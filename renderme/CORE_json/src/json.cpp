@@ -53,10 +53,12 @@ int json::parse( const std::string& p_str )
 	return r;
 }
 
+/*
 void json::setCallback(const ParserCallback& p_cb)
 {
     m_parserCallback = p_cb;
 }
+*/
 
 jsmntype_t json::get_token_type( int p_index ) const
 {
@@ -122,7 +124,10 @@ void json::recurs_analyze(void)
     {
         case JSMN_OBJECT:
         {
-            m_parserCallback(Event::OBJECT_BEGIN, id, unused, "");
+            for (const auto& call : m_callbacks)
+            {
+                call(JSONEvent::OBJECT_BEGIN, id, -1, "");
+            }
             m_index++;
 
             for( size_t i = 0; i < content_size; i++ )
@@ -130,14 +135,19 @@ void json::recurs_analyze(void)
                 recurs_analyze();
             }
 
-            m_parserCallback(Event::OBJECT_END, id, unused, "");
+            for (const auto& call : m_callbacks)
+            {
+                call(JSONEvent::OBJECT_END, id, -1, "");
+            }
         }
         break;
 
         case JSMN_ARRAY:
         {
-            m_parserCallback(Event::ARRAY_BEGIN, id, unused, "");
-
+            for (const auto& call : m_callbacks)
+            {
+                call(JSONEvent::ARRAY_BEGIN, id, -1, "");
+            }
             m_index++;
 
             for( size_t i = 0; i < content_size; i++ )
@@ -148,14 +158,22 @@ void json::recurs_analyze(void)
                 if( JSMN_OBJECT == sub_content_type )
                 {
                     m_index++;
-                    m_parserCallback(Event::OBJECT_BEGIN, id, i, "");
+
+                    for (const auto& call : m_callbacks)
+                    {
+                        call(JSONEvent::OBJECT_BEGIN, id, i, "");
+                    }
+
 
                     for( size_t j = 0; j < sub_content_size; j++ )
                     {
                         recurs_analyze();
                     }
 
-                    m_parserCallback(Event::OBJECT_END, id, i, "");
+                    for (const auto& call : m_callbacks)
+                    {
+                        call(JSONEvent::OBJECT_END, id, i, "");
+                    }
                 }
                 else
                 {
@@ -163,15 +181,21 @@ void json::recurs_analyze(void)
                 }
             }
 
-            m_parserCallback(Event::ARRAY_END, id, unused, "");
+            for (const auto& call : m_callbacks)
+            {
+                call(JSONEvent::ARRAY_END, id, -1, "");
+            }
         }
         break;
 
         case JSMN_STRING:
         {      
             const auto value{ get_token_string(m_index) };
+            for (const auto& call : m_callbacks)
+            {
+                call(JSONEvent::STRING, id, -1, value);
+            }
 
-            m_parserCallback(Event::STRING, id, unused, value);
             m_index++;
         }
         break;
@@ -179,8 +203,11 @@ void json::recurs_analyze(void)
         case JSMN_PRIMITIVE:
         {            
             const auto value{ get_token_string(m_index) };
+            for (const auto& call : m_callbacks)
+            {
+                call(JSONEvent::PRIMITIVE, id, -1, value);
+            }
 
-            m_parserCallback(Event::PRIMITIVE, id, unused, value);
             m_index++;
         }
         break;

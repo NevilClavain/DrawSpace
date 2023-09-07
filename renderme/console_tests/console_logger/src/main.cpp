@@ -51,7 +51,7 @@ int main( int argc, char* argv[] )
 
 		// init logger
 
-		jsonParser.setCallback(renderMe::core::logger::Configuration::getInstance()->getParserCallback());
+		jsonParser.registerSubscriber(renderMe::core::logger::Configuration::getInstance()->getCallback());
 		const auto parseStatus{ jsonParser.parse(data) };
 		std::cout << "Parser status = " << (parseStatus > -1 ? "OK" : "KO") << "\n";
 

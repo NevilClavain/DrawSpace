@@ -53,9 +53,17 @@ namespace renderMe
                 void                    updateTick(void);
                 LONGLONG                getLastTick(void) const;
 
-                json::ParserCallback          getParserCallback(void);
+                //json::ParserCallback          getParserCallback(void);
+
+                json::Callback getCallback() const
+                {
+                    return m_cb;
+                }
 
             private:
+
+                json::Callback	                                    m_cb;
+
                 std::map<std::string, std::unique_ptr<Output>>      m_outputs;
 
                 using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;

@@ -28,34 +28,37 @@
 #include <string>
 #include <functional>
 
+#include "eventsource.h"
+
 namespace renderMe
 {
     namespace core
     {
-        class json
+
+        enum class JSONEvent
+        {
+            OBJECT_BEGIN,
+            ARRAY_BEGIN,
+            OBJECT_END,
+            ARRAY_END,
+            STRING,
+            PRIMITIVE
+        };
+
+        class json : public renderMe::property::EventSource<JSONEvent, const std::string&, int, const std::string&>
         {
         public:
 
-            enum class Event
-            {
-                OBJECT_BEGIN,
-                ARRAY_BEGIN,
-                OBJECT_END,
-                ARRAY_END,
-                STRING,
-                PRIMITIVE
-            };
+            //static constexpr int unused{ -1 };
 
-            static constexpr int unused{ -1 };
-
-            using ParserCallback = std::function<void(Event, const std::string&, int, const std::string&)>;
+            //using ParserCallback = std::function<void(Event, const std::string&, int, const std::string&)>;
 
             json(void);
             ~json(void) = default;
 
             int		    parse(const std::string& p_str);
 
-            void        setCallback(const ParserCallback& p_cb);
+            //void        setCallback(const ParserCallback& p_cb);
 
         private:
 
@@ -71,7 +74,7 @@ namespace renderMe
 
             int                 m_index{ -1 };
 
-            ParserCallback      m_parserCallback{ [](Event, const std::string&, int p_index, const std::string&) {} };
+            //ParserCallback      m_parserCallback{ [](Event, const std::string&, int p_index, const std::string&) {} };
 
 
             jsmntype_t		    get_token_type(int p_index) const;
