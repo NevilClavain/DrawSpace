@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-#include "json.h"
+#include "Json.h"
 
 /*
 #include "memalloc.h"
@@ -33,12 +33,12 @@
 
 using namespace renderMe::core;
 
-json::json( void )
+Json::Json( void )
 {
 	jsmn_init( &m_parser );
 }
 
-int json::parse( const std::string& p_str )
+int Json::parse( const std::string& p_str )
 {
 	m_parse_success = false;
     const auto r{ jsmn_parse(&m_parser, p_str.c_str(), p_str.size(), m_tokens, max_tokens) };
@@ -54,27 +54,27 @@ int json::parse( const std::string& p_str )
 }
 
 /*
-void json::setCallback(const ParserCallback& p_cb)
+void Json::setCallback(const ParserCallback& p_cb)
 {
     m_parserCallback = p_cb;
 }
 */
 
-jsmntype_t json::get_token_type( int p_index ) const
+jsmntype_t Json::get_token_type( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-        _EXCEPTION("json::GetTokenType");
+        _EXCEPTION("Json::GetTokenType");
 	}
 
 	return m_tokens[p_index].type;
 }
 
-std::string json::get_token_string( int p_index ) const
+std::string Json::get_token_string( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-        _EXCEPTION("json::GetTokenString");
+        _EXCEPTION("Json::GetTokenString");
 	}
 
     const auto start{ m_tokens[p_index].start };
@@ -83,17 +83,17 @@ std::string json::get_token_string( int p_index ) const
 	return m_text.substr( start, end - start );
 }
 
-size_t json::get_token_size( int p_index ) const
+size_t Json::get_token_size( int p_index ) const
 {
 	if( !m_parse_success || p_index > m_nb_tokens - 1 )
 	{
-        _EXCEPTION("json::GetTokenSize");
+        _EXCEPTION("Json::GetTokenSize");
 	}
 
 	return m_tokens[p_index].size;
 }
 
-void json::analyze_tokens(void)
+void Json::analyze_tokens(void)
 {
     m_index = 0;
     const auto size{ get_token_size(m_index) };
@@ -112,7 +112,7 @@ void json::analyze_tokens(void)
     }    
 }
 
-void json::recurs_analyze(void)
+void Json::recurs_analyze(void)
 {
     const auto id{ get_token_string(m_index) };
     m_index++;

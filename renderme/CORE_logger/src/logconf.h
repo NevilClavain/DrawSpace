@@ -55,14 +55,14 @@ namespace renderMe
 
                 //json::ParserCallback          getParserCallback(void);
 
-                json::Callback getCallback() const
+                Json::Callback getCallback() const
                 {
                     return m_cb;
                 }
 
             private:
 
-                json::Callback	                                    m_cb;
+                Json::Callback	                                    m_cb;
 
                 std::map<std::string, std::unique_ptr<Output>>      m_outputs;
 

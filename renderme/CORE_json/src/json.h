@@ -45,7 +45,7 @@ namespace renderMe
             PRIMITIVE
         };
 
-        class json : public renderMe::property::EventSource<JSONEvent, const std::string&, int, const std::string&>
+        class Json : public renderMe::property::EventSource<JSONEvent, const std::string&, int, const std::string&>
         {
         public:
 
@@ -53,8 +53,8 @@ namespace renderMe
 
             //using ParserCallback = std::function<void(Event, const std::string&, int, const std::string&)>;
 
-            json(void);
-            ~json(void) = default;
+            Json(void);
+            ~Json(void) = default;
 
             int		    parse(const std::string& p_str);
 

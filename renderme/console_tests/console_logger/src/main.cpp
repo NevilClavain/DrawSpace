@@ -47,7 +47,7 @@ int main( int argc, char* argv[] )
 		const auto dataSize{ fc.getDataSize() };
 		const std::string data(fc.getData(), dataSize);
 
-		renderMe::core::json jsonParser;
+		renderMe::core::Json jsonParser;
 
 		// init logger
 
