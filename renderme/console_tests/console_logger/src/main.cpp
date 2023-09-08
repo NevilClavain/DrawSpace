@@ -41,7 +41,7 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		renderMe::core::fileContent<char> fc("./console_logger_assets/log_conf.json");
+		renderMe::core::FileContent<char> fc("./console_logger_assets/log_conf.json");
 		fc.load();
 
 		const auto dataSize{ fc.getDataSize() };

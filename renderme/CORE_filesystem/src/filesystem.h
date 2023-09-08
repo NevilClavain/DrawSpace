@@ -43,18 +43,18 @@ namespace renderMe
         }
 
         template<typename T>
-        class fileContent
+        class FileContent
         {
         public:
 
-            fileContent() = delete;
+            FileContent() = delete;
 
-            fileContent(const std::string& p_path) :
+            FileContent(const std::string& p_path) :
             m_path(p_path)
             {
             }
 
-            ~fileContent() = default;
+            ~FileContent() = default;
 
             void load(void)
             {

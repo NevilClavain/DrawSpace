@@ -34,7 +34,7 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		renderMe::core::fileContent<char> fc("./console_jsonparser_assets/log.json");
+		renderMe::core::FileContent<char> fc("./console_jsonparser_assets/log.json");
 		fc.load();
 
 		const auto dataSize{ fc.getDataSize() };

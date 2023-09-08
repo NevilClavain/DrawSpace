@@ -36,10 +36,10 @@ int main( int argc, char* argv[] )
 
 		const std::string textOut("abcdefghijklmnopqrstuvwxyz1234567890");
 
-		renderMe::core::fileContent<const char> writer("./mytext.txt");
+		renderMe::core::FileContent<const char> writer("./mytext.txt");
 		writer.save(textOut.c_str(), textOut.size());
 
-		renderMe::core::fileContent<const char> reader("./mytext.txt");
+		renderMe::core::FileContent<const char> reader("./mytext.txt");
 		reader.load();
 
 		const std::string textIn(reader.getData(), reader.getDataSize());
@@ -52,10 +52,10 @@ int main( int argc, char* argv[] )
 
 		const double dataOut[]{ 0.1, 0.3, 0.666, 0.75, 3.1415927 };
 
-		renderMe::core::fileContent<const double> writer("./mydata.dat");
+		renderMe::core::FileContent<const double> writer("./mydata.dat");
 		writer.save(dataOut, 5);
 
-		renderMe::core::fileContent<const double> reader("./mydata.dat");
+		renderMe::core::FileContent<const double> reader("./mydata.dat");
 		reader.load();
 
 		const auto nbElements = reader.getDataSize() / sizeof(const double);
