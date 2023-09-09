@@ -25,21 +25,18 @@
 #pragma once
 
 #include <thread>
-#include "task.h"
 #include "mailbox.h"
-#include "singleton.h"
-#include "task.h"
+#include "asynctask.h"
 
 namespace renderMe
 {
 	namespace core
 	{
-		struct Runner : public property::Singleton<Runner>
+		class Runner
 		{
 		public:
 
-			Mailbox<Task*>									m_mailbox_in;
-			Mailbox<std::pair<std::string, std::string>>	m_mailbox_out;
+			Mailbox<property::AsyncTask*>					m_mailbox_in;
 
 			void startup(void);
 			void join(void) const;
@@ -49,21 +46,21 @@ namespace renderMe
 			mutable std::unique_ptr<std::thread>			m_thread;
 			bool											m_cont;
 
-			static void mainloop(void);
+			static void mainloop(Runner* p_runner);
 
 			static constexpr unsigned int idle_duration_ms{ 50 };
 			friend struct RunnerKiller;
 		};
 
-		struct RunnerKiller : public Task
+		struct RunnerKiller : public property::AsyncTask
 		{
-			RunnerKiller(void) : Task("KILL", "Runner")
+			RunnerKiller(void) : AsyncTask("KILL", "Runner")
 			{
 			}
 
-			void execute(void)
+			void execute(core::Runner* p_runner)
 			{
-				Runner::getInstance()->m_cont = false;
+				p_runner->m_cont = false;
 			}
 		};
 	}

@@ -27,50 +27,30 @@
 
 #include "runner.h"
 
-/*
-#include "logsink.h"
-#include "logconf.h"
-#include "logoutput.h"
-#include "logging.h"
-
-DrawSpace::Logger::Sink runner_logger("Runner", DrawSpace::Logger::Configuration::getInstance());
-*/
-
 using namespace renderMe;
 using namespace renderMe::core;
+using namespace renderMe::property;
 
-void Runner::mainloop(void)
+void Runner::mainloop(Runner* p_runner)
 {
-	Runner::getInstance()->m_cont = true;
+	const auto runnerInstance{ p_runner };
 
-	//_DSDEBUG(runner_logger, std::string("<<< Runner begin >>>"));
+	runnerInstance->m_cont = true;
 
 	do
 	{
-		auto mb_in{ &Runner::getInstance()->m_mailbox_in };
-		auto mb_out{ &Runner::getInstance()->m_mailbox_out };
+		auto mb_in{ &runnerInstance->m_mailbox_in };
 		const auto mbsize{ mb_in->getBoxSize() };
 
 		if (mbsize > 0)
 		{
-			Task* current{ nullptr };
+			AsyncTask* current{ nullptr };
 			do
 			{
-				current = mb_in->popNext<Task*>(nullptr);
+				current = mb_in->popNext<AsyncTask*>(nullptr);
 				if (current)
-				{
-					auto task_target{ current->getTargetDescr() };
-					auto task_action{ current->getActionDescr() };
-
-					const std::string exec_trace{ std::string("<<< Runner executing : ") + task_action + std::string(" ") + task_target + std::string(" >>>") };
-					
-					//_DSDEBUG(runner_logger, exec_trace);
-					
-					current->execute();
-
-					//_DSDEBUG(runner_logger, std::string("<<< Task execution done >>>"));
-
-					mb_out->push<std::pair<std::string, std::string>>(std::make_pair(task_action, task_target));
+				{														
+					current->execute(runnerInstance);
 				}
 
 			} while (current);
@@ -78,18 +58,17 @@ void Runner::mainloop(void)
 		else
 		{
 			// idle for a little time...
-			//::Sleep(idle_duration_ms);
+
 			std::this_thread::sleep_for(std::chrono::milliseconds(idle_duration_ms));
 		}
 
-	} while (Runner::getInstance()->m_cont);
-
-	//_DSDEBUG(runner_logger, std::string("<<< Runner end >>>"));
+	} while (runnerInstance->m_cont);
+	
 }
 
 void Runner::startup(void)
 {	
-	m_thread = std::make_unique<std::thread>(Runner::mainloop);
+	m_thread = std::make_unique<std::thread>(Runner::mainloop, this);
 };
 
 void Runner::join(void) const
