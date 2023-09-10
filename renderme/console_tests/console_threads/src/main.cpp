@@ -24,9 +24,75 @@
 /* -*-LIC_END-*- */
 
 #include <iostream>
+#include <vector>
+
+#include "runner.h"
+#include "filesystem.h"
+
+
+class Loader : public renderMe::property::AsyncTask
+{
+public:
+	Loader(const std::string& p_path, std::string& p_dest): AsyncTask("loading text", "std::string"),
+	m_path(p_path),
+	m_dest(p_dest)
+	{
+	}
+
+private:
+	std::string m_path;
+	std::string& m_dest;
+
+	void execute(renderMe::core::Runner* p_runner)
+	{
+		renderMe::core::FileContent<const char> reader(m_path);
+		reader.load();
+
+		const std::string textIn(reader.getData(), reader.getDataSize());
+
+		m_dest = textIn;
+	}
+
+};
 
 int main( int argc, char* argv[] )
 {    
 	std::cout << "Threads tests... !\n";
+
+	std::string text1;
+	std::string text2;
+
+	Loader loader("./console_threads_assets/gmreadme.txt", text1);
+
+	Loader loader2("./console_threads_assets/title.txt", text2);
+
+
+	renderMe::core::Runner runner;
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader);
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&renderMe::core::RunnerKiller());
+
+	renderMe::core::Runner runner2;
+	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader2);
+	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&renderMe::core::RunnerKiller());
+
+
+	runner.startup();
+	runner2.startup();
+
+
+
+	runner.join();
+	runner2.join();
+
+	
+	std::cout << "*****text1***************\n";
+	std::cout << text1 << "\n";
+
+	std::cout << "*****text2***************\n";
+	std::cout << text2 << "\n";
+	
+
+	std::cout << "bye...\n";
+
     return 0;
 }

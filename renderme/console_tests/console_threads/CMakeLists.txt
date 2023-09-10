@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.0)
 project(console_threads)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
 
 file(
@@ -35,9 +36,11 @@ file(
 
 add_executable(console_threads ${source_files})
 
-target_link_libraries(console_threads CORE_threads)
+target_link_libraries(console_threads CORE_threads CORE_filesystem)
 
 install(TARGETS console_threads CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS console_threads CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS console_threads CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/console_tests/console_threads/console_threads_assets DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 

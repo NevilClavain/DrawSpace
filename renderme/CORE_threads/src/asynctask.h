@@ -43,8 +43,7 @@ namespace renderMe
 				m_target_descr(p_target_descr)
 			{
 			};
-			virtual void execute(core::Runner* p_runner) = 0;
-
+			
 			std::string getTargetDescr(void) const
 			{
 				return m_target_descr;
@@ -68,6 +67,10 @@ namespace renderMe
 		private:
 			std::string	m_action_descr;
 			std::string	m_target_descr;
+
+			virtual void execute(core::Runner* p_runner) = 0;
+
+			friend class core::Runner;
 
 		};
 	}
