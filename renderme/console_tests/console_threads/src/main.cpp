@@ -26,7 +26,11 @@
 #include <iostream>
 #include <vector>
 
+//#include <tuple>
+//#include <functional>
+
 #include "runner.h"
+
 #include "filesystem.h"
 
 
@@ -55,12 +59,32 @@ private:
 
 };
 
+
 int main( int argc, char* argv[] )
 {    
 	std::cout << "Threads tests... !\n";
 
 	std::string text1;
 	std::string text2;
+	
+	renderMe::core::SimpleAsyncTask<const std::string&> it(
+		[&text1](const std::string& p_path)
+		{
+			std::cout << "Hello from path : " << p_path << "\n";
+		},
+
+		"./console_threads_assets/gmreadme.txt"
+	);
+	
+	renderMe::core::SimpleAsyncTask<> it2(
+
+		[](void)
+		{
+			std::cout << "Hello from NOBODY !\n";
+
+		}
+	);
+
 
 	Loader loader("./console_threads_assets/gmreadme.txt", text1);
 
@@ -68,6 +92,11 @@ int main( int argc, char* argv[] )
 
 
 	renderMe::core::Runner runner;
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it);
+
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it2);
+
+
 	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader);
 	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&renderMe::core::RunnerKiller());
 
@@ -83,7 +112,7 @@ int main( int argc, char* argv[] )
 
 	runner.join();
 	runner2.join();
-
+	std::cout << "ALL joined\n";
 	
 	std::cout << "*****text1***************\n";
 	std::cout << text1 << "\n";

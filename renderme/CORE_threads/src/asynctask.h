@@ -24,6 +24,7 @@
 
 #pragma once
 #include <string>
+#include <functional>
 
 namespace renderMe
 {
@@ -72,6 +73,31 @@ namespace renderMe
 
 			friend class core::Runner;
 
+		};
+	}
+
+	namespace core
+	{
+		template <typename... Args>
+		class SimpleAsyncTask : public renderMe::property::AsyncTask
+		{
+		public:
+
+			using bind_type = decltype(std::bind(std::declval<std::function<void(Args...)>>(), std::declval<Args>()...));
+
+			template <typename... ConstrArgs>
+			SimpleAsyncTask(std::function<void(Args...)> f, ConstrArgs&&... args) : AsyncTask("imm", "imm"),
+				m_bind(std::forward<std::function<void(Args...)>>(f), std::forward<ConstrArgs>(args)...)
+			{
+			}
+
+			void execute(renderMe::core::Runner* p_runner)
+			{
+				m_bind();
+			}
+
+		private:
+			bind_type m_bind;
 		};
 	}
 }
