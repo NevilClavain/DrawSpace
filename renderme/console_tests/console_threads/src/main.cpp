@@ -67,7 +67,7 @@ int main( int argc, char* argv[] )
 	std::string text1;
 	std::string text2;
 	
-	renderMe::core::SimpleAsyncTask<const std::string&> it(
+	renderMe::core::SimpleAsyncTask<const std::string&> it( "Say hello from path", "stdout",
 		[&text1](const std::string& p_path)
 		{
 			std::cout << "Hello from path : " << p_path << "\n";
@@ -76,7 +76,7 @@ int main( int argc, char* argv[] )
 		"./console_threads_assets/gmreadme.txt"
 	);
 	
-	renderMe::core::SimpleAsyncTask<> it2(
+	renderMe::core::SimpleAsyncTask<> it2("Say hello from nobody", "stdout",
 
 		[](void)
 		{

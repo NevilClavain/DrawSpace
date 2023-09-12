@@ -86,7 +86,7 @@ namespace renderMe
 			using bind_type = decltype(std::bind(std::declval<std::function<void(Args...)>>(), std::declval<Args>()...));
 
 			template <typename... ConstrArgs>
-			SimpleAsyncTask(std::function<void(Args...)> f, ConstrArgs&&... args) : AsyncTask("imm", "imm"),
+			SimpleAsyncTask(const std::string& p_action_descr, const std::string& p_target_descr, std::function<void(Args...)> f, ConstrArgs&&... args) : AsyncTask(p_action_descr, p_target_descr),
 				m_bind(std::forward<std::function<void(Args...)>>(f), std::forward<ConstrArgs>(args)...)
 			{
 			}
