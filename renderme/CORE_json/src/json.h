@@ -49,16 +49,10 @@ namespace renderMe
         {
         public:
 
-            //static constexpr int unused{ -1 };
-
-            //using ParserCallback = std::function<void(Event, const std::string&, int, const std::string&)>;
-
             Json(void);
             ~Json(void) = default;
 
             int		    parse(const std::string& p_str);
-
-            //void        setCallback(const ParserCallback& p_cb);
 
         private:
 
@@ -73,9 +67,6 @@ namespace renderMe
             std::string         m_text;
 
             int                 m_index{ -1 };
-
-            //ParserCallback      m_parserCallback{ [](Event, const std::string&, int p_index, const std::string&) {} };
-
 
             jsmntype_t		    get_token_type(int p_index) const;
             size_t		        get_token_size(int p_index) const;

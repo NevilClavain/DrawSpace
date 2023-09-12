@@ -53,12 +53,6 @@ int Json::parse( const std::string& p_str )
 	return r;
 }
 
-/*
-void Json::setCallback(const ParserCallback& p_cb)
-{
-    m_parserCallback = p_cb;
-}
-*/
 
 jsmntype_t Json::get_token_type( int p_index ) const
 {
