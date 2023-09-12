@@ -24,7 +24,9 @@
 
 #pragma once
 
+#include <string>
 #include <thread>
+#include <utility> 
 #include "mailbox.h"
 #include "asynctask.h"
 
@@ -37,9 +39,10 @@ namespace renderMe
 		public:
 
 			Mailbox<property::AsyncTask*>					m_mailbox_in;
+			Mailbox<std::pair<std::string, std::string>>	m_mailbox_out;
 
 			void startup(void);
-			void join(void) const;
+			void join(void);
 
 		private:
 

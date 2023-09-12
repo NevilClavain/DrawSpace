@@ -22,6 +22,8 @@
 */
 /* -*-LIC_END-*- */
 
+#include <iostream>
+
 #include <string>
 #include <chrono>
 
@@ -40,6 +42,7 @@ void Runner::mainloop(Runner* p_runner)
 	do
 	{
 		auto mb_in{ &runnerInstance->m_mailbox_in };
+		auto mb_out{ &runnerInstance->m_mailbox_out };
 		const auto mbsize{ mb_in->getBoxSize() };
 
 		if (mbsize > 0)
@@ -49,8 +52,12 @@ void Runner::mainloop(Runner* p_runner)
 			{
 				current = mb_in->popNext<AsyncTask*>(nullptr);
 				if (current)
-				{														
+				{	
+					auto task_target{ current->getTargetDescr() };
+					auto task_action{ current->getActionDescr() };
+
 					current->execute(runnerInstance);
+					mb_out->push<std::pair<std::string, std::string>>(std::make_pair(task_action, task_target));
 				}
 
 			} while (current);
@@ -71,10 +78,19 @@ void Runner::startup(void)
 	m_thread = std::make_unique<std::thread>(Runner::mainloop, this);
 };
 
-void Runner::join(void) const
+void Runner::join(void)
 {
 	if (m_thread.get())
 	{
 		m_thread->join();
+
+		const auto mb_size{ m_mailbox_out.getBoxSize() };
+
+		for (int i = 0; i < mb_size; i++)
+		{
+			const auto task_descr{ m_mailbox_out.popNext<std::pair<std::string, std::string>>(std::make_pair<std::string, std::string>("","")) };
+
+			std::cout << i << " POP : " << task_descr.first << " " << task_descr.second << "\n";
+		}
 	}	
 }

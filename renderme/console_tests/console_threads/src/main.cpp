@@ -26,11 +26,7 @@
 #include <iostream>
 #include <vector>
 
-//#include <tuple>
-//#include <functional>
-
 #include "runner.h"
-
 #include "filesystem.h"
 
 
@@ -66,6 +62,8 @@ int main( int argc, char* argv[] )
 
 	std::string text1;
 	std::string text2;
+
+	renderMe::core::RunnerKiller runnerKiller;
 	
 	renderMe::core::SimpleAsyncTask<const std::string&> it( "Say hello from path", "stdout",
 		[&text1](const std::string& p_path)
@@ -92,26 +90,25 @@ int main( int argc, char* argv[] )
 
 
 	renderMe::core::Runner runner;
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it);
-
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it);	
 	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it2);
-
-
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader);
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&renderMe::core::RunnerKiller());
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader);	
+	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
 
 	renderMe::core::Runner runner2;
 	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader2);
-	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&renderMe::core::RunnerKiller());
+	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
 
 
 	runner.startup();
 	runner2.startup();
 
-
-
+	std::cout << ">>>>>>>runner.join\n";
 	runner.join();
+
+	std::cout << ">>>>>>>runner2.join\n";
 	runner2.join();
+
 	std::cout << "ALL joined\n";
 	
 	std::cout << "*****text1***************\n";
