@@ -89,8 +89,10 @@ void Runner::join(void)
 		for (int i = 0; i < mb_size; i++)
 		{
 			const auto task_descr{ m_mailbox_out.popNext<std::pair<std::string, std::string>>(std::make_pair<std::string, std::string>("","")) };
-
-			std::cout << i << " POP : " << task_descr.first << " " << task_descr.second << "\n";
+			for (const auto& call : m_callbacks)
+			{
+				call(RunnerEvent::TASK_DONE, task_descr.first, task_descr.second);
+			}
 		}
 	}	
 }

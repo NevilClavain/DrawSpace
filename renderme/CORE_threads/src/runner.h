@@ -29,12 +29,19 @@
 #include <utility> 
 #include "mailbox.h"
 #include "asynctask.h"
+#include "eventsource.h"
 
 namespace renderMe
 {
 	namespace core
 	{
-		class Runner
+		enum class RunnerEvent
+		{
+			TASK_DONE
+		};
+
+
+		class Runner : public renderMe::property::EventSource<RunnerEvent, const std::string&, const std::string&>
 		{
 		public:
 

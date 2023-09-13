@@ -99,6 +99,20 @@ int main( int argc, char* argv[] )
 	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader2);
 	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
 
+	
+	const auto runnerEventHandler{
+		[](renderMe::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
+		{
+			if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
+			{
+				std::cout << "TASK_DONE " << p_target_descr << " " << p_action_descr << "\n";
+			}
+		}
+	};
+	
+	runner.registerSubscriber(runnerEventHandler);
+	runner2.registerSubscriber(runnerEventHandler);
+
 
 	runner.startup();
 	runner2.startup();
