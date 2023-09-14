@@ -182,6 +182,8 @@ ALL_BUILD.vcxproj*
 
 ################## renderME + ##########################################
 
+/renderme/config_deployment/
+
 /renderme/apps/
 
 /renderme/CMakeFiles/
@@ -211,6 +213,10 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_threads/CMakeFiles/
 /renderme/console_tests/console_threads/*.sln
 /renderme/console_tests/console_threads/*.vcxproj*
+
+/renderme/rt/CMakeFiles/
+/renderme/rt/*.sln
+/renderme/rt/*.vcxproj*
 
 
 /renderme/CORE_allocator/CMakeFiles/
