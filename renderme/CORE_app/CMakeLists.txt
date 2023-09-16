@@ -21,35 +21,23 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(rt)
+project(CORE_app)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_app/src)
-
-include_directories(${jsonjsmn_include_dir})
-link_directories(${jsonjsmn_lib_dir})
 
 
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/rt/src/*.h
-        ${CMAKE_SOURCE_DIR}/rt/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/CORE_app/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_app/src/*.cpp		
 )
 
-add_executable(rt WIN32 ${source_files})
 
-target_link_libraries(rt CORE_app jsmn)
+add_definitions( -D_FROMCMAKE )
 
-
-install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS rt CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS rt CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/rt_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-
+add_library(CORE_app ${source_files})
 
 
 

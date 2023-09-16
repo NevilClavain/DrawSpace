@@ -64,6 +64,7 @@ add_subdirectory(CORE_file)
 add_subdirectory(CORE_filesystem)
 add_subdirectory(CORE_json)
 add_subdirectory(CORE_threads)
+add_subdirectory(CORE_app)
 
 add_subdirectory(rt)
 
