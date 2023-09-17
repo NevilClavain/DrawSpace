@@ -32,7 +32,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     {
         const auto app{ renderMe::core::App::getInstance() };
 
-        if (app->initApp(hInstance) == false)
+        if (app->init(hInstance, "./rt_config/logrt.json") == false)
         {
             MessageBox(NULL, "initApp FAILURE", "renderMe", MB_OK | MB_ICONSTOP);
             return 0;

@@ -42,9 +42,10 @@ App::App()
 
 }
 
-bool App::initApp(HINSTANCE p_hInstance)
+bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 {
-	renderMe::core::FileContent<char> logConfFileContent("./rt_config/logrt.json");
+	//renderMe::core::FileContent<char> logConfFileContent();
+	renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
 	logConfFileContent.load();
 
 	const auto dataSize{ logConfFileContent.getDataSize() };

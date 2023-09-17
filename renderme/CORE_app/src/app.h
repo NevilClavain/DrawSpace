@@ -40,7 +40,7 @@ namespace renderMe
             App();
             ~App() = default;
 
-            bool initApp(HINSTANCE p_hInstance);
+            bool init(HINSTANCE p_hInstance, const std::string& p_logconfig_path);
             void idleApp(void);
             bool initRenderer(void);
             void stopRenderer(void);
