@@ -48,9 +48,13 @@ namespace renderMe
         private:
 
             HWND                                    m_hwnd          { nullptr };
-            long                                    m_w_width       { 800 };
-            long                                    m_w_height      { 600 };
+            long                                    m_w_width       { 1024 };
+            long                                    m_w_height      { 768 };
             bool                                    m_w_fullscreen  { false };
+
+            bool                                    m_app_ready     { false };
+
+            static LRESULT CALLBACK winProc(HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLParam);
 
         };
 

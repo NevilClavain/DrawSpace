@@ -42,6 +42,11 @@ App::App()
 
 }
 
+LRESULT CALLBACK App::winProc(HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLParam)
+{
+    return(DefWindowProcA(pHwnd, pMsg, pWParam, pLParam));
+}
+
 bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 {
 	//renderMe::core::FileContent<char> logConfFileContent();
@@ -56,9 +61,75 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 
 	const auto parseStatus{ jsonParser.parse(data) };
 
-	_RENDERME_DEBUG(localLogger, "InitApp startup");
+	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
 
-	return true;
+	bool status{ true };
+
+	WNDCLASSA wc;
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = sizeof(DWORD);
+	wc.hInstance = p_hInstance;
+	wc.hIcon = nullptr;
+	wc.hCursor = nullptr;
+	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wc.lpszMenuName = nullptr;
+	wc.lpszClassName = "renderMeAppWnd";
+
+	wc.lpfnWndProc = (WNDPROC)winProc;
+
+    if (!RegisterClassA(&wc))
+    {
+        _RENDERME_FATAL(localLogger, "RegisterClass FAIL")
+        status = false;
+    }
+    else
+    {
+        // RegisterClass OK
+        if (m_w_fullscreen)
+        {
+            // plein ecran
+            RECT rect;
+            GetWindowRect(GetDesktopWindow(), &rect);
+
+            long fsw, fsh;
+            fsw = (rect.right - rect.left);
+            fsh = (rect.bottom - rect.top);
+
+            m_w_width = fsw;
+            m_w_height = fsh;
+
+            _RENDERME_DEBUG(localLogger, std::string("Fullscreen mode : CreateWindowExA ") << fsw << std::string(" x ") << fsh)
+            m_hwnd = CreateWindowExA(WS_EX_TOPMOST, wc.lpszClassName, "", WS_POPUP, 0, 0, fsw, fsh, NULL, NULL, p_hInstance, NULL);
+        }
+        else
+        {
+            // mode fenetre
+            _RENDERME_DEBUG(localLogger, std::string("Windowed mode : CreateWindowA ") << m_w_width << std::string(" x ") << m_w_height)
+
+            static const std::string wTitle{ "renderMe" };
+            m_hwnd = CreateWindowA(wc.lpszClassName, (LPCSTR)wTitle.c_str(), WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZE, CW_USEDEFAULT, CW_USEDEFAULT, m_w_width, m_w_height, NULL, NULL, p_hInstance, NULL);
+
+            const auto lastError{ GetLastError() };
+
+            _asm nop
+        }
+
+        if (!m_hwnd)
+        {
+            status = false;
+            _RENDERME_ERROR(localLogger, "CreateWindow FAIL")
+        }
+
+        ShowWindow(m_hwnd, SW_SHOWDEFAULT);
+        UpdateWindow(m_hwnd);
+
+        m_app_ready = true;
+    }
+
+    _RENDERME_DEBUG(localLogger, std::string("status = ") << status)
+
+	return status;
 }
 
 void App::idleApp(void)
