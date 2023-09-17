@@ -25,16 +25,33 @@
 
 #pragma once
 
+#include <Windows.h>
+#include <string>
+#include "singleton.h"
+
 namespace renderMe
 {
     namespace core
     {
-        class App
+        class App : public property::Singleton<App>
         {
         public:
 
             App();
             ~App() = default;
+
+            bool initApp(HINSTANCE p_hInstance);
+            void idleApp(void);
+            bool initRenderer(void);
+            void stopRenderer(void);
+
+        private:
+
+            HWND                                    m_hwnd          { nullptr };
+            long                                    m_w_width       { 800 };
+            long                                    m_w_height      { 600 };
+            bool                                    m_w_fullscreen  { false };
+
         };
 
     } //core

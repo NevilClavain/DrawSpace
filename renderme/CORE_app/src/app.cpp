@@ -26,10 +26,50 @@
 
 #include "app.h"
 
+#include "filesystem.h"
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
+
+
 using namespace renderMe;
 using namespace renderMe::core;
 
+static renderMe::core::logger::Sink localLogger("App", renderMe::core::logger::Configuration::getInstance());
+
 App::App()
+{
+
+}
+
+bool App::initApp(HINSTANCE p_hInstance)
+{
+	renderMe::core::FileContent<char> logConfFileContent("./rt_config/logrt.json");
+	logConfFileContent.load();
+
+	const auto dataSize{ logConfFileContent.getDataSize() };
+	const std::string data(logConfFileContent.getData(), dataSize);
+
+	renderMe::core::Json jsonParser;
+	jsonParser.registerSubscriber(renderMe::core::logger::Configuration::getInstance()->getCallback());
+
+	const auto parseStatus{ jsonParser.parse(data) };
+
+	_RENDERME_DEBUG(localLogger, "InitApp startup");
+
+	return true;
+}
+
+void App::idleApp(void)
+{
+}
+
+bool App::initRenderer(void)
+{
+	return true;
+}
+
+void App::stopRenderer(void)
 {
 
 }

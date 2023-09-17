@@ -24,7 +24,10 @@ cmake_minimum_required(VERSION 3.0)
 project(CORE_app)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
-
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
+include_directories(${jsonjsmn_include_dir})
 
 
 file(

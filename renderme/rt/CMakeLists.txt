@@ -26,7 +26,6 @@ project(rt)
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_app/src)
 
-include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
 
 
@@ -41,7 +40,7 @@ file(
 
 add_executable(rt WIN32 ${source_files})
 
-target_link_libraries(rt CORE_app jsmn)
+target_link_libraries(rt CORE_filesystem CORE_app CORE_json CORE_logger CORE_file jsmn)
 
 
 install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)

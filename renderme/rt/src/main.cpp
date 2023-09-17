@@ -24,9 +24,25 @@
 /* -*-LIC_END-*- */
 
 #include <Windows.h>
+#include "app.h"
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
+    try
+    {
+        const auto app{ renderMe::core::App::getInstance() };
 
+        if (app->initApp(hInstance) == false)
+        {
+            MessageBox(NULL, "initApp FAILURE", "renderMe", MB_OK | MB_ICONSTOP);
+            return 0;
+        }
+
+    }
+    catch (const std::exception& e)
+    {
+        const auto what{ e.what() };
+        ::MessageBoxA(nullptr, what, "renderMe Exception", MB_OK | MB_ICONERROR);
+    }
     return 0;
 }
