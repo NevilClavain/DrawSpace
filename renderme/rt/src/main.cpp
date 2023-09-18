@@ -38,6 +38,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
             return 0;
         }
 
+        app->loop();
+
     }
     catch (const std::exception& e)
     {

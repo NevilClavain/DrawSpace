@@ -41,7 +41,7 @@ namespace renderMe
             ~App() = default;
 
             bool init(HINSTANCE p_hInstance, const std::string& p_logconfig_path);
-            void idleApp(void);
+            void loop(void);
             bool initRenderer(void);
             void stopRenderer(void);
 
@@ -53,6 +53,8 @@ namespace renderMe
             bool                                    m_w_fullscreen  { false };
 
             bool                                    m_app_ready     { false };
+
+            bool  loopAppInit();
 
             static LRESULT CALLBACK winProc(HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLParam);
 

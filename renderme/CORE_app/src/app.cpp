@@ -57,7 +57,7 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 	const std::string data(logConfFileContent.getData(), dataSize);
 
 	renderMe::core::Json jsonParser;
-	jsonParser.registerSubscriber(renderMe::core::logger::Configuration::getInstance()->getCallback());
+	jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
 	const auto parseStatus{ jsonParser.parse(data) };
 
@@ -127,13 +127,52 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
         m_app_ready = true;
     }
 
-    _RENDERME_DEBUG(localLogger, std::string("status = ") << status)
+    _RENDERME_DEBUG(localLogger, std::string("App init status = ") << status)
 
 	return status;
 }
 
-void App::idleApp(void)
+bool App::loopAppInit()
 {
+    // MODULE stuff init HERE : TODO
+
+    return true;
+}
+
+void App::loop(void)
+{
+    if (loopAppInit())
+    {
+        MSG	msg;
+        while (1)
+        {
+            if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+            {
+                if (WM_QUIT == msg.message)
+                {
+                    _RENDERME_DEBUG(localLogger, "WM_QUIT, calling OnClose()")
+                    //OnClose();
+                    break;
+                }
+
+                else
+                {
+                    TranslateMessage(&msg);
+                    DispatchMessage(&msg);
+                }
+            }
+            else
+            {
+                if (m_app_ready)
+                {
+                    logger::Configuration::getInstance()->updateTick();
+
+                    //process_input_events();
+                    //OnRenderFrame();
+                }
+            }
+        }
+    }
 }
 
 bool App::initRenderer(void)
