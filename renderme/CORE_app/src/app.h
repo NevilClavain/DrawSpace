@@ -67,8 +67,9 @@ namespace renderMe
             long                                    m_mousemoving_last_y    { 0 };
             long                                    m_mousemoving_curr_x    { 0 };
             long                                    m_mousemoving_curr_y    { 0 };
-            long                                    m_mouse_circularmode    { false };;
+            long                                    m_mouse_circularmode    { false };
 
+            bool                                    m_mousecursor_visible   { true };
 
             long                                    m_mouselclick_pos   { 0 };
             long                                    m_mouserclick_pos   { 0 };
@@ -100,6 +101,15 @@ namespace renderMe
             void    onMouseRightButtonUp(long p_xm, long p_ym);
 
             void    onAppEvent(WPARAM p_wParam, LPARAM p_lParam);
+
+
+            // event from loaded module
+            void    onModuleMouseVisible(bool p_state);
+            void    onModuleMouseCircularModeUpdate(bool p_state);
+            void    onModuleCloseapp(int p_code);
+
+
+            void    quit(int p_code);
 
 
 

@@ -389,6 +389,67 @@ void App::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 }
 
 
+void App::onModuleMouseVisible(bool p_state)
+{
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est deja visible), car sinon
+    // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
+
+    if (!p_state)
+    {
+        if (m_mousecursor_visible)
+        {
+            ::ShowCursor(false);
+            m_mousecursor_visible = false;
+        }
+    }
+    else
+    {
+        if (!m_mousecursor_visible)
+        {
+            ::ShowCursor(true);
+            m_mousecursor_visible = true;
+        }
+    }
+}
+
+void App::onModuleMouseCircularModeUpdate(bool p_state)
+{
+    m_mouse_circularmode = p_state;
+
+    /*
+    // ne pas appeler ::ShowCursor() quand c'est inutile (par ex. ShowCursor( true ) si le curseur est deja visible), car sinon
+    // ca fout le bordel (gestion d'un compteur interne, dixit la doc windows !!!!)
+
+    if( p_state )
+    {
+        if( m_mousecursor_visible )
+        {
+            ::ShowCursor( false );
+            m_mousecursor_visible = false;
+        }
+    }
+    else
+    {
+        if( !m_mousecursor_visible )
+        {
+            ::ShowCursor( true );
+            m_mousecursor_visible = true;
+        }
+    }
+    */
+
+}
+
+void App::onModuleCloseapp(int p_code)
+{
+    quit(p_code);
+}
+
+void App::quit(int p_code)
+{
+    ::PostQuitMessage(p_code);
+}
+
 
 LRESULT CALLBACK App::winProc(HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLParam)
 {
