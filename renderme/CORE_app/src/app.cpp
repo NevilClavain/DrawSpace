@@ -340,24 +340,26 @@ void App::onRenderFrame(void)
 void App::onClose(void)
 {
     _RENDERME_DEBUG(localLogger, std::string("shutdown..."));
-
-
 }
 
 void App::onKeyPress(long p_key)
 {
+    _RENDERME_TRACE(localLogger, std::string("onKeyPress :") << p_key);
 }
 
 void App::onEndKeyPress(long p_key)
 {
+    _RENDERME_TRACE(localLogger, std::string("onEndKeyPress :") << p_key);
 }
 
 void App::onKeyPulse(long p_key)
 {
+    _RENDERME_TRACE(localLogger, std::string("onKeyPulse :") << p_key);
 }
 
 void App::onChar(long p_char, long p_scan)
 {
+    _RENDERME_TRACE(localLogger, std::string("onChar :") << p_char << std::string(" ") << p_scan);
 }
 
 void App::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
@@ -366,26 +368,32 @@ void App::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 
 void App::onMouseWheel(long p_distance)
 {
+    _RENDERME_TRACE(localLogger, std::string("onMouseWheel :") << p_distance);
 }
 
 void App::onMouseLeftButtonDown(long p_xm, long p_ym)
 {
+    _RENDERME_TRACE(localLogger, std::string("onMouseLeftButtonDown :") << p_xm << std::string(" ") << p_ym);
 }
 
 void App::onMouseLeftButtonUp(long p_xm, long p_ym)
 {
+    _RENDERME_TRACE(localLogger, std::string("onMouseLeftButtonUp :") << p_xm << std::string(" ") << p_ym);
 }
 
 void App::onMouseRightButtonDown(long p_xm, long p_ym)
 {
+    _RENDERME_TRACE(localLogger, std::string("onMouseRightButtonDown :") << p_xm << std::string(" ") << p_ym);
 }
 
 void App::onMouseRightButtonUp(long p_xm, long p_ym)
 {
+    _RENDERME_TRACE(localLogger, std::string("onMouseRightButtonUp :") << p_xm << std::string(" ") << p_ym);
 }
 
 void App::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
+    _RENDERME_TRACE(localLogger, std::string("onAppEvent :") << p_wParam << std::string(" ") << p_lParam);
 }
 
 
@@ -526,7 +534,7 @@ void App::osInputEvtLButtonUp(long p_pos)
     long x_m, y_m;
     TRAD_EVT_COORD_MOUSE(App::getInstance()->m_mouselclick_pos, x_m, y_m);
 
-    App::getInstance()->onMouseLeftButtonDown(x_m, y_m);
+    App::getInstance()->onMouseLeftButtonUp(x_m, y_m);
 }
 
 void App::osInputEvtLButtonDown(long p_pos)
@@ -534,7 +542,7 @@ void App::osInputEvtLButtonDown(long p_pos)
     long x_m, y_m;
     TRAD_EVT_COORD_MOUSE(App::getInstance()->m_mouselclick_pos, x_m, y_m);
 
-    App::getInstance()->onMouseLeftButtonUp(x_m, y_m);
+    App::getInstance()->onMouseLeftButtonDown(x_m, y_m);
 }
 
 void App::osInputEvtRButtonUp(long p_pos)
@@ -544,7 +552,7 @@ void App::osInputEvtRButtonUp(long p_pos)
     long x_m, y_m;
     TRAD_EVT_COORD_MOUSE(App::getInstance()->m_mouserclick_pos, x_m, y_m);
 
-    App::getInstance()->onMouseRightButtonDown(x_m, y_m);
+    App::getInstance()->onMouseRightButtonUp(x_m, y_m);
 }
 
 void App::osInputEvtRButtonDown(long p_pos)
@@ -552,7 +560,7 @@ void App::osInputEvtRButtonDown(long p_pos)
     long x_m, y_m;
     TRAD_EVT_COORD_MOUSE(App::getInstance()->m_mouserclick_pos, x_m, y_m);
 
-    App::getInstance()->onMouseRightButtonUp(x_m, y_m);
+    App::getInstance()->onMouseRightButtonDown(x_m, y_m);
 }
 
 void App::osInputEvtKeyDown(long p_key)
