@@ -48,9 +48,8 @@ App::App()
 
 }
 
-bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
-{
-	//renderMe::core::FileContent<char> logConfFileContent();
+void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
+{	
 	renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
 	logConfFileContent.load();
 
@@ -62,9 +61,13 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 
 	const auto parseStatus{ jsonParser.parse(data) };
 
-	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
+    if (parseStatus < 0)
+    {
+        _EXCEPTION("Cannot parse logging configuration")
+    }
 
-	bool status{ true };
+
+	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
 
 	WNDCLASSA wc;
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -82,7 +85,7 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
     if (!RegisterClassA(&wc))
     {
         _RENDERME_FATAL(localLogger, "RegisterClass FAIL")
-        status = false;
+        _EXCEPTION("RegisterClass FAIL")
     }
     else
     {
@@ -110,16 +113,12 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 
             static const std::string wTitle{ "renderMe" };
             m_hwnd = CreateWindowA(wc.lpszClassName, (LPCSTR)wTitle.c_str(), WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZE, CW_USEDEFAULT, CW_USEDEFAULT, m_w_width, m_w_height, NULL, NULL, p_hInstance, NULL);
-
-            const auto lastError{ GetLastError() };
-
-            _asm nop
         }
 
         if (!m_hwnd)
         {
-            status = false;
-            _RENDERME_ERROR(localLogger, "CreateWindow FAIL")
+            _RENDERME_FATAL(localLogger, "CreateWindow FAIL")
+            _EXCEPTION("CreateWindowA FAIL")
         }
 
         ShowWindow(m_hwnd, SW_SHOWDEFAULT);
@@ -127,10 +126,6 @@ bool App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
 
         m_app_ready = true;
     }
-
-    _RENDERME_DEBUG(localLogger, std::string("App init status = ") << status)
-
-	return status;
 }
 
 void App::processInputEvents(void)
