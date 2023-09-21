@@ -45,26 +45,72 @@ static renderMe::core::logger::Sink localLogger("App", renderMe::core::logger::C
 
 App::App()
 {
+    m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+    {
+        switch (p_event)
+        {
+            case renderMe::core::JSONEvent::PRIMITIVE:
 
+                if ("fullscreen" == p_id)
+                {                    
+                    this->m_w_fullscreen = ("true" == p_value ? true : false);
+                }
+                else if ("width" == p_id)
+                {
+                    this->m_w_width = std::stoi(p_value);
+                }
+                else if ("height" == p_id)
+                {
+                    this->m_w_height = std::stoi(p_value);
+                }
+                break;
+        }
+    };
 }
 
-void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path)
+void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path)
 {	
-	renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
-	logConfFileContent.load();
-
-	const auto dataSize{ logConfFileContent.getDataSize() };
-	const std::string data(logConfFileContent.getData(), dataSize);
-
-	renderMe::core::Json jsonParser;
-	jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
-
-	const auto parseStatus{ jsonParser.parse(data) };
-
-    if (parseStatus < 0)
+    // load logging config
     {
-        _EXCEPTION("Cannot parse logging configuration")
+        renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
+        logConfFileContent.load();
+
+        const auto dataSize{ logConfFileContent.getDataSize() };
+        const std::string data(logConfFileContent.getData(), dataSize);
+
+        renderMe::core::Json jsonParser;
+        jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
+
+        const auto logParseStatus{ jsonParser.parse(data) };
+
+        if (logParseStatus < 0)
+        {
+            _EXCEPTION("Cannot parse logging configuration")
+        }
     }
+
+
+    // load RT window config
+    {
+        renderMe::core::FileContent<char> rtConfFileContent(p_rtconfig_path);
+        rtConfFileContent.load();
+
+        const auto dataSize{ rtConfFileContent.getDataSize() };
+        const std::string data(rtConfFileContent.getData(), dataSize);
+
+        renderMe::core::Json jsonParser;
+        jsonParser.registerSubscriber(m_cb);
+
+        const auto rtParseStatus{ jsonParser.parse(data) };
+
+        if (rtParseStatus < 0)
+        {
+            _EXCEPTION("Cannot parse windows settings configuration")
+        }
+    }
+
+
+
 
 
 	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);

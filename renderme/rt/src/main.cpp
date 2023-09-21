@@ -32,7 +32,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     {
         const auto app{ renderMe::core::App::getInstance() };
 
-        app->init(hInstance, "./rt_config/logrt.json");
+        app->init(hInstance, "./rt_config/logrt.json", "./rt_config/windows_settings.json");
         app->loop();
 
     }

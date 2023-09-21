@@ -40,126 +40,126 @@ logger::Configuration::Configuration( void )
     {
         switch (p_event)
         {
-        case renderMe::core::JSONEvent::OBJECT_BEGIN:
+            case renderMe::core::JSONEvent::OBJECT_BEGIN:
 
-            if ("outputs" == p_id)
-            {
-                this->m_parsing_state = ParsingState::RECORD_CONFIG;
-            }
-            else if ("loggers" == p_id)
-            {
-                this->m_parsing_state = ParsingState::RECORD_LOGGER;
-            }
-            break;
-
-        case renderMe::core::JSONEvent::OBJECT_END:
-
-            if ("outputs" == p_id)
-            {
-                // create the output
-                if ("file" == m_mem_output_type)
+                if ("outputs" == p_id)
                 {
-                    // file output
-
-                    this->m_outputs[m_mem_output_id] = std::make_unique<OutputFile>(m_mem_output_path);
-                    const auto& of{ this->m_outputs[m_mem_output_id] };
-                    of.get()->setFlushPeriod(0);
+                    this->m_parsing_state = ParsingState::RECORD_CONFIG;
                 }
-                // no other type of output for now
-
-            }
-            else if ("loggers" == p_id)
-            {
-                const auto output{ this->m_outputs.at(m_mem_logger_output).get() };
-
-                if (this->m_sinks_infos.count(this->m_mem_logger_source))
+                else if ("loggers" == p_id)
                 {
-                    auto& sink_info{ this->m_sinks_infos[this->m_mem_logger_source] };
-
-                    const auto sink{ std::get<0>(this->m_sinks_infos.at(this->m_mem_logger_source)) };
-
-                    sink->setCurrentLevel(m_mem_logger_level);
-                    sink->setState(m_mem_logger_state);
-                    sink->registerOutput(output);
-
-                    std::get<1>(sink_info) = m_mem_logger_state;
-                    std::get<2>(sink_info) = m_mem_logger_level;
-                    std::get<3>(sink_info) = output;
+                    this->m_parsing_state = ParsingState::RECORD_LOGGER;
                 }
-                else
-                {
-                    this->m_sinks_infos[this->m_mem_logger_source] = std::make_tuple(nullptr, m_mem_logger_state, m_mem_logger_level, output);
-                }
-            }
-            break;
-
-            /* not ussed
-            case renderMe::core::json::Event::ARRAY_BEGIN:
-
                 break;
 
-            case renderMe::core::json::Event::ARRAY_END:
+            case renderMe::core::JSONEvent::OBJECT_END:
 
+                if ("outputs" == p_id)
+                {
+                    // create the output
+                    if ("file" == m_mem_output_type)
+                    {
+                        // file output
+
+                        this->m_outputs[m_mem_output_id] = std::make_unique<OutputFile>(m_mem_output_path);
+                        const auto& of{ this->m_outputs[m_mem_output_id] };
+                        of.get()->setFlushPeriod(0);
+                    }
+                    // no other type of output for now
+
+                }
+                else if ("loggers" == p_id)
+                {
+                    const auto output{ this->m_outputs.at(m_mem_logger_output).get() };
+
+                    if (this->m_sinks_infos.count(this->m_mem_logger_source))
+                    {
+                        auto& sink_info{ this->m_sinks_infos[this->m_mem_logger_source] };
+
+                        const auto sink{ std::get<0>(this->m_sinks_infos.at(this->m_mem_logger_source)) };
+
+                        sink->setCurrentLevel(m_mem_logger_level);
+                        sink->setState(m_mem_logger_state);
+                        sink->registerOutput(output);
+
+                        std::get<1>(sink_info) = m_mem_logger_state;
+                        std::get<2>(sink_info) = m_mem_logger_level;
+                        std::get<3>(sink_info) = output;
+                    }
+                    else
+                    {
+                        this->m_sinks_infos[this->m_mem_logger_source] = std::make_tuple(nullptr, m_mem_logger_state, m_mem_logger_level, output);
+                    }
+                }
                 break;
-            */
 
-        case renderMe::core::JSONEvent::STRING:
+                /* not ussed
+                case renderMe::core::json::Event::ARRAY_BEGIN:
 
-            if (ParsingState::RECORD_CONFIG == this->m_parsing_state)
-            {
-                if ("type" == p_id)
-                {
-                    m_mem_output_type = p_value;
-                }
-                else if ("id" == p_id)
-                {
-                    m_mem_output_id = p_value;
-                }
-                else if ("path" == p_id)
-                {
-                    m_mem_output_path = p_value;
-                }
-            }
-            else if (ParsingState::RECORD_LOGGER == this->m_parsing_state)
-            {
-                if ("source" == p_id)
-                {
-                    m_mem_logger_source = p_value;
-                }
-                else if ("level" == p_id)
-                {
-                    static const std::map<std::string, Sink::Level> levelTranslation
-                    {
-                        { "FATAL", Sink::Level::LEVEL_FATAL},
-                        { "ERROR", Sink::Level::LEVEL_ERROR},
-                        { "WARN", Sink::Level::LEVEL_WARN},
-                        { "DEBUG", Sink::Level::LEVEL_DEBUG},
-                        { "TRACE", Sink::Level::LEVEL_TRACE},
-                    };
-
-                    m_mem_logger_level = levelTranslation.at(p_value);
-                }
-                else if ("state" == p_id)
-                {
-                    static const std::map<std::string, bool> stateTranslation
-                    {
-                        { "on", true},
-                        { "off", false},
-                    };
-
-                    m_mem_logger_state = stateTranslation.at(p_value);
-                }
-                else if ("output" == p_id)
-                {
-                    m_mem_logger_output = p_value;
-                }
-            }
-            break;
-
-            /* not used
-                case renderMe::core::json::Event::PRIMITIVE:
                     break;
-            */
+
+                case renderMe::core::json::Event::ARRAY_END:
+
+                    break;
+                */
+
+            case renderMe::core::JSONEvent::STRING:
+
+                if (ParsingState::RECORD_CONFIG == this->m_parsing_state)
+                {
+                    if ("type" == p_id)
+                    {
+                        m_mem_output_type = p_value;
+                    }
+                    else if ("id" == p_id)
+                    {
+                        m_mem_output_id = p_value;
+                    }
+                    else if ("path" == p_id)
+                    {
+                        m_mem_output_path = p_value;
+                    }
+                }
+                else if (ParsingState::RECORD_LOGGER == this->m_parsing_state)
+                {
+                    if ("source" == p_id)
+                    {
+                        m_mem_logger_source = p_value;
+                    }
+                    else if ("level" == p_id)
+                    {
+                        static const std::map<std::string, Sink::Level> levelTranslation
+                        {
+                            { "FATAL", Sink::Level::LEVEL_FATAL},
+                            { "ERROR", Sink::Level::LEVEL_ERROR},
+                            { "WARN", Sink::Level::LEVEL_WARN},
+                            { "DEBUG", Sink::Level::LEVEL_DEBUG},
+                            { "TRACE", Sink::Level::LEVEL_TRACE},
+                        };
+
+                        m_mem_logger_level = levelTranslation.at(p_value);
+                    }
+                    else if ("state" == p_id)
+                    {
+                        static const std::map<std::string, bool> stateTranslation
+                        {
+                            { "on", true},
+                            { "off", false},
+                        };
+
+                        m_mem_logger_state = stateTranslation.at(p_value);
+                    }
+                    else if ("output" == p_id)
+                    {
+                        m_mem_logger_output = p_value;
+                    }
+                }
+                break;
+
+                /* not used
+                    case renderMe::core::json::Event::PRIMITIVE:
+                        break;
+                */
         }
 
 

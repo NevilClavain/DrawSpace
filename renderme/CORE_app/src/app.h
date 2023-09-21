@@ -28,6 +28,7 @@
 #include <Windows.h>
 #include <string>
 #include "singleton.h"
+#include "json.h"
 
 namespace renderMe
 {
@@ -40,7 +41,7 @@ namespace renderMe
             App();
             ~App() = default;
 
-            void init(HINSTANCE p_hInstance, const std::string& p_logconfig_path);
+            void init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path);
             void loop(void);
             bool initRenderer(void);
             void stopRenderer(void);
@@ -73,6 +74,8 @@ namespace renderMe
 
             long                                    m_mouselclick_pos   { 0 };
             long                                    m_mouserclick_pos   { 0 };
+
+            Json::Callback	                        m_cb;
 
 
             void    processInputEvents(void);
@@ -108,10 +111,7 @@ namespace renderMe
             void    onModuleMouseCircularModeUpdate(bool p_state);
             void    onModuleCloseapp(int p_code);
 
-
             void    quit(int p_code);
-
-
 
             static LRESULT CALLBACK winProc(HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLParam);
 
