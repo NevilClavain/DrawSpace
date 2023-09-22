@@ -71,6 +71,7 @@ File::~File( void )
         m_fp = nullptr;
     }
 }
+
 void File::puts( const std::string& p_string )
 {
     if( m_fp )

@@ -86,6 +86,9 @@ namespace renderMe
 		{
 		public:
 
+			SimpleAsyncTask() = default;
+			~SimpleAsyncTask() = default;
+
 			using bind_type = decltype(std::bind(std::declval<std::function<void(Args...)>>(), std::declval<Args>()...));
 
 			template <typename... ConstrArgs>

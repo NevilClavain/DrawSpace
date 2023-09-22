@@ -48,6 +48,9 @@ namespace renderMe
         public:
 
             FileContent() = delete;
+            FileContent(const FileContent&) = delete;
+            FileContent(FileContent&&) = delete;
+            FileContent& operator=(const FileContent& t) = delete;
 
             FileContent(const std::string& p_path) :
             m_path(p_path)

@@ -36,7 +36,9 @@ namespace renderMe
         class MemoryChunks : public property::Singleton<MemoryChunks>
         {
         public:
-            ~MemoryChunks(void) = default;
+
+            MemoryChunks(void) = default;
+            ~MemoryChunks() = default;
 
             void dumpContent(void);
 
@@ -67,9 +69,7 @@ namespace renderMe
 
             std::map<void*, chunk>  m_chunks;
             size_t                  m_totalSize{ 0 };
-
-            MemoryChunks(void) = default;
-
+           
             void register_bloc(void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment);
 
         };

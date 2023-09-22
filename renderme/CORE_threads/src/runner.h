@@ -45,6 +45,13 @@ namespace renderMe
 		{
 		public:
 
+			Runner() = default;
+			Runner(const Runner&) = delete;
+			Runner(Runner&&) = delete;
+			Runner& operator=(const Runner& t) = delete;
+
+			~Runner() = default;
+
 			Mailbox<property::AsyncTask*>					m_mailbox_in;
 			Mailbox<std::pair<std::string, std::string>>	m_mailbox_out;
 

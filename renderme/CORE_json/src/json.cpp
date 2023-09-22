@@ -23,12 +23,6 @@
 /* -*-LIC_END-*- */
 
 #include "Json.h"
-
-/*
-#include "memalloc.h"
-#include "file.h"
-*/
-
 #include "exceptions.h"
 
 using namespace renderMe::core;

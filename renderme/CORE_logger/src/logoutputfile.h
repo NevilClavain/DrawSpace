@@ -41,10 +41,14 @@ namespace renderMe
 
                 OutputFile(const std::string& p_filename);
 
+                OutputFile() = delete;
+                OutputFile(const OutputFile&) = delete;
+                OutputFile(OutputFile&&) = delete;
+                OutputFile& operator=(const OutputFile& t) = delete;
+
                 ~OutputFile(void) = default;
 
-                void logIt(const std::string& p_trace);
-                //void flush( void );
+                void logIt(const std::string& p_trace);                
                 void setFlushPeriod(long p_period);
 
             private:

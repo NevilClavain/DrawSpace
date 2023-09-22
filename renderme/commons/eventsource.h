@@ -37,6 +37,9 @@ namespace renderMe
 		class EventSource
 		{
 		public:
+
+			~EventSource() = default;
+
 			using Callback = std::function<void(Args&&...)>;
 
 			void registerSubscriber(const Callback& p_callback)
@@ -45,6 +48,7 @@ namespace renderMe
 			}
 
 		protected:
+			EventSource() = default;
 			std::vector<Callback> m_callbacks;
 		};
     }

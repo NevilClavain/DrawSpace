@@ -53,7 +53,6 @@ namespace renderMe
                 void                    updateTick(void);
                 LONGLONG                getLastTick(void) const;
 
-                //json::ParserCallback          getParserCallback(void);
 
                 Json::Callback getCallback() const
                 {

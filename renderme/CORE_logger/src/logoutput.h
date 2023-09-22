@@ -35,8 +35,10 @@ namespace renderMe
             class Output
             {
             public:
+                Output() = default;
+                ~Output() = default;
+
                 virtual void logIt(const std::string& p_trace) = 0;
-                //virtual void flush( void ) = 0;
                 virtual void setFlushPeriod(long p_period) = 0;
             };
         }

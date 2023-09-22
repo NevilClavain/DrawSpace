@@ -47,6 +47,12 @@ namespace renderMe
 
             File(const std::string& p_filename, Mode p_mode);
             File(const std::string& p_filename, const std::string& p_mode);
+
+            File() = delete;
+            File(const File&) = delete;
+            File(File&&) = delete;
+            File& operator=(const File& t) = delete;
+
             ~File(void);
 
             void puts(const std::string& p_string);
