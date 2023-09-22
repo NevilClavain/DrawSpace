@@ -34,12 +34,10 @@ namespace renderMe
 		template<typename T>
 		struct Mailbox
 		{
-		private:
-
-			std::list<T>	    m_messages;
-			mutable std::mutex	m_mutex;
-
 		public:
+
+			Mailbox() = default;
+			~Mailbox() = default;
 
 			// build arg by copy if ptr or integral(fundamental) type
 			template<typename Type>
@@ -110,6 +108,10 @@ namespace renderMe
 				m_mutex.unlock();
 				return size;
 			}
+
+		private:
+			std::list<T>	    m_messages;
+			mutable std::mutex	m_mutex;
 		};
 	}
 }

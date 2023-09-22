@@ -44,6 +44,9 @@ namespace renderMe
 				m_target_descr(p_target_descr)
 			{
 			};
+
+			AsyncTask() = delete;
+			~AsyncTask() = default;
 			
 			std::string getTargetDescr(void) const
 			{

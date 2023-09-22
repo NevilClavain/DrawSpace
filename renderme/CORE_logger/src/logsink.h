@@ -47,6 +47,12 @@ namespace renderMe
                 };
 
                 Sink(const std::string& p_name, Configuration* p_conf = nullptr);
+
+                Sink() = delete;
+                Sink(const Sink&) = delete;
+                Sink(Sink&&) = delete;
+                Sink& operator=(const Sink& t) = delete;
+
                 ~Sink(void) = default;
 
                 void setCurrentLevel(Level p_level);
@@ -61,11 +67,11 @@ namespace renderMe
 
             private:
 
-                Level                   m_current_level{ Level::LEVEL_FATAL };
-                bool                    m_state{ false };
+                Level                   m_current_level { Level::LEVEL_FATAL };
+                bool                    m_state         { false };
 
-                Output* m_output{ nullptr };
-                Configuration* m_conf{ nullptr };
+                Output*                 m_output        { nullptr };
+                Configuration*          m_conf          { nullptr };
 
                 std::string             m_name;
             };
