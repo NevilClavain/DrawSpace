@@ -142,9 +142,8 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             RECT rect;
             GetWindowRect(GetDesktopWindow(), &rect);
 
-            long fsw, fsh;
-            fsw = (rect.right - rect.left);
-            fsh = (rect.bottom - rect.top);
+            const long fsw{ rect.right - rect.left };
+            const long fsh{ rect.bottom - rect.top };
 
             m_w_width = fsw;
             m_w_height = fsh;
