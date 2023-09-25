@@ -65,6 +65,7 @@ add_subdirectory(CORE_filesystem)
 add_subdirectory(CORE_json)
 add_subdirectory(CORE_threads)
 add_subdirectory(CORE_app)
+add_subdirectory(CORE_ecs)
 
 add_subdirectory(rt)
 
@@ -74,6 +75,7 @@ add_subdirectory(console_tests/console_logger)
 add_subdirectory(console_tests/console_fileio)
 add_subdirectory(console_tests/console_callback)
 add_subdirectory(console_tests/console_threads)
+add_subdirectory(console_tests/console_components)
 
 
 

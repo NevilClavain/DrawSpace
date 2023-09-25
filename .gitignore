@@ -214,6 +214,12 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_threads/*.sln
 /renderme/console_tests/console_threads/*.vcxproj*
 
+
+/renderme/console_component/console_threads/CMakeFiles/
+/renderme/console_component/console_threads/*.sln
+/renderme/console_component/console_threads/*.vcxproj*
+
+
 /renderme/rt/CMakeFiles/
 /renderme/rt/*.sln
 /renderme/rt/*.vcxproj*
@@ -243,10 +249,13 @@ ALL_BUILD.vcxproj*
 /renderme/CORE_threads/*.sln
 /renderme/CORE_threads/*.vcxproj*
 
-
 /renderme/CORE_app/CMakeFiles/
 /renderme/CORE_app/*.sln
 /renderme/CORE_app/*.vcxproj*
+
+/renderme/CORE_ecs/CMakeFiles/
+/renderme/CORE_ecs/*.sln
+/renderme/CORE_ecs/*.vcxproj*
 
 
 ################## renderME - ##########################################
