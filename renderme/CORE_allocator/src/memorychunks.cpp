@@ -58,7 +58,7 @@ void MemoryChunks::dumpContent(void)
 
 }
 
-void MemoryChunks::unregister(void* p_ptr)
+void MemoryChunks::unregisterChunk(void* p_ptr)
 {
     if (m_chunks.count(p_ptr) > 0)
     {

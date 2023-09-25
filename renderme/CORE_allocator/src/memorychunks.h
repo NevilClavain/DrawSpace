@@ -43,7 +43,7 @@ namespace renderMe
             void dumpContent(void);
 
             template <typename base>
-            base* Register(base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment = "")
+            base* registerChunk(base* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment = "")
             {
                 base* t = p_ptr;
                 register_bloc(t, p_size, p_item, p_funcname, p_line, p_filename, p_comment);
@@ -51,7 +51,7 @@ namespace renderMe
                 return t;
             };
 
-            void    unregister(void* p_ptr);
+            void    unregisterChunk(void* p_ptr);
             size_t  getTotalSize(void) const;
 
 

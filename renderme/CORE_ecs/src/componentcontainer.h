@@ -67,7 +67,34 @@ namespace renderMe
 				newcomp->setUID( m_uid_count++ );
 			}
 
-			/*
+			template<typename T>
+			void removeComponent(const std::string& p_id)
+			{
+				if (0 == m_components.count(p_id))
+				{
+					_EXCEPTION("Component id not registered in this aspect : " + p_id);
+				}
+
+				auto comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
+				// suppression dans m_components_by_type
+				const auto tid{ typeid(T).hash_code() };
+				for (auto it = m_components_by_type.at(tid).begin(); it != m_components_by_type.at(tid).end(); ++it)
+				{
+					if (m_components.at(p_id) == *it)
+					{
+						// on a trouve le composant en question ! suppression...
+						m_components_by_type.at(tid).erase(it);
+						break;
+					}
+				}
+				m_components.erase(p_id);
+				//
+				_DELETE_CHUNK_(comp);
+
+				m_uid_count--;
+			}
+
+			
 			template<typename T>
 			Component<T>* getComponent(const std::string& p_id) const
 			{
@@ -79,6 +106,7 @@ namespace renderMe
 				return comp;
 			}
 
+			
 			template<typename T>
 			void getComponentsByType(ComponentList<T>& p_outlist) const
 			{
@@ -92,7 +120,7 @@ namespace renderMe
 					}
 				}
 			}
-			*/
+			
 
 
 		protected:

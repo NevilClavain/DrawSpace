@@ -28,6 +28,16 @@
 
 using namespace renderMe;
 
+class Foo 
+{
+public:
+	Foo() = default;
+	~Foo()
+	{
+		std::cout << "Foo ctor call\n";
+	}
+};
+
 int main( int argc, char* argv[] )
 {    
 	std::cout << "Component container test !\n";
@@ -35,6 +45,21 @@ int main( int argc, char* argv[] )
 
 	c.addComponent<std::string>("theString", "abcdefg");
 	c.addComponent<double>("pi", 3.1415927);
+	c.addComponent<Foo>("foo");
+
+	std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
+
+	const auto pi{ c.getComponent<double>("pi") };
+	const auto theString{ c.getComponent<std::string>("theString") };
+
+	std::cout << pi->getPurpose() << "\n";
+	std::cout << theString->getPurpose() << "\n";
+
+	c.removeComponent<std::string>("theString");
+	c.removeComponent<double>("pi");
+	c.removeComponent<Foo>("foo");
+
+	std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
 
 
     return 0;

@@ -26,6 +26,5 @@
 #include "componentcontainer.h"
 
 using namespace renderMe::core;
-
 int ComponentContainer::m_uid_count{ 0 };
 
