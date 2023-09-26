@@ -56,7 +56,7 @@ namespace renderMe
 				}
 
 				const auto newcomp{ _NEW_CHUNK_WITH_COMMENT(Component<T>, Component<T>, p_id) };
-				newcomp->MakePurpose((std::forward<Args>(p_args))...);
+				newcomp->makePurpose((std::forward<Args>(p_args))...);
 				m_components[p_id] = newcomp;
 
 				// ajout dans m_components_by_type
