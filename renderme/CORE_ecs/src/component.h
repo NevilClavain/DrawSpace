@@ -35,6 +35,8 @@ namespace renderMe
 		class ComponentBase
 		{
 		public:
+			~ComponentBase() = default;
+
 			void setUID(int p_uid)
 			{
 				m_uid = p_uid;
@@ -46,7 +48,7 @@ namespace renderMe
 			}
 			
 		protected:
-			ComponentBase() = default;
+			ComponentBase() = default;			
 			int m_uid;
 		};
 
@@ -59,7 +61,7 @@ namespace renderMe
 		public:
 
 			Component() = default;
-			~Component() = default;
+			virtual ~Component() = default;
 
 			template<class... Args>
 			void MakePurpose(Args&&... p_args)
