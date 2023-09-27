@@ -43,6 +43,12 @@ namespace renderMe
 		public:
 
 			ComponentContainer() = default;
+
+			ComponentContainer(const ComponentContainer&) = delete;
+			ComponentContainer(ComponentContainer&&) = delete;
+			ComponentContainer& operator=(const ComponentContainer& t) = delete;
+
+
 			~ComponentContainer() = default;
 
 			static int getUIDCount() { return m_uid_count; };
@@ -121,10 +127,7 @@ namespace renderMe
 				}
 			}
 			
-
-
 		protected:
-
 			static int													m_uid_count;
 
 			// map globale, regroupant les composants par id...
@@ -132,7 +135,6 @@ namespace renderMe
 
 			// 2eme map pour regrouper les composants en fct de leur type
 			std::unordered_map<size_t, std::vector<ComponentBase*>>		m_components_by_type;
-
 		};
 	}
 }
