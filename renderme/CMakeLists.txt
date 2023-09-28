@@ -77,5 +77,7 @@ add_subdirectory(console_tests/console_callback)
 add_subdirectory(console_tests/console_threads)
 add_subdirectory(console_tests/console_components)
 
+add_subdirectory(module_helloworld)
+
 
 
