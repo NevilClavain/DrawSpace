@@ -34,14 +34,14 @@ namespace renderMe
         class ComponentContainer;
     }
 
-    namespace interface
+    namespace interfaces
     {
         class ModuleRoot
         {
         public:
-            virtual std::string                 getModuleName() const = 0;
-            virtual std::string                 getModuleDescr() const = 0;
-            virtual const core::ComponentContainer&   getComponentContainer() const = 0;
+            virtual std::string                         getModuleName() const = 0;
+            virtual std::string                         getModuleDescr() const = 0;
+            virtual const core::ComponentContainer&     getComponentContainer() const = 0;
         };
     }
 }

@@ -28,6 +28,8 @@ include_directories(${CMAKE_SOURCE_DIR}/commons)
 # include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
+
+
 # include_directories(${jsonjsmn_include_dir})
 
 #link_directories(${jsonjsmn_lib_dir})
@@ -42,7 +44,9 @@ file(
 		
 )
 
+
 add_library(module_helloworld SHARED ${source_files})
+target_link_libraries(module_helloworld CORE_module)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

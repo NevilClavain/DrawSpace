@@ -66,6 +66,7 @@ add_subdirectory(CORE_json)
 add_subdirectory(CORE_threads)
 add_subdirectory(CORE_app)
 add_subdirectory(CORE_ecs)
+add_subdirectory(CORE_module)
 
 add_subdirectory(rt)
 

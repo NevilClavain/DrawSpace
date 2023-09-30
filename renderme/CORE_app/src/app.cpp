@@ -110,9 +110,6 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
     }
 
 
-
-
-
 	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
 
 	WNDCLASSA wc;
@@ -320,6 +317,9 @@ void App::processInputEvents(void)
 bool App::loopAppInit()
 {
     // MODULE stuff init HERE : TODO
+
+    
+    //Root* root = DrawSpace::Core::SingletonPlugin<Root>::GetInstance()->m_interface;
 
     return true;
 }

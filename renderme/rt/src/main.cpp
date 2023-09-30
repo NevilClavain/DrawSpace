@@ -24,7 +24,11 @@
 /* -*-LIC_END-*- */
 
 #include <Windows.h>
+
 #include "app.h"
+#include "exceptions.h"
+#include "moduleload.h"
+#include "module_root.h"
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
@@ -33,6 +37,27 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
         const auto app{ renderMe::core::App::getInstance() };
 
         app->init(hInstance, "./rt_config/logrt.json", "./rt_config/windows_settings.json");
+
+        if (strcmp(lpCmdLine, ""))
+        {
+
+            /*
+            if (!DrawSpace::Utils::PILoad::LoadModule(lpCmdLine, "main_appmodule",
+                &DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface))
+                */
+
+            renderMe::interfaces::ModuleRoot* module_root;
+
+            if( !renderMe::core::module::load(std::string(lpCmdLine), "main_appmodule", &module_root))
+            {
+                _EXCEPTION("cannot load " + std::string(lpCmdLine) + " module");
+            }
+        }
+        else
+        {
+            _EXCEPTION("Usage : rt <module_name>");
+        }
+
         app->loop();
 
     }

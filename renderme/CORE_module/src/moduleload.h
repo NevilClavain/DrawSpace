@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -25,30 +24,26 @@
 
 #pragma once
 
-#include "module_root.h"
-#include "componentcontainer.h"
+#include <string>
 
-
-class RootImpl : public renderMe::interfaces::ModuleRoot
+namespace renderMe
 {
-public:
-    RootImpl() = default;
-    ~RootImpl() = default;
+    // fwd decl
 
-    RootImpl(const RootImpl&) = delete;
-    RootImpl(RootImpl&&) = delete;
-    RootImpl& operator=(const RootImpl& t) = delete;
+    namespace interfaces
+    {
+        class ModuleRoot;
+    }
 
-
-    std::string                                     getModuleName() const;
-    std::string                                     getModuleDescr() const;
-    const renderMe::core::ComponentContainer&       getComponentContainer() const;
-
-private:
-
-    renderMe::core::ComponentContainer m_component_container;
-};
-
-
-
-
+    namespace core
+    {
+        
+        namespace module
+        {
+        
+            bool load(const std::string& p_file, const std::string& p_module_instance_id, renderMe::interfaces::ModuleRoot** p_module_root);
+            bool unload(const std::string& p_file, renderMe::interfaces::ModuleRoot* p_module_root);
+        
+        }
+    }
+}

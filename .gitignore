@@ -261,6 +261,10 @@ ALL_BUILD.vcxproj*
 /renderme/CORE_ecs/*.sln
 /renderme/CORE_ecs/*.vcxproj*
 
+/renderme/CORE_module/CMakeFiles/
+/renderme/CORE_module/*.sln
+/renderme/CORE_module/*.vcxproj*
+
 
 ################## renderME - ##########################################
 
