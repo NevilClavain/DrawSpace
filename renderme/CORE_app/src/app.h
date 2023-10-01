@@ -30,8 +30,14 @@
 #include "singleton.h"
 #include "json.h"
 
+
 namespace renderMe
 {
+    namespace interfaces
+    {
+        class ModuleRoot;
+    }
+
     namespace core
     {
         class App : public property::Singleton<App>
@@ -41,7 +47,7 @@ namespace renderMe
             App();
             ~App() = default;
 
-            void init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path);
+            void init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, renderMe::interfaces::ModuleRoot* p_root);
             void loop(void);
             bool initRenderer(void);
             void stopRenderer(void);
@@ -76,6 +82,8 @@ namespace renderMe
             long                                    m_mouserclick_pos   { 0 };
 
             Json::Callback	                        m_cb;
+
+            renderMe::interfaces::ModuleRoot*       m_module_root       { nullptr };
 
 
             void    processInputEvents(void);

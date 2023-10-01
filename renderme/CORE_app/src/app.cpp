@@ -30,6 +30,7 @@
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
+#include "module_root.h"
 
 
 using namespace renderMe;
@@ -68,17 +69,19 @@ App::App()
     };
 }
 
-void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path)
+void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, renderMe::interfaces::ModuleRoot* p_root)
 {	
     // load logging config
     {
-        renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
+        // set static to spare some space on stack // compiler message
+        static renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
         logConfFileContent.load();
 
         const auto dataSize{ logConfFileContent.getDataSize() };
         const std::string data(logConfFileContent.getData(), dataSize);
 
-        renderMe::core::Json jsonParser;
+        // set static to spare some space on stack // compiler message
+        static renderMe::core::Json jsonParser;
         jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
         const auto logParseStatus{ jsonParser.parse(data) };
@@ -92,13 +95,15 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 
     // load RT window config
     {
-        renderMe::core::FileContent<char> rtConfFileContent(p_rtconfig_path);
+        // set static to spare some space on stack // compiler message
+        static renderMe::core::FileContent<char> rtConfFileContent(p_rtconfig_path);
         rtConfFileContent.load();
 
         const auto dataSize{ rtConfFileContent.getDataSize() };
         const std::string data(rtConfFileContent.getData(), dataSize);
 
-        renderMe::core::Json jsonParser;
+        // set static to spare some space on stack // compiler message
+        static renderMe::core::Json jsonParser;
         jsonParser.registerSubscriber(m_cb);
 
         const auto rtParseStatus{ jsonParser.parse(data) };
@@ -112,7 +117,9 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 
 	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
 
-	WNDCLASSA wc;
+    // set static to spare some space on stack // compiler message
+	static WNDCLASSA wc;
+
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = sizeof(DWORD);
@@ -162,11 +169,13 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             _RENDERME_FATAL(localLogger, "CreateWindow FAIL")
             _EXCEPTION("CreateWindowA FAIL")
         }
+        else
+        {
+            ShowWindow(m_hwnd, SW_SHOWDEFAULT);
+            UpdateWindow(m_hwnd);
 
-        ShowWindow(m_hwnd, SW_SHOWDEFAULT);
-        UpdateWindow(m_hwnd);
-
-        m_app_ready = true;
+            m_app_ready = true;
+        }
     }
 }
 

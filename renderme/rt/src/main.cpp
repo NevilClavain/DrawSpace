@@ -34,31 +34,26 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 {
     try
     {
-        const auto app{ renderMe::core::App::getInstance() };
-
-        app->init(hInstance, "./rt_config/logrt.json", "./rt_config/windows_settings.json");
-
         if (strcmp(lpCmdLine, ""))
         {
+            renderMe::interfaces::ModuleRoot* module_root{ nullptr };
 
-            /*
-            if (!DrawSpace::Utils::PILoad::LoadModule(lpCmdLine, "main_appmodule",
-                &DrawSpace::Core::SingletonPlugin<DrawSpace::Interface::Module::Root>::GetInstance()->m_interface))
-                */
-
-            renderMe::interfaces::ModuleRoot* module_root;
-
-            if( !renderMe::core::module::load(std::string(lpCmdLine), "main_appmodule", &module_root))
+            if (!renderMe::core::module::load(std::string(lpCmdLine), "main_appmodule", &module_root))
             {
                 _EXCEPTION("cannot load " + std::string(lpCmdLine) + " module");
             }
+
+            const auto app{ renderMe::core::App::getInstance() };
+            app->init(hInstance, "./rt_config/logrt.json", "./rt_config/windows_settings.json", module_root);
+            app->loop();
+
         }
+
         else
         {
             _EXCEPTION("Usage : rt <module_name>");
         }
 
-        app->loop();
 
     }
     catch (const std::exception& e)
