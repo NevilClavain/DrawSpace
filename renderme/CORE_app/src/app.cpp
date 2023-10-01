@@ -31,8 +31,6 @@
 #include "logconf.h"
 #include "logging.h"
 #include "module_root.h"
-#include "componentcontainer.h"
-
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -333,10 +331,6 @@ bool App::loopAppInit()
     std::string win_title{ "renderMe Runtime - " };
     win_title += m_module_root->getModuleDescr();
     ::SetWindowText(m_hwnd, win_title.c_str());
-
-    core::ComponentContainer& module_components{ m_module_root->getComponentContainer() };
-
-    module_components.addComponent<bool>("id", false);
 
     return true;
 }

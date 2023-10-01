@@ -26,7 +26,7 @@
 #pragma once
 
 #include "module_root.h"
-#include "componentcontainer.h"
+
 
 
 class RootImpl : public renderMe::interfaces::ModuleRoot
@@ -42,11 +42,9 @@ public:
 
     std::string                                     getModuleName() const;
     std::string                                     getModuleDescr() const;
-    renderMe::core::ComponentContainer&             getComponentContainer();
 
 private:
 
-    renderMe::core::ComponentContainer m_component_container;
 };
 
 

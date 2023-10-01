@@ -36,8 +36,3 @@ std::string RootImpl::getModuleDescr() const
 }
 
 
-renderMe::core::ComponentContainer& RootImpl::getComponentContainer()
-{
-	return m_component_container;
-}
-

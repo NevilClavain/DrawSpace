@@ -24,15 +24,9 @@ cmake_minimum_required(VERSION 3.0)
 project(module_helloworld)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
-# include_directories(${CMAKE_SOURCE_DIR}/CORE_app/src)
-# include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 
-
-# include_directories(${jsonjsmn_include_dir})
-
-#link_directories(${jsonjsmn_lib_dir})
+# include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
+# include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 
 
 

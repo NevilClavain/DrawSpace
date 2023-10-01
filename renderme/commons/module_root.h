@@ -29,11 +29,6 @@
 
 namespace renderMe
 {
-    namespace core
-    {
-        class ComponentContainer;
-    }
-
     namespace interfaces
     {
         class ModuleRoot
@@ -41,7 +36,6 @@ namespace renderMe
         public:
             virtual std::string                         getModuleName() const = 0;
             virtual std::string                         getModuleDescr() const = 0;
-            virtual core::ComponentContainer&           getComponentContainer() = 0;
         };
     }
 }
