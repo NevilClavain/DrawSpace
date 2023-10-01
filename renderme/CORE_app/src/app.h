@@ -29,15 +29,10 @@
 #include <string>
 #include "singleton.h"
 #include "json.h"
-
+#include "module_root.h"
 
 namespace renderMe
 {
-    namespace interfaces
-    {
-        class ModuleRoot;
-    }
-
     namespace core
     {
         class App : public property::Singleton<App>
@@ -54,19 +49,19 @@ namespace renderMe
 
         private:
 
-            HWND                                    m_hwnd              { nullptr };
-            long                                    m_w_width           { 1024 };
-            long                                    m_w_height          { 768 };
-            bool                                    m_w_fullscreen      { false };
+            HWND                                    m_hwnd                  { nullptr };
+            long                                    m_w_width               { 1024 };
+            long                                    m_w_height              { 768 };
+            bool                                    m_w_fullscreen          { false };
 
-            bool                                    m_app_ready         { false };
-            bool                                    m_keypress          { false };
-            bool                                    m_keypulse          { false };
+            bool                                    m_app_ready             { false };
+            bool                                    m_keypress              { false };
+            bool                                    m_keypulse              { false };
             long                                    m_keycode;
 
-            bool                                    m_mousemoving       { true };
-            bool                                    m_mousemovingstart  { true };
-            bool                                    m_mousewheel        { false };
+            bool                                    m_mousemoving           { true };
+            bool                                    m_mousemovingstart      { true };
+            bool                                    m_mousewheel            { false };
             long                                    m_mousemoving_pos;
             long                                    m_mousewheel_delta;
 
@@ -78,12 +73,15 @@ namespace renderMe
 
             bool                                    m_mousecursor_visible   { true };
 
-            long                                    m_mouselclick_pos   { 0 };
-            long                                    m_mouserclick_pos   { 0 };
+            long                                    m_mouselclick_pos       { 0 };
+            long                                    m_mouserclick_pos       { 0 };
 
-            Json::Callback	                        m_cb;
+            Json::Callback	                        m_json_cb;
+            interfaces::ModuleRoot::Callback	    m_module_events_cb;
 
-            renderMe::interfaces::ModuleRoot*       m_module_root       { nullptr };
+            interfaces::ModuleRoot*                 m_module_root           { nullptr };
+
+            
 
 
             void    processInputEvents(void);

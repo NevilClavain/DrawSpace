@@ -28,11 +28,13 @@
 #include <windows.h>
 #include <string>
 
+#include "eventsource.h"
+
 namespace renderMe
 {
     namespace interfaces
     {
-        class ModuleRoot
+        class ModuleRoot : public property::EventSource<int>
         {
         public:
             virtual std::string     getModuleName() const = 0;

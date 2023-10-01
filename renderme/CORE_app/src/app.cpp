@@ -30,7 +30,6 @@
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
-#include "module_root.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -45,7 +44,7 @@ static renderMe::core::logger::Sink localLogger("App", renderMe::core::logger::C
 
 App::App()
 {
-    m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+    m_json_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
     {
         switch (p_event)
         {
@@ -66,11 +65,17 @@ App::App()
                 break;
         }
     };
+
+    m_module_events_cb = [&, this](int p_evt_value)
+    {
+
+    };
 }
 
 void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, renderMe::interfaces::ModuleRoot* p_root)
 {
     m_module_root = p_root;
+    m_module_root->registerSubscriber(m_module_events_cb);
 
     // load logging config
     {
@@ -105,7 +110,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 
         // set static to spare some space on stack // compiler message
         static renderMe::core::Json jsonParser;
-        jsonParser.registerSubscriber(m_cb);
+        jsonParser.registerSubscriber(m_json_cb);
 
         const auto rtParseStatus{ jsonParser.parse(data) };
 
