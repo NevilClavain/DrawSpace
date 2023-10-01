@@ -27,8 +27,6 @@
 
 #include "module_root.h"
 
-
-
 class RootImpl : public renderMe::interfaces::ModuleRoot
 {
 public:
@@ -40,8 +38,21 @@ public:
     RootImpl& operator=(const RootImpl& t) = delete;
 
 
-    std::string                                     getModuleName() const;
-    std::string                                     getModuleDescr() const;
+    std::string     getModuleName() const;
+    std::string     getModuleDescr() const;
+
+    void            onKeyPress(long p_key);
+    void            onEndKeyPress(long p_key);
+    void            onKeyPulse(long p_key);
+    void            onChar(long p_char, long p_scan);
+    void            onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy);
+    void            onMouseWheel(long p_delta);
+    void            onMouseLeftButtonDown(long p_xm, long p_ym);
+    void            onMouseLeftButtonUp(long p_xm, long p_ym);
+    void            onMouseRightButtonDown(long p_xm, long p_ym);
+    void            onMouseRightButtonUp(long p_xm, long p_ym);
+    void            onAppEvent(WPARAM p_wParam, LPARAM p_lParam);
+
 
 private:
 

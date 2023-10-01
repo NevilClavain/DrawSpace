@@ -36,3 +36,46 @@ std::string RootImpl::getModuleDescr() const
 }
 
 
+void RootImpl::onKeyPress(long p_key)
+{
+}
+
+void RootImpl::onEndKeyPress(long p_key)
+{
+}
+
+void RootImpl::onKeyPulse(long p_key)
+{
+}
+
+void RootImpl::onChar(long p_char, long p_scan)
+{
+}
+
+void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
+{
+}
+
+void RootImpl::onMouseWheel(long p_delta)
+{
+}
+
+void RootImpl::onMouseLeftButtonDown(long p_xm, long p_ym)
+{
+}
+
+void RootImpl::onMouseLeftButtonUp(long p_xm, long p_ym)
+{
+}
+
+void RootImpl::onMouseRightButtonDown(long p_xm, long p_ym)
+{
+}
+
+void RootImpl::onMouseRightButtonUp(long p_xm, long p_ym)
+{
+}
+
+void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
+{
+}

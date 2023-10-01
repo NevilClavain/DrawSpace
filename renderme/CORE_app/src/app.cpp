@@ -396,55 +396,66 @@ void App::onClose(void)
 void App::onKeyPress(long p_key)
 {
     _RENDERME_TRACE(localLogger, std::string("onKeyPress :") << p_key);
+    m_module_root->onKeyPress(p_key);
 }
 
 void App::onEndKeyPress(long p_key)
 {
     _RENDERME_TRACE(localLogger, std::string("onEndKeyPress :") << p_key);
+    m_module_root->onEndKeyPress(p_key);
 }
 
 void App::onKeyPulse(long p_key)
 {
     _RENDERME_TRACE(localLogger, std::string("onKeyPulse :") << p_key);
+    m_module_root->onKeyPulse(p_key);
 }
 
 void App::onChar(long p_char, long p_scan)
 {
     _RENDERME_TRACE(localLogger, std::string("onChar :") << p_char << std::string(" ") << p_scan);
+    m_module_root->onChar(p_char, p_scan);
 }
 
 void App::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
+    m_module_root->onMouseMove(p_xm, p_ym, p_dx, p_dy);
 }
 
 void App::onMouseWheel(long p_distance)
 {
     _RENDERME_TRACE(localLogger, std::string("onMouseWheel :") << p_distance);
+    m_module_root->onMouseWheel(p_distance);
 }
 
 void App::onMouseLeftButtonDown(long p_xm, long p_ym)
 {
     _RENDERME_TRACE(localLogger, std::string("onMouseLeftButtonDown :") << p_xm << std::string(" ") << p_ym);
+    m_module_root->onMouseLeftButtonDown(p_xm, p_ym);
 }
 
 void App::onMouseLeftButtonUp(long p_xm, long p_ym)
 {
     _RENDERME_TRACE(localLogger, std::string("onMouseLeftButtonUp :") << p_xm << std::string(" ") << p_ym);
+    m_module_root->onMouseLeftButtonUp(p_xm, p_ym);
 }
 
 void App::onMouseRightButtonDown(long p_xm, long p_ym)
 {
     _RENDERME_TRACE(localLogger, std::string("onMouseRightButtonDown :") << p_xm << std::string(" ") << p_ym);
+    m_module_root->onMouseRightButtonDown(p_xm, p_ym);
 }
 
 void App::onMouseRightButtonUp(long p_xm, long p_ym)
 {
     _RENDERME_TRACE(localLogger, std::string("onMouseRightButtonUp :") << p_xm << std::string(" ") << p_ym);
+    m_module_root->onMouseRightButtonUp(p_xm, p_ym);
 }
 
 void App::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
     _RENDERME_TRACE(localLogger, std::string("onAppEvent :") << p_wParam << std::string(" ") << p_lParam);
+    m_module_root->onAppEvent(p_wParam, p_lParam);
 }
 
 
