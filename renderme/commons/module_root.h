@@ -41,7 +41,7 @@ namespace renderMe
         public:
             virtual std::string                         getModuleName() const = 0;
             virtual std::string                         getModuleDescr() const = 0;
-            virtual const core::ComponentContainer&     getComponentContainer() const = 0;
+            virtual core::ComponentContainer&           getComponentContainer() = 0;
         };
     }
 }

@@ -31,6 +31,7 @@
 #include "logconf.h"
 #include "logging.h"
 #include "module_root.h"
+#include "componentcontainer.h"
 
 
 using namespace renderMe;
@@ -70,7 +71,9 @@ App::App()
 }
 
 void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, renderMe::interfaces::ModuleRoot* p_root)
-{	
+{
+    m_module_root = p_root;
+
     // load logging config
     {
         // set static to spare some space on stack // compiler message
@@ -325,10 +328,15 @@ void App::processInputEvents(void)
 
 bool App::loopAppInit()
 {
-    // MODULE stuff init HERE : TODO
+    // MODULE stuff init HERE 
 
-    
-    //Root* root = DrawSpace::Core::SingletonPlugin<Root>::GetInstance()->m_interface;
+    std::string win_title{ "renderMe Runtime - " };
+    win_title += m_module_root->getModuleDescr();
+    ::SetWindowText(m_hwnd, win_title.c_str());
+
+    core::ComponentContainer& module_components{ m_module_root->getComponentContainer() };
+
+    module_components.addComponent<bool>("id", false);
 
     return true;
 }

@@ -42,7 +42,7 @@ public:
 
     std::string                                     getModuleName() const;
     std::string                                     getModuleDescr() const;
-    const renderMe::core::ComponentContainer&       getComponentContainer() const;
+    renderMe::core::ComponentContainer&             getComponentContainer();
 
 private:
 
