@@ -34,7 +34,14 @@ namespace renderMe
 {
     namespace interfaces
     {
-        class ModuleRoot : public property::EventSource<int>
+        enum class ModuleEvents
+        {
+            MOUSE_CIRCULARMODE_CHANGED,
+            MOUSE_DISPLAY_CHANGED,
+            CLOSE_APP
+        };
+
+        class ModuleRoot : public property::EventSource<ModuleEvents, int>
         {
         public:
             virtual std::string     getModuleName() const = 0;

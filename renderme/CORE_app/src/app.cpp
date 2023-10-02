@@ -66,9 +66,20 @@ App::App()
         }
     };
 
-    m_module_events_cb = [&, this](int p_evt_value)
+    m_module_events_cb = [&, this](interfaces::ModuleEvents p_event, int p_evt_value)
     {
+        switch (p_event)
+        {
+            case interfaces::ModuleEvents::CLOSE_APP:
+                quit(p_evt_value);
+                break;
 
+            case interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED:
+                break;
+
+            case interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED:
+                break;
+        }
     };
 }
 

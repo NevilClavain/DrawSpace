@@ -42,6 +42,13 @@ void RootImpl::onKeyPress(long p_key)
 
 void RootImpl::onEndKeyPress(long p_key)
 {
+	if (VK_SPACE == p_key)
+	{
+		for (const auto& call : m_callbacks)
+		{
+			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
+		}
+	}
 }
 
 void RootImpl::onKeyPulse(long p_key)
