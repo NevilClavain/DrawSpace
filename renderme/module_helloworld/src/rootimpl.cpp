@@ -64,11 +64,22 @@ void RootImpl::onEndKeyPress(long p_key)
 		{
 			call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
 		}
-
 	}
 	else if (VK_F2 == p_key)
 	{
+		if (m_mouse_circular_mode)
+		{
+			m_mouse_circular_mode = false;
+		}
+		else
+		{
+			m_mouse_circular_mode = true;
+		}
 
+		for (const auto& call : m_callbacks)
+		{
+			call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
+		}
 	}
 }
 
@@ -117,4 +128,11 @@ void RootImpl::registerSubscriber(const Callback& p_callback)
 	{
 		call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
 	}
+
+	// send immediately m_mouse_circular_mode value
+	for (const auto& call : m_callbacks)
+	{
+		call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
+	}
+
 }

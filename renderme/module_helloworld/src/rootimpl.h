@@ -60,6 +60,7 @@ public:
 private:
 
     bool           m_show_mouse_cursor{ true };
+    bool           m_mouse_circular_mode{ false };
 
 };
 

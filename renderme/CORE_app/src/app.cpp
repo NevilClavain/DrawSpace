@@ -80,6 +80,8 @@ App::App()
                 break;
 
             case interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED:
+                
+                this->onModuleMouseCircularModeUpdate(p_evt_value);
                 break;
         }
     };
