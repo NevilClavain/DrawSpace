@@ -75,6 +75,8 @@ App::App()
                 break;
 
             case interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED:
+
+                this->onModuleMouseVisible(p_evt_value);
                 break;
 
             case interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED:

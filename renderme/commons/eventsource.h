@@ -41,8 +41,7 @@ namespace renderMe
 			~EventSource() = default;
 
 			using Callback = std::function<void(Args&&...)>;
-
-			void registerSubscriber(const Callback& p_callback)
+			virtual void registerSubscriber(const Callback& p_callback)
 			{
 				m_callbacks.push_back(p_callback);
 			}

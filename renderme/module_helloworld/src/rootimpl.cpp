@@ -49,6 +49,27 @@ void RootImpl::onEndKeyPress(long p_key)
 			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
 		}
 	}
+	else if (VK_F1 == p_key)
+	{
+		if (m_show_mouse_cursor)
+		{
+			m_show_mouse_cursor = false;
+		}
+		else
+		{
+			m_show_mouse_cursor = true;
+		}
+
+		for (const auto& call : m_callbacks)
+		{
+			call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
+		}
+
+	}
+	else if (VK_F2 == p_key)
+	{
+
+	}
 }
 
 void RootImpl::onKeyPulse(long p_key)
@@ -85,4 +106,15 @@ void RootImpl::onMouseRightButtonUp(long p_xm, long p_ym)
 
 void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
+}
+
+void RootImpl::registerSubscriber(const Callback& p_callback)
+{
+	renderMe::property::EventSource<renderMe::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);
+
+	// send immediately m_show_mouse_cursor value
+	for (const auto& call : m_callbacks)
+	{
+		call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
+	}
 }
