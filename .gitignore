@@ -214,10 +214,13 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_threads/*.sln
 /renderme/console_tests/console_threads/*.vcxproj*
 
-
 /renderme/console_component/console_threads/CMakeFiles/
 /renderme/console_component/console_threads/*.sln
 /renderme/console_component/console_threads/*.vcxproj*
+
+/renderme/console_tests/console_ecs/CMakeFiles/
+/renderme/console_tests/console_ecs/*.sln
+/renderme/console_tests/console_ecs/*.vcxproj*
 
 /renderme/module_helloworld/CMakeFiles/
 /renderme/module_helloworld/*.sln
