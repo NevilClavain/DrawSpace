@@ -35,7 +35,7 @@ file(
 )
 
 add_executable(console_components ${source_files})
-target_link_libraries(console_components CORE_ecs CORE_allocator CORE_logger CORE_file)
+target_link_libraries(console_components CORE_ecs CORE_logger CORE_allocator CORE_file)
 
 install(TARGETS console_components CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS console_components CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

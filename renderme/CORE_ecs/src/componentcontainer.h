@@ -44,10 +44,10 @@ namespace renderMe
 
 			ComponentContainer() = default;
 
+			// give component container an "unique" aspect
 			ComponentContainer(const ComponentContainer&) = delete;
 			ComponentContainer(ComponentContainer&&) = delete;
 			ComponentContainer& operator=(const ComponentContainer& t) = delete;
-
 
 			~ComponentContainer() = default;
 

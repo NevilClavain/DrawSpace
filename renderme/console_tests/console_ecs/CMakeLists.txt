@@ -23,6 +23,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(console_ecs)
 
+include_directories(${CMAKE_SOURCE_DIR}/commons)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
+
 file(
         GLOB_RECURSE
         source_files
@@ -31,6 +35,8 @@ file(
 )
 
 add_executable(console_ecs ${source_files})
+target_link_libraries(console_ecs CORE_ecs CORE_logger CORE_allocator CORE_file)
+
 
 install(TARGETS console_ecs CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS console_ecs CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

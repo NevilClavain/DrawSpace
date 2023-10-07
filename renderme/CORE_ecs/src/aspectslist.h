@@ -23,37 +23,13 @@
 */
 /* -*-LIC_END-*- */
 
-#include <iostream>
+#pragma once
 
-#include "entity.h"
-#include "aspectslist.h"
-
-using namespace renderMe;
-
-int main( int argc, char* argv[] )
-{    
-	std::cout << "ECS tests\n";
-
-	core::entity ent;
-
-	ent.makeAspect(core::renderingAspect);
-
+namespace renderMe
+{
+	namespace core
 	{
-		// write component in an entity/aspect
-
-		auto& aspect{ ent.aspectAccess(core::renderingAspect) };
-		aspect.addComponent<int>("width", 640);
+		static constexpr int renderingAspect{ 0x0001 };
+		static constexpr int transformAspect{ 0x0002 };
 	}
-
-
-	{
-		// read component component in an entity/aspect
-
-		auto& aspect{ ent.aspectAccess(core::renderingAspect) };
-		const auto width{ aspect.getComponent<int>("width")->getPurpose() };
-		std::cout << "width = " << width << "\n";
-	}
-
-
-    return 0;
 }
