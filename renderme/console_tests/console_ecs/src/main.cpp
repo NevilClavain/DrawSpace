@@ -77,10 +77,28 @@ int main( int argc, char* argv[] )
 	ent11_node.insert(&ent111);
 
 
-
+	// dummy tree browse
 	for (auto e : entityGraph)
 	{
 		const auto currId{ e.data()->getId() };
+		std::cout << currId << "\n";
+	}
+	
+	std::cout << "\n";
+
+	// leaf to root browsing
+	for (auto it = entityGraph.df_post_begin(); it != entityGraph.df_post_end(); ++it)
+	{
+		const auto currId{ it->data()->getId() };
+		std::cout << currId << "\n";
+	}
+
+	std::cout << "\n";
+
+	// root to leaf browsing
+	for (auto it = entityGraph.df_pre_begin(); it != entityGraph.df_pre_end(); ++it)
+	{
+		const auto currId{ it->data()->getId() };
 		std::cout << currId << "\n";
 	}
 
