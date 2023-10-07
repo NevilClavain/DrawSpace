@@ -34,23 +34,54 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "ECS tests\n";
 
-	core::entity ent("myEntity");
-	ent.makeAspect(core::renderingAspect);
+	core::Entity root("root");
+	root.makeAspect(core::renderingAspect);
 
 	{
 		// write component in an entity/aspect
 
-		auto& aspect{ ent.aspectAccess(core::renderingAspect) };
+		auto& aspect{ root.aspectAccess(core::renderingAspect) };
 		aspect.addComponent<int>("width", 640);
 	}
-
 
 	{
 		// read component component in an entity/aspect
 
-		auto& aspect{ ent.aspectAccess(core::renderingAspect) };
+		auto& aspect{ root.aspectAccess(core::renderingAspect) };
 		const auto width{ aspect.getComponent<int>("width")->getPurpose() };
 		std::cout << "width = " << width << "\n";
+	}
+
+	using enode = st_tree::tree<core::Entity*>::node_type;
+	using enode_iterator = enode::iterator;
+
+	st_tree::tree<core::Entity*> entityGraph;
+	entityGraph.insert(&root);
+	
+
+	core::Entity ent1("ent1");
+	enode& ent1_node{ *(entityGraph.root().insert(&ent1)) };
+
+	core::Entity ent2("ent2");
+	enode& ent2_node{ *(entityGraph.root().insert(&ent2)) };
+	
+
+	core::Entity ent11("ent11");
+	enode& ent11_node{ *ent1_node.insert(&ent11) };
+
+	core::Entity ent12("ent12");
+	ent1_node.insert(&ent12);
+
+
+	core::Entity ent111("ent111");
+	ent11_node.insert(&ent111);
+
+
+
+	for (auto e : entityGraph)
+	{
+		const auto currId{ e.data()->getId() };
+		std::cout << currId << "\n";
 	}
 
 

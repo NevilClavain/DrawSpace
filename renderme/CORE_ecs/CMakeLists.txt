@@ -26,6 +26,8 @@ project(CORE_ecs)
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 
+include_directories(${st_tree_include_dir})
+
 file(
         GLOB_RECURSE
         source_files

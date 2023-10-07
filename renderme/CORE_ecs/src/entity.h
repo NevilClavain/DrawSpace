@@ -27,21 +27,26 @@
 
 #include <map>
 #include "componentcontainer.h"
+#include "st_tree.h"
 
 namespace renderMe
 {
 	namespace core
 	{
-		class entity
+		class Entity : public st_tree::tree<core::Entity*>::node_type
 		{
 		public:
-			entity(const std::string& p_id) :
+			Entity(const std::string& p_id) :
 			m_id(p_id)
 			{
-
 			}
 
-			~entity() = default;
+			// give an "unique" aspect
+			Entity(const Entity&) = delete;
+			Entity(Entity&&) = delete;
+			Entity& operator=(const Entity& t) = delete;
+
+			~Entity() = default;
 
 			std::string getId() const
 			{
