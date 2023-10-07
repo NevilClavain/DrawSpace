@@ -35,8 +35,18 @@ namespace renderMe
 		class entity
 		{
 		public:
-			entity() = default;
+			entity(const std::string& p_id) :
+			m_id(p_id)
+			{
+
+			}
+
 			~entity() = default;
+
+			std::string getId() const
+			{
+				return m_id;
+			}
 
 			void makeAspect(int p_aspect)
 			{
@@ -57,24 +67,22 @@ namespace renderMe
 				}
 				else
 				{
-					_EXCEPTION("removeAspect: Unknown aspect : " + std::to_string(p_aspect))
+					_EXCEPTION("removeAspect: unknown aspect : " + std::to_string(p_aspect))
 				}
 			}
 
 			ComponentContainer& aspectAccess(int p_aspect)
-			{
-				if(m_aspects.count(p_aspect))
+			{			
+				if(0 == m_aspects.count(p_aspect))
 				{ 
-					return m_aspects.at(p_aspect);
-				}
-				else
-				{
 					_EXCEPTION("aspectAccess: unknown aspect : " + std::to_string(p_aspect))
 				}
+				return m_aspects.at(p_aspect);
 			}
 
 		private:
 			std::map<int, ComponentContainer> m_aspects;
+			const std::string				  m_id;
 		};
 	}
 }

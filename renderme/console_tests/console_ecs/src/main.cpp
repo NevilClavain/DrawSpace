@@ -34,8 +34,7 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "ECS tests\n";
 
-	core::entity ent;
-
+	core::entity ent("myEntity");
 	ent.makeAspect(core::renderingAspect);
 
 	{
