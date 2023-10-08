@@ -56,8 +56,11 @@ namespace renderMe
 
 			~Entitygraph() = default;
 
-			void makeRoot(Entity* p_entity);
-			bool hasRoot() const;
+			Node&	makeRoot(Entity* p_entity);
+			bool	hasRoot() const;
+
+			st_tree::tree<core::Entity*>::df_pre_iterator preBegin();
+			st_tree::tree<core::Entity*>::df_pre_iterator preEnd();
 
 		private:
 			st_tree::tree<core::Entity*> m_tree;

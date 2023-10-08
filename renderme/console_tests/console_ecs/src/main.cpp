@@ -57,11 +57,28 @@ int main( int argc, char* argv[] )
 	core::Entitygraph eg;
 
 	std::cout << "eg has root : " << eg.hasRoot() << "\n";
-	eg.makeRoot(&root);
+	auto& root_node{ eg.makeRoot(&root) };
 
 	std::cout << "eg has root now : " << eg.hasRoot() << "\n";
 
+	core::Entity ent1("ent1");
+	core::Entity ent2("ent2");
 
+	root_node.insert(&ent1);
+	root_node.insert(&ent2);
+
+	// root to leaf browsing
+	for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
+	{
+		const auto currId{ it->data()->getId() };
+		std::cout << currId << "\n";
+	}
+
+
+
+
+
+	/*
 
 	using enode = st_tree::tree<core::Entity*>::node_type;
 	using enode_iterator = enode::iterator;
@@ -71,8 +88,7 @@ int main( int argc, char* argv[] )
 
 	enode& root_node{ entityGraph.root() };
 
-	
-
+		
 	core::Entity ent1("ent1");
 	enode& ent1_node{ *(root_node.insert(&ent1)) };
 
@@ -116,6 +132,7 @@ int main( int argc, char* argv[] )
 		std::cout << currId << "\n";
 	}
 
+	*/
 	
 
 

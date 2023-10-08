@@ -28,24 +28,33 @@
 
 using namespace renderMe::core;
 
-void Entitygraph::makeRoot(Entity* p_entity)
+Entitygraph::Node& Entitygraph::makeRoot(Entity* p_entity)
 {
 	if (hasRoot())
 	{
 		_EXCEPTION("Entitygraph root already set")
 	}
-	else
-	{
-		m_tree.insert(p_entity);
 
-		for (const auto& call : m_callbacks)
-		{
-			call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *p_entity);
-		}
-	}	
+	m_tree.insert(p_entity);
+
+	for (const auto& call : m_callbacks)
+	{
+		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *p_entity);
+	}
+	return m_tree.root();
 }
 
 bool Entitygraph::hasRoot() const
 {
 	return (m_tree.depth() > 0);
+}
+
+st_tree::tree<Entity*>::df_pre_iterator Entitygraph::preBegin()
+{
+	return m_tree.df_pre_begin();
+}
+
+st_tree::tree<Entity*>::df_pre_iterator Entitygraph::preEnd()
+{
+	return m_tree.df_pre_end();
 }
