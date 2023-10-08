@@ -69,15 +69,15 @@ int main( int argc, char* argv[] )
 	st_tree::tree<core::Entity*> entityGraph;
 	entityGraph.insert(&root);
 
-
+	enode& root_node{ entityGraph.root() };
 
 	
 
 	core::Entity ent1("ent1");
-	enode& ent1_node{ *(entityGraph.root().insert(&ent1)) };
+	enode& ent1_node{ *(root_node.insert(&ent1)) };
 
 	core::Entity ent2("ent2");
-	enode& ent2_node{ *(entityGraph.root().insert(&ent2)) };
+	enode& ent2_node{ *(root_node.insert(&ent2)) };
 	
 
 	core::Entity ent11("ent11");
