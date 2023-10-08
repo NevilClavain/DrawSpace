@@ -25,6 +25,7 @@
 
 #include <iostream>
 
+#include "entitygraph.h"
 #include "entity.h"
 #include "aspectslist.h"
 
@@ -52,11 +53,24 @@ int main( int argc, char* argv[] )
 		std::cout << "width = " << width << "\n";
 	}
 
+
+	core::Entitygraph eg;
+
+	std::cout << "eg has root : " << eg.hasRoot() << "\n";
+	eg.makeRoot(&root);
+
+	std::cout << "eg has root now : " << eg.hasRoot() << "\n";
+
+
+
 	using enode = st_tree::tree<core::Entity*>::node_type;
 	using enode_iterator = enode::iterator;
 
 	st_tree::tree<core::Entity*> entityGraph;
 	entityGraph.insert(&root);
+
+
+
 	
 
 	core::Entity ent1("ent1");
@@ -101,6 +115,8 @@ int main( int argc, char* argv[] )
 		const auto currId{ it->data()->getId() };
 		std::cout << currId << "\n";
 	}
+
+	
 
 
     return 0;
