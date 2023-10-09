@@ -57,8 +57,6 @@ namespace renderMe
 
 			~Entitygraph() = default;
 
-			//Node&	makeRoot(Entity* p_entity);
-
 			Node& makeRoot(const std::string& p_entity_id);
 			bool	hasRoot() const;
 
