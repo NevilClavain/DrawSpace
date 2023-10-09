@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include "st_tree.h"
 #include "eventsource.h"
 
@@ -56,7 +57,9 @@ namespace renderMe
 
 			~Entitygraph() = default;
 
-			Node&	makeRoot(Entity* p_entity);
+			//Node&	makeRoot(Entity* p_entity);
+
+			Node& makeRoot(const std::string& p_entity_id);
 			bool	hasRoot() const;
 
 			st_tree::tree<core::Entity*>::df_pre_iterator preBegin();
@@ -67,7 +70,8 @@ namespace renderMe
 
 
 		private:
-			st_tree::tree<core::Entity*> m_tree;
+			st_tree::tree<core::Entity*>								m_tree;
+			std::unordered_map<std::string, std::unique_ptr<Entity>>	m_entites;
 			
 			
 		};

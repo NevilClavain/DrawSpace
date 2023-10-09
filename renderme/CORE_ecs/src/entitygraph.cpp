@@ -28,6 +28,7 @@
 
 using namespace renderMe::core;
 
+/*
 Entitygraph::Node& Entitygraph::makeRoot(Entity* p_entity)
 {
 	if (hasRoot())
@@ -41,6 +42,25 @@ Entitygraph::Node& Entitygraph::makeRoot(Entity* p_entity)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *p_entity);
 	}
+	return m_tree.root();
+}
+*/
+
+Entitygraph::Node& Entitygraph::makeRoot(const std::string& p_entity_id)
+{
+	if (hasRoot())
+	{
+		_EXCEPTION("Entitygraph root already set")
+	}
+
+	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id);
+	m_tree.insert(m_entites.at(p_entity_id).get());
+
+	for (const auto& call : m_callbacks)
+	{
+		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *m_entites.at(p_entity_id).get());
+	}
+	
 	return m_tree.root();
 }
 

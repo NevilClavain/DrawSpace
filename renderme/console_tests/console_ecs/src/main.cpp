@@ -37,28 +37,31 @@ int main( int argc, char* argv[] )
 
 	core::Entitygraph eg;
 
-	core::Entity root("root");
+	//core::Entity root("root");
 	
 	std::cout << "eg has root : " << eg.hasRoot() << "\n";
-	auto& root_node{ eg.makeRoot(&root) };
+	auto& root_node{ eg.makeRoot("root")};
 
-	root.makeAspect(core::renderingAspect);
+	const auto root_entity{ root_node.data() };
+	
+	
+	root_entity->makeAspect(core::renderingAspect);
 
 	{
 		// write component in an entity/aspect
 
-		auto& aspect{ root.aspectAccess(core::renderingAspect) };
+		auto& aspect{ root_entity->aspectAccess(core::renderingAspect) };
 		aspect.addComponent<int>("width", 640);
 	}
 
 	{
 		// read component component in an entity/aspect
 
-		auto& aspect{ root.aspectAccess(core::renderingAspect) };
+		auto& aspect{ root_entity->aspectAccess(core::renderingAspect) };
 		const auto width{ aspect.getComponent<int>("width")->getPurpose() };
 		std::cout << "width = " << width << "\n";
 	}
-
+	
 
 
 
