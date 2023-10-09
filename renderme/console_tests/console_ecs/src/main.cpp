@@ -35,7 +35,13 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "ECS tests\n";
 
+	core::Entitygraph eg;
+
 	core::Entity root("root");
+	
+	std::cout << "eg has root : " << eg.hasRoot() << "\n";
+	auto& root_node{ eg.makeRoot(&root) };
+
 	root.makeAspect(core::renderingAspect);
 
 	{
@@ -54,10 +60,7 @@ int main( int argc, char* argv[] )
 	}
 
 
-	core::Entitygraph eg;
 
-	std::cout << "eg has root : " << eg.hasRoot() << "\n";
-	auto& root_node{ eg.makeRoot(&root) };
 
 	std::cout << "eg has root now : " << eg.hasRoot() << "\n";
 
