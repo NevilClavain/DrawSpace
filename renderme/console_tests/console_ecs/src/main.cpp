@@ -93,61 +93,6 @@ int main( int argc, char* argv[] )
 	std::cout << "\n";
 
 
-	/*
-
-	using enode = st_tree::tree<core::Entity*>::node_type;
-	using enode_iterator = enode::iterator;
-
-	st_tree::tree<core::Entity*> entityGraph;
-	entityGraph.insert(&root);
-
-	enode& root_node{ entityGraph.root() };
-
-		
-	core::Entity ent1("ent1");
-	enode& ent1_node{ *(root_node.insert(&ent1)) };
-
-	core::Entity ent2("ent2");
-	enode& ent2_node{ *(root_node.insert(&ent2)) };
-	
-
-	core::Entity ent11("ent11");
-	enode& ent11_node{ *ent1_node.insert(&ent11) };
-
-	core::Entity ent12("ent12");
-	ent1_node.insert(&ent12);
-
-
-	core::Entity ent111("ent111");
-	ent11_node.insert(&ent111);
-
-
-	// dummy tree browse
-	for (auto e : entityGraph)
-	{
-		const auto currId{ e.data()->getId() };
-		std::cout << currId << "\n";
-	}
-	
-	std::cout << "\n";
-
-	// leaf to root browsing
-	for (auto it = entityGraph.df_post_begin(); it != entityGraph.df_post_end(); ++it)
-	{
-		const auto currId{ it->data()->getId() };
-		std::cout << currId << "\n";
-	}
-
-	std::cout << "\n";
-
-	// root to leaf browsing
-	for (auto it = entityGraph.df_pre_begin(); it != entityGraph.df_pre_end(); ++it)
-	{
-		const auto currId{ it->data()->getId() };
-		std::cout << currId << "\n";
-	}
-
-	*/
 	
 
 
