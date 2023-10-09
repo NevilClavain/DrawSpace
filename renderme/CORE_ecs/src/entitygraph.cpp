@@ -58,3 +58,13 @@ st_tree::tree<Entity*>::df_pre_iterator Entitygraph::preEnd()
 {
 	return m_tree.df_pre_end();
 }
+
+st_tree::tree<Entity*>::df_post_iterator Entitygraph::postBegin()
+{
+	return m_tree.df_post_begin();
+}
+
+st_tree::tree<Entity*>::df_post_iterator Entitygraph::postEnd()
+{
+	return m_tree.df_post_end();
+}

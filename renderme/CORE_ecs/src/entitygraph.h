@@ -62,6 +62,10 @@ namespace renderMe
 			st_tree::tree<core::Entity*>::df_pre_iterator preBegin();
 			st_tree::tree<core::Entity*>::df_pre_iterator preEnd();
 
+			st_tree::tree<core::Entity*>::df_post_iterator postBegin();
+			st_tree::tree<core::Entity*>::df_post_iterator postEnd();
+
+
 		private:
 			st_tree::tree<core::Entity*> m_tree;
 			
