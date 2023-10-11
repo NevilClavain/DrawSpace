@@ -36,14 +36,11 @@ int main( int argc, char* argv[] )
 	std::cout << "ECS tests\n";
 
 	core::Entitygraph eg;
-	
-	
+		
 	std::cout << "eg has root : " << eg.hasRoot() << "\n";
 	auto& root_node{ eg.makeRoot("root")};
 
-	const auto root_entity{ root_node.data() };
-	
-	
+	const auto root_entity{ root_node.data() };	
 	root_entity->makeAspect(core::renderingAspect);
 
 	{
@@ -61,11 +58,18 @@ int main( int argc, char* argv[] )
 		std::cout << "width = " << width << "\n";
 	}
 	
-
-
-
 	std::cout << "eg has root now : " << eg.hasRoot() << "\n";
 
+	
+	auto& ent1_node{ eg.add(root_node, "ent1") };
+	auto& ent2_node{ eg.add(root_node, "ent2") };
+
+	auto& ent11_node{ eg.add(ent1_node, "ent11") };
+	auto& ent111_node{ eg.add(ent11_node, "ent111") };
+	
+
+
+	/*
 	core::Entity ent1("ent1");
 	core::Entity ent2("ent2");
 
@@ -77,7 +81,7 @@ int main( int argc, char* argv[] )
 
 	core::Entity ent111("ent111");
 	auto& ent111_node{ *ent11_node.insert(&ent111) };
-
+	*/
 
 
 

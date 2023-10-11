@@ -51,6 +51,29 @@ bool Entitygraph::hasRoot() const
 	return (m_tree.depth() > 0);
 }
 
+Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_id)
+{
+	const auto parent_id{ p_parent.data()->getId() };
+
+	if (0 == m_entites.count(parent_id))
+	{
+		_EXCEPTION("parent not registered")
+	}
+
+	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id);
+
+
+	auto& new_node{ *(p_parent.insert(&*(m_entites[p_entity_id].get()))) };
+
+	for (const auto& call : m_callbacks)
+	{
+		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *m_entites.at(p_entity_id).get());
+	}
+
+	return new_node;
+}
+
+
 st_tree::tree<Entity*>::df_pre_iterator Entitygraph::preBegin()
 {
 	return m_tree.df_pre_begin();
