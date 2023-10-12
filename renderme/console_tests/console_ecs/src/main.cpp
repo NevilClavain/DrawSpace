@@ -69,22 +69,6 @@ int main( int argc, char* argv[] )
 	
 
 
-	/*
-	core::Entity ent1("ent1");
-	core::Entity ent2("ent2");
-
-	auto& ent1_node{ *(root_node.insert(&ent1)) };
-	auto& ent2_node{ *(root_node.insert(&ent2)) };
-
-	core::Entity ent11("ent11");
-	auto& ent11_node{ *ent1_node.insert(&ent11) };
-
-	core::Entity ent111("ent111");
-	auto& ent111_node{ *ent11_node.insert(&ent111) };
-	*/
-
-
-
 	// root to leaf browsing
 	for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
 	{
