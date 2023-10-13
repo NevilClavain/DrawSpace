@@ -66,8 +66,7 @@ int main( int argc, char* argv[] )
 
 	eg.add(ent1_node, "ent11");
 
-
-	eg.add(eg.node("ent11"), "ent111");
+	eg.add(eg.node("ent11"), "ent111"); // another way to insert a node from its parent
 	
 
 
