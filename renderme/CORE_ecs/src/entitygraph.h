@@ -48,6 +48,9 @@ namespace renderMe
 			using Node			= st_tree::tree<core::Entity*>::node_type;
 			using NodeIterator	= Node::iterator;
 
+			using PreIterator	= st_tree::tree<core::Entity*>::df_pre_iterator;
+			using PostIterator	= st_tree::tree<core::Entity*>::df_post_iterator;
+
 			Entitygraph() = default;
 
 			// give an "unique" aspect
@@ -57,22 +60,24 @@ namespace renderMe
 
 			~Entitygraph() = default;
 
-			Node&	makeRoot(const std::string& p_entity_id);
-			bool		hasRoot() const;
+			Node&			makeRoot(const std::string& p_entity_id);
+			bool			hasRoot() const;
 
-			Node& add(Node& p_parent, const std::string& p_entity_id);
+			Node&			add(Node& p_parent, const std::string& p_entity_id);
+
+			Node&			node(const std::string& p_entity_id);
 
 
-			st_tree::tree<core::Entity*>::df_pre_iterator preBegin();
-			st_tree::tree<core::Entity*>::df_pre_iterator preEnd();
+			PreIterator		preBegin();
+			PreIterator		preEnd();
 
-			st_tree::tree<core::Entity*>::df_post_iterator postBegin();
-			st_tree::tree<core::Entity*>::df_post_iterator postEnd();
-
+			PostIterator	postBegin();
+			PostIterator	postEnd();
 
 		private:
 			st_tree::tree<core::Entity*>								m_tree;
 			std::unordered_map<std::string, std::unique_ptr<Entity>>	m_entites;
+			std::unordered_map<std::string, Node>						m_nodes;
 			
 			
 		};

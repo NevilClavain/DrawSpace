@@ -36,7 +36,9 @@ Entitygraph::Node& Entitygraph::makeRoot(const std::string& p_entity_id)
 	}
 
 	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id);
+
 	m_tree.insert(m_entites.at(p_entity_id).get());
+	m_nodes[p_entity_id] = m_tree.root();
 
 	for (const auto& call : m_callbacks)
 	{
@@ -57,13 +59,12 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 
 	if (0 == m_entites.count(parent_id))
 	{
-		_EXCEPTION("parent not registered")
+		_EXCEPTION("parent not registered : " + parent_id)
 	}
 
 	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id);
-
-
 	auto& new_node{ *(p_parent.insert(&*(m_entites[p_entity_id].get()))) };
+	m_nodes[p_entity_id] = new_node;
 
 	for (const auto& call : m_callbacks)
 	{
@@ -73,23 +74,33 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 	return new_node;
 }
 
+Entitygraph::Node& Entitygraph::node(const std::string& p_entity_id)
+{
+	const auto id{ p_entity_id };
 
-st_tree::tree<Entity*>::df_pre_iterator Entitygraph::preBegin()
+	if (0 == m_nodes.count(id))
+	{
+		_EXCEPTION("node not registered" + id)
+	}
+	return m_nodes.at(id);
+}
+
+Entitygraph::PreIterator Entitygraph::preBegin()
 {
 	return m_tree.df_pre_begin();
 }
 
-st_tree::tree<Entity*>::df_pre_iterator Entitygraph::preEnd()
+Entitygraph::PreIterator Entitygraph::preEnd()
 {
 	return m_tree.df_pre_end();
 }
 
-st_tree::tree<Entity*>::df_post_iterator Entitygraph::postBegin()
+Entitygraph::PostIterator Entitygraph::postBegin()
 {
 	return m_tree.df_post_begin();
 }
 
-st_tree::tree<Entity*>::df_post_iterator Entitygraph::postEnd()
+Entitygraph::PostIterator Entitygraph::postEnd()
 {
 	return m_tree.df_post_end();
 }

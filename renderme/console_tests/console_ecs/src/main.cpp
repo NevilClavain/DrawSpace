@@ -64,8 +64,10 @@ int main( int argc, char* argv[] )
 	auto& ent1_node{ eg.add(root_node, "ent1") };
 	auto& ent2_node{ eg.add(root_node, "ent2") };
 
-	auto& ent11_node{ eg.add(ent1_node, "ent11") };
-	auto& ent111_node{ eg.add(ent11_node, "ent111") };
+	eg.add(ent1_node, "ent11");
+
+
+	eg.add(eg.node("ent11"), "ent111");
 	
 
 
