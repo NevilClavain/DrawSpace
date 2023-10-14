@@ -27,7 +27,7 @@
 
 #include "entitygraph.h"
 #include "entity.h"
-#include "aspectslist.h"
+#include "aspects.h"
 
 using namespace renderMe;
 
@@ -35,60 +35,89 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "ECS tests\n";
 
-	core::Entitygraph eg;
-		
-	std::cout << "eg has root : " << eg.hasRoot() << "\n";
-	auto& root_node{ eg.makeRoot("root")};
-
-	const auto root_entity{ root_node.data() };	
-	root_entity->makeAspect(core::renderingAspect);
+	///// basic tree construction
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 	{
-		// write component in an entity/aspect
 
-		auto& aspect{ root_entity->aspectAccess(core::renderingAspect) };
-		aspect.addComponent<int>("width", 640);
+		core::Entitygraph eg;
+
+		std::cout << "eg has root : " << eg.hasRoot() << "\n";
+		auto& root_node{ eg.makeRoot("root") };
+
+		const auto root_entity{ root_node.data() };
+		root_entity->makeAspect(core::renderingAspect::id);
+
+		{
+			// write component in an entity/aspect
+
+			auto& aspect{ root_entity->aspectAccess(core::renderingAspect::id) };
+			aspect.addComponent<int>("width", 640);
+		}
+
+		{
+			// read component component in an entity/aspect
+
+			auto& aspect{ root_entity->aspectAccess(core::renderingAspect::id) };
+			const auto width{ aspect.getComponent<int>("width")->getPurpose() };
+			std::cout << "width = " << width << "\n";
+		}
+
+		std::cout << "eg has root now : " << eg.hasRoot() << "\n";
+
+
+		auto& ent1_node{ eg.add(root_node, "ent1") };
+		auto& ent2_node{ eg.add(root_node, "ent2") };
+
+		eg.add(ent1_node, "ent11");
+
+		eg.add(eg.node("ent11"), "ent111"); // another way to insert a node from its parent
+
+
+
+		// root to leaf browsing
+		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
+		{
+			const auto currId{ it->data()->getId() };
+			std::cout << currId << "\n";
+		}
+		std::cout << "\n";
+
+		// leaf to root browsing
+		for (auto it = eg.postBegin(); it != eg.postEnd(); ++it)
+		{
+			const auto currId{ it->data()->getId() };
+			std::cout << currId << "\n";
+		}
+		std::cout << "\n";
 	}
+
+
+	//// systems
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 	{
-		// read component component in an entity/aspect
 
-		auto& aspect{ root_entity->aspectAccess(core::renderingAspect) };
-		const auto width{ aspect.getComponent<int>("width")->getPurpose() };
-		std::cout << "width = " << width << "\n";
+		core::Entitygraph eg;
+
+		auto& root_window_node{ eg.makeRoot("appwindow") };
+
+
+		const auto root_window_entity{ root_window_node.data() };
+		root_window_entity->makeAspect(core::renderingAspect::id);
+
+		auto& rendering_aspect{ root_window_entity->aspectAccess(core::renderingAspect::id) };
+
+		rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::WINDOW_TARGET);
+		rendering_aspect.addComponent<bool>("fullscreen", false);
+		rendering_aspect.addComponent<int>("windowWidth", 800);
+		rendering_aspect.addComponent<int>("windowHeight", 600);
+
 	}
-	
-	std::cout << "eg has root now : " << eg.hasRoot() << "\n";
-
-	
-	auto& ent1_node{ eg.add(root_node, "ent1") };
-	auto& ent2_node{ eg.add(root_node, "ent2") };
-
-	eg.add(ent1_node, "ent11");
-
-	eg.add(eg.node("ent11"), "ent111"); // another way to insert a node from its parent
-	
-
-
-	// root to leaf browsing
-	for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
-	{
-		const auto currId{ it->data()->getId() };
-		std::cout << currId << "\n";
-	}
-	std::cout << "\n";
-
-	// leaf to root browsing
-	for (auto it = eg.postBegin(); it != eg.postEnd(); ++it)
-	{
-		const auto currId{ it->data()->getId() };
-		std::cout << currId << "\n";
-	}
-	std::cout << "\n";
-
-
-	
-
 
     return 0;
 }

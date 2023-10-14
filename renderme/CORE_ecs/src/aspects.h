@@ -29,7 +29,19 @@ namespace renderMe
 {
 	namespace core
 	{
-		static constexpr int renderingAspect{ 0x0001 };
-		static constexpr int transformAspect{ 0x0002 };
+
+		//static constexpr int renderingAspect{ 0x0001 };
+
+		namespace renderingAspect
+		{
+			static constexpr int id{ 0x0001 };
+
+			enum class renderingTarget
+			{
+				WINDOW_TARGET,
+				BUFFER_TARGET
+			};
+		}
+
 	}
 }
