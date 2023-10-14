@@ -42,6 +42,8 @@ int main( int argc, char* argv[] )
 
 	{
 
+		std::cout << "**** Entitygraph test\n\n";
+
 		core::Entitygraph eg;
 
 		std::cout << "eg has root : " << eg.hasRoot() << "\n";
@@ -102,22 +104,65 @@ int main( int argc, char* argv[] )
 
 	{
 
+		std::cout << "**** Systems test\n\n";
+
 		core::Entitygraph eg;
 
-		auto& root_window_node{ eg.makeRoot("appwindow") };
+		{
+
+			auto& root_window_node{ eg.makeRoot("appwindow") };
 
 
-		const auto root_window_entity{ root_window_node.data() };
-		root_window_entity->makeAspect(core::renderingAspect::id);
+			const auto root_window_entity{ root_window_node.data() };
+			root_window_entity->makeAspect(core::renderingAspect::id);
 
-		auto& rendering_aspect{ root_window_entity->aspectAccess(core::renderingAspect::id) };
+			auto& rendering_aspect{ root_window_entity->aspectAccess(core::renderingAspect::id) };
 
-		rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::WINDOW_TARGET);
-		rendering_aspect.addComponent<bool>("fullscreen", false);
-		rendering_aspect.addComponent<int>("windowWidth", 800);
-		rendering_aspect.addComponent<int>("windowHeight", 600);
+			rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::WINDOW_TARGET);
+			rendering_aspect.addComponent<bool>("fullscreen", false);
+			rendering_aspect.addComponent<int>("windowWidth", 800);
+			rendering_aspect.addComponent<int>("windowHeight", 600);
+			rendering_aspect.addComponent<bool>("initialized", false);
+		}
 
+		{
+
+			while (1)
+			{
+				// rendering system
+
+				// root to leaf browsing
+				for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
+				{
+					const auto current_entity{ it->data() };
+					const auto currId{ current_entity->getId() };
+
+					if (current_entity->hasAspect(core::renderingAspect::id))
+					{
+						const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
+
+						auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+						if (rendering_target_comp)
+						{
+							auto& rendering_target{ rendering_target_comp->getPurpose() };
+
+							if (core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target)
+							{
+								//std::cout << "found a WINDOW_TARGET\n";
+
+								auto& initialized{ rendering_aspect.getComponent<bool>("initialized")->getPurpose() };
+
+								if (!initialized)
+								{
+									std::cout << "initializing rendering...\n";
+									initialized = true;
+								}
+							}
+						}
+					}
+				}
+			}			
+		}
 	}
-
     return 0;
 }

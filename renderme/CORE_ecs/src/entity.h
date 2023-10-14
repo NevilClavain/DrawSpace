@@ -76,6 +76,11 @@ namespace renderMe
 				}
 			}
 
+			bool hasAspect(int p_aspect)
+			{
+				return (m_aspects.count(p_aspect) > 0);
+			}
+
 			ComponentContainer& aspectAccess(int p_aspect)
 			{			
 				if(0 == m_aspects.count(p_aspect))
