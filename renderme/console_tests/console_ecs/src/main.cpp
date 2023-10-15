@@ -28,6 +28,7 @@
 #include "entitygraph.h"
 #include "entity.h"
 #include "aspects.h"
+#include "system.h"
 
 using namespace renderMe;
 
@@ -122,46 +123,87 @@ int main( int argc, char* argv[] )
 			rendering_aspect.addComponent<bool>("fullscreen", false);
 			rendering_aspect.addComponent<int>("windowWidth", 800);
 			rendering_aspect.addComponent<int>("windowHeight", 600);
-			rendering_aspect.addComponent<bool>("initialized", false);
 		}
 
 		{
+			//////////////////////////////////////////////////////////
 
-			while (1)
+			constexpr int renderingExecutionSlot{ 0 };
+
+			class MyRenderingSystem : public core::System
 			{
-				// rendering system
+			public:
 
-				// root to leaf browsing
-				for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
+				MyRenderingSystem(core::Entitygraph& p_entitygraph) : System(p_entitygraph, renderingExecutionSlot)
 				{
-					const auto current_entity{ it->data() };
-					const auto currId{ current_entity->getId() };
+				}
+				~MyRenderingSystem() = default;
 
-					if (current_entity->hasAspect(core::renderingAspect::id))
+				void run()
+				{
+
+					// root to leaf browsing
+					for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
 					{
-						const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
+						
+						const auto current_entity{ it->data() };
+						const auto currId{ current_entity->getId() };
 
-						auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
-						if (rendering_target_comp)
+						if (current_entity->hasAspect(core::renderingAspect::id))
 						{
-							auto& rendering_target{ rendering_target_comp->getPurpose() };
+							const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
 
-							if (core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target)
+							auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+							if (rendering_target_comp)
 							{
-								//std::cout << "found a WINDOW_TARGET\n";
+								auto& rendering_target{ rendering_target_comp->getPurpose() };
 
-								auto& initialized{ rendering_aspect.getComponent<bool>("initialized")->getPurpose() };
-
-								if (!initialized)
+								if (core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target)
 								{
-									std::cout << "initializing rendering...\n";
-									initialized = true;
+									//std::cout << "found a WINDOW_TARGET\n";
+
+									if (!m_initialized)
+									{
+										std::cout << "initializing rendering...\n";
+
+										// do initialization stuff here...
+
+										m_initialized = true;
+									}
 								}
 							}
-						}
+						}						
 					}
 				}
-			}			
+
+			private:
+				bool	m_initialized{ false };
+			};
+
+			MyRenderingSystem myRenderingSystem(eg);
+
+			//////////////////////////////////////////////////////////
+
+			// systems management...
+
+			std::map<int, core::System*> systems;
+
+			const auto place{ systems.emplace(myRenderingSystem.getExecutionSlot(), &myRenderingSystem) };
+
+			if (!place.second) {
+				_EXCEPTION("system already registered for this slot : " + std::to_string(myRenderingSystem.getExecutionSlot()))
+			}
+			
+			while (1)
+			{
+				for (auto system : systems)
+				{
+					system.second->run();
+				}
+			}
+
+			//////////////////////////////////////////////////////////
+
 		}
 	}
     return 0;
