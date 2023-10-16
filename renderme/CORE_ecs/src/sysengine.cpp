@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,22 +22,4 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
-
-namespace renderMe
-{
-	namespace core
-	{
-		namespace renderingAspect
-		{
-			static constexpr int id{ 0x0001 };
-
-			enum class renderingTarget
-			{
-				WINDOW_TARGET,
-				BUFFER_TARGET
-			};
-		}
-
-	}
-}
+#include "sysengine.h"

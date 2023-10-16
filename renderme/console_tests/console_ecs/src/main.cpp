@@ -29,6 +29,7 @@
 #include "entity.h"
 #include "aspects.h"
 #include "system.h"
+#include "sysengine.h"
 
 using namespace renderMe;
 
@@ -128,13 +129,13 @@ int main( int argc, char* argv[] )
 		{
 			//////////////////////////////////////////////////////////
 
-			constexpr int renderingExecutionSlot{ 0 };
+			constexpr int myRenderingSystemExecutionSlot{ 0 };
 
 			class MyRenderingSystem : public core::System
 			{
 			public:
 
-				MyRenderingSystem(core::Entitygraph& p_entitygraph) : System(p_entitygraph, renderingExecutionSlot)
+				MyRenderingSystem(core::Entitygraph& p_entitygraph) : System(p_entitygraph, myRenderingSystemExecutionSlot)
 				{
 				}
 				~MyRenderingSystem() = default;
@@ -186,21 +187,15 @@ int main( int argc, char* argv[] )
 
 			// systems management...
 
-			std::map<int, core::System*> systems;
-
-			const auto place{ systems.emplace(myRenderingSystem.getExecutionSlot(), &myRenderingSystem) };
-
-			if (!place.second) {
-				_EXCEPTION("system already registered for this slot : " + std::to_string(myRenderingSystem.getExecutionSlot()))
-			}
+			auto sysEngine{ core::SystemEngine::getInstance() };
+			sysEngine->add(myRenderingSystem);
 			
 			while (1)
 			{
-				for (auto system : systems)
-				{
-					system.second->run();
-				}
+				sysEngine->run();
 			}
+			
+
 
 			//////////////////////////////////////////////////////////
 

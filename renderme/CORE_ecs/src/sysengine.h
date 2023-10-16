@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -25,20 +24,48 @@
 
 #pragma once
 
+#include <map>
+
+#include "eventsource.h"
+#include "singleton.h"
+#include "system.h"
+#include "exceptions.h"
+
 namespace renderMe
 {
 	namespace core
 	{
-		namespace renderingAspect
+
+		enum class SystemEngineEvents
 		{
-			static constexpr int id{ 0x0001 };
+		};
 
-			enum class renderingTarget
+		//singleton and events source
+		class SystemEngine : public property::EventSource<SystemEngineEvents, const System&>, public property::Singleton<SystemEngine>
+		{
+		public:
+			SystemEngine() = default;
+			~SystemEngine() = default;
+
+			void add(core::System& p_system)
 			{
-				WINDOW_TARGET,
-				BUFFER_TARGET
-			};
-		}
+				const auto place{ m_systems.emplace(p_system.getExecutionSlot(), p_system) };
 
+				if (!place.second) {
+					_EXCEPTION("system already registered for this slot : " + std::to_string(p_system.getExecutionSlot()))
+				}
+			}
+
+			void run()
+			{
+				for (auto& system : m_systems)
+				{
+					system.second.run();
+				}
+			}
+
+		private:
+			std::map<int, core::System&> m_systems;
+		};
 	}
 }
