@@ -25,6 +25,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 
 #include "eventsource.h"
 #include "singleton.h"
@@ -35,9 +36,9 @@ namespace renderMe
 {
 	namespace core
 	{
-
 		enum class SystemEngineEvents
 		{
+			SYSTEM_ADDED,
 		};
 
 		//singleton and events source
@@ -47,25 +48,29 @@ namespace renderMe
 			SystemEngine() = default;
 			~SystemEngine() = default;
 
-			void add(core::System& p_system)
-			{
-				const auto place{ m_systems.emplace(p_system.getExecutionSlot(), p_system) };
-
-				if (!place.second) {
-					_EXCEPTION("system already registered for this slot : " + std::to_string(p_system.getExecutionSlot()))
-				}
-			}
-
-			void run()
-			{
-				for (auto& system : m_systems)
-				{
-					system.second.run();
-				}
-			}
+			template<typename T, class... Args>
+			void makeSystem(int p_executionslot, Args&&... p_args);
+			
+			void run();
 
 		private:
-			std::map<int, core::System&> m_systems;
+			std::map<int, std::unique_ptr<core::System>> m_systems;
 		};
+
+
+		template<typename T, class... Args>
+		inline void SystemEngine::makeSystem(int p_executionslot, Args&&... p_args)
+		{
+			const auto place{ m_systems.emplace(p_executionslot, std::make_unique<T>((std::forward<Args>(p_args))...)) };
+
+			if (!place.second) {
+				_EXCEPTION("system already registered for this slot : " + std::to_string(p_executionslot))
+			}
+
+			for (const auto& call : m_callbacks)
+			{
+				call(SystemEngineEvents::SYSTEM_ADDED, *m_systems.at(p_executionslot).get());
+			}
+		}
 	}
 }

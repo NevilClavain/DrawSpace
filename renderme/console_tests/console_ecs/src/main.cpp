@@ -135,7 +135,7 @@ int main( int argc, char* argv[] )
 			{
 			public:
 
-				MyRenderingSystem(core::Entitygraph& p_entitygraph) : System(p_entitygraph, myRenderingSystemExecutionSlot)
+				MyRenderingSystem(core::Entitygraph& p_entitygraph) : System(p_entitygraph)
 				{
 				}
 				~MyRenderingSystem() = default;
@@ -188,17 +188,14 @@ int main( int argc, char* argv[] )
 			// systems management...
 
 			auto sysEngine{ core::SystemEngine::getInstance() };
-			sysEngine->add(myRenderingSystem);
+			sysEngine->makeSystem<MyRenderingSystem>(myRenderingSystemExecutionSlot, eg);
 			
 			while (1)
 			{
 				sysEngine->run();
 			}
 			
-
-
 			//////////////////////////////////////////////////////////
-
 		}
 	}
     return 0;

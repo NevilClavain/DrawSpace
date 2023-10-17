@@ -27,13 +27,7 @@
 
 using namespace renderMe::core;
 
-System::System(Entitygraph& p_entitygraph, int p_executionSlot) :
-m_entitygraph(p_entitygraph),
-m_executionSlot(p_executionSlot)
+System::System(Entitygraph& p_entitygraph) :
+m_entitygraph(p_entitygraph)
 {
-}
-
-int System::getExecutionSlot() const
-{
-	return m_executionSlot;
 }

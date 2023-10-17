@@ -23,3 +23,13 @@
 /* -*-LIC_END-*- */
 
 #include "sysengine.h"
+
+using namespace renderMe::core;
+
+void SystemEngine::run()
+{
+	for (auto& system : m_systems)
+	{
+		system.second.get()->run();
+	}
+}

@@ -36,19 +36,13 @@ namespace renderMe
 		{
 		public:
 
-			System(Entitygraph& p_entitygraph, int p_executionSlot);
+			System(Entitygraph& p_entitygraph);
 			~System() = default;
 
 			virtual void run() = 0;
-
-			int getExecutionSlot() const;
 		
 		protected:
 			Entitygraph&	m_entitygraph;
-
-		private:
-			const int		m_executionSlot{ 0 };
-
 		};
 	}
 }
