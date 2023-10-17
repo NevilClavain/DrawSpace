@@ -32,6 +32,11 @@
 
 namespace renderMe
 {
+    namespace core
+    {
+        class Entitygraph;
+    }
+
     namespace interfaces
     {
         enum class ModuleEvents
@@ -44,20 +49,22 @@ namespace renderMe
         class ModuleRoot : public property::EventSource<ModuleEvents, int>
         {
         public:
-            virtual std::string     getModuleName() const = 0;
-            virtual std::string     getModuleDescr() const = 0;
+            virtual std::string             getModuleName() const = 0;
+            virtual std::string             getModuleDescr() const = 0;
 
-            virtual void            onKeyPress(long p_key) = 0;
-            virtual void            onEndKeyPress(long p_key) = 0;
-            virtual void            onKeyPulse(long p_key) = 0;
-            virtual void            onChar(long p_char, long p_scan) = 0;
-            virtual void            onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy) = 0;
-            virtual void            onMouseWheel(long p_delta) = 0;
-            virtual void            onMouseLeftButtonDown(long p_xm, long p_ym) = 0;
-            virtual void            onMouseLeftButtonUp(long p_xm, long p_ym) = 0;
-            virtual void            onMouseRightButtonDown(long p_xm, long p_ym) = 0;
-            virtual void            onMouseRightButtonUp(long p_xm, long p_ym) = 0;
-            virtual void            onAppEvent(WPARAM p_wParam, LPARAM p_lParam) = 0;
+            virtual core::Entitygraph*      entitygraph() = 0;
+
+            virtual void                    onKeyPress(long p_key) = 0;
+            virtual void                    onEndKeyPress(long p_key) = 0;
+            virtual void                    onKeyPulse(long p_key) = 0;
+            virtual void                    onChar(long p_char, long p_scan) = 0;
+            virtual void                    onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy) = 0;
+            virtual void                    onMouseWheel(long p_delta) = 0;
+            virtual void                    onMouseLeftButtonDown(long p_xm, long p_ym) = 0;
+            virtual void                    onMouseLeftButtonUp(long p_xm, long p_ym) = 0;
+            virtual void                    onMouseRightButtonDown(long p_xm, long p_ym) = 0;
+            virtual void                    onMouseRightButtonUp(long p_xm, long p_ym) = 0;
+            virtual void                    onAppEvent(WPARAM p_wParam, LPARAM p_lParam) = 0;
 
         };
     }

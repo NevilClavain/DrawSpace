@@ -31,6 +31,10 @@
 #include "logconf.h"
 #include "logging.h"
 
+#include "entitygraph.h"
+#include "entity.h"
+#include "aspects.h"
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -174,7 +178,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             m_w_height = fsh;
 
             _RENDERME_DEBUG(localLogger, std::string("Fullscreen mode : CreateWindowExA ") << fsw << std::string(" x ") << fsh)
-            m_hwnd = CreateWindowExA(WS_EX_TOPMOST, wc.lpszClassName, "", WS_POPUP, 0, 0, fsw, fsh, NULL, NULL, p_hInstance, NULL);
+            m_hwnd = CreateWindowExA(WS_EX_TOPMOST, wc.lpszClassName, "", WS_POPUP, 0, 0, fsw, fsh, nullptr, nullptr, p_hInstance, nullptr);
         }
         else
         {
@@ -182,7 +186,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             _RENDERME_DEBUG(localLogger, std::string("Windowed mode : CreateWindowA ") << m_w_width << std::string(" x ") << m_w_height)
 
             static const std::string wTitle{ "renderMe" };
-            m_hwnd = CreateWindowA(wc.lpszClassName, (LPCSTR)wTitle.c_str(), WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZE, CW_USEDEFAULT, CW_USEDEFAULT, m_w_width, m_w_height, NULL, NULL, p_hInstance, NULL);
+            m_hwnd = CreateWindowA(wc.lpszClassName, (LPCSTR)wTitle.c_str(), WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZE, CW_USEDEFAULT, CW_USEDEFAULT, m_w_width, m_w_height, nullptr, nullptr, p_hInstance, nullptr);
         }
 
         if (!m_hwnd)
@@ -196,6 +200,29 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             UpdateWindow(m_hwnd);
 
             m_app_ready = true;
+
+            /// add root node to module entity graph : window rendering target infos
+
+            auto entitygraph{ m_module_root->entitygraph() };
+
+            if (entitygraph)
+            {
+                auto& root_window_node{ entitygraph->makeRoot("appwindow") };
+
+                const auto root_window_entity{ root_window_node.data() };
+                root_window_entity->makeAspect(core::renderingAspect::id);
+
+                auto& rendering_aspect{ root_window_entity->aspectAccess(core::renderingAspect::id) };
+
+                rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::WINDOW_TARGET);
+                rendering_aspect.addComponent<bool>("fullscreen", m_w_fullscreen);
+                rendering_aspect.addComponent<int>("windowWidth", m_w_width);
+                rendering_aspect.addComponent<int>("windowHeight", m_w_height);
+            }
+            else
+            {
+                _RENDERME_WARN(localLogger, "no entity graph in attached module")
+            }
         }
     }
 }
@@ -362,7 +389,7 @@ void App::loop(void)
         MSG	msg;
         while (1)
         {
-            if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+            if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
             {
                 if (WM_QUIT == msg.message)
                 {

@@ -24,6 +24,8 @@
 
 #include "rootimpl.h"
 
+using namespace renderMe::core;
+
 std::string RootImpl::getModuleName() const
 {
 	return "Hello World";
@@ -35,6 +37,10 @@ std::string RootImpl::getModuleDescr() const
 	return "Hello World module example";
 }
 
+renderMe::core::Entitygraph* RootImpl::entitygraph()
+{
+	return &m_entitygraph;
+}
 
 void RootImpl::onKeyPress(long p_key)
 {

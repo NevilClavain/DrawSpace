@@ -26,6 +26,8 @@
 #pragma once
 
 #include "module_root.h"
+#include "entity.h"
+#include "entitygraph.h"
 
 class RootImpl : public renderMe::interfaces::ModuleRoot
 {
@@ -38,20 +40,22 @@ public:
     RootImpl& operator=(const RootImpl& t) = delete;
 
 
-    std::string     getModuleName() const;
-    std::string     getModuleDescr() const;
+    std::string                     getModuleName() const;
+    std::string                     getModuleDescr() const;
 
-    void            onKeyPress(long p_key);
-    void            onEndKeyPress(long p_key);
-    void            onKeyPulse(long p_key);
-    void            onChar(long p_char, long p_scan);
-    void            onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy);
-    void            onMouseWheel(long p_delta);
-    void            onMouseLeftButtonDown(long p_xm, long p_ym);
-    void            onMouseLeftButtonUp(long p_xm, long p_ym);
-    void            onMouseRightButtonDown(long p_xm, long p_ym);
-    void            onMouseRightButtonUp(long p_xm, long p_ym);
-    void            onAppEvent(WPARAM p_wParam, LPARAM p_lParam);
+    renderMe::core::Entitygraph*    entitygraph();
+
+    void                            onKeyPress(long p_key);
+    void                            onEndKeyPress(long p_key);
+    void                            onKeyPulse(long p_key);
+    void                            onChar(long p_char, long p_scan);
+    void                            onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy);
+    void                            onMouseWheel(long p_delta);
+    void                            onMouseLeftButtonDown(long p_xm, long p_ym);
+    void                            onMouseLeftButtonUp(long p_xm, long p_ym);
+    void                            onMouseRightButtonDown(long p_xm, long p_ym);
+    void                            onMouseRightButtonUp(long p_xm, long p_ym);
+    void                            onAppEvent(WPARAM p_wParam, LPARAM p_lParam);
 
     //override
     void registerSubscriber(const Callback& p_callback);
@@ -59,8 +63,10 @@ public:
 
 private:
 
-    bool           m_show_mouse_cursor{ true };
-    bool           m_mouse_circular_mode{ false };
+    bool                            m_show_mouse_cursor{ true };
+    bool                            m_mouse_circular_mode{ false };
+
+    renderMe::core::Entitygraph     m_entitygraph;
 
 };
 

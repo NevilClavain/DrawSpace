@@ -25,9 +25,10 @@ project(module_helloworld)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
-# include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
-# include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 
+include_directories(${st_tree_include_dir})
 
 
 file(
