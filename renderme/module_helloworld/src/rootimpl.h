@@ -60,8 +60,7 @@ public:
     void                            run(void);
 
     //override
-    void registerSubscriber(const Callback& p_callback);
-
+    void                            registerSubscriber(const Callback& p_callback);
 
 private:
 
@@ -69,6 +68,7 @@ private:
     bool                            m_mouse_circular_mode{ false };
 
     renderMe::core::Entitygraph     m_entitygraph;
+
 
 };
 
