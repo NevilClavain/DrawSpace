@@ -57,6 +57,8 @@ public:
     void                            onMouseRightButtonUp(long p_xm, long p_ym);
     void                            onAppEvent(WPARAM p_wParam, LPARAM p_lParam);
 
+    void                            run(void);
+
     //override
     void registerSubscriber(const Callback& p_callback);
 

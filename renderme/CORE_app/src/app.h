@@ -44,8 +44,6 @@ namespace renderMe
 
             void init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, renderMe::interfaces::ModuleRoot* p_root);
             void loop(void);
-            bool initRenderer(void);
-            void stopRenderer(void);
 
         private:
 

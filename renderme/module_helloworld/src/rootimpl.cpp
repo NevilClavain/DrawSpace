@@ -125,6 +125,12 @@ void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
 }
 
+
+void RootImpl::run(void)
+{
+
+}
+
 void RootImpl::registerSubscriber(const Callback& p_callback)
 {
 	renderMe::property::EventSource<renderMe::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);

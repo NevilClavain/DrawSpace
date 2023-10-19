@@ -418,18 +418,13 @@ void App::loop(void)
     }
 }
 
-bool App::initRenderer(void)
-{
-	return true;
-}
-
-void App::stopRenderer(void)
-{
-
-}
 
 void App::onRenderFrame(void)
 {
+    if (m_module_root)
+    {
+        m_module_root->run();
+    }
 }
 
 
