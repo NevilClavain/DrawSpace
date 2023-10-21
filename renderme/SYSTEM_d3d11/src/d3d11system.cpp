@@ -25,19 +25,11 @@
 
 #pragma warning( disable : 4005 4838 )
 
-/*
-#include <d3d11.h>
-#include <d3dx11.h>
-#include <xnamath.h>
-#include <dxgiformat.h>
-*/
-
 #include "d3d11system.h"
 
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
-
 
 #include "aspects.h"
 #include "entity.h"

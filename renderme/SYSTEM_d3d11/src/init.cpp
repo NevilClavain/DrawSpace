@@ -40,10 +40,7 @@
 #include "entity.h"
 
 
-
-
 using namespace renderMe::core;
-
 
 static renderMe::core::logger::Sink localLogger("D3D11Init", renderMe::core::logger::Configuration::getInstance());
 
