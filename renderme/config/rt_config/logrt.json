@@ -11,8 +11,8 @@
 	"loggers" : 
 	[
 		{		
-			"source" : "rt",
-			"level" : "TRACE",
+			"source" : "App",
+			"level" : "DEBUG",
 			"state" : "on",
 			"output" : "file0"	
 		}
