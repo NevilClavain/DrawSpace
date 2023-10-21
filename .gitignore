@@ -269,6 +269,10 @@ ALL_BUILD.vcxproj*
 /renderme/CORE_module/*.vcxproj*
 
 
+/renderme/SYSTEM_d3d11/CMakeFiles/
+/renderme/SYSTEM_d3d11/*.sln
+/renderme/SYSTEM_d3d11/*.vcxproj*
+
 ################## renderME - ##########################################
 
 

@@ -21,14 +21,12 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(module_helloworld)
+project(SYSTEM_d3d11)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
-
-include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src)
 
 include_directories(${st_tree_include_dir})
 
@@ -36,21 +34,13 @@ include_directories(${st_tree_include_dir})
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/module_helloworld/src/*.h
-        ${CMAKE_SOURCE_DIR}/module_helloworld/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src/*.h
+        ${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src/*.cpp		
 )
 
+add_definitions( -D_FROMCMAKE )
 
-add_library(module_helloworld SHARED ${source_files})
-target_link_libraries(module_helloworld CORE_module CORE_ecs CORE_allocator SYSTEM_d3d11)
-
-install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS module_helloworld CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
-
-
-
+add_library(SYSTEM_d3d11 ${source_files})
 
 
 

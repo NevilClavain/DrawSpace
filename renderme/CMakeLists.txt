@@ -68,6 +68,8 @@ add_subdirectory(CORE_app)
 add_subdirectory(CORE_ecs)
 add_subdirectory(CORE_module)
 
+add_subdirectory(SYSTEM_d3d11)
+
 add_subdirectory(rt)
 
 add_subdirectory(console_tests/console_helloworld)

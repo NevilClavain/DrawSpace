@@ -23,7 +23,11 @@
 /* -*-LIC_END-*- */
 
 #include "rootimpl.h"
+#include "sysengine.h"
 
+#include "d3d11system.h"
+
+using namespace renderMe;
 using namespace renderMe::core;
 
 std::string RootImpl::getModuleName() const
@@ -125,10 +129,16 @@ void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
 }
 
+void RootImpl::init(void)
+{
+	auto sysEngine{ SystemEngine::getInstance() };
+	sysEngine->makeSystem<system::D3D11>(system::d3d11ExecutionSlot, m_entitygraph);
+}
 
 void RootImpl::run(void)
 {
-
+	auto sysEngine{ SystemEngine::getInstance() };
+	sysEngine->run();
 }
 
 void RootImpl::registerSubscriber(const Callback& p_callback)
