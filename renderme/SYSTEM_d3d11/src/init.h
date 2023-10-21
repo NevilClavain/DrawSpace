@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,26 +23,14 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "system.h"
 
 namespace renderMe
-{   
+{
+    // fwd decl
+    namespace core { class Entity; }
+
     namespace system
     {
-        constexpr int d3d11ExecutionSlot{ 0 };
-        
-        class D3D11 : public core::System
-        {
-        public:
-
-            D3D11(core::Entitygraph& p_entitygraph);
-            ~D3D11() = default;
-
-            void run();
-
-        private:
-            bool	m_initialized{ false };
-
-        };
+        void    d3dInit(core::Entity* p_mainWindow);
     }
 }

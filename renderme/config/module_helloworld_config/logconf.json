@@ -11,7 +11,7 @@
 	"loggers" : 
 	[
 		{		
-			"source" : "D3D11",
+			"source" : "D3D11Init",
 			"level" : "DEBUG",
 			"state" : "on",
 			"output" : "file0"	
