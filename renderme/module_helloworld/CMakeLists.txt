@@ -36,6 +36,7 @@ include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})
 
 link_directories(${jsonjsmn_lib_dir})
+link_directories(${dx11sdk_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -47,7 +48,7 @@ file(
 
 
 add_library(module_helloworld SHARED ${source_files})
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator SYSTEM_d3d11 jsmn)
+target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator SYSTEM_d3d11 jsmn d3d11 d3dx11 dxgi)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

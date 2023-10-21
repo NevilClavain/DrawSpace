@@ -25,10 +25,18 @@
 
 #pragma once
 
+
 #include "system.h"
 
 namespace renderMe
 {
+    // fwd proj
+    namespace core
+    {
+        class Entity;
+    }
+    
+
     namespace system
     {
         constexpr int d3d11ExecutionSlot{ 0 };
@@ -45,8 +53,7 @@ namespace renderMe
         private:
             bool	m_initialized{ false };
 
-            void    initD3D();
-
+            void    initD3D(core::Entity* p_mainWindow);
         };
     }
 }
