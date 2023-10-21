@@ -1,0 +1,20 @@
+{ 
+	"outputs" :
+	[
+		{
+			"type" : "file",
+			"id" : "file0",
+			"path" : "helloworld_logs.out"
+		}
+	],
+	
+	"loggers" : 
+	[
+		{		
+			"source" : "D3D11",
+			"level" : "DEBUG",
+			"state" : "on",
+			"output" : "file0"	
+		}
+	]
+}

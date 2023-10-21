@@ -27,6 +27,10 @@
 
 #include "d3d11system.h"
 
+#include "filesystem.h"
+#include "logconf.h"
+
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -131,6 +135,27 @@ void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 
 void RootImpl::init(void)
 {
+	// logging conf
+
+	renderMe::core::FileContent<char> logConfFileContent("./module_helloworld_config/logconf.json");
+	logConfFileContent.load();
+
+	const auto dataSize{ logConfFileContent.getDataSize() };
+	const std::string data(logConfFileContent.getData(), dataSize);
+
+	// set static to spare some space on stack // compiler message
+	static renderMe::core::Json jsonParser;
+	jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
+
+	const auto logParseStatus{ jsonParser.parse(data) };
+
+	if (logParseStatus < 0)
+	{
+		_EXCEPTION("Cannot parse logging configuration")
+	}
+
+	// systems
+
 	auto sysEngine{ SystemEngine::getInstance() };
 	sysEngine->makeSystem<system::D3D11>(system::d3d11ExecutionSlot, m_entitygraph);
 }

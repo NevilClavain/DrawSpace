@@ -24,12 +24,20 @@
 /* -*-LIC_END-*- */
 
 #include "d3d11system.h"
+
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
+
+
 #include "aspects.h"
 #include "entity.h"
 #include "entitygraph.h"
 
 using namespace renderMe::core;
 using namespace renderMe::system;
+
+static renderMe::core::logger::Sink localLogger("D3D11", renderMe::core::logger::Configuration::getInstance());
 
 D3D11::D3D11(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
@@ -67,5 +75,6 @@ void D3D11::run()
 
 void D3D11::initD3D()
 {
+	_RENDERME_DEBUG(localLogger, std::string("initD3D"))
 }
 

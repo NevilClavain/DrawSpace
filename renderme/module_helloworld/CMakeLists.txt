@@ -24,14 +24,18 @@ cmake_minimum_required(VERSION 3.0)
 project(module_helloworld)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
-
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src)
 
 include_directories(${st_tree_include_dir})
+include_directories(${jsonjsmn_include_dir})
 
+link_directories(${jsonjsmn_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -43,11 +47,13 @@ file(
 
 
 add_library(module_helloworld SHARED ${source_files})
-target_link_libraries(module_helloworld CORE_module CORE_ecs CORE_allocator SYSTEM_d3d11)
+target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator SYSTEM_d3d11 jsmn)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS module_helloworld CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/module_helloworld_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 
 
