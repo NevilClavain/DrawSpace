@@ -218,6 +218,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
                 rendering_aspect.addComponent<bool>("fullscreen", m_w_fullscreen);
                 rendering_aspect.addComponent<int>("windowWidth", m_w_width);
                 rendering_aspect.addComponent<int>("windowHeight", m_w_height);
+                rendering_aspect.addComponent<HWND>("windowHWND", m_hwnd);
 
                 //////////////////////////
 

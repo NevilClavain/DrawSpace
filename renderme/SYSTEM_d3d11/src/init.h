@@ -31,6 +31,7 @@ namespace renderMe
 
     namespace system
     {
+
         void    d3dInit(core::Entity* p_mainWindow);
     }
 }

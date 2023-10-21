@@ -72,7 +72,13 @@ void renderMe::system::d3dInit(Entity* p_mainWindow)
 	ZeroMemory(&swap_chain, sizeof(swap_chain));
 
 	//get main windows infos
-	const auto& rendering_aspect{ p_mainWindow->aspectAccess(renderingAspect::id) };
+	auto& rendering_aspect{ p_mainWindow->aspectAccess(renderingAspect::id) };
+
+	int characteristics_width_resol{ 0 };
+	int characteristics_height_resol{ 0 };
+	float characteristics_v_width, characteristics_v_height;
+
+	const auto windowHWND{ rendering_aspect.getComponent<HWND>("windowHWND")->getPurpose() };
 
 	const auto fullscreen{ rendering_aspect.getComponent<bool>("fullscreen")->getPurpose() };
 	if (fullscreen)
@@ -85,13 +91,59 @@ void renderMe::system::d3dInit(Entity* p_mainWindow)
 
 		fullscreen_autoset_desktop_resolution(fullscreen_width, fullscreen_height, fullscreen_format, fullscreen_refresh_rate_num, fullscreen_refresh_rate_den);
 
+		characteristics_width_resol = fullscreen_width;
+		characteristics_height_resol = fullscreen_height;
 
+		characteristics_v_width = 1.0;
+		characteristics_v_height = characteristics_v_width * fullscreen_height / fullscreen_width;
 
 		_RENDERME_TRACE(localLogger, std::string("full screen resol : ") + std::to_string(fullscreen_width) + "x" + std::to_string(fullscreen_height))
+
+		swap_chain.BufferDesc.Format = fullscreen_format;
+		swap_chain.BufferDesc.RefreshRate.Numerator = fullscreen_refresh_rate_num;
+		swap_chain.BufferDesc.RefreshRate.Denominator = fullscreen_refresh_rate_den;
+
+		swap_chain.Windowed = FALSE;
 	}
 	else
 	{
-		const auto windowwidth{ rendering_aspect.getComponent<int>("windowWidth")->getPurpose() };
-		const auto windowheight{ rendering_aspect.getComponent<int>("windowHeight")->getPurpose() };
+		RECT rect;
+		GetClientRect(windowHWND, &rect);
+
+		characteristics_width_resol = rect.right - rect.left;
+		characteristics_height_resol = rect.bottom - rect.top;
+		
+		characteristics_v_width = 1.0;
+		characteristics_v_height = characteristics_v_width * characteristics_height_resol / characteristics_width_resol;
+
+		swap_chain.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swap_chain.BufferDesc.RefreshRate.Numerator = 60;
+		swap_chain.BufferDesc.RefreshRate.Denominator = 1;	
+
+		swap_chain.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		swap_chain.Windowed = TRUE;
 	}
+
+
+	_RENDERME_TRACE(localLogger, std::string("renderer characteristics : width_resol = ") + std::to_string(characteristics_width_resol) +
+									std::string(" height_resol = ") + std::to_string(characteristics_height_resol) +
+									std::string(" v_width = ") + std::to_string(characteristics_v_width) +
+									std::string(" v_height = ") + std::to_string(characteristics_v_height))
+
+
+	// complete main window entity with renderer characteristics
+	rendering_aspect.addComponent<int>("widthResol", characteristics_width_resol);
+	rendering_aspect.addComponent<int>("heightResol", characteristics_width_resol);
+	rendering_aspect.addComponent<float>("viewportWidth", characteristics_v_width);
+	rendering_aspect.addComponent<float>("viewporHeight", characteristics_v_height);
+
+
+	swap_chain.BufferDesc.Width = characteristics_width_resol;
+	swap_chain.BufferDesc.Height = characteristics_height_resol;
+	swap_chain.BufferCount = 1;
+	swap_chain.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swap_chain.OutputWindow = windowHWND;
+	swap_chain.SampleDesc.Count = 1; // de 1 a 4 en D3D11
+	swap_chain.SampleDesc.Quality = 0; // en low quality
+
 }
