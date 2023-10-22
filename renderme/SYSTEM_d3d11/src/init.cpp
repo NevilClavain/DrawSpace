@@ -78,15 +78,15 @@ bool renderMe::system::d3dInit(Entity* p_mainWindow)
 	ZeroMemory(&swap_chain, sizeof(swap_chain));
 
 	//get main windows infos
-	auto& rendering_aspect{ p_mainWindow->aspectAccess(renderingAspect::id) };
+	auto& mainwindows_rendering_aspect{ p_mainWindow->aspectAccess(renderingAspect::id) };
 
 	int characteristics_width_resol{ 0 };
 	int characteristics_height_resol{ 0 };
 	float characteristics_v_width, characteristics_v_height;
 
-	const auto windowHWND{ rendering_aspect.getComponent<HWND>("windowHWND")->getPurpose() };
+	const auto windowHWND{ mainwindows_rendering_aspect.getComponent<HWND>("windowHWND")->getPurpose() };
 
-	const auto fullscreen{ rendering_aspect.getComponent<bool>("fullscreen")->getPurpose() };
+	const auto fullscreen{ mainwindows_rendering_aspect.getComponent<bool>("fullscreen")->getPurpose() };
 	if (fullscreen)
 	{
 		int         fullscreen_width;
@@ -138,10 +138,10 @@ bool renderMe::system::d3dInit(Entity* p_mainWindow)
 
 
 	// complete main window entity with renderer characteristics
-	rendering_aspect.addComponent<int>("widthResol", characteristics_width_resol);
-	rendering_aspect.addComponent<int>("heightResol", characteristics_width_resol);
-	rendering_aspect.addComponent<float>("viewportWidth", characteristics_v_width);
-	rendering_aspect.addComponent<float>("viewporHeight", characteristics_v_height);
+	mainwindows_rendering_aspect.addComponent<int>("widthResol", characteristics_width_resol);
+	mainwindows_rendering_aspect.addComponent<int>("heightResol", characteristics_width_resol);
+	mainwindows_rendering_aspect.addComponent<float>("viewportWidth", characteristics_v_width);
+	mainwindows_rendering_aspect.addComponent<float>("viewportHeight", characteristics_v_height);
 
 
 	swap_chain.BufferDesc.Width = characteristics_width_resol;
@@ -202,6 +202,8 @@ bool renderMe::system::d3dInit(Entity* p_mainWindow)
 
 	hRes = r;
 	D3D11_CHECK(D3D11CreateDeviceAndSwapChain)
+
+	mainwindows_rendering_aspect.addComponent<std::string>("d3d11DriverDescr", driver_descr);
 
 
 	return true;
