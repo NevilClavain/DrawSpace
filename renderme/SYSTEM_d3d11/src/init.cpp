@@ -26,10 +26,6 @@
 #pragma warning( disable : 4005 4838 26812 )
 
 #include <windows.h>
-#include <d3d11.h>
-#include <d3dx11.h>
-#include <xnamath.h>
-#include <dxgiformat.h>
 
 #include "init.h"
 #include "errors.h"
@@ -45,11 +41,12 @@
 
 
 using namespace renderMe::core;
+using namespace renderMe::d3d11;
 
 static renderMe::core::logger::Sink localLogger("D3D11Init", renderMe::core::logger::Configuration::getInstance());
 
 
-static renderMe::d3d11::helpers::D3D11Commons d3d11Commons;
+static renderMe::d3d11::helpers::D3D11Handles d3d11h;
 
 static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den)
 {
@@ -66,7 +63,7 @@ static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& 
 
 }
 
-bool renderMe::d3d11::helpers::init(Entity* p_mainWindow)
+bool helpers::init(Entity* p_mainWindow)
 {
 	DECLARE_D3D11ASSERT_VARS
 
@@ -208,10 +205,15 @@ bool renderMe::d3d11::helpers::init(Entity* p_mainWindow)
 
 	mainwindows_rendering_aspect.addComponent<std::string>("d3d11DriverDescr", driver_descr);
 
-	d3d11Commons.m_lpd3ddevcontext	= lpd3ddevcontext;
-	d3d11Commons.m_lpd3ddevice		= lpd3ddevice;
-	d3d11Commons.m_lpd3dswapchain	= lpd3dswapchain;
+	d3d11h.m_lpd3ddevcontext	= lpd3ddevcontext;
+	d3d11h.m_lpd3ddevice		= lpd3ddevice;
+	d3d11h.m_lpd3dswapchain	= lpd3dswapchain;
 
 
 	return true;
+}
+
+helpers::D3D11Handles helpers::getHandles()
+{
+	return d3d11h;
 }

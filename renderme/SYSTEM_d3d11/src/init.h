@@ -24,6 +24,13 @@
 
 #pragma once
 
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <xnamath.h>
+#include <dxgiformat.h>
+
+#include "d3d_defs.h"
+
 namespace renderMe
 {
     // fwd decl
@@ -33,7 +40,9 @@ namespace renderMe
     {
         namespace helpers
         {
-            bool    init(core::Entity* p_mainWindow);
+            bool            init(core::Entity* p_mainWindow);
+
+            D3D11Handles    getHandles();
         }        
     }
 }
