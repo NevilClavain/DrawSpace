@@ -48,6 +48,9 @@ using namespace renderMe::core;
 
 static renderMe::core::logger::Sink localLogger("D3D11Init", renderMe::core::logger::Configuration::getInstance());
 
+
+static renderMe::system::D3D11Commons d3d11Commons;
+
 static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den)
 {
 	bool found = false;
@@ -204,6 +207,10 @@ bool renderMe::system::d3dInit(Entity* p_mainWindow)
 	D3D11_CHECK(D3D11CreateDeviceAndSwapChain)
 
 	mainwindows_rendering_aspect.addComponent<std::string>("d3d11DriverDescr", driver_descr);
+
+	d3d11Commons.m_lpd3ddevcontext	= lpd3ddevcontext;
+	d3d11Commons.m_lpd3ddevice		= lpd3ddevice;
+	d3d11Commons.m_lpd3dswapchain	= lpd3dswapchain;
 
 
 	return true;

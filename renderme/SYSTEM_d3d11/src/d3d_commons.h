@@ -24,6 +24,8 @@
 
 #pragma once
 
+// for simplification, assuming no #include here : responsability of the includer
+
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
 
@@ -37,3 +39,16 @@
         _RENDERME_ERROR( localLogger, dstr.c_str() ); \
         return false; \
     }
+
+namespace renderMe
+{
+    namespace system
+    {
+        struct D3D11Commons
+        {
+            IDXGISwapChain*         m_lpd3dswapchain{ nullptr };
+            ID3D11Device*           m_lpd3ddevice{ nullptr };
+            ID3D11DeviceContext*    m_lpd3ddevcontext{ nullptr };
+        };
+    }
+}
