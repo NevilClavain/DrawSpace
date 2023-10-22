@@ -157,7 +157,7 @@ void RootImpl::init(void)
 	// systems
 
 	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->makeSystem<renderMe::D3D11>(renderMe::d3d11ExecutionSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::D3D11System>(renderMe::d3d11SystemExecutionSlot, m_entitygraph);
 }
 
 void RootImpl::run(void)

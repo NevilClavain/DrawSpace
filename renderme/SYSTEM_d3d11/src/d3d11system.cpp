@@ -44,11 +44,11 @@ using namespace renderMe;
 using namespace renderMe::core;
 
 
-D3D11::D3D11(Entitygraph& p_entitygraph) : System(p_entitygraph)
+D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
 }
 
-void D3D11::run()
+void D3D11System::run()
 {
 	for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
 	{
