@@ -28,7 +28,7 @@
 #include <unordered_map>
 #include <d3dx11.h>
 
-void translateD3DD11Error(HRESULT p_hRes, std::string& p_str)
+void renderMe::d3d11::helpers::translateD3DD11Error(HRESULT p_hRes, std::string& p_str)
 {
     static const std::unordered_map<HRESULT, std::string> translate =
     {

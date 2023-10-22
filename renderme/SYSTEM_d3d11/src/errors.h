@@ -27,4 +27,13 @@
 #include <string>
 #include <windows.h>
 
-void translateD3DD11Error(HRESULT p_hRes, std::string& p_str);
+namespace renderMe
+{
+    namespace d3d11
+    {
+        namespace helpers
+        {
+            void translateD3DD11Error(HRESULT p_hRes, std::string& p_str);
+        }
+    }
+}

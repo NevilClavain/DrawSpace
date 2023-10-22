@@ -32,7 +32,7 @@
 #define D3D11_CHECK( p_mName ) \
     if( hRes != S_OK ) \
     { \
-        translateD3DD11Error( hRes, d3dErrStr ); \
+        renderMe::d3d11::helpers::translateD3DD11Error( hRes, d3dErrStr ); \
         std::string dstr = " "#p_mName" -> "; \
         dstr += d3dErrStr; \
         dstr += "\n"; \
@@ -46,9 +46,9 @@ namespace renderMe
     {
         struct D3D11Commons
         {
-            IDXGISwapChain*         m_lpd3dswapchain{ nullptr };
-            ID3D11Device*           m_lpd3ddevice{ nullptr };
-            ID3D11DeviceContext*    m_lpd3ddevcontext{ nullptr };
+            IDXGISwapChain*         m_lpd3dswapchain    { nullptr };
+            ID3D11Device*           m_lpd3ddevice       { nullptr };
+            ID3D11DeviceContext*    m_lpd3ddevcontext   { nullptr };
         };
     }
 }
