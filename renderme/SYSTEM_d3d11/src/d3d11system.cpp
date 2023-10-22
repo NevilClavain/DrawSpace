@@ -39,8 +39,9 @@
 
 #include "exceptions.h"
 
+
+using namespace renderMe;
 using namespace renderMe::core;
-using namespace renderMe::system;
 
 
 D3D11::D3D11(Entitygraph& p_entitygraph) : System(p_entitygraph)
@@ -67,7 +68,7 @@ void D3D11::run()
 				{					
 					if (!m_initialized)
 					{						
-						if (d3dInit(current_entity))
+						if (renderMe::d3d11::helpers::init(current_entity))
 						{
 							m_initialized = true;
 						}

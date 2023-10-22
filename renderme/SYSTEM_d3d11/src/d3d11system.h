@@ -28,8 +28,6 @@
 
 namespace renderMe
 {   
-    namespace system
-    {
         constexpr int d3d11ExecutionSlot{ 0 };
         
         class D3D11 : public core::System
@@ -46,5 +44,5 @@ namespace renderMe
 
 
         };
-    }
+
 }

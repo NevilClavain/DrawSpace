@@ -66,7 +66,7 @@ static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& 
 
 }
 
-bool renderMe::system::d3dInit(Entity* p_mainWindow)
+bool renderMe::d3d11::helpers::init(Entity* p_mainWindow)
 {
 	DECLARE_D3D11ASSERT_VARS
 

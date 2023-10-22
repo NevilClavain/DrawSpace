@@ -29,8 +29,11 @@ namespace renderMe
     // fwd decl
     namespace core { class Entity; }
 
-    namespace system
+    namespace d3d11
     {
-        bool    d3dInit(core::Entity* p_mainWindow);
+        namespace helpers
+        {
+            bool    init(core::Entity* p_mainWindow);
+        }        
     }
 }
