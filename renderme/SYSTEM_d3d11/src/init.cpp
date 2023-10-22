@@ -33,7 +33,7 @@
 
 #include "init.h"
 #include "errors.h"
-#include "d3d_commons.h"
+#include "d3d_defs.h"
 
 
 #include "logsink.h"
