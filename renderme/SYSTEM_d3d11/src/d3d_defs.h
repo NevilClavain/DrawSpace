@@ -42,13 +42,16 @@
 
 namespace renderMe
 {
-    namespace system
+    namespace d3d11
     {
-        struct D3D11Commons
+        namespace helpers
         {
-            IDXGISwapChain*         m_lpd3dswapchain    { nullptr };
-            ID3D11Device*           m_lpd3ddevice       { nullptr };
-            ID3D11DeviceContext*    m_lpd3ddevcontext   { nullptr };
-        };
+            struct D3D11Commons
+            {
+                IDXGISwapChain*         m_lpd3dswapchain{ nullptr };
+                ID3D11Device*           m_lpd3ddevice{ nullptr };
+                ID3D11DeviceContext*    m_lpd3ddevcontext{ nullptr };
+            };
+        }
     }
 }

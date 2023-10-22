@@ -49,7 +49,7 @@ using namespace renderMe::core;
 static renderMe::core::logger::Sink localLogger("D3D11Init", renderMe::core::logger::Configuration::getInstance());
 
 
-static renderMe::system::D3D11Commons d3d11Commons;
+static renderMe::d3d11::helpers::D3D11Commons d3d11Commons;
 
 static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den)
 {
