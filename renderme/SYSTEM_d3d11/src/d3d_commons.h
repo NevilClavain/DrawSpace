@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,27 +23,17 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "system.h"
 
-namespace renderMe
-{   
-    namespace system
-    {
-        constexpr int d3d11ExecutionSlot{ 0 };
-        
-        class D3D11 : public core::System
-        {
-        public:
+#define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
+                                 std::string d3dErrStr;
 
-            D3D11(core::Entitygraph& p_entitygraph);
-            ~D3D11() = default;
-
-            void run();
-
-        private:
-            bool	m_initialized{ false };
-
-
-        };
+#define D3D11_CHECK( p_mName ) \
+    if( hRes != S_OK ) \
+    { \
+        translateD3DD11Error( hRes, d3dErrStr ); \
+        std::string dstr = " "#p_mName" -> "; \
+        dstr += d3dErrStr; \
+        dstr += "\n"; \
+        _RENDERME_ERROR( localLogger, dstr.c_str() ); \
+        return false; \
     }
-}

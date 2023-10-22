@@ -37,6 +37,8 @@
 
 #include "init.h"
 
+#include "exceptions.h"
+
 using namespace renderMe::core;
 using namespace renderMe::system;
 
@@ -65,8 +67,14 @@ void D3D11::run()
 				{					
 					if (!m_initialized)
 					{						
-						d3dInit(current_entity);
-						m_initialized = true;
+						if (d3dInit(current_entity))
+						{
+							m_initialized = true;
+						}
+						else
+						{
+							_EXCEPTION("D3D11 initialization failed")
+						}
 					}
 				}
 			}

@@ -23,14 +23,18 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma warning( disable : 4005 4838 )
+#pragma warning( disable : 4005 4838 26812 )
 
+#include <windows.h>
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <xnamath.h>
 #include <dxgiformat.h>
 
 #include "init.h"
+#include "errors.h"
+#include "d3d_commons.h"
+
 
 #include "logsink.h"
 #include "logconf.h"
@@ -59,8 +63,10 @@ static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& 
 
 }
 
-void renderMe::system::d3dInit(Entity* p_mainWindow)
+bool renderMe::system::d3dInit(Entity* p_mainWindow)
 {
+	DECLARE_D3D11ASSERT_VARS
+
 	_RENDERME_DEBUG(localLogger, std::string("initD3D"))
 
 		IDXGIFactory* factory {
@@ -146,4 +152,57 @@ void renderMe::system::d3dInit(Entity* p_mainWindow)
 	swap_chain.SampleDesc.Count = 1; // de 1 a 4 en D3D11
 	swap_chain.SampleDesc.Quality = 0; // en low quality
 
+
+	static const std::vector<std::pair<D3D_DRIVER_TYPE, std::string>> driver_type =
+	{
+		{ D3D_DRIVER_TYPE_HARDWARE, "HARDWARE"},
+		{ D3D_DRIVER_TYPE_WARP, "WARP"},
+		{ D3D_DRIVER_TYPE_REFERENCE, "REF"},
+		{ D3D_DRIVER_TYPE_SOFTWARE, "SOFTWARE"}
+	};
+
+	IDXGISwapChain*			lpd3dswapchain{ nullptr };
+	ID3D11Device*			lpd3ddevice{ nullptr };
+	ID3D11DeviceContext*	lpd3ddevcontext{ nullptr };
+
+	std::string				driver_descr;
+
+	UINT createDeviceFlags{ 0 };
+#ifdef _DEBUG
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+	HRESULT r;
+	for (auto& e : driver_type)
+	{
+		r = D3D11CreateDeviceAndSwapChain(NULL, e.first,
+			nullptr,
+			createDeviceFlags,
+			nullptr,
+			0,
+			D3D11_SDK_VERSION,
+			&swap_chain,
+			&lpd3dswapchain,
+			&lpd3ddevice,
+			nullptr,
+			&lpd3ddevcontext);
+
+		if (r == S_OK)
+		{
+			driver_descr = e.second;
+
+			_RENDERME_TRACE(localLogger, "D3D11CreateDeviceAndSwapChain OK for " + driver_descr)
+			break;
+		} 
+		else
+		{
+			_RENDERME_WARN(localLogger, "D3D11CreateDeviceAndSwapChain KO for " + driver_descr + ", switching to next")
+		}
+	}
+
+	hRes = r;
+	D3D11_CHECK(D3D11CreateDeviceAndSwapChain)
+
+
+	return true;
 }
