@@ -75,11 +75,20 @@ namespace renderMe
             long                                    m_mouserclick_pos       { 0 };
 
             Json::Callback	                        m_json_cb;
+
+            enum class JSONParsingMode
+            {
+                ON_ROOT,
+                ON_FONTS,
+            };
+
+            JSONParsingMode                         m_json_parsing_mode{ JSONParsingMode::ON_ROOT };
+
             interfaces::ModuleRoot::Callback	    m_module_events_cb;
 
             interfaces::ModuleRoot*                 m_module_root           { nullptr };
 
-            
+            std::vector<std::string>                m_fonts;
 
 
             void    processInputEvents(void);

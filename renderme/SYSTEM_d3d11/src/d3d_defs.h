@@ -48,9 +48,17 @@ namespace renderMe
         {
             struct D3D11Handles
             {
-                IDXGISwapChain*         m_lpd3dswapchain{ nullptr };
-                ID3D11Device*           m_lpd3ddevice{ nullptr };
-                ID3D11DeviceContext*    m_lpd3ddevcontext{ nullptr };
+                IDXGISwapChain*                     m_lpd3dswapchain{ nullptr };
+                ID3D11Device*                       m_lpd3ddevice{ nullptr };
+                ID3D11DeviceContext*                m_lpd3ddevcontext{ nullptr };
+                ID3D11RenderTargetView*             m_screentarget{ nullptr };
+                ID3D11DepthStencilState*            m_dsState_DepthTestDisabled{ nullptr };
+                ID3D11DepthStencilState*            m_dsState_DepthTestEnabled{ nullptr };
+
+                ID3D11Texture2D*                    m_pDepthStencil{ nullptr };
+                ID3D11DepthStencilView*             m_pDepthStencilView{ nullptr };
+
+                std::vector<IFW1FontWrapper*>       m_fontWrappers;
             };
         }
     }

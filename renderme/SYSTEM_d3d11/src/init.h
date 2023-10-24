@@ -28,6 +28,7 @@
 #include <d3dx11.h>
 #include <xnamath.h>
 #include <dxgiformat.h>
+#include <FW1FontWrapper.h>
 
 #include "d3d_defs.h"
 

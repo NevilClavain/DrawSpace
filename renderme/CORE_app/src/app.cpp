@@ -54,17 +54,48 @@ App::App()
         {
             case renderMe::core::JSONEvent::PRIMITIVE:
 
-                if ("fullscreen" == p_id)
-                {                    
-                    this->m_w_fullscreen = ("true" == p_value ? true : false);
-                }
-                else if ("width" == p_id)
+                if (JSONParsingMode::ON_ROOT == m_json_parsing_mode)
                 {
-                    this->m_w_width = std::stoi(p_value);
+                    if ("fullscreen" == p_id)
+                    {
+                        this->m_w_fullscreen = ("true" == p_value ? true : false);
+                    }
+                    else if ("width" == p_id)
+                    {
+                        this->m_w_width = std::stoi(p_value);
+                    }
+                    else if ("height" == p_id)
+                    {
+                        this->m_w_height = std::stoi(p_value);
+                    }
                 }
-                else if ("height" == p_id)
+                break;
+
+            case renderMe::core::JSONEvent::STRING:
+
+                if (JSONParsingMode::ON_FONTS == m_json_parsing_mode)
                 {
-                    this->m_w_height = std::stoi(p_value);
+                    if ("name" == p_id)
+                    {
+                        this->m_fonts.push_back(p_value);
+                    }
+                }
+                break;
+
+            case renderMe::core::JSONEvent::ARRAY_BEGIN:
+
+                if ("fonts" == p_id)
+                {
+                    this->m_json_parsing_mode = JSONParsingMode::ON_FONTS;
+                    this->m_fonts.clear();
+                }                
+                break;
+
+            case renderMe::core::JSONEvent::ARRAY_END:
+
+                if ("fonts" == p_id)
+                {
+                    this->m_json_parsing_mode = JSONParsingMode::ON_ROOT;
                 }
                 break;
         }
@@ -219,6 +250,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
                 rendering_aspect.addComponent<int>("windowWidth", m_w_width);
                 rendering_aspect.addComponent<int>("windowHeight", m_w_height);
                 rendering_aspect.addComponent<HWND>("windowHWND", m_hwnd);
+                rendering_aspect.addComponent<std::vector<std::string>>("fonts", m_fonts); // list of fonts to use for rendered texts
 
                 //////////////////////////
 

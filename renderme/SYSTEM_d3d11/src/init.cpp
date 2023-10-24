@@ -27,6 +27,8 @@
 
 #include <windows.h>
 
+#include <vector>
+
 #include "init.h"
 #include "errors.h"
 
@@ -60,6 +62,41 @@ static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& 
 	p_fullscreen_refreshRate_den = 1;
 
 }
+
+static bool create_depth_stencil_buffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view)
+{
+	DECLARE_D3D11ASSERT_VARS
+
+	D3D11_TEXTURE2D_DESC descDepth;
+	ZeroMemory(&descDepth, sizeof(descDepth));
+	descDepth.Width = p_width;
+	descDepth.Height = p_height;
+	descDepth.MipLevels = 1;
+	descDepth.ArraySize = 1;
+	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDepth.SampleDesc.Count = 1;
+	descDepth.SampleDesc.Quality = 0;
+	descDepth.Usage = D3D11_USAGE_DEFAULT;
+	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descDepth.CPUAccessFlags = 0;
+	descDepth.MiscFlags = 0;
+	hRes = p_lpd3ddevice->CreateTexture2D(&descDepth, NULL, p_texture2D);
+
+	D3D11_CHECK(CreateTexture2D)
+
+	// Create the depth stencil view
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+	ZeroMemory(&descDSV, sizeof(descDSV));
+	descDSV.Format = descDepth.Format;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.Texture2D.MipSlice = 0;
+	hRes = p_lpd3ddevice->CreateDepthStencilView(*p_texture2D, &descDSV, p_view);
+
+	D3D11_CHECK(CreateDepthStencilView)
+
+	return true;
+}
+
 
 bool helpers::init(Entity* p_mainWindow)
 {
@@ -205,7 +242,107 @@ bool helpers::init(Entity* p_mainWindow)
 
 	d3d11h.m_lpd3ddevcontext	= lpd3ddevcontext;
 	d3d11h.m_lpd3ddevice		= lpd3ddevice;
-	d3d11h.m_lpd3dswapchain	= lpd3dswapchain;
+	d3d11h.m_lpd3dswapchain		= lpd3dswapchain;
+
+	if (fullscreen)
+	{
+		lpd3dswapchain->SetFullscreenState(TRUE, nullptr);
+	}
+
+	///////////////////////////////////////////////////////////////////////
+	
+	ID3D11Texture2D* backBuffer;
+	hRes = lpd3dswapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+	D3D11_CHECK(GetBuffer)
+
+	ID3D11RenderTargetView* screentarget;
+
+	hRes = lpd3ddevice->CreateRenderTargetView(backBuffer, NULL, &screentarget);
+	D3D11_CHECK(CreateRenderTargetView)
+
+	backBuffer->Release();
+
+	d3d11h.m_screentarget = screentarget;
+
+	///////////////////////////////////////////////////////////////////////
+
+	D3D11_DEPTH_STENCIL_DESC dsDesc;
+	ZeroMemory(&dsDesc, sizeof(dsDesc));
+
+	// Depth test parameters
+	dsDesc.DepthEnable = FALSE;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	// Stencil test parameters
+	dsDesc.StencilEnable = FALSE;
+	dsDesc.StencilReadMask = 0xFF;
+	dsDesc.StencilWriteMask = 0xFF;
+
+	// Stencil operations if pixel is front-facing
+	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Stencil operations if pixel is back-facing
+	dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	ID3D11DepthStencilState* dsState_DepthTestDisabled{ nullptr };
+	ID3D11DepthStencilState* dsState_DepthTestEnabled{ nullptr };
+
+
+	hRes = lpd3ddevice->CreateDepthStencilState(&dsDesc, &dsState_DepthTestDisabled);
+	D3D11_CHECK(CreateDepthStencilState)
+
+	dsDesc.DepthEnable = TRUE;
+
+	hRes = lpd3ddevice->CreateDepthStencilState(&dsDesc, &dsState_DepthTestEnabled);
+	D3D11_CHECK(CreateDepthStencilState)
+
+	// dans D3D9 plugin, zbuffer est activé par défaut (cf doc)
+	// donc idem ici
+	lpd3ddevcontext->OMSetDepthStencilState(dsState_DepthTestEnabled, 1);
+
+	d3d11h.m_dsState_DepthTestEnabled = dsState_DepthTestEnabled;
+	d3d11h.m_dsState_DepthTestDisabled = dsState_DepthTestDisabled;
+
+	ID3D11Texture2D*			pDepthStencil{ nullptr };
+	ID3D11DepthStencilView*		pDepthStencilView{ nullptr };
+
+	if (!create_depth_stencil_buffer(lpd3ddevice, characteristics_width_resol, characteristics_height_resol,
+										DXGI_FORMAT_D24_UNORM_S8_UINT, &pDepthStencil, &pDepthStencilView))
+	{
+		return false;
+	}
+
+	d3d11h.m_pDepthStencil = pDepthStencil;
+	d3d11h.m_pDepthStencilView = pDepthStencilView;
+
+	///////////////////////////////////////////////////
+
+	IFW1Factory* fW1Factory;
+	hRes = FW1CreateFactory(FW1_VERSION, &fW1Factory);
+	D3D11_CHECK(FW1CreateFactory)
+
+	d3d11h.m_fontWrappers.clear();
+	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("fonts")->getPurpose() };
+	for (auto fontname : fonts)
+	{
+		IFW1FontWrapper* fontWrapper{ nullptr };
+
+		const std::wstring wfontname(fontname.begin(), fontname.end());
+
+		hRes = fW1Factory->CreateFontWrapper(lpd3ddevice, wfontname.c_str(), &fontWrapper);		
+		D3D11_CHECK(CreateFontWrapper)
+
+		d3d11h.m_fontWrappers.push_back(fontWrapper);
+	}
+
+	
 
 
 	return true;

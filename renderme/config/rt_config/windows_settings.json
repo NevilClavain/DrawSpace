@@ -1,5 +1,9 @@
 {
   "fullscreen": false,
   "width": 1400,
-  "height": 900
+  "height": 900,
+  "fonts": 
+  [
+	{ "name" : "Courier New" }
+  ]
 }
