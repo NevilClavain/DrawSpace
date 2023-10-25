@@ -342,8 +342,82 @@ bool helpers::init(Entity* p_mainWindow)
 		d3d11h.m_fontWrappers.push_back(fontWrapper);
 	}
 
-	
+	//////////////////////////////////////////////////////////////////////
 
+	lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+
+
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	ID3D11SamplerState* linearFilterSamplerState{ nullptr };
+	ID3D11SamplerState* pointFilterSamplerState{ nullptr };
+	ID3D11SamplerState* anisotropicFilterSamplerState{ nullptr };
+
+	ID3D11SamplerState* linearFilterSamplerState_uvwrap{ nullptr };
+	ID3D11SamplerState* pointFilterSamplerState_uvwrap{ nullptr };
+	ID3D11SamplerState* anisotropicFilterSamplerState_uvwrap{ nullptr };
+
+
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &pointFilterSamplerState);
+	D3D11_CHECK(CreateSamplerState)
+
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &pointFilterSamplerState_uvwrap);
+	D3D11_CHECK(CreateSamplerState)
+
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &linearFilterSamplerState);
+	D3D11_CHECK(CreateSamplerState)
+
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &linearFilterSamplerState_uvwrap);
+	D3D11_CHECK(CreateSamplerState)
+
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &anisotropicFilterSamplerState);
+	D3D11_CHECK(CreateSamplerState)
+
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &anisotropicFilterSamplerState_uvwrap);
+	D3D11_CHECK(CreateSamplerState)
+
+	d3d11h.m_linearFilterSamplerState = linearFilterSamplerState;
+	d3d11h.m_pointFilterSamplerState = pointFilterSamplerState;
+	d3d11h.m_anisotropicFilterSamplerState = anisotropicFilterSamplerState;
+
+	d3d11h.m_linearFilterSamplerState_uvwrap = linearFilterSamplerState_uvwrap;
+	d3d11h.m_pointFilterSamplerState_uvwrap = pointFilterSamplerState_uvwrap;
+	d3d11h.m_anisotropicFilterSamplerState_uvwrap = anisotropicFilterSamplerState_uvwrap;
+
+	// set default sampling : pointFilter with no uvwrapping
+
+	ID3D11SamplerState* ss_array[] = { pointFilterSamplerState };
+	for (long i = 0; i < 8; i++)
+	{
+		lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
+		lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
+	}
 
 	return true;
 }

@@ -59,6 +59,14 @@ namespace renderMe
                 ID3D11DepthStencilView*             m_pDepthStencilView{ nullptr };
 
                 std::vector<IFW1FontWrapper*>       m_fontWrappers;
+
+                ID3D11SamplerState*                 m_linearFilterSamplerState{ nullptr };
+                ID3D11SamplerState*                 m_pointFilterSamplerState{ nullptr };
+                ID3D11SamplerState*                 m_anisotropicFilterSamplerState{ nullptr };
+
+                ID3D11SamplerState*                 m_linearFilterSamplerState_uvwrap{ nullptr };
+                ID3D11SamplerState*                 m_pointFilterSamplerState_uvwrap{ nullptr };
+                ID3D11SamplerState*                 m_anisotropicFilterSamplerState_uvwrap{ nullptr };
             };
         }
     }
