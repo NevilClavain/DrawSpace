@@ -1,0 +1,93 @@
+/* -*-LIC_BEGIN-*- */
+/*
+*
+* renderMe grafx framework
+* Emmanuel Chaumont Copyright (c) 2013-2023
+*
+* This file is part of renderMe.
+*
+*    renderMe is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    renderMe is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with renderMe.  If not, see <http://www.gnu.org/licenses/>.
+*
+*/
+/* -*-LIC_END-*- */
+
+#pragma once
+
+#pragma warning( disable : 4005 4838 26812 )
+
+// IMPORTANT : thi .h is supposed to be included in d3dsystemimpl.cpp only, so no need of any forward declaration here
+
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <xnamath.h>
+#include <dxgiformat.h>
+#include <FW1FontWrapper.h>
+
+#include <vector>
+
+#include "singleton.h"
+#include "entity.h"
+
+#define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
+                                 std::string d3dErrStr;
+
+#define D3D11_CHECK( p_mName ) \
+    if( hRes != S_OK ) \
+    { \
+        D3D11SystemImpl::translateD3DD11Error( hRes, d3dErrStr ); \
+        std::string dstr = " "#p_mName" -> "; \
+        dstr += d3dErrStr; \
+        dstr += "\n"; \
+        _RENDERME_ERROR( localLogger, dstr.c_str() ); \
+        return false; \
+    }
+
+class D3D11SystemImpl : public renderMe::property::Singleton<D3D11SystemImpl>
+{
+public:
+
+    D3D11SystemImpl() = default;
+    ~D3D11SystemImpl() = default;
+
+    bool init(renderMe::core::Entity* p_mainWindow);
+
+private:
+
+    IDXGISwapChain* m_lpd3dswapchain{ nullptr };
+    ID3D11Device* m_lpd3ddevice{ nullptr };
+    ID3D11DeviceContext* m_lpd3ddevcontext{ nullptr };
+    ID3D11RenderTargetView* m_screentarget{ nullptr };
+    ID3D11DepthStencilState* m_dsState_DepthTestDisabled{ nullptr };
+    ID3D11DepthStencilState* m_dsState_DepthTestEnabled{ nullptr };
+
+    ID3D11Texture2D* m_pDepthStencil{ nullptr };
+    ID3D11DepthStencilView* m_pDepthStencilView{ nullptr };
+
+    std::vector<IFW1FontWrapper*>       m_fontWrappers;
+
+    ID3D11SamplerState* m_linearFilterSamplerState{ nullptr };
+    ID3D11SamplerState* m_pointFilterSamplerState{ nullptr };
+    ID3D11SamplerState* m_anisotropicFilterSamplerState{ nullptr };
+
+    ID3D11SamplerState* m_linearFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState* m_pointFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState* m_anisotropicFilterSamplerState_uvwrap{ nullptr };
+
+
+    static void translateD3DD11Error(HRESULT p_hRes, std::string& p_str);
+    static bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
+    static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, 
+                                                        int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den);
+};
+

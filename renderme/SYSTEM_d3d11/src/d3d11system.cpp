@@ -35,9 +35,10 @@
 #include "entity.h"
 #include "entitygraph.h"
 
-#include "init.h"
+
 
 #include "exceptions.h"
+#include "d3d11systemimpl.h"
 
 
 using namespace renderMe;
@@ -68,7 +69,7 @@ void D3D11System::run()
 				{					
 					if (!m_initialized)
 					{						
-						if (renderMe::d3d11::helpers::init(current_entity))
+						if (D3D11SystemImpl::getInstance()->init(current_entity))
 						{
 							m_initialized = true;
 						}
@@ -76,6 +77,7 @@ void D3D11System::run()
 						{
 							_EXCEPTION("D3D11 initialization failed")
 						}
+						
 					}
 				}
 			}

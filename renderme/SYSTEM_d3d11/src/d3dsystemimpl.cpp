@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,82 +22,18 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma warning( disable : 4005 4838 26812 )
+#include "d3d11systemimpl.h"
 
-#include <windows.h>
-
-#include <vector>
-
-#include "init.h"
-#include "errors.h"
+#include "aspects.h"
 
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
 
-#include "aspects.h"
-#include "entity.h"
 
+static renderMe::core::logger::Sink localLogger("D3D11System", renderMe::core::logger::Configuration::getInstance());
 
-using namespace renderMe::core;
-using namespace renderMe::d3d11;
-
-static renderMe::core::logger::Sink localLogger("D3D11Init", renderMe::core::logger::Configuration::getInstance());
-
-
-static renderMe::d3d11::helpers::D3D11Handles d3d11h;
-
-static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den)
-{
-	bool found = false;
-	// get user windows desktop resolution
-	RECT desktop_rect;
-	GetWindowRect(GetDesktopWindow(), &desktop_rect);
-
-	p_fullscreen_width = desktop_rect.right - desktop_rect.left;
-	p_fullscreen_height = desktop_rect.bottom - desktop_rect.top;
-	p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	p_fullscreen_refreshRate_num = 60;
-	p_fullscreen_refreshRate_den = 1;
-
-}
-
-static bool create_depth_stencil_buffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view)
-{
-	DECLARE_D3D11ASSERT_VARS
-
-	D3D11_TEXTURE2D_DESC descDepth;
-	ZeroMemory(&descDepth, sizeof(descDepth));
-	descDepth.Width = p_width;
-	descDepth.Height = p_height;
-	descDepth.MipLevels = 1;
-	descDepth.ArraySize = 1;
-	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDepth.SampleDesc.Count = 1;
-	descDepth.SampleDesc.Quality = 0;
-	descDepth.Usage = D3D11_USAGE_DEFAULT;
-	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	descDepth.CPUAccessFlags = 0;
-	descDepth.MiscFlags = 0;
-	hRes = p_lpd3ddevice->CreateTexture2D(&descDepth, NULL, p_texture2D);
-
-	D3D11_CHECK(CreateTexture2D)
-
-	// Create the depth stencil view
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	ZeroMemory(&descDSV, sizeof(descDSV));
-	descDSV.Format = descDepth.Format;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0;
-	hRes = p_lpd3ddevice->CreateDepthStencilView(*p_texture2D, &descDSV, p_view);
-
-	D3D11_CHECK(CreateDepthStencilView)
-
-	return true;
-}
-
-
-bool helpers::init(Entity* p_mainWindow)
+bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 {
 	DECLARE_D3D11ASSERT_VARS
 
@@ -113,7 +48,7 @@ bool helpers::init(Entity* p_mainWindow)
 	ZeroMemory(&swap_chain, sizeof(swap_chain));
 
 	//get main windows infos
-	auto& mainwindows_rendering_aspect{ p_mainWindow->aspectAccess(renderingAspect::id) };
+	auto& mainwindows_rendering_aspect{ p_mainWindow->aspectAccess(renderMe::core::renderingAspect::id) };
 
 	int characteristics_width_resol{ 0 };
 	int characteristics_height_resol{ 0 };
@@ -140,7 +75,7 @@ bool helpers::init(Entity* p_mainWindow)
 
 		_RENDERME_TRACE(localLogger, std::string("full screen resol : ") + std::to_string(fullscreen_width) + "x" + std::to_string(fullscreen_height))
 
-		swap_chain.BufferDesc.Format = fullscreen_format;
+			swap_chain.BufferDesc.Format = fullscreen_format;
 		swap_chain.BufferDesc.RefreshRate.Numerator = fullscreen_refresh_rate_num;
 		swap_chain.BufferDesc.RefreshRate.Denominator = fullscreen_refresh_rate_den;
 
@@ -153,13 +88,13 @@ bool helpers::init(Entity* p_mainWindow)
 
 		characteristics_width_resol = rect.right - rect.left;
 		characteristics_height_resol = rect.bottom - rect.top;
-		
+
 		characteristics_v_width = 1.0;
 		characteristics_v_height = characteristics_v_width * characteristics_height_resol / characteristics_width_resol;
 
 		swap_chain.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swap_chain.BufferDesc.RefreshRate.Numerator = 60;
-		swap_chain.BufferDesc.RefreshRate.Denominator = 1;	
+		swap_chain.BufferDesc.RefreshRate.Denominator = 1;
 
 		swap_chain.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 		swap_chain.Windowed = TRUE;
@@ -167,9 +102,9 @@ bool helpers::init(Entity* p_mainWindow)
 
 
 	_RENDERME_TRACE(localLogger, std::string("renderer characteristics : width_resol = ") + std::to_string(characteristics_width_resol) +
-									std::string(" height_resol = ") + std::to_string(characteristics_height_resol) +
-									std::string(" v_width = ") + std::to_string(characteristics_v_width) +
-									std::string(" v_height = ") + std::to_string(characteristics_v_height))
+		std::string(" height_resol = ") + std::to_string(characteristics_height_resol) +
+		std::string(" v_width = ") + std::to_string(characteristics_v_width) +
+		std::string(" v_height = ") + std::to_string(characteristics_v_height))
 
 
 	// complete main window entity with renderer characteristics
@@ -196,9 +131,9 @@ bool helpers::init(Entity* p_mainWindow)
 		{ D3D_DRIVER_TYPE_SOFTWARE, "SOFTWARE"}
 	};
 
-	IDXGISwapChain*			lpd3dswapchain{ nullptr };
-	ID3D11Device*			lpd3ddevice{ nullptr };
-	ID3D11DeviceContext*	lpd3ddevcontext{ nullptr };
+	IDXGISwapChain* lpd3dswapchain{ nullptr };
+	ID3D11Device* lpd3ddevice{ nullptr };
+	ID3D11DeviceContext* lpd3ddevcontext{ nullptr };
 
 	std::string				driver_descr;
 
@@ -227,8 +162,8 @@ bool helpers::init(Entity* p_mainWindow)
 			driver_descr = e.second;
 
 			_RENDERME_TRACE(localLogger, "D3D11CreateDeviceAndSwapChain OK for " + driver_descr)
-			break;
-		} 
+				break;
+		}
 		else
 		{
 			_RENDERME_WARN(localLogger, "D3D11CreateDeviceAndSwapChain KO for " + driver_descr + ", switching to next")
@@ -240,9 +175,9 @@ bool helpers::init(Entity* p_mainWindow)
 
 	mainwindows_rendering_aspect.addComponent<std::string>("d3d11DriverDescr", driver_descr);
 
-	d3d11h.m_lpd3ddevcontext	= lpd3ddevcontext;
-	d3d11h.m_lpd3ddevice		= lpd3ddevice;
-	d3d11h.m_lpd3dswapchain		= lpd3dswapchain;
+	m_lpd3ddevcontext = lpd3ddevcontext;
+	m_lpd3ddevice = lpd3ddevice;
+	m_lpd3dswapchain = lpd3dswapchain;
 
 	if (fullscreen)
 	{
@@ -250,7 +185,7 @@ bool helpers::init(Entity* p_mainWindow)
 	}
 
 	///////////////////////////////////////////////////////////////////////
-	
+
 	ID3D11Texture2D* backBuffer;
 	hRes = lpd3dswapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 	D3D11_CHECK(GetBuffer)
@@ -262,7 +197,7 @@ bool helpers::init(Entity* p_mainWindow)
 
 	backBuffer->Release();
 
-	d3d11h.m_screentarget = screentarget;
+	m_screentarget = screentarget;
 
 	///////////////////////////////////////////////////////////////////////
 
@@ -307,20 +242,20 @@ bool helpers::init(Entity* p_mainWindow)
 	// donc idem ici
 	lpd3ddevcontext->OMSetDepthStencilState(dsState_DepthTestEnabled, 1);
 
-	d3d11h.m_dsState_DepthTestEnabled = dsState_DepthTestEnabled;
-	d3d11h.m_dsState_DepthTestDisabled = dsState_DepthTestDisabled;
+	m_dsState_DepthTestEnabled = dsState_DepthTestEnabled;
+	m_dsState_DepthTestDisabled = dsState_DepthTestDisabled;
 
-	ID3D11Texture2D*			pDepthStencil{ nullptr };
-	ID3D11DepthStencilView*		pDepthStencilView{ nullptr };
+	ID3D11Texture2D* pDepthStencil{ nullptr };
+	ID3D11DepthStencilView* pDepthStencilView{ nullptr };
 
-	if (!create_depth_stencil_buffer(lpd3ddevice, characteristics_width_resol, characteristics_height_resol,
-										DXGI_FORMAT_D24_UNORM_S8_UINT, &pDepthStencil, &pDepthStencilView))
+	if (!createDepthStencilBuffer(lpd3ddevice, characteristics_width_resol, characteristics_height_resol,
+		DXGI_FORMAT_D24_UNORM_S8_UINT, &pDepthStencil, &pDepthStencilView))
 	{
 		return false;
 	}
 
-	d3d11h.m_pDepthStencil = pDepthStencil;
-	d3d11h.m_pDepthStencilView = pDepthStencilView;
+	m_pDepthStencil = pDepthStencil;
+	m_pDepthStencilView = pDepthStencilView;
 
 	///////////////////////////////////////////////////
 
@@ -328,7 +263,7 @@ bool helpers::init(Entity* p_mainWindow)
 	hRes = FW1CreateFactory(FW1_VERSION, &fW1Factory);
 	D3D11_CHECK(FW1CreateFactory)
 
-	d3d11h.m_fontWrappers.clear();
+	m_fontWrappers.clear();
 	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("fonts")->getPurpose() };
 	for (auto fontname : fonts)
 	{
@@ -336,10 +271,10 @@ bool helpers::init(Entity* p_mainWindow)
 
 		const std::wstring wfontname(fontname.begin(), fontname.end());
 
-		hRes = fW1Factory->CreateFontWrapper(lpd3ddevice, wfontname.c_str(), &fontWrapper);		
+		hRes = fW1Factory->CreateFontWrapper(lpd3ddevice, wfontname.c_str(), &fontWrapper);
 		D3D11_CHECK(CreateFontWrapper)
 
-		d3d11h.m_fontWrappers.push_back(fontWrapper);
+		m_fontWrappers.push_back(fontWrapper);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -402,13 +337,13 @@ bool helpers::init(Entity* p_mainWindow)
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &anisotropicFilterSamplerState_uvwrap);
 	D3D11_CHECK(CreateSamplerState)
 
-	d3d11h.m_linearFilterSamplerState = linearFilterSamplerState;
-	d3d11h.m_pointFilterSamplerState = pointFilterSamplerState;
-	d3d11h.m_anisotropicFilterSamplerState = anisotropicFilterSamplerState;
+	m_linearFilterSamplerState = linearFilterSamplerState;
+	m_pointFilterSamplerState = pointFilterSamplerState;
+	m_anisotropicFilterSamplerState = anisotropicFilterSamplerState;
 
-	d3d11h.m_linearFilterSamplerState_uvwrap = linearFilterSamplerState_uvwrap;
-	d3d11h.m_pointFilterSamplerState_uvwrap = pointFilterSamplerState_uvwrap;
-	d3d11h.m_anisotropicFilterSamplerState_uvwrap = anisotropicFilterSamplerState_uvwrap;
+	m_linearFilterSamplerState_uvwrap = linearFilterSamplerState_uvwrap;
+	m_pointFilterSamplerState_uvwrap = pointFilterSamplerState_uvwrap;
+	m_anisotropicFilterSamplerState_uvwrap = anisotropicFilterSamplerState_uvwrap;
 
 	// set default sampling : pointFilter with no uvwrapping
 
@@ -420,9 +355,77 @@ bool helpers::init(Entity* p_mainWindow)
 	}
 
 	return true;
+
 }
 
-helpers::D3D11Handles helpers::getHandles()
+
+void D3D11SystemImpl::translateD3DD11Error(HRESULT p_hRes, std::string& p_str)
 {
-	return d3d11h;
+	static const std::unordered_map<HRESULT, std::string> translate =
+	{
+		{ S_OK, "S_OK"},
+		{ S_FALSE, "S_FALSE"},
+		{ E_NOTIMPL, "E_NOTIMPL"},
+		{ E_OUTOFMEMORY, "E_OUTOFMEMORY"},
+		{ E_INVALIDARG, "E_INVALIDARG"},
+		{ E_FAIL, "E_FAIL"},
+		{ D3DERR_WASSTILLDRAWING, "D3DERR_WASSTILLDRAWING"},
+		{ DXGI_ERROR_WAS_STILL_DRAWING, "DXGI_ERROR_WAS_STILL_DRAWING"},
+		{ D3DERR_INVALIDCALL, "D3DERR_INVALIDCALL"},
+		{ DXGI_ERROR_INVALID_CALL, "DXGI_ERROR_INVALID_CALL"},
+		{ D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD, "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD"},
+		{ D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS"},
+		{ D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS"},
+		{ D3D11_ERROR_FILE_NOT_FOUND, "D3D11_ERROR_FILE_NOT_FOUND"},
+	};
+	p_str = translate.at(p_hRes);
+}
+
+bool D3D11SystemImpl::createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view)
+{
+	DECLARE_D3D11ASSERT_VARS
+
+	D3D11_TEXTURE2D_DESC descDepth;
+	ZeroMemory(&descDepth, sizeof(descDepth));
+	descDepth.Width = p_width;
+	descDepth.Height = p_height;
+	descDepth.MipLevels = 1;
+	descDepth.ArraySize = 1;
+	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDepth.SampleDesc.Count = 1;
+	descDepth.SampleDesc.Quality = 0;
+	descDepth.Usage = D3D11_USAGE_DEFAULT;
+	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descDepth.CPUAccessFlags = 0;
+	descDepth.MiscFlags = 0;
+	hRes = p_lpd3ddevice->CreateTexture2D(&descDepth, NULL, p_texture2D);
+
+	D3D11_CHECK(CreateTexture2D)
+
+		// Create the depth stencil view
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+	ZeroMemory(&descDSV, sizeof(descDSV));
+	descDSV.Format = descDepth.Format;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.Texture2D.MipSlice = 0;
+	hRes = p_lpd3ddevice->CreateDepthStencilView(*p_texture2D, &descDSV, p_view);
+
+	D3D11_CHECK(CreateDepthStencilView)
+
+	return true;
+}
+
+void D3D11SystemImpl::fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den)
+{
+	bool found = false;
+	// get user windows desktop resolution
+	RECT desktop_rect;
+	GetWindowRect(GetDesktopWindow(), &desktop_rect);
+
+	p_fullscreen_width = desktop_rect.right - desktop_rect.left;
+	p_fullscreen_height = desktop_rect.bottom - desktop_rect.top;
+	p_fullscreen_format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	p_fullscreen_refreshRate_num = 60;
+	p_fullscreen_refreshRate_den = 1;
+
 }
