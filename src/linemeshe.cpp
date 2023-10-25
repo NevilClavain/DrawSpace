@@ -27,7 +27,6 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
 
 LineMeshe::LineMeshe(void)
 {

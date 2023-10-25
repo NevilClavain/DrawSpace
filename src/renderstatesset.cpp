@@ -27,7 +27,7 @@
 
 using namespace DrawSpace;
 using namespace DrawSpace::Core;
-using namespace DrawSpace::Utils;
+
 
 RenderStatesSet::RenderStatesSet( void )
 {

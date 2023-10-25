@@ -102,12 +102,6 @@ typedef unsigned long int UINT4;
 // convenient object that wraps
 // the C-functions for use in C++ only
 
-// ECH : namespaces added by myself...
-namespace DrawSpace
-{
-namespace Utils
-{
-
 class MD5
 {
 private:
@@ -382,7 +376,5 @@ public:
   }
 } ;
 
-}
-}
 
 
