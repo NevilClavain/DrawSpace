@@ -23,12 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "d3d11systemimpl.h"
-
 #include "aspects.h"
-
-#include "logsink.h"
-#include "logconf.h"
-#include "logging.h"
 
 bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 {
@@ -266,7 +261,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	{
 		IFW1FontWrapper* fontWrapper{ nullptr };
 
-		_RENDERME_TRACE(m_localLogger, "creating font wrapper" + fontname)
+		_RENDERME_TRACE(m_localLogger, "creating font wrapper : " + fontname)
 
 		const std::wstring wfontname(fontname.begin(), fontname.end());
 

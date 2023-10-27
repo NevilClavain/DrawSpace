@@ -24,7 +24,7 @@
 
 #pragma once
 
-#pragma warning( disable : 4005 4838 26812 )
+#pragma warning( disable : 4005 4838 26812 4996 )
 
 // IMPORTANT : this .h is supposed to be included in d3dsystemimpl.cpp only, so no need of any forward declaration here
 
@@ -34,8 +34,10 @@
 #include <dxgiformat.h>
 #include <FW1FontWrapper.h>
 
+#include <string>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 #include "singleton.h"
 #include "entity.h"
@@ -62,7 +64,6 @@
 class D3D11SystemImpl : public renderMe::property::Singleton<D3D11SystemImpl>
 {
 public:
-
     D3D11SystemImpl();
     ~D3D11SystemImpl() = default;
 
@@ -70,7 +71,23 @@ public:
 
 private:
 
-    //std::unique_ptr<renderMe::core::logger::Sink>    m_localLogger;
+    // render states
+    struct RSCacheEntry
+    {
+        D3D11_RASTERIZER_DESC       rs_desc  { 0 };
+        ID3D11RasterizerState*      rs_state { nullptr };
+    };
+
+    // blending states
+    struct BSCacheEntry
+    {
+        D3D11_BLEND_DESC            bs_desc  { 0 };
+        ID3D11BlendState*           bs_state { nullptr };
+    };
+
+    using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;
+    using BSCache =                 std::unordered_map<std::string, BSCacheEntry>;
+
     renderMe::core::logger::Sink    m_localLogger;
 
     IDXGISwapChain*                 m_lpd3dswapchain{ nullptr };
@@ -93,7 +110,15 @@ private:
     ID3D11SamplerState*             m_pointFilterSamplerState_uvwrap{ nullptr };
     ID3D11SamplerState*             m_anisotropicFilterSamplerState_uvwrap{ nullptr };
 
+    RSCache                         m_rsCache;
+    BSCache                         m_bsCache;
+
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
+
+    bool setCacheRS(const D3D11_RASTERIZER_DESC& p_currRS);
+    bool setCacheBlendstate(const D3D11_BLEND_DESC& p_currBlendDesc);
+
+    ///////////////////////////////////////////////////////////////////////////////
 
     static void translateD3DD11Error(HRESULT p_hRes, std::string& p_str);    
     static void fullscreenAutosetDesktopResolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, 
