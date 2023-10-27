@@ -23,14 +23,9 @@
 /* -*-LIC_END-*- */
 
 #include "d3d11systemimpl.h"
-
 #include "aspects.h"
-
-
-//renderMe::core::logger::Sink localLogger("D3D11System", renderMe::core::logger::Configuration::getInstance());
 
 D3D11SystemImpl::D3D11SystemImpl() :
 m_localLogger("D3D11System", renderMe::core::logger::Configuration::getInstance())
 {
-
 }

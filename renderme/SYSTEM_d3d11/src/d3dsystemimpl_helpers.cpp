@@ -29,8 +29,6 @@
 #include "logconf.h"
 #include "logging.h"
 
-//extern renderMe::core::logger::Sink localLogger("D3D11System", renderMe::core::logger::Configuration::getInstance());
-
 void D3D11SystemImpl::translateD3DD11Error(HRESULT p_hRes, std::string& p_str)
 {
 	static const std::unordered_map<HRESULT, std::string> translate =

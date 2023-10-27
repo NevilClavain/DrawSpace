@@ -30,8 +30,6 @@
 #include "logconf.h"
 #include "logging.h"
 
-//extern renderMe::core::logger::Sink m_localLogger("D3D11System", renderMe::core::logger::Configuration::getInstance());
-
 bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 {
 	DECLARE_D3D11ASSERT_VARS
