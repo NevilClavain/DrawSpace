@@ -26,7 +26,7 @@
 
 #pragma warning( disable : 4005 4838 26812 )
 
-// IMPORTANT : thi .h is supposed to be included in d3dsystemimpl.cpp only, so no need of any forward declaration here
+// IMPORTANT : this .h is supposed to be included in d3dsystemimpl.cpp only, so no need of any forward declaration here
 
 #include <d3d11.h>
 #include <d3dx11.h>
