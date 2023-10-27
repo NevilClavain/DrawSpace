@@ -35,9 +35,15 @@
 #include <FW1FontWrapper.h>
 
 #include <vector>
+#include <memory>
 
 #include "singleton.h"
 #include "entity.h"
+
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
+
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
@@ -49,7 +55,7 @@
         std::string dstr = " "#p_mName" -> "; \
         dstr += d3dErrStr; \
         dstr += "\n"; \
-        _RENDERME_ERROR( localLogger, dstr.c_str() ); \
+        _RENDERME_ERROR( m_localLogger, dstr.c_str() ); \
         return false; \
     }
 
@@ -57,37 +63,40 @@ class D3D11SystemImpl : public renderMe::property::Singleton<D3D11SystemImpl>
 {
 public:
 
-    D3D11SystemImpl() = default;
+    D3D11SystemImpl();
     ~D3D11SystemImpl() = default;
 
     bool init(renderMe::core::Entity* p_mainWindow);
 
 private:
 
-    IDXGISwapChain* m_lpd3dswapchain{ nullptr };
-    ID3D11Device* m_lpd3ddevice{ nullptr };
-    ID3D11DeviceContext* m_lpd3ddevcontext{ nullptr };
-    ID3D11RenderTargetView* m_screentarget{ nullptr };
-    ID3D11DepthStencilState* m_dsState_DepthTestDisabled{ nullptr };
-    ID3D11DepthStencilState* m_dsState_DepthTestEnabled{ nullptr };
+    //std::unique_ptr<renderMe::core::logger::Sink>    m_localLogger;
+    renderMe::core::logger::Sink    m_localLogger;
 
-    ID3D11Texture2D* m_pDepthStencil{ nullptr };
-    ID3D11DepthStencilView* m_pDepthStencilView{ nullptr };
+    IDXGISwapChain*                 m_lpd3dswapchain{ nullptr };
+    ID3D11Device*                   m_lpd3ddevice{ nullptr };
+    ID3D11DeviceContext*            m_lpd3ddevcontext{ nullptr };
+    ID3D11RenderTargetView*         m_screentarget{ nullptr };
+    ID3D11DepthStencilState*        m_dsState_DepthTestDisabled{ nullptr };
+    ID3D11DepthStencilState*        m_dsState_DepthTestEnabled{ nullptr };
 
-    std::vector<IFW1FontWrapper*>       m_fontWrappers;
+    ID3D11Texture2D*                m_pDepthStencil{ nullptr };
+    ID3D11DepthStencilView*         m_pDepthStencilView{ nullptr };
 
-    ID3D11SamplerState* m_linearFilterSamplerState{ nullptr };
-    ID3D11SamplerState* m_pointFilterSamplerState{ nullptr };
-    ID3D11SamplerState* m_anisotropicFilterSamplerState{ nullptr };
+    std::vector<IFW1FontWrapper*>   m_fontWrappers;
 
-    ID3D11SamplerState* m_linearFilterSamplerState_uvwrap{ nullptr };
-    ID3D11SamplerState* m_pointFilterSamplerState_uvwrap{ nullptr };
-    ID3D11SamplerState* m_anisotropicFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState*             m_linearFilterSamplerState{ nullptr };
+    ID3D11SamplerState*             m_pointFilterSamplerState{ nullptr };
+    ID3D11SamplerState*             m_anisotropicFilterSamplerState{ nullptr };
 
+    ID3D11SamplerState*             m_linearFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState*             m_pointFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState*             m_anisotropicFilterSamplerState_uvwrap{ nullptr };
 
-    static void translateD3DD11Error(HRESULT p_hRes, std::string& p_str);
-    static bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
-    static void fullscreen_autoset_desktop_resolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, 
+    bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
+
+    static void translateD3DD11Error(HRESULT p_hRes, std::string& p_str);    
+    static void fullscreenAutosetDesktopResolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, 
                                                         int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den);
 };
 
