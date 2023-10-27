@@ -348,5 +348,65 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 		lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
 	}
 
+	////////////////////////////////////////////////////////////////////////////
+
+	// default renderstate description
+	D3D11_RASTERIZER_DESC rsDesc;
+
+	rsDesc.FillMode = D3D11_FILL_SOLID;
+
+	// dans d3d9, le cull mode par defaut est ccw (cf doc)
+	// donc idem ici
+
+	// cull ccw
+	rsDesc.CullMode = D3D11_CULL_BACK;
+	rsDesc.FrontCounterClockwise = FALSE;
+	// cull ccw
+
+	/*
+	// cull cw
+	rsDesc.CullMode = D3D11_CULL_FRONT;
+	rsDesc.FrontCounterClockwise = FALSE;
+	// cull cw
+	*/
+
+	rsDesc.DepthBias = 0;
+	rsDesc.SlopeScaledDepthBias = 0.0f;
+	rsDesc.DepthBiasClamp = 0.0f;
+	rsDesc.DepthClipEnable = TRUE;
+	rsDesc.ScissorEnable = FALSE;
+	rsDesc.MultisampleEnable = FALSE;
+	rsDesc.AntialiasedLineEnable = FALSE;
+
+	// apply this default renderstate
+	if (!setCacheRS(rsDesc))
+	{
+		return false;
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	// default blend state description
+
+	D3D11_BLEND_DESC blDesc;
+	ZeroMemory(&blDesc, sizeof(blDesc));
+
+	blDesc.AlphaToCoverageEnable = false;
+	blDesc.IndependentBlendEnable = false;
+	blDesc.RenderTarget[0].BlendEnable = false;
+	blDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
+	blDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// apply this default blend state
+	if (!setCacheBlendstate(blDesc))
+	{
+		return false;
+	}
+
 	return true;
 }

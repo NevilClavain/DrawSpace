@@ -61,27 +61,27 @@ bool D3D11SystemImpl::createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int 
 
 bool D3D11SystemImpl::setCacheRS(const D3D11_RASTERIZER_DESC& p_currRS)
 {
-	bool status = true;
+	bool status{ true };
 	DECLARE_D3D11ASSERT_VARS
 
-	D3D11_RASTERIZER_DESC currRS = p_currRS;
+	const auto currRS{ p_currRS };
 	MD5 md5;
 
-	std::string rsdesc_key = md5.digestMemory((BYTE*)&currRS, sizeof(D3D11_RASTERIZER_DESC));
+	const std::string rsdesc_key{ md5.digestMemory((BYTE*)&currRS, sizeof(D3D11_RASTERIZER_DESC)) };
 
 	if (m_rsCache.count(rsdesc_key) > 0)
 	{
-		m_lpd3ddevcontext->RSSetState(m_rsCache[rsdesc_key].rs_state);
+		m_lpd3ddevcontext->RSSetState(m_rsCache.at(rsdesc_key).rs_state);
 	}
 	else
 	{
-		ID3D11RasterizerState* rs;
+		ID3D11RasterizerState* rs{ nullptr };
 		hRes = m_lpd3ddevice->CreateRasterizerState(&currRS, &rs);
 		D3D11_CHECK(CreateRasterizerState)
 		m_lpd3ddevcontext->RSSetState(rs);
 
 		// create new entry in cache
-		RSCacheEntry cache_e = { currRS, rs };
+		const RSCacheEntry cache_e { currRS, rs };
 		m_rsCache[rsdesc_key] = cache_e; // store in cache
 	}
 	return status;
@@ -89,29 +89,29 @@ bool D3D11SystemImpl::setCacheRS(const D3D11_RASTERIZER_DESC& p_currRS)
 
 bool D3D11SystemImpl::setCacheBlendstate(const D3D11_BLEND_DESC& p_currBlendDesc)
 {
-	bool status = true;
+	bool status{ true };
 	DECLARE_D3D11ASSERT_VARS
 
-	D3D11_BLEND_DESC currBlendDesc = p_currBlendDesc;
+	const auto currBlendDesc{ p_currBlendDesc };
 	MD5 md5;
 
-	FLOAT bvals[4] = { 0.0, 0.0, 0.0, 0.0 };
+	FLOAT bvals[4] { 0.0, 0.0, 0.0, 0.0 };
 
-	std::string bsdesc_key = md5.digestMemory((BYTE*)&currBlendDesc, sizeof(D3D11_BLEND_DESC));
+	const std::string bsdesc_key{ md5.digestMemory((BYTE*)&currBlendDesc, sizeof(D3D11_BLEND_DESC)) };
 
 	if (m_bsCache.count(bsdesc_key) > 0)
 	{
-		m_lpd3ddevcontext->OMSetBlendState(m_bsCache[bsdesc_key].bs_state, bvals, 0xffffffff);
+		m_lpd3ddevcontext->OMSetBlendState(m_bsCache.at(bsdesc_key).bs_state, bvals, 0xffffffff);
 	}
 	else
 	{
-		ID3D11BlendState* bs;
+		ID3D11BlendState* bs{ nullptr };
 		hRes = m_lpd3ddevice->CreateBlendState(&currBlendDesc, &bs);
 		D3D11_CHECK(CreateBlendState)
 		m_lpd3ddevcontext->OMSetBlendState(bs, bvals, 0xffffffff);
 
 		// create new entry in cache
-		BSCacheEntry cache_e = { currBlendDesc, bs };
+		const BSCacheEntry cache_e { currBlendDesc, bs };
 		m_bsCache[bsdesc_key] = cache_e; // store in cache
 	}
 

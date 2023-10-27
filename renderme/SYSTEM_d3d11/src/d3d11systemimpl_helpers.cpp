@@ -49,7 +49,7 @@ void D3D11SystemImpl::translateD3DD11Error(HRESULT p_hRes, std::string& p_str)
 
 void D3D11SystemImpl::fullscreenAutosetDesktopResolution(int& p_fullscreen_width, int& p_fullscreen_height, DXGI_FORMAT& p_fullscreen_format, int& p_fullscreen_refreshRate_num, int& p_fullscreen_refreshRate_den)
 {
-	bool found = false;
+	bool found{ false };
 	// get user windows desktop resolution
 	RECT desktop_rect;
 	GetWindowRect(GetDesktopWindow(), &desktop_rect);
