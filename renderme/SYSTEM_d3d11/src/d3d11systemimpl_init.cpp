@@ -29,7 +29,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 {
 	DECLARE_D3D11ASSERT_VARS
 
-	_RENDERME_DEBUG(m_localLogger, std::string("initD3D"))
+	_RENDERME_DEBUG(m_localLogger, std::string("init D3D startup"))
 
 		IDXGIFactory* factory {
 		nullptr
@@ -449,6 +449,9 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	}
 
 	m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
+
+
+	_RENDERME_DEBUG(m_localLogger, std::string("init D3D SUCCESS"))
 
 	return true;
 }
