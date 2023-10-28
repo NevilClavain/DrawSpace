@@ -85,6 +85,12 @@ private:
         ID3D11BlendState*           bs_state { nullptr };
     };
 
+    struct ShaderLegacyArg
+    {
+        XMFLOAT4                    vector[512];
+        XMMATRIX                    matrix[512];
+    };
+
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;
     using BSCache =                 std::unordered_map<std::string, BSCacheEntry>;
 
@@ -112,6 +118,12 @@ private:
 
     RSCache                         m_rsCache;
     BSCache                         m_bsCache;
+
+    ID3D11Buffer*                   m_vertexShaderLegacyargsBuffer{ nullptr };
+    ID3D11Buffer*                   m_pixelShaderLegacyargsBuffer{ nullptr };
+
+    D3D11_VIEWPORT                  m_mainScreenViewport;
+
 
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
 

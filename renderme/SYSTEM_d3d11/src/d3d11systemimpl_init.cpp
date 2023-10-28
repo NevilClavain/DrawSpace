@@ -46,6 +46,8 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	int characteristics_height_resol{ 0 };
 	float characteristics_v_width, characteristics_v_height;
 
+	RECT rect{ 0 }; // /!\ valid on ly if !fullscreen
+
 	const auto windowHWND{ mainwindows_rendering_aspect.getComponent<HWND>("windowHWND")->getPurpose() };
 
 	const auto fullscreen{ mainwindows_rendering_aspect.getComponent<bool>("fullscreen")->getPurpose() };
@@ -163,7 +165,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	}
 
 	hRes = r;
-	D3D11_CHECK(D3D11CreateDeviceAndSwapChain)
+	D3D11_CHECK(D3D11CreateDeviceAndSwapChain);
 
 	mainwindows_rendering_aspect.addComponent<std::string>("d3d11DriverDescr", driver_descr);
 
@@ -180,12 +182,12 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	ID3D11Texture2D* backBuffer;
 	hRes = lpd3dswapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-	D3D11_CHECK(GetBuffer)
+	D3D11_CHECK(GetBuffer);
 
 	ID3D11RenderTargetView* screentarget;
 
 	hRes = lpd3ddevice->CreateRenderTargetView(backBuffer, NULL, &screentarget);
-	D3D11_CHECK(CreateRenderTargetView)
+	D3D11_CHECK(CreateRenderTargetView);
 
 	backBuffer->Release();
 
@@ -223,12 +225,12 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 
 	hRes = lpd3ddevice->CreateDepthStencilState(&dsDesc, &dsState_DepthTestDisabled);
-	D3D11_CHECK(CreateDepthStencilState)
+	D3D11_CHECK(CreateDepthStencilState);
 
 	dsDesc.DepthEnable = TRUE;
 
 	hRes = lpd3ddevice->CreateDepthStencilState(&dsDesc, &dsState_DepthTestEnabled);
-	D3D11_CHECK(CreateDepthStencilState)
+	D3D11_CHECK(CreateDepthStencilState);
 
 	// dans D3D9 plugin, zbuffer est activé par défaut (cf doc)
 	// donc idem ici
@@ -253,7 +255,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	IFW1Factory* fW1Factory;
 	hRes = FW1CreateFactory(FW1_VERSION, &fW1Factory);
-	D3D11_CHECK(FW1CreateFactory)
+	D3D11_CHECK(FW1CreateFactory);
 
 	m_fontWrappers.clear();
 	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("fonts")->getPurpose() };
@@ -266,7 +268,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 		const std::wstring wfontname(fontname.begin(), fontname.end());
 
 		hRes = fW1Factory->CreateFontWrapper(lpd3ddevice, wfontname.c_str(), &fontWrapper);
-		D3D11_CHECK(CreateFontWrapper)
+		D3D11_CHECK(CreateFontWrapper);
 
 		m_fontWrappers.push_back(fontWrapper);
 	}
@@ -297,39 +299,39 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &pointFilterSamplerState);
-	D3D11_CHECK(CreateSamplerState)
+	D3D11_CHECK(CreateSamplerState);
 
 	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &pointFilterSamplerState_uvwrap);
-	D3D11_CHECK(CreateSamplerState)
+	D3D11_CHECK(CreateSamplerState);
 
 	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &linearFilterSamplerState);
-	D3D11_CHECK(CreateSamplerState)
+	D3D11_CHECK(CreateSamplerState);
 
 	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &linearFilterSamplerState_uvwrap);
-	D3D11_CHECK(CreateSamplerState)
+	D3D11_CHECK(CreateSamplerState);
 
 	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &anisotropicFilterSamplerState);
-	D3D11_CHECK(CreateSamplerState)
+	D3D11_CHECK(CreateSamplerState);
 
 	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	hRes = lpd3ddevice->CreateSamplerState(&sampDesc, &anisotropicFilterSamplerState_uvwrap);
-	D3D11_CHECK(CreateSamplerState)
+	D3D11_CHECK(CreateSamplerState);
 
 	m_linearFilterSamplerState = linearFilterSamplerState;
 	m_pointFilterSamplerState = pointFilterSamplerState;
@@ -407,6 +409,46 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	{
 		return false;
 	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(ShaderLegacyArg);
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bd.CPUAccessFlags = 0;
+
+	hRes = m_lpd3ddevice->CreateBuffer(&bd, NULL, &m_vertexShaderLegacyargsBuffer);
+	D3D11_CHECK(CreateBuffer);
+
+	hRes = m_lpd3ddevice->CreateBuffer(&bd, NULL, &m_pixelShaderLegacyargsBuffer);
+	D3D11_CHECK(CreateBuffer);
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	// set viewport....
+	if (fullscreen)
+	{
+		m_mainScreenViewport.Width = characteristics_width_resol;
+		m_mainScreenViewport.Height = characteristics_height_resol;
+		m_mainScreenViewport.MinDepth = 0.0;
+		m_mainScreenViewport.MaxDepth = 1.0;
+		m_mainScreenViewport.TopLeftX = 0.0;
+		m_mainScreenViewport.TopLeftY = 0.0;
+	}
+	else
+	{
+		m_mainScreenViewport.Width = characteristics_width_resol;
+		m_mainScreenViewport.Height = characteristics_height_resol;
+		m_mainScreenViewport.MinDepth = 0.0;
+		m_mainScreenViewport.MaxDepth = 1.0;
+		m_mainScreenViewport.TopLeftX = rect.left;
+		m_mainScreenViewport.TopLeftY = rect.top;
+	}
+
+	m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
 
 	return true;
 }
