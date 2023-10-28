@@ -25,7 +25,7 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 #include "singleton.h"
 
@@ -67,7 +67,7 @@ namespace renderMe
                 std::string     comment;
             };
 
-            std::map<void*, chunk>  m_chunks;
+            std::unordered_map<void*, chunk>  m_chunks;
             size_t                  m_totalSize{ 0 };
            
             void register_bloc(void* p_ptr, size_t p_size, const std::string& p_item, const std::string& p_funcname, long p_line, const std::string& p_filename, const std::string& p_comment);

@@ -27,7 +27,7 @@
 
 #include <Windows.h>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include "singleton.h"
 
 namespace renderMe
@@ -73,7 +73,7 @@ namespace renderMe
 			using Factory = base * (*)(void);
 			using Trash = void  (*)(base*);
 
-			using LibList = std::map<std::string, PluginInfos>;
+			using LibList = std::unordered_map<std::string, PluginInfos>;
 
 			LibList m_libs;			
 		};

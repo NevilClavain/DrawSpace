@@ -26,9 +26,9 @@
 
 #include <windows.h>
 #include <string>
-#include <map>
-#include <vector>
-#include <functional>
+//#include <map>
+#include <unordered_map>
+#include <tuple>
 
 #include "singleton.h"
 #include "logsink.h"
@@ -61,16 +61,16 @@ namespace renderMe
 
             private:
 
-                Json::Callback	                                    m_cb;
+                Json::Callback	                                                m_cb;
 
-                std::map<std::string, std::unique_ptr<Output>>      m_outputs;
+                std::unordered_map<std::string, std::unique_ptr<Output>>        m_outputs;
 
                 using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;
-                std::map<std::string, SinkInfos>                    m_sinks_infos;
+                std::unordered_map<std::string, SinkInfos>                      m_sinks_infos;
 
-                LARGE_INTEGER                                       m_base_tick;
-                LARGE_INTEGER                                       m_last_tick;
-                LARGE_INTEGER                                       m_freq;
+                LARGE_INTEGER                                                   m_base_tick;
+                LARGE_INTEGER                                                   m_last_tick;
+                LARGE_INTEGER                                                   m_freq;
 
                 //// JSON parsing working members
 

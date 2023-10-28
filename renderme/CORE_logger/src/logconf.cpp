@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include <unordered_map>
 #include "logconf.h"
 
 #include "logoutput.h"
@@ -128,7 +129,7 @@ logger::Configuration::Configuration( void )
                     }
                     else if ("level" == p_id)
                     {
-                        static const std::map<std::string, Sink::Level> levelTranslation
+                        static const std::unordered_map<std::string, Sink::Level> levelTranslation
                         {
                             { "FATAL", Sink::Level::LEVEL_FATAL},
                             { "ERROR", Sink::Level::LEVEL_ERROR},
@@ -141,7 +142,7 @@ logger::Configuration::Configuration( void )
                     }
                     else if ("state" == p_id)
                     {
-                        static const std::map<std::string, bool> stateTranslation
+                        static const std::unordered_map<std::string, bool> stateTranslation
                         {
                             { "on", true},
                             { "off", false},

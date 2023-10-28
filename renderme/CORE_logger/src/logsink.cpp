@@ -24,6 +24,7 @@
 
 #include <sstream>
 #include <iomanip> // setprecision
+#include <unordered_map>
 
 #include "logsink.h"
 #include "logconf.h"
@@ -54,7 +55,7 @@ void logger::Sink::logIt( Level p_level, const std::string& p_trace )
 {
     if( p_level <= m_current_level && m_state && m_output )
     {        
-        static const std::map<Level, std::string> lvl_to_string
+        static const std::unordered_map<Level, std::string> lvl_to_string
         {
             { Level::LEVEL_FATAL, "FATAL"},
             { Level::LEVEL_ERROR, "ERROR"},
