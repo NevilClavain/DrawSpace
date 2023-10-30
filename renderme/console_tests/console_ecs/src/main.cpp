@@ -49,9 +49,15 @@ int main( int argc, char* argv[] )
 		core::Entitygraph eg;
 
 		std::cout << "eg has root : " << eg.hasRoot() << "\n";
-		auto& root_node{ eg.makeRoot("root") };
+		
+		//auto& root_node{ eg.makeRoot("root") };		
+		eg.makeRoot("root");
+		auto& root_node{ eg.node("root") };
+
 
 		const auto root_entity{ root_node.data() };
+
+
 		root_entity->makeAspect(core::renderingAspect::id);
 
 		{
@@ -75,9 +81,11 @@ int main( int argc, char* argv[] )
 		auto& ent1_node{ eg.add(root_node, "ent1") };
 		auto& ent2_node{ eg.add(root_node, "ent2") };
 
-		eg.add(ent1_node, "ent11");
+		auto& ent11_node{ eg.add(ent1_node, "ent11") };
 
 		eg.add(eg.node("ent11"), "ent111"); // another way to insert a node from its parent
+
+		//eg.add(ent11_node, "ent111"); // another way to insert a node from its parent
 
 
 

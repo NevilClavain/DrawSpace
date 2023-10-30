@@ -77,9 +77,11 @@ namespace renderMe
 		private:
 			st_tree::tree<core::Entity*>								m_tree;
 			std::unordered_map<std::string, std::unique_ptr<Entity>>	m_entites;
-			std::unordered_map<std::string, Node>						m_nodes;
-			
-			
+
+			Node														m_rootNode;
+			std::string													m_rootNodeName;
+
+			std::unordered_map<std::string, NodeIterator>				m_nodes_iterator;					
 		};
 	}
 }
