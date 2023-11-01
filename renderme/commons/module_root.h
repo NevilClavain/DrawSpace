@@ -66,7 +66,7 @@ namespace renderMe
             virtual void                    onMouseRightButtonUp(long p_xm, long p_ym) = 0;
             virtual void                    onAppEvent(WPARAM p_wParam, LPARAM p_lParam) = 0;
 
-            virtual void                    init(void) = 0;
+            virtual void                    init(const std::string p_appWindowsEntityName) = 0;
             virtual void                    run(void) = 0;
 
         };

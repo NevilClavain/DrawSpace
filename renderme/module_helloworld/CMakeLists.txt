@@ -30,6 +30,8 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
 
+include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
+
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src)
 
 include_directories(${st_tree_include_dir})
@@ -49,7 +51,7 @@ file(
 
 
 add_library(module_helloworld SHARED ${source_files})
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator SYSTEM_d3d11 jsmn d3d11 d3dx11 dxgi FW1FontWrapper)
+target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator RENDERING_control SYSTEM_d3d11 jsmn d3d11 d3dx11 dxgi FW1FontWrapper)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

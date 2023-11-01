@@ -35,10 +35,10 @@
 #include "entity.h"
 #include "entitygraph.h"
 
-
-
 #include "exceptions.h"
 #include "d3d11systemimpl.h"
+
+#include "renderingqueue.h"
 
 
 using namespace renderMe;
@@ -47,6 +47,21 @@ using namespace renderMe::core;
 
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
+}
+
+void D3D11System::checkD3D11SystemImplInit(core::Entity* p_entity)
+{
+	if (!m_initialized)
+	{
+		if (D3D11SystemImpl::getInstance()->init(p_entity))
+		{
+			m_initialized = true;
+		}
+		else
+		{
+			_EXCEPTION("D3D11 initialization failed")
+		}
+	}
 }
 
 void D3D11System::run()
@@ -60,26 +75,94 @@ void D3D11System::run()
 		{
 			const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
 
-			auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
-			if (rendering_target_comp)
-			{
-				auto& rendering_target{ rendering_target_comp->getPurpose() };
+			//////////////////////////////////////////////////////////////////////////////////////////////
 
-				if (core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target)
-				{					
-					if (!m_initialized)
-					{						
-						if (D3D11SystemImpl::getInstance()->init(current_entity))
+			auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr && 
+													core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target_comp->getPurpose() };
+
+			if (isWindowsRenderingTarget)
+			{
+				checkD3D11SystemImplInit(current_entity);
+			}
+
+			//////////////////////////////////////////////////////////////////////////////////////////////
+
+			auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
+			if (rendering_queue_comp)
+			{
+				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+				switch (renderingQueue.getState())
+				{
+					case rendering::Queue::State::WAIT_INIT:
 						{
-							m_initialized = true;
+							const auto purpose{ renderingQueue.getPurpose() };
+
+							if (rendering::Queue::Purpose::UNDEFINED == purpose) 
+							{
+								const auto parent_entity{ current_entity->getParent() };
+
+								if (nullptr == parent_entity)
+								{
+									renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+									// log it (WARN)
+								}
+								else
+								{
+									if (current_entity->hasAspect(core::renderingAspect::id))
+									{
+										const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
+										auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+										if (parent_rendering_target_comp)
+										{
+											if (core::renderingAspect::renderingTarget::WINDOW_TARGET == parent_rendering_target_comp->getPurpose())
+											{
+												// WINDOW_TARGET
+												// 
+												// parent is a screen-target pass 
+												// set queue purpose accordingly
+
+												renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
+												renderingQueue.setState(rendering::Queue::State::READY);
+											}
+											else 
+											{
+												// BUFFER_TARGET
+												// 
+												// parent is a texture-target pass
+												// set queue purpose accordingly
+											
+												renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
+												renderingQueue.setState(rendering::Queue::State::READY);
+											}
+										}
+										else
+										{
+											// parent rendering aspect has no renderingTarget component !
+											renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+											// log it (WARN)
+										}
+									}
+									else
+									{
+										// parent has no rendering aspect 
+										renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+										// log it (WARN)
+									}
+								}
+							}									
 						}
-						else
-						{
-							_EXCEPTION("D3D11 initialization failed")
-						}
-						
-					}
-				}
+						break;
+
+					case rendering::Queue::State::READY:
+
+						// do queue rendering						
+						break;
+
+					case rendering::Queue::State::ERROR_ORPHAN:
+						// nothin' to do
+						break;
+				}			
 			}
 		}
 	}

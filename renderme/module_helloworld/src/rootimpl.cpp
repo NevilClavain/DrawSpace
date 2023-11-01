@@ -23,12 +23,17 @@
 /* -*-LIC_END-*- */
 
 #include "rootimpl.h"
+
+#include "aspects.h"
+
 #include "sysengine.h"
 
 #include "d3d11system.h"
 
 #include "filesystem.h"
 #include "logconf.h"
+
+#include "renderingqueue.h"
 
 
 using namespace renderMe;
@@ -133,9 +138,9 @@ void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
 }
 
-void RootImpl::init(void)
+void RootImpl::init(const std::string p_appWindowsEntityName)
 {
-	// logging conf
+	/////////// logging conf
 
 	renderMe::core::FileContent<char> logConfFileContent("./module_helloworld_config/logconf.json");
 	logConfFileContent.load();
@@ -143,7 +148,7 @@ void RootImpl::init(void)
 	const auto dataSize{ logConfFileContent.getDataSize() };
 	const std::string data(logConfFileContent.getData(), dataSize);
 
-	// set static to spare some space on stack // compiler message
+	/////////// set static to spare some space on stack // compiler message
 	static renderMe::core::Json jsonParser;
 	jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
@@ -154,7 +159,18 @@ void RootImpl::init(void)
 		_EXCEPTION("Cannot parse logging configuration")
 	}
 
-	// systems
+	/////////// add rendering pass entity
+
+	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName)};
+	auto screenRenderingPass { m_entitygraph.add(appwindow_node, "screenRenderingPass") };
+
+	const auto screenRenderingPassEntity{ screenRenderingPass.data() };
+	auto& rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
+
+	rendering_aspect.addComponent<rendering::Queue>("renderingQueue", "final_pass");
+
+
+	/////////// systems
 
 	auto sysEngine{ SystemEngine::getInstance() };
 	sysEngine->makeSystem<renderMe::D3D11System>(renderMe::d3d11SystemExecutionSlot, m_entitygraph);

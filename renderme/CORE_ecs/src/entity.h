@@ -36,8 +36,9 @@ namespace renderMe
 		class Entity : public st_tree::tree<core::Entity*>::node_type
 		{
 		public:
-			Entity(const std::string& p_id) :
-			m_id(p_id)
+			Entity(const std::string& p_id, Entity* p_parent = nullptr) :
+			m_id(p_id),
+			m_parent(p_parent)
 			{
 			}
 
@@ -53,7 +54,7 @@ namespace renderMe
 				return m_id;
 			}
 
-			void makeAspect(int p_aspect)
+			ComponentContainer& makeAspect(int p_aspect)
 			{
 				if (m_aspects.count(p_aspect))
 				{
@@ -62,6 +63,8 @@ namespace renderMe
 
 				// mark aspect id in the component container
 				m_aspects[p_aspect].addComponent<int>("aspect", p_aspect);
+
+				return m_aspects.at(p_aspect);
 			}
 
 			void removeAspect(int p_aspect)
@@ -90,9 +93,16 @@ namespace renderMe
 				return m_aspects.at(p_aspect);
 			}
 
+			Entity* getParent() const
+			{
+				return m_parent;
+			}
+
 		private:
-			std::map<int, ComponentContainer> m_aspects;
-			const std::string				  m_id;
+			std::map<int, ComponentContainer>	m_aspects;
+			const std::string					m_id;
+
+			Entity*								m_parent{ nullptr };
 		};
 	}
 }

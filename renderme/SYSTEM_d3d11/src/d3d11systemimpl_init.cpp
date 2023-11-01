@@ -139,7 +139,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	HRESULT r;
 	for (auto& e : driver_type)
 	{
-		r = D3D11CreateDeviceAndSwapChain(NULL, e.first,
+		r = D3D11CreateDeviceAndSwapChain(nullptr, e.first,
 			nullptr,
 			createDeviceFlags,
 			nullptr,
@@ -186,7 +186,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	ID3D11RenderTargetView* screentarget;
 
-	hRes = lpd3ddevice->CreateRenderTargetView(backBuffer, NULL, &screentarget);
+	hRes = lpd3ddevice->CreateRenderTargetView(backBuffer, nullptr, &screentarget);
 	D3D11_CHECK(CreateRenderTargetView);
 
 	backBuffer->Release();
@@ -259,7 +259,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	m_fontWrappers.clear();
 	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("fonts")->getPurpose() };
-	for (auto fontname : fonts)
+	for (const auto& fontname : fonts)
 	{
 		IFW1FontWrapper* fontWrapper{ nullptr };
 
@@ -420,10 +420,10 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 
-	hRes = m_lpd3ddevice->CreateBuffer(&bd, NULL, &m_vertexShaderLegacyargsBuffer);
+	hRes = m_lpd3ddevice->CreateBuffer(&bd, nullptr, &m_vertexShaderLegacyargsBuffer);
 	D3D11_CHECK(CreateBuffer);
 
-	hRes = m_lpd3ddevice->CreateBuffer(&bd, NULL, &m_pixelShaderLegacyargsBuffer);
+	hRes = m_lpd3ddevice->CreateBuffer(&bd, nullptr, &m_pixelShaderLegacyargsBuffer);
 	D3D11_CHECK(CreateBuffer);
 
 	/////////////////////////////////////////////////////////////////////////////

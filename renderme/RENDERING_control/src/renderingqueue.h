@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace renderMe
 {
 	namespace rendering
@@ -32,10 +34,38 @@ namespace renderMe
 		class Queue
 		{
 		public:
-			Queue() = default;
+
+			enum class Purpose
+			{
+				UNDEFINED,
+				SCREEN_RENDERING,
+				INTERMEDIATE_RENDERING
+			};
+
+			enum class State
+			{
+				WAIT_INIT,
+				READY,
+				ERROR_ORPHAN
+			};
+
+			Queue(const std::string& p_name);
 			~Queue() = default;
 
+			std::string getName() const;
+			Purpose		getPurpose() const;
+			State		getState() const;
+
+			void		setState(State p_newstate);
+			void		setPurpose(Purpose p_purpose);
+
 		private:
+			std::string		m_name;
+			Purpose			m_purpose{ Purpose::UNDEFINED };
+			State			m_state{ State::WAIT_INIT };
+
+
+			
 		};
 	}
 }

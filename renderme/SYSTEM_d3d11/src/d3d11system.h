@@ -28,6 +28,8 @@
 
 namespace renderMe
 {   
+    namespace core { class Entity; }
+
     constexpr int d3d11SystemExecutionSlot{ 0 };
         
     class D3D11System : public core::System
@@ -42,6 +44,7 @@ namespace renderMe
     private:
         bool	m_initialized{ false };
 
+        void    checkD3D11SystemImplInit(core::Entity* p_entity);
 
     };
 }

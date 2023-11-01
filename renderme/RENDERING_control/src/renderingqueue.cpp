@@ -23,3 +23,36 @@
 /* -*-LIC_END-*- */
 
 #include "renderingqueue.h"
+
+using namespace renderMe::rendering;
+
+Queue::Queue(const std::string& p_name) :
+m_name(p_name)
+{
+
+}
+
+std::string Queue::getName() const
+{
+	return m_name;
+}
+
+Queue::Purpose Queue::getPurpose() const
+{
+	return m_purpose;
+}
+
+Queue::State Queue::getState() const
+{
+	return m_state;
+}
+
+void Queue::setState(State p_newstate)
+{
+	m_state = p_newstate;
+}
+
+void Queue::setPurpose(Purpose p_purpose)
+{
+	m_purpose = p_purpose;
+}

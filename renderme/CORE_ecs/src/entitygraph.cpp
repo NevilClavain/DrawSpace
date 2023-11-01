@@ -61,7 +61,7 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 		_EXCEPTION("parent not registered : " + parent_id)
 	}
 
-	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id);
+	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id, p_parent.data());
 
 	NodeIterator ite_new_node{ p_parent.insert(&*(m_entites[p_entity_id].get())) };
 	m_nodes_iterator[p_entity_id] = ite_new_node;

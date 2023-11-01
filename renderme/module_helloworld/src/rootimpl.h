@@ -57,7 +57,7 @@ public:
     void                            onMouseRightButtonUp(long p_xm, long p_ym);
     void                            onAppEvent(WPARAM p_wParam, LPARAM p_lParam);
 
-    void                            init(void);
+    void                            init(const std::string p_appWindowsEntityName);
     void                            run(void);
 
     //override

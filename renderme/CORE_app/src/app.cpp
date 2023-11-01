@@ -238,7 +238,9 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 
             if (entitygraph)
             {
-                auto& root_window_node{ entitygraph->makeRoot("appwindow") };
+                const std::string rootName{ "appwindow" };
+
+                auto& root_window_node{ entitygraph->makeRoot(rootName) };
 
                 const auto root_window_entity{ root_window_node.data() };
                 root_window_entity->makeAspect(core::renderingAspect::id);
@@ -254,7 +256,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 
                 //////////////////////////
 
-                m_module_root->init();
+                m_module_root->init(rootName);
             }
             else
             {
