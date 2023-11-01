@@ -158,9 +158,9 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	/////////// add screen rendering pass entity
 
 	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName)};
-	auto screenRenderingPass { m_entitygraph.add(appwindow_node, "screenRenderingPass") };
+	auto screenRenderingPassNode { m_entitygraph.add(appwindow_node, "screenRenderingPassNode") };
 
-	const auto screenRenderingPassEntity{ screenRenderingPass.data() };
+	const auto screenRenderingPassEntity{ screenRenderingPassNode.data() };
 	auto& rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
 
 	rendering_aspect.addComponent<rendering::Queue>("renderingQueue", "final_pass");
