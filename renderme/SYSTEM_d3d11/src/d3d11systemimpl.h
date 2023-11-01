@@ -67,6 +67,8 @@ public:
     D3D11SystemImpl();
     ~D3D11SystemImpl() = default;
 
+    renderMe::core::logger::Sink& logger();
+
     bool init(renderMe::core::Entity* p_mainWindow);
 
 private:

@@ -64,6 +64,89 @@ void D3D11System::checkD3D11SystemImplInit(core::Entity* p_entity)
 	}
 }
 
+void D3D11System::manageRenderingQueues(Entity* p_entity, rendering::Queue& p_renderingQueue)
+{
+	switch (p_renderingQueue.getState())
+	{
+		case rendering::Queue::State::WAIT_INIT:
+		{
+			const auto purpose{ p_renderingQueue.getPurpose() };
+
+			if (rendering::Queue::Purpose::UNDEFINED == purpose)
+			{
+				const auto parent_entity{ p_entity->getParent() };
+
+				if (nullptr == parent_entity)
+				{
+					p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+					// log it (WARN)
+					_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : no parent")
+				}
+				else
+				{
+					if (p_entity->hasAspect(core::renderingAspect::id))
+					{
+						const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
+						auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+						if (parent_rendering_target_comp)
+						{
+							if (core::renderingAspect::renderingTarget::WINDOW_TARGET == parent_rendering_target_comp->getPurpose())
+							{
+								// WINDOW_TARGET
+								// 
+								// parent is a screen-target pass 
+								// set queue purpose accordingly
+
+								p_renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
+								p_renderingQueue.setState(rendering::Queue::State::READY);
+
+								_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, SCREEN_RENDERING")
+							}
+							else
+							{
+								// BUFFER_TARGET
+								// 
+								// parent is a texture-target pass
+								// set queue purpose accordingly
+
+								p_renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
+								p_renderingQueue.setState(rendering::Queue::State::READY);
+
+								_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, INTERMEDIATE_RENDERING")
+							}
+						}
+						else
+						{
+							// parent rendering aspect has no renderingTarget component !
+							p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+							// log it (WARN)
+							_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")
+						}
+					}
+					else
+					{
+						// parent has no rendering aspect 
+						p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+						// log it (WARN)
+						_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
+					}
+				}
+			}
+		}
+		break;
+
+		case rendering::Queue::State::READY:
+
+			// do queue rendering						
+			break;
+
+		case rendering::Queue::State::ERROR_ORPHAN:
+
+			// nothin' to do
+			break;
+	}
+}
+
 void D3D11System::run()
 {
 	for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
@@ -76,6 +159,7 @@ void D3D11System::run()
 			const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
+			// manage D3D11 init
 
 			auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
 			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr && 
@@ -87,82 +171,13 @@ void D3D11System::run()
 			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
+			// manage rendering queues
 
 			auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
 			if (rendering_queue_comp)
 			{
 				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
-				switch (renderingQueue.getState())
-				{
-					case rendering::Queue::State::WAIT_INIT:
-						{
-							const auto purpose{ renderingQueue.getPurpose() };
-
-							if (rendering::Queue::Purpose::UNDEFINED == purpose) 
-							{
-								const auto parent_entity{ current_entity->getParent() };
-
-								if (nullptr == parent_entity)
-								{
-									renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
-									// log it (WARN)
-								}
-								else
-								{
-									if (current_entity->hasAspect(core::renderingAspect::id))
-									{
-										const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
-										auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
-										if (parent_rendering_target_comp)
-										{
-											if (core::renderingAspect::renderingTarget::WINDOW_TARGET == parent_rendering_target_comp->getPurpose())
-											{
-												// WINDOW_TARGET
-												// 
-												// parent is a screen-target pass 
-												// set queue purpose accordingly
-
-												renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
-												renderingQueue.setState(rendering::Queue::State::READY);
-											}
-											else 
-											{
-												// BUFFER_TARGET
-												// 
-												// parent is a texture-target pass
-												// set queue purpose accordingly
-											
-												renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
-												renderingQueue.setState(rendering::Queue::State::READY);
-											}
-										}
-										else
-										{
-											// parent rendering aspect has no renderingTarget component !
-											renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
-											// log it (WARN)
-										}
-									}
-									else
-									{
-										// parent has no rendering aspect 
-										renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
-										// log it (WARN)
-									}
-								}
-							}									
-						}
-						break;
-
-					case rendering::Queue::State::READY:
-
-						// do queue rendering						
-						break;
-
-					case rendering::Queue::State::ERROR_ORPHAN:
-						// nothin' to do
-						break;
-				}			
+				manageRenderingQueues(current_entity, renderingQueue);
 			}
 		}
 	}

@@ -29,6 +29,7 @@
 namespace renderMe
 {   
     namespace core { class Entity; }
+    namespace rendering { class Queue; }
 
     constexpr int d3d11SystemExecutionSlot{ 0 };
         
@@ -45,6 +46,7 @@ namespace renderMe
         bool	m_initialized{ false };
 
         void    checkD3D11SystemImplInit(core::Entity* p_entity);
+        void    manageRenderingQueues(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
 
     };
 }
