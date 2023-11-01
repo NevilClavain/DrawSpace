@@ -23,13 +23,9 @@
 /* -*-LIC_END-*- */
 
 #include "rootimpl.h"
-
 #include "aspects.h"
-
 #include "sysengine.h"
-
 #include "d3d11system.h"
-
 #include "filesystem.h"
 #include "logconf.h"
 
@@ -159,7 +155,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 		_EXCEPTION("Cannot parse logging configuration")
 	}
 
-	/////////// add rendering pass entity
+	/////////// add screen rendering pass entity
 
 	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName)};
 	auto screenRenderingPass { m_entitygraph.add(appwindow_node, "screenRenderingPass") };
