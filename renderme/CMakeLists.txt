@@ -67,6 +67,7 @@ add_subdirectory(CORE_threads)
 add_subdirectory(CORE_app)
 add_subdirectory(CORE_ecs)
 add_subdirectory(CORE_module)
+add_subdirectory(CORE_maths)
 
 add_subdirectory(RENDERING_control)
 
@@ -82,6 +83,7 @@ add_subdirectory(console_tests/console_callback)
 add_subdirectory(console_tests/console_threads)
 add_subdirectory(console_tests/console_components)
 add_subdirectory(console_tests/console_ecs)
+add_subdirectory(console_tests/console_maths)
 
 add_subdirectory(module_helloworld)
 

@@ -222,6 +222,10 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_ecs/*.sln
 /renderme/console_tests/console_ecs/*.vcxproj*
 
+/renderme/console_tests/console_maths/CMakeFiles/
+/renderme/console_tests/console_maths/*.sln
+/renderme/console_tests/console_maths/*.vcxproj*
+
 /renderme/module_helloworld/CMakeFiles/
 /renderme/module_helloworld/*.sln
 /renderme/module_helloworld/*.vcxproj*
@@ -267,6 +271,10 @@ ALL_BUILD.vcxproj*
 /renderme/CORE_module/CMakeFiles/
 /renderme/CORE_module/*.sln
 /renderme/CORE_module/*.vcxproj*
+
+/renderme/CORE_maths/CMakeFiles/
+/renderme/CORE_maths/*.sln
+/renderme/CORE_maths/*.vcxproj*
 
 /renderme/RENDERING_control/CMakeFiles/
 /renderme/RENDERING_control/*.sln
