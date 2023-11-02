@@ -25,6 +25,9 @@
 
 #pragma once
 
+#include <string>
+#include <tuple>
+
 namespace renderMe
 {
 	namespace core
@@ -33,34 +36,47 @@ namespace renderMe
 		class Vector
         {
         public:
+            
+            Vector() = default;
 
-            Vector(void) = default;
-            ~Vector(void) = default;
-
-            /*
-            dsreal operator[](int p_index) const
+            template<class... Args>
+            Vector(Args... p_args)
             {
-                return m_vector[p_index];
-            };
+                /*
+                const auto args_tuple{ std::tuple<Args...>(p_args...) };
+                constexpr int nb_args{ std::tuple_size<decltype(args_tuple)>::value };
+                */
 
-            dsreal& operator[](int p_index)
+                unpack_args(0, p_args...);
+            }
+
+            ~Vector() = default;
+
+            std::string dump() const
             {
-                return m_vector[p_index];
-            };
+                std::string content{ "[ " };
+                for(int i = 0; i < Size; i++)
+                { 
+                    content += std::to_string(m_vector[i]) + " ";
+                }
 
-            dsreal lengthPow2(void) const;
-            dsreal length(void) const;
+                content += "]";
+                return content;
+            }
 
-            void normalize(void);
-            void scale(dsreal p_scale);
-
-            static Vector lerp(const Vector& p_v1, const Vector& p_v2, dsreal p_blend);
-
-            static Vector prodVec(const DrawSpace::Maths::Vector& p_vA, const DrawSpace::Maths::Vector& p_vB);
-            */
-
-        private:
+        private:                   
             T m_vector[Size] = { 0 };
+
+            void unpack_args(int index)
+            {
+            }
+
+            template <class First, class... Rest>
+            void unpack_args(int index, First first, Rest... rest) {
+
+                m_vector[index] = first;
+                unpack_args(index + 1, rest...); // Unpack the arguments for further treatment
+            }
         };
 	}
 }
