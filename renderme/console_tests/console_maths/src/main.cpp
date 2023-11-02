@@ -47,6 +47,18 @@ int main( int argc, char* argv[] )
 	Vector<double, 2> vdouble2(3.14, 1.57);
 	std::cout << "2 double vector : " << vdouble2.dump() << "\n";
 
+	std::cout << vdouble2[1] << "\n";
+	vdouble2[1] = 9.81;
+	std::cout << vdouble2[1] << "\n";
+
+
+	Vector<double, 2> vunit(1.0, 1.0);	
+	std::cout << "vunit length = " << vunit.length() << "\n";
+	vunit.normalize();
+	std::cout << "vunit length after normalization = " << vunit.length() << "\n";
+	std::cout << "vunit vector (normalized) : " << vunit.dump() << "\n";
+
+
 
     return 0;
 }

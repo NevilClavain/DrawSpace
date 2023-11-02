@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <string>
 #include <tuple>
 
@@ -35,18 +36,12 @@ namespace renderMe
 		template<typename T=double, int Size=4>
 		class Vector
         {
-        public:
-            
+        public:            
             Vector() = default;
 
             template<class... Args>
             Vector(Args... p_args)
             {
-                /*
-                const auto args_tuple{ std::tuple<Args...>(p_args...) };
-                constexpr int nb_args{ std::tuple_size<decltype(args_tuple)>::value };
-                */
-
                 unpack_args(0, p_args...);
             }
 
@@ -62,6 +57,45 @@ namespace renderMe
 
                 content += "]";
                 return content;
+            }
+
+            T operator[](size_t p_index) const
+            {
+                return m_vector[p_index];
+            };
+
+            T& operator[](size_t p_index)
+            {
+                return m_vector[p_index];
+            };
+
+            T lengthPow2(void) const
+            {
+                T sum{ 0 };
+                for (int i = 0; i < Size; i++)
+                {
+                    sum += m_vector[i] * m_vector[i];
+                }
+                return sum;
+            }
+
+            T length(void) const
+            {
+                return std::sqrt(lengthPow2());
+            }
+
+            void normalize(void)
+            {
+                const T len{ length() };
+                if (len > 0)
+                {
+                    const T mag{ static_cast<T>(1) / len };
+
+                    for (int i = 0; i < Size; i++)
+                    {
+                        m_vector[i] *= mag;
+                    }
+                }
             }
 
         private:                   
