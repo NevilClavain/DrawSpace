@@ -67,9 +67,8 @@ namespace renderMe
         private:                   
             T m_vector[Size] = { 0 };
 
-            void unpack_args(int index)
-            {
-            }
+            // to stop the recursive args unpacking from the variadic
+            void unpack_args(int index) {}
 
             template <class First, class... Rest>
             void unpack_args(int index, First first, Rest... rest) {
