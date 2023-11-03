@@ -25,12 +25,11 @@
 #include "renderingqueue.h"
 
 using namespace renderMe::rendering;
+using namespace renderMe::core;
 
 Queue::Queue(const std::string& p_name) :
 m_name(p_name)
-{
-
-}
+{}
 
 std::string Queue::getName() const
 {
@@ -55,4 +54,24 @@ void Queue::setState(State p_newstate)
 void Queue::setPurpose(Purpose p_purpose)
 {
 	m_purpose = p_purpose;
+}
+
+void Queue::enableTargetClearing(bool p_enable)
+{
+	m_clear_target = true;
+}
+
+void Queue::setTargetClearColor(const Vector<unsigned char, 4>& p_color)
+{
+	m_target_clear_color = p_color;
+}
+
+bool Queue::getTargetClearing() const
+{
+	return m_clear_target;
+}
+
+Vector<unsigned char, 4> Queue::getTargetClearColor() const
+{
+	return m_target_clear_color;
 }

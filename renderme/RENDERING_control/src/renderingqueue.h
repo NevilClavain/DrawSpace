@@ -26,6 +26,7 @@
 #pragma once
 
 #include <string>
+#include "tvector.h"
 
 namespace renderMe
 {
@@ -59,12 +60,20 @@ namespace renderMe
 			void		setState(State p_newstate);
 			void		setPurpose(Purpose p_purpose);
 
+			void		enableTargetClearing(bool p_enable);
+			void		setTargetClearColor(const core::Vector<unsigned char, 4>& p_color);
+
+			bool							getTargetClearing() const;
+			core::Vector<unsigned char, 4>	getTargetClearColor() const;
+
 		private:
-			std::string		m_name;
-			Purpose			m_purpose{ Purpose::UNDEFINED };
-			State			m_state{ State::WAIT_INIT };
+			std::string						m_name;
+			Purpose							m_purpose{ Purpose::UNDEFINED };
+			State							m_state{ State::WAIT_INIT };
 
+			bool							m_clear_target{ false };
 
+			core::Vector<unsigned char, 4>	m_target_clear_color;
 			
 		};
 	}

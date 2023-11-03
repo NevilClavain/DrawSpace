@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.0)
 project(RENDERING_control)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 
 file(
         GLOB_RECURSE
