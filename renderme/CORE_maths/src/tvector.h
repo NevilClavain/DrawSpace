@@ -98,6 +98,47 @@ namespace renderMe
                 }
             }
 
+            void scale(T p_scale)
+            {
+                for (int i = 0; i < Size; i++)
+                {
+                    m_vector[i] *= p_scale;
+                }
+
+            }
+
+            static Vector<T, Size> lerp(const Vector<T, Size>& p_v1, const Vector<T, Size>& p_v2, float p_blend)
+            {
+                Vector<T, Size> out;
+                for (int i = 0; i < Size; i++)
+                {
+                    out[i] = p_v1[i] + static_cast<T>(p_blend) * (p_v2[i] - p_v1[i]);
+                }
+                return out;
+            }
+
+            static Vector<T, Size> crossProduct(const Vector<T, Size>& p_v1, const Vector<T, Size>& p_v2)
+            {
+                Vector<T, Size> out;
+                static_assert(Size >= 3, "cross Product applies only on 3D or 4D vector");
+
+                out[0] = (p_v1[1] * p_v2[2]) - (p_v1[2] * p_v2[1]);
+                out[1] = (p_v1[2] * p_v2[0]) - (p_v1[0] * p_v2[2]);
+                out[2] = (p_v1[0] * p_v2[1]) - (p_v1[1] * p_v2[0]);
+                return out;
+            }
+
+            static T dotProduct(const Vector<T, Size>& p_v1, const Vector<T, Size>& p_v2)
+            {
+                T sum{ 0 };
+                for (int i = 0; i < Size; i++)
+                {
+                    sum += p_v1[i] * p_v2[i];
+                }
+                return sum;
+            }
+
+
         private:                   
             T m_vector[Size] = { 0 };
 
@@ -111,5 +152,25 @@ namespace renderMe
                 unpack_args(index + 1, rest...); // Unpack the arguments for further treatment
             }
         };
+
+        // dot product
+        template<typename T = double, int Size = 4>
+        T operator* (const Vector<T, Size>& p_vA, const Vector<T, Size>& p_vB)
+        {            
+            return Vector<T,Size>::dotProduct(p_vA, p_vB);
+        }
+
+        // sum vectors
+        template<typename T = double, int Size = 4>
+        Vector<T, Size> operator+ (const Vector<T, Size>& p_vA, const Vector<T, Size>& p_vB)
+        {
+            Vector<T, Size> sum;
+            for (int i = 0; i < Size; i++)
+            {
+                sum[i] = p_vA[i] + p_vB[i];
+            }
+
+            return sum;
+        }        
 	}
 }

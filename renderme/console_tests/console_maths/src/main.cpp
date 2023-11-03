@@ -58,7 +58,26 @@ int main( int argc, char* argv[] )
 	std::cout << "vunit length after normalization = " << vunit.length() << "\n";
 	std::cout << "vunit vector (normalized) : " << vunit.dump() << "\n";
 
+	vint4.scale(10);
+	std::cout << "4 int vector scaled: " << vint4.dump() << "\n";
 
+	Vector<float, 3> vl0(1.0f, 1.0f, 1.0f);
+	Vector<float, 3> vl1(2.0f, 2.0f, 2.0f);
+
+	const auto vlerped{ Vector<float, 3>::lerp(vl0, vl1, 0.43f) };
+	std::cout << "lerp result: " << vlerped.dump() << "\n";
+
+	Vector<float, 3> vA(1.0f, -1.0f, 0.5f);
+	Vector<float, 3> vB(-1.0f, 2.0f, 2.0f);
+
+	const auto vcp{ Vector<float, 3>::crossProduct(vA, vB) };
+	std::cout << "cross-product result: " << vcp.dump() << "\n";
+
+	const float dp{ vA * vB };
+	std::cout << "dot-product = " << dp << "\n";
+
+	const auto vSum{ vA + vB };
+	std::cout << "vector sum = " << vSum.dump() << "\n";
 
     return 0;
 }
