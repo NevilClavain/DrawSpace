@@ -131,10 +131,10 @@ void D3D11SystemImpl::clearScreen(const renderMe::core::RGBAColor& p_clear_color
 {
 	FLOAT clearcolor[4];
 
-	clearcolor[renderMe::core::colorR] = p_clear_color[renderMe::core::colorR] / 255.0f;
-	clearcolor[renderMe::core::colorG] = p_clear_color[renderMe::core::colorG] / 255.0f;
-	clearcolor[renderMe::core::colorB] = p_clear_color[renderMe::core::colorB] / 255.0;
-	clearcolor[renderMe::core::colorA] = p_clear_color[renderMe::core::colorA] / 255.0;
+	clearcolor[0] = p_clear_color.r() / 255.0f;
+	clearcolor[1] = p_clear_color.g() / 255.0f;
+	clearcolor[2] = p_clear_color.b() / 255.0;
+	clearcolor[3] = p_clear_color.a() / 255.0;
 
 	m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);
 }
@@ -146,9 +146,9 @@ void D3D11SystemImpl::flipScreen(void)
 
 void D3D11SystemImpl::drawText(const renderMe::core::RGBColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text)
 {
-	const unsigned long color32{ (((0xff) << 24) | (((unsigned long)(p_clear_color[renderMe::core::colorB]) & 0xff) << 16) | 
-													(((unsigned long)(p_clear_color[renderMe::core::colorG]) & 0xff) << 8) |
-													((unsigned long)(p_clear_color[renderMe::core::colorA]) & 0xff)) };
+	const unsigned long color32{ (((0xff) << 24) | (((unsigned long)(p_clear_color.b()) & 0xff) << 16) | 
+													(((unsigned long)(p_clear_color.g()) & 0xff) << 8) |
+													((unsigned long)(p_clear_color.r()) & 0xff)) };
 
 	const std::wstring wtext(p_text.begin(), p_text.end());
 
@@ -156,10 +156,9 @@ void D3D11SystemImpl::drawText(const renderMe::core::RGBColor& p_clear_color, co
 		m_lpd3ddevcontext,
 		wtext.c_str(),
 		p_fontsize,// Font size
-		p_pos[renderMe::core::posX],// X position
-		p_pos[renderMe::core::posY],// Y position
+		p_pos.x(),// X position
+		p_pos.y(),// Y position
 		color32,// Text color, 0xAaBbGgRr
 		FW1_NOGEOMETRYSHADER | FW1_RESTORESTATE// Flags
-
 	);
 }

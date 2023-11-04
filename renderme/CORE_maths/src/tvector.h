@@ -69,6 +69,30 @@ namespace renderMe
                 return m_vector[p_index];
             };
 
+
+            // access helpers
+            T x() const { return m_vector[0]; };
+            T y() const { return m_vector[1]; };
+            T z() const { return m_vector[2]; };
+            T w() const { return m_vector[3]; };
+
+            T r() const { return m_vector[0]; };
+            T g() const { return m_vector[1]; };
+            T b() const { return m_vector[2]; };
+            T a() const { return m_vector[3]; };
+
+            T& x() { return m_vector[0]; };
+            T& y() { return m_vector[1]; };
+            T& z() { return m_vector[2]; };
+            T& w() { return m_vector[3]; };
+
+            T& r() { return m_vector[0]; };
+            T& g() { return m_vector[1]; };
+            T& b() { return m_vector[2]; };
+            T& a() { return m_vector[3]; };
+
+            //////////////////////////////////////////////////////////////////
+
             T lengthPow2(void) const
             {
                 T sum{ 0 };
@@ -172,17 +196,6 @@ namespace renderMe
 
             return sum;
         } 
-
-        constexpr int colorR{ 0 };
-        constexpr int colorG{ 1 };
-        constexpr int colorB{ 2 };
-        constexpr int colorA{ 3 };
-
-        constexpr int posX{ 0 };
-        constexpr int posY{ 1 };
-        constexpr int posZ{ 2 };
-        constexpr int posW{ 3 };
-
 
         using RGBAColor = Vector<unsigned char, 4>;
         using RGBColor = Vector<unsigned char, 3>;
