@@ -137,7 +137,18 @@ void D3D11System::manageRenderingQueues(Entity* p_entity, rendering::Queue& p_re
 
 		case rendering::Queue::State::READY:
 
-			// do queue rendering						
+			// do queue rendering
+
+			if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
+			{
+				D3D11SystemImpl::getInstance()->beginScreen();
+				D3D11SystemImpl::getInstance()->clearScreen(p_renderingQueue.getTargetClearColor());
+			}
+			else //INTERMEDIATE_RENDERING
+			{				
+				// TODO
+			}
+
 			break;
 
 		case rendering::Queue::State::ERROR_ORPHAN:
@@ -178,8 +189,15 @@ void D3D11System::run()
 			{
 				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
 				manageRenderingQueues(current_entity, renderingQueue);
+				
+				
 			}
 		}
+	}
+
+	if (m_initialized)
+	{
+		D3D11SystemImpl::getInstance()->flipScreen();
 	}
 }
 

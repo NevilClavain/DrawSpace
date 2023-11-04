@@ -117,3 +117,29 @@ bool D3D11SystemImpl::setCacheBlendstate(const D3D11_BLEND_DESC& p_currBlendDesc
 
 	return status;
 }
+
+void D3D11SystemImpl::beginScreen()
+{
+	m_currentTarget = m_screentarget;
+	m_currentView = m_pDepthStencilView;
+
+	m_lpd3ddevcontext->OMSetRenderTargets(1, &m_currentTarget, m_currentView);
+	m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
+}
+
+void D3D11SystemImpl::clearScreen(const renderMe::core::Vector<unsigned char, 4>& p_clear_color)
+{
+	FLOAT clearcolor[4];
+
+	clearcolor[0] = p_clear_color[0] / 255.0f;
+	clearcolor[1] = p_clear_color[1] / 255.0f;
+	clearcolor[2] = p_clear_color[2] / 255.0;
+	clearcolor[3] = p_clear_color[3] / 255.0;
+
+	m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);
+}
+
+void D3D11SystemImpl::flipScreen(void)
+{
+	m_lpd3dswapchain->Present(0, 0);
+}

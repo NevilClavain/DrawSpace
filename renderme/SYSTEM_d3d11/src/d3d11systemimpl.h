@@ -46,6 +46,7 @@
 #include "logconf.h"
 #include "logging.h"
 
+#include "tvector.h"
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
@@ -70,6 +71,10 @@ public:
     renderMe::core::logger::Sink& logger();
 
     bool init(renderMe::core::Entity* p_mainWindow);
+
+    void beginScreen();
+    void clearScreen(const renderMe::core::Vector<unsigned char, 4>& p_clear_color);
+    void flipScreen(void);
 
 private:
 
@@ -125,6 +130,10 @@ private:
     ID3D11Buffer*                   m_pixelShaderLegacyargsBuffer{ nullptr };
 
     D3D11_VIEWPORT                  m_mainScreenViewport;
+
+    ID3D11DepthStencilView*         m_currentView{ nullptr };
+    ID3D11RenderTargetView*         m_currentTarget{ nullptr };
+
 
 
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);

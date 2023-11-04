@@ -167,7 +167,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 	auto& rendering_queue{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
 
-	rendering_queue.setTargetClearColor({ 0, 128, 0, 255 });
+	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
 
 	/////////// systems
