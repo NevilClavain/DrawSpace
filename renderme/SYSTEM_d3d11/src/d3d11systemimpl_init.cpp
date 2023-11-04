@@ -270,7 +270,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 		hRes = fW1Factory->CreateFontWrapper(lpd3ddevice, wfontname.c_str(), &fontWrapper);
 		D3D11_CHECK(CreateFontWrapper);
 
-		m_fontWrappers.push_back(fontWrapper);
+		m_fontWrappers[fontname] = fontWrapper;
 	}
 
 	//////////////////////////////////////////////////////////////////////

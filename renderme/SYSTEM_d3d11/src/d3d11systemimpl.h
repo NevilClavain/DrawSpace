@@ -76,7 +76,7 @@ public:
     void clearScreen(const renderMe::core::RGBAColor& p_clear_color);
     void flipScreen(void);
 
-    void drawText(const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text);
+    void drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text);
 
 private:
 
@@ -103,38 +103,38 @@ private:
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;
     using BSCache =                 std::unordered_map<std::string, BSCacheEntry>;
 
-    renderMe::core::logger::Sink    m_localLogger;
+    renderMe::core::logger::Sink                        m_localLogger;
 
-    IDXGISwapChain*                 m_lpd3dswapchain{ nullptr };
-    ID3D11Device*                   m_lpd3ddevice{ nullptr };
-    ID3D11DeviceContext*            m_lpd3ddevcontext{ nullptr };
-    ID3D11RenderTargetView*         m_screentarget{ nullptr };
-    ID3D11DepthStencilState*        m_dsState_DepthTestDisabled{ nullptr };
-    ID3D11DepthStencilState*        m_dsState_DepthTestEnabled{ nullptr };
+    IDXGISwapChain*                                     m_lpd3dswapchain{ nullptr };
+    ID3D11Device*                                       m_lpd3ddevice{ nullptr };
+    ID3D11DeviceContext*                                m_lpd3ddevcontext{ nullptr };
+    ID3D11RenderTargetView*                             m_screentarget{ nullptr };
+    ID3D11DepthStencilState*                            m_dsState_DepthTestDisabled{ nullptr };
+    ID3D11DepthStencilState*                            m_dsState_DepthTestEnabled{ nullptr };
 
-    ID3D11Texture2D*                m_pDepthStencil{ nullptr };
-    ID3D11DepthStencilView*         m_pDepthStencilView{ nullptr };
+    ID3D11Texture2D*                                    m_pDepthStencil{ nullptr };
+    ID3D11DepthStencilView*                             m_pDepthStencilView{ nullptr };
 
-    std::vector<IFW1FontWrapper*>   m_fontWrappers;
+    std::unordered_map<std::string, IFW1FontWrapper*>   m_fontWrappers;
 
-    ID3D11SamplerState*             m_linearFilterSamplerState{ nullptr };
-    ID3D11SamplerState*             m_pointFilterSamplerState{ nullptr };
-    ID3D11SamplerState*             m_anisotropicFilterSamplerState{ nullptr };
+    ID3D11SamplerState*                                 m_linearFilterSamplerState{ nullptr };
+    ID3D11SamplerState*                                 m_pointFilterSamplerState{ nullptr };
+    ID3D11SamplerState*                                 m_anisotropicFilterSamplerState{ nullptr };
 
-    ID3D11SamplerState*             m_linearFilterSamplerState_uvwrap{ nullptr };
-    ID3D11SamplerState*             m_pointFilterSamplerState_uvwrap{ nullptr };
-    ID3D11SamplerState*             m_anisotropicFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState*                                 m_linearFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState*                                 m_pointFilterSamplerState_uvwrap{ nullptr };
+    ID3D11SamplerState*                                 m_anisotropicFilterSamplerState_uvwrap{ nullptr };
 
-    RSCache                         m_rsCache;
-    BSCache                         m_bsCache;
+    RSCache                                             m_rsCache;
+    BSCache                                             m_bsCache;
 
-    ID3D11Buffer*                   m_vertexShaderLegacyargsBuffer{ nullptr };
-    ID3D11Buffer*                   m_pixelShaderLegacyargsBuffer{ nullptr };
+    ID3D11Buffer*                                       m_vertexShaderLegacyargsBuffer{ nullptr };
+    ID3D11Buffer*                                       m_pixelShaderLegacyargsBuffer{ nullptr };
 
-    D3D11_VIEWPORT                  m_mainScreenViewport;
+    D3D11_VIEWPORT                                      m_mainScreenViewport;
 
-    ID3D11DepthStencilView*         m_currentView{ nullptr };
-    ID3D11RenderTargetView*         m_currentTarget{ nullptr };
+    ID3D11DepthStencilView*                             m_currentView{ nullptr };
+    ID3D11RenderTargetView*                             m_currentTarget{ nullptr };
 
 
 
