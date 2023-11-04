@@ -195,7 +195,7 @@ void D3D11System::run()
 
 	if (m_initialized)
 	{
-		D3D11SystemImpl::getInstance()->drawText({ 255, 0, 255 }, { 0, 0 }, 30.0, "plop !");
+		D3D11SystemImpl::getInstance()->drawText({ 255, 0, 255, 255 }, { 0, 0 }, 30.0, "plop !");
 
 		D3D11SystemImpl::getInstance()->flipScreen();
 	}

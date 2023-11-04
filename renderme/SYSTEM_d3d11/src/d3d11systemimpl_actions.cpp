@@ -144,11 +144,14 @@ void D3D11SystemImpl::flipScreen(void)
 	m_lpd3dswapchain->Present(0, 0);
 }
 
-void D3D11SystemImpl::drawText(const renderMe::core::RGBColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text)
+void D3D11SystemImpl::drawText(const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text)
 {
-	const unsigned long color32{ (((0xff) << 24) | (((unsigned long)(p_clear_color.b()) & 0xff) << 16) | 
-													(((unsigned long)(p_clear_color.g()) & 0xff) << 8) |
-													((unsigned long)(p_clear_color.r()) & 0xff)) };
+	const unsigned long color32{ (
+									(((unsigned long)(p_clear_color.a())) << 24) |
+									(((unsigned long)(p_clear_color.b()) & 0xff) << 16) | 
+									(((unsigned long)(p_clear_color.g()) & 0xff) << 8) |
+									((unsigned long)(p_clear_color.r()) & 0xff)
+								) };
 
 	const std::wstring wtext(p_text.begin(), p_text.end());
 
