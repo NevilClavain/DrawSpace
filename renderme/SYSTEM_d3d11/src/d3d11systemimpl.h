@@ -76,6 +76,8 @@ public:
     void clearScreen(const renderMe::core::RGBAColor& p_clear_color);
     void flipScreen(void);
 
+    void drawText(const renderMe::core::RGBColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text);
+
 private:
 
     // render states

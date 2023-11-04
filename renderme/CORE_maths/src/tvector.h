@@ -173,8 +173,20 @@ namespace renderMe
             return sum;
         } 
 
+        constexpr int colorR{ 0 };
+        constexpr int colorG{ 1 };
+        constexpr int colorB{ 2 };
+        constexpr int colorA{ 3 };
+
+        constexpr int posX{ 0 };
+        constexpr int posY{ 1 };
+        constexpr int posZ{ 2 };
+        constexpr int posW{ 3 };
+
+
         using RGBAColor = Vector<unsigned char, 4>;
         using RGBColor = Vector<unsigned char, 3>;
+        using IntCoords2D = Vector<int, 2>;
 
 	} // core
 } // renderMe
