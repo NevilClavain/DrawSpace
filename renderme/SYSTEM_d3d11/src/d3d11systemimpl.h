@@ -73,7 +73,7 @@ public:
     bool init(renderMe::core::Entity* p_mainWindow);
 
     void beginScreen();
-    void clearScreen(const renderMe::core::Vector<unsigned char, 4>& p_clear_color);
+    void clearScreen(const renderMe::core::RGBAColor& p_clear_color);
     void flipScreen(void);
 
 private:

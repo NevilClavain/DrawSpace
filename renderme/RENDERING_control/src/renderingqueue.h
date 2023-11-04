@@ -53,18 +53,18 @@ namespace renderMe
 			Queue(const std::string& p_name);
 			~Queue() = default;
 
-			std::string getName() const;
-			Purpose		getPurpose() const;
-			State		getState() const;
+			std::string			getName() const;
+			Purpose				getPurpose() const;
+			State				getState() const;
 
-			void		setState(State p_newstate);
-			void		setPurpose(Purpose p_purpose);
+			void				setState(State p_newstate);
+			void				setPurpose(Purpose p_purpose);
 
-			void		enableTargetClearing(bool p_enable);
-			void		setTargetClearColor(const core::Vector<unsigned char, 4>& p_color);
+			void				enableTargetClearing(bool p_enable);
+			void				setTargetClearColor(const core::RGBAColor& p_color);
 
-			bool							getTargetClearing() const;
-			core::Vector<unsigned char, 4>	getTargetClearColor() const;
+			bool				getTargetClearing() const;
+			core::RGBAColor		getTargetClearColor() const;
 
 		private:
 			std::string						m_name;
@@ -73,7 +73,7 @@ namespace renderMe
 
 			bool							m_clear_target{ false };
 
-			core::Vector<unsigned char, 4>	m_target_clear_color;
+			core::RGBAColor					m_target_clear_color;
 			
 		};
 	}

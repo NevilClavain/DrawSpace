@@ -127,7 +127,7 @@ void D3D11SystemImpl::beginScreen()
 	m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
 }
 
-void D3D11SystemImpl::clearScreen(const renderMe::core::Vector<unsigned char, 4>& p_clear_color)
+void D3D11SystemImpl::clearScreen(const renderMe::core::RGBAColor& p_clear_color)
 {
 	FLOAT clearcolor[4];
 

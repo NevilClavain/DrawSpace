@@ -32,7 +32,7 @@
 namespace renderMe
 {
 	namespace core
-	{
+	{      
 		template<typename T=double, int Size=4>
 		class Vector
         {
@@ -171,6 +171,10 @@ namespace renderMe
             }
 
             return sum;
-        }        
-	}
-}
+        } 
+
+        using RGBAColor = Vector<unsigned char, 4>;
+        using RGBColor = Vector<unsigned char, 3>;
+
+	} // core
+} // renderMe

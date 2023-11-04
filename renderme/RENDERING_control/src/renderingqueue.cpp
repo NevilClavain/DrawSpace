@@ -61,7 +61,7 @@ void Queue::enableTargetClearing(bool p_enable)
 	m_clear_target = true;
 }
 
-void Queue::setTargetClearColor(const Vector<unsigned char, 4>& p_color)
+void Queue::setTargetClearColor(const RGBAColor& p_color)
 {
 	m_target_clear_color = p_color;
 }
@@ -71,7 +71,7 @@ bool Queue::getTargetClearing() const
 	return m_clear_target;
 }
 
-Vector<unsigned char, 4> Queue::getTargetClearColor() const
+RGBAColor Queue::getTargetClearColor() const
 {
 	return m_target_clear_color;
 }

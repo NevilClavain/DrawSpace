@@ -188,9 +188,7 @@ void D3D11System::run()
 			if (rendering_queue_comp)
 			{
 				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
-				manageRenderingQueues(current_entity, renderingQueue);
-				
-				
+				manageRenderingQueues(current_entity, renderingQueue);							
 			}
 		}
 	}
