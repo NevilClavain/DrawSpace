@@ -60,6 +60,8 @@ public:
     void                            init(const std::string p_appWindowsEntityName);
     void                            run(void);
 
+    void                            createEntities(const std::string p_appWindowsEntityName);
+
     //override
     void                            registerSubscriber(const Callback& p_callback);
 

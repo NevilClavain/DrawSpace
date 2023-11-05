@@ -155,10 +155,28 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 		_EXCEPTION("Cannot parse logging configuration")
 	}
 
+	/////////// systems
+
+	auto sysEngine{ SystemEngine::getInstance() };
+	sysEngine->makeSystem<renderMe::D3D11System>(renderMe::d3d11SystemExecutionSlot, m_entitygraph);
+
+	//////////////////////////
+
+	createEntities(p_appWindowsEntityName);
+}
+
+void RootImpl::run(void)
+{
+	auto sysEngine{ SystemEngine::getInstance() };
+	sysEngine->run();
+}
+
+void RootImpl::createEntities(const std::string p_appWindowsEntityName)
+{
 	/////////// add screen rendering pass entity
 
-	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName)};
-	auto screenRenderingPassNode { m_entitygraph.add(appwindow_node, "screenRenderingPassNode") };
+	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName) };
+	auto screenRenderingPassNode{ m_entitygraph.add(appwindow_node, "screenRenderingPassNode") };
 
 	const auto screenRenderingPassEntity{ screenRenderingPassNode.data() };
 	auto& rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
@@ -169,17 +187,6 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
-
-	/////////// systems
-
-	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->makeSystem<renderMe::D3D11System>(renderMe::d3d11SystemExecutionSlot, m_entitygraph);
-}
-
-void RootImpl::run(void)
-{
-	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->run();
 }
 
 void RootImpl::registerSubscriber(const Callback& p_callback)
