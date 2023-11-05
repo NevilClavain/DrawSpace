@@ -171,24 +171,6 @@ void RootImpl::run(void)
 	sysEngine->run();
 }
 
-void RootImpl::createEntities(const std::string p_appWindowsEntityName)
-{
-	/////////// add screen rendering pass entity
-
-	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName) };
-	auto screenRenderingPassNode{ m_entitygraph.add(appwindow_node, "screenRenderingPassNode") };
-
-	const auto screenRenderingPassEntity{ screenRenderingPassNode.data() };
-	auto& rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
-
-	rendering_aspect.addComponent<rendering::Queue>("renderingQueue", "final_pass");
-
-	auto& rendering_queue{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
-
-	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
-	rendering_queue.enableTargetClearing(true);
-}
-
 void RootImpl::registerSubscriber(const Callback& p_callback)
 {
 	renderMe::property::EventSource<renderMe::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);
@@ -204,5 +186,30 @@ void RootImpl::registerSubscriber(const Callback& p_callback)
 	{
 		call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
 	}
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void RootImpl::createEntities(const std::string p_appWindowsEntityName)
+{
+	/////////// add screen rendering pass entity
+
+	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName) };
+	auto& screenRenderingPassNode{ m_entitygraph.add(appwindow_node, "screenRenderingPassNode") };
+
+	const auto screenRenderingPassEntity{ screenRenderingPassNode.data() };
+
+	auto& screenRendering_rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
+
+	screenRendering_rendering_aspect.addComponent<rendering::Queue>("renderingQueue", "final_pass");
+	
+	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
+	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
+	rendering_queue.enableTargetClearing(true);
+
+	rendering_queue.addText({ "Small text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 100 }, 10.0 });
+	rendering_queue.addText({ "Medium text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 150 }, 20.0 });
+	rendering_queue.addText({ "Large text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 200 }, 40.0 });
 
 }

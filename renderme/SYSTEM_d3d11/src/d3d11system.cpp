@@ -172,6 +172,11 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 
 		// TODO : run queue
 
+		// render texts
+		for (auto& text : p_renderingQueue.texts())
+		{
+			D3D11SystemImpl::getInstance()->drawText(text.font, text.color, text.position, text.font_size, text.text);
+		}
 		break;
 
 	case rendering::Queue::State::ERROR_ORPHAN:
@@ -216,10 +221,6 @@ void D3D11System::run()
 
 	if (m_initialized)
 	{
-		D3D11SystemImpl::getInstance()->drawText("Bahnschrift", { 255, 0, 255, 255 }, { 10, 100 }, 10.0, "small text");
-		D3D11SystemImpl::getInstance()->drawText("Bahnschrift", { 255, 0, 255, 255 }, { 10, 150 }, 20.0, "medium text");
-		D3D11SystemImpl::getInstance()->drawText("Bahnschrift", { 255, 0, 255, 255 }, { 10, 200 }, 40.0, "large text");
-
 		D3D11SystemImpl::getInstance()->flipScreen();
 	}
 }

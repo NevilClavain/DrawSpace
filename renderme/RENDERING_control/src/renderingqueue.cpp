@@ -75,3 +75,18 @@ RGBAColor Queue::getTargetClearColor() const
 {
 	return m_target_clear_color;
 }
+
+void Queue::addText(const Queue::Text& p_text)
+{
+	m_texts.push_back(p_text);
+}
+
+void Queue::clearTexts()
+{
+	m_texts.clear();
+}
+
+const std::vector<Queue::Text>& Queue::texts() const
+{
+	return m_texts;
+}

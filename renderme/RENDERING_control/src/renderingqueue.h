@@ -26,6 +26,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "tvector.h"
 
 namespace renderMe
@@ -50,22 +51,36 @@ namespace renderMe
 				ERROR_ORPHAN
 			};
 
+			struct Text
+			{
+				std::string					text;
+				std::string					font;
+				renderMe::core::RGBAColor	color{ 255, 255, 255, 255 };
+				renderMe::core::IntCoords2D position;
+				float						font_size{ 15.0 };
+			};
+
 			Queue(const std::string& p_name);
 			~Queue() = default;
 
-			std::string			getName() const;
-			Purpose				getPurpose() const;
-			State				getState() const;
+			std::string					getName() const;
+			Purpose						getPurpose() const;
+			State						getState() const;
 
-			void				setState(State p_newstate);
-			void				setPurpose(Purpose p_purpose);
+			void						setState(State p_newstate);
+			void						setPurpose(Purpose p_purpose);
 
-			void				enableTargetClearing(bool p_enable);
-			void				setTargetClearColor(const core::RGBAColor& p_color);
+			void						enableTargetClearing(bool p_enable);
+			void						setTargetClearColor(const core::RGBAColor& p_color);
 
-			bool				getTargetClearing() const;
-			core::RGBAColor		getTargetClearColor() const;
+			bool						getTargetClearing() const;
+			core::RGBAColor				getTargetClearColor() const;
 
+			void						addText(const Text& p_text);
+			void						clearTexts();
+
+			const std::vector<Text>&	texts() const;
+		
 		private:
 			std::string						m_name;
 			Purpose							m_purpose{ Purpose::UNDEFINED };
@@ -74,7 +89,8 @@ namespace renderMe
 			bool							m_clear_target{ false };
 
 			core::RGBAColor					m_target_clear_color;
-			
+
+			std::vector<Text>				m_texts;			
 		};
 	}
 }
