@@ -45,7 +45,11 @@ namespace renderMe
     private:
         bool	m_initialized{ false };
 
-        void    manageRenderingQueues(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
+        void    manageInitialization();
+
+        void    manageRenderingQueue();
+
+        void    handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
 
     };
 }
