@@ -73,7 +73,7 @@ public:
     bool init(renderMe::core::Entity* p_mainWindow);
 
     void beginScreen();
-    void clearScreen(const renderMe::core::RGBAColor& p_clear_color);
+    void clearTarget(const renderMe::core::RGBAColor& p_clear_color);
     void flipScreen(void);
 
     void drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text);

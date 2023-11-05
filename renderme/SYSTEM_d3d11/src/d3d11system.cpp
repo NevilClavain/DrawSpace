@@ -161,12 +161,16 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 		if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
 		{
 			D3D11SystemImpl::getInstance()->beginScreen();
-			D3D11SystemImpl::getInstance()->clearScreen(p_renderingQueue.getTargetClearColor());
+			
 		}
 		else //INTERMEDIATE_RENDERING
 		{
-			// TODO
+			// TODO : beginIntermediate()
 		}
+
+		D3D11SystemImpl::getInstance()->clearTarget(p_renderingQueue.getTargetClearColor());
+
+		// TODO : run queue
 
 		break;
 
