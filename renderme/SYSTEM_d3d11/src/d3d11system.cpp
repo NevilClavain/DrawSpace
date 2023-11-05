@@ -49,20 +49,6 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
 }
 
-void D3D11System::checkD3D11SystemImplInit(core::Entity* p_entity)
-{
-	if (!m_initialized)
-	{
-		if (D3D11SystemImpl::getInstance()->init(p_entity))
-		{
-			m_initialized = true;
-		}
-		else
-		{
-			_EXCEPTION("D3D11 initialization failed")
-		}
-	}
-}
 
 void D3D11System::manageRenderingQueues(Entity* p_entity, rendering::Queue& p_renderingQueue)
 {
@@ -160,7 +146,41 @@ void D3D11System::manageRenderingQueues(Entity* p_entity, rendering::Queue& p_re
 
 void D3D11System::run()
 {
-	for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+	if (!m_initialized)
+	{
+		for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+		{
+			const auto current_entity{ it->data() };
+			const auto currId{ current_entity->getId() };
+
+			if (current_entity->hasAspect(core::renderingAspect::id))
+			{
+				const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
+
+				//////////////////////////////////////////////////////////////////////////////////////////////
+				// manage D3D11 init
+
+				auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+				const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr &&
+														core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target_comp->getPurpose() };
+
+				if (isWindowsRenderingTarget)
+				{
+					if (D3D11SystemImpl::getInstance()->init(current_entity))
+					{
+						m_initialized = true;
+						break;
+					}
+					else
+					{
+						_EXCEPTION("D3D11 initialization failed")
+					}
+				}
+			}
+		}
+	}
+
+	for (auto it = m_entitygraph.postBegin(); it != m_entitygraph.postEnd(); ++it)
 	{
 		const auto current_entity{ it->data() };
 		const auto currId{ current_entity->getId() };
@@ -170,25 +190,13 @@ void D3D11System::run()
 			const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			// manage D3D11 init
-
-			auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
-			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr && 
-													core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target_comp->getPurpose() };
-
-			if (isWindowsRenderingTarget)
-			{
-				checkD3D11SystemImplInit(current_entity);
-			}
-
-			//////////////////////////////////////////////////////////////////////////////////////////////
 			// manage rendering queues
 
 			auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
 			if (rendering_queue_comp)
 			{
 				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
-				manageRenderingQueues(current_entity, renderingQueue);							
+				manageRenderingQueues(current_entity, renderingQueue);
 			}
 		}
 	}

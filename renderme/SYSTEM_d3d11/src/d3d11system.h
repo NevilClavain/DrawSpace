@@ -45,7 +45,6 @@ namespace renderMe
     private:
         bool	m_initialized{ false };
 
-        void    checkD3D11SystemImplInit(core::Entity* p_entity);
         void    manageRenderingQueues(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
 
     };
