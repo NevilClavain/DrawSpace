@@ -276,6 +276,11 @@ ALL_BUILD.vcxproj*
 /renderme/CORE_maths/*.sln
 /renderme/CORE_maths/*.vcxproj*
 
+/renderme/CORE_time/CMakeFiles/
+/renderme/CORE_time/*.sln
+/renderme/CORE_time/*.vcxproj*
+
+
 /renderme/RENDERING_control/CMakeFiles/
 /renderme/RENDERING_control/*.sln
 /renderme/RENDERING_control/*.vcxproj*

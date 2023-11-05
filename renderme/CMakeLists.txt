@@ -68,6 +68,7 @@ add_subdirectory(CORE_app)
 add_subdirectory(CORE_ecs)
 add_subdirectory(CORE_module)
 add_subdirectory(CORE_maths)
+add_subdirectory(CORE_time)
 
 add_subdirectory(RENDERING_control)
 
