@@ -157,26 +157,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 	case rendering::Queue::State::READY:
 
 		// do queue rendering
-
-		if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
-		{
-			D3D11SystemImpl::getInstance()->beginScreen();
-			
-		}
-		else //INTERMEDIATE_RENDERING
-		{
-			// TODO : beginIntermediate()
-		}
-
-		D3D11SystemImpl::getInstance()->clearTarget(p_renderingQueue.getTargetClearColor());
-
-		// TODO : run queue
-
-		// render texts
-		for (auto& text : p_renderingQueue.texts())
-		{
-			D3D11SystemImpl::getInstance()->drawText(text.font, text.color, text.position, text.font_size, text.text);
-		}
+		renderQueue(p_renderingQueue);
 		break;
 
 	case rendering::Queue::State::ERROR_ORPHAN:
@@ -186,7 +167,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 	}
 }
 
-void D3D11System::manageRenderingQueue()
+void D3D11System::manageRenderingQueue() const
 {
 	for (auto it = m_entitygraph.postBegin(); it != m_entitygraph.postEnd(); ++it)
 	{
@@ -207,6 +188,29 @@ void D3D11System::manageRenderingQueue()
 				handleRenderingQueuesState(current_entity, renderingQueue);
 			}
 		}
+	}
+}
+
+void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
+{
+	if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
+	{
+		D3D11SystemImpl::getInstance()->beginScreen();
+
+	}
+	else //INTERMEDIATE_RENDERING
+	{
+		// TODO : beginIntermediate()
+	}
+
+	D3D11SystemImpl::getInstance()->clearTarget(p_renderingQueue.getTargetClearColor());
+
+	// TODO : run queue
+
+	// render texts
+	for (auto& text : p_renderingQueue.texts())
+	{
+		D3D11SystemImpl::getInstance()->drawText(text.font, text.color, text.position, text.font_size, text.text);
 	}
 }
 

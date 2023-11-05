@@ -46,10 +46,9 @@ namespace renderMe
         bool	m_initialized{ false };
 
         void    manageInitialization();
+        void    manageRenderingQueue() const;
 
-        void    manageRenderingQueue();
-
-        void    handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
-
+        static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
+        static void renderQueue(rendering::Queue& p_renderingQueue);
     };
 }
