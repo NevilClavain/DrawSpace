@@ -103,7 +103,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 			}
 			else
 			{
-				if (p_entity->hasAspect(core::renderingAspect::id))
+				if (parent_entity->hasAspect(core::renderingAspect::id))
 				{
 					const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
 					auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
