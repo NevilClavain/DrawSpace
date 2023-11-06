@@ -73,6 +73,7 @@ add_subdirectory(CORE_time)
 add_subdirectory(RENDERING_control)
 
 add_subdirectory(SYSTEM_d3d11)
+add_subdirectory(SYSTEM_time)
 
 add_subdirectory(rt)
 

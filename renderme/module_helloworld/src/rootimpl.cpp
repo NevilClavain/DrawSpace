@@ -26,6 +26,8 @@
 #include "aspects.h"
 #include "sysengine.h"
 #include "d3d11system.h"
+#include "timesystem.h"
+
 #include "filesystem.h"
 #include "logconf.h"
 
@@ -158,8 +160,10 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	/////////// systems
 
 	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->makeSystem<renderMe::D3D11System>(renderMe::d3d11SystemExecutionSlot, m_entitygraph);
 
+	sysEngine->makeSystem<renderMe::TimeSystem>(0, m_entitygraph);
+	sysEngine->makeSystem<renderMe::D3D11System>(1, m_entitygraph);
+	
 	//////////////////////////
 
 	createEntities(p_appWindowsEntityName);

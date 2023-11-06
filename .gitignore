@@ -290,6 +290,10 @@ ALL_BUILD.vcxproj*
 /renderme/SYSTEM_d3d11/*.sln
 /renderme/SYSTEM_d3d11/*.vcxproj*
 
+/renderme/SYSTEM_time/CMakeFiles/
+/renderme/SYSTEM_time/*.sln
+/renderme/SYSTEM_time/*.vcxproj*
+
 ################## renderME - ##########################################
 
 

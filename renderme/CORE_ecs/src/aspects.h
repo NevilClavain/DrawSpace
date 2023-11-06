@@ -40,5 +40,9 @@ namespace renderMe
 			};
 		}
 
+		namespace timeAspect
+		{
+			static constexpr int id{ 0x0002 };
+		}
 	}
 }

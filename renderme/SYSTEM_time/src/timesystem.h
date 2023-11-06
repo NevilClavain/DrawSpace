@@ -27,27 +27,19 @@
 #include "system.h"
 
 namespace renderMe
-{   
+{
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
-    namespace rendering { class Queue; }
-           
-    class D3D11System : public core::System
+   
+    class TimeSystem : public core::System
     {
     public:
 
-        D3D11System(core::Entitygraph& p_entitygraph);
-        ~D3D11System() = default;
+        TimeSystem(core::Entitygraph& p_entitygraph);
+        ~TimeSystem() = default;
 
         void run();
 
     private:
-        bool	m_initialized{ false };
-
-        void    manageInitialization();
-        void    manageRenderingQueue() const;
-
-        static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
-        static void renderQueue(rendering::Queue& p_renderingQueue);
     };
 }

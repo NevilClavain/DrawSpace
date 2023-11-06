@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,31 +22,16 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
-#include "system.h"
+#include "timesystem.h"
+#include "entitygraph.h"
 
-namespace renderMe
-{   
-    namespace core { class Entity; }
-    namespace core { class Entitygraph; }
-    namespace rendering { class Queue; }
-           
-    class D3D11System : public core::System
-    {
-    public:
+using namespace renderMe;
+using namespace renderMe::core;
 
-        D3D11System(core::Entitygraph& p_entitygraph);
-        ~D3D11System() = default;
+TimeSystem::TimeSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
+{
+}
 
-        void run();
-
-    private:
-        bool	m_initialized{ false };
-
-        void    manageInitialization();
-        void    manageRenderingQueue() const;
-
-        static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
-        static void renderQueue(rendering::Queue& p_renderingQueue);
-    };
+void TimeSystem::run()
+{
 }
