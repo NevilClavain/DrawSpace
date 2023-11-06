@@ -218,5 +218,6 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 
 	rendering_queue.addText({ "Hello world !", "Bahnschrift", { 255, 255, 255, 255 }, { 400, 10 }, 20.0 });
+	rendering_queue.addText({ "fps = ", "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
 
 }
