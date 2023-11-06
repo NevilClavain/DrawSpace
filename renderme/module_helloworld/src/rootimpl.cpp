@@ -171,8 +171,22 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 void RootImpl::run(void)
 {
+	/////////////////////////////////////////////////////
+
 	auto sysEngine{ SystemEngine::getInstance() };
 	sysEngine->run();
+
+	/////////////////////////////////////////////////////
+
+	
+	auto& timeInfosNode{ m_entitygraph.node("timeInfosEntity") };
+
+	const auto timeInfosEntity{ timeInfosNode.data() };
+	auto& timeInfos_rendering_aspect{ timeInfosEntity->aspectAccess(core::timeAspect::id) };
+
+	const auto currentFPS{ timeInfos_rendering_aspect.getComponent<int>("framePerSeconds")->getPurpose() };
+
+	// TO BE CONTINUED : print fps from timeInfos enttiy
 }
 
 void RootImpl::registerSubscriber(const Callback& p_callback)
@@ -199,9 +213,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 {
 	/////////// add screen rendering pass entity
 
-	auto& appwindow_node{ m_entitygraph.node(p_appWindowsEntityName) };
-	auto& screenRenderingPassNode{ m_entitygraph.add(appwindow_node, "screenRenderingPassNode") };
+	auto& appwindowNode{ m_entitygraph.node(p_appWindowsEntityName) };
 
+	auto& screenRenderingPassNode{ m_entitygraph.add(appwindowNode, "screenRenderingEntity") };
 	const auto screenRenderingPassEntity{ screenRenderingPassNode.data() };
 
 	auto& screenRendering_rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
@@ -219,5 +233,16 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	rendering_queue.addText({ "Hello world !", "Bahnschrift", { 255, 255, 255, 255 }, { 400, 10 }, 20.0 });
 	rendering_queue.addText({ "fps = ", "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
+
+
+	/////////////// add time management infos entity
+
+	auto& timeInfosNode{ m_entitygraph.add(appwindowNode, "timeInfosEntity") };
+
+	const auto timeInfosEntity{ timeInfosNode.data() };
+
+	auto& timeInfos_rendering_aspect{ timeInfosEntity->makeAspect(core::timeAspect::id) };
+
+	timeInfos_rendering_aspect.addComponent<int>("framePerSeconds", -1); // will be updated by time system
 
 }
