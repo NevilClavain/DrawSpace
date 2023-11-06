@@ -31,7 +31,8 @@
 #include "filesystem.h"
 #include "logconf.h"
 
-#include "renderingqueue.h"
+#include "entity.h"
+
 
 
 using namespace renderMe;
@@ -186,7 +187,9 @@ void RootImpl::run(void)
 
 	const auto currentFPS{ timeInfos_rendering_aspect.getComponent<int>("framePerSeconds")->getPurpose() };
 
-	// TO BE CONTINUED : print fps from timeInfos enttiy
+	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };;
+
+	m_windowRenderingQueue->setText(4, { fpsText, "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
 }
 
 void RootImpl::registerSubscriber(const Callback& p_callback)
@@ -226,15 +229,15 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
 
-	rendering_queue.addText({ "Small text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 100 }, 10.0 });
-	rendering_queue.addText({ "Medium text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 150 }, 20.0 });
-	rendering_queue.addText({ "Large text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 200 }, 40.0 });
+	rendering_queue.setText(0, { "Small text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 100 }, 10.0 });
+	rendering_queue.setText(1, { "Medium text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 150 }, 20.0 });
+	rendering_queue.setText(2, { "Large text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 200 }, 40.0 });
 
 
-	rendering_queue.addText({ "Hello world !", "Bahnschrift", { 255, 255, 255, 255 }, { 400, 10 }, 20.0 });
-	rendering_queue.addText({ "fps = ", "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
+	rendering_queue.setText(3, { "Hello world !", "Bahnschrift", { 255, 255, 255, 255 }, { 400, 10 }, 20.0 });
 
-
+	m_windowRenderingQueue = &rendering_queue;
+	
 	/////////////// add time management infos entity
 
 	auto& timeInfosNode{ m_entitygraph.add(appwindowNode, "timeInfosEntity") };

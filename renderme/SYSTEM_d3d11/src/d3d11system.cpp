@@ -210,7 +210,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 	// render texts
 	for (auto& text : p_renderingQueue.texts())
 	{
-		D3D11SystemImpl::getInstance()->drawText(text.font, text.color, text.position, text.font_size, text.text);
+		D3D11SystemImpl::getInstance()->drawText(text.second.font, text.second.color, text.second.position, text.second.font_size, text.second.text);
 	}
 }
 

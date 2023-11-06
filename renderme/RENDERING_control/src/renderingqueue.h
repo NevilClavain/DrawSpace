@@ -26,7 +26,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <map>
 #include "tvector.h"
 
 namespace renderMe
@@ -76,10 +76,10 @@ namespace renderMe
 			bool						getTargetClearing() const;
 			core::RGBAColor				getTargetClearColor() const;
 
-			void						addText(const Text& p_text);
+			void						setText(int p_id, const Text& p_text);
 			void						clearTexts();
 
-			const std::vector<Text>&	texts() const;
+			const std::map<int, Text>&	texts() const;
 		
 		private:
 			std::string						m_name;
@@ -90,7 +90,8 @@ namespace renderMe
 
 			core::RGBAColor					m_target_clear_color;
 
-			std::vector<Text>				m_texts;			
+			//std::vector<Text>				m_texts;
+			std::map<int,Text>				m_texts;
 		};
 	}
 }

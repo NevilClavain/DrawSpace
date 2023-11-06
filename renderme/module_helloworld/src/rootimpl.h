@@ -26,8 +26,10 @@
 #pragma once
 
 #include "module_root.h"
+
 #include "entity.h"
 #include "entitygraph.h"
+#include "renderingqueue.h"
 
 class RootImpl : public renderMe::interfaces::ModuleRoot
 {
@@ -71,6 +73,8 @@ private:
     bool                            m_mouse_circular_mode{ false };
 
     renderMe::core::Entitygraph     m_entitygraph;
+
+    renderMe::rendering::Queue*     m_windowRenderingQueue{ nullptr };
 
 
 };

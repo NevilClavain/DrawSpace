@@ -76,9 +76,10 @@ RGBAColor Queue::getTargetClearColor() const
 	return m_target_clear_color;
 }
 
-void Queue::addText(const Queue::Text& p_text)
+void Queue::setText(int p_id, const Queue::Text& p_text)
 {
-	m_texts.push_back(p_text);
+	// can overwrite (to update text)
+	m_texts[p_id] = p_text;
 }
 
 void Queue::clearTexts()
@@ -86,7 +87,7 @@ void Queue::clearTexts()
 	m_texts.clear();
 }
 
-const std::vector<Queue::Text>& Queue::texts() const
+const std::map<int, Queue::Text>& Queue::texts() const
 {
 	return m_texts;
 }
