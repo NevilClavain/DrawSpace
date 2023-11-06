@@ -179,16 +179,8 @@ void RootImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-	
-	auto& timeInfosNode{ m_entitygraph.node("timeInfosEntity") };
-
-	const auto timeInfosEntity{ timeInfosNode.data() };
-	auto& timeInfos_rendering_aspect{ timeInfosEntity->aspectAccess(core::timeAspect::id) };
-
-	const auto currentFPS{ timeInfos_rendering_aspect.getComponent<int>("framePerSeconds")->getPurpose() };
-
+	const auto currentFPS{ m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
 	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };;
-
 	m_windowRenderingQueue->setText(4, { fpsText, "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
 }
 
@@ -244,8 +236,10 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	const auto timeInfosEntity{ timeInfosNode.data() };
 
-	auto& timeInfos_rendering_aspect{ timeInfosEntity->makeAspect(core::timeAspect::id) };
+	auto& timeInfos_time_aspect{ timeInfosEntity->makeAspect(core::timeAspect::id) };
 
-	timeInfos_rendering_aspect.addComponent<int>("framePerSeconds", -1); // will be updated by time system
+	timeInfos_time_aspect.addComponent<int>("framePerSeconds", -1); // will be updated by time system
+
+	m_timeInfos_time_aspect = &timeInfos_time_aspect;
 
 }

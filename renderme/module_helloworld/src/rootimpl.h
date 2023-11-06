@@ -69,12 +69,13 @@ public:
 
 private:
 
-    bool                            m_show_mouse_cursor{ true };
-    bool                            m_mouse_circular_mode{ false };
+    bool                                    m_show_mouse_cursor{ true };
+    bool                                    m_mouse_circular_mode{ false };
 
-    renderMe::core::Entitygraph     m_entitygraph;
+    renderMe::core::Entitygraph             m_entitygraph;
 
-    renderMe::rendering::Queue*     m_windowRenderingQueue{ nullptr };
+    renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
+    renderMe::core::ComponentContainer*     m_timeInfos_time_aspect{ nullptr };
 
 
 };
