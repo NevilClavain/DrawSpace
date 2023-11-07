@@ -237,7 +237,6 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	const auto timeInfosEntity{ timeInfosNode.data() };
 
 	auto& timeInfos_time_aspect{ timeInfosEntity->makeAspect(core::timeAspect::id) };
-
 	timeInfos_time_aspect.addComponent<int>("framePerSeconds", -1); // will be updated by time system
 
 	m_timeInfos_time_aspect = &timeInfos_time_aspect;

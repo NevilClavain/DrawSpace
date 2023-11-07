@@ -23,7 +23,9 @@
 /* -*-LIC_END-*- */
 
 #include "timesystem.h"
+#include "entity.h"
 #include "entitygraph.h"
+#include "aspects.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -34,4 +36,22 @@ TimeSystem::TimeSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void TimeSystem::run()
 {
+	m_tm.update();
+
+	if (m_tm.isReady())
+	{
+		for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+		{
+			const auto current_entity{ it->data() };
+			const auto currId{ current_entity->getId() };
+
+			if (current_entity->hasAspect(core::timeAspect::id))
+			{
+				// update FPS info
+				const auto& time_aspect{ current_entity->aspectAccess(core::timeAspect::id) };
+				time_aspect.getComponent<int>("framePerSeconds")->getPurpose() = m_tm.getFPS();
+
+			}
+		}
+	}
 }

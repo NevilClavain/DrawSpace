@@ -87,83 +87,83 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 {
 	switch (p_renderingQueue.getState())
 	{
-	case rendering::Queue::State::WAIT_INIT:
-	{
-		const auto purpose{ p_renderingQueue.getPurpose() };
-
-		if (rendering::Queue::Purpose::UNDEFINED == purpose)
+		case rendering::Queue::State::WAIT_INIT:
 		{
-			const auto parent_entity{ p_entity->getParent() };
+			const auto purpose{ p_renderingQueue.getPurpose() };
 
-			if (nullptr == parent_entity)
+			if (rendering::Queue::Purpose::UNDEFINED == purpose)
 			{
-				p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
-				// log it (WARN)
-				_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : no parent")
-			}
-			else
-			{
-				if (parent_entity->hasAspect(core::renderingAspect::id))
+				const auto parent_entity{ p_entity->getParent() };
+
+				if (nullptr == parent_entity)
 				{
-					const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
-					auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
-					if (parent_rendering_target_comp)
+					p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+					// log it (WARN)
+					_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : no parent")
+				}
+				else
+				{
+					if (parent_entity->hasAspect(core::renderingAspect::id))
 					{
-						if (core::renderingAspect::renderingTarget::WINDOW_TARGET == parent_rendering_target_comp->getPurpose())
+						const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
+						auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+						if (parent_rendering_target_comp)
 						{
-							// WINDOW_TARGET
-							// 
-							// parent is a screen-target pass 
-							// set queue purpose accordingly
+							if (core::renderingAspect::renderingTarget::WINDOW_TARGET == parent_rendering_target_comp->getPurpose())
+							{
+								// WINDOW_TARGET
+								// 
+								// parent is a screen-target pass 
+								// set queue purpose accordingly
 
-							p_renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
-							p_renderingQueue.setState(rendering::Queue::State::READY);
+								p_renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
+								p_renderingQueue.setState(rendering::Queue::State::READY);
 
-							_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, SCREEN_RENDERING")
+								_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, SCREEN_RENDERING")
+							}
+							else
+							{
+								// BUFFER_TARGET
+								// 
+								// parent is a texture-target pass
+								// set queue purpose accordingly
+
+								p_renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
+								p_renderingQueue.setState(rendering::Queue::State::READY);
+
+								_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, INTERMEDIATE_RENDERING")
+							}
 						}
 						else
 						{
-							// BUFFER_TARGET
-							// 
-							// parent is a texture-target pass
-							// set queue purpose accordingly
-
-							p_renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
-							p_renderingQueue.setState(rendering::Queue::State::READY);
-
-							_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, INTERMEDIATE_RENDERING")
+							// parent rendering aspect has no renderingTarget component !
+							p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+							// log it (WARN)
+							_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")
 						}
 					}
 					else
 					{
-						// parent rendering aspect has no renderingTarget component !
+						// parent has no rendering aspect 
 						p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
 						// log it (WARN)
-						_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")
+						_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
 					}
-				}
-				else
-				{
-					// parent has no rendering aspect 
-					p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
-					// log it (WARN)
-					_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
 				}
 			}
 		}
-	}
-	break;
-
-	case rendering::Queue::State::READY:
-
-		// do queue rendering
-		renderQueue(p_renderingQueue);
 		break;
 
-	case rendering::Queue::State::ERROR_ORPHAN:
+		case rendering::Queue::State::READY:
 
-		// nothin' to do
-		break;
+			// do queue rendering
+			renderQueue(p_renderingQueue);
+			break;
+
+		case rendering::Queue::State::ERROR_ORPHAN:
+
+			// nothin' to do
+			break;
 	}
 }
 

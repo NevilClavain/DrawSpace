@@ -25,6 +25,7 @@
 
 #pragma once
 #include "system.h"
+#include "timemanager.h"
 
 namespace renderMe
 {
@@ -41,5 +42,7 @@ namespace renderMe
         void run();
 
     private:
+
+        core::TimeManager   m_tm;
     };
 }
