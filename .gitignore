@@ -294,6 +294,11 @@ ALL_BUILD.vcxproj*
 /renderme/SYSTEM_time/*.sln
 /renderme/SYSTEM_time/*.vcxproj*
 
+/renderme/hlsl40_shaders/CMakeFiles/
+/renderme/hlsl40_shaders/*.sln
+/renderme/hlsl40_shaders/*.vcxproj*
+
+
 ################## renderME - ##########################################
 
 
