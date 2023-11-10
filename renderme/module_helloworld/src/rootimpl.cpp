@@ -241,4 +241,23 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	m_timeInfos_time_aspect = &timeInfos_time_aspect;
 
+	//////////////////////////////////////////////////////
+	
+	auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "circleEntity") };
+	const auto circleEntity{ circleNode.data() };
+	auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
+
+	const std::vector<std::string> vertex_shaders =
+	{
+		"color_vs.hlsl"
+	};
+
+	const std::vector<std::string> pixel_shaders =
+	{
+		"color_ps.hlsl"
+	};
+
+	circle_resource_aspect.addComponent<std::vector<std::string>>("vertexShaders", vertex_shaders);
+	circle_resource_aspect.addComponent<std::vector<std::string>>("pixelShaders", pixel_shaders);
+	
 }

@@ -44,5 +44,10 @@ namespace renderMe
 		{
 			static constexpr int id{ 0x0002 };
 		}
+
+		namespace resourcesAspect
+		{
+			static constexpr int id{ 0x0003 };
+		}
 	}
 }
