@@ -294,6 +294,10 @@ ALL_BUILD.vcxproj*
 /renderme/SYSTEM_time/*.sln
 /renderme/SYSTEM_time/*.vcxproj*
 
+/renderme/SYSTEM_resource/CMakeFiles/
+/renderme/SYSTEM_resource/*.sln
+/renderme/SYSTEM_resource/*.vcxproj*
+
 /renderme/hlsl40_shaders/CMakeFiles/
 /renderme/hlsl40_shaders/*.sln
 /renderme/hlsl40_shaders/*.vcxproj*

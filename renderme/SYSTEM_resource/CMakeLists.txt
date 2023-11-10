@@ -21,52 +21,30 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(module_helloworld)
+project(SYSTEM_resource)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
+
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_time/src)
 
-include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
-
-include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src)
-include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_time/src)
-include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
 
 include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})
 
-link_directories(${jsonjsmn_lib_dir})
-link_directories(${dx11sdk_lib_dir})
-link_directories(${fw1fontwrapper_lib_dir})
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/module_helloworld/src/*.h
-        ${CMAKE_SOURCE_DIR}/module_helloworld/src/*.cpp
-		
+		${CMAKE_SOURCE_DIR}/SYSTEM_resource/src/*.h
+        ${CMAKE_SOURCE_DIR}/SYSTEM_resource/src/*.cpp		
 )
 
+add_definitions( -D_FROMCMAKE )
 
-add_library(module_helloworld SHARED ${source_files})
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time RENDERING_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource jsmn d3d11 d3dx11 dxgi FW1FontWrapper)
-
-install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS module_helloworld CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/module_helloworld_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-
-install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-
-
-
+add_library(SYSTEM_resource ${source_files})
 
 
 
