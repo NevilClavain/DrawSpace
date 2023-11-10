@@ -148,8 +148,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	const auto dataSize{ logConfFileContent.getDataSize() };
 	const std::string data(logConfFileContent.getData(), dataSize);
 
-	/////////// set static to spare some space on stack // compiler message
-	static renderMe::core::Json jsonParser;
+	renderMe::core::Json jsonParser;
 	jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
 	const auto logParseStatus{ jsonParser.parse(data) };
