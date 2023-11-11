@@ -28,7 +28,7 @@
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
-
+#include "runner.h"
 
 
 namespace renderMe
@@ -40,13 +40,33 @@ namespace renderMe
     {
     public:
 
+        struct ShaderInfos
+        {
+            std::string name;
+            
+            std::string content;
+            std::string contentMD5;
+            size_t      contentSize{ 0 };
+
+            bool        readyToUse{ false };
+        };
+
         ResourceSystem(core::Entitygraph& p_entitygraph);
-        ~ResourceSystem() = default;
+        ~ResourceSystem();
 
         void run();
+        void killRunner();
 
     private:
-        renderMe::core::logger::Sink m_localLogger;
+        renderMe::core::logger::Sink    m_localLogger;
+        renderMe::core::logger::Sink    m_localLoggerRunner;
+        const std::string               m_shadersBasePath{ "/shaders" };
+        const std::string               m_shadersCachePath{ "/bc_cache" };
+
+        renderMe::core::Runner          m_runner;
+
+
+        void handleShader(ShaderInfos& shaderInfos);
 
 
     };

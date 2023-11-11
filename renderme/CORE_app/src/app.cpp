@@ -472,6 +472,11 @@ void App::onRenderFrame(void)
 void App::onClose(void)
 {
     _RENDERME_DEBUG(localLogger, std::string("shutdown..."));
+
+    if (m_module_root)
+    {
+        m_module_root->close();
+    }
 }
 
 void App::onKeyPress(long p_key)

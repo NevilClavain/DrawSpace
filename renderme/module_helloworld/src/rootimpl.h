@@ -61,6 +61,7 @@ public:
 
     void                            init(const std::string p_appWindowsEntityName);
     void                            run(void);
+    void                            close(void);
 
     void                            createEntities(const std::string p_appWindowsEntityName);
 

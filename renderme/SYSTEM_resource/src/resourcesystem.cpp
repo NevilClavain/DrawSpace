@@ -32,8 +32,15 @@ using namespace renderMe;
 using namespace renderMe::core;
 
 ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygraph),
-m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance())
+m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance()),
+m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuration::getInstance())
 {
+	m_runner.startup();
+}
+
+ResourceSystem::~ResourceSystem()
+{
+	_RENDERME_DEBUG(m_localLogger, std::string("Exiting..."));
 }
 
 void ResourceSystem::run()
@@ -44,16 +51,44 @@ void ResourceSystem::run()
 		{
 			// search for vertex shaders
 
-			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<std::string>>("vertexShaders") };
+			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders") };
 			if (vshaders_list)
 			{
-				for (const auto& shader : vshaders_list->getPurpose())
+				for (auto& shaderDescr : vshaders_list->getPurpose())
 				{
-
+					if (!shaderDescr.readyToUse)
+					{					
+						handleShader(shaderDescr);
+						shaderDescr.readyToUse = true;
+					}
 				}
 			}
 		}
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourceAspect);
+}
+
+void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
+{
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle vertex shader ") + shaderInfos.name);
+
+	/*
+	static renderMe::core::SimpleAsyncTask<> loadShaderSource(shaderInfos.name, "load source",
+		[&](void)
+		{
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name);
+
+		}
+	);
+
+	m_runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loadShaderSource);
+	*/
+}
+
+void ResourceSystem::killRunner()
+{
+	renderMe::core::RunnerKiller runnerKiller;
+	m_runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
+	m_runner.join();
 }

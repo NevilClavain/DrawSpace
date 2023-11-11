@@ -185,6 +185,14 @@ void RootImpl::run(void)
 	m_windowRenderingQueue->setText(4, { fpsText, "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
 }
 
+void RootImpl::close(void)
+{
+	auto resourceSystem{ SystemEngine::getInstance()->getSystem(2) };
+	auto resourceSystemInstance{ dynamic_cast<renderMe::ResourceSystem*>(resourceSystem) };
+
+	resourceSystemInstance->killRunner();
+}
+
 void RootImpl::registerSubscriber(const Callback& p_callback)
 {
 	renderMe::property::EventSource<renderMe::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);
@@ -248,17 +256,17 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	const auto circleEntity{ circleNode.data() };
 	auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
 
-	const std::vector<std::string> vertex_shaders =
+	const std::vector<ResourceSystem::ShaderInfos> vertex_shaders =
 	{
-		"color_vs.hlsl"
+		{ "color_vs.hlsl" }
 	};
 
-	const std::vector<std::string> pixel_shaders =
+	const std::vector<ResourceSystem::ShaderInfos> pixel_shaders =
 	{
-		"color_ps.hlsl"
+		{ "color_ps.hlsl" }
 	};
 
-	circle_resource_aspect.addComponent<std::vector<std::string>>("vertexShaders", vertex_shaders);
-	circle_resource_aspect.addComponent<std::vector<std::string>>("pixelShaders", pixel_shaders);
-	
+	circle_resource_aspect.addComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders", vertex_shaders);
+	circle_resource_aspect.addComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders", pixel_shaders);
+
 }

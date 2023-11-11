@@ -33,3 +33,15 @@ void SystemEngine::run()
 		system.second.get()->run();
 	}
 }
+
+System* SystemEngine::getSystem(int p_executionslot) const
+{
+	if (m_systems.count(p_executionslot))
+	{
+		return m_systems.at(p_executionslot).get();
+	}
+	else
+	{
+		_EXCEPTION("unknow system slot");
+	}
+}

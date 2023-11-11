@@ -68,6 +68,7 @@ namespace renderMe
 
             virtual void                    init(const std::string p_appWindowsEntityName) = 0;
             virtual void                    run(void) = 0;
+            virtual void                    close(void) = 0;
 
         };
     }

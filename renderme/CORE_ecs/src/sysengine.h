@@ -53,6 +53,8 @@ namespace renderMe
 			
 			void run();
 
+			core::System* getSystem(int p_executionslot) const;
+
 		private:
 			std::map<int, std::unique_ptr<core::System>> m_systems;
 		};
