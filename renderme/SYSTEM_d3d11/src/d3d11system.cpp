@@ -53,7 +53,6 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void D3D11System::manageInitialization()
 {
-
 	const auto forEachRenderingAspect
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
@@ -168,25 +167,19 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 
 void D3D11System::manageRenderingQueue() const
 {
-	for (auto it = m_entitygraph.postBegin(); it != m_entitygraph.postEnd(); ++it)
+	const auto forEachRenderingAspect
 	{
-		const auto current_entity{ it->data() };
-
-		if (current_entity->hasAspect(core::renderingAspect::id))
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
 		{
-			const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
-
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			// manage rendering queues
-
-			auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
+			const auto rendering_queue_comp{ p_rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
 			if (rendering_queue_comp)
 			{
 				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
-				handleRenderingQueuesState(current_entity, renderingQueue);
+				handleRenderingQueuesState(p_entity, renderingQueue);
 			}
 		}
-	}
+	};
+	renderMe::helpers::extractAspectsDownTop<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
 void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)

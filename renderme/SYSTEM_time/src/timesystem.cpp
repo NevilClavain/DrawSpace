@@ -26,6 +26,7 @@
 #include "entity.h"
 #include "entitygraph.h"
 #include "aspects.h"
+#include "ecshelpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -40,15 +41,19 @@ void TimeSystem::run()
 
 	if (m_tm.isReady())
 	{
-		for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+		const auto forEachTimeAspect
 		{
-			const auto current_entity{ it->data() };
-			if (current_entity->hasAspect(core::timeAspect::id))
+			[&](Entity* p_entity, const ComponentContainer& p_time_aspect)
 			{
 				// update FPS info
-				const auto& time_aspect{ current_entity->aspectAccess(core::timeAspect::id) };
-				time_aspect.getComponent<int>("framePerSeconds")->getPurpose() = m_tm.getFPS();
+				const auto fpsComp { p_time_aspect.getComponent<int>("framePerSeconds") };
+				if (fpsComp)
+				{
+					fpsComp->getPurpose() = m_tm.getFPS();
+				}				
 			}
-		}
+		};
+
+		renderMe::helpers::extractAspectsTopDown<renderMe::core::timeAspect>(m_entitygraph, forEachTimeAspect);
 	}
 }
