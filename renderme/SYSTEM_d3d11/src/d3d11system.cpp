@@ -40,6 +40,8 @@
 
 #include "renderingqueue.h"
 
+#include "ecshelpers.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -51,36 +53,33 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void D3D11System::manageInitialization()
 {
-	for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+
+	const auto forEachRenderingAspect
 	{
-		const auto current_entity{ it->data() };
-		const auto currId{ current_entity->getId() };
-
-		if (current_entity->hasAspect(core::renderingAspect::id))
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
 		{
-			const auto& rendering_aspect{ current_entity->aspectAccess(core::renderingAspect::id) };
-
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			// manage D3D11 init
 
-			auto rendering_target_comp{ rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+			auto rendering_target_comp{ p_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
 			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr &&
 													core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target_comp->getPurpose() };
 
 			if (isWindowsRenderingTarget)
 			{
-				if (D3D11SystemImpl::getInstance()->init(current_entity))
+				if (D3D11SystemImpl::getInstance()->init(p_entity))
 				{
 					m_initialized = true;
-					break;
 				}
 				else
 				{
 					_EXCEPTION("D3D11 initialization failed")
 				}
 			}
-		}
-	}
+		}	
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
 void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue& p_renderingQueue)
@@ -172,7 +171,6 @@ void D3D11System::manageRenderingQueue() const
 	for (auto it = m_entitygraph.postBegin(); it != m_entitygraph.postEnd(); ++it)
 	{
 		const auto current_entity{ it->data() };
-		const auto currId{ current_entity->getId() };
 
 		if (current_entity->hasAspect(core::renderingAspect::id))
 		{

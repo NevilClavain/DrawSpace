@@ -29,7 +29,7 @@ namespace renderMe
 {
 	namespace core
 	{
-		namespace renderingAspect
+		struct renderingAspect
 		{
 			static constexpr int id{ 0x0001 };
 
@@ -38,16 +38,16 @@ namespace renderMe
 				WINDOW_TARGET,
 				BUFFER_TARGET
 			};
-		}
+		};
 
-		namespace timeAspect
+		struct timeAspect
 		{
 			static constexpr int id{ 0x0002 };
-		}
+		};
 
-		namespace resourcesAspect
+		struct resourcesAspect
 		{
 			static constexpr int id{ 0x0003 };
-		}
+		};
 	}
 }
