@@ -25,6 +25,10 @@
 
 #pragma once
 #include "system.h"
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
+
 
 
 namespace renderMe
@@ -42,6 +46,7 @@ namespace renderMe
         void run();
 
     private:
+        renderMe::core::logger::Sink m_localLogger;
 
 
     };

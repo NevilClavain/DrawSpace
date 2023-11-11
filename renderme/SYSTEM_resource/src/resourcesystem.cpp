@@ -26,14 +26,34 @@
 #include "entity.h"
 #include "entitygraph.h"
 #include "aspects.h"
+#include "ecshelpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
 
-ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
+ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygraph),
+m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance())
 {
 }
 
 void ResourceSystem::run()
 {
+	const auto forEachResourceAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
+		{
+			// search for vertex shaders
+
+			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<std::string>>("vertexShaders") };
+			if (vshaders_list)
+			{
+				for (const auto& shader : vshaders_list->getPurpose())
+				{
+
+				}
+			}
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourceAspect);
 }
