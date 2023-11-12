@@ -447,8 +447,6 @@ void App::loop(void)
             {
                 if (m_app_ready)
                 {
-                    logger::Configuration::getInstance()->updateTick();
-
                     processInputEvents();
                     onRenderFrame();
                 }

@@ -33,9 +33,7 @@ using namespace renderMe::core;
 
 logger::Configuration::Configuration( void )
 {
-    QueryPerformanceFrequency( &m_freq );
-    QueryPerformanceCounter( &m_base_tick );
-    m_last_tick = m_base_tick;
+    m_baseTick = ::GetTickCount();
 
     m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
     {
@@ -190,25 +188,9 @@ void logger::Configuration::registerSink( Sink* p_sink )
     }
 }
 
-void logger::Configuration::updateTick( void )
-{
-    QueryPerformanceCounter( &m_last_tick );
-}
-
 LONGLONG logger::Configuration::getLastTick( void ) const
 {
-    LONGLONG elapsed{ m_last_tick.QuadPart - m_base_tick.QuadPart };
 
-    //
-    // We now have the elapsed number of ticks, along with the
-    // number of ticks-per-second. We use these values
-    // to convert to the number of elapsed microseconds.
-    // To guard against loss-of-precision, we convert
-    // to microseconds *before* dividing by ticks-per-second.
-    //
 
-    elapsed *= 1000000;
-    elapsed /= m_freq.QuadPart;
-
-    return elapsed;
+    return ::GetTickCount() - m_baseTick;
 }

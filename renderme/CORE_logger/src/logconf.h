@@ -49,7 +49,6 @@ namespace renderMe
                 ~Configuration(void) = default;
 
                 void                    registerSink(Sink* p_sink);
-                void                    updateTick(void);
                 LONGLONG                getLastTick(void) const;
 
 
@@ -67,9 +66,7 @@ namespace renderMe
                 using SinkInfos = std::tuple<Sink*, bool, Sink::Level, Output*>;
                 std::unordered_map<std::string, SinkInfos>                      m_sinks_infos;
 
-                LARGE_INTEGER                                                   m_base_tick;
-                LARGE_INTEGER                                                   m_last_tick;
-                LARGE_INTEGER                                                   m_freq;
+                DWORD                                                           m_baseTick;
 
                 //// JSON parsing working members
 

@@ -74,8 +74,9 @@ void logger::Sink::logIt( Level p_level, const std::string& p_trace )
         std::string timestamp;
         if( m_conf )
         {
-            const auto timestamp_in_second{ m_conf->getLastTick() / 1000000.0 };            
-            const auto precision{ 6 };
+            
+            const auto timestamp_in_second{ m_conf->getLastTick() / 1000.0 };
+            constexpr auto precision{ 3 };
             std::stringstream stream;
             stream << std::fixed << std::setprecision(precision) << timestamp_in_second;
             timestamp = stream.str();
@@ -87,11 +88,6 @@ void logger::Sink::logIt( Level p_level, const std::string& p_trace )
 
         std::string final_trace = timestamp + std::string( " " ) + thread_id + std::string( " " ) + m_name + std::string( " " ) + level + std::string( " " ) + std::string( "[ " ) + p_trace + std::string( " ]" ) + std::string( "\n" );
         m_output->logIt( final_trace );
-    }
-
-    if( m_conf )
-    {
-        m_conf->updateTick();
     }
 }
 
