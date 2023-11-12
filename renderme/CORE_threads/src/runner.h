@@ -37,12 +37,23 @@ namespace renderMe
 	{
 		enum class RunnerEvent
 		{
+			TASK_UPDATE,
+			TASK_ERROR,
 			TASK_DONE
 		};
 
 
-		class Runner : public renderMe::property::EventSource<RunnerEvent, const std::string&, const std::string&>
+		class Runner : public renderMe::property::EventSource<const RunnerEvent&, const std::string&, const std::string&>
 		{
+		private:
+
+			struct TaskReport
+			{
+				RunnerEvent runner_event;
+				std::string target;
+				std::string action;
+			};
+
 		public:
 
 			Runner() = default;
@@ -53,7 +64,9 @@ namespace renderMe
 			~Runner() = default;
 
 			Mailbox<property::AsyncTask*>					m_mailbox_in;
-			Mailbox<std::pair<std::string, std::string>>	m_mailbox_out;
+			//Mailbox<std::pair<std::string, std::string>>	m_mailbox_out;
+
+			Mailbox<TaskReport>								m_mailbox_out;
 
 			void startup(void);
 			void join(void);
@@ -64,6 +77,8 @@ namespace renderMe
 
 			mutable std::unique_ptr<std::thread>			m_thread;
 			bool											m_cont;
+
+
 
 			static void mainloop(Runner* p_runner);
 

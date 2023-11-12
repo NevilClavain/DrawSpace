@@ -57,7 +57,9 @@ void Runner::mainloop(Runner* p_runner)
 					auto task_action{ current->getActionDescr() };
 
 					current->execute(runnerInstance);
-					mb_out->push<std::pair<std::string, std::string>>(std::make_pair(task_action, task_target));
+
+					const TaskReport report{ RunnerEvent::TASK_DONE, task_target, task_action };
+					mb_out->push<TaskReport>(report);
 				}
 
 			} while (current);
@@ -91,11 +93,11 @@ void Runner::dispatchEvents()
 {
 	const auto mb_size{ m_mailbox_out.getBoxSize() };
 	for (int i = 0; i < mb_size; i++)
-	{
-		const auto task_descr{ m_mailbox_out.popNext<std::pair<std::string, std::string>>(std::make_pair<std::string, std::string>("","")) };
+	{	
+		auto task_report{ m_mailbox_out.popNext<TaskReport>(TaskReport()) };
 		for (const auto& call : m_callbacks)
 		{
-			call(RunnerEvent::TASK_DONE, task_descr.first, task_descr.second);
+			call(task_report.runner_event, task_report.target, task_report.action);
 		}
 	}
 }
