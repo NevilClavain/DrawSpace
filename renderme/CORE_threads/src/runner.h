@@ -45,14 +45,6 @@ namespace renderMe
 
 		class Runner : public renderMe::property::EventSource<const RunnerEvent&, const std::string&, const std::string&>
 		{
-		private:
-
-			struct TaskReport
-			{
-				RunnerEvent runner_event;
-				std::string target;
-				std::string action;
-			};
 
 		public:
 
@@ -62,6 +54,15 @@ namespace renderMe
 			Runner& operator=(const Runner& t) = delete;
 
 			~Runner() = default;
+
+			struct TaskReport
+			{
+				RunnerEvent runner_event;
+				std::string target;
+				std::string action;
+			};
+
+
 
 			Mailbox<property::AsyncTask*>					m_mailbox_in;
 			Mailbox<TaskReport>								m_mailbox_out;

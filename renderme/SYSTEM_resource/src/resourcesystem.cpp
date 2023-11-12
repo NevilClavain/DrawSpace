@@ -41,9 +41,11 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 		{
 			if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
-				//std::cout << "TASK_DONE " << p_target_descr << " " << p_action_descr << "\n";
-
 				_RENDERME_DEBUG(m_localLoggerRunner, std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
+			}
+			else if (renderMe::core::RunnerEvent::TASK_UPDATE == p_event)
+			{
+				_RENDERME_DEBUG(m_localLoggerRunner, std::string("TASK_UPDATE ") + p_target_descr + " " + p_action_descr);
 			}
 		}
 	};
@@ -93,6 +95,19 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 		{
 			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name);
 
+			Sleep(100);
+
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("part 1 done ") + shaderInfos.name);
+
+			const Runner::TaskReport report{ RunnerEvent::TASK_UPDATE, shaderInfos.name, "load_shader_source" };
+			m_runner.m_mailbox_out.push<Runner::TaskReport>(report);
+
+			Sleep(150);
+
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("part 2 done ") + shaderInfos.name);
+
+			const Runner::TaskReport report2{ RunnerEvent::TASK_UPDATE, shaderInfos.name, "load_shader_source" };
+			m_runner.m_mailbox_out.push<Runner::TaskReport>(report2);
 		}
 	);
 
