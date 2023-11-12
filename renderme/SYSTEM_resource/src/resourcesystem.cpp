@@ -35,6 +35,20 @@ ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygrap
 m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance()),
 m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuration::getInstance())
 {
+	const Runner::Callback cb
+	{
+		[&, this](renderMe::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
+		{
+			if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
+			{
+				//std::cout << "TASK_DONE " << p_target_descr << " " << p_action_descr << "\n";
+
+				_RENDERME_DEBUG(m_localLoggerRunner, std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
+			}
+		}
+	};
+
+	m_runner.registerSubscriber(cb);
 	m_runner.startup();
 }
 
