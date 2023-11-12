@@ -58,6 +58,8 @@ namespace renderMe
 			void startup(void);
 			void join(void);
 
+			void dispatchEvents();
+
 		private:
 
 			mutable std::unique_ptr<std::thread>			m_thread;

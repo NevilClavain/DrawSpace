@@ -81,14 +81,14 @@ void ResourceSystem::run()
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourceAspect);
+	m_runner.dispatchEvents();
 }
 
 void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 {
 	_RENDERME_DEBUG(m_localLogger, std::string("Handle vertex shader ") + shaderInfos.name);
-
-	/*
-	static renderMe::core::SimpleAsyncTask<> loadShaderSource(shaderInfos.name, "load source",
+	
+	static renderMe::core::SimpleAsyncTask<> loadShaderSource(shaderInfos.name, "load_shader_source",
 		[&](void)
 		{
 			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name);
@@ -96,8 +96,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 		}
 	);
 
-	m_runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loadShaderSource);
-	*/
+	m_runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loadShaderSource);	
 }
 
 void ResourceSystem::killRunner()
