@@ -64,8 +64,6 @@ namespace renderMe
 			~Runner() = default;
 
 			Mailbox<property::AsyncTask*>					m_mailbox_in;
-			//Mailbox<std::pair<std::string, std::string>>	m_mailbox_out;
-
 			Mailbox<TaskReport>								m_mailbox_out;
 
 			void startup(void);
