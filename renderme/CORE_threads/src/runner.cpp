@@ -83,17 +83,7 @@ void Runner::join(void)
 	if (m_thread.get())
 	{
 		m_thread->join();
-
-		const auto mb_size{ m_mailbox_out.getBoxSize() };
-
-		for (int i = 0; i < mb_size; i++)
-		{
-			const auto task_descr{ m_mailbox_out.popNext<std::pair<std::string, std::string>>(std::make_pair<std::string, std::string>("","")) };
-			for (const auto& call : m_callbacks)
-			{
-				call(RunnerEvent::TASK_DONE, task_descr.first, task_descr.second);
-			}
-		}
+		dispatchEvents(); // final dispatch events
 	}	
 }
 
