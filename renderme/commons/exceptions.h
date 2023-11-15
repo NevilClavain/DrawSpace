@@ -32,7 +32,7 @@ namespace renderMe
 {
     namespace core
     {
-        static void throwException(const std::string& p_msg, const std::string& p_func)
+        inline void throwException(const std::string& p_msg, const std::string& p_func)
         {
             const auto message{ p_msg + std::string(" @ ") + std::string(p_func) };
             throw std::exception(message.c_str());

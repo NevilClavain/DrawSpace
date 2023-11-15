@@ -25,7 +25,9 @@
 #pragma once
 
 #include <string>
+#include <utility> 
 #include <functional>
+#include <filesystem>
 #include "exceptions.h"
 
 #pragma warning( disable : 4996 )
@@ -40,6 +42,7 @@ namespace renderMe
             bool isDirectory(const std::string& p_path);
             void createDirectory(const std::string& p_path);
             long fileSize(FILE* p_fp);
+            std::pair<std::string, std::string> splitFilename(const std::string& p_filename);
         }
 
         template<typename T>

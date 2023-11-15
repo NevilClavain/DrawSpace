@@ -57,7 +57,13 @@ long fileSystem::fileSize(FILE* p_fp)
     return size;
 }
 
+std::pair<std::string, std::string> fileSystem::splitFilename(const std::string& p_filename)
+{
+    const auto extension { std::filesystem::path(p_filename).extension().string() };
+    const auto name{ std::filesystem::path(p_filename).stem().string() };
 
+    return std::make_pair(name, extension);
+}
 
 
 

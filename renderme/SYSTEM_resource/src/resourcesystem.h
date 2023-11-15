@@ -60,8 +60,8 @@ namespace renderMe
     private:
         renderMe::core::logger::Sink    m_localLogger;
         renderMe::core::logger::Sink    m_localLoggerRunner;
-        const std::string               m_shadersBasePath{ "/shaders" };
-        const std::string               m_shadersCachePath{ "/bc_cache" };
+        const std::string               m_shadersBasePath{ "./shaders/resources" };
+        const std::string               m_shadersCachePath{ "./bc_cache" };
 
         renderMe::core::Runner          m_runner;
 
