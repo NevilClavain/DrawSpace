@@ -190,6 +190,8 @@ ALL_BUILD.vcxproj*
 /renderme/*.sln
 /renderme/*.vcxproj*
 
+/renderme/.vscode/
+
 /renderme/console_tests/console_helloworld/CMakeFiles/
 /renderme/console_tests/console_helloworld/*.sln
 /renderme/console_tests/console_helloworld/*.vcxproj*
