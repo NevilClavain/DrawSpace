@@ -148,8 +148,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory exists : ") + cacheDirectory);
 
 					// check if cache md5 file exists AND compiled shader exists
-
-					if (!fileSystem::exists(cacheDirectory + "/bc.md5")/* || !fileSystem::exists(cacheDirectory + "/bc.code") */)
+					if (!fileSystem::exists(cacheDirectory + "/bc.md5") || !fileSystem::exists(cacheDirectory + "/bc.code"))
 					{
 						_RENDERME_TRACE(m_localLoggerRunner, std::string("cache file missing !"));
 						generate_cache_entry = true;
@@ -172,9 +171,8 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 						else
 						{
 							// load bc.code file
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.name);
+							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.name);						
 						}
-
 					}
 				}
 
@@ -186,9 +184,11 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 					renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
 					shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
 
-					// compile shader and create bc.code file					
+					// TODO ! compile shader and create bc.code file		
 				}
-				
+
+				// TODO ! : load code content in entitygraph : D3D11 system shall detect and handle this to instanciate shader
+
 
 			}
 			catch (const std::exception& e)
