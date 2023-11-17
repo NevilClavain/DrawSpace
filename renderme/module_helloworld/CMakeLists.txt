@@ -56,7 +56,7 @@ file(
 
 
 add_library(module_helloworld SHARED ${source_files})
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads RENDERING_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource jsmn d3d11 d3dx11 dxgi FW1FontWrapper)
+target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services RENDERING_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource jsmn d3d11 d3dx11 dxgi FW1FontWrapper)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

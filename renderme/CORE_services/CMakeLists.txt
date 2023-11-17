@@ -21,34 +21,23 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(SYSTEM_resource)
+project(CORE_services)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
-include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
-
-
-include_directories(${st_tree_include_dir})
-include_directories(${jsonjsmn_include_dir})
-include_directories(${md5_include_dir})
 
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/SYSTEM_resource/src/*.h
-        ${CMAKE_SOURCE_DIR}/SYSTEM_resource/src/*.cpp		
+		${CMAKE_SOURCE_DIR}/CORE_services/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_services/src/*.cpp		
 )
+
 
 add_definitions( -D_FROMCMAKE )
 
-add_library(SYSTEM_resource ${source_files})
+add_library(CORE_services ${source_files})
 
 
 
