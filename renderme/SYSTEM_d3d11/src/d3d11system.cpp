@@ -49,6 +49,10 @@ using namespace renderMe::core;
 
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
+	m_cb = [&, this](services::ShadersServiceEvents p_event, const renderMe::core::FileContent<char>& p_fileContent)
+	{
+		int a = 0;
+	};
 }
 
 void D3D11System::manageInitialization()

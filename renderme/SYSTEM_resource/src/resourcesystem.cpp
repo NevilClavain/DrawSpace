@@ -30,6 +30,8 @@
 #include "filesystem.h"
 #include "md5.h"
 
+#include "shaders_service.h"
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -184,7 +186,9 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 					renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
 					shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
 
-					// TODO ! compile shader and create bc.code file		
+					services::ShadersServices::getInstance()->requestCompilationShader(shader_src_content);
+
+
 				}
 
 				// TODO ! : load code content in entitygraph : D3D11 system shall detect and handle this to instanciate shader

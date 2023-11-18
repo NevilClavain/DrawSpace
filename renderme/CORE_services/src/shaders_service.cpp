@@ -22,4 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
-#include "renderer.h"
+#include "shaders_service.h"
+
+using namespace renderMe::core::services;
+
+void ShadersServices::requestCompilationShader(const renderMe::core::FileContent<char>& p_shaderSource)
+{
+	for (const auto& call : m_callbacks)
+	{
+		call(ShadersServiceEvents::SHADER_COMPILATION_REQUEST, p_shaderSource);
+	}
+}

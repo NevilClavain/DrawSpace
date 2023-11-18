@@ -30,6 +30,9 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
+
 include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
 
 include_directories(${st_tree_include_dir})

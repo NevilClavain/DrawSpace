@@ -24,14 +24,29 @@
 
 #pragma once
 
+#include <string>
+#include "singleton.h"
+#include "eventsource.h"
+#include "filesystem.h"
+
 namespace renderMe
 {
 	namespace core
 	{
 		namespace services
 		{
-			class Renderer
+			enum class ShadersServiceEvents
 			{
+				SHADER_COMPILATION_REQUEST
+			};
+
+			class ShadersServices : public property::Singleton<ShadersServices>, public property::EventSource<ShadersServiceEvents, const renderMe::core::FileContent<char>&>
+			{
+			public:
+				ShadersServices() = default;
+				~ShadersServices() = default;
+
+				void requestCompilationShader(const renderMe::core::FileContent<char>& p_shaderSource);
 
 			};
 		}

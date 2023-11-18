@@ -55,6 +55,10 @@ namespace renderMe
 
 			core::System* getSystem(int p_executionslot) const;
 
+			template<typename T>
+			T* getSystem(int p_executionslot) const;
+
+
 		private:
 			std::map<int, std::unique_ptr<core::System>> m_systems;
 		};
@@ -73,6 +77,13 @@ namespace renderMe
 			{
 				call(SystemEngineEvents::SYSTEM_ADDED, *m_systems.at(p_executionslot).get());
 			}
+		}
+
+		template<typename T>
+		inline T* SystemEngine::getSystem(int p_executionslot) const
+		{
+			const auto baseSystem{ getSystem(p_executionslot) };
+			return static_cast<T*>(baseSystem);
 		}
 	}
 }

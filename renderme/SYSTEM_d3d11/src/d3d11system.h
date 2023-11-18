@@ -25,6 +25,7 @@
 
 #pragma once
 #include "system.h"
+#include "shaders_service.h"
 
 namespace renderMe
 {   
@@ -41,8 +42,14 @@ namespace renderMe
 
         void run();
 
+        auto getCallback() const
+        {
+            return m_cb;
+        };
+
     private:
-        bool	m_initialized{ false };
+        bool	                                    m_initialized{ false };
+        core::services::ShadersServices::Callback   m_cb;
 
         void    manageInitialization();
         void    manageRenderingQueue() const;

@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.0)
 project(CORE_services)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 
 
 
