@@ -109,6 +109,11 @@ namespace renderMe
                 return m_dataSize;
             }
 
+            std::string getPath() const
+            {
+                return m_path;
+            }
+
         private:
 
             std::string             m_path;

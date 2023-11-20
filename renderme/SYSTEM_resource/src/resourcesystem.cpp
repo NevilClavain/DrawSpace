@@ -93,7 +93,7 @@ void ResourceSystem::run()
 				{
 					if (!shaderDescr.readyToUse)
 					{					
-						handleShader(shaderDescr);
+						handleShader(shaderDescr, 0);
 						shaderDescr.readyToUse = true;
 					}
 				}
@@ -105,14 +105,18 @@ void ResourceSystem::run()
 	m_runner.dispatchEvents();
 }
 
-void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
+void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 {
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle vertex shader ") + shaderInfos.name);
+	const auto shaderType{ p_shaderType };
+
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle vertex shader ") + shaderInfos.name + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shader_action{ "load_shader" };
 	
 	static renderMe::core::SimpleAsyncTask<> loadShader(shaderInfos.name, shader_action,
-		[&, shader_action = shader_action]()
+		[&, shader_action = shader_action, 
+			shaderType = shaderType
+		]()
 		{
 			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name);
 
@@ -120,7 +124,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.name };
 			try
 			{				
-				renderMe::core::FileContent<char> shader_src_content(shader_path);
+				renderMe::core::FileContent<const char> shader_src_content(shader_path);
 				shader_src_content.load();
 
 				// no mutex needed here (only this thread access it)
@@ -186,9 +190,12 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos)
 					renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
 					shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
 
-					services::ShadersServices::getInstance()->requestCompilationShader(shader_src_content);
+					renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/code.md5");
 
-
+					if (0 == shaderType)
+					{
+						services::ShadersCompilationService::getInstance()->requestVertexCompilationShader(".", shader_src_content, cache_code_content);
+					}				
 				}
 
 				// TODO ! : load code content in entitygraph : D3D11 system shall detect and handle this to instanciate shader

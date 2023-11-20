@@ -169,7 +169,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	// D3D11 system provides compilation shader service
 
 	renderMe::D3D11System* d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
-	services::ShadersServices::getInstance()->registerSubscriber(d3d11System->getCallback());
+	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getCallback());
 	
 	//////////////////////////
 

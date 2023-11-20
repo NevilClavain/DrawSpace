@@ -48,8 +48,8 @@ namespace renderMe
         };
 
     private:
-        bool	                                    m_initialized{ false };
-        core::services::ShadersServices::Callback   m_cb;
+        bool	                                                m_initialized{ false };
+        core::services::ShadersCompilationService::Callback     m_cb;
 
         void    manageInitialization();
         void    manageRenderingQueue() const;

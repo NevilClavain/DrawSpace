@@ -26,10 +26,22 @@
 
 using namespace renderMe::core::services;
 
-void ShadersServices::requestCompilationShader(const renderMe::core::FileContent<char>& p_shaderSource)
+void ShadersCompilationService::requestVertexCompilationShader(const std::string& p_includePath,
+															const renderMe::core::FileContent<const char>& p_shaderSource,
+															const renderMe::core::FileContent<char>& p_shaderDestination)
 {
 	for (const auto& call : m_callbacks)
 	{
-		call(ShadersServiceEvents::SHADER_COMPILATION_REQUEST, p_shaderSource);
+		call(p_includePath, p_shaderSource, p_shaderDestination, 0);
+	}
+}
+
+void ShadersCompilationService::requestPixelCompilationShader(const std::string& p_includePath,
+	const renderMe::core::FileContent<const char>& p_shaderSource,
+	const renderMe::core::FileContent<char>& p_shaderDestination)
+{
+	for (const auto& call : m_callbacks)
+	{
+		call(p_includePath, p_shaderSource, p_shaderDestination, 1);
 	}
 }

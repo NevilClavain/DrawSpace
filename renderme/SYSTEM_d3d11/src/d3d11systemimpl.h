@@ -48,6 +48,8 @@
 
 #include "tvector.h"
 
+#include "filesystem.h"
+
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
 
@@ -61,6 +63,22 @@
         _RENDERME_ERROR( m_localLogger, dstr.c_str() ); \
         return false; \
     }
+
+struct D3D10Include : public ID3D10Include
+{
+public:
+
+    D3D10Include(const std::string& p_basepath, renderMe::core::logger::Sink& p_logger);
+    ~D3D10Include() = default;
+
+    HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes);
+    HRESULT __stdcall Close(LPCVOID pData);
+
+private:
+    renderMe::core::FileContent<const char>*    m_fc{ nullptr };
+    const std::string                           m_basepath;
+    renderMe::core::logger::Sink&               m_logger;
+};
 
 class D3D11SystemImpl : public renderMe::property::Singleton<D3D11SystemImpl>
 {
@@ -77,6 +95,12 @@ public:
     void flipScreen(void);
 
     void drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text);
+
+    bool createShaderBytesOnFile(int p_shadertype,
+                                    const std::string& p_includes_path,
+                                    const renderMe::core::FileContent<const char>& srcFile,
+                                    const renderMe::core::FileContent<char>& destFile);
+                            
 
 private:
 
@@ -142,6 +166,8 @@ private:
 
     bool setCacheRS(const D3D11_RASTERIZER_DESC& p_currRS);
     bool setCacheBlendstate(const D3D11_BLEND_DESC& p_currBlendDesc);
+
+    HRESULT compileShaderFromMem(void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut);
 
     ///////////////////////////////////////////////////////////////////////////////
 

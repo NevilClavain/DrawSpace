@@ -49,9 +49,12 @@ using namespace renderMe::core;
 
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
-	m_cb = [&, this](services::ShadersServiceEvents p_event, const renderMe::core::FileContent<char>& p_fileContent)
+	m_cb = [&, this](const std::string& p_includePath,
+		const renderMe::core::FileContent<const char>& p_src,
+		const renderMe::core::FileContent<char>& p_dest,
+		int p_shaderType)
 	{
-		int a = 0;
+		D3D11SystemImpl::getInstance()->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_dest);
 	};
 }
 

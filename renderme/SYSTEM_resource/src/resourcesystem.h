@@ -66,7 +66,7 @@ namespace renderMe
         renderMe::core::Runner          m_runner;
 
 
-        void handleShader(ShaderInfos& shaderInfos);
+        void handleShader(ShaderInfos& shaderInfos, int p_shaderType);
 
 
     };

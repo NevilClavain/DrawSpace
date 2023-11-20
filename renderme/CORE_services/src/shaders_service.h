@@ -35,18 +35,24 @@ namespace renderMe
 	{
 		namespace services
 		{
-			enum class ShadersServiceEvents
-			{
-				SHADER_COMPILATION_REQUEST
-			};
 
-			class ShadersServices : public property::Singleton<ShadersServices>, public property::EventSource<ShadersServiceEvents, const renderMe::core::FileContent<char>&>
+			class ShadersCompilationService : public property::Singleton<ShadersCompilationService>, public property::EventSource<
+																																	const std::string&, 
+																																	const renderMe::core::FileContent<const char>&,
+																																	const renderMe::core::FileContent<char>&,
+																																	int>
 			{
 			public:
-				ShadersServices() = default;
-				~ShadersServices() = default;
+				ShadersCompilationService() = default;
+				~ShadersCompilationService() = default;
 
-				void requestCompilationShader(const renderMe::core::FileContent<char>& p_shaderSource);
+				void requestVertexCompilationShader(const std::string& p_includePath,
+												const renderMe::core::FileContent<const char>& p_shaderSource, 
+												const renderMe::core::FileContent<char>& p_shaderDestination);
+
+				void requestPixelCompilationShader(const std::string& p_includePath,
+					const renderMe::core::FileContent<const char>& p_shaderSource,
+					const renderMe::core::FileContent<char>& p_shaderDestination);
 
 			};
 		}
