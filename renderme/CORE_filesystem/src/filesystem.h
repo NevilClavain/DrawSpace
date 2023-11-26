@@ -43,6 +43,7 @@ namespace renderMe
             void createDirectory(const std::string& p_path);
             long fileSize(FILE* p_fp);
             std::pair<std::string, std::string> splitFilename(const std::string& p_filename);
+            std::pair<std::string, std::string> splitPath(const std::string& p_path);
         }
 
         template<typename T>

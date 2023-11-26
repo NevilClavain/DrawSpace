@@ -65,5 +65,11 @@ std::pair<std::string, std::string> fileSystem::splitFilename(const std::string&
     return std::make_pair(name, extension);
 }
 
+std::pair<std::string, std::string> fileSystem::splitPath(const std::string& p_path)
+{
+    const auto fn{ std::filesystem::path(p_path).filename().string() };
+    const auto folder{ std::filesystem::path(p_path).parent_path().string() };
 
+    return std::make_pair(folder, fn);
+}
 
