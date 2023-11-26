@@ -64,6 +64,21 @@ int main( int argc, char* argv[] )
 	std::string text2;
 
 	renderMe::core::RunnerKiller runnerKiller;
+
+	class NotCopyConstructible
+	{
+	public:
+		NotCopyConstructible() = default;
+
+		std::unique_ptr<int[]> array;		
+	};
+
+	std::cout << std::is_copy_constructible<int>::value << "\n";
+	std::cout << std::is_copy_constructible<NotCopyConstructible>::value << "\n";
+	std::cout << std::is_copy_constructible<renderMe::core::SimpleAsyncTask<>>::value << "\n";
+	std::cout << std::is_copy_constructible<renderMe::core::RunnerKiller>::value << "\n";
+	
+
 	
 	renderMe::core::SimpleAsyncTask<const std::string&> it( "Say hello from path", "stdout",
 		[&text1](const std::string& p_path)
