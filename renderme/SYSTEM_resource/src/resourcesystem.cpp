@@ -58,7 +58,7 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 				if ("load_shader" == p_action_descr)
 				{
 					// rethrow in current thread
-					_EXCEPTION(std::string("failed action ") + p_action_descr + "on target " + p_target_descr );
+					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr );
 				}
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
@@ -98,6 +98,19 @@ void ResourceSystem::run()
 					}
 				}
 			}
+
+			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders") };
+			if (pshaders_list)
+			{
+				for (auto& shaderDescr : pshaders_list->getPurpose())
+				{
+					if (!shaderDescr.readyToUse)
+					{
+						handleShader(shaderDescr, 1);
+						shaderDescr.readyToUse = true;
+					}
+				}
+			}
 		}
 	};
 
@@ -109,21 +122,22 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle vertex shader ") + shaderInfos.name + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + shaderInfos.name + std::string(" shader type ") + std::to_string(shaderType));
 
-	const std::string shader_action{ "load_shader" };
-	
-	static renderMe::core::SimpleAsyncTask<> loadShader(shaderInfos.name, shader_action,
-		[&, shader_action = shader_action, 
-			shaderType = shaderType
+	const std::string shaderAction{ "load_shader" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.name, shaderAction,
+		[&,
+		shaderAction = shaderAction,
+		shaderType = shaderType
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name);
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name + " shader type = " + std::to_string(shaderType));
 
 			// build full path
 			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.name };
 			try
-			{				
+			{
 				renderMe::core::FileContent<const char> shader_src_content(shader_path);
 				shader_src_content.load();
 
@@ -139,7 +153,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 				const auto cacheDirectory{ m_shadersCachePath + "/" + decomposed_shader_filename.first };
 
 				bool generate_cache_entry{ false };
-				
+
 				//check if shader exists in cache...
 				if (!fileSystem::exists(cacheDirectory))
 				{
@@ -177,7 +191,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 						else
 						{
 							// load bc.code file
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.name);						
+							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.name);
 						}
 					}
 				}
@@ -190,16 +204,35 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
 					shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
 
-					renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/code.md5");
+					std::unique_ptr<char[]> shaderBytes;
+					size_t shaderBytesLength;
+
+					bool compilationStatus;
 
 					if (0 == shaderType)
 					{
-						services::ShadersCompilationService::getInstance()->requestVertexCompilationShader(".", shader_src_content, cache_code_content);
-					}				
+						services::ShadersCompilationService::getInstance()->requestVertexCompilationShader(fileSystem::splitPath(shader_path).first, shader_src_content, shaderBytes, shaderBytesLength, compilationStatus);
+					}
+					else if (1 == shaderType)
+					{
+						services::ShadersCompilationService::getInstance()->requestPixelCompilationShader(fileSystem::splitPath(shader_path).first, shader_src_content, shaderBytes, shaderBytesLength, compilationStatus);
+					}
+
+					if (compilationStatus)
+					{
+						renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
+						cache_code_content.save(shaderBytes.get(), shaderBytesLength);
+					}
+					else
+					{
+						std::string compilErrorMessage(shaderBytes.get(), shaderBytesLength);
+
+						_EXCEPTION("shader compilation error : " + compilErrorMessage)
+					}
+
 				}
 
 				// TODO ! : load code content in entitygraph : D3D11 system shall detect and handle this to instanciate shader
-
 
 			}
 			catch (const std::exception& e)
@@ -207,18 +240,19 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + shader_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.name, shader_action };
-				m_runner.m_mailbox_out.push<Runner::TaskReport>(report);
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.name, shaderAction };
+				m_runner.m_mailbox_out.push(report);
 			}
-		}
-	);
 
-	m_runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loadShader);
+		}
+	)};
+
+	m_runner.m_mailbox_in.push(task);
 }
 
 void ResourceSystem::killRunner()
 {
 	renderMe::core::RunnerKiller runnerKiller;
-	m_runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
+	m_runner.m_mailbox_in.push(&runnerKiller);
 	m_runner.join();
 }

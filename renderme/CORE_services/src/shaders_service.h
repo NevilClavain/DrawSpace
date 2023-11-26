@@ -36,23 +36,25 @@ namespace renderMe
 		namespace services
 		{
 
-			class ShadersCompilationService : public property::Singleton<ShadersCompilationService>, public property::EventSource<
-																																	const std::string&, 
-																																	const renderMe::core::FileContent<const char>&,
-																																	const renderMe::core::FileContent<char>&,
-																																	int>
+			class ShadersCompilationService : public property::Singleton<ShadersCompilationService>, public property::EventSource<const std::string&, 
+																																  const renderMe::core::FileContent<const char>&,
+																																  int,
+																																  std::unique_ptr<char[]>&,
+																																  size_t&, bool&>
 			{
 			public:
 				ShadersCompilationService() = default;
 				~ShadersCompilationService() = default;
 
-				void requestVertexCompilationShader(const std::string& p_includePath,
-												const renderMe::core::FileContent<const char>& p_shaderSource, 
-												const renderMe::core::FileContent<char>& p_shaderDestination);
+				void requestVertexCompilationShader(const std::string& p_includePath, 
+														const renderMe::core::FileContent<const char>& p_shaderSource, 
+														std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
+														bool& p_status);
 
-				void requestPixelCompilationShader(const std::string& p_includePath,
-					const renderMe::core::FileContent<const char>& p_shaderSource,
-					const renderMe::core::FileContent<char>& p_shaderDestination);
+				void requestPixelCompilationShader(const std::string& p_includePath, 
+														const renderMe::core::FileContent<const char>& p_shaderSource, 
+														std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
+														bool& p_status);
 
 			};
 		}

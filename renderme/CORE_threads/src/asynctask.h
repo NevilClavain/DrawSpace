@@ -46,7 +46,7 @@ namespace renderMe
 			};
 
 			AsyncTask() = delete;
-			~AsyncTask() = default;
+			virtual ~AsyncTask() = default;
 			
 			std::string getTargetDescr(void) const
 			{
@@ -75,7 +75,6 @@ namespace renderMe
 			virtual void execute(core::Runner* p_runner) = 0;
 
 			friend class core::Runner;
-
 		};
 	}
 
@@ -86,7 +85,7 @@ namespace renderMe
 		{
 		public:
 
-			SimpleAsyncTask() = default;
+			SimpleAsyncTask() = delete;
 			~SimpleAsyncTask() = default;
 
 			using bind_type = decltype(std::bind(std::declval<std::function<void(Args...)>>(), std::declval<Args>()...));

@@ -26,22 +26,24 @@
 
 using namespace renderMe::core::services;
 
-void ShadersCompilationService::requestVertexCompilationShader(const std::string& p_includePath,
-															const renderMe::core::FileContent<const char>& p_shaderSource,
-															const renderMe::core::FileContent<char>& p_shaderDestination)
+void ShadersCompilationService::requestVertexCompilationShader(const std::string& p_includePath, 
+																const renderMe::core::FileContent<const char>& p_shaderSource, 
+																std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
+																bool& p_status)
 {
 	for (const auto& call : m_callbacks)
 	{
-		call(p_includePath, p_shaderSource, p_shaderDestination, 0);
+		call(p_includePath, p_shaderSource, 0, shaderBytes, shaderBytesLength, p_status);
 	}
 }
 
-void ShadersCompilationService::requestPixelCompilationShader(const std::string& p_includePath,
-	const renderMe::core::FileContent<const char>& p_shaderSource,
-	const renderMe::core::FileContent<char>& p_shaderDestination)
+void ShadersCompilationService::requestPixelCompilationShader(const std::string& p_includePath, 
+																const renderMe::core::FileContent<const char>& p_shaderSource, 
+																std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
+																bool& p_status)
 {
 	for (const auto& call : m_callbacks)
 	{
-		call(p_includePath, p_shaderSource, p_shaderDestination, 1);
+		call(p_includePath, p_shaderSource, 1, shaderBytes, shaderBytesLength, p_status);
 	}
 }

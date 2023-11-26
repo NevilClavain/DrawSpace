@@ -50,11 +50,13 @@ using namespace renderMe::core;
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
 	m_cb = [&, this](const std::string& p_includePath,
-		const renderMe::core::FileContent<const char>& p_src,
-		const renderMe::core::FileContent<char>& p_dest,
-		int p_shaderType)
+		const renderMe::core::FileContent<const char>& p_src,		
+		int p_shaderType,
+		std::unique_ptr<char[]>& p_shaderBytes,
+		size_t& p_shaderBytesLength,
+		bool& p_status)
 	{
-		D3D11SystemImpl::getInstance()->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_dest);
+		p_status = D3D11SystemImpl::getInstance()->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_shaderBytes, p_shaderBytesLength);
 	};
 }
 

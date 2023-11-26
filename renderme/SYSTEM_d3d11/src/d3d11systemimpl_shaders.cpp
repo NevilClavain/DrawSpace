@@ -33,7 +33,7 @@ m_logger(p_logger)
 
 HRESULT __stdcall D3D10Include::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 {
-    const std::string final_path{ m_basepath + pFileName };
+    const std::string final_path{ m_basepath + "/" + pFileName};
     if (!m_fc)
     {
         _RENDERME_DEBUG(m_logger, std::string("D3D10Include open : ") + final_path);
@@ -64,7 +64,8 @@ HRESULT __stdcall D3D10Include::Close(LPCVOID pData)
 bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
     const std::string& p_includes_path,
     const renderMe::core::FileContent<const char>& srcFile,
-    const renderMe::core::FileContent<char>& destFile)
+    std::unique_ptr<char[]>& p_shaderBytes,
+    size_t& p_shaderBytesLength)
 {
     DECLARE_D3D11ASSERT_VARS
     bool status{ false };
@@ -76,11 +77,40 @@ bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
 
     _RENDERME_DEBUG(m_localLogger, std::string("Src Shader path : ") + srcFile.getPath());
     _RENDERME_DEBUG(m_localLogger, std::string("With shader type : ") + std::to_string(p_shadertype));
-    _RENDERME_DEBUG(m_localLogger, std::string("Dst Shader path : ") + destFile.getPath());
     _RENDERME_DEBUG(m_localLogger, std::string("include path : ") + p_includes_path);
     
+    hRes = compileShaderFromMem((void*)srcFile.getData(), srcFile.getDataSize(), 
+                                    srcFile.getPath().c_str(), 
+                                    (p_shadertype == 0 ? "vs_main" : "ps_main"), 
+                                    (p_shadertype == 0 ? "vs_4_0" : "ps_4_0"), 
+                                    &include_mgmt,
+                                    &pBlob, &pErrBlob);
 
+    if (S_OK != hRes)
+    {
+        if (pErrBlob != nullptr)
+        {
+            const auto bytesLen{ pErrBlob->GetBufferSize() };
 
+            p_shaderBytes = std::make_unique<char[]>(bytesLen);
+            memcpy(p_shaderBytes.get(), pErrBlob->GetBufferPointer(), bytesLen);
+            p_shaderBytesLength = bytesLen;
+
+            pErrBlob->Release();
+        }
+    }
+    else
+    {
+        const auto bytesLen{ pBlob->GetBufferSize() };
+
+        p_shaderBytes = std::make_unique<char[]>(bytesLen);
+        memcpy(p_shaderBytes.get(), pBlob->GetBufferPointer(), bytesLen);
+        p_shaderBytesLength = bytesLen;
+
+        pBlob->Release();
+
+        status = true;
+    }
     return status;
 }
 

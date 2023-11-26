@@ -58,16 +58,13 @@ namespace renderMe
         void killRunner();
 
     private:
-        renderMe::core::logger::Sink    m_localLogger;
-        renderMe::core::logger::Sink    m_localLoggerRunner;
-        const std::string               m_shadersBasePath{ "./shaders/resources" };
-        const std::string               m_shadersCachePath{ "./bc_cache" };
+        renderMe::core::logger::Sink        m_localLogger;
+        renderMe::core::logger::Sink        m_localLoggerRunner;
+        const std::string                   m_shadersBasePath{ "./shaders/resources" };
+        const std::string                   m_shadersCachePath{ "./bc_cache" };
 
-        renderMe::core::Runner          m_runner;
-
+        renderMe::core::Runner              m_runner;
 
         void handleShader(ShaderInfos& shaderInfos, int p_shaderType);
-
-
     };
 }

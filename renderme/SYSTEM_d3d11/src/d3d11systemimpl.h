@@ -99,7 +99,8 @@ public:
     bool createShaderBytesOnFile(int p_shadertype,
                                     const std::string& p_includes_path,
                                     const renderMe::core::FileContent<const char>& srcFile,
-                                    const renderMe::core::FileContent<char>& destFile);
+                                    std::unique_ptr<char[]>& p_shaderBytes,
+                                    size_t& p_shaderBytesLength);
                             
 
 private:
