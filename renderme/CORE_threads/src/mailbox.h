@@ -39,12 +39,14 @@ namespace renderMe
 
 			Mailbox()
 			{
+				// push & popnext works only with COPY of associated type (we refuse here any reference on an external object which lifecycle is unknown by definition)
+				// so the only type admitted here must be copy-constructible
 				static_assert(std::is_copy_constructible<T>::value , "Provided type must be copy-constructible");
 			}
 
-
 			~Mailbox() = default;
 			
+			// works only with COPY of associated type (we refuse here any reference on an external object which lifecycle is unknown by definition)
 			inline void push(T p_object)
 			{
 				m_mutex.lock();
@@ -52,6 +54,7 @@ namespace renderMe
 				m_mutex.unlock();
 			}
 
+			// works only with COPY of associated type (we refuse here any reference on an external object which lifecycle is unknown by definition)
 			inline T popNext(T p_default)
 			{
 				auto task{ p_default };
@@ -66,8 +69,6 @@ namespace renderMe
 				}
 				return task;
 			}
-
-
 
 			/*
 			// build arg by copy if ptr or integral(fundamental) type
