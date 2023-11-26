@@ -26,6 +26,7 @@
 
 #include <list>
 #include <mutex>
+#include <type_traits>
 
 namespace renderMe
 {
@@ -36,9 +37,39 @@ namespace renderMe
 		{
 		public:
 
-			Mailbox() = default;
-			~Mailbox() = default;
+			Mailbox()
+			{
+				static_assert(std::is_copy_constructible<T>::value , "Provided type must be copy-constructible");
+			}
 
+
+			~Mailbox() = default;
+			
+			inline void push(T p_object)
+			{
+				m_mutex.lock();
+				m_messages.push_front(p_object);
+				m_mutex.unlock();
+			}
+
+			inline T popNext(T p_default)
+			{
+				auto task{ p_default };
+				if (m_mutex.try_lock())
+				{
+					if (m_messages.size() > 0)
+					{
+						task = m_messages.back();
+						m_messages.pop_back();
+					}
+					m_mutex.unlock();
+				}
+				return task;
+			}
+
+
+
+			/*
 			// build arg by copy if ptr or integral(fundamental) type
 			template<typename Type>
 			using copyArg = typename std::enable_if_t<std::is_pointer<Type>::value || std::is_integral<Type>::value, T>;
@@ -46,7 +77,7 @@ namespace renderMe
 			// build arg by const ref if not ptr and not integral(fundamental) type (i.e classes, struct...)
 			template<typename Type>
 			using constRefArg = typename std::enable_if_t<!std::is_pointer<Type>::value && !std::is_integral<Type>::value, const T&>;
-
+			
 
 			//if ptr or integral type, build method signature : Push(T p_object)
 			template<typename Arg>
@@ -99,6 +130,7 @@ namespace renderMe
 				}
 				return task;
 			}
+			*/
 
 			inline int getBoxSize(void) const
 			{

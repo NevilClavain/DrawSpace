@@ -50,7 +50,7 @@ void Runner::mainloop(Runner* p_runner)
 			AsyncTask* current{ nullptr };
 			do
 			{
-				current = mb_in->popNext<AsyncTask*>(nullptr);
+				current = mb_in->popNext(nullptr);
 				if (current)
 				{	
 					auto task_target{ current->getTargetDescr() };
@@ -59,7 +59,7 @@ void Runner::mainloop(Runner* p_runner)
 					current->execute(runnerInstance);
 
 					const TaskReport report{ RunnerEvent::TASK_DONE, task_target, task_action };
-					mb_out->push<TaskReport>(report);
+					mb_out->push(report);
 				}
 
 			} while (current);
@@ -94,7 +94,7 @@ void Runner::dispatchEvents()
 	const auto mb_size{ m_mailbox_out.getBoxSize() };
 	for (int i = 0; i < mb_size; i++)
 	{	
-		auto task_report{ m_mailbox_out.popNext<TaskReport>(TaskReport()) };
+		auto task_report{ m_mailbox_out.popNext(TaskReport()) };
 		for (const auto& call : m_callbacks)
 		{
 			call(task_report.runner_event, task_report.target, task_report.action);

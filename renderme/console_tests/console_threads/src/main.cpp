@@ -105,6 +105,8 @@ int main( int argc, char* argv[] )
 
 
 	renderMe::core::Runner runner;
+
+	/*
 	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it);	
 	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it2);
 	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader);	
@@ -113,6 +115,16 @@ int main( int argc, char* argv[] )
 	renderMe::core::Runner runner2;
 	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader2);
 	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
+	*/
+
+	runner.m_mailbox_in.push(&it);
+	runner.m_mailbox_in.push(&it2);
+	runner.m_mailbox_in.push(&loader);
+	runner.m_mailbox_in.push(&runnerKiller);
+
+	renderMe::core::Runner runner2;
+	runner2.m_mailbox_in.push(&loader2);
+	runner2.m_mailbox_in.push(&runnerKiller);
 
 	
 	const auto runnerEventHandler{
