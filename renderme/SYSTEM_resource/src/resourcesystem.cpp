@@ -40,8 +40,12 @@ m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstan
 m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuration::getInstance())
 {
 	m_runner.reserve(nbRunners);
-	m_runner.push_back(std::make_unique< renderMe::core::Runner>());
 
+	for (int i = 0; i < nbRunners; i++)
+	{
+		m_runner.push_back(std::make_unique< renderMe::core::Runner>());
+	}
+	
 	///////// check & create shader cache if needed
 
 	if (!fileSystem::exists(m_shadersCachePath))

@@ -65,7 +65,7 @@ namespace renderMe
 
         //renderMe::core::Runner              m_runner;
 
-        static constexpr unsigned int                           nbRunners{ 1 };
+        static constexpr unsigned int                           nbRunners{ 2 };
         std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;
         int                                                     m_runnerIndex{ 0 };
 
