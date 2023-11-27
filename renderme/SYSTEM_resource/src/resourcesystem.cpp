@@ -39,6 +39,9 @@ ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygrap
 m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance()),
 m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuration::getInstance())
 {
+	m_runner.reserve(nbRunners);
+	m_runner.push_back(std::make_unique< renderMe::core::Runner>());
+
 	///////// check & create shader cache if needed
 
 	if (!fileSystem::exists(m_shadersCachePath))
@@ -69,8 +72,11 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 		}
 	};
 
-	m_runner.registerSubscriber(cb);
-	m_runner.startup();
+	for (int i = 0; i < nbRunners; i++)
+	{
+		m_runner[i].get()->registerSubscriber(cb);
+		m_runner[i].get()->startup();
+	}
 }
 
 ResourceSystem::~ResourceSystem()
@@ -115,7 +121,11 @@ void ResourceSystem::run()
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourceAspect);
-	m_runner.dispatchEvents();
+
+	for (int i = 0; i < nbRunners; i++)
+	{
+		m_runner[i].get()->dispatchEvents();
+	}	
 }
 
 void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
@@ -128,8 +138,9 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 
 	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.name, shaderAction,
 		[&,
-		shaderAction = shaderAction,
-		shaderType = shaderType
+			shaderType=shaderType,
+			shaderAction=shaderAction,
+			currentIndex = m_runnerIndex
 		]()
 		{
 			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name + " shader type = " + std::to_string(shaderType));
@@ -200,9 +211,6 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 				{
 					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + shaderInfos.name);
 
-					// create cache md5 file
-					renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
-					shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
 
 					std::unique_ptr<char[]> shaderBytes;
 					size_t shaderBytesLength;
@@ -222,6 +230,11 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					{
 						renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
 						cache_code_content.save(shaderBytes.get(), shaderBytesLength);
+
+						// create cache md5 file
+						renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
+						shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
+
 					}
 					else
 					{
@@ -241,18 +254,28 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.name, shaderAction };
-				m_runner.m_mailbox_out.push(report);
+				m_runner[currentIndex].get()->m_mailbox_out.push(report);
 			}
 
 		}
 	)};
 
-	m_runner.m_mailbox_in.push(task);
+	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
+
+	m_runnerIndex++;
+	if (m_runnerIndex == nbRunners)
+	{
+		m_runnerIndex = 0;
+	}
 }
 
 void ResourceSystem::killRunner()
 {
 	renderMe::core::RunnerKiller runnerKiller;
-	m_runner.m_mailbox_in.push(&runnerKiller);
-	m_runner.join();
+
+	for (int i = 0; i < nbRunners; i++)
+	{
+		m_runner[i].get()->m_mailbox_in.push(&runnerKiller);
+		m_runner[i].get()->join();
+	}
 }

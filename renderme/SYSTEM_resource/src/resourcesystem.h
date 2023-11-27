@@ -63,7 +63,11 @@ namespace renderMe
         const std::string                   m_shadersBasePath{ "./shaders/resources" };
         const std::string                   m_shadersCachePath{ "./bc_cache" };
 
-        renderMe::core::Runner              m_runner;
+        //renderMe::core::Runner              m_runner;
+
+        static constexpr unsigned int                           nbRunners{ 1 };
+        std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;
+        int                                                     m_runnerIndex{ 0 };
 
         void handleShader(ShaderInfos& shaderInfos, int p_shaderType);
     };
