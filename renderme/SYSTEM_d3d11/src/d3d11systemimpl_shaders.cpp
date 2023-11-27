@@ -36,7 +36,6 @@ HRESULT __stdcall D3D10Include::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileN
     const std::string final_path{ m_basepath + "/" + pFileName};
     if (!m_fc)
     {
-        _RENDERME_DEBUG(m_logger, std::string("D3D10Include open : ") + final_path);
         m_fc = new renderMe::core::FileContent<const char>(final_path);
         m_fc->load();
         *pBytes = m_fc->getDataSize();
@@ -97,6 +96,8 @@ bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
             p_shaderBytesLength = bytesLen;
 
             pErrBlob->Release();
+
+            _RENDERME_DEBUG(m_localLogger, "Shader compilation FAILED !");
         }
     }
     else
@@ -110,6 +111,7 @@ bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
         pBlob->Release();
 
         status = true;
+        _RENDERME_DEBUG(m_localLogger, "Shader compilation SUCCESS !");
     }
     return status;
 }
