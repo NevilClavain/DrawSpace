@@ -215,9 +215,13 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 				{
 					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + shaderInfos.name);
 
-
 					std::unique_ptr<char[]> shaderBytes;
 					size_t shaderBytesLength;
+
+					for (const auto& call : m_callbacks)
+					{
+						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, shaderInfos.name);
+					}
 
 					bool compilationStatus;
 
@@ -232,18 +236,26 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 
 					if (compilationStatus)
 					{
+						for (const auto& call : m_callbacks)
+						{
+							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.name);
+						}
+
 						renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
 						cache_code_content.save(shaderBytes.get(), shaderBytesLength);
 
 						// create cache md5 file
 						renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
 						shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
-
 					}
 					else
 					{
-						std::string compilErrorMessage(shaderBytes.get(), shaderBytesLength);
+						for (const auto& call : m_callbacks)
+						{
+							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, shaderInfos.name);
+						}
 
+						std::string compilErrorMessage(shaderBytes.get(), shaderBytesLength);
 						_EXCEPTION("shader compilation error : " + compilErrorMessage)
 					}
 

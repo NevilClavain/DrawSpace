@@ -29,14 +29,25 @@
 #include "logconf.h"
 #include "logging.h"
 #include "runner.h"
-
+#include "eventsource.h"
 
 namespace renderMe
 {
+    // fwd decls
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
+
+    enum class ResourceSystemEvent
+    {
+        RESOURCE_SHADER_COMPILATION_BEGIN,
+        RESOURCE_SHADER_COMPILATION_SUCCESS,
+        RESOURCE_SHADER_COMPILATION_ERROR,
+        RESOURCE_SHADER_LOAD_BEGIN,
+        RESOURCE_SHADER_LOAD_SUCCESS,
+        RESOURCE_SHADER_LOAD_ERROR,
+    };
    
-    class ResourceSystem : public core::System
+    class ResourceSystem : public core::System, public renderMe::property::EventSource<ResourceSystemEvent, const std::string&>
     {
     public:
 

@@ -35,9 +35,9 @@
 #include "entity.h"
 
 
-
 using namespace renderMe;
 using namespace renderMe::core;
+
 
 std::string RootImpl::getModuleName() const
 {
@@ -170,6 +170,19 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 	renderMe::D3D11System* d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
 	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getCallback());
+
+	// register to resource system events
+
+	const ResourceSystem::Callback cb
+	{
+		[&, this](ResourceSystemEvent p_event, const std::string& p_resourceName)
+		{
+		}
+	};
+
+	renderMe::ResourceSystem* resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(2) };
+	resourceSystem->registerSubscriber(cb);
+
 	
 	//////////////////////////
 
