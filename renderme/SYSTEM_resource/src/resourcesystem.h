@@ -39,6 +39,7 @@ namespace renderMe
 
     enum class ResourceSystemEvent
     {
+        RESOURCE_SHADER_CACHE_CREATED,
         RESOURCE_SHADER_COMPILATION_BEGIN,
         RESOURCE_SHADER_COMPILATION_SUCCESS,
         RESOURCE_SHADER_COMPILATION_ERROR,

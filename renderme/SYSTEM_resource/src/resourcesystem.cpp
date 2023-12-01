@@ -52,6 +52,12 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 	{
 		_RENDERME_DEBUG(m_localLogger, std::string("Shader cache missing, creating it..."));
 		fileSystem::createDirectory(m_shadersCachePath);
+
+		for (const auto& call : m_callbacks)
+		{
+			call(ResourceSystemEvent::RESOURCE_SHADER_CACHE_CREATED, m_shadersCachePath);
+		}
+
 	}
 
 	/////////////////////////////////////////////
