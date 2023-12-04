@@ -78,7 +78,7 @@ private:
     renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
     renderMe::core::ComponentContainer*     m_timeInfos_time_aspect{ nullptr };
 
-
+    std::string                             m_resources_event{ "..." };
 };
 
 

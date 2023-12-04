@@ -177,6 +177,24 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	{
 		[&, this](ResourceSystemEvent p_event, const std::string& p_resourceName)
 		{
+			switch (p_event)
+			{
+				case ResourceSystemEvent::RESOURCE_SHADER_CACHE_CREATED:
+					m_resources_event = "Shader cache creation : " + p_resourceName;
+					break;
+
+				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN:
+					m_resources_event = "Shader compilation: " + p_resourceName + " BEGIN";
+					break;
+
+				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS:
+					m_resources_event = "Shader compilation " + p_resourceName + " SUCCESS";
+					break;
+
+				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR:
+					m_resources_event = "Shader compilation " + p_resourceName + " ERROR";
+					break;
+			}
 		}
 	};
 
@@ -198,9 +216,12 @@ void RootImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-	const auto currentFPS{ m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
-	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };;
+	const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
+	const std::string fpsText { std::string("fps = ") + std::to_string(currentFPS) };;
 	m_windowRenderingQueue->setText(4, { fpsText, "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
+
+	// resources system event
+	m_windowRenderingQueue->setText(5, { m_resources_event, "Courier New", {255, 255, 255, 255}, {5, 25}, 12.0});
 }
 
 void RootImpl::close(void)
