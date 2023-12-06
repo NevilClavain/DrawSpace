@@ -25,6 +25,7 @@ project(console_fileio)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_buffer/src)
 
 file(
         GLOB_RECURSE
@@ -35,7 +36,7 @@ file(
 
 add_executable(console_fileio ${source_files})
 
-target_link_libraries(console_fileio CORE_filesystem)
+target_link_libraries(console_fileio CORE_filesystem CORE_buffer)
 
 install(TARGETS console_fileio CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS console_fileio CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

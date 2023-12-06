@@ -25,10 +25,12 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include <utility> 
 #include <functional>
 #include <filesystem>
 #include "exceptions.h"
+#include "buffer.h"
 
 #pragma warning( disable : 4996 )
 
@@ -114,6 +116,22 @@ namespace renderMe
             {
                 return m_path;
             }
+
+            bool isEmpty() const
+            {
+                return *m_data;
+            }
+
+            void cloneDataTo(Buffer<T>& p_buffer)
+            {
+
+            }
+
+            void cloneDataFrom(const Buffer<T>& p_buffer)
+            {
+
+            }
+
 
         private:
 

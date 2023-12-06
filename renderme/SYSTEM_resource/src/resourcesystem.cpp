@@ -264,10 +264,15 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 						std::string compilErrorMessage(shaderBytes.get(), shaderBytesLength);
 						_EXCEPTION("shader compilation error : " + compilErrorMessage)
 					}
+				}
+				else
+				{
+					// load bc.code file
+					renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
+					cache_code_content.load();
 
 				}
 
-				// TODO ! : load code content in entitygraph : D3D11 system shall detect and handle this to instanciate shader
 
 			}
 			catch (const std::exception& e)

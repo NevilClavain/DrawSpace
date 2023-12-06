@@ -27,6 +27,7 @@ include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_app/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_module/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_buffer/src)
 include_directories(${jsonjsmn_include_dir})
 
 link_directories(${jsonjsmn_lib_dir})

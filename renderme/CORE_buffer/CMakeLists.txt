@@ -21,25 +21,21 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(CORE_services)
+project(CORE_buffer)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_buffer/src)
-
-
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/CORE_services/src/*.h
-        ${CMAKE_SOURCE_DIR}/CORE_services/src/*.cpp		
+		${CMAKE_SOURCE_DIR}/CORE_buffer/src/*.h
+        ${CMAKE_SOURCE_DIR}/CORE_buffer/src/*.cpp		
 )
 
 
 add_definitions( -D_FROMCMAKE )
 
-add_library(CORE_services ${source_files})
+add_library(CORE_buffer ${source_files})
 
 
 
