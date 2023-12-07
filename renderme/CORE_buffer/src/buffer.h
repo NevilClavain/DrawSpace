@@ -58,7 +58,7 @@ namespace renderMe
             void fill(T* p_buffer, size_t p_bufferSize)
             {
                 m_data.release();
-                m_data = std::make_unique<T[]>(p_bufferSize * sizeof(T));
+                m_data = std::make_unique<T[]>(p_bufferSize);
                 memcpy((void*)m_data.get(), p_buffer, p_bufferSize * sizeof(T));
                 m_dataSize = p_bufferSize;
             }
