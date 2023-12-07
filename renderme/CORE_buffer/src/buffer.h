@@ -52,15 +52,21 @@ namespace renderMe
 
             bool isEmpty() const
             {
-                return *m_data;
+                return (m_data.get()==nullptr);
+            }
+
+            void fill(T* p_buffer, size_t p_bufferSize)
+            {
+                m_data.release();
+                m_data = std::make_unique<T[]>(p_bufferSize * sizeof(T));
+                memcpy((void*)m_data.get(), p_buffer, p_bufferSize * sizeof(T));
+                m_dataSize = p_bufferSize;
             }
 
 
         private:
             std::unique_ptr<T[]>    m_data;
             size_t                  m_dataSize { 0 };
-
-
         };
     }
 }

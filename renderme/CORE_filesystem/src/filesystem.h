@@ -88,7 +88,7 @@ namespace renderMe
                 }
             }
 
-            void save(T* p_buffer, size_t p_buffersize)
+            void save(T* p_buffer, size_t p_buffersize) const
             {
                 const auto fp{ ::fopen(m_path.c_str(), "wb") };
                 if (fp)
@@ -102,6 +102,40 @@ namespace renderMe
                 }
             }
 
+            void save(const Buffer<T>& p_buffer) const
+            {
+                const auto fp{ ::fopen(m_path.c_str(), "wb") };
+                if (fp)
+                {
+                    if (!p_buffer.isEmpty())
+                    {
+                        ::fwrite(p_buffer.getData(), p_buffer.getDataSize(), sizeof(T), fp);
+                    }
+                    ::fclose(fp);
+                }
+                else
+                {
+                    _EXCEPTION("Cannot create " + m_path);
+                }
+            }
+
+            void save() const
+            {
+                const auto fp{ ::fopen(m_path.c_str(), "wb") };
+                if (fp)
+                {
+                    if (!isEmpty())
+                    {
+                        ::fwrite(m_data.get(), m_dataSize, sizeof(T), fp);
+                    }
+                    ::fclose(fp);
+                }
+                else
+                {
+                    _EXCEPTION("Cannot create " + m_path);
+                }
+            }
+          
             T* getData(void) const
             {
                 return m_data.get();
@@ -119,17 +153,17 @@ namespace renderMe
 
             bool isEmpty() const
             {
-                return *m_data;
+                return (m_data.get() == nullptr);
             }
 
             void cloneDataTo(Buffer<T>& p_buffer)
             {
-
+                p_buffer.fill(m_data.get(), m_dataSize);
             }
 
             void cloneDataFrom(const Buffer<T>& p_buffer)
             {
-
+                // TODO
             }
 
 

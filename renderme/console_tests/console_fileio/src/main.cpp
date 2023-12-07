@@ -70,5 +70,22 @@ int main( int argc, char* argv[] )
 		}
 	}
 
+	// buffers test
+	{
+		renderMe::core::Buffer<const char> myBuffer;
+
+		std::cout << "buffer empty : " << myBuffer.isEmpty() << "\n";
+
+		renderMe::core::FileContent<const char> reader("./mytext.txt");
+		reader.load();
+
+		reader.cloneDataTo(myBuffer);
+
+		renderMe::core::FileContent<const char> writer("./mytext_cloned.txt");
+		writer.save(myBuffer);
+
+
+	}
+
     return 0;
 }
