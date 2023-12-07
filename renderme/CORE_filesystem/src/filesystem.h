@@ -73,7 +73,7 @@ namespace renderMe
                     const auto fs{ fileSystem::fileSize(fp)};
                  
                     m_data.release();
-                    m_data = std::make_unique<T[]>(fs * sizeof(T));
+                    m_data = std::make_unique<T[]>(fs);
                     
                     auto dstPtr{ m_data.get() };
 
