@@ -253,6 +253,9 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 						// create cache md5 file
 						renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
 						shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
+
+						// and transfer file content to shaderInfos 'code' buffer
+						shaderInfos.code.fill(shaderBytes.get(), shaderBytesLength);
 					}
 					else
 					{
@@ -271,6 +274,8 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
 					cache_code_content.load();
 
+					// transfer file content to shaderInfos 'code' buffer
+					shaderInfos.code.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 				}
 
 
