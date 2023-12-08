@@ -107,11 +107,18 @@ void ResourceSystem::run()
 			{
 				for (auto& shaderDescr : vshaders_list->getPurpose())
 				{
-					if (!shaderDescr.readyToUse)
-					{					
+					shaderDescr.state_mutex.lock();
+					const auto state{ shaderDescr.state };
+					shaderDescr.state_mutex.unlock();
+					
+					if (ShaderInfos::State::INIT == state)
+					{
 						handleShader(shaderDescr, 0);
-						shaderDescr.readyToUse = true;
-					}
+
+						shaderDescr.state_mutex.lock();
+						shaderDescr.state = ShaderInfos::State::BLOBLOADING;
+						shaderDescr.state_mutex.unlock();
+					}					
 				}
 			}
 
@@ -120,10 +127,17 @@ void ResourceSystem::run()
 			{
 				for (auto& shaderDescr : pshaders_list->getPurpose())
 				{
-					if (!shaderDescr.readyToUse)
+					shaderDescr.state_mutex.lock();
+					const auto state{ shaderDescr.state };
+					shaderDescr.state_mutex.unlock();
+
+					if (ShaderInfos::State::INIT == state)
 					{
 						handleShader(shaderDescr, 1);
-						shaderDescr.readyToUse = true;
+
+						shaderDescr.state_mutex.lock();
+						shaderDescr.state = ShaderInfos::State::BLOBLOADING;
+						shaderDescr.state_mutex.unlock();
 					}
 				}
 			}
@@ -277,6 +291,11 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					// transfer file content to shaderInfos 'code' buffer
 					shaderInfos.code.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 				}
+
+				shaderInfos.state_mutex.lock();
+				shaderInfos.state = ShaderInfos::State::BLOBLOADED;
+				shaderInfos.state_mutex.unlock();
+
 			}
 			catch (const std::exception& e)
 			{

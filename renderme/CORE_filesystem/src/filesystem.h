@@ -75,7 +75,7 @@ namespace renderMe
             {
                 if (p_other.isEmpty())
                 {
-                    return;
+                    return *this;
                 }
                 m_data.release();
                 m_data = std::make_unique<T[]>(p_other.m_dataSize);

@@ -297,12 +297,12 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	const std::vector<ResourceSystem::ShaderInfos> vertex_shaders =
 	{
-		{ "color_vs.hlsl" }
+		ResourceSystem::ShaderInfos("color_vs.hlsl")
 	};
 
 	const std::vector<ResourceSystem::ShaderInfos> pixel_shaders =
 	{
-		{ "color_ps.hlsl" }
+		ResourceSystem::ShaderInfos("color_ps.hlsl")
 	};
 
 	circle_resource_aspect.addComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders", vertex_shaders);
