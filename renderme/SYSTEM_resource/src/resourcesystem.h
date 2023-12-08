@@ -30,6 +30,7 @@
 #include "logging.h"
 #include "runner.h"
 #include "eventsource.h"
+#include "buffer.h"
 
 namespace renderMe
 {
@@ -61,6 +62,8 @@ namespace renderMe
             size_t      contentSize{ 0 };
 
             bool        readyToUse{ false };
+
+            core::Buffer<char> code;
         };
 
         ResourceSystem(core::Entitygraph& p_entitygraph);

@@ -35,9 +35,35 @@ namespace renderMe
         public:
 
             Buffer() = default;
-            Buffer(const Buffer&) = delete;
+
+            Buffer(const Buffer& p_other)
+            {
+                if (p_other.isEmpty())
+                {
+                    return;
+                }
+
+                m_data.release();
+                m_data = std::make_unique<T[]>(p_other.m_dataSize);
+                memcpy((void*)m_data.get(), p_other.m_data.get(), p_other.m_dataSize * sizeof(T));
+                m_dataSize = p_other.m_dataSize;
+            }            
             Buffer(Buffer&&) = delete;
-            Buffer& operator=(const Buffer& t) = delete;
+            
+            Buffer& operator=(const Buffer& p_other)
+            {
+                if (p_other.isEmpty())
+                {
+                    return;
+                }
+                m_data.release();
+                m_data = std::make_unique<T[]>(p_other.m_dataSize);
+                memcpy((void*)m_data.get(), p_other.m_data.get(), p_other.m_dataSize * sizeof(T));
+                m_dataSize = p_other.m_dataSize;
+
+                return *this;
+            }
+
             ~Buffer() = default;
 
             T* getData(void) const
