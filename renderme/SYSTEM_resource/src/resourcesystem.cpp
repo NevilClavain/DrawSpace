@@ -277,8 +277,6 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					// transfer file content to shaderInfos 'code' buffer
 					shaderInfos.code.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 				}
-
-
 			}
 			catch (const std::exception& e)
 			{
