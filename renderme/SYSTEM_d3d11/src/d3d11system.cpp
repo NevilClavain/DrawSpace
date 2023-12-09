@@ -191,6 +191,53 @@ void D3D11System::manageRenderingQueue() const
 	renderMe::helpers::extractAspectsDownTop<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
+void D3D11System::manageResources() const
+{
+	const auto forEachResourcesAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
+		{
+			// search for vertex shaders
+
+			/*
+			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders") };
+			if (vshaders_list)
+			{
+				for (auto& shaderDescr : vshaders_list->getPurpose())
+				{
+					shaderDescr.state_mutex.lock();
+					const auto state{ shaderDescr.state };
+					shaderDescr.state_mutex.unlock();
+
+					if (ShaderInfos::State::INIT == state)
+					{
+					}
+				}
+			}
+
+			// search for pixel shaders
+
+			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders") };
+			if (pshaders_list)
+			{
+				for (auto& shaderDescr : pshaders_list->getPurpose())
+				{
+					shaderDescr.state_mutex.lock();
+					const auto state{ shaderDescr.state };
+					shaderDescr.state_mutex.unlock();
+
+					if (ShaderInfos::State::INIT == state)
+					{
+					}
+				}
+			}
+			*/
+		}
+	};
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachResourcesAspect);
+}
+
+
 void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 {
 	if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
@@ -221,6 +268,7 @@ void D3D11System::run()
 		manageInitialization();
 	}
 
+	manageResources();
 	manageRenderingQueue();
 
 	if (m_initialized)
