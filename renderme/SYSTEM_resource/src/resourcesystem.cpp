@@ -31,6 +31,7 @@
 #include "md5.h"
 
 #include "shaders_service.h"
+#include "shader.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -121,6 +122,8 @@ void ResourceSystem::run()
 					}					
 				}
 			}
+
+			// search for pixel shaders
 
 			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders") };
 			if (pshaders_list)
