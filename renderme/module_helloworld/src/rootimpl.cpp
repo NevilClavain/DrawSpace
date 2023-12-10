@@ -28,6 +28,7 @@
 #include "d3d11system.h"
 #include "timesystem.h"
 #include "resourcesystem.h"
+#include "shader.h"
 
 #include "filesystem.h"
 #include "logconf.h"
@@ -295,17 +296,17 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	const auto circleEntity{ circleNode.data() };
 	auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
 
-	const std::vector<ResourceSystem::ShaderInfos> vertex_shaders =
+	const std::vector<Shader> vertex_shaders =
 	{
-		ResourceSystem::ShaderInfos("color_vs.hlsl")
+		Shader("color_vs.hlsl")
 	};
 
-	const std::vector<ResourceSystem::ShaderInfos> pixel_shaders =
+	const std::vector<Shader> pixel_shaders =
 	{
-		ResourceSystem::ShaderInfos("color_ps.hlsl")
+		Shader("color_ps.hlsl")
 	};
 
-	circle_resource_aspect.addComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders", vertex_shaders);
-	circle_resource_aspect.addComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders", pixel_shaders);
+	circle_resource_aspect.addComponent<std::vector<Shader>>("vertexShaders", vertex_shaders);
+	circle_resource_aspect.addComponent<std::vector<Shader>>("pixelShaders", pixel_shaders);
 
 }

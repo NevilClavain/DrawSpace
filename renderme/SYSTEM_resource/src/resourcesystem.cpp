@@ -103,44 +103,34 @@ void ResourceSystem::run()
 		{
 			// search for vertex shaders
 
-			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders") };
+			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<Shader>>("vertexShaders") };
 			if (vshaders_list)
 			{
 				for (auto& shaderDescr : vshaders_list->getPurpose())
 				{
-					shaderDescr.state_mutex.lock();
-					const auto state{ shaderDescr.state };
-					shaderDescr.state_mutex.unlock();
+					const auto state{ shaderDescr.getState() };
 					
-					if (ShaderInfos::State::INIT == state)
+					if (Shader::State::INIT == state)
 					{
 						handleShader(shaderDescr, 0);
-
-						shaderDescr.state_mutex.lock();
-						shaderDescr.state = ShaderInfos::State::BLOBLOADING;
-						shaderDescr.state_mutex.unlock();
+						shaderDescr.setState(Shader::State::BLOBLOADING);
 					}					
 				}
 			}
 
 			// search for pixel shaders
 
-			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders") };
+			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<Shader>>("pixelShaders") };
 			if (pshaders_list)
 			{
 				for (auto& shaderDescr : pshaders_list->getPurpose())
 				{
-					shaderDescr.state_mutex.lock();
-					const auto state{ shaderDescr.state };
-					shaderDescr.state_mutex.unlock();
+					const auto state{ shaderDescr.getState() };
 
-					if (ShaderInfos::State::INIT == state)
+					if (Shader::State::INIT == state)
 					{
 						handleShader(shaderDescr, 1);
-
-						shaderDescr.state_mutex.lock();
-						shaderDescr.state = ShaderInfos::State::BLOBLOADING;
-						shaderDescr.state_mutex.unlock();
+						shaderDescr.setState(Shader::State::BLOBLOADING);
 					}
 				}
 			}
@@ -155,39 +145,39 @@ void ResourceSystem::run()
 	}	
 }
 
-void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
+void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + shaderInfos.name + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "load_shader" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.name, shaderAction,
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.getName(), shaderAction,
 		[&,
 			shaderType=shaderType,
 			shaderAction=shaderAction,
 			currentIndex = m_runnerIndex
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.name + " shader type = " + std::to_string(shaderType));
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.getName() + " shader type = " + std::to_string(shaderType));
 
 			// build full path
-			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.name };
+			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.getName() };
 			try
 			{
 				renderMe::core::FileContent<const char> shader_src_content(shader_path);
 				shader_src_content.load();
 
 				// no mutex needed here (only this thread access it)
-				shaderInfos.contentSize = shader_src_content.getDataSize();
-				shaderInfos.content = shader_src_content.getData();
+				shaderInfos.setContentSize( shader_src_content.getDataSize() );
+				shaderInfos.setContent( shader_src_content.getData() );
 
 				MD5 md5;
 				const std::string shaderMD5{ md5.digestMemory((BYTE*)shader_src_content.getData(), shader_src_content.getDataSize()) };
-				shaderInfos.contentMD5 = shaderMD5;
+				shaderInfos.setContentMD5( shaderMD5 );
 
-				const auto decomposed_shader_filename{ fileSystem::splitFilename(shaderInfos.name) };
+				const auto decomposed_shader_filename{ fileSystem::splitFilename(shaderInfos.getName()) };
 				const auto cacheDirectory{ m_shadersCachePath + "/" + decomposed_shader_filename.first };
 
 				bool generate_cache_entry{ false };
@@ -221,29 +211,29 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 
 						// check if md5 are equals
 
-						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != shaderInfos.contentMD5)
+						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != shaderInfos.getContentMD5())
 						{
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + shaderInfos.name);
+							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + shaderInfos.getName());
 							generate_cache_entry = true;
 						}
 						else
 						{
 							// load bc.code file
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.name);
+							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.getName());
 						}
 					}
 				}
 
 				if (generate_cache_entry)
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + shaderInfos.name);
+					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + shaderInfos.getName());
 
 					std::unique_ptr<char[]> shaderBytes;
 					size_t shaderBytesLength;
 
 					for (const auto& call : m_callbacks)
 					{
-						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, shaderInfos.name);
+						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, shaderInfos.getName());
 					}
 
 					bool compilationStatus;
@@ -261,7 +251,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					{
 						for (const auto& call : m_callbacks)
 						{
-							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.name);
+							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.getName());
 						}
 
 						renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
@@ -269,16 +259,21 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 
 						// create cache md5 file
 						renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
-						shader_md5_content.save(shaderInfos.contentMD5.c_str(), shaderInfos.contentMD5.size());
+						const std::string shaderMD5{ shaderInfos.getContentMD5() };
+						shader_md5_content.save(shaderMD5.c_str(), shaderMD5.length());
 
 						// and transfer file content to shaderInfos 'code' buffer
-						shaderInfos.code.fill(shaderBytes.get(), shaderBytesLength);
+						core::Buffer<char> shaderCode;
+						shaderCode.fill(shaderBytes.get(), shaderBytesLength);
+						shaderInfos.setCode(shaderCode);
+
+						//shaderInfos.code.fill(shaderBytes.get(), shaderBytesLength);
 					}
 					else
 					{
 						for (const auto& call : m_callbacks)
 						{
-							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, shaderInfos.name);
+							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, shaderInfos.getName());
 						}
 
 						std::string compilErrorMessage(shaderBytes.get(), shaderBytesLength);
@@ -292,12 +287,13 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 					cache_code_content.load();
 
 					// transfer file content to shaderInfos 'code' buffer
-					shaderInfos.code.fill(cache_code_content.getData(), cache_code_content.getDataSize());
+					//shaderInfos.code.fill(cache_code_content.getData(), cache_code_content.getDataSize());
+					core::Buffer<char> shaderCode;
+					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
+					shaderInfos.setCode(shaderCode);
 				}
-
-				shaderInfos.state_mutex.lock();
-				shaderInfos.state = ShaderInfos::State::BLOBLOADED;
-				shaderInfos.state_mutex.unlock();
+				
+				shaderInfos.setState(Shader::State::BLOBLOADED);
 
 			}
 			catch (const std::exception& e)
@@ -305,7 +301,7 @@ void ResourceSystem::handleShader(ShaderInfos& shaderInfos, int p_shaderType)
 				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + shader_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.name, shaderAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
 				m_runner[currentIndex].get()->m_mailbox_out.push(report);
 			}
 

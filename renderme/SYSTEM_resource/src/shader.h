@@ -134,6 +134,11 @@ namespace renderMe
             m_state_mutex.unlock();
         }
 
+        void setCode(const core::Buffer<char>& p_code)
+        {
+            m_code = p_code;
+        }
+
     private:
 
         std::string         m_name;

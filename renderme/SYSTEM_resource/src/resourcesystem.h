@@ -41,6 +41,7 @@ namespace renderMe
     // fwd decls
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
+    class Shader;
 
     enum class ResourceSystemEvent
     {
@@ -57,6 +58,7 @@ namespace renderMe
     {
     public:
 
+        /*
         struct ShaderInfos
         {
             ShaderInfos() = delete;
@@ -116,6 +118,7 @@ namespace renderMe
             mutable std::mutex	state_mutex;
             State               state{ State::INIT };
         };
+        */
 
         ResourceSystem(core::Entitygraph& p_entitygraph);
         ~ResourceSystem();
@@ -129,12 +132,11 @@ namespace renderMe
         const std::string                   m_shadersBasePath{ "./shaders/resources" };
         const std::string                   m_shadersCachePath{ "./bc_cache" };
 
-        //renderMe::core::Runner              m_runner;
 
         static constexpr unsigned int                           nbRunners{ 2 };
         std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;
         int                                                     m_runnerIndex{ 0 };
 
-        void handleShader(ShaderInfos& shaderInfos, int p_shaderType);
+        void handleShader(Shader& shaderInfos, int p_shaderType);
     };
 }
