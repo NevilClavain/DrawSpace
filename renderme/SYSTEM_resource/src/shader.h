@@ -38,25 +38,8 @@ namespace renderMe
     {
     public:
         Shader() = delete;
-        Shader(const std::string& p_name) :
-            m_name(p_name)
-        {
-        }
-
-        Shader(const Shader& p_other)
-        {
-            m_name = p_other.m_name;
-            m_content = p_other.m_content;
-            m_contentMD5 = p_other.m_contentMD5;
-            m_contentSize = p_other.m_contentSize;
-            m_code = p_other.m_code;
-
-            m_state_mutex.lock();
-            p_other.m_state_mutex.lock();
-            m_state = p_other.m_state;
-            p_other.m_state_mutex.unlock();
-            m_state_mutex.unlock();
-        }
+        Shader(const std::string& p_name);
+        Shader(const Shader& p_other);
 
         Shader& operator=(const Shader& p_other)
         {
@@ -84,60 +67,17 @@ namespace renderMe
             RENDERERLOADED,
         };
 
-        std::string getName() const
-        {
-            return m_name;
-        }
+        std::string getName() const;
+        std::string getContent() const;
+        void setContent(const std::string& p_content);
+        std::string getContentMD5() const;
+        void setContentMD5(const std::string& p_contentMD5);
+        size_t getContentSize() const;
+        void setContentSize(size_t p_contentSize);
+        State getState() const;
+        void setState(State p_state);
 
-        std::string getContent() const
-        {
-            return m_content;
-        }
-
-        void setContent(const std::string& p_content)
-        {
-            m_content = p_content;
-        }
-
-        std::string getContentMD5() const
-        {
-            return m_contentMD5;
-        }
-
-        void setContentMD5(const std::string& p_contentMD5)
-        {
-            m_contentMD5 = p_contentMD5;
-        }
-
-        size_t getContentSize() const
-        {
-            return m_contentSize;
-        }
-
-        void setContentSize(size_t p_contentSize)
-        {
-            m_contentSize = p_contentSize;
-        }
-
-        State getState() const
-        {
-            m_state_mutex.lock();
-            const auto state{ m_state };
-            m_state_mutex.unlock();
-            return state;
-        }
-
-        void setState(State p_state)
-        {
-            m_state_mutex.lock();
-            m_state = p_state;
-            m_state_mutex.unlock();
-        }
-
-        void setCode(const core::Buffer<char>& p_code)
-        {
-            m_code = p_code;
-        }
+        void setCode(const core::Buffer<char>& p_code);
 
     private:
 

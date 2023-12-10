@@ -266,8 +266,6 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 						core::Buffer<char> shaderCode;
 						shaderCode.fill(shaderBytes.get(), shaderBytesLength);
 						shaderInfos.setCode(shaderCode);
-
-						//shaderInfos.code.fill(shaderBytes.get(), shaderBytesLength);
 					}
 					else
 					{
@@ -287,7 +285,6 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					cache_code_content.load();
 
 					// transfer file content to shaderInfos 'code' buffer
-					//shaderInfos.code.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 					core::Buffer<char> shaderCode;
 					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 					shaderInfos.setCode(shaderCode);
