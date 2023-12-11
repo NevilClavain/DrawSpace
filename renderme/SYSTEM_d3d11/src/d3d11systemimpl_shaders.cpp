@@ -142,3 +142,137 @@ HRESULT D3D11SystemImpl::compileShaderFromMem(void* p_data, int p_size, LPCTSTR 
     }
     return hr;
 }
+
+bool D3D11SystemImpl::createVertexShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code)
+{
+    DECLARE_D3D11ASSERT_VARS
+    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading : " + p_name);
+
+    const D3D11_INPUT_ELEMENT_DESC layout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 5, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 6, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 7, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 8, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "BINORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,   0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+
+    if (m_vshaders.count(p_name))
+    {
+        _RENDERME_DEBUG(m_localLogger, "Vertex Shader already loaded : " + p_name);
+    }
+    else
+    {
+        const char* shader_bc           { p_code.getData() };
+        const size_t shader_bc_length   { p_code.getDataSize() };
+
+        ID3D11VertexShader* vs{ nullptr };
+        hRes = m_lpd3ddevice->CreateVertexShader(shader_bc, shader_bc_length, nullptr, &vs);
+        D3D11_CHECK(CreateVertexShader);
+
+        ID3D11InputLayout* input_layout{ nullptr };
+        hRes = m_lpd3ddevice->CreateInputLayout(layout, ARRAYSIZE(layout), shader_bc, shader_bc_length, &input_layout);
+        D3D11_CHECK(CreateInputLayout);
+
+        m_vshaders[p_name] = { vs, input_layout };
+    }
+
+    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading SUCCESS : " + p_name);
+    return true;
+}
+
+bool D3D11SystemImpl::createPixelShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code)
+{
+    DECLARE_D3D11ASSERT_VARS
+    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading : " + p_name);
+
+    const D3D11_INPUT_ELEMENT_DESC layout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 5, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 6, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 7, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 8, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "BINORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,   0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+
+    if (m_pshaders.count(p_name))
+    {
+        _RENDERME_DEBUG(m_localLogger, "Pixel Shader already loaded : " + p_name);
+    }
+    else
+    {
+        const char* shader_bc{ p_code.getData() };
+        const size_t shader_bc_length{ p_code.getDataSize() };
+
+        ID3D11PixelShader* ps{ nullptr };
+        hRes = m_lpd3ddevice->CreatePixelShader(shader_bc, shader_bc_length, nullptr, &ps);
+        D3D11_CHECK(CreatePixelShader);
+
+        m_pshaders[p_name] = { ps };
+    }
+
+    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading SUCCESS : " + p_name);
+    return true;
+}
+
+void D3D11SystemImpl::setVertexShader(const std::string& p_name) const
+{
+    if (!m_vshaders.count(p_name))
+    {
+        _EXCEPTION("unknown vertex shader :" + p_name)
+    }
+    const auto shaderData{ m_vshaders.at(p_name) };
+    
+    m_lpd3ddevcontext->IASetInputLayout(shaderData.input_layout);
+    m_lpd3ddevcontext->VSSetShader(shaderData.vertex_shader, nullptr, 0);
+}
+
+void D3D11SystemImpl::setPixelShader(const std::string& p_name) const
+{
+    if (!m_pshaders.count(p_name))
+    {
+        _EXCEPTION("unknown pixel shader :" + p_name)
+    }
+    const auto shaderData{ m_pshaders.at(p_name) };
+
+    m_lpd3ddevcontext->PSSetShader(shaderData.pixel_shader, nullptr, 0);
+}
+
+void D3D11SystemImpl::destroyVertexShader(const std::string& p_name)
+{
+    if (!m_vshaders.count(p_name))
+    {
+        _EXCEPTION("unknown vertex shader :" + p_name)
+    }
+    const auto shaderData{ m_vshaders.at(p_name) };
+
+    shaderData.input_layout->Release();
+    shaderData.vertex_shader->Release();
+}
+
+void D3D11SystemImpl::destroyPixelShader(const std::string& p_name)
+{
+    if (!m_vshaders.count(p_name))
+    {
+        _EXCEPTION("unknown vertex shader :" + p_name)
+    }
+    const auto shaderData{ m_pshaders.at(p_name) };
+
+    shaderData.pixel_shader->Release();
+}

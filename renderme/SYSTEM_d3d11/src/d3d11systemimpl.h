@@ -49,6 +49,7 @@
 #include "tvector.h"
 
 #include "filesystem.h"
+#include "buffer.h"
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
@@ -101,7 +102,16 @@ public:
                                     const renderMe::core::FileContent<const char>& srcFile,
                                     std::unique_ptr<char[]>& p_shaderBytes,
                                     size_t& p_shaderBytesLength);
-                            
+
+    bool createVertexShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code);
+    bool createPixelShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code);
+          
+    void setVertexShader(const std::string& p_name) const;
+    void setPixelShader(const std::string& p_name) const;
+
+    void destroyVertexShader(const std::string& p_name);
+    void destroyPixelShader(const std::string& p_name);
+
 
 private:
 
@@ -125,8 +135,24 @@ private:
         XMMATRIX                    matrix[512];
     };
 
+    struct VertexShadersData
+    {
+        ID3D11VertexShader* vertex_shader   { nullptr };
+        ID3D11InputLayout* input_layout     { nullptr };
+    };
+
+    struct PixelShadersData
+    {
+        ID3D11PixelShader* pixel_shader     { nullptr };
+    };
+
+
+
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;
     using BSCache =                 std::unordered_map<std::string, BSCacheEntry>;
+
+    using VShaderList =             std::unordered_map<std::string, VertexShadersData>;
+    using PShaderList =             std::unordered_map<std::string, PixelShadersData>;
 
     renderMe::core::logger::Sink                        m_localLogger;
 
@@ -160,6 +186,10 @@ private:
 
     ID3D11DepthStencilView*                             m_currentView{ nullptr };
     ID3D11RenderTargetView*                             m_currentTarget{ nullptr };
+
+    VShaderList                                         m_vshaders;
+    PShaderList                                         m_pshaders;
+
 
 
 
