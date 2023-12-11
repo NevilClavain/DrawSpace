@@ -170,7 +170,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	// D3D11 system provides compilation shader service
 
 	renderMe::D3D11System* d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
-	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getCallback());
+	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getServiceInvocationCallback());
 
 	// register to resource system events
 
@@ -231,6 +231,11 @@ void RootImpl::close(void)
 	auto resourceSystemInstance{ dynamic_cast<renderMe::ResourceSystem*>(resourceSystem) };
 
 	resourceSystemInstance->killRunner();
+
+	auto d3d11System{ SystemEngine::getInstance()->getSystem(1) };
+	auto d3d11SystemInstance{ dynamic_cast<renderMe::D3D11System*>(d3d11System) };
+
+	d3d11SystemInstance->killRunner();
 }
 
 void RootImpl::registerSubscriber(const Callback& p_callback)

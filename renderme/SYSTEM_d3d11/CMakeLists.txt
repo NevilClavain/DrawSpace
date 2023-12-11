@@ -33,6 +33,8 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_buffer/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
+include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
 

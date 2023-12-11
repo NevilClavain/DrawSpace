@@ -58,68 +58,6 @@ namespace renderMe
     {
     public:
 
-        /*
-        struct ShaderInfos
-        {
-            ShaderInfos() = delete;
-            ShaderInfos(const std::string& p_name) :
-            name(p_name)
-            {
-            }
-
-            ShaderInfos(const ShaderInfos& p_other)
-            {
-                name = p_other.name;
-                content = p_other.content;
-                contentMD5 = p_other.contentMD5;
-                contentSize = p_other.contentSize;
-                code = p_other.code;
-
-                state_mutex.lock();
-                p_other.state_mutex.lock();
-                state = p_other.state;
-                p_other.state_mutex.unlock();
-                state_mutex.unlock();
-            }
-
-            ShaderInfos& operator=(const ShaderInfos& p_other)
-            {
-                name = p_other.name;
-                content = p_other.content;
-                contentMD5 = p_other.contentMD5;
-                contentSize = p_other.contentSize;
-                code = p_other.code;
-
-                state_mutex.lock();
-                p_other.state_mutex.lock();
-                state = p_other.state;
-                p_other.state_mutex.unlock();
-                state_mutex.unlock();
-
-                return *this;
-            }
-
-            enum class State 
-            {
-                INIT,
-                BLOBLOADING,
-                BLOBLOADED,
-                RENDERERLOADING,
-                RENDERERLOADED,
-            };
-
-            std::string         name;            
-            std::string         content;
-            std::string         contentMD5;
-            size_t              contentSize{ 0 };
-
-            core::Buffer<char>  code;
-
-            mutable std::mutex	state_mutex;
-            State               state{ State::INIT };
-        };
-        */
-
         ResourceSystem(core::Entitygraph& p_entitygraph);
         ~ResourceSystem();
 

@@ -41,6 +41,7 @@
 #include "renderingqueue.h"
 
 #include "ecshelpers.h"
+#include "shader.h"
 
 
 using namespace renderMe;
@@ -49,7 +50,7 @@ using namespace renderMe::core;
 
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
-	m_cb = [&, this](const std::string& p_includePath,
+	m_service_invocation_cb = [&, this](const std::string& p_includePath,
 		const renderMe::core::FileContent<const char>& p_src,		
 		int p_shaderType,
 		std::unique_ptr<char[]>& p_shaderBytes,
@@ -58,6 +59,24 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 	{
 		p_status = D3D11SystemImpl::getInstance()->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_shaderBytes, p_shaderBytesLength);
 	};
+
+	
+	const Runner::Callback runner_cb
+	{
+		[&, this](renderMe::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
+		{
+			if (renderMe::core::RunnerEvent::TASK_ERROR == p_event)
+			{
+			}
+			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
+			{
+				_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
+			}
+		}
+	};
+	
+	m_runner.registerSubscriber(runner_cb);
+	m_runner.startup();
 }
 
 void D3D11System::manageInitialization()
@@ -199,17 +218,14 @@ void D3D11System::manageResources() const
 		{
 			// search for vertex shaders
 
-			/*
-			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("vertexShaders") };
+			
+			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<Shader>>("vertexShaders") };
 			if (vshaders_list)
 			{
 				for (auto& shaderDescr : vshaders_list->getPurpose())
 				{
-					shaderDescr.state_mutex.lock();
-					const auto state{ shaderDescr.state };
-					shaderDescr.state_mutex.unlock();
-
-					if (ShaderInfos::State::INIT == state)
+					const auto state{ shaderDescr.getState() };
+					if (Shader::State::BLOBLOADED == state)
 					{
 					}
 				}
@@ -217,24 +233,20 @@ void D3D11System::manageResources() const
 
 			// search for pixel shaders
 
-			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<ResourceSystem::ShaderInfos>>("pixelShaders") };
+			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<Shader>>("pixelShaders") };
 			if (pshaders_list)
 			{
 				for (auto& shaderDescr : pshaders_list->getPurpose())
 				{
-					shaderDescr.state_mutex.lock();
-					const auto state{ shaderDescr.state };
-					shaderDescr.state_mutex.unlock();
-
-					if (ShaderInfos::State::INIT == state)
+					const auto state{ shaderDescr.getState() };
+					if (Shader::State::BLOBLOADED == state)
 					{
 					}
 				}
-			}
-			*/
+			}			
 		}
 	};
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachResourcesAspect);
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);
 }
 
 
@@ -275,9 +287,16 @@ void D3D11System::run()
 	{
 		D3D11SystemImpl::getInstance()->flipScreen();
 	}
+
+	m_runner.dispatchEvents();
 }
 
-
+void D3D11System::killRunner()
+{
+	renderMe::core::RunnerKiller runnerKiller;
+	m_runner.m_mailbox_in.push(&runnerKiller);
+	m_runner.join();
+}
 
 
 

@@ -26,6 +26,7 @@
 #pragma once
 #include "system.h"
 #include "shaders_service.h"
+#include "runner.h"
 
 namespace renderMe
 {   
@@ -41,15 +42,18 @@ namespace renderMe
         ~D3D11System() = default;
 
         void run();
+        void killRunner();
 
-        auto getCallback() const
+        auto getServiceInvocationCallback() const
         {
-            return m_cb;
+            return m_service_invocation_cb;
         };
 
     private:
         bool	                                                m_initialized{ false };
-        core::services::ShadersCompilationService::Callback     m_cb;
+        core::services::ShadersCompilationService::Callback     m_service_invocation_cb;
+
+        renderMe::core::Runner                                  m_runner;
 
         void    manageInitialization();
         void    manageRenderingQueue() const;
