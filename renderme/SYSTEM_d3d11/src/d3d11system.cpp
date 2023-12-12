@@ -321,7 +321,29 @@ void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
 			shaderAction = shaderAction
 		]()
 		{
-			shaderInfos.setState(Shader::State::RENDERERLOADED);
+			bool status { false };
+			if (0 == shaderType)
+			{
+				status = D3D11SystemImpl::getInstance()->createVertexShader(shaderInfos.getName(), shaderInfos.getCode());
+			}
+			else if (1 == shaderType)
+			{
+				status = D3D11SystemImpl::getInstance()->createPixelShader(shaderInfos.getName(), shaderInfos.getCode());
+			}
+
+			if (!status)
+			{
+				_RENDERME_ERROR(D3D11SystemImpl::getInstance()->logger(), "Failed to load shader " + shaderInfos.getName() + " in D3D11 ");
+				
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
+				m_runner.m_mailbox_out.push(report);
+			}
+			else
+			{
+				_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "Successful creation of shader " + shaderInfos.getName() + " in D3D11 ");
+				shaderInfos.setState(Shader::State::RENDERERLOADED);
+			}			
 		}
 	)};
 
