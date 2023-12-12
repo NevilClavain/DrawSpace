@@ -67,6 +67,11 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 		{
 			if (renderMe::core::RunnerEvent::TASK_ERROR == p_event)
 			{
+				if ("load_shader_d3d11" == p_action_descr)
+				{
+					// rethrow in current thread
+					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
+				}
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
@@ -210,7 +215,7 @@ void D3D11System::manageRenderingQueue() const
 	renderMe::helpers::extractAspectsDownTop<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
-void D3D11System::manageResources() const
+void D3D11System::manageResources()
 {
 	const auto forEachResourcesAspect
 	{
@@ -227,6 +232,8 @@ void D3D11System::manageResources() const
 					const auto state{ shaderDescr.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
+						handleShader(shaderDescr, 0);
+						shaderDescr.setState(Shader::State::RENDERERLOADING);
 					}
 				}
 			}
@@ -241,6 +248,8 @@ void D3D11System::manageResources() const
 					const auto state{ shaderDescr.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
+						handleShader(shaderDescr, 1);
+						shaderDescr.setState(Shader::State::RENDERERLOADING);
 					}
 				}
 			}			
@@ -298,5 +307,24 @@ void D3D11System::killRunner()
 	m_runner.join();
 }
 
+void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
+{
+	const auto shaderType{ p_shaderType };
 
+	_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+
+	const std::string shaderAction{ "load_shader_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.getName(), shaderAction,
+		[&,
+			shaderType = shaderType,
+			shaderAction = shaderAction
+		]()
+		{
+			shaderInfos.setState(Shader::State::RENDERERLOADED);
+		}
+	)};
+
+	m_runner.m_mailbox_in.push(task);
+}
 

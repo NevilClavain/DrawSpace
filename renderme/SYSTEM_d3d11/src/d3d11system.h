@@ -33,6 +33,7 @@ namespace renderMe
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
     namespace rendering { class Queue; }
+    class Shader;
            
     class D3D11System : public core::System
     {
@@ -58,7 +59,9 @@ namespace renderMe
         void    manageInitialization();
         void    manageRenderingQueue() const;
 
-        void    manageResources() const;
+        void    manageResources();
+
+        void    handleShader(Shader& shaderInfos, int p_shaderType);
 
         static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
         static void renderQueue(rendering::Queue& p_renderingQueue);
