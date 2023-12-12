@@ -305,6 +305,8 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 		}
 	)};
 
+	_RENDERME_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
+
 	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
 
 	m_runnerIndex++;
