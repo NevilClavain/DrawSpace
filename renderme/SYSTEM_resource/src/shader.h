@@ -77,6 +77,7 @@ namespace renderMe
         State getState() const;
         void setState(State p_state);
 
+        const core::Buffer<char>& getCode() const;
         void setCode(const core::Buffer<char>& p_code);
 
     private:

@@ -97,6 +97,11 @@ void Shader::setState(State p_state)
     m_state_mutex.unlock();
 }
 
+const core::Buffer<char>& Shader::getCode() const
+{
+    return m_code;
+}
+
 void Shader::setCode(const core::Buffer<char>& p_code)
 {
     m_code = p_code;
