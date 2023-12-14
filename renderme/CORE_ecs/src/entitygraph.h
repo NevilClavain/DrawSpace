@@ -65,6 +65,8 @@ namespace renderMe
 
 			Node&			add(Node& p_parent, const std::string& p_entity_id);
 
+			void			remove(Node& p_node);
+
 			Node&			node(const std::string& p_entity_id);
 
 

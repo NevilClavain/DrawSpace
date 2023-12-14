@@ -73,6 +73,11 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 	return *ite_new_node;
 }
 
+void Entitygraph::remove(Node& p_node)
+{
+	p_node.erase();
+}
+
 Entitygraph::Node& Entitygraph::node(const std::string& p_entity_id)
 {
 	const auto id{ p_entity_id };
