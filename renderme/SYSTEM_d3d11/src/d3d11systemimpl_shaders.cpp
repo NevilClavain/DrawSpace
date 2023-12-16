@@ -186,6 +186,8 @@ bool D3D11SystemImpl::createVertexShader(const std::string& p_name, const render
     }
 
     _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading SUCCESS : " + p_name);
+    m_shaderNames.emplace(p_name);
+
     return true;
 }
 
@@ -228,6 +230,9 @@ bool D3D11SystemImpl::createPixelShader(const std::string& p_name, const renderM
     }
 
     _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading SUCCESS : " + p_name);
+    m_shaderNames.emplace(p_name);
+
+
     return true;
 }
 
@@ -275,4 +280,9 @@ void D3D11SystemImpl::destroyPixelShader(const std::string& p_name)
     const auto shaderData{ m_pshaders.at(p_name) };
 
     shaderData.pixel_shader->Release();
+}
+
+std::unordered_set<std::string> D3D11SystemImpl::getShadersNames() const
+{
+    return m_shaderNames;
 }

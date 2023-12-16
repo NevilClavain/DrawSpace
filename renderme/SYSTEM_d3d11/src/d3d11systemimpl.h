@@ -38,6 +38,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "singleton.h"
 #include "entity.h"
@@ -112,6 +113,7 @@ public:
     void destroyVertexShader(const std::string& p_name);
     void destroyPixelShader(const std::string& p_name);
 
+    std::unordered_set<std::string> getShadersNames() const;
 
 private:
 
@@ -190,7 +192,7 @@ private:
     VShaderList                                         m_vshaders;
     PShaderList                                         m_pshaders;
 
-
+    std::unordered_set<std::string>                     m_shaderNames;
 
 
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
