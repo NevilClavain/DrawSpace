@@ -75,6 +75,12 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 
 void Entitygraph::remove(Node& p_node)
 {
+	const auto& entity{ *p_node.data() };
+	for (const auto& call : m_callbacks)
+	{
+		call(EntitygraphEvents::ENTITYGRAPHNODE_REMOVED, entity);
+	}
+
 	p_node.erase();
 }
 

@@ -60,6 +60,7 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 		p_status = d3dimpl->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_shaderBytes, p_shaderBytesLength);
 	};
 
+	////// Register callback to runner
 	
 	const Runner::Callback runner_cb
 	{
@@ -82,6 +83,21 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 	
 	m_runner.registerSubscriber(runner_cb);
 	m_runner.startup();
+
+	////// Register callback to entitygraph
+
+	const Entitygraph::Callback eg_cb
+	{
+		[&, this](renderMe::core::EntitygraphEvents p_event, const core::Entity& p_entity)
+		{
+			if (renderMe::core::EntitygraphEvents::ENTITYGRAPHNODE_REMOVED == p_event)
+			{
+				// to be continued...
+			}
+		}
+	};
+
+	p_entitygraph.registerSubscriber(eg_cb);
 }
 
 void D3D11System::manageInitialization()
