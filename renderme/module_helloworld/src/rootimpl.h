@@ -65,6 +65,7 @@ public:
 
     void                            createEntities(const std::string p_appWindowsEntityName);
 
+
     //override
     void                            registerSubscriber(const Callback& p_callback);
 
@@ -79,6 +80,8 @@ private:
     renderMe::core::ComponentContainer*     m_timeInfos_time_aspect{ nullptr };
 
     std::string                             m_resources_event{ "..." };
+
+    bool                                    m_draw_circle{ true };
 };
 
 

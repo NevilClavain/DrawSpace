@@ -24,9 +24,13 @@
 /* -*-LIC_END-*- */
 
 #pragma once
+
+#include <unordered_set>
 #include "system.h"
 #include "shaders_service.h"
 #include "runner.h"
+
+
 
 namespace renderMe
 {   
@@ -34,7 +38,7 @@ namespace renderMe
     namespace core { class Entitygraph; }
     namespace rendering { class Queue; }
     class Shader;
-           
+               
     class D3D11System : public core::System
     {
     public:

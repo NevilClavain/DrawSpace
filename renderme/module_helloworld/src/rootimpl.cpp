@@ -101,6 +101,15 @@ void RootImpl::onEndKeyPress(long p_key)
 			call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
 		}
 	}
+	else if (VK_F3 == p_key)
+	{
+		if (m_draw_circle)
+		{
+			m_draw_circle = false;
+
+			m_entitygraph.remove(m_entitygraph.node("circleEntity"));
+		}
+	}
 }
 
 void RootImpl::onKeyPulse(long p_key)
@@ -296,22 +305,25 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	m_timeInfos_time_aspect = &timeInfos_time_aspect;
 
 	//////////////////////////////////////////////////////
+
+	if (m_draw_circle)
+	{
+		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "circleEntity") };
+		const auto circleEntity{ circleNode.data() };
+		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
+
+		const std::vector<Shader> vertex_shaders =
+		{
+			Shader("color_vs.hlsl")
+		};
+
+		const std::vector<Shader> pixel_shaders =
+		{
+			Shader("color_ps.hlsl")
+		};
+
+		circle_resource_aspect.addComponent<std::vector<Shader>>("vertexShaders", vertex_shaders);
+		circle_resource_aspect.addComponent<std::vector<Shader>>("pixelShaders", pixel_shaders);
+	}
 	
-	auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "circleEntity") };
-	const auto circleEntity{ circleNode.data() };
-	auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
-
-	const std::vector<Shader> vertex_shaders =
-	{
-		Shader("color_vs.hlsl")
-	};
-
-	const std::vector<Shader> pixel_shaders =
-	{
-		Shader("color_ps.hlsl")
-	};
-
-	circle_resource_aspect.addComponent<std::vector<Shader>>("vertexShaders", vertex_shaders);
-	circle_resource_aspect.addComponent<std::vector<Shader>>("pixelShaders", pixel_shaders);
-
 }

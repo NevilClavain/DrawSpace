@@ -37,7 +37,6 @@
 
 #include "exceptions.h"
 #include "d3d11systemimpl.h"
-
 #include "renderingqueue.h"
 
 #include "ecshelpers.h"
@@ -47,6 +46,7 @@
 using namespace renderMe;
 using namespace renderMe::core;
 
+static const auto d3dimpl{ D3D11SystemImpl::getInstance() };
 
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
@@ -57,7 +57,7 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 		size_t& p_shaderBytesLength,
 		bool& p_status)
 	{
-		p_status = D3D11SystemImpl::getInstance()->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_shaderBytes, p_shaderBytesLength);
+		p_status = d3dimpl->createShaderBytesOnFile(p_shaderType, p_includePath, p_src, p_shaderBytes, p_shaderBytesLength);
 	};
 
 	
@@ -75,7 +75,7 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
-				_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
+				_RENDERME_DEBUG(d3dimpl->logger(), std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
 			}
 		}
 	};
@@ -99,7 +99,7 @@ void D3D11System::manageInitialization()
 
 			if (isWindowsRenderingTarget)
 			{
-				if (D3D11SystemImpl::getInstance()->init(p_entity))
+				if (d3dimpl->init(p_entity))
 				{
 					m_initialized = true;
 				}
@@ -130,7 +130,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 				{
 					p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
 					// log it (WARN)
-					_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : no parent")
+					_RENDERME_WARN(d3dimpl->logger(), "Rendering queue set to ERROR_ORPHAN : no parent")
 				}
 				else
 				{
@@ -150,7 +150,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 								p_renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
 								p_renderingQueue.setState(rendering::Queue::State::READY);
 
-								_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, SCREEN_RENDERING")
+								_RENDERME_DEBUG(d3dimpl->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, SCREEN_RENDERING")
 							}
 							else
 							{
@@ -162,7 +162,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 								p_renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
 								p_renderingQueue.setState(rendering::Queue::State::READY);
 
-								_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, INTERMEDIATE_RENDERING")
+								_RENDERME_DEBUG(d3dimpl->logger(), "rendering queue " + p_renderingQueue.getName() + " set to READY, INTERMEDIATE_RENDERING")
 							}
 						}
 						else
@@ -170,7 +170,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 							// parent rendering aspect has no renderingTarget component !
 							p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
 							// log it (WARN)
-							_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")
+							_RENDERME_WARN(d3dimpl->logger(), "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")
 						}
 					}
 					else
@@ -178,7 +178,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 						// parent has no rendering aspect 
 						p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
 						// log it (WARN)
-						_RENDERME_WARN(D3D11SystemImpl::getInstance()->logger(), "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
+						_RENDERME_WARN(d3dimpl->logger(), "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
 					}
 				}
 			}
@@ -221,9 +221,7 @@ void D3D11System::manageResources()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
 		{
-			// search for vertex shaders
-
-			
+			// search for vertex shaders			
 			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<Shader>>("vertexShaders") };
 			if (vshaders_list)
 			{
@@ -239,7 +237,6 @@ void D3D11System::manageResources()
 			}
 
 			// search for pixel shaders
-
 			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<Shader>>("pixelShaders") };
 			if (pshaders_list)
 			{
@@ -263,7 +260,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 {
 	if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
 	{
-		D3D11SystemImpl::getInstance()->beginScreen();
+		d3dimpl->beginScreen();
 
 	}
 	else //INTERMEDIATE_RENDERING
@@ -271,14 +268,14 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 		// TODO : beginIntermediate()
 	}
 
-	D3D11SystemImpl::getInstance()->clearTarget(p_renderingQueue.getTargetClearColor());
+	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
 
 	// TODO : run queue
 
 	// render texts
 	for (auto& text : p_renderingQueue.texts())
 	{
-		D3D11SystemImpl::getInstance()->drawText(text.second.font, text.second.color, text.second.position, text.second.font_size, text.second.text);
+		d3dimpl->drawText(text.second.font, text.second.color, text.second.position, text.second.font_size, text.second.text);
 	}
 }
 
@@ -294,7 +291,7 @@ void D3D11System::run()
 
 	if (m_initialized)
 	{
-		D3D11SystemImpl::getInstance()->flipScreen();
+		d3dimpl->flipScreen();
 	}
 
 	m_runner.dispatchEvents();
@@ -311,7 +308,7 @@ void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "load_shader_d3d11" };
 
@@ -324,16 +321,16 @@ void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
 			bool status { false };
 			if (0 == shaderType)
 			{
-				status = D3D11SystemImpl::getInstance()->createVertexShader(shaderInfos.getName(), shaderInfos.getCode());
+				status = d3dimpl->createVertexShader(shaderInfos.getName(), shaderInfos.getCode());
 			}
 			else if (1 == shaderType)
 			{
-				status = D3D11SystemImpl::getInstance()->createPixelShader(shaderInfos.getName(), shaderInfos.getCode());
+				status = d3dimpl->createPixelShader(shaderInfos.getName(), shaderInfos.getCode());
 			}
 
 			if (!status)
 			{
-				_RENDERME_ERROR(D3D11SystemImpl::getInstance()->logger(), "Failed to load shader " + shaderInfos.getName() + " in D3D11 ");
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + shaderInfos.getName() + " in D3D11 ");
 				
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
@@ -341,7 +338,7 @@ void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
 			}
 			else
 			{
-				_RENDERME_DEBUG(D3D11SystemImpl::getInstance()->logger(), "Successful creation of shader " + shaderInfos.getName() + " in D3D11 ");
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + shaderInfos.getName() + " in D3D11 ");
 				shaderInfos.setState(Shader::State::RENDERERLOADED);
 			}			
 		}
