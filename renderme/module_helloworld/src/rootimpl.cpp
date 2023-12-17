@@ -29,6 +29,7 @@
 #include "timesystem.h"
 #include "resourcesystem.h"
 #include "shader.h"
+#include "logger_service.h"
 
 #include "filesystem.h"
 #include "logconf.h"
@@ -40,11 +41,17 @@ using namespace renderMe;
 using namespace renderMe::core;
 
 
+RootImpl::RootImpl()
+{
+	/////////// create common specific logger for events
+	services::LoggerSharing::getInstance()->createLogger("Events");
+
+}
+
 std::string RootImpl::getModuleName() const
 {
 	return "Hello World";
 }
-
 
 std::string RootImpl::getModuleDescr() const
 {
@@ -62,10 +69,13 @@ void RootImpl::onKeyPress(long p_key)
 
 void RootImpl::onEndKeyPress(long p_key)
 {
+	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
 	if (VK_SPACE == p_key)
 	{
+		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
 		for (const auto& call : m_callbacks)
-		{
+		{			
 			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
 		}
 	}
@@ -80,6 +90,7 @@ void RootImpl::onEndKeyPress(long p_key)
 			m_show_mouse_cursor = true;
 		}
 
+		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_DISPLAY_CHANGED");
 		for (const auto& call : m_callbacks)
 		{
 			call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
@@ -96,6 +107,7 @@ void RootImpl::onEndKeyPress(long p_key)
 			m_mouse_circular_mode = true;
 		}
 
+		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_CIRCULARMODE_CHANGED");
 		for (const auto& call : m_callbacks)
 		{
 			call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
@@ -262,7 +274,6 @@ void RootImpl::registerSubscriber(const Callback& p_callback)
 	{
 		call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
 	}
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

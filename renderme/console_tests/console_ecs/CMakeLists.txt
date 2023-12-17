@@ -37,7 +37,7 @@ file(
 )
 
 add_executable(console_ecs ${source_files})
-target_link_libraries(console_ecs CORE_ecs CORE_logger CORE_allocator CORE_file)
+target_link_libraries(console_ecs CORE_ecs CORE_logger CORE_allocator CORE_file CORE_logger CORE_json CORE_services)
 
 
 install(TARGETS console_ecs CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)

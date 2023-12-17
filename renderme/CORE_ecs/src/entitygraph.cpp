@@ -26,6 +26,12 @@
 #include "entity.h"
 #include "exceptions.h"
 
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
+
+#include "logger_service.h"
+
 using namespace renderMe::core;
 
 Entitygraph::Node& Entitygraph::makeRoot(const std::string& p_entity_id)
@@ -66,6 +72,8 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 	NodeIterator ite_new_node{ p_parent.insert(&*(m_entites[p_entity_id].get())) };
 	m_nodes_iterator[p_entity_id] = ite_new_node;
 
+	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_ADDED");
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *m_entites.at(p_entity_id).get());
@@ -76,6 +84,9 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 void Entitygraph::remove(Node& p_node)
 {
 	const auto& entity{ *p_node.data() };
+
+	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_REMOVED");
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_REMOVED, entity);

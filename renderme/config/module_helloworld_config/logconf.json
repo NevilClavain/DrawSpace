@@ -11,7 +11,25 @@
 	"loggers" : 
 	[
 		{		
-			"source" : "D3D11Init",
+			"source" :"D3D11System",
+			"level" : "TRACE",
+			"state" : "on",
+			"output" : "file0"	
+		},
+		{		
+			"source" :"ResourceSystem",
+			"level" : "TRACE",
+			"state" : "on",
+			"output" : "file0"	
+		},
+		{		
+			"source" :"ResourceSystemRunner",
+			"level" : "TRACE",
+			"state" : "on",
+			"output" : "file0"	
+		},
+		{		
+			"source" :"Events",
 			"level" : "DEBUG",
 			"state" : "on",
 			"output" : "file0"	

@@ -29,12 +29,15 @@
 #include "ecshelpers.h"
 #include "filesystem.h"
 #include "md5.h"
+#include "logger_service.h"
 
 #include "shaders_service.h"
 #include "shader.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
+
+
 
 ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygraph),
 m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance()),
@@ -53,6 +56,9 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 	{
 		_RENDERME_DEBUG(m_localLogger, std::string("Shader cache missing, creating it..."));
 		fileSystem::createDirectory(m_shadersCachePath);
+
+		auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_CACHE_CREATED");
 
 		for (const auto& call : m_callbacks)
 		{
@@ -231,6 +237,9 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					std::unique_ptr<char[]> shaderBytes;
 					size_t shaderBytesLength;
 
+					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN");
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, shaderInfos.getName());
@@ -249,6 +258,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 					if (compilationStatus)
 					{
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS");
 						for (const auto& call : m_callbacks)
 						{
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.getName());
@@ -269,6 +279,8 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					}
 					else
 					{
+
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR");
 						for (const auto& call : m_callbacks)
 						{
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, shaderInfos.getName());
@@ -280,6 +292,14 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				}
 				else
 				{
+					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN");
+					for (const auto& call : m_callbacks)
+					{
+						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_BEGIN, shaderInfos.getName());
+					}
+
 					// load bc.code file
 					renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
 					cache_code_content.load();
@@ -288,6 +308,13 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					core::Buffer<char> shaderCode;
 					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 					shaderInfos.setCode(shaderCode);
+
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS");
+					for (const auto& call : m_callbacks)
+					{
+						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_SUCCESS, shaderInfos.getName());
+					}
+
 				}
 				
 				shaderInfos.setState(Shader::State::BLOBLOADED);

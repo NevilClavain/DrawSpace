@@ -169,11 +169,7 @@ logger::Configuration::Configuration( void )
 
 void logger::Configuration::registerSink( Sink* p_sink )
 {
-    std::string name;
-    p_sink->getName( name );
-
-    //if( m_sinks.count( name ) > 0 )
-
+    const auto name{ p_sink->getName() };
     if (m_sinks_infos.count(name) > 0)
     {
         // entry exists

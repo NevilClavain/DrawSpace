@@ -34,7 +34,7 @@
 class RootImpl : public renderMe::interfaces::ModuleRoot
 {
 public:
-    RootImpl() = default;
+    RootImpl();
     ~RootImpl() = default;
 
     RootImpl(const RootImpl&) = delete;

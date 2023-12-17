@@ -44,7 +44,7 @@ file(
 
 add_executable(rt WIN32 ${source_files})
 
-target_link_libraries(rt CORE_module CORE_filesystem CORE_app CORE_allocator CORE_ecs CORE_json CORE_logger CORE_file jsmn)
+target_link_libraries(rt CORE_module CORE_filesystem CORE_app CORE_allocator CORE_ecs CORE_json CORE_logger CORE_file CORE_services jsmn)
 
 
 install(TARGETS rt CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)

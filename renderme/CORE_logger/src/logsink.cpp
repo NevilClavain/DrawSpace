@@ -96,9 +96,9 @@ void logger::Sink::registerOutput(logger::Output* p_output )
     m_output = p_output;
 }
 
-void logger::Sink::getName( std::string& p_name ) const
+std::string logger::Sink::getName() const
 {
-    p_name = m_name;
+    return m_name;
 }
 
 void logger::Sink::setConfiguration(logger::Configuration* p_conf )

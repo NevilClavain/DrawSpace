@@ -62,7 +62,7 @@ namespace renderMe
 
                 void registerOutput(Output* p_output);
 
-                void getName(std::string& p_name) const;
+                std::string getName() const;
                 void setConfiguration(Configuration* p_conf);
 
             private:
