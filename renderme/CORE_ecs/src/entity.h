@@ -79,7 +79,7 @@ namespace renderMe
 				}
 			}
 
-			bool hasAspect(int p_aspect)
+			bool hasAspect(int p_aspect) const
 			{
 				return (m_aspects.count(p_aspect) > 0);
 			}
@@ -92,6 +92,16 @@ namespace renderMe
 				}
 				return m_aspects.at(p_aspect);
 			}
+
+			const ComponentContainer& aspectAccess(int p_aspect) const
+			{
+				if (0 == m_aspects.count(p_aspect))
+				{
+					_EXCEPTION("aspectAccess: unknown aspect : " + std::to_string(p_aspect))
+				}
+				return m_aspects.at(p_aspect);
+			}
+
 
 			Entity* getParent() const
 			{

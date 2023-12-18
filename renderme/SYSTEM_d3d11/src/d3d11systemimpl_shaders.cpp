@@ -269,17 +269,23 @@ void D3D11SystemImpl::destroyVertexShader(const std::string& p_name)
 
     shaderData.input_layout->Release();
     shaderData.vertex_shader->Release();
+
+    m_vshaders.erase(p_name);
+    _RENDERME_DEBUG(m_localLogger, "Vertex Shader release SUCCESS : " + p_name);
 }
 
 void D3D11SystemImpl::destroyPixelShader(const std::string& p_name)
 {
-    if (!m_vshaders.count(p_name))
+    if (!m_pshaders.count(p_name))
     {
         _EXCEPTION("unknown vertex shader :" + p_name)
     }
     const auto shaderData{ m_pshaders.at(p_name) };
 
     shaderData.pixel_shader->Release();
+
+    m_pshaders.erase(p_name);
+    _RENDERME_DEBUG(m_localLogger, "Pixel Shader release SUCCESS : " + p_name);
 }
 
 std::unordered_set<std::string> D3D11SystemImpl::getShadersNames() const

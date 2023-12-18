@@ -75,6 +75,11 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 					// rethrow in current thread
 					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
 				}
+				else if ("release_shader_d3d11" == p_action_descr)
+				{
+					// rethrow in current thread
+					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
+				}
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
@@ -99,6 +104,37 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 				_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> ENTITYGRAPHNODE_REMOVED : " + p_entity.getId());
 
 				// to be continued...
+				if (p_entity.hasAspect(core::resourcesAspect::id))
+				{
+					const auto& resources{ p_entity.aspectAccess(core::resourcesAspect::id) };
+
+					const auto vshaders_list{ resources.getComponent<std::vector<Shader>>("vertexShaders") };
+					if (vshaders_list)
+					{
+						for (auto& shaderDescr : vshaders_list->getPurpose())
+						{
+							const auto state{ shaderDescr.getState() };
+							if (Shader::State::RENDERERLOADED == state)
+							{
+								handleShaderRelease(shaderDescr, 0);
+							}
+						}
+					}
+
+					// search for pixel shaders
+					const auto pshaders_list{ resources.getComponent<std::vector<Shader>>("pixelShaders") };
+					if (pshaders_list)
+					{
+						for (auto& shaderDescr : pshaders_list->getPurpose())
+						{
+							const auto state{ shaderDescr.getState() };
+							if (Shader::State::RENDERERLOADED == state)
+							{
+								handleShaderRelease(shaderDescr, 1);
+							}
+						}
+					}
+				}				
 			}
 		}
 	};
@@ -252,7 +288,7 @@ void D3D11System::manageResources()
 					const auto state{ shaderDescr.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
-						handleShader(shaderDescr, 0);
+						handleShaderCreation(shaderDescr, 0);
 						shaderDescr.setState(Shader::State::RENDERERLOADING);
 					}
 				}
@@ -267,11 +303,11 @@ void D3D11System::manageResources()
 					const auto state{ shaderDescr.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
-						handleShader(shaderDescr, 1);
+						handleShaderCreation(shaderDescr, 1);
 						shaderDescr.setState(Shader::State::RENDERERLOADING);
 					}
 				}
-			}			
+			}
 		}
 	};
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);
@@ -326,7 +362,7 @@ void D3D11System::killRunner()
 	m_runner.join();
 }
 
-void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
+void D3D11System::handleShaderCreation(Shader& shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
@@ -367,5 +403,48 @@ void D3D11System::handleShader(Shader& shaderInfos, int p_shaderType)
 	)};
 
 	m_runner.m_mailbox_in.push(task);
+}
+
+void D3D11System::handleShaderRelease(Shader& shaderInfos, int p_shaderType)
+{
+	const auto shaderType{ p_shaderType };
+
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+
+	const std::string shaderAction{ "release_shader_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.getName(), shaderAction,
+		[&,
+			shaderType = shaderType,
+			shaderAction = shaderAction
+		]()
+		{
+			try
+			{
+				if (0 == shaderType)
+				{
+					d3dimpl->destroyVertexShader(shaderInfos.getName());
+				}
+				else if (1 == shaderType)
+				{
+					d3dimpl->destroyPixelShader(shaderInfos.getName());
+				}
+
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of shader " + shaderInfos.getName() + " in D3D11 ");
+
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + shaderInfos.getName() + " : reason = " + e.what());
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
+				m_runner.m_mailbox_out.push(report);
+			}
+		}
+	) };
+
+	m_runner.m_mailbox_in.push(task);
+
 }
 

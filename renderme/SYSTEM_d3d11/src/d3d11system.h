@@ -65,7 +65,8 @@ namespace renderMe
 
         void    manageResources();
 
-        void    handleShader(Shader& shaderInfos, int p_shaderType);
+        void    handleShaderCreation(Shader& shaderInfos, int p_shaderType);
+        void    handleShaderRelease(Shader& shaderInfos, int p_shaderType);
 
         static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
         static void renderQueue(rendering::Queue& p_renderingQueue);
