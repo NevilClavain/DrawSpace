@@ -73,7 +73,7 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 	m_nodes_iterator[p_entity_id] = ite_new_node;
 
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
-	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_ADDED");
+	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_ADDED : " + p_entity_id);
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *m_entites.at(p_entity_id).get());
@@ -86,7 +86,7 @@ void Entitygraph::remove(Node& p_node)
 	const auto& entity{ *p_node.data() };
 
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
-	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_REMOVED");
+	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_REMOVED : " + entity.getId());
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_REMOVED, entity);
