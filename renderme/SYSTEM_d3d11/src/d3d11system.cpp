@@ -42,6 +42,8 @@
 #include "ecshelpers.h"
 #include "shader.h"
 
+#include "logger_service.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -65,7 +67,7 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 	const Runner::Callback runner_cb
 	{
 		[&, this](renderMe::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
-		{
+		{		
 			if (renderMe::core::RunnerEvent::TASK_ERROR == p_event)
 			{
 				if ("load_shader_d3d11" == p_action_descr)
@@ -90,8 +92,12 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 	{
 		[&, this](renderMe::core::EntitygraphEvents p_event, const core::Entity& p_entity)
 		{
+			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
 			if (renderMe::core::EntitygraphEvents::ENTITYGRAPHNODE_REMOVED == p_event)
 			{
+				_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> ENTITYGRAPHNODE_REMOVED : " + p_entity.getId());
+
 				// to be continued...
 			}
 		}

@@ -199,21 +199,27 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	{
 		[&, this](ResourceSystemEvent p_event, const std::string& p_resourceName)
 		{
+			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
 			switch (p_event)
 			{
 				case ResourceSystemEvent::RESOURCE_SHADER_CACHE_CREATED:
+					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_CACHE_CREATED : " + p_resourceName);
 					m_resources_event = "Shader cache creation : " + p_resourceName;
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN:
+					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + p_resourceName);
 					m_resources_event = "Shader compilation: " + p_resourceName + " BEGIN";
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS:
+					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + p_resourceName);
 					m_resources_event = "Shader compilation " + p_resourceName + " SUCCESS";
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR:
+					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + p_resourceName);
 					m_resources_event = "Shader compilation " + p_resourceName + " ERROR";
 					break;
 			}
