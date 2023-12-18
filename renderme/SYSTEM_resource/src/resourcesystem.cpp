@@ -239,7 +239,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN");
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + shaderInfos.getName());
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, shaderInfos.getName());
@@ -258,7 +258,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 					if (compilationStatus)
 					{
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS");
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + shaderInfos.getName());
 						for (const auto& call : m_callbacks)
 						{
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.getName());
@@ -280,7 +280,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					else
 					{
 
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR");
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + shaderInfos.getName());
 						for (const auto& call : m_callbacks)
 						{
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, shaderInfos.getName());
@@ -294,7 +294,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				{
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN");
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN : " + shaderInfos.getName());
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_BEGIN, shaderInfos.getName());
@@ -309,7 +309,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 					shaderInfos.setCode(shaderCode);
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS");
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS : " + shaderInfos.getName());
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_SUCCESS, shaderInfos.getName());
