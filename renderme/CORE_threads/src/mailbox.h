@@ -47,7 +47,7 @@ namespace renderMe
 			~Mailbox() = default;
 			
 			// works only with COPY of associated type (we refuse here any reference on an external object which lifecycle is unknown by definition)
-			inline void push(T p_object)
+			void push(T p_object)
 			{
 				m_mutex.lock();
 				m_messages.push_front(p_object);
@@ -55,7 +55,7 @@ namespace renderMe
 			}
 
 			// works only with COPY of associated type (we refuse here any reference on an external object which lifecycle is unknown by definition)
-			inline T popNext(T p_default)
+			T popNext(T p_default)
 			{
 				auto task{ p_default };
 				if (m_mutex.try_lock())
@@ -82,7 +82,7 @@ namespace renderMe
 
 			//if ptr or integral type, build method signature : Push(T p_object)
 			template<typename Arg>
-			inline void push(copyArg<Arg> p_object)
+			void push(copyArg<Arg> p_object)
 			{
 				m_mutex.lock();
 				m_messages.push_front(p_object);
@@ -91,7 +91,7 @@ namespace renderMe
 
 			//if not ptr and not integral type, build method signature : Push(const T& p_object)
 			template<typename Arg>
-			inline void push(constRefArg<Arg> p_object)
+			void push(constRefArg<Arg> p_object)
 			{
 				m_mutex.lock();
 				m_messages.push_front(p_object);
@@ -100,7 +100,7 @@ namespace renderMe
 
 			//if ptr or integral type, build method signature : PopNext(T p_object)
 			template<typename Arg>
-			inline T popNext(copyArg<Arg> p_default)
+			T popNext(copyArg<Arg> p_default)
 			{
 				auto task{ p_default };
 				if (m_mutex.try_lock())
@@ -117,7 +117,7 @@ namespace renderMe
 
 			//if not ptr and not integral type, build method signature : PopNext(const T& p_object)
 			template<typename Arg>
-			inline T popNext(constRefArg<Arg> p_default)
+			T popNext(constRefArg<Arg> p_default)
 			{
 				auto task{ p_default };
 				if (m_mutex.try_lock())
@@ -133,7 +133,7 @@ namespace renderMe
 			}
 			*/
 
-			inline int getBoxSize(void) const
+			int getBoxSize(void) const
 			{
 				int size = -1;
 				m_mutex.lock();
