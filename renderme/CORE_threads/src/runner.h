@@ -61,9 +61,7 @@ namespace renderMe
 				std::string target;
 				std::string action;
 			};
-
-
-
+		
 			Mailbox<property::AsyncTask*>					m_mailbox_in;
 			Mailbox<TaskReport>								m_mailbox_out;
 
@@ -74,12 +72,10 @@ namespace renderMe
 
 		private:
 
+			void mainloop();
+
 			mutable std::unique_ptr<std::thread>			m_thread;
 			bool											m_cont;
-
-
-
-			static void mainloop(Runner* p_runner);
 
 			static constexpr unsigned int idle_duration_ms{ 50 };
 			friend struct RunnerKiller;

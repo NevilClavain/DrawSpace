@@ -33,16 +33,14 @@ using namespace renderMe;
 using namespace renderMe::core;
 using namespace renderMe::property;
 
-void Runner::mainloop(Runner* p_runner)
+void Runner::mainloop()
 {
-	const auto runnerInstance{ p_runner };
-
-	runnerInstance->m_cont = true;
+	m_cont = true;
 
 	do
 	{
-		auto mb_in{ &runnerInstance->m_mailbox_in };
-		auto mb_out{ &runnerInstance->m_mailbox_out };
+		auto mb_in{ &m_mailbox_in };
+		auto mb_out{ &m_mailbox_out };
 		const auto mbsize{ mb_in->getBoxSize() };
 
 		if (mbsize > 0)
@@ -56,7 +54,7 @@ void Runner::mainloop(Runner* p_runner)
 					auto task_target{ current->getTargetDescr() };
 					auto task_action{ current->getActionDescr() };
 
-					current->execute(runnerInstance);
+					current->execute(this);
 
 					const TaskReport report{ RunnerEvent::TASK_DONE, task_target, task_action };
 					mb_out->push(report);
@@ -71,13 +69,12 @@ void Runner::mainloop(Runner* p_runner)
 			std::this_thread::sleep_for(std::chrono::milliseconds(idle_duration_ms));
 		}
 
-	} while (runnerInstance->m_cont);
-	
+	} while (m_cont);	
 }
 
 void Runner::startup(void)
 {	
-	m_thread = std::make_unique<std::thread>(Runner::mainloop, this);
+	m_thread = std::make_unique<std::thread>(&Runner::mainloop, this);
 };
 
 void Runner::join(void)
