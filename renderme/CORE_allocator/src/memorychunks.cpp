@@ -34,7 +34,7 @@ static logger::Sink memAllocLogger("MemAlloc", logger::Configuration::getInstanc
 
 void MemoryChunks::dumpContent(void)
 {
-    _RENDERME_DEBUG(memAllocLogger, std::string("Allocations total size : ") << (unsigned int)m_totalSize << std::string (" byte(s)"))
+    _RENDERME_DEBUG(memAllocLogger, std::string("Allocations total size : ") + std::to_string(m_totalSize) + std::string (" byte(s)"))
 
     long count{ 1 };
 

@@ -538,7 +538,7 @@ void App::onMouseRightButtonUp(long p_xm, long p_ym)
 
 void App::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
-    _RENDERME_TRACE(localLogger, std::string("onAppEvent :") << p_wParam << std::string(" ") << p_lParam);
+    _RENDERME_TRACE(localLogger, std::string("onAppEvent :") + std::to_string(p_wParam) + std::string(" ") + std::to_string(p_lParam));
     m_module_root->onAppEvent(p_wParam, p_lParam);
 }
 
