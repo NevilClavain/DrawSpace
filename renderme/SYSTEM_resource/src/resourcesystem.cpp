@@ -64,7 +64,6 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 		{
 			call(ResourceSystemEvent::RESOURCE_SHADER_CACHE_CREATED, m_shadersCachePath);
 		}
-
 	}
 
 	/////////////////////////////////////////////
@@ -159,7 +158,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 	const std::string shaderAction{ "load_shader" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.getName(), shaderAction,
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, shaderInfos.getName(),
 		[&,
 			shaderType=shaderType,
 			shaderAction=shaderAction,

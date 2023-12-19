@@ -83,7 +83,26 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
+				auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
 				_RENDERME_DEBUG(d3dimpl->logger(), std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
+
+				if ("load_shader_d3d11" == p_action_descr)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_SUCCESS : " + p_target_descr);
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_SHADER_CREATION_SUCCESS, p_target_descr);
+					}
+				}
+				else if ("release_shader_d3d11" == p_action_descr)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_SUCCESS : " + p_target_descr);
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_SHADER_RELEASE_SUCCESS, p_target_descr);
+					}
+				}
 			}
 		}
 	};
@@ -103,9 +122,10 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 			{
 				_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> ENTITYGRAPHNODE_REMOVED : " + p_entity.getId());
 
-				// to be continued...
 				if (p_entity.hasAspect(core::resourcesAspect::id))
 				{
+					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+				
 					const auto& resources{ p_entity.aspectAccess(core::resourcesAspect::id) };
 
 					const auto vshaders_list{ resources.getComponent<std::vector<Shader>>("vertexShaders") };
@@ -116,6 +136,11 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 							const auto state{ shaderDescr.getState() };
 							if (Shader::State::RENDERERLOADED == state)
 							{
+								_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + shaderDescr.getName() );
+								for (const auto& call : m_callbacks)
+								{
+									call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, shaderDescr.getName());
+								}
 								handleShaderRelease(shaderDescr, 0);
 							}
 						}
@@ -130,6 +155,12 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 							const auto state{ shaderDescr.getState() };
 							if (Shader::State::RENDERERLOADED == state)
 							{
+								_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + shaderDescr.getName());
+								for (const auto& call : m_callbacks)
+								{
+									call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, shaderDescr.getName());
+								}
+
 								handleShaderRelease(shaderDescr, 1);
 							}
 						}
@@ -279,6 +310,8 @@ void D3D11System::manageResources()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
 		{
+			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
 			// search for vertex shaders			
 			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<Shader>>("vertexShaders") };
 			if (vshaders_list)
@@ -288,6 +321,13 @@ void D3D11System::manageResources()
 					const auto state{ shaderDescr.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
+
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shaderDescr.getName());
+						for (const auto& call : m_callbacks)
+						{
+							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shaderDescr.getName());
+						}
+
 						handleShaderCreation(shaderDescr, 0);
 						shaderDescr.setState(Shader::State::RENDERERLOADING);
 					}
@@ -303,6 +343,12 @@ void D3D11System::manageResources()
 					const auto state{ shaderDescr.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shaderDescr.getName());
+						for (const auto& call : m_callbacks)
+						{
+							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shaderDescr.getName());
+						}
+
 						handleShaderCreation(shaderDescr, 1);
 						shaderDescr.setState(Shader::State::RENDERERLOADING);
 					}
@@ -370,7 +416,7 @@ void D3D11System::handleShaderCreation(Shader& shaderInfos, int p_shaderType)
 
 	const std::string shaderAction{ "load_shader_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.getName(), shaderAction,
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, shaderInfos.getName(),
 		[&,
 			shaderType = shaderType,
 			shaderAction = shaderAction
@@ -413,7 +459,7 @@ void D3D11System::handleShaderRelease(Shader& shaderInfos, int p_shaderType)
 
 	const std::string shaderAction{ "release_shader_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderInfos.getName(), shaderAction,
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, shaderInfos.getName(),
 		[&,
 			shaderType = shaderType,
 			shaderAction = shaderAction

@@ -34,12 +34,22 @@
 
 namespace renderMe
 {   
+    // fwd decls
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
     namespace rendering { class Queue; }
     class Shader;
+
+
+    enum class D3D11SystemEvent
+    {
+        D3D11_SHADER_CREATION_BEGIN,
+        D3D11_SHADER_CREATION_SUCCESS,
+        D3D11_SHADER_RELEASE_BEGIN,
+        D3D11_SHADER_RELEASE_SUCCESS,
+    };
                
-    class D3D11System : public core::System
+    class D3D11System : public core::System, public renderMe::property::EventSource<D3D11SystemEvent, const std::string&>
     {
     public:
 
