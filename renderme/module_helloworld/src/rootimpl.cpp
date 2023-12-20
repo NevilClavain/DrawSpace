@@ -28,7 +28,10 @@
 #include "d3d11system.h"
 #include "timesystem.h"
 #include "resourcesystem.h"
+
 #include "shader.h"
+#include "linemeshe.h"
+
 #include "logger_service.h"
 
 #include "filesystem.h"
@@ -329,6 +332,8 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		const auto circleEntity{ circleNode.data() };
 		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
 
+		/////////// Add shaders
+
 		const std::vector<Shader> vertex_shaders =
 		{
 			Shader("color_vs.hlsl")
@@ -341,6 +346,29 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		circle_resource_aspect.addComponent<std::vector<Shader>>("vertexShaders", vertex_shaders);
 		circle_resource_aspect.addComponent<std::vector<Shader>>("pixelShaders", pixel_shaders);
+
+		/////////// Add linemeshe
+
+		LineMeshe square("square");
+
+		square.push(Vertex(-0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, 0.5, 0.0));
+		square.push(Vertex(-0.5, 0.5, 0.0));
+
+		square.push({ 0, 1 });
+		square.push({ 1, 2 });
+		square.push({ 2, 3 });
+		square.push({ 3, 0 });
+
+		const std::vector<LineMeshe> line_meshes =
+		{
+			square
+		};
+
+
+		circle_resource_aspect.addComponent<std::vector<LineMeshe>>("squareLineMeshe", line_meshes);
+
 	}
 	
 }
