@@ -37,12 +37,12 @@ std::string LineMeshe::getName(void) const
 	return m_name;
 }
 
-auto LineMeshe::getVertices(void) const
+std::vector<renderMe::Vertex>LineMeshe::getVertices(void) const
 {
 	return m_vertices;
 }
 
-auto LineMeshe::getLines(void) const
+std::vector<LinePrimitive<unsigned int>> LineMeshe::getLines(void) const
 {
 	return m_lines;
 }

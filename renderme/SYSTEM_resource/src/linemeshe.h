@@ -41,8 +41,8 @@ namespace renderMe
 
 		std::string getName(void) const;
 
-		auto		getVertices(void) const;
-		auto		getLines(void) const;
+		std::vector<renderMe::Vertex>				getVertices(void) const;
+		std::vector<LinePrimitive<unsigned int>>	getLines(void) const;
 
 		size_t		getLinesListSize() const;
 		size_t		getVerticesListSize() const;

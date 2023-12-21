@@ -52,6 +52,8 @@
 #include "filesystem.h"
 #include "buffer.h"
 
+#include "linemeshe.h"
+
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
 
@@ -65,6 +67,28 @@
         _RENDERME_ERROR( m_localLogger, dstr.c_str() ); \
         return false; \
     }
+
+struct d3d11triangle
+{
+    unsigned long vertex1;
+    unsigned long vertex2;
+    unsigned long vertex3;
+};
+
+struct d3d11line
+{
+    unsigned long vertex1;
+    unsigned long vertex2;
+};
+
+struct d3d11vertex
+{
+    XMFLOAT3 pos;
+    XMFLOAT3 normale;
+    XMFLOAT4 t[9];
+    XMFLOAT3 tangent;
+    XMFLOAT3 binormale;
+};
 
 struct D3D10Include : public ID3D10Include
 {
@@ -113,6 +137,10 @@ public:
     void destroyVertexShader(const std::string& p_name);
     void destroyPixelShader(const std::string& p_name);
 
+    bool createLineMeshe(const std::string& p_name, const renderMe::LineMeshe& p_lm);
+    void setLineMeshe(const std::string& p_name);
+    void destroyLineMeshe(const std::string& p_name);
+
     std::unordered_set<std::string> getShadersNames() const;
 
 private:
@@ -148,7 +176,13 @@ private:
         ID3D11PixelShader* pixel_shader     { nullptr };
     };
 
-
+    struct LineMesheData
+    {
+        ID3D11Buffer* vertex_buffer         { nullptr };
+        ID3D11Buffer* index_buffer          { nullptr };
+        size_t        nb_vertices           { 0 };
+        size_t        nb_primitives         { 0 };
+    };
 
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;
     using BSCache =                 std::unordered_map<std::string, BSCacheEntry>;
@@ -156,7 +190,13 @@ private:
     using VShaderList =             std::unordered_map<std::string, VertexShadersData>;
     using PShaderList =             std::unordered_map<std::string, PixelShadersData>;
 
+    using LineMesheList =           std::unordered_map<std::string, LineMesheData>;
+
     renderMe::core::logger::Sink                        m_localLogger;
+
+    size_t                                              m_next_nbvertices{ 0 };
+    size_t                                              m_next_nbtriangles{ 0 };
+    size_t                                              m_next_nblines{ 0 };
 
     IDXGISwapChain*                                     m_lpd3dswapchain{ nullptr };
     ID3D11Device*                                       m_lpd3ddevice{ nullptr };
@@ -193,6 +233,9 @@ private:
     PShaderList                                         m_pshaders;
 
     std::unordered_set<std::string>                     m_shaderNames;
+
+
+    LineMesheList                                       m_lines;
 
 
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);

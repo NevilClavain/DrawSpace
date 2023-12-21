@@ -44,6 +44,8 @@
 
 #include "logger_service.h"
 
+#include "linemeshe.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -351,6 +353,20 @@ void D3D11System::manageResources()
 
 						handleShaderCreation(shaderDescr, 1);
 						shaderDescr.setState(Shader::State::RENDERERLOADING);
+					}
+				}
+			}
+
+			//search for line Meshes
+			const auto lmeshes_list{ p_resource_aspect.getComponent<std::vector<LineMeshe>>("lineMeshes") };
+			if (lmeshes_list)
+			{
+				for (auto& lm : lmeshes_list->getPurpose())
+				{
+					// take only 'ready' line meshes
+					if (lm.isReady())
+					{
+						//TODO
 					}
 				}
 			}
