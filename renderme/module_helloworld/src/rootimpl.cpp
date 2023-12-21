@@ -367,7 +367,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		};
 
 
-		circle_resource_aspect.addComponent<std::vector<LineMeshe>>("squareLineMeshe", line_meshes);
+		circle_resource_aspect.addComponent<std::vector<LineMeshe>>("lineMeshes", line_meshes);
 
 	}
 	
