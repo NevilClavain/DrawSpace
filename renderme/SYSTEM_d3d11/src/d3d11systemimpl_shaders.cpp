@@ -132,7 +132,7 @@ HRESULT D3D11SystemImpl::compileShaderFromMem(void* p_data, int p_size, LPCTSTR 
 #endif
 
     ID3DBlob* pErrorBlob;
-    const auto hr{ D3DX11CompileFromMemory((LPCTSTR)p_data, p_size, szFileName, NULL, p_include, szEntryPoint, szShaderModel, dwShaderFlags, 0, nullptr, ppBlobOut, &pErrorBlob, nullptr) };
+    const auto hr{ D3DCompile((LPCTSTR)p_data, p_size, szFileName, nullptr, p_include, szEntryPoint, szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob) };
     if (FAILED(hr))
     {
         if (pErrorBlob != nullptr)

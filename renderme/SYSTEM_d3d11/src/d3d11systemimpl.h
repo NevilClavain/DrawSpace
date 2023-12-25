@@ -29,8 +29,9 @@
 // IMPORTANT : this .h is supposed to be included in d3dsystemimpl.cpp only, so no need of any forward declaration here
 
 #include <d3d11.h>
-#include <d3dx11.h>
-#include <xnamath.h>
+//#include <d3dx11.h>
+//#include <xnamath.h>
+#include <directxmath.h>
 #include <dxgiformat.h>
 #include <FW1FontWrapper.h>
 
@@ -83,11 +84,11 @@ struct d3d11line
 
 struct d3d11vertex
 {
-    XMFLOAT3 pos;
-    XMFLOAT3 normale;
-    XMFLOAT4 t[9];
-    XMFLOAT3 tangent;
-    XMFLOAT3 binormale;
+    DirectX::XMFLOAT3 pos;
+    DirectX::XMFLOAT3 normale;
+    DirectX::XMFLOAT4 t[9];
+    DirectX::XMFLOAT3 tangent;
+    DirectX::XMFLOAT3 binormale;
 };
 
 struct D3D10Include : public ID3D10Include
@@ -161,8 +162,8 @@ private:
 
     struct ShaderLegacyArg
     {
-        XMFLOAT4                    vector[512];
-        XMMATRIX                    matrix[512];
+        DirectX::XMFLOAT4                    vector[512];
+        DirectX::XMMATRIX                    matrix[512];
     };
 
     struct VertexShadersData

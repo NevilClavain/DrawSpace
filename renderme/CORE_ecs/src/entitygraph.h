@@ -26,6 +26,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <memory>
 #include "st_tree.h"
 #include "eventsource.h"
 

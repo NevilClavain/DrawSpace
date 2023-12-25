@@ -31,11 +31,6 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	_RENDERME_DEBUG(m_localLogger, std::string("init D3D startup"))
 
-		IDXGIFactory* factory {
-		nullptr
-	};
-	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
-
 	DXGI_SWAP_CHAIN_DESC swap_chain;
 	ZeroMemory(&swap_chain, sizeof(swap_chain));
 
@@ -132,9 +127,13 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	std::string				driver_descr;
 
 	UINT createDeviceFlags{ 0 };
+
+	// not accepted by D3D11CreateDeviceAndSwapChain (wtf ?)
+/*
 #ifdef _DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
+*/
 
 	HRESULT r;
 	for (auto& e : driver_type)

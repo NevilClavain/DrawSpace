@@ -40,7 +40,6 @@ include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
 
 include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})
-include_directories(${dx11sdk_include_dir})
 include_directories(${fw1fontwrapper_include_dir})
 include_directories(${md5_include_dir})
 
