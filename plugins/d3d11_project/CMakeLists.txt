@@ -58,3 +58,5 @@ install(TARGETS drawspaced3d11 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_
 install(TARGETS drawspaced3d11 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS drawspaced3d11 CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(FILES ${dx11sdk_lib_dir}/Debug/D3DX11d_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${dx11sdk_lib_dir}/Release/d3dx11_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
