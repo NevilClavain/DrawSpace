@@ -60,3 +60,7 @@ install(TARGETS drawspaced3d11 CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION
 install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 install(FILES ${dx11sdk_lib_dir}/Debug/D3DX11d_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(FILES ${dx11sdk_lib_dir}/Release/d3dx11_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(FILES ${dx11sdk_lib_dir}/RelWithDebInfo/d3dx11_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+install(FILES ${dx11sdk_lib_dir}/Debug/D3DCompiler_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(FILES ${dx11sdk_lib_dir}/Release/D3DCompiler_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(FILES ${dx11sdk_lib_dir}/RelWithDebInfo/D3DCompiler_43.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
