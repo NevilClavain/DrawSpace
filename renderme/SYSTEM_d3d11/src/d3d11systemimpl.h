@@ -29,11 +29,13 @@
 // IMPORTANT : this .h is supposed to be included in d3dsystemimpl.cpp only, so no need of any forward declaration here
 
 #include <d3d11.h>
-//#include <d3dx11.h>
-//#include <xnamath.h>
 #include <directxmath.h>
 #include <dxgiformat.h>
-#include <FW1FontWrapper.h>
+
+#include <SpriteFont.h>
+#include <SpriteBatch.h>
+
+
 
 #include <string>
 #include <vector>
@@ -121,7 +123,7 @@ public:
     void clearTarget(const renderMe::core::RGBAColor& p_clear_color);
     void flipScreen(void);
 
-    void drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text);
+    void drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_rotation, const std::string& p_text);
 
     bool createShaderBytesOnFile(int p_shadertype,
                                     const std::string& p_includes_path,
@@ -145,6 +147,12 @@ public:
     std::unordered_set<std::string> getShadersNames() const;
 
 private:
+
+    struct FontRenderingData
+    {
+        std::shared_ptr<DirectX::SpriteBatch> spriteBatch;
+        std::shared_ptr<DirectX::SpriteFont>  spriteFont;
+    };
 
     // render states
     struct RSCacheEntry
@@ -209,7 +217,8 @@ private:
     ID3D11Texture2D*                                    m_pDepthStencil{ nullptr };
     ID3D11DepthStencilView*                             m_pDepthStencilView{ nullptr };
 
-    std::unordered_map<std::string, IFW1FontWrapper*>   m_fontWrappers;
+    //std::unordered_map<std::string, IFW1FontWrapper*>   m_fontWrappers;
+    std::unordered_map<std::string, FontRenderingData>  m_fontWrappers;
 
     ID3D11SamplerState*                                 m_linearFilterSamplerState{ nullptr };
     ID3D11SamplerState*                                 m_pointFilterSamplerState{ nullptr };

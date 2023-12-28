@@ -44,6 +44,10 @@ set(fw1fontwrapper_lib_dir ${CMAKE_SOURCE_DIR}/../thirdparts/FW1FontWrapper/sdk/
 set(dx11sdk_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/dx11sdk/sdk/Include)
 set(dx11sdk_lib_dir ${CMAKE_SOURCE_DIR}/../thirdparts/dx11sdk/sdk/Lib/x86)
 
+set(dxtk_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/DirectXTK/sdk/include)
+set(dxtk_lib_dir ${CMAKE_SOURCE_DIR}/../thirdparts/DirectXTK/sdk/lib/x86)
+
+
 set(cegui_include_dir ${CMAKE_SOURCE_DIR}/../thirdparts/CEGUI-0.8.7/sdk/include/cegui-0)
 set(cegui_lib_dir ${CMAKE_SOURCE_DIR}/../thirdparts/CEGUI-0.8.7/sdk/lib/x86)
 

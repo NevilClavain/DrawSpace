@@ -46,8 +46,8 @@ include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})
 
 link_directories(${jsonjsmn_lib_dir})
-# link_directories(${dx11sdk_lib_dir})
 link_directories(${fw1fontwrapper_lib_dir})
+link_directories(${dxtk_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -60,15 +60,13 @@ file(
 
 add_library(module_helloworld SHARED ${source_files})
 
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services RENDERING_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource jsmn d3d11 d3dcompiler FW1FontWrapper)
+target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services RENDERING_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource jsmn d3d11 d3dcompiler DirectXTK)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
 install(TARGETS module_helloworld CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/module_helloworld_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-
-install(FILES ${fw1fontwrapper_lib_dir}/$<CONFIGURATION>/FW1FontWrapper.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 
 

@@ -144,7 +144,7 @@ void D3D11SystemImpl::flipScreen(void)
 	m_lpd3dswapchain->Present(0, 0);
 }
 
-void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_fontsize, const std::string& p_text)
+void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
 {
 	const unsigned long color32{ (
 									(((unsigned long)(p_clear_color.a())) << 24) |
@@ -153,15 +153,16 @@ void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::
 									((unsigned long)(p_clear_color.r()) & 0xff)
 								) };
 
-	const std::wstring wtext(p_text.begin(), p_text.end());
+	const auto fontData{ m_fontWrappers.at(p_font) };
 
-	m_fontWrappers.at(p_font)->DrawString(
-		m_lpd3ddevcontext,
-		wtext.c_str(),
-		p_fontsize,// Font size
-		p_pos.x(),// X position
-		p_pos.y(),// Y position
-		color32,// Text color, 0xAaBbGgRr
-		FW1_NOGEOMETRYSHADER | FW1_RESTORESTATE// Flags
-	);
+	const auto spriteBatch{ fontData.spriteBatch.get() };
+	const auto spriteFont{ fontData.spriteFont.get() };
+
+	const DirectX::XMFLOAT2 pos{ (float)p_pos.x(), (float)p_pos.y() };
+
+	const DirectX::FXMVECTOR color{ p_clear_color.r(), p_clear_color.g(), p_clear_color.b(), p_clear_color.a() };
+
+	spriteBatch->Begin();
+	spriteFont->DrawString(spriteBatch, p_text.c_str(), pos, color, p_rotation);
+	spriteBatch->End();
 }

@@ -57,7 +57,7 @@ namespace renderMe
 				std::string					font;
 				renderMe::core::RGBAColor	color{ 255, 255, 255, 255 };
 				renderMe::core::IntCoords2D position;
-				float						font_size{ 15.0 };
+				float						rotation_rad{ 0.0 };
 			};
 
 			Queue(const std::string& p_name);
@@ -85,12 +85,8 @@ namespace renderMe
 			std::string						m_name;
 			Purpose							m_purpose{ Purpose::UNDEFINED };
 			State							m_state{ State::WAIT_INIT };
-
 			bool							m_clear_target{ false };
-
 			core::RGBAColor					m_target_clear_color;
-
-			//std::vector<Text>				m_texts;
 			std::map<int,Text>				m_texts;
 		};
 	}

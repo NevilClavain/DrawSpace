@@ -1,0 +1,3 @@
+
+example : 
+	MakeSpriteFont "Courier New" CourierNew.32.spritefont /FontSize:32

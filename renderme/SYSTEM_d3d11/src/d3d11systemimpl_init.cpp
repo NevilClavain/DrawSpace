@@ -252,24 +252,19 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	///////////////////////////////////////////////////
 
-	IFW1Factory* fW1Factory;
-	hRes = FW1CreateFactory(FW1_VERSION, &fW1Factory);
-	D3D11_CHECK(FW1CreateFactory);
-
-	m_fontWrappers.clear();
 	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("fonts")->getPurpose() };
 	for (const auto& fontname : fonts)
 	{
-		IFW1FontWrapper* fontWrapper{ nullptr };
-
-		_RENDERME_TRACE(m_localLogger, "creating font wrapper : " + fontname)
-
 		const std::wstring wfontname(fontname.begin(), fontname.end());
 
-		hRes = fW1Factory->CreateFontWrapper(lpd3ddevice, wfontname.c_str(), &fontWrapper);
-		D3D11_CHECK(CreateFontWrapper);
+		const std::wstring wfontPath{ L"./fonts/" + wfontname };
 
-		m_fontWrappers[fontname] = fontWrapper;
+		const auto spriteBatch{ std::make_shared<DirectX::SpriteBatch>(m_lpd3ddevcontext) };
+		const auto spriteFont{ std::make_shared<DirectX::SpriteFont>(m_lpd3ddevice, wfontPath.c_str())};
+
+		FontRenderingData fontData{ spriteBatch, spriteFont };
+
+		m_fontWrappers[fontname] = fontData;
 	}
 
 	//////////////////////////////////////////////////////////////////////

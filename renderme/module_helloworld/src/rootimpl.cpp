@@ -249,10 +249,11 @@ void RootImpl::run(void)
 
 	const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
 	const std::string fpsText { std::string("fps = ") + std::to_string(currentFPS) };;
-	m_windowRenderingQueue->setText(4, { fpsText, "Courier New", { 255, 255, 255, 255 }, { 5, 5 }, 12.0 });
+
+	m_windowRenderingQueue->setText(4, { fpsText, "CourierNew.10.spritefont", { 255, 0, 0, 255 }, { 0, 0 }, 0.0f });
 
 	// resources system event
-	m_windowRenderingQueue->setText(5, { m_resources_event, "Courier New", {255, 255, 255, 255}, {5, 25}, 12.0});
+	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 25}, 0.0});
 }
 
 void RootImpl::close(void)
@@ -304,12 +305,8 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
 
-	rendering_queue.setText(0, { "Small text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 100 }, 10.0 });
-	rendering_queue.setText(1, { "Medium text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 150 }, 20.0 });
-	rendering_queue.setText(2, { "Large text", "Bahnschrift", { 255, 0, 255, 255 }, { 10, 200 }, 40.0 });
-
-
-	rendering_queue.setText(3, { "Hello world !", "Bahnschrift", { 255, 255, 255, 255 }, { 400, 10 }, 20.0 });
+	rendering_queue.setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
+	
 
 	m_windowRenderingQueue = &rendering_queue;
 	

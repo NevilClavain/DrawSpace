@@ -395,7 +395,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 	// render texts
 	for (auto& text : p_renderingQueue.texts())
 	{
-		d3dimpl->drawText(text.second.font, text.second.color, text.second.position, text.second.font_size, text.second.text);
+		d3dimpl->drawText(text.second.font, text.second.color, text.second.position, text.second.rotation_rad, text.second.text);
 	}
 }
 

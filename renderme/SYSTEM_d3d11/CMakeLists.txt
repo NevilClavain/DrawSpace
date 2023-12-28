@@ -42,6 +42,7 @@ include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})
 include_directories(${fw1fontwrapper_include_dir})
 include_directories(${md5_include_dir})
+include_directories(${dxtk_include_dir})
 
 
 file(
@@ -54,6 +55,9 @@ file(
 add_definitions( -D_FROMCMAKE )
 
 add_library(SYSTEM_d3d11 ${source_files})
+
+#deploy DirectXTK fonts
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 
 
