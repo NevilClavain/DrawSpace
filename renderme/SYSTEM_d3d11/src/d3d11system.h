@@ -39,6 +39,7 @@ namespace renderMe
     namespace core { class Entitygraph; }
     namespace rendering { class Queue; }
     class Shader;
+    class LineMeshe;
 
 
     enum class D3D11SystemEvent
@@ -47,6 +48,10 @@ namespace renderMe
         D3D11_SHADER_CREATION_SUCCESS,
         D3D11_SHADER_RELEASE_BEGIN,
         D3D11_SHADER_RELEASE_SUCCESS,
+        D3D11_LINEMESHE_CREATION_BEGIN,
+        D3D11_LINEMESHE_CREATION_SUCCESS,
+        D3D11_LINEMESHE_RELEASE_BEGIN,
+        D3D11_LINEMESHE_RELEASE_SUCCESS
     };
                
     class D3D11System : public core::System, public renderMe::property::EventSource<D3D11SystemEvent, const std::string&>
@@ -75,8 +80,11 @@ namespace renderMe
 
         void    manageResources();
 
-        void    handleShaderCreation(Shader& shaderInfos, int p_shaderType);
-        void    handleShaderRelease(Shader& shaderInfos, int p_shaderType);
+        void    handleShaderCreation(Shader& p_shaderInfos, int p_shaderType);
+        void    handleShaderRelease(Shader& p_shaderInfos, int p_shaderType);
+
+        void    handleLinemesheCreation(LineMeshe& p_lm);
+        void    handleLinemesheRelease(LineMeshe& p_lm);
 
         static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
         static void renderQueue(rendering::Queue& p_renderingQueue);

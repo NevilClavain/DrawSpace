@@ -140,7 +140,7 @@ public:
     void destroyVertexShader(const std::string& p_name);
     void destroyPixelShader(const std::string& p_name);
 
-    bool createLineMeshe(const std::string& p_name, const renderMe::LineMeshe& p_lm);
+    bool createLineMeshe(const renderMe::LineMeshe& p_lm);
     void setLineMeshe(const std::string& p_name);
     void destroyLineMeshe(const std::string& p_name);
 

@@ -72,16 +72,8 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 		{		
 			if (renderMe::core::RunnerEvent::TASK_ERROR == p_event)
 			{
-				if ("load_shader_d3d11" == p_action_descr)
-				{
-					// rethrow in current thread
-					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
-				}
-				else if ("release_shader_d3d11" == p_action_descr)
-				{
-					// rethrow in current thread
-					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
-				}
+				// rethrow in current thread
+				_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
@@ -103,6 +95,22 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 					for (const auto& call : m_callbacks)
 					{
 						call(D3D11SystemEvent::D3D11_SHADER_RELEASE_SUCCESS, p_target_descr);
+					}
+				}
+				else if ("load_linemeshe_d3d11" == p_action_descr)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_SUCCESS : " + p_target_descr);
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_LINEMESHE_CREATION_SUCCESS, p_target_descr);
+					}
+				}
+				else if ("release_linemeshe_d3d11" == p_action_descr)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_RELEASE_SUCCESS : " + p_target_descr);
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_LINEMESHE_RELEASE_SUCCESS, p_target_descr);
 					}
 				}
 			}
@@ -130,6 +138,7 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 				
 					const auto& resources{ p_entity.aspectAccess(core::resourcesAspect::id) };
 
+					// search for vertex shaders
 					const auto vshaders_list{ resources.getComponent<std::vector<Shader>>("vertexShaders") };
 					if (vshaders_list)
 					{
@@ -164,6 +173,26 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 								}
 
 								handleShaderRelease(shaderDescr, 1);
+							}
+						}
+					}
+
+					//search for linemeshe
+					const auto lm_list{ resources.getComponent<std::vector<LineMeshe>>("lineMeshes") };
+					if (lm_list)
+					{
+						for (auto& lm : lm_list->getPurpose())
+						{
+							const auto state{ lm.getState() };
+							if (LineMeshe::State::RENDERERLOADED == state)
+							{
+								_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_RELEASE_BEGIN : " + lm.getName());
+								for (const auto& call : m_callbacks)
+								{
+									call(D3D11SystemEvent::D3D11_LINEMESHE_RELEASE_BEGIN, lm.getName());
+								}
+
+								handleLinemesheRelease(lm);
 							}
 						}
 					}
@@ -357,19 +386,28 @@ void D3D11System::manageResources()
 				}
 			}
 
+			
 			//search for line Meshes
 			const auto lmeshes_list{ p_resource_aspect.getComponent<std::vector<LineMeshe>>("lineMeshes") };
 			if (lmeshes_list)
 			{
 				for (auto& lm : lmeshes_list->getPurpose())
 				{
-					// take only 'ready' line meshes
-					if (lm.isReady())
+					const auto state{ lm.getState() };
+
+					if (LineMeshe::State::BLOBLOADED == state)
 					{
-						//TODO
-					}
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_BEGIN : " + lm.getName());
+						for (const auto& call : m_callbacks)
+						{
+							call(D3D11SystemEvent::D3D11_LINEMESHE_CREATION_BEGIN, lm.getName());
+						}
+
+						handleLinemesheCreation(lm);
+						lm.setState(LineMeshe::State::RENDERERLOADING);
+					}			
 				}
-			}
+			}			
 		}
 	};
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);
@@ -424,15 +462,15 @@ void D3D11System::killRunner()
 	m_runner.join();
 }
 
-void D3D11System::handleShaderCreation(Shader& shaderInfos, int p_shaderType)
+void D3D11System::handleShaderCreation(Shader& p_shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader creation ") + p_shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "load_shader_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, shaderInfos.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_shaderInfos.getName(),
 		[&,
 			shaderType = shaderType,
 			shaderAction = shaderAction
@@ -441,25 +479,25 @@ void D3D11System::handleShaderCreation(Shader& shaderInfos, int p_shaderType)
 			bool status { false };
 			if (0 == shaderType)
 			{
-				status = d3dimpl->createVertexShader(shaderInfos.getName(), shaderInfos.getCode());
+				status = d3dimpl->createVertexShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
 			}
 			else if (1 == shaderType)
 			{
-				status = d3dimpl->createPixelShader(shaderInfos.getName(), shaderInfos.getCode());
+				status = d3dimpl->createPixelShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
 			}
 
 			if (!status)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + shaderInfos.getName() + " in D3D11 ");
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.getName() + " in D3D11 ");
 				
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
 				m_runner.m_mailbox_out.push(report);
 			}
 			else
 			{
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + shaderInfos.getName() + " in D3D11 ");
-				shaderInfos.setState(Shader::State::RENDERERLOADED);
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + p_shaderInfos.getName() + " in D3D11 ");
+				p_shaderInfos.setState(Shader::State::RENDERERLOADED);
 			}			
 		}
 	)};
@@ -467,15 +505,15 @@ void D3D11System::handleShaderCreation(Shader& shaderInfos, int p_shaderType)
 	m_runner.m_mailbox_in.push(task);
 }
 
-void D3D11System::handleShaderRelease(Shader& shaderInfos, int p_shaderType)
+void D3D11System::handleShaderRelease(Shader& p_shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader release ") + p_shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "release_shader_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, shaderInfos.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_shaderInfos.getName(),
 		[&,
 			shaderType = shaderType,
 			shaderAction = shaderAction
@@ -485,28 +523,90 @@ void D3D11System::handleShaderRelease(Shader& shaderInfos, int p_shaderType)
 			{
 				if (0 == shaderType)
 				{
-					d3dimpl->destroyVertexShader(shaderInfos.getName());
+					d3dimpl->destroyVertexShader(p_shaderInfos.getName());
 				}
 				else if (1 == shaderType)
 				{
-					d3dimpl->destroyPixelShader(shaderInfos.getName());
+					d3dimpl->destroyPixelShader(p_shaderInfos.getName());
 				}
 
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of shader " + shaderInfos.getName() + " in D3D11 ");
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of shader " + p_shaderInfos.getName() + " in D3D11 ");
 
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + shaderInfos.getName() + " : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_shaderInfos.getName() + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}
 	) };
 
 	m_runner.m_mailbox_in.push(task);
-
 }
 
+void D3D11System::handleLinemesheCreation(LineMeshe& p_lm)
+{
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle line meshe creation ") + p_lm.getName());
+
+	const std::string action{ "load_linemeshe_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_lm.getName(),
+		[&,
+			action = action
+		]()
+		{
+			bool status { false };
+			status = d3dimpl->createLineMeshe(p_lm);
+
+			if (!status)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getName() + " in D3D11 ");
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getName(), action };
+				m_runner.m_mailbox_out.push(report);
+			}
+			else
+			{
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of linemeshe " + p_lm.getName() + " in D3D11 ");
+				p_lm.setState(LineMeshe::State::RENDERERLOADED);
+			}
+		}
+	) };
+
+	m_runner.m_mailbox_in.push(task);
+}
+
+void D3D11System::handleLinemesheRelease(LineMeshe& p_lm)
+{
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle line meshe release ") + p_lm.getName());
+
+	const std::string action{ "release_linemeshe_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_lm.getName(),
+		[&,
+			action = action
+		]()
+		{
+			try
+			{
+				d3dimpl->destroyLineMeshe(p_lm.getName());
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of linemeshe " + p_lm.getName() + " in D3D11 ");
+
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_lm.getName() + " : reason = " + e.what());
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getName(), action };
+				m_runner.m_mailbox_out.push(report);
+			}
+		}
+	) };
+
+	m_runner.m_mailbox_in.push(task);
+}

@@ -25,14 +25,17 @@
 
 #include "d3d11systemimpl.h"
 
-bool D3D11SystemImpl::createLineMeshe(const std::string& p_name, const renderMe::LineMeshe& p_lm)
+bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
 {
     DECLARE_D3D11ASSERT_VARS
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + p_name);
 
-    if (m_lines.count(p_name))
+    const auto name{ p_lm.getName() };
+
+    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + name);
+
+    if (m_lines.count(name))
     {
-        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + p_name);
+        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + name);
     }
     else
     {
@@ -119,10 +122,10 @@ bool D3D11SystemImpl::createLineMeshe(const std::string& p_name, const renderMe:
             delete[] t;
         }
 
-        m_lines[p_name] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
+        m_lines[name] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
     }
 
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + p_name);
+    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + name);
 	return true;
 }
 

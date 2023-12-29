@@ -346,7 +346,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////// Add linemeshe
 
-		LineMeshe square("square");
+		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
 
 		square.push(Vertex(-0.5, -0.5, 0.0));
 		square.push(Vertex(0.5, -0.5, 0.0));
@@ -358,14 +358,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
-		const std::vector<LineMeshe> line_meshes =
-		{
-			square
-		};
-
+		const std::vector<LineMeshe> line_meshes = { square };
 
 		circle_resource_aspect.addComponent<std::vector<LineMeshe>>("lineMeshes", line_meshes);
-
 	}
 	
 }

@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 
 #include "primitives.h"
 
@@ -35,8 +36,36 @@ namespace renderMe
 	class LineMeshe
 	{
 	public:
+		enum class State
+		{
+			INIT,
+			BLOBLOADING,
+			BLOBLOADED,
+			RENDERERLOADING,
+			RENDERERLOADED,
+		};
+
+
 		LineMeshe() = delete;
-		LineMeshe(const std::string& p_name);
+		LineMeshe(const std::string& p_name, State p_initial_state = State::INIT);
+
+		LineMeshe(const LineMeshe& p_other);
+
+		LineMeshe& operator=(const LineMeshe& p_other)
+		{
+			m_name = p_other.m_name;
+			m_vertices = p_other.m_vertices;
+			m_lines = p_other.m_lines;
+
+			m_state_mutex.lock();
+			p_other.m_state_mutex.lock();
+			m_state = p_other.m_state;
+			p_other.m_state_mutex.unlock();
+			m_state_mutex.unlock();
+
+			return *this;
+		}
+
 		~LineMeshe() = default;
 
 		std::string getName(void) const;
@@ -54,12 +83,16 @@ namespace renderMe
 		void clearLines(void);
 		void clearVertices(void);
 
-		bool isReady() const;
+		State getState() const;
+		void setState(State p_state);
 		
 	private:
 		std::string									m_name;
 		std::vector<Vertex>							m_vertices;
 		std::vector<LinePrimitive<unsigned int>>    m_lines;
+
+		mutable std::mutex							m_state_mutex;
+		State										m_state;
 
 	};
 

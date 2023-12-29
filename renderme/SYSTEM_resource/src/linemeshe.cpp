@@ -27,9 +27,23 @@
 
 using namespace renderMe;
 
-LineMeshe::LineMeshe(const std::string& p_name) :
-m_name(p_name)
+LineMeshe::LineMeshe(const std::string& p_name, State p_initial_state) :
+m_name(p_name),
+m_state(p_initial_state)
 {
+}
+
+LineMeshe::LineMeshe(const LineMeshe& p_other)
+{
+	m_name = p_other.m_name;
+	m_vertices = p_other.m_vertices;
+	m_lines = p_other.m_lines;
+
+	m_state_mutex.lock();
+	p_other.m_state_mutex.lock();
+	m_state = p_other.m_state;
+	p_other.m_state_mutex.unlock();
+	m_state_mutex.unlock();
 }
 
 std::string LineMeshe::getName(void) const
@@ -77,11 +91,18 @@ size_t LineMeshe::getLinesListSize() const
 	return m_lines.size();
 }
 
-bool LineMeshe::isReady() const
+
+LineMeshe::State LineMeshe::getState() const
 {
-	if (m_vertices.size() > 1 && m_lines.size() > 0)
-	{
-		return true;
-	}
-	return false;
+	m_state_mutex.lock();
+	const auto state{ m_state };
+	m_state_mutex.unlock();
+	return state;
+}
+
+void LineMeshe::setState(LineMeshe::State p_state)
+{
+	m_state_mutex.lock();
+	m_state = p_state;
+	m_state_mutex.unlock();
 }
