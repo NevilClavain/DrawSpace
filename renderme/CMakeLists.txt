@@ -81,6 +81,7 @@ add_subdirectory(RENDERING_control)
 add_subdirectory(SYSTEM_d3d11)
 add_subdirectory(SYSTEM_time)
 add_subdirectory(SYSTEM_resource)
+add_subdirectory(SYSTEM_renderingqueue)
 
 add_subdirectory(hlsl40_shaders)
 

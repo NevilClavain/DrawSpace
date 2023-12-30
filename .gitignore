@@ -323,6 +323,10 @@ ALL_BUILD.vcxproj*
 /renderme/SYSTEM_resource/*.sln
 /renderme/SYSTEM_resource/*.vcxproj*
 
+/renderme/SYSTEM_renderingqueue/CMakeFiles/
+/renderme/SYSTEM_renderingqueue/*.sln
+/renderme/SYSTEM_renderingqueue/*.vcxproj*
+
 /renderme/hlsl40_shaders/CMakeFiles/
 /renderme/hlsl40_shaders/*.sln
 /renderme/hlsl40_shaders/*.vcxproj*

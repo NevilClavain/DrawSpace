@@ -28,6 +28,7 @@
 #include "d3d11system.h"
 #include "timesystem.h"
 #include "resourcesystem.h"
+#include "renderingqueuesystem.h"
 
 #include "shader.h"
 #include "linemeshe.h"
@@ -190,6 +191,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	sysEngine->makeSystem<renderMe::TimeSystem>(0, m_entitygraph);
 	sysEngine->makeSystem<renderMe::D3D11System>(1, m_entitygraph);
 	sysEngine->makeSystem<renderMe::ResourceSystem>(2, m_entitygraph);
+	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(3, m_entitygraph);
 
 	// D3D11 system provides compilation shader service
 
