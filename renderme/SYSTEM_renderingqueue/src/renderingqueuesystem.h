@@ -26,11 +26,15 @@
 #pragma once
 
 #include "system.h"
+#include "logsink.h"
+#include "logconf.h"
+#include "logging.h"
 
 namespace renderMe
 {
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
+    namespace rendering { class Queue; }
 
     class RenderingQueueSystem : public core::System
     {
@@ -43,5 +47,9 @@ namespace renderMe
 
     private:
 
+        renderMe::core::logger::Sink        m_localLogger;
+
+        void manageRenderingQueue();
+        void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue);
     };
 }
