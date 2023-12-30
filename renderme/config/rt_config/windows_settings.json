@@ -4,7 +4,8 @@
   "height": 900,
   "fonts": 
   [
-	{ "name" : "Bahnschrift" },
-	{ "name" : "Courier New" }	
+    { "name" : "CourierNew.10.spritefont" },
+	{ "name" : "CourierNew.32.spritefont" },
+	{ "name" : "Bahnschrift.16.spritefont" }
   ]
 }
