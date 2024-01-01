@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -25,30 +24,16 @@
 
 #pragma once
 
-#include <vector>
-#include <functional>
-#include "linemeshedrawing.h"
+#include <string>
 
 namespace renderMe
 {
 	namespace rendering
 	{
-		struct LineMesheListDrawing : public LineMesheDrawing
+		struct LineMesheDrawing
 		{
 		public:
-			
-			LineMesheListDrawing() = default;
-			LineMesheListDrawing(const std::vector<std::string>& p_linemesheNames);
-
-			~LineMesheListDrawing() = default;
-
-			void addName(const std::string& p_lmName);
-
-			std::function< void(const std::function<void(const std::string&)>&)> getDrawingFunc() const;
-
-		private:
-			std::vector<std::string> m_linemesheNames;
-
+			virtual std::function< void(const std::function<void(const std::string&)>&)> getDrawingFunc() const = 0;
 		};
 	}
 }
