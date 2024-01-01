@@ -127,7 +127,7 @@ void D3D11SystemImpl::beginScreen()
 	m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
 }
 
-void D3D11SystemImpl::clearTarget(const renderMe::core::RGBAColor& p_clear_color)
+void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clear_color)
 {
 	FLOAT clearcolor[4];
 
@@ -144,7 +144,7 @@ void D3D11SystemImpl::flipScreen(void)
 	m_lpd3dswapchain->Present(0, 0);
 }
 
-void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
+void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::maths::RGBAColor& p_clear_color, const renderMe::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
 {
 	const unsigned long color32{ (
 									(((unsigned long)(p_clear_color.a())) << 24) |

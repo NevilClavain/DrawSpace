@@ -53,11 +53,11 @@ namespace renderMe
 
 			struct Text
 			{
-				std::string					text;
-				std::string					font;
-				renderMe::core::RGBAColor	color{ 255, 255, 255, 255 };
-				renderMe::core::IntCoords2D position;
-				float						rotation_rad{ 0.0 };
+				std::string							text;
+				std::string							font;
+				renderMe::core::maths::RGBAColor	color{ 255, 255, 255, 255 };
+				renderMe::core::maths::IntCoords2D	position;
+				float								rotation_rad{ 0.0 };
 			};
 
 			Queue(const std::string& p_name);
@@ -71,10 +71,10 @@ namespace renderMe
 			void						setPurpose(Purpose p_purpose);
 
 			void						enableTargetClearing(bool p_enable);
-			void						setTargetClearColor(const core::RGBAColor& p_color);
+			void						setTargetClearColor(const core::maths::RGBAColor& p_color);
 
 			bool						getTargetClearing() const;
-			core::RGBAColor				getTargetClearColor() const;
+			core::maths::RGBAColor		getTargetClearColor() const;
 
 			void						setText(int p_id, const Text& p_text);
 			void						clearTexts();
@@ -86,7 +86,7 @@ namespace renderMe
 			Purpose							m_purpose{ Purpose::UNDEFINED };
 			State							m_state{ State::WAIT_INIT };
 			bool							m_clear_target{ false };
-			core::RGBAColor					m_target_clear_color;
+			core::maths::RGBAColor			m_target_clear_color;
 			std::map<int,Text>				m_texts;
 		};
 	}

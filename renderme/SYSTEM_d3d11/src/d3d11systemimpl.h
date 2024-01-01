@@ -120,10 +120,10 @@ public:
     bool init(renderMe::core::Entity* p_mainWindow);
 
     void beginScreen();
-    void clearTarget(const renderMe::core::RGBAColor& p_clear_color);
+    void clearTarget(const renderMe::core::maths::RGBAColor& p_clear_color);
     void flipScreen(void);
 
-    void drawText(const std::string& p_font, const renderMe::core::RGBAColor& p_clear_color, const renderMe::core::IntCoords2D& p_pos, float p_rotation, const std::string& p_text);
+    void drawText(const std::string& p_font, const renderMe::core::maths::RGBAColor& p_clear_color, const renderMe::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text);
 
     bool createShaderBytesOnFile(int p_shadertype,
                                     const std::string& p_includes_path,

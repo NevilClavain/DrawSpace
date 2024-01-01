@@ -26,6 +26,7 @@
 
 using namespace renderMe::rendering;
 using namespace renderMe::core;
+using namespace renderMe::core::maths;
 
 Queue::Queue(const std::string& p_name) :
 m_name(p_name)

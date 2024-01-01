@@ -27,6 +27,7 @@
 #include "tvector.h"
 
 using namespace renderMe::core;
+using namespace renderMe::core::maths;
 
 int main( int argc, char* argv[] )
 {    
