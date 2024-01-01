@@ -29,6 +29,7 @@
 #include "timesystem.h"
 #include "resourcesystem.h"
 #include "renderingqueuesystem.h"
+#include "linemeshelistdrawing.h"
 
 #include "shader.h"
 #include "linemeshe.h"
@@ -363,6 +364,10 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		const std::vector<LineMeshe> line_meshes = { square };
 
 		circle_resource_aspect.addComponent<std::vector<LineMeshe>>("lineMeshes", line_meshes);
+
+		/////////// Add rendering method : simple line Meshes list here
+
+		circle_resource_aspect.addComponent<rendering::LineMesheListDrawing>("drawingMethod", rendering::LineMesheListDrawing({ "square" }));
 	}
 	
 }

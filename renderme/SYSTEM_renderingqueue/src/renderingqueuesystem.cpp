@@ -44,19 +44,49 @@ void RenderingQueueSystem::run()
 
 void RenderingQueueSystem::manageRenderingQueue()
 {
-	const auto forEachRenderingAspect
+	////////Queue states//////////////////////////////////////
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+		const auto forEachRenderingAspect
 		{
-			const auto rendering_queue_comp{ p_rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
-			if (rendering_queue_comp)
+			[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
 			{
-				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
-				handleRenderingQueuesState(p_entity, renderingQueue);
+				const auto rendering_queue_comp{ p_rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
+				if (rendering_queue_comp)
+				{
+					auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+					handleRenderingQueuesState(p_entity, renderingQueue);
+				}
+			}
+		};
+		renderMe::helpers::extractAspectsDownTop<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
+	}
+	////////Queue build/updates//////////////////////////////////////
+	{
+		rendering::Queue* current_queue{ nullptr };
+
+		for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+		{
+			const auto current_entity{ it->data() };
+			const auto currId{ current_entity->getId() };
+
+			if (current_entity->hasAspect(renderMe::core::renderingAspect::id))
+			{
+				const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
+
+				const auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
+				if (rendering_queue_comp)
+				{
+					auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+					current_queue = &renderingQueue;
+				}
+
+				if (current_entity->hasAspect(renderMe::core::resourcesAspect::id))
+				{
+					const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
+				}
 			}
 		}
-	};
-	renderMe::helpers::extractAspectsDownTop<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
+	}
 }
 
 void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, rendering::Queue& p_renderingQueue)
