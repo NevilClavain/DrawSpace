@@ -23,14 +23,80 @@
 */
 /* -*-LIC_END-*- */
 
+#include "tvector.h"
+
 #pragma once
 
 namespace renderMe
 {
 	namespace core
 	{
-		class Matrix
-		{
-		};
+        namespace maths
+        {
+            class Matrix
+            {
+            public:
+
+                enum class ConfigurationType
+                {
+                    CONFIG_UNDETERMINED,
+                    CONFIG_ZERO,
+                    CONFIG_IDENTITY,
+                    CONFIG_TRANSLATION,
+                    CONFIG_SCALING,
+                    CONFIG_ROTATION
+
+                };
+
+                struct ConfigurationInfo
+                {
+                    ConfigurationType   type;
+                    Real4Vector         values;
+                };
+
+
+                Matrix(void);
+                ~Matrix(void) = default;
+
+                void zero(void);
+
+                double operator()(int p_row, int p_col) const
+                {
+                    return m_matrix[p_row][p_col];
+                };
+
+                double& operator()(int p_row, int p_col)
+                {
+                    m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
+                    return m_matrix[p_row][p_col];
+                };
+
+                void identity(void);
+                void translation(double p_x, double p_y, double p_z);
+                void translation(const Vector<>& p_pos);
+                void transpose(void);
+                void perspective(double p_w, double p_h, double p_zn, double p_zf);
+
+                void scale(double p_sx, double p_sy, double p_sz);
+                void scale(const Real4Vector& p_pos);
+                void clearTranslation(void);
+
+                void rotation(const Real4Vector& p_axis, double p_angle);
+                void inverse(void);
+                void transform(Real4Vector* p_vec_in, Real4Vector* p_vec_out) const;
+
+                double* getArray(void) const
+                {
+                    return (double*)m_matrix;
+                };
+
+                static void matrixMult(Matrix* p_mA, Matrix* p_mB, Matrix* p_mRes);
+
+            private:
+
+                ConfigurationInfo   m_configinfos;
+                double              m_matrix[4][4];
+            };
+        }
 	}
 }
