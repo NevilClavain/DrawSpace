@@ -24,15 +24,17 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 
 namespace renderMe
 {
 	namespace rendering
 	{
-		struct LineMesheDrawing
+		struct PrimitiveDrawing
 		{
 		public:
+			// Drawing function take a Primitive presentation function, provided by the renderer (D3D11 or others...)
 			virtual std::function< void(const std::function<void(const std::string&)>&)> getDrawingFunc() const = 0;
 		};
 	}

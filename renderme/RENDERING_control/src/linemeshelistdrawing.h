@@ -26,14 +26,13 @@
 #pragma once
 
 #include <vector>
-#include <functional>
-#include "linemeshedrawing.h"
+#include "primitivedrawing.h"
 
 namespace renderMe
 {
 	namespace rendering
 	{
-		struct LineMesheListDrawing : public LineMesheDrawing
+		struct LineMesheListDrawing : public PrimitiveDrawing
 		{
 		public:
 			
@@ -44,7 +43,7 @@ namespace renderMe
 
 			void addName(const std::string& p_lmName);
 
-			std::function< void(const std::function<void(const std::string&)>&)> getDrawingFunc() const;
+			std::function<void(const std::function<void(const std::string&)>&)> getDrawingFunc() const;
 
 		private:
 			std::vector<std::string> m_linemesheNames;
