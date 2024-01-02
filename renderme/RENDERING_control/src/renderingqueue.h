@@ -26,13 +26,19 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <map>
+#include <unordered_map>
 #include "tvector.h"
 
 namespace renderMe
 {
 	namespace rendering
 	{
+		//fwd decl
+		struct PrimitiveDrawing;
+		class RenderingQueueSystem;
+
 		class Queue
 		{
 		public:
@@ -59,6 +65,17 @@ namespace renderMe
 				renderMe::core::maths::IntCoords2D	position;
 				float								rotation_rad{ 0.0 };
 			};
+			
+
+			using DrawingNodes		= std::vector<PrimitiveDrawing*>;
+
+			using TexturesIdsMap	= std::unordered_map<std::string, DrawingNodes>;
+			using MeshesIdsMap		= std::unordered_map<std::string, TexturesIdsMap>;
+			using ShaderIdsMap		= std::unordered_map<std::string, MeshesIdsMap>;
+
+			using QueueNodes		= ShaderIdsMap;
+
+			////////////////////////////////////////////////////////////////////
 
 			Queue(const std::string& p_name);
 			~Queue() = default;
@@ -79,6 +96,10 @@ namespace renderMe
 			void						setText(int p_id, const Text& p_text);
 			void						clearTexts();
 
+			QueueNodes					getQueueNodes() const;
+
+			void						setQueueNodes(const QueueNodes& p_nodes);
+
 			const std::map<int, Text>&	texts() const;
 		
 		private:
@@ -88,6 +109,8 @@ namespace renderMe
 			bool							m_clear_target{ false };
 			core::maths::RGBAColor			m_target_clear_color;
 			std::map<int,Text>				m_texts;
+
+			QueueNodes						m_queueNodes;
 		};
 	}
 }
