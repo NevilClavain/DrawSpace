@@ -34,6 +34,7 @@ namespace renderMe
 {
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
+    namespace core { class ComponentContainer; }
     namespace rendering { class Queue; }
 
     class RenderingQueueSystem : public core::System
@@ -51,5 +52,7 @@ namespace renderMe
 
         void manageRenderingQueue();
         void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue);
+
+        void updateRenderingQueueFromResource(const renderMe::core::ComponentContainer& p_resourceAspect, renderMe::rendering::Queue& p_renderingQueue);
     };
 }

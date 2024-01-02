@@ -28,6 +28,7 @@
 #include "aspects.h"
 #include "ecshelpers.h"
 #include "renderingqueue.h"
+#include "shader.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -79,10 +80,15 @@ void RenderingQueueSystem::manageRenderingQueue()
 					auto& renderingQueue{ rendering_queue_comp->getPurpose() };
 					current_queue = &renderingQueue;
 				}
+			}
 
-				if (current_entity->hasAspect(renderMe::core::resourcesAspect::id))
+			if (current_entity->hasAspect(renderMe::core::resourcesAspect::id))
+			{
+				const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
+
+				if (current_queue)
 				{
-					const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
+					updateRenderingQueueFromResource(resource_aspect, *current_queue);
 				}
 			}
 		}
@@ -160,4 +166,14 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 		}
 		break;
 	}
+}
+
+void RenderingQueueSystem::updateRenderingQueueFromResource(const renderMe::core::ComponentContainer& p_resourceAspect, renderMe::rendering::Queue& p_renderingQueue)
+{
+	const auto queueNodes{ p_renderingQueue.getQueueNodes() };
+
+
+	//...to be continued
+
+	p_renderingQueue.setQueueNodes(queueNodes);
 }
