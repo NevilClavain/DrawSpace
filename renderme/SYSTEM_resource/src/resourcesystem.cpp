@@ -106,37 +106,25 @@ void ResourceSystem::run()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
 		{
-			// search for vertex shaders
-
-			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<Shader>>("vertexShaders") };
-			if (vshaders_list)
 			{
-				for (auto& shaderDescr : vshaders_list->getPurpose())
+				auto& vshader { p_resource_aspect.getComponent<Shader>("vertexShader")->getPurpose()};
+				const auto state{ vshader.getState() };
+
+				if (Shader::State::INIT == state)
 				{
-					const auto state{ shaderDescr.getState() };
-					
-					if (Shader::State::INIT == state)
-					{
-						handleShader(shaderDescr, 0);
-						shaderDescr.setState(Shader::State::BLOBLOADING);
-					}					
+					handleShader(vshader, 0);
+					vshader.setState(Shader::State::BLOBLOADING);
 				}
 			}
 
-			// search for pixel shaders
-
-			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<Shader>>("pixelShaders") };
-			if (pshaders_list)
 			{
-				for (auto& shaderDescr : pshaders_list->getPurpose())
-				{
-					const auto state{ shaderDescr.getState() };
+				auto& pshader{ p_resource_aspect.getComponent<Shader>("pixelShader")->getPurpose() };
+				const auto state{ pshader.getState() };
 
-					if (Shader::State::INIT == state)
-					{
-						handleShader(shaderDescr, 1);
-						shaderDescr.setState(Shader::State::BLOBLOADING);
-					}
+				if (Shader::State::INIT == state)
+				{
+					handleShader(pshader, 1);
+					pshader.setState(Shader::State::BLOBLOADING);
 				}
 			}
 		}

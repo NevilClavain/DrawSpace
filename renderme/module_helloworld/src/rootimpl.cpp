@@ -335,6 +335,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////// Add shaders
 
+		/*
 		const std::vector<Shader> vertex_shaders =
 		{
 			Shader("color_vs.hlsl")
@@ -347,6 +348,11 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		circle_resource_aspect.addComponent<std::vector<Shader>>("vertexShaders", vertex_shaders);
 		circle_resource_aspect.addComponent<std::vector<Shader>>("pixelShaders", pixel_shaders);
+		*/
+
+		circle_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs.hlsl"));
+		circle_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps.hlsl"));
+
 
 		/////////// Add linemeshe
 

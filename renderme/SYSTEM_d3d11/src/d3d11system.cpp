@@ -138,42 +138,32 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 				
 					const auto& resources{ p_entity.aspectAccess(core::resourcesAspect::id) };
 
-					// search for vertex shaders
-					const auto vshaders_list{ resources.getComponent<std::vector<Shader>>("vertexShaders") };
-					if (vshaders_list)
 					{
-						for (auto& shaderDescr : vshaders_list->getPurpose())
+						auto& vshader{ resources.getComponent<Shader>("vertexShader")->getPurpose() };
+						const auto state{ vshader.getState() };
+						if (Shader::State::RENDERERLOADED == state)
 						{
-							const auto state{ shaderDescr.getState() };
-							if (Shader::State::RENDERERLOADED == state)
+							_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + vshader.getName());
+							for (const auto& call : m_callbacks)
 							{
-								_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + shaderDescr.getName() );
-								for (const auto& call : m_callbacks)
-								{
-									call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, shaderDescr.getName());
-								}
-								handleShaderRelease(shaderDescr, 0);
+								call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, vshader.getName());
 							}
+							handleShaderRelease(vshader, 0);
 						}
 					}
 
-					// search for pixel shaders
-					const auto pshaders_list{ resources.getComponent<std::vector<Shader>>("pixelShaders") };
-					if (pshaders_list)
 					{
-						for (auto& shaderDescr : pshaders_list->getPurpose())
+						auto& pshader{ resources.getComponent<Shader>("pixelShader")->getPurpose() };
+						const auto state{ pshader.getState() };
+						if (Shader::State::RENDERERLOADED == state)
 						{
-							const auto state{ shaderDescr.getState() };
-							if (Shader::State::RENDERERLOADED == state)
+							_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + pshader.getName());
+							for (const auto& call : m_callbacks)
 							{
-								_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + shaderDescr.getName());
-								for (const auto& call : m_callbacks)
-								{
-									call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, shaderDescr.getName());
-								}
-
-								handleShaderRelease(shaderDescr, 1);
+								call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, pshader.getName());
 							}
+
+							handleShaderRelease(pshader, 1);
 						}
 					}
 
@@ -276,49 +266,38 @@ void D3D11System::manageResources()
 		{
 			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-			// search for vertex shaders			
-			const auto vshaders_list { p_resource_aspect.getComponent<std::vector<Shader>>("vertexShaders") };
-			if (vshaders_list)
-			{
-				for (auto& shaderDescr : vshaders_list->getPurpose())
+			{			
+				auto& vshader{ p_resource_aspect.getComponent<Shader>("vertexShader")->getPurpose() };
+				const auto state{ vshader.getState() };
+				if (Shader::State::BLOBLOADED == state)
 				{
-					const auto state{ shaderDescr.getState() };
-					if (Shader::State::BLOBLOADED == state)
+
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + vshader.getName());
+					for (const auto& call : m_callbacks)
 					{
-
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shaderDescr.getName());
-						for (const auto& call : m_callbacks)
-						{
-							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shaderDescr.getName());
-						}
-
-						handleShaderCreation(shaderDescr, 0);
-						shaderDescr.setState(Shader::State::RENDERERLOADING);
+						call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, vshader.getName());
 					}
+
+					handleShaderCreation(vshader, 0);
+					vshader.setState(Shader::State::RENDERERLOADING);
 				}
 			}
 
-			// search for pixel shaders
-			const auto pshaders_list{ p_resource_aspect.getComponent<std::vector<Shader>>("pixelShaders") };
-			if (pshaders_list)
 			{
-				for (auto& shaderDescr : pshaders_list->getPurpose())
+				auto& pshader{ p_resource_aspect.getComponent<Shader>("pixelShader")->getPurpose() };
+				const auto state{ pshader.getState() };
+				if (Shader::State::BLOBLOADED == state)
 				{
-					const auto state{ shaderDescr.getState() };
-					if (Shader::State::BLOBLOADED == state)
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + pshader.getName());
+					for (const auto& call : m_callbacks)
 					{
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shaderDescr.getName());
-						for (const auto& call : m_callbacks)
-						{
-							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shaderDescr.getName());
-						}
-
-						handleShaderCreation(shaderDescr, 1);
-						shaderDescr.setState(Shader::State::RENDERERLOADING);
+						call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, pshader.getName());
 					}
+
+					handleShaderCreation(pshader, 1);
+					pshader.setState(Shader::State::RENDERERLOADING);
 				}
 			}
-
 			
 			//search for line Meshes
 			const auto lmeshes_list{ p_resource_aspect.getComponent<std::vector<LineMeshe>>("lineMeshes") };
