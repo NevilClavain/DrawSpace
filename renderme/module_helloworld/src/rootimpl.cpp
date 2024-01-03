@@ -33,6 +33,7 @@
 
 #include "shader.h"
 #include "linemeshe.h"
+#include "renderstate.h"
 
 #include "logger_service.h"
 
@@ -363,7 +364,14 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		const std::vector<LineMeshe> line_meshes = { square };
 
-		circle_resource_aspect.addComponent<std::vector<LineMeshe>>("lineMeshes", line_meshes);
+		circle_resource_aspect.addComponent<LineMeshe>("lineMeshe", square);
+
+		/////////// Add renderstate
+
+		RenderState rs_nocullling(RenderState::Operation::SETCULLING, "none");		
+		const std::vector<RenderState> rs_list = { rs_nocullling };
+
+		circle_resource_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
 		/////////// Add rendering method : simple line Meshes list here
 		circle_resource_aspect.addComponent<rendering::LineMesheListDrawing>("lineMesheDrawing", rendering::LineMesheListDrawing({ "square" }));
