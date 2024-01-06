@@ -338,7 +338,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	// set default sampling : pointFilter with no uvwrapping
 
 	ID3D11SamplerState* ss_array[] = { pointFilterSamplerState };
-	for (long i = 0; i < 8; i++)
+	for (long i = 0; i < 9; i++)
 	{
 		lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
 		lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
