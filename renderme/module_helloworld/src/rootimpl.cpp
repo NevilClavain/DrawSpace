@@ -29,7 +29,7 @@
 #include "timesystem.h"
 #include "resourcesystem.h"
 #include "renderingqueuesystem.h"
-#include "linemeshelistdrawing.h"
+
 
 #include "shader.h"
 #include "linemeshe.h"
@@ -335,21 +335,6 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////// Add shaders
 
-		/*
-		const std::vector<Shader> vertex_shaders =
-		{
-			Shader("color_vs.hlsl")
-		};
-
-		const std::vector<Shader> pixel_shaders =
-		{
-			Shader("color_ps.hlsl")
-		};
-
-		circle_resource_aspect.addComponent<std::vector<Shader>>("vertexShaders", vertex_shaders);
-		circle_resource_aspect.addComponent<std::vector<Shader>>("pixelShaders", pixel_shaders);
-		*/
-
 		circle_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs.hlsl"));
 		circle_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps.hlsl"));
 
@@ -379,8 +364,6 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		circle_resource_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
-		/////////// Add rendering method : simple line Meshes list here
-		circle_resource_aspect.addComponent<rendering::LineMesheListDrawing>("lineMesheDrawing", rendering::LineMesheListDrawing({ "square" }));
 	}
 	
 }

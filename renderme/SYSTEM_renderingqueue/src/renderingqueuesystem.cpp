@@ -170,10 +170,10 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 
 void RenderingQueueSystem::updateRenderingQueueFromResource(const renderMe::core::ComponentContainer& p_resourceAspect, renderMe::rendering::Queue& p_renderingQueue)
 {
-	const auto queueNodes{ p_renderingQueue.getQueueNodes() };
+	//const auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
 
 	//...to be continued
 
-	p_renderingQueue.setQueueNodes(queueNodes);
+	//p_renderingQueue.setQueueNodes(queueNodes);
 }
