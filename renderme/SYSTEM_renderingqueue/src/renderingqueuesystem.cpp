@@ -82,13 +82,15 @@ void RenderingQueueSystem::manageRenderingQueue()
 				}
 			}
 
-			if (current_entity->hasAspect(renderMe::core::resourcesAspect::id))
+			if (current_entity->hasAspect(renderMe::core::resourcesAspect::id) &&
+				current_entity->hasAspect(renderMe::core::renderingAspect::id))
 			{
 				const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
+				const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
 
 				if (current_queue)
 				{
-					updateRenderingQueueFromResource(resource_aspect, *current_queue);
+					updateRenderingQueue(resource_aspect, rendering_aspect, *current_queue);
 				}
 			}
 		}
@@ -168,9 +170,14 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 	}
 }
 
-void RenderingQueueSystem::updateRenderingQueueFromResource(const renderMe::core::ComponentContainer& p_resourceAspect, renderMe::rendering::Queue& p_renderingQueue)
+void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentContainer& p_resourceAspect, 
+												const renderMe::core::ComponentContainer& p_renderingAspect, 
+												renderMe::rendering::Queue& p_renderingQueue)
 {
 	const auto queueNodes{ p_renderingQueue.getQueueNodes() };
+
+	//search for lineMeshes
+	
 
 
 	//...to be continued
