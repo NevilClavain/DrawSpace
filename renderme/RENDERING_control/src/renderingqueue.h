@@ -29,15 +29,40 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
+#include <functional>
 #include "tvector.h"
+#include "matrix.h"
+#include "renderstate.h"
+
 
 namespace renderMe
 {
 	namespace rendering
 	{
 		//fwd decl
-		struct PrimitiveDrawing;
+		struct PrimitiveDrawing;	
 		class RenderingQueueSystem;
+
+
+		struct LineDrawingControl
+		{
+		public:
+
+			LineDrawingControl()
+			{
+				world.identity();
+				view.identity();
+			}
+
+			~LineDrawingControl() = default;
+
+			core::maths::Matrix world;
+			core::maths::Matrix view;
+			core::maths::Matrix proj;
+
+			std::function<void()> setup{ [] {} };
+			std::function<void()> teardown{ [] {} };
+		};
 
 		class Queue
 		{
@@ -65,8 +90,36 @@ namespace renderMe
 				renderMe::core::maths::IntCoords2D	position;
 				float								rotation_rad{ 0.0 };
 			};
-			
-			
+						
+			struct LineMeshePayload
+			{
+				std::vector<LineDrawingControl> list;
+			};
+
+			struct RenderStatePayload
+			{
+				// renderstates set
+				std::vector<RenderState>							description;
+
+				// key = lineMeshe D3D11 id
+				std::unordered_map<std::string, LineMeshePayload>	list;
+			};
+
+			struct PixelShaderPayload
+			{
+				// key = renderstate set strings dump concatenation (RenderState::toString())
+				std::unordered_map<std::string, RenderStatePayload> list;
+			};
+
+			struct VertexShaderPayload
+			{
+				// key = pixel shader D3D11 id
+				std::unordered_map<std::string, PixelShaderPayload> list;
+			};
+
+			// key = vertex shader D3D11 id
+			using QueueNodes = std::unordered_map<std::string, VertexShaderPayload>;
+
 
 			////////////////////////////////////////////////////////////////////
 
@@ -89,10 +142,10 @@ namespace renderMe
 			void						setText(int p_id, const Text& p_text);
 			void						clearTexts();
 
-			/*
+			
 			QueueNodes					getQueueNodes() const;
 			void						setQueueNodes(const QueueNodes& p_nodes);
-			*/
+			
 
 			const std::map<int, Text>&	texts() const;
 		
@@ -104,7 +157,7 @@ namespace renderMe
 			core::maths::RGBAColor			m_target_clear_color;
 			std::map<int,Text>				m_texts;
 
-			//QueueNodes						m_queueNodes;
+			QueueNodes						m_queueNodes;
 		};
 	}
 }

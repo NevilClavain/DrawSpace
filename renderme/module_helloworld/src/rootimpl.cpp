@@ -357,13 +357,26 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		circle_resource_aspect.addComponent<LineMeshe>("lineMeshe", square);
 
+		/////////////////////////////////////
+
+		auto& circle_rendering_aspect{ circleEntity->makeAspect(core::renderingAspect::id) };
+
 		/////////// Add renderstate
 
-		RenderState rs_nocullling(RenderState::Operation::SETCULLING, "none");		
-		const std::vector<RenderState> rs_list = { rs_nocullling };
+		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");		
+		const std::vector<RenderState> rs_list = { rs_noculling };
 
-		circle_resource_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+		circle_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
+		/////////// Draw lines
+	
+		rendering::LineDrawingControl lineDrawingControl;
+
+		// TODO : temporary prepare matrix here
+
+		////////
+
+		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("lineDrawingControl", lineDrawingControl);
 	}
 	
 }
