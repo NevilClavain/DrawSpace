@@ -203,7 +203,7 @@ void D3D11System::manageInitialization()
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			// manage D3D11 init
 
-			auto rendering_target_comp{ p_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+			const auto rendering_target_comp{ p_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
 			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr &&
 													core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target_comp->getPurpose() };
 
