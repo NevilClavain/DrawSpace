@@ -27,8 +27,9 @@
 
 using namespace renderMe;
 
-Shader::Shader(const std::string& p_name) :
-    m_name(p_name)
+Shader::Shader(const std::string& p_name, int p_type) :
+    m_name(p_name),
+    m_type(p_type)
 {
 }
 
@@ -39,6 +40,7 @@ Shader::Shader(const Shader& p_other)
     m_contentMD5 = p_other.m_contentMD5;
     m_contentSize = p_other.m_contentSize;
     m_code = p_other.m_code;
+    m_type = p_other.m_type;
 
     m_state_mutex.lock();
     p_other.m_state_mutex.lock();
@@ -105,4 +107,9 @@ const core::Buffer<char>& Shader::getCode() const
 void Shader::setCode(const core::Buffer<char>& p_code)
 {
     m_code = p_code;
+}
+
+int Shader::getType() const
+{
+    return m_type;
 }

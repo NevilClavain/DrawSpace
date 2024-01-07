@@ -38,7 +38,7 @@ namespace renderMe
     {
     public:
         Shader() = delete;
-        Shader(const std::string& p_name);
+        Shader(const std::string& p_name, int p_type);
         Shader(const Shader& p_other);
 
         Shader& operator=(const Shader& p_other)
@@ -48,6 +48,7 @@ namespace renderMe
             m_contentMD5 = p_other.m_contentMD5;
             m_contentSize = p_other.m_contentSize;
             m_code = p_other.m_code;
+            m_type = p_other.m_type;
 
             m_state_mutex.lock();
             p_other.m_state_mutex.lock();
@@ -77,6 +78,8 @@ namespace renderMe
         State getState() const;
         void setState(State p_state);
 
+        int getType() const;
+
         const core::Buffer<char>& getCode() const;
         void setCode(const core::Buffer<char>& p_code);
 
@@ -86,6 +89,8 @@ namespace renderMe
         std::string         m_content;
         std::string         m_contentMD5;
         size_t              m_contentSize{ 0 };
+
+        int                 m_type; //0 = vertex shader, 1 = pixel shader
 
         core::Buffer<char>  m_code;
 

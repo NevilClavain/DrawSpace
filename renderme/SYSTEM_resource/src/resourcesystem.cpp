@@ -106,25 +106,16 @@ void ResourceSystem::run()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
 		{
+			const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
+			for (auto& e : s_list)
 			{
-				auto& vshader { p_resource_aspect.getComponent<Shader>("vertexShader")->getPurpose()};
-				const auto state{ vshader.getState() };
+				auto& shader{ e->getPurpose() };
+				const auto state{ shader.getState() };
 
 				if (Shader::State::INIT == state)
 				{
-					handleShader(vshader, 0);
-					vshader.setState(Shader::State::BLOBLOADING);
-				}
-			}
-
-			{
-				auto& pshader{ p_resource_aspect.getComponent<Shader>("pixelShader")->getPurpose() };
-				const auto state{ pshader.getState() };
-
-				if (Shader::State::INIT == state)
-				{
-					handleShader(pshader, 1);
-					pshader.setState(Shader::State::BLOBLOADING);
+					handleShader(shader, shader.getType());
+					shader.setState(Shader::State::BLOBLOADING);
 				}
 			}
 		}

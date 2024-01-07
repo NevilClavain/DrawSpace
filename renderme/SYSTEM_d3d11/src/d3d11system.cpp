@@ -138,32 +138,21 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 				
 					const auto& resources{ p_entity.aspectAccess(core::resourcesAspect::id) };
 
+
+					const auto s_list{ resources.getComponentsByType<Shader>() };
+					for (auto& e : s_list)
 					{
-						auto& vshader{ resources.getComponent<Shader>("vertexShader")->getPurpose() };
-						const auto state{ vshader.getState() };
+						auto& shader{ e->getPurpose() };
+
+						const auto state{ shader.getState() };
 						if (Shader::State::RENDERERLOADED == state)
 						{
-							_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + vshader.getName());
+							_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + shader.getName());
 							for (const auto& call : m_callbacks)
 							{
-								call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, vshader.getName());
+								call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, shader.getName());
 							}
-							handleShaderRelease(vshader, 0);
-						}
-					}
-
-					{
-						auto& pshader{ resources.getComponent<Shader>("pixelShader")->getPurpose() };
-						const auto state{ pshader.getState() };
-						if (Shader::State::RENDERERLOADED == state)
-						{
-							_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_RELEASE_BEGIN : " + pshader.getName());
-							for (const auto& call : m_callbacks)
-							{
-								call(D3D11SystemEvent::D3D11_SHADER_RELEASE_BEGIN, pshader.getName());
-							}
-
-							handleShaderRelease(pshader, 1);
+							handleShaderRelease(shader, shader.getType());
 						}
 					}
 
@@ -267,59 +256,45 @@ void D3D11System::manageResources()
 			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
 			{			
-				auto& vshader{ p_resource_aspect.getComponent<Shader>("vertexShader")->getPurpose() };
-				const auto state{ vshader.getState() };
-				if (Shader::State::BLOBLOADED == state)
+				const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
+				for (auto& e : s_list)
 				{
-
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + vshader.getName());
-					for (const auto& call : m_callbacks)
+					auto& shader{ e->getPurpose() };
+					const auto state{ shader.getState() };
+					if (Shader::State::BLOBLOADED == state)
 					{
-						call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, vshader.getName());
+
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shader.getName());
+						for (const auto& call : m_callbacks)
+						{
+							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shader.getName());
+						}
+
+						handleShaderCreation(shader, shader.getType());
+						shader.setState(Shader::State::RENDERERLOADING);
 					}
-
-					handleShaderCreation(vshader, 0);
-					vshader.setState(Shader::State::RENDERERLOADING);
-				}
-			}
-
-			{
-				auto& pshader{ p_resource_aspect.getComponent<Shader>("pixelShader")->getPurpose() };
-				const auto state{ pshader.getState() };
-				if (Shader::State::BLOBLOADED == state)
-				{
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + pshader.getName());
-					for (const auto& call : m_callbacks)
-					{
-						call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, pshader.getName());
-					}
-
-					handleShaderCreation(pshader, 1);
-					pshader.setState(Shader::State::RENDERERLOADING);
 				}
 			}
 			
 			//search for line Meshes
-			const auto lmeshes_list{ p_resource_aspect.getComponent<std::vector<LineMeshe>>("lineMeshes") };
-			if (lmeshes_list)
+			const auto lmeshes_list{ p_resource_aspect.getComponentsByType<LineMeshe>()};
+			for (auto& e : lmeshes_list)
 			{
-				for (auto& lm : lmeshes_list->getPurpose())
-				{
-					const auto state{ lm.getState() };
+				auto& lm{ e->getPurpose() };
+				const auto state{ lm.getState()};
 
-					if (LineMeshe::State::BLOBLOADED == state)
+				if (LineMeshe::State::BLOBLOADED == state)
+				{				
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_BEGIN : " + lm.getName());
+					for (const auto& call : m_callbacks)
 					{
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_BEGIN : " + lm.getName());
-						for (const auto& call : m_callbacks)
-						{
-							call(D3D11SystemEvent::D3D11_LINEMESHE_CREATION_BEGIN, lm.getName());
-						}
+						call(D3D11SystemEvent::D3D11_LINEMESHE_CREATION_BEGIN, lm.getName());
+					}
 
-						handleLinemesheCreation(lm);
-						lm.setState(LineMeshe::State::RENDERERLOADING);
-					}			
-				}
-			}			
+					handleLinemesheCreation(lm);
+					lm.setState(LineMeshe::State::RENDERERLOADING);
+				}			
+			}
 		}
 	};
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);

@@ -114,17 +114,20 @@ namespace renderMe
 
 			
 			template<typename T>
-			void getComponentsByType(ComponentList<T>& p_outlist) const
+			ComponentList<T> getComponentsByType() const
 			{
+				ComponentList<T> outlist;
 				const auto tid{ typeid(T).hash_code() };
 				if (m_components_by_type.count(tid) > 0)
 				{
 					const auto& list{ m_components_by_type.at(tid) };
 					for (auto& e : list)
 					{
-						p_outlist.push_back(static_cast<Component<T>*>(e));
+						outlist.push_back(static_cast<Component<T>*>(e));
 					}
 				}
+
+				return outlist;
 			}
 			
 		protected:
