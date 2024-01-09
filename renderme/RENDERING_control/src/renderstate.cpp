@@ -92,5 +92,5 @@ std::string RenderState::toString(void) const
 
     const std::string result{ translate.at(m_operation) + " = " + m_arg };
 
-    return translate.at(m_operation);
+    return result;
 }

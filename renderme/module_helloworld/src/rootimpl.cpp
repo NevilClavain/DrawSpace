@@ -353,9 +353,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
-		const std::vector<LineMeshe> line_meshes = { square };
-
-		circle_resource_aspect.addComponent<LineMeshe>("lineMeshe", square);
+		circle_resource_aspect.addComponent<LineMeshe>("square", square);
 
 		/////////////////////////////////////
 
@@ -376,7 +374,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		////////
 
-		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("lineDrawingControl", lineDrawingControl);
+		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
 	}
 	
 }

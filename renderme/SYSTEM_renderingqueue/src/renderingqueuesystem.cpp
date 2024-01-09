@@ -29,6 +29,7 @@
 #include "ecshelpers.h"
 #include "renderingqueue.h"
 #include "shader.h"
+#include "linemeshe.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -174,13 +175,95 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
 {
-	const auto queueNodes{ p_renderingQueue.getQueueNodes() };
+	auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
-	//search for lineMeshes
+	//search for line drawing request
+	const auto linesDrawingControls{ p_renderingAspect.getComponentsByType<rendering::LineDrawingControl>() };
+
+	if (linesDrawingControls.size() > 0)
+	{
+		bool notAllReady{ false };
+
+		for (const auto& e : linesDrawingControls)
+		{
+			const auto& linesDrawingControl{ e->getPurpose() };
+
+			if (!linesDrawingControl.ready)
+			{
+				notAllReady = true;
+			}
+		}
+
+		if (notAllReady)
+		{	
+			// TODO : search for lineMeshe
+
+			const auto lineMeshes{ p_resourceAspect.getComponentsByType<LineMeshe>() };
+
+			// search rendering states
+			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<RenderState>>() };
+
+			//search for shaders
+			const auto shaders{ p_resourceAspect.getComponentsByType<Shader>() };
+
+			if (1 < shaders.size())
+			{
+				const auto vshader{ shaders.at(0)->getPurpose() };
+				const auto pshader{ shaders.at(1)->getPurpose() };
+
+				if (0 == vshader.getType() && 1 == pshader.getType())
+				{
+					if (Shader::State::RENDERERLOADED == vshader.getState() && Shader::State::RENDERERLOADED == pshader.getState())
+					{
+						if (rsStates.size() > 0 && lineMeshes.size() > 0)
+						{
+							// ok, can update queue
+
+							if (queueNodes.count(vshader.getName()))
+							{
+								// vshader entry exists
+
+								// TODO
+							}
+							else
+							{
+								// insert new branch
+
+								rendering::Queue::LineMeshePayload lineMeshePayload;
+								for (const auto& e : linesDrawingControls)
+								{
+									auto& linesDrawingControl{ e->getPurpose() };
+									linesDrawingControl.ready = true;
+									lineMeshePayload.list.push_back(linesDrawingControl);									
+								}
+
+								rendering::Queue::RenderStatePayload renderStatePayload;
+								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
+								renderStatePayload.description = rsStates.at(0)->getPurpose();
+
+								rendering::Queue::PixelShaderPayload pixelShaderPayload;
+								std::string rs_set_signature;
+								const auto rs_set{ rsStates.at(0)->getPurpose() };
+								for (const auto& e : rs_set)
+								{
+									rs_set_signature += e.toString() + "; ";
+								}
+								pixelShaderPayload.list[rs_set_signature] = renderStatePayload;
+
+								rendering::Queue::VertexShaderPayload vertexShaderPayload;
+								vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;
+								
+								queueNodes[vshader.getName()] = vertexShaderPayload;
+							}							
+						}
+					}
+				}
+			}
+		}
+	}
+
 	
 
-
-	//...to be continued
 
 	p_renderingQueue.setQueueNodes(queueNodes);
 }

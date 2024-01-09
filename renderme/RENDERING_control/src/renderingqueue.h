@@ -60,6 +60,8 @@ namespace renderMe
 			core::maths::Matrix view;
 			core::maths::Matrix proj;
 
+			bool				ready{ false };
+
 			std::function<void()> setup{ [] {} };
 			std::function<void()> teardown{ [] {} };
 		};
