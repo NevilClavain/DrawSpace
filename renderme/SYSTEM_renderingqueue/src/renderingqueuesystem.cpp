@@ -196,7 +196,7 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 
 		if (notAllReady)
 		{	
-			// TODO : search for lineMeshe
+			// search for lineMeshe
 
 			const auto lineMeshes{ p_resourceAspect.getComponentsByType<LineMeshe>() };
 
