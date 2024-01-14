@@ -23,7 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "d3d11systemimpl.h"
-#include "md5.h"
+
 
 bool D3D11SystemImpl::createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view)
 {
@@ -57,65 +57,6 @@ bool D3D11SystemImpl::createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int 
 	D3D11_CHECK(CreateDepthStencilView)
 
 	return true;
-}
-
-bool D3D11SystemImpl::setCacheRS(const D3D11_RASTERIZER_DESC& p_currRS)
-{
-	bool status{ true };
-	DECLARE_D3D11ASSERT_VARS
-
-	const auto currRS{ p_currRS };
-	MD5 md5;
-
-	const std::string rsdesc_key{ md5.digestMemory((BYTE*)&currRS, sizeof(D3D11_RASTERIZER_DESC)) };
-
-	if (m_rsCache.count(rsdesc_key) > 0)
-	{
-		m_lpd3ddevcontext->RSSetState(m_rsCache.at(rsdesc_key).rs_state);
-	}
-	else
-	{
-		ID3D11RasterizerState* rs{ nullptr };
-		hRes = m_lpd3ddevice->CreateRasterizerState(&currRS, &rs);
-		D3D11_CHECK(CreateRasterizerState)
-		m_lpd3ddevcontext->RSSetState(rs);
-
-		// create new entry in cache
-		const RSCacheEntry cache_e { currRS, rs };
-		m_rsCache[rsdesc_key] = cache_e; // store in cache
-	}
-	return status;
-}
-
-bool D3D11SystemImpl::setCacheBlendstate(const D3D11_BLEND_DESC& p_currBlendDesc)
-{
-	bool status{ true };
-	DECLARE_D3D11ASSERT_VARS
-
-	const auto currBlendDesc{ p_currBlendDesc };
-	MD5 md5;
-
-	FLOAT bvals[4] { 0.0, 0.0, 0.0, 0.0 };
-
-	const std::string bsdesc_key{ md5.digestMemory((BYTE*)&currBlendDesc, sizeof(D3D11_BLEND_DESC)) };
-
-	if (m_bsCache.count(bsdesc_key) > 0)
-	{
-		m_lpd3ddevcontext->OMSetBlendState(m_bsCache.at(bsdesc_key).bs_state, bvals, 0xffffffff);
-	}
-	else
-	{
-		ID3D11BlendState* bs{ nullptr };
-		hRes = m_lpd3ddevice->CreateBlendState(&currBlendDesc, &bs);
-		D3D11_CHECK(CreateBlendState)
-		m_lpd3ddevcontext->OMSetBlendState(bs, bvals, 0xffffffff);
-
-		// create new entry in cache
-		const BSCacheEntry cache_e { currBlendDesc, bs };
-		m_bsCache[bsdesc_key] = cache_e; // store in cache
-	}
-
-	return status;
 }
 
 void D3D11SystemImpl::beginScreen()

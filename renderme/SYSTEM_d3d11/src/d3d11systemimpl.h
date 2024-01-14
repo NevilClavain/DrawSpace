@@ -56,6 +56,9 @@
 #include "buffer.h"
 
 #include "linemeshe.h"
+#include "renderstate.h"
+
+static constexpr int nbTextureStages = 9;
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
@@ -88,7 +91,7 @@ struct d3d11vertex
 {
     DirectX::XMFLOAT3 pos;
     DirectX::XMFLOAT3 normale;
-    DirectX::XMFLOAT4 t[9];
+    DirectX::XMFLOAT4 t[nbTextureStages];
     DirectX::XMFLOAT3 tangent;
     DirectX::XMFLOAT3 binormale;
 };
@@ -143,6 +146,17 @@ public:
     bool createLineMeshe(const renderMe::LineMeshe& p_lm);
     void setLineMeshe(const std::string& p_name);
     void destroyLineMeshe(const std::string& p_name);
+
+    void prepareRenderState(const renderMe::RenderState& p_renderstate); // update struct
+    bool setCacheRS(); // apply
+
+    void prepareBlendState(const renderMe::RenderState& p_renderstate); // update struct    
+    bool setCacheBlendstate(); // apply
+
+    void setDepthStenciState(const renderMe::RenderState& p_renderstate);
+
+    void setPSSamplers(const renderMe::RenderState& p_renderstate);
+    void setVSSamplers(const renderMe::RenderState& p_renderstate);
 
     std::unordered_set<std::string> getShadersNames() const;
 
@@ -217,7 +231,9 @@ private:
     ID3D11Texture2D*                                    m_pDepthStencil{ nullptr };
     ID3D11DepthStencilView*                             m_pDepthStencilView{ nullptr };
 
-    //std::unordered_map<std::string, IFW1FontWrapper*>   m_fontWrappers;
+    D3D11_RASTERIZER_DESC                               m_currentRSDesc;
+    D3D11_BLEND_DESC                                    m_currentBlendDesc;
+
     std::unordered_map<std::string, FontRenderingData>  m_fontWrappers;
 
     ID3D11SamplerState*                                 m_linearFilterSamplerState{ nullptr };
@@ -244,14 +260,27 @@ private:
 
     std::unordered_set<std::string>                     m_shaderNames;
 
-
     LineMesheList                                       m_lines;
+
+
+    ////////////////////////////////////////////////////////
+
+    std::string                                         m_currentRenderStateMD5;
+    std::string                                         m_currentBlendStateMD5;
+    std::string                                         m_currentDepthStencilState;
+
+    std::string                                         m_currentPSSampler;
+    std::string                                         m_currentPSExtendedSamplers[nbTextureStages];
+
+    std::string                                         m_currentVSSampler;
+    std::string                                         m_currentVSExtendedSamplers[nbTextureStages];
+
+
+    ////////////////////////////////////////////////////////
 
 
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
 
-    bool setCacheRS(const D3D11_RASTERIZER_DESC& p_currRS);
-    bool setCacheBlendstate(const D3D11_BLEND_DESC& p_currBlendDesc);
 
     HRESULT compileShaderFromMem(void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut);
 

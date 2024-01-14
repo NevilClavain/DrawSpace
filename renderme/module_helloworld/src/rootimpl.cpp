@@ -369,9 +369,11 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		/////////// Draw lines
 	
 		rendering::LineDrawingControl lineDrawingControl;
-
-		// TODO : temporary prepare matrix here
-
+		
+		lineDrawingControl.world.translation(0.0, 0.0, -5.0);
+		lineDrawingControl.view.identity();		
+		lineDrawingControl.proj.perspective(1.0, 0.75, 0.0, 10.0);
+	
 		////////
 
 		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);

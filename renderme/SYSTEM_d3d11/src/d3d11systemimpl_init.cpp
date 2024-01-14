@@ -338,7 +338,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	// set default sampling : pointFilter with no uvwrapping
 
 	ID3D11SamplerState* ss_array[] = { pointFilterSamplerState };
-	for (long i = 0; i < 9; i++)
+	for (long i = 0; i < nbTextureStages; i++)
 	{
 		lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
 		lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
@@ -374,8 +374,10 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	rsDesc.MultisampleEnable = FALSE;
 	rsDesc.AntialiasedLineEnable = FALSE;
 
+	m_currentRSDesc = rsDesc;
+
 	// apply this default renderstate
-	if (!setCacheRS(rsDesc))
+	if (!setCacheRS())
 	{
 		return false;
 	}
@@ -398,8 +400,10 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	blDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
+	m_currentBlendDesc = blDesc;
+
 	// apply this default blend state
-	if (!setCacheBlendstate(blDesc))
+	if (!setCacheBlendstate())
 	{
 		return false;
 	}

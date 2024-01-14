@@ -315,8 +315,54 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
 
-	// TODO : run queue
+	{
+		auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
+		for (const auto& vertexShaderInfo : queueNodes)
+		{
+			const auto& vertexShaderId{ vertexShaderInfo.first };
+			const auto& vertexShaderPayload{ vertexShaderInfo.second };
+
+			//set vertex shader
+			d3dimpl->setVertexShader(vertexShaderId);
+			for (const auto& pixelShaderInfo : vertexShaderPayload.list)
+			{
+				const auto& pixelShaderId{ pixelShaderInfo.first };
+				const auto& pixelShaderPayload{ pixelShaderInfo.second };
+
+				//set pixel shader
+				d3dimpl->setPixelShader(pixelShaderId);
+				for (const auto& renderStatesInfo : pixelShaderPayload.list)
+				{
+					const auto renderStates { renderStatesInfo.second.description };
+					for (const auto& renderState : renderStates)
+					{
+						d3dimpl->setDepthStenciState(renderState);
+						d3dimpl->setPSSamplers(renderState);
+						d3dimpl->setVSSamplers(renderState);
+
+						// prepare updates
+						d3dimpl->prepareRenderState(renderState);
+						d3dimpl->prepareBlendState(renderState);
+					}
+
+					// apply updates
+					d3dimpl->setCacheRS();
+					d3dimpl->setCacheBlendstate();
+
+					for (const auto& lineMesheInfo : renderStatesInfo.second.list)
+					{
+						const auto& lineMesheId{ lineMesheInfo.first };
+						d3dimpl->setLineMeshe(lineMesheId);
+
+						// TODO
+
+					}
+				}
+			}
+		}
+	}
+	
 	// render texts
 	for (auto& text : p_renderingQueue.texts())
 	{

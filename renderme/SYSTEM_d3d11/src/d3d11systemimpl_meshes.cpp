@@ -61,7 +61,7 @@ bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
                 v[i].pos.y = (float)vertex.y;
                 v[i].pos.z = (float)vertex.z;
 
-                for (size_t j = 0; j < 9; j++)
+                for (size_t j = 0; j < nbTextureStages; j++)
                 {
                     v[i].t[j].x = vertex.tu[j];
                     v[i].t[j].y = vertex.tv[j];
