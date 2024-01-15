@@ -157,7 +157,6 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
             {
                 m_currentBlendDesc.RenderTarget[0].BlendEnable = FALSE;
             }
-            //setCacheBlendstate();
         }
         break;
 
@@ -188,7 +187,6 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
                 m_currentBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MAX;
                 m_currentBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
             }
-            //setCacheBlendstate();
         }
         break;
 
@@ -198,7 +196,6 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
             {
                 _EXCEPTION("unsupported alpha blending func for D3D11")
             }
-            //setCacheBlendstate();
         }
         break;
 
@@ -254,7 +251,6 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
                 m_currentBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_DEST_COLOR;
                 m_currentBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_DEST_COLOR;
             }
-            //setCacheBlendstate();
         }
         break;
 
@@ -310,7 +306,6 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
                 m_currentBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_INV_DEST_COLOR;
                 m_currentBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_DEST_COLOR;
             }
-            //setCacheBlendstate();
         }
         break;
     }
@@ -319,19 +314,6 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
 void D3D11SystemImpl::prepareRenderState(const renderMe::RenderState& p_renderstate)
 {
     const auto arg{ p_renderstate.getArg() };
-
-    /*
-    static const std::map<std::string, ID3D11SamplerState*> translate_samplerstate =
-    {
-        { "none",               m_pointFilterSamplerState              },
-        { "point",              m_pointFilterSamplerState              },
-        { "linear",             m_linearFilterSamplerState             },
-        { "anisotropic",        m_anisotropicFilterSamplerState        },
-        { "point_uvwrap",       m_pointFilterSamplerState_uvwrap       },
-        { "linear_uvwrap",      m_linearFilterSamplerState_uvwrap      },
-        { "anisotropic_uvwrap", m_anisotropicFilterSamplerState_uvwrap }
-    };
-    */
    
     switch (p_renderstate.getOperation())
     {
@@ -356,73 +338,8 @@ void D3D11SystemImpl::prepareRenderState(const renderMe::RenderState& p_renderst
                 m_currentRSDesc.FrontCounterClockwise = FALSE;
                 // cull ccw
             }
-            //setCacheRS();
         }
         break;
-
-        /*
-        case renderMe::RenderState::Operation::ENABLEZBUFFER:
-            if ("true" == arg)
-            {
-                m_lpd3ddevcontext->OMSetDepthStencilState(m_dsState_DepthTestEnabled, 1);
-            }
-            else
-            {
-                m_lpd3ddevcontext->OMSetDepthStencilState(m_dsState_DepthTestDisabled, 1);
-            }
-            break;
-
-        
-        case renderMe::RenderState::Operation::SETTEXTUREFILTERTYPE:
-        {
-            if ("extended" == arg)
-            {
-                ID3D11SamplerState* ss_array[] = { nullptr };
-
-                const auto args_list{ p_renderstate.getExtendedArgs() };
-                auto index{ 0 };
-                for (const auto& e : args_list)
-                {
-                    ss_array[0] = translate_samplerstate.at(e);
-                    m_lpd3ddevcontext->PSSetSamplers(index++, 1, ss_array);
-                }
-            }
-            else
-            {
-                ID3D11SamplerState* ss_array[] = { translate_samplerstate.at(arg) };
-                for (auto i = 0; i < 8; i++)
-                {
-                    m_lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
-                }
-            }
-        }
-        break;
-
-        case renderMe::RenderState::Operation::SETVERTEXTEXTUREFILTERTYPE:
-        {
-            if ("extended" == arg)
-            {
-                ID3D11SamplerState* ss_array[] = { nullptr };
-
-                const auto args_list{ p_renderstate.getExtendedArgs() };
-                auto index{ 0 };
-                for (const auto& e : args_list)
-                {
-                    ss_array[0] = translate_samplerstate.at(e);
-                    m_lpd3ddevcontext->VSSetSamplers(index++, 1, ss_array);
-                }
-            }
-            else
-            {
-                ID3D11SamplerState* ss_array[] = { translate_samplerstate.at(arg) };
-                for (auto i = 0; i < 8; i++)
-                {
-                    m_lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
-                }
-            }
-        }
-        break;
-        */
 
         case renderMe::RenderState::Operation::SETFILLMODE:
         {
@@ -434,7 +351,6 @@ void D3D11SystemImpl::prepareRenderState(const renderMe::RenderState& p_renderst
             {
                 m_currentRSDesc.FillMode = D3D11_FILL_SOLID;
             }
-            //setCacheRS();
         }
         break;
     }
@@ -510,6 +426,5 @@ bool D3D11SystemImpl::setCacheBlendstate()
 
         m_currentBlendStateMD5 = bsdesc_key;
     }
-
     return status;
 }
