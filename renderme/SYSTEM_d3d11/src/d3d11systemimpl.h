@@ -58,6 +58,9 @@
 #include "linemeshe.h"
 #include "renderstate.h"
 
+#include "tvector.h"
+#include "matrix.h"
+
 static constexpr int nbTextureStages = 9;
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
@@ -158,6 +161,9 @@ public:
     void setPSSamplers(const renderMe::RenderState& p_renderstate);
     void setVSSamplers(const renderMe::RenderState& p_renderstate);
 
+
+    void drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
+
     std::unordered_set<std::string> getShadersNames() const;
 
 private:
@@ -182,7 +188,7 @@ private:
         ID3D11BlendState*           bs_state { nullptr };
     };
 
-    struct ShaderLegacyArg
+    struct ShaderArg
     {
         DirectX::XMFLOAT4                    vector[512];
         DirectX::XMMATRIX                    matrix[512];
@@ -247,8 +253,12 @@ private:
     RSCache                                             m_rsCache;
     BSCache                                             m_bsCache;
 
-    ID3D11Buffer*                                       m_vertexShaderLegacyargsBuffer{ nullptr };
-    ID3D11Buffer*                                       m_pixelShaderLegacyargsBuffer{ nullptr };
+    ID3D11Buffer*                                       m_vertexShaderArgsBuffer{ nullptr };
+    ID3D11Buffer*                                       m_pixelShaderArgsBuffer{ nullptr };
+
+    ShaderArg                                           m_vertexshader_args;
+    ShaderArg                                           m_pixelshader_args;
+
 
     D3D11_VIEWPORT                                      m_mainScreenViewport;
 
@@ -281,8 +291,12 @@ private:
 
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
 
-
     HRESULT compileShaderFromMem(void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut);
+
+    void set_vertexshader_constants_vec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
+    void set_pixelshader_constants_vec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
+    void set_vertexshader_constants_mat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
+    void set_pixelshader_constants_mat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
 
     ///////////////////////////////////////////////////////////////////////////////
 

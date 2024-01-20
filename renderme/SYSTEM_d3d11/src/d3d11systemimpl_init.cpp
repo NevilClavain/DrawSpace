@@ -414,14 +414,14 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	ZeroMemory(&bd, sizeof(bd));
 
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(ShaderLegacyArg);
+	bd.ByteWidth = sizeof(ShaderArg);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 
-	hRes = m_lpd3ddevice->CreateBuffer(&bd, nullptr, &m_vertexShaderLegacyargsBuffer);
+	hRes = m_lpd3ddevice->CreateBuffer(&bd, nullptr, &m_vertexShaderArgsBuffer);
 	D3D11_CHECK(CreateBuffer);
 
-	hRes = m_lpd3ddevice->CreateBuffer(&bd, nullptr, &m_pixelShaderLegacyargsBuffer);
+	hRes = m_lpd3ddevice->CreateBuffer(&bd, nullptr, &m_pixelShaderArgsBuffer);
 	D3D11_CHECK(CreateBuffer);
 
 	/////////////////////////////////////////////////////////////////////////////

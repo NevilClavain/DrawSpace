@@ -310,6 +310,10 @@ ALL_BUILD.vcxproj*
 /renderme/RENDERING_control/*.sln
 /renderme/RENDERING_control/*.vcxproj*
 
+/renderme/TRANSFORM_control/CMakeFiles/
+/renderme/TRANSFORM_control/*.sln
+/renderme/TRANSFORM_control/*.vcxproj*
+
 
 /renderme/SYSTEM_d3d11/CMakeFiles/
 /renderme/SYSTEM_d3d11/*.sln
