@@ -38,12 +38,12 @@ namespace renderMe
 			MatrixChain(int p_nbmat);
 			~MatrixChain() = default;
 
-			void    pushMatrix(const renderMe::core::maths::Matrix& p_matrix);
-			void    updateMatrix(size_t p_index, const renderMe::core::maths::Matrix& p_mat);
-			void	reset();
+			void					pushMatrix(const renderMe::core::maths::Matrix& p_matrix);
+			void					updateMatrix(size_t p_index, const renderMe::core::maths::Matrix& p_mat);
+			void					reset();
 
-			void    buildResult(void);
-			void    getResultTransform(renderMe::core::maths::Matrix& p_mat) const;
+			void					buildResult(void);
+			core::maths::Matrix		getResultTransform() const;
 
 		private:
 			std::vector<renderMe::core::maths::Matrix>	m_matrix_chain;

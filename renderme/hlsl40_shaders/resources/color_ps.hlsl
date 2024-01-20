@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-cbuffer legacyargs : register(b0)
+cbuffer constargs : register(b0)
 {
     float4 vec[512];
     Matrix mat[512];
@@ -36,5 +36,7 @@ struct PS_INTPUT
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {   
-    return vec[0];
+    //return vec[0];
+    float4 color = {1.0f, 1.0f, 1.0f, 1.0f };
+    return color;
 }

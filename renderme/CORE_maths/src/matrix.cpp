@@ -117,7 +117,7 @@ void Matrix::perspective(double p_w, double p_h, double p_zn, double p_zf)
     m_matrix[3][2] = -p_zn * m_matrix[2][2];
     m_matrix[2][3] = 1.0f;
 
-    m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
+    m_configinfos.type = ConfigurationType::CONFIG_PROJ;
 }
 
 

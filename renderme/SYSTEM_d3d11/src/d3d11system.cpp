@@ -355,8 +355,13 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 						const auto& lineMesheId{ lineMesheInfo.first };
 						d3dimpl->setLineMeshe(lineMesheId);
 
-						// TODO
-
+						std::vector<renderMe::rendering::LineDrawingControl> lineDrawingControls{ lineMesheInfo.second.list };
+						for (const auto& lc : lineDrawingControls)
+						{
+							lc.setup();
+							d3dimpl->drawLineMeshe(lc.world, lc.view, lc.proj);
+							lc.teardown();
+						}
 					}
 				}
 			}

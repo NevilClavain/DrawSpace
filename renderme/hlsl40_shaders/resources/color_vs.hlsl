@@ -22,7 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
-cbuffer legacyargs : register(b0)
+cbuffer constargs : register(b0)
 {
     float4 vec[512];
     Matrix mat[512];
@@ -48,7 +48,54 @@ VS_OUTPUT vs_main( VS_INPUT Input )
     pos.xyz = Input.Position;    
     pos.w = 1.0;
 
-    Output.Position = mul(pos, mat[matWorldViewProjection]);
+    Matrix myMat;
+
+    /*
+    myMat[0][0] = 2.0f;
+    myMat[0][1] = 0.0f;
+    myMat[0][2] = 0.0f;
+    myMat[0][3] = 0.0f;
+
+    myMat[1][0] = 0.0f;
+    myMat[1][1] = 3.111111111f;
+    myMat[1][2] = 0.0f;
+    myMat[1][3] = 0.0f;
+
+    myMat[2][0] = 0.0f;
+    myMat[2][1] = 0.0f;
+    myMat[2][2] = -1.00001f;
+    myMat[2][3] = 14.00014f;
+
+    myMat[3][0] = 0.0f;
+    myMat[3][1] = 0.0f;
+    myMat[3][2] = -1.0f;
+    myMat[3][3] = 15.0f;
+    */
+
+    
+    myMat[0][0] = 2.0f;
+    myMat[1][0] = 0.0f;
+    myMat[2][0] = 0.0f;
+    myMat[3][0] = 0.0f;
+
+    myMat[0][1] = 0.0f;
+    myMat[1][1] = 3.111111111f;
+    myMat[2][1] = 0.0f;
+    myMat[3][1] = 0.0f;
+
+    myMat[0][2] = 0.0f;
+    myMat[1][2] = 0.0f;
+    myMat[2][2] = -1.00001f;
+    myMat[3][2] = 14.00014f;
+
+    myMat[0][3] = 0.0f;
+    myMat[1][3] = 0.0f;
+    myMat[2][3] = -1.0f;
+    myMat[3][3] = 15.0f;
+    
+
+    //Output.Position = mul(pos, mat[matWorldViewProjection]);
+    Output.Position = mul(pos, myMat);
       
     return( Output );   
 }

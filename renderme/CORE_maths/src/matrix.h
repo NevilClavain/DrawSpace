@@ -44,13 +44,14 @@ namespace renderMe
                     CONFIG_IDENTITY,
                     CONFIG_TRANSLATION,
                     CONFIG_SCALING,
-                    CONFIG_ROTATION
+                    CONFIG_ROTATION,
+                    CONFIG_PROJ
 
                 };
 
                 struct ConfigurationInfo
                 {
-                    ConfigurationType   type;
+                    ConfigurationType   type{ ConfigurationType::CONFIG_UNDETERMINED };
                     Real4Vector         values;
                 };
 
@@ -100,3 +101,5 @@ namespace renderMe
         }
 	}
 }
+
+renderMe::core::maths::Matrix operator* (renderMe::core::maths::Matrix p_mA, renderMe::core::maths::Matrix p_mB);

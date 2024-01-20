@@ -74,20 +74,18 @@ void MatrixChain::buildResult(void)
 {
     if (m_matrix_chain.size() > 0)
     {
-        Matrix stack = m_matrix_chain.at(0);
+        Matrix stack{ m_matrix_chain.at(0) };
         for (unsigned long i = 1; i < m_matrix_chain.size(); i++)
         {
-            Matrix res, current;
-
-            current = m_matrix_chain[i];
-            Matrix::matrixMult(&current, &stack, &res);
+            Matrix res;
+            Matrix::matrixMult(&m_matrix_chain[i], &stack, &res);
             stack = res;
         }
         m_result = stack;
     }
 }
 
-void MatrixChain::getResultTransform(renderMe::core::maths::Matrix& p_mat) const
+renderMe::core::maths::Matrix MatrixChain::getResultTransform() const
 {
-    p_mat = m_result;
+    return m_result;
 }

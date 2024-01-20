@@ -370,9 +370,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	
 		rendering::LineDrawingControl lineDrawingControl;
 		
-		lineDrawingControl.world.translation(0.0, 0.0, -5.0);
+		lineDrawingControl.world.translation(0.0, 0.0, -15.0);
 		lineDrawingControl.view.identity();		
-		lineDrawingControl.proj.perspective(1.0, 0.75, 0.0, 10.0);
+		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 	
 		////////
 

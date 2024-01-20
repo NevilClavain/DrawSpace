@@ -191,7 +191,8 @@ private:
     struct ShaderArg
     {
         DirectX::XMFLOAT4                    vector[512];
-        DirectX::XMMATRIX                    matrix[512];
+        //DirectX::XMMATRIX                    matrix[512];
+        DirectX::XMFLOAT4X4                    matrix[512];
     };
 
     struct VertexShadersData
