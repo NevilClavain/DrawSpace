@@ -269,8 +269,6 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	//////////////////////////////////////////////////////////////////////
 
-	//lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
 
@@ -349,7 +347,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	// default renderstate description
 	D3D11_RASTERIZER_DESC rsDesc;
 
-	rsDesc.FillMode = D3D11_FILL_WIREFRAME;//D3D11_FILL_SOLID;
+	rsDesc.FillMode = D3D11_FILL_SOLID;
 
 	// dans d3d9, le cull mode par defaut est ccw (cf doc)
 	// donc idem ici

@@ -350,6 +350,11 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 					d3dimpl->setCacheRS();
 					d3dimpl->setCacheBlendstate();
 
+					if (renderStatesInfo.second.list.size() > 0)
+					{
+						d3dimpl->setLineListTopology();
+					}
+					
 					for (const auto& lineMesheInfo : renderStatesInfo.second.list)
 					{
 						const auto& lineMesheId{ lineMesheInfo.first };

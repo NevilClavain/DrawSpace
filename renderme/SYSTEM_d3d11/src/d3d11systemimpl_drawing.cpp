@@ -30,10 +30,7 @@ using namespace renderMe::core::maths;
 using namespace renderMe::transform;
 
 void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj)
-{
-
-    m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
+{   
     // setting transformation    
     Matrix inv;    
     inv.identity();

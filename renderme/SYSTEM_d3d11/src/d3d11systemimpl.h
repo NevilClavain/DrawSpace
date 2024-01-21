@@ -161,6 +161,8 @@ public:
     void setPSSamplers(const renderMe::RenderState& p_renderstate);
     void setVSSamplers(const renderMe::RenderState& p_renderstate);
 
+    void setTriangleListTopology();
+    void setLineListTopology();
 
     void drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
 

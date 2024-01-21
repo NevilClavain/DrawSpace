@@ -107,3 +107,13 @@ void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::
 	spriteFont->DrawString(spriteBatch, p_text.c_str(), pos, color, p_rotation);
 	spriteBatch->End();
 }
+
+void D3D11SystemImpl::setTriangleListTopology()
+{
+	m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void D3D11SystemImpl::setLineListTopology()
+{
+	m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+}
