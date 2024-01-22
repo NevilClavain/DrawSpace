@@ -1,0 +1,9 @@
+{
+  "inputs": [
+    {
+      "id": "color",
+      "type": "vector_4_floats",
+      "register": 0
+    }
+  ]
+}
