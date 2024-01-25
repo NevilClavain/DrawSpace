@@ -35,6 +35,12 @@ file(
 		${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources/*_ps.hlsl
 )
 
+file(
+        GLOB_RECURSE
+        json_files
+		${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources/*.json
+)
+
 set_property(SOURCE ${ps_source_files} PROPERTY VS_SHADER_TYPE Pixel)
 set_property(SOURCE ${ps_source_files} PROPERTY VS_SHADER_MODEL 4.0)
 set_property(SOURCE ${ps_source_files} PROPERTY VS_SHADER_DISABLE_OPTIMIZATIONS False)
@@ -48,6 +54,7 @@ set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENABLE_DEBUG False)
 set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENTRYPOINT vs_main)
 
 add_custom_target(hlsl40_shaders SOURCES ${vs_source_files} ${ps_source_files})
+add_custom_target(hlsl40_shaders_metadata SOURCES ${json_files})
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/shaders)
 

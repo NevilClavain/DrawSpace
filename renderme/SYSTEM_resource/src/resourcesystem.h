@@ -34,6 +34,7 @@
 #include "runner.h"
 #include "eventsource.h"
 #include "buffer.h"
+#include "json.h"
 
 
 namespace renderMe
@@ -64,11 +65,12 @@ namespace renderMe
         void killRunner();
 
     private:
-        renderMe::core::logger::Sink        m_localLogger;
-        renderMe::core::logger::Sink        m_localLoggerRunner;
-        const std::string                   m_shadersBasePath{ "./shaders/resources" };
-        const std::string                   m_shadersCachePath{ "./bc_cache" };
+        renderMe::core::logger::Sink                            m_localLogger;
+        renderMe::core::logger::Sink                            m_localLoggerRunner;
+        const std::string                                       m_shadersBasePath{ "./shaders/resources" };
+        const std::string                                       m_shadersCachePath{ "./bc_cache" };
 
+        renderMe::core::Json::Callback	                        m_cb;
 
         static constexpr unsigned int                           nbRunners{ 2 };
         std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;

@@ -28,8 +28,13 @@
 
 #include <string>
 #include <mutex>
+#include <vector>
 
 #include "buffer.h"
+
+#include "matrix.h"
+#include "tvector.h"
+
 
 
 namespace renderMe
@@ -37,6 +42,19 @@ namespace renderMe
     class Shader
     {
     public:
+
+        struct Argument
+        {
+        public:
+            std::string                 argument_id;
+            
+            std::string                 argument_type;
+            core::maths::Matrix         matrix;
+            core::maths::Real4Vector    real4vector;
+
+            int                         shader_register;
+        };
+
         Shader() = delete;
         Shader(const std::string& p_name, int p_type);
         Shader(const Shader& p_other);
@@ -85,17 +103,19 @@ namespace renderMe
 
     private:
 
-        std::string         m_name;
-        std::string         m_content;
-        std::string         m_contentMD5;
-        size_t              m_contentSize{ 0 };
+        std::string             m_name;
+        std::string             m_content;
+        std::string             m_contentMD5;
+        size_t                  m_contentSize{ 0 };
 
-        int                 m_type; //0 = vertex shader, 1 = pixel shader
+        int                     m_type; //0 = vertex shader, 1 = pixel shader
 
-        core::Buffer<char>  m_code;
+        core::Buffer<char>      m_code;
 
-        mutable std::mutex	m_state_mutex;
-        State               m_state{ State::INIT };
+        mutable std::mutex	    m_state_mutex;
+        State                   m_state{ State::INIT };
+
+        std::vector<Argument>   m_arguments;
     };
 }
 

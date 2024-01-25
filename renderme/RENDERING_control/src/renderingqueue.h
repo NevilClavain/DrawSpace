@@ -109,12 +109,18 @@ namespace renderMe
 
 			struct PixelShaderPayload
 			{
+				// TODO : shader arguments list 
+				// ...
+
 				// key = renderstate set strings dump concatenation (RenderState::toString())
 				std::unordered_map<std::string, RenderStatePayload> list;
 			};
 
 			struct VertexShaderPayload
 			{
+				// TODO : shader arguments list 
+				// ...
+
 				// key = pixel shader D3D11 id
 				std::unordered_map<std::string, PixelShaderPayload> list;
 			};

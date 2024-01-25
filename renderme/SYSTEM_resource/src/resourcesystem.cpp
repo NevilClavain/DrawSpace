@@ -93,6 +93,66 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 		m_runner[i].get()->registerSubscriber(cb);
 		m_runner[i].get()->startup();
 	}
+
+	//// for shaders json metadata parsing
+
+	m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+	{
+		static std::string		section_name;
+		static Shader::Argument s_argument;
+
+		switch (p_event)
+		{
+			/*
+			case renderMe::core::JSONEvent::OBJECT_BEGIN:
+
+				break;
+
+			case renderMe::core::JSONEvent::OBJECT_END:
+
+				break;
+			*/
+
+			case renderMe::core::JSONEvent::ARRAY_BEGIN:
+
+				section_name = p_id;
+				break;
+
+			case renderMe::core::JSONEvent::ARRAY_END:
+
+				if ("inputs" == section_name)
+				{
+					section_name = "";
+				}
+				break;
+
+			case renderMe::core::JSONEvent::STRING:
+
+				if ("inputs" == section_name)
+				{
+					if ("type" == p_id)
+					{
+						s_argument.argument_type = p_value;
+					}
+					else if ("argument_id" == p_id)
+					{
+						s_argument.argument_id = p_value;
+					}
+				}
+				break;
+			
+			case renderMe::core::JSONEvent::PRIMITIVE:
+
+				if ("inputs" == section_name)
+				{
+					if ("register" == p_id)
+					{
+						s_argument.shader_register = std::atoi(p_value.c_str());
+					}
+				}
+				break;			
+		}
+	};
 }
 
 ResourceSystem::~ResourceSystem()
@@ -147,7 +207,8 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.getName() + " shader type = " + std::to_string(shaderType));
 
 			// build full path
-			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.getName() };
+			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.getName() + ".hlsl"};
+			const auto shader_metadata_path{ m_shadersBasePath + "/" + shaderInfos.getName() + ".json" };
 			try
 			{
 				renderMe::core::FileContent<const char> shader_src_content(shader_path);
@@ -294,9 +355,29 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					}
 
 				}
+
+				///// manage metadata json file
+
+				renderMe::core::FileContent<const char> shadermetadata_src_content(shader_metadata_path);
+				shadermetadata_src_content.load();
+
+				const auto metadataSize{ shadermetadata_src_content.getDataSize() };
+				const std::string metadata(shadermetadata_src_content.getData(), metadataSize);
+
+				renderMe::core::Json jsonParser;
+
+				jsonParser.registerSubscriber(m_cb);
+
+				const auto logParseStatus{ jsonParser.parse(metadata) };
+
+				if (logParseStatus < 0)
+				{
+					_EXCEPTION("JSON parse error on " + shader_metadata_path);
+				}
+
+				////////////////////////////////
 				
 				shaderInfos.setState(Shader::State::BLOBLOADED);
-
 			}
 			catch (const std::exception& e)
 			{

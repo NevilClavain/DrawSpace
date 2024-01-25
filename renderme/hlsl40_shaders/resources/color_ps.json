@@ -1,9 +1,10 @@
 {
   "inputs": [
     {
-      "id": "color",
+      "argument_id":  "color",
       "type": "vector_4_floats",
-      "register": 0
+      "register": 0,
+      "description": "color value"
     }
   ]
 }
