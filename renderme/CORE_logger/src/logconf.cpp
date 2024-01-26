@@ -35,7 +35,7 @@ logger::Configuration::Configuration( void )
 {
     m_baseTick = ::GetTickCount();
 
-    m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+    m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<renderMe::core::DefaultUserData*>&)
     {
         switch (p_event)
         {

@@ -52,7 +52,7 @@ namespace renderMe
             core::maths::Matrix         matrix;
             core::maths::Real4Vector    real4vector;
 
-            int                         shader_register;
+            int                         shader_register{ -1 };
         };
 
         Shader() = delete;

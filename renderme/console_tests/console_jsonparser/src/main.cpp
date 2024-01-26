@@ -40,9 +40,9 @@ int main( int argc, char* argv[] )
 		const auto dataSize{ fc.getDataSize() };
 		const std::string data(fc.getData(), dataSize);
 
-		renderMe::core::Json jsonParser;
+		renderMe::core::Json<> jsonParser;
 
-		jsonParser.registerSubscriber([] (renderMe::core::JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+		jsonParser.registerSubscriber([] (renderMe::core::JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<renderMe::core::DefaultUserData*>&)
 		{
 			switch (p_event)
 			{
@@ -79,7 +79,7 @@ int main( int argc, char* argv[] )
 			}
 		});
 
-		const auto parseStatus{ jsonParser.parse(data) };
+		const int parseStatus{ jsonParser.parse(data) };
 
 		std::cout << "Parser status = " << (parseStatus > -1 ? "OK" : "KO") << "\n";
 

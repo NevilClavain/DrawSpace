@@ -70,7 +70,7 @@ namespace renderMe
         const std::string                                       m_shadersBasePath{ "./shaders/resources" };
         const std::string                                       m_shadersCachePath{ "./bc_cache" };
 
-        renderMe::core::Json::Callback	                        m_cb;
+        renderMe::core::Json<Shader>::Callback	                m_cb;
 
         static constexpr unsigned int                           nbRunners{ 2 };
         std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;

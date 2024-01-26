@@ -48,7 +48,7 @@ static renderMe::core::logger::Sink localLogger("App", renderMe::core::logger::C
 
 App::App()
 {
-    m_json_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+    m_json_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<renderMe::core::DefaultUserData*>&)
     {
         switch (p_event)
         {
@@ -137,7 +137,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
         const std::string data(logConfFileContent.getData(), dataSize);
 
         // set static to spare some space on stack // compiler message
-        static renderMe::core::Json jsonParser;
+        static renderMe::core::Json<> jsonParser;
         jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
         const auto logParseStatus{ jsonParser.parse(data) };
@@ -159,7 +159,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
         const std::string data(rtConfFileContent.getData(), dataSize);
 
         // set static to spare some space on stack // compiler message
-        static renderMe::core::Json jsonParser;
+        static renderMe::core::Json<> jsonParser;
         jsonParser.registerSubscriber(m_json_cb);
 
         const auto rtParseStatus{ jsonParser.parse(data) };

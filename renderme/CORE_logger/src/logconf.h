@@ -52,14 +52,14 @@ namespace renderMe
                 LONGLONG                getLastTick(void) const;
 
 
-                Json::Callback getCallback() const
+                Json<>::Callback getCallback() const
                 {
                     return m_cb;
                 }
 
             private:
 
-                Json::Callback	                                                m_cb;
+                Json<>::Callback	                                                m_cb;
 
                 std::unordered_map<std::string, std::unique_ptr<Output>>        m_outputs;
 

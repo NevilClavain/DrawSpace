@@ -96,10 +96,10 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 	//// for shaders json metadata parsing
 
-	m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value)
+	m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>&)
 	{
-		static std::string		section_name;
-		static Shader::Argument s_argument;
+		static			std::string			section_name;
+		thread_local	Shader::Argument	s_argument;
 
 		switch (p_event)
 		{
@@ -364,7 +364,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				const auto metadataSize{ shadermetadata_src_content.getDataSize() };
 				const std::string metadata(shadermetadata_src_content.getData(), metadataSize);
 
-				renderMe::core::Json jsonParser;
+				renderMe::core::Json<Shader> jsonParser;
 
 				jsonParser.registerSubscriber(m_cb);
 

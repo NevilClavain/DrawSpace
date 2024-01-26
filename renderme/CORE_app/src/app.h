@@ -74,7 +74,7 @@ namespace renderMe
             long                                    m_mouselclick_pos       { 0 };
             long                                    m_mouserclick_pos       { 0 };
 
-            Json::Callback	                        m_json_cb;
+            Json<>::Callback	                    m_json_cb;
 
             enum class JSONParsingMode
             {
