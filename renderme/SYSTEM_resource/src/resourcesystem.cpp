@@ -96,23 +96,15 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 	//// for shaders json metadata parsing
 
-	m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>&)
+	m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>& p_shader_opt)
 	{
 		static			std::string			section_name;
 		thread_local	Shader::Argument	s_argument;
 
+		Shader* shader_dest { p_shader_opt.value()};
+
 		switch (p_event)
 		{
-			/*
-			case renderMe::core::JSONEvent::OBJECT_BEGIN:
-
-				break;
-
-			case renderMe::core::JSONEvent::OBJECT_END:
-
-				break;
-			*/
-
 			case renderMe::core::JSONEvent::ARRAY_BEGIN:
 
 				section_name = p_id;
@@ -123,6 +115,11 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 				if ("inputs" == section_name)
 				{
 					section_name = "";
+
+					if (s_argument.shader_register > -1)
+					{
+						shader_dest->addArgument(s_argument);
+					}					
 				}
 				break;
 
@@ -368,7 +365,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 				jsonParser.registerSubscriber(m_cb);
 
-				const auto logParseStatus{ jsonParser.parse(metadata) };
+				const auto logParseStatus{ jsonParser.parse(metadata, &shaderInfos) };
 
 				if (logParseStatus < 0)
 				{

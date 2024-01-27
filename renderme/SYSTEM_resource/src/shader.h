@@ -101,6 +101,8 @@ namespace renderMe
         const core::Buffer<char>& getCode() const;
         void setCode(const core::Buffer<char>& p_code);
 
+        void addArgument(const Argument& p_arg);
+
     private:
 
         std::string             m_name;
