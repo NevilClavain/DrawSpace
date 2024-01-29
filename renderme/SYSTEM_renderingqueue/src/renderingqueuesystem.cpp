@@ -229,16 +229,16 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 							{
 								// insert new branch
 
-								rendering::Queue::LineMeshePayload lineMeshePayload;
+								rendering::Queue::LineDrawPayload lineDrawPayload;
 								for (const auto& e : linesDrawingControls)
 								{
 									auto& linesDrawingControl{ e->getPurpose() };
 									linesDrawingControl.ready = true;
-									lineMeshePayload.list.push_back(linesDrawingControl);									
+									lineDrawPayload.list.push_back(linesDrawingControl);
 								}
 
 								rendering::Queue::RenderStatePayload renderStatePayload;
-								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
+								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineDrawPayload;
 								renderStatePayload.description = rsStates.at(0)->getPurpose();
 
 								rendering::Queue::PixelShaderPayload pixelShaderPayload;

@@ -338,7 +338,6 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		circle_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
 		circle_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
 
-
 		/////////// Add linemeshe
 
 		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
@@ -373,10 +372,13 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		lineDrawingControl.world.translation(0.0, 0.0, -5.0);
 		lineDrawingControl.view.identity();		
 		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
-	
-		////////
 
+		lineDrawingControl.pshaders_map.push_back(std::make_pair("mycolor", "color"));
+
+	
 		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+
+
 	}
 	
 }

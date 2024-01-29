@@ -33,7 +33,7 @@
 #include "tvector.h"
 #include "matrix.h"
 #include "renderstate.h"
-
+#include "shader.h"
 
 namespace renderMe
 {
@@ -64,6 +64,10 @@ namespace renderMe
 
 			std::function<void()> setup{ [] {} };
 			std::function<void()> teardown{ [] {} };
+
+			std::vector<std::pair<std::string, std::string>> vshaders_map;
+			std::vector<std::pair<std::string, std::string>> pshaders_map;
+
 		};
 
 		class Queue
@@ -93,9 +97,16 @@ namespace renderMe
 				float								rotation_rad{ 0.0 };
 			};
 						
-			struct LineMeshePayload
+			struct LineDrawPayload
 			{
 				std::vector<LineDrawingControl> list;
+
+				// shaders params to apply for each LineDrawingControl
+				// 
+				// list of association (pair) : dataCloud variable id/shader argument
+				std::vector<std::vector<std::pair<std::string, renderMe::Shader::Argument>>> vertex_shader_args;
+				// list of association (pair) : dataCloud variable id/shader argument
+				std::vector<std::vector<std::pair<std::string, renderMe::Shader::Argument>>> pixel_shader_args;
 			};
 
 			struct RenderStatePayload
@@ -104,30 +115,23 @@ namespace renderMe
 				std::vector<RenderState>							description;
 
 				// key = lineMeshe D3D11 id
-				std::unordered_map<std::string, LineMeshePayload>	list;
+				std::unordered_map<std::string, LineDrawPayload>	list;
 			};
 
 			struct PixelShaderPayload
 			{
-				// TODO : shader arguments list 
-				// ...
-
 				// key = renderstate set strings dump concatenation (RenderState::toString())
 				std::unordered_map<std::string, RenderStatePayload> list;
 			};
 
 			struct VertexShaderPayload
 			{
-				// TODO : shader arguments list 
-				// ...
-
 				// key = pixel shader D3D11 id
 				std::unordered_map<std::string, PixelShaderPayload> list;
 			};
 
 			// key = vertex shader D3D11 id
 			using QueueNodes = std::unordered_map<std::string, VertexShaderPayload>;
-
 
 			////////////////////////////////////////////////////////////////////
 
