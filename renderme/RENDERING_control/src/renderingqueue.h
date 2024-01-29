@@ -65,8 +65,15 @@ namespace renderMe
 			std::function<void()> setup{ [] {} };
 			std::function<void()> teardown{ [] {} };
 
+			//shaders params mapping description
+			// dataCloud variable id / shader argument section id in shader json
 			std::vector<std::pair<std::string, std::string>> vshaders_map;
 			std::vector<std::pair<std::string, std::string>> pshaders_map;
+
+			// shaders params to apply
+			// dataCloud variable id/shader argument
+			std::vector<std::pair<std::string, renderMe::Shader::Argument>> vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
+			std::vector<std::pair<std::string, renderMe::Shader::Argument>> pshaders_map_cnx; // computed from pshaders_map and the queue current pshader
 
 		};
 
@@ -100,13 +107,6 @@ namespace renderMe
 			struct LineDrawPayload
 			{
 				std::vector<LineDrawingControl> list;
-
-				// shaders params to apply for each LineDrawingControl
-				// 
-				// list of association (pair) : dataCloud variable id/shader argument
-				std::vector<std::vector<std::pair<std::string, renderMe::Shader::Argument>>> vertex_shader_args;
-				// list of association (pair) : dataCloud variable id/shader argument
-				std::vector<std::vector<std::pair<std::string, renderMe::Shader::Argument>>> pixel_shader_args;
 			};
 
 			struct RenderStatePayload
