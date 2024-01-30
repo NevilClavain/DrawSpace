@@ -237,6 +237,34 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 								{
 									auto& linesDrawingControl{ e->getPurpose() };
 									linesDrawingControl.ready = true;
+
+									//vshader arguments id match loop
+									for (const auto& e : vshaders_current_args)
+									{
+										const auto argument_id{ e.argument_id };
+										for (const auto& e2 : linesDrawingControl.vshaders_map)
+										{
+											if (argument_id == e2.second)
+											{
+												linesDrawingControl.vshaders_map_cnx.push_back(std::make_pair(e2.first, e));
+											}
+										}
+									}
+
+									//pshader arguments id match loop
+									for (const auto& e : pshaders_current_args)
+									{
+										const auto argument_id{ e.argument_id };
+										for (const auto& e2 : linesDrawingControl.pshaders_map)
+										{
+											if (argument_id == e2.second)
+											{
+												linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(e2.first, e));
+											}
+										}
+									}
+
+
 									lineDrawPayload.list.push_back(linesDrawingControl);
 								}
 
