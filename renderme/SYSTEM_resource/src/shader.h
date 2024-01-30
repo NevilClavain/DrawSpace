@@ -74,6 +74,8 @@ namespace renderMe
             p_other.m_state_mutex.unlock();
             m_state_mutex.unlock();
 
+            m_arguments = p_other.m_arguments;
+
             return *this;
         }
 
@@ -103,6 +105,8 @@ namespace renderMe
 
         void addArgument(const Argument& p_arg);
 
+        std::vector<Argument> getArguments() const;
+
     private:
 
         std::string             m_name;
@@ -118,6 +122,9 @@ namespace renderMe
         State                   m_state{ State::INIT };
 
         std::vector<Argument>   m_arguments;
+
+        // IF NEW MEMBERS HERE :
+        // UPDATE COPY CTOR AND OPERATOR !!!!!!
     };
 }
 

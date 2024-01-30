@@ -229,6 +229,9 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 							{
 								// insert new branch
 
+								const auto vshaders_current_args{ vshader.getArguments() };
+								const auto pshaders_current_args{ pshader.getArguments() };
+
 								rendering::Queue::LineDrawPayload lineDrawPayload;
 								for (const auto& e : linesDrawingControls)
 								{

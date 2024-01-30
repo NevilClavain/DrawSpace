@@ -47,6 +47,8 @@ Shader::Shader(const Shader& p_other)
     m_state = p_other.m_state;
     p_other.m_state_mutex.unlock();
     m_state_mutex.unlock();
+
+    m_arguments = p_other.m_arguments;
 }
 
 std::string Shader::getName() const
@@ -117,4 +119,9 @@ int Shader::getType() const
 void Shader::addArgument(const Argument& p_arg)
 {
     m_arguments.push_back(p_arg);
+}
+
+std::vector<Shader::Argument> Shader::getArguments() const
+{
+    return m_arguments;
 }
