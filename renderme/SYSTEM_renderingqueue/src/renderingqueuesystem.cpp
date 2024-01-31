@@ -34,6 +34,7 @@
 using namespace renderMe;
 using namespace renderMe::core;
 
+
 RenderingQueueSystem::RenderingQueueSystem(Entitygraph& p_entitygraph) : System(p_entitygraph),
 m_localLogger("RenderingQueueSystem", renderMe::core::logger::Configuration::getInstance())
 {
@@ -201,7 +202,7 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 			const auto lineMeshes{ p_resourceAspect.getComponentsByType<LineMeshe>() };
 
 			// search rendering states
-			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<RenderState>>() };
+			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<renderMe::rendering::RenderState>>() };
 
 			//search for shaders
 			const auto shaders{ p_resourceAspect.getComponentsByType<Shader>() };

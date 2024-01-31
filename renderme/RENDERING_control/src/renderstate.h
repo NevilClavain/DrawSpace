@@ -28,46 +28,49 @@
 
 namespace renderMe
 {
-    class RenderState
+    namespace rendering
     {
-    public:
-
-        enum class Operation
+        class RenderState
         {
-            NONE,
-            SETCULLING,
-            ENABLEZBUFFER,
-            SETTEXTUREFILTERTYPE,
-            SETVERTEXTEXTUREFILTERTYPE,
-            SETFILLMODE,
-            ALPHABLENDENABLE,
-            ALPHABLENDOP,
-            ALPHABLENDFUNC,
-            ALPHABLENDDEST,
-            ALPHABLENDSRC,
+        public:
+
+            enum class Operation
+            {
+                NONE,
+                SETCULLING,
+                ENABLEZBUFFER,
+                SETTEXTUREFILTERTYPE,
+                SETVERTEXTEXTUREFILTERTYPE,
+                SETFILLMODE,
+                ALPHABLENDENABLE,
+                ALPHABLENDOP,
+                ALPHABLENDFUNC,
+                ALPHABLENDDEST,
+                ALPHABLENDSRC,
+            };
+
+            RenderState(void) = default;
+            RenderState(Operation p_operation, const std::string& p_arg);
+            ~RenderState() = default;
+
+            void setOperation(Operation p_operation);
+            void setArg(const std::string& p_arg);
+            void setExtendedArgs(const std::vector<std::string>& p_args);
+
+            void clearExtendedArgs(void);
+            void pushExtendedArg(const std::string& p_arg);
+
+            std::string toString(void) const;
+
+            Operation getOperation(void) const;
+            std::string getArg(void) const;
+            std::vector<std::string> getExtendedArgs(void) const;
+
+        private:
+            std::string                             m_arg;         //argument operation renderstate, sous forme de chaine ascii
+            std::vector<std::string>                m_extendedargs;
+
+            Operation                               m_operation{ Operation::NONE };
         };
-
-        RenderState(void) = default;
-        RenderState(Operation p_operation, const std::string& p_arg);
-        ~RenderState() = default;
-
-        void setOperation(Operation p_operation);
-        void setArg(const std::string& p_arg);
-        void setExtendedArgs(const std::vector<std::string>& p_args);
-
-        void clearExtendedArgs(void);
-        void pushExtendedArg(const std::string& p_arg);
-
-        std::string toString(void) const;
-
-        Operation getOperation(void) const;
-        std::string getArg(void) const;
-        std::vector<std::string> getExtendedArgs(void) const;
-
-    private:
-        std::string                             m_arg;         //argument operation renderstate, sous forme de chaine ascii
-        std::vector<std::string>                m_extendedargs;
-
-        Operation                               m_operation{ Operation::NONE };
-    };
+    }
 }

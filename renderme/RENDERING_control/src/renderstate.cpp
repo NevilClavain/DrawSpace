@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include "renderstate.h"
 
-using namespace renderMe;
+using namespace renderMe::rendering;
 
 RenderState::RenderState(Operation p_operation, const std::string& p_arg) :
 m_operation(p_operation),

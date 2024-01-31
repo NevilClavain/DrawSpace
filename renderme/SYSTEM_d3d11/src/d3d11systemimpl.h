@@ -150,16 +150,16 @@ public:
     void setLineMeshe(const std::string& p_name);
     void destroyLineMeshe(const std::string& p_name);
 
-    void prepareRenderState(const renderMe::RenderState& p_renderstate); // update struct
+    void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
     bool setCacheRS(); // apply
 
-    void prepareBlendState(const renderMe::RenderState& p_renderstate); // update struct    
+    void prepareBlendState(const renderMe::rendering::RenderState& p_renderstate); // update struct    
     bool setCacheBlendstate(); // apply
 
-    void setDepthStenciState(const renderMe::RenderState& p_renderstate);
+    void setDepthStenciState(const renderMe::rendering::RenderState& p_renderstate);
 
-    void setPSSamplers(const renderMe::RenderState& p_renderstate);
-    void setVSSamplers(const renderMe::RenderState& p_renderstate);
+    void setPSSamplers(const renderMe::rendering::RenderState& p_renderstate);
+    void setVSSamplers(const renderMe::rendering::RenderState& p_renderstate);
 
     void setTriangleListTopology();
     void setLineListTopology();

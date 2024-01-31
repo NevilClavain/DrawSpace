@@ -45,6 +45,7 @@
 
 using namespace renderMe;
 using namespace renderMe::core;
+using namespace renderMe::rendering;
 
 
 RootImpl::RootImpl()

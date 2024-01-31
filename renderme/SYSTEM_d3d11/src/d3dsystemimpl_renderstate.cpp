@@ -25,10 +25,10 @@
 #include "d3d11systemimpl.h"
 #include "md5.h"
 
-void D3D11SystemImpl::setDepthStenciState(const renderMe::RenderState& p_renderstate)
+void D3D11SystemImpl::setDepthStenciState(const renderMe::rendering::RenderState& p_renderstate)
 {
     const auto arg{ p_renderstate.getArg() };
-    if (renderMe::RenderState::Operation::ENABLEZBUFFER == p_renderstate.getOperation())
+    if (renderMe::rendering::RenderState::Operation::ENABLEZBUFFER == p_renderstate.getOperation())
     {
         if (m_currentDepthStencilState != arg)
         {
@@ -45,7 +45,7 @@ void D3D11SystemImpl::setDepthStenciState(const renderMe::RenderState& p_renders
     }
 }
 
-void D3D11SystemImpl::setPSSamplers(const renderMe::RenderState& p_renderstate)
+void D3D11SystemImpl::setPSSamplers(const renderMe::rendering::RenderState& p_renderstate)
 {
     static const std::map<std::string, ID3D11SamplerState*> translate_samplerstate =
     {
@@ -59,7 +59,7 @@ void D3D11SystemImpl::setPSSamplers(const renderMe::RenderState& p_renderstate)
     };
 
     const auto arg{ p_renderstate.getArg() };
-    if (renderMe::RenderState::Operation::SETTEXTUREFILTERTYPE == p_renderstate.getOperation())
+    if (renderMe::rendering::RenderState::Operation::SETTEXTUREFILTERTYPE == p_renderstate.getOperation())
     {
         if ("extended" == arg)
         {
@@ -93,7 +93,7 @@ void D3D11SystemImpl::setPSSamplers(const renderMe::RenderState& p_renderstate)
     }
 }
 
-void D3D11SystemImpl::setVSSamplers(const renderMe::RenderState& p_renderstate)
+void D3D11SystemImpl::setVSSamplers(const renderMe::rendering::RenderState& p_renderstate)
 {
     static const std::map<std::string, ID3D11SamplerState*> translate_samplerstate =
     {
@@ -107,7 +107,7 @@ void D3D11SystemImpl::setVSSamplers(const renderMe::RenderState& p_renderstate)
     };
 
     const auto arg{ p_renderstate.getArg() };
-    if (renderMe::RenderState::Operation::SETVERTEXTEXTUREFILTERTYPE == p_renderstate.getOperation())
+    if (renderMe::rendering::RenderState::Operation::SETVERTEXTEXTUREFILTERTYPE == p_renderstate.getOperation())
     {
         if ("extended" == arg)
         {
@@ -141,13 +141,13 @@ void D3D11SystemImpl::setVSSamplers(const renderMe::RenderState& p_renderstate)
     }
 }
 
-void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_renderstate)
+void D3D11SystemImpl::prepareBlendState(const renderMe::rendering::RenderState& p_renderstate)
 {
     const auto arg{ p_renderstate.getArg() };
 
     switch (p_renderstate.getOperation())
     {
-        case renderMe::RenderState::Operation::ALPHABLENDENABLE:
+        case renderMe::rendering::RenderState::Operation::ALPHABLENDENABLE:
         {
             if ("true" == arg)
             {
@@ -160,7 +160,7 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
         }
         break;
 
-        case renderMe::RenderState::Operation::ALPHABLENDOP:
+        case renderMe::rendering::RenderState::Operation::ALPHABLENDOP:
         {
             if ("add" == arg)
             {
@@ -190,7 +190,7 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
         }
         break;
 
-        case renderMe::RenderState::Operation::ALPHABLENDFUNC:
+        case renderMe::rendering::RenderState::Operation::ALPHABLENDFUNC:
         {
             if (arg != "always")
             {
@@ -199,7 +199,7 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
         }
         break;
 
-        case renderMe::RenderState::Operation::ALPHABLENDDEST:
+        case renderMe::rendering::RenderState::Operation::ALPHABLENDDEST:
         {
             if ("zero" == arg)
             {
@@ -254,7 +254,7 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
         }
         break;
 
-        case renderMe::RenderState::Operation::ALPHABLENDSRC:
+        case renderMe::rendering::RenderState::Operation::ALPHABLENDSRC:
         {
             if ("zero" == arg)
             {
@@ -311,13 +311,13 @@ void D3D11SystemImpl::prepareBlendState(const renderMe::RenderState& p_rendersta
     }
 }
 
-void D3D11SystemImpl::prepareRenderState(const renderMe::RenderState& p_renderstate)
+void D3D11SystemImpl::prepareRenderState(const renderMe::rendering::RenderState& p_renderstate)
 {
     const auto arg{ p_renderstate.getArg() };
    
     switch (p_renderstate.getOperation())
     {
-        case renderMe::RenderState::Operation::SETCULLING:
+        case renderMe::rendering::RenderState::Operation::SETCULLING:
         {           
             if ("none" == arg)
             {
@@ -341,7 +341,7 @@ void D3D11SystemImpl::prepareRenderState(const renderMe::RenderState& p_renderst
         }
         break;
 
-        case renderMe::RenderState::Operation::SETFILLMODE:
+        case renderMe::rendering::RenderState::Operation::SETFILLMODE:
         {
             if ("line" == arg)
             {
