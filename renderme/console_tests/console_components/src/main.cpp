@@ -49,11 +49,24 @@ int main( int argc, char* argv[] )
 
 	std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
 
-	const auto pi{ c.getComponent<double>("pi") };
-	const auto theString{ c.getComponent<std::string>("theString") };
+	{
+		const auto pi{ c.getComponent<double>("pi") };
+		const auto theString{ c.getComponent<std::string>("theString") };
 
-	std::cout << pi->getPurpose() << "\n";
-	std::cout << theString->getPurpose() << "\n";
+		std::cout << pi->getPurpose() << "\n";
+		std::cout << theString->getPurpose() << "\n";
+	}
+
+	// update
+	{
+		auto& pi{ c.getComponent<double>("pi")->getPurpose() };
+		pi = 3.12;
+	}
+	///
+	{
+		const auto pi{ c.getComponent<double>("pi") };
+		std::cout << pi->getPurpose() << "\n";
+	}
 
 	c.removeComponent<std::string>("theString");
 	c.removeComponent<double>("pi");
