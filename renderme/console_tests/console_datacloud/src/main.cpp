@@ -35,17 +35,47 @@ int main( int argc, char* argv[] )
 {    
 	std::cout << "Datacloud tests\n";
 
-	renderMe::rendering::Datacloud::getInstance()->registerData<Real4Vector>("mycolor");
+	const auto dataCloud { renderMe::rendering::Datacloud::getInstance() };
+
+	const auto cb{
+		[](renderMe::rendering::DatacloudEvent p_event, const std::string& p_id, const std::string& p_typeid)
+		{
+			switch (p_event)
+			{
+				case renderMe::rendering::DatacloudEvent::DATA_ADDED:
+
+					std::cout << "DATA_ADDED : " << p_id << " of type " << p_typeid << "\n";
+					break;
+
+				case renderMe::rendering::DatacloudEvent::DATA_REMOVED:
+
+					std::cout << "DATA_REMOVED : " << p_id << " of type " << p_typeid << "\n";
+					break;
+
+				case renderMe::rendering::DatacloudEvent::DATA_UPDATED:
+
+					std::cout << "DATA_UPDATED : " << p_id << " of type " << p_typeid << "\n";
+					break;
+
+			}
+		}
+	};
+		
+	dataCloud->registerSubscriber(cb);
+
+		
+
+	dataCloud->registerData<Real4Vector>("mycolor");
 
 	{
-		const auto mycolorVal{ renderMe::rendering::Datacloud::getInstance()->readDataValue<Real4Vector>("mycolor") };
+		const auto mycolorVal{ dataCloud->readDataValue<Real4Vector>("mycolor") };
 		std::cout << "mycolor = " << mycolorVal[0] << " " << mycolorVal[1] << " " << mycolorVal[2] << " " << mycolorVal[3] << "\n";
 	}
 
-	renderMe::rendering::Datacloud::getInstance()->updateData<Real4Vector>("mycolor", Real4Vector(0.3, 0.2, 0.1, 1.0));
+	dataCloud->updateData<Real4Vector>("mycolor", Real4Vector(0.3, 0.2, 0.1, 1.0));
 
 	{
-		const auto mycolorVal{ renderMe::rendering::Datacloud::getInstance()->readDataValue<Real4Vector>("mycolor") };
+		const auto mycolorVal{ dataCloud->readDataValue<Real4Vector>("mycolor") };
 		std::cout << "mycolor = " << mycolorVal[0] << " " << mycolorVal[1] << " " << mycolorVal[2] << " " << mycolorVal[3] << "\n";
 	}
 

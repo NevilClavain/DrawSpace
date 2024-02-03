@@ -151,101 +151,98 @@ namespace renderMe
 
                 switch (content_type)
                 {
-                case JSMN_OBJECT:
-                {
-                    for (const auto& call : m_callbacks)
+                    case JSMN_OBJECT:
                     {
-                        call(JSONEvent::OBJECT_BEGIN, id, -1, "", p_userData);
-                    }
-                    m_index++;
-
-                    for (size_t i = 0; i < content_size; i++)
-                    {
-                        recurs_analyze(p_userData);
-                    }
-
-                    for (const auto& call : m_callbacks)
-                    {
-                        call(JSONEvent::OBJECT_END, id, -1, "", p_userData);
-                    }
-                }
-                break;
-
-                case JSMN_ARRAY:
-                {
-                    for (const auto& call : m_callbacks)
-                    {
-                        call(JSONEvent::ARRAY_BEGIN, id, -1, "", p_userData);
-                    }
-                    m_index++;
-
-                    for (size_t i = 0; i < content_size; i++)
-                    {
-                        const auto sub_content_type{ get_token_type(m_index) };
-                        const auto sub_content_size{ get_token_size(m_index) };
-
-                        if (JSMN_OBJECT == sub_content_type)
+                        for (const auto& call : m_callbacks)
                         {
-                            m_index++;
-
-                            for (const auto& call : m_callbacks)
-                            {
-                                call(JSONEvent::OBJECT_BEGIN, id, i, "", p_userData);
-                            }
-
-
-                            for (size_t j = 0; j < sub_content_size; j++)
-                            {
-                                recurs_analyze(p_userData);
-                            }
-
-                            for (const auto& call : m_callbacks)
-                            {
-                                call(JSONEvent::OBJECT_END, id, i, "", p_userData);
-                            }
+                            call(JSONEvent::OBJECT_BEGIN, id, -1, "", p_userData);
                         }
-                        else
+                        m_index++;
+
+                        for (size_t i = 0; i < content_size; i++)
                         {
-                            _EXCEPTION("JSON Array content must be a JSON Object")
+                            recurs_analyze(p_userData);
+                        }
+
+                        for (const auto& call : m_callbacks)
+                        {
+                            call(JSONEvent::OBJECT_END, id, -1, "", p_userData);
                         }
                     }
+                    break;
 
-                    for (const auto& call : m_callbacks)
+                    case JSMN_ARRAY:
                     {
-                        call(JSONEvent::ARRAY_END, id, -1, "", p_userData);
-                    }
-                }
-                break;
+                        for (const auto& call : m_callbacks)
+                        {
+                            call(JSONEvent::ARRAY_BEGIN, id, -1, "", p_userData);
+                        }
+                        m_index++;
 
-                case JSMN_STRING:
-                {
-                    const auto value{ get_token_string(m_index) };
-                    for (const auto& call : m_callbacks)
+                        for (size_t i = 0; i < content_size; i++)
+                        {
+                            const auto sub_content_type{ get_token_type(m_index) };
+                            const auto sub_content_size{ get_token_size(m_index) };
+
+                            if (JSMN_OBJECT == sub_content_type)
+                            {
+                                m_index++;
+
+                                for (const auto& call : m_callbacks)
+                                {
+                                    call(JSONEvent::OBJECT_BEGIN, id, i, "", p_userData);
+                                }
+
+
+                                for (size_t j = 0; j < sub_content_size; j++)
+                                {
+                                    recurs_analyze(p_userData);
+                                }
+
+                                for (const auto& call : m_callbacks)
+                                {
+                                    call(JSONEvent::OBJECT_END, id, i, "", p_userData);
+                                }
+                            }
+                            else
+                            {
+                                _EXCEPTION("JSON Array content must be a JSON Object")
+                            }
+                        }
+
+                        for (const auto& call : m_callbacks)
+                        {
+                            call(JSONEvent::ARRAY_END, id, -1, "", p_userData);
+                        }
+                    }
+                    break;
+
+                    case JSMN_STRING:
                     {
-                        call(JSONEvent::STRING, id, -1, value, p_userData);
+                        const auto value{ get_token_string(m_index) };
+                        for (const auto& call : m_callbacks)
+                        {
+                            call(JSONEvent::STRING, id, -1, value, p_userData);
+                        }
+
+                        m_index++;
                     }
+                    break;
 
-                    m_index++;
-                }
-                break;
-
-                case JSMN_PRIMITIVE:
-                {
-                    const auto value{ get_token_string(m_index) };
-                    for (const auto& call : m_callbacks)
+                    case JSMN_PRIMITIVE:
                     {
-                        call(JSONEvent::PRIMITIVE, id, -1, value, p_userData);
-                    }
+                        const auto value{ get_token_string(m_index) };
+                        for (const auto& call : m_callbacks)
+                        {
+                            call(JSONEvent::PRIMITIVE, id, -1, value, p_userData);
+                        }
 
-                    m_index++;
-                }
-                break;
+                        m_index++;
+                    }
+                    break;
                 }
             }
-
         };
-
     }
-
 }
 

@@ -25,12 +25,20 @@
 #pragma once
 #include "singleton.h"
 #include "componentcontainer.h"
+#include "eventsource.h"
 
 namespace renderMe
 {
     namespace rendering
     {
-        class Datacloud : public property::Singleton<Datacloud>
+        enum class DatacloudEvent
+        {
+            DATA_ADDED,
+            DATA_REMOVED,
+            DATA_UPDATED
+        };
+
+        class Datacloud : public property::Singleton<Datacloud>, public renderMe::property::EventSource<DatacloudEvent, const std::string&, const std::string&>
         {
         public:
             Datacloud(void) = default;
@@ -38,13 +46,19 @@ namespace renderMe
 
             template<typename T, class... Args>
             void registerData(const std::string& p_id, Args&&... p_args)
-            {
+            {                
                 m_component_container.addComponent<T, Args...>(p_id, (std::forward<Args>(p_args))...);
+
+                const std::string tid{ typeid(T).name() };
+                for (const auto& call : m_callbacks)
+                {
+                    call(DatacloudEvent::DATA_ADDED, p_id, tid);
+                }
             }
 
             template<typename T>
             T readDataValue(const std::string& p_id) const
-            {
+            {               
                 const auto comp{ m_component_container.getComponent<T>(p_id) };
                 if (nullptr == comp)
                 {
@@ -63,20 +77,29 @@ namespace renderMe
                 }
                 auto& purpose{ comp->getPurpose() };
                 purpose = value;
+
+                const std::string tid{ typeid(T).name() };
+                for (const auto& call : m_callbacks)
+                {
+                    call(DatacloudEvent::DATA_UPDATED, p_id, tid);
+                }
+
             }
 
             template<typename T>
             void removeData(const std::string& p_id)
             {
                 m_component_container.removeComponent<T>(p_id);
+
+                const std::string tid{ typeid(T).name() };
+                for (const auto& call : m_callbacks)
+                {
+                    call(DatacloudEvent::DATA_REMOVED, p_id, tid);
+                }
             }
-
-
 
         private:
             core::ComponentContainer m_component_container;
-
-
         };
     }
 }
