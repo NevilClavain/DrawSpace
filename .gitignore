@@ -243,6 +243,11 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_maths/*.sln
 /renderme/console_tests/console_maths/*.vcxproj*
 
+/renderme/console_tests/console_datacloud/CMakeFiles/
+/renderme/console_tests/console_datacloud/*.sln
+/renderme/console_tests/console_datacloud/*.vcxproj*
+
+
 /renderme/module_helloworld/CMakeFiles/
 /renderme/module_helloworld/*.sln
 /renderme/module_helloworld/*.vcxproj*

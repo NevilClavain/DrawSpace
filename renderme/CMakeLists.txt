@@ -97,6 +97,7 @@ add_subdirectory(console_tests/console_threads)
 add_subdirectory(console_tests/console_components)
 add_subdirectory(console_tests/console_ecs)
 add_subdirectory(console_tests/console_maths)
+add_subdirectory(console_tests/console_datacloud)
 
 add_subdirectory(module_helloworld)
 

@@ -42,6 +42,8 @@
 
 #include "entity.h"
 
+#include "datacloud.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -328,6 +330,13 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	//////////////////////////////////////////////////////
 
+	renderMe::rendering::Datacloud::getInstance()->registerData<float>("mycolor", 0.66f);
+
+	renderMe::rendering::Datacloud::getInstance()->updateData<float>("mycolor", 3.1415f);
+
+	const auto mycolorVal{ renderMe::rendering::Datacloud::getInstance()->readDataValue<float>("mycolor") };
+
+
 	if (m_draw_circle)
 	{
 		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "circleEntity") };
@@ -378,6 +387,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	
 		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+
+
+	
 
 
 	}

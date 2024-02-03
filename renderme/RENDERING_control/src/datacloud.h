@@ -36,6 +36,43 @@ namespace renderMe
             Datacloud(void) = default;
             ~Datacloud() = default;
 
+            template<typename T, class... Args>
+            void registerData(const std::string& p_id, Args&&... p_args)
+            {
+                m_component_container.addComponent<T, Args...>(p_id, (std::forward<Args>(p_args))...);
+            }
+
+            template<typename T>
+            T readDataValue(const std::string& p_id) const
+            {
+                const auto comp{ m_component_container.getComponent<T>(p_id) };
+                if (nullptr == comp)
+                {
+                    _EXCEPTION("unknown data in datacloud: " + p_id);
+                }
+                return comp->getPurpose();
+            }
+
+            template<typename T>
+            void updateData(const std::string& p_id, T value)
+            {
+                const auto comp{ m_component_container.getComponent<T>(p_id) };
+                if (nullptr == comp)
+                {
+                    _EXCEPTION("unknown data in datacloud: " + p_id);
+                }
+                auto& purpose{ comp->getPurpose() };
+                purpose = value;
+            }
+
+            template<typename T>
+            void removeData(const std::string& p_id)
+            {
+                m_component_container.removeComponent<T>(p_id);
+            }
+
+
+
         private:
             core::ComponentContainer m_component_container;
 
