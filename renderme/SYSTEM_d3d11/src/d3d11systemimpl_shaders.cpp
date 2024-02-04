@@ -294,7 +294,7 @@ std::unordered_set<std::string> D3D11SystemImpl::getShadersNames() const
     return m_shaderNames;
 }
 
-void D3D11SystemImpl::set_vertexshader_constants_vec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
+void D3D11SystemImpl::setVertexshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
 {
     m_vertexshader_args.vector[p_startreg].x = p_vec[0];
     m_vertexshader_args.vector[p_startreg].y = p_vec[1];
@@ -302,7 +302,7 @@ void D3D11SystemImpl::set_vertexshader_constants_vec(int p_startreg, const rende
     m_vertexshader_args.vector[p_startreg].w = p_vec[3];
 }
 
-void D3D11SystemImpl::set_pixelshader_constants_vec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
+void D3D11SystemImpl::setPixelshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
 {
     m_pixelshader_args.vector[p_startreg].x = p_vec[0];
     m_pixelshader_args.vector[p_startreg].y = p_vec[1];
@@ -310,7 +310,7 @@ void D3D11SystemImpl::set_pixelshader_constants_vec(int p_startreg, const render
     m_pixelshader_args.vector[p_startreg].w = p_vec[3];
 }
 
-void D3D11SystemImpl::set_vertexshader_constants_mat(int p_startreg, const renderMe::core::maths::Matrix& p_mat)
+void D3D11SystemImpl::setVertexshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat)
 {
     auto& dest{ m_vertexshader_args.matrix[p_startreg] };
 
@@ -337,7 +337,7 @@ void D3D11SystemImpl::set_vertexshader_constants_mat(int p_startreg, const rende
     
 }
 
-void D3D11SystemImpl::set_pixelshader_constants_mat(int p_startreg, const renderMe::core::maths::Matrix& p_mat)
+void D3D11SystemImpl::setPixelshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat)
 {
     auto& dest{ m_pixelshader_args.matrix[p_startreg] };
 

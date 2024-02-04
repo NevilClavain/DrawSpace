@@ -166,6 +166,12 @@ public:
 
     void drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
 
+    void setVertexshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
+    void setPixelshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
+    void setVertexshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
+    void setPixelshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
+
+
     std::unordered_set<std::string> getShadersNames() const;
 
 private:
@@ -295,11 +301,6 @@ private:
     bool createDepthStencilBuffer(ID3D11Device* p_lpd3ddevice, int p_width, int p_height, DXGI_FORMAT p_format, ID3D11Texture2D** p_texture2D, ID3D11DepthStencilView** p_view);
 
     HRESULT compileShaderFromMem(void* p_data, int p_size, LPCTSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Include* p_include, ID3DBlob** ppBlobOut, ID3DBlob** ppBlobErrOut);
-
-    void set_vertexshader_constants_vec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
-    void set_pixelshader_constants_vec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
-    void set_vertexshader_constants_mat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
-    void set_pixelshader_constants_mat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
 
     ///////////////////////////////////////////////////////////////////////////////
 

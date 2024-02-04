@@ -45,7 +45,7 @@
 #include "logger_service.h"
 
 #include "linemeshe.h"
-
+#include "datacloud.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -303,6 +303,8 @@ void D3D11System::manageResources()
 
 void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 {
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
 	if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
 	{
 		d3dimpl->beginScreen();
@@ -363,8 +365,40 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 						std::vector<renderMe::rendering::LineDrawingControl> lineDrawingControls{ lineMesheInfo.second.list };
 						for (const auto& lc : lineDrawingControls)
 						{
+							//////
 							lc.setup();
+
+							////// Apply shaders params
+
+							for (const auto& e : lc.vshaders_map_cnx)
+							{
+								const auto& datacloud_data_id{ e.first };
+								const auto& shader_param{ e.second };
+
+								if ("Real4Vector" == shader_param.argument_type)
+								{
+									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+									d3dimpl->setVertexshaderConstantsVec(0, rvector);
+								}
+							}
+
+							for (const auto& e : lc.pshaders_map_cnx)
+							{
+								const auto& datacloud_data_id{ e.first };
+								const auto& shader_param{ e.second };
+
+								if ("Real4Vector" == shader_param.argument_type)
+								{
+									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+									d3dimpl->setPixelshaderConstantsVec(0, rvector);
+								}
+							}
+
+							//////
+
 							d3dimpl->drawLineMeshe(lc.world, lc.view, lc.proj);
+
+							//////
 							lc.teardown();
 						}
 					}

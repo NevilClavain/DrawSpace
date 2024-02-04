@@ -45,16 +45,16 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     auto result{ chain.getResultTransform() };
     result.transpose();
 
-    set_vertexshader_constants_mat(0, result);
-    set_pixelshader_constants_mat(100, result);
+    setVertexshaderConstantsMat(0, result);
+    setPixelshaderConstantsMat(100, result);
 
     //////////////////////////////////////////////////////////////////////
     
     Matrix worldview{ p_world * p_view };
     worldview.transpose();
 
-    set_vertexshader_constants_mat(4, worldview);
-    set_pixelshader_constants_mat(104, worldview);
+    setVertexshaderConstantsMat(4, worldview);
+    setPixelshaderConstantsMat(104, worldview);
 
     //////////////////////////////////////////////////////////////////////
 
@@ -64,11 +64,11 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     auto view{ p_view };
     view.transpose();
 
-    set_vertexshader_constants_mat(8, world);
-    set_vertexshader_constants_mat(12, view);
+    setVertexshaderConstantsMat(8, world);
+    setVertexshaderConstantsMat(12, view);
 
-    set_pixelshader_constants_mat(108, world);
-    set_pixelshader_constants_mat(112, view);
+    setPixelshaderConstantsMat(108, world);
+    setPixelshaderConstantsMat(112, view);
 
     //////////////////////////////////////////////////////////////////////
 
@@ -76,14 +76,14 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     cam.inverse();
     cam.transpose();
 
-    set_vertexshader_constants_mat(16, cam);
-    set_pixelshader_constants_mat(116, cam);
+    setVertexshaderConstantsMat(16, cam);
+    setPixelshaderConstantsMat(116, cam);
 
     auto proj { p_proj };
 
     proj.transpose();
-    set_vertexshader_constants_mat(20, proj);
-    set_pixelshader_constants_mat(120, proj);
+    setVertexshaderConstantsMat(20, proj);
+    setPixelshaderConstantsMat(120, proj);
 
     // update des shaders legacy constants buffers...
 

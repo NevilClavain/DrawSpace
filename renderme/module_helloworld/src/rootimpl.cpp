@@ -330,11 +330,8 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	//////////////////////////////////////////////////////
 
-	renderMe::rendering::Datacloud::getInstance()->registerData<float>("mycolor", 0.66f);
-
-	renderMe::rendering::Datacloud::getInstance()->updateData<float>("mycolor", 3.1415f);
-
-	const auto mycolorVal{ renderMe::rendering::Datacloud::getInstance()->readDataValue<float>("mycolor") };
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	dataCloud->registerData<maths::Real4Vector>("mycolor", maths::Real4Vector(0.0, 0.95, 0.0, 1.0));
 
 
 	if (m_draw_circle)

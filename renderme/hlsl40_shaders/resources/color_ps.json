@@ -1,8 +1,8 @@
 {
   "inputs": [
     {
-      "argument_id":  "color",
-      "type": "vector_4_floats",
+      "argument_id": "color",
+      "type": "Real4Vector",
       "register": 0,
       "description": "color value"
     }
