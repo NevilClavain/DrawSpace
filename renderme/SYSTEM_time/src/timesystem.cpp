@@ -50,7 +50,18 @@ void TimeSystem::run()
 				if (fpsComp)
 				{
 					fpsComp->getPurpose() = m_tm.getFPS();
-				}				
+				}	
+
+				// search for TimeManager::Variable objects
+
+				const auto tm_var_list{ p_time_aspect.getComponentsByType<TimeManager::Variable>() };
+				if (tm_var_list.size())
+				{
+					for (auto& v : tm_var_list)
+					{
+						m_tm.manageVariable(v->getPurpose());
+					}
+				}
 			}
 		};
 

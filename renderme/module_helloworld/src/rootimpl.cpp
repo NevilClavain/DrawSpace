@@ -261,6 +261,26 @@ void RootImpl::run(void)
 
 	// resources system event
 	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 25}, 0.0});
+
+	//////////////////////////////////////////////////////
+	// 	
+	auto& circleNode{ m_entitygraph.node( "circleEntity") };
+
+	const auto circleEntity{ circleNode.data() };
+	auto& circle_time_aspect{ circleEntity->aspectAccess(core::timeAspect::id)};
+
+	renderMe::core::TimeManager::Variable& mycolor_r { circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose()};
+
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	maths::Real4Vector mycolor;
+
+	mycolor[0] = mycolor_r.value;
+	mycolor[1] = mycolor_r.value;
+	mycolor[2] = mycolor_r.value;
+	mycolor[3] = 1.0;
+
+	dataCloud->updateData("mycolor", mycolor);
+
 }
 
 void RootImpl::close(void)
@@ -331,14 +351,15 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	//////////////////////////////////////////////////////
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	dataCloud->registerData<maths::Real4Vector>("mycolor", maths::Real4Vector(0.0, 0.95, 0.0, 1.0));
-
+	dataCloud->registerData<maths::Real4Vector>("mycolor");
 
 	if (m_draw_circle)
 	{
 		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "circleEntity") };
 		const auto circleEntity{ circleNode.data() };
 		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
+
+		auto& circle_time_aspect{ circleEntity->makeAspect(core::timeAspect::id) };
 
 		/////////// Add shaders
 
@@ -384,6 +405,10 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	
 		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+
+		/////////////////
+
+		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.1));
 
 
 	

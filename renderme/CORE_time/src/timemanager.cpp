@@ -186,3 +186,29 @@ void TimeManager::translationSpeedDec(double* p_translation, double p_speed)
     const double translationSpeedUnitPerFrame{ p_speed / m_fps };
     *p_translation -= translationSpeedUnitPerFrame;
 }
+
+void TimeManager::manageVariable(Variable& p_variable)
+{
+    if (Variable::Type::ANGLE == p_variable.type)
+    {
+        if (p_variable.increment)
+        {
+            angleSpeedInc(&p_variable.value, p_variable.step);
+        }
+        else
+        {
+            angleSpeedDec(&p_variable.value, p_variable.step);
+        }
+    }
+    else if (Variable::Type::POSITION == p_variable.type)
+    {
+        if (p_variable.increment)
+        {
+            translationSpeedInc(&p_variable.value, p_variable.step);
+        }
+        else
+        {
+            translationSpeedDec(&p_variable.value, p_variable.step);
+        }
+    }
+}

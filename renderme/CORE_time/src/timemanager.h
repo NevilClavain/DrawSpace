@@ -34,9 +34,37 @@ namespace renderMe
             TimeManager(void);
             ~TimeManager(void) = default;
 
+            struct Variable
+            {
+            public:
+                enum class Type
+                {
+                    ANGLE,
+                    POSITION
+                };
+
+                Variable() = default;
+                ~Variable() = default;
+
+                Variable(Type p_type, double p_step, bool p_increment = true, double p_initial_value = 0.0) :
+                type(p_type),
+                step(p_step),
+                increment(p_increment),
+                value(p_initial_value)
+                {
+                };
+
+                double  value{ 0.0 };
+                double  step{ 0.0 };
+                bool    increment{ true };
+                Type    type;                
+            };
+
             void    reset(void);
 
             void    update(void);
+
+            void    manageVariable(Variable& p_variable);
 
             void    angleSpeedInc(double* p_angle, double p_angleSpeed);
             void    angleSpeedDec(double* p_angle, double p_angleSpeed);
