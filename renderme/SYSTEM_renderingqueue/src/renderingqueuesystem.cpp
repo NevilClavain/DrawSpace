@@ -172,6 +172,52 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 	}
 }
 
+static rendering::Queue::LineDrawPayload build_LineDrawPayload(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
+{
+	rendering::Queue::LineDrawPayload lineDrawPayload;
+
+	const auto vshaders_current_args{ p_vshader.getArguments() };
+	const auto pshaders_current_args{ p_pshader.getArguments() };
+
+
+	for (const auto& e : p_linesDrawingControls)
+	{
+		auto& linesDrawingControl{ e->getPurpose() };
+		linesDrawingControl.ready = true;
+
+		//vshader arguments id match loop
+		for (const auto& e : vshaders_current_args)
+		{
+			const auto argument_id{ e.argument_id };
+			for (const auto& e2 : linesDrawingControl.vshaders_map)
+			{
+				if (argument_id == e2.second)
+				{
+					linesDrawingControl.vshaders_map_cnx.push_back(std::make_pair(e2.first, e));
+				}
+			}
+		}
+
+		//pshader arguments id match loop
+		for (const auto& e : pshaders_current_args)
+		{
+			const auto argument_id{ e.argument_id };
+			for (const auto& e2 : linesDrawingControl.pshaders_map)
+			{
+				if (argument_id == e2.second)
+				{
+					linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(e2.first, e));
+				}
+			}
+		}
+
+		lineDrawPayload.list.push_back(linesDrawingControl);
+	}
+
+	return lineDrawPayload;
+}
+
 void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentContainer& p_resourceAspect, 
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
@@ -224,50 +270,25 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 							{
 								// vshader entry exists
 
+								const auto& pshaders{ queueNodes.at(vshader.getName()) };
+
+								if (queueNodes.count(pshader.getName()))
+								{
+									// pshader entry exists
+
+								}
+								else
+								{
+									// insert new branch
+								}
+
+
 								// TODO
 							}
 							else
 							{
 								// insert new branch
-
-								const auto vshaders_current_args{ vshader.getArguments() };
-								const auto pshaders_current_args{ pshader.getArguments() };
-
-								rendering::Queue::LineDrawPayload lineDrawPayload;
-								for (const auto& e : linesDrawingControls)
-								{
-									auto& linesDrawingControl{ e->getPurpose() };
-									linesDrawingControl.ready = true;
-
-									//vshader arguments id match loop
-									for (const auto& e : vshaders_current_args)
-									{
-										const auto argument_id{ e.argument_id };
-										for (const auto& e2 : linesDrawingControl.vshaders_map)
-										{
-											if (argument_id == e2.second)
-											{
-												linesDrawingControl.vshaders_map_cnx.push_back(std::make_pair(e2.first, e));
-											}
-										}
-									}
-
-									//pshader arguments id match loop
-									for (const auto& e : pshaders_current_args)
-									{
-										const auto argument_id{ e.argument_id };
-										for (const auto& e2 : linesDrawingControl.pshaders_map)
-										{
-											if (argument_id == e2.second)
-											{
-												linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(e2.first, e));
-											}
-										}
-									}
-
-
-									lineDrawPayload.list.push_back(linesDrawingControl);
-								}
+								const auto lineDrawPayload { build_LineDrawPayload(linesDrawingControls, vshader, pshader) };
 
 								rendering::Queue::RenderStatePayload renderStatePayload;
 								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineDrawPayload;
