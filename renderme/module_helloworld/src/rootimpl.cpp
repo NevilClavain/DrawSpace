@@ -271,6 +271,17 @@ void RootImpl::run(void)
 
 	renderMe::core::TimeManager::Variable& mycolor_r { circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose()};
 
+	if (mycolor_r.value > 1.0)
+	{
+		mycolor_r.value = 1.0;
+		mycolor_r.increment = false;
+	}
+	else if (mycolor_r.value < 0.0)
+	{
+		mycolor_r.value = 0.0;
+		mycolor_r.increment = true;
+	}
+
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	maths::Real4Vector mycolor;
 
@@ -408,7 +419,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////////////
 
-		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.1));
+		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
 
 
 	
