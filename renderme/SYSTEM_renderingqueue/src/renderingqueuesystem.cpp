@@ -231,9 +231,9 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 	{
 		bool notAllReady{ false };
 
-		for (const auto& e : linesDrawingControls)
+		for (const auto& ldc : linesDrawingControls)
 		{
-			const auto& linesDrawingControl{ e->getPurpose() };
+			const auto& linesDrawingControl{ ldc->getPurpose() };
 
 			if (!linesDrawingControl.ready)
 			{
