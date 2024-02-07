@@ -172,7 +172,7 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 	}
 }
 
-static rendering::Queue::LineMeshePayload build_LineDrawPayload(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+static rendering::Queue::LineMeshePayload build_LineMeshePayload(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
 																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	rendering::Queue::LineMeshePayload lineMeshePayload;
@@ -288,10 +288,10 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 							else
 							{
 								// insert new branch
-								const auto lineDrawPayload { build_LineDrawPayload(linesDrawingControls, vshader, pshader) };
+								const auto lineMeshePayload { build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
 
 								rendering::Queue::RenderStatePayload renderStatePayload;
-								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineDrawPayload;
+								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
 								renderStatePayload.description = rsStates.at(0)->getPurpose();
 
 								rendering::Queue::PixelShaderPayload pixelShaderPayload;
