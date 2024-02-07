@@ -291,7 +291,11 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 								const auto lineMeshePayload { build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
 
 								rendering::Queue::RenderStatePayload renderStatePayload;
+
+								// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
+
+								// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
 								renderStatePayload.description = rsStates.at(0)->getPurpose();
 
 								rendering::Queue::PixelShaderPayload pixelShaderPayload;
