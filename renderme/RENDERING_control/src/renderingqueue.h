@@ -104,7 +104,7 @@ namespace renderMe
 				float								rotation_rad{ 0.0 };
 			};
 						
-			struct LineDrawPayload
+			struct LineMeshePayload
 			{
 				std::vector<LineDrawingControl> list;
 			};
@@ -115,7 +115,7 @@ namespace renderMe
 				std::vector<RenderState>							description;
 
 				// key = lineMeshe D3D11 id
-				std::unordered_map<std::string, LineDrawPayload>	list;
+				std::unordered_map<std::string, LineMeshePayload>	list;
 			};
 
 			struct PixelShaderPayload

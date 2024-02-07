@@ -172,18 +172,18 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 	}
 }
 
-static rendering::Queue::LineDrawPayload build_LineDrawPayload(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+static rendering::Queue::LineMeshePayload build_LineDrawPayload(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
 																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
-	rendering::Queue::LineDrawPayload lineDrawPayload;
+	rendering::Queue::LineMeshePayload lineMeshePayload;
 
 	const auto vshaders_current_args{ p_vshader.getArguments() };
 	const auto pshaders_current_args{ p_pshader.getArguments() };
 
 
-	for (const auto& e : p_linesDrawingControls)
+	for (const auto& ldc : p_linesDrawingControls)
 	{
-		auto& linesDrawingControl{ e->getPurpose() };
+		auto& linesDrawingControl{ ldc->getPurpose() };
 		linesDrawingControl.ready = true;
 
 		//vshader arguments id match loop
@@ -212,10 +212,10 @@ static rendering::Queue::LineDrawPayload build_LineDrawPayload(const renderMe::c
 			}
 		}
 
-		lineDrawPayload.list.push_back(linesDrawingControl);
+		lineMeshePayload.list.push_back(linesDrawingControl);
 	}
 
-	return lineDrawPayload;
+	return lineMeshePayload;
 }
 
 void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentContainer& p_resourceAspect, 
