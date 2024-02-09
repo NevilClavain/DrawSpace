@@ -218,6 +218,31 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(const renderMe:
 	return lineMeshePayload;
 }
 
+rendering::Queue::RenderStatePayload build_RenderStatePayload(const std::string& p_linemesheId, 
+																const rendering::Queue::LineMeshePayload& p_lineMeshePayload, 
+																const std::vector<renderMe::rendering::RenderState>& rs_list)
+{
+	rendering::Queue::RenderStatePayload renderStatePayload;
+
+	renderStatePayload.list[p_linemesheId] = p_lineMeshePayload;
+	renderStatePayload.description = rs_list;
+
+	return renderStatePayload;
+}
+
+static rendering::Queue::PixelShaderPayload build_pixelShaderPayload(const std::vector<renderMe::rendering::RenderState>& rs_list, const rendering::Queue::RenderStatePayload& p_renderStatePayload)
+{
+	rendering::Queue::PixelShaderPayload pixelShaderPayload;
+	std::string rs_set_signature;
+	for (const auto& e : rs_list)
+	{
+		rs_set_signature += e.toString() + "; ";
+	}
+	pixelShaderPayload.list[rs_set_signature] = p_renderStatePayload;
+
+	return pixelShaderPayload;
+}
+
 void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentContainer& p_resourceAspect, 
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
@@ -289,23 +314,12 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 							{
 								// insert new branch
 								const auto lineMeshePayload { build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
-
-								rendering::Queue::RenderStatePayload renderStatePayload;
-
+							
 								// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
-								renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
-
 								// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-								renderStatePayload.description = rsStates.at(0)->getPurpose();
+								const auto renderStatePayload{ build_RenderStatePayload(lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
 
-								rendering::Queue::PixelShaderPayload pixelShaderPayload;
-								std::string rs_set_signature;
-								const auto rs_set{ rsStates.at(0)->getPurpose() };
-								for (const auto& e : rs_set)
-								{
-									rs_set_signature += e.toString() + "; ";
-								}
-								pixelShaderPayload.list[rs_set_signature] = renderStatePayload;
+								const auto pixelShaderPayload{ build_pixelShaderPayload(rsStates.at(0)->getPurpose(), renderStatePayload) };
 
 								rendering::Queue::VertexShaderPayload vertexShaderPayload;
 								vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;
