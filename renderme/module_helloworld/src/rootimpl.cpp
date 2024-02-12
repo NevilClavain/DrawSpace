@@ -129,7 +129,7 @@ void RootImpl::onEndKeyPress(long p_key)
 		{
 			m_draw_quad0 = false;
 
-			m_entitygraph.remove(m_entitygraph.node("quadEntity"));
+			m_entitygraph.remove(m_entitygraph.node("quadEntity0"));
 		}
 		*/
 	}
@@ -268,12 +268,12 @@ void RootImpl::run(void)
 	// 	
 
 	{
-		auto& circleNode{ m_entitygraph.node("quadEntity") };
+		auto& quadNode{ m_entitygraph.node("quadEntity0") };
 
-		const auto circleEntity{ circleNode.data() };
-		auto& circle_time_aspect{ circleEntity->aspectAccess(core::timeAspect::id) };
+		const auto quadEntity{ quadNode.data() };
+		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::TimeManager::Variable& mycolor_r{ circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose() };
+		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose() };
 
 		if (mycolor_r.value > 1.0)
 		{
@@ -299,12 +299,12 @@ void RootImpl::run(void)
 
 	
 	{
-		auto& circleNode{ m_entitygraph.node("quadEntity2") };
+		auto& quadNode{ m_entitygraph.node("quadEntity2") };
 
-		const auto circleEntity{ circleNode.data() };
-		auto& circle_time_aspect{ circleEntity->aspectAccess(core::timeAspect::id) };
+		const auto quadEntity{ quadNode.data() };
+		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::TimeManager::Variable& mycolor_r{ circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r_2")->getPurpose() };
+		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r_2")->getPurpose() };
 
 		if (mycolor_r.value > 1.0)
 		{
@@ -402,16 +402,16 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	//if (m_draw_quad0)
 	{
-		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity") };
-		const auto circleEntity{ circleNode.data() };
-		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
+		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity0") };
+		const auto quadEntity{ quadNode.data() };
+		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 
-		auto& circle_time_aspect{ circleEntity->makeAspect(core::timeAspect::id) };
+		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 
 		/////////// Add shaders
 
-		circle_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
-		circle_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
+		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
+		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
 
 		/////////// Add linemeshe
 
@@ -427,11 +427,11 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
-		circle_resource_aspect.addComponent<LineMeshe>("square", square);
+		quad_resource_aspect.addComponent<LineMeshe>("square", square);
 
 		/////////////////////////////////////
 
-		auto& circle_rendering_aspect{ circleEntity->makeAspect(core::renderingAspect::id) };
+		auto& circle_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add renderstate
 
@@ -455,7 +455,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////////////
 
-		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
+		quad_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
 
 	}
 	
@@ -463,17 +463,17 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	{
 
-		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
+		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
 		
-		const auto circleEntity{ circleNode.data() };
-		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
+		const auto quadEntity{ quadNode.data() };
+		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 
-		auto& circle_time_aspect{ circleEntity->makeAspect(core::timeAspect::id) };
+		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 
 		/////////// Add shaders
 
-		circle_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
-		circle_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
+		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
+		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
 
 		/////////// Add linemeshe
 
@@ -489,11 +489,11 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
-		circle_resource_aspect.addComponent<LineMeshe>("square", square);
+		quad_resource_aspect.addComponent<LineMeshe>("square", square);
 
 		/////////////////////////////////////
 
-		auto& circle_rendering_aspect{ circleEntity->makeAspect(core::renderingAspect::id) };
+		auto& circle_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add renderstate
 
@@ -517,7 +517,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////////////
 
-		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r_2", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
+		quad_time_aspect.addComponent<TimeManager::Variable>("mycolor_r_2", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
 		
 
 	}
