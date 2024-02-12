@@ -124,12 +124,14 @@ void RootImpl::onEndKeyPress(long p_key)
 	}
 	else if (VK_F3 == p_key)
 	{
-		if (m_draw_circle)
+		/*
+		if (m_draw_quad0)
 		{
-			m_draw_circle = false;
+			m_draw_quad0 = false;
 
-			m_entitygraph.remove(m_entitygraph.node("circleEntity"));
+			m_entitygraph.remove(m_entitygraph.node("quadEntity"));
 		}
+		*/
 	}
 }
 
@@ -264,34 +266,68 @@ void RootImpl::run(void)
 
 	//////////////////////////////////////////////////////
 	// 	
-	auto& circleNode{ m_entitygraph.node( "circleEntity") };
 
-	const auto circleEntity{ circleNode.data() };
-	auto& circle_time_aspect{ circleEntity->aspectAccess(core::timeAspect::id)};
-
-	renderMe::core::TimeManager::Variable& mycolor_r { circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose()};
-
-	if (mycolor_r.value > 1.0)
 	{
-		mycolor_r.value = 1.0;
-		mycolor_r.increment = false;
+		auto& circleNode{ m_entitygraph.node("quadEntity") };
+
+		const auto circleEntity{ circleNode.data() };
+		auto& circle_time_aspect{ circleEntity->aspectAccess(core::timeAspect::id) };
+
+		renderMe::core::TimeManager::Variable& mycolor_r{ circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose() };
+
+		if (mycolor_r.value > 1.0)
+		{
+			mycolor_r.value = 1.0;
+			mycolor_r.increment = false;
+		}
+		else if (mycolor_r.value < 0.0)
+		{
+			mycolor_r.value = 0.0;
+			mycolor_r.increment = true;
+		}
+
+		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+		maths::Real4Vector mycolor;
+
+		mycolor[0] = mycolor_r.value;
+		mycolor[1] = mycolor_r.value;
+		mycolor[2] = mycolor_r.value;
+		mycolor[3] = 1.0;
+
+		dataCloud->updateData("mycolor", mycolor);
 	}
-	else if (mycolor_r.value < 0.0)
+
+	/*
 	{
-		mycolor_r.value = 0.0;
-		mycolor_r.increment = true;
+		auto& circleNode{ m_entitygraph.node("quadEntity2") };
+
+		const auto circleEntity{ circleNode.data() };
+		auto& circle_time_aspect{ circleEntity->aspectAccess(core::timeAspect::id) };
+
+		renderMe::core::TimeManager::Variable& mycolor_r{ circle_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r_2")->getPurpose() };
+
+		if (mycolor_r.value > 1.0)
+		{
+			mycolor_r.value = 1.0;
+			mycolor_r.increment = false;
+		}
+		else if (mycolor_r.value < 0.0)
+		{
+			mycolor_r.value = 0.0;
+			mycolor_r.increment = true;
+		}
+
+		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+		maths::Real4Vector mycolor;
+
+		mycolor[0] = mycolor_r.value;
+		mycolor[1] = mycolor_r.value;
+		mycolor[2] = mycolor_r.value;
+		mycolor[3] = 1.0;
+
+		dataCloud->updateData("mycolor2", mycolor);
 	}
-
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	maths::Real4Vector mycolor;
-
-	mycolor[0] = mycolor_r.value;
-	mycolor[1] = mycolor_r.value;
-	mycolor[2] = mycolor_r.value;
-	mycolor[3] = 1.0;
-
-	dataCloud->updateData("mycolor", mycolor);
-
+	*/
 }
 
 void RootImpl::close(void)
@@ -364,9 +400,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	dataCloud->registerData<maths::Real4Vector>("mycolor");
 
-	if (m_draw_circle)
+	//if (m_draw_quad0)
 	{
-		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "circleEntity") };
+		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity") };
 		const auto circleEntity{ circleNode.data() };
 		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
 
@@ -421,10 +457,71 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
 
-
-	
-
-
 	}
 	
+	/*
+	{
+		m_entitygraph.add(screenRenderingPassNode, "quadEntity2");
+
+		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
+		
+		const auto circleEntity{ circleNode.data() };
+		auto& circle_resource_aspect{ circleEntity->makeAspect(core::resourcesAspect::id) };
+
+		auto& circle_time_aspect{ circleEntity->makeAspect(core::timeAspect::id) };
+
+		/////////// Add shaders
+
+		circle_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
+		circle_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
+
+		/////////// Add linemeshe
+
+		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
+
+		square.push(Vertex(-0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, 0.5, 0.0));
+		square.push(Vertex(-0.5, 0.5, 0.0));
+
+		square.push({ 0, 1 });
+		square.push({ 1, 2 });
+		square.push({ 2, 3 });
+		square.push({ 3, 0 });
+
+		circle_resource_aspect.addComponent<LineMeshe>("square", square);
+
+		/////////////////////////////////////
+
+		auto& circle_rendering_aspect{ circleEntity->makeAspect(core::renderingAspect::id) };
+
+		/////////// Add renderstate
+
+		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+		const std::vector<RenderState> rs_list = { rs_noculling };
+
+		circle_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+
+		/////////// Draw lines
+
+		rendering::LineDrawingControl lineDrawingControl;
+
+		lineDrawingControl.world.translation(0.0, 0.0, -15.0);
+		lineDrawingControl.view.identity();
+		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
+
+		lineDrawingControl.pshaders_map.push_back(std::make_pair("mycolor2", "color"));
+
+
+		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+
+		/////////////////
+
+		circle_time_aspect.addComponent<TimeManager::Variable>("mycolor_r_2", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
+		
+
+	}
+	*/
+	
+
 }

@@ -26,12 +26,6 @@
 #include "entity.h"
 #include "exceptions.h"
 
-#include "logsink.h"
-#include "logconf.h"
-#include "logging.h"
-
-#include "logger_service.h"
-
 using namespace renderMe::core;
 
 Entitygraph::Node& Entitygraph::makeRoot(const std::string& p_entity_id)
@@ -70,10 +64,14 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 	m_entites[p_entity_id] = std::make_unique<Entity>(p_entity_id, p_parent.data());
 
 	NodeIterator ite_new_node{ p_parent.insert(&*(m_entites[p_entity_id].get())) };
-	m_nodes_iterator[p_entity_id] = ite_new_node;
 
-	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
-	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_ADDED : " + p_entity_id);
+	if (m_nodes.count(p_entity_id))
+	{
+		_EXCEPTION("entity already exists : " + p_entity_id);
+	}
+
+	m_nodes[p_entity_id] = &*ite_new_node;
+
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *m_entites.at(p_entity_id).get());
@@ -85,8 +83,6 @@ void Entitygraph::remove(Node& p_node)
 {
 	const auto& entity{ *p_node.data() };
 
-	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
-	_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> ENTITYGRAPHNODE_REMOVED : " + entity.getId());
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_REMOVED, entity);
@@ -106,11 +102,12 @@ Entitygraph::Node& Entitygraph::node(const std::string& p_entity_id)
 	}
 	else
 	{
-		if (0 == m_nodes_iterator.count(id))
+		
+		if (0 == m_nodes.count(id))
 		{
 			_EXCEPTION("node not registered" + id)
 		}
-		return *(m_nodes_iterator.at(id));
+		return (*m_nodes.at(id));		
 	}
 }
 

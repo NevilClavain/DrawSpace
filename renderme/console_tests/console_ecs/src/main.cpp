@@ -77,17 +77,19 @@ int main( int argc, char* argv[] )
 
 		std::cout << "eg has root now : " << eg.hasRoot() << "\n";
 
+		eg.add(root_node, "ent1");
+		eg.add(root_node, "ent2");
 
-		auto& ent1_node{ eg.add(root_node, "ent1") };
-		auto& ent2_node{ eg.add(root_node, "ent2") };
+		auto& ent1{ eg.node("ent1") };
 
-		auto& ent11_node{ eg.add(ent1_node, "ent11") };
-
-		eg.add(eg.node("ent11"), "ent111"); // another way to insert a node from its parent
-
-		//eg.add(ent11_node, "ent111"); // another way to insert a node from its parent
+		eg.add( eg.add(ent1, "ent11"), "ent111");
 
 
+		auto& ent2{ eg.node("ent2") };
+		eg.add(ent2, "ent21");
+
+
+		std::cout << "////////////////////////////////////\n\n";
 
 		// root to leaf browsing
 		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
@@ -105,6 +107,7 @@ int main( int argc, char* argv[] )
 		}
 		std::cout << "\n";
 
+		/*
 		// remove a node
 		eg.remove(eg.node("ent2"));
 
@@ -125,6 +128,7 @@ int main( int argc, char* argv[] )
 			std::cout << currId << "\n";
 		}
 		std::cout << "\n";
+		*/
 
 	}
 

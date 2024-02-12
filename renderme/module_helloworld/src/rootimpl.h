@@ -81,7 +81,7 @@ private:
 
     std::string                             m_resources_event{ "..." };
 
-    bool                                    m_draw_circle{ true };
+    //bool                                    m_draw_quad0{ true };
 };
 
 
