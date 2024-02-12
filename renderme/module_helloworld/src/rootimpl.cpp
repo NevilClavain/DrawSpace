@@ -273,7 +273,7 @@ void RootImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r")->getPurpose() };
+		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("quad0_color")->getPurpose() };
 
 		if (mycolor_r.value > 1.0)
 		{
@@ -294,7 +294,7 @@ void RootImpl::run(void)
 		mycolor[2] = mycolor_r.value;
 		mycolor[3] = 1.0;
 
-		dataCloud->updateData("mycolor", mycolor);
+		dataCloud->updateData("quad0_color", mycolor);
 	}
 
 	
@@ -304,7 +304,7 @@ void RootImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("mycolor_r_2")->getPurpose() };
+		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("quad1_color")->getPurpose() };
 
 		if (mycolor_r.value > 1.0)
 		{
@@ -325,7 +325,7 @@ void RootImpl::run(void)
 		mycolor[2] = mycolor_r.value;
 		mycolor[3] = 1.0;
 
-		dataCloud->updateData("mycolor2", mycolor);
+		dataCloud->updateData("quad1_color", mycolor);
 	}
 	
 }
@@ -398,7 +398,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	//////////////////////////////////////////////////////
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	dataCloud->registerData<maths::Real4Vector>("mycolor");
+	dataCloud->registerData<maths::Real4Vector>("quad0_color");
 
 	//if (m_draw_quad0)
 	{
@@ -431,14 +431,14 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////////////////////////////////
 
-		auto& circle_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");		
 		const std::vector<RenderState> rs_list = { rs_noculling };
 
-		circle_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+		quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
 		/////////// Draw lines
 	
@@ -448,18 +448,18 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		lineDrawingControl.view.identity();		
 		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
-		lineDrawingControl.pshaders_map.push_back(std::make_pair("mycolor", "color"));
+		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad0_color", "color"));
 
 	
-		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+		quad_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
 
 		/////////////////
 
-		quad_time_aspect.addComponent<TimeManager::Variable>("mycolor_r", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
+		quad_time_aspect.addComponent<TimeManager::Variable>("quad0_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
 
 	}
 	
-	dataCloud->registerData<maths::Real4Vector>("mycolor2");
+	dataCloud->registerData<maths::Real4Vector>("quad1_color");
 
 	{
 
@@ -493,14 +493,14 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 		/////////////////////////////////////
 
-		auto& circle_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 		const std::vector<RenderState> rs_list = { rs_noculling };
 
-		circle_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+		quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
 		/////////// Draw lines
 
@@ -510,14 +510,14 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		lineDrawingControl.view.identity();
 		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
-		lineDrawingControl.pshaders_map.push_back(std::make_pair("mycolor2", "color"));
+		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad1_color", "color"));
 
 
-		circle_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+		quad_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
 
 		/////////////////
 
-		quad_time_aspect.addComponent<TimeManager::Variable>("mycolor_r_2", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
+		quad_time_aspect.addComponent<TimeManager::Variable>("quad1_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
 		
 
 	}
