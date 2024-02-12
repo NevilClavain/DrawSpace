@@ -207,7 +207,6 @@ static void const connect_shaders_args(const renderMe::core::ComponentList<rende
 		}
 
 		//pshader arguments id match loop
-		bool p_connection_done{ false };
 		for (const auto& e : pshaders_current_args)
 		{
 			const auto argument_id{ e.argument_id };
@@ -216,13 +215,8 @@ static void const connect_shaders_args(const renderMe::core::ComponentList<rende
 				if (argument_id == e2.second)
 				{
 					linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(e2.first, e));
-					p_connection_done = true;
 				}
 			}
-		}
-		if (!p_connection_done)
-		{
-			_asm nop
 		}
 	}
 }
