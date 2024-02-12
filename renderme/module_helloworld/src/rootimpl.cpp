@@ -297,7 +297,7 @@ void RootImpl::run(void)
 		dataCloud->updateData("mycolor", mycolor);
 	}
 
-	/*
+	
 	{
 		auto& circleNode{ m_entitygraph.node("quadEntity2") };
 
@@ -327,7 +327,7 @@ void RootImpl::run(void)
 
 		dataCloud->updateData("mycolor2", mycolor);
 	}
-	*/
+	
 }
 
 void RootImpl::close(void)
@@ -459,9 +459,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	}
 	
-	/*
+	dataCloud->registerData<maths::Real4Vector>("mycolor2");
+
 	{
-		m_entitygraph.add(screenRenderingPassNode, "quadEntity2");
 
 		auto& circleNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
 		
@@ -521,7 +521,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		
 
 	}
-	*/
+	
 	
 
 }
