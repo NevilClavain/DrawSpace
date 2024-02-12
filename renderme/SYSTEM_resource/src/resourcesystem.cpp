@@ -96,7 +96,7 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 	//// for shaders json metadata parsing
 
-	m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>& p_shader_opt)
+	m_jsonparser_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>& p_shader_opt)
 	{
 		static			std::string			section_name;
 		thread_local	Shader::Argument	s_argument;
@@ -373,11 +373,12 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				const auto metadataSize{ shadermetadata_src_content.getDataSize() };
 				const std::string metadata(shadermetadata_src_content.getData(), metadataSize);
 
+				// json parser seem to be not thread-safe -> enter critical section
+				m_jsonparser_mutex.lock();
 				renderMe::core::Json<Shader> jsonParser;
-
-				jsonParser.registerSubscriber(m_cb);
-
+				jsonParser.registerSubscriber(m_jsonparser_cb);			
 				const auto logParseStatus{ jsonParser.parse(metadata, &shaderInfos) };
+				m_jsonparser_mutex.unlock();
 
 				if (logParseStatus < 0)
 				{
