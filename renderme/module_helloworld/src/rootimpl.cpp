@@ -404,9 +404,10 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	{
 		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity0") };
 		const auto quadEntity{ quadNode.data() };
-		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 
+		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
+		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add shaders
 
@@ -428,11 +429,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		square.push({ 3, 0 });
 
 		quad_resource_aspect.addComponent<LineMeshe>("square", square);
-
-		/////////////////////////////////////
-
-		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
-
+		
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");		
@@ -462,13 +459,12 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	dataCloud->registerData<maths::Real4Vector>("quad1_color");
 
 	{
-
-		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
-		
+		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };		
 		const auto quadEntity{ quadNode.data() };
-		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 
+		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
+		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add shaders
 
@@ -490,11 +486,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 		square.push({ 3, 0 });
 
 		quad_resource_aspect.addComponent<LineMeshe>("square", square);
-
-		/////////////////////////////////////
-
-		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
-
+			
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");

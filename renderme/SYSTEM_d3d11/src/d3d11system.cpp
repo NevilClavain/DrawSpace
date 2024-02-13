@@ -132,6 +132,8 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 			{
 				_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> ENTITYGRAPHNODE_REMOVED : " + p_entity.getId());
 
+				/// no, DO NOT RELEASE RESOURCE IN D3D !!
+				/*
 				if (p_entity.hasAspect(core::resourcesAspect::id))
 				{
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
@@ -175,7 +177,8 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 							}
 						}
 					}
-				}				
+				}
+				*/
 			}
 		}
 	};

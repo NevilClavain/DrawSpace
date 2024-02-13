@@ -38,6 +38,21 @@ using namespace renderMe::core;
 RenderingQueueSystem::RenderingQueueSystem(Entitygraph& p_entitygraph) : System(p_entitygraph),
 m_localLogger("RenderingQueueSystem", renderMe::core::logger::Configuration::getInstance())
 {
+	////// Register callback to entitygraph
+
+	const Entitygraph::Callback eg_cb
+	{
+		[&, this](renderMe::core::EntitygraphEvents p_event, const core::Entity& p_entity)
+		{
+			if (renderMe::core::EntitygraphEvents::ENTITYGRAPHNODE_REMOVED == p_event)
+			{
+
+
+			}
+		}
+	};
+
+	p_entitygraph.registerSubscriber(eg_cb);
 }
 
 void RenderingQueueSystem::run()
