@@ -85,7 +85,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 		for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
 		{
 			const auto current_entity{ it->data() };
-			const auto currId{ current_entity->getId() };
+			const auto currEntityId{ current_entity->getId() };
 
 			if (current_entity->hasAspect(renderMe::core::renderingAspect::id))
 			{
@@ -107,7 +107,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 
 				if (current_queue)
 				{
-					updateRenderingQueue(resource_aspect, rendering_aspect, *current_queue);
+					updateRenderingQueue(currEntityId, resource_aspect, rendering_aspect, *current_queue);
 				}
 			}
 		}
@@ -276,7 +276,7 @@ static rendering::Queue::PixelShaderPayload build_pixelShaderPayload(const std::
 
 
 
-void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentContainer& p_resourceAspect, 
+void RenderingQueueSystem::updateRenderingQueue(const std::string& p_entity_id, const renderMe::core::ComponentContainer& p_resourceAspect, 
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
 {
@@ -291,11 +291,12 @@ void RenderingQueueSystem::updateRenderingQueue(const renderMe::core::ComponentC
 
 		for (const auto& ldc : linesDrawingControls)
 		{
-			const auto& linesDrawingControl{ ldc->getPurpose() };
+			auto& linesDrawingControl{ ldc->getPurpose() };
 
 			if (!linesDrawingControl.ready)
 			{
 				notAllReady = true;
+				linesDrawingControl.owner_entity_id = p_entity_id;
 			}
 		}
 

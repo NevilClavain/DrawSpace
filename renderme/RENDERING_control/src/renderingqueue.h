@@ -75,6 +75,8 @@ namespace renderMe
 			std::vector<std::pair<std::string, renderMe::Shader::Argument>> vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
 			std::vector<std::pair<std::string, renderMe::Shader::Argument>> pshaders_map_cnx; // computed from pshaders_map and the queue current pshader
 
+			std::string owner_entity_id; // to be completed by queue system
+
 		};
 
 		class Queue
