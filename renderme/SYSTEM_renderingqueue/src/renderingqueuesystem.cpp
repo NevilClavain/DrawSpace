@@ -42,16 +42,42 @@ m_localLogger("RenderingQueueSystem", renderMe::core::logger::Configuration::get
 
 	const Entitygraph::Callback eg_cb
 	{
-		[&, this](renderMe::core::EntitygraphEvents p_event, const core::Entity& p_entity)
+		[&, this](renderMe::core::EntitygraphEvents p_event, const core::Entity& p_removed_entity)
 		{
 			if (renderMe::core::EntitygraphEvents::ENTITYGRAPHNODE_REMOVED == p_event)
-			{
+			{		
+				rendering::Queue* current_queue{ nullptr };
 
+				for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+				{
+					const auto current_entity{ it->data() };
+					const auto currEntityId{ current_entity->getId() };
 
+					if (current_entity->hasAspect(renderMe::core::renderingAspect::id))
+					{
+						const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
+
+						const auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
+						if (rendering_queue_comp)
+						{
+							auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+							current_queue = &renderingQueue;
+						}
+					}
+
+					if (currEntityId == p_removed_entity.getId() && 
+						current_entity->hasAspect(renderMe::core::resourcesAspect::id) &&
+						current_entity->hasAspect(renderMe::core::renderingAspect::id) && 
+						current_queue)
+					{
+						// found the entity that will be removed...
+
+						removeFromRenderingQueue(p_removed_entity.getId(), *current_queue);
+					}
+				}
 			}
 		}
 	};
-
 	p_entitygraph.registerSubscriber(eg_cb);
 }
 
@@ -100,14 +126,14 @@ void RenderingQueueSystem::manageRenderingQueue()
 			}
 
 			if (current_entity->hasAspect(renderMe::core::resourcesAspect::id) &&
-				current_entity->hasAspect(renderMe::core::renderingAspect::id))
+				current_entity->hasAspect(renderMe::core::renderingAspect::id) && current_queue)
 			{
 				const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
 				const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
 
 				if (current_queue)
 				{
-					updateRenderingQueue(currEntityId, resource_aspect, rendering_aspect, *current_queue);
+					addToRenderingQueue(currEntityId, resource_aspect, rendering_aspect, *current_queue);
 				}
 			}
 		}
@@ -274,14 +300,10 @@ static rendering::Queue::PixelShaderPayload build_pixelShaderPayload(const std::
 	return pixelShaderPayload;
 }
 
-
-
-void RenderingQueueSystem::updateRenderingQueue(const std::string& p_entity_id, const renderMe::core::ComponentContainer& p_resourceAspect, 
+void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, const renderMe::core::ComponentContainer& p_resourceAspect,
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
 {
-	auto queueNodes{ p_renderingQueue.getQueueNodes() };
-
 	//search for line drawing request
 	const auto linesDrawingControls{ p_renderingAspect.getComponentsByType<rendering::LineDrawingControl>() };
 
@@ -302,6 +324,8 @@ void RenderingQueueSystem::updateRenderingQueue(const std::string& p_entity_id, 
 
 		if (notAllReady)
 		{	
+			auto queueNodes{ p_renderingQueue.getQueueNodes() };
+
 			// search for lineMeshe
 
 			const auto lineMeshes{ p_resourceAspect.getComponentsByType<LineMeshe>() };
@@ -411,8 +435,12 @@ void RenderingQueueSystem::updateRenderingQueue(const std::string& p_entity_id, 
 					}
 				}
 			}
+			p_renderingQueue.setQueueNodes(queueNodes);
 		}
-	}
+	}	
+}
 
-	p_renderingQueue.setQueueNodes(queueNodes);
+void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_id, renderMe::rendering::Queue& p_renderingQueue)
+{
+
 }

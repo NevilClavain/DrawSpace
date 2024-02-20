@@ -53,11 +53,19 @@ namespace renderMe
         void manageRenderingQueue();
         void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue);
 
-        void updateRenderingQueue(
+        void addToRenderingQueue(
                                     const std::string& p_entity_id, 
                                     const renderMe::core::ComponentContainer& p_resourceAspect,
                                     const renderMe::core::ComponentContainer& p_renderingAspect, 
                                     renderMe::rendering::Queue& p_renderingQueue
                                 );
+
+        void removeFromRenderingQueue(
+                                    const std::string& p_entity_id, 
+                                    renderMe::rendering::Queue& p_renderingQueue
+                                );
+
+
+
     };
 }
