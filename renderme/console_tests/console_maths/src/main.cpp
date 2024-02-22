@@ -39,9 +39,6 @@ int main( int argc, char* argv[] )
 	Vector<int> vint4(1, 2, 3, 4);
 	std::cout << "4 int vector : " << vint4.dump() << "\n";
 
-	Vector<int, 2> vint2;
-	std::cout << "2 int vector : " << vint2.dump() << "\n";
-
 	Vector<float, 3> vfloat3(10.0f, 20.0f, 30.0f);
 	std::cout << "3 float vector : " << vfloat3.dump() << "\n";
 
