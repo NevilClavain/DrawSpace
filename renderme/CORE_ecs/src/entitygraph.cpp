@@ -85,33 +85,27 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 void Entitygraph::remove(Node& p_node)
 {
 	const auto& entity{ *p_node.data() };
-
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_REMOVED, entity);
 	}
 
 	p_node.erase();
+	const auto id{ entity.getId() };
+
+	m_nodes.erase(id);
+	m_entites.erase(id);
 }
 
 Entitygraph::Node& Entitygraph::node(const std::string& p_entity_id)
 {
 	const auto id{ p_entity_id };
 
-	// root handled separately :-/
-	if (id == m_rootNodeName)
+	if (0 == m_nodes.count(id))
 	{
-		return m_tree.root();
+		_EXCEPTION("node not registered" + id)
 	}
-	else
-	{
-		
-		if (0 == m_nodes.count(id))
-		{
-			_EXCEPTION("node not registered" + id)
-		}
-		return (*m_nodes.at(id));		
-	}
+	return (*m_nodes.at(id));		
 }
 
 Entitygraph::PreIterator Entitygraph::preBegin()

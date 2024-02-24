@@ -107,7 +107,7 @@ int main( int argc, char* argv[] )
 		}
 		std::cout << "\n";
 
-		/*
+		
 		// remove a node
 		eg.remove(eg.node("ent2"));
 
@@ -128,7 +128,7 @@ int main( int argc, char* argv[] )
 			std::cout << currId << "\n";
 		}
 		std::cout << "\n";
-		*/
+		
 
 	}
 
