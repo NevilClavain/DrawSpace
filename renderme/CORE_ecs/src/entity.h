@@ -63,7 +63,6 @@ namespace renderMe
 
 				// mark aspect id in the component container
 				m_aspects[p_aspect].addComponent<int>("aspect", p_aspect);
-
 				return m_aspects.at(p_aspect);
 			}
 
@@ -71,6 +70,7 @@ namespace renderMe
 			{
 				if (m_aspects.count(p_aspect))
 				{
+					m_aspects[p_aspect].removeComponent<int>("aspect");
 					m_aspects.erase(p_aspect);
 				}
 				else
