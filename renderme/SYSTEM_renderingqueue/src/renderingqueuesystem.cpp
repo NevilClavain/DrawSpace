@@ -66,8 +66,6 @@ m_localLogger("RenderingQueueSystem", renderMe::core::logger::Configuration::get
 					}
 
 					if (currEntityId == p_removed_entity.getId() && 
-						current_entity->hasAspect(renderMe::core::resourcesAspect::id) &&
-						current_entity->hasAspect(renderMe::core::renderingAspect::id) && 
 						current_queue)
 					{
 						// found the entity that will be removed...
@@ -274,7 +272,8 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(const renderMe:
 		auto& linesDrawingControl{ ldc->getPurpose() };
 		linesDrawingControl.ready = true;
 
-		lineMeshePayload.list.push_back(linesDrawingControl);
+		//lineMeshePayload.list.push_back(linesDrawingControl);
+		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
 	}
 
 	return lineMeshePayload;
@@ -380,7 +379,8 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												auto& linesDrawingControl{ ldc->getPurpose() };
 												linesDrawingControl.ready = true;
 
-												lineMeshePayload.list.push_back(linesDrawingControl);
+												//lineMeshePayload.list.push_back(linesDrawingControl);
+												lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
 											}
 										}
 										else
@@ -442,5 +442,83 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 
 void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_id, renderMe::rendering::Queue& p_renderingQueue)
 {
+	auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
+	std::vector<std::string> vs_to_remove;
+
+	for (auto& vs : queueNodes)
+	{
+		std::vector<std::string> ps_to_remove;
+
+		for (auto& ps : vs.second.list)
+		{
+			std::vector<std::string> rs_to_remove;
+
+			for (auto& rs : ps.second.list)
+			{
+				std::vector<std::string> lm_to_remove;
+
+				for (auto& lm : rs.second.list)
+				{
+					std::vector<std::string> ldc_to_remove;
+
+					for (const auto& ldc : lm.second.list)
+					{						
+						if (ldc.second.owner_entity_id == p_entity_id)
+						{
+							// remove this ldc							
+							ldc_to_remove.push_back(p_entity_id);
+						}						
+					}
+
+					for (const std::string& id : ldc_to_remove)
+					{
+						lm.second.list.erase(id);
+					}
+
+					if (0 == lm.second.list.size())
+					{
+						lm_to_remove.push_back(lm.first);
+					}
+				}
+
+				for (const std::string& id : lm_to_remove)
+				{
+					rs.second.list.erase(id);
+				}
+
+				if (0 == rs.second.list.size())
+				{
+					rs_to_remove.push_back(rs.first);
+				}
+			}
+
+			for (const std::string& id : rs_to_remove)
+			{
+				ps.second.list.erase(id);
+			}
+
+			if (0 == ps.second.list.size())
+			{
+				ps_to_remove.push_back(ps.first);
+			}
+		}
+
+		for (const std::string& id : ps_to_remove)
+		{
+			vs.second.list.erase(id);
+		}
+
+		if (0 == vs.second.list.size())
+		{
+			vs_to_remove.push_back(vs.first);
+		}
+	}
+
+	for (const std::string& id : vs_to_remove)
+	{
+		queueNodes.erase(id);
+	}
+
+	p_renderingQueue.setQueueNodes(queueNodes);
 }

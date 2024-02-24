@@ -365,15 +365,17 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 						const auto& lineMesheId{ lineMesheInfo.first };
 						d3dimpl->setLineMeshe(lineMesheId);
 
-						std::vector<renderMe::rendering::LineDrawingControl> lineDrawingControls{ lineMesheInfo.second.list };
+						//std::vector<renderMe::rendering::LineDrawingControl> lineDrawingControls{ lineMesheInfo.second.list };
+
+						const auto& lineDrawingControls{ lineMesheInfo.second.list };
 						for (const auto& lc : lineDrawingControls)
 						{
 							//////
-							lc.setup();
+							lc.second.setup();
 
 							////// Apply shaders params
 
-							for (const auto& e : lc.vshaders_map_cnx)
+							for (const auto& e : lc.second.vshaders_map_cnx)
 							{
 								const auto& datacloud_data_id{ e.first };
 								const auto& shader_param{ e.second };
@@ -385,7 +387,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 								}
 							}
 
-							for (const auto& e : lc.pshaders_map_cnx)
+							for (const auto& e : lc.second.pshaders_map_cnx)
 							{
 								const auto& datacloud_data_id{ e.first };
 								const auto& shader_param{ e.second };
@@ -399,10 +401,10 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 							//////
 
-							d3dimpl->drawLineMeshe(lc.world, lc.view, lc.proj);
+							d3dimpl->drawLineMeshe(lc.second.world, lc.second.view, lc.second.proj);
 
 							//////
-							lc.teardown();
+							lc.second.teardown();
 						}
 					}
 				}

@@ -108,7 +108,10 @@ namespace renderMe
 						
 			struct LineMeshePayload
 			{
-				std::vector<LineDrawingControl> list;
+				//std::vector<LineDrawingControl> list;
+
+				// key = entity id
+				std::unordered_map<std::string, LineDrawingControl> list;
 			};
 
 			struct RenderStatePayload
