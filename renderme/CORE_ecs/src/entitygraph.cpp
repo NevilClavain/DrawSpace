@@ -43,7 +43,10 @@ Entitygraph::Node& Entitygraph::makeRoot(const std::string& p_entity_id)
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_ADDED, *m_entites.at(p_entity_id).get());
-	}	
+	}
+
+	m_nodes[p_entity_id] = &m_tree.root();
+
 	return m_tree.root();
 }
 
