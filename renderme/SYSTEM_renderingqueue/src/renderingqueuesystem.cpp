@@ -260,7 +260,8 @@ static void const connect_shaders_args(const renderMe::core::ComponentList<rende
 	}
 }
 
-static rendering::Queue::LineMeshePayload build_LineMeshePayload(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+static rendering::Queue::LineMeshePayload build_LineMeshePayload(renderMe::core::logger::Sink& p_localLogger, 
+																const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
 																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	rendering::Queue::LineMeshePayload lineMeshePayload;
@@ -272,14 +273,16 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(const renderMe:
 		auto& linesDrawingControl{ ldc->getPurpose() };
 		linesDrawingControl.ready = true;
 
-		//lineMeshePayload.list.push_back(linesDrawingControl);
 		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
+
+		_RENDERME_DEBUG(p_localLogger, "adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
 	}
 
 	return lineMeshePayload;
 }
 
-rendering::Queue::RenderStatePayload build_RenderStatePayload(const std::string& p_linemesheId, 
+rendering::Queue::RenderStatePayload build_RenderStatePayload(renderMe::core::logger::Sink& p_localLogger,
+																const std::string& p_linemesheId, 
 																const rendering::Queue::LineMeshePayload& p_lineMeshePayload, 
 																const std::vector<renderMe::rendering::RenderState>& p_rs_list)
 {
@@ -288,21 +291,29 @@ rendering::Queue::RenderStatePayload build_RenderStatePayload(const std::string&
 	renderStatePayload.list[p_linemesheId] = p_lineMeshePayload;
 	renderStatePayload.description = p_rs_list;
 
+	_RENDERME_DEBUG(p_localLogger, "build new RenderStatePayload with linemeshe id " + p_linemesheId)
+
 	return renderStatePayload;
 }
 
-static rendering::Queue::PixelShaderPayload build_pixelShaderPayload(const std::vector<renderMe::rendering::RenderState>& p_rs_list, const rendering::Queue::RenderStatePayload& p_renderStatePayload)
+static rendering::Queue::PixelShaderPayload build_pixelShaderPayload(renderMe::core::logger::Sink& p_localLogger, 
+																		const std::vector<renderMe::rendering::RenderState>& p_rs_list, 
+																		const rendering::Queue::RenderStatePayload& p_renderStatePayload)
 {
 	rendering::Queue::PixelShaderPayload pixelShaderPayload;
 
-	pixelShaderPayload.list[build_rs_list_id(p_rs_list)] = p_renderStatePayload;
+	const auto rs_id{ build_rs_list_id(p_rs_list) };
+	pixelShaderPayload.list[rs_id] = p_renderStatePayload;
+
+	_RENDERME_DEBUG(p_localLogger, "build new PixelShaderPayload with renderstate list id " + rs_id)
+
 	return pixelShaderPayload;
 }
 
 void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, const renderMe::core::ComponentContainer& p_resourceAspect,
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
-{
+{	
 	//search for line drawing request
 	const auto linesDrawingControls{ p_renderingAspect.getComponentsByType<rendering::LineDrawingControl>() };
 
@@ -322,7 +333,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 		}
 
 		if (notAllReady)
-		{	
+		{			
 			auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
 			// search for lineMeshe
@@ -352,11 +363,20 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 							{
 								// vshader entry exists
 
+								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+									+ " updated with new entity : " + p_entity_id
+									+ " : adding under existing vshader branch : " + vshader.getName())
+
 								auto& vertexShaderPayload{ queueNodes.at(vshader.getName()) };
 
 								if (vertexShaderPayload.list.count(pshader.getName()))
 								{
 									// pshader entry exists
+
+									_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+										+ " updated with new entity : " + p_entity_id
+										+ " : adding under existing pshader branch : " + pshader.getName())
+
 
 									auto& pixelShaderPayload{ vertexShaderPayload.list.at(pshader.getName())};
 
@@ -365,11 +385,21 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 									{
 										// renderstates list entry exists
 
+										_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+											+ " updated with new entity : " + p_entity_id
+											+ " : adding under existing renderstates branch : " + rs_list_id)
+
+
 										auto& renderStatePayload{ pixelShaderPayload.list.at(rs_list_id) };
 										if (renderStatePayload.list.count(lineMeshes.at(0)->getPurpose().getName()))
 										{
 											// linemeshe entry exists
 
+											_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+												+ " updated with new entity : " + p_entity_id
+												+ " : adding under existing linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
+
+									
 											auto& lineMeshePayload{ renderStatePayload.list.at(lineMeshes.at(0)->getPurpose().getName())};
 
 											connect_shaders_args(linesDrawingControls, vshader, pshader);
@@ -378,39 +408,54 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 											{
 												auto& linesDrawingControl{ ldc->getPurpose() };
 												linesDrawingControl.ready = true;
-
-												//lineMeshePayload.list.push_back(linesDrawingControl);
 												lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
+
+												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+													+ " updated with new entity : " + p_entity_id
+													+ " : adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
 											}
 										}
 										else
 										{
 											// new linemeshe and below elements to add
 
-											const auto lineMeshePayload{ build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
+											_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+												+ " updated with new entity : " + p_entity_id
+												+ " : adding new linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
+
+											const auto lineMeshePayload{ build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
 											renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
 										}
 									}
 									else
 									{
+										_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+											+ " updated with new entity : " + p_entity_id
+											+ " : adding new renderstate branch : " + rs_list_id)
+
+
 										// new renderstate and below elements to add
-										const auto lineMeshePayload{ build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
-										const auto renderStatePayload{ build_RenderStatePayload(lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
+										const auto lineMeshePayload{ build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
+										const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
 
 										pixelShaderPayload.list[rs_list_id] = renderStatePayload;
 									}
 								}
 								else
 								{
+									_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+										+ " updated with new entity : " + p_entity_id
+										+ " : adding new pshader branch : " + pshader.getName())
+
 									// new pshader and below elements to add
 
-									const auto lineMeshePayload{ build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
+									const auto lineMeshePayload{ build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
 
 									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-									const auto renderStatePayload{ build_RenderStatePayload(lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
+									const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
 
-									const auto pixelShaderPayload{ build_pixelShaderPayload(rsStates.at(0)->getPurpose(), renderStatePayload) };
+									const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
 
 									vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;									
 								}
@@ -419,16 +464,23 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 							{
 								// new vshader and below elements to add
 
-								const auto lineMeshePayload { build_LineMeshePayload(linesDrawingControls, vshader, pshader) };
+								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() 
+																+ " updated with new entity : " + p_entity_id 
+																+ " : adding new vshader branch : " + vshader.getName())
+
+								const auto lineMeshePayload { build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
 							
 								// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 								// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-								const auto renderStatePayload{ build_RenderStatePayload(lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
+								const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
 
-								const auto pixelShaderPayload{ build_pixelShaderPayload(rsStates.at(0)->getPurpose(), renderStatePayload) };
+								const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
 
 								rendering::Queue::VertexShaderPayload vertexShaderPayload;
-								vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;								
+								vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;	
+
+								_RENDERME_DEBUG(m_localLogger, "build new vertexShaderPayload with pixel shader id " + pshader.getName())
+
 								queueNodes[vshader.getName()] = vertexShaderPayload;
 							}							
 						}
