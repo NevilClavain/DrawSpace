@@ -81,10 +81,15 @@ private:
 
     std::string                             m_resources_event{ "..." };
 
-    //bool                                    m_draw_quad0{ true };
 
     bool                                    m_quadEntity0_state_request{ true };
     bool                                    m_quadEntity0_state { false };
+
+    bool                                    m_quadEntity1_state_request{ true };
+    bool                                    m_quadEntity1_state{ false };
+
+
+
 };
 
 
