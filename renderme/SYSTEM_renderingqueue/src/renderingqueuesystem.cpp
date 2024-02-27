@@ -222,7 +222,8 @@ static std::string build_rs_list_id(const std::vector<renderMe::rendering::Rende
 	return rs_set_signature;
 }
 
-static void const connect_shaders_args(const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogger, 
+										const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
 										const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	const auto vshaders_current_args{ p_vshader.getArguments() };
@@ -232,28 +233,34 @@ static void const connect_shaders_args(const renderMe::core::ComponentList<rende
 	{
 		auto& linesDrawingControl{ ldc->getPurpose() };
 
+		_RENDERME_DEBUG(p_localLogger, "connecting shaders argumants for linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
+
 		//vshader arguments id match loop
-		for (const auto& e : vshaders_current_args)
+		for (const auto& current_arg : vshaders_current_args)
 		{
-			const auto argument_id{ e.argument_id };
-			for (const auto& e2 : linesDrawingControl.vshaders_map)
+			const auto argument_id{ current_arg.argument_id };
+			for (const auto& connection_pair : linesDrawingControl.vshaders_map)
 			{
-				if (argument_id == e2.second)
+				if (argument_id == connection_pair.second)
 				{
-					linesDrawingControl.vshaders_map_cnx.push_back(std::make_pair(e2.first, e));
+					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+						linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
 				}
 			}
 		}
 
 		//pshader arguments id match loop
-		for (const auto& e : pshaders_current_args)
+		for (const auto& current_arg : pshaders_current_args)
 		{
-			const auto argument_id{ e.argument_id };
-			for (const auto& e2 : linesDrawingControl.pshaders_map)
+			const auto argument_id{ current_arg.argument_id };
+			for (const auto& connection_pair : linesDrawingControl.pshaders_map)
 			{
-				if (argument_id == e2.second)
+				if (argument_id == connection_pair.second)
 				{
-					linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(e2.first, e));
+					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+					linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
 				}
 			}
 		}
@@ -266,7 +273,7 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(renderMe::core:
 {
 	rendering::Queue::LineMeshePayload lineMeshePayload;
 
-	connect_shaders_args(p_linesDrawingControls, p_vshader, p_pshader);
+	connect_shaders_args(p_localLogger, p_linesDrawingControls, p_vshader, p_pshader);
 
 	for (const auto& ldc : p_linesDrawingControls)
 	{		
@@ -402,7 +409,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 									
 											auto& lineMeshePayload{ renderStatePayload.list.at(lineMeshes.at(0)->getPurpose().getName())};
 
-											connect_shaders_args(linesDrawingControls, vshader, pshader);
+											connect_shaders_args(m_localLogger, linesDrawingControls, vshader, pshader);
 
 											for (const auto& ldc : linesDrawingControls)
 											{
