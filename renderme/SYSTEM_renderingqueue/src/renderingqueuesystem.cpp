@@ -525,7 +525,8 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 					{						
 						if (ldc.second.owner_entity_id == p_entity_id)
 						{
-							// remove this ldc							
+							_RENDERME_DEBUG(m_localLogger, "remove linesDrawingControl of entity " + p_entity_id)
+							// remove this ldc
 							ldc_to_remove.push_back(p_entity_id);
 						}						
 					}
@@ -537,6 +538,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 					if (0 == lm.second.list.size())
 					{
+						_RENDERME_DEBUG(m_localLogger, "linemeshe payload is now empty, remove linemeshe id : " + lm.first)
 						lm_to_remove.push_back(lm.first);
 					}
 				}
@@ -548,6 +550,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 				if (0 == rs.second.list.size())
 				{
+					_RENDERME_DEBUG(m_localLogger, "renderstate payload is now empty, remove renderstate id : " + rs.first)
 					rs_to_remove.push_back(rs.first);
 				}
 			}
@@ -559,6 +562,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 			if (0 == ps.second.list.size())
 			{
+				_RENDERME_DEBUG(m_localLogger, "pixelshader payload is now empty, remove pixelshader id : " + ps.first)
 				ps_to_remove.push_back(ps.first);
 			}
 		}
@@ -570,6 +574,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 		if (0 == vs.second.list.size())
 		{
+			_RENDERME_DEBUG(m_localLogger, "vertexshader payload is now empty, remove vertexshader id : " + vs.first)
 			vs_to_remove.push_back(vs.first);
 		}
 	}
