@@ -29,6 +29,7 @@
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
+#include "eventsource.h"
 
 namespace renderMe
 {
@@ -37,7 +38,13 @@ namespace renderMe
     namespace core { class ComponentContainer; }
     namespace rendering { class Queue; }
 
-    class RenderingQueueSystem : public core::System
+    enum class RenderingQueueSystemEvent
+    {
+        LINEDRAWING_ADDED,
+        LINEDRAWING_REMOVED
+    };
+
+    class RenderingQueueSystem : public core::System, public renderMe::property::EventSource<RenderingQueueSystemEvent, const std::string&>
     {
     public:
 

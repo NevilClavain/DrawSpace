@@ -267,7 +267,9 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 	}
 }
 
-static rendering::Queue::LineMeshePayload build_LineMeshePayload(renderMe::core::logger::Sink& p_localLogger, 
+static rendering::Queue::LineMeshePayload build_LineMeshePayload(
+																const std::vector<RenderingQueueSystem::Callback>& p_cbs,
+																renderMe::core::logger::Sink& p_localLogger, 
 																const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
 																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
@@ -283,6 +285,11 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(renderMe::core:
 		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
 
 		_RENDERME_DEBUG(p_localLogger, "adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
+
+		for (const auto& call : p_cbs)
+		{
+			call(RenderingQueueSystemEvent::LINEDRAWING_ADDED, linesDrawingControl.owner_entity_id);
+		}
 	}
 
 	return lineMeshePayload;
@@ -420,6 +427,11 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 													+ " updated with new entity : " + p_entity_id
 													+ " : adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
+
+												for (const auto& call : m_callbacks)
+												{
+													call(RenderingQueueSystemEvent::LINEDRAWING_ADDED, linesDrawingControl.owner_entity_id);
+												}
 											}
 										}
 										else
@@ -430,7 +442,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												+ " updated with new entity : " + p_entity_id
 												+ " : adding new linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
 
-											const auto lineMeshePayload{ build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
+											const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
 											renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
 										}
 									}
@@ -442,7 +454,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 
 
 										// new renderstate and below elements to add
-										const auto lineMeshePayload{ build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
+										const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
 										const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
 
 										pixelShaderPayload.list[rs_list_id] = renderStatePayload;
@@ -456,7 +468,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 
 									// new pshader and below elements to add
 
-									const auto lineMeshePayload{ build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
+									const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
 
 									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
@@ -475,7 +487,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 																+ " updated with new entity : " + p_entity_id 
 																+ " : adding new vshader branch : " + vshader.getName())
 
-								const auto lineMeshePayload { build_LineMeshePayload(m_localLogger, linesDrawingControls, vshader, pshader) };
+								const auto lineMeshePayload { build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
 							
 								// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 								// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
@@ -528,6 +540,11 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 							_RENDERME_DEBUG(m_localLogger, "remove linesDrawingControl of entity " + p_entity_id)
 							// remove this ldc
 							ldc_to_remove.push_back(p_entity_id);
+
+							for (const auto& call : m_callbacks)
+							{
+								call(RenderingQueueSystemEvent::LINEDRAWING_REMOVED, p_entity_id);
+							}
 						}						
 					}
 
