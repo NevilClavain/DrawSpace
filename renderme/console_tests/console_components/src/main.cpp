@@ -41,39 +41,47 @@ public:
 int main( int argc, char* argv[] )
 {    
 	std::cout << "Component container test !\n";
-	core::ComponentContainer c;
-
-	c.addComponent<std::string>("theString", "abcdefg");
-	c.addComponent<double>("pi", 3.1415927);
-	c.addComponent<Foo>("foo");
-
-	std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
 
 	{
-		const auto pi{ c.getComponent<double>("pi") };
-		const auto theString{ c.getComponent<std::string>("theString") };
 
-		std::cout << pi->getPurpose() << "\n";
-		std::cout << theString->getPurpose() << "\n";
+		core::ComponentContainer c;
+
+		c.addComponent<std::string>("theString", "abcdefg");
+		c.addComponent<double>("pi", 3.1415927);
+		c.addComponent<Foo>("foo");
+
+		std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
+
+		{
+			const auto pi{ c.getComponent<double>("pi") };
+			const auto theString{ c.getComponent<std::string>("theString") };
+
+			std::cout << pi->getPurpose() << "\n";
+			std::cout << theString->getPurpose() << "\n";
+		}
+
+		// update
+		{
+			auto& pi{ c.getComponent<double>("pi")->getPurpose() };
+			pi = 3.12;
+		}
+		///
+		{
+			const auto pi{ c.getComponent<double>("pi") };
+			std::cout << pi->getPurpose() << "\n";
+		}
+
+		c.removeComponent<std::string>("theString");
+		c.removeComponent<double>("pi");
+
+	
+		std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
+
+		std::cout << "Bye...\n";
 	}
+	//Foo ctor called here, as we leave ComponentContainer c context
 
-	// update
-	{
-		auto& pi{ c.getComponent<double>("pi")->getPurpose() };
-		pi = 3.12;
-	}
-	///
-	{
-		const auto pi{ c.getComponent<double>("pi") };
-		std::cout << pi->getPurpose() << "\n";
-	}
-
-	c.removeComponent<std::string>("theString");
-	c.removeComponent<double>("pi");
-	c.removeComponent<Foo>("foo");
-
-	std::cout << "Number of components : " << core::ComponentContainer::getUIDCount() << "\n";
-
+	std::cout << "The end...\n";
 
     return 0;
 }

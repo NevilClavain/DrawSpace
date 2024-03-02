@@ -29,6 +29,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <algorithm>
 
 #include "exceptions.h"
 #include "component.h"
@@ -49,7 +50,9 @@ namespace renderMe
 			ComponentContainer(ComponentContainer&&) = delete;
 			ComponentContainer& operator=(const ComponentContainer& t) = delete;
 
-			~ComponentContainer() = default;
+			~ComponentContainer()
+			{
+			}
 
 			static int getUIDCount() { return m_uid_count; };
 
@@ -61,55 +64,54 @@ namespace renderMe
 					_EXCEPTION("Component with same id already exists : " + p_id);
 				}
 
-				const auto newcomp{ _NEW_CHUNK_WITH_COMMENT(Component<T>, Component<T>, p_id) };
-				newcomp->makePurpose((std::forward<Args>(p_args))...);
-				m_components[p_id] = newcomp;
+				m_components[p_id] = std::make_shared<Component<T>>();
+				const auto newcomp { m_components.at(p_id).get()};
+				Component<T>* newcompT{ static_cast<Component<T>*>(newcomp) };
+				newcompT->makePurpose((std::forward<Args>(p_args))...);
 
 				// ajout dans m_components_by_type
-
 				const auto tid{ typeid(T).hash_code() };
-				m_components_by_type[tid].push_back(newcomp);
+				m_components_by_type[tid].push_back(newcompT);
 
 				newcomp->setUID( m_uid_count++ );
 			}
 
 			template<typename T>
 			void removeComponent(const std::string& p_id)
-			{
+			{				
 				if (0 == m_components.count(p_id))
 				{
 					_EXCEPTION("Component id not registered in this aspect : " + p_id);
 				}
 
-				auto comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
+				auto comp{ static_cast<Component<T>*>(m_components.at(p_id).get()) };
 				// suppression dans m_components_by_type
 				const auto tid{ typeid(T).hash_code() };
 				for (auto it = m_components_by_type.at(tid).begin(); it != m_components_by_type.at(tid).end(); ++it)
 				{
-					if (m_components.at(p_id) == *it)
+					if (m_components.at(p_id).get() == *it)
 					{
 						// on a trouve le composant en question ! suppression...
 						m_components_by_type.at(tid).erase(it);
 						break;
 					}
 				}
-				m_components.erase(p_id);
-				//
-				_DELETE_CHUNK_(comp);
 
-				m_uid_count--;
+				m_components.erase(p_id);
+			
+				m_uid_count--;				
 			}
 
 			
 			template<typename T>
 			Component<T>* getComponent(const std::string& p_id) const
-			{
+			{				
 				if (0 == m_components.count(p_id))
 				{
 					return nullptr;
 				}
-				const auto comp{ static_cast<Component<T>*>(m_components.at(p_id)) };
-				return comp;
+				const auto comp{ static_cast<Component<T>*>(m_components.at(p_id).get()) };
+				return comp;			
 			}
 
 			
@@ -117,6 +119,7 @@ namespace renderMe
 			ComponentList<T> getComponentsByType() const
 			{
 				ComponentList<T> outlist;
+				
 				const auto tid{ typeid(T).hash_code() };
 				if (m_components_by_type.count(tid) > 0)
 				{
@@ -125,19 +128,18 @@ namespace renderMe
 					{
 						outlist.push_back(static_cast<Component<T>*>(e));
 					}
-				}
-
+				}				
 				return outlist;
 			}
 			
 		protected:
-			static int													m_uid_count;
+			static int															m_uid_count;
 
 			// map globale, regroupant les composants par id...
-			std::unordered_map<std::string, ComponentBase*>				m_components;
+			std::unordered_map<std::string, std::shared_ptr<ComponentBase>>		m_components;
 
 			// 2eme map pour regrouper les composants en fct de leur type
-			std::unordered_map<size_t, std::vector<ComponentBase*>>		m_components_by_type;
+			std::unordered_map<size_t, std::vector<ComponentBase*>>				m_components_by_type;
 		};
 	}
 }

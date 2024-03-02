@@ -29,6 +29,11 @@ namespace renderMe
 {
 	namespace core
 	{
+		struct teapotAspect // for test, debug
+		{
+			static constexpr int id{ 0x6000 };
+		};
+
 		struct renderingAspect
 		{
 			static constexpr int id{ 0x0001 };

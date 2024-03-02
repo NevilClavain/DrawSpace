@@ -342,13 +342,8 @@ void RootImpl::run(void)
 		quad_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
 
 
-
-
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 		quad_time_aspect.addComponent<TimeManager::Variable>("quad0_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
-
-
-
 
 
 		m_quadEntity0_state = true;
@@ -362,43 +357,10 @@ void RootImpl::run(void)
 
 
 		auto& quadNode{ m_entitygraph.node("quadEntity0") };
-		const auto quadEntity{ quadNode.data() };
-
-
-		////////////////////////////////////
-
-		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
-
-		quad_time_aspect.removeComponent<TimeManager::Variable>("quad0_color");
-		quadEntity->removeAspect(core::timeAspect::id);
-
-		////////////////////////////////////
-
-		auto& quad_rendering_aspect{ quadEntity->aspectAccess(core::renderingAspect::id) };
-
-		quad_rendering_aspect.removeComponent<rendering::LineDrawingControl>("squareRendering");
-		quad_rendering_aspect.removeComponent<std::vector<RenderState>>("renderStates");
-
-		quadEntity->removeAspect(core::renderingAspect::id);
-
-		////////////////////////////////////
-
-		auto& quad_resource_aspect{ quadEntity->aspectAccess(core::resourcesAspect::id) };
-
-		quad_resource_aspect.removeComponent<LineMeshe>("square");
-		quad_resource_aspect.removeComponent<Shader>("vertexShader");
-		quad_resource_aspect.removeComponent<Shader>("pixelShader");
-
-
-
-
 		m_entitygraph.remove(quadNode);
-
 
 		m_quadEntity0_state = false;
 	}
-
-
 
 	//////////////////////////////////////////////////////
 	// 	
@@ -463,12 +425,8 @@ void RootImpl::run(void)
 		quad_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
 
 
-
-
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };		
 		quad_time_aspect.addComponent<TimeManager::Variable>("quad1_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
-
-
 
 
 		m_quadEntity1_state = true;
@@ -480,45 +438,12 @@ void RootImpl::run(void)
 		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->removeData<maths::Real4Vector>("quad1_color");
 
-
 		auto& quadNode{ m_entitygraph.node("quadEntity1") };
-		const auto quadEntity{ quadNode.data() };
-
-
-		////////////////////////////////////
-
-		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
-
-		quad_time_aspect.removeComponent<TimeManager::Variable>("quad1_color");
-		quadEntity->removeAspect(core::timeAspect::id);
-
-		////////////////////////////////////
-
-		auto& quad_rendering_aspect{ quadEntity->aspectAccess(core::renderingAspect::id) };
-
-		quad_rendering_aspect.removeComponent<rendering::LineDrawingControl>("squareRendering");
-		quad_rendering_aspect.removeComponent<std::vector<RenderState>>("renderStates");
-
-		quadEntity->removeAspect(core::renderingAspect::id);
-
-		////////////////////////////////////
-
-		auto& quad_resource_aspect{ quadEntity->aspectAccess(core::resourcesAspect::id) };
-
-		quad_resource_aspect.removeComponent<LineMeshe>("square");
-		quad_resource_aspect.removeComponent<Shader>("vertexShader");
-		quad_resource_aspect.removeComponent<Shader>("pixelShader");
-
-
-
-
 		m_entitygraph.remove(quadNode);
 
 
 		m_quadEntity1_state = false;
 	}
-
-
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

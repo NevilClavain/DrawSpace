@@ -33,6 +33,17 @@
 
 using namespace renderMe;
 
+
+class Foo
+{
+public:
+	Foo() = default;
+	~Foo()
+	{
+		std::cout << "Foo ctor call\n";
+	}
+};
+
 int main( int argc, char* argv[] )
 {    
 	std::cout << "ECS tests\n";
@@ -82,6 +93,13 @@ int main( int argc, char* argv[] )
 
 		auto& ent1{ eg.node("ent1") };
 
+		ent1.data()->makeAspect(core::teapotAspect::id);
+		{
+			// write component in an entity/aspect
+			auto& teapot_aspect{ ent1.data()->aspectAccess(core::teapotAspect::id) };
+			teapot_aspect.addComponent<Foo>("foo");
+		}
+
 		eg.add( eg.add(ent1, "ent11"), "ent111");
 
 
@@ -106,7 +124,6 @@ int main( int argc, char* argv[] )
 			std::cout << currId << "\n";
 		}
 		std::cout << "\n";
-
 		
 		// remove a node
 		eg.remove(eg.node("ent2"));
@@ -119,7 +136,7 @@ int main( int argc, char* argv[] )
 		}
 		std::cout << "\n";
 
-		eg.remove(eg.node("ent11"));
+		eg.remove(eg.node("ent1"));
 
 		// root to leaf browsing
 		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
@@ -127,11 +144,7 @@ int main( int argc, char* argv[] )
 			const auto currId{ it->data()->getId() };
 			std::cout << currId << "\n";
 		}
-		std::cout << "\n";
-		
-
+		std::cout << "\n";	
 	}
-
-
     return 0;
 }

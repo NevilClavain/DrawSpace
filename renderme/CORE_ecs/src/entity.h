@@ -70,7 +70,7 @@ namespace renderMe
 			{
 				if (m_aspects.count(p_aspect))
 				{
-					m_aspects[p_aspect].removeComponent<int>("aspect");
+					m_aspects.at(p_aspect).removeComponent<int>("aspect");
 					m_aspects.erase(p_aspect);
 				}
 				else
