@@ -44,17 +44,17 @@ namespace renderMe
 		class RenderingQueueSystem;
 
 
-		struct LineDrawingControl
+		struct DrawingControl
 		{
 		public:
 
-			LineDrawingControl()
+			DrawingControl()
 			{
 				world.identity();
 				view.identity();
 			}
 
-			~LineDrawingControl() = default;
+			~DrawingControl() = default;
 
 			core::maths::Matrix world;
 			core::maths::Matrix view;
@@ -111,7 +111,7 @@ namespace renderMe
 				//std::vector<LineDrawingControl> list;
 
 				// key = entity id
-				std::unordered_map<std::string, LineDrawingControl> list;
+				std::unordered_map<std::string, DrawingControl> list;
 			};
 
 			struct RenderStatePayload
@@ -120,7 +120,7 @@ namespace renderMe
 				std::vector<RenderState>							description;
 
 				// key = lineMeshe D3D11 id
-				std::unordered_map<std::string, LineMeshePayload>	list;
+				std::unordered_map<std::string, LineMeshePayload>	linemeshes_list;
 			};
 
 			struct PixelShaderPayload

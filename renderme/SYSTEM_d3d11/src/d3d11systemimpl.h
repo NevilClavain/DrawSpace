@@ -165,6 +165,7 @@ public:
     void setLineListTopology();
 
     void drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
+    void drawTriangleMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
 
     void setVertexshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
     void setPixelshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);

@@ -223,7 +223,7 @@ static std::string build_rs_list_id(const std::vector<renderMe::rendering::Rende
 }
 
 static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogger, 
-										const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+										const renderMe::core::ComponentList<rendering::DrawingControl>& p_linesDrawingControls,
 										const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	const auto vshaders_current_args{ p_vshader.getArguments() };
@@ -270,7 +270,7 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 																const std::vector<RenderingQueueSystem::Callback>& p_cbs,
 																renderMe::core::logger::Sink& p_localLogger, 
-																const renderMe::core::ComponentList<rendering::LineDrawingControl>& p_linesDrawingControls,
+																const renderMe::core::ComponentList<rendering::DrawingControl>& p_linesDrawingControls,
 																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	rendering::Queue::LineMeshePayload lineMeshePayload;
@@ -302,7 +302,7 @@ rendering::Queue::RenderStatePayload build_RenderStatePayload(renderMe::core::lo
 {
 	rendering::Queue::RenderStatePayload renderStatePayload;
 
-	renderStatePayload.list[p_linemesheId] = p_lineMeshePayload;
+	renderStatePayload.linemeshes_list[p_linemesheId] = p_lineMeshePayload;
 	renderStatePayload.description = p_rs_list;
 
 	_RENDERME_DEBUG(p_localLogger, "build new RenderStatePayload with linemeshe id " + p_linemesheId)
@@ -329,7 +329,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												renderMe::rendering::Queue& p_renderingQueue)
 {	
 	//search for line drawing request
-	const auto linesDrawingControls{ p_renderingAspect.getComponentsByType<rendering::LineDrawingControl>() };
+	const auto linesDrawingControls{ p_renderingAspect.getComponentsByType<rendering::DrawingControl>() };
 
 	if (linesDrawingControls.size() > 0)
 	{
@@ -405,7 +405,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 
 
 										auto& renderStatePayload{ pixelShaderPayload.list.at(rs_list_id) };
-										if (renderStatePayload.list.count(lineMeshes.at(0)->getPurpose().getName()))
+										if (renderStatePayload.linemeshes_list.count(lineMeshes.at(0)->getPurpose().getName()))
 										{
 											// linemeshe entry exists
 
@@ -414,7 +414,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												+ " : adding under existing linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
 
 									
-											auto& lineMeshePayload{ renderStatePayload.list.at(lineMeshes.at(0)->getPurpose().getName())};
+											auto& lineMeshePayload{ renderStatePayload.linemeshes_list.at(lineMeshes.at(0)->getPurpose().getName())};
 
 											connect_shaders_args(m_localLogger, linesDrawingControls, vshader, pshader);
 
@@ -443,7 +443,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												+ " : adding new linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
 
 											const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
-											renderStatePayload.list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
+											renderStatePayload.linemeshes_list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
 										}
 									}
 									else
@@ -529,7 +529,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 			{
 				std::vector<std::string> lm_to_remove;
 
-				for (auto& lm : rs.second.list)
+				for (auto& lm : rs.second.linemeshes_list)
 				{
 					std::vector<std::string> ldc_to_remove;
 
@@ -562,10 +562,10 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 				for (const std::string& id : lm_to_remove)
 				{
-					rs.second.list.erase(id);
+					rs.second.linemeshes_list.erase(id);
 				}
 
-				if (0 == rs.second.list.size())
+				if (0 == rs.second.linemeshes_list.size())
 				{
 					_RENDERME_DEBUG(m_localLogger, "renderstate payload is now empty, remove renderstate id : " + rs.first)
 					rs_to_remove.push_back(rs.first);

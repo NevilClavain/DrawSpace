@@ -1,0 +1,140 @@
+
+/* -*-LIC_BEGIN-*- */
+/*
+*
+* renderMe grafx framework
+* Emmanuel Chaumont Copyright (c) 2013-2023
+*
+* This file is part of renderMe.
+*
+*    renderMe is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    renderMe is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with renderMe.  If not, see <http://www.gnu.org/licenses/>.
+*
+*/
+/* -*-LIC_END-*- */
+
+#pragma once
+
+#include <string>
+#include <vector>
+#include <mutex>
+#include <map>
+
+#include "primitives.h"
+#include "matrix.h"
+
+namespace renderMe
+{
+	class TriangleMeshe
+	{
+	public:
+		enum class State
+		{
+			INIT,
+			BLOBLOADING,
+			BLOBLOADED,
+			RENDERERLOADING,
+			RENDERERLOADED,
+		};
+
+		enum class NormalesGenerationMode
+		{
+			NORMALES_DISCARDED,
+			NORMALES_AUTO,
+			NORMALES_AUTO_SMOOTH,
+			NORMALES_FROMLOADER,
+			NORMALES_FROMLOADER_SMOOTH,
+			NORMALES_COMPUTED
+		};
+
+		enum class TangentBinormalesGenerationMode
+		{
+			TB_DISCARDED,
+			TB_AUTO,
+			TB_FROMLOADER,
+			TB_COMPUTED
+		};
+
+		TriangleMeshe() = delete;
+		TriangleMeshe(const std::string& p_name, State p_initial_state = State::INIT);
+
+		TriangleMeshe(const TriangleMeshe& p_other);
+
+		TriangleMeshe& operator=(const TriangleMeshe& p_other)
+		{
+			m_name = p_other.m_name;
+			m_vertices = p_other.m_vertices;
+			m_triangles = p_other.m_triangles;
+			m_triangles_for_vertex = p_other.m_triangles_for_vertex;
+
+			m_normales_transformation = p_other.m_normales_transformation;
+			m_n_gen_mode = p_other.m_n_gen_mode;
+			m_tb_gen_mode = p_other.m_tb_gen_mode;
+
+			m_state_mutex.lock();
+			p_other.m_state_mutex.lock();
+			m_state = p_other.m_state;
+			p_other.m_state_mutex.unlock();
+			m_state_mutex.unlock();
+
+			return *this;
+		}
+
+		~TriangleMeshe() = default;
+
+		std::string										getName(void) const;
+
+		std::vector<renderMe::Vertex>					getVertices(void) const;
+		size_t											getVerticesListSize() const;
+		
+		std::vector<TrianglePrimitive<unsigned int>>	getTriangles(void) const;
+		size_t											getTrianglesListSize() const;
+
+		void											setNGenerationMode(NormalesGenerationMode p_mode);
+		void											setTBGenerationMode(TangentBinormalesGenerationMode p_mode);
+
+		NormalesGenerationMode							getNGenerationMode(void) const;
+		TangentBinormalesGenerationMode					getTBGenerationMode(void) const;
+
+		core::maths::Matrix								getNormalesTransf(void) const;
+		void											setNormalesTransf(const core::maths::Matrix& p_transf);
+
+
+		void											clearVertices(void);
+		void											clearTriangles(void);
+
+		void											push(const TrianglePrimitive<unsigned int>& p_triangle);
+		void											push(const Vertex& p_vertex);
+
+		State											getState() const;
+		void											setState(State p_state);
+
+
+	private:
+
+		std::string														m_name;
+		std::vector<Vertex>												m_vertices;
+		std::vector<TrianglePrimitive<unsigned int>>					m_triangles;
+
+		// list of triangles for each vertex
+		std::map<long, std::vector<TrianglePrimitive<unsigned int>>>	m_triangles_for_vertex;
+
+		NormalesGenerationMode											m_n_gen_mode{ NormalesGenerationMode::NORMALES_COMPUTED };
+		TangentBinormalesGenerationMode									m_tb_gen_mode{ TangentBinormalesGenerationMode::TB_DISCARDED };
+
+		core::maths::Matrix												m_normales_transformation;
+
+		mutable std::mutex												m_state_mutex;
+		State															m_state;
+	};
+}

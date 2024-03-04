@@ -330,7 +330,7 @@ void RootImpl::run(void)
 
 		/////////// Draw lines
 
-		rendering::LineDrawingControl lineDrawingControl;
+		rendering::DrawingControl lineDrawingControl;
 
 		lineDrawingControl.world.translation(0.0, 0.0, -5.0);
 		lineDrawingControl.view.identity();
@@ -339,7 +339,7 @@ void RootImpl::run(void)
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad0_color", "color"));
 
 
-		quad_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", lineDrawingControl);
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
@@ -413,7 +413,7 @@ void RootImpl::run(void)
 
 		/////////// Draw lines
 
-		rendering::LineDrawingControl lineDrawingControl;
+		rendering::DrawingControl lineDrawingControl;
 
 		lineDrawingControl.world.translation(0.0, 0.0, -15.0);
 		lineDrawingControl.view.identity();
@@ -422,7 +422,7 @@ void RootImpl::run(void)
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad1_color", "color"));
 
 
-		quad_rendering_aspect.addComponent<rendering::LineDrawingControl>("squareRendering", lineDrawingControl);
+		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", lineDrawingControl);
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };		
