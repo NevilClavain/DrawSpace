@@ -33,6 +33,7 @@
 
 #include "shader.h"
 #include "linemeshe.h"
+#include "trianglemeshe.h"
 #include "renderstate.h"
 
 #include "logger_service.h"
@@ -123,8 +124,7 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 	}
 	else if (VK_F3 == p_key)
-	{
-		
+	{		
 		if (true == m_quadEntity0_state_request)
 		{
 			m_quadEntity0_state_request = false;
@@ -136,7 +136,6 @@ void RootImpl::onEndKeyPress(long p_key)
 	}
 	else if (VK_F4 == p_key)
 	{
-
 		if (true == m_quadEntity1_state_request)
 		{
 			m_quadEntity1_state_request = false;
@@ -144,6 +143,17 @@ void RootImpl::onEndKeyPress(long p_key)
 		else
 		{
 			m_quadEntity1_state_request = true;
+		}
+	}
+	else if (VK_F5 == p_key)
+	{
+		if (true == m_quadEntity2_state_request)
+		{
+			m_quadEntity2_state_request = false;
+		}
+		else
+		{
+			m_quadEntity2_state_request = true;
 		}
 	}
 }
@@ -443,6 +453,105 @@ void RootImpl::run(void)
 
 
 		m_quadEntity1_state = false;
+	}
+
+	//////////////////////////////////////////////////////
+	// 	
+	// quadEntity2
+
+	if (true == m_quadEntity2_state_request && false == m_quadEntity2_state)
+	{
+
+		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+		dataCloud->registerData<maths::Real4Vector>("quad2_color");
+		dataCloud->updateData< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
+
+		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+
+		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
+		const auto quadEntity{ quadNode.data() };
+
+		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
+
+		/////////// Add shaders
+
+		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
+		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
+
+
+		/////////// Add trianglemeshe
+		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
+
+		square.push(Vertex(-0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, 0.5, 0.0));
+		square.push(Vertex(-0.5, 0.5, 0.0));
+
+		const TrianglePrimitive<unsigned int> t1 { 0, 1, 2 };
+		square.push(t1);
+
+		const TrianglePrimitive<unsigned int> t2 { 1, 2, 3 };
+		square.push(t2);
+
+		square.computeNormales();
+		square.computeTB();
+
+
+		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+
+		
+
+		/*
+		/////////// Add linemeshe
+
+		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
+
+		square.push(Vertex(-0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, -0.5, 0.0));
+		square.push(Vertex(0.5, 0.5, 0.0));
+		square.push(Vertex(-0.5, 0.5, 0.0));
+
+		square.push({ 0, 1 });
+		square.push({ 1, 2 });
+		square.push({ 2, 3 });
+		square.push({ 3, 0 });
+
+		quad_resource_aspect.addComponent<LineMeshe>("square", square);
+		*/
+
+
+
+		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+
+		/////////// Add renderstate
+
+		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+		const std::vector<RenderState> rs_list = { rs_noculling };
+
+		quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+
+		/////////// Draw triangles
+
+		rendering::DrawingControl drawingControl;
+
+		drawingControl.world.translation(0.0, 0.0, -20.0);
+		drawingControl.view.identity();
+		drawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
+
+		drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
+
+
+		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
+
+
+
+
+
+		m_quadEntity2_state = true;
+	}
+	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
+	{
+		m_quadEntity2_state = false;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

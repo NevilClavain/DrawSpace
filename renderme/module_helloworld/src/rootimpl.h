@@ -88,6 +88,8 @@ private:
     bool                                    m_quadEntity1_state_request{ true };
     bool                                    m_quadEntity1_state{ false };
 
+    bool                                    m_quadEntity2_state_request{ true };
+    bool                                    m_quadEntity2_state{ false };
 
 
 };

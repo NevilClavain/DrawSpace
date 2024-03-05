@@ -32,6 +32,7 @@
 
 #include "primitives.h"
 #include "matrix.h"
+#include "tvector.h"
 
 namespace renderMe
 {
@@ -116,6 +117,10 @@ namespace renderMe
 		void											push(const TrianglePrimitive<unsigned int>& p_triangle);
 		void											push(const Vertex& p_vertex);
 
+		void											computeNormales();
+		void											computeTB();
+
+
 		State											getState() const;
 		void											setState(State p_state);
 
@@ -136,5 +141,9 @@ namespace renderMe
 
 		mutable std::mutex												m_state_mutex;
 		State															m_state;
+
+		void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
+							core::maths::Real4Vector& p_T, core::maths::Real4Vector& p_B, core::maths::Real4Vector& p_N);
+
 	};
 }
