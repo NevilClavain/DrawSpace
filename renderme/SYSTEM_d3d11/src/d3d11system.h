@@ -41,6 +41,7 @@ namespace renderMe
     namespace rendering { class Queue; }
     class Shader;
     class LineMeshe;
+    class TriangleMeshe;
 
 
     enum class D3D11SystemEvent
@@ -52,7 +53,11 @@ namespace renderMe
         D3D11_LINEMESHE_CREATION_BEGIN,
         D3D11_LINEMESHE_CREATION_SUCCESS,
         D3D11_LINEMESHE_RELEASE_BEGIN,
-        D3D11_LINEMESHE_RELEASE_SUCCESS
+        D3D11_LINEMESHE_RELEASE_SUCCESS,
+        D3D11_TRIANGLEMESHE_CREATION_BEGIN,
+        D3D11_TRIANGLEMESHE_CREATION_SUCCESS,
+        D3D11_TRIANGLEMESHE_RELEASE_BEGIN,
+        D3D11_TRIANGLEMESHE_RELEASE_SUCCESS
     };
                
     class D3D11System : public core::System, public renderMe::property::EventSource<D3D11SystemEvent, const std::string&>
@@ -86,6 +91,10 @@ namespace renderMe
 
         void    handleLinemesheCreation(LineMeshe& p_lm);
         void    handleLinemesheRelease(LineMeshe& p_lm);
+
+        void    handleTrianglemesheCreation(TriangleMeshe& p_tm);
+        void    handleTrianglemesheRelease(TriangleMeshe& p_tm);
+
 
         static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
         static void renderQueue(rendering::Queue& p_renderingQueue);

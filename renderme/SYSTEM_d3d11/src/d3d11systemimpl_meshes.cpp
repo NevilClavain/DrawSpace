@@ -161,3 +161,142 @@ void D3D11SystemImpl::destroyLineMeshe(const std::string& p_name)
     m_lines.erase(p_name);
     _RENDERME_DEBUG(m_localLogger, "Line meshe release SUCCESS : " + p_name);
 }
+
+bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
+{
+    DECLARE_D3D11ASSERT_VARS
+
+    const auto name{ p_tm.getName() };
+
+    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading : " + name);
+
+    if (m_triangles.count(name))
+    {
+        _RENDERME_DEBUG(m_localLogger, "Triangle meshe already loaded : " + name);
+    }
+    else
+    {
+        const auto nb_vertices{ p_tm.getVerticesListSize() };
+        const auto nb_triangles{ p_tm.getTrianglesListSize() };
+
+        D3D11_SUBRESOURCE_DATA id = { 0 };
+
+        ID3D11Buffer* vertex_buffer{ nullptr };
+        ID3D11Buffer* index_buffer{ nullptr };
+
+        {
+            // vertex buffer creation
+            const auto v{ new d3d11vertex[nb_vertices] };
+
+            const auto vertices{ p_tm.getVertices() };
+
+            for (size_t i = 0; i < nb_vertices; i++)
+            {
+                const auto vertex{ vertices[i] };
+
+                v[i].pos.x = (float)vertex.x;
+                v[i].pos.y = (float)vertex.y;
+                v[i].pos.z = (float)vertex.z;
+
+                for (size_t j = 0; j < nbTextureStages; j++)
+                {
+                    v[i].t[j].x = vertex.tu[j];
+                    v[i].t[j].y = vertex.tv[j];
+                    v[i].t[j].z = vertex.tw[j];
+                    v[i].t[j].w = vertex.ta[j];
+                }
+            }
+
+            id.pSysMem = v;
+            id.SysMemPitch = 0;//sizeof( d3d11vertex );
+            id.SysMemSlicePitch = 0;
+
+            D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
+
+            vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+            vertexBufferDesc.ByteWidth = nb_vertices * sizeof(d3d11vertex);
+            vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+            vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+            vertexBufferDesc.MiscFlags = 0;
+
+            hRes = m_lpd3ddevice->CreateBuffer(&vertexBufferDesc, &id, &vertex_buffer);
+            D3D11_CHECK(CreateBuffer)
+
+            delete[] v;
+        }
+
+        {
+            // index buffer creation
+
+            const auto t{ new d3d11triangle[nb_triangles] };
+
+            const auto triangles{ p_tm.getTriangles() };
+
+            for (size_t i = 0; i < nb_triangles; i++)
+            {
+                const auto triangle{ triangles[i] };
+
+                t[i].vertex1 = triangle.at(0);
+                t[i].vertex2 = triangle.at(1);
+                t[i].vertex3 = triangle.at(2);
+            }
+
+            id.pSysMem = t;
+
+            id.SysMemPitch = 0;
+            id.SysMemSlicePitch = 0;
+
+            D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+
+            indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+            indexBufferDesc.ByteWidth = nb_triangles * sizeof(d3d11triangle);
+            indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+            indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+            indexBufferDesc.MiscFlags = 0;
+
+            hRes = m_lpd3ddevice->CreateBuffer(&indexBufferDesc, &id, &index_buffer);
+            D3D11_CHECK(CreateBuffer)
+
+            delete[] t;
+        }
+
+        m_triangles[name] = { vertex_buffer, index_buffer, nb_vertices, nb_triangles };
+    }
+
+    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading SUCCESS : " + name);
+    return true;
+
+}
+
+void D3D11SystemImpl::setTriangleMeshe(const std::string& p_name)
+{
+    if (!m_triangles.count(p_name))
+    {
+        _EXCEPTION("unknown triangle meshes :" + p_name)
+    }
+    const auto tmData{ m_triangles.at(p_name) };
+
+    const UINT stride{ sizeof(d3d11vertex) };
+    const UINT offset = 0;
+
+    m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &tmData.vertex_buffer, &stride, &offset);
+    m_lpd3ddevcontext->IASetIndexBuffer(tmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+    m_next_nbvertices = tmData.nb_vertices;
+    m_next_nblines = tmData.nb_primitives;
+}
+
+void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_name)
+{
+    if (!m_triangles.count(p_name))
+    {
+        _EXCEPTION("unknown triangle meshe :" + p_name)
+    }
+    const auto tmData{ m_triangles.at(p_name) };
+
+    tmData.vertex_buffer->Release();
+    tmData.index_buffer->Release();
+
+    m_triangles.erase(p_name);
+    _RENDERME_DEBUG(m_localLogger, "Triangle meshe release SUCCESS : " + p_name);
+}

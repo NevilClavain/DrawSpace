@@ -45,6 +45,8 @@
 #include "logger_service.h"
 
 #include "linemeshe.h"
+#include "trianglemeshe.h"
+
 #include "datacloud.h"
 
 using namespace renderMe;
@@ -113,6 +115,22 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 						call(D3D11SystemEvent::D3D11_LINEMESHE_RELEASE_SUCCESS, p_target_descr);
 					}
 				}
+				else if ("load_trianglemeshe_d3d11" == p_action_descr)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_SUCCESS : " + p_target_descr);
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_SUCCESS, p_target_descr);
+					}
+				}
+				else if ("release_trianglemeshe_d3d11" == p_action_descr)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_RELEASE_SUCCESS : " + p_target_descr);
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_RELEASE_SUCCESS, p_target_descr);
+					}
+				}
 			}
 		}
 	};
@@ -174,6 +192,25 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 								}
 
 								handleLinemesheRelease(lm);
+							}
+						}
+					}
+					//search for trianglemeshe
+					const auto tm_list{ resources.getComponent<std::vector<TriangleMeshe>>("triangleMeshes") };
+					if (tm_list)
+					{
+						for (auto& tm : tm_list->getPurpose())
+						{
+							const auto state{ tm.getState() };
+							if (TriangleMeshe::State::RENDERERLOADED == state)
+							{
+								_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_RELEASE_BEGIN : " + tm.getName());
+								for (const auto& call : m_callbacks)
+								{
+									call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_RELEASE_BEGIN, tm.getName());
+								}
+
+								handleTrianglemesheRelease(tm);
 							}
 						}
 					}
@@ -298,6 +335,27 @@ void D3D11System::manageResources()
 					lm.setState(LineMeshe::State::RENDERERLOADING);
 				}			
 			}
+
+			//search for triangle Meshes
+			const auto tmeshes_list{ p_resource_aspect.getComponentsByType<TriangleMeshe>() };
+			for (auto& e : tmeshes_list)
+			{
+				auto& tm{ e->getPurpose() };
+				const auto state{ tm.getState() };
+
+				if (TriangleMeshe::State::BLOBLOADED == state)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_BEGIN : " + tm.getName());
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_BEGIN, tm.getName());
+					}
+
+					handleTrianglemesheCreation(tm);
+					tm.setState(TriangleMeshe::State::RENDERERLOADING);
+				}
+			}
+
 		}
 	};
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);
@@ -575,7 +633,6 @@ void D3D11System::handleLinemesheRelease(LineMeshe& p_lm)
 			{
 				d3dimpl->destroyLineMeshe(p_lm.getName());
 				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of linemeshe " + p_lm.getName() + " in D3D11 ");
-
 			}
 			catch (const std::exception& e)
 			{
@@ -583,6 +640,69 @@ void D3D11System::handleLinemesheRelease(LineMeshe& p_lm)
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getName(), action };
+				m_runner.m_mailbox_out.push(report);
+			}
+		}
+	) };
+
+	m_runner.m_mailbox_in.push(task);
+}
+
+void D3D11System::handleTrianglemesheCreation(TriangleMeshe& p_tm)
+{
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_tm.getName());
+
+	const std::string action{ "load_trianglemeshe_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.getName(),
+		[&,
+			action = action
+		]()
+		{
+			bool status { false };
+			status = d3dimpl->createTriangleMeshe(p_tm);
+
+			if (!status)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load trianglemeshe " + p_tm.getName() + " in D3D11 ");
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getName(), action };
+				m_runner.m_mailbox_out.push(report);
+			}
+			else
+			{
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of trianglemeshe " + p_tm.getName() + " in D3D11 ");
+				p_tm.setState(TriangleMeshe::State::RENDERERLOADED);
+			}
+		}
+	) };
+
+	m_runner.m_mailbox_in.push(task);
+}
+
+void D3D11System::handleTrianglemesheRelease(TriangleMeshe& p_tm)
+{
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe release ") + p_tm.getName());
+
+	const std::string action{ "release_trianglemeshe_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.getName(),
+		[&,
+			action = action
+		]()
+		{
+			try
+			{
+				d3dimpl->destroyTriangleMeshe(p_tm.getName());
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of trianglemeshe " + p_tm.getName() + " in D3D11 ");
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_tm.getName() + " : reason = " + e.what());
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getName(), action };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}

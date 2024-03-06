@@ -39,6 +39,7 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 {
 	m_name = p_other.m_name;
 	m_vertices = p_other.m_vertices;
+	m_triangles = p_other.m_triangles;
 	m_triangles_for_vertex = p_other.m_triangles_for_vertex;
 
 	m_normales_transformation = p_other.m_normales_transformation;

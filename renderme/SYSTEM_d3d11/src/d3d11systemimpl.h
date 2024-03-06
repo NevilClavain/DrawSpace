@@ -56,6 +56,7 @@
 #include "buffer.h"
 
 #include "linemeshe.h"
+#include "trianglemeshe.h"
 #include "renderstate.h"
 
 #include "tvector.h"
@@ -150,6 +151,10 @@ public:
     void setLineMeshe(const std::string& p_name);
     void destroyLineMeshe(const std::string& p_name);
 
+    bool createTriangleMeshe(const renderMe::TriangleMeshe& p_tm);
+    void setTriangleMeshe(const std::string& p_name);
+    void destroyTriangleMeshe(const std::string& p_name);
+
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
     bool setCacheRS(); // apply
 
@@ -215,7 +220,7 @@ private:
         ID3D11PixelShader* pixel_shader     { nullptr };
     };
 
-    struct LineMesheData
+    struct MesheData
     {
         ID3D11Buffer* vertex_buffer         { nullptr };
         ID3D11Buffer* index_buffer          { nullptr };
@@ -229,7 +234,8 @@ private:
     using VShaderList =             std::unordered_map<std::string, VertexShadersData>;
     using PShaderList =             std::unordered_map<std::string, PixelShadersData>;
 
-    using LineMesheList =           std::unordered_map<std::string, LineMesheData>;
+    using MesheList =               std::unordered_map<std::string, MesheData>;
+
 
     renderMe::core::logger::Sink                        m_localLogger;
 
@@ -280,7 +286,8 @@ private:
 
     std::unordered_set<std::string>                     m_shaderNames;
 
-    LineMesheList                                       m_lines;
+    MesheList                                           m_lines;
+    MesheList                                           m_triangles;
 
 
     ////////////////////////////////////////////////////////

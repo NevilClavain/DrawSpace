@@ -496,30 +496,7 @@ void RootImpl::run(void)
 		square.computeNormales();
 		square.computeTB();
 
-
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
-
-		
-
-		/*
-		/////////// Add linemeshe
-
-		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
-
-		square.push(Vertex(-0.5, -0.5, 0.0));
-		square.push(Vertex(0.5, -0.5, 0.0));
-		square.push(Vertex(0.5, 0.5, 0.0));
-		square.push(Vertex(-0.5, 0.5, 0.0));
-
-		square.push({ 0, 1 });
-		square.push({ 1, 2 });
-		square.push({ 2, 3 });
-		square.push({ 3, 0 });
-
-		quad_resource_aspect.addComponent<LineMeshe>("square", square);
-		*/
-
-
 
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
