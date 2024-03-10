@@ -30,6 +30,7 @@
 #include "renderingqueue.h"
 #include "shader.h"
 #include "linemeshe.h"
+#include "trianglemeshe.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -267,6 +268,35 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 	}
 }
 
+
+static rendering::Queue::TriangleMeshePayload build_TriangleMeshePayload(
+																const std::vector<RenderingQueueSystem::Callback>& p_cbs,
+																renderMe::core::logger::Sink& p_localLogger,
+																const renderMe::core::ComponentList<rendering::DrawingControl>& p_trianglesDrawingControls,
+																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
+{
+	rendering::Queue::TriangleMeshePayload triangleMeshePayload;
+
+	connect_shaders_args(p_localLogger, p_trianglesDrawingControls, p_vshader, p_pshader);
+
+	for (const auto& tdc : p_trianglesDrawingControls)
+	{
+		auto& trianglesDrawingControl{ tdc->getPurpose() };
+		trianglesDrawingControl.ready = true;
+
+		triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesDrawingControl;
+
+		_RENDERME_DEBUG(p_localLogger, "adding triangles DrawingControl of entity: " + trianglesDrawingControl.owner_entity_id)
+
+		for (const auto& call : p_cbs)
+		{
+			call(RenderingQueueSystemEvent::TRIANGLEDRAWING_ADDED, trianglesDrawingControl.owner_entity_id);
+		}
+	}
+
+	return triangleMeshePayload;
+}
+
 static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 																const std::vector<RenderingQueueSystem::Callback>& p_cbs,
 																renderMe::core::logger::Sink& p_localLogger, 
@@ -284,7 +314,7 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 
 		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
 
-		_RENDERME_DEBUG(p_localLogger, "adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
+		_RENDERME_DEBUG(p_localLogger, "adding lines DrawingControl of entity: " + linesDrawingControl.owner_entity_id)
 
 		for (const auto& call : p_cbs)
 		{
@@ -295,7 +325,7 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 	return lineMeshePayload;
 }
 
-rendering::Queue::RenderStatePayload build_RenderStatePayload(renderMe::core::logger::Sink& p_localLogger,
+rendering::Queue::RenderStatePayload build_RenderStatePayloadWithLineMeshePayload(renderMe::core::logger::Sink& p_localLogger,
 																const std::string& p_linemesheId, 
 																const rendering::Queue::LineMeshePayload& p_lineMeshePayload, 
 																const std::vector<renderMe::rendering::RenderState>& p_rs_list)
@@ -306,6 +336,21 @@ rendering::Queue::RenderStatePayload build_RenderStatePayload(renderMe::core::lo
 	renderStatePayload.description = p_rs_list;
 
 	_RENDERME_DEBUG(p_localLogger, "build new RenderStatePayload with linemeshe id " + p_linemesheId)
+
+	return renderStatePayload;
+}
+
+rendering::Queue::RenderStatePayload build_RenderStatePayloadWithTriangleMeshePayload(renderMe::core::logger::Sink& p_localLogger,
+																						const std::string& p_trianglemesheId,
+																						const rendering::Queue::TriangleMeshePayload& p_triangleMeshePayload,
+																						const std::vector<renderMe::rendering::RenderState>& p_rs_list)
+{
+	rendering::Queue::RenderStatePayload renderStatePayload;
+
+	renderStatePayload.trianglemeshes_list[p_trianglemesheId] = p_triangleMeshePayload;
+	renderStatePayload.description = p_rs_list;
+
+	_RENDERME_DEBUG(p_localLogger, "build new RenderStatePayload with trianglemeshe id " + p_trianglemesheId)
 
 	return renderStatePayload;
 }
@@ -329,20 +374,20 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 												renderMe::rendering::Queue& p_renderingQueue)
 {	
 	//search for line drawing request
-	const auto linesDrawingControls{ p_renderingAspect.getComponentsByType<rendering::DrawingControl>() };
+	const auto drawingControls{ p_renderingAspect.getComponentsByType<rendering::DrawingControl>() };
 
-	if (linesDrawingControls.size() > 0)
+	if (drawingControls.size() > 0)
 	{
 		bool notAllReady{ false };
 
-		for (const auto& ldc : linesDrawingControls)
+		for (const auto& dc : drawingControls)
 		{
-			auto& linesDrawingControl{ ldc->getPurpose() };
+			auto& drawingControl{ dc->getPurpose() };
 
-			if (!linesDrawingControl.ready)
+			if (!drawingControl.ready)
 			{
 				notAllReady = true;
-				linesDrawingControl.owner_entity_id = p_entity_id;
+				drawingControl.owner_entity_id = p_entity_id;
 			}
 		}
 
@@ -351,8 +396,10 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 			auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
 			// search for lineMeshe
-
 			const auto lineMeshes{ p_resourceAspect.getComponentsByType<LineMeshe>() };
+
+			// search for triangleMeshe
+			const auto triangleMeshes{ p_resourceAspect.getComponentsByType<TriangleMeshe>() };
 
 			// search rendering states
 			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<renderMe::rendering::RenderState>>() };
@@ -369,7 +416,7 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 				{
 					if (Shader::State::RENDERERLOADED == vshader.getState() && Shader::State::RENDERERLOADED == pshader.getState())
 					{
-						if (rsStates.size() > 0 && lineMeshes.size() > 0)
+						if (rsStates.size() > 0 && (lineMeshes.size() > 0 || triangleMeshes.size() > 0))
 						{
 							// ok, can update queue
 
@@ -391,7 +438,6 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 										+ " updated with new entity : " + p_entity_id
 										+ " : adding under existing pshader branch : " + pshader.getName())
 
-
 									auto& pixelShaderPayload{ vertexShaderPayload.list.at(pshader.getName())};
 
 									const auto rs_list_id{ build_rs_list_id(rsStates.at(0)->getPurpose()) };
@@ -403,104 +449,222 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 											+ " updated with new entity : " + p_entity_id
 											+ " : adding under existing renderstates branch : " + rs_list_id)
 
-
 										auto& renderStatePayload{ pixelShaderPayload.list.at(rs_list_id) };
-										if (renderStatePayload.linemeshes_list.count(lineMeshes.at(0)->getPurpose().getName()))
-										{
-											// linemeshe entry exists
 
-											_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
-												+ " updated with new entity : " + p_entity_id
-												+ " : adding under existing linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
-
-									
-											auto& lineMeshePayload{ renderStatePayload.linemeshes_list.at(lineMeshes.at(0)->getPurpose().getName())};
-
-											connect_shaders_args(m_localLogger, linesDrawingControls, vshader, pshader);
-
-											for (const auto& ldc : linesDrawingControls)
+										if (lineMeshes.size() > 0)
+										{											
+											if (renderStatePayload.linemeshes_list.count(lineMeshes.at(0)->getPurpose().getName()))
 											{
-												auto& linesDrawingControl{ ldc->getPurpose() };
-												linesDrawingControl.ready = true;
-												lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
+												// linemeshe entry exists
 
 												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 													+ " updated with new entity : " + p_entity_id
-													+ " : adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
+													+ " : adding under existing linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
+									
+												auto& lineMeshePayload{ renderStatePayload.linemeshes_list.at(lineMeshes.at(0)->getPurpose().getName())};
 
-												for (const auto& call : m_callbacks)
+												connect_shaders_args(m_localLogger, drawingControls, vshader, pshader);
+
+												for (const auto& dc : drawingControls)
 												{
-													call(RenderingQueueSystemEvent::LINEDRAWING_ADDED, linesDrawingControl.owner_entity_id);
+													auto& linesDrawingControl{ dc->getPurpose() };
+													linesDrawingControl.ready = true;
+													lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
+
+													_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+														+ " updated with new entity : " + p_entity_id
+														+ " : adding linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
+
+													for (const auto& call : m_callbacks)
+													{
+														call(RenderingQueueSystemEvent::LINEDRAWING_ADDED, linesDrawingControl.owner_entity_id);
+													}
 												}
 											}
+											else
+											{
+												// new linemeshe and below elements to add
+
+												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+													+ " updated with new entity : " + p_entity_id
+													+ " : adding new linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
+
+												const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+												renderStatePayload.linemeshes_list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
+											}
 										}
-										else
+										else if (triangleMeshes.size() > 0)
 										{
-											// new linemeshe and below elements to add
+											if (renderStatePayload.trianglemeshes_list.count(triangleMeshes.at(0)->getPurpose().getName()))
+											{
+												// trianglemeshe entry exists
 
-											_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
-												+ " updated with new entity : " + p_entity_id
-												+ " : adding new linemeshe branch : " + lineMeshes.at(0)->getPurpose().getName())
+												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+													+ " updated with new entity : " + p_entity_id
+													+ " : adding under existing trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getName())
 
-											const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
-											renderStatePayload.linemeshes_list[lineMeshes.at(0)->getPurpose().getName()] = lineMeshePayload;
+												auto& triangleMeshePayload{ renderStatePayload.trianglemeshes_list.at(triangleMeshes.at(0)->getPurpose().getName()) };
+
+												connect_shaders_args(m_localLogger, drawingControls, vshader, pshader);
+
+												for (const auto& dc : drawingControls)
+												{
+													auto& trianglesDrawingControl{ dc->getPurpose() };
+													trianglesDrawingControl.ready = true;
+													triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesDrawingControl;
+
+													_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+														+ " updated with new entity : " + p_entity_id
+														+ " : adding trianglesDrawingControl of entity: " + trianglesDrawingControl.owner_entity_id)
+
+													for (const auto& call : m_callbacks)
+													{
+														call(RenderingQueueSystemEvent::TRIANGLEDRAWING_ADDED, trianglesDrawingControl.owner_entity_id);
+													}
+												}
+
+											}
+											else
+											{
+												// new trianglemeshe and below elements to add
+
+												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+													+ " updated with new entity : " + p_entity_id
+													+ " : adding new trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getName())
+
+												const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+												renderStatePayload.trianglemeshes_list[triangleMeshes.at(0)->getPurpose().getName()] = triangleMeshePayload;
+											}
 										}
 									}
 									else
 									{
+										// new renderstate and below elements to add
+
 										_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 											+ " updated with new entity : " + p_entity_id
 											+ " : adding new renderstate branch : " + rs_list_id)
 
+										rendering::Queue::RenderStatePayload renderStatePayload;
+										bool renderStatePayloadSet{ false };
 
-										// new renderstate and below elements to add
-										const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
-										const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
+										if (lineMeshes.size() > 0)
+										{											
+											const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+											renderStatePayload = build_RenderStatePayloadWithLineMeshePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose());
 
-										pixelShaderPayload.list[rs_list_id] = renderStatePayload;
+											renderStatePayloadSet = true;
+										}
+										else if (triangleMeshes.size() > 0)
+										{
+											const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+											renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getName(), triangleMeshePayload, rsStates.at(0)->getPurpose());
+
+											renderStatePayloadSet = true;
+										}
+
+										if (renderStatePayloadSet)
+										{
+											pixelShaderPayload.list[rs_list_id] = renderStatePayload;
+										}
+										else
+										{
+											_EXCEPTION("Cannot update queue : no linemeshe or trianglemeshe provided with entity : " + p_entity_id)
+										}
 									}
 								}
 								else
 								{
+									// new pshader and below elements to add
+
 									_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 										+ " updated with new entity : " + p_entity_id
 										+ " : adding new pshader branch : " + pshader.getName())
 
-									// new pshader and below elements to add
+									rendering::Queue::RenderStatePayload renderStatePayload;
+									bool renderStatePayloadSet{ false };
 
-									const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
+									if (lineMeshes.size() > 0)
+									{
+										const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
 
-									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
-									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-									const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
+										// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
+										// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
+										renderStatePayload = build_RenderStatePayloadWithLineMeshePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose());
 
-									const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
+										renderStatePayloadSet = true;
+									}
+									else if (triangleMeshes.size() > 0)
+									{
+										const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
 
-									vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;									
+										// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
+										// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
+										renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getName(), triangleMeshePayload, rsStates.at(0)->getPurpose());
+
+										renderStatePayloadSet = true;
+									}
+
+									if (renderStatePayloadSet)
+									{
+										const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
+										vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;
+									}
+									else
+									{
+										_EXCEPTION("Cannot update queue : no linemeshe or trianglemeshe provided with entity : " + p_entity_id)
+									}
+
 								}
 							}
 							else
 							{
 								// new vshader and below elements to add
 
-								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() 
-																+ " updated with new entity : " + p_entity_id 
-																+ " : adding new vshader branch : " + vshader.getName())
+								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
+									+ " updated with new entity : " + p_entity_id
+									+ " : adding new vshader branch : " + vshader.getName())
 
-								const auto lineMeshePayload { build_LineMeshePayload(m_callbacks, m_localLogger, linesDrawingControls, vshader, pshader) };
-							
-								// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
-								// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-								const auto renderStatePayload{ build_RenderStatePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose()) };
+								rendering::Queue::RenderStatePayload renderStatePayload;
+								bool renderStatePayloadSet{ false };
 
-								const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
+								if (lineMeshes.size() > 0)
+								{
+									const auto lineMeshePayload{ build_LineMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
 
-								rendering::Queue::VertexShaderPayload vertexShaderPayload;
-								vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;	
+									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
+									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
+									renderStatePayload = build_RenderStatePayloadWithLineMeshePayload(m_localLogger, lineMeshes.at(0)->getPurpose().getName(), lineMeshePayload, rsStates.at(0)->getPurpose());
 
-								_RENDERME_DEBUG(m_localLogger, "build new vertexShaderPayload with pixel shader id " + pshader.getName())
+									renderStatePayloadSet = true;
+								}
+								else if (triangleMeshes.size() > 0)
+								{
+									const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
 
-								queueNodes[vshader.getName()] = vertexShaderPayload;
+									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
+									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
+									renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getName(), triangleMeshePayload, rsStates.at(0)->getPurpose());
+
+									renderStatePayloadSet = true;
+								}
+								
+								if (renderStatePayloadSet)
+								{
+									const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
+
+									rendering::Queue::VertexShaderPayload vertexShaderPayload;
+									vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;
+
+									_RENDERME_DEBUG(m_localLogger, "build new vertexShaderPayload with pixel shader id " + pshader.getName())
+
+									queueNodes[vshader.getName()] = vertexShaderPayload;
+
+								}
+								else
+								{
+									_EXCEPTION("Cannot update queue : no linemeshe or trianglemeshe provided with entity : " + p_entity_id)
+								}
 							}							
 						}
 					}

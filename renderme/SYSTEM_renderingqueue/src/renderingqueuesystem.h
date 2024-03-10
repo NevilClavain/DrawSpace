@@ -41,7 +41,9 @@ namespace renderMe
     enum class RenderingQueueSystemEvent
     {
         LINEDRAWING_ADDED,
-        LINEDRAWING_REMOVED
+        LINEDRAWING_REMOVED,
+        TRIANGLEDRAWING_ADDED,
+        TRIANGLEDRAWING_REMOVED
     };
 
     class RenderingQueueSystem : public core::System, public renderMe::property::EventSource<RenderingQueueSystemEvent, const std::string&>

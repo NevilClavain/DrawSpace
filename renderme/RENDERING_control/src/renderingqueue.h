@@ -105,11 +105,15 @@ namespace renderMe
 				renderMe::core::maths::IntCoords2D	position;
 				float								rotation_rad{ 0.0 };
 			};
-						
+
+			struct TriangleMeshePayload
+			{
+				// key = entity id
+				std::unordered_map<std::string, DrawingControl> list;
+			};
+
 			struct LineMeshePayload
 			{
-				//std::vector<LineDrawingControl> list;
-
 				// key = entity id
 				std::unordered_map<std::string, DrawingControl> list;
 			};
@@ -117,10 +121,13 @@ namespace renderMe
 			struct RenderStatePayload
 			{
 				// renderstates set
-				std::vector<RenderState>							description;
+				std::vector<RenderState>								description;
+
+				// key = triangleMeshe D3D11 id
+				std::unordered_map<std::string, TriangleMeshePayload>	trianglemeshes_list;
 
 				// key = lineMeshe D3D11 id
-				std::unordered_map<std::string, LineMeshePayload>	linemeshes_list;
+				std::unordered_map<std::string, LineMeshePayload>		linemeshes_list;
 			};
 
 			struct PixelShaderPayload
