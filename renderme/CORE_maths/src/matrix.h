@@ -74,7 +74,7 @@ namespace renderMe
 
                 void identity(void);
                 void translation(double p_x, double p_y, double p_z);
-                void translation(const Vector<>& p_pos);
+                void translation(const Real4Vector& p_pos);
                 void transpose(void);
                 void perspective(double p_w, double p_h, double p_zn, double p_zf);
 
@@ -85,6 +85,8 @@ namespace renderMe
                 void rotation(const Real4Vector& p_axis, double p_angle);
                 void inverse(void);
                 void transform(Real4Vector* p_vec_in, Real4Vector* p_vec_out) const;
+
+                std::string dump() const;
 
                 double* getArray(void) const
                 {

@@ -85,6 +85,142 @@ void RenderingQueueSystem::run()
 	manageRenderingQueue();
 }
 
+void RenderingQueueSystem::requestRenderingqueueLogging(const std::string& p_entityid)
+{
+	m_queuesToLog.emplace(p_entityid);
+}
+
+void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, renderMe::rendering::Queue& p_renderingQueue) const
+{
+	_RENDERME_DEBUG(m_localLogger, ">>>>>>>>>>>>>>> QUEUE DUMP BEGIN <<<<<<<<<<<<<<<<<<<<<<<<")
+	_RENDERME_DEBUG(m_localLogger, "for entity : " + p_entity_id);
+
+	_RENDERME_DEBUG(m_localLogger, "name : " + p_renderingQueue.getName())
+
+	const std::map<rendering::Queue::Purpose, std::string> purpose_translate
+	{
+		{ rendering::Queue::Purpose::UNDEFINED, "UNDEFINED" },
+		{ rendering::Queue::Purpose::SCREEN_RENDERING, "SCREEN_RENDERING" },
+		{ rendering::Queue::Purpose::INTERMEDIATE_RENDERING, "INTERMEDIATE_RENDERING" },
+	};
+	_RENDERME_DEBUG(m_localLogger, "purpose : " + purpose_translate.at(p_renderingQueue.getPurpose()))
+
+	const std::map<rendering::Queue::State, std::string> state_translate
+	{
+		{ rendering::Queue::State::WAIT_INIT, "WAIT_INIT" },
+		{ rendering::Queue::State::READY, "READY" },
+		{ rendering::Queue::State::ERROR_ORPHAN, "ERROR_ORPHAN" },
+	};
+	_RENDERME_DEBUG(m_localLogger, "state : " + state_translate.at(p_renderingQueue.getState()))
+
+	_RENDERME_DEBUG(m_localLogger, "clear_target : " + std::to_string(p_renderingQueue.getTargetClearing()))
+
+	if (p_renderingQueue.getTargetClearing())
+	{
+		const auto clear_color{ p_renderingQueue.getTargetClearColor() };
+		_RENDERME_DEBUG(m_localLogger, "clear_target_color : " + std::to_string(clear_color.r())
+														+ " " + std::to_string(clear_color.g()) 
+														+ " " + std::to_string(clear_color.b()) 
+														+ " " + std::to_string(clear_color.a()))
+	}
+
+	// queue node dump
+	const auto qnodes{ p_renderingQueue.getQueueNodes() };
+
+	for (const auto& vshaders : qnodes)
+	{
+		const auto vshader_id{ vshaders.first };
+		_RENDERME_DEBUG(m_localLogger, "	-> vshader D3D resource id: " + vshader_id);
+
+		for (const auto& pshaders : vshaders.second.list)
+		{
+			const auto pshader_id{ pshaders.first };
+			_RENDERME_DEBUG(m_localLogger, "		-> pshader D3D resource id: " + pshader_id);
+
+			for (const auto& rs : pshaders.second.list)
+			{
+				_RENDERME_DEBUG(m_localLogger, "			-> renderstate : " + rs.first);
+
+				for (const auto& linemeshe : rs.second.linemeshes_list)
+				{
+					const auto linemeshe_id{ linemeshe.first };
+					_RENDERME_DEBUG(m_localLogger, "				-> line meshe D3D resource id: " + linemeshe_id);
+
+					for (const auto& drawing : linemeshe.second.list)
+					{
+						const auto drawing_id{ drawing.first };
+						_RENDERME_DEBUG(m_localLogger, "					-> drawing : " + drawing_id);
+
+						const auto drawing_body{ drawing.second };
+
+						_RENDERME_DEBUG(m_localLogger, "						-> world :\n" + drawing_body.world.dump());
+						_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view.dump());
+						_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj.dump());
+
+						_RENDERME_DEBUG(m_localLogger, "						-> vshaders params datacloud connexions :");
+						for (const auto& cnx : drawing_body.vshaders_map_cnx)
+						{
+							_RENDERME_DEBUG(m_localLogger, "							-> datacloud var '" + cnx.first + "' mapped on shader input '"
+																											+ cnx.second.argument_id
+																											+ "' (" + cnx.second.argument_type
+																											+ ") for register " + std::to_string(cnx.second.shader_register));
+						}
+
+						_RENDERME_DEBUG(m_localLogger, "						-> pshaders params datacloud connexions :");
+						for (const auto& cnx : drawing_body.pshaders_map_cnx)
+						{
+							_RENDERME_DEBUG(m_localLogger, "							-> datacloud var '" + cnx.first + "' mapped on shader input '"
+																											+ cnx.second.argument_id
+																											+ "' (" + cnx.second.argument_type
+																											+ ") for register " + std::to_string(cnx.second.shader_register));
+						}
+
+					}
+				}
+
+				for (const auto& trianglemeshe : rs.second.trianglemeshes_list)
+				{
+					const auto triangle_id{ trianglemeshe.first };
+					_RENDERME_DEBUG(m_localLogger, "				-> triangle meshe D3D resource id: " + triangle_id);
+
+					for (const auto& drawing : trianglemeshe.second.list)
+					{
+						const auto drawing_id{ drawing.first };
+						_RENDERME_DEBUG(m_localLogger, "					-> drawing : " + drawing_id);
+
+						const auto drawing_body{ drawing.second };
+
+						_RENDERME_DEBUG(m_localLogger, "						-> world :\n" + drawing_body.world.dump());
+						_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view.dump());
+						_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj.dump());
+
+						_RENDERME_DEBUG(m_localLogger, "						-> vshaders params datacloud connexions :");
+						for (const auto& cnx : drawing_body.vshaders_map_cnx)
+						{
+							_RENDERME_DEBUG(m_localLogger, "							-> datacloud var '" + cnx.first + "' mapped on shader input '"
+																											+ cnx.second.argument_id
+																											+ "' (" + cnx.second.argument_type
+																											+ ") for register " + std::to_string(cnx.second.shader_register));
+						}
+
+						_RENDERME_DEBUG(m_localLogger, "						-> pshaders params datacloud connexions :");
+						for (const auto& cnx : drawing_body.pshaders_map_cnx)
+						{
+							_RENDERME_DEBUG(m_localLogger, "							-> datacloud var '" + cnx.first + "' mapped on shader input '"
+																											+ cnx.second.argument_id
+																											+ "' (" + cnx.second.argument_type
+																											+ ") for register " + std::to_string(cnx.second.shader_register));
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	_RENDERME_DEBUG(m_localLogger, ">>>>>>>>>>>>>>> QUEUE DUMP END <<<<<<<<<<<<<<<<<<<<<<<<<<");
+}
+
 void RenderingQueueSystem::manageRenderingQueue()
 {
 	////////Queue states//////////////////////////////////////
@@ -103,7 +239,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 		};
 		renderMe::helpers::extractAspectsDownTop<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 	}
-	////////Queue build/updates//////////////////////////////////////
+	////////Queue build/updates/log//////////////////////////////////////
 	{
 		rendering::Queue* current_queue{ nullptr };
 
@@ -121,6 +257,16 @@ void RenderingQueueSystem::manageRenderingQueue()
 				{
 					auto& renderingQueue{ rendering_queue_comp->getPurpose() };
 					current_queue = &renderingQueue;
+
+					//////// check if anu request to log this queue
+
+					if (m_queuesToLog.count(currEntityId))
+					{
+						logRenderingqueue(currEntityId, renderingQueue);
+						m_queuesToLog.erase(currEntityId);
+					}
+
+					////////
 				}
 			}
 
@@ -137,6 +283,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 			}
 		}
 	}
+	
 }
 
 void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, rendering::Queue& p_renderingQueue)

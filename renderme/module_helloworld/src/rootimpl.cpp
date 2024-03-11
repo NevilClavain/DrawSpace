@@ -156,6 +156,14 @@ void RootImpl::onEndKeyPress(long p_key)
 			m_quadEntity2_state_request = true;
 		}
 	}
+
+	else if (VK_F8 == p_key)
+	{
+		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(3) };
+		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
+
+		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
+	}
 }
 
 void RootImpl::onKeyPulse(long p_key)

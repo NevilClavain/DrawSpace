@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <unordered_set>
 #include "system.h"
 #include "logsink.h"
 #include "logconf.h"
@@ -55,9 +56,13 @@ namespace renderMe
 
         void run();
 
+        void requestRenderingqueueLogging(const std::string& p_entityid);
+
     private:
 
-        renderMe::core::logger::Sink        m_localLogger;
+        mutable renderMe::core::logger::Sink        m_localLogger;
+
+        std::unordered_set<std::string>             m_queuesToLog;
 
         void manageRenderingQueue();
         void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue);
@@ -75,6 +80,7 @@ namespace renderMe
                                 );
 
 
+        void logRenderingqueue(const std::string& p_entity_id, renderMe::rendering::Queue& p_renderingQueue) const;
 
     };
 }

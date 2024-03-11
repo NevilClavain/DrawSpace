@@ -204,6 +204,33 @@ void Matrix::inverse(void)
     memcpy(&m_matrix, &res.m_matrix, 16 * sizeof(double));
 }
 
+std::string Matrix::dump() const
+{
+    std::string mat_dump;
+
+    mat_dump += std::to_string(m_matrix[0][0]) + " ";
+    mat_dump += std::to_string(m_matrix[0][1]) + " ";
+    mat_dump += std::to_string(m_matrix[0][2]) + " ";
+    mat_dump += std::to_string(m_matrix[0][3]) + "\n";
+
+    mat_dump += std::to_string(m_matrix[1][0]) + " ";
+    mat_dump += std::to_string(m_matrix[1][1]) + " ";
+    mat_dump += std::to_string(m_matrix[1][2]) + " ";
+    mat_dump += std::to_string(m_matrix[1][3]) + "\n";
+
+    mat_dump += std::to_string(m_matrix[2][0]) + " ";
+    mat_dump += std::to_string(m_matrix[2][1]) + " ";
+    mat_dump += std::to_string(m_matrix[2][2]) + " ";
+    mat_dump += std::to_string(m_matrix[2][3]) + "\n";
+
+    mat_dump += std::to_string(m_matrix[3][0]) + " ";
+    mat_dump += std::to_string(m_matrix[3][1]) + " ";
+    mat_dump += std::to_string(m_matrix[3][2]) + " ";
+    mat_dump += std::to_string(m_matrix[3][3]) + "\n";
+
+    return mat_dump;
+}
+
 void Matrix::rotation(const Real4Vector& p_axis, double p_angle)
 {
     const auto c{ std::cos(p_angle) };
@@ -302,5 +329,4 @@ Matrix operator* (Matrix p_mA, Matrix p_mB)
     }
     return res;
 }
-
 
