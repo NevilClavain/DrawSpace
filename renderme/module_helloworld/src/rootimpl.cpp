@@ -529,13 +529,19 @@ void RootImpl::run(void)
 		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
 
 
-
-
-
 		m_quadEntity2_state = true;
 	}
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
 	{
+		// remove quadEntity2
+
+		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+		dataCloud->removeData<maths::Real4Vector>("quad2_color");
+
+		auto& quadNode{ m_entitygraph.node("quadEntity2") };
+		m_entitygraph.remove(quadNode);
+
+
 		m_quadEntity2_state = false;
 	}
 

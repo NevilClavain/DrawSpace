@@ -838,6 +838,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 			for (auto& rs : ps.second.list)
 			{
+				//// line meshes
 				std::vector<std::string> lm_to_remove;
 
 				for (auto& lm : rs.second.linemeshes_list)
@@ -848,7 +849,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 					{						
 						if (ldc.second.owner_entity_id == p_entity_id)
 						{
-							_RENDERME_DEBUG(m_localLogger, "remove linesDrawingControl of entity " + p_entity_id)
+							_RENDERME_DEBUG(m_localLogger, "remove lines drawingControl of entity " + p_entity_id)
 							// remove this ldc
 							ldc_to_remove.push_back(p_entity_id);
 
@@ -875,8 +876,50 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 				{
 					rs.second.linemeshes_list.erase(id);
 				}
+				////////////////////
 
-				if (0 == rs.second.linemeshes_list.size())
+				//// triangle meshes
+				std::vector<std::string> tm_to_remove;
+
+				for (auto& tm : rs.second.trianglemeshes_list)
+				{
+					std::vector<std::string> tdc_to_remove;
+
+					for (const auto& tdc : tm.second.list)
+					{
+						if (tdc.second.owner_entity_id == p_entity_id)
+						{
+							_RENDERME_DEBUG(m_localLogger, "remove triangles drawingControl of entity " + p_entity_id)
+							// remove this triangle dc
+							tdc_to_remove.push_back(p_entity_id);
+
+							for (const auto& call : m_callbacks)
+							{
+								call(RenderingQueueSystemEvent::TRIANGLEDRAWING_REMOVED, p_entity_id);
+							}
+						}
+					}
+
+					for (const std::string& id : tdc_to_remove)
+					{
+						tm.second.list.erase(id);
+					}
+
+					if (0 == tm.second.list.size())
+					{
+						_RENDERME_DEBUG(m_localLogger, "trianglemeshe payload is now empty, remove trianglemeshe id : " + tm.first)
+						tm_to_remove.push_back(tm.first);
+					}
+				}
+
+				for (const std::string& id : tm_to_remove)
+				{
+					rs.second.trianglemeshes_list.erase(id);
+				}
+
+				////////////////////
+
+				if (0 == rs.second.linemeshes_list.size() && 0 == rs.second.trianglemeshes_list.size())
 				{
 					_RENDERME_DEBUG(m_localLogger, "renderstate payload is now empty, remove renderstate id : " + rs.first)
 					rs_to_remove.push_back(rs.first);
