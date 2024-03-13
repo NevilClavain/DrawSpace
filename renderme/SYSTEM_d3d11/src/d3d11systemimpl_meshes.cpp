@@ -283,7 +283,7 @@ void D3D11SystemImpl::setTriangleMeshe(const std::string& p_name)
     m_lpd3ddevcontext->IASetIndexBuffer(tmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
 
     m_next_nbvertices = tmData.nb_vertices;
-    m_next_nblines = tmData.nb_primitives;
+    m_next_nbtriangles = tmData.nb_primitives;
 }
 
 void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_name)

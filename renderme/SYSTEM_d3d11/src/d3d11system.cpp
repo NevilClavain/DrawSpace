@@ -378,6 +378,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
 
+
 	{
 		auto queueNodes{ p_renderingQueue.getQueueNodes() };
 
@@ -413,6 +414,65 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 					d3dimpl->setCacheRS();
 					d3dimpl->setCacheBlendstate();
 
+					///////////// TriangleMeshes BEGIN
+
+					if (renderStatesInfo.second.trianglemeshes_list.size() > 0)
+					{
+						d3dimpl->setTriangleListTopology();
+					}
+
+					///////////// TriangleMeshes END
+
+					for (const auto& triangleMesheInfo : renderStatesInfo.second.trianglemeshes_list)
+					{
+						const auto& triangleMesheId{ triangleMesheInfo.first };
+						d3dimpl->setTriangleMeshe(triangleMesheId);
+
+						const auto& triangleDrawingControls{ triangleMesheInfo.second.list };
+
+						for (const auto& tdc : triangleDrawingControls)
+						{
+							//////
+							tdc.second.setup();
+
+							////// Apply shaders params
+
+							for (const auto& e : tdc.second.vshaders_map_cnx)
+							{
+								const auto& datacloud_data_id{ e.first };
+								const auto& shader_param{ e.second };
+
+								if ("Real4Vector" == shader_param.argument_type)
+								{
+									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+									d3dimpl->setVertexshaderConstantsVec(shader_param.shader_register, rvector);
+								}
+							}
+
+							for (const auto& e : tdc.second.pshaders_map_cnx)
+							{
+								const auto& datacloud_data_id{ e.first };
+								const auto& shader_param{ e.second };
+
+								if ("Real4Vector" == shader_param.argument_type)
+								{
+									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+									d3dimpl->setPixelshaderConstantsVec(shader_param.shader_register, rvector);
+								}
+							}
+
+							//////
+
+							d3dimpl->drawTriangleMeshe(tdc.second.world, tdc.second.view, tdc.second.proj);
+
+							//////
+							tdc.second.teardown();
+
+						}
+					}
+
+					///////////// LineMeshes BEGIN
+					
 					if (renderStatesInfo.second.linemeshes_list.size() > 0)
 					{
 						d3dimpl->setLineListTopology();
@@ -424,14 +484,14 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 						d3dimpl->setLineMeshe(lineMesheId);
 
 						const auto& lineDrawingControls{ lineMesheInfo.second.list };
-						for (const auto& lc : lineDrawingControls)
+						for (const auto& ldc : lineDrawingControls)
 						{
 							//////
-							lc.second.setup();
+							ldc.second.setup();
 
 							////// Apply shaders params
 
-							for (const auto& e : lc.second.vshaders_map_cnx)
+							for (const auto& e : ldc.second.vshaders_map_cnx)
 							{
 								const auto& datacloud_data_id{ e.first };
 								const auto& shader_param{ e.second };
@@ -439,11 +499,11 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 								if ("Real4Vector" == shader_param.argument_type)
 								{
 									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
-									d3dimpl->setVertexshaderConstantsVec(0, rvector);
+									d3dimpl->setVertexshaderConstantsVec(shader_param.shader_register, rvector);
 								}
 							}
 
-							for (const auto& e : lc.second.pshaders_map_cnx)
+							for (const auto& e : ldc.second.pshaders_map_cnx)
 							{
 								const auto& datacloud_data_id{ e.first };
 								const auto& shader_param{ e.second };
@@ -451,18 +511,20 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 								if ("Real4Vector" == shader_param.argument_type)
 								{
 									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
-									d3dimpl->setPixelshaderConstantsVec(0, rvector);
+									d3dimpl->setPixelshaderConstantsVec(shader_param.shader_register, rvector);
 								}
 							}
 
 							//////
 
-							d3dimpl->drawLineMeshe(lc.second.world, lc.second.view, lc.second.proj);
+							d3dimpl->drawLineMeshe(ldc.second.world, ldc.second.view, ldc.second.proj);
 
 							//////
-							lc.second.teardown();
+							ldc.second.teardown();
 						}
 					}
+					
+					///////////// LineMeshes END
 				}
 			}
 		}
@@ -515,6 +577,7 @@ void D3D11System::handleShaderCreation(Shader& p_shaderInfos, int p_shaderType)
 		]()
 		{
 			bool status { false };
+
 			if (0 == shaderType)
 			{
 				status = d3dimpl->createVertexShader(p_shaderInfos.getName(), p_shaderInfos.getCode());

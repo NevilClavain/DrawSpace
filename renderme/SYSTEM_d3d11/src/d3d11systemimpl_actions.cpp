@@ -74,8 +74,8 @@ void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clea
 
 	clearcolor[0] = p_clear_color.r() / 255.0f;
 	clearcolor[1] = p_clear_color.g() / 255.0f;
-	clearcolor[2] = p_clear_color.b() / 255.0;
-	clearcolor[3] = p_clear_color.a() / 255.0;
+	clearcolor[2] = p_clear_color.b() / 255.0f;
+	clearcolor[3] = p_clear_color.a() / 255.0f;
 
 	m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);
 }

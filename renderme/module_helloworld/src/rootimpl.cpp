@@ -498,7 +498,7 @@ void RootImpl::run(void)
 		const TrianglePrimitive<unsigned int> t1 { 0, 1, 2 };
 		square.push(t1);
 
-		const TrianglePrimitive<unsigned int> t2 { 1, 2, 3 };
+		const TrianglePrimitive<unsigned int> t2 { 0, 2, 3 };
 		square.push(t2);
 
 		square.computeNormales();
@@ -511,7 +511,10 @@ void RootImpl::run(void)
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
-		const std::vector<RenderState> rs_list = { rs_noculling };
+		RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
+		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "line");
+
+		const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill };
 
 		quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 

@@ -381,7 +381,7 @@ bool D3D11SystemImpl::setCacheRS()
         ID3D11RasterizerState* rs{ nullptr };
         hRes = m_lpd3ddevice->CreateRasterizerState(&currRS, &rs);
         D3D11_CHECK(CreateRasterizerState)
-            m_lpd3ddevcontext->RSSetState(rs);
+        m_lpd3ddevcontext->RSSetState(rs);
 
         // create new entry in cache
         const RSCacheEntry cache_e{ currRS, rs };
