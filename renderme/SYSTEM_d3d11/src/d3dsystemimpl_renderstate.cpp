@@ -45,6 +45,20 @@ void D3D11SystemImpl::setDepthStenciState(const renderMe::rendering::RenderState
     }
 }
 
+void D3D11SystemImpl::forceCurrentDepthStenciState()
+{
+    if ("true" == m_currentDepthStencilState)
+    {
+        m_lpd3ddevcontext->OMSetDepthStencilState(m_dsState_DepthTestEnabled, 1);
+    }
+    else
+    {
+        m_lpd3ddevcontext->OMSetDepthStencilState(m_dsState_DepthTestDisabled, 1);
+    }
+}
+
+
+
 void D3D11SystemImpl::setPSSamplers(const renderMe::rendering::RenderState& p_renderstate)
 {
     static const std::map<std::string, ID3D11SamplerState*> translate_samplerstate =
@@ -66,17 +80,24 @@ void D3D11SystemImpl::setPSSamplers(const renderMe::rendering::RenderState& p_re
             ID3D11SamplerState* ss_array[] = { nullptr };
 
             const auto args_list{ p_renderstate.getExtendedArgs() };
+            
             auto index{ 0 };
+            m_currentPSExtendedSamplersLength = 0;
+
             for (const auto& e : args_list)
             {
                 if (m_currentPSExtendedSamplers[index] != e)
                 {
+                    m_currentPSExtendedSamplers[index] = e;
+                    m_currentPSExtendedSamplersLength++;
+
                     ss_array[0] = translate_samplerstate.at(e);
                     m_lpd3ddevcontext->PSSetSamplers(index++, 1, ss_array);
-
-                    m_currentPSExtendedSamplers[index] = e;
+                    
                 }
             }
+
+            m_PSExtendedSamplers = true;
         }
         else
         {
@@ -89,6 +110,8 @@ void D3D11SystemImpl::setPSSamplers(const renderMe::rendering::RenderState& p_re
                 }
                 m_currentPSSampler = arg;
             }
+
+            m_PSExtendedSamplers = false;
         }
     }
 }
@@ -114,17 +137,23 @@ void D3D11SystemImpl::setVSSamplers(const renderMe::rendering::RenderState& p_re
             ID3D11SamplerState* ss_array[] = { nullptr };
 
             const auto args_list{ p_renderstate.getExtendedArgs() };
+
             auto index{ 0 };
+            m_currentVSExtendedSamplersLength = 0;
+
             for (const auto& e : args_list)
             {
                 if (m_currentVSExtendedSamplers[index] != e)
                 {
+                    m_currentVSExtendedSamplers[index] = e;
+                    m_currentVSExtendedSamplersLength++;
+
                     ss_array[0] = translate_samplerstate.at(e);
                     m_lpd3ddevcontext->VSSetSamplers(index++, 1, ss_array);
-
-                    m_currentVSExtendedSamplers[index] = e;
                 }
             }
+
+            m_VSExtendedSamplers = true;
         }
         else
         {
@@ -137,9 +166,78 @@ void D3D11SystemImpl::setVSSamplers(const renderMe::rendering::RenderState& p_re
                 }
                 m_currentVSSampler = arg;
             }
+
+            m_VSExtendedSamplers = false;
         }
     }
 }
+
+void D3D11SystemImpl::forceCurrentPSSamplers()
+{
+    static const std::map<std::string, ID3D11SamplerState*> translate_samplerstate =
+    {
+        { "none",               m_pointFilterSamplerState              },
+        { "point",              m_pointFilterSamplerState              },
+        { "linear",             m_linearFilterSamplerState             },
+        { "anisotropic",        m_anisotropicFilterSamplerState        },
+        { "point_uvwrap",       m_pointFilterSamplerState_uvwrap       },
+        { "linear_uvwrap",      m_linearFilterSamplerState_uvwrap      },
+        { "anisotropic_uvwrap", m_anisotropicFilterSamplerState_uvwrap }
+    };
+
+    if (m_PSExtendedSamplers)
+    {
+        ID3D11SamplerState* ss_array[] = { nullptr };
+
+        for (auto i = 0; i < m_currentPSExtendedSamplersLength; i++)
+        {
+            ss_array[0] = translate_samplerstate.at(m_currentPSExtendedSamplers[i]);
+            m_lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
+        }
+    }
+    else
+    {
+        ID3D11SamplerState* ss_array[] = { translate_samplerstate.at(m_currentPSSampler) };
+        for (auto i = 0; i < nbTextureStages; i++)
+        {
+            m_lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
+        }                    
+    }
+}
+
+void D3D11SystemImpl::forceCurrentVSSamplers()
+{
+    static const std::map<std::string, ID3D11SamplerState*> translate_samplerstate =
+    {
+        { "none",               m_pointFilterSamplerState              },
+        { "point",              m_pointFilterSamplerState              },
+        { "linear",             m_linearFilterSamplerState             },
+        { "anisotropic",        m_anisotropicFilterSamplerState        },
+        { "point_uvwrap",       m_pointFilterSamplerState_uvwrap       },
+        { "linear_uvwrap",      m_linearFilterSamplerState_uvwrap      },
+        { "anisotropic_uvwrap", m_anisotropicFilterSamplerState_uvwrap }
+    };
+
+    if (m_VSExtendedSamplers)
+    {
+        ID3D11SamplerState* ss_array[] = { nullptr };
+
+        for (auto i = 0; i < m_currentVSExtendedSamplersLength; i++)
+        {
+            ss_array[0] = translate_samplerstate.at(m_currentVSExtendedSamplers[i]);
+            m_lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
+        }
+    }
+    else
+    {
+        ID3D11SamplerState* ss_array[] = { translate_samplerstate.at(m_currentVSSampler) };
+        for (auto i = 0; i < nbTextureStages; i++)
+        {
+            m_lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
+        }
+    }
+}
+
 
 void D3D11SystemImpl::prepareBlendState(const renderMe::rendering::RenderState& p_renderstate)
 {
@@ -357,7 +455,7 @@ void D3D11SystemImpl::prepareRenderState(const renderMe::rendering::RenderState&
 }
 
 
-bool D3D11SystemImpl::setCacheRS()
+bool D3D11SystemImpl::setCacheRS(bool p_force)
 {
     bool status{ true };
     DECLARE_D3D11ASSERT_VARS
@@ -369,7 +467,7 @@ bool D3D11SystemImpl::setCacheRS()
 
     if (m_rsCache.count(rsdesc_key) > 0)
     {
-        if (rsdesc_key != m_currentRenderStateMD5)
+        if (rsdesc_key != m_currentRenderStateMD5 || p_force)
         {
             // not already applied
             m_lpd3ddevcontext->RSSetState(m_rsCache.at(rsdesc_key).rs_state);
@@ -392,7 +490,7 @@ bool D3D11SystemImpl::setCacheRS()
     return status;
 }
 
-bool D3D11SystemImpl::setCacheBlendstate()
+bool D3D11SystemImpl::setCacheBlendstate(bool p_force)
 {
     bool status{ true };
     DECLARE_D3D11ASSERT_VARS
@@ -406,7 +504,7 @@ bool D3D11SystemImpl::setCacheBlendstate()
 
     if (m_bsCache.count(bsdesc_key) > 0)
     {
-        if (bsdesc_key != m_currentBlendStateMD5)
+        if (bsdesc_key != m_currentBlendStateMD5 || p_force)
         {
             // not already applied
             m_lpd3ddevcontext->OMSetBlendState(m_bsCache.at(bsdesc_key).bs_state, bvals, 0xffffffff);
@@ -418,7 +516,7 @@ bool D3D11SystemImpl::setCacheBlendstate()
         ID3D11BlendState* bs{ nullptr };
         hRes = m_lpd3ddevice->CreateBlendState(&currBlendDesc, &bs);
         D3D11_CHECK(CreateBlendState)
-            m_lpd3ddevcontext->OMSetBlendState(bs, bvals, 0xffffffff);
+        m_lpd3ddevcontext->OMSetBlendState(bs, bvals, 0xffffffff);
 
         // create new entry in cache
         const BSCacheEntry cache_e{ currBlendDesc, bs };

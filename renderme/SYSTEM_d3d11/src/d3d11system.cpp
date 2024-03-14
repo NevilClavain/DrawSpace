@@ -534,6 +534,16 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 	for (auto& text : p_renderingQueue.texts())
 	{
 		d3dimpl->drawText(text.second.font, text.second.color, text.second.position, text.second.rotation_rad, text.second.text);
+
+		// after DrawString call, need to force blend state and renderstate restauration
+		d3dimpl->setCacheRS(true);
+		d3dimpl->setCacheBlendstate(true);
+
+		d3dimpl->forceCurrentDepthStenciState();
+		d3dimpl->forceCurrentPSSamplers();
+		d3dimpl->forceCurrentVSSamplers();
+
+		// todo : also for setDepthStenciState(), setPSSamplers(), setVSSamplers()
 	}
 }
 

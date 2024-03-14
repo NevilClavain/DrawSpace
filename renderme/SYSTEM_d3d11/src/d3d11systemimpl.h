@@ -156,15 +156,20 @@ public:
     void destroyTriangleMeshe(const std::string& p_name);
 
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
-    bool setCacheRS(); // apply
+    bool setCacheRS(bool p_force = false); // apply
 
     void prepareBlendState(const renderMe::rendering::RenderState& p_renderstate); // update struct    
-    bool setCacheBlendstate(); // apply
+    bool setCacheBlendstate(bool p_force = false); // apply
 
     void setDepthStenciState(const renderMe::rendering::RenderState& p_renderstate);
+    void forceCurrentDepthStenciState();
 
     void setPSSamplers(const renderMe::rendering::RenderState& p_renderstate);
     void setVSSamplers(const renderMe::rendering::RenderState& p_renderstate);
+
+    void forceCurrentPSSamplers();
+    void forceCurrentVSSamplers();
+
 
     void setTriangleListTopology();
     void setLineListTopology();
@@ -296,10 +301,16 @@ private:
     std::string                                         m_currentDepthStencilState;
 
     std::string                                         m_currentPSSampler;
+
+    bool                                                m_PSExtendedSamplers;
     std::string                                         m_currentPSExtendedSamplers[nbTextureStages];
+    int                                                 m_currentPSExtendedSamplersLength;
 
     std::string                                         m_currentVSSampler;
+
+    bool                                                m_VSExtendedSamplers;
     std::string                                         m_currentVSExtendedSamplers[nbTextureStages];
+    int                                                 m_currentVSExtendedSamplersLength;
 
 
     ////////////////////////////////////////////////////////

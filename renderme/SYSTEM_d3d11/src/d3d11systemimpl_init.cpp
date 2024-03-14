@@ -341,6 +341,10 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 		lpd3ddevcontext->VSSetSamplers(i, 1, ss_array);
 		lpd3ddevcontext->PSSetSamplers(i, 1, ss_array);
 	}
+	m_PSExtendedSamplers = false;
+	m_VSExtendedSamplers = false;
+	m_currentPSSampler = "none";
+	m_currentVSSampler = "none";
 
 	////////////////////////////////////////////////////////////////////////////
 

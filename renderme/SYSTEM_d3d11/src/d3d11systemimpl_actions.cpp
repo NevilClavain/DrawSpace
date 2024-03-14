@@ -106,6 +106,7 @@ void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::
 	spriteBatch->Begin();
 	spriteFont->DrawString(spriteBatch, p_text.c_str(), pos, color, p_rotation);
 	spriteBatch->End();
+
 }
 
 void D3D11SystemImpl::setTriangleListTopology()
