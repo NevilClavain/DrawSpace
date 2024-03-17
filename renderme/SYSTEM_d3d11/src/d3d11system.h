@@ -46,6 +46,7 @@ namespace renderMe
 
     enum class D3D11SystemEvent
     {
+        D3D11_WINDOW_READY,
         D3D11_SHADER_CREATION_BEGIN,
         D3D11_SHADER_CREATION_SUCCESS,
         D3D11_SHADER_RELEASE_BEGIN,

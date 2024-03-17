@@ -233,12 +233,56 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 	// D3D11 system provides compilation shader service
 
-	renderMe::D3D11System* d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
+	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
 	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getServiceInvocationCallback());
+
+	const D3D11System::Callback d3d11_cb
+	{
+		[&, this](D3D11SystemEvent p_event, const std::string& p_id)
+		{
+			switch (p_event)
+			{
+				case D3D11SystemEvent::D3D11_WINDOW_READY:
+				{
+					auto& appwindowNode{ m_entitygraph.node(p_id) };
+					const auto appwindow{ appwindowNode.data() };
+
+					const auto& mainwindows_rendering_aspect{ appwindow->aspectAccess(renderMe::core::renderingAspect::id) };
+
+					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
+					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
+
+					/////////////// add viewpoint ////////////////////////
+
+					auto& viewPointNode{ m_entitygraph.add(appwindowNode, "viewPointEntity") };
+					const auto viewPointEntity{ viewPointNode.data() };
+
+					auto& viewpoint_aspect{ viewPointEntity->makeAspect(core::viewAspect::id) };
+
+					maths::Matrix projection;
+					projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+
+					viewpoint_aspect.addComponent<maths::Matrix>("projection", projection);
+
+					auto& worldpoint_aspect{ viewPointEntity->makeAspect(core::worldAspect::id) };
+
+					maths::Matrix view_position;
+					view_position.translation(0.0, 0.0, 0.0);
+					worldpoint_aspect.addComponent<maths::Matrix>("view_position", view_position);
+
+					//////////////////////////////////////////////////////
+				}
+				break;
+			}
+		}
+	};
+	d3d11System->registerSubscriber(d3d11_cb);
+
+
 
 	// register to resource system events
 
-	const ResourceSystem::Callback cb
+	const ResourceSystem::Callback rs_cb
 	{
 		[&, this](ResourceSystemEvent p_event, const std::string& p_resourceName)
 		{
@@ -269,8 +313,10 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 		}
 	};
 
-	renderMe::ResourceSystem* resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(2) };
-	resourceSystem->registerSubscriber(cb);
+	const auto resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(2) };
+	resourceSystem->registerSubscriber(rs_cb);
+
+
 
 	
 	//////////////////////////
@@ -352,7 +398,7 @@ void RootImpl::run(void)
 
 		lineDrawingControl.world.translation(0.0, 0.0, -5.0);
 		lineDrawingControl.view.identity();
-		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
+		lineDrawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad0_color", "color"));
 
@@ -435,7 +481,7 @@ void RootImpl::run(void)
 
 		lineDrawingControl.world.translation(0.0, 0.0, -15.0);
 		lineDrawingControl.view.identity();
-		lineDrawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
+		lineDrawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad1_color", "color"));
 
@@ -524,7 +570,7 @@ void RootImpl::run(void)
 
 		drawingControl.world.translation(0.0, 0.0, -20.0);
 		drawingControl.view.identity();
-		drawingControl.proj.perspective(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
+		drawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
 		drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
 
@@ -684,5 +730,4 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	m_timeInfos_time_aspect = &timeInfos_time_aspect;
 
-	//////////////////////////////////////////////////////
 }

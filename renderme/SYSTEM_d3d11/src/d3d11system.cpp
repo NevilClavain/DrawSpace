@@ -225,6 +225,8 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void D3D11System::manageInitialization()
 {
+	std::string rendering_target_entity_id;
+
 	const auto forEachRenderingAspect
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
@@ -241,6 +243,7 @@ void D3D11System::manageInitialization()
 				if (d3dimpl->init(p_entity))
 				{
 					m_initialized = true;
+					rendering_target_entity_id = p_entity->getId();
 				}
 				else
 				{
@@ -251,6 +254,14 @@ void D3D11System::manageInitialization()
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
+
+	if (m_initialized)
+	{
+		for (const auto& call : m_callbacks)
+		{
+			call(D3D11SystemEvent::D3D11_WINDOW_READY, rendering_target_entity_id);
+		}
+	}
 }
 
 void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue& p_renderingQueue)

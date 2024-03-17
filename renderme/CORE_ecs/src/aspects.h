@@ -54,5 +54,16 @@ namespace renderMe
 		{
 			static constexpr int id{ 0x0003 };
 		};
+
+		struct viewAspect
+		{
+			static constexpr int id{ 0x0004 };
+		};
+
+		struct worldAspect
+		{
+			static constexpr int id{ 0x0005 };
+		};
+
 	}
 }

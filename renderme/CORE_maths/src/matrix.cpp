@@ -89,7 +89,7 @@ void Matrix::translation(double p_x, double p_y, double p_z)
     m_configinfos.values[0] = p_x;
     m_configinfos.values[1] = p_y;
     m_configinfos.values[2] = p_z;
-    m_configinfos.values[3] = 0.0;
+    m_configinfos.values[3] = 1.0;
 
 }
 
@@ -104,18 +104,18 @@ void Matrix::translation(const Real4Vector& p_pos)
     m_configinfos.values[0] = p_pos[0];
     m_configinfos.values[1] = p_pos[1];
     m_configinfos.values[2] = p_pos[2];
-    m_configinfos.values[3] = 0.0;
+    m_configinfos.values[3] = 1.0;
 
 }
 
-void Matrix::perspective(double p_w, double p_h, double p_zn, double p_zf)
+void Matrix::projection(double p_w, double p_h, double p_zn, double p_zf)
 {
     zero();
     m_matrix[0][0] = 2.0f * p_zn / p_w;
     m_matrix[1][1] = 2.0f * p_zn / p_h;
     m_matrix[2][2] = p_zf / (p_zf - p_zn);
     m_matrix[3][2] = -p_zn * m_matrix[2][2];
-    m_matrix[2][3] = 1.0f;
+    m_matrix[2][3] = 1.0;
 
     m_configinfos.type = ConfigurationType::CONFIG_PROJ;
 }
@@ -160,7 +160,7 @@ void Matrix::scale(double p_sx, double p_sy, double p_sz)
     m_configinfos.values[0] = p_sx;
     m_configinfos.values[1] = p_sy;
     m_configinfos.values[2] = p_sz;
-    m_configinfos.values[3] = 0.0;
+    m_configinfos.values[3] = 1.0;
 
 }
 
@@ -176,7 +176,7 @@ void Matrix::scale(const Real4Vector& p_pos)
     m_configinfos.values[0] = p_pos[0];
     m_configinfos.values[1] = p_pos[1];
     m_configinfos.values[2] = p_pos[2];
-    m_configinfos.values[3] = 0.0;
+    m_configinfos.values[3] = 1.0;
 
 }
 
@@ -186,6 +186,7 @@ void Matrix::clearTranslation(void)
     m_matrix[3][0] = 0.0;
     m_matrix[3][1] = 0.0;
     m_matrix[3][2] = 0.0;
+    m_matrix[3][3] = 1.0;
 
     m_configinfos.type = ConfigurationType::CONFIG_UNDETERMINED;
 }
