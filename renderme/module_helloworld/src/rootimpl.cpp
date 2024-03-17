@@ -29,6 +29,8 @@
 #include "timesystem.h"
 #include "resourcesystem.h"
 #include "renderingqueuesystem.h"
+#include "worldsystem.h"
+#include "viewsystem.h"
 
 
 #include "shader.h"
@@ -159,7 +161,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 	else if (VK_F8 == p_key)
 	{
-		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(3) };
+		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(5) };
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
@@ -229,7 +231,9 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	sysEngine->makeSystem<renderMe::TimeSystem>(0, m_entitygraph);
 	sysEngine->makeSystem<renderMe::D3D11System>(1, m_entitygraph);
 	sysEngine->makeSystem<renderMe::ResourceSystem>(2, m_entitygraph);
-	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(3, m_entitygraph);
+	sysEngine->makeSystem<renderMe::WorldSystem> (3, m_entitygraph);
+	sysEngine->makeSystem<renderMe::ViewSystem>(4, m_entitygraph);
+	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(5, m_entitygraph);
 
 	// D3D11 system provides compilation shader service
 

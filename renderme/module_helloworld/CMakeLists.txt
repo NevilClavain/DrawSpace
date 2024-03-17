@@ -42,6 +42,8 @@ include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_time/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_renderingqueue/src)
+include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_world/src)
+include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_view/src)
 
 include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})
@@ -61,7 +63,7 @@ file(
 
 add_library(module_helloworld SHARED ${source_files})
 
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services CORE_maths RENDERING_control TRANSFORM_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource SYSTEM_renderingqueue jsmn d3d11 d3dcompiler DirectXTK)
+target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services CORE_maths RENDERING_control TRANSFORM_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource SYSTEM_renderingqueue SYSTEM_world SYSTEM_view jsmn d3d11 d3dcompiler DirectXTK)
 
 install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

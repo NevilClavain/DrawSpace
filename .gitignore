@@ -328,6 +328,15 @@ ALL_BUILD.vcxproj*
 /renderme/SYSTEM_time/*.sln
 /renderme/SYSTEM_time/*.vcxproj*
 
+/renderme/SYSTEM_world/CMakeFiles/
+/renderme/SYSTEM_world/*.sln
+/renderme/SYSTEM_world/*.vcxproj*
+
+/renderme/SYSTEM_view/CMakeFiles/
+/renderme/SYSTEM_view/*.sln
+/renderme/SYSTEM_view/*.vcxproj*
+
+
 /renderme/SYSTEM_resource/CMakeFiles/
 /renderme/SYSTEM_resource/*.sln
 /renderme/SYSTEM_resource/*.vcxproj*

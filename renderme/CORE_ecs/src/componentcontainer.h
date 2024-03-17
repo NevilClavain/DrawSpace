@@ -33,7 +33,7 @@
 
 #include "exceptions.h"
 #include "component.h"
-#include "allocator.h"
+
 
 namespace renderMe
 {

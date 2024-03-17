@@ -21,24 +21,29 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(CORE_ecs)
+project(SYSTEM_view)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
-include_directories(${jsonjsmn_include_dir})
+include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
+
+
 include_directories(${st_tree_include_dir})
+include_directories(${jsonjsmn_include_dir})
+
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/CORE_ecs/src/*.h
-        ${CMAKE_SOURCE_DIR}/CORE_ecs/src/*.cpp		
+		${CMAKE_SOURCE_DIR}/SYSTEM_view/src/*.h
+        ${CMAKE_SOURCE_DIR}/SYSTEM_view/src/*.cpp		
 )
-
 
 add_definitions( -D_FROMCMAKE )
 
-add_library(CORE_ecs ${source_files})
+add_library(SYSTEM_view ${source_files})
 
 
 
