@@ -26,8 +26,6 @@ project(SYSTEM_view)
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
 
 
 include_directories(${st_tree_include_dir})
