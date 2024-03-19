@@ -44,6 +44,7 @@ namespace renderMe
 		class RenderingQueueSystem;
 
 
+		/// IN ENTITY
 		struct DrawingControl
 		{
 		public:
@@ -70,13 +71,33 @@ namespace renderMe
 			std::vector<std::pair<std::string, std::string>> vshaders_map;
 			std::vector<std::pair<std::string, std::string>> pshaders_map;
 
+			std::string owner_entity_id; // to be completed by queue system
+
+		};
+
+		/// 'DrawingControl' EQUIVALENT IN BUILT RENDERING QUEUE
+		struct QueueDrawingControl
+		{
+		public:
+
+			QueueDrawingControl() = default;
+			~QueueDrawingControl() = default;
+
+			// transformations to apply;
+			core::maths::Matrix* world{ nullptr };
+			core::maths::Matrix* view{ nullptr };
+			core::maths::Matrix* proj{ nullptr };
+
+			std::function<void()> setup{ [] {} };
+			std::function<void()> teardown{ [] {} };
+
+
 			// shaders params to apply
 			// dataCloud variable id/shader argument
 			std::vector<std::pair<std::string, renderMe::Shader::Argument>> vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
 			std::vector<std::pair<std::string, renderMe::Shader::Argument>> pshaders_map_cnx; // computed from pshaders_map and the queue current pshader
 
-			std::string owner_entity_id; // to be completed by queue system
-
+			std::string owner_entity_id;
 		};
 
 		class Queue
@@ -109,13 +130,13 @@ namespace renderMe
 			struct TriangleMeshePayload
 			{
 				// key = entity id
-				std::unordered_map<std::string, DrawingControl> list;
+				std::unordered_map<std::string, QueueDrawingControl> list;
 			};
 
 			struct LineMeshePayload
 			{
 				// key = entity id
-				std::unordered_map<std::string, DrawingControl> list;
+				std::unordered_map<std::string, QueueDrawingControl> list;
 			};
 
 			struct RenderStatePayload

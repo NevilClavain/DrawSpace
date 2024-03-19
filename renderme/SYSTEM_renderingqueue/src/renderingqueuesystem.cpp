@@ -153,9 +153,32 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 
 						const auto drawing_body{ drawing.second };
 
-						_RENDERME_DEBUG(m_localLogger, "						-> world :\n" + drawing_body.world.dump());
-						_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view.dump());
-						_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj.dump());
+						if (drawing_body.world)
+						{
+							_RENDERME_DEBUG(m_localLogger, "						-> world :\n" + drawing_body.world->dump());
+						}
+						else
+						{
+							_RENDERME_WARN(m_localLogger, "						-> world : nullptr\n" );
+						}
+
+						if (drawing_body.view)
+						{
+							_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view->dump());
+						}
+						else
+						{
+							_RENDERME_WARN(m_localLogger, "						-> view : nullptr\n");
+						}
+							
+						if (drawing_body.proj)
+						{
+							_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj->dump());
+						}
+						else
+						{
+							_RENDERME_WARN(m_localLogger, "						-> proj : nullptr\n");
+						}
 
 						_RENDERME_DEBUG(m_localLogger, "						-> vshaders params datacloud connexions :");
 						for (const auto& cnx : drawing_body.vshaders_map_cnx)
@@ -190,9 +213,32 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 
 						const auto drawing_body{ drawing.second };
 
-						_RENDERME_DEBUG(m_localLogger, "						-> world :\n" + drawing_body.world.dump());
-						_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view.dump());
-						_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj.dump());
+						if (drawing_body.world)
+						{
+							_RENDERME_DEBUG(m_localLogger, "						-> world :\n" + drawing_body.world->dump());
+						}
+						else
+						{
+							_RENDERME_WARN(m_localLogger, "						-> world : nullptr\n");
+						}
+
+						if (drawing_body.view)
+						{
+							_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view->dump());
+						}
+						else
+						{
+							_RENDERME_WARN(m_localLogger, "						-> view : nullptr\n");
+						}
+
+						if (drawing_body.proj)
+						{
+							_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj->dump());
+						}
+						else
+						{
+							_RENDERME_WARN(m_localLogger, "						-> proj : nullptr\n");
+						}
 
 						_RENDERME_DEBUG(m_localLogger, "						-> vshaders params datacloud connexions :");
 						for (const auto& cnx : drawing_body.vshaders_map_cnx)
@@ -370,6 +416,7 @@ static std::string build_rs_list_id(const std::vector<renderMe::rendering::Rende
 	return rs_set_signature;
 }
 
+/*
 static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogger, 
 										const renderMe::core::ComponentList<rendering::DrawingControl>& p_linesDrawingControls,
 										const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
@@ -393,7 +440,7 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 				{
 					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
 						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
-						linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+						linesDrawingControl.vshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
 				}
 			}
 		}
@@ -414,6 +461,7 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 		}
 	}
 }
+*/
 
 
 static rendering::Queue::TriangleMeshePayload build_TriangleMeshePayload(
@@ -424,14 +472,61 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMeshePayload(
 {
 	rendering::Queue::TriangleMeshePayload triangleMeshePayload;
 
-	connect_shaders_args(p_localLogger, p_trianglesDrawingControls, p_vshader, p_pshader);
+	//connect_shaders_args(p_localLogger, p_trianglesDrawingControls, p_vshader, p_pshader);
 
 	for (const auto& tdc : p_trianglesDrawingControls)
 	{
 		auto& trianglesDrawingControl{ tdc->getPurpose() };
 		trianglesDrawingControl.ready = true;
 
-		triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesDrawingControl;
+		rendering::QueueDrawingControl trianglesQueueDrawingControl;
+		trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
+		trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
+		trianglesQueueDrawingControl.view = &trianglesDrawingControl.view;
+		trianglesQueueDrawingControl.proj = &trianglesDrawingControl.proj;
+		trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
+		trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+
+		///////////////////// connect vertex shader args
+		const auto vshaders_current_args{ p_vshader.getArguments() };
+
+		//vshader arguments id match loop
+		for (const auto& current_arg : vshaders_current_args)
+		{
+			const auto argument_id{ current_arg.argument_id };
+			for (const auto& connection_pair : trianglesDrawingControl.vshaders_map)
+			{
+				if (argument_id == connection_pair.second)
+				{
+					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+						trianglesQueueDrawingControl.vshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+				}
+			}
+		}
+
+		///////////////////// connect pixel shader args
+		const auto pshaders_current_args{ p_pshader.getArguments() };
+
+		//pshader arguments id match loop
+		for (const auto& current_arg : pshaders_current_args)
+		{
+			const auto argument_id{ current_arg.argument_id };
+			for (const auto& connection_pair : trianglesDrawingControl.pshaders_map)
+			{
+				if (argument_id == connection_pair.second)
+				{
+					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+						trianglesQueueDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+				}
+			}
+		}
+		///////////////////////////////////
+		triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesQueueDrawingControl;
+
 
 		_RENDERME_DEBUG(p_localLogger, "adding triangles DrawingControl of entity: " + trianglesDrawingControl.owner_entity_id)
 
@@ -452,14 +547,61 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 {
 	rendering::Queue::LineMeshePayload lineMeshePayload;
 
-	connect_shaders_args(p_localLogger, p_linesDrawingControls, p_vshader, p_pshader);
+	//connect_shaders_args(p_localLogger, p_linesDrawingControls, p_vshader, p_pshader);
 
 	for (const auto& ldc : p_linesDrawingControls)
 	{		
 		auto& linesDrawingControl{ ldc->getPurpose() };
 		linesDrawingControl.ready = true;
 
-		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
+		rendering::QueueDrawingControl linesQueueDrawingControl;
+		linesQueueDrawingControl.owner_entity_id = linesDrawingControl.owner_entity_id;
+		linesQueueDrawingControl.world = &linesDrawingControl.world;
+		linesQueueDrawingControl.view = &linesDrawingControl.view;
+		linesQueueDrawingControl.proj = &linesDrawingControl.proj;
+		linesQueueDrawingControl.setup = linesDrawingControl.setup;
+		linesQueueDrawingControl.teardown = linesDrawingControl.teardown;
+
+		///////////////////// connect vertex shader args
+		const auto vshaders_current_args{ p_vshader.getArguments() };
+
+		//vshader arguments id match loop
+		for (const auto& current_arg : vshaders_current_args)
+		{
+			const auto argument_id{ current_arg.argument_id };
+			for (const auto& connection_pair : linesDrawingControl.vshaders_map)
+			{
+				if (argument_id == connection_pair.second)
+				{
+					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+						linesQueueDrawingControl.vshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+				}
+			}
+		}
+
+		///////////////////// connect pixel shader args
+		const auto pshaders_current_args{ p_pshader.getArguments() };
+
+		//pshader arguments id match loop
+		for (const auto& current_arg : pshaders_current_args)
+		{
+			const auto argument_id{ current_arg.argument_id };
+			for (const auto& connection_pair : linesDrawingControl.pshaders_map)
+			{
+				if (argument_id == connection_pair.second)
+				{
+					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+						linesQueueDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+				}
+			}
+		}
+
+		///////////////////////////////////
+		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesQueueDrawingControl;
 
 		_RENDERME_DEBUG(p_localLogger, "adding lines DrawingControl of entity: " + linesDrawingControl.owner_entity_id)
 
@@ -610,13 +752,59 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 									
 												auto& lineMeshePayload{ renderStatePayload.linemeshes_list.at(lineMeshes.at(0)->getPurpose().getName())};
 
-												connect_shaders_args(m_localLogger, drawingControls, vshader, pshader);
-
 												for (const auto& dc : drawingControls)
 												{
 													auto& linesDrawingControl{ dc->getPurpose() };
 													linesDrawingControl.ready = true;
-													lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesDrawingControl;
+
+													rendering::QueueDrawingControl linesQueueDrawingControl;
+													linesQueueDrawingControl.owner_entity_id = linesDrawingControl.owner_entity_id;
+													linesQueueDrawingControl.world = &linesDrawingControl.world;
+													linesQueueDrawingControl.view = &linesDrawingControl.view;
+													linesQueueDrawingControl.proj = &linesDrawingControl.proj;
+													linesQueueDrawingControl.setup = linesDrawingControl.setup;
+													linesQueueDrawingControl.teardown = linesDrawingControl.teardown;
+
+													///////////////////// connect vertex shader args
+													const auto vshaders_current_args{ vshader.getArguments() };
+
+													//vshader arguments id match loop
+													for (const auto& current_arg : vshaders_current_args)
+													{
+														const auto argument_id{ current_arg.argument_id };
+														for (const auto& connection_pair : linesDrawingControl.vshaders_map)
+														{
+															if (argument_id == connection_pair.second)
+															{
+																_RENDERME_DEBUG(m_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+																	+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+																	linesQueueDrawingControl.vshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+															}
+														}
+													}
+
+													///////////////////// connect pixel shader args
+													const auto pshaders_current_args{ pshader.getArguments() };
+
+													//pshader arguments id match loop
+													for (const auto& current_arg : pshaders_current_args)
+													{
+														const auto argument_id{ current_arg.argument_id };
+														for (const auto& connection_pair : linesDrawingControl.pshaders_map)
+														{
+															if (argument_id == connection_pair.second)
+															{
+																_RENDERME_DEBUG(m_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+																	+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+																	linesQueueDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+															}
+														}
+													}
+
+													///////////////////////////////////
+													lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesQueueDrawingControl;
 
 													_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 														+ " updated with new entity : " + p_entity_id
@@ -652,13 +840,58 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 
 												auto& triangleMeshePayload{ renderStatePayload.trianglemeshes_list.at(triangleMeshes.at(0)->getPurpose().getName()) };
 
-												connect_shaders_args(m_localLogger, drawingControls, vshader, pshader);
-
 												for (const auto& dc : drawingControls)
 												{
 													auto& trianglesDrawingControl{ dc->getPurpose() };
 													trianglesDrawingControl.ready = true;
-													triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesDrawingControl;
+
+													rendering::QueueDrawingControl trianglesQueueDrawingControl;
+													trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
+													trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
+													trianglesQueueDrawingControl.view = &trianglesDrawingControl.view;
+													trianglesQueueDrawingControl.proj = &trianglesDrawingControl.proj;
+													trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
+													trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+
+													///////////////////// connect vertex shader args
+													const auto vshaders_current_args{ vshader.getArguments() };
+
+													//vshader arguments id match loop
+													for (const auto& current_arg : vshaders_current_args)
+													{
+														const auto argument_id{ current_arg.argument_id };
+														for (const auto& connection_pair : trianglesDrawingControl.vshaders_map)
+														{
+															if (argument_id == connection_pair.second)
+															{
+																_RENDERME_DEBUG(m_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+																	+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+																	trianglesQueueDrawingControl.vshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+															}
+														}
+													}
+
+													///////////////////// connect pixel shader args
+													const auto pshaders_current_args{ pshader.getArguments() };
+
+													//pshader arguments id match loop
+													for (const auto& current_arg : pshaders_current_args)
+													{
+														const auto argument_id{ current_arg.argument_id };
+														for (const auto& connection_pair : trianglesDrawingControl.pshaders_map)
+														{
+															if (argument_id == connection_pair.second)
+															{
+																_RENDERME_DEBUG(m_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
+																	+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
+
+																	trianglesQueueDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
+															}
+														}
+													}
+													///////////////////////////////////
+													triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesQueueDrawingControl;
 
 													_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 														+ " updated with new entity : " + p_entity_id

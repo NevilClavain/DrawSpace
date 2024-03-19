@@ -439,9 +439,9 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 						const auto& triangleMesheId{ triangleMesheInfo.first };
 						d3dimpl->setTriangleMeshe(triangleMesheId);
 
-						const auto& triangleDrawingControls{ triangleMesheInfo.second.list };
+						const auto& triangleQueueDrawingControls{ triangleMesheInfo.second.list };
 
-						for (const auto& tdc : triangleDrawingControls)
+						for (const auto& tdc : triangleQueueDrawingControls)
 						{
 							//////
 							tdc.second.setup();
@@ -474,7 +474,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 							//////
 
-							d3dimpl->drawTriangleMeshe(tdc.second.world, tdc.second.view, tdc.second.proj);
+							d3dimpl->drawTriangleMeshe(*tdc.second.world, *tdc.second.view, *tdc.second.proj);
 
 							//////
 							tdc.second.teardown();
@@ -528,7 +528,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 							//////
 
-							d3dimpl->drawLineMeshe(ldc.second.world, ldc.second.view, ldc.second.proj);
+							d3dimpl->drawLineMeshe(*ldc.second.world, *ldc.second.view, *ldc.second.proj);
 
 							//////
 							ldc.second.teardown();
