@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,20 +23,27 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "system.h"
 #include "matrix.h"
 
 namespace renderMe
 {
-    namespace core { class Entity; }
-    namespace core { class Entitygraph; }
-   
-    class WorldSystem : public core::System
-    {
-    public:
-        WorldSystem(core::Entitygraph& p_entitygraph);
-        ~WorldSystem() = default;
+	namespace transform
+	{
+        struct WorldPosition
+        {
+            WorldPosition()
+            {
+                local_pos.identity();
+                global_pos.identity();
+            }
 
-        void run();
-    };
+            WorldPosition(const core::maths::Matrix& p_local)
+            {
+                local_pos = p_local;
+            }
+
+            core::maths::Matrix local_pos;
+            core::maths::Matrix global_pos;
+        };
+	}
 }

@@ -49,6 +49,9 @@
 
 #include "datacloud.h"
 
+#include "worldposition.h"
+
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -372,6 +375,44 @@ void D3D11System::manageResources()
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);
 }
 
+void D3D11System::collectWorldTransformations() const
+{
+	const auto forEachRenderingAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+		{
+			auto& drawing_control_list { p_rendering_aspect.getComponentsByType<rendering::DrawingControl>() };
+			if (drawing_control_list.size() > 0)
+			{
+				auto& drawing_control{ drawing_control_list.at(0)->getPurpose() };
+
+				// search for a world aspect on the same entity
+				if (!p_entity->hasAspect(core::worldAspect::id))
+				{
+					_EXCEPTION("missing entity world aspect : " + p_entity->getId());
+				}
+
+				const auto& worldaspect{ p_entity->aspectAccess(worldAspect::id) };
+				const auto& worldpositions_list{ worldaspect.getComponentsByType<transform::WorldPosition>() };
+
+				if (0 == worldpositions_list.size())
+				{
+					_EXCEPTION("entity world aspect : missing world position " + p_entity->getId());
+				}
+				else
+				{
+					auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+					drawing_control.world = entity_worldposition.global_pos;
+				}
+
+			}
+
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
+}
+
 
 void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 {
@@ -567,6 +608,7 @@ void D3D11System::run()
 
 	manageResources();
 	manageRenderingQueue();
+	collectWorldTransformations();
 
 	if (m_initialized)
 	{

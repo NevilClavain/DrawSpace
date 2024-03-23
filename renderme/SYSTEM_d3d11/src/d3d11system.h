@@ -82,10 +82,10 @@ namespace renderMe
 
         renderMe::core::Runner                                  m_runner;
 
-        void    manageInitialization();
-        void    manageRenderingQueue() const;
-
+        void    manageInitialization();       
         void    manageResources();
+        void    manageRenderingQueue() const;
+        void    collectWorldTransformations() const;
 
         void    handleShaderCreation(Shader& p_shaderInfos, int p_shaderType);
         void    handleShaderRelease(Shader& p_shaderInfos, int p_shaderType);

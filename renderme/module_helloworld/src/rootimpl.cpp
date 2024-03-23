@@ -32,6 +32,8 @@
 #include "worldsystem.h"
 #include "viewsystem.h"
 
+#include "worldposition.h"
+
 
 #include "shader.h"
 #include "linemeshe.h"
@@ -270,9 +272,10 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					auto& worldpoint_aspect{ viewPointEntity->makeAspect(core::worldAspect::id) };
 
-					maths::Matrix view_position;
-					view_position.translation(0.0, 0.0, 0.0);
-					worldpoint_aspect.addComponent<maths::Matrix>("view_position", view_position);
+					maths::Matrix view_positionmat;
+					view_positionmat.translation(0.0, 0.0, -6.0);
+
+					worldpoint_aspect.addComponent<transform::WorldPosition>("view_worldposition", transform::WorldPosition(view_positionmat));
 
 					//////////////////////////////////////////////////////
 				}
@@ -400,7 +403,7 @@ void RootImpl::run(void)
 
 		rendering::DrawingControl lineDrawingControl;
 
-		lineDrawingControl.world.translation(0.0, 0.0, -5.0);
+		//lineDrawingControl.world.translation(0.0, 0.0, -5.0);
 		lineDrawingControl.view.identity();
 		lineDrawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
@@ -412,6 +415,16 @@ void RootImpl::run(void)
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 		quad_time_aspect.addComponent<TimeManager::Variable>("quad0_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
+
+		/////////// World position
+
+		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
+	
+		maths::Matrix positionmat;
+		positionmat.translation(0.0, 0.0, -5.0);
+
+		world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
+
 
 
 		m_quadEntity0_state = true;
@@ -483,7 +496,7 @@ void RootImpl::run(void)
 
 		rendering::DrawingControl lineDrawingControl;
 
-		lineDrawingControl.world.translation(0.0, 0.0, -15.0);
+		//lineDrawingControl.world.translation(0.0, 0.0, -15.0);
 		lineDrawingControl.view.identity();
 		lineDrawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
@@ -495,6 +508,15 @@ void RootImpl::run(void)
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };		
 		quad_time_aspect.addComponent<TimeManager::Variable>("quad1_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
+
+		/////////// World position
+
+		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
+
+		maths::Matrix positionmat;
+		positionmat.translation(0.0, 0.0, -15.0);
+
+		world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
 
 
 		m_quadEntity1_state = true;
@@ -572,7 +594,7 @@ void RootImpl::run(void)
 
 		rendering::DrawingControl drawingControl;
 
-		drawingControl.world.translation(0.0, 0.0, -20.0);
+		//drawingControl.world.translation(0.0, 0.0, -20.0);
 		drawingControl.view.identity();
 		drawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
 
@@ -580,6 +602,17 @@ void RootImpl::run(void)
 
 
 		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
+
+
+
+		/////////// World position
+
+		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
+
+		maths::Matrix positionmat;
+		positionmat.translation(0.0, 0.0, -20.0);
+
+		world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
 
 
 		m_quadEntity2_state = true;

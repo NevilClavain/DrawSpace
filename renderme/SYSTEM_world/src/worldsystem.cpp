@@ -23,6 +23,12 @@
 /* -*-LIC_END-*- */
 
 #include "worldsystem.h"
+#include "entity.h"
+#include "entitygraph.h"
+#include "aspects.h"
+#include "ecshelpers.h"
+#include "worldposition.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -33,4 +39,37 @@ WorldSystem::WorldSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void WorldSystem::run()
 {
+	const auto forEachWorldAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_world_aspect)
+		{
+			auto& entity_worldposition { p_world_aspect.getComponentsByType<transform::WorldPosition>().at(0)->getPurpose() };
+			const auto localpos_mat{ entity_worldposition.local_pos };
+
+			// get parent entity if exists
+			const auto parent_entity{ p_entity->getParent() };
+
+			if (parent_entity && parent_entity->hasAspect(worldAspect::id))
+			{
+				const auto& parent_worldaspect{ parent_entity->aspectAccess(worldAspect::id) };
+				const auto& parententity_worldpositions_list{ parent_worldaspect.getComponentsByType<transform::WorldPosition>() };
+
+				if (0 == parententity_worldpositions_list.size())
+				{
+					_EXCEPTION("Parent entity world aspect : missing world position " + parent_entity->getId());
+				}
+				else
+				{
+					auto& parententity_worldposition{ parententity_worldpositions_list.at(0)->getPurpose() };
+					entity_worldposition.global_pos = entity_worldposition.local_pos * parententity_worldposition.global_pos;
+				}
+			}
+			else 
+			{
+				entity_worldposition.global_pos = entity_worldposition.local_pos;
+			}
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::worldAspect>(m_entitygraph, forEachWorldAspect);
 }
