@@ -72,7 +72,7 @@ int main( int argc, char* argv[] )
 		std::cout << "mycolor = " << mycolorVal[0] << " " << mycolorVal[1] << " " << mycolorVal[2] << " " << mycolorVal[3] << "\n";
 	}
 
-	dataCloud->updateData<Real4Vector>("mycolor", Real4Vector(0.3, 0.2, 0.1, 1.0));
+	dataCloud->updateDataValue<Real4Vector>("mycolor", Real4Vector(0.3, 0.2, 0.1, 1.0));
 
 	{
 		const auto mycolorVal{ dataCloud->readDataValue<Real4Vector>("mycolor") };

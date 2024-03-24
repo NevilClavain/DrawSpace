@@ -86,6 +86,7 @@ namespace renderMe
         void    manageResources();
         void    manageRenderingQueue() const;
         void    collectWorldTransformations() const;
+        void    collectViewTransformations() const;
 
         void    handleShaderCreation(Shader& p_shaderInfos, int p_shaderType);
         void    handleShaderRelease(Shader& p_shaderInfos, int p_shaderType);

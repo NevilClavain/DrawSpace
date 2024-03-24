@@ -392,8 +392,8 @@ void D3D11System::collectWorldTransformations() const
 					_EXCEPTION("missing entity world aspect : " + p_entity->getId());
 				}
 
-				const auto& worldaspect{ p_entity->aspectAccess(worldAspect::id) };
-				const auto& worldpositions_list{ worldaspect.getComponentsByType<transform::WorldPosition>() };
+				const auto& world_aspect{ p_entity->aspectAccess(worldAspect::id) };
+				const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
 
 				if (0 == worldpositions_list.size())
 				{
@@ -404,13 +404,97 @@ void D3D11System::collectWorldTransformations() const
 					auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
 					drawing_control.world = entity_worldposition.global_pos;
 				}
-
 			}
-
 		}
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
+}
+
+void D3D11System::collectViewTransformations() const
+{
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("(@std)current_view") };
+
+	if ("" == current_view_entity_id)
+	{
+		_EXCEPTION("no current view defined");
+	}
+
+	bool found{ false };
+
+	maths::Matrix current_cam;
+	maths::Matrix current_proj;
+
+	const auto forEachViewAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_view_aspect)
+		{
+			if (p_entity->getId() == current_view_entity_id)
+			{
+				// current camera
+				found = true;
+
+				// extract view aspect
+				const auto& view_aspect{ p_entity->aspectAccess(viewAspect::id) };
+				const auto& viewpoint_projs_list { view_aspect.getComponentsByType<maths::Matrix>() };
+
+				if (0 == viewpoint_projs_list.size())
+				{
+					_EXCEPTION("entity view aspect : missing projection definition " + p_entity->getId());
+				}
+				else
+				{
+					current_proj = viewpoint_projs_list.at(0)->getPurpose();
+				}
+
+				// extract world aspect
+
+				const auto& world_aspect{ p_entity->aspectAccess(worldAspect::id) };
+				const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+				if (0 == worldpositions_list.size())
+				{
+					_EXCEPTION("entity world aspect : missing world position " + p_entity->getId());
+				}
+				else
+				{
+					auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+					current_cam = entity_worldposition.global_pos;
+				}
+
+			}
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::viewAspect>(m_entitygraph, forEachViewAspect);
+
+	if (!found)
+	{
+		_EXCEPTION("cannot find view entity :" + current_view_entity_id);
+	}
+
+	maths::Matrix current_view = current_cam;
+	current_view.inverse();
+
+	const auto forEachRenderingAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_view_aspect)
+		{
+			const auto& rendering_aspect{ p_entity->aspectAccess(renderingAspect::id) };
+
+			const auto& dc_list{ rendering_aspect.getComponentsByType<rendering::DrawingControl>() };
+			if (dc_list.size() > 0)
+			{
+				rendering::DrawingControl& dc { dc_list.at(0)->getPurpose() };
+
+				dc.proj = current_proj;
+				dc.view = current_view;
+			}
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
 
@@ -609,6 +693,7 @@ void D3D11System::run()
 	manageResources();
 	manageRenderingQueue();
 	collectWorldTransformations();
+	collectViewTransformations();
 
 	if (m_initialized)
 	{

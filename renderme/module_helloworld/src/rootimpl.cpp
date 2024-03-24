@@ -260,24 +260,27 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					/////////////// add viewpoint ////////////////////////
 
-					auto& viewPointNode{ m_entitygraph.add(appwindowNode, "viewPointEntity") };
+					auto& viewPointNode{ m_entitygraph.add(appwindowNode, "Camera01Entity") };
 					const auto viewPointEntity{ viewPointNode.data() };
 
-					auto& viewpoint_aspect{ viewPointEntity->makeAspect(core::viewAspect::id) };
+					auto& view_aspect{ viewPointEntity->makeAspect(core::viewAspect::id) };
 
 					maths::Matrix projection;
 					projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
 
-					viewpoint_aspect.addComponent<maths::Matrix>("projection", projection);
+					view_aspect.addComponent<maths::Matrix>("projection", projection);
 
 					auto& worldpoint_aspect{ viewPointEntity->makeAspect(core::worldAspect::id) };
 
 					maths::Matrix view_positionmat;
-					view_positionmat.translation(0.0, 0.0, -6.0);
+					view_positionmat.translation(0.0, 0.0, 6.0);
 
 					worldpoint_aspect.addComponent<transform::WorldPosition>("view_worldposition", transform::WorldPosition(view_positionmat));
 
 					//////////////////////////////////////////////////////
+
+					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+					dataCloud->updateDataValue<std::string>("(@std)current_view", "Camera01Entity");
 				}
 				break;
 			}
@@ -329,6 +332,10 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	//////////////////////////
 
 	createEntities(p_appWindowsEntityName);
+
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	dataCloud->registerData<std::string>("(@std)current_view");
+
 }
 
 void RootImpl::run(void)
@@ -402,11 +409,6 @@ void RootImpl::run(void)
 		/////////// Draw lines
 
 		rendering::DrawingControl lineDrawingControl;
-
-		//lineDrawingControl.world.translation(0.0, 0.0, -5.0);
-		lineDrawingControl.view.identity();
-		lineDrawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
-
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad0_color", "color"));
 
 
@@ -495,11 +497,6 @@ void RootImpl::run(void)
 		/////////// Draw lines
 
 		rendering::DrawingControl lineDrawingControl;
-
-		//lineDrawingControl.world.translation(0.0, 0.0, -15.0);
-		lineDrawingControl.view.identity();
-		lineDrawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
-
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad1_color", "color"));
 
 
@@ -544,7 +541,7 @@ void RootImpl::run(void)
 
 		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
-		dataCloud->updateData< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
+		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
 
 		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
@@ -593,11 +590,6 @@ void RootImpl::run(void)
 		/////////// Draw triangles
 
 		rendering::DrawingControl drawingControl;
-
-		//drawingControl.world.translation(0.0, 0.0, -20.0);
-		drawingControl.view.identity();
-		drawingControl.proj.projection(1.0, 0.64285713434219360, 1.0, 100000.00000000000);
-
 		drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
 
 
@@ -664,7 +656,7 @@ void RootImpl::run(void)
 		mycolor[2] = mycolor_r.value;
 		mycolor[3] = 1.0;
 
-		dataCloud->updateData("quad0_color", mycolor);
+		dataCloud->updateDataValue("quad0_color", mycolor);
 	}
 	
 
@@ -696,7 +688,7 @@ void RootImpl::run(void)
 		mycolor[2] = mycolor_r.value;
 		mycolor[3] = 1.0;
 
-		dataCloud->updateData("quad1_color", mycolor);
+		dataCloud->updateDataValue("quad1_color", mycolor);
 	}
 	
 	

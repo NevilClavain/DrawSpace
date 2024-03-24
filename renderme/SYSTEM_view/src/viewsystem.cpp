@@ -23,6 +23,12 @@
 /* -*-LIC_END-*- */
 
 #include "viewsystem.h"
+#include "entity.h"
+#include "entitygraph.h"
+#include "aspects.h"
+#include "ecshelpers.h"
+#include "worldposition.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -33,4 +39,5 @@ ViewSystem::ViewSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void ViewSystem::run()
 {
+
 }

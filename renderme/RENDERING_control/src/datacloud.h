@@ -68,7 +68,7 @@ namespace renderMe
             }
 
             template<typename T>
-            void updateData(const std::string& p_id, T value)
+            void updateDataValue(const std::string& p_id, T value)
             {
                 const auto comp{ m_component_container.getComponent<T>(p_id) };
                 if (nullptr == comp)
