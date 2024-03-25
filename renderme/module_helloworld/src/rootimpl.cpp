@@ -421,8 +421,8 @@ void RootImpl::run(void)
 		//positionmat.translation(0.0, 0.0, -5.0);
 
 		//world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
-		world_aspect.addComponent<transform::WorldPosition>("position");
 
+		world_aspect.addComponent<transform::WorldPosition>("position");
 		world_aspect.addComponent<std::function<void()>>("animator", []() 
 			{
 				int a = 0;
