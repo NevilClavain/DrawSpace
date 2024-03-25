@@ -43,7 +43,15 @@ void WorldSystem::run()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_world_aspect)
 		{
-			auto& entity_worldposition { p_world_aspect.getComponentsByType<transform::WorldPosition>().at(0)->getPurpose() };
+			///// compute matrix hierarchy
+
+			auto& entity_worldposition_list { p_world_aspect.getComponentsByType<transform::WorldPosition>() };
+			if (0 == entity_worldposition_list.size())
+			{
+				_EXCEPTION("Eentity world aspect : missing world position " + p_entity->getId());
+			}
+
+			auto& entity_worldposition{ entity_worldposition_list.at(0)->getPurpose()};
 			const auto localpos_mat{ entity_worldposition.local_pos };
 
 			// get parent entity if exists
@@ -68,6 +76,23 @@ void WorldSystem::run()
 			{
 				entity_worldposition.global_pos = entity_worldposition.local_pos;
 			}
+
+			///// compute animators
+
+			auto& entity_animators_list{ p_world_aspect.getComponentsByType<std::function<void()>>() };
+			if (entity_animators_list.size() > 0)
+			{
+				for (const auto& animator_comp : entity_animators_list)
+				{
+					const auto& animator{ animator_comp->getPurpose() };
+
+					animator();
+				}
+			}
+
+
+
+			
 		}
 	};
 

@@ -55,7 +55,7 @@ namespace renderMe
 			static constexpr int id{ 0x0003 };
 		};
 
-		struct viewAspect
+		struct cameraAspect
 		{
 			static constexpr int id{ 0x0004 };
 		};

@@ -435,17 +435,17 @@ void D3D11System::collectViewTransformations() const
 				// current camera
 				found = true;
 
-				// extract view aspect
-				const auto& view_aspect{ p_entity->aspectAccess(viewAspect::id) };
-				const auto& viewpoint_projs_list { view_aspect.getComponentsByType<maths::Matrix>() };
+				// extract cam aspect
+				const auto& cam_aspect{ p_entity->aspectAccess(cameraAspect::id) };
+				const auto& cam_projs_list { cam_aspect.getComponentsByType<maths::Matrix>() };
 
-				if (0 == viewpoint_projs_list.size())
+				if (0 == cam_projs_list.size())
 				{
 					_EXCEPTION("entity view aspect : missing projection definition " + p_entity->getId());
 				}
 				else
 				{
-					current_proj = viewpoint_projs_list.at(0)->getPurpose();
+					current_proj = cam_projs_list.at(0)->getPurpose();
 				}
 
 				// extract world aspect
@@ -462,12 +462,11 @@ void D3D11System::collectViewTransformations() const
 					auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
 					current_cam = entity_worldposition.global_pos;
 				}
-
 			}
 		}
 	};
 
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::viewAspect>(m_entitygraph, forEachViewAspect);
+	renderMe::helpers::extractAspectsTopDown<cameraAspect>(m_entitygraph, forEachViewAspect);
 
 	if (!found)
 	{

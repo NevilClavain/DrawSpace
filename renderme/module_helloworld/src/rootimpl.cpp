@@ -30,11 +30,7 @@
 #include "resourcesystem.h"
 #include "renderingqueuesystem.h"
 #include "worldsystem.h"
-#include "viewsystem.h"
-
 #include "worldposition.h"
-
-
 #include "shader.h"
 #include "linemeshe.h"
 #include "trianglemeshe.h"
@@ -234,8 +230,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	sysEngine->makeSystem<renderMe::D3D11System>(1, m_entitygraph);
 	sysEngine->makeSystem<renderMe::ResourceSystem>(2, m_entitygraph);
 	sysEngine->makeSystem<renderMe::WorldSystem> (3, m_entitygraph);
-	sysEngine->makeSystem<renderMe::ViewSystem>(4, m_entitygraph);
-	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(5, m_entitygraph);
+	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(4, m_entitygraph);
 
 	// D3D11 system provides compilation shader service
 
@@ -261,21 +256,21 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					/////////////// add viewpoint ////////////////////////
 
 					auto& viewPointNode{ m_entitygraph.add(appwindowNode, "Camera01Entity") };
-					const auto viewPointEntity{ viewPointNode.data() };
+					const auto cameraEntity{ viewPointNode.data() };
 
-					auto& view_aspect{ viewPointEntity->makeAspect(core::viewAspect::id) };
+					auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
 
 					maths::Matrix projection;
 					projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
 
-					view_aspect.addComponent<maths::Matrix>("projection", projection);
+					camera_aspect.addComponent<maths::Matrix>("projection", projection);
 
-					auto& worldpoint_aspect{ viewPointEntity->makeAspect(core::worldAspect::id) };
+					auto& world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
-					maths::Matrix view_positionmat;
-					view_positionmat.translation(0.0, 0.0, 6.0);
+					maths::Matrix cam_positionmat;
+					cam_positionmat.translation(0.0, 0.0, 6.0);
 
-					worldpoint_aspect.addComponent<transform::WorldPosition>("view_worldposition", transform::WorldPosition(view_positionmat));
+					world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
 
 					//////////////////////////////////////////////////////
 
@@ -422,10 +417,19 @@ void RootImpl::run(void)
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 	
-		maths::Matrix positionmat;
-		positionmat.translation(0.0, 0.0, -5.0);
+		//maths::Matrix positionmat;
+		//positionmat.translation(0.0, 0.0, -5.0);
 
-		world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
+		//world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
+		world_aspect.addComponent<transform::WorldPosition>("position");
+
+		world_aspect.addComponent<std::function<void()>>("animator", []() 
+			{
+				int a = 0;
+				a++;
+			}		
+		);
+
 
 
 

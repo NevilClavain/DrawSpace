@@ -82,7 +82,7 @@ add_subdirectory(TRANSFORM_control)
 add_subdirectory(SYSTEM_d3d11)
 add_subdirectory(SYSTEM_time)
 add_subdirectory(SYSTEM_world)
-add_subdirectory(SYSTEM_view)
+
 add_subdirectory(SYSTEM_resource)
 add_subdirectory(SYSTEM_renderingqueue)
 
