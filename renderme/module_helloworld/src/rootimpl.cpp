@@ -45,6 +45,8 @@
 
 #include "datacloud.h"
 
+#include "animatorfunc.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -413,20 +415,24 @@ void RootImpl::run(void)
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 		quad_time_aspect.addComponent<TimeManager::Variable>("quad0_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
 
+		quad_time_aspect.addComponent<TimeManager::Variable>("z_rotation_angle", TimeManager::Variable(TimeManager::Variable::Type::ANGLE, 1.0));
+
 		/////////// World position
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
-	
-		//maths::Matrix positionmat;
-		//positionmat.translation(0.0, 0.0, -5.0);
-
-		//world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
 
 		world_aspect.addComponent<transform::WorldPosition>("position");
-		world_aspect.addComponent<std::function<void()>>("animator", []() 
+	
+		
+		world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
 			{
-				int a = 0;
-				a++;
+				const auto& z_rotation_angle{ p_time_aspect.getComponent<TimeManager::Variable>("z_rotation_angle")->getPurpose()};
+
+				maths::Matrix rotation_mat;
+				rotation_mat.rotation(maths::Real4Vector(0.0, 0.0, 1.0), z_rotation_angle.value);
+
+				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+				wp.local_pos = rotation_mat;
 			}		
 		);
 

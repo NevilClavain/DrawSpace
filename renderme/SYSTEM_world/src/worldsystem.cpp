@@ -79,20 +79,24 @@ void WorldSystem::run()
 
 			///// compute animators
 
-			auto& entity_animators_list{ p_world_aspect.getComponentsByType<std::function<void()>>() };
+			auto& entity_animators_list{ p_world_aspect.getComponentsByType<std::function<void(const core::ComponentContainer&, const core::ComponentContainer&)>>() };
 			if (entity_animators_list.size() > 0)
 			{
-				for (const auto& animator_comp : entity_animators_list)
+				if (p_entity->hasAspect(core::timeAspect::id))
 				{
-					const auto& animator{ animator_comp->getPurpose() };
+					const auto& time_aspect{ p_entity->aspectAccess(core::timeAspect::id) };
 
-					animator();
+					for (const auto& animator_comp : entity_animators_list)
+					{
+						const auto& animator{ animator_comp->getPurpose() };
+						animator(p_world_aspect, time_aspect);
+					}
 				}
-			}
-
-
-
-			
+				else
+				{
+					_EXCEPTION("animator requires a time aspect")
+				}
+			}			
 		}
 	};
 
