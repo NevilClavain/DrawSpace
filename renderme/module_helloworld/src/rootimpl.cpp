@@ -255,9 +255,24 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
+
+					/////////////// add viewpoint FPS mvt ////////////////
+
+					auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CamraFPSMvtEntity") };
+					const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+
+					auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
+
+					maths::Matrix fps_positionmat;
+					fps_positionmat.translation(0.0, 0.0, 6.0);
+
+					fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position", transform::WorldPosition(fps_positionmat));
+
+
+
 					/////////////// add viewpoint ////////////////////////
 
-					auto& viewPointNode{ m_entitygraph.add(appwindowNode, "Camera01Entity") };
+					auto& viewPointNode{ m_entitygraph.add(fpsMvtNode, "Camera01Entity")};
 					const auto cameraEntity{ viewPointNode.data() };
 
 					auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
@@ -267,12 +282,12 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					camera_aspect.addComponent<maths::Matrix>("projection", projection);
 
-					auto& world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
+					auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
 					maths::Matrix cam_positionmat;
-					cam_positionmat.translation(0.0, 0.0, 6.0);
+					cam_positionmat.translation(0.0, 0.0, 0.0);
 
-					world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
+					camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
 
 					//////////////////////////////////////////////////////
 
