@@ -261,12 +261,31 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CamraFPSMvtEntity") };
 					const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
 
+					auto& camera_time_aspect{ cameraFPSMvtEntity->makeAspect(core::timeAspect::id) };
+					camera_time_aspect.addComponent<TimeManager::Variable>("fps_theta", TimeManager::Variable(TimeManager::Variable::Type::ANGLE, 2.0));
+
 					auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
 
-					maths::Matrix fps_positionmat;
-					fps_positionmat.translation(0.0, 0.0, 6.0);
+					fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
 
-					fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position", transform::WorldPosition(fps_positionmat));
+					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
+						{
+							const auto& fps_theta{ p_time_aspect.getComponent<TimeManager::Variable>("fps_theta")->getPurpose() };
+
+							maths::Matrix fps_thetarotnmat;
+							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta.value);
+
+							maths::Matrix fps_positionmat;
+							fps_positionmat.translation(0.0, 0.0, 6.0);
+
+							const auto final_local_mat{ fps_thetarotnmat * fps_positionmat };
+
+							// store result
+							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("fpsmvt_position")->getPurpose() };
+							wp.local_pos = final_local_mat;
+						}
+					);
+
 
 
 
