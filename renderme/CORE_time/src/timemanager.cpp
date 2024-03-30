@@ -26,6 +26,7 @@
 #include <cmath>
 
 #include "timemanager.h"
+#include "syncvariable.h"
 
 using namespace renderMe::core;
 
@@ -187,9 +188,9 @@ void TimeManager::translationSpeedDec(double* p_translation, double p_speed)
     *p_translation -= translationSpeedUnitPerFrame;
 }
 
-void TimeManager::manageVariable(Variable& p_variable)
+void TimeManager::manageVariable(SyncVariable& p_variable)
 {
-    if (Variable::Type::ANGLE == p_variable.type)
+    if (SyncVariable::Type::ANGLE == p_variable.type)
     {
         if (p_variable.increment)
         {
@@ -200,7 +201,7 @@ void TimeManager::manageVariable(Variable& p_variable)
             angleSpeedDec(&p_variable.value, p_variable.step);
         }
     }
-    else if (Variable::Type::POSITION == p_variable.type)
+    else if (SyncVariable::Type::POSITION == p_variable.type)
     {
         if (p_variable.increment)
         {

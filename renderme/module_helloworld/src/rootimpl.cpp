@@ -27,6 +27,8 @@
 #include "sysengine.h"
 #include "d3d11system.h"
 #include "timesystem.h"
+#include "syncvariable.h"
+#include "timemanager.h"
 #include "resourcesystem.h"
 #include "renderingqueuesystem.h"
 #include "worldsystem.h"
@@ -262,7 +264,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
 
 					auto& camera_time_aspect{ cameraFPSMvtEntity->makeAspect(core::timeAspect::id) };
-					camera_time_aspect.addComponent<TimeManager::Variable>("fps_theta", TimeManager::Variable(TimeManager::Variable::Type::ANGLE, 2.0));
+					camera_time_aspect.addComponent<SyncVariable>("fps_theta", SyncVariable(SyncVariable::Type::ANGLE, 2.0));
 
 					auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
 
@@ -270,7 +272,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
 						{
-							const auto& fps_theta{ p_time_aspect.getComponent<TimeManager::Variable>("fps_theta")->getPurpose() };
+							const auto& fps_theta{ p_time_aspect.getComponent<SyncVariable>("fps_theta")->getPurpose() };
 
 							maths::Matrix fps_thetarotnmat;
 							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta.value);
@@ -447,9 +449,9 @@ void RootImpl::run(void)
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
-		quad_time_aspect.addComponent<TimeManager::Variable>("quad0_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 1.0));
+		quad_time_aspect.addComponent<SyncVariable>("quad0_color", SyncVariable(SyncVariable::Type::POSITION, 1.0));
 
-		quad_time_aspect.addComponent<TimeManager::Variable>("z_rotation_angle", TimeManager::Variable(TimeManager::Variable::Type::ANGLE, 1.0));
+		quad_time_aspect.addComponent<SyncVariable>("z_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 1.0));
 
 		/////////// World position
 
@@ -460,7 +462,7 @@ void RootImpl::run(void)
 		
 		world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
 			{
-				const auto& z_rotation_angle{ p_time_aspect.getComponent<TimeManager::Variable>("z_rotation_angle")->getPurpose()};
+				const auto& z_rotation_angle{ p_time_aspect.getComponent<SyncVariable>("z_rotation_angle")->getPurpose()};
 
 				maths::Matrix rotation_mat;
 				rotation_mat.rotation(maths::Real4Vector(0.0, 0.0, 1.0), z_rotation_angle.value);
@@ -548,7 +550,7 @@ void RootImpl::run(void)
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };		
-		quad_time_aspect.addComponent<TimeManager::Variable>("quad1_color", TimeManager::Variable(TimeManager::Variable::Type::POSITION, 0.43));
+		quad_time_aspect.addComponent<SyncVariable>("quad1_color", SyncVariable(SyncVariable::Type::POSITION, 0.43));
 
 		/////////// World position
 
@@ -679,7 +681,7 @@ void RootImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("quad0_color")->getPurpose() };
+		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad0_color")->getPurpose() };
 
 		if (mycolor_r.value > 1.0)
 		{
@@ -711,7 +713,7 @@ void RootImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::TimeManager::Variable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::TimeManager::Variable>("quad1_color")->getPurpose() };
+		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad1_color")->getPurpose() };
 
 		if (mycolor_r.value > 1.0)
 		{

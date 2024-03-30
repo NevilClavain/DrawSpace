@@ -27,6 +27,8 @@
 #include "entitygraph.h"
 #include "aspects.h"
 #include "ecshelpers.h"
+#include "syncvariable.h"
+#include "timemanager.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -37,9 +39,9 @@ TimeSystem::TimeSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void TimeSystem::run()
 {
-	m_tm.update();
-
-	if (m_tm.isReady())
+	auto tm{ TimeManager::getInstance() };
+	tm->update();
+	if (tm->isReady())
 	{
 		const auto forEachTimeAspect
 		{
@@ -49,17 +51,17 @@ void TimeSystem::run()
 				const auto fpsComp { p_time_aspect.getComponent<int>("framePerSeconds") };
 				if (fpsComp)
 				{
-					fpsComp->getPurpose() = m_tm.getFPS();
+					fpsComp->getPurpose() = tm->getFPS();
 				}	
 
 				// search for TimeManager::Variable objects
 
-				const auto tm_var_list{ p_time_aspect.getComponentsByType<TimeManager::Variable>() };
+				const auto tm_var_list{ p_time_aspect.getComponentsByType<SyncVariable>() };
 				if (tm_var_list.size())
 				{
 					for (auto& v : tm_var_list)
 					{
-						m_tm.manageVariable(v->getPurpose());
+						tm->manageVariable(v->getPurpose());
 					}
 				}
 			}

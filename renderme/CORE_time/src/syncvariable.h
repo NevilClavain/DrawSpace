@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,20 +23,35 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "system.h"
 
 namespace renderMe
 {
-    namespace core { class Entity; }
-    namespace core { class Entitygraph; }
-   
-    class TimeSystem : public core::System
-    {
-    public:
+	namespace core
+	{
+        struct SyncVariable
+        {
+        public:
+            enum class Type
+            {
+                ANGLE,
+                POSITION
+            };
 
-        TimeSystem(core::Entitygraph& p_entitygraph);
-        ~TimeSystem() = default;
+            SyncVariable() = default;
+            ~SyncVariable() = default;
 
-        void run();
-    };
+            SyncVariable(Type p_type, double p_step, bool p_increment = true, double p_initial_value = 0.0) :
+                type(p_type),
+                step(p_step),
+                increment(p_increment),
+                value(p_initial_value)
+            {
+            };
+
+            double  value{ 0.0 };
+            double  step{ 0.0 };
+            bool    increment{ true };
+            Type    type;
+        };
+	}
 }
