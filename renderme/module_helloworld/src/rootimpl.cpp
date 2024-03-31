@@ -180,6 +180,21 @@ void RootImpl::onChar(long p_char, long p_scan)
 
 void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
+	const auto tm{ TimeManager::getInstance() };
+
+	if (tm->isReady())
+	{
+		auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
+		const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+
+		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& fps_theta{ fps_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
+
+
+		tm->angleSpeedInc(&fps_theta, p_dx);
+
+	}	
 }
 
 void RootImpl::onMouseWheel(long p_delta)
@@ -260,22 +275,23 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					/////////////// add viewpoint FPS mvt ////////////////
 
-					auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CamraFPSMvtEntity") };
+					auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CameraFPSMvtEntity") };
 					const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
 
 					auto& camera_time_aspect{ cameraFPSMvtEntity->makeAspect(core::timeAspect::id) };
-					camera_time_aspect.addComponent<SyncVariable>("fps_theta", SyncVariable(SyncVariable::Type::ANGLE, 2.0));
 
 					auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
 
 					fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
 
+					fps_world_aspect.addComponent<double>("fps_theta", 0);
+
 					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
 						{
-							const auto& fps_theta{ p_time_aspect.getComponent<SyncVariable>("fps_theta")->getPurpose() };
+							const double fps_theta{ p_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
 
 							maths::Matrix fps_thetarotnmat;
-							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta.value);
+							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta);
 
 							maths::Matrix fps_positionmat;
 							fps_positionmat.translation(0.0, 0.0, 6.0);
