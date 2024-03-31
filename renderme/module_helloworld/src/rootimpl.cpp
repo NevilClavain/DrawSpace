@@ -190,9 +190,10 @@ void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
 
 		double& fps_theta{ fps_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
-
+		double& fps_phi{ fps_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
 
 		tm->angleSpeedInc(&fps_theta, p_dx);
+		tm->angleSpeedInc(&fps_phi, -p_dy);
 
 	}	
 }
@@ -285,18 +286,23 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
 
 					fps_world_aspect.addComponent<double>("fps_theta", 0);
+					fps_world_aspect.addComponent<double>("fps_phi", 0);
 
 					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
 						{
 							const double fps_theta{ p_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
+							const double fps_phi{ p_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
 
 							maths::Matrix fps_thetarotnmat;
 							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta);
 
-							maths::Matrix fps_positionmat;
-							fps_positionmat.translation(0.0, 0.0, 6.0);
+							maths::Matrix fps_phirotnmat;
+							fps_phirotnmat.rotation(maths::Real4Vector(1.0, 0.0, 0.0), fps_phi);
 
-							const auto final_local_mat{ fps_thetarotnmat * fps_positionmat };
+							maths::Matrix fps_positionmat;
+							fps_positionmat.translation(0.0, 4.0, 7.0);
+
+							const auto final_local_mat{ fps_phirotnmat * fps_thetarotnmat * fps_positionmat };
 
 							// store result
 							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("fpsmvt_position")->getPurpose() };
