@@ -28,6 +28,7 @@
 #include "aspects.h"
 #include "ecshelpers.h"
 #include "worldposition.h"
+#include "animatorfunc.h"
 
 
 using namespace renderMe;
@@ -52,7 +53,6 @@ void WorldSystem::run()
 			}
 
 			auto& entity_worldposition{ entity_worldposition_list.at(0)->getPurpose()};
-			const auto localpos_mat{ entity_worldposition.local_pos };
 
 			// get parent entity if exists
 			const auto parent_entity{ p_entity->getParent() };
@@ -69,34 +69,69 @@ void WorldSystem::run()
 				else
 				{
 					auto& parententity_worldposition{ parententity_worldpositions_list.at(0)->getPurpose() };
+
+					///// compute animators -> result stored in local pos
+
+					auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::AnimatorFunc>() };
+					if (entity_animators_list.size() > 0)
+					{
+						if (p_entity->hasAspect(core::timeAspect::id))
+						{
+							const auto& time_aspect{ p_entity->aspectAccess(core::timeAspect::id) };
+
+							for (const auto& animator_comp : entity_animators_list)
+							{
+								const auto& animator{ animator_comp->getPurpose() };
+								animator(p_world_aspect, time_aspect, parententity_worldposition);
+							}
+						}
+						else
+						{
+							_EXCEPTION("animator requires a time aspect")
+						}
+					}
+
+					///////////////////////
+
 					entity_worldposition.global_pos = entity_worldposition.local_pos * parententity_worldposition.global_pos;
 				}
 			}
 			else 
 			{
+				///// compute animators -> result stored in local pos
+
+				auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::AnimatorFunc>() };
+				if (entity_animators_list.size() > 0)
+				{
+					if (p_entity->hasAspect(core::timeAspect::id))
+					{
+						const auto& time_aspect{ p_entity->aspectAccess(core::timeAspect::id) };
+
+						for (const auto& animator_comp : entity_animators_list)
+						{
+							const auto& animator{ animator_comp->getPurpose() };
+
+							// no parent -> give WorldPosition with identity
+							transform::WorldPosition fake_parent_pos;
+							fake_parent_pos.global_pos.identity();
+							fake_parent_pos.local_pos.identity();
+
+							animator(p_world_aspect, time_aspect, fake_parent_pos);
+						}
+					}
+					else
+					{
+						_EXCEPTION("animator requires a time aspect")
+					}
+				}
+
+				///////////////////////
+
+
 				entity_worldposition.global_pos = entity_worldposition.local_pos;
 			}
 
-			///// compute animators
-
-			auto& entity_animators_list{ p_world_aspect.getComponentsByType<std::function<void(const core::ComponentContainer&, const core::ComponentContainer&)>>() };
-			if (entity_animators_list.size() > 0)
-			{
-				if (p_entity->hasAspect(core::timeAspect::id))
-				{
-					const auto& time_aspect{ p_entity->aspectAccess(core::timeAspect::id) };
-
-					for (const auto& animator_comp : entity_animators_list)
-					{
-						const auto& animator{ animator_comp->getPurpose() };
-						animator(p_world_aspect, time_aspect);
-					}
-				}
-				else
-				{
-					_EXCEPTION("animator requires a time aspect")
-				}
-			}			
+			
 		}
 	};
 

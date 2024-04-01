@@ -36,6 +36,9 @@ namespace renderMe
 
 	namespace transform
 	{
-		using AnimatorFunc = std::function<void(const core::ComponentContainer&, const core::ComponentContainer&)>;
+		// fwd decl
+		struct WorldPosition;
+
+		using AnimatorFunc = std::function<void(const core::ComponentContainer&, const core::ComponentContainer&, const WorldPosition& )>;
 	}
 }

@@ -79,6 +79,28 @@ renderMe::core::Entitygraph* RootImpl::entitygraph()
 
 void RootImpl::onKeyPress(long p_key)
 {
+	if ('Q' == p_key)
+	{
+		auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
+		const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+
+		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+
+		fps_speed = 0.1;
+	}
+	else if ('W' == p_key)
+	{
+		auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
+		const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+
+		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+
+		fps_speed = -0.1;
+	}
 }
 
 void RootImpl::onEndKeyPress(long p_key)
@@ -167,6 +189,30 @@ void RootImpl::onEndKeyPress(long p_key)
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
+	}
+
+	else if ('Q' == p_key)
+	{
+		auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
+		const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+
+		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& fps_speed { fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+
+		fps_speed = 0.0;
+	}
+
+	else if ('W' == p_key)
+	{
+		auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
+		const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+
+		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+
+		fps_speed = 0.0;
 	}
 }
 
@@ -287,9 +333,12 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					fps_world_aspect.addComponent<double>("fps_theta", 0);
 					fps_world_aspect.addComponent<double>("fps_phi", 0);
+					fps_world_aspect.addComponent<double>("fps_speed", 0);
 					fps_world_aspect.addComponent<maths::Real4Vector>("fps_pos", maths::Real4Vector( 0.0, 4.0, 7.0 ));
 
-					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
+					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, 
+																							const core::ComponentContainer& p_time_aspect, 
+																							const transform::WorldPosition& p_parent)
 						{
 							const double fps_theta{ p_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
 							const double fps_phi{ p_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
@@ -300,7 +349,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 							maths::Matrix fps_phirotnmat;
 							fps_phirotnmat.rotation(maths::Real4Vector(1.0, 0.0, 0.0), fps_phi);
 
-							const auto fps_pos { p_world_aspect.getComponent<maths::Real4Vector>("fps_pos")->getPurpose() };
+							auto& fps_pos { p_world_aspect.getComponent<maths::Real4Vector>("fps_pos")->getPurpose() };
 
 							maths::Matrix fps_positionmat;
 							fps_positionmat.translation(fps_pos);
@@ -310,6 +359,23 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 							// store result
 							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("fpsmvt_position")->getPurpose() };
 							wp.local_pos = final_local_mat;
+
+							// update pos with speed
+							const double fps_speed{ p_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+							if (std::abs(fps_speed) > 0.0)
+							{
+								//project speed vector in global coords
+
+								// on neg z axis...
+								maths::Real4Vector local_speed(0.0, 0.0, -fps_speed);
+								maths::Real4Vector global_speed;
+
+								const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent.global_pos };
+								final_mat.transform(&local_speed, &global_speed);
+
+								fps_pos = fps_pos + global_speed;
+								
+							}
 						}
 					);
 
@@ -485,7 +551,9 @@ void RootImpl::run(void)
 		world_aspect.addComponent<transform::WorldPosition>("position");
 	
 		
-		world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, const core::ComponentContainer& p_time_aspect)
+		world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, 
+																			const core::ComponentContainer& p_time_aspect, 
+																			const transform::WorldPosition& p_parent)
 			{
 				const auto& z_rotation_angle{ p_time_aspect.getComponent<SyncVariable>("z_rotation_angle")->getPurpose()};
 
