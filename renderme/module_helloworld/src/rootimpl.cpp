@@ -336,12 +336,23 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					fps_world_aspect.addComponent<double>("fps_speed", 0);
 					fps_world_aspect.addComponent<maths::Real4Vector>("fps_pos", maths::Real4Vector( 0.0, 4.0, 7.0 ));
 
-					fps_world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, 
+					fps_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+																						{
+																							// input-output/components keys id mapping
+																							{"fpsview_anim_theta", "fps_theta"},
+																							{"fpsview_anim_phi", "fps_phi"},
+																							{"fpsview_anim_position", "fps_pos"},
+																							{"fpsview_anim_speed", "fps_speed"},
+																							{"fpsview_anim_destination", "fpsmvt_position"},
+
+																						},
+																						[](const core::ComponentContainer& p_world_aspect, 
 																							const core::ComponentContainer& p_time_aspect, 
-																							const transform::WorldPosition& p_parent)
+																							const transform::WorldPosition& p_parent_pos,
+																							const std::unordered_map<std::string, std::string>& p_keys)
 						{
-							const double fps_theta{ p_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
-							const double fps_phi{ p_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
+							const double fps_theta{ p_world_aspect.getComponent<double>( p_keys.at("fpsview_anim_theta"))->getPurpose() };
+							const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("fpsview_anim_phi"))->getPurpose() }; // to be continued...
 
 							maths::Matrix fps_thetarotnmat;
 							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta);
@@ -349,7 +360,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 							maths::Matrix fps_phirotnmat;
 							fps_phirotnmat.rotation(maths::Real4Vector(1.0, 0.0, 0.0), fps_phi);
 
-							auto& fps_pos { p_world_aspect.getComponent<maths::Real4Vector>("fps_pos")->getPurpose() };
+							auto& fps_pos { p_world_aspect.getComponent<maths::Real4Vector>(p_keys.at("fpsview_anim_position"))->getPurpose() };
 
 							maths::Matrix fps_positionmat;
 							fps_positionmat.translation(fps_pos);
@@ -357,11 +368,11 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 							const auto final_local_mat{ fps_phirotnmat * fps_thetarotnmat * fps_positionmat };
 
 							// store result
-							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("fpsmvt_position")->getPurpose() };
+							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fpsview_anim_destination"))->getPurpose() };
 							wp.local_pos = final_local_mat;
 
 							// update pos with speed
-							const double fps_speed{ p_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+							const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("fpsview_anim_speed"))->getPurpose() };
 							if (std::abs(fps_speed) > 0.0)
 							{
 								//project speed vector in global coords
@@ -370,14 +381,13 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 								maths::Real4Vector local_speed(0.0, 0.0, -fps_speed);
 								maths::Real4Vector global_speed;
 
-								const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent.global_pos };
+								const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent_pos.global_pos };
 								final_mat.transform(&local_speed, &global_speed);
 
 								fps_pos = fps_pos + global_speed;
 								
 							}
-						}
-					);
+						}));
 
 
 
@@ -551,9 +561,12 @@ void RootImpl::run(void)
 		world_aspect.addComponent<transform::WorldPosition>("position");
 	
 		
-		world_aspect.addComponent<transform::AnimatorFunc>("animator", [](const core::ComponentContainer& p_world_aspect, 
+		world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+																			{},
+																			[](const core::ComponentContainer& p_world_aspect,
 																			const core::ComponentContainer& p_time_aspect, 
-																			const transform::WorldPosition& p_parent)
+																			const transform::WorldPosition&,
+																			const std::unordered_map<std::string, std::string>&)
 			{
 				const auto& z_rotation_angle{ p_time_aspect.getComponent<SyncVariable>("z_rotation_angle")->getPurpose()};
 
@@ -562,8 +575,7 @@ void RootImpl::run(void)
 
 				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 				wp.local_pos = rotation_mat;
-			}		
-		);
+			}));
 
 
 

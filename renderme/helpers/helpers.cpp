@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -22,38 +21,3 @@
 *
 */
 /* -*-LIC_END-*- */
-
-#pragma once
-
-#include <functional>
-#include <unordered_map>
-
-namespace renderMe
-{
-	namespace core
-	{
-		class ComponentContainer;
-	}
-
-	namespace transform
-	{
-		// fwd decl
-		struct WorldPosition;
-
-		using AnimatorFunc = std::function<void(const core::ComponentContainer&, const core::ComponentContainer&, const WorldPosition&, const std::unordered_map<std::string, std::string>& )>;
-
-		struct Animator
-		{
-		public:
-			Animator(std::unordered_map<std::string, std::string> p_component_keys, const AnimatorFunc& p_func) :
-			func(p_func),
-			component_keys(p_component_keys)
-			{}
-
-			Animator() = delete;
-
-			AnimatorFunc									func;
-			std::unordered_map<std::string, std::string>	component_keys;
-		};
-	}
-}

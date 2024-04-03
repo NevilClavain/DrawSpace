@@ -72,7 +72,7 @@ void WorldSystem::run()
 
 					///// compute animators -> result stored in local pos
 
-					auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::AnimatorFunc>() };
+					auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::Animator>() };
 					if (entity_animators_list.size() > 0)
 					{
 						if (p_entity->hasAspect(core::timeAspect::id))
@@ -82,7 +82,7 @@ void WorldSystem::run()
 							for (const auto& animator_comp : entity_animators_list)
 							{
 								const auto& animator{ animator_comp->getPurpose() };
-								animator(p_world_aspect, time_aspect, parententity_worldposition);
+								animator.func(p_world_aspect, time_aspect, parententity_worldposition, animator.component_keys);
 							}
 						}
 						else
@@ -100,7 +100,7 @@ void WorldSystem::run()
 			{
 				///// compute animators -> result stored in local pos
 
-				auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::AnimatorFunc>() };
+				auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::Animator>() };
 				if (entity_animators_list.size() > 0)
 				{
 					if (p_entity->hasAspect(core::timeAspect::id))
@@ -116,7 +116,7 @@ void WorldSystem::run()
 							fake_parent_pos.global_pos.identity();
 							fake_parent_pos.local_pos.identity();
 
-							animator(p_world_aspect, time_aspect, fake_parent_pos);
+							animator.func(p_world_aspect, time_aspect, fake_parent_pos, animator.component_keys);
 						}
 					}
 					else
