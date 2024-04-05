@@ -48,6 +48,7 @@
 #include "datacloud.h"
 
 #include "animatorfunc.h"
+#include "animators.h"
 
 
 using namespace renderMe;
@@ -345,49 +346,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 																							{"fpsview_anim_speed", "fps_speed"},
 																							{"fpsview_anim_destination", "fpsmvt_position"},
 
-																						},
-																						[](const core::ComponentContainer& p_world_aspect, 
-																							const core::ComponentContainer& p_time_aspect, 
-																							const transform::WorldPosition& p_parent_pos,
-																							const std::unordered_map<std::string, std::string>& p_keys)
-						{
-							const double fps_theta{ p_world_aspect.getComponent<double>( p_keys.at("fpsview_anim_theta"))->getPurpose() };
-							const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("fpsview_anim_phi"))->getPurpose() }; // to be continued...
-
-							maths::Matrix fps_thetarotnmat;
-							fps_thetarotnmat.rotation(maths::Real4Vector(0.0, 1.0, 0.0), fps_theta);
-
-							maths::Matrix fps_phirotnmat;
-							fps_phirotnmat.rotation(maths::Real4Vector(1.0, 0.0, 0.0), fps_phi);
-
-							auto& fps_pos { p_world_aspect.getComponent<maths::Real4Vector>(p_keys.at("fpsview_anim_position"))->getPurpose() };
-
-							maths::Matrix fps_positionmat;
-							fps_positionmat.translation(fps_pos);
-
-							const auto final_local_mat{ fps_phirotnmat * fps_thetarotnmat * fps_positionmat };
-
-							// store result
-							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fpsview_anim_destination"))->getPurpose() };
-							wp.local_pos = final_local_mat;
-
-							// update pos with speed
-							const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("fpsview_anim_speed"))->getPurpose() };
-							if (std::abs(fps_speed) > 0.0)
-							{
-								//project speed vector in global coords
-
-								// on neg z axis...
-								maths::Real4Vector local_speed(0.0, 0.0, -fps_speed);
-								maths::Real4Vector global_speed;
-
-								const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent_pos.global_pos };
-								final_mat.transform(&local_speed, &global_speed);
-
-								fps_pos = fps_pos + global_speed;
-								
-							}
-						}));
+																						}, helpers::animators::makeFPSAnimator()));
 
 
 

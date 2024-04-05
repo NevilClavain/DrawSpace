@@ -45,6 +45,7 @@ include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_renderingqueue/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_world/src)
 
+include_directories(${CMAKE_SOURCE_DIR}/helpers)
 
 include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})

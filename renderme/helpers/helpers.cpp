@@ -21,3 +21,5 @@
 *
 */
 /* -*-LIC_END-*- */
+
+#include "animators.h"
