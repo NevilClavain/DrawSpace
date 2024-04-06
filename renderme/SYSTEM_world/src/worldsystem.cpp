@@ -54,6 +54,8 @@ void WorldSystem::run()
 
 			auto& entity_worldposition{ entity_worldposition_list.at(0)->getPurpose()};
 
+			entity_worldposition.local_pos.identity();
+
 			// get parent entity if exists
 			const auto parent_entity{ p_entity->getParent() };
 

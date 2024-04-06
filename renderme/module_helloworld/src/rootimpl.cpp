@@ -340,11 +340,11 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					fps_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 																						{
 																							// input-output/components keys id mapping
-																							{"fpsview_anim_theta", "fps_theta"},
-																							{"fpsview_anim_phi", "fps_phi"},
-																							{"fpsview_anim_position", "fps_pos"},
-																							{"fpsview_anim_speed", "fps_speed"},
-																							{"fpsview_anim_destination", "fpsmvt_position"},
+																							{"fpsAnim.theta", "fps_theta"},
+																							{"fpsAnim.phi", "fps_phi"},
+																							{"fpsAnim.position", "fps_pos"},
+																							{"fpsAnim.speed", "fps_speed"},
+																							{"fpsAnim.output", "fpsmvt_position"},
 
 																						}, helpers::animators::makeFPSAnimator()));
 
@@ -518,25 +518,30 @@ void RootImpl::run(void)
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
 		world_aspect.addComponent<transform::WorldPosition>("position");
-	
-		
-		world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
-																			{},
-																			[](const core::ComponentContainer& p_world_aspect,
-																			const core::ComponentContainer& p_time_aspect, 
-																			const transform::WorldPosition&,
-																			const std::unordered_map<std::string, std::string>&)
-			{
-				const auto& z_rotation_angle{ p_time_aspect.getComponent<SyncVariable>("z_rotation_angle")->getPurpose()};
 
-				maths::Matrix rotation_mat;
-				rotation_mat.rotation(maths::Real4Vector(0.0, 0.0, 1.0), z_rotation_angle.value);
+		
+		world_aspect.addComponent<transform::Animator>("animator_roty", transform::Animator
+		(
+																			{ {"syncYRot.angle", "z_rotation_angle"} },
+																			helpers::animators::makeSynchronizedYRotationAnimator()));
+
+
+		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+		(
+			{},
+			[](const core::ComponentContainer& p_world_aspect,
+				const core::ComponentContainer& p_time_aspect,
+				const transform::WorldPosition&,
+				const std::unordered_map<std::string, std::string>&)
+			{
+
+				maths::Matrix positionmat;
+				positionmat.translation(0.0, 2.0, 0.0);
 
 				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
-				wp.local_pos = rotation_mat;
-			}));
-
-
+				wp.local_pos = wp.local_pos * positionmat;
+			}
+		));
 
 
 		m_quadEntity0_state = true;
@@ -609,8 +614,9 @@ void RootImpl::run(void)
 		rendering::DrawingControl lineDrawingControl;
 		lineDrawingControl.pshaders_map.push_back(std::make_pair("quad1_color", "color"));
 
-
 		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", lineDrawingControl);
+
+
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };		
@@ -620,10 +626,25 @@ void RootImpl::run(void)
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
-		maths::Matrix positionmat;
-		positionmat.translation(0.0, 0.0, -15.0);
+		world_aspect.addComponent<transform::WorldPosition>("position");
 
-		world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
+
+		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+		(
+			{},
+			[](const core::ComponentContainer& p_world_aspect,
+				const core::ComponentContainer& p_time_aspect,
+				const transform::WorldPosition&,
+				const std::unordered_map<std::string, std::string>&)
+			{
+
+				maths::Matrix positionmat;
+				positionmat.translation(0.0, 0.0, -15.0);
+
+				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+				wp.local_pos = wp.local_pos * positionmat;
+			}
+		));
 
 
 		m_quadEntity1_state = true;
@@ -707,14 +728,31 @@ void RootImpl::run(void)
 
 
 
+		quadEntity->makeAspect(core::timeAspect::id);
+
+
 		/////////// World position
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
-		maths::Matrix positionmat;
-		positionmat.translation(0.0, 0.0, -20.0);
+		world_aspect.addComponent<transform::WorldPosition>("position"/*, transform::WorldPosition(positionmat)*/);
 
-		world_aspect.addComponent<transform::WorldPosition>("position", transform::WorldPosition(positionmat));
+		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+		(
+			{},
+			[](const core::ComponentContainer& p_world_aspect,
+				const core::ComponentContainer& p_time_aspect,
+				const transform::WorldPosition&,
+				const std::unordered_map<std::string, std::string>&)
+			{
+
+				maths::Matrix positionmat;
+				positionmat.translation(0.0, 0.0, -20.0);
+
+				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+				wp.local_pos = wp.local_pos * positionmat;
+			}
+		));
 
 
 		m_quadEntity2_state = true;
