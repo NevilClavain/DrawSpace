@@ -48,7 +48,7 @@
 #include "datacloud.h"
 
 #include "animatorfunc.h"
-#include "animators.h"
+#include "animators_helpers.h"
 
 
 using namespace renderMe;
