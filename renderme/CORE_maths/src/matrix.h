@@ -23,9 +23,9 @@
 */
 /* -*-LIC_END-*- */
 
-#include "tvector.h"
-
 #pragma once
+
+#include "tvector.h"
 
 namespace renderMe
 {
