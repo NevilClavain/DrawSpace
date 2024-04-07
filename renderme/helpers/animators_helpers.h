@@ -96,7 +96,7 @@ namespace renderMe
 							//project speed vector in global coords
 
 							// on neg z axis...
-							core::maths::Real4Vector local_speed(0.0, 0.0, -fps_speed);
+							core::maths::Real4Vector local_speed(0.0, 0.0, -fps_speed, 1.0);
 							core::maths::Real4Vector global_speed;
 
 							const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent_pos.global_pos };
