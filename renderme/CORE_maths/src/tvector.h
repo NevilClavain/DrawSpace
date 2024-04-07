@@ -164,7 +164,6 @@ namespace renderMe
                     return sum;
                 }
 
-
             private:
                 T m_vector[Size] = { 0 };
 
@@ -199,10 +198,19 @@ namespace renderMe
                 return sum;
             }
 
+
+            //Aliases
             using RGBAColor = Vector<unsigned char, 4>;
             using RGBColor = Vector<unsigned char, 3>;
             using IntCoords2D = Vector<int, 2>;
             using Real4Vector = Vector<>;
+
+            // Constants
+            const static Real4Vector ZeroVector  = { 0.0, 0.0, 0.0, 1.0 };
+            const static Real4Vector OneVector   = { 1.0, 1.0, 1.0, 1.0 };
+            const static Real4Vector XAxisVector = { 1.0, 0.0, 0.0, 1.0 };
+            const static Real4Vector YAxisVector = { 0.0, 1.0, 0.0, 1.0 };
+            const static Real4Vector ZAxisVector = { 0.0, 1.0, 0.0, 1.0 };
 
         }
 	} // core
