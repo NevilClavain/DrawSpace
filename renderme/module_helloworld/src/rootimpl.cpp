@@ -511,7 +511,7 @@ void RootImpl::run(void)
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 		quad_time_aspect.addComponent<SyncVariable>("quad0_color", SyncVariable(SyncVariable::Type::POSITION, 1.0));
 
-		quad_time_aspect.addComponent<SyncVariable>("z_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 1.0));
+		quad_time_aspect.addComponent<SyncVariable>("y_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 1.0));
 
 		/////////// World position
 
@@ -522,7 +522,7 @@ void RootImpl::run(void)
 		
 		world_aspect.addComponent<transform::Animator>("animator_roty", transform::Animator
 		(
-																			{ {"syncYRot.angle", "z_rotation_angle"} },
+																			{ {"syncYRot.angle", "y_rotation_angle"} },
 																			helpers::animators::makeSynchronizedYRotationAnimator()));
 
 
