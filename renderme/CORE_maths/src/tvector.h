@@ -204,14 +204,16 @@ namespace renderMe
             using RGBColor = Vector<unsigned char, 3>;
             using IntCoords2D = Vector<int, 2>;
             using Real4Vector = Vector<>;
+            using Real3Vector = Vector<double, 3>;
 
             // Constants
-            const static Real4Vector ZeroVector  = { 0.0, 0.0, 0.0, 1.0 };
-            const static Real4Vector OneVector   = { 1.0, 1.0, 1.0, 1.0 };
-            const static Real4Vector XAxisVector = { 1.0, 0.0, 0.0, 1.0 };
-            const static Real4Vector YAxisVector = { 0.0, 1.0, 0.0, 1.0 };
-            const static Real4Vector ZAxisVector = { 0.0, 1.0, 0.0, 1.0 };
-
+            /*
+            const static Real3Vector ZeroVector  = { 0.0, 0.0, 0.0 };
+            const static Real3Vector OneVector   = { 1.0, 1.0, 1.0 };
+            const static Real3Vector XAxisVector = { 1.0, 0.0, 0.0 };
+            const static Real3Vector YAxisVector = { 0.0, 1.0, 0.0 };
+            const static Real3Vector ZAxisVector = { 0.0, 1.0, 0.0 };
+            */
         }
 	} // core
 } // renderMe

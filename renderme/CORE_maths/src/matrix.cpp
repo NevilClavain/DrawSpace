@@ -93,7 +93,7 @@ void Matrix::translation(double p_x, double p_y, double p_z)
 
 }
 
-void Matrix::translation(const Real4Vector& p_pos)
+void Matrix::translation(const Real3Vector& p_pos)
 {
     identity();
     m_matrix[3][0] = p_pos[0];
@@ -164,7 +164,7 @@ void Matrix::scale(double p_sx, double p_sy, double p_sz)
 
 }
 
-void Matrix::scale(const Real4Vector& p_pos)
+void Matrix::scale(const Real3Vector& p_pos)
 {
     zero();
     m_matrix[0][0] = p_pos[0];
@@ -232,7 +232,7 @@ std::string Matrix::dump() const
     return mat_dump;
 }
 
-void Matrix::rotation(const Real4Vector& p_axis, double p_angle)
+void Matrix::rotation(const Real3Vector& p_axis, double p_angle)
 {
     const auto c{ std::cos(p_angle) };
     const auto s{ std::sin(p_angle) };
@@ -274,7 +274,9 @@ void Matrix::rotation(const Real4Vector& p_axis, double p_angle)
 
     m_configinfos.type = ConfigurationType::CONFIG_ROTATION;
 
-    m_configinfos.values = p_axis;
+    m_configinfos.values[0] = p_axis[0];
+    m_configinfos.values[1] = p_axis[1];
+    m_configinfos.values[2] = p_axis[2];
     m_configinfos.values[3] = p_angle;
 }
 

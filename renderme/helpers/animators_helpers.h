@@ -49,7 +49,7 @@ namespace renderMe
 						const auto& y_rotation_angle{ p_time_aspect.getComponent<core::SyncVariable>(p_keys.at("syncYRot.angle"))->getPurpose()};
 
 						core::maths::Matrix rotation_mat;
-						rotation_mat.rotation(core::maths::Real4Vector(0.0, 1.0, 0.0), y_rotation_angle.value);
+						rotation_mat.rotation(core::maths::Real3Vector(0.0, 1.0, 0.0), y_rotation_angle.value);
 
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 						wp.local_pos = wp.local_pos * rotation_mat;
@@ -73,12 +73,12 @@ namespace renderMe
 						const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.phi"))->getPurpose() }; // to be continued...
 
 						core::maths::Matrix fps_thetarotnmat;
-						fps_thetarotnmat.rotation(core::maths::Real4Vector(0.0, 1.0, 0.0), fps_theta);
+						fps_thetarotnmat.rotation(core::maths::Real3Vector(0.0, 1.0, 0.0), fps_theta);
 
 						core::maths::Matrix fps_phirotnmat;
-						fps_phirotnmat.rotation(core::maths::Real4Vector(1.0, 0.0, 0.0), fps_phi);
+						fps_phirotnmat.rotation(core::maths::Real3Vector(1.0, 0.0, 0.0), fps_phi);
 
-						auto& fps_pos { p_world_aspect.getComponent<core::maths::Real4Vector>(p_keys.at("fpsAnim.position"))->getPurpose() };
+						auto& fps_pos { p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fpsAnim.position"))->getPurpose() };
 
 						core::maths::Matrix fps_positionmat;
 						fps_positionmat.translation(fps_pos);
@@ -102,7 +102,9 @@ namespace renderMe
 							const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent_pos.global_pos };
 							final_mat.transform(&local_speed, &global_speed);
 
-							fps_pos = fps_pos + global_speed;
+							core::maths::Real3Vector global_speed3(global_speed[0], global_speed[1], global_speed[2]);
+
+							fps_pos = fps_pos + global_speed3;
 
 						}
 					}
