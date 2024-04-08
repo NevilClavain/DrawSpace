@@ -54,8 +54,8 @@ namespace renderMe
 
 				void zero(void);
 				void identity(void);
-				void lookAt(const Real4Vector& p_source, const Real4Vector& p_dest);
-				void rotationAxis(Real4Vector& p_axis, double p_angle);
+				void lookAt(const Real3Vector& p_source, const Real3Vector& p_dest);
+				void rotationAxis(const Real3Vector& p_axis, double p_angle);
 				void rotationMatFrom(Matrix& p_mat) const;
 				void normalize(void);
 

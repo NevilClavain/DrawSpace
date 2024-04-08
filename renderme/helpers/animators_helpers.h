@@ -28,7 +28,9 @@
 #include <unordered_map>
 #include "componentcontainer.h"
 #include "worldposition.h"
+#include "tvector.h"
 #include "matrix.h"
+#include "quaternion.h"
 #include "syncvariable.h"
 
 namespace renderMe
@@ -71,23 +73,26 @@ namespace renderMe
 
 						const double fps_theta{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.theta"))->getPurpose() };
 						const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.phi"))->getPurpose() }; // to be continued...
+						
 
-						core::maths::Matrix fps_thetarotnmat;
-						fps_thetarotnmat.rotation(core::maths::Real3Vector(0.0, 1.0, 0.0), fps_theta);
-
-						core::maths::Matrix fps_phirotnmat;
-						fps_phirotnmat.rotation(core::maths::Real3Vector(1.0, 0.0, 0.0), fps_phi);
-
-						auto& fps_pos { p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fpsAnim.position"))->getPurpose() };
-
+						auto& fps_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fpsAnim.position"))->getPurpose() };
 						core::maths::Matrix fps_positionmat;
 						fps_positionmat.translation(fps_pos);
+				
+						core::maths::Quaternion		    qyaw;
+						core::maths::Quaternion		    qpitch;
+						
+						qyaw.rotationAxis(core::maths::YAxisVector, fps_theta);
+						qpitch.rotationAxis(core::maths::XAxisVector, fps_phi);
 
-						const auto final_local_mat{ fps_phirotnmat * fps_thetarotnmat * fps_positionmat };
+						const auto qres{ qpitch * qyaw };
+
+						core::maths::Matrix orientation;
+						qres.rotationMatFrom(orientation);
 
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fpsAnim.output"))->getPurpose() };
-						wp.local_pos = final_local_mat;
+						wp.local_pos = orientation * fps_positionmat;
 
 						// update pos with speed
 						const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.speed"))->getPurpose() };
@@ -99,13 +104,11 @@ namespace renderMe
 							core::maths::Real4Vector local_speed(0.0, 0.0, -fps_speed, 1.0);
 							core::maths::Real4Vector global_speed;
 
-							const auto final_mat{ fps_phirotnmat * fps_thetarotnmat * p_parent_pos.global_pos };
-							final_mat.transform(&local_speed, &global_speed);
+							orientation.transform(&local_speed, &global_speed);
 
 							core::maths::Real3Vector global_speed3(global_speed[0], global_speed[1], global_speed[2]);
-
+						
 							fps_pos = fps_pos + global_speed3;
-
 						}
 					}
 				};

@@ -54,15 +54,14 @@ void Quaternion::identity(void)
 
 // https://stackoverflow.com/questions/12435671/quaternion-lookat-function
 
-void Quaternion::lookAt(const Real4Vector& p_source, const Real4Vector& p_dest)
+void Quaternion::lookAt(const Real3Vector& p_source, const Real3Vector& p_dest)
 {
-	Real4Vector forwardVector(p_dest[0] - p_source[0],
+	Real3Vector forwardVector(p_dest[0] - p_source[0],
 									p_dest[1] - p_source[1],
-									p_dest[2] - p_source[2],
-									0.0);
+									p_dest[2] - p_source[2]);
 
 	forwardVector.normalize();
-	Real4Vector forward(0.0, 0.0, -1.0, 0.0);
+	const Real3Vector forward(0.0, 0.0, -1.0);
 
 	const auto dot{ forward * forwardVector };
 
@@ -80,22 +79,23 @@ void Quaternion::lookAt(const Real4Vector& p_source, const Real4Vector& p_dest)
 	else
 	{
 		const auto rotAngle{ std::acos(dot) };
-		auto rotAxis{ Real4Vector::crossProduct(forward, forwardVector) };
+		auto rotAxis{ Real3Vector::crossProduct(forward, forwardVector) };
 		rotAxis.normalize();
 
 		rotationAxis(rotAxis, rotAngle);
 	}
 }
 
-void Quaternion::rotationAxis(Real4Vector& p_axis, double p_angle)
+void Quaternion::rotationAxis(const Real3Vector& p_axis, double p_angle)
 {
-	p_axis.normalize();
+	auto axis{ p_axis };
+	axis.normalize();
 
 	const double sin_a{ std::sin(p_angle / 2.0) };
 
-	m_quat[0] = p_axis[0] * sin_a;
-	m_quat[1] = p_axis[1] * sin_a;
-	m_quat[2] = p_axis[2] * sin_a;
+	m_quat[0] = axis[0] * sin_a;
+	m_quat[1] = axis[1] * sin_a;
+	m_quat[2] = axis[2] * sin_a;
 	m_quat[3] = std::cos(p_angle / 2.0);
 }
 
@@ -162,7 +162,7 @@ Quaternion Quaternion::lerp(const Quaternion& p_q1, const Quaternion& p_q2, doub
 	return result;
 }
 
-Quaternion operator* (Quaternion p_qA, Quaternion p_qB)
+Quaternion operator* (const Quaternion& p_qA, const Quaternion& p_qB)
 {
 	Quaternion res;
 
