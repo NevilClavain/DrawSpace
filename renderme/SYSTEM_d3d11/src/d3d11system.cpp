@@ -414,7 +414,7 @@ void D3D11System::collectWorldTransformations() const
 void D3D11System::collectViewTransformations() const
 {
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("(@std)current_view") };
+	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
 
 	if ("" == current_view_entity_id)
 	{
