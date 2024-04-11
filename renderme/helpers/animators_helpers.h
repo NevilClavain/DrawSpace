@@ -113,8 +113,32 @@ namespace renderMe
 					}
 				};
 
+				return animator;								
+			}
+
+			auto makeFreeMvtAnimator()
+			{
+				const auto animator
+				{
+					[](const core::ComponentContainer& p_world_aspect,
+						const core::ComponentContainer& p_time_aspect,
+						const transform::WorldPosition& p_parent_pos,
+						const std::unordered_map<std::string, std::string>& p_keys)
+					{
+						auto& free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.position"))->getPurpose() };
+						core::maths::Matrix free_positionmat;
+						free_positionmat.translation(free_pos);
+
+
+
+						// store result
+						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("freeMvtAnim.output"))->getPurpose() };
+						wp.local_pos = /* orientation *  */ free_positionmat;
+
+					}
+				};
+
 				return animator;
-								
 			}
 		}
 	}

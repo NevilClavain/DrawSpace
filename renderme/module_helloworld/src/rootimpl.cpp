@@ -227,22 +227,27 @@ void RootImpl::onChar(long p_char, long p_scan)
 
 void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
-	const auto tm{ TimeManager::getInstance() };
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
 
-	if (tm->isReady())
+	if ("Camera01Entity" == current_view_entity_id)
 	{
-		auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
-		const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+		const auto tm{ TimeManager::getInstance() };
+		if (tm->isReady())
+		{
+			auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
+			const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
 
-		auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
 
-		double& fps_theta{ fps_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
-		double& fps_phi{ fps_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
+			double& fps_theta{ fps_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
+			double& fps_phi{ fps_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
 
-		tm->angleSpeedInc(&fps_theta, -p_dx);
-		tm->angleSpeedInc(&fps_phi, -p_dy);
+			tm->angleSpeedInc(&fps_theta, -p_dx);
+			tm->angleSpeedInc(&fps_phi, -p_dy);
 
-	}	
+		}
+	}
 }
 
 void RootImpl::onMouseWheel(long p_delta)
@@ -320,60 +325,133 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
+					{
 
-					/////////////// add viewpoint FPS mvt ////////////////
+						/////////////// add viewpoint FPS mvt ////////////////
 
-					auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CameraFPSMvtEntity") };
-					const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+						auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CameraFPSMvtEntity") };
+						const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
 
-					auto& camera_time_aspect{ cameraFPSMvtEntity->makeAspect(core::timeAspect::id) };
+						auto& camera_time_aspect{ cameraFPSMvtEntity->makeAspect(core::timeAspect::id) };
+						auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
 
-					auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
+						fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
 
-					fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
+						fps_world_aspect.addComponent<double>("fps_theta", 0);
+						fps_world_aspect.addComponent<double>("fps_phi", 0);
+						fps_world_aspect.addComponent<double>("fps_speed", 0);
+						fps_world_aspect.addComponent<maths::Real3Vector>("fps_pos", maths::Real3Vector(0.0, 4.0, 7.0));
 
-					fps_world_aspect.addComponent<double>("fps_theta", 0);
-					fps_world_aspect.addComponent<double>("fps_phi", 0);
-					fps_world_aspect.addComponent<double>("fps_speed", 0);
-					fps_world_aspect.addComponent<maths::Real4Vector>("fps_pos", maths::Real4Vector( 0.0, 4.0, 7.0 ));
+						fps_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+							{
+								// input-output/components keys id mapping
+								{"fpsAnim.theta", "fps_theta"},
+								{"fpsAnim.phi", "fps_phi"},
+								{"fpsAnim.position", "fps_pos"},
+								{"fpsAnim.speed", "fps_speed"},
+								{"fpsAnim.output", "fpsmvt_position"}
 
-					fps_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
-																						{
-																							// input-output/components keys id mapping
-																							{"fpsAnim.theta", "fps_theta"},
-																							{"fpsAnim.phi", "fps_phi"},
-																							{"fpsAnim.position", "fps_pos"},
-																							{"fpsAnim.speed", "fps_speed"},
-																							{"fpsAnim.output", "fpsmvt_position"},
-
-																						}, helpers::animators::makeFPSAnimator()));
-
-
+							}, helpers::animators::makeFPSAnimator()));
 
 
-					/////////////// add viewpoint ////////////////////////
 
-					auto& viewPointNode{ m_entitygraph.add(fpsMvtNode, "Camera01Entity")};
-					const auto cameraEntity{ viewPointNode.data() };
 
-					auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
+						/////////////// add viewpoint ////////////////////////
 
-					maths::Matrix projection;
-					projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+						auto& viewPointNode{ m_entitygraph.add(fpsMvtNode, "Camera01Entity") };
+						const auto cameraEntity{ viewPointNode.data() };
 
-					camera_aspect.addComponent<maths::Matrix>("projection", projection);
+						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
 
-					auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
+						maths::Matrix projection;
+						projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
 
-					maths::Matrix cam_positionmat;
-					cam_positionmat.translation(0.0, 0.0, 0.0);
+						camera_aspect.addComponent<maths::Matrix>("projection", projection);
 
-					camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
+						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
-					//////////////////////////////////////////////////////
+						maths::Matrix cam_positionmat;
+						cam_positionmat.translation(0.0, 0.0, 0.0);
+
+						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
+						
+
+						//////////////////////////////////////////////////////
+
+					}
+
+					//////////////////////////////////////////////////////////////
+
+					{
+						/////////////// add viewpoint FREE mvt ////////////////
+
+						auto& freeMvtNode{ m_entitygraph.add(appwindowNode, "CameraFreeMvtEntity") };
+						const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+						auto& camera_time_aspect{ cameraFreeMvtEntity->makeAspect(core::timeAspect::id) };
+						auto& free_world_aspect{ cameraFreeMvtEntity->makeAspect(core::worldAspect::id) };
+
+						free_world_aspect.addComponent<transform::WorldPosition>("free_position");
+
+						free_world_aspect.addComponent<double>("rspeed_x", 0.0);
+						free_world_aspect.addComponent<double>("rspeed_y", 0.0);
+						free_world_aspect.addComponent<double>("rspeed_z", 0.0);
+						free_world_aspect.addComponent<core::maths::Real3Vector>("free_speed");
+
+						// add 3 axis here
+						free_world_aspect.addComponent<maths::Real3Vector>("rot_axis_x", maths::XAxisVector);
+						free_world_aspect.addComponent<maths::Real3Vector>("rot_axis_y", maths::YAxisVector);
+						free_world_aspect.addComponent<maths::Real3Vector>("rot_axis_z", maths::ZAxisVector);
+
+						free_world_aspect.addComponent<maths::Real3Vector>("free_pos", maths::Real3Vector(0.0, -1.0, 9.0));
+						free_world_aspect.addComponent<maths::Quaternion>("free_quat");
+
+						free_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+							{
+								// input-output/components keys id mapping
+								{"freeMvtAnim.position", "free_pos"},
+								{"freeMvtAnim.quat", "free_quat"},
+								{"freeMvtAnim.speed", "free_speed"},
+								{"freeMvtAnim.rot_axis_x", "rot_axis_x"},
+								{"freeMvtAnim.rot_axis_y", "rot_axis_y"},
+								{"freeMvtAnim.rot_axis_z", "rot_axis_z"},
+								{"freeMvtAnim.rot_speed_x", "rspeed_x"},
+								{"freeMvtAnim.rot_speed_y", "rspeed_y"},
+								{"freeMvtAnim.rot_speed_z", "rspeed_z"},
+								{"freeMvtAnim.output", "free_position"}
+
+							}, helpers::animators::makeFreeMvtAnimator()));
+
+
+						/////////////// add viewpoint ////////////////////////
+
+						auto& viewPointNode{ m_entitygraph.add(freeMvtNode, "Camera02Entity") };
+						const auto cameraEntity{ viewPointNode.data() };
+
+						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
+
+						maths::Matrix projection;
+						projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+
+						camera_aspect.addComponent<maths::Matrix>("projection", projection);
+
+						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
+
+						maths::Matrix cam_positionmat;
+						cam_positionmat.translation(0.0, 0.0, 0.0);
+
+						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
+
+
+						//////////////////////////////////////////////////////
+
+					}
+
+					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
+					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
+					dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
 				}
 				break;
 			}
