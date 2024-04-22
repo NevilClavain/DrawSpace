@@ -32,6 +32,7 @@
 #include "matrix.h"
 #include "quaternion.h"
 #include "syncvariable.h"
+#include "timemanager.h"
 
 namespace renderMe
 {
@@ -125,15 +126,76 @@ namespace renderMe
 						const transform::WorldPosition& p_parent_pos,
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
-						auto& free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.position"))->getPurpose() };
+						
+						const auto free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.position"))->getPurpose() };
 						core::maths::Matrix free_positionmat;
 						free_positionmat.translation(free_pos);
+
+
+						//vitesses demandees...
+
+						const double rspeed_x{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.rot_speed_x"))->getPurpose() };
+						const double rspeed_y{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.rot_speed_y"))->getPurpose() };
+						const double rspeed_z{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.rot_speed_z"))->getPurpose() };
+
+						// axe demandes
+						auto& rot_axis_x{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.rot_axis_x"))->getPurpose() };
+						auto& rot_axis_y{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.rot_axis_y"))->getPurpose() };
+						auto& rot_axis_z{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.rot_axis_z"))->getPurpose() };
+
+						// current quat
+
+						auto& current_res{ p_world_aspect.getComponent<core::maths::Quaternion>(p_keys.at("freeMvtAnim.quat"))->getPurpose() };
+
+						// work variables
+						core::maths::Matrix orientation;
+						const auto tm{ core::TimeManager::getInstance() };
+						double fps;
+						core::maths::Quaternion q_axis;
+
+
+
+						/// NB: l'ordre dans lequel sont traites les axes n'a pas d'importance...
+
+						/////////////////Axe X /////////////////////////////
+
+						fps = tm->convertUnitPerSecFramePerSec(rspeed_x);
+						q_axis.rotationAxis(rot_axis_x, fps);
+						current_res = current_res * q_axis;
+
+						current_res.rotationMatFrom(orientation);
+						rot_axis_x[0] = orientation(0, 0);
+						rot_axis_x[1] = orientation(0, 1);
+						rot_axis_x[2] = orientation(0, 2);
+
+						/////////////////Axe Y /////////////////////////////
+
+						fps = tm->convertUnitPerSecFramePerSec(rspeed_y);
+						q_axis.rotationAxis(rot_axis_y, fps);
+						current_res = current_res * q_axis;
+
+						current_res.rotationMatFrom(orientation);
+						rot_axis_y[0] = orientation(1, 0);
+						rot_axis_y[1] = orientation(1, 1);
+						rot_axis_y[2] = orientation(1, 2);
+
+						/////////////////Axe Z /////////////////////////////
+
+						fps = tm->convertUnitPerSecFramePerSec(rspeed_z);
+						q_axis.rotationAxis(rot_axis_z, fps);
+						current_res = current_res * q_axis;
+
+						current_res.rotationMatFrom(orientation);
+						rot_axis_z[0] = orientation(2, 0);
+						rot_axis_z[1] = orientation(2, 1);
+						rot_axis_z[2] = orientation(2, 2);
+
 
 
 
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("freeMvtAnim.output"))->getPurpose() };
-						wp.local_pos = /* orientation *  */ free_positionmat;
+						wp.local_pos = orientation * free_positionmat;
 
 					}
 				};

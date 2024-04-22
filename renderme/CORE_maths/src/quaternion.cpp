@@ -27,6 +27,11 @@
 
 using namespace renderMe::core::maths;
 
+Quaternion::Quaternion()
+{
+	identity();
+}
+
 Quaternion::Quaternion(double p_x, double p_y, double p_z, double p_w)
 {
 	m_quat[0] = p_x;

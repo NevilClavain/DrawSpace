@@ -212,7 +212,7 @@ namespace renderMe
             const static Real3Vector OneVector   = { 1.0, 1.0, 1.0 };
             const static Real3Vector XAxisVector = { 1.0, 0.0, 0.0 };
             const static Real3Vector YAxisVector = { 0.0, 1.0, 0.0 };
-            const static Real3Vector ZAxisVector = { 0.0, 1.0, 0.0 };
+            const static Real3Vector ZAxisVector = { 0.0, 0.0, 1.0 };
             
         }
 	} // core

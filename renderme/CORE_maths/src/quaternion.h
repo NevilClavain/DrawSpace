@@ -37,7 +37,7 @@ namespace renderMe
 			class Quaternion
 			{
 			public:
-				Quaternion(void) = default;
+				Quaternion(void);
 				Quaternion(double p_x, double p_y, double p_z, double p_w);
 
 				~Quaternion(void) = default;

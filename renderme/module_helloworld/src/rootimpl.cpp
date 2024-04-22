@@ -102,6 +102,68 @@ void RootImpl::onKeyPress(long p_key)
 
 		fps_speed = -0.1;
 	}
+	else if (VK_LEFT == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+		rspeed_y = 0.9;
+
+	}
+	else if (VK_RIGHT == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+		rspeed_y = -0.9;
+	}
+	else if (VK_UP == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+		rspeed_x = 0.9;
+
+	}
+	else if (VK_DOWN == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+		rspeed_x = -0.9;
+	}
+	else if ('A' == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+		rspeed_z = -0.9;
+	}
+	else if ('E' == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+		rspeed_z = 0.9;
+	}
 }
 
 void RootImpl::onEndKeyPress(long p_key)
@@ -215,6 +277,68 @@ void RootImpl::onEndKeyPress(long p_key)
 
 		fps_speed = 0.0;
 	}
+	else if (VK_LEFT == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+		rspeed_y = 0.0;
+	}
+	else if (VK_RIGHT == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+		rspeed_y = 0.0;
+	}
+	else if (VK_UP == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+		rspeed_x = 0.0;
+
+	}
+	else if (VK_DOWN == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+		rspeed_x = 0.0;
+	}
+	else if ('A' == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+		rspeed_z = 0.0;
+	}
+	else if ('E' == p_key)
+	{
+		auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
+		const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+
+		auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+
+		double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+		rspeed_z = 0.0;
+	}
+
 }
 
 void RootImpl::onKeyPulse(long p_key)
