@@ -92,7 +92,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
 
 			speed = 0.1;
 		}
@@ -117,7 +117,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
 
 			speed = -0.1;
 		}
@@ -302,7 +302,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
 
 			speed = 0.0;
 		}
@@ -328,7 +328,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
 
 			speed = 0.0;
 		}
@@ -435,8 +435,8 @@ void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 
 			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_theta{ world_aspect.getComponent<double>("fps_theta")->getPurpose() };
-			double& fps_phi{ world_aspect.getComponent<double>("fps_phi")->getPurpose() };
+			double& fps_theta{ world_aspect.getComponent<double>("gbl_theta")->getPurpose() };
+			double& fps_phi{ world_aspect.getComponent<double>("gbl_phi")->getPurpose() };
 
 			tm->angleSpeedInc(&fps_theta, -p_dx);
 			tm->angleSpeedInc(&fps_phi, -p_dy);
@@ -528,23 +528,23 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						const auto gblJointEntity{ gblJointEntityNode.data() };
 
 						auto& camera_time_aspect{ gblJointEntity->makeAspect(core::timeAspect::id) };
-						auto& fps_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
+						auto& gbl_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
 
-						fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
+						gbl_world_aspect.addComponent<transform::WorldPosition>("gbl_output");
 
-						fps_world_aspect.addComponent<double>("fps_theta", 0);
-						fps_world_aspect.addComponent<double>("fps_phi", 0);
-						fps_world_aspect.addComponent<double>("fps_speed", 0);
-						fps_world_aspect.addComponent<maths::Real3Vector>("fps_pos", maths::Real3Vector(0.0, 4.0, 7.0));
+						gbl_world_aspect.addComponent<double>("gbl_theta", 0);
+						gbl_world_aspect.addComponent<double>("gbl_phi", 0);
+						gbl_world_aspect.addComponent<double>("gbl_speed", 0);
+						gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 4.0, 7.0));
 
-						fps_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+						gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
 								// input-output/components keys id mapping
-								{"gimbalLockJointAnim.theta", "fps_theta"},
-								{"gimbalLockJointAnim.phi", "fps_phi"},
-								{"gimbalLockJointAnim.position", "fps_pos"},
-								{"gimbalLockJointAnim.speed", "fps_speed"},
-								{"gimbalLockJointAnim.output", "fpsmvt_position"}
+								{"gimbalLockJointAnim.theta", "gbl_theta"},
+								{"gimbalLockJointAnim.phi", "gbl_phi"},
+								{"gimbalLockJointAnim.position", "gbl_pos"},
+								{"gimbalLockJointAnim.speed", "gbl_speed"},
+								{"gimbalLockJointAnim.output", "gbl_output"}
 
 							}, helpers::animators::makeGimbalLockJointAnimator()));
 
