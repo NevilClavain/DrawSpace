@@ -117,7 +117,7 @@ namespace renderMe
 				return animator;								
 			}
 
-			auto makeFreeMvtAnimator()
+			auto makeFullGimbalJointAnimator()
 			{
 				const auto animator
 				{

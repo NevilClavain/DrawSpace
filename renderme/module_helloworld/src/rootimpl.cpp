@@ -98,8 +98,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -123,8 +123,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -138,8 +138,8 @@ void RootImpl::onKeyPress(long p_key)
 	{
 		if (VK_LEFT == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -149,8 +149,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else if (VK_RIGHT == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -159,8 +159,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else if (VK_UP == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -170,8 +170,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else if (VK_DOWN == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -180,8 +180,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else if ('A' == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -190,8 +190,8 @@ void RootImpl::onKeyPress(long p_key)
 		}
 		else if ('E' == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -308,8 +308,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -334,8 +334,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -350,8 +350,8 @@ void RootImpl::onEndKeyPress(long p_key)
 
 		if (VK_LEFT == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -360,8 +360,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else if (VK_RIGHT == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -370,8 +370,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else if (VK_UP == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -381,8 +381,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else if (VK_DOWN == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -391,8 +391,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else if ('A' == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -401,8 +401,8 @@ void RootImpl::onEndKeyPress(long p_key)
 		}
 		else if ('E' == p_key)
 		{
-			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
-			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
+			const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
@@ -576,8 +576,8 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					{
 						/////////////// add viewpoint with full gimbal jointure ////////////////
 
-						auto& freeMvtNode{ m_entitygraph.add(appwindowNode, "CameraFreeMvtEntity") };
-						const auto cameraFreeMvtEntity{ freeMvtNode.data() };
+						auto& fullGblJointEntityNode{ m_entitygraph.add(appwindowNode, "fullGblJointEntity") };
+						const auto cameraFreeMvtEntity{ fullGblJointEntityNode.data() };
 
 						auto& camera_time_aspect{ cameraFreeMvtEntity->makeAspect(core::timeAspect::id) };
 						auto& free_world_aspect{ cameraFreeMvtEntity->makeAspect(core::worldAspect::id) };
@@ -611,12 +611,12 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 								{"freeMvtAnim.rot_speed_z", "rspeed_z"},
 								{"freeMvtAnim.output", "free_position"}
 
-							}, helpers::animators::makeFreeMvtAnimator()));
+							}, helpers::animators::makeFullGimbalJointAnimator()));
 
 
 						/////////////// add viewpoint ////////////////////////
 
-						auto& viewPointNode{ m_entitygraph.add(freeMvtNode, "Camera02Entity") };
+						auto& viewPointNode{ m_entitygraph.add(fullGblJointEntityNode, "Camera02Entity") };
 						const auto cameraEntity{ viewPointNode.data() };
 
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
@@ -641,8 +641,8 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
+					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
+					dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
 				}
 				break;
 			}
