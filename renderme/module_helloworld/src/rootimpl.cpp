@@ -521,8 +521,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
 					{
-
-						/////////////// add viewpoint FPS mvt ////////////////
+						/////////////// add viewpoint with gimbal lock jointure ////////////////
 
 						auto& gblJointEntityNode{ m_entitygraph.add(appwindowNode, "gblJointEntity") };
 						const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -547,9 +546,6 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 								{"gimbalLockJointAnim.output", "gbl_output"}
 
 							}, helpers::animators::makeGimbalLockJointAnimator()));
-
-
-
 
 						/////////////// add viewpoint ////////////////////////
 
@@ -578,7 +574,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					//////////////////////////////////////////////////////////////
 
 					{
-						/////////////// add viewpoint FREE mvt ////////////////
+						/////////////// add viewpoint with full gimbal jointure ////////////////
 
 						auto& freeMvtNode{ m_entitygraph.add(appwindowNode, "CameraFreeMvtEntity") };
 						const auto cameraFreeMvtEntity{ freeMvtNode.data() };
