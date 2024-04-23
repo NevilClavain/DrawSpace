@@ -127,7 +127,7 @@ namespace renderMe
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
 						
-						const auto free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.position"))->getPurpose() };
+						auto& free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.position"))->getPurpose() };
 						core::maths::Matrix free_positionmat;
 						free_positionmat.translation(free_pos);
 
@@ -152,7 +152,6 @@ namespace renderMe
 						const auto tm{ core::TimeManager::getInstance() };
 						double fps;
 						core::maths::Quaternion q_axis;
-
 
 
 						/// NB: l'ordre dans lequel sont traites les axes n'a pas d'importance...
@@ -190,12 +189,25 @@ namespace renderMe
 						rot_axis_z[1] = orientation(2, 1);
 						rot_axis_z[2] = orientation(2, 2);
 
-
-
-
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("freeMvtAnim.output"))->getPurpose() };
 						wp.local_pos = orientation * free_positionmat;
+
+						const double speed{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.speed"))->getPurpose() };
+						if (std::abs(speed) > 0.0)
+						{
+							//project speed vector in global coords
+
+							// on neg z axis...
+							core::maths::Real4Vector local_speed(0.0, 0.0, -speed, 1.0);
+							core::maths::Real4Vector global_speed;
+
+							orientation.transform(&local_speed, &global_speed);
+
+							core::maths::Real3Vector global_speed3(global_speed[0], global_speed[1], global_speed[2]);
+
+							free_pos = free_pos + global_speed3;
+						}
 
 					}
 				};
