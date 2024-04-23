@@ -152,9 +152,9 @@ void RootImpl::onKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+			double& rspeed_y{ world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
 			rspeed_y = -0.9;
 		}
 		else if (VK_UP == p_key)
@@ -162,9 +162,9 @@ void RootImpl::onKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+			double& rspeed_x{ world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
 			rspeed_x = 0.9;
 
 		}
@@ -173,9 +173,9 @@ void RootImpl::onKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+			double& rspeed_x{ world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
 			rspeed_x = -0.9;
 		}
 		else if ('A' == p_key)
@@ -183,9 +183,9 @@ void RootImpl::onKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+			double& rspeed_z{ world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
 			rspeed_z = 0.9;
 		}
 		else if ('E' == p_key)
@@ -193,9 +193,9 @@ void RootImpl::onKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+			double& rspeed_z{ world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
 			rspeed_z = -0.9;
 		}
 	}
@@ -353,9 +353,9 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+			double& rspeed_y{ world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
 			rspeed_y = 0.0;
 		}
 		else if (VK_RIGHT == p_key)
@@ -363,9 +363,9 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+			double& rspeed_y{ world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
 			rspeed_y = 0.0;
 		}
 		else if (VK_UP == p_key)
@@ -373,9 +373,9 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+			double& rspeed_x{ world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
 			rspeed_x = 0.0;
 
 		}
@@ -384,9 +384,9 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_x{ free_world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
+			double& rspeed_x{ world_aspect.getComponent<double>("rspeed_x")->getPurpose() };
 			rspeed_x = 0.0;
 		}
 		else if ('A' == p_key)
@@ -394,9 +394,9 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+			double& rspeed_z{ world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
 			rspeed_z = 0.0;
 		}
 		else if ('E' == p_key)
@@ -404,9 +404,9 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-			auto& free_world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_z{ free_world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
+			double& rspeed_z{ world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
 			rspeed_z = 0.0;
 		}
 	}
@@ -600,16 +600,16 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						free_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
 								// input-output/components keys id mapping
-								{"freeMvtAnim.position", "free_pos"},
-								{"freeMvtAnim.quat", "free_quat"},
-								{"freeMvtAnim.speed", "free_speed"},
-								{"freeMvtAnim.rot_axis_x", "rot_axis_x"},
-								{"freeMvtAnim.rot_axis_y", "rot_axis_y"},
-								{"freeMvtAnim.rot_axis_z", "rot_axis_z"},
-								{"freeMvtAnim.rot_speed_x", "rspeed_x"},
-								{"freeMvtAnim.rot_speed_y", "rspeed_y"},
-								{"freeMvtAnim.rot_speed_z", "rspeed_z"},
-								{"freeMvtAnim.output", "free_position"}
+								{"fullGimbalJointAnim.position", "free_pos"},
+								{"fullGimbalJointAnim.quat", "free_quat"},
+								{"fullGimbalJointAnim.speed", "free_speed"},
+								{"fullGimbalJointAnim.rot_axis_x", "rot_axis_x"},
+								{"fullGimbalJointAnim.rot_axis_y", "rot_axis_y"},
+								{"fullGimbalJointAnim.rot_axis_z", "rot_axis_z"},
+								{"fullGimbalJointAnim.rot_speed_x", "rspeed_x"},
+								{"fullGimbalJointAnim.rot_speed_y", "rspeed_y"},
+								{"fullGimbalJointAnim.rot_speed_z", "rspeed_z"},
+								{"fullGimbalJointAnim.output", "free_position"}
 
 							}, helpers::animators::makeFullGimbalJointAnimator()));
 

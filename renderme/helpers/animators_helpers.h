@@ -127,25 +127,25 @@ namespace renderMe
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
 						
-						auto& free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.position"))->getPurpose() };
+						auto& free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fullGimbalJointAnim.position"))->getPurpose() };
 						core::maths::Matrix free_positionmat;
 						free_positionmat.translation(free_pos);
 
 
 						//vitesses demandees...
 
-						const double rspeed_x{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.rot_speed_x"))->getPurpose() };
-						const double rspeed_y{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.rot_speed_y"))->getPurpose() };
-						const double rspeed_z{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.rot_speed_z"))->getPurpose() };
+						const double rspeed_x{ p_world_aspect.getComponent<double>(p_keys.at("fullGimbalJointAnim.rot_speed_x"))->getPurpose() };
+						const double rspeed_y{ p_world_aspect.getComponent<double>(p_keys.at("fullGimbalJointAnim.rot_speed_y"))->getPurpose() };
+						const double rspeed_z{ p_world_aspect.getComponent<double>(p_keys.at("fullGimbalJointAnim.rot_speed_z"))->getPurpose() };
 
 						// axe demandes
-						auto& rot_axis_x{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.rot_axis_x"))->getPurpose() };
-						auto& rot_axis_y{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.rot_axis_y"))->getPurpose() };
-						auto& rot_axis_z{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("freeMvtAnim.rot_axis_z"))->getPurpose() };
+						auto& rot_axis_x{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fullGimbalJointAnim.rot_axis_x"))->getPurpose() };
+						auto& rot_axis_y{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fullGimbalJointAnim.rot_axis_y"))->getPurpose() };
+						auto& rot_axis_z{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fullGimbalJointAnim.rot_axis_z"))->getPurpose() };
 
 						// current quat
 
-						auto& current_res{ p_world_aspect.getComponent<core::maths::Quaternion>(p_keys.at("freeMvtAnim.quat"))->getPurpose() };
+						auto& current_res{ p_world_aspect.getComponent<core::maths::Quaternion>(p_keys.at("fullGimbalJointAnim.quat"))->getPurpose() };
 
 						// work variables
 						core::maths::Matrix orientation;
@@ -190,10 +190,10 @@ namespace renderMe
 						rot_axis_z[2] = orientation(2, 2);
 
 						// store result
-						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("freeMvtAnim.output"))->getPurpose() };
+						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fullGimbalJointAnim.output"))->getPurpose() };
 						wp.local_pos = orientation * free_positionmat;
 
-						const double speed{ p_world_aspect.getComponent<double>(p_keys.at("freeMvtAnim.speed"))->getPurpose() };
+						const double speed{ p_world_aspect.getComponent<double>(p_keys.at("fullGimbalJointAnim.speed"))->getPurpose() };
 						if (std::abs(speed) > 0.0)
 						{
 							//project speed vector in global coords
