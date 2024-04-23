@@ -87,14 +87,14 @@ void RootImpl::onKeyPress(long p_key)
 	{
 		if ("Camera01Entity" == current_view_entity_id)
 		{
-			auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
-			const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+			const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
 
-			fps_speed = 0.1;
+			speed = 0.1;
 		}
 		else
 		{
@@ -112,14 +112,14 @@ void RootImpl::onKeyPress(long p_key)
 	{
 		if ("Camera01Entity" == current_view_entity_id)
 		{
-			auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
-			const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+			const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
 
-			fps_speed = -0.1;
+			speed = -0.1;
 		}
 		else
 		{
@@ -141,9 +141,9 @@ void RootImpl::onKeyPress(long p_key)
 			auto& freeMvtNode{ m_entitygraph.node("CameraFreeMvtEntity") };
 			const auto cameraFreeMvtEntity{ freeMvtNode.data() };
 
-			auto& free_world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ cameraFreeMvtEntity->aspectAccess(core::worldAspect::id) };
 
-			double& rspeed_y{ free_world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
+			double& rspeed_y{ world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
 			rspeed_y = 0.9;
 
 		}
@@ -297,14 +297,14 @@ void RootImpl::onEndKeyPress(long p_key)
 	{
 		if ("Camera01Entity" == current_view_entity_id)
 		{
-			auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
-			const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+			const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
 
-			fps_speed = 0.0;
+			speed = 0.0;
 		}
 		else
 		{
@@ -323,14 +323,14 @@ void RootImpl::onEndKeyPress(long p_key)
 	{
 		if ("Camera01Entity" == current_view_entity_id)
 		{
-			auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
-			const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+			const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_speed{ fps_world_aspect.getComponent<double>("fps_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fps_speed")->getPurpose() };
 
-			fps_speed = 0.0;
+			speed = 0.0;
 		}
 		else
 		{
@@ -430,13 +430,13 @@ void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 		const auto tm{ TimeManager::getInstance() };
 		if (tm->isReady())
 		{
-			auto& fpsMvtNode{ m_entitygraph.node("CameraFPSMvtEntity") };
-			const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+			const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& fps_world_aspect{ cameraFPSMvtEntity->aspectAccess(core::worldAspect::id) };
+			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_theta{ fps_world_aspect.getComponent<double>("fps_theta")->getPurpose() };
-			double& fps_phi{ fps_world_aspect.getComponent<double>("fps_phi")->getPurpose() };
+			double& fps_theta{ world_aspect.getComponent<double>("fps_theta")->getPurpose() };
+			double& fps_phi{ world_aspect.getComponent<double>("fps_phi")->getPurpose() };
 
 			tm->angleSpeedInc(&fps_theta, -p_dx);
 			tm->angleSpeedInc(&fps_phi, -p_dy);
@@ -524,11 +524,11 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 						/////////////// add viewpoint FPS mvt ////////////////
 
-						auto& fpsMvtNode{ m_entitygraph.add(appwindowNode, "CameraFPSMvtEntity") };
-						const auto cameraFPSMvtEntity{ fpsMvtNode.data() };
+						auto& gblJointEntityNode{ m_entitygraph.add(appwindowNode, "gblJointEntity") };
+						const auto gblJointEntity{ gblJointEntityNode.data() };
 
-						auto& camera_time_aspect{ cameraFPSMvtEntity->makeAspect(core::timeAspect::id) };
-						auto& fps_world_aspect{ cameraFPSMvtEntity->makeAspect(core::worldAspect::id) };
+						auto& camera_time_aspect{ gblJointEntity->makeAspect(core::timeAspect::id) };
+						auto& fps_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
 
 						fps_world_aspect.addComponent<transform::WorldPosition>("fpsmvt_position");
 
@@ -553,7 +553,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 						/////////////// add viewpoint ////////////////////////
 
-						auto& viewPointNode{ m_entitygraph.add(fpsMvtNode, "Camera01Entity") };
+						auto& viewPointNode{ m_entitygraph.add(gblJointEntityNode, "Camera01Entity") };
 						const auto cameraEntity{ viewPointNode.data() };
 
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
