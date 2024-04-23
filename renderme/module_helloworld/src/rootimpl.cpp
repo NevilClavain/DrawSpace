@@ -540,13 +540,13 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						fps_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
 								// input-output/components keys id mapping
-								{"fpsAnim.theta", "fps_theta"},
-								{"fpsAnim.phi", "fps_phi"},
-								{"fpsAnim.position", "fps_pos"},
-								{"fpsAnim.speed", "fps_speed"},
-								{"fpsAnim.output", "fpsmvt_position"}
+								{"gimbalLockJointAnim.theta", "fps_theta"},
+								{"gimbalLockJointAnim.phi", "fps_phi"},
+								{"gimbalLockJointAnim.position", "fps_pos"},
+								{"gimbalLockJointAnim.speed", "fps_speed"},
+								{"gimbalLockJointAnim.output", "fpsmvt_position"}
 
-							}, helpers::animators::makeFPSAnimator()));
+							}, helpers::animators::makeGimbalLockJointAnimator()));
 
 
 
@@ -645,8 +645,8 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
+					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
+					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
 				}
 				break;
 			}

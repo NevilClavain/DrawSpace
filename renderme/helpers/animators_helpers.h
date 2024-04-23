@@ -62,7 +62,7 @@ namespace renderMe
 				return animator;
 			}
 
-			auto makeFPSAnimator() 
+			auto makeGimbalLockJointAnimator()
 			{
 				const auto animator
 				{
@@ -72,11 +72,11 @@ namespace renderMe
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
 
-						const double fps_theta{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.theta"))->getPurpose() };
-						const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.phi"))->getPurpose() }; // to be continued...
+						const double fps_theta{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.theta"))->getPurpose() };
+						const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.phi"))->getPurpose() }; // to be continued...
 						
 
-						auto& fps_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fpsAnim.position"))->getPurpose() };
+						auto& fps_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("gimbalLockJointAnim.position"))->getPurpose() };
 						core::maths::Matrix fps_positionmat;
 						fps_positionmat.translation(fps_pos);
 				
@@ -92,11 +92,11 @@ namespace renderMe
 						qres.rotationMatFrom(orientation);
 
 						// store result
-						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fpsAnim.output"))->getPurpose() };
+						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("gimbalLockJointAnim.output"))->getPurpose() };
 						wp.local_pos = orientation * fps_positionmat;
 
 						// update pos with speed
-						const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("fpsAnim.speed"))->getPurpose() };
+						const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.speed"))->getPurpose() };
 						if (std::abs(fps_speed) > 0.0)
 						{
 							//project speed vector in global coords
