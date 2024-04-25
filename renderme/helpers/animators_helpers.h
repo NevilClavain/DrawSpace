@@ -72,19 +72,19 @@ namespace renderMe
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
 
-						const double fps_theta{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.theta"))->getPurpose() };
-						const double fps_phi{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.phi"))->getPurpose() }; // to be continued...
+						const double theta{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.theta"))->getPurpose() };
+						const double phi{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.phi"))->getPurpose() }; // to be continued...
 						
 
-						auto& fps_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("gimbalLockJointAnim.position"))->getPurpose() };
-						core::maths::Matrix fps_positionmat;
-						fps_positionmat.translation(fps_pos);
+						auto& pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("gimbalLockJointAnim.position"))->getPurpose() };
+						core::maths::Matrix positionmat;
+						positionmat.translation(pos);
 				
 						core::maths::Quaternion		    qyaw;
 						core::maths::Quaternion		    qpitch;
 						
-						qyaw.rotationAxis(core::maths::YAxisVector, fps_theta);
-						qpitch.rotationAxis(core::maths::XAxisVector, fps_phi);
+						qyaw.rotationAxis(core::maths::YAxisVector, theta);
+						qpitch.rotationAxis(core::maths::XAxisVector, phi);
 
 						const auto qres{ qpitch * qyaw };
 
@@ -93,7 +93,7 @@ namespace renderMe
 
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("gimbalLockJointAnim.output"))->getPurpose() };
-						wp.local_pos = orientation * fps_positionmat;
+						wp.local_pos = orientation * positionmat;
 
 						// update pos with speed
 						const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.speed"))->getPurpose() };
@@ -109,7 +109,7 @@ namespace renderMe
 
 							core::maths::Real3Vector global_speed3(global_speed[0], global_speed[1], global_speed[2]);
 						
-							fps_pos = fps_pos + global_speed3;
+							pos = pos + global_speed3;
 						}
 					}
 				};
@@ -127,9 +127,9 @@ namespace renderMe
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
 						
-						auto& free_pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fullGimbalJointAnim.position"))->getPurpose() };
-						core::maths::Matrix free_positionmat;
-						free_positionmat.translation(free_pos);
+						auto& pos{ p_world_aspect.getComponent<core::maths::Real3Vector>(p_keys.at("fullGimbalJointAnim.position"))->getPurpose() };
+						core::maths::Matrix positionmat;
+						positionmat.translation(pos);
 
 
 						//vitesses demandees...
@@ -191,7 +191,7 @@ namespace renderMe
 
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fullGimbalJointAnim.output"))->getPurpose() };
-						wp.local_pos = orientation * free_positionmat;
+						wp.local_pos = orientation * positionmat;
 
 						const double speed{ p_world_aspect.getComponent<double>(p_keys.at("fullGimbalJointAnim.speed"))->getPurpose() };
 						if (std::abs(speed) > 0.0)
@@ -206,7 +206,7 @@ namespace renderMe
 
 							core::maths::Real3Vector global_speed3(global_speed[0], global_speed[1], global_speed[2]);
 
-							free_pos = free_pos + global_speed3;
+							pos = pos + global_speed3;
 						}
 
 					}
