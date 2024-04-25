@@ -103,7 +103,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("free_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = 0.02;
 		}
@@ -128,7 +128,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("free_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = -0.02;
 		}
@@ -313,7 +313,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("free_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = 0.0;
 		}
@@ -339,7 +339,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			auto& world_aspect{ fullGblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("free_speed")->getPurpose() };
+			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = 0.0;
 		}
@@ -580,36 +580,36 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
 						auto& camera_time_aspect{ fullGblJointEntity->makeAspect(core::timeAspect::id) };
-						auto& free_world_aspect{ fullGblJointEntity->makeAspect(core::worldAspect::id) };
+						auto& fullgbl_world_aspect{ fullGblJointEntity->makeAspect(core::worldAspect::id) };
 
-						free_world_aspect.addComponent<transform::WorldPosition>("free_position");
+						fullgbl_world_aspect.addComponent<transform::WorldPosition>("fullgbl_output");
 
-						free_world_aspect.addComponent<double>("rspeed_x", 0.0);
-						free_world_aspect.addComponent<double>("rspeed_y", 0.0);
-						free_world_aspect.addComponent<double>("rspeed_z", 0.0);
-						free_world_aspect.addComponent<core::maths::Real3Vector>("free_speed");
+						fullgbl_world_aspect.addComponent<double>("rspeed_x", 0.0);
+						fullgbl_world_aspect.addComponent<double>("rspeed_y", 0.0);
+						fullgbl_world_aspect.addComponent<double>("rspeed_z", 0.0);
+						fullgbl_world_aspect.addComponent<core::maths::Real3Vector>("fullgbl_speed");
 
 						// add 3 axis here
-						free_world_aspect.addComponent<maths::Real3Vector>("rot_axis_x", maths::XAxisVector);
-						free_world_aspect.addComponent<maths::Real3Vector>("rot_axis_y", maths::YAxisVector);
-						free_world_aspect.addComponent<maths::Real3Vector>("rot_axis_z", maths::ZAxisVector);
+						fullgbl_world_aspect.addComponent<maths::Real3Vector>("rot_axis_x", maths::XAxisVector);
+						fullgbl_world_aspect.addComponent<maths::Real3Vector>("rot_axis_y", maths::YAxisVector);
+						fullgbl_world_aspect.addComponent<maths::Real3Vector>("rot_axis_z", maths::ZAxisVector);
 
-						free_world_aspect.addComponent<maths::Real3Vector>("free_pos", maths::Real3Vector(0.0, -1.0, 9.0));
-						free_world_aspect.addComponent<maths::Quaternion>("free_quat");
+						fullgbl_world_aspect.addComponent<maths::Real3Vector>("fullgbl_pos", maths::Real3Vector(0.0, -1.0, 9.0));
+						fullgbl_world_aspect.addComponent<maths::Quaternion>("fullgbl_quat");
 
-						free_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+						fullgbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
 								// input-output/components keys id mapping
-								{"fullGimbalJointAnim.position", "free_pos"},
-								{"fullGimbalJointAnim.quat", "free_quat"},
-								{"fullGimbalJointAnim.speed", "free_speed"},
+								{"fullGimbalJointAnim.position", "fullgbl_pos"},
+								{"fullGimbalJointAnim.quat", "fullgbl_quat"},
+								{"fullGimbalJointAnim.speed", "fullgbl_speed"},
 								{"fullGimbalJointAnim.rot_axis_x", "rot_axis_x"},
 								{"fullGimbalJointAnim.rot_axis_y", "rot_axis_y"},
 								{"fullGimbalJointAnim.rot_axis_z", "rot_axis_z"},
 								{"fullGimbalJointAnim.rot_speed_x", "rspeed_x"},
 								{"fullGimbalJointAnim.rot_speed_y", "rspeed_y"},
 								{"fullGimbalJointAnim.rot_speed_z", "rspeed_z"},
-								{"fullGimbalJointAnim.output", "free_position"}
+								{"fullGimbalJointAnim.output", "fullgbl_output"}
 
 							}, helpers::animators::makeFullGimbalJointAnimator()));
 
