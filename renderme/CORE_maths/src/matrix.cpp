@@ -280,6 +280,12 @@ void Matrix::rotation(const Real3Vector& p_axis, double p_angle)
     m_configinfos.values[3] = p_angle;
 }
 
+Real3Vector Matrix::getPosition() const
+{
+    return Real3Vector(m_matrix[3][0], m_matrix[3][1], m_matrix[3][2]);
+}
+
+
 void Matrix::transform(Real4Vector* p_vec_in, Real4Vector* p_vec_out) const
 {
     (*p_vec_out)[0] = (*p_vec_in)[0] * m_matrix[0][0] +

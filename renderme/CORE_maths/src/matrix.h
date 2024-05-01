@@ -86,6 +86,8 @@ namespace renderMe
                 void inverse(void);
                 void transform(Real4Vector* p_vec_in, Real4Vector* p_vec_out) const;
 
+                Real3Vector getPosition() const;
+
                 std::string dump() const;
 
                 double* getArray(void) const

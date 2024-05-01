@@ -194,7 +194,6 @@ namespace renderMe
                 {
                     sum[i] = p_vA[i] + p_vB[i];
                 }
-
                 return sum;
             }
 

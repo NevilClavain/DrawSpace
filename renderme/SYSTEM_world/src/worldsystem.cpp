@@ -95,7 +95,14 @@ void WorldSystem::run()
 
 					///////////////////////
 
-					entity_worldposition.global_pos = entity_worldposition.local_pos * parententity_worldposition.global_pos;
+					if (transform::WorldPosition::TransformationComposition::TRANSFORMATION_RELATIVE_FROM_PARENT == entity_worldposition.composition_operation)
+					{
+						entity_worldposition.global_pos = entity_worldposition.local_pos * parententity_worldposition.global_pos;
+					}
+					else if (transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE == entity_worldposition.composition_operation)
+					{
+						entity_worldposition.global_pos = entity_worldposition.local_pos;
+					}					
 				}
 			}
 			else 

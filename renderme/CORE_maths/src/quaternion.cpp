@@ -57,40 +57,6 @@ void Quaternion::identity(void)
 }
 
 
-// https://stackoverflow.com/questions/12435671/quaternion-lookat-function
-
-void Quaternion::lookAt(const Real3Vector& p_source, const Real3Vector& p_dest)
-{
-	Real3Vector forwardVector(p_dest[0] - p_source[0],
-									p_dest[1] - p_source[1],
-									p_dest[2] - p_source[2]);
-
-	forwardVector.normalize();
-	const Real3Vector forward(0.0, 0.0, -1.0);
-
-	const auto dot{ forward * forwardVector };
-
-	if (std::abs(dot - (-1.0)) < 0.000001)
-	{
-		m_quat[0] = 0.0;
-		m_quat[1] = 1.0;
-		m_quat[2] = 0.0;
-		m_quat[3] = 3.1415927;
-	}
-	else if (std::abs(dot - (1.0)) < 0.000001)
-	{
-		identity();
-	}
-	else
-	{
-		const auto rotAngle{ std::acos(dot) };
-		auto rotAxis{ Real3Vector::crossProduct(forward, forwardVector) };
-		rotAxis.normalize();
-
-		rotationAxis(rotAxis, rotAngle);
-	}
-}
-
 void Quaternion::rotationAxis(const Real3Vector& p_axis, double p_angle)
 {
 	auto axis{ p_axis };
@@ -167,7 +133,74 @@ Quaternion Quaternion::lerp(const Quaternion& p_q1, const Quaternion& p_q2, doub
 	return result;
 }
 
-Quaternion operator* (const Quaternion& p_qA, const Quaternion& p_qB)
+// p_forward : vector from destination to source !
+Quaternion Quaternion::lookRotation(const Real3Vector& p_forward, const Real3Vector& p_up)
+{
+	// from quaternion implementation https://gist.github.com/HelloKitty/91b7af87aac6796c3da9
+		
+	Quaternion result;
+
+	auto forward = p_forward;
+	forward.normalize();
+
+	const auto right{ Real3Vector::crossProduct(p_up, forward) };
+
+	const auto up{ Real3Vector::crossProduct(forward, right) };
+
+	const double m00{ right[0] };
+	const double m01{ right[1] };
+	const double m02{ right[2] };
+	const double m10{ up[0]};
+	const double m11{ up[1] };
+	const double m12{ up[2] };
+	const double m20{ forward[0] };
+	const double m21{ forward[1] };
+	const double m22{ forward[2] };
+
+	const double num8{ (m00 + m11) + m22 };
+	if (num8 > 0.0)
+	{
+		double num = std::sqrt(num8 + 1.0);
+		result[3] = num * 0.5;
+		num = 0.5 / num;
+		result[0] = (m12 - m21) * num;
+		result[1] = (m20 - m02) * num;
+		result[2] = (m01 - m10) * num;
+		return result;
+	}
+	if ((m00 >= m11) && (m00 >= m22))
+	{
+		const double num7{ std::sqrt(((1.0 + m00) - m11) - m22) };
+		const double num4{ 0.5 / num7 };
+		result[0] = 0.5 * num7;
+		result[1] = (m01 + m10) * num4;
+		result[2] = (m02 + m20) * num4;
+		result[3] = (m12 - m21) * num4;
+		return result;
+	}
+	if (m11 > m22)
+	{
+		const double num6{ std::sqrt(((1.0 + m11) - m00) - m22) };
+		const double num3{ 0.5 / num6 };
+		result[0] = (m10 + m01) * num3;
+		result[1] = 0.5 * num6;
+		result[2] = (m21 + m12) * num3;
+		result[3] = (m20 - m02) * num3;
+		return result;
+	}
+
+	const double num5{ std::sqrt(((1.0 + m22) - m00) - m11) };
+	const double num2{ 0.5 / num5 };
+	result[0] = (m20 + m02) * num2;
+	result[1] = (m21 + m12) * num2;
+	result[2] = 0.5 * num5;
+	result[3] = (m01 - m10) * num2;
+	return result;
+	
+}
+
+
+Quaternion renderMe::core::maths::operator* (const Quaternion& p_qA, const Quaternion& p_qB)
 {
 	Quaternion res;
 

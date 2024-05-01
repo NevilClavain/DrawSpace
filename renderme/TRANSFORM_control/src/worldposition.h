@@ -42,8 +42,18 @@ namespace renderMe
                 local_pos = p_local;
             }
 
+            ~WorldPosition() = default;
+
+            enum class TransformationComposition
+            {
+                TRANSFORMATION_RELATIVE_FROM_PARENT,
+                TRANSFORMATION_ABSOLUTE
+            };
+
             core::maths::Matrix local_pos;
             core::maths::Matrix global_pos;
+
+            TransformationComposition composition_operation{ TransformationComposition::TRANSFORMATION_RELATIVE_FROM_PARENT };
         };
 	}
 }

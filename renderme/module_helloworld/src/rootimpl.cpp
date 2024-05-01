@@ -85,7 +85,7 @@ void RootImpl::onKeyPress(long p_key)
 
 	if ('Q' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -110,7 +110,7 @@ void RootImpl::onKeyPress(long p_key)
 	}
 	else if ('W' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -295,7 +295,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 	else if ('Q' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -321,7 +321,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 	else if ('W' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -425,7 +425,7 @@ void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
 
-	if ("Camera01Entity" == current_view_entity_id)
+	if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id )
 	{
 		const auto tm{ TimeManager::getInstance() };
 		if (tm->isReady())
@@ -534,7 +534,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						gbl_world_aspect.addComponent<double>("gbl_theta", 0);
 						gbl_world_aspect.addComponent<double>("gbl_phi", 0);
 						gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-						gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 4.0, 7.0));
+						gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(12.0, -4.0, 7.0));
 
 						gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
@@ -638,11 +638,59 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 					}
 
+					{
+						/////////////// add viewpoint of lookat jointure ////////////////
+
+						auto& gblJointEntityNode { m_entitygraph.node("gblJointEntity") };
+						auto& lookatJointEntityNode{ m_entitygraph.add(gblJointEntityNode, "lookatJointEntity") };
+
+						//auto& lookatJointEntityNode{ m_entitygraph.add(appwindowNode, "lookatJointEntity") };
+
+						const auto lookatJointEntity{ lookatJointEntityNode.data() };
+
+						auto& lookat_time_aspect{ lookatJointEntity->makeAspect(core::timeAspect::id) };
+						auto& lookat_world_aspect{ lookatJointEntity->makeAspect(core::worldAspect::id) };
+
+						lookat_world_aspect.addComponent<transform::WorldPosition>("lookat_output");
+						lookat_world_aspect.getComponent<transform::WorldPosition>("lookat_output")->getPurpose().composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE;
+
+						lookat_world_aspect.addComponent<core::maths::Real3Vector>("lookat_dest", core::maths::Real3Vector( 0.0, 0.0, -20.0 ));
+
+						lookat_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+							{
+								{"lookatJointAnim.output", "lookat_output"},
+								{"lookatJointAnim.dest", "lookat_dest"},
+
+							}, 
+							helpers::animators::makeLookatJointAnimator())
+						);
+
+						/////////////// add viewpoint ////////////////////////
+
+						auto& viewPointNode{ m_entitygraph.add(lookatJointEntityNode, "Camera03Entity") };
+						const auto cameraEntity{ viewPointNode.data() };
+
+						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
+
+						maths::Matrix projection;
+						projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+
+						camera_aspect.addComponent<maths::Matrix>("projection", projection);
+
+						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
+
+						maths::Matrix cam_positionmat;
+						cam_positionmat.translation(0.0, 0.0, 0.0);
+
+						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
+					}
+
 					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
+					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
+					dataCloud->updateDataValue<std::string>("std.current_view", "Camera03Entity");
 				}
 				break;
 			}

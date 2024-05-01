@@ -54,18 +54,22 @@ namespace renderMe
 
 				void zero(void);
 				void identity(void);
-				void lookAt(const Real3Vector& p_source, const Real3Vector& p_dest);
 				void rotationAxis(const Real3Vector& p_axis, double p_angle);
 				void rotationMatFrom(Matrix& p_mat) const;
 				void normalize(void);
 
 				static Quaternion lerp(const Quaternion& p_q1, const Quaternion& p_q2, double p_blend);
 
+				// p_forward : vector from destination to source !
+				static Quaternion lookRotation(const Real3Vector& p_forward, const Real3Vector& p_up);
+
 			private:
 				double      m_quat[4] = { 0.0 };
 			};
+
+			Quaternion operator* (const Quaternion& p_qA, const Quaternion& p_qB);
 		}
 	}
 }
 
-renderMe::core::maths::Quaternion operator* (const renderMe::core::maths::Quaternion& p_qA, const renderMe::core::maths::Quaternion& p_qB);
+//renderMe::core::maths::Quaternion operator* (const renderMe::core::maths::Quaternion& p_qA, const renderMe::core::maths::Quaternion& p_qB);
