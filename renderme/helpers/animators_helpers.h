@@ -40,7 +40,7 @@ namespace renderMe
 	{
 		namespace animators
 		{
-			auto makeSynchronizedYRotationJointAnimator()
+			auto makeYRotationJointAnimator()
 			{
 				const auto animator
 				{
@@ -224,10 +224,14 @@ namespace renderMe
 						const transform::WorldPosition& p_parent_pos,
 						const std::unordered_map<std::string, std::string>& p_keys)
 					{
+						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("lookatJointAnim.output"))->getPurpose() };
 
-						core::maths::Real4Vector pos(0.0, 0.0, 0.0, 1.0);
+						// compute source (current node) absolute position : parent global pos + actual loca pos
+						core::maths::Real4Vector pos(0.0, 0.0, 0.0, 1.0);												
 						core::maths::Real4Vector source4;
-						p_parent_pos.global_pos.transform(&pos, &source4);
+						const core::maths::Matrix absolute_transformation{ wp.local_pos * p_parent_pos.global_pos };
+												
+						absolute_transformation.transform(&pos, &source4);
 
 						core::maths::Real3Vector source3(source4[0], source4[1], source4[2]);
 
@@ -240,12 +244,18 @@ namespace renderMe
 						core::maths::Matrix orientation;
 						quat.rotationMatFrom(orientation);
 
-						core::maths::Matrix translation; 
-						translation.translation( p_parent_pos.global_pos.getPosition() );
+						core::maths::Matrix translation_from_parent; 
+						translation_from_parent.translation( p_parent_pos.global_pos.getPosition() );
+
+						core::maths::Matrix translation_from_current_local;
+						translation_from_current_local.translation(wp.local_pos.getPosition());
+
 					
 						// store result
-						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("lookatJointAnim.output"))->getPurpose() };
-						wp.local_pos = orientation * translation;
+						
+						wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE;
+
+						wp.local_pos = orientation * translation_from_current_local * translation_from_parent;
 					}
 				};
 

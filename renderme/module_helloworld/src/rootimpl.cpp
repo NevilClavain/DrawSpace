@@ -644,15 +644,13 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						auto& gblJointEntityNode { m_entitygraph.node("gblJointEntity") };
 						auto& lookatJointEntityNode{ m_entitygraph.add(gblJointEntityNode, "lookatJointEntity") };
 
-						//auto& lookatJointEntityNode{ m_entitygraph.add(appwindowNode, "lookatJointEntity") };
-
 						const auto lookatJointEntity{ lookatJointEntityNode.data() };
 
 						auto& lookat_time_aspect{ lookatJointEntity->makeAspect(core::timeAspect::id) };
 						auto& lookat_world_aspect{ lookatJointEntity->makeAspect(core::worldAspect::id) };
 
 						lookat_world_aspect.addComponent<transform::WorldPosition>("lookat_output");
-						lookat_world_aspect.getComponent<transform::WorldPosition>("lookat_output")->getPurpose().composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE;
+						//lookat_world_aspect.getComponent<transform::WorldPosition>("lookat_output")->getPurpose().composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE;
 
 						lookat_world_aspect.addComponent<core::maths::Real3Vector>("lookat_dest", core::maths::Real3Vector( 0.0, 0.0, -20.0 ));
 
@@ -840,7 +838,7 @@ void RootImpl::run(void)
 		world_aspect.addComponent<transform::Animator>("animator_roty", transform::Animator
 		(
 																			{ {"syncYRot.angle", "y_rotation_angle"} },
-																			helpers::animators::makeSynchronizedYRotationJointAnimator()));
+																			helpers::animators::makeYRotationJointAnimator()));
 
 
 		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
