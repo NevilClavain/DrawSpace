@@ -93,7 +93,7 @@ namespace renderMe
 
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("gimbalLockJointAnim.output"))->getPurpose() };
-						wp.local_pos = orientation * positionmat;
+						wp.local_pos = wp.local_pos * orientation * positionmat;
 
 						// update pos with speed
 						const double fps_speed{ p_world_aspect.getComponent<double>(p_keys.at("gimbalLockJointAnim.speed"))->getPurpose() };
@@ -191,7 +191,7 @@ namespace renderMe
 
 						// store result
 						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("fullGimbalJointAnim.output"))->getPurpose() };
-						wp.local_pos = orientation * positionmat;
+						wp.local_pos = wp.local_pos * orientation * positionmat;
 
 						const double speed{ p_world_aspect.getComponent<double>(p_keys.at("fullGimbalJointAnim.speed"))->getPurpose() };
 						if (std::abs(speed) > 0.0)
