@@ -40,7 +40,7 @@ namespace renderMe
 	{
 		namespace animators
 		{
-			auto makeSynchronizedYRotationAnimator()
+			auto makeSynchronizedYRotationJointAnimator()
 			{
 				const auto animator
 				{

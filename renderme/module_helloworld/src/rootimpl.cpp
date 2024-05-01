@@ -840,7 +840,7 @@ void RootImpl::run(void)
 		world_aspect.addComponent<transform::Animator>("animator_roty", transform::Animator
 		(
 																			{ {"syncYRot.angle", "y_rotation_angle"} },
-																			helpers::animators::makeSynchronizedYRotationAnimator()));
+																			helpers::animators::makeSynchronizedYRotationJointAnimator()));
 
 
 		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
