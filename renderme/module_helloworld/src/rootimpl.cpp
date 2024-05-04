@@ -85,7 +85,7 @@ void RootImpl::onKeyPress(long p_key)
 
 	if ('Q' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -96,7 +96,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			speed = 0.1;
 		}
-		else
+		else if ("Camera02Entity" == current_view_entity_id)
 		{
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
@@ -107,10 +107,21 @@ void RootImpl::onKeyPress(long p_key)
 
 			speed = 0.02;
 		}
+		else if ("Camera03Entity" == current_view_entity_id)
+		{
+			auto& sliderJointEntityNode{ m_entitygraph.node("sliderJointEntity") };
+			const auto sliderJointEntity{ sliderJointEntityNode.data() };
+			auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
+
+			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
+
+			z_slide_pos.increment = false;
+			z_slide_pos.step = 5.0;
+		}
 	}
 	else if ('W' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id )
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -121,7 +132,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			speed = -0.1;
 		}
-		else
+		else if ("Camera02Entity" == current_view_entity_id)
 		{
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
@@ -131,6 +142,17 @@ void RootImpl::onKeyPress(long p_key)
 			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = -0.02;
+		}
+		else if ("Camera03Entity" == current_view_entity_id)
+		{
+			auto& sliderJointEntityNode{ m_entitygraph.node("sliderJointEntity") };
+			const auto sliderJointEntity{ sliderJointEntityNode.data() };
+			auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
+
+			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
+
+			z_slide_pos.increment = true;
+			z_slide_pos.step = 5.0;
 		}
 	}
 
@@ -145,7 +167,6 @@ void RootImpl::onKeyPress(long p_key)
 
 			double& rspeed_y{ world_aspect.getComponent<double>("rspeed_y")->getPurpose() };
 			rspeed_y = 0.9;
-
 		}
 		else if (VK_RIGHT == p_key)
 		{
@@ -197,6 +218,38 @@ void RootImpl::onKeyPress(long p_key)
 
 			double& rspeed_z{ world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
 			rspeed_z = -0.9;
+		}
+	}
+	else if ("Camera03Entity" == current_view_entity_id)
+	{
+		auto& sliderJointEntityNode{ m_entitygraph.node("sliderJointEntity") };
+		const auto sliderJointEntity{ sliderJointEntityNode.data() };
+		auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
+
+
+		if (VK_LEFT == p_key)
+		{
+			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
+
+			x_slide_pos.increment = false;
+			x_slide_pos.step = 5.0;
+
+		}
+		else if (VK_RIGHT == p_key)
+		{
+			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
+
+			x_slide_pos.increment = true;
+			x_slide_pos.step = 5.0;
+
+		}
+		else if (VK_UP == p_key)
+		{
+
+		}
+		else if (VK_DOWN == p_key)
+		{
+
 		}
 	}
 }
@@ -295,7 +348,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 	else if ('Q' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -306,7 +359,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			speed = 0.0;
 		}
-		else
+		else if ("Camera02Entity" == current_view_entity_id)
 		{
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
@@ -316,12 +369,22 @@ void RootImpl::onEndKeyPress(long p_key)
 			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = 0.0;
+		}
+		else if ("Camera03Entity" == current_view_entity_id)
+		{
+			auto& sliderJointEntityNode{ m_entitygraph.node("sliderJointEntity") };
+			const auto sliderJointEntity{ sliderJointEntityNode.data() };
+			auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
+
+			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
+
+			z_slide_pos.step = 0.0;
 		}
 	}
 
 	else if ('W' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
+		if ("Camera01Entity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -332,7 +395,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			speed = 0.0;
 		}
-		else
+		else if ("Camera02Entity" == current_view_entity_id)
 		{
 			auto& fullGblJointEntityNode{ m_entitygraph.node("fullGblJointEntity") };
 			const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
@@ -342,6 +405,16 @@ void RootImpl::onEndKeyPress(long p_key)
 			double& speed{ world_aspect.getComponent<double>("fullgbl_speed")->getPurpose() };
 
 			speed = 0.0;
+		}
+		else if ("Camera03Entity" == current_view_entity_id)
+		{
+			auto& sliderJointEntityNode{ m_entitygraph.node("sliderJointEntity") };
+			const auto sliderJointEntity{ sliderJointEntityNode.data() };
+			auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
+
+			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
+
+			z_slide_pos.step = 0.0;
 		}
 	}
 
@@ -408,6 +481,33 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			double& rspeed_z{ world_aspect.getComponent<double>("rspeed_z")->getPurpose() };
 			rspeed_z = 0.0;
+		}
+	}
+	else if ("Camera03Entity" == current_view_entity_id)
+	{
+		auto& sliderJointEntityNode{ m_entitygraph.node("sliderJointEntity") };
+		const auto sliderJointEntity{ sliderJointEntityNode.data() };
+		auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
+
+
+		if (VK_LEFT == p_key)
+		{
+			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
+			x_slide_pos.step = 0.0;
+
+		}
+		else if (VK_RIGHT == p_key)
+		{
+			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
+			x_slide_pos.step = 0.0;
+		}
+		else if (VK_UP == p_key)
+		{
+
+		}
+		else if (VK_DOWN == p_key)
+		{
+
 		}
 	}
 }
@@ -526,7 +626,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						auto& gblJointEntityNode{ m_entitygraph.add(appwindowNode, "gblJointEntity") };
 						const auto gblJointEntity{ gblJointEntityNode.data() };
 
-						auto& camera_time_aspect{ gblJointEntity->makeAspect(core::timeAspect::id) };
+						gblJointEntity->makeAspect(core::timeAspect::id);
 						auto& gbl_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
 
 						gbl_world_aspect.addComponent<transform::WorldPosition>("gbl_output");
@@ -579,7 +679,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						auto& fullGblJointEntityNode{ m_entitygraph.add(appwindowNode, "fullGblJointEntity") };
 						const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
-						auto& camera_time_aspect{ fullGblJointEntity->makeAspect(core::timeAspect::id) };
+						fullGblJointEntity->makeAspect(core::timeAspect::id);
 						auto& fullgbl_world_aspect{ fullGblJointEntity->makeAspect(core::worldAspect::id) };
 
 						fullgbl_world_aspect.addComponent<transform::WorldPosition>("fullgbl_output");
@@ -641,8 +741,38 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					{
 						/////////////// add viewpoint of lookat jointure ////////////////
 
-						auto& gblJointEntityNode { m_entitygraph.node("gblJointEntity") };
-						auto& lookatJointEntityNode{ m_entitygraph.add(gblJointEntityNode, "lookatJointEntity") };
+						auto& sliderJointEntityNode{ m_entitygraph.add(appwindowNode, "sliderJointEntity") };
+						const auto sliderJointEntity{ sliderJointEntityNode.data() };
+
+						auto& slider_time_aspect{ sliderJointEntity->makeAspect(core::timeAspect::id) };
+						auto& slider_world_aspect{ sliderJointEntity->makeAspect(core::worldAspect::id) };
+
+
+						slider_world_aspect.addComponent<transform::WorldPosition>("slider_output");
+
+						slider_time_aspect.addComponent<SyncVariable>("x_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, true, 3.0));
+						slider_time_aspect.addComponent<SyncVariable>("y_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, true, 4.0));
+						slider_time_aspect.addComponent<SyncVariable>("z_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, true, 0.0));
+
+						slider_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+							{
+								{"xyzSliderJointAnim.x_pos", "x_slide_pos"},
+								{"xyzSliderJointAnim.y_pos", "y_slide_pos"},
+								{"xyzSliderJointAnim.z_pos", "z_slide_pos"},
+								{"xyzSliderJointAnim.output", "slider_output"}
+
+							}, helpers::animators::makeXYZSliderJointAnimator()));
+
+
+
+
+
+
+
+
+						auto& lookatJointEntityNode{ m_entitygraph.add(sliderJointEntityNode, "lookatJointEntity") };
+
+						
 
 						const auto lookatJointEntity{ lookatJointEntityNode.data() };
 
@@ -650,7 +780,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 						auto& lookat_world_aspect{ lookatJointEntity->makeAspect(core::worldAspect::id) };
 
 						lookat_world_aspect.addComponent<transform::WorldPosition>("lookat_output");
-						//lookat_world_aspect.getComponent<transform::WorldPosition>("lookat_output")->getPurpose().composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE;
+
 
 						lookat_world_aspect.addComponent<core::maths::Real3Vector>("lookat_dest", core::maths::Real3Vector( 0.0, 0.0, -20.0 ));
 
@@ -832,13 +962,15 @@ void RootImpl::run(void)
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
-		world_aspect.addComponent<transform::WorldPosition>("position");
-
+		world_aspect.addComponent<transform::WorldPosition>("output");
 		
-		world_aspect.addComponent<transform::Animator>("animator_roty", transform::Animator
-		(
-																			{ {"syncYRot.angle", "y_rotation_angle"} },
-																			helpers::animators::makeYRotationJointAnimator()));
+		world_aspect.addComponent<transform::Animator>("animator_roty", transform::Animator(
+																			{ 
+																				{"yRotJointAnim.angle", "y_rotation_angle"},
+																				{"yRotJointAnim.output", "output"}
+																			},
+																			helpers::animators::makeYRotationJointAnimator()
+																		));
 
 
 		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
@@ -853,7 +985,7 @@ void RootImpl::run(void)
 				maths::Matrix positionmat;
 				positionmat.translation(0.0, 2.0, 0.0);
 
-				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("output")->getPurpose() };
 				wp.local_pos = wp.local_pos * positionmat;
 			}
 		));
