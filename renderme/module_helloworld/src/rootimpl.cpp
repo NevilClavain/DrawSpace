@@ -878,6 +878,9 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 void RootImpl::run(void)
 {
+
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
 	/////////////////////////////////////////////////////
 
 	auto sysEngine{ SystemEngine::getInstance() };
@@ -885,7 +888,9 @@ void RootImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-	const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
+	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
+	const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
+
 	const std::string fpsText { std::string("fps = ") + std::to_string(currentFPS) };;
 
 	m_windowRenderingQueue->setText(4, { fpsText, "CourierNew.10.spritefont", { 255, 0, 0, 255 }, { 0, 0 }, 0.0f });
@@ -900,8 +905,7 @@ void RootImpl::run(void)
 	if (true == m_quadEntity0_state_request && false == m_quadEntity0_state)
 	{
 		// add quadEntity0
-	
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+			
 		dataCloud->registerData<maths::Real4Vector>("quad0_color");
 
 		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
@@ -997,7 +1001,6 @@ void RootImpl::run(void)
 	{
 		// remove quadEntity0
 
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->removeData<maths::Real4Vector>("quad0_color");
 
 
@@ -1013,8 +1016,6 @@ void RootImpl::run(void)
 
 	if (true == m_quadEntity1_state_request && false == m_quadEntity1_state)
 	{
-
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->registerData<maths::Real4Vector>("quad1_color");
 
 		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
@@ -1100,7 +1101,6 @@ void RootImpl::run(void)
 	{
 		// remove quadEntity1
 
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->removeData<maths::Real4Vector>("quad1_color");
 
 		auto& quadNode{ m_entitygraph.node("quadEntity1") };
@@ -1116,8 +1116,6 @@ void RootImpl::run(void)
 
 	if (true == m_quadEntity2_state_request && false == m_quadEntity2_state)
 	{
-
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
 		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
 
@@ -1207,8 +1205,6 @@ void RootImpl::run(void)
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
 	{
 		// remove quadEntity2
-
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		dataCloud->removeData<maths::Real4Vector>("quad2_color");
 
 		auto& quadNode{ m_entitygraph.node("quadEntity2") };
@@ -1243,7 +1239,6 @@ void RootImpl::run(void)
 			mycolor_r.increment = true;
 		}
 
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		maths::Real4Vector mycolor;
 
 		mycolor[0] = mycolor_r.value;
@@ -1275,7 +1270,6 @@ void RootImpl::run(void)
 			mycolor_r.increment = true;
 		}
 
-		const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 		maths::Real4Vector mycolor;
 
 		mycolor[0] = mycolor_r.value;
@@ -1340,18 +1334,5 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	rendering_queue.setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
 	
-
-	m_windowRenderingQueue = &rendering_queue;
-	
-	/////////////// add time management infos entity
-
-	auto& timeInfosNode{ m_entitygraph.add(appwindowNode, "timeInfosEntity") };
-
-	const auto timeInfosEntity{ timeInfosNode.data() };
-
-	auto& timeInfos_time_aspect{ timeInfosEntity->makeAspect(core::timeAspect::id) };
-	timeInfos_time_aspect.addComponent<int>("framePerSeconds", -1); // will be updated by time system
-
-	m_timeInfos_time_aspect = &timeInfos_time_aspect;
-
+	m_windowRenderingQueue = &rendering_queue;	
 }

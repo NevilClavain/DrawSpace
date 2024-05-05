@@ -29,12 +29,15 @@
 #include "ecshelpers.h"
 #include "syncvariable.h"
 #include "timemanager.h"
+#include "datacloud.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
 
 TimeSystem::TimeSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	dataCloud->registerData<long>("std.framesPerSecond", -1);
 }
 
 void TimeSystem::run()
@@ -52,7 +55,10 @@ void TimeSystem::run()
 				if (fpsComp)
 				{
 					fpsComp->getPurpose() = tm->getFPS();
-				}	
+				}
+
+				const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+				dataCloud->updateDataValue<long>("std.framesPerSecond", tm->getFPS());
 
 				// search for TimeManager::Variable objects
 
