@@ -332,6 +332,10 @@ ALL_BUILD.vcxproj*
 /renderme/SYSTEM_world/*.sln
 /renderme/SYSTEM_world/*.vcxproj*
 
+/renderme/SYSTEM_dataprint/CMakeFiles/
+/renderme/SYSTEM_dataprint/*.sln
+/renderme/SYSTEM_dataprint/*.vcxproj*
+
 /renderme/helpers/CMakeFiles/
 /renderme/helpers/*.sln
 /renderme/helpers/*.vcxproj*

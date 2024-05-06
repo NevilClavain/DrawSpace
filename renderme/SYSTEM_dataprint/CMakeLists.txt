@@ -21,43 +21,26 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(SYSTEM_d3d11)
+project(SYSTEM_dataprint)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_logger/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_json/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_filesystem/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_buffer/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
-include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
-include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_time/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
-include_directories(${CMAKE_SOURCE_DIR}/TRANSFORM_control/src)
 
 include_directories(${st_tree_include_dir})
-include_directories(${jsonjsmn_include_dir})
-include_directories(${fw1fontwrapper_include_dir})
-include_directories(${md5_include_dir})
-include_directories(${dxtk_include_dir})
 
 
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src/*.h
-        ${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src/*.cpp		
+		${CMAKE_SOURCE_DIR}/SYSTEM_dataprint/src/*.h
+        ${CMAKE_SOURCE_DIR}/SYSTEM_dataprint/src/*.cpp		
 )
 
 add_definitions( -D_FROMCMAKE )
 
-add_library(SYSTEM_d3d11 ${source_files})
-
-#deploy DirectXTK fonts
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
-
-
+add_library(SYSTEM_dataprint ${source_files})
 

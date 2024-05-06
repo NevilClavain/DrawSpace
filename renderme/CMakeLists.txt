@@ -85,6 +85,7 @@ add_subdirectory(SYSTEM_world)
 
 add_subdirectory(SYSTEM_resource)
 add_subdirectory(SYSTEM_renderingqueue)
+add_subdirectory(SYSTEM_dataprint)
 
 add_subdirectory(hlsl40_shaders)
 

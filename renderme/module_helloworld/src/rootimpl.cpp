@@ -38,6 +38,8 @@
 #include "trianglemeshe.h"
 #include "renderstate.h"
 
+#include "dataprintsystem.h"
+
 #include "logger_service.h"
 
 #include "filesystem.h"
@@ -598,6 +600,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	sysEngine->makeSystem<renderMe::ResourceSystem>(2, m_entitygraph);
 	sysEngine->makeSystem<renderMe::WorldSystem> (3, m_entitygraph);
 	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(4, m_entitygraph);
+	sysEngine->makeSystem<renderMe::DataPrintSystem>(5, m_entitygraph);
 
 	// D3D11 system provides compilation shader service
 
