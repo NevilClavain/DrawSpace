@@ -73,6 +73,11 @@ namespace renderMe
 				const auto tid{ typeid(T).hash_code() };
 				m_components_by_type[tid].push_back(newcompT);
 
+				// ajout dans m_components_type_names
+				m_components_type_names[p_id] = tid;
+
+				//////////////////////////////////////
+
 				newcomp->setUID( m_uid_count++ );
 			}
 
@@ -98,6 +103,7 @@ namespace renderMe
 				}
 
 				m_components.erase(p_id);
+				m_components_type_names.erase(p_id);
 			
 				m_uid_count--;				
 			}
@@ -124,12 +130,18 @@ namespace renderMe
 				if (m_components_by_type.count(tid) > 0)
 				{
 					const auto& list{ m_components_by_type.at(tid) };
-					for (auto& e : list)
+					for (const auto& e : list)
 					{
 						outlist.push_back(static_cast<Component<T>*>(e));
 					}
 				}				
 				return outlist;
+			}
+
+
+			const std::unordered_map<std::string, size_t>& getComponentsIdList() const
+			{
+				return m_components_type_names;
 			}
 			
 		protected:
@@ -138,8 +150,12 @@ namespace renderMe
 			// map globale, regroupant les composants par id...
 			std::unordered_map<std::string, std::shared_ptr<ComponentBase>>		m_components;
 
+			std::unordered_map<std::string, size_t>								m_components_type_names;
+
 			// 2eme map pour regrouper les composants en fct de leur type
 			std::unordered_map<size_t, std::vector<ComponentBase*>>				m_components_by_type;
+
+			
 		};
 	}
 }

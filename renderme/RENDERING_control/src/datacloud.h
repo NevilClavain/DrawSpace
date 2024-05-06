@@ -98,6 +98,11 @@ namespace renderMe
                 }
             }
 
+            const std::unordered_map<std::string, size_t>& getVarsIdsList() const
+            {
+                return m_component_container.getComponentsIdList();
+            }
+
         private:
             core::ComponentContainer m_component_container;
         };
