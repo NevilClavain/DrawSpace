@@ -51,6 +51,7 @@ namespace renderMe
     {
     public:
 
+        RenderingQueueSystem() = delete;
         RenderingQueueSystem(core::Entitygraph& p_entitygraph);
         ~RenderingQueueSystem() = default;
 

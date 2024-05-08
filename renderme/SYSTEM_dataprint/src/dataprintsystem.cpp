@@ -39,10 +39,14 @@ using namespace renderMe::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
-
 }
 
 void DataPrintSystem::run()
+{
+	collactData();
+}
+
+void DataPrintSystem::collactData()
 {
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
@@ -137,7 +141,7 @@ void DataPrintSystem::run()
 					var_str_value = value;
 				}
 			}
-			
+
 		};
 
 

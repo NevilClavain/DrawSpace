@@ -896,10 +896,11 @@ void RootImpl::run(void)
 
 	const std::string fpsText { std::string("fps = ") + std::to_string(currentFPS) };;
 
-	m_windowRenderingQueue->setText(4, { fpsText, "CourierNew.10.spritefont", { 255, 0, 0, 255 }, { 0, 0 }, 0.0f });
+	//m_windowRenderingQueue->setText(4, { fpsText, "CourierNew.10.spritefont", { 255, 0, 0, 255 }, { 0, 0 }, 0.0f });
 
 	// resources system event
-	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 25}, 0.0});
+	//m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 25}, 0.0});
+
 
 	//////////////////////////////////////////////////////
 	// 	
@@ -1335,7 +1336,7 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
 
-	rendering_queue.setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
+	//rendering_queue.setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
 	
 	m_windowRenderingQueue = &rendering_queue;	
 }

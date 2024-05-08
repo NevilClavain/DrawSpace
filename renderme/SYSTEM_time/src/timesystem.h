@@ -35,6 +35,7 @@ namespace renderMe
     {
     public:
 
+        TimeSystem() = delete;
         TimeSystem(core::Entitygraph& p_entitygraph);
         ~TimeSystem() = default;
 

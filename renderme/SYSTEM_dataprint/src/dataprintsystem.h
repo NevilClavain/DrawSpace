@@ -34,10 +34,13 @@ namespace renderMe
     class DataPrintSystem : public core::System
     {
     public:
-
+        DataPrintSystem() = delete;
         DataPrintSystem(core::Entitygraph& p_entitygraph);
         ~DataPrintSystem() = default;
 
         void run();
+
+    private:
+        void collactData();
     };
 }

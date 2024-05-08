@@ -35,6 +35,7 @@ namespace renderMe
     class WorldSystem : public core::System
     {
     public:
+        WorldSystem() = delete;
         WorldSystem(core::Entitygraph& p_entitygraph);
         ~WorldSystem() = default;
 

@@ -58,6 +58,7 @@ namespace renderMe
     {
     public:
 
+        ResourceSystem() = delete;
         ResourceSystem(core::Entitygraph& p_entitygraph);
         ~ResourceSystem();
 
