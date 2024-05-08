@@ -32,21 +32,32 @@
 #include "ecshelpers.h"
 #include "datacloud.h"
 #include "tvector.h"
-
+#include "renderingqueue.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
+	// TEMP
+	for (int i = 0; i < 200; i++)
+	{		
+		m_strings.push_back(std::string( "test " + std::to_string(i + 1) ));
+	}
 }
 
 void DataPrintSystem::run()
 {
-	collactData();
+	collectData();
+	print();
 }
 
-void DataPrintSystem::collactData()
+void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
+{
+	m_renderingQueue = p_queue;
+}
+
+void DataPrintSystem::collectData()
 {
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
@@ -159,5 +170,32 @@ void DataPrintSystem::collactData()
 		}
 
 		_asm nop
+	}
+}
+
+void DataPrintSystem::print()
+{
+	//m_renderingQueue->setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
+
+	int curr_row{ 0 };
+	int curr_col{ 0 };
+	int index{ 0 };
+
+	for (const auto& e : m_strings)
+	{
+		m_renderingQueue->setText(textsIdBase + index, { m_strings.at(index), "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * colWidth, curr_row * rowHeight}, 0.0});
+		index++;
+
+		curr_col++;
+		if (nbCols == curr_col)
+		{
+			curr_col = 0;
+			curr_row++;
+
+			if (nbRows == curr_row)
+			{
+				break;
+			}
+		}
 	}
 }

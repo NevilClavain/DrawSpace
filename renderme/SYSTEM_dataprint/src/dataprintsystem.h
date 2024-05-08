@@ -24,10 +24,20 @@
 /* -*-LIC_END-*- */
 
 #pragma once
+
+#include <vector>
+#include <string>
 #include "system.h"
+
 
 namespace renderMe
 {
+    //fwd decl
+    namespace rendering
+    {
+        class Queue;
+    }
+
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
    
@@ -40,7 +50,23 @@ namespace renderMe
 
         void run();
 
+        void setRenderingQueue(renderMe::rendering::Queue* p_queue);
+
     private:
-        void collactData();
+
+        static constexpr int                    textsIdBase{ 2000 };
+        static constexpr int                    nbCols{ 5 };
+        static constexpr int                    nbRows{ 7 };
+
+        static constexpr int                    colWidth{ 300 };
+        static constexpr int                    rowHeight{ 15 };
+
+        renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
+
+        std::vector<std::string>                m_strings; // display inputs
+
+        void collectData();
+        void print();
+        
     };
 }

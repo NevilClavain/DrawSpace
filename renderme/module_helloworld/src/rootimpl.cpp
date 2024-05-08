@@ -1339,4 +1339,9 @@ void RootImpl::createEntities(const std::string p_appWindowsEntityName)
 	//rendering_queue.setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
 	
 	m_windowRenderingQueue = &rendering_queue;	
+
+	auto sysEngine{ SystemEngine::getInstance() };
+	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(5) };
+
+	dataPrintSystem->setRenderingQueue(m_windowRenderingQueue);
 }
