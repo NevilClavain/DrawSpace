@@ -39,11 +39,13 @@ using namespace renderMe::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
+	/*
 	// TEMP
 	for (int i = 0; i < 200; i++)
 	{		
 		m_strings.push_back(std::string( "test " + std::to_string(i + 1) ));
 	}
+	*/
 }
 
 void DataPrintSystem::run()
@@ -59,8 +61,9 @@ void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
 
 void DataPrintSystem::collectData()
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	m_strings.clear();
 
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto dataCloudVariables{ dataCloud->getVarsIdsList() };
 
 	for (const auto& e : dataCloudVariables)
@@ -77,7 +80,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -85,7 +88,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -93,7 +96,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -101,7 +104,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -109,7 +112,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -117,7 +120,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -125,7 +128,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = std::to_string(value);
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
 			{
@@ -133,7 +136,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<core::maths::Real3Vector>(p_id) };
-					var_str_value = "[" + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " ]";
+					var_str_value = "dc." + p_id + " " + "[" + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " ]";
 				}
 			},
 			{
@@ -141,7 +144,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<core::maths::Real4Vector>(p_id) };
-					var_str_value = var_str_value = "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " " + std::to_string(value[3]) + " ]";
+					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " " + std::to_string(value[3]) + " ]";
 				}
 			},
 			{
@@ -149,7 +152,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<std::string>(p_id) };
-					var_str_value = value;
+					var_str_value = "dc." + p_id + " " + value;
 				}
 			}
 
@@ -169,14 +172,12 @@ void DataPrintSystem::collectData()
 			var_str_value = "<unknown type>";
 		}
 
-		_asm nop
+		m_strings.push_back(var_str_value);
 	}
 }
 
 void DataPrintSystem::print()
 {
-	//m_renderingQueue->setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
-
 	int curr_row{ 0 };
 	int curr_col{ 0 };
 	int index{ 0 };

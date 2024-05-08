@@ -55,11 +55,11 @@ namespace renderMe
     private:
 
         static constexpr int                    textsIdBase{ 2000 };
-        static constexpr int                    nbCols{ 5 };
-        static constexpr int                    nbRows{ 7 };
+        static constexpr int                    nbCols{ 3 };
+        static constexpr int                    nbRows{ 10 };
 
-        static constexpr int                    colWidth{ 300 };
-        static constexpr int                    rowHeight{ 15 };
+        static constexpr int                    colWidth{ 600 };
+        static constexpr int                    rowHeight{ 25 };
 
         renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
 
