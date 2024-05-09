@@ -55,18 +55,18 @@ namespace renderMe
     private:
 
         static constexpr int                    textsIdBase{ 2000 };
-        static constexpr int                    nbCols{ 3 };
+        static constexpr int                    nbCols{ 4 };
         static constexpr int                    nbRows{ 10 };
 
-        static constexpr int                    colWidth{ 600 };
+        static constexpr int                    colWidth{ 500 };
         static constexpr int                    rowHeight{ 25 };
 
         renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
 
-        std::vector<std::string>                m_strings; // display inputs
+        std::vector<std::string>                m_dc_strings; // dataclouds display inputs
 
         void collectData();
-        void print();
+        void datacloud_print();
         
     };
 }

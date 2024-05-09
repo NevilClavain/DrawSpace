@@ -51,7 +51,7 @@ DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygr
 void DataPrintSystem::run()
 {
 	collectData();
-	print();
+	datacloud_print();
 }
 
 void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
@@ -61,7 +61,7 @@ void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
 
 void DataPrintSystem::collectData()
 {
-	m_strings.clear();
+	m_dc_strings.clear();
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto dataCloudVariables{ dataCloud->getVarsIdsList() };
@@ -87,7 +87,7 @@ void DataPrintSystem::collectData()
 				typeid(int).hash_code(),
 				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
+					const auto value { dataCloud->readDataValue<int>(p_id) };
 					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
@@ -95,7 +95,7 @@ void DataPrintSystem::collectData()
 				typeid(unsigned long).hash_code(),
 				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
+					const auto value { dataCloud->readDataValue<unsigned long>(p_id) };
 					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
@@ -103,7 +103,7 @@ void DataPrintSystem::collectData()
 				typeid(unsigned int).hash_code(),
 				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
+					const auto value { dataCloud->readDataValue<unsigned int>(p_id) };
 					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
@@ -111,7 +111,7 @@ void DataPrintSystem::collectData()
 				typeid(size_t).hash_code(),
 				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
+					const auto value { dataCloud->readDataValue<size_t>(p_id) };
 					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
@@ -119,7 +119,7 @@ void DataPrintSystem::collectData()
 				typeid(float).hash_code(),
 				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
+					const auto value { dataCloud->readDataValue<float>(p_id) };
 					var_str_value = "dc." + p_id + " " + std::to_string(value);
 				}
 			},
@@ -127,8 +127,24 @@ void DataPrintSystem::collectData()
 				typeid(double).hash_code(),
 				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
+					const auto value { dataCloud->readDataValue<double>(p_id) };
 					var_str_value = "dc." + p_id + " " + std::to_string(value);
+				}
+			},
+			{
+				typeid(core::maths::IntCoords2D).hash_code(),
+				[&](const std::string& p_id)
+				{
+					const auto value { dataCloud->readDataValue<core::maths::IntCoords2D>(p_id) };
+					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " ]";
+				}
+			},
+			{
+				typeid(core::maths::FloatCoords2D).hash_code(),
+				[&](const std::string& p_id)
+				{
+					const auto value { dataCloud->readDataValue<core::maths::FloatCoords2D>(p_id) };
+					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " ]";
 				}
 			},
 			{
@@ -136,7 +152,7 @@ void DataPrintSystem::collectData()
 				[&](const std::string& p_id)
 				{
 					const auto value { dataCloud->readDataValue<core::maths::Real3Vector>(p_id) };
-					var_str_value = "dc." + p_id + " " + "[" + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " ]";
+					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " ]";
 				}
 			},
 			{
@@ -169,22 +185,22 @@ void DataPrintSystem::collectData()
 		{
 			// cannot infer type
 
-			var_str_value = "<unknown type>";
+			var_str_value = var_id + " <unknown type>";
 		}
 
-		m_strings.push_back(var_str_value);
+		m_dc_strings.push_back(var_str_value);
 	}
 }
 
-void DataPrintSystem::print()
+void DataPrintSystem::datacloud_print()
 {
 	int curr_row{ 0 };
 	int curr_col{ 0 };
 	int index{ 0 };
 
-	for (const auto& e : m_strings)
+	for (const auto& e : m_dc_strings)
 	{
-		m_renderingQueue->setText(textsIdBase + index, { m_strings.at(index), "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * colWidth, curr_row * rowHeight}, 0.0});
+		m_renderingQueue->setText(textsIdBase + index, { e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * colWidth, curr_row * rowHeight}, 0.0});
 		index++;
 
 		curr_col++;

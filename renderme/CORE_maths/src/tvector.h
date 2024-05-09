@@ -202,6 +202,7 @@ namespace renderMe
             using RGBAColor = Vector<unsigned char, 4>;
             using RGBColor = Vector<unsigned char, 3>;
             using IntCoords2D = Vector<int, 2>;
+            using FloatCoords2D = Vector<float, 2>;
             using Real4Vector = Vector<>;
             using Real3Vector = Vector<double, 3>;
 

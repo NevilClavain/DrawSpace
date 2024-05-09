@@ -22,6 +22,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include "datacloud.h"
 #include "d3d11systemimpl.h"
 #include "aspects.h"
 
@@ -33,6 +34,8 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	DXGI_SWAP_CHAIN_DESC swap_chain;
 	ZeroMemory(&swap_chain, sizeof(swap_chain));
+
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
 	//get main windows infos
 	auto& mainwindows_rendering_aspect{ p_mainWindow->aspectAccess(renderMe::core::renderingAspect::id) };
@@ -98,9 +101,15 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	// complete main window entity with renderer characteristics
 	mainwindows_rendering_aspect.addComponent<int>("widthResol", characteristics_width_resol);
-	mainwindows_rendering_aspect.addComponent<int>("heightResol", characteristics_width_resol);
+	mainwindows_rendering_aspect.addComponent<int>("heightResol", characteristics_height_resol);
 	mainwindows_rendering_aspect.addComponent<float>("viewportWidth", characteristics_v_width);
 	mainwindows_rendering_aspect.addComponent<float>("viewportHeight", characteristics_v_height);
+
+	dataCloud->registerData<renderMe::core::maths::IntCoords2D>("std.window_resol");
+	dataCloud->updateDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol", renderMe::core::maths::IntCoords2D(characteristics_width_resol, characteristics_height_resol));
+
+	dataCloud->registerData<renderMe::core::maths::FloatCoords2D>("std.viewport");
+	dataCloud->updateDataValue<renderMe::core::maths::FloatCoords2D>("std.viewport", renderMe::core::maths::FloatCoords2D(characteristics_v_width, characteristics_v_height));
 
 
 	swap_chain.BufferDesc.Width = characteristics_width_resol;
@@ -155,7 +164,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 			driver_descr = e.second;
 
 			_RENDERME_TRACE(m_localLogger, "D3D11CreateDeviceAndSwapChain is OK for " + driver_descr)
-				break;
+			break;
 		}
 		else
 		{
