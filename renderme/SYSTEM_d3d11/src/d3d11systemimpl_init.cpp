@@ -187,6 +187,46 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	}
 
 	///////////////////////////////////////////////////////////////////////
+	// get device description
+
+	IDXGIDevice* dxgiDevice{ nullptr };
+	hRes = m_lpd3ddevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+	D3D11_CHECK(QueryInterface);
+
+	
+	hRes = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgiAdapter);
+	D3D11_CHECK(dxgiDeviceGetParent);
+
+	dxgiDevice->Release();
+
+	// GPU name
+
+	m_dxgiAdapter->GetDesc(&m_adapterDescription);
+
+	dataCloud->registerData<std::string>("std.gpu");
+	const std::wstring w_gpu_description(m_adapterDescription.Description);
+	const std::string gpu_description(w_gpu_description.begin(), w_gpu_description.end());
+	dataCloud->updateDataValue<std::string>("std.gpu", gpu_description);
+
+	mainwindows_rendering_aspect.addComponent<std::string>("gpuName", gpu_description);
+
+	// GPU driver version
+
+	LARGE_INTEGER i;	
+	m_dxgiAdapter->CheckInterfaceSupport(__uuidof(IDXGIDevice), &i);
+
+	const auto a{ i.QuadPart >> 48 };
+	const auto b{ (i.QuadPart >> 32) & 0xFFFF };
+	const auto c{ (i.QuadPart >> 16) & 0xFFFF };
+	const auto d{ i.QuadPart & 0xFFFF };
+
+	std::string driver_version{ std::to_string(a) + "." + std::to_string(b) + "." + std::to_string(c) + "." + std::to_string(d) };
+	dataCloud->registerData<std::string>("std.gpu_driver");
+	dataCloud->updateDataValue<std::string>("std.gpu_driver", driver_version);
+
+	mainwindows_rendering_aspect.addComponent<std::string>("gpuDriver", driver_version);
+
+	///////////////////////////////////////////////////////////////////////
 
 	ID3D11Texture2D* backBuffer;
 	hRes = lpd3dswapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);

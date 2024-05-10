@@ -250,6 +250,10 @@ private:
     IDXGISwapChain*                                     m_lpd3dswapchain{ nullptr };
     ID3D11Device*                                       m_lpd3ddevice{ nullptr };
     ID3D11DeviceContext*                                m_lpd3ddevcontext{ nullptr };
+
+    IDXGIAdapter*                                       m_dxgiAdapter{ nullptr };
+    DXGI_ADAPTER_DESC                                   m_adapterDescription;
+
     ID3D11RenderTargetView*                             m_screentarget{ nullptr };
     ID3D11DepthStencilState*                            m_dsState_DepthTestDisabled{ nullptr };
     ID3D11DepthStencilState*                            m_dsState_DepthTestEnabled{ nullptr };
