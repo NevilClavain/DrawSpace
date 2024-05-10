@@ -829,10 +829,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 	};
 	d3d11System->registerSubscriber(d3d11_cb);
 
-
-
 	// register to resource system events
-
 	const ResourceSystem::Callback rs_cb
 	{
 		[&, this](ResourceSystemEvent p_event, const std::string& p_resourceName)
@@ -894,12 +891,12 @@ void RootImpl::run(void)
 	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
 	const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
 
-	const std::string fpsText { std::string("fps = ") + std::to_string(currentFPS) };;
+	const std::string fpsText { std::string("fps = ") + std::to_string(currentFPS) };
 
 	//m_windowRenderingQueue->setText(4, { fpsText, "CourierNew.10.spritefont", { 255, 0, 0, 255 }, { 0, 0 }, 0.0f });
 
 	// resources system event
-	//m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 25}, 0.0});
+	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0});
 
 
 	//////////////////////////////////////////////////////

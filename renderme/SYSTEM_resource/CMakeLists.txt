@@ -34,6 +34,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_threads/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 
+include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
 
 include_directories(${st_tree_include_dir})
 include_directories(${jsonjsmn_include_dir})

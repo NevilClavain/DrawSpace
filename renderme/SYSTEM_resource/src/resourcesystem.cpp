@@ -34,6 +34,8 @@
 #include "shaders_service.h"
 #include "shader.h"
 
+#include "datacloud.h"
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -232,35 +234,71 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				shaderInfos.setContentMD5( shaderMD5 );
 
 				const auto decomposed_shader_filename{ fileSystem::splitFilename(shaderInfos.getName()) };
-				const auto cacheDirectory{ m_shadersCachePath + "/" + decomposed_shader_filename.first };
+				const auto shaderCacheDirectory{ m_shadersCachePath + "/" + decomposed_shader_filename.first };
 
 				bool generate_cache_entry{ false };
 
-				//check if shader exists in cache...
-				if (!fileSystem::exists(cacheDirectory))
+
+				///////// check driver version change...
+
+				// get current driver version
+				const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+				const auto current_driver{ dataCloud->readDataValue<std::string>("std.gpu_driver") };
+
+				bool update_driver_text{ false };
+
+				if (fileSystem::exists(m_shadersCachePath + "/driverversion.text"))
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory missing : ") + cacheDirectory);
+					// file exists
+					renderMe::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
+					driverversion_content.load();
+
+					const std::string last_driverversion(driverversion_content.getData(), driverversion_content.getDataSize());
+
+					if (current_driver != last_driverversion)
+					{
+						update_driver_text = true;
+					}
+				}
+				else
+				{
+					update_driver_text = true;
+				}
+				
+				if(update_driver_text) // update driver text and so rebuld shaders
+				{
+					renderMe::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
+					driverversion_content.save(current_driver.c_str(), current_driver.length());
+
+					generate_cache_entry = true;
+				}
+				
+				///////// check if shader exists in cache...
+
+				if (!fileSystem::exists(shaderCacheDirectory))
+				{
+					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory missing : ") + shaderCacheDirectory);
 
 					// create all
-					fileSystem::createDirectory(cacheDirectory);
+					fileSystem::createDirectory(shaderCacheDirectory);
 					generate_cache_entry = true;
 				}
 				else
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory exists : ") + cacheDirectory);
+					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory exists : ") + shaderCacheDirectory);
 
 					// check if cache md5 file exists AND compiled shader exists
-					if (!fileSystem::exists(cacheDirectory + "/bc.md5") || !fileSystem::exists(cacheDirectory + "/bc.code"))
+					if (!fileSystem::exists(shaderCacheDirectory + "/bc.md5") || !fileSystem::exists(shaderCacheDirectory + "/bc.code"))
 					{
 						_RENDERME_TRACE(m_localLoggerRunner, std::string("cache file missing !"));
 						generate_cache_entry = true;
 					}
 					else
 					{
-						_RENDERME_TRACE(m_localLoggerRunner, std::string("cache md5 file exists : ") + cacheDirectory + "/bc.md5");
+						_RENDERME_TRACE(m_localLoggerRunner, std::string("cache md5 file exists : ") + shaderCacheDirectory + "/bc.md5");
 
 						// load cache md5 file
-						renderMe::core::FileContent<char> cache_md5_content(cacheDirectory + "/bc.md5");
+						renderMe::core::FileContent<char> cache_md5_content(shaderCacheDirectory + "/bc.md5");
 						cache_md5_content.load();
 
 						// check if md5 are equals
@@ -312,11 +350,11 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.getName());
 						}
 
-						renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
+						renderMe::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
 						cache_code_content.save(shaderBytes.get(), shaderBytesLength);
 
 						// create cache md5 file
-						renderMe::core::FileContent<const char> shader_md5_content(cacheDirectory + "/bc.md5");
+						renderMe::core::FileContent<const char> shader_md5_content(shaderCacheDirectory + "/bc.md5");
 						const std::string shaderMD5{ shaderInfos.getContentMD5() };
 						shader_md5_content.save(shaderMD5.c_str(), shaderMD5.length());
 
@@ -349,7 +387,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					}
 
 					// load bc.code file
-					renderMe::core::FileContent<char> cache_code_content(cacheDirectory + "/bc.code");
+					renderMe::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
 					cache_code_content.load();
 
 					// transfer file content to shaderInfos 'code' buffer
@@ -362,7 +400,6 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_SUCCESS, shaderInfos.getName());
 					}
-
 				}
 
 				///// manage metadata json file
