@@ -54,19 +54,30 @@ namespace renderMe
 
     private:
 
-        static constexpr int                    textsIdBase{ 2000 };
-        static constexpr int                    nbCols{ 4 };
-        static constexpr int                    nbRows{ 10 };
+        static constexpr int                    dcTextsIdBase{ 2000 };
+        static constexpr int                    svTextsIdBase{ 3000 };
 
-        static constexpr int                    colWidth{ 500 };
-        static constexpr int                    rowHeight{ 25 };
+        static constexpr int                    dcNbCols{ 4 };
+        static constexpr int                    dcNbRows{ 10 };
+
+        static constexpr int                    dcColWidth{ 500 };
+        static constexpr int                    dcRowHeight{ 25 };
+
+        static constexpr int                    svNbCols{ 9 };
+        static constexpr int                    svNbRows{ 10 };
+
+        static constexpr int                    svColWidth{ 200 };
+        static constexpr int                    svRowHeight{ 25 };
 
         renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
 
         std::vector<std::string>                m_dc_strings; // dataclouds display inputs
 
+        std::vector<std::string>                m_sv_strings; // synchronized varq display inputs
+
         void collectData();
-        void datacloud_print();
+        void print(const std::vector<std::string>& p_list, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight);
+
         
     };
 }

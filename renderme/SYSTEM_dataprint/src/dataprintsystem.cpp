@@ -39,19 +39,30 @@ using namespace renderMe::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
-	/*
+	
 	// TEMP
 	for (int i = 0; i < 200; i++)
 	{		
-		m_strings.push_back(std::string( "test " + std::to_string(i + 1) ));
+		m_sv_strings.push_back(std::string( "test " + std::to_string(i + 1) ));
 	}
-	*/
+	
 }
 
 void DataPrintSystem::run()
 {
 	collectData();
-	datacloud_print();
+
+	print(m_dc_strings, 0, dcTextsIdBase, dcNbCols, dcNbRows, dcColWidth, dcRowHeight);
+
+	// positioning sync vars print bloc at bottomo of the window : compute y position
+
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
+	const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+
+	const int y_pos = window_dims[1] - (svNbRows * svRowHeight);
+
+	print(m_sv_strings, y_pos, svTextsIdBase, svNbCols, svNbRows, svColWidth, svRowHeight);
 }
 
 void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
@@ -192,24 +203,24 @@ void DataPrintSystem::collectData()
 	}
 }
 
-void DataPrintSystem::datacloud_print()
+void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
 {
 	int curr_row{ 0 };
 	int curr_col{ 0 };
 	int index{ 0 };
 
-	for (const auto& e : m_dc_strings)
+	for (const auto& e : p_list)
 	{
-		m_renderingQueue->setText(textsIdBase + index, { e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * colWidth, curr_row * rowHeight}, 0.0});
+		m_renderingQueue->setText(p_id_base + index, { e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * p_colWidth, curr_row * p_rowHeight + p_y_base}, 0.0});
 		index++;
 
 		curr_col++;
-		if (nbCols == curr_col)
+		if (p_nbCols == curr_col)
 		{
 			curr_col = 0;
 			curr_row++;
 
-			if (nbRows == curr_row)
+			if (p_nbRows == curr_row)
 			{
 				break;
 			}
