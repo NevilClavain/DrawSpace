@@ -22,11 +22,16 @@
 */
 /* -*-LIC_END-*- */
 
+#define _USE_MATH_DEFINES
+
 #include <windows.h>
 #include <cmath>
+#include <numbers>
 
 #include "timemanager.h"
 #include "syncvariable.h"
+
+
 
 using namespace renderMe::core;
 
@@ -143,7 +148,7 @@ void TimeManager::angleSpeedInc(double* p_angle, double p_angleSpeed)
     double angle{ *p_angle };
 
     angle += angleSpeedDegPerFrame;
-    angle = std::fmod(angle, 360.0);
+    angle = std::fmod(angle, 2 * M_PI);
 
     *p_angle = angle;
 }
@@ -158,11 +163,11 @@ void TimeManager::angleSpeedDec(double* p_angle, double p_angleSpeed)
     double angle{ *p_angle };
 
     angle -= angleSpeedDegPerFrame;
-    angle = std::fmod(angle, 360.0);
+    angle = std::fmod(angle, 2 * M_PI);
 
     if (*p_angle <= 0.0f)
     {
-        angle = 360.0 + angle;
+        angle = 2 * M_PI + angle;
     }
 
     *p_angle = angle;

@@ -961,7 +961,7 @@ void RootImpl::run(void)
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 		quad_time_aspect.addComponent<SyncVariable>("quad0_color", SyncVariable(SyncVariable::Type::POSITION, 1.0));
 
-		quad_time_aspect.addComponent<SyncVariable>("y_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 1.0));
+		quad_time_aspect.addComponent<SyncVariable>("y_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 0.2, false));
 
 		/////////// World position
 
