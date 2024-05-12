@@ -33,6 +33,7 @@
 #include "datacloud.h"
 #include "tvector.h"
 #include "renderingqueue.h"
+#include "syncvariable.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -72,6 +73,8 @@ void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
 
 void DataPrintSystem::collectData()
 {
+	/////// collect datacloud vars
+
 	m_dc_strings.clear();
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
@@ -201,6 +204,39 @@ void DataPrintSystem::collectData()
 
 		m_dc_strings.push_back(var_str_value);
 	}
+
+	/////// collect sync vars
+
+	m_sv_strings.clear();
+
+	const auto forEachTimeAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_time_aspect)
+		{
+			const auto comps { p_time_aspect.getComponentsIdList() };
+			const size_t sv_hash{ typeid(core::SyncVariable).hash_code() };
+
+			for (const auto& e : comps)
+			{
+				if (e.second == sv_hash)
+				{
+					const std::string id{ e.first };
+
+					const auto& sync_var{ p_time_aspect.getComponent<core::SyncVariable>(id)->getPurpose() };
+
+					const std::string type { core::SyncVariable::Type::ANGLE == sync_var.type ? "ANGLE" : "POS" };
+					const std::string direction { sync_var.increment ? "INC" : "DEC" };
+					const std::string value { std::to_string(sync_var.value) };
+					const std::string step { std::to_string(sync_var.step) };
+					const std::string var_str_value{ "syncv." + id + " = " + value + "(" + direction + " " + step + ")"};
+
+					m_sv_strings.push_back(var_str_value);
+				}
+			}
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::timeAspect>(m_entitygraph, forEachTimeAspect);
 }
 
 void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
