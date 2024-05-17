@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <random>
+
 #include "module_root.h"
 
 #include "entity.h"
@@ -90,7 +92,8 @@ private:
     bool                                    m_quadEntity2_state_request{ true };
     bool                                    m_quadEntity2_state{ false };
 
-
+    std::default_random_engine              m_generator;
+    std::uniform_real_distribution<double>  m_distribution;
 };
 
 

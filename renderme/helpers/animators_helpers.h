@@ -287,6 +287,41 @@ namespace renderMe
 				return animator;
 			}
 
+			auto makeOscillationJointAnimator()
+			{
+				const auto animator
+				{
+					[](const core::ComponentContainer& p_world_aspect,
+						const core::ComponentContainer& p_time_aspect,
+						const transform::WorldPosition& p_parent_pos,
+						const std::unordered_map<std::string, std::string>& p_keys)
+					{
+						transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>(p_keys.at("oscillationJointAnim.output"))->getPurpose() };
+						const auto& osc1{ p_time_aspect.getComponent<core::SyncVariable>(p_keys.at("oscillationJointAnim.oscillation1"))->getPurpose() };
+
+						const auto& osc2{ p_time_aspect.getComponent<core::SyncVariable>(p_keys.at("oscillationJointAnim.oscillation2"))->getPurpose() };
+
+						core::maths::Quaternion quat1;
+						quat1.rotationAxis(core::maths::Real3Vector(-0.5, 1.0, 0.0), 0.10);
+
+						core::maths::Quaternion quat2;
+						quat2.rotationAxis(core::maths::Real3Vector(1.0, -1.0, 0.0), 0.06);
+
+						core::maths::Quaternion quat3;
+						quat3.rotationAxis(core::maths::Real3Vector(0.0, 1.0, 0.9), 0.13);
+
+						const auto final_quat{ core::maths::Quaternion::lerp( std::move(core::maths::Quaternion::lerp(quat1, quat2, osc1.value)), quat3, osc2.value) };
+						
+						core::maths::Matrix orientation;
+						final_quat.rotationMatFrom(orientation);
+
+		
+						wp.local_pos = wp.local_pos * orientation;
+					}
+				};
+
+				return animator;
+			}
 		}
 	}
 }

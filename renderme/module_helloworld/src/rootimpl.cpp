@@ -58,7 +58,8 @@ using namespace renderMe::core;
 using namespace renderMe::rendering;
 
 
-RootImpl::RootImpl()
+RootImpl::RootImpl() :
+m_distribution(0.15, 0.65)
 {
 	/////////// create common specific logger for events
 	services::LoggerSharing::getInstance()->createLogger("Events");
@@ -1173,15 +1174,34 @@ void RootImpl::run(void)
 		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
 
 
+		/////////// time aspect
 
-		quadEntity->makeAspect(core::timeAspect::id);
+		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
+		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation1", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), true));
+
+	
+		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation2", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), true));
+
 
 
 		/////////// World position
 
+
+
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
-		world_aspect.addComponent<transform::WorldPosition>("position"/*, transform::WorldPosition(positionmat)*/);
+		world_aspect.addComponent<transform::WorldPosition>("position");
+
+
+		world_aspect.addComponent<transform::Animator>("animator_osc", transform::Animator(
+			{
+				// input-output/components keys id mapping
+
+				{"oscillationJointAnim.oscillation1", "quad2_oscillation1"},
+				{"oscillationJointAnim.oscillation2", "quad2_oscillation2"},
+				{"oscillationJointAnim.output", "position"}
+
+			}, helpers::animators::makeOscillationJointAnimator()));
 
 		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 		(
@@ -1201,12 +1221,14 @@ void RootImpl::run(void)
 		));
 
 
+
 		m_quadEntity2_state = true;
 	}
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
 	{
 		// remove quadEntity2
 		dataCloud->removeData<maths::Real4Vector>("quad2_color");
+		
 
 		auto& quadNode{ m_entitygraph.node("quadEntity2") };
 		m_entitygraph.remove(quadNode);
@@ -1280,8 +1302,50 @@ void RootImpl::run(void)
 
 		dataCloud->updateDataValue("quad1_color", mycolor);
 	}
-	
-	
+
+
+	if (m_quadEntity2_state)
+	{
+		auto& quadNode{ m_entitygraph.node("quadEntity2") };
+
+		const auto quadEntity{ quadNode.data() };
+		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
+
+		renderMe::core::SyncVariable& osc1{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation1")->getPurpose() };
+		if (osc1.value > 1.0)
+		{
+			osc1.value = 1.0;
+			osc1.increment = false;
+
+			osc1.step = m_distribution(m_generator);
+		}
+		else if (osc1.value < 0.0)
+		{
+			osc1.value = 0.0;
+			osc1.increment = true;
+
+			osc1.step = m_distribution(m_generator);
+		}
+
+		
+
+		renderMe::core::SyncVariable& osc2{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation2")->getPurpose() };
+		if (osc2.value > 1.0)
+		{
+			osc2.value = 1.0;
+			osc2.increment = false;
+
+			osc2.step = m_distribution(m_generator);
+		}
+		else if (osc2.value < 0.0)
+		{
+			osc2.value = 0.0;
+			osc2.increment = true;
+
+			osc2.step = m_distribution(m_generator);
+		}
+
+	}	
 }
 
 void RootImpl::close(void)
