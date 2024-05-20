@@ -1192,10 +1192,26 @@ void RootImpl::run(void)
 
 		world_aspect.addComponent<transform::WorldPosition>("position");
 
+		core::maths::Quaternion quat1;
+		quat1.rotationAxis(core::maths::Real3Vector(-0.5, 1.0, 0.0), 0.10);
 
+		core::maths::Quaternion quat2;
+		quat2.rotationAxis(core::maths::Real3Vector(1.0, -1.0, 0.0), 0.06);
+
+		core::maths::Quaternion quat3;
+		quat3.rotationAxis(core::maths::Real3Vector(0.0, 1.0, 0.9), 0.13);
+
+		world_aspect.addComponent < core::maths::Quaternion>("quat1", quat1);
+		world_aspect.addComponent < core::maths::Quaternion>("quat2", quat2);
+		world_aspect.addComponent < core::maths::Quaternion>("quat3", quat3);
+	
 		world_aspect.addComponent<transform::Animator>("animator_osc", transform::Animator(
 			{
 				// input-output/components keys id mapping
+
+				{"oscillationJointAnim.quat1", "quat1"},
+				{"oscillationJointAnim.quat2", "quat2"},
+				{"oscillationJointAnim.quat3", "quat3"},
 
 				{"oscillationJointAnim.oscillation1", "quad2_oscillation1"},
 				{"oscillationJointAnim.oscillation2", "quad2_oscillation2"},
