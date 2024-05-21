@@ -197,7 +197,7 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
 {
     if (SyncVariable::Type::ANGLE == p_variable.type)
     {
-        if (p_variable.increment)
+        if (SyncVariable::Direction::INC == p_variable.direction)
         {
             angleSpeedInc(&p_variable.value, p_variable.step);
         }
@@ -208,7 +208,7 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
     }
     else if (SyncVariable::Type::POSITION == p_variable.type)
     {
-        if (p_variable.increment)
+        if (SyncVariable::Direction::INC == p_variable.direction)
         {
             translationSpeedInc(&p_variable.value, p_variable.step);
         }

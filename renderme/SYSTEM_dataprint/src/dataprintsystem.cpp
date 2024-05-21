@@ -225,7 +225,7 @@ void DataPrintSystem::collectData()
 					const auto& sync_var{ p_time_aspect.getComponent<core::SyncVariable>(id)->getPurpose() };
 
 					const std::string type { core::SyncVariable::Type::ANGLE == sync_var.type ? "ANGLE" : "POS" };
-					const std::string direction { sync_var.increment ? "INC" : "DEC" };
+					const std::string direction { SyncVariable::Direction::INC == sync_var.direction ? "INC" : "DEC" };
 					const std::string value { std::to_string(sync_var.value) };
 					const std::string step { std::to_string(sync_var.step) };
 					const std::string var_str_value{ "syncv." + id + " = " + value + "(" + direction + " " + step + ")"};

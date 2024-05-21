@@ -37,21 +37,27 @@ namespace renderMe
                 POSITION
             };
 
+            enum class Direction
+            {
+                INC,
+                DEC
+            };
+
             SyncVariable() = default;
             ~SyncVariable() = default;
 
-            SyncVariable(Type p_type, double p_step, bool p_increment = true, double p_initial_value = 0.0) :
+            SyncVariable(Type p_type, double p_step, Direction p_direction = Direction::INC, double p_initial_value = 0.0) :
                 type(p_type),
                 step(p_step),
-                increment(p_increment),
+                direction(p_direction),
                 value(p_initial_value)
             {
             };
 
-            double  value{ 0.0 };
-            double  step{ 0.0 };
-            bool    increment{ true };
-            Type    type;
+            double      value{ 0.0 };
+            double      step{ 0.0 };
+            Direction   direction{ Direction::INC };
+            Type        type;
         };
 	}
 }

@@ -118,7 +118,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
-			z_slide_pos.increment = false;
+			z_slide_pos.direction = SyncVariable::Direction::DEC;
 			z_slide_pos.step = 5.0;
 		}
 	}
@@ -154,7 +154,7 @@ void RootImpl::onKeyPress(long p_key)
 
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
-			z_slide_pos.increment = true;
+			z_slide_pos.direction = SyncVariable::Direction::INC;
 			z_slide_pos.step = 5.0;
 		}
 	}
@@ -234,7 +234,7 @@ void RootImpl::onKeyPress(long p_key)
 		{
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
 
-			x_slide_pos.increment = false;
+			x_slide_pos.direction = SyncVariable::Direction::DEC;
 			x_slide_pos.step = 5.0;
 
 		}
@@ -242,7 +242,7 @@ void RootImpl::onKeyPress(long p_key)
 		{
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
 
-			x_slide_pos.increment = true;
+			x_slide_pos.direction = SyncVariable::Direction::INC;
 			x_slide_pos.step = 5.0;
 
 		}
@@ -754,9 +754,9 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 						slider_world_aspect.addComponent<transform::WorldPosition>("slider_output");
 
-						slider_time_aspect.addComponent<SyncVariable>("x_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, true, 3.0));
-						slider_time_aspect.addComponent<SyncVariable>("y_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, true, 4.0));
-						slider_time_aspect.addComponent<SyncVariable>("z_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, true, 0.0));
+						slider_time_aspect.addComponent<SyncVariable>("x_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 3.0));
+						slider_time_aspect.addComponent<SyncVariable>("y_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 4.0));
+						slider_time_aspect.addComponent<SyncVariable>("z_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 0.0));
 
 						slider_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
@@ -962,7 +962,7 @@ void RootImpl::run(void)
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 		quad_time_aspect.addComponent<SyncVariable>("quad0_color", SyncVariable(SyncVariable::Type::POSITION, 1.0));
 
-		quad_time_aspect.addComponent<SyncVariable>("y_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 0.2, false));
+		quad_time_aspect.addComponent<SyncVariable>("y_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 0.2, SyncVariable::Direction::DEC));
 
 		/////////// World position
 
@@ -1177,10 +1177,10 @@ void RootImpl::run(void)
 		/////////// time aspect
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
-		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation1", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), true));
+		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation1", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), SyncVariable::Direction::INC));
 
 	
-		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation2", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), true));
+		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation2", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), SyncVariable::Direction::INC));
 
 
 
@@ -1270,12 +1270,12 @@ void RootImpl::run(void)
 		if (mycolor_r.value > 1.0)
 		{
 			mycolor_r.value = 1.0;
-			mycolor_r.increment = false;
+			mycolor_r.direction = SyncVariable::Direction::DEC;
 		}
 		else if (mycolor_r.value < 0.0)
 		{
 			mycolor_r.value = 0.0;
-			mycolor_r.increment = true;
+			mycolor_r.direction = SyncVariable::Direction::INC;
 		}
 
 		maths::Real4Vector mycolor;
@@ -1301,12 +1301,12 @@ void RootImpl::run(void)
 		if (mycolor_r.value > 1.0)
 		{
 			mycolor_r.value = 1.0;
-			mycolor_r.increment = false;
+			mycolor_r.direction = SyncVariable::Direction::DEC;
 		}
 		else if (mycolor_r.value < 0.0)
 		{
 			mycolor_r.value = 0.0;
-			mycolor_r.increment = true;
+			mycolor_r.direction = SyncVariable::Direction::INC;
 		}
 
 		maths::Real4Vector mycolor;
@@ -1331,14 +1331,14 @@ void RootImpl::run(void)
 		if (osc1.value > 1.0)
 		{
 			osc1.value = 1.0;
-			osc1.increment = false;
+			osc1.direction = SyncVariable::Direction::DEC;
 
 			osc1.step = m_distribution(m_generator);
 		}
 		else if (osc1.value < 0.0)
 		{
 			osc1.value = 0.0;
-			osc1.increment = true;
+			osc1.direction = SyncVariable::Direction::INC;
 
 			osc1.step = m_distribution(m_generator);
 		}
@@ -1349,14 +1349,14 @@ void RootImpl::run(void)
 		if (osc2.value > 1.0)
 		{
 			osc2.value = 1.0;
-			osc2.increment = false;
+			osc2.direction = SyncVariable::Direction::DEC;
 
 			osc2.step = m_distribution(m_generator);
 		}
 		else if (osc2.value < 0.0)
 		{
 			osc2.value = 0.0;
-			osc2.increment = true;
+			osc2.direction = SyncVariable::Direction::INC;
 
 			osc2.step = m_distribution(m_generator);
 		}
