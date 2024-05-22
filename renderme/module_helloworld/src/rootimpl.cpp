@@ -1070,7 +1070,7 @@ void RootImpl::run(void)
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };		
-		quad_time_aspect.addComponent<SyncVariable>("quad1_color", SyncVariable(SyncVariable::Type::POSITION, 0.43));
+		quad_time_aspect.addComponent<SyncVariable>("quad1_color", SyncVariable(SyncVariable::Type::POSITION, 0.43, SyncVariable::Direction::INC, 0.0, { 0.0, 1.0 }, SyncVariable::BoundariesManagement::MIRROR));
 
 		/////////// World position
 
@@ -1177,10 +1177,12 @@ void RootImpl::run(void)
 		/////////// time aspect
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
-		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation1", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), SyncVariable::Direction::INC));
+		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation1", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), 
+																			SyncVariable::Direction::INC, 0.0, { 0.0, 1.0 }, SyncVariable::BoundariesManagement::MIRROR));
 
 	
-		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation2", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), SyncVariable::Direction::INC));
+		quad_time_aspect.addComponent<SyncVariable>("quad2_oscillation2", SyncVariable(SyncVariable::Type::POSITION, m_distribution(m_generator), 
+																			SyncVariable::Direction::INC, 0.0, { 0.0, 1.0 }, SyncVariable::BoundariesManagement::MIRROR));
 
 
 
@@ -1267,19 +1269,6 @@ void RootImpl::run(void)
 
 		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad0_color")->getPurpose() };
 
-		/*
-		if (mycolor_r.value > 1.0)
-		{
-			mycolor_r.value = 1.0;
-			mycolor_r.direction = SyncVariable::Direction::DEC;
-		}
-		else if (mycolor_r.value < 0.0)
-		{
-			mycolor_r.value = 0.0;
-			mycolor_r.direction = SyncVariable::Direction::INC;
-		}
-		*/
-
 		maths::Real4Vector mycolor;
 
 		mycolor[0] = mycolor_r.value;
@@ -1300,17 +1289,6 @@ void RootImpl::run(void)
 
 		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad1_color")->getPurpose() };
 
-		if (mycolor_r.value > 1.0)
-		{
-			mycolor_r.value = 1.0;
-			mycolor_r.direction = SyncVariable::Direction::DEC;
-		}
-		else if (mycolor_r.value < 0.0)
-		{
-			mycolor_r.value = 0.0;
-			mycolor_r.direction = SyncVariable::Direction::INC;
-		}
-
 		maths::Real4Vector mycolor;
 
 		mycolor[0] = mycolor_r.value;
@@ -1330,17 +1308,12 @@ void RootImpl::run(void)
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
 		renderMe::core::SyncVariable& osc1{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation1")->getPurpose() };
-		if (osc1.value > 1.0)
+		if (osc1.value == 1.0)
 		{
-			osc1.value = 1.0;
-			osc1.direction = SyncVariable::Direction::DEC;
-
 			osc1.step = m_distribution(m_generator);
 		}
-		else if (osc1.value < 0.0)
+		else if (osc1.value == 0.0)
 		{
-			osc1.value = 0.0;
-			osc1.direction = SyncVariable::Direction::INC;
 
 			osc1.step = m_distribution(m_generator);
 		}
@@ -1348,21 +1321,14 @@ void RootImpl::run(void)
 		
 
 		renderMe::core::SyncVariable& osc2{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation2")->getPurpose() };
-		if (osc2.value > 1.0)
+		if (osc2.value == 1.0)
 		{
-			osc2.value = 1.0;
-			osc2.direction = SyncVariable::Direction::DEC;
-
 			osc2.step = m_distribution(m_generator);
 		}
-		else if (osc2.value < 0.0)
+		else if (osc2.value == 0.0)
 		{
-			osc2.value = 0.0;
-			osc2.direction = SyncVariable::Direction::INC;
-
 			osc2.step = m_distribution(m_generator);
 		}
-
 	}	
 }
 
