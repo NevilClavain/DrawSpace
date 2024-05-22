@@ -960,7 +960,7 @@ void RootImpl::run(void)
 
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
-		quad_time_aspect.addComponent<SyncVariable>("quad0_color", SyncVariable(SyncVariable::Type::POSITION, 1.0));
+		quad_time_aspect.addComponent<SyncVariable>("quad0_color", SyncVariable(SyncVariable::Type::POSITION, 0.5, SyncVariable::Direction::INC, 0.0, { 0.0, 1.0 }, SyncVariable::BoundariesManagement::MIRROR));
 
 		quad_time_aspect.addComponent<SyncVariable>("y_rotation_angle", SyncVariable(SyncVariable::Type::ANGLE, 0.2, SyncVariable::Direction::DEC));
 
@@ -1267,6 +1267,7 @@ void RootImpl::run(void)
 
 		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad0_color")->getPurpose() };
 
+		/*
 		if (mycolor_r.value > 1.0)
 		{
 			mycolor_r.value = 1.0;
@@ -1277,6 +1278,7 @@ void RootImpl::run(void)
 			mycolor_r.value = 0.0;
 			mycolor_r.direction = SyncVariable::Direction::INC;
 		}
+		*/
 
 		maths::Real4Vector mycolor;
 

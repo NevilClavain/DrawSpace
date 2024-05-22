@@ -200,10 +200,62 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
         if (SyncVariable::Direction::INC == p_variable.direction)
         {
             angleSpeedInc(&p_variable.value, p_variable.step);
+
+            if (p_variable.boundaries.max != NAN)
+            {
+                if (p_variable.value > p_variable.boundaries.max)
+                {
+                    switch (p_variable.boundaries_management)
+                    {
+                        case SyncVariable::BoundariesManagement::STOP:
+
+                            p_variable.value = p_variable.boundaries.max;
+                            p_variable.direction = SyncVariable::Direction::ZERO;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::MIRROR:
+
+                            p_variable.value = p_variable.boundaries.max;
+                            p_variable.direction = SyncVariable::Direction::DEC;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::WRAP:
+
+                            p_variable.value = p_variable.boundaries.min;
+                            break;
+                    }
+                }
+            }
         }
-        else
+        else if(SyncVariable::Direction::DEC == p_variable.direction)
         {
             angleSpeedDec(&p_variable.value, p_variable.step);
+
+            if (p_variable.boundaries.min != NAN)
+            {
+                if (p_variable.value < p_variable.boundaries.min)
+                {
+                    switch (p_variable.boundaries_management)
+                    {
+                        case SyncVariable::BoundariesManagement::STOP:
+
+                            p_variable.value = p_variable.boundaries.min;
+                            p_variable.direction = SyncVariable::Direction::ZERO;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::MIRROR:
+
+                            p_variable.value = p_variable.boundaries.min;
+                            p_variable.direction = SyncVariable::Direction::INC;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::WRAP:
+
+                            p_variable.value = p_variable.boundaries.max;
+                            break;
+                    }
+                }
+            }
         }
     }
     else if (SyncVariable::Type::POSITION == p_variable.type)
@@ -211,10 +263,62 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
         if (SyncVariable::Direction::INC == p_variable.direction)
         {
             translationSpeedInc(&p_variable.value, p_variable.step);
+
+            if (p_variable.boundaries.max != NAN)
+            {
+                if (p_variable.value > p_variable.boundaries.max)
+                {                   
+                    switch (p_variable.boundaries_management)
+                    {
+                        case SyncVariable::BoundariesManagement::STOP:
+
+                            p_variable.value = p_variable.boundaries.max;
+                            p_variable.direction = SyncVariable::Direction::ZERO;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::MIRROR:
+
+                            p_variable.value = p_variable.boundaries.max;
+                            p_variable.direction = SyncVariable::Direction::DEC;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::WRAP:
+
+                            p_variable.value = p_variable.boundaries.min;
+                            break;
+                    }
+                }
+            }
         }
-        else
+        else if (SyncVariable::Direction::DEC == p_variable.direction)
         {
             translationSpeedDec(&p_variable.value, p_variable.step);
+
+            if (p_variable.boundaries.min != NAN)
+            {
+                if (p_variable.value < p_variable.boundaries.min)
+                {
+                    switch (p_variable.boundaries_management)
+                    {
+                        case SyncVariable::BoundariesManagement::STOP:
+
+                            p_variable.value = p_variable.boundaries.min;
+                            p_variable.direction = SyncVariable::Direction::ZERO;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::MIRROR:
+
+                            p_variable.value = p_variable.boundaries.min;
+                            p_variable.direction = SyncVariable::Direction::INC;
+                            break;
+
+                        case SyncVariable::BoundariesManagement::WRAP:
+
+                            p_variable.value = p_variable.boundaries.max;
+                            break;
+                    }
+                }
+            }
         }
     }
 }

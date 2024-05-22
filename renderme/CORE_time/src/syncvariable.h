@@ -40,24 +40,46 @@ namespace renderMe
             enum class Direction
             {
                 INC,
-                DEC
+                DEC,
+                ZERO
+            };
+
+            enum class BoundariesManagement
+            {
+                STOP,
+                MIRROR,
+                WRAP
+            };
+
+            struct Boundaries
+            {
+                double  min;
+                double  max;
             };
 
             SyncVariable() = default;
             ~SyncVariable() = default;
 
-            SyncVariable(Type p_type, double p_step, Direction p_direction = Direction::INC, double p_initial_value = 0.0) :
+            SyncVariable(Type p_type, double p_step, Direction p_direction = Direction::INC, 
+                            double p_initial_value = 0.0, Boundaries p_boundaries = { NAN, NAN }, 
+                            BoundariesManagement p_boundariesManagement = { BoundariesManagement::STOP } ) :
+
                 type(p_type),
                 step(p_step),
                 direction(p_direction),
-                value(p_initial_value)
+                value(p_initial_value),
+                boundaries(p_boundaries),
+                boundaries_management(p_boundariesManagement)
             {
             };
 
-            double      value{ 0.0 };
-            double      step{ 0.0 };
-            Direction   direction{ Direction::INC };
-            Type        type;
+            double                  value{ 0.0 };
+            double                  step{ 0.0 };
+            Direction               direction{ Direction::INC };
+            Type                    type;
+            Boundaries              boundaries{ NAN, NAN };
+            BoundariesManagement    boundaries_management{ BoundariesManagement::STOP };
+            
         };
 	}
 }
