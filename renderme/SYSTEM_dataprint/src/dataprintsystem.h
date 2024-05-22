@@ -63,10 +63,10 @@ namespace renderMe
         static constexpr int                    dcColWidth{ 500 };
         static constexpr int                    dcRowHeight{ 25 };
 
-        static constexpr int                    svNbCols{ 5 };
+        static constexpr int                    svNbCols{ 4 };
         static constexpr int                    svNbRows{ 10 };
 
-        static constexpr int                    svColWidth{ 400 };
+        static constexpr int                    svColWidth{ 500 };
         static constexpr int                    svRowHeight{ 25 };
 
         renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
