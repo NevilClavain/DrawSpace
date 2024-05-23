@@ -119,7 +119,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
 			z_slide_pos.direction = SyncVariable::Direction::DEC;
-			z_slide_pos.step = 5.0;
+			z_slide_pos.nominal_step = 5.0;
 		}
 	}
 	else if ('W' == p_key)
@@ -155,7 +155,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
 			z_slide_pos.direction = SyncVariable::Direction::INC;
-			z_slide_pos.step = 5.0;
+			z_slide_pos.nominal_step = 5.0;
 		}
 	}
 
@@ -235,7 +235,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
 
 			x_slide_pos.direction = SyncVariable::Direction::DEC;
-			x_slide_pos.step = 5.0;
+			x_slide_pos.nominal_step = 5.0;
 
 		}
 		else if (VK_RIGHT == p_key)
@@ -243,7 +243,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
 
 			x_slide_pos.direction = SyncVariable::Direction::INC;
-			x_slide_pos.step = 5.0;
+			x_slide_pos.nominal_step = 5.0;
 
 		}
 		else if (VK_UP == p_key)
@@ -381,7 +381,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
-			z_slide_pos.step = 0.0;
+			z_slide_pos.nominal_step = 0.0;
 		}
 	}
 
@@ -417,7 +417,7 @@ void RootImpl::onEndKeyPress(long p_key)
 
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
-			z_slide_pos.step = 0.0;
+			z_slide_pos.nominal_step = 0.0;
 		}
 	}
 
@@ -496,13 +496,13 @@ void RootImpl::onEndKeyPress(long p_key)
 		if (VK_LEFT == p_key)
 		{
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
-			x_slide_pos.step = 0.0;
+			x_slide_pos.nominal_step = 0.0;
 
 		}
 		else if (VK_RIGHT == p_key)
 		{
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
-			x_slide_pos.step = 0.0;
+			x_slide_pos.nominal_step = 0.0;
 		}
 		else if (VK_UP == p_key)
 		{
@@ -1310,12 +1310,12 @@ void RootImpl::run(void)
 		renderMe::core::SyncVariable& osc1{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation1")->getPurpose() };
 		if (osc1.value == 1.0)
 		{
-			osc1.step = m_distribution(m_generator);
+			osc1.nominal_step = m_distribution(m_generator);
 		}
 		else if (osc1.value == 0.0)
 		{
 
-			osc1.step = m_distribution(m_generator);
+			osc1.nominal_step = m_distribution(m_generator);
 		}
 
 		
@@ -1323,11 +1323,11 @@ void RootImpl::run(void)
 		renderMe::core::SyncVariable& osc2{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation2")->getPurpose() };
 		if (osc2.value == 1.0)
 		{
-			osc2.step = m_distribution(m_generator);
+			osc2.nominal_step = m_distribution(m_generator);
 		}
 		else if (osc2.value == 0.0)
 		{
-			osc2.step = m_distribution(m_generator);
+			osc2.nominal_step = m_distribution(m_generator);
 		}
 	}	
 }

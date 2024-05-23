@@ -247,7 +247,7 @@ void DataPrintSystem::collectData()
 
 
 					const std::string value { std::to_string(sync_var.value) };
-					const std::string step { std::to_string(sync_var.step) };
+					const std::string step { std::to_string(sync_var.current_step) };
 					const std::string var_str_value{ "syncv." + id + " = " + value + "(" + direction + " " + step + ")"};
 
 					m_sv_strings.push_back(var_str_value);

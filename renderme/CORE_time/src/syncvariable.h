@@ -65,7 +65,7 @@ namespace renderMe
                             BoundariesManagement p_boundariesManagement = { BoundariesManagement::STOP } ) :
 
                 type(p_type),
-                step(p_step),
+                nominal_step(p_step),
                 direction(p_direction),
                 value(p_initial_value),
                 boundaries(p_boundaries),
@@ -74,7 +74,9 @@ namespace renderMe
             };
 
             double                  value{ 0.0 };
-            double                  step{ 0.0 };
+            double                  nominal_step{ 0.0 };
+            double                  current_step{ 0.0 };
+
             Direction               direction{ Direction::INC };
             Type                    type;
             Boundaries              boundaries{ NAN, NAN };
