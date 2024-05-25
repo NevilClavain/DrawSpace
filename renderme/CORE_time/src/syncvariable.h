@@ -51,6 +51,12 @@ namespace renderMe
                 WRAP
             };
 
+            enum class State
+            {
+                ON,
+                OFF
+            };
+
             struct Boundaries
             {
                 double  min;
@@ -76,6 +82,8 @@ namespace renderMe
             double                  value{ 0.0 };
             double                  nominal_step{ 0.0 };
             double                  current_step{ 0.0 };
+
+            State                   state{ State::ON };
 
             Direction               direction{ Direction::INC };
             Type                    type;

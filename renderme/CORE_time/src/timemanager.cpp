@@ -195,6 +195,11 @@ void TimeManager::translationSpeedDec(double* p_translation, double p_speed)
 
 void TimeManager::manageVariable(SyncVariable& p_variable)
 {
+    if (p_variable.state == SyncVariable::State::OFF)
+    {
+        return;
+    }
+
     // TEMP
     p_variable.current_step = p_variable.nominal_step;
 

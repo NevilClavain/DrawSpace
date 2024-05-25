@@ -119,7 +119,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
 			z_slide_pos.direction = SyncVariable::Direction::DEC;
-			z_slide_pos.nominal_step = 5.0;
+			z_slide_pos.state = SyncVariable::State::ON;
 		}
 	}
 	else if ('W' == p_key)
@@ -155,7 +155,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
 
 			z_slide_pos.direction = SyncVariable::Direction::INC;
-			z_slide_pos.nominal_step = 5.0;
+			z_slide_pos.state = SyncVariable::State::ON;
 		}
 	}
 
@@ -235,7 +235,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
 
 			x_slide_pos.direction = SyncVariable::Direction::DEC;
-			x_slide_pos.nominal_step = 5.0;
+			x_slide_pos.state = SyncVariable::State::ON;
 
 		}
 		else if (VK_RIGHT == p_key)
@@ -243,7 +243,7 @@ void RootImpl::onKeyPress(long p_key)
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
 
 			x_slide_pos.direction = SyncVariable::Direction::INC;
-			x_slide_pos.nominal_step = 5.0;
+			x_slide_pos.state = SyncVariable::State::ON;
 
 		}
 		else if (VK_UP == p_key)
@@ -380,8 +380,7 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
 
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
-
-			z_slide_pos.nominal_step = 0.0;
+			z_slide_pos.state = SyncVariable::State::OFF;
 		}
 	}
 
@@ -416,8 +415,7 @@ void RootImpl::onEndKeyPress(long p_key)
 			auto& slider_time_aspect{ sliderJointEntity->aspectAccess(core::timeAspect::id) };
 
 			auto& z_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("z_slide_pos")->getPurpose() };
-
-			z_slide_pos.nominal_step = 0.0;
+			z_slide_pos.state = SyncVariable::State::OFF;
 		}
 	}
 
@@ -496,13 +494,13 @@ void RootImpl::onEndKeyPress(long p_key)
 		if (VK_LEFT == p_key)
 		{
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
-			x_slide_pos.nominal_step = 0.0;
+			x_slide_pos.state = SyncVariable::State::OFF;
 
 		}
 		else if (VK_RIGHT == p_key)
 		{
 			auto& x_slide_pos{ slider_time_aspect.getComponent< SyncVariable>("x_slide_pos")->getPurpose() };
-			x_slide_pos.nominal_step = 0.0;
+			x_slide_pos.state = SyncVariable::State::OFF;
 		}
 		else if (VK_UP == p_key)
 		{
@@ -754,9 +752,18 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 						slider_world_aspect.addComponent<transform::WorldPosition>("slider_output");
 
-						slider_time_aspect.addComponent<SyncVariable>("x_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 3.0));
-						slider_time_aspect.addComponent<SyncVariable>("y_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 4.0));
-						slider_time_aspect.addComponent<SyncVariable>("z_slide_pos", SyncVariable(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 0.0));
+						SyncVariable x_slide_pos(SyncVariable::Type::POSITION, 5.0, SyncVariable::Direction::INC, 3.0);
+						x_slide_pos.state = SyncVariable::State::OFF;
+
+						SyncVariable y_slide_pos(SyncVariable::Type::POSITION, 0.0, SyncVariable::Direction::INC, 4.0);
+						y_slide_pos.state = SyncVariable::State::OFF;
+
+						SyncVariable z_slide_pos(SyncVariable::Type::POSITION, 5.0, SyncVariable::Direction::INC, 0.0);
+						z_slide_pos.state = SyncVariable::State::OFF;
+
+						slider_time_aspect.addComponent<SyncVariable>("x_slide_pos", x_slide_pos);
+						slider_time_aspect.addComponent<SyncVariable>("y_slide_pos", y_slide_pos);
+						slider_time_aspect.addComponent<SyncVariable>("z_slide_pos", z_slide_pos);
 
 						slider_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 							{
