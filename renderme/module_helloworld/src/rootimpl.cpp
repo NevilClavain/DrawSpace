@@ -1317,12 +1317,12 @@ void RootImpl::run(void)
 		renderMe::core::SyncVariable& osc1{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation1")->getPurpose() };
 		if (osc1.value == 1.0)
 		{
-			osc1.nominal_step = m_distribution(m_generator);
+			osc1.step = m_distribution(m_generator);
 		}
 		else if (osc1.value == 0.0)
 		{
 
-			osc1.nominal_step = m_distribution(m_generator);
+			osc1.step = m_distribution(m_generator);
 		}
 
 		
@@ -1330,11 +1330,11 @@ void RootImpl::run(void)
 		renderMe::core::SyncVariable& osc2{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation2")->getPurpose() };
 		if (osc2.value == 1.0)
 		{
-			osc2.nominal_step = m_distribution(m_generator);
+			osc2.step = m_distribution(m_generator);
 		}
 		else if (osc2.value == 0.0)
 		{
-			osc2.nominal_step = m_distribution(m_generator);
+			osc2.step = m_distribution(m_generator);
 		}
 	}	
 }

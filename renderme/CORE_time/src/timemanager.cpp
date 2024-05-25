@@ -200,15 +200,11 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
         return;
     }
 
-    // TEMP
-    p_variable.current_step = p_variable.nominal_step;
-
-
     if (SyncVariable::Type::ANGLE == p_variable.type)
     {
         if (SyncVariable::Direction::INC == p_variable.direction)
         {
-            angleSpeedInc(&p_variable.value, p_variable.current_step);
+            angleSpeedInc(&p_variable.value, p_variable.step);
 
             if (p_variable.boundaries.max != NAN)
             {
@@ -238,7 +234,7 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
         }
         else if(SyncVariable::Direction::DEC == p_variable.direction)
         {
-            angleSpeedDec(&p_variable.value, p_variable.current_step);
+            angleSpeedDec(&p_variable.value, p_variable.step);
 
             if (p_variable.boundaries.min != NAN)
             {
@@ -271,7 +267,7 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
     {
         if (SyncVariable::Direction::INC == p_variable.direction)
         {
-            translationSpeedInc(&p_variable.value, p_variable.current_step);
+            translationSpeedInc(&p_variable.value, p_variable.step);
 
             if (p_variable.boundaries.max != NAN)
             {
@@ -301,7 +297,7 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
         }
         else if (SyncVariable::Direction::DEC == p_variable.direction)
         {
-            translationSpeedDec(&p_variable.value, p_variable.current_step);
+            translationSpeedDec(&p_variable.value, p_variable.step);
 
             if (p_variable.boundaries.min != NAN)
             {
