@@ -23,18 +23,18 @@
 */
 /* -*-LIC_END-*- */
 
-#include "rootimpl.h"
+#include "module_impl.h"
 
 extern "C"
 {
     __declspec(dllexport) renderMe::interfaces::ModuleRoot* moduleFactory(void)
     {
-        return new RootImpl;
+        return new ModuleImpl;
     }
 
     __declspec(dllexport) void moduleTrash(renderMe::interfaces::ModuleRoot* p_itf)
     {
-        RootImpl* itf = static_cast<RootImpl*>(p_itf);
+        ModuleImpl* itf = static_cast<ModuleImpl*>(p_itf);
         delete itf;
     }
 }

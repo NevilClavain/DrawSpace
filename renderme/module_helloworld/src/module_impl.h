@@ -33,15 +33,15 @@
 #include "entitygraph.h"
 #include "renderingqueue.h"
 
-class RootImpl : public renderMe::interfaces::ModuleRoot
+class ModuleImpl : public renderMe::interfaces::ModuleRoot
 {
 public:
-    RootImpl();
-    ~RootImpl() = default;
+    ModuleImpl();
+    ~ModuleImpl() = default;
 
-    RootImpl(const RootImpl&) = delete;
-    RootImpl(RootImpl&&) = delete;
-    RootImpl& operator=(const RootImpl& t) = delete;
+    ModuleImpl(const ModuleImpl&) = delete;
+    ModuleImpl(ModuleImpl&&) = delete;
+    ModuleImpl& operator=(const ModuleImpl& t) = delete;
 
 
     std::string                     getModuleName() const;

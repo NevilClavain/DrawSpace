@@ -22,7 +22,8 @@
 */
 /* -*-LIC_END-*- */
 
-#include "rootimpl.h"
+#include "module_impl.h"
+
 #include "aspects.h"
 #include "sysengine.h"
 #include "d3d11system.h"
@@ -58,7 +59,7 @@ using namespace renderMe::core;
 using namespace renderMe::rendering;
 
 
-RootImpl::RootImpl() :
+ModuleImpl::ModuleImpl() :
 m_distribution(0.15, 0.65)
 {
 	/////////// create common specific logger for events
@@ -66,22 +67,22 @@ m_distribution(0.15, 0.65)
 
 }
 
-std::string RootImpl::getModuleName() const
+std::string ModuleImpl::getModuleName() const
 {
 	return "Hello World";
 }
 
-std::string RootImpl::getModuleDescr() const
+std::string ModuleImpl::getModuleDescr() const
 {
 	return "Hello World module example";
 }
 
-renderMe::core::Entitygraph* RootImpl::entitygraph()
+renderMe::core::Entitygraph* ModuleImpl::entitygraph()
 {
 	return &m_entitygraph;
 }
 
-void RootImpl::onKeyPress(long p_key)
+void ModuleImpl::onKeyPress(long p_key)
 {
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
@@ -257,7 +258,7 @@ void RootImpl::onKeyPress(long p_key)
 	}
 }
 
-void RootImpl::onEndKeyPress(long p_key)
+void ModuleImpl::onEndKeyPress(long p_key)
 {
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
@@ -513,15 +514,15 @@ void RootImpl::onEndKeyPress(long p_key)
 	}
 }
 
-void RootImpl::onKeyPulse(long p_key)
+void ModuleImpl::onKeyPulse(long p_key)
 {
 }
 
-void RootImpl::onChar(long p_char, long p_scan)
+void ModuleImpl::onChar(long p_char, long p_scan)
 {
 }
 
-void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
+void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
@@ -546,31 +547,31 @@ void RootImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 	}
 }
 
-void RootImpl::onMouseWheel(long p_delta)
+void ModuleImpl::onMouseWheel(long p_delta)
 {
 }
 
-void RootImpl::onMouseLeftButtonDown(long p_xm, long p_ym)
+void ModuleImpl::onMouseLeftButtonDown(long p_xm, long p_ym)
 {
 }
 
-void RootImpl::onMouseLeftButtonUp(long p_xm, long p_ym)
+void ModuleImpl::onMouseLeftButtonUp(long p_xm, long p_ym)
 {
 }
 
-void RootImpl::onMouseRightButtonDown(long p_xm, long p_ym)
+void ModuleImpl::onMouseRightButtonDown(long p_xm, long p_ym)
 {
 }
 
-void RootImpl::onMouseRightButtonUp(long p_xm, long p_ym)
+void ModuleImpl::onMouseRightButtonUp(long p_xm, long p_ym)
 {
 }
 
-void RootImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
+void ModuleImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
 }
 
-void RootImpl::init(const std::string p_appWindowsEntityName)
+void ModuleImpl::init(const std::string p_appWindowsEntityName)
 {
 	/////////// logging conf
 
@@ -827,9 +828,9 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
+					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
 					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera03Entity");
+					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera03Entity");
 				}
 				break;
 			}
@@ -884,7 +885,7 @@ void RootImpl::init(const std::string p_appWindowsEntityName)
 
 }
 
-void RootImpl::run(void)
+void ModuleImpl::run(void)
 {
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
@@ -1339,7 +1340,7 @@ void RootImpl::run(void)
 	}	
 }
 
-void RootImpl::close(void)
+void ModuleImpl::close(void)
 {
 	auto resourceSystem{ SystemEngine::getInstance()->getSystem(2) };
 	auto resourceSystemInstance{ dynamic_cast<renderMe::ResourceSystem*>(resourceSystem) };
@@ -1352,7 +1353,7 @@ void RootImpl::close(void)
 	d3d11SystemInstance->killRunner();
 }
 
-void RootImpl::registerSubscriber(const Callback& p_callback)
+void ModuleImpl::registerSubscriber(const Callback& p_callback)
 {
 	renderMe::property::EventSource<renderMe::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);
 
@@ -1371,7 +1372,7 @@ void RootImpl::registerSubscriber(const Callback& p_callback)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void RootImpl::createEntities(const std::string p_appWindowsEntityName)
+void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 {
 	/////////// add screen rendering pass entity
 
