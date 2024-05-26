@@ -105,7 +105,7 @@ add_subdirectory(console_tests/console_ecs)
 add_subdirectory(console_tests/console_maths)
 add_subdirectory(console_tests/console_datacloud)
 
-add_subdirectory(module_helloworld)
+add_subdirectory(module_scene00)
 
 
 

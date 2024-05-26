@@ -21,7 +21,7 @@
 # -*-LIC_END-*-
 
 cmake_minimum_required(VERSION 3.0)
-project(module_helloworld)
+project(module_scene00)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
@@ -58,21 +58,21 @@ link_directories(${dxtk_lib_dir})
 file(
         GLOB_RECURSE
         source_files
-		${CMAKE_SOURCE_DIR}/module_helloworld/src/*.h
-        ${CMAKE_SOURCE_DIR}/module_helloworld/src/*.cpp
+		${CMAKE_SOURCE_DIR}/module_scene00/src/*.h
+        ${CMAKE_SOURCE_DIR}/module_scene00/src/*.cpp
 		
 )
 
 
-add_library(module_helloworld SHARED ${source_files})
+add_library(module_scene00 SHARED ${source_files})
 
-target_link_libraries(module_helloworld CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services CORE_maths RENDERING_control TRANSFORM_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource SYSTEM_renderingqueue SYSTEM_world SYSTEM_dataprint jsmn d3d11 d3dcompiler DirectXTK)
+target_link_libraries(module_scene00 CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services CORE_maths RENDERING_control TRANSFORM_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource SYSTEM_renderingqueue SYSTEM_world SYSTEM_dataprint jsmn d3d11 d3dcompiler DirectXTK)
 
-install(TARGETS module_helloworld CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
-install(TARGETS module_helloworld CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
-install(TARGETS module_helloworld CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
+install(TARGETS module_scene00 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
+install(TARGETS module_scene00 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)
+install(TARGETS module_scene00 CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/RelWithDebInfo)
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/module_helloworld_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/module_scene00_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 
 

@@ -69,12 +69,12 @@ m_distribution(0.15, 0.65)
 
 std::string ModuleImpl::getModuleName() const
 {
-	return "Hello World";
+	return "Scene00";
 }
 
 std::string ModuleImpl::getModuleDescr() const
 {
-	return "Hello World module example";
+	return "Scene00 module example";
 }
 
 renderMe::core::Entitygraph* ModuleImpl::entitygraph()
