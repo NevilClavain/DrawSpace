@@ -49,12 +49,12 @@ namespace renderMe
 				void requestVertexCompilationShader(const std::string& p_includePath, 
 														const renderMe::core::FileContent<const char>& p_shaderSource, 
 														std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
-														bool& p_status);
+														bool& p_status) const;
 
 				void requestPixelCompilationShader(const std::string& p_includePath, 
 														const renderMe::core::FileContent<const char>& p_shaderSource, 
 														std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
-														bool& p_status);
+														bool& p_status) const;
 
 			};
 		}

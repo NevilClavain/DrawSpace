@@ -29,21 +29,23 @@ using namespace renderMe::core::services;
 void ShadersCompilationService::requestVertexCompilationShader(const std::string& p_includePath, 
 																const renderMe::core::FileContent<const char>& p_shaderSource, 
 																std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
-																bool& p_status)
+																bool& p_status) const
 {
-	for (const auto& call : m_callbacks)
+	if (m_callbacks.size() > 0)
 	{
-		call(p_includePath, p_shaderSource, 0, shaderBytes, shaderBytesLength, p_status);
+		const auto func{ m_callbacks.at(0) };
+		func(p_includePath, p_shaderSource, 0, shaderBytes, shaderBytesLength, p_status);
 	}
 }
 
 void ShadersCompilationService::requestPixelCompilationShader(const std::string& p_includePath, 
 																const renderMe::core::FileContent<const char>& p_shaderSource, 
 																std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
-																bool& p_status)
+																bool& p_status) const
 {
-	for (const auto& call : m_callbacks)
+	if (m_callbacks.size() > 0)
 	{
-		call(p_includePath, p_shaderSource, 1, shaderBytes, shaderBytesLength, p_status);
+		const auto func{ m_callbacks.at(0) };
+		func(p_includePath, p_shaderSource, 1, shaderBytes, shaderBytesLength, p_status);
 	}
 }
