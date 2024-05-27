@@ -106,6 +106,8 @@ add_subdirectory(console_tests/console_maths)
 add_subdirectory(console_tests/console_datacloud)
 
 add_subdirectory(module_scene00)
+add_subdirectory(module_basicquad)
+add_subdirectory(module_gblcamera)
 
 
 
