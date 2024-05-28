@@ -36,27 +36,6 @@ using namespace renderMe::core;
 
 void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
-
-	if ("Camera01Entity" == current_view_entity_id)
-	{
-		const auto tm{ TimeManager::getInstance() };
-		if (tm->isReady())
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& fps_theta{ world_aspect.getComponent<double>("gbl_theta")->getPurpose() };
-			double& fps_phi{ world_aspect.getComponent<double>("gbl_phi")->getPurpose() };
-
-			tm->angleSpeedInc(&fps_theta, -p_dx);
-			tm->angleSpeedInc(&fps_phi, -p_dy);
-
-		}
-	}
 }
 
 void ModuleImpl::onMouseWheel(long p_delta)

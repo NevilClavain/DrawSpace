@@ -76,8 +76,8 @@ public:
 
 private:
 
-    bool                                    m_show_mouse_cursor{ false };
-    bool                                    m_mouse_circular_mode{ true };
+    bool                                    m_show_mouse_cursor{ true };
+    bool                                    m_mouse_circular_mode{ false };
 
     renderMe::core::Entitygraph             m_entitygraph;
 

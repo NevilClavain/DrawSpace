@@ -41,35 +41,6 @@ void ModuleImpl::onKeyPress(long p_key)
 {
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
-
-	if ('Q' == p_key)
-	{
-		if ("Camera01Entity" == current_view_entity_id)
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
-
-			speed = 0.01;
-		}
-	}
-	else if ('W' == p_key)
-	{
-		if ("Camera01Entity" == current_view_entity_id)
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
-
-			speed = -0.01;
-		}
-	}
 }
 
 void ModuleImpl::onEndKeyPress(long p_key)
@@ -80,7 +51,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
 
 
-	if (VK_SPACE == p_key)
+	if (VK_ESCAPE == p_key)
 	{
 		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
 		for (const auto& call : m_callbacks)
@@ -124,14 +95,6 @@ void ModuleImpl::onEndKeyPress(long p_key)
 	}
 	else if (VK_F3 == p_key)
 	{
-		if (true == m_quadEntity_state_request)
-		{
-			m_quadEntity_state_request = false;
-		}
-		else
-		{
-			m_quadEntity_state_request = true;
-		}
 	}
 
 	else if (VK_F8 == p_key)
@@ -140,37 +103,6 @@ void ModuleImpl::onEndKeyPress(long p_key)
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
-	}
-
-	else if ('Q' == p_key)
-	{
-		if ("Camera01Entity" == current_view_entity_id)
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
-
-			speed = 0.0;
-		}
-	}
-
-	else if ('W' == p_key)
-	{
-		if ("Camera01Entity" == current_view_entity_id)
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
-
-			speed = 0.0;
-		}
-
 	}
 }
 

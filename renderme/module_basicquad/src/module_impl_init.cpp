@@ -189,6 +189,7 @@ void ModuleImpl::d3d11_system_events()
 			{
 				case D3D11SystemEvent::D3D11_WINDOW_READY:
 				{
+					
 					auto& appwindowNode{ m_entitygraph.node(p_id) };
 					const auto appwindow{ appwindowNode.data() };
 
@@ -198,35 +199,10 @@ void ModuleImpl::d3d11_system_events()
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
 					{
-						/////////////// add viewpoint with gimbal lock jointure ////////////////
-
-						auto& gblJointEntityNode{ m_entitygraph.add(appwindowNode, "gblJointEntity") };
-						const auto gblJointEntity{ gblJointEntityNode.data() };
-
-						gblJointEntity->makeAspect(core::timeAspect::id);
-						auto& gbl_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
-
-						gbl_world_aspect.addComponent<transform::WorldPosition>("gbl_output");
-
-						gbl_world_aspect.addComponent<double>("gbl_theta", 0);
-						gbl_world_aspect.addComponent<double>("gbl_phi", 0);
-						gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-						gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 0.0, 7.0));
-
-						gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
-							{
-								// input-output/components keys id mapping
-								{"gimbalLockJointAnim.theta", "gbl_theta"},
-								{"gimbalLockJointAnim.phi", "gbl_phi"},
-								{"gimbalLockJointAnim.position", "gbl_pos"},
-								{"gimbalLockJointAnim.speed", "gbl_speed"},
-								{"gimbalLockJointAnim.output", "gbl_output"}
-
-							}, helpers::animators::makeGimbalLockJointAnimator()));
 
 						/////////////// add viewpoint ////////////////////////
 
-						auto& viewPointNode{ m_entitygraph.add(gblJointEntityNode, "Camera01Entity") };
+						auto& viewPointNode{ m_entitygraph.add(appwindowNode, "Camera01") };
 						const auto cameraEntity{ viewPointNode.data() };
 
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
@@ -251,9 +227,8 @@ void ModuleImpl::d3d11_system_events()
 					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera03Entity");
+					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01");
+					
 				}
 				break;
 			}
