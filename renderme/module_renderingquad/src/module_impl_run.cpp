@@ -92,10 +92,10 @@ void ModuleImpl::run(void)
 		/////////// Add trianglemeshe
 		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
 
-		square.push(Vertex(-0.9, -0.5, 0.0));
-		square.push(Vertex(0.9, -0.5, 0.0));
-		square.push(Vertex(0.9, 0.5, 0.0));
-		square.push(Vertex(-0.9, 0.5, 0.0));
+		square.push(Vertex(-0.5, -0.2305, 0.0));
+		square.push(Vertex(0.5, -0.2305, 0.0));
+		square.push(Vertex(0.5, 0.2305, 0.0));
+		square.push(Vertex(-0.5, 0.2305, 0.0));
 
 		const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
 		square.push(t1);
@@ -152,7 +152,7 @@ void ModuleImpl::run(void)
 			{
 
 				maths::Matrix positionmat;
-				positionmat.translation(0.0, 0.0, -5.0);
+				positionmat.translation(0.0, 0.0, -1.00001);
 
 				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 				wp.local_pos = wp.local_pos * positionmat;

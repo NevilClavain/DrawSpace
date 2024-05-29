@@ -108,18 +108,17 @@ void Matrix::translation(const Real3Vector& p_pos)
 
 }
 
-void Matrix::projection(double p_w, double p_h, double p_zn, double p_zf)
+void Matrix::perspective(double p_w, double p_h, double p_zn, double p_zf)
 {
     zero();
-    m_matrix[0][0] = 2.0f * p_zn / p_w;
-    m_matrix[1][1] = 2.0f * p_zn / p_h;
+    m_matrix[0][0] = 2.0 * p_zn / p_w;
+    m_matrix[1][1] = 2.0 * p_zn / p_h;
     m_matrix[2][2] = p_zf / (p_zf - p_zn);
-    m_matrix[3][2] = -p_zn * m_matrix[2][2];
+    m_matrix[3][2] = (- p_zn * p_zf) / (p_zf - p_zn);
     m_matrix[2][3] = 1.0;
 
     m_configinfos.type = ConfigurationType::CONFIG_PROJ;
 }
-
 
 void Matrix::transpose(void)
 {

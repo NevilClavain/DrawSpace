@@ -232,7 +232,7 @@ void ModuleImpl::d3d11_system_events()
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
 
 						maths::Matrix projection;
-						projection.projection(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
 
 						camera_aspect.addComponent<maths::Matrix>("projection", projection);
 
