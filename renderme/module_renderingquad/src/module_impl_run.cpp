@@ -74,7 +74,7 @@ void ModuleImpl::run(void)
 	if (true == m_quadEntity_state_request && false == m_quadEntity_state)
 	{
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
-		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
+		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 0.0f, 0.0f, 1.0f));
 
 		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
@@ -92,10 +92,10 @@ void ModuleImpl::run(void)
 		/////////// Add trianglemeshe
 		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
 
-		square.push(Vertex(-0.5, -0.2305, 0.0));
-		square.push(Vertex(0.5, -0.2305, 0.0));
-		square.push(Vertex(0.5, 0.2305, 0.0));
-		square.push(Vertex(-0.5, 0.2305, 0.0));
+		square.push(Vertex(-m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0));
+		square.push(Vertex(m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0));
+		square.push(Vertex(m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0));
+		square.push(Vertex(-m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0));
 
 		const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
 		square.push(t1);

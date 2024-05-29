@@ -89,6 +89,9 @@ private:
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };
 
+    float                                   m_characteristics_v_width;
+    float                                   m_characteristics_v_height;
+
 };
 
 

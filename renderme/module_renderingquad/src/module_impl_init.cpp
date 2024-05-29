@@ -198,6 +198,9 @@ void ModuleImpl::d3d11_system_events()
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
+					m_characteristics_v_width = characteristics_v_width;
+					m_characteristics_v_height = characteristics_v_height;
+
 					{
 
 						/////////////// add viewpoint ////////////////////////
