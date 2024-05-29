@@ -200,7 +200,8 @@ void ModuleImpl::d3d11_system_events()
 					{
 						/////////////// add viewpoint with gimbal lock jointure ////////////////
 
-						auto& gblJointEntityNode{ m_entitygraph.add(appwindowNode, "gblJointEntity") };
+						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+						auto& gblJointEntityNode{ m_entitygraph.add(screenRenderingNode, "gblJointEntity") };
 						const auto gblJointEntity{ gblJointEntityNode.data() };
 
 						gblJointEntity->makeAspect(core::timeAspect::id);
@@ -253,7 +254,8 @@ void ModuleImpl::d3d11_system_events()
 					{
 						/////////////// add viewpoint with full gimbal jointure ////////////////
 
-						auto& fullGblJointEntityNode{ m_entitygraph.add(appwindowNode, "fullGblJointEntity") };
+						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+						auto& fullGblJointEntityNode{ m_entitygraph.add(screenRenderingNode, "fullGblJointEntity") };
 						const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
 						fullGblJointEntity->makeAspect(core::timeAspect::id);
@@ -318,7 +320,8 @@ void ModuleImpl::d3d11_system_events()
 					{
 						/////////////// add viewpoint of lookat jointure ////////////////
 
-						auto& sliderJointEntityNode{ m_entitygraph.add(appwindowNode, "sliderJointEntity") };
+						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+						auto& sliderJointEntityNode{ m_entitygraph.add(screenRenderingNode, "sliderJointEntity") };
 						const auto sliderJointEntity{ sliderJointEntityNode.data() };
 
 						auto& slider_time_aspect{ sliderJointEntity->makeAspect(core::timeAspect::id) };

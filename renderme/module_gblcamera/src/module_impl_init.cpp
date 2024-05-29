@@ -199,8 +199,10 @@ void ModuleImpl::d3d11_system_events()
 
 					{
 						/////////////// add viewpoint with gimbal lock jointure ////////////////
+				
+						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+						auto& gblJointEntityNode{ m_entitygraph.add(screenRenderingNode, "gblJointEntity") };
 
-						auto& gblJointEntityNode{ m_entitygraph.add(appwindowNode, "gblJointEntity") };
 						const auto gblJointEntity{ gblJointEntityNode.data() };
 
 						gblJointEntity->makeAspect(core::timeAspect::id);
@@ -227,6 +229,7 @@ void ModuleImpl::d3d11_system_events()
 						/////////////// add viewpoint ////////////////////////
 
 						auto& viewPointNode{ m_entitygraph.add(gblJointEntityNode, "Camera01Entity") };
+
 						const auto cameraEntity{ viewPointNode.data() };
 
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
