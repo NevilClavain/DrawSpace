@@ -235,6 +235,8 @@ void ModuleImpl::d3d11_system_events()
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01");
+
+					m_windowRenderingQueue->setCurrentView("Camera01");
 					
 				}
 				break;

@@ -190,6 +190,9 @@ namespace renderMe
 			
 			QueueNodes					getQueueNodes() const;
 			void						setQueueNodes(const QueueNodes& p_nodes);
+
+			void						setCurrentView(const std::string& p_entityId);
+			std::string					getCurrentView() const;
 			
 
 			const std::map<int, Text>&	texts() const;
@@ -203,6 +206,8 @@ namespace renderMe
 			std::map<int,Text>				m_texts;
 
 			QueueNodes						m_queueNodes;
+
+			std::string						m_currentView; // entity name
 		};
 	}
 }

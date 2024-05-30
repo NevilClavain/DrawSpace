@@ -93,7 +93,6 @@ const std::map<int, Queue::Text>& Queue::texts() const
 	return m_texts;
 }
 
-
 Queue::QueueNodes Queue::getQueueNodes() const
 {
 	return m_queueNodes;
@@ -102,4 +101,14 @@ Queue::QueueNodes Queue::getQueueNodes() const
 void Queue::setQueueNodes(const Queue::QueueNodes& p_nodes)
 {
 	m_queueNodes = p_nodes;
+}
+
+void Queue::setCurrentView(const std::string& p_entityId)
+{
+	m_currentView = p_entityId;
+}
+
+std::string	Queue::getCurrentView() const
+{
+	return m_currentView;
 }
