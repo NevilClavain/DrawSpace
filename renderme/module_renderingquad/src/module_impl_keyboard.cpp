@@ -39,16 +39,11 @@ using namespace renderMe::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
 }
 
 void ModuleImpl::onEndKeyPress(long p_key)
 {
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
-
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
 
 
 	if (VK_ESCAPE == p_key)
