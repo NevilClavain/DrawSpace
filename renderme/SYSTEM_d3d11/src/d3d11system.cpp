@@ -284,7 +284,7 @@ void D3D11System::handleRenderingQueuesState(Entity* p_entity, rendering::Queue&
 	}
 }
 
-void D3D11System::manageRenderingQueue() const
+void D3D11System::manageRenderingQueue()
 {
 	const auto forEachRenderingAspect
 	{
@@ -294,7 +294,7 @@ void D3D11System::manageRenderingQueue() const
 			if (rendering_queue_comp)
 			{
 				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
-				handleRenderingQueuesState(p_entity, renderingQueue);
+				this->handleRenderingQueuesState(p_entity, renderingQueue);
 			}
 		}
 	};
@@ -411,94 +411,58 @@ void D3D11System::collectWorldTransformations() const
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
-void D3D11System::collectViewTransformations() const
+void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
+	//////////////////////////////// get view and proj matrix for this queue
 
+	const std::string current_view_entity_id{ p_renderingQueue.getCurrentView()};
 	if ("" == current_view_entity_id)
 	{
-		_EXCEPTION("no current view defined");
+		_EXCEPTION("no current view defined in rendering queue");
 	}
 
-	bool found{ false };
+	auto& viewode{ m_entitygraph.node(current_view_entity_id) };
+	const auto view_entity{ viewode.data() };
 
 	maths::Matrix current_cam;
 	maths::Matrix current_proj;
 
-	const auto forEachViewAspect
+
+
+
+	// extract cam aspect
+	const auto& cam_aspect{ view_entity->aspectAccess(cameraAspect::id) };
+	const auto& cam_projs_list{ cam_aspect.getComponentsByType<maths::Matrix>() };
+
+	if (0 == cam_projs_list.size())
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_view_aspect)
-		{
-			if (p_entity->getId() == current_view_entity_id)
-			{
-				// current camera
-				found = true;
-
-				// extract cam aspect
-				const auto& cam_aspect{ p_entity->aspectAccess(cameraAspect::id) };
-				const auto& cam_projs_list { cam_aspect.getComponentsByType<maths::Matrix>() };
-
-				if (0 == cam_projs_list.size())
-				{
-					_EXCEPTION("entity view aspect : missing projection definition " + p_entity->getId());
-				}
-				else
-				{
-					current_proj = cam_projs_list.at(0)->getPurpose();
-				}
-
-				// extract world aspect
-
-				const auto& world_aspect{ p_entity->aspectAccess(worldAspect::id) };
-				const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
-
-				if (0 == worldpositions_list.size())
-				{
-					_EXCEPTION("entity world aspect : missing world position " + p_entity->getId());
-				}
-				else
-				{
-					auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
-					current_cam = entity_worldposition.global_pos;
-				}
-			}
-		}
-	};
-
-	renderMe::helpers::extractAspectsTopDown<cameraAspect>(m_entitygraph, forEachViewAspect);
-
-	if (!found)
+		_EXCEPTION("entity view aspect : missing projection definition " + view_entity->getId());
+	}
+	else
 	{
-		_EXCEPTION("cannot find view entity :" + current_view_entity_id);
+		current_proj = cam_projs_list.at(0)->getPurpose();
+	}
+
+	// extract world aspect
+
+	const auto& world_aspect{ view_entity->aspectAccess(worldAspect::id) };
+	const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+	if (0 == worldpositions_list.size())
+	{
+		_EXCEPTION("entity world aspect : missing world position " + view_entity->getId());
+	}
+	else
+	{
+		auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+		current_cam = entity_worldposition.global_pos;
 	}
 
 	maths::Matrix current_view = current_cam;
 	current_view.inverse();
 
-	const auto forEachRenderingAspect
-	{
-		[&](Entity* p_entity, const ComponentContainer& p_view_aspect)
-		{
-			const auto& rendering_aspect{ p_entity->aspectAccess(renderingAspect::id) };
+	////////////////////////////////////////////////////////////////////////
 
-			const auto& dc_list{ rendering_aspect.getComponentsByType<rendering::DrawingControl>() };
-			if (dc_list.size() > 0)
-			{
-				rendering::DrawingControl& dc { dc_list.at(0)->getPurpose() };
-
-				dc.proj = current_proj;
-				dc.view = current_view;
-			}
-		}
-	};
-
-	renderMe::helpers::extractAspectsTopDown<renderingAspect>(m_entitygraph, forEachRenderingAspect);
-}
-
-
-void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
-{
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
 	if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
@@ -598,7 +562,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 							//////
 
-							d3dimpl->drawTriangleMeshe(*tdc.second.world, *tdc.second.view, *tdc.second.proj);
+							d3dimpl->drawTriangleMeshe(*tdc.second.world, current_view, current_proj);
 
 							//////
 							tdc.second.teardown();
@@ -652,7 +616,7 @@ void D3D11System::renderQueue(rendering::Queue& p_renderingQueue)
 
 							//////
 
-							d3dimpl->drawLineMeshe(*ldc.second.world, *ldc.second.view, *ldc.second.proj);
+							d3dimpl->drawLineMeshe(*ldc.second.world, current_view, current_proj);
 
 							//////
 							ldc.second.teardown();
@@ -692,7 +656,6 @@ void D3D11System::run()
 	manageResources();
 	manageRenderingQueue();
 	collectWorldTransformations();
-	collectViewTransformations();
 
 	if (m_initialized)
 	{

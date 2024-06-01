@@ -39,8 +39,7 @@ using namespace renderMe::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
+	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
 
 	if ('Q' == p_key)
 	{
@@ -217,8 +216,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 {
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
+	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
 
 
 	if (VK_SPACE == p_key)

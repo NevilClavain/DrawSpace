@@ -84,9 +84,8 @@ namespace renderMe
 
         void    manageInitialization();       
         void    manageResources();
-        void    manageRenderingQueue() const;
+        void    manageRenderingQueue();
         void    collectWorldTransformations() const;
-        void    collectViewTransformations() const;
 
         void    handleShaderCreation(Shader& p_shaderInfos, int p_shaderType);
         void    handleShaderRelease(Shader& p_shaderInfos, int p_shaderType);
@@ -97,8 +96,9 @@ namespace renderMe
         void    handleTrianglemesheCreation(TriangleMeshe& p_tm);
         void    handleTrianglemesheRelease(TriangleMeshe& p_tm);
 
+        void    renderQueue(const rendering::Queue& p_renderingQueue) const;
 
-        static void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
-        static void renderQueue(rendering::Queue& p_renderingQueue);
+        void    handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue );
+        
     };
 }

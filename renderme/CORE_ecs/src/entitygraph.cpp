@@ -103,7 +103,7 @@ Entitygraph::Node& Entitygraph::node(const std::string& p_entity_id)
 
 	if (0 == m_nodes.count(id))
 	{
-		_EXCEPTION("node not registered" + id)
+		_EXCEPTION("node not registered " + id)
 	}
 	return (*m_nodes.at(id));		
 }

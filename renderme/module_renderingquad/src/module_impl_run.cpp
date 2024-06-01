@@ -74,7 +74,7 @@ void ModuleImpl::run(void)
 	if (true == m_quadEntity_state_request && false == m_quadEntity_state)
 	{
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
-		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 0.0f, 0.0f, 1.0f));
+		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(0.43f, 0.0f, 0.0f, 1.0f));
 
 		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
@@ -114,7 +114,7 @@ void ModuleImpl::run(void)
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 		RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
-		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "line");
+		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 
 		const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill };
 
@@ -158,8 +158,6 @@ void ModuleImpl::run(void)
 				wp.local_pos = wp.local_pos * positionmat;
 			}
 		));
-
-
 
 		m_quadEntity_state = true;
 	}

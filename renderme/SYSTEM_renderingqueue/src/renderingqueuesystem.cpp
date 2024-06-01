@@ -162,24 +162,6 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 							_RENDERME_WARN(m_localLogger, "						-> world : nullptr\n" );
 						}
 
-						if (drawing_body.view)
-						{
-							_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view->dump());
-						}
-						else
-						{
-							_RENDERME_WARN(m_localLogger, "						-> view : nullptr\n");
-						}
-							
-						if (drawing_body.proj)
-						{
-							_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj->dump());
-						}
-						else
-						{
-							_RENDERME_WARN(m_localLogger, "						-> proj : nullptr\n");
-						}
-
 						_RENDERME_DEBUG(m_localLogger, "						-> vshaders params datacloud connexions :");
 						for (const auto& cnx : drawing_body.vshaders_map_cnx)
 						{
@@ -220,24 +202,6 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 						else
 						{
 							_RENDERME_WARN(m_localLogger, "						-> world : nullptr\n");
-						}
-
-						if (drawing_body.view)
-						{
-							_RENDERME_DEBUG(m_localLogger, "						-> view :\n" + drawing_body.view->dump());
-						}
-						else
-						{
-							_RENDERME_WARN(m_localLogger, "						-> view : nullptr\n");
-						}
-
-						if (drawing_body.proj)
-						{
-							_RENDERME_DEBUG(m_localLogger, "						-> proj :\n" + drawing_body.proj->dump());
-						}
-						else
-						{
-							_RENDERME_WARN(m_localLogger, "						-> proj : nullptr\n");
 						}
 
 						_RENDERME_DEBUG(m_localLogger, "						-> vshaders params datacloud connexions :");
@@ -524,8 +488,6 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMeshePayload(
 		rendering::QueueDrawingControl trianglesQueueDrawingControl;
 		trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 		trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-		trianglesQueueDrawingControl.view = &trianglesDrawingControl.view;
-		trianglesQueueDrawingControl.proj = &trianglesDrawingControl.proj;
 		trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
 		trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
 
@@ -561,8 +523,6 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 		rendering::QueueDrawingControl linesQueueDrawingControl;
 		linesQueueDrawingControl.owner_entity_id = linesDrawingControl.owner_entity_id;
 		linesQueueDrawingControl.world = &linesDrawingControl.world;
-		linesQueueDrawingControl.view = &linesDrawingControl.view;
-		linesQueueDrawingControl.proj = &linesDrawingControl.proj;
 		linesQueueDrawingControl.setup = linesDrawingControl.setup;
 		linesQueueDrawingControl.teardown = linesDrawingControl.teardown;
 
@@ -727,8 +687,6 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 													rendering::QueueDrawingControl linesQueueDrawingControl;
 													linesQueueDrawingControl.owner_entity_id = linesDrawingControl.owner_entity_id;
 													linesQueueDrawingControl.world = &linesDrawingControl.world;
-													linesQueueDrawingControl.view = &linesDrawingControl.view;
-													linesQueueDrawingControl.proj = &linesDrawingControl.proj;
 													linesQueueDrawingControl.setup = linesDrawingControl.setup;
 													linesQueueDrawingControl.teardown = linesDrawingControl.teardown;
 
@@ -778,8 +736,6 @@ void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, c
 													rendering::QueueDrawingControl trianglesQueueDrawingControl;
 													trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 													trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-													trianglesQueueDrawingControl.view = &trianglesDrawingControl.view;
-													trianglesQueueDrawingControl.proj = &trianglesDrawingControl.proj;
 													trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
 													trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
 

@@ -36,8 +36,7 @@ using namespace renderMe::core;
 
 void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto current_view_entity_id{ dataCloud->readDataValue<std::string>("std.current_view") };
+	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
 
 	if ("Camera01Entity" == current_view_entity_id)
 	{

@@ -52,14 +52,11 @@ namespace renderMe
 			DrawingControl()
 			{
 				world.identity();
-				view.identity();
 			}
 
 			~DrawingControl() = default;
 
 			core::maths::Matrix world;
-			core::maths::Matrix view;
-			core::maths::Matrix proj;
 
 			bool				ready{ false };
 
@@ -85,8 +82,6 @@ namespace renderMe
 
 			// transformations to apply;
 			core::maths::Matrix* world{ nullptr };
-			core::maths::Matrix* view{ nullptr };
-			core::maths::Matrix* proj{ nullptr };
 
 			std::function<void()> setup{ [] {} };
 			std::function<void()> teardown{ [] {} };

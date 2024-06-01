@@ -96,10 +96,6 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	//////////////////////////
 
 	createEntities(p_appWindowsEntityName);
-
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	dataCloud->registerData<std::string>("std.current_view");
-
 }
 
 
@@ -405,9 +401,11 @@ void ModuleImpl::d3d11_system_events()
 					//////////////////////////////////////////////////////////////
 
 					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01Entity");
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera02Entity");
-					//dataCloud->updateDataValue<std::string>("std.current_view", "Camera03Entity");
+
+
+					//m_windowRenderingQueue->setCurrentView("Camera01Entity");
+					//m_windowRenderingQueue->setCurrentView("Camera02Entity");
+					m_windowRenderingQueue->setCurrentView("Camera03Entity");
 				}
 				break;
 			}

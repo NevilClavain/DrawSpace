@@ -96,10 +96,6 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	//////////////////////////
 
 	createEntities(p_appWindowsEntityName);
-
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	dataCloud->registerData<std::string>("std.current_view");
-
 }
 
 
@@ -222,7 +218,7 @@ void ModuleImpl::d3d11_system_events()
 						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
 						maths::Matrix cam_positionmat;
-						cam_positionmat.translation(0.0, 0.0, 0.0);
+						cam_positionmat.translation(0.0, 0.0, 1.0);
 
 						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
 
@@ -232,9 +228,6 @@ void ModuleImpl::d3d11_system_events()
 					}
 
 					//////////////////////////////////////////////////////////////
-
-					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-					dataCloud->updateDataValue<std::string>("std.current_view", "Camera01");
 
 					m_windowRenderingQueue->setCurrentView("Camera01");
 					
