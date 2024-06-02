@@ -57,17 +57,17 @@ namespace renderMe
         static constexpr int                    dcTextsIdBase{ 2000 };
         static constexpr int                    svTextsIdBase{ 3000 };
 
-        static constexpr int                    dcNbCols{ 4 };
+        static constexpr int                    dcNbCols{ 3 };
         static constexpr int                    dcNbRows{ 10 };
 
         static constexpr int                    dcColWidth{ 500 };
-        static constexpr int                    dcRowHeight{ 25 };
+        static constexpr int                    dcRowHeight{ 21 };
 
-        static constexpr int                    svNbCols{ 4 };
+        static constexpr int                    svNbCols{ 3 };
         static constexpr int                    svNbRows{ 10 };
 
         static constexpr int                    svColWidth{ 500 };
-        static constexpr int                    svRowHeight{ 25 };
+        static constexpr int                    svRowHeight{ 21 };
 
         renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
 

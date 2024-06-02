@@ -290,10 +290,11 @@ void D3D11System::manageRenderingQueue()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
 		{
-			const auto rendering_queue_comp{ p_rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
-			if (rendering_queue_comp)
+			const auto rendering_queues_list { p_rendering_aspect.getComponentsByType<rendering::Queue>() };
+			if (rendering_queues_list.size() > 0)
 			{
-				auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
+
 				this->handleRenderingQueuesState(p_entity, renderingQueue);
 			}
 		}

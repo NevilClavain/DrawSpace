@@ -58,10 +58,10 @@ m_localLogger("RenderingQueueSystem", renderMe::core::logger::Configuration::get
 					{
 						const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
 
-						const auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
-						if (rendering_queue_comp)
+						const auto rendering_queues_list{ rendering_aspect.getComponentsByType<rendering::Queue>() };
+						if (rendering_queues_list.size() > 0)
 						{
-							auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+							auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
 							current_queue = &renderingQueue;
 						}
 					}
@@ -239,10 +239,10 @@ void RenderingQueueSystem::manageRenderingQueue()
 		{
 			[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
 			{
-				const auto rendering_queue_comp{ p_rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
-				if (rendering_queue_comp)
+				const auto rendering_queues_list{ p_rendering_aspect.getComponentsByType<rendering::Queue>() };
+				if (rendering_queues_list.size() > 0)
 				{
-					auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+					auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
 					handleRenderingQueuesState(p_entity, renderingQueue);
 				}
 			}
@@ -262,10 +262,11 @@ void RenderingQueueSystem::manageRenderingQueue()
 			{
 				const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
 
-				const auto rendering_queue_comp{ rendering_aspect.getComponent<rendering::Queue>("renderingQueue") };
-				if (rendering_queue_comp)
+				const auto rendering_queues_list{ rendering_aspect.getComponentsByType<rendering::Queue>() };
+				if (rendering_queues_list.size() > 0)
 				{
-					auto& renderingQueue{ rendering_queue_comp->getPurpose() };
+					auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
+
 					current_queue = &renderingQueue;
 
 					//////// check if anu request to log this queue

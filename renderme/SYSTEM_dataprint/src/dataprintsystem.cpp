@@ -257,6 +257,23 @@ void DataPrintSystem::collectData()
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::timeAspect>(m_entitygraph, forEachTimeAspect);
+
+	/////// collect rendering queues
+
+	const auto forEachRenderingAspect
+	{
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+		{
+			const auto rendering_queues_list { p_rendering_aspect.getComponentsByType<rendering::Queue>() };
+			if (rendering_queues_list.size() > 0)
+			{
+				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
+
+			}
+		}
+	};
+
+	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
 void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
