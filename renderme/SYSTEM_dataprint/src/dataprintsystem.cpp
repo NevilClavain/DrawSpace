@@ -39,31 +39,31 @@ using namespace renderMe;
 using namespace renderMe::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
-{
-	
-	// TEMP
-	for (int i = 0; i < 200; i++)
-	{		
-		m_sv_strings.push_back(std::string( "test " + std::to_string(i + 1) ));
-	}
-	
+{		
 }
 
 void DataPrintSystem::run()
 {
+
 	collectData();
 
-	print(m_dc_strings, 0, dcTextsIdBase, dcNbCols, dcNbRows, dcColWidth, dcRowHeight);
-
-	// positioning sync vars print bloc at bottomo of the window : compute y position
+	print(m_dc_strings, 0, 0, dcTextsIdBase, dcNbCols, dcNbRows, dcColWidth, dcRowHeight);
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-
 	const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
 
+
+	// positioning sync vars print bloc at bottomo of the window : compute y position
 	const int y_pos = window_dims[1] - (svNbRows * svRowHeight);
 
-	print(m_sv_strings, y_pos, svTextsIdBase, svNbCols, svNbRows, svColWidth, svRowHeight);
+	print(m_sv_strings, 0, y_pos, svTextsIdBase, svNbCols, svNbRows, svColWidth, svRowHeight);
+
+	// positioning rendering queues list & infos on the right : compute x position
+
+	const int x_pos = window_dims[0] - (rqNbCols * rqColWidth);
+
+	print(m_rq_strings, x_pos, 0, rqTextsIdBase, rqNbCols, rqNbRows, rqColWidth, rqRowHeight);
+
 }
 
 void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
@@ -260,6 +260,8 @@ void DataPrintSystem::collectData()
 
 	/////// collect rendering queues
 
+	m_rq_strings.clear();
+
 	const auto forEachRenderingAspect
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
@@ -267,8 +269,39 @@ void DataPrintSystem::collectData()
 			const auto rendering_queues_list { p_rendering_aspect.getComponentsByType<rendering::Queue>() };
 			if (rendering_queues_list.size() > 0)
 			{
-				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
+				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };				
+				
+				std::string infos;
 
+				infos += renderingQueue.getName();
+
+				if (rendering::Queue::Purpose::INTERMEDIATE_RENDERING == renderingQueue.getPurpose())
+				{
+					infos += " - to buffer";
+				}
+				else if (rendering::Queue::Purpose::SCREEN_RENDERING == renderingQueue.getPurpose())
+				{
+					infos += " - to screen";
+				}
+
+
+				if (rendering::Queue::State::ERROR_ORPHAN == renderingQueue.getState())
+				{
+					infos += " - ERR ORPHAN";
+				}
+				else if (rendering::Queue::State::READY == renderingQueue.getState())
+				{
+					infos += " - READY";
+				}
+				else if (rendering::Queue::State::WAIT_INIT == renderingQueue.getState())
+				{
+					infos += " - WAIT INIT";
+				}
+
+				infos += " - current view = " + renderingQueue.getCurrentView();
+
+
+				m_rq_strings.push_back(infos);
 			}
 		}
 	};
@@ -276,7 +309,7 @@ void DataPrintSystem::collectData()
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
-void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
+void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
 {
 	int curr_row{ 0 };
 	int curr_col{ 0 };
@@ -284,7 +317,7 @@ void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_y_base
 
 	for (const auto& e : p_list)
 	{
-		m_renderingQueue->setText(p_id_base + index, { e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * p_colWidth, curr_row * p_rowHeight + p_y_base}, 0.0});
+		m_renderingQueue->setText(p_id_base + index, { e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * p_colWidth + p_x_base, curr_row * p_rowHeight + p_y_base}, 0.0});
 		index++;
 
 		curr_col++;

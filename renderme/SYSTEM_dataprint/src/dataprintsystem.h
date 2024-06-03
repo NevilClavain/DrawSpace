@@ -56,27 +56,34 @@ namespace renderMe
 
         static constexpr int                    dcTextsIdBase{ 2000 };
         static constexpr int                    svTextsIdBase{ 3000 };
+        static constexpr int                    rqTextsIdBase{ 3000 };
 
         static constexpr int                    dcNbCols{ 3 };
         static constexpr int                    dcNbRows{ 10 };
-
         static constexpr int                    dcColWidth{ 500 };
         static constexpr int                    dcRowHeight{ 21 };
 
         static constexpr int                    svNbCols{ 3 };
         static constexpr int                    svNbRows{ 10 };
-
         static constexpr int                    svColWidth{ 500 };
         static constexpr int                    svRowHeight{ 21 };
+
+        static constexpr int                    rqNbCols{ 1 };
+        static constexpr int                    rqNbRows{ 10 };
+        static constexpr int                    rqColWidth{ 600 };
+        static constexpr int                    rqRowHeight{ 21 };
+
 
         renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
 
         std::vector<std::string>                m_dc_strings; // dataclouds display inputs
 
-        std::vector<std::string>                m_sv_strings; // synchronized varq display inputs
+        std::vector<std::string>                m_sv_strings; // synchronized var display inputs
+
+        std::vector<std::string>                m_rq_strings; // rendering queues display
 
         void collectData();
-        void print(const std::vector<std::string>& p_list, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight);
+        void print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight);
 
         
     };
