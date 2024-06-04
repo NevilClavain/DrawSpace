@@ -130,6 +130,7 @@ void ModuleImpl::run(void)
 
 
 		/////////// time aspect
+		// required for animator !
 
 		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
 
