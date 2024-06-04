@@ -201,10 +201,10 @@ void ModuleImpl::d3d11_system_events()
 
 						/////////////// add viewpoint ////////////////////////
 
-						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+						auto& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
 					
-						auto& viewPointNode{ m_entitygraph.add(screenRenderingNode, "Camera01") };
+						auto& viewPointNode{ m_entitygraph.add(screenRenderingPassNode, "Camera01") };
 						const auto cameraEntity{ viewPointNode.data() };
 
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
