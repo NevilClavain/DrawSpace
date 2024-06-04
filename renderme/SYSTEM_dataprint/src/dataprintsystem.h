@@ -35,7 +35,7 @@ namespace renderMe
     //fwd decl
     namespace rendering
     {
-        class Queue;
+        struct Queue;
     }
 
     namespace core { class Entity; }

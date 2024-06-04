@@ -37,7 +37,7 @@ namespace renderMe
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
     namespace core { class ComponentContainer; }
-    namespace rendering { class Queue; }
+    namespace rendering { struct Queue; }
 
     enum class RenderingQueueSystemEvent
     {

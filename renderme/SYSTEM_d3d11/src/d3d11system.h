@@ -38,7 +38,7 @@ namespace renderMe
     // fwd decls
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
-    namespace rendering { class Queue; }
+    namespace rendering { struct Queue; }
     class Shader;
     class LineMeshe;
     class TriangleMeshe;
