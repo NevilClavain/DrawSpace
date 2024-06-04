@@ -381,53 +381,6 @@ static std::string build_rs_list_id(const std::vector<renderMe::rendering::Rende
 	return rs_set_signature;
 }
 
-/*
-static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogger, 
-										const renderMe::core::ComponentList<rendering::DrawingControl>& p_linesDrawingControls,
-										const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
-{
-	const auto vshaders_current_args{ p_vshader.getArguments() };
-	const auto pshaders_current_args{ p_pshader.getArguments() };
-
-	for (const auto& ldc : p_linesDrawingControls)
-	{
-		auto& linesDrawingControl{ ldc->getPurpose() };
-
-		_RENDERME_DEBUG(p_localLogger, "connecting shaders argumants for linesDrawingControl of entity: " + linesDrawingControl.owner_entity_id)
-
-		//vshader arguments id match loop
-		for (const auto& current_arg : vshaders_current_args)
-		{
-			const auto argument_id{ current_arg.argument_id };
-			for (const auto& connection_pair : linesDrawingControl.vshaders_map)
-			{
-				if (argument_id == connection_pair.second)
-				{
-					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
-						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
-						linesDrawingControl.vshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
-				}
-			}
-		}
-
-		//pshader arguments id match loop
-		for (const auto& current_arg : pshaders_current_args)
-		{
-			const auto argument_id{ current_arg.argument_id };
-			for (const auto& connection_pair : linesDrawingControl.pshaders_map)
-			{
-				if (argument_id == connection_pair.second)
-				{
-					_RENDERME_DEBUG(p_localLogger, "connecting datacloud variable '" + connection_pair.first + "' on shader arg '" + argument_id
-						+ "' of type '" + current_arg.argument_type + "' for register: " + std::to_string(current_arg.shader_register))
-					linesDrawingControl.pshaders_map_cnx.push_back(std::make_pair(connection_pair.first, current_arg));
-				}
-			}
-		}
-	}
-}
-*/
-
 static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogger,
 	const rendering::DrawingControl& p_drawingControl, 
 	rendering::QueueDrawingControl& p_queueDrawingControl,
