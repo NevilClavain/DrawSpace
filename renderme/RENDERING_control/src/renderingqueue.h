@@ -37,6 +37,8 @@
 
 namespace renderMe
 {
+	class RenderingQueueSystem;
+
 	namespace rendering
 	{
 		//fwd decl
@@ -170,9 +172,6 @@ namespace renderMe
 			Purpose						getPurpose() const;
 			State						getState() const;
 
-			void						setState(State p_newstate);   //TODO : seal
-			void						setPurpose(Purpose p_purpose);  //TODO : seal
-
 			void						enableTargetClearing(bool p_enable);
 			void						setTargetClearColor(const core::maths::RGBAColor& p_color);
 
@@ -203,6 +202,12 @@ namespace renderMe
 			QueueNodes						m_queueNodes;
 
 			std::string						m_currentView; // entity name
+
+			void							setState(State p_newstate);
+			void							setPurpose(Purpose p_purpose);
+
+			friend class renderMe::RenderingQueueSystem;
+
 		};
 	}
 }
