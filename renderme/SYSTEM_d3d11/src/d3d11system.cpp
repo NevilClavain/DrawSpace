@@ -239,7 +239,7 @@ void D3D11System::manageInitialization()
 
 			const auto rendering_target_comp{ p_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
 			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr &&
-													core::renderingAspect::renderingTarget::WINDOW_TARGET == rendering_target_comp->getPurpose() };
+													core::renderingAspect::renderingTarget::SCREEN_RENDERINGTARGET == rendering_target_comp->getPurpose() };
 
 			if (isWindowsRenderingTarget)
 			{
@@ -471,7 +471,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 		d3dimpl->beginScreen();
 
 	}
-	else //INTERMEDIATE_RENDERING
+	else //BUFFER_RENDERING
 	{
 		// TODO : beginIntermediate()
 	}

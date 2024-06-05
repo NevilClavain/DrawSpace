@@ -275,7 +275,7 @@ void DataPrintSystem::collectData()
 
 				infos += renderingQueue.getName();
 
-				if (rendering::Queue::Purpose::INTERMEDIATE_RENDERING == renderingQueue.getPurpose())
+				if (rendering::Queue::Purpose::BUFFER_RENDERING == renderingQueue.getPurpose())
 				{
 					infos += " - to buffer";
 				}

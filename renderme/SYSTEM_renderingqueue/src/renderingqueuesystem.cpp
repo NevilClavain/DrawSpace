@@ -101,7 +101,7 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 	{
 		{ rendering::Queue::Purpose::UNDEFINED, "UNDEFINED" },
 		{ rendering::Queue::Purpose::SCREEN_RENDERING, "SCREEN_RENDERING" },
-		{ rendering::Queue::Purpose::INTERMEDIATE_RENDERING, "INTERMEDIATE_RENDERING" },
+		{ rendering::Queue::Purpose::BUFFER_RENDERING, "BUFFER_RENDERING" },
 	};
 	_RENDERME_DEBUG(m_localLogger, "purpose : " + purpose_translate.at(p_renderingQueue.getPurpose()))
 
@@ -323,9 +323,9 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 						auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
 						if (parent_rendering_target_comp)
 						{
-							if (core::renderingAspect::renderingTarget::WINDOW_TARGET == parent_rendering_target_comp->getPurpose())
+							if (core::renderingAspect::renderingTarget::SCREEN_RENDERINGTARGET == parent_rendering_target_comp->getPurpose())
 							{
-								// WINDOW_TARGET
+								// SCREEN_RENDERINGTARGET
 								// 
 								// parent is a screen-target pass 
 								// set queue purpose accordingly
@@ -337,15 +337,15 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 							}
 							else
 							{
-								// BUFFER_TARGET
+								// BUFFER_RENDERINGTARGET
 								// 
 								// parent is a texture-target pass
 								// set queue purpose accordingly
 
-								p_renderingQueue.setPurpose(rendering::Queue::Purpose::INTERMEDIATE_RENDERING);
+								p_renderingQueue.setPurpose(rendering::Queue::Purpose::BUFFER_RENDERING);
 								p_renderingQueue.setState(rendering::Queue::State::READY);
 
-								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() + " set to READY, INTERMEDIATE_RENDERING")
+								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() + " set to READY, BUFFER_RENDERING")
 							}
 						}
 						else

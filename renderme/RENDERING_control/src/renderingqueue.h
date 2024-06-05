@@ -103,7 +103,7 @@ namespace renderMe
 			{
 				UNDEFINED,
 				SCREEN_RENDERING,
-				INTERMEDIATE_RENDERING
+				BUFFER_RENDERING
 			};
 
 			enum class State

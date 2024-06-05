@@ -247,7 +247,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 
                 auto& rendering_aspect{ root_window_entity->aspectAccess(core::renderingAspect::id) };
 
-                rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::WINDOW_TARGET);
+                rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::SCREEN_RENDERINGTARGET);
                 rendering_aspect.addComponent<bool>("fullscreen", m_w_fullscreen);
                 rendering_aspect.addComponent<int>("windowWidth", m_w_width);
                 rendering_aspect.addComponent<int>("windowHeight", m_w_height);

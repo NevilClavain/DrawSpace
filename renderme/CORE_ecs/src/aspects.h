@@ -40,8 +40,8 @@ namespace renderMe
 
 			enum class renderingTarget
 			{
-				WINDOW_TARGET,
-				BUFFER_TARGET
+				SCREEN_RENDERINGTARGET,
+				BUFFER_RENDERINGTARGET
 			};
 		};
 
