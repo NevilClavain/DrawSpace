@@ -142,6 +142,9 @@ namespace renderMe
 		mutable std::mutex												m_state_mutex;
 		State															m_state;
 
+		// IF NEW MEMBERS HERE :
+		// UPDATE COPY CTOR AND OPERATOR !!!!!!
+
 		void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
 							core::maths::Real4Vector& p_T, core::maths::Real4Vector& p_B, core::maths::Real4Vector& p_N);
 
