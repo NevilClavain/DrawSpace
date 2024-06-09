@@ -43,6 +43,7 @@ namespace renderMe
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
     class Shader;
+    class Texture;
 
     enum class ResourceSystemEvent
     {
@@ -80,5 +81,6 @@ namespace renderMe
         int                                                     m_runnerIndex{ 0 };
 
         void handleShader(Shader& shaderInfos, int p_shaderType);
+        void handleTexture(Texture& textureInfos);
     };
 }

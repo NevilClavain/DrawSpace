@@ -39,6 +39,10 @@
 
 namespace renderMe
 {
+    //fwd decl
+    class ResourceSystem;
+    class D3D11System;
+
     class Shader
     {
     public:
@@ -96,8 +100,7 @@ namespace renderMe
         size_t getContentSize() const;
         void setContentSize(size_t p_contentSize);
         State getState() const;
-        void setState(State p_state);
-
+        
         int getType() const;
 
         const core::Buffer<char>& getCode() const;
@@ -108,7 +111,7 @@ namespace renderMe
         std::vector<Argument> getArguments() const;
 
     private:
-
+        
         std::string             m_name;
         std::string             m_content;
         std::string             m_contentMD5;
@@ -125,6 +128,13 @@ namespace renderMe
 
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
+
+
+
+        void setState(State p_state);
+
+        friend class renderMe::ResourceSystem;
+        friend class renderMe::D3D11System;
     };
 }
 

@@ -33,7 +33,10 @@
 
 namespace renderMe
 {
-   
+    //fwd decl
+    class ResourceSystem;
+    class D3D11System;
+
     class Texture
     {
     public:
@@ -81,7 +84,7 @@ namespace renderMe
 
         Texture& operator=(const Texture& p_other)
         {
-
+            m_name = p_other.m_name;
             m_source = p_other.m_source;
             m_width = p_other.m_width;
             m_height = p_other.m_height;
@@ -102,20 +105,34 @@ namespace renderMe
         size_t getHeight() const;
         Format getFormat() const;
 
+        State getState() const;
+
+        std::string getName() const;
+
     private:
 
-        Source                  m_source;
+        std::string             m_name;
 
-        size_t                  m_width{ 0 };
-        size_t                  m_height{ 0 };
-        Format                  m_format;
+        Source                  m_source        { Source::CONTENT_FROM_FILE };
+
+        size_t                  m_width         { 0 };
+        size_t                  m_height        { 0 };
+        Format                  m_format        { Format::TEXTURE_RGB };
 
         mutable std::mutex	    m_state_mutex;
-        State                   m_state{ State::INIT };
+        State                   m_state         { State::INIT };
 
         core::Buffer<char>      m_filecontent;
 
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
+
+
+
+        void setState(Texture::State p_state);
+
+        friend class renderMe::ResourceSystem;
+        friend class renderMe::D3D11System;
+
     };
 };

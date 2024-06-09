@@ -33,6 +33,8 @@
 
 #include "shaders_service.h"
 #include "shader.h"
+#include "texture.h"
+#include <utility>
 
 #include "datacloud.h"
 
@@ -177,16 +179,34 @@ void ResourceSystem::run()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
 		{
+
+			////// Handle shaders ///////////
 			const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
 			for (auto& e : s_list)
 			{
 				auto& shader{ e->getPurpose() };
-				const auto state{ shader.getState() };
 
+				const auto state{ shader.getState() };
 				if (Shader::State::INIT == state)
 				{
 					handleShader(shader, shader.getType());
 					shader.setState(Shader::State::BLOBLOADING);
+				}
+			}
+
+			////// Handle textures ///////////
+			const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,Texture>>() };
+			for (auto& e : t_list)
+			{
+				auto& staged_texture{ e->getPurpose() };
+				size_t stage{ staged_texture.first };
+				Texture& texture{ staged_texture.second };
+					
+				const auto state{ texture.getState() };
+				if (Texture::State::INIT == state)
+				{
+					handleTexture(texture);
+					texture.setState(Texture::State::BLOBLOADING);
 				}
 			}
 		}
@@ -265,7 +285,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					update_driver_text = true;
 				}
 				
-				if(update_driver_text) // update driver text and so rebuld shaders
+				if(update_driver_text) // update driver text and so rebuild shaders
 				{
 					renderMe::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
 					driverversion_content.save(current_driver.c_str(), current_driver.length());
@@ -432,6 +452,55 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
+				m_runner[currentIndex].get()->m_mailbox_out.push(report);
+			}
+
+		}
+	)};
+
+	_RENDERME_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
+
+	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
+
+	m_runnerIndex++;
+	if (m_runnerIndex == nbRunners)
+	{
+		m_runnerIndex = 0;
+	}
+}
+
+void ResourceSystem::handleTexture(Texture& textureInfos)
+{
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle Texture ") + textureInfos.getName());
+
+	const std::string textureAction{ "load_texture" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(textureAction, textureInfos.getName(),
+		[&,
+			textureAction = textureAction,
+			currentIndex = m_runnerIndex
+		]()
+		{
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + textureInfos.getName());
+
+			// build full path
+			const auto texture_path{ m_texturesBasePath + "/" + textureInfos.getName() };
+
+			try
+			{
+				renderMe::core::FileContent<const unsigned char> texture_content(texture_path);
+				texture_content.load();
+
+				textureInfos.setState(Texture::State::BLOBLOADED);
+
+				const size_t texture_size{ texture_content.getDataSize() };
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + texture_path + " : reason = " + e.what());
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, textureInfos.getName(), textureAction };
 				m_runner[currentIndex].get()->m_mailbox_out.push(report);
 			}
 

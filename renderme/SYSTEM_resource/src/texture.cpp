@@ -27,12 +27,14 @@
 using namespace renderMe;
 
 Texture::Texture(const std::string& p_filename) :
-m_source(Source::CONTENT_FROM_FILE)
+m_source(Source::CONTENT_FROM_FILE),
+m_name(p_filename)
 {
 
 }
 
 Texture::Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height) :
+m_name(p_name),
 m_source(Source::CONTENT_FROM_RENDERINGQUEUE),
 m_format(p_format),
 m_width(p_width),
@@ -43,6 +45,7 @@ m_height(p_height)
 
 Texture::Texture(const Texture& p_other)
 {
+    m_name = p_other.m_name;
 	m_source = p_other.m_source;
 	m_width = p_other.m_width;
 	m_height = p_other.m_height;
@@ -76,4 +79,22 @@ Texture::Format Texture::getFormat() const
     return m_format;
 }
 
+Texture::State Texture::getState() const
+{
+    m_state_mutex.lock();
+    const auto state{ m_state };
+    m_state_mutex.unlock();
+    return state;
+}
 
+void Texture::setState(Texture::State p_state)
+{
+    m_state_mutex.lock();
+    m_state = p_state;
+    m_state_mutex.unlock();
+}
+
+std::string Texture::getName() const
+{
+    return m_name;
+}
