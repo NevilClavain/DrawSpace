@@ -30,7 +30,6 @@
 #include "datacloud.h"
 #include "sysengine.h"
 
-#include "linemeshe.h"
 #include "trianglemeshe.h"
 #include "renderstate.h"
 

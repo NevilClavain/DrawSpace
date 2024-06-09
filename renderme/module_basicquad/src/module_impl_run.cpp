@@ -30,8 +30,9 @@
 #include "datacloud.h"
 #include "sysengine.h"
 
-#include "linemeshe.h"
 #include "trianglemeshe.h"
+#include "texture.h"
+
 #include "renderstate.h"
 
 #include "syncvariable.h"
@@ -107,6 +108,10 @@ void ModuleImpl::run(void)
 		square.computeTB();
 
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+
+		/////////// Add texture
+
+		quad_resource_aspect.addComponent<std::pair<size_t,Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("map.jpg")));
 
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 

@@ -69,6 +69,7 @@ namespace renderMe
         renderMe::core::logger::Sink                            m_localLogger;
         renderMe::core::logger::Sink                            m_localLoggerRunner;
         const std::string                                       m_shadersBasePath{ "./shaders/resources" };
+        const std::string                                       m_texturesBasePath{ "./textures" };
         const std::string                                       m_shadersCachePath{ "./bc_cache" };
 
         renderMe::core::Json<Shader>::Callback	                m_jsonparser_cb;
