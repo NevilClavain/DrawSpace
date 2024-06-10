@@ -52,7 +52,11 @@ namespace renderMe
         RESOURCE_SHADER_COMPILATION_SUCCESS,
         RESOURCE_SHADER_COMPILATION_ERROR,
         RESOURCE_SHADER_LOAD_BEGIN,
-        RESOURCE_SHADER_LOAD_SUCCESS
+        RESOURCE_SHADER_LOAD_SUCCESS,
+
+        RESOURCE_TEXTURE_LOAD_BEGIN,
+        RESOURCE_TEXTURE_LOAD_SUCCESS
+
     };
    
     class ResourceSystem : public core::System, public renderMe::property::EventSource<ResourceSystemEvent, const std::string&>

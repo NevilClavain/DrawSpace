@@ -50,7 +50,7 @@ Texture::Texture(const Texture& p_other)
 	m_width = p_other.m_width;
 	m_height = p_other.m_height;
 	m_format = p_other.m_format;
-    m_filecontent = p_other.m_filecontent;
+    m_data = p_other.m_data;
 
     m_state_mutex.lock();
     p_other.m_state_mutex.lock();
@@ -92,6 +92,12 @@ void Texture::setState(Texture::State p_state)
     m_state_mutex.lock();
     m_state = p_state;
     m_state_mutex.unlock();
+}
+
+
+void Texture::setData(const core::Buffer<unsigned char>& p_data)
+{
+    m_data = p_data;
 }
 
 std::string Texture::getName() const

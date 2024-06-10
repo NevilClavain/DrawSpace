@@ -89,7 +89,7 @@ namespace renderMe
             m_width = p_other.m_width;
             m_height = p_other.m_height;
             m_format = p_other.m_format;
-            m_filecontent = p_other.m_filecontent;
+            m_data = p_other.m_data;
 
             m_state_mutex.lock();
             p_other.m_state_mutex.lock();
@@ -111,18 +111,18 @@ namespace renderMe
 
     private:
 
-        std::string             m_name;
+        std::string                         m_name;
 
-        Source                  m_source        { Source::CONTENT_FROM_FILE };
+        Source                              m_source        { Source::CONTENT_FROM_FILE };
 
-        size_t                  m_width         { 0 };
-        size_t                  m_height        { 0 };
-        Format                  m_format        { Format::TEXTURE_RGB };
+        size_t                              m_width         { 0 };
+        size_t                              m_height        { 0 };
+        Format                              m_format        { Format::TEXTURE_RGB };
 
-        mutable std::mutex	    m_state_mutex;
-        State                   m_state         { State::INIT };
+        mutable std::mutex	                m_state_mutex;
+        State                               m_state         { State::INIT };
 
-        core::Buffer<char>      m_filecontent;
+        core::Buffer<unsigned char>         m_data;
 
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
@@ -130,6 +130,7 @@ namespace renderMe
 
 
         void setState(Texture::State p_state);
+        void setData(const core::Buffer<unsigned char>& p_data);
 
         friend class renderMe::ResourceSystem;
         friend class renderMe::D3D11System;

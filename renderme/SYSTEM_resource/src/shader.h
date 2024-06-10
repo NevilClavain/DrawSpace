@@ -104,7 +104,7 @@ namespace renderMe
         int getType() const;
 
         const core::Buffer<char>& getCode() const;
-        void setCode(const core::Buffer<char>& p_code);
+        
 
         void addArgument(const Argument& p_arg);
 
@@ -132,6 +132,7 @@ namespace renderMe
 
 
         void setState(State p_state);
+        void setCode(const core::Buffer<char>& p_code);
 
         friend class renderMe::ResourceSystem;
         friend class renderMe::D3D11System;
