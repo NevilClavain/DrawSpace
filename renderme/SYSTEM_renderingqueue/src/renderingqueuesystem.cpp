@@ -269,7 +269,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 
 					current_queue = &renderingQueue;
 
-					//////// check if anu request to log this queue
+					//////// check if request to log this queue
 
 					if (m_queuesToLog.count(currEntityId))
 					{
@@ -289,7 +289,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 
 				if (current_queue)
 				{
-					addToRenderingQueue(currEntityId, resource_aspect, rendering_aspect, *current_queue);
+					checkEntityInsertion(currEntityId, resource_aspect, rendering_aspect, *current_queue);
 				}
 			}
 		}
@@ -539,11 +539,10 @@ static rendering::Queue::PixelShaderPayload build_pixelShaderPayload(renderMe::c
 	return pixelShaderPayload;
 }
 
-void RenderingQueueSystem::addToRenderingQueue(const std::string& p_entity_id, const renderMe::core::ComponentContainer& p_resourceAspect,
+void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, const renderMe::core::ComponentContainer& p_resourceAspect,
 												const renderMe::core::ComponentContainer& p_renderingAspect, 
 												renderMe::rendering::Queue& p_renderingQueue)
 {	
-	//search for line drawing request
 	const auto drawingControls{ p_renderingAspect.getComponentsByType<rendering::DrawingControl>() };
 
 	if (drawingControls.size() > 0)

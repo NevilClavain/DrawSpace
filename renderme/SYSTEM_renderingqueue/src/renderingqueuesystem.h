@@ -68,7 +68,7 @@ namespace renderMe
         void manageRenderingQueue();
         void handleRenderingQueuesState(core::Entity* p_entity, rendering::Queue& p_renderingQueue);
 
-        void addToRenderingQueue(
+        void checkEntityInsertion(
                                     const std::string& p_entity_id, 
                                     const renderMe::core::ComponentContainer& p_resourceAspect,
                                     const renderMe::core::ComponentContainer& p_renderingAspect, 
