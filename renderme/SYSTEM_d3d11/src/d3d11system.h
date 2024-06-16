@@ -42,6 +42,7 @@ namespace renderMe
     class Shader;
     class LineMeshe;
     class TriangleMeshe;
+    class Texture;
 
 
     enum class D3D11SystemEvent
@@ -58,7 +59,11 @@ namespace renderMe
         D3D11_TRIANGLEMESHE_CREATION_BEGIN,
         D3D11_TRIANGLEMESHE_CREATION_SUCCESS,
         D3D11_TRIANGLEMESHE_RELEASE_BEGIN,
-        D3D11_TRIANGLEMESHE_RELEASE_SUCCESS
+        D3D11_TRIANGLEMESHE_RELEASE_SUCCESS,
+        D3D11_TEXTURE_CREATION_BEGIN,
+        D3D11_TEXTURE_CREATION_SUCCESS,
+        D3D11_TEXTURE_RELEASE_BEGIN,
+        D3D11_TEXTURE_RELEASE_SUCCESS
     };
                
     class D3D11System : public core::System, public renderMe::property::EventSource<D3D11SystemEvent, const std::string&>
@@ -95,6 +100,8 @@ namespace renderMe
 
         void    handleTrianglemesheCreation(TriangleMeshe& p_tm);
         void    handleTrianglemesheRelease(TriangleMeshe& p_tm);
+
+        void    handleTextureCreation(Texture& p_texture);
 
         void    renderQueue(const rendering::Queue& p_renderingQueue) const;
 

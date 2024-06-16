@@ -499,6 +499,10 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
 
+	// WIC (Windows Imaging Component : must initialize library for textures loading of standard format (bmp, jpg, ...)
+	hRes = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	D3D11_CHECK(CoInitializeEx);
+	
 
 	_RENDERME_DEBUG(m_localLogger, std::string("init D3D SUCCESS"))
 

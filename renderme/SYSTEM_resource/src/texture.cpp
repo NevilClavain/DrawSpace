@@ -26,21 +26,21 @@
 
 using namespace renderMe;
 
-Texture::Texture(const std::string& p_filename) :
+Texture::Texture(const std::string& p_filename, ContentAccessMode p_content_access_mode) :
 m_source(Source::CONTENT_FROM_FILE),
-m_name(p_filename)
+m_name(p_filename), 
+m_content_access_mode(p_content_access_mode)
 {
-
 }
 
-Texture::Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height) :
+Texture::Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode) :
 m_name(p_name),
 m_source(Source::CONTENT_FROM_RENDERINGQUEUE),
 m_format(p_format),
 m_width(p_width),
-m_height(p_height)
+m_height(p_height),
+m_content_access_mode(p_content_access_mode)
 {
-
 }
 
 Texture::Texture(const Texture& p_other)
@@ -51,6 +51,7 @@ Texture::Texture(const Texture& p_other)
 	m_height = p_other.m_height;
 	m_format = p_other.m_format;
     m_data = p_other.m_data;
+    m_content_access_mode = p_other.m_content_access_mode;
 
     m_state_mutex.lock();
     p_other.m_state_mutex.lock();
@@ -87,6 +88,11 @@ Texture::State Texture::getState() const
     return state;
 }
 
+Texture::ContentAccessMode Texture::getContentAccessMode() const
+{
+    return m_content_access_mode;
+}
+
 void Texture::setState(Texture::State p_state)
 {
     m_state_mutex.lock();
@@ -100,7 +106,23 @@ void Texture::setData(const core::Buffer<unsigned char>& p_data)
     m_data = p_data;
 }
 
+const core::Buffer<unsigned char>& Texture::getData() const
+{
+    return m_data;
+}
+
 std::string Texture::getName() const
 {
     return m_name;
+}
+
+void Texture::setDims(size_t p_w, size_t p_h)
+{
+    m_width = p_w;
+    m_height = p_h;
+}
+
+void Texture::setFormat(Format p_format)
+{
+    m_format = p_format;
 }

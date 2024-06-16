@@ -31,6 +31,9 @@
 
 #include "matrix.h"
 
+//fwd decl
+class D3D11SystemImpl;
+
 namespace renderMe
 {
     //fwd decl
@@ -75,10 +78,18 @@ namespace renderMe
             CONTENT_FROM_RENDERINGQUEUE
         };
 
+        enum class ContentAccessMode
+        {
+            NO_CONTENT_ACCESS,
+            CONTENT_ACCESS_READ, 
+            CONTENT_ACCESS_WRITE,
+            CONTENT_ACCESS_READWRITE
+        };
+
         Texture() = delete;
         
-        Texture::Texture(const std::string& p_filename);
-        Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height);
+        Texture::Texture(const std::string& p_filename, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
+        Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
 
         Texture(const Texture& p_other);
 
@@ -90,6 +101,7 @@ namespace renderMe
             m_height = p_other.m_height;
             m_format = p_other.m_format;
             m_data = p_other.m_data;
+            m_content_access_mode = p_other.m_content_access_mode;
 
             m_state_mutex.lock();
             p_other.m_state_mutex.lock();
@@ -100,40 +112,48 @@ namespace renderMe
             return *this;
         }
 
-        Source getSource() const;
-        size_t getWidth() const;
-        size_t getHeight() const;
-        Format getFormat() const;
+        Source                              getSource() const;
 
-        State getState() const;
+        size_t                              getWidth() const;
+        size_t                              getHeight() const;
+        Format                              getFormat() const;
 
-        std::string getName() const;
+        State                               getState() const;
+
+        std::string                         getName() const;
+
+        ContentAccessMode                   getContentAccessMode() const;
+
+        const core::Buffer<unsigned char>&  getData() const;
 
     private:
 
         std::string                         m_name;
 
-        Source                              m_source        { Source::CONTENT_FROM_FILE };
+        Source                              m_source            { Source::CONTENT_FROM_FILE };
 
-        size_t                              m_width         { 0 };
-        size_t                              m_height        { 0 };
-        Format                              m_format        { Format::TEXTURE_RGB };
+        size_t                              m_width             { 0 };
+        size_t                              m_height            { 0 };
+        Format                              m_format            { Format::TEXTURE_RGB };
 
         mutable std::mutex	                m_state_mutex;
-        State                               m_state         { State::INIT };
+        State                               m_state             { State::INIT };
+
+        ContentAccessMode                   m_content_access_mode { ContentAccessMode::NO_CONTENT_ACCESS };
 
         core::Buffer<unsigned char>         m_data;
 
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
 
-
-
         void setState(Texture::State p_state);
         void setData(const core::Buffer<unsigned char>& p_data);
 
+        void setDims(size_t p_w, size_t p_h);
+        void setFormat(Format p_format);
+        
         friend class renderMe::ResourceSystem;
         friend class renderMe::D3D11System;
-
+        friend class D3D11SystemImpl;
     };
 };

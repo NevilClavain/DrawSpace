@@ -199,7 +199,6 @@ void ResourceSystem::run()
 			for (auto& e : t_list)
 			{
 				auto& staged_texture{ e->getPurpose() };
-				size_t stage{ staged_texture.first };
 				Texture& texture{ staged_texture.second };
 					
 				const auto state{ texture.getState() };

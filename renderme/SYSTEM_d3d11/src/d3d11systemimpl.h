@@ -57,6 +57,7 @@
 
 #include "linemeshe.h"
 #include "trianglemeshe.h"
+#include "texture.h"
 #include "renderstate.h"
 
 #include "tvector.h"
@@ -155,6 +156,10 @@ public:
     void setTriangleMeshe(const std::string& p_name);
     void destroyTriangleMeshe(const std::string& p_name);
 
+    bool createTexture(renderMe::Texture& p_texture);
+    void setTexture(const std::string& p_name);
+    void destroyTexture(const std::string& p_name);
+
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
     bool setCacheRS(bool p_force = false); // apply
 
@@ -232,6 +237,11 @@ private:
         size_t        nb_primitives         { 0 };
     };
 
+    struct TextureData
+    {
+
+    };
+
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;
     using BSCache =                 std::unordered_map<std::string, BSCacheEntry>;
 
@@ -239,6 +249,7 @@ private:
     using PShaderList =             std::unordered_map<std::string, PixelShadersData>;
 
     using MesheList =               std::unordered_map<std::string, MesheData>;
+    using TextureList =             std::unordered_map<std::string, TextureData>;
 
 
     renderMe::core::logger::Sink                        m_localLogger;
@@ -296,6 +307,8 @@ private:
 
     MesheList                                           m_lines;
     MesheList                                           m_triangles;
+
+    TextureList                                         m_textures;
 
 
     ////////////////////////////////////////////////////////

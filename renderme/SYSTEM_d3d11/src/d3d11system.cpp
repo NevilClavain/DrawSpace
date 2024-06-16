@@ -47,6 +47,8 @@
 #include "linemeshe.h"
 #include "trianglemeshe.h"
 
+#include "texture.h"
+
 #include "datacloud.h"
 
 #include "worldposition.h"
@@ -371,6 +373,27 @@ void D3D11System::manageResources()
 				}
 			}
 
+			//search for textures
+			const auto textures_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,Texture>>() };
+
+			for (auto& e : textures_list)
+			{
+				auto& staged_texture{ e->getPurpose() };
+				Texture& texture{ staged_texture.second };
+
+				const auto state{ texture.getState() };
+				if (Texture::State::BLOBLOADED == state)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TEXTURE_CREATION_BEGIN : " + texture.getName());
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_TEXTURE_CREATION_BEGIN, texture.getName());
+					}
+
+					handleTextureCreation(texture);
+					texture.setState(Texture::State::RENDERERLOADING);
+				}
+			}
 		}
 	};
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourcesAspect);
@@ -883,4 +906,39 @@ void D3D11System::handleTrianglemesheRelease(TriangleMeshe& p_tm)
 	) };
 
 	m_runner.m_mailbox_in.push(task);
+}
+
+void D3D11System::handleTextureCreation(Texture& p_texture)
+{
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_texture.getName());
+
+	const std::string action{ "load_texture_d3d11" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_texture.getName(),
+		[&,
+			action = action
+		]()
+		{
+			
+			bool status { false };
+			status = d3dimpl->createTexture(p_texture);
+
+			if (!status)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load texture " + p_texture.getName() + " in D3D11 ");
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_texture.getName(), action };
+				m_runner.m_mailbox_out.push(report);
+			}
+			else
+			{
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of texture " + p_texture.getName() + " in D3D11 ");
+				p_texture.setState(Texture::State::RENDERERLOADED);
+			}
+		}
+	) };
+
+	m_runner.m_mailbox_in.push(task);
+
 }
