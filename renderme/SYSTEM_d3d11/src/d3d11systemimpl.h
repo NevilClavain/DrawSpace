@@ -63,7 +63,7 @@
 #include "tvector.h"
 #include "matrix.h"
 
-static constexpr int nbTextureStages = 9;
+static constexpr int nbTextureStages = renderMe::nbUVCoordsPerVertex;
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
