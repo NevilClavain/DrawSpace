@@ -157,7 +157,7 @@ public:
     void destroyTriangleMeshe(const std::string& p_name);
 
     bool createTexture(renderMe::Texture& p_texture);
-    void setTexture(const std::string& p_name);
+    void setTexture(const std::string& p_name, int p_stage);
     void destroyTexture(const std::string& p_name);
 
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
@@ -239,7 +239,9 @@ private:
 
     struct TextureData
     {
-
+        ID3D11ShaderResourceView*   shader_resource_view{ nullptr };
+        ID3D11Resource*             texture{ nullptr };
+        D3D11_TEXTURE2D_DESC        desc;
     };
 
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;

@@ -100,6 +100,8 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
             D3D11_RESOURCE_DIMENSION dims;
             d3dt11->GetType(&dims);
 
+            D3D11_TEXTURE2D_DESC desc;
+
             if (D3D11_RESOURCE_DIMENSION_TEXTURE2D == dims)
             {
                 // retrieve texture infos
@@ -107,7 +109,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                 ID3D11Texture2D* pTextureInterface{ nullptr };
                 hRes = d3dt11->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
 
-                D3D11_TEXTURE2D_DESC desc;
+                
                 pTextureInterface->GetDesc(&desc);
 
                 _RENDERME_DEBUG(m_localLogger, "Texture infos : " + std::to_string(desc.Width) + "x" + std::to_string(desc.Height) + " format : " + std::to_string(desc.Format));
@@ -151,6 +153,14 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                 }
 
                 p_texture.setFormat(format);
+
+                TextureData texture_data;
+                texture_data.texture = d3dt11;
+                texture_data.shader_resource_view = textureResourceView;
+                texture_data.desc = desc;
+                m_textures[name] = texture_data;
+
+
             }
             else
             {
@@ -165,12 +175,29 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
 }
 
-void D3D11SystemImpl::setTexture(const std::string& p_name)
+void D3D11SystemImpl::setTexture(const std::string& p_name, int p_stage)
 {
+    if (!m_textures.count(p_name))
+    {
+        _EXCEPTION("unknown texture :" + p_name)
+    }
+    const auto textureData{ m_textures.at(p_name) };
 
+    m_lpd3ddevcontext->PSSetShaderResources(p_stage, 1, &textureData.shader_resource_view);
 }
 
 void D3D11SystemImpl::destroyTexture(const std::string& p_name)
 {
+    if (!m_textures.count(p_name))
+    {
+        _EXCEPTION("unknown texture :" + p_name)
+    }
+    const auto textureData{ m_textures.at(p_name) };
 
+    textureData.shader_resource_view->Release();
+    textureData.texture->Release();
+
+    m_textures.erase(p_name);
+
+    _RENDERME_DEBUG(m_localLogger, "texture release SUCCESS : " + p_name);
 }
