@@ -124,6 +124,34 @@ namespace renderMe
 				float								rotation_rad{ 0.0 };
 			};
 
+			/////////////////////////////////////////////////////////////////////////////////////////
+
+			
+			struct TexturePayloadstage3
+			{
+				// key = entity id
+				std::unordered_map<std::string, QueueDrawingControl> list;
+			};
+
+			struct TexturePayloadstage2
+			{
+				// key = stage 3 texture id
+				std::unordered_map<std::string, TexturePayloadstage3> list;
+			};
+
+			struct TexturePayloadstage1
+			{
+				// key = stage 2 texture id
+				std::unordered_map<std::string, TexturePayloadstage2> list;
+			};
+
+			struct TexturePayloadstage0
+			{
+				// key = stage 1 texture id
+				std::unordered_map<std::string, TexturePayloadstage1> list;
+			};
+
+
 			struct TriangleMeshePayload
 			{
 				// key = entity id

@@ -175,7 +175,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
 }
 
-void D3D11SystemImpl::setTexture(const std::string& p_name, int p_stage)
+void D3D11SystemImpl::setTexture(const std::string& p_name, size_t p_stage)
 {
     if (!m_textures.count(p_name))
     {

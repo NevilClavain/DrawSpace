@@ -157,7 +157,7 @@ public:
     void destroyTriangleMeshe(const std::string& p_name);
 
     bool createTexture(renderMe::Texture& p_texture);
-    void setTexture(const std::string& p_name, int p_stage);
+    void setTexture(const std::string& p_name, size_t p_stage);
     void destroyTexture(const std::string& p_name);
 
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
