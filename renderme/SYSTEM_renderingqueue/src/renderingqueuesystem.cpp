@@ -31,6 +31,7 @@
 #include "shader.h"
 #include "linemeshe.h"
 #include "trianglemeshe.h"
+#include "texture.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -430,6 +431,7 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMeshePayload(
 																const std::vector<RenderingQueueSystem::Callback>& p_cbs,
 																renderMe::core::logger::Sink& p_localLogger,
 																const renderMe::core::ComponentList<rendering::DrawingControl>& p_trianglesDrawingControls,
+																const renderMe::core::ComponentList<std::pair<size_t, Texture>>& p_texturesSet,
 																const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	rendering::Queue::TriangleMeshePayload triangleMeshePayload;
@@ -573,8 +575,11 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 			// search rendering states
 			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<renderMe::rendering::RenderState>>() };
 
-			//search for shaders
+			// search for shaders
 			const auto shaders{ p_resourceAspect.getComponentsByType<Shader>() };
+
+			// search for textures set
+			const auto texturesSet{ p_resourceAspect.getComponentsByType<std::pair<size_t,Texture>>() };
 
 			if (1 < shaders.size())
 			{
@@ -715,7 +720,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 													+ " updated with new entity : " + p_entity_id
 													+ " : adding new trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getName())
 
-												const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+												const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, texturesSet, vshader, pshader) };
 												renderStatePayload.trianglemeshes_list[triangleMeshes.at(0)->getPurpose().getName()] = triangleMeshePayload;
 											}
 										}
@@ -740,7 +745,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 										}
 										else if (triangleMeshes.size() > 0)
 										{
-											const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+											const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, texturesSet, vshader, pshader) };
 											renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getName(), triangleMeshePayload, rsStates.at(0)->getPurpose());
 
 											renderStatePayloadSet = true;
@@ -779,7 +784,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 									}
 									else if (triangleMeshes.size() > 0)
 									{
-										const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+										const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, texturesSet, vshader, pshader) };
 
 										// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 										// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
@@ -823,7 +828,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 								}
 								else if (triangleMeshes.size() > 0)
 								{
-									const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, vshader, pshader) };
+									const auto triangleMeshePayload{ build_TriangleMeshePayload(m_callbacks, m_localLogger, drawingControls, texturesSet, vshader, pshader) };
 
 									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
