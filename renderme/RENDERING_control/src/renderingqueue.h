@@ -128,7 +128,7 @@ namespace renderMe
 
 			struct TextureSetPayload
 			{
-				std::map<size_t, std::string> textures; // stage/texture id
+				std::map<size_t, std::string>						 textures; // stage/texture id
 
 				// key = entity id
 				std::unordered_map<std::string, QueueDrawingControl> drawing_list;
@@ -142,7 +142,7 @@ namespace renderMe
 
 				// drawing under textures set
 				// key = texture set signatures : "<stagenumber>.<name>/..."
-				std::unordered_map<std::string, QueueDrawingControl> textures_set_list;
+				std::unordered_map<std::string, TextureSetPayload> textures_set_list;
 			};
 
 			struct LineMeshePayload
