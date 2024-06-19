@@ -551,7 +551,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 						const auto& triangleMesheId{ triangleMesheInfo.first };
 						d3dimpl->setTriangleMeshe(triangleMesheId);
 
-						const auto& triangleQueueDrawingControls{ triangleMesheInfo.second.list };
+						const auto& triangleQueueDrawingControls{ triangleMesheInfo.second.drawing_list };
 
 						for (const auto& tdc : triangleQueueDrawingControls)
 						{
@@ -606,7 +606,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 						const auto& lineMesheId{ lineMesheInfo.first };
 						d3dimpl->setLineMeshe(lineMesheId);
 
-						const auto& lineDrawingControls{ lineMesheInfo.second.list };
+						const auto& lineDrawingControls{ lineMesheInfo.second.drawing_list };
 						for (const auto& ldc : lineDrawingControls)
 						{
 							//////

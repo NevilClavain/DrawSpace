@@ -146,7 +146,7 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 					const auto linemeshe_id{ linemeshe.first };
 					_RENDERME_DEBUG(m_localLogger, "				-> line meshe D3D resource id: " + linemeshe_id);
 
-					for (const auto& drawing : linemeshe.second.list)
+					for (const auto& drawing : linemeshe.second.drawing_list)
 					{
 						const auto drawing_id{ drawing.first };
 						_RENDERME_DEBUG(m_localLogger, "					-> drawing : " + drawing_id);
@@ -188,7 +188,7 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 					const auto triangle_id{ trianglemeshe.first };
 					_RENDERME_DEBUG(m_localLogger, "				-> triangle meshe D3D resource id: " + triangle_id);
 
-					for (const auto& drawing : trianglemeshe.second.list)
+					for (const auto& drawing : trianglemeshe.second.drawing_list)
 					{
 						const auto drawing_id{ drawing.first };
 						_RENDERME_DEBUG(m_localLogger, "					-> drawing : " + drawing_id);
@@ -447,7 +447,7 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMeshePayload(
 
 		connect_shaders_args(p_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, p_vshader, p_pshader);
 
-		triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesQueueDrawingControl;
+		triangleMeshePayload.drawing_list[trianglesDrawingControl.owner_entity_id] = trianglesQueueDrawingControl;
 
 
 		_RENDERME_DEBUG(p_localLogger, "adding triangles DrawingControl of entity: " + trianglesDrawingControl.owner_entity_id)
@@ -482,7 +482,7 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(
 
 		connect_shaders_args(p_localLogger, linesDrawingControl, linesQueueDrawingControl, p_vshader, p_pshader);
 
-		lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesQueueDrawingControl;
+		lineMeshePayload.drawing_list[linesDrawingControl.owner_entity_id] = linesQueueDrawingControl;
 
 		_RENDERME_DEBUG(p_localLogger, "adding lines DrawingControl of entity: " + linesDrawingControl.owner_entity_id)
 
@@ -645,7 +645,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 													connect_shaders_args(m_localLogger, linesDrawingControl, linesQueueDrawingControl, vshader, pshader);
 
-													lineMeshePayload.list[linesDrawingControl.owner_entity_id] = linesQueueDrawingControl;
+													lineMeshePayload.drawing_list[linesDrawingControl.owner_entity_id] = linesQueueDrawingControl;
 
 													_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 														+ " updated with new entity : " + p_entity_id
@@ -694,7 +694,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 													connect_shaders_args(m_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, vshader, pshader);
 
-													triangleMeshePayload.list[trianglesDrawingControl.owner_entity_id] = trianglesQueueDrawingControl;
+													triangleMeshePayload.drawing_list[trianglesDrawingControl.owner_entity_id] = trianglesQueueDrawingControl;
 
 													_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 														+ " updated with new entity : " + p_entity_id
@@ -881,7 +881,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 				{
 					std::vector<std::string> ldc_to_remove;
 
-					for (const auto& ldc : lm.second.list)
+					for (const auto& ldc : lm.second.drawing_list)
 					{						
 						if (ldc.second.owner_entity_id == p_entity_id)
 						{
@@ -898,10 +898,10 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 					for (const std::string& id : ldc_to_remove)
 					{
-						lm.second.list.erase(id);
+						lm.second.drawing_list.erase(id);
 					}
 
-					if (0 == lm.second.list.size())
+					if (0 == lm.second.drawing_list.size())
 					{
 						_RENDERME_DEBUG(m_localLogger, "linemeshe payload is now empty, remove linemeshe id : " + lm.first)
 						lm_to_remove.push_back(lm.first);
@@ -921,7 +921,7 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 				{
 					std::vector<std::string> tdc_to_remove;
 
-					for (const auto& tdc : tm.second.list)
+					for (const auto& tdc : tm.second.drawing_list)
 					{
 						if (tdc.second.owner_entity_id == p_entity_id)
 						{
@@ -938,10 +938,10 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 
 					for (const std::string& id : tdc_to_remove)
 					{
-						tm.second.list.erase(id);
+						tm.second.drawing_list.erase(id);
 					}
 
-					if (0 == tm.second.list.size())
+					if (0 == tm.second.drawing_list.size())
 					{
 						_RENDERME_DEBUG(m_localLogger, "trianglemeshe payload is now empty, remove trianglemeshe id : " + tm.first)
 						tm_to_remove.push_back(tm.first);

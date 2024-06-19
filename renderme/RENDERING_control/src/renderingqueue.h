@@ -126,42 +126,29 @@ namespace renderMe
 
 			/////////////////////////////////////////////////////////////////////////////////////////
 
-			
-			struct TexturePayloadstage3
+			struct TextureSetPayload
 			{
+				std::map<size_t, std::string> textures; // stage/texture id
+
 				// key = entity id
-				std::unordered_map<std::string, QueueDrawingControl> list;
+				std::unordered_map<std::string, QueueDrawingControl> drawing_list;
 			};
-
-			struct TexturePayloadstage2
-			{
-				// key = stage 3 texture id
-				std::unordered_map<std::string, TexturePayloadstage3> list;
-			};
-
-			struct TexturePayloadstage1
-			{
-				// key = stage 2 texture id
-				std::unordered_map<std::string, TexturePayloadstage2> list;
-			};
-
-			struct TexturePayloadstage0
-			{
-				// key = stage 1 texture id
-				std::unordered_map<std::string, TexturePayloadstage1> list;
-			};
-
-
+			
 			struct TriangleMeshePayload
 			{
+				// drawing without textures
 				// key = entity id
-				std::unordered_map<std::string, QueueDrawingControl> list;
+				std::unordered_map<std::string, QueueDrawingControl> drawing_list;
+
+				// drawing under textures set
+				// key = texture set signatures : "<stagenumber>.<name>/..."
+				std::unordered_map<std::string, QueueDrawingControl> textures_set_list;
 			};
 
 			struct LineMeshePayload
 			{
 				// key = entity id
-				std::unordered_map<std::string, QueueDrawingControl> list;
+				std::unordered_map<std::string, QueueDrawingControl> drawing_list;
 			};
 
 			struct RenderStatePayload
