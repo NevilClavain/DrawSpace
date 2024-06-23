@@ -134,7 +134,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 	else if (VK_F8 == p_key)
 	{
-		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(5) };
+		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(dataPrintSystemSlot) };
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");

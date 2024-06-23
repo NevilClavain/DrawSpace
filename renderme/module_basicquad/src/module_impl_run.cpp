@@ -113,13 +113,16 @@ void ModuleImpl::run(void)
 
 		quad_resource_aspect.addComponent<std::pair<size_t,Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("map.jpg")));
 
+
+
+
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 		RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
-		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "line");
+		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 
 		const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill };
 

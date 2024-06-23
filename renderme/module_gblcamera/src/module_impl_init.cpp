@@ -86,7 +86,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	sysEngine->makeSystem<renderMe::DataPrintSystem>(5, m_entitygraph);
 
 	// D3D11 system provides compilation shader service : give access to this to resources sytem
-	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
+	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
 	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getServiceInvocationCallback());
 
 
@@ -121,7 +121,7 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 	m_windowRenderingQueue = &rendering_queue;
 
 	auto sysEngine{ SystemEngine::getInstance() };
-	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(5) };
+	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot) };
 
 	dataPrintSystem->setRenderingQueue(m_windowRenderingQueue);
 }
@@ -170,7 +170,7 @@ void ModuleImpl::resource_system_events()
 		}
 	};
 
-	const auto resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(2) };
+	const auto resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(resourceSystemSlot) };
 	resourceSystem->registerSubscriber(rs_cb);
 }
 
@@ -180,7 +180,7 @@ void ModuleImpl::resource_system_events()
 void ModuleImpl::d3d11_system_events()
 {
 	const auto sysEngine{ SystemEngine::getInstance() };
-	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(1) };
+	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
 
 	const D3D11System::Callback d3d11_cb
 	{

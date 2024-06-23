@@ -89,11 +89,19 @@ void ModuleImpl::onEndKeyPress(long p_key)
 	}
 	else if (VK_F3 == p_key)
 	{
+		if (true == m_quadEntity_state_request)
+		{
+			m_quadEntity_state_request = false;
+		}
+		else
+		{
+			m_quadEntity_state_request = true;
+		}
 	}
 
 	else if (VK_F8 == p_key)
 	{
-		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(5) };
+		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");

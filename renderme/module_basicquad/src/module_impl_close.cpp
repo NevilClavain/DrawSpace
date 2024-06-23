@@ -34,12 +34,12 @@ using namespace renderMe::core;
 
 void ModuleImpl::close(void)
 {
-	auto resourceSystem{ SystemEngine::getInstance()->getSystem(2) };
+	auto resourceSystem{ SystemEngine::getInstance()->getSystem(resourceSystemSlot) };
 	auto resourceSystemInstance{ dynamic_cast<renderMe::ResourceSystem*>(resourceSystem) };
 
 	resourceSystemInstance->killRunner();
 
-	auto d3d11System{ SystemEngine::getInstance()->getSystem(1) };
+	auto d3d11System{ SystemEngine::getInstance()->getSystem(d3d11SystemSlot) };
 	auto d3d11SystemInstance{ dynamic_cast<renderMe::D3D11System*>(d3d11System) };
 
 	d3d11SystemInstance->killRunner();

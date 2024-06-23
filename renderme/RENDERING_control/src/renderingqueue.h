@@ -141,7 +141,7 @@ namespace renderMe
 				std::unordered_map<std::string, QueueDrawingControl> drawing_list;
 
 				// drawing under textures set
-				// key = texture set signatures : "<stagenumber>.<name>/..."
+				// key = texture set signatures : "<name>.<stagenumber>/..."
 				std::unordered_map<std::string, TextureSetPayload> textures_set_list;
 			};
 
