@@ -175,15 +175,37 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
 }
 
-void D3D11SystemImpl::setTexture(const std::string& p_name, size_t p_stage)
+void D3D11SystemImpl::bindTextureStage(const std::string& p_name, size_t p_stage)
 {
     if (!m_textures.count(p_name))
     {
         _EXCEPTION("unknown texture :" + p_name)
     }
-    const auto textureData{ m_textures.at(p_name) };
 
+    if (m_currentTextures[p_stage] == p_name)
+    {
+        // already set;
+        return;
+    }
+
+    const auto textureData{ m_textures.at(p_name) };
     m_lpd3ddevcontext->PSSetShaderResources(p_stage, 1, &textureData.shader_resource_view);
+
+    m_currentTextures[p_stage] = p_name;
+}
+
+void D3D11SystemImpl::unbindTextureStage(size_t p_stage)
+{
+    if (m_currentTextures[p_stage] == "")
+    {
+        // already void;
+        return;
+    }
+
+    ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
+    m_lpd3ddevcontext->PSSetShaderResources(p_stage, 1, nullSRV);
+
+    m_currentTextures[p_stage] = "";
 }
 
 void D3D11SystemImpl::destroyTexture(const std::string& p_name)

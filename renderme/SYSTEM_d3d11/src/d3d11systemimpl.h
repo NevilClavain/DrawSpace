@@ -157,7 +157,10 @@ public:
     void destroyTriangleMeshe(const std::string& p_name);
 
     bool createTexture(renderMe::Texture& p_texture);
-    void setTexture(const std::string& p_name, size_t p_stage);
+
+    void bindTextureStage(const std::string& p_name, size_t p_stage);
+    void unbindTextureStage(size_t p_stage);
+
     void destroyTexture(const std::string& p_name);
 
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
@@ -330,6 +333,9 @@ private:
     bool                                                m_VSExtendedSamplers;
     std::string                                         m_currentVSExtendedSamplers[nbTextureStages];
     int                                                 m_currentVSExtendedSamplersLength;
+
+    // current texture name for each stage
+    std::string                                         m_currentTextures[nbTextureStages];
 
 
     ////////////////////////////////////////////////////////
