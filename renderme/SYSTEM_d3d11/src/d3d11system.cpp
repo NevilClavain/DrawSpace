@@ -544,55 +544,124 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 						d3dimpl->setTriangleListTopology();
 					}
 
-					///////////// TriangleMeshes END
-
 					for (const auto& triangleMesheInfo : renderStatesInfo.second.trianglemeshes_list)
 					{
 						const auto& triangleMesheId{ triangleMesheInfo.first };
 						d3dimpl->setTriangleMeshe(triangleMesheId);
 
-						const auto& triangleQueueDrawingControls{ triangleMesheInfo.second.drawing_list };
-
-						for (const auto& tdc : triangleQueueDrawingControls)
+						// nodes without textures
 						{
-							//////
-							tdc.second.setup();
+							const auto& triangleQueueDrawingControls{ triangleMesheInfo.second.drawing_list };
 
-							////// Apply shaders params
-
-							for (const auto& e : tdc.second.vshaders_map_cnx)
+							for (const auto& tdc : triangleQueueDrawingControls)
 							{
-								const auto& datacloud_data_id{ e.first };
-								const auto& shader_param{ e.second };
+								//////
+								tdc.second.setup();
 
-								if ("Real4Vector" == shader_param.argument_type)
+								////// Apply shaders params
+
+								for (const auto& e : tdc.second.vshaders_map_cnx)
 								{
-									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
-									d3dimpl->setVertexshaderConstantsVec(shader_param.shader_register, rvector);
+									const auto& datacloud_data_id{ e.first };
+									const auto& shader_param{ e.second };
+
+									if ("Real4Vector" == shader_param.argument_type)
+									{
+										const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+										d3dimpl->setVertexshaderConstantsVec(shader_param.shader_register, rvector);
+									}
 								}
+
+								for (const auto& e : tdc.second.pshaders_map_cnx)
+								{
+									const auto& datacloud_data_id{ e.first };
+									const auto& shader_param{ e.second };
+
+									if ("Real4Vector" == shader_param.argument_type)
+									{
+										const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+										d3dimpl->setPixelshaderConstantsVec(shader_param.shader_register, rvector);
+									}
+								}
+
+								//////
+
+								d3dimpl->drawTriangleMeshe(*tdc.second.world, current_view, current_proj);
+
+								//////
+								tdc.second.teardown();
+
+							}
+						}
+
+						// nodes with textures
+						const auto& textures_set_list{ triangleMesheInfo.second.textures_set_list };
+
+						for (const auto& textures_set_entry : textures_set_list)
+						{
+							// Set textures stages
+
+							const auto& textures_set{ textures_set_entry.second };
+							for (int i = 0; i < renderMe::nbUVCoordsPerVertex; i++)
+							{
+								if (textures_set.textures.count(i))
+								{
+									// texture stage defined with an id
+									const auto& texture_id{ textures_set.textures.at(i) };
+									d3dimpl->bindTextureStage(texture_id, i);
+								}
+								else
+								{
+									d3dimpl->unbindTextureStage(i);
+								}								
 							}
 
-							for (const auto& e : tdc.second.pshaders_map_cnx)
+							/////
+
+							const auto& triangleQueueDrawingControls{ textures_set_entry.second.drawing_list };
+
+							for (const auto& tdc : triangleQueueDrawingControls)
 							{
-								const auto& datacloud_data_id{ e.first };
-								const auto& shader_param{ e.second };
+								//////
+								tdc.second.setup();
 
-								if ("Real4Vector" == shader_param.argument_type)
+								////// Apply shaders params
+
+								for (const auto& e : tdc.second.vshaders_map_cnx)
 								{
-									const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
-									d3dimpl->setPixelshaderConstantsVec(shader_param.shader_register, rvector);
+									const auto& datacloud_data_id{ e.first };
+									const auto& shader_param{ e.second };
+
+									if ("Real4Vector" == shader_param.argument_type)
+									{
+										const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+										d3dimpl->setVertexshaderConstantsVec(shader_param.shader_register, rvector);
+									}
 								}
+
+								for (const auto& e : tdc.second.pshaders_map_cnx)
+								{
+									const auto& datacloud_data_id{ e.first };
+									const auto& shader_param{ e.second };
+
+									if ("Real4Vector" == shader_param.argument_type)
+									{
+										const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
+										d3dimpl->setPixelshaderConstantsVec(shader_param.shader_register, rvector);
+									}
+								}
+
+								//////
+
+								d3dimpl->drawTriangleMeshe(*tdc.second.world, current_view, current_proj);
+
+								//////
+								tdc.second.teardown();
 							}
-
-							//////
-
-							d3dimpl->drawTriangleMeshe(*tdc.second.world, current_view, current_proj);
-
-							//////
-							tdc.second.teardown();
-
 						}
 					}
+
+					///////////// TriangleMeshes END
 
 					///////////// LineMeshes BEGIN
 					

@@ -683,8 +683,49 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 				if (0 == vshader.getType() && 1 == pshader.getType())
 				{
-					if (Shader::State::RENDERERLOADED == vshader.getState() && Shader::State::RENDERERLOADED == pshader.getState())
+
+					bool resources_D3D11ready{ true };
+
+					//////////////////////////////// check shaders are D3D11 ready
+
+					if (Shader::State::RENDERERLOADED != vshader.getState() || Shader::State::RENDERERLOADED != pshader.getState())
 					{
+						resources_D3D11ready = false;
+					}
+
+					//////////////////////////////// check meshes are D3D11 ready
+
+					if (lineMeshes.size() > 0)
+					{
+						if (LineMeshe::State::RENDERERLOADED != lineMeshes.at(0)->getPurpose().getState())
+						{
+							resources_D3D11ready = false;
+						}
+					}
+
+					if (triangleMeshes.size() > 0)
+					{
+						if (TriangleMeshe::State::RENDERERLOADED != triangleMeshes.at(0)->getPurpose().getState())
+						{
+							resources_D3D11ready = false;
+						}
+					}
+
+					//////////////////////////////// check textures are D3D11 ready
+
+					for (const auto& e : texturesSet)
+					{
+						const auto& staged_texture{ e->getPurpose() };
+
+						if (Texture::State::RENDERERLOADED != staged_texture.second.getState())
+						{
+							resources_D3D11ready = false;
+						}
+					}
+
+					if (resources_D3D11ready)
+					{
+
 						if (rsStates.size() > 0 && (lineMeshes.size() > 0 || triangleMeshes.size() > 0))
 						{
 							// ok, can update queue
