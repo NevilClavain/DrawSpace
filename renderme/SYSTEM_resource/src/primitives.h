@@ -66,6 +66,18 @@ namespace renderMe
             init_text_coords();
         }
 
+        Vertex(double p_x, double p_y, double p_z, float p_tu0, float p_tv0) :
+            x(p_x),
+            y(p_y),
+            z(p_z)
+        {
+            init_text_coords();
+
+            tu[0] = p_tu0;
+            tv[0] = p_tv0;
+        }
+
+
     private:
         void init_text_coords(void)
         {
