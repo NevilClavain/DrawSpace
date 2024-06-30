@@ -88,7 +88,7 @@ namespace renderMe
 
         Texture() = delete;
         
-        Texture::Texture(const std::string& p_filename, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
+        Texture::Texture(const std::string& p_filename);
         Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
 
         Texture(const Texture& p_other);

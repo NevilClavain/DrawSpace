@@ -75,7 +75,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                     break;
                 case renderMe::Texture::ContentAccessMode::CONTENT_ACCESS_WRITE:
 
-                    usage = D3D11_USAGE_DYNAMIC; // allow GPU/CPU transfert                    
+                    usage = D3D11_USAGE_DYNAMIC; // allow GPU/CPU transfert
                     cpuAccessFlags = D3D11_CPU_ACCESS_WRITE; // cpu can write content
 
                     break;

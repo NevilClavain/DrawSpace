@@ -26,10 +26,9 @@
 
 using namespace renderMe;
 
-Texture::Texture(const std::string& p_filename, ContentAccessMode p_content_access_mode) :
+Texture::Texture(const std::string& p_filename) :
 m_source(Source::CONTENT_FROM_FILE),
-m_name(p_filename), 
-m_content_access_mode(p_content_access_mode)
+m_name(p_filename)
 {
 }
 
