@@ -722,7 +722,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 		}
 	}
 	
-	/*
+	
 	// render texts
 	for (auto& text : p_renderingQueue.texts())
 	{
@@ -736,9 +736,11 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 		d3dimpl->forceCurrentPSSamplers();
 		d3dimpl->forceCurrentVSSamplers();
 
+		d3dimpl->forceTexturesBinding();
+
 		// todo : also for setDepthStenciState(), setPSSamplers(), setVSSamplers()
 	}
-	*/
+	
 }
 
 void D3D11System::run()

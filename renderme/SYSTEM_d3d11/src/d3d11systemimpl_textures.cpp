@@ -223,3 +223,15 @@ void D3D11SystemImpl::destroyTexture(const std::string& p_name)
 
     _RENDERME_DEBUG(m_localLogger, "texture release SUCCESS : " + p_name);
 }
+
+void D3D11SystemImpl::forceTexturesBinding()
+{
+    for (int i = 0; i < nbTextureStages; i++)
+    {
+        if ("" != m_currentTextures[i])
+        {
+            const auto textureData{ m_textures.at(m_currentTextures[i])};
+            m_lpd3ddevcontext->PSSetShaderResources(i, 1, &textureData.shader_resource_view);
+        }
+    }
+}

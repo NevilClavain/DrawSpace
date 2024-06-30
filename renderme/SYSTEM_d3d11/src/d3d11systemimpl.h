@@ -170,7 +170,7 @@ public:
     bool setCacheBlendstate(bool p_force = false); // apply
 
     void setDepthStenciState(const renderMe::rendering::RenderState& p_renderstate);
-    void forceCurrentDepthStenciState();
+    void forceCurrentDepthStenciState();    
 
     void setPSSamplers(const renderMe::rendering::RenderState& p_renderstate);
     void setVSSamplers(const renderMe::rendering::RenderState& p_renderstate);
@@ -178,6 +178,7 @@ public:
     void forceCurrentPSSamplers();
     void forceCurrentVSSamplers();
 
+    void forceTexturesBinding();
 
     void setTriangleListTopology();
     void setLineListTopology();
