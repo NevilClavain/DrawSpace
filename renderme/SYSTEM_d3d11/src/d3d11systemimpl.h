@@ -183,6 +183,8 @@ public:
     void setTriangleListTopology();
     void setLineListTopology();
 
+    void forceCurrentTopology();
+
     void drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
     void drawTriangleMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
 
@@ -337,6 +339,9 @@ private:
 
     // current texture name for each stage
     std::string                                         m_currentTextures[nbTextureStages];
+
+    // current primitive topology
+    D3D11_PRIMITIVE_TOPOLOGY                            m_primitiveTopology{ D3D_PRIMITIVE_TOPOLOGY_UNDEFINED };
 
 
     ////////////////////////////////////////////////////////

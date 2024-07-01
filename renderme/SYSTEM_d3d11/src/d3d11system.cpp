@@ -738,6 +738,8 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 		d3dimpl->forceTexturesBinding();
 
+		d3dimpl->forceCurrentTopology();
+
 		// todo : also for setDepthStenciState(), setPSSamplers(), setVSSamplers()
 	}
 	
