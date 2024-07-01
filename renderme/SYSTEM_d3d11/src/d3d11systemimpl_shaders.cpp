@@ -237,27 +237,56 @@ bool D3D11SystemImpl::createPixelShader(const std::string& p_name, const renderM
     return true;
 }
 
-void D3D11SystemImpl::setVertexShader(const std::string& p_name) const
+void D3D11SystemImpl::setVertexShader(const std::string& p_name)
 {
     if (!m_vshaders.count(p_name))
     {
         _EXCEPTION("unknown vertex shader :" + p_name)
     }
-    const auto shaderData{ m_vshaders.at(p_name) };
-    
-    m_lpd3ddevcontext->IASetInputLayout(shaderData.input_layout);
-    m_lpd3ddevcontext->VSSetShader(shaderData.vertex_shader, nullptr, 0);
+
+    if (m_currentVs != p_name)
+    {
+        const auto shaderData{ m_vshaders.at(p_name) };
+        m_lpd3ddevcontext->IASetInputLayout(shaderData.input_layout);
+        m_lpd3ddevcontext->VSSetShader(shaderData.vertex_shader, nullptr, 0);
+
+        m_currentVs = p_name;
+    }
 }
 
-void D3D11SystemImpl::setPixelShader(const std::string& p_name) const
+void D3D11SystemImpl::setPixelShader(const std::string& p_name)
 {
     if (!m_pshaders.count(p_name))
     {
         _EXCEPTION("unknown pixel shader :" + p_name)
     }
-    const auto shaderData{ m_pshaders.at(p_name) };
 
-    m_lpd3ddevcontext->PSSetShader(shaderData.pixel_shader, nullptr, 0);
+    if (m_currentPs != p_name)
+    {
+        const auto shaderData{ m_pshaders.at(p_name) };
+        m_lpd3ddevcontext->PSSetShader(shaderData.pixel_shader, nullptr, 0);
+
+        m_currentPs = p_name;
+    }
+}
+
+void D3D11SystemImpl::forceCurrentVertexShader()
+{
+    if (m_currentVs != "")
+    {
+        const auto shaderData{ m_vshaders.at(m_currentVs) };
+        m_lpd3ddevcontext->IASetInputLayout(shaderData.input_layout);
+        m_lpd3ddevcontext->VSSetShader(shaderData.vertex_shader, nullptr, 0);
+    }
+}
+
+void D3D11SystemImpl::forceCurrentPixelShader()
+{
+    if (m_currentPs != "")
+    {
+        const auto shaderData{ m_pshaders.at(m_currentPs) };
+        m_lpd3ddevcontext->PSSetShader(shaderData.pixel_shader, nullptr, 0);
+    }
 }
 
 void D3D11SystemImpl::destroyVertexShader(const std::string& p_name)

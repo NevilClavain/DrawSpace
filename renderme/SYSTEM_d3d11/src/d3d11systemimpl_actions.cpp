@@ -111,21 +111,23 @@ void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::
 
 void D3D11SystemImpl::setTriangleListTopology()
 {
-	if (D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST != m_primitiveTopology)
+	if (D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST != m_currentPrimitiveTopology)
 	{
 		m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_currentPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	}	
 }
 
 void D3D11SystemImpl::setLineListTopology()
 {
-	if (D3D11_PRIMITIVE_TOPOLOGY_LINELIST != m_primitiveTopology)
+	if (D3D11_PRIMITIVE_TOPOLOGY_LINELIST != m_currentPrimitiveTopology)
 	{
 		m_lpd3ddevcontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		m_currentPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	}
 }
 
 void D3D11SystemImpl::forceCurrentTopology()
 {
-	m_lpd3ddevcontext->IASetPrimitiveTopology(m_primitiveTopology);
+	m_lpd3ddevcontext->IASetPrimitiveTopology(m_currentPrimitiveTopology);
 }

@@ -142,8 +142,11 @@ public:
     bool createVertexShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code);
     bool createPixelShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code);
           
-    void setVertexShader(const std::string& p_name) const;
-    void setPixelShader(const std::string& p_name) const;
+    void setVertexShader(const std::string& p_name);
+    void setPixelShader(const std::string& p_name);
+
+    void forceCurrentVertexShader();
+    void forceCurrentPixelShader();
 
     void destroyVertexShader(const std::string& p_name);
     void destroyPixelShader(const std::string& p_name);
@@ -341,7 +344,12 @@ private:
     std::string                                         m_currentTextures[nbTextureStages];
 
     // current primitive topology
-    D3D11_PRIMITIVE_TOPOLOGY                            m_primitiveTopology{ D3D_PRIMITIVE_TOPOLOGY_UNDEFINED };
+    D3D11_PRIMITIVE_TOPOLOGY                            m_currentPrimitiveTopology{ D3D_PRIMITIVE_TOPOLOGY_UNDEFINED };
+
+
+    // current shaders
+    std::string                                         m_currentVs;
+    std::string                                         m_currentPs;
 
 
     ////////////////////////////////////////////////////////

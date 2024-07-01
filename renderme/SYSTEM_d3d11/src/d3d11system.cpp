@@ -740,9 +740,9 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 		d3dimpl->forceCurrentTopology();
 
-		// todo : also for setDepthStenciState(), setPSSamplers(), setVSSamplers()
+		d3dimpl->forceCurrentPixelShader();
+		d3dimpl->forceCurrentVertexShader();
 	}
-	
 }
 
 void D3D11System::run()
