@@ -92,7 +92,7 @@ void ModuleImpl::run(void)
 
 		/////////// Add linemeshe
 
-		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
+		LineMeshe square("line_square_0", LineMeshe::State::BLOBLOADED);
 
 		square.push(Vertex(-0.5, -0.5, 0.0));
 		square.push(Vertex(0.5, -0.5, 0.0));
@@ -104,7 +104,7 @@ void ModuleImpl::run(void)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
-		quad_resource_aspect.addComponent<LineMeshe>("square", square);
+		quad_resource_aspect.addComponent<LineMeshe>("line_square_0", square);
 
 
 
@@ -201,7 +201,7 @@ void ModuleImpl::run(void)
 
 		/////////// Add linemeshe
 
-		LineMeshe square("square", LineMeshe::State::BLOBLOADED);
+		LineMeshe square("line_square_1", LineMeshe::State::BLOBLOADED);
 
 		square.push(Vertex(-0.5, -0.5, 0.0));
 		square.push(Vertex(0.5, -0.5, 0.0));
@@ -213,7 +213,7 @@ void ModuleImpl::run(void)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
-		quad_resource_aspect.addComponent<LineMeshe>("square", square);
+		quad_resource_aspect.addComponent<LineMeshe>("line_square_1", square);
 
 
 
@@ -302,7 +302,7 @@ void ModuleImpl::run(void)
 
 
 		/////////// Add trianglemeshe
-		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
+		TriangleMeshe square("triangle_square", TriangleMeshe::State::BLOBLOADED);
 
 		square.push(Vertex(-0.5, -0.5, 0.0));
 		square.push(Vertex(0.5, -0.5, 0.0));
@@ -318,7 +318,7 @@ void ModuleImpl::run(void)
 		square.computeNormales();
 		square.computeTB();
 
-		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+		quad_resource_aspect.addComponent<TriangleMeshe>("triangle_square", square);
 
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 

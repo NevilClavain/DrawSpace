@@ -159,6 +159,8 @@ public:
     void setTriangleMeshe(const std::string& p_name);
     void destroyTriangleMeshe(const std::string& p_name);
 
+    void forceCurrentMeshe();
+
     bool createTexture(renderMe::Texture& p_texture);
 
     void bindTextureStage(const std::string& p_name, size_t p_stage);
@@ -346,10 +348,12 @@ private:
     // current primitive topology
     D3D11_PRIMITIVE_TOPOLOGY                            m_currentPrimitiveTopology{ D3D_PRIMITIVE_TOPOLOGY_UNDEFINED };
 
-
     // current shaders
     std::string                                         m_currentVs;
     std::string                                         m_currentPs;
+
+    // current meshe (line or triangle)
+    std::string                                         m_currentMeshe;
 
 
     ////////////////////////////////////////////////////////

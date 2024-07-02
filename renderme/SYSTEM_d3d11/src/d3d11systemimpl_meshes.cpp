@@ -135,16 +135,22 @@ void D3D11SystemImpl::setLineMeshe(const std::string& p_name)
     {
         _EXCEPTION("unknown line meshes :" + p_name)
     }
-    const auto lmData{ m_lines.at(p_name) };
 
-    const UINT stride{ sizeof(d3d11vertex) };
-    const UINT offset = 0;
+    if (m_currentMeshe != p_name)
+    {
+        const auto lmData{ m_lines.at(p_name) };
 
-    m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &lmData.vertex_buffer, &stride, &offset);
-    m_lpd3ddevcontext->IASetIndexBuffer(lmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+        const UINT stride{ sizeof(d3d11vertex) };
+        const UINT offset = 0;
 
-    m_next_nbvertices = lmData.nb_vertices;
-    m_next_nblines = lmData.nb_primitives;
+        m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &lmData.vertex_buffer, &stride, &offset);
+        m_lpd3ddevcontext->IASetIndexBuffer(lmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+        m_next_nbvertices = lmData.nb_vertices;
+        m_next_nblines = lmData.nb_primitives;
+
+        m_currentMeshe = p_name;
+    }
 }
 
 void D3D11SystemImpl::destroyLineMeshe(const std::string& p_name)
@@ -274,16 +280,22 @@ void D3D11SystemImpl::setTriangleMeshe(const std::string& p_name)
     {
         _EXCEPTION("unknown triangle meshes :" + p_name)
     }
-    const auto tmData{ m_triangles.at(p_name) };
 
-    const UINT stride{ sizeof(d3d11vertex) };
-    const UINT offset = 0;
+    if (m_currentMeshe != p_name)
+    {
+        const auto tmData{ m_triangles.at(p_name) };
 
-    m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &tmData.vertex_buffer, &stride, &offset);
-    m_lpd3ddevcontext->IASetIndexBuffer(tmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+        const UINT stride{ sizeof(d3d11vertex) };
+        const UINT offset = 0;
 
-    m_next_nbvertices = tmData.nb_vertices;
-    m_next_nbtriangles = tmData.nb_primitives;
+        m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &tmData.vertex_buffer, &stride, &offset);
+        m_lpd3ddevcontext->IASetIndexBuffer(tmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+        m_next_nbvertices = tmData.nb_vertices;
+        m_next_nbtriangles = tmData.nb_primitives;
+
+        m_currentMeshe = p_name;
+    }
 }
 
 void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_name)
@@ -299,4 +311,35 @@ void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_name)
 
     m_triangles.erase(p_name);
     _RENDERME_DEBUG(m_localLogger, "Triangle meshe release SUCCESS : " + p_name);
+}
+
+
+void D3D11SystemImpl::forceCurrentMeshe()
+{
+    if (m_triangles.count(m_currentMeshe))
+    {
+        const auto tmData{ m_triangles.at(m_currentMeshe) };
+
+        const UINT stride{ sizeof(d3d11vertex) };
+        const UINT offset = 0;
+
+        m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &tmData.vertex_buffer, &stride, &offset);
+        m_lpd3ddevcontext->IASetIndexBuffer(tmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+        m_next_nbvertices = tmData.nb_vertices;
+        m_next_nbtriangles = tmData.nb_primitives;
+    }
+    else if (m_lines.count(m_currentMeshe))
+    {
+        const auto lmData{ m_lines.at(m_currentMeshe) };
+
+        const UINT stride{ sizeof(d3d11vertex) };
+        const UINT offset = 0;
+
+        m_lpd3ddevcontext->IASetVertexBuffers(0, 1, &lmData.vertex_buffer, &stride, &offset);
+        m_lpd3ddevcontext->IASetIndexBuffer(lmData.index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+        m_next_nbvertices = lmData.nb_vertices;
+        m_next_nblines = lmData.nb_primitives;
+    }
 }
