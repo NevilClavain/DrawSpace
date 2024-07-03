@@ -222,13 +222,7 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
-						maths::Matrix cam_positionmat;
-						cam_positionmat.translation(0.0, 0.0, 1.0);
-
-						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
-
-
-						//////////////////////////////////////////////////////
+						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
 
 					}
 

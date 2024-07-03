@@ -158,7 +158,7 @@ void ModuleImpl::run(void)
 			{
 
 				maths::Matrix positionmat;
-				positionmat.translation(0.0, 0.0, -5.0);
+				positionmat.translation(0.0, 0.0, -3.00001);
 
 				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 				wp.local_pos = wp.local_pos * positionmat;
