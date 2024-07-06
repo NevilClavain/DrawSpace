@@ -250,9 +250,23 @@ private:
 
     struct TextureData
     {
-        ID3D11ShaderResourceView*   shader_resource_view{ nullptr };
-        ID3D11Resource*             texture{ nullptr };
+        renderMe::Texture::Source   source;
         D3D11_TEXTURE2D_DESC        desc;
+
+        // common
+        ID3D11ShaderResourceView*   shaderResourceView      { nullptr };
+
+        // specifique textures from files
+        ID3D11Resource*             textureResource         { nullptr };
+
+        // specifique textures render target
+
+        ID3D11Texture2D*            targetTexture           { nullptr };
+        ID3D11RenderTargetView*     rendertextureTargetView { nullptr };
+        ID3D11Texture2D*            stencilDepthBuffer      { nullptr };
+        ID3D11DepthStencilView*     stencilDepthView        { nullptr };
+        D3D11_VIEWPORT              viewport; // viewport adapte au rendu dans cette texture
+
     };
 
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;

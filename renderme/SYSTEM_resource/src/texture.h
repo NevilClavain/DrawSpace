@@ -114,8 +114,8 @@ namespace renderMe
 
         Source                              getSource() const;
 
-        size_t                              getWidth() const;
-        size_t                              getHeight() const;
+        int                                 getWidth() const;
+        int                                 getHeight() const;
         Format                              getFormat() const;
 
         State                               getState() const;
@@ -132,8 +132,8 @@ namespace renderMe
 
         Source                              m_source            { Source::CONTENT_FROM_FILE };
 
-        size_t                              m_width             { 0 };
-        size_t                              m_height            { 0 };
+        int                                 m_width             { 0 };
+        int                                 m_height            { 0 };
         Format                              m_format            { Format::TEXTURE_RGB };
 
         mutable std::mutex	                m_state_mutex;
@@ -149,7 +149,7 @@ namespace renderMe
         void setState(Texture::State p_state);
         void setData(const core::Buffer<unsigned char>& p_data);
 
-        void setDims(size_t p_w, size_t p_h);
+        void setDims(int p_w, int p_h);
         void setFormat(Format p_format);
         
         friend class renderMe::ResourceSystem;

@@ -38,7 +38,8 @@ m_source(Source::CONTENT_FROM_RENDERINGQUEUE),
 m_format(p_format),
 m_width(p_width),
 m_height(p_height),
-m_content_access_mode(p_content_access_mode)
+m_content_access_mode(p_content_access_mode),
+m_state(State::BLOBLOADED) // no binary to load from resource system
 {
 }
 
@@ -64,12 +65,12 @@ Texture::Source Texture::getSource() const
     return m_source;
 }
 
-size_t Texture::getWidth() const
+int Texture::getWidth() const
 {
     return m_width;
 }
 
-size_t Texture::getHeight() const
+int Texture::getHeight() const
 {
     return m_height;
 }
@@ -115,7 +116,7 @@ std::string Texture::getName() const
     return m_name;
 }
 
-void Texture::setDims(size_t p_w, size_t p_h)
+void Texture::setDims(int p_w, int p_h)
 {
     m_width = p_w;
     m_height = p_h;

@@ -32,6 +32,7 @@
 
 #include "trianglemeshe.h"
 #include "renderstate.h"
+#include "texture.h"
 
 #include "syncvariable.h"
 
@@ -84,8 +85,10 @@ void ModuleImpl::run(void)
 
 		/////////// Add shaders
 
-		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
-		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
+
+		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
+		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
+
 
 
 		/////////// Add trianglemeshe
@@ -108,6 +111,16 @@ void ModuleImpl::run(void)
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
 
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+
+		/////////// render target Texture
+
+		const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+
+		const int w_width{ window_dims.x() };
+		const int w_height{ window_dims.y() };
+
+		quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("rendering_quad_texture", std::make_pair(Texture::STAGE_0, Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height)));
+
 
 		/////////// Add renderstate
 
@@ -152,7 +165,7 @@ void ModuleImpl::run(void)
 			{
 
 				maths::Matrix positionmat;
-				positionmat.translation(0.0, 0.0, -1.00001);
+				positionmat.translation(0.0, 0.0, -1.05001);
 
 				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 				wp.local_pos = wp.local_pos * positionmat;
