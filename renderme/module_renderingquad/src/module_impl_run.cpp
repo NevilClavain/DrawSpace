@@ -135,7 +135,7 @@ void ModuleImpl::run(void)
 		/////////// Draw triangles
 
 		rendering::DrawingControl drawingControl;
-		drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
+		//drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
 
 
 		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
