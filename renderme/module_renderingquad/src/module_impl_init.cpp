@@ -111,8 +111,8 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	auto& appwindowNode{ m_entitygraph.node(p_appWindowsEntityName) };
 
-	auto& screenRenderingPassNode{ m_entitygraph.add(appwindowNode, "screenRenderingEntity") };
-	const auto screenRenderingPassEntity{ screenRenderingPassNode.data() };
+	auto& screenRenderingNode{ m_entitygraph.add(appwindowNode, "screenRenderingEntity") };
+	const auto screenRenderingPassEntity{ screenRenderingNode.data() };
 
 	auto& screenRendering_rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
 
@@ -208,14 +208,16 @@ void ModuleImpl::d3d11_system_events()
 					m_characteristics_v_width = characteristics_v_width;
 					m_characteristics_v_height = characteristics_v_height;
 
+
+
 					{
 
 						/////////////// add viewpoint ////////////////////////
 
-						auto& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
 
 					
-						auto& viewPointNode{ m_entitygraph.add(screenRenderingPassNode, "Camera01") };
+						auto& viewPointNode{ m_entitygraph.add(screenRenderingNode, "ScreenRenderingViewEntity") };
 						const auto cameraEntity{ viewPointNode.data() };
 
 						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
@@ -234,7 +236,7 @@ void ModuleImpl::d3d11_system_events()
 
 					//////////////////////////////////////////////////////////////
 
-					m_windowRenderingQueue->setCurrentView("Camera01");
+					m_windowRenderingQueue->setCurrentView("ScreenRenderingViewEntity");
 
 
 
@@ -243,16 +245,16 @@ void ModuleImpl::d3d11_system_events()
 
 
 
-					////////////////////////////////////////////////////////////////////
+					/////////////////////////////screenRenderingQuadEntity///////////////////////////////////////
 
 					{
 
-						Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+						Entitygraph::Node& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
 
-						auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "screenRenderingQuadEntity") };
-						const auto quadEntity{ quadNode.data() };
+						auto& screenRenderingQuadNode{ m_entitygraph.add(screenRenderingNode, "screenRenderingQuadEntity") };
+						const auto screenRenderingQuadEntity{ screenRenderingQuadNode.data() };
 
-						auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
+						auto& quad_resource_aspect{ screenRenderingQuadEntity->makeAspect(core::resourcesAspect::id) };
 
 						/////////// Add shaders
 
@@ -281,7 +283,7 @@ void ModuleImpl::d3d11_system_events()
 
 						quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
 
-						auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+						auto& quad_rendering_aspect{ screenRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
 						/////////// render target Texture
 
@@ -317,13 +319,11 @@ void ModuleImpl::d3d11_system_events()
 						/////////// time aspect
 						// required for animator !
 
-						auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
+						auto& quad_time_aspect{ screenRenderingQuadEntity->makeAspect(core::timeAspect::id) };
 
 						/////////// World position
 
-
-
-						auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
+						auto& world_aspect{ screenRenderingQuadEntity->makeAspect(core::worldAspect::id) };
 
 						world_aspect.addComponent<transform::WorldPosition>("position");
 
@@ -345,11 +345,21 @@ void ModuleImpl::d3d11_system_events()
 							}
 						));
 
+					}
+
+					/////////////////////////////screenRenderingQuadEntity///////////////////////////////////////
+
+
+					{
+						Entitygraph::Node& screenRenderingQuadNode{ m_entitygraph.node("screenRenderingQuadEntity") };
+
+						auto& bufferRenderingNode{ m_entitygraph.add(screenRenderingQuadNode, "bufferRenderingEntity") };
+						const auto bufferRenderingQuadEntity{ bufferRenderingNode.data() };
+
+						auto& bufferRendering_rendering_aspect{ bufferRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
 
 					}
-
-
 
 					
 				}
