@@ -67,18 +67,11 @@ void ModuleImpl::run(void)
 	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
 
 
-	//////////////////////////////////////////////////////
-	// 	
-	// quadEntity
-
-	if (true == m_quadEntity_state_request && false == m_quadEntity_state)
-	{
-		dataCloud->registerData<maths::Real4Vector>("quad2_color");
-		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(0.43f, 0.0f, 0.0f, 1.0f));
+/*
 
 		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
-		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
+		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "screenRenderingQuadEntity") };
 		const auto quadEntity{ quadNode.data() };
 
 		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
@@ -135,7 +128,7 @@ void ModuleImpl::run(void)
 		/////////// Draw triangles
 
 		rendering::DrawingControl drawingControl;
-		//drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
+
 
 
 		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
@@ -172,20 +165,8 @@ void ModuleImpl::run(void)
 			}
 		));
 
-		m_quadEntity_state = true;
-	}
-	else if (false == m_quadEntity_state_request && true == m_quadEntity_state)
-	{
-		// remove quadEntity2
-		dataCloud->removeData<maths::Real4Vector>("quad2_color");
+		*/
 
-
-		auto& quadNode{ m_entitygraph.node("quadEntity2") };
-		m_entitygraph.remove(quadNode);
-
-
-		m_quadEntity_state = false;
-	}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
