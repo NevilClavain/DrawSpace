@@ -58,7 +58,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 {
 	/////////// logging conf
 
-	renderMe::core::FileContent<char> logConfFileContent("./module_helloworld_config/logconf.json");
+	renderMe::core::FileContent<char> logConfFileContent("./module_scene00_config/logconf.json");
 	logConfFileContent.load();
 
 	const auto dataSize{ logConfFileContent.getDataSize() };
@@ -88,7 +88,6 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	// D3D11 system provides compilation shader service : give access to this to resources sytem
 	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
 	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getServiceInvocationCallback());
-
 
 	d3d11_system_events();
 	resource_system_events();

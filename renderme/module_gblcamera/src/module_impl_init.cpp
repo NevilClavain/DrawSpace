@@ -58,7 +58,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 {
 	/////////// logging conf
 
-	renderMe::core::FileContent<char> logConfFileContent("./module_helloworld_config/logconf.json");
+	renderMe::core::FileContent<char> logConfFileContent("./module_gblcamera_config/logconf.json");
 	logConfFileContent.load();
 
 	const auto dataSize{ logConfFileContent.getDataSize() };

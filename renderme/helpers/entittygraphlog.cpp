@@ -1,3 +1,4 @@
+
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -22,9 +23,33 @@
 */
 /* -*-LIC_END-*- */
 
+#include "entitygraph.h"
+#include "entity.h"
+
 #include "logsink.h"
 #include "logconf.h"
 #include "logging.h"
-#include "animators_helpers.h"
 
-renderMe::core::logger::Sink localLogger("Helpers", renderMe::core::logger::Configuration::getInstance());
+
+extern renderMe::core::logger::Sink localLogger("Helpers", renderMe::core::logger::Configuration::getInstance());
+
+namespace renderMe
+{
+	namespace helpers
+	{
+		void logEntitygraph()
+		{
+			_RENDERME_DEBUG(localLogger, "Poueeeet");
+
+			/*
+			for (auto it = p_eg.preBegin(); it != p_eg.preEnd(); ++it)
+			{
+				const renderMe::core::Entity* current_entity { it->data() };
+				const std::string currId{ current_entity->getId() };
+				_RENDERME_DEBUG(localLogger, "Entity id : " + currId);
+			}
+			*/
+		}
+	}
+}
+

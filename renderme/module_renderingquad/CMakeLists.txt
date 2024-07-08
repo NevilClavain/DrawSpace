@@ -39,6 +39,8 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
 include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
 include_directories(${CMAKE_SOURCE_DIR}/TRANSFORM_control/src)
 
+include_directories(${CMAKE_SOURCE_DIR}/helpers)
+
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_time/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
@@ -79,6 +81,7 @@ target_link_libraries(module_renderingquad
 										CORE_threads 
 										CORE_services 
 										CORE_maths 
+										helpers
 										RENDERING_control 
 										TRANSFORM_control 
 										SYSTEM_d3d11 
@@ -89,7 +92,7 @@ target_link_libraries(module_renderingquad
 										SYSTEM_dataprint 
 										jsmn 
 										d3d11 
-										d3dcompiler 
+										d3dcompiler 										
 										DirectXTK)
 
 install(TARGETS module_renderingquad CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)

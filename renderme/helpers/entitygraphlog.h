@@ -1,3 +1,5 @@
+
+
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -22,9 +24,21 @@
 */
 /* -*-LIC_END-*- */
 
-#include "logsink.h"
-#include "logconf.h"
-#include "logging.h"
-#include "animators_helpers.h"
+#pragma once
 
-renderMe::core::logger::Sink localLogger("Helpers", renderMe::core::logger::Configuration::getInstance());
+namespace renderMe
+{
+	// fwd decl
+	namespace core
+	{
+		class Entitygraph;
+	}
+
+	namespace helpers
+	{
+		void logEntitygraph();
+	}
+}
+
+
+

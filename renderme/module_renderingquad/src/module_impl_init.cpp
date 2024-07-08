@@ -56,6 +56,8 @@
 
 #include "shaders_service.h"
 
+#include "entitygraphlog.h"
+
 using namespace renderMe;
 using namespace renderMe::core;
 using namespace renderMe::rendering;
@@ -64,7 +66,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 {
 	/////////// logging conf
 
-	renderMe::core::FileContent<char> logConfFileContent("./module_helloworld_config/logconf.json");
+	renderMe::core::FileContent<char> logConfFileContent("./module_renderingquad_config/logconf.json");
 	logConfFileContent.load();
 
 	const auto dataSize{ logConfFileContent.getDataSize() };
@@ -358,10 +360,12 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& bufferRendering_rendering_aspect{ bufferRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
+						// TO BE CONTINUED
+
 
 					}
-
 					
+					helpers::logEntitygraph();
 				}
 				break;
 			}
