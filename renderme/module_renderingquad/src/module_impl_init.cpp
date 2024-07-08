@@ -365,7 +365,7 @@ void ModuleImpl::d3d11_system_events()
 
 					}
 					
-					helpers::logEntitygraph();
+					helpers::logEntitygraph(m_entitygraph);
 				}
 				break;
 			}
