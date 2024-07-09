@@ -29,6 +29,7 @@
 
 #include "entitygraph.h"
 #include "entity.h"
+#include "aspects.h"
 
 #include "logsink.h"
 #include "logconf.h"
@@ -80,8 +81,6 @@ namespace renderMe
 				if (parent_entity)
 				{
 					const std::string parentId{ parent_entity->getId() };
-					//_RENDERME_DEBUG(localLogger, "	Parent id : " + parentId);
-
 					search(root, parentId, currId);
 				}
 				else
@@ -97,13 +96,45 @@ namespace renderMe
 			{
 				[&](const ENode& p_node, int depth)
 				{
+					const auto& eg_node { p_eg.node(p_node.id) };
+
+					const core::Entity* curr_entity{ eg_node.data() };
+					
 					std::string logstr;
+
+					// entity name
 					for (int i = 0; i < depth; i++)
 					{
 						logstr += "\t";
 					}
-
 					logstr += p_node.id;
+
+					// aspects of this entity
+					const std::map<int, std::string> aspects_translate
+					{
+						{ core::teapotAspect::id,		"teapotAspect" },
+						{ core::renderingAspect::id,	"renderingAspect" },
+						{ core::timeAspect::id,			"timeAspect" },
+						{ core::resourcesAspect::id,	"resourcesAspect" },
+						{ core::cameraAspect::id,		"cameraAspect" },
+						{ core::worldAspect::id,		"worldAspect" },
+					};
+
+					for (const auto& e : aspects_translate)
+					{
+						if (curr_entity->hasAspect(e.first))
+						{
+							logstr += "\n";
+							for (int i = 0; i < depth + 1; i++)
+							{
+								logstr += "\t";
+							}
+
+							logstr += e.second;
+						}
+					}
+
+
 					_RENDERME_DEBUG(localLogger, logstr);
 
 					for (auto& e : p_node.children)
