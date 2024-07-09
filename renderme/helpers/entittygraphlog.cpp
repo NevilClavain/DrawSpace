@@ -23,6 +23,10 @@
 */
 /* -*-LIC_END-*- */
 
+#include <map>
+#include <string>
+#include <functional>
+
 #include "entitygraph.h"
 #include "entity.h"
 
@@ -39,16 +43,77 @@ namespace renderMe
 	{
 		void logEntitygraph(core::Entitygraph& p_eg)
 		{
-			_RENDERME_DEBUG(localLogger, "Poueeeet");
+			struct ENode
+			{
+				std::string					 id;
+				std::map<std::string, ENode> children;
+			};
 
-			
+			ENode root;
+
+			// build node tree that will be dumped to log
 			for (auto it = p_eg.preBegin(); it != p_eg.preEnd(); ++it)
 			{
 				const renderMe::core::Entity* current_entity { it->data() };
 				const std::string currId{ current_entity->getId() };
-				_RENDERME_DEBUG(localLogger, "Entity id : " + currId);
+
+				const std::function<void(ENode&, const std::string&, const std::string&)> search
+				{
+					[&](ENode& p_node, const std::string& p_parentId, const std::string& p_id)
+					{
+						if (p_node.id == p_parentId)
+						{
+							ENode child;
+							child.id = p_id;
+							// found parent
+							p_node.children[p_id] = child;
+						}
+
+						for (auto& e : p_node.children)
+						{
+							search(e.second, p_parentId, p_id);
+						}						
+					}
+				};
+
+				const auto parent_entity{ current_entity->getParent() };
+				if (parent_entity)
+				{
+					const std::string parentId{ parent_entity->getId() };
+					//_RENDERME_DEBUG(localLogger, "	Parent id : " + parentId);
+
+					search(root, parentId, currId);
+				}
+				else
+				{
+					// create root;
+					root.id = currId;
+				}
 			}
-			
+
+			// dump to log the built node tree
+
+			const std::function<void(const ENode&, int)> logMe
+			{
+				[&](const ENode& p_node, int depth)
+				{
+					std::string logstr;
+					for (int i = 0; i < depth; i++)
+					{
+						logstr += "\t";
+					}
+
+					logstr += p_node.id;
+					_RENDERME_DEBUG(localLogger, logstr);
+
+					for (auto& e : p_node.children)
+					{
+						logMe(e.second, depth+1);
+					}
+				}
+			};
+
+			logMe(root, 0);			
 		}
 	}
 }

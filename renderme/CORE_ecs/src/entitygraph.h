@@ -84,8 +84,6 @@ namespace renderMe
 			Node														m_rootNode;
 			std::string													m_rootNodeName;
 
-			//std::unordered_map<std::string, NodeIterator>				m_nodes_iterator;
-
 			std::unordered_map<std::string, Node*>						m_nodes;
 		};
 	}
