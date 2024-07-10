@@ -287,6 +287,8 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& quad_rendering_aspect{ screenRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
+						quad_rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::BUFFER_RENDERINGTARGET);
+
 						/////////// render target Texture
 
 						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
