@@ -75,6 +75,7 @@ namespace renderMe
 
 				// ajout dans m_components_type_names
 				m_components_type_names[p_id] = tid;
+				m_components_type_names_str[p_id] = std::string(typeid(T).name());
 
 				//////////////////////////////////////
 
@@ -104,6 +105,7 @@ namespace renderMe
 
 				m_components.erase(p_id);
 				m_components_type_names.erase(p_id);
+				m_components_type_names_str.erase(p_id);
 			
 				m_uid_count--;				
 			}
@@ -138,10 +140,14 @@ namespace renderMe
 				return outlist;
 			}
 
-
 			const std::unordered_map<std::string, size_t>& getComponentsIdList() const
 			{
 				return m_components_type_names;
+			}
+
+			const std::unordered_map<std::string, std::string>& getComponentsIdWithTypeStrList() const
+			{
+				return m_components_type_names_str;
 			}
 			
 		protected:
@@ -151,10 +157,10 @@ namespace renderMe
 			std::unordered_map<std::string, std::shared_ptr<ComponentBase>>		m_components;
 
 			std::unordered_map<std::string, size_t>								m_components_type_names;
+			std::unordered_map<std::string, std::string>						m_components_type_names_str;
 
 			// 2eme map pour regrouper les composants en fct de leur type
 			std::unordered_map<size_t, std::vector<ComponentBase*>>				m_components_by_type;
-
 			
 		};
 	}

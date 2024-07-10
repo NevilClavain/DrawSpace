@@ -124,6 +124,8 @@ namespace renderMe
 					{
 						if (curr_entity->hasAspect(e.first))
 						{
+							// log aspect name
+
 							logstr += "\n";
 							for (int i = 0; i < depth + 1; i++)
 							{
@@ -131,6 +133,27 @@ namespace renderMe
 							}
 
 							logstr += e.second;
+
+							/////////////////////
+							const auto& cc{ curr_entity->aspectAccess(e.first) };
+							const std::unordered_map<std::string, std::string>& comp_id_list{ cc.getComponentsIdWithTypeStrList() };
+
+							for (const auto& c : comp_id_list)
+							{
+								logstr += "\n";
+								for (int i = 0; i < depth + 2; i++)
+								{
+									logstr += "\t";
+								}
+								logstr += c.first;
+								logstr += " ";
+								logstr += c.second;
+								
+
+								
+
+
+							}
 						}
 					}
 
