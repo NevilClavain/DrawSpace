@@ -147,12 +147,7 @@ namespace renderMe
 								}
 								logstr += c.first;
 								logstr += " ";
-								logstr += c.second;
-								
-
-								
-
-
+								logstr += c.second;												
 							}
 						}
 					}
