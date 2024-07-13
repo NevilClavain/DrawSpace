@@ -112,3 +112,13 @@ std::string	Queue::getCurrentView() const
 {
 	return m_currentView;
 }
+
+std::string	Queue::getTargetTextureName() const
+{
+	return m_targetTextureName;
+}
+
+void Queue::setTargetTextureName(const std::string& p_name)
+{
+	m_targetTextureName = p_name;
+}

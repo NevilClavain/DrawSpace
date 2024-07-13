@@ -128,6 +128,10 @@ public:
     bool init(renderMe::core::Entity* p_mainWindow);
 
     void beginScreen();
+    void beginTarget(const std::string& p_targetName);
+
+
+
     void clearTarget(const renderMe::core::maths::RGBAColor& p_clear_color);
     void flipScreen(void);
 

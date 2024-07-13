@@ -165,3 +165,72 @@ void D3D11SystemImpl::drawTriangleMeshe(const renderMe::core::maths::Matrix& p_w
 
     m_lpd3ddevcontext->DrawIndexed(m_next_nbtriangles * 3, 0, 0);
 }
+
+void D3D11SystemImpl::beginScreen()
+{
+    m_currentTarget = m_screentarget;
+    m_currentView = m_pDepthStencilView;
+
+    m_lpd3ddevcontext->OMSetRenderTargets(1, &m_currentTarget, m_currentView);
+    m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport);
+}
+
+void D3D11SystemImpl::beginTarget(const std::string& p_targetName)
+{
+    if (m_textures.count(p_targetName))
+    {
+        const auto ti{ m_textures.at(p_targetName) };
+
+        m_currentTarget = ti.rendertextureTargetView;
+        m_currentView = ti.stencilDepthView;
+
+        m_lpd3ddevcontext->OMSetRenderTargets(1, &m_currentTarget, m_currentView);
+
+        m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport); // CHANGE FOR TARGET TEXTURE ASSOCIATED VIEWPORT
+    }
+    else
+    {
+        _EXCEPTION_("Target texture not found : " + p_targetName);
+    }
+}
+
+void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clear_color)
+{
+    FLOAT clearcolor[4];
+
+    clearcolor[0] = p_clear_color.r() / 255.0f;
+    clearcolor[1] = p_clear_color.g() / 255.0f;
+    clearcolor[2] = p_clear_color.b() / 255.0f;
+    clearcolor[3] = p_clear_color.a() / 255.0f;
+
+    m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);
+}
+
+void D3D11SystemImpl::flipScreen(void)
+{
+    m_lpd3dswapchain->Present(0, 0);
+}
+
+void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::maths::RGBAColor& p_clear_color, const renderMe::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
+{
+    const unsigned long color32{ (
+                                    (((unsigned long)(p_clear_color.a())) << 24) |
+                                    (((unsigned long)(p_clear_color.b()) & 0xff) << 16) |
+                                    (((unsigned long)(p_clear_color.g()) & 0xff) << 8) |
+                                    ((unsigned long)(p_clear_color.r()) & 0xff)
+                                ) };
+
+    const auto fontData{ m_fontWrappers.at(p_font) };
+
+    const auto spriteBatch{ fontData.spriteBatch.get() };
+    const auto spriteFont{ fontData.spriteFont.get() };
+
+    const DirectX::XMFLOAT2 pos{ (float)p_pos.x(), (float)p_pos.y() };
+
+    const DirectX::FXMVECTOR color{ p_clear_color.r(), p_clear_color.g(), p_clear_color.b(), p_clear_color.a() };
+
+    spriteBatch->Begin();
+    spriteFont->DrawString(spriteBatch, p_text.c_str(), pos, color, p_rotation);
+    spriteBatch->End();
+
+}

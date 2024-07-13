@@ -118,9 +118,9 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 
 	auto& screenRendering_rendering_aspect{ screenRenderingPassEntity->makeAspect(core::renderingAspect::id) };
 
-	screenRendering_rendering_aspect.addComponent<rendering::Queue>("renderingQueue", "final_pass");
+	screenRendering_rendering_aspect.addComponent<rendering::Queue>("screenRenderingQueue", "screen_pass_queue");
 
-	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
+	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("screenRenderingQueue")->getPurpose() };
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
 
@@ -267,7 +267,7 @@ void ModuleImpl::d3d11_system_events()
 
 
 						/////////// Add trianglemeshe
-						TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
+						TriangleMeshe square("rendering_quad", TriangleMeshe::State::BLOBLOADED);
 
 						square.push(Vertex(-m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0));
 						square.push(Vertex(m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0));
@@ -283,7 +283,7 @@ void ModuleImpl::d3d11_system_events()
 						square.computeNormales();
 						square.computeTB();
 
-						quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+						quad_resource_aspect.addComponent<TriangleMeshe>("rendering_quad", square);
 
 						auto& quad_rendering_aspect{ screenRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
@@ -362,7 +362,15 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& bufferRendering_rendering_aspect{ bufferRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
-						// TO BE CONTINUED
+						rendering::Queue bufferRenderingQueue("buffer_pass_queue");
+						bufferRenderingQueue.setTargetClearColor({ 0, 255, 0, 255 });
+						bufferRenderingQueue.enableTargetClearing(true);
+
+						bufferRendering_rendering_aspect.addComponent<rendering::Queue>("bufferRenderingQueue", bufferRenderingQueue);
+
+						
+
+
 
 
 					}

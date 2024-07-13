@@ -202,6 +202,10 @@ namespace renderMe
 
 			void						setCurrentView(const std::string& p_entityId);
 			std::string					getCurrentView() const;
+
+
+			std::string					getTargetTextureName() const;
+			void						setTargetTextureName(const std::string& p_name);
 			
 
 			const std::map<int, Text>&	texts() const;
@@ -218,8 +222,12 @@ namespace renderMe
 
 			std::string						m_currentView; // entity name
 
+			std::string						m_targetTextureName; // for BUFFER_RENDERING
+
 			void							setState(State p_newstate);
 			void							setPurpose(Purpose p_purpose);
+
+			
 
 			friend class renderMe::RenderingQueueSystem;
 

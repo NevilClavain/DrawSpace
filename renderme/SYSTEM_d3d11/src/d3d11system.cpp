@@ -437,49 +437,49 @@ void D3D11System::collectWorldTransformations() const
 
 void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 {
-	//////////////////////////////// get view and proj matrix for this queue
-
-	const std::string current_view_entity_id{ p_renderingQueue.getCurrentView()};
-	if ("" == current_view_entity_id)
-	{
-		_EXCEPTION("no current view defined in rendering queue");
-	}
-
-	auto& viewode{ m_entitygraph.node(current_view_entity_id) };
-	const auto view_entity{ viewode.data() };
-
 	maths::Matrix current_cam;
 	maths::Matrix current_proj;
 
+	current_cam.identity();
 
+	// set a dummy default perspective
+	current_proj.perspective(1.0, 1.0, 1.0, 1000.0);
 
+	//////////////////////////////// get view and proj matrix for this queue
 
-	// extract cam aspect
-	const auto& cam_aspect{ view_entity->aspectAccess(cameraAspect::id) };
-	const auto& cam_projs_list{ cam_aspect.getComponentsByType<maths::Matrix>() };
-
-	if (0 == cam_projs_list.size())
+	const std::string current_view_entity_id{ p_renderingQueue.getCurrentView()};
+	if (current_view_entity_id != "")
 	{
-		_EXCEPTION("entity view aspect : missing projection definition " + view_entity->getId());
-	}
-	else
-	{
-		current_proj = cam_projs_list.at(0)->getPurpose();
-	}
+		auto& viewode{ m_entitygraph.node(current_view_entity_id) };
+		const auto view_entity{ viewode.data() };
 
-	// extract world aspect
+		// extract cam aspect
+		const auto& cam_aspect{ view_entity->aspectAccess(cameraAspect::id) };
+		const auto& cam_projs_list{ cam_aspect.getComponentsByType<maths::Matrix>() };
 
-	const auto& world_aspect{ view_entity->aspectAccess(worldAspect::id) };
-	const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+		if (0 == cam_projs_list.size())
+		{
+			_EXCEPTION("entity view aspect : missing projection definition " + view_entity->getId());
+		}
+		else
+		{
+			current_proj = cam_projs_list.at(0)->getPurpose();
+		}
 
-	if (0 == worldpositions_list.size())
-	{
-		_EXCEPTION("entity world aspect : missing world position " + view_entity->getId());
-	}
-	else
-	{
-		auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
-		current_cam = entity_worldposition.global_pos;
+		// extract world aspect
+
+		const auto& world_aspect{ view_entity->aspectAccess(worldAspect::id) };
+		const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+		if (0 == worldpositions_list.size())
+		{
+			_EXCEPTION("entity world aspect : missing world position " + view_entity->getId());
+		}
+		else
+		{
+			auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+			current_cam = entity_worldposition.global_pos;
+		}
 	}
 
 	maths::Matrix current_view = current_cam;
@@ -496,10 +496,15 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 	}
 	else //BUFFER_RENDERING
 	{
-		// TODO : beginIntermediate()
+		const std::string target_texture_name{ p_renderingQueue.getTargetTextureName() };
+
+		d3dimpl->beginTarget(target_texture_name);
+
+		
 	}
 
 	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
+	
 
 
 	{
@@ -745,6 +750,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 		d3dimpl->forceCurrentMeshe();
 	}
+	
 }
 
 void D3D11System::run()
@@ -987,7 +993,7 @@ void D3D11System::handleTrianglemesheRelease(TriangleMeshe& p_tm)
 
 void D3D11System::handleTextureCreation(Texture& p_texture)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_texture.getName());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle texture creation ") + p_texture.getName());
 
 	const std::string action{ "load_texture_d3d11" };
 

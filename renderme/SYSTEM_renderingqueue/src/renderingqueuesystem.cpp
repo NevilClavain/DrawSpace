@@ -32,6 +32,7 @@
 #include "linemeshe.h"
 #include "trianglemeshe.h"
 #include "texture.h"
+#include "exceptions.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -397,24 +398,46 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 
 								p_renderingQueue.setPurpose(rendering::Queue::Purpose::BUFFER_RENDERING);
 								p_renderingQueue.setState(rendering::Queue::State::READY);
-
 								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() + " set to READY, BUFFER_RENDERING")
+
+								// parent is a texture-target pass
+								// search for a target texture in it
+
+								// search in resource aspect
+
+								const auto& parent_resource_aspect{ parent_entity->aspectAccess(core::resourcesAspect::id) };
+								const auto textures_list{ parent_resource_aspect.getComponentsByType<std::pair<size_t,renderMe::Texture>>() };
+
+								if (textures_list.size() > 0)
+								{
+									const auto& render_target{ textures_list.at(0)->getPurpose().second};
+									p_renderingQueue.setTargetTextureName(render_target.getName());
+								}
+								else
+								{
+									_EXCEPTION("Missing rendertarget texture for BUFFER_RENDERING queue : " + p_renderingQueue.getName() + ", parent is " + parent_entity->getId());
+								}
 							}
 						}
 						else
 						{
 							// parent rendering aspect has no renderingTarget component !
 							p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+
+							_EXCEPTION("Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component : " + p_renderingQueue.getName() + ", parent is " + parent_entity->getId());
 							// log it (WARN)
-							_RENDERME_WARN(m_localLogger, "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")
+							//_RENDERME_WARN(m_localLogger, "Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no renderingTarget component")							
 						}
 					}
 					else
 					{
 						// parent has no rendering aspect 
 						p_renderingQueue.setState(rendering::Queue::State::ERROR_ORPHAN);
+
+						_EXCEPTION("Rendering queue set to ERROR_ORPHAN : parent rendering aspect has no rendering aspect : " + p_renderingQueue.getName() + ", parent is " + parent_entity->getId());
+
 						// log it (WARN)
-						_RENDERME_WARN(m_localLogger, "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
+						//_RENDERME_WARN(m_localLogger, "Rendering queue set to ERROR_ORPHAN : parent has no rendering aspect")
 					}
 				}
 			}
