@@ -40,6 +40,8 @@
 #include "animatorfunc.h"
 #include "animators_helpers.h"
 
+
+
 using namespace renderMe;
 using namespace renderMe::core;
 using namespace renderMe::rendering;
@@ -65,4 +67,5 @@ void ModuleImpl::run(void)
 
 	// resources system event
 	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
+
 }

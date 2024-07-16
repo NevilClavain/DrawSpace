@@ -185,8 +185,7 @@ void D3D11SystemImpl::beginTarget(const std::string& p_targetName)
         m_currentView = ti.stencilDepthView;
 
         m_lpd3ddevcontext->OMSetRenderTargets(1, &m_currentTarget, m_currentView);
-
-        m_lpd3ddevcontext->RSSetViewports(1, &m_mainScreenViewport); // CHANGE FOR TARGET TEXTURE ASSOCIATED VIEWPORT
+        m_lpd3ddevcontext->RSSetViewports(1, &ti.viewport);
     }
     else
     {
@@ -203,7 +202,7 @@ void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clea
     clearcolor[2] = p_clear_color.b() / 255.0f;
     clearcolor[3] = p_clear_color.a() / 255.0f;
 
-    m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);
+    m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);    
 }
 
 void D3D11SystemImpl::flipScreen(void)

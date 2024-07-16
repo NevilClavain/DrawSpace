@@ -33,6 +33,7 @@
 #include "datacloud.h"
 #include "aspects.h"
 #include "syncvariable.h"
+#include "entitygraphlog.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -92,9 +93,15 @@ void ModuleImpl::onEndKeyPress(long p_key)
 	{
 	}
 
+	else if (VK_F4 == p_key)
+	{
+		helpers::logEntitygraph(m_entitygraph);
+	}
+
+
 	else if (VK_F8 == p_key)
 	{
-		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(dataPrintSystemSlot) };
+		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");

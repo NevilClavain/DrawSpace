@@ -40,8 +40,10 @@
 #include "logconf.h"
 
 #include "trianglemeshe.h"
-#include "renderstate.h"
 #include "texture.h"
+#include "renderstate.h"
+#include "shader.h"
+
 
 
 #include "logger_service.h"
@@ -234,148 +236,323 @@ void ModuleImpl::d3d11_system_events()
 
 						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
 
-					}
+						////////////////////////////////////////////////////////////////////
 
-					//////////////////////////////////////////////////////////////
-
-					m_windowRenderingQueue->setCurrentView("ScreenRenderingViewEntity");
+						m_windowRenderingQueue->setCurrentView("ScreenRenderingViewEntity");
 
 
+						{
+
+							Entitygraph::Node& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+
+							auto& screenRenderingQuadNode{ m_entitygraph.add(screenRenderingNode, "screenRenderingQuadEntity") };
 
 
+							const auto screenRenderingQuadEntity{ screenRenderingQuadNode.data() };
+
+							auto& quad_resource_aspect{ screenRenderingQuadEntity->makeAspect(core::resourcesAspect::id) };
+
+							/////////// Add shaders
 
 
-
-
-					/////////////////////////////screenRenderingQuadEntity///////////////////////////////////////
-
-					{
-
-						Entitygraph::Node& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
-
-						auto& screenRenderingQuadNode{ m_entitygraph.add(screenRenderingNode, "screenRenderingQuadEntity") };
-						const auto screenRenderingQuadEntity{ screenRenderingQuadNode.data() };
-
-						auto& quad_resource_aspect{ screenRenderingQuadEntity->makeAspect(core::resourcesAspect::id) };
-
-						/////////// Add shaders
-
-
-						quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
-						quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
+							quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
+							quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
 
 
 
-						/////////// Add trianglemeshe
-						TriangleMeshe square("rendering_quad", TriangleMeshe::State::BLOBLOADED);
+							/////////// Add trianglemeshe
+							TriangleMeshe square("quad", TriangleMeshe::State::BLOBLOADED);
 
-						square.push(Vertex(-m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0));
-						square.push(Vertex(m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0));
-						square.push(Vertex(m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0));
-						square.push(Vertex(-m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0));
+							square.push(Vertex(-m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0, 0, 1));
+							square.push(Vertex(m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0, 1, 1));
+							square.push(Vertex(m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0, 1, 0));
+							square.push(Vertex(-m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0, 0, 0));
 
-						const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
-						square.push(t1);
+							const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
+							square.push(t1);
 
-						const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
-						square.push(t2);
+							const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
+							square.push(t2);
 
-						square.computeNormales();
-						square.computeTB();
+							square.computeNormales();
+							square.computeTB();
 
-						quad_resource_aspect.addComponent<TriangleMeshe>("rendering_quad", square);
+							quad_resource_aspect.addComponent<TriangleMeshe>("quad", square);
 
-						auto& quad_rendering_aspect{ screenRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
+							auto& quad_rendering_aspect{ screenRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
-						quad_rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::BUFFER_RENDERINGTARGET);
+							quad_rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::BUFFER_RENDERINGTARGET);
 
-						/////////// render target Texture
+							/////////// render target Texture
 
-						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+							const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
-						const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+							const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
 
-						const int w_width{ window_dims.x() };
-						const int w_height{ window_dims.y() };
+							const int w_width{ window_dims.x() };
+							const int w_height{ window_dims.y() };
 
-						quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("rendering_quad_texture", std::make_pair(Texture::STAGE_0, Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height)));
-
-
-						/////////// Add renderstate
-
-						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
-						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
-						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
-
-						const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill };
-
-						quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
-
-						/////////// Draw triangles
-
-						rendering::DrawingControl drawingControl;
+							quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("rendering_quad_texture", std::make_pair(Texture::STAGE_0, Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height)));
 
 
+							/////////// Add renderstate
 
-						quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
+							RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+							RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
+							RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 
+							const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill };
 
-						/////////// time aspect
-						// required for animator !
+							quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
-						auto& quad_time_aspect{ screenRenderingQuadEntity->makeAspect(core::timeAspect::id) };
+							/////////// Draw triangles
 
-						/////////// World position
-
-						auto& world_aspect{ screenRenderingQuadEntity->makeAspect(core::worldAspect::id) };
-
-						world_aspect.addComponent<transform::WorldPosition>("position");
-
-
-						world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
-						(
-							{},
-							[](const core::ComponentContainer& p_world_aspect,
-								const core::ComponentContainer& p_time_aspect,
-								const transform::WorldPosition&,
-								const std::unordered_map<std::string, std::string>&)
-							{
-
-								maths::Matrix positionmat;
-								positionmat.translation(0.0, 0.0, -1.05001);
-
-								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
-								wp.local_pos = wp.local_pos * positionmat;
-							}
-						));
-
-					}
-
-					/////////////////////////////screenRenderingQuadEntity///////////////////////////////////////
+							rendering::DrawingControl drawingControl;
 
 
-					{
-						Entitygraph::Node& screenRenderingQuadNode{ m_entitygraph.node("screenRenderingQuadEntity") };
 
-						auto& bufferRenderingNode{ m_entitygraph.add(screenRenderingQuadNode, "bufferRenderingEntity") };
-						const auto bufferRenderingQuadEntity{ bufferRenderingNode.data() };
+							quad_rendering_aspect.addComponent<rendering::DrawingControl>("screenRenderingQuad", drawingControl);
 
-						auto& bufferRendering_rendering_aspect{ bufferRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
-						rendering::Queue bufferRenderingQueue("buffer_pass_queue");
-						bufferRenderingQueue.setTargetClearColor({ 0, 255, 0, 255 });
-						bufferRenderingQueue.enableTargetClearing(true);
+							/////////// time aspect
+							// required for animator !
 
-						bufferRendering_rendering_aspect.addComponent<rendering::Queue>("bufferRenderingQueue", bufferRenderingQueue);
+							auto& quad_time_aspect{ screenRenderingQuadEntity->makeAspect(core::timeAspect::id) };
 
+							/////////// World position
+
+							auto& world_aspect{ screenRenderingQuadEntity->makeAspect(core::worldAspect::id) };
+
+							world_aspect.addComponent<transform::WorldPosition>("position");
+
+
+							world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+							(
+								{},
+								[](const core::ComponentContainer& p_world_aspect,
+									const core::ComponentContainer& p_time_aspect,
+									const transform::WorldPosition&,
+									const std::unordered_map<std::string, std::string>&)
+								{
+
+									maths::Matrix positionmat;
+									positionmat.translation(0.0, 0.0, -1.95001);
+
+									transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+									wp.local_pos = wp.local_pos * positionmat;
+								}
+							));
+
+						}
 						
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						
+						{
+
+							
+							
+							Entitygraph::Node& screenRenderingQuadNode{ m_entitygraph.node("screenRenderingQuadEntity") };
+
+							auto& bufferRenderingNode{ m_entitygraph.add(screenRenderingQuadNode, "bufferRenderingEntity") };
+							const auto bufferRenderingQuadEntity{ bufferRenderingNode.data() };
+
+							auto& bufferRendering_rendering_aspect{ bufferRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
+
+							rendering::Queue bufferRenderingQueue("buffer_pass_queue");
+							bufferRenderingQueue.setTargetClearColor({ 0, 255, 0, 255 });
+							bufferRenderingQueue.enableTargetClearing(true);
+
+							bufferRendering_rendering_aspect.addComponent<rendering::Queue>("bufferRenderingQueue", bufferRenderingQueue);
+							
+							
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							
+
+							/////////////// add viewpoint ////////////////////////
+							auto& viewPointNode{ m_entitygraph.add(bufferRenderingNode, "bufferRenderingViewEntity") };
+							const auto cameraEntity{ viewPointNode.data() };
+
+							auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
+
+							maths::Matrix projection;
+
+							projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+
+							camera_aspect.addComponent<maths::Matrix>("projection", projection);
+
+							auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
+
+							camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
+
+							bufferRendering_rendering_aspect.getComponent<rendering::Queue>("bufferRenderingQueue")->getPurpose().setCurrentView("bufferRenderingViewEntity");
+
+							
+
+
+
+
+
+
+						}
+
+
+
+
+						{
+							/*
+							Entitygraph::Node& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
+							auto& quadNode{ m_entitygraph.add(screenRenderingNode, "quadEntity2") };
+							*/
+
+
+							
+							Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+							auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity2") };
+
+
+							const auto quadEntity{ quadNode.data() };
+
+							auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
+
+							/////////// Add shaders
+
+							quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
+							quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
+
+
+							/////////// Add trianglemeshe
+							TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
+
+							square.push(Vertex(-0.9, -0.5, 0.0, 0.0f, 1.0f));
+							square.push(Vertex(0.9, -0.5, 0.0, 1.0f, 1.0f));
+							square.push(Vertex(0.9, 0.5, 0.0, 1.0f, 0.0f));
+							square.push(Vertex(-0.9, 0.5, 0.0, 0.0f, 0.0f));
+
+							const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
+							square.push(t1);
+
+							const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
+							square.push(t2);
+
+							square.computeNormales();
+							square.computeTB();
+
+							quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+
+							/////////// Add texture
+
+							quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("map.jpg")));
+
+
+
+
+							auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+
+							/////////// Add renderstate
+
+							RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+							RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
+							RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+							RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
+
+
+							const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+
+							quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+
+							/////////// Draw triangles
+
+							quad_rendering_aspect.addComponent<rendering::DrawingControl>("quad2", rendering::DrawingControl());
+
+
+							/////////// time aspect
+
+							auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
+
+							/////////// World position
+
+
+
+							auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
+
+							world_aspect.addComponent<transform::WorldPosition>("position");
+
+
+							world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+							(
+								{},
+								[](const core::ComponentContainer& p_world_aspect,
+									const core::ComponentContainer& p_time_aspect,
+									const transform::WorldPosition&,
+									const std::unordered_map<std::string, std::string>&)
+								{
+
+									maths::Matrix positionmat;
+									positionmat.translation(0.0, 0.0, -5.60001);
+
+									transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+									wp.local_pos = wp.local_pos * positionmat;
+								}
+							));
+
+							
+
+						}
+
+						
+
+
 					}
-					
-					helpers::logEntitygraph(m_entitygraph);
+
+
+
+
+
 				}
 				break;
 			}

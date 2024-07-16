@@ -443,7 +443,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 	current_cam.identity();
 
 	// set a dummy default perspective
-	current_proj.perspective(1.0, 1.0, 1.0, 1000.0);
+	current_proj.perspective(1.0, 0.5, 1.0, 100000.0);
 
 	//////////////////////////////// get view and proj matrix for this queue
 
@@ -492,21 +492,15 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 	if (rendering::Queue::Purpose::SCREEN_RENDERING == p_renderingQueue.getPurpose())
 	{
 		d3dimpl->beginScreen();
-
 	}
 	else //BUFFER_RENDERING
 	{
 		const std::string target_texture_name{ p_renderingQueue.getTargetTextureName() };
-
 		d3dimpl->beginTarget(target_texture_name);
-
-		
 	}
 
 	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
 	
-
-
 	{
 		auto queueNodes{ p_renderingQueue.getQueueNodes() };
 

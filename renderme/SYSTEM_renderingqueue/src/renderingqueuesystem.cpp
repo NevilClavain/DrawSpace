@@ -285,6 +285,30 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 	_RENDERME_DEBUG(m_localLogger, ">>>>>>>>>>>>>>> QUEUE DUMP END <<<<<<<<<<<<<<<<<<<<<<<<<<");
 }
 
+static rendering::Queue* searchRenderingQueueInAncestors(core::Entity* p_entity)
+{
+	rendering::Queue* rqueue { nullptr };
+	core::Entity* curr_parent{ p_entity->getParent() };
+
+	while (curr_parent)
+	{
+		if (curr_parent->hasAspect(renderMe::core::renderingAspect::id))
+		{
+			const auto& rendering_aspect{ curr_parent->aspectAccess(renderMe::core::renderingAspect::id) };
+
+			const auto rendering_queues_list{ rendering_aspect.getComponentsByType<rendering::Queue>() };
+			if (rendering_queues_list.size() > 0)
+			{
+				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
+				rqueue = &renderingQueue;
+				break;
+			}
+		}
+		curr_parent = curr_parent->getParent();
+	}
+	return rqueue;
+}
+
 void RenderingQueueSystem::manageRenderingQueue()
 {
 	////////Queue states//////////////////////////////////////
@@ -305,13 +329,14 @@ void RenderingQueueSystem::manageRenderingQueue()
 	}
 	////////Queue build/updates/log//////////////////////////////////////
 	{
-		rendering::Queue* current_queue{ nullptr };
+		//rendering::Queue* current_queue{ nullptr };
 
 		for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
 		{
 			const auto current_entity{ it->data() };
 			const auto currEntityId{ current_entity->getId() };
 
+			//////// check if request to log this queue
 			if (current_entity->hasAspect(renderMe::core::renderingAspect::id))
 			{
 				const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
@@ -319,11 +344,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 				const auto rendering_queues_list{ rendering_aspect.getComponentsByType<rendering::Queue>() };
 				if (rendering_queues_list.size() > 0)
 				{
-					auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
-
-					current_queue = &renderingQueue;
-
-					//////// check if request to log this queue
+					auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };					
 
 					if (m_queuesToLog.count(currEntityId))
 					{
@@ -334,6 +355,11 @@ void RenderingQueueSystem::manageRenderingQueue()
 					////////
 				}
 			}
+			/////////////////////////////////////////
+
+			// search for rendering queue over this current entity
+
+			rendering::Queue* current_queue{ searchRenderingQueueInAncestors(current_entity) };
 
 			if (current_entity->hasAspect(renderMe::core::resourcesAspect::id) &&
 				current_entity->hasAspect(renderMe::core::renderingAspect::id) && current_queue)
