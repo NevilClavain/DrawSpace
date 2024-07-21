@@ -441,14 +441,16 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 								const auto& parent_resource_aspect{ parent_entity->aspectAccess(core::resourcesAspect::id) };
 								const auto textures_list{ parent_resource_aspect.getComponentsByType<std::pair<size_t,renderMe::Texture>>() };
 
-								if (textures_list.size() > 0)
+								const size_t targetStage{ p_renderingQueue.getTargetStage() };
+								if(targetStage < textures_list.size())
 								{
-									const auto& render_target{ textures_list.at(0)->getPurpose().second};
+									const auto& render_target{ textures_list.at(targetStage)->getPurpose().second };
 									p_renderingQueue.setTargetTextureName(render_target.getName());
+
 								}
 								else
 								{
-									_EXCEPTION("Missing rendertarget texture for BUFFER_RENDERING queue : " + p_renderingQueue.getName() + ", parent is " + parent_entity->getId());
+									_EXCEPTION("Missing rendertarget texture on requested stage for BUFFER_RENDERING queue : " + p_renderingQueue.getName() + ", parent is " + parent_entity->getId());
 								}
 							}
 						}

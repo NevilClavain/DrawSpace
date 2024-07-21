@@ -377,6 +377,8 @@ void ModuleImpl::d3d11_system_events()
 							bufferRenderingQueue.setTargetClearColor({ 0, 0, 20, 255 });
 							bufferRenderingQueue.enableTargetClearing(true);
 
+							bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
+
 							bufferRendering_rendering_aspect.addComponent<rendering::Queue>("bufferRenderingQueue", bufferRenderingQueue);
 							
 							

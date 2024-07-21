@@ -122,3 +122,13 @@ void Queue::setTargetTextureName(const std::string& p_name)
 {
 	m_targetTextureName = p_name;
 }
+
+size_t Queue::getTargetStage() const
+{
+	return m_targetStage;
+}
+
+void Queue::setTargetStage(size_t p_stage)
+{
+	m_targetStage = p_stage;
+}
