@@ -23,6 +23,8 @@
 /* -*-LIC_END-*- */
 
 #include "renderingqueue.h"
+#include "component.h"
+#include "exceptions.h"
 
 using namespace renderMe::rendering;
 using namespace renderMe::core;
@@ -52,9 +54,25 @@ void Queue::setState(State p_newstate)
 	m_state = p_newstate;
 }
 
-void Queue::setPurpose(Purpose p_purpose)
+void Queue::setScreenRenderingPurpose()
 {
-	m_purpose = p_purpose;
+	m_purpose = Purpose::SCREEN_RENDERING;
+}
+
+void Queue::setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, renderMe::Texture>> p_textures_list)
+{
+
+	if (m_targetStage < p_textures_list.size())
+	{
+		const auto& render_target{ p_textures_list.at(m_targetStage)->getPurpose().second };
+		m_targetTextureName = render_target.getName();
+	}
+	else
+	{
+		_EXCEPTION("Missing rendertarget texture on requested stage for BUFFER_RENDERING queue : " + getName());
+	}
+
+	m_purpose = Purpose::BUFFER_RENDERING;
 }
 
 void Queue::enableTargetClearing(bool p_enable)
@@ -116,16 +134,6 @@ std::string	Queue::getCurrentView() const
 std::string	Queue::getTargetTextureName() const
 {
 	return m_targetTextureName;
-}
-
-void Queue::setTargetTextureName(const std::string& p_name)
-{
-	m_targetTextureName = p_name;
-}
-
-size_t Queue::getTargetStage() const
-{
-	return m_targetStage;
 }
 
 void Queue::setTargetStage(size_t p_stage)

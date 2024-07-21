@@ -34,10 +34,20 @@
 #include "matrix.h"
 #include "renderstate.h"
 #include "shader.h"
+#include "texture.h"
 
 namespace renderMe
 {
 	class RenderingQueueSystem;
+
+	namespace core
+	{
+		template<typename T>
+		class Component;
+
+		template<typename T>
+		using ComponentList = std::vector<Component<T>*>;
+	}
 
 	namespace rendering
 	{
@@ -205,10 +215,6 @@ namespace renderMe
 
 			
 			std::string					getTargetTextureName() const;
-			void						setTargetTextureName(const std::string& p_name);
-			
-
-			size_t						getTargetStage() const;
 			void						setTargetStage(size_t p_stage);
 			
 
@@ -233,7 +239,10 @@ namespace renderMe
 			
 
 			void							setState(State p_newstate);
-			void							setPurpose(Purpose p_purpose);
+
+			//void							setPurpose(Purpose p_purpose);
+			void							setScreenRenderingPurpose();
+			void							setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, renderMe::Texture>> p_textures_list);
 
 			
 

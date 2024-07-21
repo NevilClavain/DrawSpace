@@ -417,9 +417,7 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 								// parent is a screen-target pass 
 								// set queue purpose accordingly
 
-								p_renderingQueue.setPurpose(rendering::Queue::Purpose::SCREEN_RENDERING);
-								p_renderingQueue.setState(rendering::Queue::State::READY);
-
+								p_renderingQueue.setScreenRenderingPurpose();
 								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() + " set to READY, SCREEN_RENDERING")
 							}
 							else
@@ -429,30 +427,20 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 								// parent is a texture-target pass
 								// set queue purpose accordingly
 
-								p_renderingQueue.setPurpose(rendering::Queue::Purpose::BUFFER_RENDERING);
-								p_renderingQueue.setState(rendering::Queue::State::READY);
-								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() + " set to READY, BUFFER_RENDERING")
-
 								// parent is a texture-target pass
 								// search for a target texture in it
 
 								// search in resource aspect
 
 								const auto& parent_resource_aspect{ parent_entity->aspectAccess(core::resourcesAspect::id) };
-								const auto textures_list{ parent_resource_aspect.getComponentsByType<std::pair<size_t,renderMe::Texture>>() };
+								const ComponentList<std::pair<size_t, renderMe::Texture>> textures_list{ parent_resource_aspect.getComponentsByType<std::pair<size_t,renderMe::Texture>>() };
 
-								const size_t targetStage{ p_renderingQueue.getTargetStage() };
-								if(targetStage < textures_list.size())
-								{
-									const auto& render_target{ textures_list.at(targetStage)->getPurpose().second };
-									p_renderingQueue.setTargetTextureName(render_target.getName());
+								p_renderingQueue.setBufferRenderingPurpose(textures_list);
 
-								}
-								else
-								{
-									_EXCEPTION("Missing rendertarget texture on requested stage for BUFFER_RENDERING queue : " + p_renderingQueue.getName() + ", parent is " + parent_entity->getId());
-								}
+								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName() + " set to READY, BUFFER_RENDERING")
 							}
+
+							p_renderingQueue.setState(rendering::Queue::State::READY);
 						}
 						else
 						{
