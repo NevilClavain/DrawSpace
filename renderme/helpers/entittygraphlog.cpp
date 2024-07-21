@@ -44,6 +44,9 @@ namespace renderMe
 	{
 		void logEntitygraph(core::Entitygraph& p_eg)
 		{
+
+			_RENDERME_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP BEGIN <<<<<<<<<<<<<<<<<<<<<<<<");
+
 			struct ENode
 			{
 				std::string					 id;
@@ -162,7 +165,9 @@ namespace renderMe
 				}
 			};
 
-			logMe(root, 0);			
+			logMe(root, 0);	
+
+			_RENDERME_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP END <<<<<<<<<<<<<<<<<<<<<<<<");
 		}
 	}
 }

@@ -99,6 +99,7 @@ private:
     bool                                    m_quadEntity_state{ false };
 
 
+
 };
 
 

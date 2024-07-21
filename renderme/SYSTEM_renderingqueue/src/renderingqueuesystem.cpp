@@ -129,151 +129,158 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 	// queue node dump
 	const auto qnodes{ p_renderingQueue.getQueueNodes() };
 
-	for (const auto& vshaders : qnodes)
+	if (!qnodes.size())
 	{
-		const auto vshader_id{ vshaders.first };
-		_RENDERME_DEBUG(m_localLogger, "\t-> vshader D3D resource id: " + vshader_id);
-
-		for (const auto& pshaders : vshaders.second.list)
+		_RENDERME_DEBUG(m_localLogger, "Empty queue")
+	}
+	else
+	{
+		for (const auto& vshaders : qnodes)
 		{
-			const auto pshader_id{ pshaders.first };
-			_RENDERME_DEBUG(m_localLogger, "\t\t-> pshader D3D resource id: " + pshader_id);
+			const auto vshader_id{ vshaders.first };
+			_RENDERME_DEBUG(m_localLogger, "\t-> vshader D3D resource id: " + vshader_id);
 
-			for (const auto& rs : pshaders.second.list)
+			for (const auto& pshaders : vshaders.second.list)
 			{
-				_RENDERME_DEBUG(m_localLogger, "\t\t\t-> renderstate : " + rs.first);
+				const auto pshader_id{ pshaders.first };
+				_RENDERME_DEBUG(m_localLogger, "\t\t-> pshader D3D resource id: " + pshader_id);
 
-				for (const auto& linemeshe : rs.second.linemeshes_list)
+				for (const auto& rs : pshaders.second.list)
 				{
-					const auto linemeshe_id{ linemeshe.first };
-					_RENDERME_DEBUG(m_localLogger, "\t\t\t\t-> line meshe D3D resource id: " + linemeshe_id);
+					_RENDERME_DEBUG(m_localLogger, "\t\t\t-> renderstate : " + rs.first);
 
-					for (const auto& drawing : linemeshe.second.drawing_list)
+					for (const auto& linemeshe : rs.second.linemeshes_list)
 					{
-						const auto drawing_id{ drawing.first };
-						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t-> drawing : " + drawing_id);
+						const auto linemeshe_id{ linemeshe.first };
+						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t-> line meshe D3D resource id: " + linemeshe_id);
 
-						const auto drawing_body{ drawing.second };
-
-						if (drawing_body.world)
+						for (const auto& drawing : linemeshe.second.drawing_list)
 						{
-							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> world :\n" + drawing_body.world->dump());
-						}
-						else
-						{
-							_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t-> world : nullptr\n" );
-						}
+							const auto drawing_id{ drawing.first };
+							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t-> drawing : " + drawing_id);
 
-						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> vshaders params datacloud connexions :");
-						for (const auto& cnx : drawing_body.vshaders_map_cnx)
-						{
-							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
-																											+ cnx.second.argument_id
-																											+ "' (" + cnx.second.argument_type
-																											+ ") for register " + std::to_string(cnx.second.shader_register));
-						}
+							const auto drawing_body{ drawing.second };
 
-						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> pshaders params datacloud connexions :");
-						for (const auto& cnx : drawing_body.pshaders_map_cnx)
-						{
-							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
-																											+ cnx.second.argument_id
-																											+ "' (" + cnx.second.argument_type
-																											+ ") for register " + std::to_string(cnx.second.shader_register));
-						}
-
-					}
-				}
-
-				for (const auto& trianglemeshe : rs.second.trianglemeshes_list)
-				{
-					const auto triangle_id{ trianglemeshe.first };
-					_RENDERME_DEBUG(m_localLogger, "\t\t\t\t-> triangle meshe D3D resource id: " + triangle_id);
-
-					for (const auto& drawing : trianglemeshe.second.drawing_list)
-					{
-						const auto drawing_id{ drawing.first };
-						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t-> drawing : " + drawing_id);
-
-						const auto drawing_body{ drawing.second };
-
-						if (drawing_body.world)
-						{
-							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> world :\n" + drawing_body.world->dump());
-						}
-						else
-						{
-							_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t-> world : nullptr\n");
-						}
-
-						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> vshaders params datacloud connexions :");
-						for (const auto& cnx : drawing_body.vshaders_map_cnx)
-						{
-							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
-																											+ cnx.second.argument_id
-																											+ "' (" + cnx.second.argument_type
-																											+ ") for register " + std::to_string(cnx.second.shader_register));
-						}
-
-						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> pshaders params datacloud connexions :");
-						for (const auto& cnx : drawing_body.pshaders_map_cnx)
-						{
-							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
-																											+ cnx.second.argument_id
-																											+ "' (" + cnx.second.argument_type
-																											+ ") for register " + std::to_string(cnx.second.shader_register));
-						}
-
-					}
-
-					for (const auto& texture_set_list : trianglemeshe.second.textures_set_list)
-					{
-						const rendering::Queue::TextureSetPayload textureSetPayload{ texture_set_list.second };
-
-						for (const auto& staged_texture : textureSetPayload.textures)
-						{
-							const size_t	stage{ staged_texture.first };
-							const Texture&	texture{ staged_texture.second };
-
-							_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture.getName() + " " +
-																										(Texture::Source::CONTENT_FROM_FILE == texture.getSource() ? "CONTENT_FROM_FILE" : "CONTENT_FROM_RENDERINGQUEUE"));
-
-
-
-							for (const auto& drawing : textureSetPayload.drawing_list)
+							if (drawing_body.world)
 							{
-								const auto drawing_id{ drawing.first };
-								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> drawing : " + drawing_id);
+								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> world :\n" + drawing_body.world->dump());
+							}
+							else
+							{
+								_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t-> world : nullptr\n");
+							}
 
-								const auto drawing_body{ drawing.second };
+							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> vshaders params datacloud connexions :");
+							for (const auto& cnx : drawing_body.vshaders_map_cnx)
+							{
+								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
+									+ cnx.second.argument_id
+									+ "' (" + cnx.second.argument_type
+									+ ") for register " + std::to_string(cnx.second.shader_register));
+							}
 
-								if (drawing_body.world)
+							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> pshaders params datacloud connexions :");
+							for (const auto& cnx : drawing_body.pshaders_map_cnx)
+							{
+								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
+									+ cnx.second.argument_id
+									+ "' (" + cnx.second.argument_type
+									+ ") for register " + std::to_string(cnx.second.shader_register));
+							}
+
+						}
+					}
+
+					for (const auto& trianglemeshe : rs.second.trianglemeshes_list)
+					{
+						const auto triangle_id{ trianglemeshe.first };
+						_RENDERME_DEBUG(m_localLogger, "\t\t\t\t-> triangle meshe D3D resource id: " + triangle_id);
+
+						for (const auto& drawing : trianglemeshe.second.drawing_list)
+						{
+							const auto drawing_id{ drawing.first };
+							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t-> drawing : " + drawing_id);
+
+							const auto drawing_body{ drawing.second };
+
+							if (drawing_body.world)
+							{
+								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> world :\n" + drawing_body.world->dump());
+							}
+							else
+							{
+								_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t-> world : nullptr\n");
+							}
+
+							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> vshaders params datacloud connexions :");
+							for (const auto& cnx : drawing_body.vshaders_map_cnx)
+							{
+								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
+									+ cnx.second.argument_id
+									+ "' (" + cnx.second.argument_type
+									+ ") for register " + std::to_string(cnx.second.shader_register));
+							}
+
+							_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> pshaders params datacloud connexions :");
+							for (const auto& cnx : drawing_body.pshaders_map_cnx)
+							{
+								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
+									+ cnx.second.argument_id
+									+ "' (" + cnx.second.argument_type
+									+ ") for register " + std::to_string(cnx.second.shader_register));
+							}
+
+						}
+
+						for (const auto& texture_set_list : trianglemeshe.second.textures_set_list)
+						{
+							const rendering::Queue::TextureSetPayload textureSetPayload{ texture_set_list.second };
+
+							for (const auto& staged_texture : textureSetPayload.textures)
+							{
+								const size_t	stage{ staged_texture.first };
+								const Texture& texture{ staged_texture.second };
+
+								_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture.getName() + " " +
+									(Texture::Source::CONTENT_FROM_FILE == texture.getSource() ? "CONTENT_FROM_FILE" : "CONTENT_FROM_RENDERINGQUEUE"));
+
+
+
+								for (const auto& drawing : textureSetPayload.drawing_list)
 								{
-									_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> world :\n" + drawing_body.world->dump());
-								}
-								else
-								{
-									_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t-> world : nullptr\n");
-								}
+									const auto drawing_id{ drawing.first };
+									_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t-> drawing : " + drawing_id);
 
-								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> vshaders params datacloud connexions :");
-								for (const auto& cnx : drawing_body.vshaders_map_cnx)
-								{
-									_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
-										+ cnx.second.argument_id
-										+ "' (" + cnx.second.argument_type
-										+ ") for register " + std::to_string(cnx.second.shader_register));
-								}
+									const auto drawing_body{ drawing.second };
 
-								_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> pshaders params datacloud connexions :");
-								for (const auto& cnx : drawing_body.pshaders_map_cnx)
-								{
-									_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
-										+ cnx.second.argument_id
-										+ "' (" + cnx.second.argument_type
-										+ ") for register " + std::to_string(cnx.second.shader_register));
-								}
+									if (drawing_body.world)
+									{
+										_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> world :\n" + drawing_body.world->dump());
+									}
+									else
+									{
+										_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t-> world : nullptr\n");
+									}
 
+									_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> vshaders params datacloud connexions :");
+									for (const auto& cnx : drawing_body.vshaders_map_cnx)
+									{
+										_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
+											+ cnx.second.argument_id
+											+ "' (" + cnx.second.argument_type
+											+ ") for register " + std::to_string(cnx.second.shader_register));
+									}
+
+									_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t-> pshaders params datacloud connexions :");
+									for (const auto& cnx : drawing_body.pshaders_map_cnx)
+									{
+										_RENDERME_DEBUG(m_localLogger, "\t\t\t\t\t\t\t\t-> datacloud var '" + cnx.first + "' mapped on shader input '"
+											+ cnx.second.argument_id
+											+ "' (" + cnx.second.argument_type
+											+ ") for register " + std::to_string(cnx.second.shader_register));
+									}
+
+								}
 							}
 						}
 					}

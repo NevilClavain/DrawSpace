@@ -68,4 +68,117 @@ void ModuleImpl::run(void)
 	// resources system event
 	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
 
+
+
+
+
+
+
+
+
+	if (true == m_quadEntity_state_request && false == m_quadEntity_state)	
+	{
+
+		Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+		auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity2") };
+
+
+		const auto quadEntity{ quadNode.data() };
+
+		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
+
+		/////////// Add shaders
+
+		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
+		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
+
+
+		/////////// Add trianglemeshe
+		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
+
+		square.push(Vertex(-0.9, -0.5, 0.0, 0.0f, 1.0f));
+		square.push(Vertex(0.9, -0.5, 0.0, 1.0f, 1.0f));
+		square.push(Vertex(0.9, 0.5, 0.0, 1.0f, 0.0f));
+		square.push(Vertex(-0.9, 0.5, 0.0, 0.0f, 0.0f));
+
+		const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
+		square.push(t1);
+
+		const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
+		square.push(t2);
+
+		square.computeNormales();
+		square.computeTB();
+
+		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+
+		/////////// Add texture
+
+		quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("map.jpg")));
+
+
+
+
+		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
+
+		/////////// Add renderstate
+
+		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+		RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
+		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+		RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
+
+
+		const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+
+		quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+
+		/////////// Draw triangles
+
+		quad_rendering_aspect.addComponent<rendering::DrawingControl>("quad2", rendering::DrawingControl());
+
+
+		/////////// time aspect
+
+		auto& quad_time_aspect{ quadEntity->makeAspect(core::timeAspect::id) };
+
+		/////////// World position
+
+
+
+		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
+
+		world_aspect.addComponent<transform::WorldPosition>("position");
+
+
+		world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+		(
+			{},
+			[](const core::ComponentContainer& p_world_aspect,
+				const core::ComponentContainer& p_time_aspect,
+				const transform::WorldPosition&,
+				const std::unordered_map<std::string, std::string>&)
+			{
+
+				maths::Matrix positionmat;
+				positionmat.translation(0.0, 0.0, -5.60001);
+
+				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+				wp.local_pos = wp.local_pos * positionmat;
+			}
+		));
+
+
+		m_quadEntity_state = true;
+	}
+	else if (false == m_quadEntity_state_request && true == m_quadEntity_state)
+	{
+		auto& quadNode{ m_entitygraph.node("quadEntity2") };
+		m_entitygraph.remove(quadNode);
+
+		m_quadEntity_state = false;
+	}
+
+
+
 }
