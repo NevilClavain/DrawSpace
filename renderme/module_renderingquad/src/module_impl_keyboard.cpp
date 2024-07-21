@@ -33,7 +33,7 @@
 #include "datacloud.h"
 #include "aspects.h"
 #include "syncvariable.h"
-#include "entitygraphlog.h"
+#include "entitygraph_helpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;

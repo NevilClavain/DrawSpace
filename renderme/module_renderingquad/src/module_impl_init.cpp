@@ -58,7 +58,7 @@
 
 #include "shaders_service.h"
 
-#include "entitygraphlog.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;

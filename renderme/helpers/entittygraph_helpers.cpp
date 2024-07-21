@@ -44,7 +44,6 @@ namespace renderMe
 	{
 		void logEntitygraph(core::Entitygraph& p_eg)
 		{
-
 			_RENDERME_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP BEGIN <<<<<<<<<<<<<<<<<<<<<<<<");
 
 			struct ENode

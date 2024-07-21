@@ -37,6 +37,7 @@ namespace renderMe
 	namespace helpers
 	{
 		void logEntitygraph(core::Entitygraph& p_eg);
+
 	}
 }
 
