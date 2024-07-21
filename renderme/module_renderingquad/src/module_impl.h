@@ -92,8 +92,8 @@ private:
 
     std::string                             m_resources_event{ "..." };
 
-    float                                   m_characteristics_v_width;
-    float                                   m_characteristics_v_height;
+    //float                                   m_characteristics_v_width;
+    //float                                   m_characteristics_v_height;
 
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };

@@ -123,9 +123,6 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 	screenRendering_rendering_aspect.addComponent<rendering::Queue>("screenRenderingQueue", "screen_pass_queue");
 
 	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("screenRenderingQueue")->getPurpose() };
-
-	//rendering_queue.setText(3, { "Hello world !", "Bahnschrift.16.spritefont", { 0, 255, 0, 255 }, { 400, 10 }, 0.0 });
-
 	m_windowRenderingQueue = &rendering_queue;
 
 	auto sysEngine{ SystemEngine::getInstance() };
@@ -207,8 +204,7 @@ void ModuleImpl::d3d11_system_events()
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
-					m_characteristics_v_width = characteristics_v_width;
-					m_characteristics_v_height = characteristics_v_height;
+
 
 
 
@@ -261,10 +257,10 @@ void ModuleImpl::d3d11_system_events()
 							/////////// Add trianglemeshe
 							TriangleMeshe square("quad", TriangleMeshe::State::BLOBLOADED);
 
-							square.push(Vertex(-m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0, 0, 1));
-							square.push(Vertex(m_characteristics_v_width / 2, -m_characteristics_v_height / 2, 0.0, 1, 1));
-							square.push(Vertex(m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0, 1, 0));
-							square.push(Vertex(-m_characteristics_v_width / 2, m_characteristics_v_height / 2, 0.0, 0, 0));
+							square.push(Vertex(-characteristics_v_width / 2, -characteristics_v_height / 2, 0.0, 0, 1));
+							square.push(Vertex(characteristics_v_width / 2, -characteristics_v_height / 2, 0.0, 1, 1));
+							square.push(Vertex(characteristics_v_width / 2, characteristics_v_height / 2, 0.0, 1, 0));
+							square.push(Vertex(-characteristics_v_width / 2, characteristics_v_height / 2, 0.0, 0, 0));
 
 							const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
 							square.push(t1);
