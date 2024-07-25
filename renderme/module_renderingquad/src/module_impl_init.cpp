@@ -291,7 +291,7 @@ void ModuleImpl::d3d11_system_events()
 
 							/////////// Add renderstate
 
-							RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+							RenderState rs_noculling(RenderState::Operation::SETCULLING, "cw");
 							RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
 							RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 
