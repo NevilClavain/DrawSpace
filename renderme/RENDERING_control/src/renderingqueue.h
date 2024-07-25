@@ -240,7 +240,6 @@ namespace renderMe
 
 			void							setState(State p_newstate);
 
-			//void							setPurpose(Purpose p_purpose);
 			void							setScreenRenderingPurpose();
 			void							setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, renderMe::Texture>> p_textures_list);
 

@@ -181,8 +181,11 @@ namespace renderMe
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		void buildDefferedShadingGraph(float p_characteristics_v_width, float p_characteristics_v_height, 
-											renderMe::core::Entitygraph& p_entitygraph, const std::string& p_screenRenderingEntityName, 
+		void plugRenderingQuadView(renderMe::core::Entitygraph& p_entitygraph,
+			                                float p_characteristics_v_width, float p_characteristics_v_height,
+											const std::string& p_parentid,
+											const std::string& p_quadEntityid,
+											const std::string& p_viewEntityid,
 											renderMe::rendering::Queue* p_windowQueue,
 											const std::string& p_vshader,
 											const std::string& p_pshader,
@@ -191,10 +194,10 @@ namespace renderMe
 		{
 			/////////////// add viewpoint (camera) ////////////////////////
 
-			auto& screenRenderingNode{ p_entitygraph.node(p_screenRenderingEntityName) };
+			auto& parentNodeNode{ p_entitygraph.node(p_parentid) };
 
 
-			auto& viewPointNode{ p_entitygraph.add(screenRenderingNode, "ScreenRenderingViewEntity") };
+			auto& viewPointNode{ p_entitygraph.add(parentNodeNode, p_viewEntityid /*"ScreenRenderingViewEntity"*/) };
 			const auto cameraEntity{ viewPointNode.data() };
 
 			auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
@@ -209,13 +212,13 @@ namespace renderMe
 
 			camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
 
-			p_windowQueue->setCurrentView("ScreenRenderingViewEntity");
+			p_windowQueue->setCurrentView(/*"ScreenRenderingViewEntity"*/p_viewEntityid);
 
 			///////////////////////////////////////////////////////////////
 
 			// add target quad aligned with screen
 
-			auto& screenRenderingQuadNode{ p_entitygraph.add(screenRenderingNode, "screenRenderingQuadEntity") };
+			auto& screenRenderingQuadNode{ p_entitygraph.add(parentNodeNode, p_quadEntityid/*"screenRenderingQuadEntity"*/) };
 			const auto screenRenderingQuadEntity{ screenRenderingQuadNode.data() };
 
 
@@ -253,7 +256,7 @@ namespace renderMe
 
 			/////////// render target Texture
 
-			for (int i = 0; i < p_renderTargets.size(); i++)
+			for (size_t i = 0; i < p_renderTargets.size(); i++)
 			{
 				const Texture texture{ p_renderTargets.at(i).second };
 				quad_resource_aspect.addComponent<std::pair<size_t, Texture>>(texture.getName(), p_renderTargets.at(i));
@@ -305,6 +308,23 @@ namespace renderMe
 				}
 			));
 		}
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		void plugRenderingQueue(renderMe::core::Entitygraph& p_entitygraph, const rendering::Queue& p_renderingqueue, const std::string& p_parentid, const std::string& p_entityid)
+		{
+			core::Entitygraph::Node& parentNode{ p_entitygraph.node(p_parentid) };
+			auto& renderingQueueNode{ p_entitygraph.add(parentNode, p_entityid) };
+			const auto renderingQueueNodeEntity{ renderingQueueNode.data() };
+
+			auto& renderingAspect{ renderingQueueNodeEntity->makeAspect(core::renderingAspect::id) };
+
+			renderingAspect.addComponent<rendering::Queue>("renderingQueue", p_renderingqueue);
+		}
+
 	}
 }
 

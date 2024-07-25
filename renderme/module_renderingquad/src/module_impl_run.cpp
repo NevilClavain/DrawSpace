@@ -68,7 +68,7 @@ void ModuleImpl::run(void)
 	// resources system event
 	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
 
-
+	
 	if (true == m_quadEntity_state_request && false == m_quadEntity_state)	
 	{
 
@@ -171,7 +171,5 @@ void ModuleImpl::run(void)
 
 		m_quadEntity_state = false;
 	}
-
-
-
+	
 }

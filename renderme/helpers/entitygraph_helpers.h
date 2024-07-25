@@ -39,22 +39,26 @@ namespace renderMe
 
 	namespace rendering
 	{
-		class Queue;
+		struct Queue;
 	}
 
 	namespace helpers
 	{
 		void logEntitygraph(core::Entitygraph& p_eg);
 
-
-		void buildDefferedShadingGraph(float p_characteristics_v_width, float p_characteristics_v_height, 
-										renderMe::core::Entitygraph& p_entitygraph, const std::string& p_screenRenderingEntityName, 
+		void plugRenderingQuadView( renderMe::core::Entitygraph& p_entitygraph,
+										float p_characteristics_v_width, float p_characteristics_v_height, 
+										const std::string& p_parentid,
+										const std::string& p_quadEntityid,
+										const std::string& p_viewEntityid,
 										renderMe::rendering::Queue* p_windowQueue,
 										const std::string& p_vshader,
 										const std::string& p_pshader,
-										const std::vector<std::pair<size_t, Texture>>& p_renderTargets
-										);
+										const std::vector<std::pair<size_t, Texture>>& p_renderTargets);
 
+		void plugRenderingQueue( renderMe::core::Entitygraph& p_entitygraph, 
+									const rendering::Queue& p_renderingqueue, 
+									const std::string& p_parentid, const std::string& p_entityid);
 	}
 }
 
