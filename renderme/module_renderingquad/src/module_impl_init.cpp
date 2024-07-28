@@ -227,8 +227,6 @@ void ModuleImpl::d3d11_system_events()
 																);
 						
 					// buffer rendering queue
-							
-
 					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
 					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
 					bufferRenderingQueue.enableTargetClearing(true);
@@ -237,9 +235,40 @@ void ModuleImpl::d3d11_system_events()
 					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");
 
 							
-														
-					/////////////// add scene camera
+					// camera
+					maths::Matrix projection;
+					projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+					helpers::plugView(m_entitygraph, projection, "bufferRenderingEntity", "cameraEntity");
+
+					// attach animator/positionner to camera
+					core::Entitygraph::Node& cameraNode{ m_entitygraph.node("cameraEntity") };
+					const auto cameraEntity{ cameraNode.data() };
+					auto& camera_world_aspect{ cameraEntity->aspectAccess(core::worldAspect::id) };
+
+					cameraEntity->makeAspect(core::timeAspect::id);
+					camera_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+					(
+						{},
+						[](const core::ComponentContainer& p_world_aspect,
+							const core::ComponentContainer& p_time_aspect,
+							const transform::WorldPosition&,
+							const std::unordered_map<std::string, std::string>&)
+						{
+
+							core::maths::Matrix positionmat;
+							positionmat.translation(0.0, 0.0, 5.000);
+
+							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("camera_position")->getPurpose() };
+							wp.local_pos = wp.local_pos * positionmat;
+						}
+					));
+
 					
+														
+
+
+					/////////////// add scene camera
+					/*
 					core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
 					auto& viewPointNode{ m_entitygraph.add(bufferRenderingQueueNode, "cameraEntity") };
 					const auto cameraEntity{ viewPointNode.data() };
@@ -247,7 +276,6 @@ void ModuleImpl::d3d11_system_events()
 					auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
 
 					maths::Matrix projection;
-
 					projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
 
 					camera_aspect.addComponent<maths::Matrix>("projection", projection);
@@ -255,10 +283,10 @@ void ModuleImpl::d3d11_system_events()
 					auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
 					camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
+					*/
 
 
-
-
+					/*
 					camera_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 					(
 						{},
@@ -277,17 +305,18 @@ void ModuleImpl::d3d11_system_events()
 					));
 
 					cameraEntity->makeAspect(core::timeAspect::id);
+					*/
 
 
 
 
-					///////
+					///////Select camera
 
+					core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
 					const auto bufferRenderingQueueEntity { bufferRenderingQueueNode.data() };
 					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
 
 					renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
-
 					
 				}
 				break;

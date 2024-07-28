@@ -59,6 +59,10 @@ namespace renderMe
 		void plugRenderingQueue( renderMe::core::Entitygraph& p_entitygraph, 
 									const rendering::Queue& p_renderingqueue, 
 									const std::string& p_parentid, const std::string& p_entityid);
+
+		void plugView(renderMe::core::Entitygraph& p_entitygraph,
+						const core::maths::Matrix& p_projection,
+						const std::string& p_parentid, const std::string& p_entityid);
 	}
 }
 

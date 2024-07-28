@@ -325,6 +325,23 @@ namespace renderMe
 			renderingAspect.addComponent<rendering::Queue>("renderingQueue", p_renderingqueue);
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		void plugView(renderMe::core::Entitygraph& p_entitygraph,
+			const core::maths::Matrix& p_projection,
+			const std::string& p_parentid, const std::string& p_entityid)
+		{
+			core::Entitygraph::Node& bufferRenderingQueueNode{ p_entitygraph.node(p_parentid) };
+			auto& viewPointNode{ p_entitygraph.add(bufferRenderingQueueNode, p_entityid) };
+			const auto cameraEntity{ viewPointNode.data() };
+
+			auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
+
+			camera_aspect.addComponent<core::maths::Matrix>("projection", p_projection);
+			auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
+
+			camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
+		}
 	}
 }
 
