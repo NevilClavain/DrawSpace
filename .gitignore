@@ -248,9 +248,21 @@ ALL_BUILD.vcxproj*
 /renderme/console_tests/console_datacloud/*.vcxproj*
 
 
-/renderme/module_helloworld/CMakeFiles/
-/renderme/module_helloworld/*.sln
-/renderme/module_helloworld/*.vcxproj*
+/renderme/module_renderingquad/CMakeFiles/
+/renderme/module_renderingquad/*.sln
+/renderme/module_renderingquad/*.vcxproj*
+
+/renderme/module_basicquad/CMakeFiles/
+/renderme/module_basicquad/*.sln
+/renderme/module_basicquad/*.vcxproj*
+
+/renderme/module_gblcamera/CMakeFiles/
+/renderme/module_gblcamera/*.sln
+/renderme/module_gblcamera/*.vcxproj*
+
+/renderme/module_scene00/CMakeFiles/
+/renderme/module_scene00/*.sln
+/renderme/module_scene00/*.vcxproj*
 
 
 /renderme/rt/CMakeFiles/
