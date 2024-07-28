@@ -197,7 +197,7 @@ namespace renderMe
 			auto& parentNodeNode{ p_entitygraph.node(p_parentid) };
 
 
-			auto& viewPointNode{ p_entitygraph.add(parentNodeNode, p_viewEntityid /*"ScreenRenderingViewEntity"*/) };
+			auto& viewPointNode{ p_entitygraph.add(parentNodeNode, p_viewEntityid) };
 			const auto cameraEntity{ viewPointNode.data() };
 
 			auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
@@ -212,13 +212,13 @@ namespace renderMe
 
 			camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
 
-			p_windowQueue->setCurrentView(/*"ScreenRenderingViewEntity"*/p_viewEntityid);
+			p_windowQueue->setCurrentView(p_viewEntityid);
 
 			///////////////////////////////////////////////////////////////
 
 			// add target quad aligned with screen
 
-			auto& screenRenderingQuadNode{ p_entitygraph.add(parentNodeNode, p_quadEntityid/*"screenRenderingQuadEntity"*/) };
+			auto& screenRenderingQuadNode{ p_entitygraph.add(parentNodeNode, p_quadEntityid) };
 			const auto screenRenderingQuadEntity{ screenRenderingQuadNode.data() };
 
 
