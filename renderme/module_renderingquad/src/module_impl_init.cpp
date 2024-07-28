@@ -230,7 +230,7 @@ void ModuleImpl::d3d11_system_events()
 							
 
 					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
-					bufferRenderingQueue.setTargetClearColor({ 0, 0, 20, 255 });
+					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
 					bufferRenderingQueue.enableTargetClearing(true);
 					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
 
@@ -239,7 +239,7 @@ void ModuleImpl::d3d11_system_events()
 							
 														
 					/////////////// add scene camera
-
+					
 					core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
 					auto& viewPointNode{ m_entitygraph.add(bufferRenderingQueueNode, "cameraEntity") };
 					const auto cameraEntity{ viewPointNode.data() };
@@ -255,7 +255,18 @@ void ModuleImpl::d3d11_system_events()
 					auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
 					camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
-					bufferRenderingQueue.setCurrentView("cameraEntity");
+
+
+					///////
+
+					const auto bufferRenderingQueueEntity { bufferRenderingQueueNode.data() };
+					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
+
+					renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
+
+
+					//bufferRenderingQueue.setCurrentView("cameraEntity");
+					
 				}
 				break;
 			}
