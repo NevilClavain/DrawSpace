@@ -257,6 +257,30 @@ void ModuleImpl::d3d11_system_events()
 					camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
 
 
+
+
+					camera_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+					(
+						{},
+						[](const core::ComponentContainer& p_world_aspect,
+							const core::ComponentContainer& p_time_aspect,
+							const transform::WorldPosition&,
+							const std::unordered_map<std::string, std::string>&)
+						{
+
+							core::maths::Matrix positionmat;
+							positionmat.translation(0.0, 0.0, 5.000);
+
+							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("camera_position")->getPurpose() };
+							wp.local_pos = wp.local_pos * positionmat;
+						}
+					));
+
+					cameraEntity->makeAspect(core::timeAspect::id);
+
+
+
+
 					///////
 
 					const auto bufferRenderingQueueEntity { bufferRenderingQueueNode.data() };
@@ -264,8 +288,6 @@ void ModuleImpl::d3d11_system_events()
 
 					renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
 
-
-					//bufferRenderingQueue.setCurrentView("cameraEntity");
 					
 				}
 				break;

@@ -282,7 +282,7 @@ namespace renderMe
 			/////////// time aspect
 			// required for animator !
 
-			auto& quad_time_aspect{ screenRenderingQuadEntity->makeAspect(core::timeAspect::id) };
+			screenRenderingQuadEntity->makeAspect(core::timeAspect::id);
 
 			/////////// World position
 
