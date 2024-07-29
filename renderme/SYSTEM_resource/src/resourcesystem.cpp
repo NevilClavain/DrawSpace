@@ -502,7 +502,7 @@ void ResourceSystem::handleTexture(Texture& textureInfos)
 				textureInfos.setState(Texture::State::BLOBLOADED);
 
 
-				// transfer file content to texturInfos buffer
+				// transfer file content to textureInfos buffer
 
 				core::Buffer<unsigned char> textureBytes;
 				textureBytes.fill(texture_content.getData(), texture_content.getDataSize());
