@@ -81,9 +81,12 @@ namespace renderMe
         enum class ContentAccessMode
         {
             NO_CONTENT_ACCESS,
+            CONTENT_ACCESS
+            /*
             CONTENT_ACCESS_READ, 
             CONTENT_ACCESS_WRITE,
             CONTENT_ACCESS_READWRITE
+            */
         };
 
         Texture() = delete;

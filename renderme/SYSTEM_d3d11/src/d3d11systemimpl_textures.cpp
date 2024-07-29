@@ -73,7 +73,10 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                     format = DXGI_FORMAT_R32G32B32A32_FLOAT;
                     break;
             }
-            
+
+            unsigned int cpuAccessFlags{ 0 };
+            D3D11_USAGE usage{ D3D11_USAGE_DEFAULT };
+
             D3D11_TEXTURE2D_DESC textureDesc;
 
             textureDesc.Width = p_texture.getWidth();
@@ -84,12 +87,13 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
             textureDesc.SampleDesc.Count = 1;
             textureDesc.SampleDesc.Quality = 0;
 
-            textureDesc.Usage = D3D11_USAGE_DEFAULT;
+            textureDesc.Usage = usage;
             textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-            textureDesc.CPUAccessFlags = 0;
+            textureDesc.CPUAccessFlags = cpuAccessFlags;
             textureDesc.MiscFlags = 0;
 
             ID3D11Texture2D* d3dt11{ nullptr };
+            ID3D11Texture2D* d3dt11_clone{ nullptr };
 
             // Create the render target texture.
             hRes = m_lpd3ddevice->CreateTexture2D(&textureDesc, nullptr, &d3dt11);
@@ -121,6 +125,25 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
             hRes = m_lpd3ddevice->CreateShaderResourceView(d3dt11, &shaderResourceViewDesc, &rendertextureResourceView);
             D3D11_CHECK(CreateShaderResourceView)
 
+
+            /////////////////////// creation texture "clone", pour lire le contenu d'une render target
+
+            if (renderMe::Texture::ContentAccessMode::CONTENT_ACCESS == p_texture.getContentAccessMode())
+            {
+                
+                textureDesc.Usage = D3D11_USAGE_STAGING;
+                textureDesc.BindFlags = 0;
+                textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ /* | D3D11_CPU_ACCESS_WRITE */;
+
+                hRes = m_lpd3ddevice->CreateTexture2D(&textureDesc, nullptr, &d3dt11_clone);
+                D3D11_CHECK(CreateTexture2D) 
+
+
+            }
+
+            ////////////////////////////////////////////////////////////////////////
+
+
             ID3D11Texture2D*                    stencilDepthBuffer{ nullptr };;
             ID3D11DepthStencilView*             stencilDepthView{ nullptr };
 
@@ -149,6 +172,8 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
             texture_data.viewport.TopLeftX = 0.0;
             texture_data.viewport.TopLeftY = 0.0;
 
+            texture_data.targetTextureClone = d3dt11_clone;
+
             m_textures[name] = texture_data;
         }
         else
@@ -160,41 +185,10 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
             const auto& file_content{ p_texture.getData() };
 
-            D3D11_USAGE usage;
+            D3D11_USAGE usage{ D3D11_USAGE_DEFAULT };
 
             unsigned int bindFlags{ D3D11_BIND_SHADER_RESOURCE };
             unsigned int cpuAccessFlags{ 0 };
-
-            switch (p_texture.getContentAccessMode())
-            {
-                case renderMe::Texture::ContentAccessMode::NO_CONTENT_ACCESS:
-
-                    usage = D3D11_USAGE_DEFAULT;
-                    cpuAccessFlags = 0;
-
-                    break;
-
-                case renderMe::Texture::ContentAccessMode::CONTENT_ACCESS_READ:
-
-                    usage = D3D11_USAGE_STAGING; // allow GPU/CPU transfert
-                    cpuAccessFlags = D3D11_CPU_ACCESS_READ; // cpu can read content
-
-                    break;
-                case renderMe::Texture::ContentAccessMode::CONTENT_ACCESS_WRITE:
-
-                    usage = D3D11_USAGE_DYNAMIC; // allow GPU/CPU transfert
-                    cpuAccessFlags = D3D11_CPU_ACCESS_WRITE; // cpu can write content
-
-                    break;
-
-                case renderMe::Texture::ContentAccessMode::CONTENT_ACCESS_READWRITE:
-
-                    usage = D3D11_USAGE_STAGING; // allow GPU/CPU transfert
-                    cpuAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-
-                    break;
-            }
-
 
             hRes = DirectX::CreateWICTextureFromMemoryEx(m_lpd3ddevice, file_content.getData(), file_content.getDataSize(), 0, 
                                                             usage, //D3D11_USAGE
@@ -327,6 +321,11 @@ void D3D11SystemImpl::destroyTexture(const std::string& p_name)
     if (textureData.targetTexture)
     {
         textureData.targetTexture->Release();
+    }
+
+    if(textureData.targetTextureClone)
+    {
+        textureData.targetTextureClone->Release();
     }
 
     if (textureData.rendertextureTargetView)
