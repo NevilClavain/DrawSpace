@@ -272,7 +272,7 @@ private:
 
         // in case of access content
         ID3D11Texture2D*            targetTextureClone      { nullptr }; 
-        void*                       bits                    { nullptr };
+        
 
 
         D3D11_VIEWPORT              viewport; // viewport adapte au rendu dans cette texture
