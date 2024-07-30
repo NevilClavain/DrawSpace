@@ -222,7 +222,7 @@ void ModuleImpl::d3d11_system_events()
 																	"texture_vs",
 																	"texture_ps",
 																	{	
-																		std::make_pair(Texture::STAGE_0, Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height, Texture::ContentAccessMode::CONTENT_ACCESS))
+																		std::make_pair(Texture::STAGE_0, Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height/*, Texture::ContentAccessMode::CONTENT_ACCESS*/))
 																	}																																		
 																);
 						

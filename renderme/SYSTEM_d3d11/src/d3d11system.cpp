@@ -720,6 +720,15 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 			}
 		}
 	}
+
+	if (rendering::Queue::Purpose::BUFFER_RENDERING == p_renderingQueue.getPurpose() && 
+		d3dimpl->getTextureData(p_renderingQueue.getTargetTextureName()).targetTextureClone)
+	{
+
+		const std::string target_texture_name{ p_renderingQueue.getTargetTextureName() };
+		d3dimpl->copyTextureContent(target_texture_name);
+	}
+
 	
 	
 	// render texts

@@ -120,6 +120,7 @@ private:
 class D3D11SystemImpl : public renderMe::property::Singleton<D3D11SystemImpl>
 {
 public:
+
     D3D11SystemImpl();
     ~D3D11SystemImpl() = default;
 
@@ -170,8 +171,11 @@ public:
     void bindTextureStage(const std::string& p_name, size_t p_stage);
     void unbindTextureStage(size_t p_stage);
 
+    void copyTextureContent(const std::string& p_name);
+
     void destroyTexture(const std::string& p_name);
 
+   
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
     bool setCacheRS(bool p_force = false); // apply
 
@@ -204,6 +208,33 @@ public:
 
 
     std::unordered_set<std::string> getShadersNames() const;
+
+
+    struct TextureData
+    {
+        renderMe::Texture::Source           source;
+        D3D11_TEXTURE2D_DESC                desc;
+
+        // common
+        ID3D11ShaderResourceView*           shaderResourceView{ nullptr };
+
+        // specifique textures from files
+        ID3D11Resource*                     textureResource{ nullptr };
+
+        // specifique textures render target
+
+        ID3D11Texture2D*                    targetTexture{ nullptr };
+        ID3D11RenderTargetView*             rendertextureTargetView{ nullptr };
+        ID3D11Texture2D*                    stencilDepthBuffer{ nullptr };
+        ID3D11DepthStencilView*             stencilDepthView{ nullptr };
+
+        // in case of access content
+        ID3D11Texture2D*                    targetTextureClone{ nullptr };
+
+        D3D11_VIEWPORT                      viewport; // viewport adapte au rendu dans cette texture
+    };
+
+    TextureData getTextureData(const std::string& p_name);
 
 private:
 
@@ -250,33 +281,6 @@ private:
         ID3D11Buffer* index_buffer          { nullptr };
         size_t        nb_vertices           { 0 };
         size_t        nb_primitives         { 0 };
-    };
-
-    struct TextureData
-    {
-        renderMe::Texture::Source   source;
-        D3D11_TEXTURE2D_DESC        desc;
-
-        // common
-        ID3D11ShaderResourceView*   shaderResourceView      { nullptr };
-
-        // specifique textures from files
-        ID3D11Resource*             textureResource         { nullptr };
-
-        // specifique textures render target
-
-        ID3D11Texture2D*            targetTexture           { nullptr };
-        ID3D11RenderTargetView*     rendertextureTargetView { nullptr };
-        ID3D11Texture2D*            stencilDepthBuffer      { nullptr };
-        ID3D11DepthStencilView*     stencilDepthView        { nullptr };
-
-        // in case of access content
-        ID3D11Texture2D*            targetTextureClone      { nullptr }; 
-        
-
-
-        D3D11_VIEWPORT              viewport; // viewport adapte au rendu dans cette texture
-
     };
 
     using RSCache =                 std::unordered_map<std::string, RSCacheEntry>;

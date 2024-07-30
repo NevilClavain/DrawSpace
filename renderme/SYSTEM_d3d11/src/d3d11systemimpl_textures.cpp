@@ -364,3 +364,29 @@ void D3D11SystemImpl::forceTexturesBinding()
         }
     }
 }
+
+void D3D11SystemImpl::copyTextureContent(const std::string& p_name)
+{
+    if (!m_textures.count(p_name))
+    {
+        _EXCEPTION("unknown texture :" + p_name)
+    }
+
+    const auto textureData{ m_textures.at(p_name) };
+
+    // copy GPU to GPU ...
+    m_lpd3ddevcontext->CopyResource(textureData.targetTextureClone, textureData.targetTexture);
+
+    _asm nop
+}
+
+D3D11SystemImpl::TextureData D3D11SystemImpl::getTextureData(const std::string& p_name)
+{
+    if (!m_textures.count(p_name))
+    {
+        _EXCEPTION("unknown texture :" + p_name)
+    }
+
+    const auto textureData{ m_textures.at(p_name) };
+    return textureData;
+}
