@@ -24,6 +24,7 @@
 
 #pragma once
 #include <memory>
+#include "exceptions.h"
 
 namespace renderMe
 {
@@ -89,6 +90,17 @@ namespace renderMe
                 m_dataSize = p_bufferSize;
             }
 
+            void update(T* p_buffer)
+            {
+                if (isEmpty())
+                {
+                    _EXCEPTION("buffer empty; allocate first")
+                }
+                else
+                {
+                    memcpy((void*)m_data.get(), p_buffer, m_dataSize * sizeof(T));
+                }
+            }
 
         private:
             std::unique_ptr<T[]>    m_data;

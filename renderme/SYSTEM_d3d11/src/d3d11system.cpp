@@ -61,7 +61,7 @@ static const auto d3dimpl{ D3D11SystemImpl::getInstance() };
 
 D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
-	m_service_invocation_cb = [&, this](const std::string& p_includePath,
+	m_shadercompilation_invocation_cb = [&, this](const std::string& p_includePath,
 		const renderMe::core::FileContent<const char>& p_src,		
 		int p_shaderType,
 		std::unique_ptr<char[]>& p_shaderBytes,

@@ -78,12 +78,12 @@ namespace renderMe
 
         auto getServiceInvocationCallback() const
         {
-            return m_service_invocation_cb;
+            return m_shadercompilation_invocation_cb;
         };
 
     private:
         bool	                                                m_initialized{ false };
-        core::services::ShadersCompilationService::Callback     m_service_invocation_cb;
+        core::services::ShadersCompilationService::Callback     m_shadercompilation_invocation_cb;
 
         renderMe::core::Runner                                  m_runner;
 
