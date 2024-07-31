@@ -1,5 +1,3 @@
-
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -26,29 +24,25 @@
 
 #pragma once
 
-#include <vector>
-#include <functional>
+#include <string>
+#include "singleton.h"
+#include "eventsource.h"
 
 namespace renderMe
 {
-    namespace property
-    {
-		template<class... Args>
-		class EventSource
+	namespace core
+	{
+		namespace services
 		{
-		public:
-
-			~EventSource() = default;
-
-			using Callback = std::function<void(Args...)>;
-			virtual void registerSubscriber(const Callback& p_callback)
+			class TextureContentCopyService : public property::Singleton<TextureContentCopyService>, public property::EventSource<const std::string&, void**, size_t*>
 			{
-				m_callbacks.push_back(p_callback);
-			}
+			public:
+				TextureContentCopyService() = default;
+				~TextureContentCopyService() = default;
 
-		protected:
-			EventSource() = default;
-			std::vector<Callback> m_callbacks;
-		};
-    }
+				void readTextureContent(const std::string& p_textureId, void** p_data, size_t* p_dataSize) const;
+
+			};
+		}
+	}
 }

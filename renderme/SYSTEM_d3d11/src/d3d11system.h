@@ -28,6 +28,7 @@
 #include <unordered_set>
 #include "system.h"
 #include "shaders_service.h"
+#include "textures_service.h"
 #include "runner.h"
 #include "eventsource.h"
 
@@ -76,14 +77,20 @@ namespace renderMe
         void run();
         void killRunner();
 
-        auto getServiceInvocationCallback() const
+        auto getShaderCompilationInvocationCallback() const
         {
             return m_shadercompilation_invocation_cb;
+        };
+
+        auto getTextureContentCopyInvocationCallback() const
+        {
+            return m_texturecontentcopy_invocation_cb;
         };
 
     private:
         bool	                                                m_initialized{ false };
         core::services::ShadersCompilationService::Callback     m_shadercompilation_invocation_cb;
+        core::services::TextureContentCopyService::Callback     m_texturecontentcopy_invocation_cb;
 
         renderMe::core::Runner                                  m_runner;
 

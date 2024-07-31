@@ -104,6 +104,10 @@ void ModuleImpl::onEndKeyPress(long p_key)
 	{
 		helpers::logEntitygraph(m_entitygraph);
 	}
+	else if (VK_F6 == p_key)
+	{
+		m_rendering_quad_texture->getTextureContent();
+	}
 	else if (VK_F8 == p_key)
 	{
 		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };

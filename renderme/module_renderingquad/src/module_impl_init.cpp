@@ -57,6 +57,7 @@
 #include "datacloud.h"
 
 #include "shaders_service.h"
+#include "textures_service.h"
 
 #include "entitygraph_helpers.h"
 
@@ -98,7 +99,8 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 
 	// D3D11 system provides compilation shader service : give access to this to resources sytem
 	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
-	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getServiceInvocationCallback());
+	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getShaderCompilationInvocationCallback());
+	services::TextureContentCopyService::getInstance()->registerSubscriber(d3d11System->getTextureContentCopyInvocationCallback());
 
 
 	d3d11_system_events();
@@ -213,6 +215,8 @@ void ModuleImpl::d3d11_system_events()
 					const int w_width{ window_dims.x() };
 					const int w_height{ window_dims.y() };
 
+					m_rendering_quad_texture = new Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height, Texture::ContentAccessMode::CONTENT_ACCESS);
+
 					renderMe::helpers::plugRenderingQuadView( m_entitygraph,
 																	characteristics_v_width, characteristics_v_height,																	
 																	"screenRenderingEntity",
@@ -222,7 +226,7 @@ void ModuleImpl::d3d11_system_events()
 																	"texture_vs",
 																	"texture_ps",
 																	{	
-																		std::make_pair(Texture::STAGE_0, Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height/*, Texture::ContentAccessMode::CONTENT_ACCESS*/))
+																		std::make_pair(Texture::STAGE_0, *m_rendering_quad_texture)
 																	}																																		
 																);
 						

@@ -50,6 +50,7 @@
 #include "datacloud.h"
 
 #include "shaders_service.h"
+#include "textures_service.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -87,7 +88,8 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 
 	// D3D11 system provides compilation shader service : give access to this to resources sytem
 	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
-	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getServiceInvocationCallback());
+	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getShaderCompilationInvocationCallback());
+	services::TextureContentCopyService::getInstance()->registerSubscriber(d3d11System->getTextureContentCopyInvocationCallback());
 
 
 	d3d11_system_events();

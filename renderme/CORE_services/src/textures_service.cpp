@@ -1,5 +1,3 @@
-
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -24,31 +22,15 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
+#include "textures_service.h"
 
-#include <vector>
-#include <functional>
+using namespace renderMe::core::services;
 
-namespace renderMe
+void TextureContentCopyService::readTextureContent(const std::string& p_textureId, void** p_data, size_t* p_dataSize) const
 {
-    namespace property
-    {
-		template<class... Args>
-		class EventSource
-		{
-		public:
-
-			~EventSource() = default;
-
-			using Callback = std::function<void(Args...)>;
-			virtual void registerSubscriber(const Callback& p_callback)
-			{
-				m_callbacks.push_back(p_callback);
-			}
-
-		protected:
-			EventSource() = default;
-			std::vector<Callback> m_callbacks;
-		};
-    }
+	if (m_callbacks.size() > 0)
+	{
+		const auto func{ m_callbacks.at(0) };
+		func(p_textureId, p_data, p_dataSize);
+	}
 }

@@ -28,8 +28,10 @@
 #include <mutex>
 
 #include "buffer.h"
-
 #include "matrix.h"
+
+
+
 
 //fwd decl
 class D3D11SystemImpl;
@@ -128,6 +130,8 @@ namespace renderMe
         ContentAccessMode                   getContentAccessMode() const;
 
         const core::Buffer<unsigned char>&  getData() const;
+
+        void                                getTextureContent();
 
     private:
 

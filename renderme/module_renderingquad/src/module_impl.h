@@ -32,6 +32,7 @@
 #include "entity.h"
 #include "entitygraph.h"
 #include "renderingqueue.h"
+#include "texture.h"
 
 class ModuleImpl : public renderMe::interfaces::ModuleRoot
 {
@@ -92,8 +93,7 @@ private:
 
     std::string                             m_resources_event{ "..." };
 
-    //float                                   m_characteristics_v_width;
-    //float                                   m_characteristics_v_height;
+    renderMe::Texture*                      m_rendering_quad_texture{ nullptr };
 
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };

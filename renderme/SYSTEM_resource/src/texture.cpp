@@ -23,6 +23,7 @@
 /* -*-LIC_END-*- */
 
 #include "texture.h"
+#include "textures_service.h"
 
 using namespace renderMe;
 
@@ -125,4 +126,12 @@ void Texture::setDims(int p_w, int p_h)
 void Texture::setFormat(Format p_format)
 {
     m_format = p_format;
+}
+
+void Texture::getTextureContent()
+{
+    void* myBuffer;
+    size_t myBufferSize;
+
+    core::services::TextureContentCopyService::getInstance()->readTextureContent(m_name, &myBuffer, &myBufferSize);
 }
