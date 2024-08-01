@@ -46,31 +46,39 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
             DXGI_FORMAT format;
 
+            int bpp{ 0 };
+            TextureData texture_data;
+
             switch (p_texture.getFormat())
             {
                 case renderMe::Texture::Format::TEXTURE_RGB:
 
                     format = DXGI_FORMAT_B8G8R8A8_UNORM;
+                    bpp = 4;
                     break;
 
                 case renderMe::Texture::Format::TEXTURE_FLOAT:
 
                     format = DXGI_FORMAT_R16_FLOAT;
+                    bpp = 2;
                     break;
 
                 case renderMe::Texture::Format::TEXTURE_FLOAT32:
 
                     format = DXGI_FORMAT_R32_FLOAT;
+                    bpp = 4;
                     break;
 
                 case renderMe::Texture::Format::TEXTURE_FLOATVECTOR:
 
                     format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+                    bpp = 8;
                     break;
 
                 case renderMe::Texture::Format::TEXTURE_FLOATVECTOR32:
 
                     format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+                    bpp = 16;
                     break;
             }
 
@@ -138,7 +146,13 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                 hRes = m_lpd3ddevice->CreateTexture2D(&textureDesc, nullptr, &d3dt11_clone);
                 D3D11_CHECK(CreateTexture2D) 
 
+                const size_t blocksize{ bpp * textureDesc.Width * textureDesc.Height };
 
+                void* bits { new unsigned char[blocksize] };
+
+                texture_data.targetTextureClone = d3dt11_clone;
+                texture_data.bits = bits;
+                texture_data.blocksize = blocksize;
             }
 
             ////////////////////////////////////////////////////////////////////////
@@ -151,7 +165,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
             // store texture data
 
-            TextureData texture_data;
+            
             texture_data.source = renderMe::Texture::Source::CONTENT_FROM_RENDERINGQUEUE;
 
 
@@ -328,6 +342,11 @@ void D3D11SystemImpl::destroyTexture(const std::string& p_name)
         textureData.targetTextureClone->Release();
     }
 
+    if (textureData.bits)
+    {
+        delete[] textureData.bits;
+    }
+
     if (textureData.rendertextureTargetView)
     {
         textureData.rendertextureTargetView->Release();
@@ -365,8 +384,10 @@ void D3D11SystemImpl::forceTexturesBinding()
     }
 }
 
-void D3D11SystemImpl::copyTextureContent(const std::string& p_name)
+bool D3D11SystemImpl::copyTextureContent(const std::string& p_name, void** p_data, size_t* p_dataSize)
 {
+    DECLARE_D3D11ASSERT_VARS
+
     if (!m_textures.count(p_name))
     {
         _EXCEPTION("unknown texture :" + p_name)
@@ -377,7 +398,15 @@ void D3D11SystemImpl::copyTextureContent(const std::string& p_name)
     // copy GPU to GPU ...
     m_lpd3ddevcontext->CopyResource(textureData.targetTextureClone, textureData.targetTexture);
 
-    _asm nop
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    hRes = m_lpd3ddevcontext->Map(textureData.targetTextureClone, 0, D3D11_MAP_READ, 0, &mappedResource);
+    D3D11_CHECK(Map)
+
+    memcpy(textureData.bits, mappedResource.pData, textureData.blocksize);
+    m_lpd3ddevcontext->Unmap(textureData.targetTextureClone, 0);
+   
+    *p_dataSize = textureData.blocksize;
+    *p_data = textureData.bits;
 }
 
 D3D11SystemImpl::TextureData D3D11SystemImpl::getTextureData(const std::string& p_name)

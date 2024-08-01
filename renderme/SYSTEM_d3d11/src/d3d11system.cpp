@@ -73,7 +73,7 @@ D3D11System::D3D11System(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 	m_texturecontentcopy_invocation_cb = [&, this](const std::string& p_textureId, void** p_data, size_t* p_dataSize)
 	{
-		d3dimpl->copyTextureContent(p_textureId);
+		d3dimpl->copyTextureContent(p_textureId, p_data, p_dataSize);
 	};
 
 	////// Register callback to runner

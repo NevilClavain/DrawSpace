@@ -134,4 +134,6 @@ void Texture::getTextureContent()
     size_t myBufferSize;
 
     core::services::TextureContentCopyService::getInstance()->readTextureContent(m_name, &myBuffer, &myBufferSize);
+
+    _asm nop
 }

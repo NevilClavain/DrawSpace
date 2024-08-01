@@ -171,7 +171,7 @@ public:
     void bindTextureStage(const std::string& p_name, size_t p_stage);
     void unbindTextureStage(size_t p_stage);
 
-    void copyTextureContent(const std::string& p_name);
+    bool copyTextureContent(const std::string& p_name, void** p_data, size_t* p_dataSize);
 
     void destroyTexture(const std::string& p_name);
 
@@ -230,6 +230,8 @@ public:
 
         // in case of access content
         ID3D11Texture2D*                    targetTextureClone{ nullptr };
+        void*                               bits{ nullptr };
+        size_t                              blocksize{ 0 };
 
         D3D11_VIEWPORT                      viewport; // viewport adapte au rendu dans cette texture
     };
