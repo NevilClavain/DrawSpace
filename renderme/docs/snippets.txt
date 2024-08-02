@@ -1,0 +1,131 @@
+
+
+
+
+
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: rendering target access content activation
+ 
+	1/ create target texture with content access activation:
+	
+		m_rendering_quad_texture = new Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height, Texture::ContentAccessMode::CONTENT_ACCESS);
+ 
+	2/ Access to texture content via TextureContentCopyService :
+	
+		void* myBuffer;
+		size_t myBufferSize;
+
+		core::services::TextureContentCopyService::getInstance()->readTextureContent(m_name, &myBuffer, &myBufferSize);
+ 
+ 
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: typical deffered shading entity graph
+ 
+	8.796 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph >>>>>>>>>>>>>>> ENTITY GRAPH DUMP BEGIN <<<<<<<<<<<<<<<<<<<<<<<< ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () appWindowEntity
+		renderingAspect
+			fonts class std::vector<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::allocator<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > > >
+			aspect int
+			gpuName class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >
+			renderingTarget enum renderMe::core::renderingAspect::renderingTarget
+			fullscreen bool
+			windowWidth int
+			windowHWND struct HWND__ *
+			windowHeight int
+			widthResol int
+			heightResol int
+			viewportWidth float
+			viewportHeight float
+			d3d11DriverDescr class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >
+			gpuDriver class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () 	screenRenderingEntity
+			renderingAspect
+				aspect int
+				screenRenderingQueue struct renderMe::rendering::Queue ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () 		ScreenRenderingViewEntity
+				cameraAspect
+					aspect int
+					projection class renderMe::core::maths::Matrix
+				worldAspect
+					aspect int
+					camera_position struct renderMe::transform::WorldPosition ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () 		screenRenderingQuadEntity
+				renderingAspect
+					aspect int
+					renderingTarget enum renderMe::core::renderingAspect::renderingTarget
+					renderStates class std::vector<class renderMe::rendering::RenderState,class std::allocator<class renderMe::rendering::RenderState> >
+					screenRenderingQuad struct renderMe::rendering::DrawingControl
+				timeAspect
+					aspect int
+				resourcesAspect
+					aspect int
+					texture_vs class renderMe::Shader
+					texture_ps class renderMe::Shader
+					quad class renderMe::TriangleMeshe
+					rendering_quad_texture struct std::pair<unsigned int,class renderMe::Texture>
+				worldAspect
+					aspect int
+					animator_positioning struct renderMe::transform::Animator
+					position struct renderMe::transform::WorldPosition ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () 			bufferRenderingEntity
+					renderingAspect
+						aspect int
+						renderingQueue struct renderMe::rendering::Queue ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () 				cameraEntity
+						timeAspect
+							aspect int
+						cameraAspect
+							aspect int
+							projection class renderMe::core::maths::Matrix
+						worldAspect
+							aspect int
+							camera_position struct renderMe::transform::WorldPosition
+							animator_positioning struct renderMe::transform::Animator ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph::<lambda_4bde718e665936a149f7dfb14f8d0f6f>::operator () 				quadEntity2
+						renderingAspect
+							aspect int
+							renderStates class std::vector<class renderMe::rendering::RenderState,class std::allocator<class renderMe::rendering::RenderState> >
+							quad2 struct renderMe::rendering::DrawingControl
+						timeAspect
+							aspect int
+						resourcesAspect
+							aspect int
+							pixelShader class renderMe::Shader
+							vertexShader class renderMe::Shader
+							square class renderMe::TriangleMeshe
+							texture struct std::pair<unsigned int,class renderMe::Texture>
+						worldAspect
+							aspect int
+							animator_positioning struct renderMe::transform::Animator
+							position struct renderMe::transform::WorldPosition ]
+	8.812 [3680] Helpers DEBUG [ renderMe::helpers::logEntitygraph >>>>>>>>>>>>>>> ENTITY GRAPH DUMP END <<<<<<<<<<<<<<<<<<<<<<<< ]
+	
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: camera selection
+ 
+	// retrieve entity that owns the rendering queue :
+	core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
+	const auto bufferRenderingQueueEntity { bufferRenderingQueueNode.data() };
+	
+	// activate camera/view in the rendering queue
+	const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
+	renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
+	
+	
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: add time aspect
+ 
+	auto& quad_time_aspect{ myEntity->makeAspect(core::timeAspect::id) };
+ 
