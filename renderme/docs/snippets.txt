@@ -19,7 +19,14 @@
 		size_t myBufferSize;
 
 		core::services::TextureContentCopyService::getInstance()->readTextureContent(m_name, &myBuffer, &myBufferSize);
- 
+		
+	3/ Access to texture content via a Buffer :
+	
+ 		core::Buffer<core::maths::RGBAColor> texture_content;
+		m_rendering_quad_texture->getTextureContent(texture_content);
+
+		const auto pixels{ texture_content.getData() };
+		const auto pixel{ pixels[100] };
  
  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -200,3 +207,17 @@
  
 	auto& quad_time_aspect{ myEntity->makeAspect(core::timeAspect::id) };
  
+ 
+ 
+  :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: rendering queue logging 
+ 
+ 
+ 		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
+		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
+
+		// arg : name of entity thatowns the rendering queue we need to log
+		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");
