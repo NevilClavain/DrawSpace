@@ -28,6 +28,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CORE_maths/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_buffer/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_allocator/src)
 include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
+include_directories(${CMAKE_SOURCE_DIR}/CORE_services/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
 
 file(

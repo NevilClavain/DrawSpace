@@ -29,6 +29,7 @@
 
 #include "buffer.h"
 #include "matrix.h"
+#include "textures_service.h"
 
 
 
@@ -130,8 +131,9 @@ namespace renderMe
         ContentAccessMode                   getContentAccessMode() const;
 
         const core::Buffer<unsigned char>&  getData() const;
-
-        void                                getTextureContent();
+        
+        template<typename T>
+        void                                getTextureContent(renderMe::core::Buffer<T>& p_destbuffer);
 
     private:
 
@@ -163,4 +165,21 @@ namespace renderMe
         friend class renderMe::D3D11System;
         friend class D3D11SystemImpl;
     };
+
+    template<typename T>
+    void Texture::getTextureContent(renderMe::core::Buffer<T>& p_destbuffer)
+    {
+        void* buffer;
+        size_t bufferSize;
+
+        core::services::TextureContentCopyService::getInstance()->readTextureContent(m_name, &buffer, &bufferSize);
+        if (p_destbuffer.isEmpty())
+        {
+            p_destbuffer.fill(static_cast<T*>(buffer), m_width * m_height);
+        }
+        else
+        {
+            p_destbuffer.update(static_cast<T*>(buffer));
+        }
+    }
 };

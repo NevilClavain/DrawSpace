@@ -105,8 +105,13 @@ void ModuleImpl::onEndKeyPress(long p_key)
 		helpers::logEntitygraph(m_entitygraph);
 	}
 	else if (VK_F6 == p_key)
-	{
-		m_rendering_quad_texture->getTextureContent();
+	{	
+		core::Buffer<core::maths::RGBAColor> texture_content;
+		m_rendering_quad_texture->getTextureContent(texture_content);
+
+		const auto pixels{ texture_content.getData() };
+		const auto pixel{ pixels[100] };
+
 	}
 	else if (VK_F8 == p_key)
 	{
