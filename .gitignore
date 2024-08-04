@@ -252,10 +252,6 @@ ALL_BUILD.vcxproj*
 /renderme/module_renderingquad/*.sln
 /renderme/module_renderingquad/*.vcxproj*
 
-/renderme/module_basicquad/CMakeFiles/
-/renderme/module_basicquad/*.sln
-/renderme/module_basicquad/*.vcxproj*
-
 /renderme/module_gblcamera/CMakeFiles/
 /renderme/module_gblcamera/*.sln
 /renderme/module_gblcamera/*.vcxproj*
