@@ -66,7 +66,7 @@ void ModuleImpl::run(void)
 	// resources system event
 	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
 
-
+	
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity
@@ -76,9 +76,11 @@ void ModuleImpl::run(void)
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
 		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
 
-		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+		//Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
-		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
+		core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
+
+		auto& quadNode{ m_entitygraph.add(bufferRenderingQueueNode, "quadEntity2") };
 		const auto quadEntity{ quadNode.data() };
 
 		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
@@ -163,6 +165,7 @@ void ModuleImpl::run(void)
 
 		m_quadEntity_state = true;
 	}
+	/*
 	else if (false == m_quadEntity_state_request && true == m_quadEntity_state)
 	{
 		// remove quadEntity2
@@ -175,6 +178,7 @@ void ModuleImpl::run(void)
 
 		m_quadEntity_state = false;
 	}
+	*/
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

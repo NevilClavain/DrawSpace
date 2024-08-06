@@ -36,9 +36,9 @@ using namespace renderMe::core;
 
 void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
-	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
+	//const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
 
-	if ("Camera01Entity" == current_view_entity_id)
+	//if ("cameraEntity" == current_view_entity_id)
 	{
 		const auto tm{ TimeManager::getInstance() };
 		if (tm->isReady())

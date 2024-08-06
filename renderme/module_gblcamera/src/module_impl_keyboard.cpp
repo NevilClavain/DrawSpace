@@ -33,17 +33,18 @@
 #include "datacloud.h"
 #include "aspects.h"
 #include "syncvariable.h"
+#include "entitygraph_helpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
-	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
+	//const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
 
 	if ('Q' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		//if ("cameraEntity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -57,7 +58,7 @@ void ModuleImpl::onKeyPress(long p_key)
 	}
 	else if ('W' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		//if ("cameraEntity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -75,7 +76,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 {
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
+	//const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
 
 
 	if (VK_SPACE == p_key)
@@ -132,6 +133,11 @@ void ModuleImpl::onEndKeyPress(long p_key)
 		}
 	}
 
+	else if (VK_F4 == p_key)
+	{
+		helpers::logEntitygraph(m_entitygraph);
+	}
+
 	else if (VK_F8 == p_key)
 	{
 		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(dataPrintSystemSlot) };
@@ -142,7 +148,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 	else if ('Q' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		//if ("cameraEntity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };
@@ -157,7 +163,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 	else if ('W' == p_key)
 	{
-		if ("Camera01Entity" == current_view_entity_id)
+		//if ("cameraEntity" == current_view_entity_id)
 		{
 			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 			const auto gblJointEntity{ gblJointEntityNode.data() };

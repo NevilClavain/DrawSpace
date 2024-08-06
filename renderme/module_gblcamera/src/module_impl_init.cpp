@@ -52,6 +52,8 @@
 #include "shaders_service.h"
 #include "textures_service.h"
 
+#include "entitygraph_helpers.h"
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -200,6 +202,84 @@ void ModuleImpl::d3d11_system_events()
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
+
+					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
+					const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+
+					const int w_width{ window_dims.x() };
+					const int w_height{ window_dims.y() };
+
+					const auto rendering_quad_texture{ Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height) };
+
+					renderMe::helpers::plugRenderingQuadView(m_entitygraph,
+						characteristics_v_width, characteristics_v_height,
+						"screenRenderingEntity",
+						"screenRenderingQuadEntity",
+						"ScreenRenderingViewEntity",
+						m_windowRenderingQueue,
+						"texture_vs",
+						"texture_ps",
+						{
+							std::make_pair(Texture::STAGE_0, rendering_quad_texture)
+						}
+					);
+
+					// buffer rendering queue
+					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
+					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
+					bufferRenderingQueue.enableTargetClearing(true);
+					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
+
+					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");
+
+
+					/////////////// add camera with gimbal lock jointure ////////////////
+
+					auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+
+					auto& gblJointEntityNode{ m_entitygraph.add(bufferRenderingNode, "gblJointEntity") };
+
+					const auto gblJointEntity{ gblJointEntityNode.data() };
+
+					gblJointEntity->makeAspect(core::timeAspect::id);
+					auto& gbl_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
+
+					gbl_world_aspect.addComponent<transform::WorldPosition>("gbl_output");
+
+					gbl_world_aspect.addComponent<double>("gbl_theta", 0);
+					gbl_world_aspect.addComponent<double>("gbl_phi", 0);
+					gbl_world_aspect.addComponent<double>("gbl_speed", 0);
+					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 0.0, 7.0));
+
+					gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
+						{
+							// input-output/components keys id mapping
+							{"gimbalLockJointAnim.theta", "gbl_theta"},
+							{"gimbalLockJointAnim.phi", "gbl_phi"},
+							{"gimbalLockJointAnim.position", "gbl_pos"},
+							{"gimbalLockJointAnim.speed", "gbl_speed"},
+							{"gimbalLockJointAnim.output", "gbl_output"}
+
+						}, helpers::animators::makeGimbalLockJointAnimator()));
+
+
+					// add camera to scene
+					maths::Matrix projection;
+					projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+					helpers::plugView(m_entitygraph, projection, "gblJointEntity", "cameraEntity");
+
+					///////Select camera
+
+					core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
+					const auto bufferRenderingQueueEntity{ bufferRenderingQueueNode.data() };
+					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
+
+					renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
+
+
+
+					/*
 					{
 						/////////////// add viewpoint with gimbal lock jointure ////////////////
 				
@@ -253,6 +333,8 @@ void ModuleImpl::d3d11_system_events()
 					//////////////////////////////////////////////////////////////
 
 					m_windowRenderingQueue->setCurrentView("Camera01Entity");
+
+					*/
 				}
 				break;
 			}

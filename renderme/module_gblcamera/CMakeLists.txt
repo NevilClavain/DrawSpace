@@ -79,6 +79,7 @@ target_link_libraries(module_gblcamera
 										CORE_threads 
 										CORE_services 
 										CORE_maths 
+										helpers
 										RENDERING_control 
 										TRANSFORM_control 
 										SYSTEM_d3d11 
