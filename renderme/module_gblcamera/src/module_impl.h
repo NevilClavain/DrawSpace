@@ -83,19 +83,19 @@ private:
     static constexpr int                    renderingQueueSystemSlot{ 4 };
     static constexpr int                    dataPrintSystemSlot{ 5 };
 
-    bool                                    m_show_mouse_cursor{ false };
-    bool                                    m_mouse_circular_mode{ true };
+    bool                                    m_show_mouse_cursor{ true };
+    bool                                    m_mouse_circular_mode{ false };
 
     renderMe::core::Entitygraph             m_entitygraph;
 
     renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
 
-    std::string                             m_resources_event{ "..." };
+    renderMe::rendering::Queue*             m_bufferRenderingQueue{ nullptr };
 
+    std::string                             m_resources_event{ "..." };
 
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };
-
 };
 
 

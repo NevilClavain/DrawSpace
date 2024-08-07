@@ -275,66 +275,8 @@ void ModuleImpl::d3d11_system_events()
 					const auto bufferRenderingQueueEntity{ bufferRenderingQueueNode.data() };
 					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
 
-					renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
-
-
-
-					/*
-					{
-						/////////////// add viewpoint with gimbal lock jointure ////////////////
-				
-						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
-						auto& gblJointEntityNode{ m_entitygraph.add(screenRenderingNode, "gblJointEntity") };
-
-						const auto gblJointEntity{ gblJointEntityNode.data() };
-
-						gblJointEntity->makeAspect(core::timeAspect::id);
-						auto& gbl_world_aspect{ gblJointEntity->makeAspect(core::worldAspect::id) };
-
-						gbl_world_aspect.addComponent<transform::WorldPosition>("gbl_output");
-
-						gbl_world_aspect.addComponent<double>("gbl_theta", 0);
-						gbl_world_aspect.addComponent<double>("gbl_phi", 0);
-						gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-						gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 0.0, 7.0));
-
-						gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
-							{
-								// input-output/components keys id mapping
-								{"gimbalLockJointAnim.theta", "gbl_theta"},
-								{"gimbalLockJointAnim.phi", "gbl_phi"},
-								{"gimbalLockJointAnim.position", "gbl_pos"},
-								{"gimbalLockJointAnim.speed", "gbl_speed"},
-								{"gimbalLockJointAnim.output", "gbl_output"}
-
-							}, helpers::animators::makeGimbalLockJointAnimator()));
-
-						/////////////// add viewpoint ////////////////////////
-
-						auto& viewPointNode{ m_entitygraph.add(gblJointEntityNode, "Camera01Entity") };
-
-						const auto cameraEntity{ viewPointNode.data() };
-
-						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
-
-						maths::Matrix projection;
-						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
-
-						camera_aspect.addComponent<maths::Matrix>("projection", projection);
-
-						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
-
-						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
-
-
-						//////////////////////////////////////////////////////
-					}
-
-					//////////////////////////////////////////////////////////////
-
-					m_windowRenderingQueue->setCurrentView("Camera01Entity");
-
-					*/
+					m_bufferRenderingQueue = &renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose();
+					m_bufferRenderingQueue->setCurrentView("cameraEntity");
 				}
 				break;
 			}

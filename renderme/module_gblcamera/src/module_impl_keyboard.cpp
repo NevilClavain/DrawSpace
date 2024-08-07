@@ -40,34 +40,37 @@ using namespace renderMe::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
-	//const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
-
-	if ('Q' == p_key)
+	if (m_bufferRenderingQueue)
 	{
-		//if ("cameraEntity" == current_view_entity_id)
+		const auto current_view_entity_id{ m_bufferRenderingQueue->getCurrentView() };
+
+		if ('Q' == p_key)
 		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
+			if ("cameraEntity" == current_view_entity_id)
+			{
+				auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+				const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
+				auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
+				double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
 
-			speed = 0.01;
+				speed = 0.1;
+			}
 		}
-	}
-	else if ('W' == p_key)
-	{
-		//if ("cameraEntity" == current_view_entity_id)
+		else if ('W' == p_key)
 		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
+			if ("cameraEntity" == current_view_entity_id)
+			{
+				auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+				const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
+				auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
+				double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
 
-			speed = -0.01;
+				speed = -0.1;
+			}
 		}
 	}
 }
@@ -76,105 +79,107 @@ void ModuleImpl::onEndKeyPress(long p_key)
 {
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-	//const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
-
-
-	if (VK_SPACE == p_key)
+	if (m_bufferRenderingQueue)
 	{
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
-		for (const auto& call : m_callbacks)
+
+		const auto current_view_entity_id{ m_bufferRenderingQueue->getCurrentView() };
+
+		if (VK_SPACE == p_key)
 		{
-			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
+			_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
+			for (const auto& call : m_callbacks)
+			{
+				call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
+			}
 		}
-	}
-	else if (VK_F1 == p_key)
-	{
-		if (m_show_mouse_cursor)
+		else if (VK_F1 == p_key)
 		{
-			m_show_mouse_cursor = false;
+			if (m_show_mouse_cursor)
+			{
+				m_show_mouse_cursor = false;
+			}
+			else
+			{
+				m_show_mouse_cursor = true;
+			}
+
+			_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_DISPLAY_CHANGED");
+			for (const auto& call : m_callbacks)
+			{
+				call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
+			}
 		}
-		else
+		else if (VK_F2 == p_key)
 		{
-			m_show_mouse_cursor = true;
+			if (m_mouse_circular_mode)
+			{
+				m_mouse_circular_mode = false;
+			}
+			else
+			{
+				m_mouse_circular_mode = true;
+			}
+
+			_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_CIRCULARMODE_CHANGED");
+			for (const auto& call : m_callbacks)
+			{
+				call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
+			}
 		}
-
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_DISPLAY_CHANGED");
-		for (const auto& call : m_callbacks)
+		else if (VK_F3 == p_key)
 		{
-			call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
-		}
-	}
-	else if (VK_F2 == p_key)
-	{
-		if (m_mouse_circular_mode)
-		{
-			m_mouse_circular_mode = false;
-		}
-		else
-		{
-			m_mouse_circular_mode = true;
-		}
-
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_CIRCULARMODE_CHANGED");
-		for (const auto& call : m_callbacks)
-		{
-			call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
-		}
-	}
-	else if (VK_F3 == p_key)
-	{
-		if (true == m_quadEntity_state_request)
-		{
-			m_quadEntity_state_request = false;
-		}
-		else
-		{
-			m_quadEntity_state_request = true;
-		}
-	}
-
-	else if (VK_F4 == p_key)
-	{
-		helpers::logEntitygraph(m_entitygraph);
-	}
-
-	else if (VK_F8 == p_key)
-	{
-		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(dataPrintSystemSlot) };
-		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
-
-		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
-	}
-
-	else if ('Q' == p_key)
-	{
-		//if ("cameraEntity" == current_view_entity_id)
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
-
-			speed = 0.0;
-		}
-	}
-
-	else if ('W' == p_key)
-	{
-		//if ("cameraEntity" == current_view_entity_id)
-		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
-
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
-
-			double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
-
-			speed = 0.0;
+			if (true == m_quadEntity_state_request)
+			{
+				m_quadEntity_state_request = false;
+			}
+			else
+			{
+				m_quadEntity_state_request = true;
+			}
 		}
 
+		else if (VK_F4 == p_key)
+		{
+			helpers::logEntitygraph(m_entitygraph);
+		}
+
+		else if (VK_F8 == p_key)
+		{
+			auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(dataPrintSystemSlot) };
+			auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
+
+			renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
+		}
+
+		else if ('Q' == p_key)
+		{
+			if ("cameraEntity" == current_view_entity_id)
+			{
+				auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+				const auto gblJointEntity{ gblJointEntityNode.data() };
+
+				auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
+
+				double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
+
+				speed = 0.0;
+			}
+		}
+
+		else if ('W' == p_key)
+		{
+			if ("cameraEntity" == current_view_entity_id)
+			{
+				auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+				const auto gblJointEntity{ gblJointEntityNode.data() };
+
+				auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
+
+				double& speed{ world_aspect.getComponent<double>("gbl_speed")->getPurpose() };
+
+				speed = 0.0;
+			}
+		}
 	}
 }
 
