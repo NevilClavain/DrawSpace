@@ -73,31 +73,29 @@ void ModuleImpl::run(void)
 
 	if (true == m_quadEntity_state_request && false == m_quadEntity_state)
 	{
-		dataCloud->registerData<maths::Real4Vector>("quad2_color");
-		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
 
-		//Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
 
-		core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
+		Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+		auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity2") };
 
-		auto& quadNode{ m_entitygraph.add(bufferRenderingQueueNode, "quadEntity2") };
+
 		const auto quadEntity{ quadNode.data() };
 
 		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
 
 		/////////// Add shaders
 
-		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("color_vs", 0));
-		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("color_ps", 1));
+		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
+		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
 
 
 		/////////// Add trianglemeshe
 		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
 
-		square.push(Vertex(-0.5, -0.5, 0.0));
-		square.push(Vertex(0.5, -0.5, 0.0));
-		square.push(Vertex(0.5, 0.5, 0.0));
-		square.push(Vertex(-0.5, 0.5, 0.0));
+		square.push(Vertex(-0.9, -0.5, 0.0, 0.0f, 1.0f));
+		square.push(Vertex(0.9, -0.5, 0.0, 1.0f, 1.0f));
+		square.push(Vertex(0.9, 0.5, 0.0, 1.0f, 0.0f));
+		square.push(Vertex(-0.9, 0.5, 0.0, 0.0f, 0.0f));
 
 		const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
 		square.push(t1);
@@ -110,25 +108,30 @@ void ModuleImpl::run(void)
 
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
 
+		/////////// Add texture
+
+		quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("map.jpg")));
+
+
+
+
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 
 		/////////// Add renderstate
 
 		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 		RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
-		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "line");
+		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+		RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "point");
 
-		const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill };
+
+		const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
 		quad_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
 
 		/////////// Draw triangles
 
-		rendering::DrawingControl drawingControl;
-		drawingControl.pshaders_map.push_back(std::make_pair("quad2_color", "color"));
-
-
-		quad_rendering_aspect.addComponent<rendering::DrawingControl>("squareRendering", drawingControl);
+		quad_rendering_aspect.addComponent<rendering::DrawingControl>("quad2", rendering::DrawingControl());
 
 
 		/////////// time aspect
@@ -154,13 +157,12 @@ void ModuleImpl::run(void)
 			{
 
 				maths::Matrix positionmat;
-				positionmat.translation(0.0, 0.0, -20.0);
+				positionmat.translation(0.0, 0.0, -5.60001);
 
 				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 				wp.local_pos = wp.local_pos * positionmat;
 			}
 		));
-
 
 
 		m_quadEntity_state = true;
