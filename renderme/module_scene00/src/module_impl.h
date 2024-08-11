@@ -89,6 +89,7 @@ private:
     renderMe::core::Entitygraph             m_entitygraph;
 
     renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
+    renderMe::rendering::Queue*             m_bufferRenderingQueue{ nullptr };
 
     std::string                             m_resources_event{ "..." };
 

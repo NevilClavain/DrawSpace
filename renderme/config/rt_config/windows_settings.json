@@ -1,7 +1,7 @@
 {
   "fullscreen": false,
-  "width": 1400,
-  "height": 900,
+  "width": 1920,
+  "height": 1080,
   "fonts": 
   [
     { "name" : "CourierNew.10.spritefont" },

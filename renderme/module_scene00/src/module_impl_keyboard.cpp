@@ -33,6 +33,7 @@
 #include "datacloud.h"
 #include "aspects.h"
 #include "syncvariable.h"
+#include "entitygraph_helpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -294,6 +295,12 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			m_quadEntity2_state_request = true;
 		}
 	}
+
+	else if (VK_F7 == p_key)
+	{
+		helpers::logEntitygraph(m_entitygraph);
+	}
+
 
 	else if (VK_F8 == p_key)
 	{

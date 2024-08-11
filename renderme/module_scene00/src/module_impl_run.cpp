@@ -70,7 +70,7 @@ void ModuleImpl::run(void)
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity0
-
+	/*
 	if (true == m_quadEntity0_state_request && false == m_quadEntity0_state)
 	{
 		// add quadEntity0
@@ -178,11 +178,11 @@ void ModuleImpl::run(void)
 
 		m_quadEntity0_state = false;
 	}
-
+	*/
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity1
-
+/*
 	if (true == m_quadEntity1_state_request && false == m_quadEntity1_state)
 	{
 		dataCloud->registerData<maths::Real4Vector>("quad1_color");
@@ -278,11 +278,11 @@ void ModuleImpl::run(void)
 
 		m_quadEntity1_state = false;
 	}
-
+	*/
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity2
-
+/*
 	if (true == m_quadEntity2_state_request && false == m_quadEntity2_state)
 	{
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
@@ -421,7 +421,7 @@ void ModuleImpl::run(void)
 
 		m_quadEntity2_state = false;
 	}
-
+*/
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

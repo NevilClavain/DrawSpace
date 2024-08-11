@@ -66,7 +66,7 @@ file(
 
 add_library(module_scene00 SHARED ${source_files})
 
-target_link_libraries(module_scene00 CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services CORE_maths RENDERING_control TRANSFORM_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource SYSTEM_renderingqueue SYSTEM_world SYSTEM_dataprint jsmn d3d11 d3dcompiler DirectXTK)
+target_link_libraries(module_scene00 CORE_file CORE_filesystem CORE_buffer CORE_logger CORE_json CORE_module CORE_ecs CORE_allocator CORE_time CORE_threads CORE_services CORE_maths helpers RENDERING_control TRANSFORM_control SYSTEM_d3d11 SYSTEM_time SYSTEM_resource SYSTEM_renderingqueue SYSTEM_world SYSTEM_dataprint jsmn d3d11 d3dcompiler DirectXTK)
 
 install(TARGETS module_scene00 CONFIGURATIONS Debug RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Debug)
 install(TARGETS module_scene00 CONFIGURATIONS Release RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/apps/Release)

@@ -4,7 +4,7 @@
 		{
 			"type" : "file",
 			"id" : "file0",
-			"path" : "helloworld_logs.out"
+			"path" : "module_scene00.out"
 		}
 	],
 	
@@ -29,10 +29,16 @@
 			"output" : "file0"	
 		},
 		{		
-			"source" :"Events",
-			"level" : "DEBUG",
+			"source" :"RenderingQueueSystem",
+			"level" : "TRACE",
 			"state" : "on",
 			"output" : "file0"	
+		},
+		{
+			"source": "Helpers",
+			"level": "TRACE",
+			"state": "on",
+			"output": "file0"
 		}
 	]
 }

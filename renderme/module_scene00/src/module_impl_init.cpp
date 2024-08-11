@@ -52,6 +52,8 @@
 #include "shaders_service.h"
 #include "textures_service.h"
 
+#include "entitygraph_helpers.h"
+
 using namespace renderMe;
 using namespace renderMe::core;
 
@@ -196,6 +198,41 @@ void ModuleImpl::d3d11_system_events()
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("viewportHeight")->getPurpose()};
 
+
+					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
+					const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+
+					const int w_width{ window_dims.x() };
+					const int w_height{ window_dims.y() };
+
+					const auto rendering_quad_texture{ Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height) };
+
+					renderMe::helpers::plugRenderingQuadView(m_entitygraph,
+						characteristics_v_width, characteristics_v_height,
+						"screenRenderingEntity",
+						"screenRenderingQuadEntity",
+						"ScreenRenderingViewEntity",
+						m_windowRenderingQueue,
+						"texture_vs",
+						"texture_ps",
+						{
+							std::make_pair(Texture::STAGE_0, rendering_quad_texture)
+						}
+					);
+
+					// buffer rendering queue
+					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
+					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
+					bufferRenderingQueue.enableTargetClearing(true);
+					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
+
+					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");
+
+
+
+
+					/*
 					{
 						/////////////// add viewpoint with gimbal lock jointure ////////////////
 
@@ -247,9 +284,9 @@ void ModuleImpl::d3d11_system_events()
 						//////////////////////////////////////////////////////
 
 					}
-
+					*/
 					//////////////////////////////////////////////////////////////
-
+					/*
 					{
 						/////////////// add viewpoint with full gimbal jointure ////////////////
 
@@ -312,12 +349,14 @@ void ModuleImpl::d3d11_system_events()
 						//////////////////////////////////////////////////////
 
 					}
+					*/
 
+					
 					{
 						/////////////// add viewpoint of lookat jointure ////////////////
 
-						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
-						auto& sliderJointEntityNode{ m_entitygraph.add(screenRenderingNode, "sliderJointEntity") };
+						auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+						auto& sliderJointEntityNode{ m_entitygraph.add(bufferRenderingNode, "sliderJointEntity") };
 						const auto sliderJointEntity{ sliderJointEntityNode.data() };
 
 						auto& slider_time_aspect{ sliderJointEntity->makeAspect(core::timeAspect::id) };
@@ -349,15 +388,7 @@ void ModuleImpl::d3d11_system_events()
 							}, helpers::animators::makeXYZSliderJointAnimator()));
 
 
-
-
-
-
-
-
 						auto& lookatJointEntityNode{ m_entitygraph.add(sliderJointEntityNode, "lookatJointEntity") };
-
-
 
 						const auto lookatJointEntity{ lookatJointEntityNode.data() };
 
@@ -380,6 +411,7 @@ void ModuleImpl::d3d11_system_events()
 
 						/////////////// add viewpoint ////////////////////////
 
+						/*
 						auto& viewPointNode{ m_entitygraph.add(lookatJointEntityNode, "Camera03Entity") };
 						const auto cameraEntity{ viewPointNode.data() };
 
@@ -393,16 +425,33 @@ void ModuleImpl::d3d11_system_events()
 						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
 
 						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
+
+						*/
+
+
+						// add camera to scene
+						maths::Matrix projection;
+						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
+						helpers::plugView(m_entitygraph, projection, "lookatJointEntity", "Camera03Entity");
 					}
+					
+
+					core::Entitygraph::Node& bufferRenderingQueueNode{ m_entitygraph.node("bufferRenderingEntity") };
+					const auto bufferRenderingQueueEntity{ bufferRenderingQueueNode.data() };
+					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
+
+					m_bufferRenderingQueue = &renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose();
+					m_bufferRenderingQueue->setCurrentView("Camera03Entity");
+
 
 					//////////////////////////////////////////////////////////////
 
-					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+					//const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
 
 					//m_windowRenderingQueue->setCurrentView("Camera01Entity");
 					//m_windowRenderingQueue->setCurrentView("Camera02Entity");
-					m_windowRenderingQueue->setCurrentView("Camera03Entity");
+					//m_windowRenderingQueue->setCurrentView("Camera03Entity");
 				}
 				break;
 			}
