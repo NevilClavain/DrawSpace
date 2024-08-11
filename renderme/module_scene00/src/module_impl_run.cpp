@@ -70,16 +70,16 @@ void ModuleImpl::run(void)
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity0
-	/*
+	
 	if (true == m_quadEntity0_state_request && false == m_quadEntity0_state)
 	{
 		// add quadEntity0
 
 		dataCloud->registerData<maths::Real4Vector>("quad0_color");
 
-		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+		Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
 
-		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity0") };
+		auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity0") };
 		const auto quadEntity{ quadNode.data() };
 
 
@@ -178,18 +178,18 @@ void ModuleImpl::run(void)
 
 		m_quadEntity0_state = false;
 	}
-	*/
+	
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity1
-/*
+
 	if (true == m_quadEntity1_state_request && false == m_quadEntity1_state)
 	{
 		dataCloud->registerData<maths::Real4Vector>("quad1_color");
 
-		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+		Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
 
-		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity1") };
+		auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity1") };
 		const auto quadEntity{ quadNode.data() };
 
 		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
@@ -278,19 +278,19 @@ void ModuleImpl::run(void)
 
 		m_quadEntity1_state = false;
 	}
-	*/
+	
 	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity2
-/*
+
 	if (true == m_quadEntity2_state_request && false == m_quadEntity2_state)
 	{
 		dataCloud->registerData<maths::Real4Vector>("quad2_color");
 		dataCloud->updateDataValue< maths::Real4Vector>("quad2_color", maths::Real4Vector(1.0f, 1.0f, 1.0f, 1.0f));
 
-		Entitygraph::Node& screenRenderingPassNode{ m_entitygraph.node("screenRenderingEntity") };
+		Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
 
-		auto& quadNode{ m_entitygraph.add(screenRenderingPassNode, "quadEntity2") };
+		auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity2") };
 		const auto quadEntity{ quadNode.data() };
 
 		auto& quad_resource_aspect{ quadEntity->makeAspect(core::resourcesAspect::id) };
@@ -421,7 +421,7 @@ void ModuleImpl::run(void)
 
 		m_quadEntity2_state = false;
 	}
-*/
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

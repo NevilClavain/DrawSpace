@@ -40,7 +40,7 @@ using namespace renderMe::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
-	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
+	const auto current_view_entity_id{ m_bufferRenderingQueue->getCurrentView() };
 
 	if ('Q' == p_key)
 	{
@@ -217,7 +217,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 {
 	auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
+	const auto current_view_entity_id{ m_bufferRenderingQueue->getCurrentView() };
 
 
 	if (VK_SPACE == p_key)
