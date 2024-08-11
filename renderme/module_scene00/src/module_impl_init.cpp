@@ -232,12 +232,12 @@ void ModuleImpl::d3d11_system_events()
 
 
 
-					/*
+					
 					{
 						/////////////// add viewpoint with gimbal lock jointure ////////////////
 
-						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
-						auto& gblJointEntityNode{ m_entitygraph.add(screenRenderingNode, "gblJointEntity") };
+						auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+						auto& gblJointEntityNode{ m_entitygraph.add(bufferRenderingNode, "gblJointEntity") };
 						const auto gblJointEntity{ gblJointEntityNode.data() };
 
 						gblJointEntity->makeAspect(core::timeAspect::id);
@@ -261,37 +261,20 @@ void ModuleImpl::d3d11_system_events()
 
 							}, helpers::animators::makeGimbalLockJointAnimator()));
 
-						/////////////// add viewpoint ////////////////////////
 
-						auto& viewPointNode{ m_entitygraph.add(gblJointEntityNode, "Camera01Entity") };
-						const auto cameraEntity{ viewPointNode.data() };
-
-						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
-
+						// add camera to scene
 						maths::Matrix projection;
 						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
-
-						camera_aspect.addComponent<maths::Matrix>("projection", projection);
-
-						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
-
-						maths::Matrix cam_positionmat;
-						cam_positionmat.translation(0.0, 0.0, 0.0);
-
-						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition(cam_positionmat));
-
-
-						//////////////////////////////////////////////////////
-
+						helpers::plugView(m_entitygraph, projection, "gblJointEntity", "Camera01Entity");
 					}
-					*/
+					
 					//////////////////////////////////////////////////////////////
-					/*
+					
 					{
 						/////////////// add viewpoint with full gimbal jointure ////////////////
 
-						auto& screenRenderingNode{ m_entitygraph.node("screenRenderingEntity") };
-						auto& fullGblJointEntityNode{ m_entitygraph.add(screenRenderingNode, "fullGblJointEntity") };
+						auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+						auto& fullGblJointEntityNode{ m_entitygraph.add(bufferRenderingNode, "fullGblJointEntity") };
 						const auto fullGblJointEntity{ fullGblJointEntityNode.data() };
 
 						fullGblJointEntity->makeAspect(core::timeAspect::id);
@@ -328,30 +311,14 @@ void ModuleImpl::d3d11_system_events()
 
 							}, helpers::animators::makeFullGimbalJointAnimator()));
 
-
-						/////////////// add viewpoint ////////////////////////
-
-						auto& viewPointNode{ m_entitygraph.add(fullGblJointEntityNode, "Camera02Entity") };
-						const auto cameraEntity{ viewPointNode.data() };
-
-						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
-
+						// add camera to scene
 						maths::Matrix projection;
 						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
-
-						camera_aspect.addComponent<maths::Matrix>("projection", projection);
-
-						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
-
-						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
-
+						helpers::plugView(m_entitygraph, projection, "fullGblJointEntity", "Camera02Entity");
 
 						//////////////////////////////////////////////////////
-
 					}
-					*/
-
-					
+				
 					{
 						/////////////// add viewpoint of lookat jointure ////////////////
 
@@ -409,26 +376,6 @@ void ModuleImpl::d3d11_system_events()
 							helpers::animators::makeLookatJointAnimator())
 						);
 
-						/////////////// add viewpoint ////////////////////////
-
-						/*
-						auto& viewPointNode{ m_entitygraph.add(lookatJointEntityNode, "Camera03Entity") };
-						const auto cameraEntity{ viewPointNode.data() };
-
-						auto& camera_aspect{ cameraEntity->makeAspect(core::cameraAspect::id) };
-
-						maths::Matrix projection;
-						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
-
-						camera_aspect.addComponent<maths::Matrix>("projection", projection);
-
-						auto& camera_world_aspect{ cameraEntity->makeAspect(core::worldAspect::id) };
-
-						camera_world_aspect.addComponent<transform::WorldPosition>("camera_position", transform::WorldPosition());
-
-						*/
-
-
 						// add camera to scene
 						maths::Matrix projection;
 						projection.perspective(characteristics_v_width, characteristics_v_height, 1.0, 100000.00000000000);
@@ -441,17 +388,11 @@ void ModuleImpl::d3d11_system_events()
 					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
 
 					m_bufferRenderingQueue = &renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose();
-					m_bufferRenderingQueue->setCurrentView("Camera03Entity");
 
+					m_bufferRenderingQueue->setCurrentView("Camera01Entity");
+					//m_bufferRenderingQueue->setCurrentView("Camera02Entity");
+					//m_bufferRenderingQueue->setCurrentView("Camera03Entity");
 
-					//////////////////////////////////////////////////////////////
-
-					//const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-
-
-					//m_windowRenderingQueue->setCurrentView("Camera01Entity");
-					//m_windowRenderingQueue->setCurrentView("Camera02Entity");
-					//m_windowRenderingQueue->setCurrentView("Camera03Entity");
 				}
 				break;
 			}

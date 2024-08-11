@@ -36,24 +36,27 @@ using namespace renderMe::core;
 
 void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 {
-	const auto current_view_entity_id{ m_windowRenderingQueue->getCurrentView() };
-
-	if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
+	if (m_bufferRenderingQueue)
 	{
-		const auto tm{ TimeManager::getInstance() };
-		if (tm->isReady())
+		const auto current_view_entity_id{ m_bufferRenderingQueue->getCurrentView() };
+
+		if ("Camera01Entity" == current_view_entity_id || "Camera03Entity" == current_view_entity_id)
 		{
-			auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
-			const auto gblJointEntity{ gblJointEntityNode.data() };
+			const auto tm{ TimeManager::getInstance() };
+			if (tm->isReady())
+			{
+				auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
+				const auto gblJointEntity{ gblJointEntityNode.data() };
 
-			auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
+				auto& world_aspect{ gblJointEntity->aspectAccess(core::worldAspect::id) };
 
-			double& fps_theta{ world_aspect.getComponent<double>("gbl_theta")->getPurpose() };
-			double& fps_phi{ world_aspect.getComponent<double>("gbl_phi")->getPurpose() };
+				double& fps_theta{ world_aspect.getComponent<double>("gbl_theta")->getPurpose() };
+				double& fps_phi{ world_aspect.getComponent<double>("gbl_phi")->getPurpose() };
 
-			tm->angleSpeedInc(&fps_theta, -p_dx);
-			tm->angleSpeedInc(&fps_phi, -p_dy);
+				tm->angleSpeedInc(&fps_theta, -p_dx);
+				tm->angleSpeedInc(&fps_phi, -p_dy);
 
+			}
 		}
 	}
 }
