@@ -5,7 +5,7 @@
   "fonts": 
   [
     { "name" : "CourierNew.10.spritefont" },
-	{ "name" : "CourierNew.32.spritefont" },
-	{ "name" : "Bahnschrift.16.spritefont" }
+	  { "name" : "CourierNew.32.spritefont" },
+	  { "name" : "Bahnschrift.16.spritefont" }
   ]
 }
