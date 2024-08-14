@@ -230,3 +230,36 @@
  :: log entitygraph content
  
 	helpers::logEntitygraph(m_entitygraph);
+
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: New font for text rendering
+ 
+	1/ Generate font file with MakeSpriteFont tool:
+	
+		MakeSpriteFont "Courier New" CourierNew.32.spritefont /FontSize:32
+		
+	2/ copy this font file in \SYSTEM_d3d11\fonts
+	
+	3/ SYSTEM_d3d11 cmake file already insures the font files are deployed in /apps/$<CONFIGURATION>/fonts : 
+				
+		#deploy DirectXTK fonts
+		install(DIRECTORY ${CMAKE_SOURCE_DIR}/SYSTEM_d3d11/fonts DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
+	4/ add new font in rt window settings json : config_deployment\rt_config\windows_settings.json :
+	
+		{
+		  "fullscreen": false,
+		  "width": 1920,
+		  "height": 1080,
+		  "fonts": 
+		  [
+			{ "name" : "CourierNew.10.spritefont" },
+			{ "name" : "CourierNew.32.spritefont" },
+			{ "name" : "Bahnschrift.16.spritefont" }
+		  ]
+		}
+		
+

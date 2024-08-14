@@ -97,7 +97,3 @@ private:
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };
 };
-
-
-
-
