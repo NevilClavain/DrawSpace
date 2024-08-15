@@ -62,7 +62,7 @@ void ModuleImpl::run(void)
 	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };
 
 	// resources system event
-	m_windowRenderingQueue->setText(5, { m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
+	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
 
 
 	//////////////////////////////////////////////////////

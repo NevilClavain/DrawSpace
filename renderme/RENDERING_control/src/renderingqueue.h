@@ -203,9 +203,7 @@ namespace renderMe
 			bool						getTargetClearing() const;
 			core::maths::RGBAColor		getTargetClearColor() const;
 
-			void						setText(int p_id, const Text& p_text);
-			void						clearTexts();
-
+			void						pushText(const Text& p_text);
 			
 			QueueNodes					getQueueNodes() const;
 			void						setQueueNodes(const QueueNodes& p_nodes);
@@ -218,7 +216,7 @@ namespace renderMe
 			void						setTargetStage(size_t p_stage);
 			
 
-			const std::map<int, Text>&	texts() const;
+			
 		
 		private:
 			std::string						m_name;
@@ -226,7 +224,7 @@ namespace renderMe
 			State							m_state{ State::WAIT_INIT };
 			bool							m_clear_target{ false };
 			core::maths::RGBAColor			m_target_clear_color;
-			std::map<int,Text>				m_texts;
+			std::vector<Text>				m_texts;
 
 			QueueNodes						m_queueNodes;
 
@@ -246,6 +244,7 @@ namespace renderMe
 			
 
 			friend class renderMe::RenderingQueueSystem;
+			friend class renderMe::D3D11System;
 
 		};
 	}

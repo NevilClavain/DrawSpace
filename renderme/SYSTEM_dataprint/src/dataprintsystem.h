@@ -54,10 +54,6 @@ namespace renderMe
 
     private:
 
-        static constexpr int                    dcTextsIdBase{ 2000 };
-        static constexpr int                    svTextsIdBase{ 3000 };
-        static constexpr int                    rqTextsIdBase{ 3000 };
-
         static constexpr int                    dcNbCols{ 3 };
         static constexpr int                    dcNbRows{ 10 };
         static constexpr int                    dcColWidth{ 500 };
@@ -83,8 +79,6 @@ namespace renderMe
         std::vector<std::string>                m_rq_strings; // rendering queues display
 
         void collectData();
-        void print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight);
-
-        
+        void print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight);
     };
 }

@@ -303,6 +303,8 @@ void D3D11System::manageRenderingQueue()
 				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
 
 				this->handleRenderingQueuesState(p_entity, renderingQueue);
+
+				renderingQueue.m_texts.clear();
 			}
 		}
 	};
@@ -731,9 +733,9 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 	
 	
 	// render texts
-	for (auto& text : p_renderingQueue.texts())
+	for (auto& text : p_renderingQueue.m_texts)
 	{
-		d3dimpl->drawText(text.second.font, text.second.color, text.second.position, text.second.rotation_rad, text.second.text);
+		d3dimpl->drawText(text.font, text.color, text.position, text.rotation_rad, text.text);
 
 		// after DrawString call, need to force blend state and renderstate restauration
 		d3dimpl->setCacheRS(true);
@@ -752,7 +754,6 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 		d3dimpl->forceCurrentMeshe();
 	}
-	
 }
 
 void D3D11System::run()

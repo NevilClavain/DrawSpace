@@ -47,7 +47,7 @@ void DataPrintSystem::run()
 
 	collectData();
 
-	print(m_dc_strings, 0, 0, dcTextsIdBase, dcNbCols, dcNbRows, dcColWidth, dcRowHeight);
+	print(m_dc_strings, 0, 0, dcNbCols, dcNbRows, dcColWidth, dcRowHeight);
 
 	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 	const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
@@ -56,13 +56,13 @@ void DataPrintSystem::run()
 	// positioning sync vars print bloc at bottomo of the window : compute y position
 	const int y_pos = window_dims[1] - (svNbRows * svRowHeight);
 
-	print(m_sv_strings, 0, y_pos, svTextsIdBase, svNbCols, svNbRows, svColWidth, svRowHeight);
+	print(m_sv_strings, 0, y_pos, svNbCols, svNbRows, svColWidth, svRowHeight);
 
 	// positioning rendering queues list & infos on the right : compute x position
 
 	const int x_pos = window_dims[0] - (rqNbCols * rqColWidth);
 
-	print(m_rq_strings, x_pos, 0, rqTextsIdBase, rqNbCols, rqNbRows, rqColWidth, rqRowHeight);
+	print(m_rq_strings, x_pos, 0, rqNbCols, rqNbRows, rqColWidth, rqRowHeight);
 
 }
 
@@ -309,7 +309,7 @@ void DataPrintSystem::collectData()
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
-void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_id_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
+void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)
 {
 	int curr_row{ 0 };
 	int curr_col{ 0 };
@@ -317,7 +317,7 @@ void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base
 
 	for (const auto& e : p_list)
 	{
-		m_renderingQueue->setText(p_id_base + index, { e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * p_colWidth + p_x_base, curr_row * p_rowHeight + p_y_base}, 0.0});
+		m_renderingQueue->pushText({ e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * p_colWidth + p_x_base, curr_row * p_rowHeight + p_y_base}, 0.0});
 		index++;
 
 		curr_col++;
