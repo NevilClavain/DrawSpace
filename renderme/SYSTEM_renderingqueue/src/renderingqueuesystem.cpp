@@ -544,8 +544,10 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMesheAndTexturesPayl
 			rendering::QueueDrawingControl trianglesQueueDrawingControl;
 			trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 			trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-			trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
-			trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+
+			trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
+			trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
+			trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
 
 			connect_shaders_args(p_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, p_vshader, p_pshader);
 
@@ -584,8 +586,9 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMesheAndTexturesPayl
 			rendering::QueueDrawingControl trianglesQueueDrawingControl;
 			trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 			trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-			trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
-			trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+			trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
+			trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
+			trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
 
 			connect_shaders_args(p_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, p_vshader, p_pshader);
 
@@ -620,8 +623,9 @@ static rendering::Queue::LineMeshePayload build_LineMeshePayload(const std::vect
 		rendering::QueueDrawingControl linesQueueDrawingControl;
 		linesQueueDrawingControl.owner_entity_id = linesDrawingControl.owner_entity_id;
 		linesQueueDrawingControl.world = &linesDrawingControl.world;
-		linesQueueDrawingControl.setup = linesDrawingControl.setup;
-		linesQueueDrawingControl.teardown = linesDrawingControl.teardown;
+		linesQueueDrawingControl.setup = &linesDrawingControl.setup;
+		linesQueueDrawingControl.teardown = &linesDrawingControl.teardown;
+		linesQueueDrawingControl.wvpFilter = &linesDrawingControl.wvpFilter;
 
 		connect_shaders_args(p_localLogger, linesDrawingControl, linesQueueDrawingControl, p_vshader, p_pshader);
 
@@ -827,8 +831,9 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 													rendering::QueueDrawingControl linesQueueDrawingControl;
 													linesQueueDrawingControl.owner_entity_id = linesDrawingControl.owner_entity_id;
 													linesQueueDrawingControl.world = &linesDrawingControl.world;
-													linesQueueDrawingControl.setup = linesDrawingControl.setup;
-													linesQueueDrawingControl.teardown = linesDrawingControl.teardown;
+													linesQueueDrawingControl.setup = &linesDrawingControl.setup;
+													linesQueueDrawingControl.teardown = &linesDrawingControl.teardown;
+													linesQueueDrawingControl.wvpFilter = &linesDrawingControl.wvpFilter;
 
 													connect_shaders_args(m_localLogger, linesDrawingControl, linesQueueDrawingControl, vshader, pshader);
 
@@ -879,8 +884,9 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 														rendering::QueueDrawingControl trianglesQueueDrawingControl;
 														trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 														trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-														trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
-														trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+														trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
+														trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
+														trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
 
 														connect_shaders_args(m_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, vshader, pshader);
 
@@ -924,8 +930,9 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 															rendering::QueueDrawingControl trianglesQueueDrawingControl;
 															trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 															trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-															trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
-															trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+															trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
+															trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
+															trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
 
 															connect_shaders_args(m_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, vshader, pshader);
 
@@ -964,8 +971,9 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 															rendering::QueueDrawingControl trianglesQueueDrawingControl;
 															trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 															trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
-															trianglesQueueDrawingControl.setup = trianglesDrawingControl.setup;
-															trianglesQueueDrawingControl.teardown = trianglesDrawingControl.teardown;
+															trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
+															trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
+															trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
 
 															connect_shaders_args(m_localLogger, trianglesDrawingControl, trianglesQueueDrawingControl, vshader, pshader);
 

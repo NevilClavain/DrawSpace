@@ -562,7 +562,8 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 							for (const auto& tdc : triangleQueueDrawingControls)
 							{
 								//////
-								tdc.second.setup();
+								const auto setup_func{ *tdc.second.setup };
+								setup_func();
 
 								////// Apply shaders params
 
@@ -592,10 +593,19 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 								//////
 
-								d3dimpl->drawTriangleMeshe(*tdc.second.world, current_view, current_proj);
+								// world view proj matrix customization (if required)
+								const auto wvpfilterfunc{ *tdc.second.wvpFilter };
+								const auto mod_wvp{ wvpfilterfunc(*tdc.second.world, current_view, current_proj) };
+								const auto mod_world{ std::get<0>(mod_wvp) };
+								const auto mod_view{ std::get<1>(mod_wvp) };
+								const auto mod_proj{ std::get<2>(mod_wvp) };
+
+								d3dimpl->drawTriangleMeshe(mod_world, mod_view, mod_proj);
 
 								//////
-								tdc.second.teardown();
+
+								const auto teardown_func{ *tdc.second.setup };
+								teardown_func();
 
 							}
 						}
@@ -629,7 +639,8 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 							for (const auto& tdc : triangleQueueDrawingControls)
 							{
 								//////
-								tdc.second.setup();
+								const auto setup_func{ *tdc.second.setup };
+								setup_func();
 
 								////// Apply shaders params
 
@@ -659,10 +670,18 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 								//////
 
-								d3dimpl->drawTriangleMeshe(*tdc.second.world, current_view, current_proj);
+								// world view proj matrix customization (if required)
+								const auto wvpfilterfunc{ *tdc.second.wvpFilter };
+								const auto mod_wvp{ wvpfilterfunc(*tdc.second.world, current_view, current_proj) };
+								const auto mod_world{ std::get<0>(mod_wvp) };
+								const auto mod_view{ std::get<1>(mod_wvp) };
+								const auto mod_proj{ std::get<2>(mod_wvp) };
+
+								d3dimpl->drawTriangleMeshe(mod_world, mod_view, mod_proj);
 
 								//////
-								tdc.second.teardown();
+								const auto teardown_func{ *tdc.second.setup };
+								teardown_func();
 							}
 						}
 					}
@@ -685,7 +704,8 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 						for (const auto& ldc : lineDrawingControls)
 						{
 							//////
-							ldc.second.setup();
+							const auto setup_func{ *ldc.second.setup };
+							setup_func();
 
 							////// Apply shaders params
 
@@ -715,10 +735,19 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 							//////
 
-							d3dimpl->drawLineMeshe(*ldc.second.world, current_view, current_proj);
+
+							// world view proj matrix customization (if required)
+							const auto wvpfilterfunc{ *ldc.second.wvpFilter };
+							const auto mod_wvp{ wvpfilterfunc(*ldc.second.world, current_view, current_proj) };
+							const auto mod_world{ std::get<0>(mod_wvp) };
+							const auto mod_view{ std::get<1>(mod_wvp) };
+							const auto mod_proj{ std::get<2>(mod_wvp) };
+
+							d3dimpl->drawLineMeshe(mod_world, mod_view, mod_proj);
 
 							//////
-							ldc.second.teardown();
+							const auto teardown_func{ *ldc.second.setup };
+							teardown_func();
 						}
 					}
 					

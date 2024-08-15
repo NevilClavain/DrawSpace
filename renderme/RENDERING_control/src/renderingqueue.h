@@ -28,6 +28,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <tuple>
 #include <unordered_map>
 #include <functional>
 #include "tvector.h"
@@ -75,6 +76,19 @@ namespace renderMe
 			std::function<void()> setup{ [] {} };
 			std::function<void()> teardown{ [] {} };
 
+			std::function<std::tuple<core::maths::Matrix, core::maths::Matrix, core::maths::Matrix>
+				(const core::maths::Matrix&,
+					const core::maths::Matrix&,
+					const core::maths::Matrix&)> wvpFilter
+			{
+				[](const core::maths::Matrix& p_world,
+					const core::maths::Matrix& p_view,
+					const core::maths::Matrix& p_proj)
+				{
+					return std::make_tuple(p_world, p_view, p_proj);
+				}
+			};
+
 			//shaders params mapping description
 			// dataCloud variable id / shader argument section id in shader json
 			std::vector<std::pair<std::string, std::string>> vshaders_map;
@@ -88,17 +102,21 @@ namespace renderMe
 		struct QueueDrawingControl
 		{
 		public:
-
 			QueueDrawingControl() = default;
 			~QueueDrawingControl() = default;
 
 			// transformations to apply;
 			core::maths::Matrix* world{ nullptr };
 
-			std::function<void()> setup{ [] {} };
-			std::function<void()> teardown{ [] {} };
+			std::function<void()>* setup{ nullptr };
+			std::function<void()>* teardown{ nullptr };
 
+			std::function<std::tuple<core::maths::Matrix, core::maths::Matrix, core::maths::Matrix>
+				(const core::maths::Matrix&,
+				 const core::maths::Matrix&,
+				 const core::maths::Matrix&)>* wvpFilter{ nullptr };
 
+			
 			// shaders params to apply
 			// dataCloud variable id/shader argument
 			std::vector<std::pair<std::string, renderMe::Shader::Argument>> vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
