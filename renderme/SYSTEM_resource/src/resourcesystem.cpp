@@ -83,6 +83,11 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 					// rethrow in current thread
 					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr );
 				}
+				if ("load_texture" == p_action_descr)
+				{
+					// rethrow in current thread
+					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
+				}
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
