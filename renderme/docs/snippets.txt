@@ -219,7 +219,7 @@
 	auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
 	auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
-	// arg : name of entity thatowns the rendering queue we need to log
+	// arg : name of entity that owns the rendering queue we need to log
 	renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");
 		
 		

@@ -113,13 +113,6 @@ void ModuleImpl::onEndKeyPress(long p_key)
 		const auto pixel{ pixels[100] };
 
 	}
-	else if (VK_F8 == p_key)
-	{
-		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
-		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
-
-		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");
-	}
 }
 
 void ModuleImpl::onKeyPulse(long p_key)
