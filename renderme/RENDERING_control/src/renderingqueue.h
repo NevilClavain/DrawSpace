@@ -203,8 +203,13 @@ namespace renderMe
 				std::unordered_map<std::string, PixelShaderPayload> list;
 			};
 
-			// key = vertex shader D3D11 id
-			using QueueNodes = std::unordered_map<std::string, VertexShaderPayload>;
+			struct RenderingOrderChannel
+			{
+				// key = vertex shader D3D11 id
+				std::unordered_map<std::string, VertexShaderPayload> list;
+			};
+
+			using QueueNodes = std::map<int, RenderingOrderChannel>;  // RenderingOrderChannel are rendered following order given by int key
 
 			////////////////////////////////////////////////////////////////////
 
