@@ -137,12 +137,6 @@ void ModuleImpl::onEndKeyPress(long p_key)
 				m_quadEntity_state_request = true;
 			}
 		}
-
-		else if (VK_F4 == p_key)
-		{
-			helpers::logEntitygraph(m_entitygraph);
-		}
-
 		else if ('Q' == p_key)
 		{
 			if ("cameraEntity" == current_view_entity_id)

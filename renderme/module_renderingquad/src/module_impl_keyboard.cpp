@@ -100,10 +100,6 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			m_quadEntity_state_request = true;
 		}
 	}
-	else if (VK_F4 == p_key)
-	{
-		helpers::logEntitygraph(m_entitygraph);
-	}
 	else if (VK_F6 == p_key)
 	{	
 		core::Buffer<core::maths::RGBAColor> texture_content;
