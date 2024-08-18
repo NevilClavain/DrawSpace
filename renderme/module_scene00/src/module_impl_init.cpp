@@ -465,6 +465,8 @@ void ModuleImpl::d3d11_system_events()
 
 						rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_square", dc);
 
+						rendering_aspect.addComponent<int>("renderingorder", 1000);
+
 						/////////// time aspect
 
 						sprite2DEntity->makeAspect(core::timeAspect::id);

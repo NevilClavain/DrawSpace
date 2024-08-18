@@ -60,9 +60,7 @@ namespace renderMe
 				{
 					_EXCEPTION("Aspect already registered: " + std::to_string(p_aspect))
 				}
-
-				// mark aspect id in the component container
-				m_aspects[p_aspect].addComponent<int>("aspect", p_aspect);
+				m_aspects[p_aspect]; // instantiate entry
 				return m_aspects.at(p_aspect);
 			}
 

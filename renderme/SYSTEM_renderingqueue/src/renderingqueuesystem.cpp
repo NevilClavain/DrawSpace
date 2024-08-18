@@ -735,8 +735,15 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 			// search for textures set
 			const auto texturesSet{ p_resourceAspect.getComponentsByType<std::pair<size_t,Texture>>() };
 
-			// TEMP : rendering order channel : 0
-			const int rendering_channel{ 0 };
+			// Trendering order channel : 0 by default
+			int rendering_channel{ 0 };
+
+			const auto rocs{ p_renderingAspect.getComponentsByType<int>() };
+			if (rocs.size() > 0)
+			{
+				rendering_channel = rocs.at(0)->getPurpose();
+			}
+
 
 			if (1 < shaders.size())
 			{
