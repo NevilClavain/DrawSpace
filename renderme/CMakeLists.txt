@@ -109,6 +109,8 @@ add_subdirectory(module_scene00)
 add_subdirectory(module_gblcamera)
 add_subdirectory(module_renderingquad)
 
+add_subdirectory(module_basic)
+
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/textures OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
 
