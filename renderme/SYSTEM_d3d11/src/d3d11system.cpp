@@ -369,10 +369,10 @@ void D3D11System::manageResources()
 
 				if (TriangleMeshe::State::BLOBLOADED == state)
 				{
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_BEGIN : " + tm.getName());
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_BEGIN : " + tm.md5());
 					for (const auto& call : m_callbacks)
 					{
-						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_BEGIN, tm.getName());
+						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_BEGIN, tm.md5());
 					}
 
 					handleTrianglemesheCreation(tm);
@@ -967,11 +967,11 @@ void D3D11System::handleLinemesheRelease(LineMeshe& p_lm)
 
 void D3D11System::handleTrianglemesheCreation(TriangleMeshe& p_tm)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_tm.getName());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_tm.md5());
 
 	const std::string action{ "load_trianglemeshe_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.md5(),
 		[&,
 			action = action
 		]()
@@ -981,15 +981,15 @@ void D3D11System::handleTrianglemesheCreation(TriangleMeshe& p_tm)
 
 			if (!status)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load trianglemeshe " + p_tm.getName() + " in D3D11 ");
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load trianglemeshe " + p_tm.md5() + " in D3D11 ");
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getName(), action };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.md5(), action };
 				m_runner.m_mailbox_out.push(report);
 			}
 			else
 			{
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of trianglemeshe " + p_tm.getName() + " in D3D11 ");
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of trianglemeshe " + p_tm.md5() + " in D3D11 ");
 				p_tm.setState(TriangleMeshe::State::RENDERERLOADED);
 			}
 		}
@@ -1000,26 +1000,26 @@ void D3D11System::handleTrianglemesheCreation(TriangleMeshe& p_tm)
 
 void D3D11System::handleTrianglemesheRelease(TriangleMeshe& p_tm)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe release ") + p_tm.getName());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe release ") + p_tm.md5());
 
 	const std::string action{ "release_trianglemeshe_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.md5(),
 		[&,
 			action = action
 		]()
 		{
 			try
 			{
-				d3dimpl->destroyTriangleMeshe(p_tm.getName());
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of trianglemeshe " + p_tm.getName() + " in D3D11 ");
+				d3dimpl->destroyTriangleMeshe(p_tm.md5());
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of trianglemeshe " + p_tm.md5() + " in D3D11 ");
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_tm.getName() + " : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_tm.md5() + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getName(), action };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.md5(), action };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}

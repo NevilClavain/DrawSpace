@@ -53,8 +53,8 @@ namespace renderMe
 			NORMALES_DISCARDED,
 			NORMALES_AUTO,
 			NORMALES_AUTO_SMOOTH,
-			NORMALES_FROMLOADER,
-			NORMALES_FROMLOADER_SMOOTH,
+			NORMALES_FROMFILE,
+			NORMALES_FROMFILE_SMOOTH,
 			NORMALES_COMPUTED
 		};
 
@@ -62,18 +62,17 @@ namespace renderMe
 		{
 			TB_DISCARDED,
 			TB_AUTO,
-			TB_FROMLOADER,
+			TB_FROMFILE,
 			TB_COMPUTED
 		};
 
 		TriangleMeshe() = delete;
-		TriangleMeshe(const std::string& p_name, State p_initial_state = State::INIT);
+		TriangleMeshe(State p_initial_state);
 
 		TriangleMeshe(const TriangleMeshe& p_other);
 
 		TriangleMeshe& operator=(const TriangleMeshe& p_other)
 		{
-			m_name = p_other.m_name;
 			m_vertices = p_other.m_vertices;
 			m_triangles = p_other.m_triangles;
 			m_triangles_for_vertex = p_other.m_triangles_for_vertex;
@@ -93,7 +92,7 @@ namespace renderMe
 
 		~TriangleMeshe() = default;
 
-		std::string										getName(void) const;
+		
 
 		std::vector<renderMe::Vertex>					getVertices(void) const;
 		size_t											getVerticesListSize() const;
@@ -124,10 +123,11 @@ namespace renderMe
 		State											getState() const;
 		void											setState(State p_state);
 
+		std::string										md5() const;
+
 
 	private:
 
-		std::string														m_name;
 		std::vector<Vertex>												m_vertices;
 		std::vector<TrianglePrimitive<unsigned int>>					m_triangles;
 

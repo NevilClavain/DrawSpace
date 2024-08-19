@@ -23,21 +23,20 @@
 */
 /* -*-LIC_END-*- */
 
+#include <md5.h>
 #include "trianglemeshe.h"
 
 
 using namespace renderMe;
 using namespace renderMe::core::maths;
 
-TriangleMeshe::TriangleMeshe(const std::string& p_name, State p_initial_state) :
-	m_name(p_name),
-	m_state(p_initial_state)
+TriangleMeshe::TriangleMeshe(State p_initial_state) :
+m_state(p_initial_state)
 {
 }
 
 TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 {
-	m_name = p_other.m_name;
 	m_vertices = p_other.m_vertices;
 	m_triangles = p_other.m_triangles;
 	m_triangles_for_vertex = p_other.m_triangles_for_vertex;
@@ -53,10 +52,6 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_state_mutex.unlock();
 }
 
-std::string TriangleMeshe::getName(void) const
-{
-	return m_name;
-}
 
 std::vector<renderMe::Vertex>TriangleMeshe::getVertices(void) const
 {
@@ -262,4 +257,39 @@ void TriangleMeshe::setState(TriangleMeshe::State p_state)
 	m_state_mutex.lock();
 	m_state = p_state;
 	m_state_mutex.unlock();
+}
+
+std::string	TriangleMeshe::md5() const
+{
+	MD5 md5;
+
+	const auto vbuff{ new Vertex[m_vertices.size()] };
+	auto curr{ vbuff };
+	for (size_t i = 0; i < m_vertices.size(); i++)
+	{
+		*curr = m_vertices[i];
+		curr++;
+	}
+	const std::string hash_v{ md5.digestMemory((BYTE*)vbuff, (int)(m_vertices.size() * sizeof(Vertex))) };
+
+	auto tbuff{ new TrianglePrimitive<unsigned int>[m_triangles.size()] };
+	TrianglePrimitive<unsigned int>* curr2{ tbuff };
+
+	for (size_t i = 0; i < m_triangles.size(); i++)
+	{
+		TrianglePrimitive<unsigned int> triangle{ m_triangles.at(i) };
+		*curr2 = triangle;
+		curr2++;
+	}
+	const std::string hash_t{ md5.digestMemory((BYTE*)tbuff, (int)(m_triangles.size() * sizeof(TrianglePrimitive<unsigned int>))) };
+
+	delete[] vbuff;
+	delete[] tbuff;
+
+	const std::string hash_n_gen{ md5.digestMemory((BYTE*)&m_n_gen_mode, (int)(sizeof(m_n_gen_mode))) };
+	const std::string hash_tb_gen{ md5.digestMemory((BYTE*)&m_tb_gen_mode, (int)(sizeof(m_tb_gen_mode))) };
+
+	std::string hash{ hash_v + hash_t + hash_n_gen + hash_tb_gen };
+	
+	return hash;
 }

@@ -84,7 +84,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 		const auto current_view_entity_id{ m_bufferRenderingQueue->getCurrentView() };
 
-		if (VK_SPACE == p_key)
+		if (VK_ESCAPE == p_key)
 		{
 			_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
 			for (const auto& call : m_callbacks)

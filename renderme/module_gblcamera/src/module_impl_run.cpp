@@ -88,10 +88,10 @@ void ModuleImpl::run(void)
 
 
 		/////////// Add trianglemeshe
-		TriangleMeshe square("square", TriangleMeshe::State::BLOBLOADED);
+		TriangleMeshe square(TriangleMeshe::State::BLOBLOADED);
 
 		square.push(Vertex(-0.9, -0.5, 0.0, 0.0f, 1.0f));
-		square.push(Vertex(0.9, -0.5, 0.0, 1.0f, 1.0f));
+		square.push(Vertex(0.899, -0.5, 0.0, 1.0f, 1.0f));
 		square.push(Vertex(0.9, 0.5, 0.0, 1.0f, 0.0f));
 		square.push(Vertex(-0.9, 0.5, 0.0, 0.0f, 0.0f));
 

@@ -172,13 +172,13 @@ bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
 {
     DECLARE_D3D11ASSERT_VARS
 
-    const auto name{ p_tm.getName() };
+    const auto md5{ p_tm.md5()};
 
-    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading : " + name);
+    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading : " + md5);
 
-    if (m_triangles.count(name))
+    if (m_triangles.count(md5))
     {
-        _RENDERME_DEBUG(m_localLogger, "Triangle meshe already loaded : " + name);
+        _RENDERME_DEBUG(m_localLogger, "Triangle meshe already loaded : " + md5);
     }
     else
     {
@@ -266,24 +266,24 @@ bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
             delete[] t;
         }
 
-        m_triangles[name] = { vertex_buffer, index_buffer, nb_vertices, nb_triangles };
+        m_triangles[md5] = { vertex_buffer, index_buffer, nb_vertices, nb_triangles };
     }
 
-    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading SUCCESS : " + name);
+    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading SUCCESS : " + md5);
     return true;
 
 }
 
-void D3D11SystemImpl::setTriangleMeshe(const std::string& p_name)
+void D3D11SystemImpl::setTriangleMeshe(const std::string& p_md5)
 {
-    if (!m_triangles.count(p_name))
+    if (!m_triangles.count(p_md5))
     {
-        _EXCEPTION("unknown triangle meshes :" + p_name)
+        _EXCEPTION("unknown triangle meshes :" + p_md5)
     }
 
-    if (m_currentMeshe != p_name)
+    if (m_currentMeshe != p_md5)
     {
-        const auto tmData{ m_triangles.at(p_name) };
+        const auto tmData{ m_triangles.at(p_md5) };
 
         const UINT stride{ sizeof(d3d11vertex) };
         const UINT offset = 0;
@@ -294,23 +294,23 @@ void D3D11SystemImpl::setTriangleMeshe(const std::string& p_name)
         m_next_nbvertices = tmData.nb_vertices;
         m_next_nbtriangles = tmData.nb_primitives;
 
-        m_currentMeshe = p_name;
+        m_currentMeshe = p_md5;
     }
 }
 
-void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_name)
+void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_md5)
 {
-    if (!m_triangles.count(p_name))
+    if (!m_triangles.count(p_md5))
     {
-        _EXCEPTION("unknown triangle meshe :" + p_name)
+        _EXCEPTION("unknown triangle meshe :" + p_md5)
     }
-    const auto tmData{ m_triangles.at(p_name) };
+    const auto tmData{ m_triangles.at(p_md5) };
 
     tmData.vertex_buffer->Release();
     tmData.index_buffer->Release();
 
-    m_triangles.erase(p_name);
-    _RENDERME_DEBUG(m_localLogger, "Triangle meshe release SUCCESS : " + p_name);
+    m_triangles.erase(p_md5);
+    _RENDERME_DEBUG(m_localLogger, "Triangle meshe release SUCCESS : " + p_md5);
 }
 
 
