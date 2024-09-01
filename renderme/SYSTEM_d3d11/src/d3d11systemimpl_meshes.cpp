@@ -172,7 +172,11 @@ bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
 {
     DECLARE_D3D11ASSERT_VARS
 
-    const auto md5{ p_tm.md5()};
+    const auto md5{ p_tm.getMd5()};
+    if ("" == md5)
+    {
+        _EXCEPTION("no md5 hash for triangle meshe")
+    }
 
     _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading : " + md5);
 

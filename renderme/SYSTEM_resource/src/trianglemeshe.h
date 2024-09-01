@@ -66,9 +66,8 @@ namespace renderMe
 			TB_COMPUTED
 		};
 
-		TriangleMeshe() = delete;
-		TriangleMeshe(State p_initial_state);
-
+		TriangleMeshe();
+		
 		TriangleMeshe(const TriangleMeshe& p_other);
 
 		TriangleMeshe& operator=(const TriangleMeshe& p_other)
@@ -86,6 +85,8 @@ namespace renderMe
 			m_state = p_other.m_state;
 			p_other.m_state_mutex.unlock();
 			m_state_mutex.unlock();
+
+			m_md5 = p_other.m_md5;
 
 			return *this;
 		}
@@ -123,7 +124,9 @@ namespace renderMe
 		State											getState() const;
 		void											setState(State p_state);
 
-		std::string										md5() const;
+		
+
+		std::string										getMd5() const;
 
 
 	private:
@@ -140,13 +143,17 @@ namespace renderMe
 		core::maths::Matrix												m_normales_transformation;
 
 		mutable std::mutex												m_state_mutex;
-		State															m_state;
+		State															m_state{ State::INIT };
+
+		std::string														m_md5;
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!
 
 		void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
 							core::maths::Real4Vector& p_T, core::maths::Real4Vector& p_B, core::maths::Real4Vector& p_N);
+
+		void compute_md5();
 
 	};
 }

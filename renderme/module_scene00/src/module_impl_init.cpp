@@ -411,7 +411,7 @@ void ModuleImpl::d3d11_system_events()
 						resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
 
 						/////////// Add trianglemeshe
-						TriangleMeshe sprite2D_square(TriangleMeshe::State::BLOBLOADED);
+						TriangleMeshe sprite2D_square;
 
 						const double sprite_width{ 0.1 };
 						const double sprite_height{ 0.1 };
@@ -429,6 +429,9 @@ void ModuleImpl::d3d11_system_events()
 
 						sprite2D_square.computeNormales();
 						sprite2D_square.computeTB();
+
+						sprite2D_square.setState(TriangleMeshe::State::BLOBLOADED);
+
 
 						resource_aspect.addComponent<TriangleMeshe>("sprite2D_square", sprite2D_square);
 

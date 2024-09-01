@@ -369,10 +369,10 @@ void D3D11System::manageResources()
 
 				if (TriangleMeshe::State::BLOBLOADED == state)
 				{
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_BEGIN : " + tm.md5());
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_BEGIN : " + tm.getMd5());
 					for (const auto& call : m_callbacks)
 					{
-						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_BEGIN, tm.md5());
+						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_BEGIN, tm.getMd5());
 					}
 
 					handleTrianglemesheCreation(tm);
@@ -830,30 +830,41 @@ void D3D11System::handleShaderCreation(Shader& p_shaderInfos, int p_shaderType)
 			shaderAction = shaderAction
 		]()
 		{
-			bool status { false };
+			try
+			{
+				bool status { false };
 
-			if (0 == shaderType)
-			{
-				status = d3dimpl->createVertexShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
-			}
-			else if (1 == shaderType)
-			{
-				status = d3dimpl->createPixelShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
-			}
+				if (0 == shaderType)
+				{
+					status = d3dimpl->createVertexShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
+				}
+				else if (1 == shaderType)
+				{
+					status = d3dimpl->createPixelShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
+				}
 
-			if (!status)
+				if (!status)
+				{
+					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.getName() + " in D3D11 ");
+
+					// send error status to main thread and let terminate
+					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
+					m_runner.m_mailbox_out.push(report);
+				}
+				else
+				{
+					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + p_shaderInfos.getName() + " in D3D11 ");
+					p_shaderInfos.setState(Shader::State::RENDERERLOADED);
+				}
+			}
+			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.getName() + " in D3D11 ");
-				
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.getName() + " in D3D11 : reason = " + e.what());
+
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
 				m_runner.m_mailbox_out.push(report);
 			}
-			else
-			{
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + p_shaderInfos.getName() + " in D3D11 ");
-				p_shaderInfos.setState(Shader::State::RENDERERLOADED);
-			}			
 		}
 	)};
 
@@ -913,21 +924,32 @@ void D3D11System::handleLinemesheCreation(LineMeshe& p_lm)
 			action = action
 		]()
 		{
-			bool status { false };
-			status = d3dimpl->createLineMeshe(p_lm);
-
-			if (!status)
+			try
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getName() + " in D3D11 ");
+				bool status { false };
+				status = d3dimpl->createLineMeshe(p_lm);
+
+				if (!status)
+				{
+					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getName() + " in D3D11 ");
+
+					// send error status to main thread and let terminate
+					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getName(), action };
+					m_runner.m_mailbox_out.push(report);
+				}
+				else
+				{
+					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of linemeshe " + p_lm.getName() + " in D3D11 ");
+					p_lm.setState(LineMeshe::State::RENDERERLOADED);
+				}
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getName() + " in D3D11 : reason = " + e.what());
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getName(), action };
 				m_runner.m_mailbox_out.push(report);
-			}
-			else
-			{
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of linemeshe " + p_lm.getName() + " in D3D11 ");
-				p_lm.setState(LineMeshe::State::RENDERERLOADED);
 			}
 		}
 	) };
@@ -967,30 +989,42 @@ void D3D11System::handleLinemesheRelease(LineMeshe& p_lm)
 
 void D3D11System::handleTrianglemesheCreation(TriangleMeshe& p_tm)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_tm.md5());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe creation ") + p_tm.getMd5());
 
 	const std::string action{ "load_trianglemeshe_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.md5(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.getMd5(),
 		[&,
 			action = action
 		]()
 		{
-			bool status { false };
-			status = d3dimpl->createTriangleMeshe(p_tm);
-
-			if (!status)
+			try
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load trianglemeshe " + p_tm.md5() + " in D3D11 ");
+
+				bool status { false };
+				status = d3dimpl->createTriangleMeshe(p_tm);
+
+				if (!status)
+				{
+					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load trianglemeshe " + p_tm.getMd5() + " in D3D11 ");
+
+					// send error status to main thread and let terminate
+					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getMd5(), action };
+					m_runner.m_mailbox_out.push(report);
+				}
+				else
+				{
+					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of trianglemeshe " + p_tm.getMd5() + " in D3D11 ");
+					p_tm.setState(TriangleMeshe::State::RENDERERLOADED);
+				}
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load trianglemeshe " + p_tm.getMd5() + " in D3D11 : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.md5(), action };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getMd5(), action };
 				m_runner.m_mailbox_out.push(report);
-			}
-			else
-			{
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of trianglemeshe " + p_tm.md5() + " in D3D11 ");
-				p_tm.setState(TriangleMeshe::State::RENDERERLOADED);
 			}
 		}
 	) };
@@ -1000,26 +1034,26 @@ void D3D11System::handleTrianglemesheCreation(TriangleMeshe& p_tm)
 
 void D3D11System::handleTrianglemesheRelease(TriangleMeshe& p_tm)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe release ") + p_tm.md5());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle triangle meshe release ") + p_tm.getMd5());
 
 	const std::string action{ "release_trianglemeshe_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.md5(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_tm.getMd5(),
 		[&,
 			action = action
 		]()
 		{
 			try
 			{
-				d3dimpl->destroyTriangleMeshe(p_tm.md5());
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of trianglemeshe " + p_tm.md5() + " in D3D11 ");
+				d3dimpl->destroyTriangleMeshe(p_tm.getMd5());
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of trianglemeshe " + p_tm.getMd5() + " in D3D11 ");
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_tm.md5() + " : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_tm.getMd5() + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.md5(), action };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_tm.getMd5(), action };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}
@@ -1039,22 +1073,32 @@ void D3D11System::handleTextureCreation(Texture& p_texture)
 			action = action
 		]()
 		{
-			
-			bool status { false };
-			status = d3dimpl->createTexture(p_texture);
-
-			if (!status)
+			try
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load texture " + p_texture.getName() + " in D3D11 ");
+				bool status { false };
+				status = d3dimpl->createTexture(p_texture);
+
+				if (!status)
+				{
+					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load texture " + p_texture.getName() + " in D3D11 ");
+
+					// send error status to main thread and let terminate
+					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_texture.getName(), action };
+					m_runner.m_mailbox_out.push(report);
+				}
+				else
+				{
+					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of texture " + p_texture.getName() + " in D3D11 ");
+					p_texture.setState(Texture::State::RENDERERLOADED);
+				}
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load texture " + p_texture.getName() + " in D3D11 : reason = " + e.what());
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_texture.getName(), action };
 				m_runner.m_mailbox_out.push(report);
-			}
-			else
-			{
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of texture " + p_texture.getName() + " in D3D11 ");
-				p_texture.setState(Texture::State::RENDERERLOADED);
 			}
 		}
 	) };

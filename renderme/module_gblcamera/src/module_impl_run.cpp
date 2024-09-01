@@ -88,7 +88,7 @@ void ModuleImpl::run(void)
 
 
 		/////////// Add trianglemeshe
-		TriangleMeshe square(TriangleMeshe::State::BLOBLOADED);
+		TriangleMeshe square;
 
 		square.push(Vertex(-0.9, -0.5, 0.0, 0.0f, 1.0f));
 		square.push(Vertex(0.899, -0.5, 0.0, 1.0f, 1.0f));
@@ -103,6 +103,8 @@ void ModuleImpl::run(void)
 
 		square.computeNormales();
 		square.computeTB();
+
+		square.setState(TriangleMeshe::State::BLOBLOADED);
 
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
 

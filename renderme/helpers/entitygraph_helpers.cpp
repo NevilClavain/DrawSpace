@@ -231,7 +231,7 @@ namespace renderMe
 			quad_resource_aspect.addComponent<Shader>(p_pshader, Shader(p_pshader, 1));
 
 			/////////// Add trianglemeshe
-			TriangleMeshe square(TriangleMeshe::State::BLOBLOADED);
+			TriangleMeshe square;
 
 			square.push(Vertex(-p_characteristics_v_width / 2, -p_characteristics_v_height / 2, 0.0, 0, 1));
 			square.push(Vertex(p_characteristics_v_width / 2, -p_characteristics_v_height / 2, 0.0, 1, 1));
@@ -246,6 +246,8 @@ namespace renderMe
 
 			square.computeNormales();
 			square.computeTB();
+
+			square.setState(TriangleMeshe::State::BLOBLOADED);
 
 			quad_resource_aspect.addComponent<TriangleMeshe>("quad", square);
 

@@ -30,8 +30,7 @@
 using namespace renderMe;
 using namespace renderMe::core::maths;
 
-TriangleMeshe::TriangleMeshe(State p_initial_state) :
-m_state(p_initial_state)
+TriangleMeshe::TriangleMeshe()
 {
 }
 
@@ -50,6 +49,8 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_state = p_other.m_state;
 	p_other.m_state_mutex.unlock();
 	m_state_mutex.unlock();
+
+	m_md5 = p_other.m_md5;
 }
 
 
@@ -257,9 +258,14 @@ void TriangleMeshe::setState(TriangleMeshe::State p_state)
 	m_state_mutex.lock();
 	m_state = p_state;
 	m_state_mutex.unlock();
+
+	if (State::BLOBLOADED == m_state)
+	{
+		compute_md5();
+	}
 }
 
-std::string	TriangleMeshe::md5() const
+void TriangleMeshe::compute_md5()
 {
 	MD5 md5;
 
@@ -291,5 +297,10 @@ std::string	TriangleMeshe::md5() const
 
 	std::string hash{ hash_v + hash_t + hash_n_gen + hash_tb_gen };
 	
-	return hash;
+	m_md5 = hash;
+}
+
+std::string	TriangleMeshe::getMd5() const
+{
+	return m_md5;
 }
