@@ -39,6 +39,7 @@ namespace renderMe
 	class TriangleMeshe
 	{
 	public:
+
 		enum class State
 		{
 			INIT,
@@ -66,8 +67,7 @@ namespace renderMe
 			TB_COMPUTED
 		};
 
-		TriangleMeshe();
-		
+		TriangleMeshe() = default;		
 		TriangleMeshe(const TriangleMeshe& p_other);
 
 		TriangleMeshe& operator=(const TriangleMeshe& p_other)

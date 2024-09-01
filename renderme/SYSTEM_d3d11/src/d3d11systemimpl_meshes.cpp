@@ -29,13 +29,17 @@ bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
 {
     DECLARE_D3D11ASSERT_VARS
 
-    const auto name{ p_lm.getName() };
-
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + name);
-
-    if (m_lines.count(name))
+    const auto md5{ p_lm.getMd5() };
+    if ("" == md5)
     {
-        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + name);
+        _EXCEPTION("no md5 hash for line meshe")
+    }
+
+    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + md5);
+
+    if (m_lines.count(md5))
+    {
+        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + md5);
     }
     else
     {
@@ -122,23 +126,23 @@ bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
             delete[] t;
         }
 
-        m_lines[name] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
+        m_lines[md5] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
     }
 
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + name);
+    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + md5);
 	return true;
 }
 
-void D3D11SystemImpl::setLineMeshe(const std::string& p_name)
+void D3D11SystemImpl::setLineMeshe(const std::string& p_md5)
 {
-    if (!m_lines.count(p_name))
+    if (!m_lines.count(p_md5))
     {
-        _EXCEPTION("unknown line meshes :" + p_name)
+        _EXCEPTION("unknown line meshes :" + p_md5)
     }
 
-    if (m_currentMeshe != p_name)
+    if (m_currentMeshe != p_md5)
     {
-        const auto lmData{ m_lines.at(p_name) };
+        const auto lmData{ m_lines.at(p_md5) };
 
         const UINT stride{ sizeof(d3d11vertex) };
         const UINT offset = 0;
@@ -149,23 +153,23 @@ void D3D11SystemImpl::setLineMeshe(const std::string& p_name)
         m_next_nbvertices = lmData.nb_vertices;
         m_next_nblines = lmData.nb_primitives;
 
-        m_currentMeshe = p_name;
+        m_currentMeshe = p_md5;
     }
 }
 
-void D3D11SystemImpl::destroyLineMeshe(const std::string& p_name)
+void D3D11SystemImpl::destroyLineMeshe(const std::string& p_md5)
 {
-    if (!m_lines.count(p_name))
+    if (!m_lines.count(p_md5))
     {
-        _EXCEPTION("unknown line meshe :" + p_name)
+        _EXCEPTION("unknown line meshe :" + p_md5)
     }
-    const auto lmData{ m_lines.at(p_name) };
+    const auto lmData{ m_lines.at(p_md5) };
 
     lmData.vertex_buffer->Release();
     lmData.index_buffer->Release();
 
-    m_lines.erase(p_name);
-    _RENDERME_DEBUG(m_localLogger, "Line meshe release SUCCESS : " + p_name);
+    m_lines.erase(p_md5);
+    _RENDERME_DEBUG(m_localLogger, "Line meshe release SUCCESS : " + p_md5);
 }
 
 bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)

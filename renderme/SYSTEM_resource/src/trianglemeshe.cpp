@@ -30,10 +30,6 @@
 using namespace renderMe;
 using namespace renderMe::core::maths;
 
-TriangleMeshe::TriangleMeshe()
-{
-}
-
 TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 {
 	m_vertices = p_other.m_vertices;
@@ -283,7 +279,7 @@ void TriangleMeshe::compute_md5()
 
 	for (size_t i = 0; i < m_triangles.size(); i++)
 	{
-		TrianglePrimitive<unsigned int> triangle{ m_triangles.at(i) };
+		const TrianglePrimitive<unsigned int> triangle{ m_triangles.at(i) };
 		*curr2 = triangle;
 		curr2++;
 	}

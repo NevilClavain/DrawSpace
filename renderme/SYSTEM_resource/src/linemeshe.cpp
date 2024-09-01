@@ -23,19 +23,13 @@
 */
 /* -*-LIC_END-*- */
 
+#include <md5.h>
 #include "linemeshe.h"
 
 using namespace renderMe;
 
-LineMeshe::LineMeshe(const std::string& p_name, State p_initial_state) :
-m_name(p_name),
-m_state(p_initial_state)
-{
-}
-
 LineMeshe::LineMeshe(const LineMeshe& p_other)
 {
-	m_name = p_other.m_name;
 	m_vertices = p_other.m_vertices;
 	m_lines = p_other.m_lines;
 
@@ -44,12 +38,10 @@ LineMeshe::LineMeshe(const LineMeshe& p_other)
 	m_state = p_other.m_state;
 	p_other.m_state_mutex.unlock();
 	m_state_mutex.unlock();
+
+	m_md5 = p_other.m_md5;
 }
 
-std::string LineMeshe::getName(void) const
-{
-	return m_name;
-}
 
 std::vector<renderMe::Vertex>LineMeshe::getVertices(void) const
 {
@@ -105,4 +97,46 @@ void LineMeshe::setState(LineMeshe::State p_state)
 	m_state_mutex.lock();
 	m_state = p_state;
 	m_state_mutex.unlock();
+
+	if (State::BLOBLOADED == m_state)
+	{
+		compute_md5();
+	}
+}
+
+void LineMeshe::compute_md5()
+{
+	MD5 md5;
+
+	const auto vbuff{ new Vertex[m_vertices.size()] };
+	auto curr{ vbuff };
+	for (size_t i = 0; i < m_vertices.size(); i++)
+	{
+		*curr = m_vertices[i];
+		curr++;
+	}
+	const std::string hash_v{ md5.digestMemory((BYTE*)vbuff, (int)(m_vertices.size() * sizeof(Vertex))) };
+
+	auto lbuff{ new LinePrimitive<unsigned int>[m_lines.size()] };
+	LinePrimitive<unsigned int>* curr2{ lbuff };
+
+	for (size_t i = 0; i < m_lines.size(); i++)
+	{
+		const LinePrimitive<unsigned int> line{ m_lines.at(i) };
+		*curr2 = line;
+		curr2++;
+	}
+	const std::string hash_t{ md5.digestMemory((BYTE*)lbuff, (int)(m_lines.size() * sizeof(TrianglePrimitive<unsigned int>))) };
+
+	delete[] vbuff;
+	delete[] lbuff;
+
+	std::string hash{ hash_v + hash_t };
+
+	m_md5 = hash;
+}
+
+std::string	LineMeshe::getMd5() const
+{
+	return m_md5;
 }

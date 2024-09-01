@@ -45,15 +45,11 @@ namespace renderMe
 			RENDERERLOADED,
 		};
 
-
-		LineMeshe() = delete;
-		LineMeshe(const std::string& p_name, State p_initial_state = State::INIT);
-
+		LineMeshe() = default;
 		LineMeshe(const LineMeshe& p_other);
 
 		LineMeshe& operator=(const LineMeshe& p_other)
 		{
-			m_name = p_other.m_name;
 			m_vertices = p_other.m_vertices;
 			m_lines = p_other.m_lines;
 
@@ -63,12 +59,12 @@ namespace renderMe
 			p_other.m_state_mutex.unlock();
 			m_state_mutex.unlock();
 
+			m_md5 = p_other.m_md5;
+
 			return *this;
 		}
 
 		~LineMeshe() = default;
-
-		std::string getName(void) const;
 
 		std::vector<renderMe::Vertex>				getVertices(void) const;
 		std::vector<LinePrimitive<unsigned int>>	getLines(void) const;
@@ -85,15 +81,23 @@ namespace renderMe
 
 		State getState() const;
 		void setState(State p_state);
+
+		std::string	getMd5() const;
 		
 	private:
-		std::string									m_name;
+
 		std::vector<Vertex>							m_vertices;
 		std::vector<LinePrimitive<unsigned int>>    m_lines;
 
 		mutable std::mutex							m_state_mutex;
-		State										m_state;
+		State										m_state{ State::INIT };
 
+		std::string									m_md5;
+
+		// IF NEW MEMBERS HERE :
+		// UPDATE COPY CTOR AND OPERATOR !!!!!!
+
+		void compute_md5();
 	};
 
 } // renderMe
