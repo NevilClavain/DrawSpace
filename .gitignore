@@ -264,6 +264,11 @@ ALL_BUILD.vcxproj*
 /renderme/module_scene00/*.sln
 /renderme/module_scene00/*.vcxproj*
 
+/renderme/module_sprites/CMakeFiles/
+/renderme/module_sprites/*.sln
+/renderme/module_sprites/*.vcxproj*
+
+
 
 /renderme/rt/CMakeFiles/
 /renderme/rt/*.sln

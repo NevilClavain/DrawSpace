@@ -108,6 +108,7 @@ add_subdirectory(console_tests/console_datacloud)
 add_subdirectory(module_scene00)
 add_subdirectory(module_gblcamera)
 add_subdirectory(module_renderingquad)
+add_subdirectory(module_sprites)
 
 add_subdirectory(module_basic)
 
