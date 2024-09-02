@@ -274,6 +274,91 @@ void ModuleImpl::d3d11_system_events()
 					const auto& renderingAspect{ bufferRenderingQueueEntity->aspectAccess(core::renderingAspect::id) };
 
 					renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose().setCurrentView("cameraEntity");
+
+
+					/////////////
+
+					//////////////////////////////////////////////////////////////
+					{
+						Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+
+						auto& sprite2DNode{ m_entitygraph.add(bufferRenderingNode, "sprite2DEntity") };
+						const auto sprite2DEntity{ sprite2DNode.data() };
+
+						auto& resource_aspect{ sprite2DEntity->makeAspect(core::resourcesAspect::id) };
+
+						/////////// Add shaders
+
+						resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
+						resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
+
+						/////////// Add trianglemeshe
+						TriangleMeshe sprite2D_square;
+
+						const double sprite_width{ 0.1 };
+						const double sprite_height{ 0.1 };
+
+						sprite2D_square.push(Vertex(-sprite_width / 2.0, -sprite_height / 2.0, 0.0, 0.0f, 1.0f));
+						sprite2D_square.push(Vertex(sprite_width / 2.0, -sprite_height / 2.0, 0.0, 1.0f, 1.0f));
+						sprite2D_square.push(Vertex(sprite_width / 2.0, sprite_height / 2.0, 0.0, 1.0f, 0.0f));
+						sprite2D_square.push(Vertex(-sprite_width / 2.0, sprite_height / 2.0, 0.0, 0.0f, 0.0f));
+
+						const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
+						sprite2D_square.push(t1);
+
+						const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
+						sprite2D_square.push(t2);
+
+						sprite2D_square.computeNormales();
+						sprite2D_square.computeTB();
+
+						sprite2D_square.setState(TriangleMeshe::State::BLOBLOADED);
+
+
+						resource_aspect.addComponent<TriangleMeshe>("sprite2D_square", sprite2D_square);
+
+						/////////// Add texture
+
+						resource_aspect.addComponent<std::pair<size_t, Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("sb0.bmp")));
+
+
+						auto& rendering_aspect{ sprite2DEntity->makeAspect(core::renderingAspect::id) };
+
+						rendering::RenderState rs_noculling(rendering::RenderState::Operation::SETCULLING, "cw");
+						rendering::RenderState rs_zbuffer(rendering::RenderState::Operation::ENABLEZBUFFER, "false");
+						rendering::RenderState rs_fill(rendering::RenderState::Operation::SETFILLMODE, "solid");
+						rendering::RenderState rs_texturepointsampling(rendering::RenderState::Operation::SETTEXTUREFILTERTYPE, "point");
+
+						const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						rendering_aspect.addComponent<std::vector<rendering::RenderState>>("renderStates", rs_list);
+
+
+						rendering::DrawingControl dc;
+						dc.wvpFilter = [](const core::maths::Matrix& p_world,
+							const core::maths::Matrix& p_view,
+							const core::maths::Matrix& p_proj)
+							{
+								core::maths::Matrix idview;
+								idview.identity();
+
+								core::maths::Matrix pos;
+								pos.translation(0, 0, -1.0);
+
+
+								return std::make_tuple(pos, idview, p_proj);
+							};
+
+						rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_square", dc);
+
+						rendering_aspect.addComponent<int>("renderingorder", 1000);
+
+						/////////// time aspect
+
+						sprite2DEntity->makeAspect(core::timeAspect::id);
+
+						auto& world_aspect{ sprite2DEntity->makeAspect(core::worldAspect::id) };
+						world_aspect.addComponent<transform::WorldPosition>("position");
+					}
 					
 				}
 				break;
