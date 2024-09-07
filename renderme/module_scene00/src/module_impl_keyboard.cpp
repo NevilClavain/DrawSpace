@@ -307,7 +307,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
 		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
 
-		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");
+		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");		
 	}
 
 	else if ('Q' == p_key)

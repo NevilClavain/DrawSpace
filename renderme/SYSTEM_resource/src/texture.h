@@ -43,6 +43,11 @@ namespace renderMe
     class ResourceSystem;
     class D3D11System;
 
+    namespace rendering
+    {
+        struct Queue;
+    }
+
     class Texture
     {
     public:
@@ -92,21 +97,26 @@ namespace renderMe
             */
         };
 
-        Texture() = delete;
+        //Texture() = delete;
         
-        Texture::Texture(const std::string& p_filename);
-        Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
+        //Texture::Texture(const std::string& p_filename);
+        Texture() = default;
+
+
+        Texture(/*const std::string& p_name,*/ Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
 
         Texture(const Texture& p_other);
 
         Texture& operator=(const Texture& p_other)
         {
-            m_name = p_other.m_name;
+            //m_name = p_other.m_name;
             m_source = p_other.m_source;
+            m_source_id = p_other.m_source_id;
+            m_resource_uid = p_other.m_resource_uid;
             m_width = p_other.m_width;
             m_height = p_other.m_height;
             m_format = p_other.m_format;
-            m_data = p_other.m_data;
+            m_file_content = p_other.m_file_content;
             m_content_access_mode = p_other.m_content_access_mode;
 
             m_state_mutex.lock();
@@ -126,44 +136,57 @@ namespace renderMe
 
         State                               getState() const;
 
-        std::string                         getName() const;
+        //std::string                         getName() const;
 
         ContentAccessMode                   getContentAccessMode() const;
 
-        const core::Buffer<unsigned char>&  getData() const;
+        const core::Buffer<unsigned char>&  getFileContent() const;
+
+        std::string                         getResourceUID() const;
+
+        std::string                         getSourceID() const;
         
         template<typename T>
         void                                getTextureContent(renderMe::core::Buffer<T>& p_destbuffer);
 
     private:
 
-        std::string                         m_name;
+        //std::string                         m_name;
+
+        std::string                         m_resource_uid;       // texture content source unique identifier
 
         Source                              m_source            { Source::CONTENT_FROM_FILE };
+
+        std::string                         m_source_id;       // texture content source unique identifier
+
+
+        core::Buffer<unsigned char>         m_file_content;
 
         int                                 m_width             { 0 };
         int                                 m_height            { 0 };
         Format                              m_format            { Format::TEXTURE_RGB };
 
+        ContentAccessMode                   m_content_access_mode{ ContentAccessMode::NO_CONTENT_ACCESS };
+
         mutable std::mutex	                m_state_mutex;
         State                               m_state             { State::INIT };
-
-        ContentAccessMode                   m_content_access_mode { ContentAccessMode::NO_CONTENT_ACCESS };
-
-        core::Buffer<unsigned char>         m_data;
-
+       
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
 
         void setState(Texture::State p_state);
-        void setData(const core::Buffer<unsigned char>& p_data);
+        //void setData(const core::Buffer<unsigned char>& p_data);
 
-        void setDims(int p_w, int p_h);
-        void setFormat(Format p_format);
+        //void setDims(int p_w, int p_h);
+        //void setFormat(Format p_format);
+
+        void compute_resource_uid();
         
         friend class renderMe::ResourceSystem;
         friend class renderMe::D3D11System;
         friend class D3D11SystemImpl;
+
+        friend struct renderMe::rendering::Queue;
     };
 
     template<typename T>
@@ -172,7 +195,7 @@ namespace renderMe
         void* buffer;
         size_t bufferSize;
 
-        core::services::TextureContentCopyService::getInstance()->readTextureContent(m_name, &buffer, &bufferSize);
+        core::services::TextureContentCopyService::getInstance()->readTextureContent(m_resource_uid, &buffer, &bufferSize);
         if (p_destbuffer.isEmpty())
         {
             p_destbuffer.fill(static_cast<T*>(buffer), m_width * m_height);

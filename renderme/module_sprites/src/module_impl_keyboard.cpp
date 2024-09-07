@@ -54,6 +54,15 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
 		}
 	}
+
+	else if (VK_F8 == p_key)
+	{
+		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
+		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
+
+		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
+		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");		
+	}
 }
 
 void ModuleImpl::onKeyPulse(long p_key)

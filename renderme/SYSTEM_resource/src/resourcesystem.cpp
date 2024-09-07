@@ -200,16 +200,18 @@ void ResourceSystem::run()
 			}
 
 			////// Handle textures ///////////
-			const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,Texture>>() };
+			//const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,Texture>>() };
+			const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t, std::pair<std::string, Texture>>>() };
 			for (auto& e : t_list)
 			{
 				auto& staged_texture{ e->getPurpose() };
-				Texture& texture{ staged_texture.second };
+				Texture& texture{ staged_texture.second.second };
+				const auto path{ staged_texture.second.first };
 					
 				const auto state{ texture.getState() };
 				if (Texture::State::INIT == state)
 				{
-					handleTexture(texture);
+					handleTexture(texture, path);
 					texture.setState(Texture::State::BLOBLOADING);
 				}
 			}
@@ -473,31 +475,32 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 	}
 }
 
-void ResourceSystem::handleTexture(Texture& textureInfos)
+void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_filename)
 {
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle Texture ") + textureInfos.getName());
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle Texture ") + p_filename);
 
 	const std::string textureAction{ "load_texture" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(textureAction, textureInfos.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(textureAction, p_filename,
 		[&,
 			textureAction = textureAction,
-			currentIndex = m_runnerIndex
+			currentIndex = m_runnerIndex,
+			filename = p_filename
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + textureInfos.getName());
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + filename);
 
 			// build full path
-			const auto texture_path{ m_texturesBasePath + "/" + textureInfos.getName() };
+			const auto texture_path{ m_texturesBasePath + "/" + filename };
 
 			try
 			{
 				auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_BEGIN : " + textureInfos.getName());
+				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
 				{
-					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_BEGIN, textureInfos.getName());
+					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_BEGIN, filename);
 				}
 
 
@@ -506,31 +509,31 @@ void ResourceSystem::handleTexture(Texture& textureInfos)
 
 				textureInfos.setState(Texture::State::BLOBLOADED);
 
-
 				// transfer file content to textureInfos buffer
 
 				core::Buffer<unsigned char> textureBytes;
 				textureBytes.fill(texture_content.getData(), texture_content.getDataSize());
-				textureInfos.setData(textureBytes);
+				//textureInfos.setData(textureBytes);
+				textureInfos.m_file_content = textureBytes;
 
-
-				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + textureInfos.getName());
+				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
 				{
-					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS, textureInfos.getName());
+					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS, filename);
 				}
 
-
+				textureInfos.m_source = Texture::Source::CONTENT_FROM_FILE;
+				textureInfos.m_source_id = filename;
+				textureInfos.compute_resource_uid();
 			}
 			catch (const std::exception& e)
 			{
 				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + texture_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, textureInfos.getName(), textureAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, filename, textureAction };
 				m_runner[currentIndex].get()->m_mailbox_out.push(report);
 			}
-
 		}
 	)};
 

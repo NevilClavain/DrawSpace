@@ -22,6 +22,11 @@
 */
 /* -*-LIC_END-*- */
 
+#include<utility>
+#include<string>
+#include<map>
+#include<vector>
+
 #include "renderingqueuesystem.h"
 #include "entity.h"
 #include "entitygraph.h"
@@ -247,10 +252,14 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 								for (const auto& staged_texture : textureSetPayload.textures)
 								{
 									const size_t	stage{ staged_texture.first };
-									const Texture& texture{ staged_texture.second };
+									const auto		texture_resource_uid{ staged_texture.second };
 
-									_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture.getName() + " " +
+									/*
+									_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture.getSourceID() + " " +
 										(Texture::Source::CONTENT_FROM_FILE == texture.getSource() ? "CONTENT_FROM_FILE" : "CONTENT_FROM_RENDERINGQUEUE"));
+										*/
+
+									_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture_resource_uid);
 
 
 
@@ -582,9 +591,9 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMesheAndTexturesPayl
 
 			const size_t stage{ staged_texture.first };
 			const Texture& texture{ staged_texture.second };
-			textureSetPayload.textures[stage] = texture.getName();
+			textureSetPayload.textures[stage] = texture.getResourceUID();
 
-			textureset_signature += texture.getName() + "." + std::to_string(stage) + "/";
+			textureset_signature += texture.getSourceID() + "." + std::to_string(stage) + "/";
 		}
 
 		for (const auto& tdc : p_trianglesDrawingControls)
@@ -733,9 +742,32 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 			const auto shaders{ p_resourceAspect.getComponentsByType<Shader>() };
 
 			// search for textures set
-			const auto texturesSet{ p_resourceAspect.getComponentsByType<std::pair<size_t,Texture>>() };
+			
+			const auto renderingTexturesSet{ p_resourceAspect.getComponentsByType<std::pair<size_t,Texture>>() };
+			const auto texturesFromFileSet{ p_resourceAspect.getComponentsByType<std::pair<size_t,std::pair<std::string,Texture>>>() };
+			
+			ComponentList<std::pair<size_t, Texture>> texturesSet;
+			ComponentContainer cc;
 
-			// Trendering order channel : 0 by default
+			if (renderingTexturesSet.size() > 0)
+			{
+				texturesSet = renderingTexturesSet;
+			}
+			else if (texturesFromFileSet.size() > 0)
+			{
+				// uniformize texture set format : convert from std::pair<size_t,std::pair<std::string,Texture>> to std::pair<size_t,Texture>
+				for (auto& tc : texturesFromFileSet)
+				{
+					const auto t{ tc->getPurpose() };
+
+					cc.addComponent<std::pair<size_t, Texture>>("texturesFromFileList", std::make_pair(t.first, t.second.second));
+				}
+
+				texturesSet = cc.getComponentsByType<std::pair<size_t, Texture>>();
+			}
+
+					
+			// rendering order channel : 0 by default
 			int rendering_channel{ 0 };
 
 			const auto rocs{ p_renderingAspect.getComponentsByType<int>() };
@@ -934,7 +966,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 													const size_t stage{ staged_texture.first };
 													const Texture& texture{ staged_texture.second };
-													textureset_signature += texture.getName() + "." + std::to_string(stage) + "/";
+													textureset_signature += texture.getSourceID() + "." + std::to_string(stage) + "/";
 												}
 
 												// does this textureSet signature exists ?
@@ -982,7 +1014,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 														const size_t stage{ staged_texture.first };
 														const Texture& texture{ staged_texture.second };
-														textureSetPayload.textures[stage] = texture.getName();
+														textureSetPayload.textures[stage] = texture.getResourceUID();
 													}
 
 													for (const auto& dc : drawingControls)

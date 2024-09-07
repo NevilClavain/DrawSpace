@@ -235,7 +235,7 @@ namespace renderMe
 			std::string					getCurrentView() const;
 
 			
-			std::string					getTargetTextureName() const;
+			std::string					getTargetTextureUID() const;
 			void						setTargetStage(size_t p_stage);
 			
 
@@ -255,7 +255,8 @@ namespace renderMe
 
 
 			size_t							m_targetStage{ 0 };
-			std::string						m_targetTextureName; // for BUFFER_RENDERING
+
+			std::string						m_targetTextureUID; // for BUFFER_RENDERING
 
 			
 

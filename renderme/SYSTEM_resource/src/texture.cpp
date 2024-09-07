@@ -22,35 +22,45 @@
 */
 /* -*-LIC_END-*- */
 
+#include <md5.h>
 #include "texture.h"
 
 using namespace renderMe;
-
+/*
 Texture::Texture(const std::string& p_filename) :
 m_source(Source::CONTENT_FROM_FILE),
 m_name(p_filename)
 {
 }
+*/
 
-Texture::Texture(const std::string& p_name, Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode) :
-m_name(p_name),
-m_source(Source::CONTENT_FROM_RENDERINGQUEUE),
+/*
+Texture::Texture() :
+m_source(Source::CONTENT_FROM_FILE)
+{
+}
+*/
+
+Texture::Texture(/*const std::string& p_name,*/ Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode) :
+//m_name(p_name),
+//m_source(Source::CONTENT_FROM_RENDERINGQUEUE),
 m_format(p_format),
 m_width(p_width),
 m_height(p_height),
-m_content_access_mode(p_content_access_mode),
-m_state(State::BLOBLOADED) // no binary to load from resource system
+m_content_access_mode(p_content_access_mode)
 {
 }
 
 Texture::Texture(const Texture& p_other)
 {
-    m_name = p_other.m_name;
-	m_source = p_other.m_source;
-	m_width = p_other.m_width;
-	m_height = p_other.m_height;
-	m_format = p_other.m_format;
-    m_data = p_other.m_data;
+    //m_name = p_other.m_name;
+    m_source = p_other.m_source;
+    m_source_id = p_other.m_source_id;
+    m_resource_uid = p_other.m_resource_uid;
+    m_width = p_other.m_width;
+    m_height = p_other.m_height;
+    m_format = p_other.m_format;
+    m_file_content = p_other.m_file_content;
     m_content_access_mode = p_other.m_content_access_mode;
 
     m_state_mutex.lock();
@@ -93,6 +103,11 @@ Texture::ContentAccessMode Texture::getContentAccessMode() const
     return m_content_access_mode;
 }
 
+std::string Texture::getResourceUID() const
+{
+    return m_resource_uid;
+}
+
 void Texture::setState(Texture::State p_state)
 {
     m_state_mutex.lock();
@@ -100,17 +115,48 @@ void Texture::setState(Texture::State p_state)
     m_state_mutex.unlock();
 }
 
+void Texture::compute_resource_uid()
+{
+    MD5 md5;
 
+    if (Source::CONTENT_FROM_FILE == m_source)
+    {
+        const std::string hash_source{ md5.digestMemory((BYTE*)&m_source, (int)(sizeof(m_source))) };
+        const std::string hash_source_uid{ md5.digestMemory((BYTE*)&m_source_id, (int)(sizeof(m_source_id))) };
+        std::string hash{ hash_source + hash_source_uid };
+
+        m_resource_uid = hash;
+    }
+    else
+    {
+        const std::string hash_source{ md5.digestMemory((BYTE*)&m_source, (int)(sizeof(m_source))) };
+        const std::string hash_source_uid{ md5.digestMemory((BYTE*)&m_source_id, (int)(sizeof(m_source_id))) };
+
+        const std::string hash_source_width{ md5.digestMemory((BYTE*)&m_width, (int)(sizeof(m_width))) };
+        const std::string hash_source_height{ md5.digestMemory((BYTE*)&m_height, (int)(sizeof(m_height))) };
+        const std::string hash_source_format{ md5.digestMemory((BYTE*)&m_format, (int)(sizeof(m_format))) };
+
+        const std::string hash_source_content_access_mode{ md5.digestMemory((BYTE*)&m_content_access_mode, (int)(sizeof(m_content_access_mode))) };
+
+        std::string hash{ hash_source + hash_source_uid + hash_source_width + hash_source_height + hash_source_format + hash_source_content_access_mode };
+        m_resource_uid = hash;
+    }
+}
+
+/*
 void Texture::setData(const core::Buffer<unsigned char>& p_data)
 {
     m_data = p_data;
 }
+*/
 
-const core::Buffer<unsigned char>& Texture::getData() const
+const core::Buffer<unsigned char>& Texture::getFileContent() const
 {
-    return m_data;
+    return m_file_content;
 }
 
+
+/*
 std::string Texture::getName() const
 {
     return m_name;
@@ -127,3 +173,9 @@ void Texture::setFormat(Format p_format)
     m_format = p_format;
 }
 
+*/
+
+std::string Texture::getSourceID() const
+{
+    return m_source_id;
+}

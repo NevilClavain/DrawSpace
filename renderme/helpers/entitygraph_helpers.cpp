@@ -258,10 +258,11 @@ namespace renderMe
 
 			/////////// render target Texture
 
+			const std::string texture_name_base{ "renderingquad_texture_" };
+
 			for (size_t i = 0; i < p_renderTargets.size(); i++)
 			{
-				const Texture texture{ p_renderTargets.at(i).second };
-				quad_resource_aspect.addComponent<std::pair<size_t, Texture>>(texture.getName(), p_renderTargets.at(i));
+				quad_resource_aspect.addComponent<std::pair<size_t, Texture>>(texture_name_base + std::to_string(p_renderTargets.at(i).first), p_renderTargets.at(i));
 			}
 
 			/////////// Add renderstate

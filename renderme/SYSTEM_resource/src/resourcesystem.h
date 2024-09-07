@@ -85,6 +85,6 @@ namespace renderMe
         int                                                     m_runnerIndex{ 0 };
 
         void handleShader(Shader& shaderInfos, int p_shaderType);
-        void handleTexture(Texture& textureInfos);
+        void handleTexture(Texture& textureInfos, const std::string& p_filename);
     };
 }

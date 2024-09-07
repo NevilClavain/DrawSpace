@@ -168,12 +168,12 @@ public:
 
     bool createTexture(renderMe::Texture& p_texture);
 
-    void bindTextureStage(const std::string& p_name, size_t p_stage);
+    void bindTextureStage(const std::string& p_resource_uid, size_t p_stage);
     void unbindTextureStage(size_t p_stage);
 
-    bool copyTextureContent(const std::string& p_name, void** p_data, size_t* p_dataSize);
+    bool copyTextureContent(const std::string& p_resource_uid, void** p_data, size_t* p_dataSize);
 
-    void destroyTexture(const std::string& p_name);
+    void destroyTexture(const std::string& p_resource_uid);
 
    
     void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
@@ -236,7 +236,7 @@ public:
         D3D11_VIEWPORT                      viewport; // viewport adapte au rendu dans cette texture
     };
 
-    TextureData getTextureData(const std::string& p_name);
+
 
 private:
 

@@ -107,10 +107,7 @@ void ModuleImpl::run(void)
 
 		/////////// Add texture
 
-		quad_resource_aspect.addComponent<std::pair<size_t, Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("map.jpg")));
-
-
-
+		quad_resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair("map.jpg", Texture())));
 
 		auto& quad_rendering_aspect{ quadEntity->makeAspect(core::renderingAspect::id) };
 

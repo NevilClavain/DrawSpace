@@ -30,13 +30,13 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 {
 	DECLARE_D3D11ASSERT_VARS
 
-	const auto name{ p_texture.getName() };
+	const auto resource_uid{ p_texture.getResourceUID()};
 
-	_RENDERME_DEBUG(m_localLogger, "Texture loading : " + name);
+	_RENDERME_DEBUG(m_localLogger, "Texture loading : " + resource_uid);
 
-    if (m_textures.count(name))
+    if (m_textures.count(resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Texture already loaded : " + name);
+        _RENDERME_DEBUG(m_localLogger, "Texture already loaded : " + resource_uid);
     }
     else
     {
@@ -188,7 +188,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
             texture_data.targetTextureClone = d3dt11_clone;
 
-            m_textures[name] = texture_data;
+            m_textures[resource_uid] = texture_data;
         }
         else
         {
@@ -197,7 +197,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
             ID3D11Resource*             d3dt11{ nullptr };
             ID3D11ShaderResourceView*   textureResourceView{ nullptr };
 
-            const auto& file_content{ p_texture.getData() };
+            const auto& file_content{ p_texture.getFileContent()};
 
             D3D11_USAGE usage{ D3D11_USAGE_DEFAULT };
 
@@ -229,7 +229,9 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
                 _RENDERME_DEBUG(m_localLogger, "Texture infos : " + std::to_string(desc.Width) + "x" + std::to_string(desc.Height) + " format : " + std::to_string(desc.Format));
 
-                p_texture.setDims(desc.Width, desc.Height);
+                //p_texture.setDims(desc.Width, desc.Height);
+                p_texture.m_width = desc.Width;
+                p_texture.m_height = desc.Height;
 
                 renderMe::Texture::Format format;
 
@@ -263,11 +265,12 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                         break;
 
                     default:
-                        _EXCEPTION("unsupported texture format for :" + name + std::to_string(desc.Format))
+                        _EXCEPTION("unsupported texture format for :" + resource_uid + std::to_string(desc.Format))
                         break;
                 }
 
-                p_texture.setFormat(format);
+                //p_texture.setFormat(format);
+                p_texture.m_format = format;
 
                 TextureData texture_data;
                 texture_data.source = renderMe::Texture::Source::CONTENT_FROM_FILE;
@@ -275,34 +278,34 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                 texture_data.textureResource = d3dt11;
                 texture_data.shaderResourceView = textureResourceView;
                 texture_data.desc = desc;
-                m_textures[name] = texture_data;
+                m_textures[resource_uid] = texture_data;
 
 
             }
             else
             {
-                _EXCEPTION("Supporting only 2D texture :" + name)
+                _EXCEPTION("Supporting only 2D texture :" + resource_uid)
             }
            
         }
     }
 
-	_RENDERME_DEBUG(m_localLogger, "Texture loading SUCCESS : " + name);
+	_RENDERME_DEBUG(m_localLogger, "Texture loading SUCCESS : " + resource_uid);
 	return true;
 
 }
 
-void D3D11SystemImpl::bindTextureStage(const std::string& p_name, size_t p_stage)
+void D3D11SystemImpl::bindTextureStage(const std::string& p_resource_uid, size_t p_stage)
 {
-    if (!m_textures.count(p_name))
+    if (!m_textures.count(p_resource_uid))
     {
-        _EXCEPTION("unknown texture :" + p_name)
+        _EXCEPTION("unknown texture :" + p_resource_uid)
     }
 
-    const auto textureData{ m_textures.at(p_name) };
+    const auto textureData{ m_textures.at(p_resource_uid) };
     m_lpd3ddevcontext->PSSetShaderResources(p_stage, 1, &textureData.shaderResourceView);
 
-    m_currentTextures[p_stage] = p_name;
+    m_currentTextures[p_stage] = p_resource_uid;
 }
 
 void D3D11SystemImpl::unbindTextureStage(size_t p_stage)
@@ -314,13 +317,13 @@ void D3D11SystemImpl::unbindTextureStage(size_t p_stage)
     m_currentTextures[p_stage] = "";
 }
 
-void D3D11SystemImpl::destroyTexture(const std::string& p_name)
+void D3D11SystemImpl::destroyTexture(const std::string& p_resource_uid)
 {
-    if (!m_textures.count(p_name))
+    if (!m_textures.count(p_resource_uid))
     {
-        _EXCEPTION("unknown texture :" + p_name)
+        _EXCEPTION("unknown texture :" + p_resource_uid)
     }
-    const auto textureData{ m_textures.at(p_name) };
+    const auto textureData{ m_textures.at(p_resource_uid) };
 
     if (textureData.shaderResourceView)
     {
@@ -367,9 +370,9 @@ void D3D11SystemImpl::destroyTexture(const std::string& p_name)
         textureData.stencilDepthView->Release();
     }
 
-    m_textures.erase(p_name);
+    m_textures.erase(p_resource_uid);
 
-    _RENDERME_DEBUG(m_localLogger, "texture release SUCCESS : " + p_name);
+    _RENDERME_DEBUG(m_localLogger, "texture release SUCCESS : " + p_resource_uid);
 }
 
 void D3D11SystemImpl::forceTexturesBinding()
@@ -384,16 +387,16 @@ void D3D11SystemImpl::forceTexturesBinding()
     }
 }
 
-bool D3D11SystemImpl::copyTextureContent(const std::string& p_name, void** p_data, size_t* p_dataSize)
+bool D3D11SystemImpl::copyTextureContent(const std::string& p_resource_uid, void** p_data, size_t* p_dataSize)
 {
     DECLARE_D3D11ASSERT_VARS
 
-    if (!m_textures.count(p_name))
+    if (!m_textures.count(p_resource_uid))
     {
-        _EXCEPTION("unknown texture :" + p_name)
+        _EXCEPTION("unknown texture :" + p_resource_uid)
     }
 
-    const auto textureData{ m_textures.at(p_name) };
+    const auto textureData{ m_textures.at(p_resource_uid) };
 
     // copy GPU to GPU ...
     m_lpd3ddevcontext->CopyResource(textureData.targetTextureClone, textureData.targetTexture);
@@ -407,15 +410,4 @@ bool D3D11SystemImpl::copyTextureContent(const std::string& p_name, void** p_dat
    
     *p_dataSize = textureData.blocksize;
     *p_data = textureData.bits;
-}
-
-D3D11SystemImpl::TextureData D3D11SystemImpl::getTextureData(const std::string& p_name)
-{
-    if (!m_textures.count(p_name))
-    {
-        _EXCEPTION("unknown texture :" + p_name)
-    }
-
-    const auto textureData{ m_textures.at(p_name) };
-    return textureData;
 }

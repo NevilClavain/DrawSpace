@@ -215,7 +215,7 @@ void ModuleImpl::d3d11_system_events()
 					const int w_width{ window_dims.x() };
 					const int w_height{ window_dims.y() };
 
-					m_rendering_quad_texture = new Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height, Texture::ContentAccessMode::CONTENT_ACCESS);
+					m_rendering_quad_texture = new Texture(Texture::Format::TEXTURE_RGB, w_width, w_height, Texture::ContentAccessMode::CONTENT_ACCESS);
 
 					renderMe::helpers::plugRenderingQuadView( m_entitygraph,
 																	characteristics_v_width, characteristics_v_height,																	
@@ -319,8 +319,7 @@ void ModuleImpl::d3d11_system_events()
 
 						/////////// Add texture
 
-						resource_aspect.addComponent<std::pair<size_t, Texture>>("texture", std::make_pair(Texture::STAGE_0, Texture("sb0.bmp")));
-
+						resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair("sb0.bmp", Texture())));
 
 						auto& rendering_aspect{ sprite2DEntity->makeAspect(core::renderingAspect::id) };
 

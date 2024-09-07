@@ -207,7 +207,7 @@ void ModuleImpl::d3d11_system_events()
 					const int w_width{ window_dims.x() };
 					const int w_height{ window_dims.y() };
 
-					const auto rendering_quad_texture{ Texture("rendering_quad_texture", Texture::Format::TEXTURE_RGB, w_width, w_height) };
+					const auto rendering_quad_texture{ Texture(Texture::Format::TEXTURE_RGB, w_width, w_height) };
 
 					renderMe::helpers::plugRenderingQuadView(m_entitygraph,
 						characteristics_v_width, characteristics_v_height,

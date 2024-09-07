@@ -61,11 +61,17 @@ void Queue::setScreenRenderingPurpose()
 
 void Queue::setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, renderMe::Texture>> p_textures_list)
 {
-
 	if (m_targetStage < p_textures_list.size())
 	{
-		const auto& render_target{ p_textures_list.at(m_targetStage)->getPurpose().second };
-		m_targetTextureName = render_target.getName();
+		auto& render_target{ p_textures_list.at(m_targetStage)->getPurpose().second };
+
+
+		render_target.m_source = Texture::Source::CONTENT_FROM_RENDERINGQUEUE;
+		render_target.m_source_id = m_name;
+
+		render_target.compute_resource_uid();
+
+		m_targetTextureUID = render_target.getResourceUID();
 	}
 	else
 	{
@@ -120,9 +126,9 @@ std::string	Queue::getCurrentView() const
 	return m_currentView;
 }
 
-std::string	Queue::getTargetTextureName() const
+std::string	Queue::getTargetTextureUID() const
 {
-	return m_targetTextureName;
+	return m_targetTextureUID;
 }
 
 void Queue::setTargetStage(size_t p_stage)
