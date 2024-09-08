@@ -198,9 +198,7 @@ void ResourceSystem::run()
 					shader.setState(Shader::State::BLOBLOADING);
 				}
 			}
-
 			////// Handle textures ///////////
-			//const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,Texture>>() };
 			const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t, std::pair<std::string, Texture>>>() };
 			for (auto& e : t_list)
 			{
@@ -513,7 +511,6 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 
 				core::Buffer<unsigned char> textureBytes;
 				textureBytes.fill(texture_content.getData(), texture_content.getDataSize());
-				//textureInfos.setData(textureBytes);
 				textureInfos.m_file_content = textureBytes;
 
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + filename);

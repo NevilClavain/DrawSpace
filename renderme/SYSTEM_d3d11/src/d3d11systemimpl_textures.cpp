@@ -223,13 +223,11 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
                 ID3D11Texture2D* pTextureInterface{ nullptr };
                 hRes = d3dt11->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
-
                 
                 pTextureInterface->GetDesc(&desc);
 
                 _RENDERME_DEBUG(m_localLogger, "Texture infos : " + std::to_string(desc.Width) + "x" + std::to_string(desc.Height) + " format : " + std::to_string(desc.Format));
 
-                //p_texture.setDims(desc.Width, desc.Height);
                 p_texture.m_width = desc.Width;
                 p_texture.m_height = desc.Height;
 

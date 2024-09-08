@@ -254,14 +254,7 @@ void RenderingQueueSystem::logRenderingqueue(const std::string& p_entity_id, ren
 									const size_t	stage{ staged_texture.first };
 									const auto		texture_resource_uid{ staged_texture.second };
 
-									/*
-									_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture.getSourceID() + " " +
-										(Texture::Source::CONTENT_FROM_FILE == texture.getSource() ? "CONTENT_FROM_FILE" : "CONTENT_FROM_RENDERINGQUEUE"));
-										*/
-
 									_RENDERME_WARN(m_localLogger, "\t\t\t\t\t\t\t\t-> texture : stage " + std::to_string(stage) + " " + texture_resource_uid);
-
-
 
 									for (const auto& drawing : textureSetPayload.drawing_list)
 									{
@@ -376,8 +369,6 @@ void RenderingQueueSystem::manageRenderingQueue()
 						logRenderingqueue(currEntityId, renderingQueue);
 						m_queuesToLog.erase(currEntityId);
 					}
-
-					////////
 				}
 			}
 			/////////////////////////////////////////
@@ -1391,22 +1382,6 @@ void RenderingQueueSystem::removeFromRenderingQueue(const std::string& p_entity_
 	{
 		queueNodes.erase(chan);
 	}
-
-
-	/*
-	
-	std::vector<std::string> vs_to_remove;
-
-	for (auto& vs : queueNodes)
-	{
-
-	}
-
-	for (const std::string& id : vs_to_remove)
-	{
-		queueNodes.erase(id);
-	}
-	*/
 
 	p_renderingQueue.setQueueNodes(queueNodes);
 }

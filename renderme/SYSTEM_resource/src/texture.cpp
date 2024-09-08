@@ -26,24 +26,8 @@
 #include "texture.h"
 
 using namespace renderMe;
-/*
-Texture::Texture(const std::string& p_filename) :
-m_source(Source::CONTENT_FROM_FILE),
-m_name(p_filename)
-{
-}
-*/
 
-/*
-Texture::Texture() :
-m_source(Source::CONTENT_FROM_FILE)
-{
-}
-*/
-
-Texture::Texture(/*const std::string& p_name,*/ Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode) :
-//m_name(p_name),
-//m_source(Source::CONTENT_FROM_RENDERINGQUEUE),
+Texture::Texture(Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode) :
 m_format(p_format),
 m_width(p_width),
 m_height(p_height),
@@ -53,7 +37,6 @@ m_content_access_mode(p_content_access_mode)
 
 Texture::Texture(const Texture& p_other)
 {
-    //m_name = p_other.m_name;
     m_source = p_other.m_source;
     m_source_id = p_other.m_source_id;
     m_resource_uid = p_other.m_resource_uid;
@@ -143,37 +126,10 @@ void Texture::compute_resource_uid()
     }
 }
 
-/*
-void Texture::setData(const core::Buffer<unsigned char>& p_data)
-{
-    m_data = p_data;
-}
-*/
-
 const core::Buffer<unsigned char>& Texture::getFileContent() const
 {
     return m_file_content;
 }
-
-
-/*
-std::string Texture::getName() const
-{
-    return m_name;
-}
-
-void Texture::setDims(int p_w, int p_h)
-{
-    m_width = p_w;
-    m_height = p_h;
-}
-
-void Texture::setFormat(Format p_format)
-{
-    m_format = p_format;
-}
-
-*/
 
 std::string Texture::getSourceID() const
 {

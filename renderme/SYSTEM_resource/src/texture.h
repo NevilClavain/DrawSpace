@@ -97,19 +97,13 @@ namespace renderMe
             */
         };
 
-        //Texture() = delete;
-        
-        //Texture::Texture(const std::string& p_filename);
         Texture() = default;
-
-
-        Texture(/*const std::string& p_name,*/ Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
+        Texture(Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode = ContentAccessMode::NO_CONTENT_ACCESS);
 
         Texture(const Texture& p_other);
 
         Texture& operator=(const Texture& p_other)
         {
-            //m_name = p_other.m_name;
             m_source = p_other.m_source;
             m_source_id = p_other.m_source_id;
             m_resource_uid = p_other.m_resource_uid;
@@ -136,8 +130,6 @@ namespace renderMe
 
         State                               getState() const;
 
-        //std::string                         getName() const;
-
         ContentAccessMode                   getContentAccessMode() const;
 
         const core::Buffer<unsigned char>&  getFileContent() const;
@@ -150,8 +142,6 @@ namespace renderMe
         void                                getTextureContent(renderMe::core::Buffer<T>& p_destbuffer);
 
     private:
-
-        //std::string                         m_name;
 
         std::string                         m_resource_uid;       // texture content source unique identifier
 
@@ -175,11 +165,6 @@ namespace renderMe
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
 
         void setState(Texture::State p_state);
-        //void setData(const core::Buffer<unsigned char>& p_data);
-
-        //void setDims(int p_w, int p_h);
-        //void setFormat(Format p_format);
-
         void compute_resource_uid();
         
         friend class renderMe::ResourceSystem;
