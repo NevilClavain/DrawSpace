@@ -147,7 +147,7 @@ namespace renderMe
 
         Source                              m_source            { Source::CONTENT_FROM_FILE };
 
-        std::string                         m_source_id;       // texture content source unique identifier
+        std::string                         m_source_id;        
 
 
         core::Buffer<unsigned char>         m_file_content;
