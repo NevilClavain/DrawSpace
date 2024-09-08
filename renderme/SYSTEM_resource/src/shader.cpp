@@ -23,6 +23,7 @@
 */
 /* -*-LIC_END-*- */
 
+#include <md5.h>
 #include "shader.h"
 
 using namespace renderMe;
@@ -36,6 +37,9 @@ Shader::Shader(const std::string& p_name, int p_type) :
 Shader::Shader(const Shader& p_other)
 {
     m_name = p_other.m_name;
+
+    m_source_id = p_other.m_source_id;
+    m_resource_uid = p_other.m_resource_uid;
     m_content = p_other.m_content;
     m_contentMD5 = p_other.m_contentMD5;
     m_contentSize = p_other.m_contentSize;
@@ -124,4 +128,11 @@ void Shader::addArgument(const Argument& p_arg)
 std::vector<Shader::Argument> Shader::getArguments() const
 {
     return m_arguments;
+}
+
+void Shader::compute_resource_uid()
+{
+    MD5 md5;
+    const std::string hash{ md5.digestMemory((BYTE*)m_content.c_str(), m_contentSize)};
+    m_resource_uid = hash;
 }

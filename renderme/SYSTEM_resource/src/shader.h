@@ -66,6 +66,9 @@ namespace renderMe
         Shader& operator=(const Shader& p_other)
         {
             m_name = p_other.m_name;
+
+            m_source_id = p_other.m_source_id;
+            m_resource_uid = p_other.m_resource_uid;
             m_content = p_other.m_content;
             m_contentMD5 = p_other.m_contentMD5;
             m_contentSize = p_other.m_contentSize;
@@ -113,11 +116,20 @@ namespace renderMe
     private:
         
         std::string             m_name;
+
+        std::string             m_resource_uid;       // shader content source unique identifier
+
+        std::string             m_source_id;
+
+
         std::string             m_content;
         std::string             m_contentMD5;
+
         size_t                  m_contentSize{ 0 };
 
         int                     m_type; //0 = vertex shader, 1 = pixel shader
+
+
 
         core::Buffer<char>      m_code;
 
@@ -133,6 +145,8 @@ namespace renderMe
 
         void setState(State p_state);
         void setCode(const core::Buffer<char>& p_code);
+
+        void compute_resource_uid();
 
         friend class renderMe::ResourceSystem;
         friend class renderMe::D3D11System;
