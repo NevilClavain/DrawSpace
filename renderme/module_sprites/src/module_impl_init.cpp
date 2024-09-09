@@ -289,8 +289,8 @@ void ModuleImpl::d3d11_system_events()
 
 						/////////// Add shaders
 
-						resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
-						resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
+						resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("texture_vs", Shader(vertexShader)));
+						resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("texture_ps", Shader(pixelShader)));
 
 						/////////// Add trianglemeshe
 						TriangleMeshe sprite2D_square;

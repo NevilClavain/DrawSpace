@@ -28,20 +28,17 @@
 
 using namespace renderMe;
 
-Shader::Shader(const std::string& p_name, int p_type) :
-    m_name(p_name),
-    m_type(p_type)
+Shader::Shader(int p_type) :
+m_type(p_type)
 {
 }
 
 Shader::Shader(const Shader& p_other)
 {
-    m_name = p_other.m_name;
-
     m_source_id = p_other.m_source_id;
     m_resource_uid = p_other.m_resource_uid;
     m_content = p_other.m_content;
-    m_contentMD5 = p_other.m_contentMD5;
+    //m_contentMD5 = p_other.m_contentMD5;
     m_contentSize = p_other.m_contentSize;
     m_code = p_other.m_code;
     m_type = p_other.m_type;
@@ -55,11 +52,6 @@ Shader::Shader(const Shader& p_other)
     m_arguments = p_other.m_arguments;
 }
 
-std::string Shader::getName() const
-{
-    return m_name;
-}
-
 std::string Shader::getContent() const
 {
     return m_content;
@@ -70,6 +62,7 @@ void Shader::setContent(const std::string& p_content)
     m_content = p_content;
 }
 
+/*
 std::string Shader::getContentMD5() const
 {
     return m_contentMD5;
@@ -78,6 +71,17 @@ std::string Shader::getContentMD5() const
 void Shader::setContentMD5(const std::string& p_contentMD5)
 {
     m_contentMD5 = p_contentMD5;
+}
+*/
+
+std::string Shader::getResourceUID() const
+{
+    return m_resource_uid;
+}
+
+std::string Shader::getSourceID() const
+{
+    return m_source_id;
 }
 
 size_t Shader::getContentSize() const

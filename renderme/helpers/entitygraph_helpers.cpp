@@ -26,6 +26,7 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <utility>
 
 #include "entitygraph.h"
 #include "entity.h"
@@ -227,8 +228,8 @@ namespace renderMe
 
 			/////////// Add shaders
 
-			quad_resource_aspect.addComponent<Shader>(p_vshader, Shader(p_vshader, 0));
-			quad_resource_aspect.addComponent<Shader>(p_pshader, Shader(p_pshader, 1));
+			quad_resource_aspect.addComponent<std::pair<std::string,Shader>>("vertexShader", std::make_pair(p_vshader, Shader(vertexShader)));
+			quad_resource_aspect.addComponent<std::pair<std::string,Shader>>("pixelShader", std::make_pair(p_pshader, Shader(pixelShader)));
 
 			/////////// Add trianglemeshe
 			TriangleMeshe square;

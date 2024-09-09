@@ -80,9 +80,8 @@ void ModuleImpl::run(void)
 
 		/////////// Add shaders
 
-		quad_resource_aspect.addComponent<Shader>("vertexShader", Shader("texture_vs", 0));
-		quad_resource_aspect.addComponent<Shader>("pixelShader", Shader("texture_ps", 1));
-
+		quad_resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("texture_vs", Shader(vertexShader)));
+		quad_resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("texture_ps", Shader(pixelShader)));
 
 		/////////// Add trianglemeshe
 		TriangleMeshe square;

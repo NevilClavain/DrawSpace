@@ -25,6 +25,8 @@
 
 #pragma warning( disable : 4005 4838 )
 
+#include <utility>
+
 #include "d3d11system.h"
 
 #include "logsink.h"
@@ -319,19 +321,20 @@ void D3D11System::manageResources()
 		{
 			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-			{			
-				const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
-				for (auto& e : s_list)
+			{
+				const auto shaders_list{ p_resource_aspect.getComponentsByType<std::pair<std::string,Shader>>() };
+
+				for (auto& e : shaders_list)
 				{
-					auto& shader{ e->getPurpose() };
+					auto& shader{ e->getPurpose().second };
 					const auto state{ shader.getState() };
 					if (Shader::State::BLOBLOADED == state)
 					{
 
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shader.getName());
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_SHADER_CREATION_BEGIN : " + shader.m_source_id);
 						for (const auto& call : m_callbacks)
 						{
-							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shader.getName());
+							call(D3D11SystemEvent::D3D11_SHADER_CREATION_BEGIN, shader.m_source_id);
 						}
 
 						handleShaderCreation(shader, shader.getType());
@@ -346,7 +349,6 @@ void D3D11System::manageResources()
 			{
 				auto& lm{ e->getPurpose() };
 				const auto state{ lm.getState()};
-
 				if (LineMeshe::State::BLOBLOADED == state)
 				{				
 					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_BEGIN : " + lm.getMd5());
@@ -533,8 +535,7 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 		d3dimpl->beginTarget(p_renderingQueue.getTargetTextureUID());
 	}
 
-	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
-	
+	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());	
 	{
 		auto qnodes{ p_renderingQueue.getQueueNodes() };
 		for (const auto& qnode : qnodes)
@@ -847,11 +848,11 @@ void D3D11System::handleShaderCreation(Shader& p_shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader creation ") + p_shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader creation ") + p_shaderInfos.m_source_id + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "load_shader_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_shaderInfos.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_shaderInfos.m_source_id,
 		[&,
 			shaderType = shaderType,
 			shaderAction = shaderAction
@@ -863,33 +864,33 @@ void D3D11System::handleShaderCreation(Shader& p_shaderInfos, int p_shaderType)
 
 				if (0 == shaderType)
 				{
-					status = d3dimpl->createVertexShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
+					status = d3dimpl->createVertexShader(p_shaderInfos.m_resource_uid, p_shaderInfos.getCode());
 				}
 				else if (1 == shaderType)
 				{
-					status = d3dimpl->createPixelShader(p_shaderInfos.getName(), p_shaderInfos.getCode());
+					status = d3dimpl->createPixelShader(p_shaderInfos.m_resource_uid, p_shaderInfos.getCode());
 				}
 
 				if (!status)
 				{
-					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.getName() + " in D3D11 ");
+					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.m_source_id + " in D3D11 ");
 
 					// send error status to main thread and let terminate
-					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
+					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.m_source_id, shaderAction };
 					m_runner.m_mailbox_out.push(report);
 				}
 				else
 				{
-					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + p_shaderInfos.getName() + " in D3D11 ");
+					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of shader " + p_shaderInfos.m_source_id + " in D3D11 ");
 					p_shaderInfos.setState(Shader::State::RENDERERLOADED);
 				}
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.getName() + " in D3D11 : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load shader " + p_shaderInfos.m_source_id + " in D3D11 : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.m_source_id, shaderAction };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}
@@ -902,11 +903,11 @@ void D3D11System::handleShaderRelease(Shader& p_shaderInfos, int p_shaderType)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader release ") + p_shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle shader release ") + p_shaderInfos.m_source_id + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "release_shader_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_shaderInfos.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_shaderInfos.m_source_id,
 		[&,
 			shaderType = shaderType,
 			shaderAction = shaderAction
@@ -916,22 +917,22 @@ void D3D11System::handleShaderRelease(Shader& p_shaderInfos, int p_shaderType)
 			{
 				if (0 == shaderType)
 				{
-					d3dimpl->destroyVertexShader(p_shaderInfos.getName());
+					d3dimpl->destroyVertexShader(p_shaderInfos.m_source_id);
 				}
 				else if (1 == shaderType)
 				{
-					d3dimpl->destroyPixelShader(p_shaderInfos.getName());
+					d3dimpl->destroyPixelShader(p_shaderInfos.m_source_id);
 				}
 
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of shader " + p_shaderInfos.getName() + " in D3D11 ");
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of shader " + p_shaderInfos.m_source_id + " in D3D11 ");
 
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_shaderInfos.getName() + " : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_shaderInfos.m_source_id + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.getName(), shaderAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_shaderInfos.m_source_id, shaderAction };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}

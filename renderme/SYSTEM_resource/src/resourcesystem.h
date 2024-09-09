@@ -84,7 +84,7 @@ namespace renderMe
         std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;
         int                                                     m_runnerIndex{ 0 };
 
-        void handleShader(Shader& shaderInfos, int p_shaderType);
+        void handleShader(Shader& shaderInfos, int p_shaderType, const std::string& p_filename);
         void handleTexture(Texture& textureInfos, const std::string& p_filename);
     };
 }

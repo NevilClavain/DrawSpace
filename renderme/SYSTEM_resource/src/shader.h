@@ -43,9 +43,13 @@ namespace renderMe
     class ResourceSystem;
     class D3D11System;
 
+    static constexpr int            vertexShader{ 0 };
+    static constexpr int            pixelShader{ 1 };
+
     class Shader
     {
     public:
+
 
         struct Argument
         {
@@ -60,17 +64,15 @@ namespace renderMe
         };
 
         Shader() = delete;
-        Shader(const std::string& p_name, int p_type);
+        Shader(int p_type);
         Shader(const Shader& p_other);
 
         Shader& operator=(const Shader& p_other)
         {
-            m_name = p_other.m_name;
-
             m_source_id = p_other.m_source_id;
             m_resource_uid = p_other.m_resource_uid;
             m_content = p_other.m_content;
-            m_contentMD5 = p_other.m_contentMD5;
+            //m_contentMD5 = p_other.m_contentMD5;
             m_contentSize = p_other.m_contentSize;
             m_code = p_other.m_code;
             m_type = p_other.m_type;
@@ -95,11 +97,18 @@ namespace renderMe
             RENDERERLOADED,
         };
 
-        std::string getName() const;
         std::string getContent() const;
         void setContent(const std::string& p_content);
+
+        /*
         std::string getContentMD5() const;
         void setContentMD5(const std::string& p_contentMD5);
+        */
+
+        std::string getResourceUID() const;
+
+        std::string getSourceID() const;
+
         size_t getContentSize() const;
         void setContentSize(size_t p_contentSize);
         State getState() const;
@@ -115,15 +124,13 @@ namespace renderMe
 
     private:
         
-        std::string             m_name;
-
         std::string             m_resource_uid;       // shader content source unique identifier
 
         std::string             m_source_id;
 
 
         std::string             m_content;
-        std::string             m_contentMD5;
+        //std::string             m_contentMD5;
 
         size_t                  m_contentSize{ 0 };
 

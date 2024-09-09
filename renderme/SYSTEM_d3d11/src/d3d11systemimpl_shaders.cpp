@@ -144,10 +144,10 @@ HRESULT D3D11SystemImpl::compileShaderFromMem(void* p_data, int p_size, LPCTSTR 
     return hr;
 }
 
-bool D3D11SystemImpl::createVertexShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code)
+bool D3D11SystemImpl::createVertexShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code)
 {
     DECLARE_D3D11ASSERT_VARS
-    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading : " + p_name);
+    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading : " + p_resource_uid);
 
     const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
@@ -166,9 +166,9 @@ bool D3D11SystemImpl::createVertexShader(const std::string& p_name, const render
         { "BINORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,   0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    if (m_vshaders.count(p_name))
+    if (m_vshaders.count(p_resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Vertex Shader already loaded : " + p_name);
+        _RENDERME_DEBUG(m_localLogger, "Vertex Shader already loaded : " + p_resource_uid);
     }
     else
     {
@@ -183,19 +183,17 @@ bool D3D11SystemImpl::createVertexShader(const std::string& p_name, const render
         hRes = m_lpd3ddevice->CreateInputLayout(layout, ARRAYSIZE(layout), shader_bc, shader_bc_length, &input_layout);
         D3D11_CHECK(CreateInputLayout);
 
-        m_vshaders[p_name] = { vs, input_layout };
+        m_vshaders[p_resource_uid] = { vs, input_layout };
     }
-
-    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading SUCCESS : " + p_name);
-    m_shaderNames.emplace(p_name);
+    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading SUCCESS : " + p_resource_uid);
 
     return true;
 }
 
-bool D3D11SystemImpl::createPixelShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code)
+bool D3D11SystemImpl::createPixelShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code)
 {
     DECLARE_D3D11ASSERT_VARS
-    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading : " + p_name);
+    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading : " + p_resource_uid);
 
     const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
@@ -214,9 +212,9 @@ bool D3D11SystemImpl::createPixelShader(const std::string& p_name, const renderM
         { "BINORMALE", 0, DXGI_FORMAT_R32G32B32_FLOAT,   0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    if (m_pshaders.count(p_name))
+    if (m_pshaders.count(p_resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Pixel Shader already loaded : " + p_name);
+        _RENDERME_DEBUG(m_localLogger, "Pixel Shader already loaded : " + p_resource_uid);
     }
     else
     {
@@ -227,46 +225,43 @@ bool D3D11SystemImpl::createPixelShader(const std::string& p_name, const renderM
         hRes = m_lpd3ddevice->CreatePixelShader(shader_bc, shader_bc_length, nullptr, &ps);
         D3D11_CHECK(CreatePixelShader);
 
-        m_pshaders[p_name] = { ps };
+        m_pshaders[p_resource_uid] = { ps };
     }
-
-    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading SUCCESS : " + p_name);
-    m_shaderNames.emplace(p_name);
-
+    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading SUCCESS : " + p_resource_uid);
 
     return true;
 }
 
-void D3D11SystemImpl::setVertexShader(const std::string& p_name)
+void D3D11SystemImpl::setVertexShader(const std::string& p_resource_uid)
 {
-    if (!m_vshaders.count(p_name))
+    if (!m_vshaders.count(p_resource_uid))
     {
-        _EXCEPTION("unknown vertex shader :" + p_name)
+        _EXCEPTION("unknown vertex shader :" + p_resource_uid)
     }
 
-    if (m_currentVs != p_name)
+    if (m_currentVs != p_resource_uid)
     {
-        const auto shaderData{ m_vshaders.at(p_name) };
+        const auto shaderData{ m_vshaders.at(p_resource_uid) };
         m_lpd3ddevcontext->IASetInputLayout(shaderData.input_layout);
         m_lpd3ddevcontext->VSSetShader(shaderData.vertex_shader, nullptr, 0);
 
-        m_currentVs = p_name;
+        m_currentVs = p_resource_uid;
     }
 }
 
-void D3D11SystemImpl::setPixelShader(const std::string& p_name)
+void D3D11SystemImpl::setPixelShader(const std::string& p_resource_uid)
 {
-    if (!m_pshaders.count(p_name))
+    if (!m_pshaders.count(p_resource_uid))
     {
-        _EXCEPTION("unknown pixel shader :" + p_name)
+        _EXCEPTION("unknown pixel shader :" + p_resource_uid)
     }
 
-    if (m_currentPs != p_name)
+    if (m_currentPs != p_resource_uid)
     {
-        const auto shaderData{ m_pshaders.at(p_name) };
+        const auto shaderData{ m_pshaders.at(p_resource_uid) };
         m_lpd3ddevcontext->PSSetShader(shaderData.pixel_shader, nullptr, 0);
 
-        m_currentPs = p_name;
+        m_currentPs = p_resource_uid;
     }
 }
 
@@ -289,39 +284,35 @@ void D3D11SystemImpl::forceCurrentPixelShader()
     }
 }
 
-void D3D11SystemImpl::destroyVertexShader(const std::string& p_name)
+void D3D11SystemImpl::destroyVertexShader(const std::string& p_resource_uid)
 {
-    if (!m_vshaders.count(p_name))
+    if (!m_vshaders.count(p_resource_uid))
     {
-        _EXCEPTION("unknown vertex shader :" + p_name)
+        _EXCEPTION("unknown vertex shader :" + p_resource_uid)
     }
-    const auto shaderData{ m_vshaders.at(p_name) };
+    const auto shaderData{ m_vshaders.at(p_resource_uid) };
 
     shaderData.input_layout->Release();
     shaderData.vertex_shader->Release();
 
-    m_vshaders.erase(p_name);
-    _RENDERME_DEBUG(m_localLogger, "Vertex Shader release SUCCESS : " + p_name);
+    m_vshaders.erase(p_resource_uid);
+    _RENDERME_DEBUG(m_localLogger, "Vertex Shader release SUCCESS : " + p_resource_uid);
 }
 
-void D3D11SystemImpl::destroyPixelShader(const std::string& p_name)
+void D3D11SystemImpl::destroyPixelShader(const std::string& p_resource_uid)
 {
-    if (!m_pshaders.count(p_name))
+    if (!m_pshaders.count(p_resource_uid))
     {
-        _EXCEPTION("unknown vertex shader :" + p_name)
+        _EXCEPTION("unknown vertex shader :" + p_resource_uid)
     }
-    const auto shaderData{ m_pshaders.at(p_name) };
+    const auto shaderData{ m_pshaders.at(p_resource_uid) };
 
     shaderData.pixel_shader->Release();
 
-    m_pshaders.erase(p_name);
-    _RENDERME_DEBUG(m_localLogger, "Pixel Shader release SUCCESS : " + p_name);
+    m_pshaders.erase(p_resource_uid);
+    _RENDERME_DEBUG(m_localLogger, "Pixel Shader release SUCCESS : " + p_resource_uid);
 }
 
-std::unordered_set<std::string> D3D11SystemImpl::getShadersNames() const
-{
-    return m_shaderNames;
-}
 
 void D3D11SystemImpl::setVertexshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
 {

@@ -28,7 +28,7 @@
 #include "aspects.h"
 #include "ecshelpers.h"
 #include "filesystem.h"
-#include "md5.h"
+
 #include "logger_service.h"
 
 #include "shaders_service.h"
@@ -186,15 +186,18 @@ void ResourceSystem::run()
 		{
 
 			////// Handle shaders ///////////
-			const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
+			//const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
+
+			const auto s_list{ p_resource_aspect.getComponentsByType<std::pair<std::string, Shader>>() };
 			for (auto& e : s_list)
 			{
-				auto& shader{ e->getPurpose() };
+				auto& shader{ e->getPurpose().second };
+				const auto filename{ e->getPurpose().first};
 
 				const auto state{ shader.getState() };
 				if (Shader::State::INIT == state)
 				{
-					handleShader(shader, shader.getType());
+					handleShader(shader, shader.getType(), filename);
 					shader.setState(Shader::State::BLOBLOADING);
 				}
 			}
@@ -204,12 +207,12 @@ void ResourceSystem::run()
 			{
 				auto& staged_texture{ e->getPurpose() };
 				Texture& texture{ staged_texture.second.second };
-				const auto path{ staged_texture.second.first };
+				const auto filename{ staged_texture.second.first };
 					
 				const auto state{ texture.getState() };
 				if (Texture::State::INIT == state)
 				{
-					handleTexture(texture, path);
+					handleTexture(texture, filename);
 					texture.setState(Texture::State::BLOBLOADING);
 				}
 			}
@@ -224,26 +227,27 @@ void ResourceSystem::run()
 	}	
 }
 
-void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
+void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const std::string& p_filename)
 {
 	const auto shaderType{ p_shaderType };
 
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + shaderInfos.getName() + std::string(" shader type ") + std::to_string(shaderType));
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + p_filename + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "load_shader" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, shaderInfos.getName(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_filename,
 		[&,
 			shaderType=shaderType,
 			shaderAction=shaderAction,
-			currentIndex = m_runnerIndex
+			currentIndex = m_runnerIndex,
+			filename = p_filename
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + shaderInfos.getName() + " shader type = " + std::to_string(shaderType));
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + filename + " shader type = " + std::to_string(shaderType));
 
 			// build full path
-			const auto shader_path{ m_shadersBasePath + "/" + shaderInfos.getName() + ".hlsl"};
-			const auto shader_metadata_path{ m_shadersBasePath + "/" + shaderInfos.getName() + ".json" };
+			const auto shader_path{ m_shadersBasePath + "/" + filename + ".hlsl"};
+			const auto shader_metadata_path{ m_shadersBasePath + "/" + filename + ".json" };
 			try
 			{
 				renderMe::core::FileContent<const char> shader_src_content(shader_path);
@@ -252,16 +256,23 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				// no mutex needed here (only this thread access it)
 				shaderInfos.setContentSize( shader_src_content.getDataSize() );
 				shaderInfos.setContent( shader_src_content.getData() );
+				shaderInfos.m_source_id = filename;
+				shaderInfos.compute_resource_uid();
 
+				/*
 				MD5 md5;
 				const std::string shaderMD5{ md5.digestMemory((BYTE*)shader_src_content.getData(), shader_src_content.getDataSize()) };
 				shaderInfos.setContentMD5( shaderMD5 );
+				*/
 
-				const auto decomposed_shader_filename{ fileSystem::splitFilename(shaderInfos.getName()) };
+				/*
+				const auto decomposed_shader_filename{ fileSystem::splitFilename(p_filename) };
 				const auto shaderCacheDirectory{ m_shadersCachePath + "/" + decomposed_shader_filename.first };
+				*/
+
+				const auto shaderCacheDirectory{ m_shadersCachePath + "/" + filename };
 
 				bool generate_cache_entry{ false };
-
 
 				///////// check driver version change...
 
@@ -327,51 +338,51 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 						// check if md5 are equals
 
-						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != shaderInfos.getContentMD5())
+						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != shaderInfos.m_resource_uid)
 						{
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + shaderInfos.getName());
+							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + filename);
 							generate_cache_entry = true;
 						}
 						else
 						{
 							// load bc.code file
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + shaderInfos.getName());
+							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + filename);
 						}
 					}
 				}
 
 				if (generate_cache_entry)
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + shaderInfos.getName());
+					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + filename);
 
 					std::unique_ptr<char[]> shaderBytes;
 					size_t shaderBytesLength;
 
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + shaderInfos.getName());
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + filename);
 					for (const auto& call : m_callbacks)
 					{
-						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, shaderInfos.getName());
+						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, filename);
 					}
 
 					bool compilationStatus;
 
-					if (0 == shaderType)
+					if (vertexShader == shaderType)
 					{
 						services::ShadersCompilationService::getInstance()->requestVertexCompilationShader(fileSystem::splitPath(shader_path).first, shader_src_content, shaderBytes, shaderBytesLength, compilationStatus);
 					}
-					else if (1 == shaderType)
+					else if (pixelShader == shaderType)
 					{
 						services::ShadersCompilationService::getInstance()->requestPixelCompilationShader(fileSystem::splitPath(shader_path).first, shader_src_content, shaderBytes, shaderBytesLength, compilationStatus);
 					}
 
 					if (compilationStatus)
 					{
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + shaderInfos.getName());
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + filename);
 						for (const auto& call : m_callbacks)
 						{
-							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, shaderInfos.getName());
+							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, filename);
 						}
 
 						renderMe::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
@@ -379,7 +390,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 
 						// create cache md5 file
 						renderMe::core::FileContent<const char> shader_md5_content(shaderCacheDirectory + "/bc.md5");
-						const std::string shaderMD5{ shaderInfos.getContentMD5() };
+						const std::string shaderMD5{ shaderInfos.m_resource_uid };
 						shader_md5_content.save(shaderMD5.c_str(), shaderMD5.length());
 
 						// and transfer file content to shaderInfos 'code' buffer
@@ -390,10 +401,10 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					else
 					{
 
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + shaderInfos.getName());
+						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + filename);
 						for (const auto& call : m_callbacks)
 						{
-							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, shaderInfos.getName());
+							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, filename);
 						}
 
 						std::string compilErrorMessage(shaderBytes.get(), shaderBytesLength);
@@ -404,10 +415,10 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				{
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN : " + shaderInfos.getName());
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN : " + filename);
 					for (const auto& call : m_callbacks)
 					{
-						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_BEGIN, shaderInfos.getName());
+						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_BEGIN, filename);
 					}
 
 					// load bc.code file
@@ -419,10 +430,10 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 					shaderInfos.setCode(shaderCode);
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS : " + shaderInfos.getName());
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS : " + filename);
 					for (const auto& call : m_callbacks)
 					{
-						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_SUCCESS, shaderInfos.getName());
+						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_SUCCESS, filename);
 					}
 				}
 
@@ -455,7 +466,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType)
 				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + shader_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, shaderInfos.getName(), shaderAction };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, filename, shaderAction };
 				m_runner[currentIndex].get()->m_mailbox_out.push(report);
 			}
 

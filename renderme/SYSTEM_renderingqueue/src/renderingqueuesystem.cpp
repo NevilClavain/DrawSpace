@@ -730,7 +730,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<renderMe::rendering::RenderState>>() };
 
 			// search for shaders
-			const auto shaders{ p_resourceAspect.getComponentsByType<Shader>() };
+			const auto shaders{ p_resourceAspect.getComponentsByType<std::pair<std::string,Shader>>() };
 
 			// search for textures set
 			
@@ -770,10 +770,10 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 			if (1 < shaders.size())
 			{
-				const auto vshader{ shaders.at(0)->getPurpose() };
-				const auto pshader{ shaders.at(1)->getPurpose() };
+				const auto vshader{ shaders.at(vertexShader)->getPurpose().second };
+				const auto pshader{ shaders.at(pixelShader)->getPurpose().second };
 
-				if (0 == vshader.getType() && 1 == pshader.getType())
+				if (vertexShader == vshader.getType() && pixelShader == pshader.getType())
 				{
 
 					bool resources_D3D11ready{ true };
@@ -825,25 +825,25 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 							queueNodes[rendering_channel] = renderingOrderChannel;
 						}
 
-						if (queueNodes.at(rendering_channel).list.count(vshader.getName()))
+						if (queueNodes.at(rendering_channel).list.count(vshader.getResourceUID()))
 						{
 							// vshader entry exists
 
 							_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 								+ " updated with new entity : " + p_entity_id
-								+ " : adding under existing vshader branch : " + vshader.getName())
+								+ " : adding under existing vshader branch : " + vshader.getSourceID())
 
-							auto& vertexShaderPayload{ queueNodes.at(rendering_channel).list.at(vshader.getName()) };
+							auto& vertexShaderPayload{ queueNodes.at(rendering_channel).list.at(vshader.getResourceUID()) };
 
-							if (vertexShaderPayload.list.count(pshader.getName()))
+							if (vertexShaderPayload.list.count(pshader.getResourceUID()))
 							{
 								// pshader entry exists
 
 								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 									+ " updated with new entity : " + p_entity_id
-									+ " : adding under existing pshader branch : " + pshader.getName())
+									+ " : adding under existing pshader branch : " + pshader.getSourceID())
 
-								auto& pixelShaderPayload{ vertexShaderPayload.list.at(pshader.getName())};
+								auto& pixelShaderPayload{ vertexShaderPayload.list.at(pshader.getResourceUID())};
 
 								const auto rs_list_id{ build_rs_list_id(rsStates.at(0)->getPurpose()) };
 								if (pixelShaderPayload.list.count(rs_list_id))
@@ -1093,7 +1093,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 								_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 									+ " updated with new entity : " + p_entity_id
-									+ " : adding new pshader branch : " + pshader.getName())
+									+ " : adding new pshader branch : " + pshader.getSourceID())
 
 								rendering::Queue::RenderStatePayload renderStatePayload;
 								bool renderStatePayloadSet{ false };
@@ -1122,7 +1122,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 								if (renderStatePayloadSet)
 								{
 									const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
-									vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;
+									vertexShaderPayload.list[pshader.getResourceUID()] = pixelShaderPayload;
 								}
 								else
 								{
@@ -1137,7 +1137,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 							_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 								+ " updated with new entity : " + p_entity_id
-								+ " : adding new vshader branch : " + vshader.getName())
+								+ " : adding new vshader branch : " + vshader.getSourceID())
 
 							rendering::Queue::RenderStatePayload renderStatePayload;
 							bool renderStatePayloadSet{ false };
@@ -1168,14 +1168,10 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 								const auto pixelShaderPayload{ build_pixelShaderPayload(m_localLogger, rsStates.at(0)->getPurpose(), renderStatePayload) };
 
 								rendering::Queue::VertexShaderPayload vertexShaderPayload;
-								vertexShaderPayload.list[pshader.getName()] = pixelShaderPayload;
+								vertexShaderPayload.list[pshader.getResourceUID()] = pixelShaderPayload;
 
-								_RENDERME_DEBUG(m_localLogger, "build new vertexShaderPayload with pixel shader id " + pshader.getName())
-
-								//queueNodes[vshader.getName()] = vertexShaderPayload;
-
-								queueNodes.at(rendering_channel).list[vshader.getName()] = vertexShaderPayload;
-
+								_RENDERME_DEBUG(m_localLogger, "build new vertexShaderPayload with pixel shader id " + pshader.getSourceID())
+								queueNodes.at(rendering_channel).list[vshader.getResourceUID()] = vertexShaderPayload;
 							}
 							else
 							{

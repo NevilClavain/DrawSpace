@@ -144,17 +144,17 @@ public:
                                     std::unique_ptr<char[]>& p_shaderBytes,
                                     size_t& p_shaderBytesLength);
 
-    bool createVertexShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code);
-    bool createPixelShader(const std::string& p_name, const renderMe::core::Buffer<char>& p_code);
+    bool createVertexShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code);
+    bool createPixelShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code);
           
-    void setVertexShader(const std::string& p_name);
-    void setPixelShader(const std::string& p_name);
+    void setVertexShader(const std::string& p_resource_uid);
+    void setPixelShader(const std::string& p_resource_uid);
 
     void forceCurrentVertexShader();
     void forceCurrentPixelShader();
 
-    void destroyVertexShader(const std::string& p_name);
-    void destroyPixelShader(const std::string& p_name);
+    void destroyVertexShader(const std::string& p_resource_uid);
+    void destroyPixelShader(const std::string& p_resource_uid);
 
     bool createLineMeshe(const renderMe::LineMeshe& p_lm);
     void setLineMeshe(const std::string& p_md5);
@@ -206,8 +206,6 @@ public:
     void setVertexshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
     void setPixelshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
 
-
-    std::unordered_set<std::string> getShadersNames() const;
 
 
     struct TextureData
@@ -345,8 +343,6 @@ private:
 
     VShaderList                                         m_vshaders;
     PShaderList                                         m_pshaders;
-
-    std::unordered_set<std::string>                     m_shaderNames;
 
     MesheList                                           m_lines;
     MesheList                                           m_triangles;
