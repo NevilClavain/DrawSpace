@@ -32,6 +32,10 @@ using namespace renderMe::core::maths;
 
 TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 {
+	m_source = p_other.m_source;
+	m_source_id = p_other.m_source_id;
+	m_resource_uid = p_other.m_resource_uid;
+
 	m_vertices = p_other.m_vertices;
 	m_triangles = p_other.m_triangles;
 	m_triangles_for_vertex = p_other.m_triangles_for_vertex;
@@ -45,8 +49,6 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_state = p_other.m_state;
 	p_other.m_state_mutex.unlock();
 	m_state_mutex.unlock();
-
-	m_md5 = p_other.m_md5;
 }
 
 
@@ -254,14 +256,9 @@ void TriangleMeshe::setState(TriangleMeshe::State p_state)
 	m_state_mutex.lock();
 	m_state = p_state;
 	m_state_mutex.unlock();
-
-	if (State::BLOBLOADED == m_state)
-	{
-		compute_md5();
-	}
 }
 
-void TriangleMeshe::compute_md5()
+void TriangleMeshe::computeResourceUID()
 {
 	MD5 md5;
 
@@ -292,11 +289,26 @@ void TriangleMeshe::compute_md5()
 	const std::string hash_tb_gen{ md5.digestMemory((BYTE*)&m_tb_gen_mode, (int)(sizeof(m_tb_gen_mode))) };
 
 	std::string hash{ hash_v + hash_t + hash_n_gen + hash_tb_gen };
-	
-	m_md5 = hash;
+
+	m_resource_uid = hash;
 }
 
-std::string	TriangleMeshe::getMd5() const
+std::string TriangleMeshe::getResourceUID() const
 {
-	return m_md5;
+	return m_resource_uid;
+}
+
+std::string TriangleMeshe::getSourceID() const
+{
+	return m_source_id;
+}
+
+void TriangleMeshe::setSourceID(const std::string& p_source_id)
+{
+	m_source_id = p_source_id;
+}
+
+void TriangleMeshe::setSource(TriangleMeshe::Source p_source)
+{
+	m_source = p_source;
 }

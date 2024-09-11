@@ -161,8 +161,8 @@ public:
     void destroyLineMeshe(const std::string& p_md5);
 
     bool createTriangleMeshe(const renderMe::TriangleMeshe& p_tm);
-    void setTriangleMeshe(const std::string& p_md5);
-    void destroyTriangleMeshe(const std::string& p_md5);
+    void setTriangleMeshe(const std::string& p_resource_uid);
+    void destroyTriangleMeshe(const std::string& p_resource_uid);
 
     void forceCurrentMeshe();
 

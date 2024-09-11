@@ -38,7 +38,6 @@ Shader::Shader(const Shader& p_other)
     m_source_id = p_other.m_source_id;
     m_resource_uid = p_other.m_resource_uid;
     m_content = p_other.m_content;
-    //m_contentMD5 = p_other.m_contentMD5;
     m_contentSize = p_other.m_contentSize;
     m_code = p_other.m_code;
     m_type = p_other.m_type;
@@ -61,18 +60,6 @@ void Shader::setContent(const std::string& p_content)
 {
     m_content = p_content;
 }
-
-/*
-std::string Shader::getContentMD5() const
-{
-    return m_contentMD5;
-}
-
-void Shader::setContentMD5(const std::string& p_contentMD5)
-{
-    m_contentMD5 = p_contentMD5;
-}
-*/
 
 std::string Shader::getResourceUID() const
 {

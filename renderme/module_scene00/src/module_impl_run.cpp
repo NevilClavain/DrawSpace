@@ -319,6 +319,10 @@ void ModuleImpl::run(void)
 
 		square.setState(TriangleMeshe::State::BLOBLOADED);
 
+		square.computeResourceUID();
+		square.setSourceID("quadEntity2");
+		square.setSource(TriangleMeshe::Source::CONTENT_DYNAMIC_INIT);
+
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
 
 		/////////// Add texture

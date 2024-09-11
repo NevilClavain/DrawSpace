@@ -103,6 +103,10 @@ void ModuleImpl::run(void)
 		square.computeNormales();
 		square.computeTB();
 
+		square.computeResourceUID();
+		square.setSourceID("quadEntity2");
+		square.setSource(TriangleMeshe::Source::CONTENT_DYNAMIC_INIT);
+
 		square.setState(TriangleMeshe::State::BLOBLOADED);
 
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);

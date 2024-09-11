@@ -312,6 +312,10 @@ void ModuleImpl::d3d11_system_events()
 						sprite2D_square.computeNormales();
 						sprite2D_square.computeTB();
 
+						sprite2D_square.computeResourceUID();
+						sprite2D_square.setSourceID("sprite2DEntity");
+						sprite2D_square.setSource(TriangleMeshe::Source::CONTENT_DYNAMIC_INIT);
+
 						sprite2D_square.setState(TriangleMeshe::State::BLOBLOADED);
 
 

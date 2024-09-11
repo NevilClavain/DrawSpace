@@ -72,7 +72,6 @@ namespace renderMe
             m_source_id = p_other.m_source_id;
             m_resource_uid = p_other.m_resource_uid;
             m_content = p_other.m_content;
-            //m_contentMD5 = p_other.m_contentMD5;
             m_contentSize = p_other.m_contentSize;
             m_code = p_other.m_code;
             m_type = p_other.m_type;
@@ -100,11 +99,6 @@ namespace renderMe
         std::string getContent() const;
         void setContent(const std::string& p_content);
 
-        /*
-        std::string getContentMD5() const;
-        void setContentMD5(const std::string& p_contentMD5);
-        */
-
         std::string getResourceUID() const;
 
         std::string getSourceID() const;
@@ -128,15 +122,11 @@ namespace renderMe
 
         std::string             m_source_id;
 
-
         std::string             m_content;
-        //std::string             m_contentMD5;
 
         size_t                  m_contentSize{ 0 };
 
         int                     m_type; //0 = vertex shader, 1 = pixel shader
-
-
 
         core::Buffer<char>      m_code;
 

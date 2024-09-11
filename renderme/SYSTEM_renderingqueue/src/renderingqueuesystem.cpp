@@ -908,10 +908,10 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 									}
 									else if (triangleMeshes.size() > 0)
 									{
-										if (renderStatePayload.trianglemeshes_list.count(triangleMeshes.at(0)->getPurpose().getMd5()))
+										if (renderStatePayload.trianglemeshes_list.count(triangleMeshes.at(0)->getPurpose().getResourceUID()))
 										{
 											// trianglemeshe entry exists
-											auto& triangleMeshePayload{ renderStatePayload.trianglemeshes_list.at(triangleMeshes.at(0)->getPurpose().getMd5()) };
+											auto& triangleMeshePayload{ renderStatePayload.trianglemeshes_list.at(triangleMeshes.at(0)->getPurpose().getResourceUID()) };
 
 											if (0 == texturesSet.size())
 											{
@@ -919,7 +919,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 												_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 													+ " updated with new entity : " + p_entity_id
-													+ " : adding under existing trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getMd5())
+													+ " : adding under existing trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getResourceUID())
 													
 												for (const auto& dc : drawingControls)
 												{
@@ -1044,10 +1044,10 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 											_RENDERME_DEBUG(m_localLogger, "rendering queue " + p_renderingQueue.getName()
 												+ " updated with new entity : " + p_entity_id
-												+ " : adding new trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getMd5())
+												+ " : adding new trianglemeshe branch : " + triangleMeshes.at(0)->getPurpose().getResourceUID())
 
 											const auto triangleMeshePayload{ build_TriangleMesheAndTexturesPayload(m_callbacks, m_localLogger, drawingControls, texturesSet, vshader, pshader) };
-											renderStatePayload.trianglemeshes_list[triangleMeshes.at(0)->getPurpose().getMd5()] = triangleMeshePayload;
+											renderStatePayload.trianglemeshes_list[triangleMeshes.at(0)->getPurpose().getResourceUID()] = triangleMeshePayload;
 										}
 									}
 								}
@@ -1072,7 +1072,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 									else if (triangleMeshes.size() > 0)
 									{
 										const auto triangleMeshePayload{ build_TriangleMesheAndTexturesPayload(m_callbacks, m_localLogger, drawingControls, texturesSet, vshader, pshader) };
-										renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getMd5(), triangleMeshePayload, rsStates.at(0)->getPurpose());
+										renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getResourceUID(), triangleMeshePayload, rsStates.at(0)->getPurpose());
 
 										renderStatePayloadSet = true;
 									}
@@ -1114,7 +1114,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 									// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 									// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-									renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getMd5(), triangleMeshePayload, rsStates.at(0)->getPurpose());
+									renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getResourceUID(), triangleMeshePayload, rsStates.at(0)->getPurpose());
 
 									renderStatePayloadSet = true;
 								}
@@ -1158,7 +1158,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 
 								// consider only one renderMe::LineMeshe per entity -> lineMeshes.at(0)
 								// consider only one std::vector<RenderState> per entity -> rsStates.at(0)
-								renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getMd5(), triangleMeshePayload, rsStates.at(0)->getPurpose());
+								renderStatePayload = build_RenderStatePayloadWithTriangleMeshePayload(m_localLogger, triangleMeshes.at(0)->getPurpose().getResourceUID(), triangleMeshePayload, rsStates.at(0)->getPurpose());
 
 								renderStatePayloadSet = true;
 							}
