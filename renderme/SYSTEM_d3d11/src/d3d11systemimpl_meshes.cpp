@@ -29,17 +29,13 @@ bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
 {
     DECLARE_D3D11ASSERT_VARS
 
-    const auto md5{ p_lm.getMd5() };
-    if ("" == md5)
-    {
-        _EXCEPTION("no md5 hash for line meshe")
-    }
+    const auto resource_uid{ p_lm.getResourceUID() };
 
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + md5);
+    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + resource_uid);
 
-    if (m_lines.count(md5))
+    if (m_lines.count(resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + md5);
+        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + resource_uid);
     }
     else
     {
@@ -126,10 +122,10 @@ bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
             delete[] t;
         }
 
-        m_lines[md5] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
+        m_lines[resource_uid] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
     }
 
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + md5);
+    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + resource_uid);
 	return true;
 }
 

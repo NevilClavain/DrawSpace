@@ -50,6 +50,10 @@ namespace renderMe
 
 		LineMeshe& operator=(const LineMeshe& p_other)
 		{
+
+			m_source_id = p_other.m_source_id;
+			m_resource_uid = p_other.m_resource_uid;
+
 			m_vertices = p_other.m_vertices;
 			m_lines = p_other.m_lines;
 
@@ -58,8 +62,6 @@ namespace renderMe
 			m_state = p_other.m_state;
 			p_other.m_state_mutex.unlock();
 			m_state_mutex.unlock();
-
-			m_md5 = p_other.m_md5;
 
 			return *this;
 		}
@@ -82,9 +84,18 @@ namespace renderMe
 		State getState() const;
 		void setState(State p_state);
 
-		std::string	getMd5() const;
+		std::string	getResourceUID() const;
+		std::string getSourceID() const;
+
+		void setSourceID(const std::string& p_source_id);
+
+		void computeResourceUID();
 		
 	private:
+
+		std::string									m_resource_uid;       // meshe content source unique identifier
+
+		std::string									m_source_id;
 
 		std::vector<Vertex>							m_vertices;
 		std::vector<LinePrimitive<unsigned int>>    m_lines;
@@ -92,12 +103,8 @@ namespace renderMe
 		mutable std::mutex							m_state_mutex;
 		State										m_state{ State::INIT };
 
-		std::string									m_md5;
-
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!
-
-		void compute_md5();
 	};
 
 } // renderMe

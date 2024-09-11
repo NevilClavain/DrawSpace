@@ -102,6 +102,9 @@ void ModuleImpl::run(void)
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
 
+		square.computeResourceUID();
+		square.setSourceID("quadEntity0");
+
 		square.setState(LineMeshe::State::BLOBLOADED);
 
 		quad_resource_aspect.addComponent<LineMeshe>("line_square_0", square);
@@ -212,6 +215,10 @@ void ModuleImpl::run(void)
 		square.push({ 1, 2 });
 		square.push({ 2, 3 });
 		square.push({ 3, 0 });
+
+		square.computeResourceUID();
+		square.setSourceID("quadEntity1");
+
 
 		square.setState(LineMeshe::State::BLOBLOADED);
 

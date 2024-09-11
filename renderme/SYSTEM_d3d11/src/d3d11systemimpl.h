@@ -157,8 +157,8 @@ public:
     void destroyPixelShader(const std::string& p_resource_uid);
 
     bool createLineMeshe(const renderMe::LineMeshe& p_lm);
-    void setLineMeshe(const std::string& p_md5);
-    void destroyLineMeshe(const std::string& p_md5);
+    void setLineMeshe(const std::string& p_resource_uid);
+    void destroyLineMeshe(const std::string& p_resource_uid);
 
     bool createTriangleMeshe(const renderMe::TriangleMeshe& p_tm);
     void setTriangleMeshe(const std::string& p_resource_uid);

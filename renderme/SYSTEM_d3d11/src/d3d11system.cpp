@@ -351,10 +351,10 @@ void D3D11System::manageResources()
 				const auto state{ lm.getState()};
 				if (LineMeshe::State::BLOBLOADED == state)
 				{				
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_BEGIN : " + lm.getMd5());
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_LINEMESHE_CREATION_BEGIN : " + lm.getSourceID());
 					for (const auto& call : m_callbacks)
 					{
-						call(D3D11SystemEvent::D3D11_LINEMESHE_CREATION_BEGIN, lm.getMd5());
+						call(D3D11SystemEvent::D3D11_LINEMESHE_CREATION_BEGIN, lm.getSourceID());
 					}
 
 					handleLinemesheCreation(lm);
@@ -943,11 +943,11 @@ void D3D11System::handleShaderRelease(Shader& p_shaderInfos, int p_shaderType)
 
 void D3D11System::handleLinemesheCreation(LineMeshe& p_lm)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle line meshe creation ") + p_lm.getMd5());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle line meshe creation ") + p_lm.getSourceID());
 
 	const std::string action{ "load_linemeshe_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_lm.getMd5(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_lm.getSourceID(),
 		[&,
 			action = action
 		]()
@@ -959,24 +959,24 @@ void D3D11System::handleLinemesheCreation(LineMeshe& p_lm)
 
 				if (!status)
 				{
-					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getMd5() + " in D3D11 ");
+					_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getSourceID() + " in D3D11 ");
 
 					// send error status to main thread and let terminate
-					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getMd5(), action };
+					const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getSourceID(), action };
 					m_runner.m_mailbox_out.push(report);
 				}
 				else
 				{
-					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of linemeshe " + p_lm.getMd5() + " in D3D11 ");
+					_RENDERME_DEBUG(d3dimpl->logger(), "Successful creation of linemeshe " + p_lm.getSourceID() + " in D3D11 ");
 					p_lm.setState(LineMeshe::State::RENDERERLOADED);
 				}
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getMd5() + " in D3D11 : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), "Failed to load linemeshe " + p_lm.getSourceID() + " in D3D11 : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getMd5(), action };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getSourceID(), action };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}
@@ -987,26 +987,26 @@ void D3D11System::handleLinemesheCreation(LineMeshe& p_lm)
 
 void D3D11System::handleLinemesheRelease(LineMeshe& p_lm)
 {
-	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle line meshe release ") + p_lm.getMd5());
+	_RENDERME_DEBUG(d3dimpl->logger(), std::string("Handle line meshe release ") + p_lm.getSourceID());
 
 	const std::string action{ "release_linemeshe_d3d11" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_lm.getMd5(),
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(action, p_lm.getSourceID(),
 		[&,
 			action = action
 		]()
 		{
 			try
 			{
-				d3dimpl->destroyLineMeshe(p_lm.getMd5());
-				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of linemeshe " + p_lm.getMd5() + " in D3D11 ");
+				d3dimpl->destroyLineMeshe(p_lm.getSourceID());
+				_RENDERME_DEBUG(d3dimpl->logger(), "Successful release of linemeshe " + p_lm.getSourceID() + " in D3D11 ");
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_lm.getMd5() + " : reason = " + e.what());
+				_RENDERME_ERROR(d3dimpl->logger(), std::string("failed to release ") + p_lm.getSourceID() + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
-				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getMd5(), action };
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, p_lm.getSourceID(), action };
 				m_runner.m_mailbox_out.push(report);
 			}
 		}

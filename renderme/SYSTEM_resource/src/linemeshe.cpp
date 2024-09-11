@@ -30,6 +30,9 @@ using namespace renderMe;
 
 LineMeshe::LineMeshe(const LineMeshe& p_other)
 {
+	m_source_id = p_other.m_source_id;
+	m_resource_uid = p_other.m_resource_uid;
+
 	m_vertices = p_other.m_vertices;
 	m_lines = p_other.m_lines;
 
@@ -38,8 +41,6 @@ LineMeshe::LineMeshe(const LineMeshe& p_other)
 	m_state = p_other.m_state;
 	p_other.m_state_mutex.unlock();
 	m_state_mutex.unlock();
-
-	m_md5 = p_other.m_md5;
 }
 
 
@@ -97,14 +98,10 @@ void LineMeshe::setState(LineMeshe::State p_state)
 	m_state_mutex.lock();
 	m_state = p_state;
 	m_state_mutex.unlock();
-
-	if (State::BLOBLOADED == m_state)
-	{
-		compute_md5();
-	}
 }
 
-void LineMeshe::compute_md5()
+
+void LineMeshe::computeResourceUID()
 {
 	MD5 md5;
 
@@ -133,10 +130,20 @@ void LineMeshe::compute_md5()
 
 	std::string hash{ hash_v + hash_t };
 
-	m_md5 = hash;
+	m_resource_uid = hash;
 }
 
-std::string	LineMeshe::getMd5() const
+std::string LineMeshe::getResourceUID() const
 {
-	return m_md5;
+	return m_resource_uid;
+}
+
+std::string LineMeshe::getSourceID() const
+{
+	return m_source_id;
+}
+
+void LineMeshe::setSourceID(const std::string& p_source_id)
+{
+	m_source_id = p_source_id;
 }
