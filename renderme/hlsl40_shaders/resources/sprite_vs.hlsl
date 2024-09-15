@@ -51,8 +51,11 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     pos.w = 1.0;
            
     float4x4 matrxView = IDENTITY_MATRIX;    
-    matrxView[3][2] = 1.0;       
-    float4x4 matrxWorld = mat[matWorld];    
+    matrxView[3][2] = 1.0;
+    
+    float4x4 matrxWorld = mat[matWorld];
+    matrxWorld[3][2] = 0.0;
+    
     float4x4 matrxProj = mat[matProj];
             
     float4x4 matFinal = mul(mul(matrxWorld, matrxView), matrxProj);

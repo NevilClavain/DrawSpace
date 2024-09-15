@@ -335,25 +335,7 @@ void ModuleImpl::d3d11_system_events()
 						const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 						rendering_aspect.addComponent<std::vector<rendering::RenderState>>("renderStates", rs_list);
 
-
 						rendering::DrawingControl dc;
-
-						/*
-						dc.wvpFilter = [](const core::maths::Matrix& p_world,
-							const core::maths::Matrix& p_view,
-							const core::maths::Matrix& p_proj)
-							{
-								core::maths::Matrix idview;
-								idview.identity();
-
-								core::maths::Matrix pos;
-								pos.translation(0, 0, -1.0);
-
-
-								return std::make_tuple(pos, idview, p_proj);
-							};
-							*/
-
 						rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_square", dc);
 
 						rendering_aspect.addComponent<int>("renderingorder", 1000);
@@ -362,10 +344,29 @@ void ModuleImpl::d3d11_system_events()
 
 						sprite2DEntity->makeAspect(core::timeAspect::id);
 
+						/////////// world aspect
+
 						auto& world_aspect{ sprite2DEntity->makeAspect(core::worldAspect::id) };
 						world_aspect.addComponent<transform::WorldPosition>("position");
 
+						
+						world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						(
+							{},
+							[](const core::ComponentContainer& p_world_aspect,
+								const core::ComponentContainer& p_time_aspect,
+								const transform::WorldPosition&,
+								const std::unordered_map<std::string, std::string>&)
+							{
 
+								maths::Matrix positionmat;
+								positionmat.translation(0.0, 0.0, 0.0);
+
+								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+								wp.local_pos = wp.local_pos * positionmat;
+							}
+						));
+						
 
 					}
 					
