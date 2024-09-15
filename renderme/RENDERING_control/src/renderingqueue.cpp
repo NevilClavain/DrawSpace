@@ -72,6 +72,7 @@ void Queue::setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, rend
 		render_target.compute_resource_uid();
 
 		m_targetTextureUID = render_target.getResourceUID();
+		render_target.setState(Texture::State::BLOBLOADED);
 	}
 	else
 	{

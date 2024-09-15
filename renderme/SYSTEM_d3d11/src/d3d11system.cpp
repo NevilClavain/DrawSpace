@@ -392,7 +392,7 @@ void D3D11System::manageResources()
 					Texture& texture{ staged_texture.second };
 
 					const auto state{ texture.getState() };
-					if (Texture::State::INIT == state)
+					if (Texture::State::BLOBLOADED == state)
 					{
 						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TEXTURE_CREATION_BEGIN : " + texture.m_source_id);
 						for (const auto& call : m_callbacks)
