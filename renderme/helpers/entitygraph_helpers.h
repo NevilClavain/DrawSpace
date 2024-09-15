@@ -27,7 +27,8 @@
 #pragma once
 
 #include <string>
-
+#include <vector>
+#include <utility>
 
 namespace renderMe
 {
@@ -35,6 +36,11 @@ namespace renderMe
 	namespace core
 	{
 		class Entitygraph;
+
+		namespace maths
+		{
+			class Matrix;
+		}
 	}
 
 	namespace rendering
