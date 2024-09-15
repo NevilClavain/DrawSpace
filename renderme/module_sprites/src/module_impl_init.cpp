@@ -360,7 +360,7 @@ void ModuleImpl::d3d11_system_events()
 							{
 
 								maths::Matrix positionmat;
-								positionmat.translation(0.0, 0.0, 0.0);
+								positionmat.translation(0.23, 0.12, 0.0);
 
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * positionmat;
