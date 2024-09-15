@@ -289,8 +289,8 @@ void ModuleImpl::d3d11_system_events()
 
 						/////////// Add shaders
 
-						resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("texture_vs", Shader(vertexShader)));
-						resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("texture_ps", Shader(pixelShader)));
+						resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("sprite_vs", Shader(vertexShader)));
+						resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("sprite_ps", Shader(pixelShader)));
 
 						/////////// Add trianglemeshe
 						TriangleMeshe sprite2D_square;
@@ -337,6 +337,8 @@ void ModuleImpl::d3d11_system_events()
 
 
 						rendering::DrawingControl dc;
+
+						/*
 						dc.wvpFilter = [](const core::maths::Matrix& p_world,
 							const core::maths::Matrix& p_view,
 							const core::maths::Matrix& p_proj)
@@ -350,6 +352,7 @@ void ModuleImpl::d3d11_system_events()
 
 								return std::make_tuple(pos, idview, p_proj);
 							};
+							*/
 
 						rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_square", dc);
 
@@ -361,6 +364,9 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& world_aspect{ sprite2DEntity->makeAspect(core::worldAspect::id) };
 						world_aspect.addComponent<transform::WorldPosition>("position");
+
+
+
 					}
 					
 				}
