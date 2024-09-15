@@ -506,33 +506,30 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 			{
 				auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
+				textureInfos.m_source = Texture::Source::CONTENT_FROM_FILE;
+				textureInfos.m_source_id = filename;
+				textureInfos.compute_resource_uid();
+
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_BEGIN, filename);
 				}
 
-
 				renderMe::core::FileContent<unsigned char> texture_content(texture_path);
 				texture_content.load();
 
-				textureInfos.setState(Texture::State::BLOBLOADED);
-
 				// transfer file content to textureInfos buffer
-
 				core::Buffer<unsigned char> textureBytes;
 				textureBytes.fill(texture_content.getData(), texture_content.getDataSize());
 				textureInfos.m_file_content = textureBytes;
-
+				
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS, filename);
 				}
-
-				textureInfos.m_source = Texture::Source::CONTENT_FROM_FILE;
-				textureInfos.m_source_id = filename;
-				textureInfos.compute_resource_uid();
+				textureInfos.setState(Texture::State::BLOBLOADED);
 			}
 			catch (const std::exception& e)
 			{
