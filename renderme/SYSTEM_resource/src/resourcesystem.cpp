@@ -497,7 +497,7 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 			filename = p_filename
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + filename);
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading texture ") + filename);
 
 			// build full path
 			const auto texture_path{ m_texturesBasePath + "/" + filename };
