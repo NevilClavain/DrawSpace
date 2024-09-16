@@ -61,6 +61,8 @@
 
 #include "entitygraph_helpers.h"
 
+#include "graphicobjects_helpers.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -279,6 +281,10 @@ void ModuleImpl::d3d11_system_events()
 					/////////////
 
 					//////////////////////////////////////////////////////////////
+
+					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05);
+
+					/*
 					{
 						Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
 
@@ -308,9 +314,6 @@ void ModuleImpl::d3d11_system_events()
 
 						const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
 						sprite2D_square.push(t2);
-
-						sprite2D_square.computeNormales();
-						sprite2D_square.computeTB();
 
 						sprite2D_square.computeResourceUID();
 						sprite2D_square.setSourceID("sprite2DEntity");
@@ -342,7 +345,10 @@ void ModuleImpl::d3d11_system_events()
 
 						/////////// time aspect
 
-						sprite2DEntity->makeAspect(core::timeAspect::id);
+						auto& time_aspect{ sprite2DEntity->makeAspect(core::timeAspect::id) };
+
+						time_aspect.addComponent<SyncVariable>("x_pos", SyncVariable(SyncVariable::Type::POSITION, 0.04, SyncVariable::Direction::INC));
+						time_aspect.addComponent<SyncVariable>("y_pos", SyncVariable(SyncVariable::Type::POSITION, 0.01, SyncVariable::Direction::INC));
 
 						/////////// world aspect
 
@@ -359,8 +365,11 @@ void ModuleImpl::d3d11_system_events()
 								const std::unordered_map<std::string, std::string>&)
 							{
 
+								const auto& x_pos{ p_time_aspect.getComponent<core::SyncVariable>("x_pos")->getPurpose()};
+								const auto& y_pos{ p_time_aspect.getComponent<core::SyncVariable>("y_pos")->getPurpose() };
+
 								maths::Matrix positionmat;
-								positionmat.translation(0.23, 0.12, 0.0);
+								positionmat.translation(x_pos.value, y_pos.value, 0.0);
 
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * positionmat;
@@ -369,6 +378,7 @@ void ModuleImpl::d3d11_system_events()
 						
 
 					}
+					*/
 					
 				}
 				break;

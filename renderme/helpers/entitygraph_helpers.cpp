@@ -42,6 +42,7 @@
 #include "matrix.h"
 
 #include "shader.h"
+#include "texture.h"
 #include "trianglemeshe.h"
 #include "renderstate.h"
 
