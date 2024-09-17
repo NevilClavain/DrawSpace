@@ -280,8 +280,6 @@ void ModuleImpl::d3d11_system_events()
 
 					/////////////
 
-					//////////////////////////////////////////////////////////////
-
 					rendering::RenderState rs_noculling(rendering::RenderState::Operation::SETCULLING, "cw");
 					rendering::RenderState rs_zbuffer(rendering::RenderState::Operation::ENABLEZBUFFER, "false");
 					rendering::RenderState rs_fill(rendering::RenderState::Operation::SETFILLMODE, "solid");
@@ -289,7 +287,12 @@ void ModuleImpl::d3d11_system_events()
 
 					const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
-					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05, "sprite_vs", "sprite_ps", "sb0.bmp", rs_list, 1000);					
+					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05, "sprite_vs", "sprite_ps", "sb0.bmp", rs_list, 1000);
+
+					auto& x_var{ helpers::get2DSpriteXControl(m_entitygraph, "sprite00") };
+
+					x_var.direction = core::SyncVariable::Direction::INC;
+					x_var.step = 0.1;
 				}
 				break;
 			}

@@ -145,5 +145,27 @@ namespace renderMe
 			));
 
 		}
+
+		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		{
+			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
+			const auto sprite2DEntity{ sprite2DNode.data() };
+
+			const auto& time_aspect{ sprite2DEntity->aspectAccess(core::timeAspect::id) };
+
+			core::SyncVariable& x_pos{ time_aspect.getComponent< core::SyncVariable>("x_pos")->getPurpose()} ;
+			return x_pos;
+		}
+
+		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		{
+			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
+			const auto sprite2DEntity{ sprite2DNode.data() };
+
+			const auto& time_aspect{ sprite2DEntity->aspectAccess(core::timeAspect::id) };
+
+			core::SyncVariable& y_pos{ time_aspect.getComponent< core::SyncVariable>("y_pos")->getPurpose() };
+			return y_pos;
+		}
 	}
 }

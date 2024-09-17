@@ -34,6 +34,7 @@ namespace renderMe
 	namespace core
 	{
 		class Entitygraph;
+		struct SyncVariable;
 	}
 
 	namespace helpers
@@ -50,5 +51,8 @@ namespace renderMe
 							int p_rendering_order
 						);
 
+		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		
 	}
 }
