@@ -47,7 +47,12 @@ namespace renderMe
 							const std::string& p_parentid, 
 							const std::string& p_spriteEntityid,
 							const double p_spriteWidth,
-							const double p_spriteHeight
+							const double p_spriteHeight,
+							const std::string& p_vshader,
+							const std::string& p_pshader,
+							const std::string& p_texture,
+							const std::vector<rendering::RenderState>& p_renderstates_list,
+							int p_rendering_order
 						)
 		{			
 			auto& parentNodeNode{ p_entitygraph.node(p_parentid) };
@@ -59,8 +64,8 @@ namespace renderMe
 
 			/////////// Add shaders
 
-			resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("sprite_vs", Shader(vertexShader)));
-			resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("sprite_ps", Shader(pixelShader)));
+			resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair(p_vshader, Shader(vertexShader)));
+			resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair(p_pshader, Shader(pixelShader)));
 
 			/////////// Add trianglemeshe
 			TriangleMeshe sprite2D_square;
@@ -86,33 +91,33 @@ namespace renderMe
 			resource_aspect.addComponent<TriangleMeshe>("sprite2D_square", sprite2D_square);
 
 			/////////// Add texture
-			resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair("sb0.bmp", Texture())));
+			resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair(p_texture, Texture())));
 
 
 			/////////// Add renderstate
 			auto& rendering_aspect{ sprite2DEntity->makeAspect(core::renderingAspect::id) };
 
-			rendering::RenderState rs_noculling(rendering::RenderState::Operation::SETCULLING, "cw");
-			rendering::RenderState rs_zbuffer(rendering::RenderState::Operation::ENABLEZBUFFER, "false");
-			rendering::RenderState rs_fill(rendering::RenderState::Operation::SETFILLMODE, "solid");
-			rendering::RenderState rs_texturepointsampling(rendering::RenderState::Operation::SETTEXTUREFILTERTYPE, "point");
-
-			const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
-			rendering_aspect.addComponent<std::vector<rendering::RenderState>>("renderStates", rs_list);
+			rendering_aspect.addComponent<std::vector<rendering::RenderState>>("renderStates", p_renderstates_list);
 
 			////////// Drawing control
 
 			rendering::DrawingControl dc;
 			rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_square", dc);
 
-			rendering_aspect.addComponent<int>("renderingorder", 1000);
+			rendering_aspect.addComponent<int>("renderingorder", p_rendering_order);
 
 			/////////// time aspect
 
 			auto& time_aspect{ sprite2DEntity->makeAspect(core::timeAspect::id) };
 
+			/*
 			time_aspect.addComponent<core::SyncVariable>("x_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.04, core::SyncVariable::Direction::INC));
 			time_aspect.addComponent<core::SyncVariable>("y_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.01, core::SyncVariable::Direction::INC));
+			*/
+
+			time_aspect.addComponent<core::SyncVariable>("x_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.0));
+			time_aspect.addComponent<core::SyncVariable>("y_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.0));
+
 
 			///////// world aspect
 

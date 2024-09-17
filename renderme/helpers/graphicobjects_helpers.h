@@ -26,6 +26,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace renderMe
 {
@@ -41,7 +42,12 @@ namespace renderMe
 							const std::string& p_parentid,
 							const std::string& p_spriteEntityid, 
 							const double p_spriteWidth,
-							const double p_spriteHeight
+							const double p_spriteHeight,
+							const std::string& p_vshader,
+							const std::string& p_pshader,
+							const std::string& p_texture,
+							const std::vector<rendering::RenderState>& p_renderstates_list,
+							int p_rendering_order
 						);
 
 	}
