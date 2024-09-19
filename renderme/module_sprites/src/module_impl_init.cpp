@@ -111,10 +111,21 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	//////////////////////////
 
 	createEntities(p_appWindowsEntityName);
+
+	//////////////////////////
+
+	const auto seed{ ::GetTickCount() };
+
+	m_generator = new std::default_random_engine(seed);
+
+	m_speed_distribution = new std::uniform_real_distribution<double>(0.1, 0.2);
+	m_rotation_speed_distribution = new std::uniform_real_distribution<double>(0.25 * core::maths::pi, 2 * core::maths::pi);
+	m_speed_sign_distribution = new std::uniform_int_distribution<int>(0, 1);
+	m_rotation_speed_sign_distribution = new std::uniform_int_distribution<int>(0, 1);
 }
 
 
-void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
+void ModuleImpl::createEntities(const std::string& p_appWindowsEntityName)
 {
 	/////////// add screen rendering pass entity
 
@@ -287,18 +298,7 @@ void ModuleImpl::d3d11_system_events()
 
 					const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
-					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05, "sprite_vs", "sprite_ps", "sb0.bmp", rs_list, 1000);
-
-					
-					auto& x_pos{ helpers::get2DSpriteXControl(m_entitygraph, "sprite00") };
-					x_pos.direction = core::SyncVariable::Direction::INC;
-					x_pos.step = 0.1;
-					
-
-					auto& z_rot{ helpers::get2DSpriteZControl(m_entitygraph, "sprite00") };
-					z_rot.direction = core::SyncVariable::Direction::INC;
-					z_rot.step = 2 * core::maths::pi;
-
+					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", rs_list, 1000);
 
 				}
 				break;

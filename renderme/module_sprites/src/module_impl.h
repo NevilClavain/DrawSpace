@@ -66,10 +66,13 @@ public:
     void                            run(void);
     void                            close(void);
 
-    void                            createEntities(const std::string p_appWindowsEntityName);
+    void                            createEntities(const std::string& p_appWindowsEntityName);
 
     void                            resource_system_events();
     void                            d3d11_system_events();
+
+
+    void                            manage_sprite_trajectory(renderMe::core::Entity* p_entity);
 
 
     //override
@@ -94,6 +97,16 @@ private:
     std::string                             m_resources_event{ "..." };
 
     renderMe::Texture*                      m_rendering_quad_texture{ nullptr };
+
+    std::default_random_engine*             m_generator;
+    
+    std::uniform_real_distribution<double>* m_speed_distribution;
+    std::uniform_int_distribution<int>*     m_speed_sign_distribution;
+
+    std::uniform_real_distribution<double>* m_rotation_speed_distribution;
+    std::uniform_int_distribution<int>*     m_rotation_speed_sign_distribution;
+
+
 
 };
 

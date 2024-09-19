@@ -40,6 +40,12 @@ struct PS_INTPUT
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
-{      
-    return txDiffuse.Sample(sam, input.TexCoord0);
+{
+    float4 color = txDiffuse.Sample(sam, input.TexCoord0);
+    
+    if(color.r == 0 && color.g == 1.0 && color.b == 0)
+    {
+        clip(-1);
+    }
+    return color;
 }
