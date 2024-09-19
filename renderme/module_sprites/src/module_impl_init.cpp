@@ -289,10 +289,17 @@ void ModuleImpl::d3d11_system_events()
 
 					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05, "sprite_vs", "sprite_ps", "sb0.bmp", rs_list, 1000);
 
-					auto& x_var{ helpers::get2DSpriteXControl(m_entitygraph, "sprite00") };
+					
+					auto& x_pos{ helpers::get2DSpriteXControl(m_entitygraph, "sprite00") };
+					x_pos.direction = core::SyncVariable::Direction::INC;
+					x_pos.step = 0.1;
+					
 
-					x_var.direction = core::SyncVariable::Direction::INC;
-					x_var.step = 0.1;
+					auto& z_rot{ helpers::get2DSpriteZControl(m_entitygraph, "sprite00") };
+					z_rot.direction = core::SyncVariable::Direction::INC;
+					z_rot.step = 2 * core::maths::pi;
+
+
 				}
 				break;
 			}

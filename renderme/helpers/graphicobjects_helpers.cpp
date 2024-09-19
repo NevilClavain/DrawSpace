@@ -110,14 +110,9 @@ namespace renderMe
 
 			auto& time_aspect{ sprite2DEntity->makeAspect(core::timeAspect::id) };
 
-			/*
-			time_aspect.addComponent<core::SyncVariable>("x_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.04, core::SyncVariable::Direction::INC));
-			time_aspect.addComponent<core::SyncVariable>("y_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.01, core::SyncVariable::Direction::INC));
-			*/
-
 			time_aspect.addComponent<core::SyncVariable>("x_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.0));
 			time_aspect.addComponent<core::SyncVariable>("y_pos", core::SyncVariable(core::SyncVariable::Type::POSITION, 0.0));
-
+			time_aspect.addComponent<core::SyncVariable>("z_rot", core::SyncVariable(core::SyncVariable::Type::ANGLE, 0.0));
 
 			///////// world aspect
 
@@ -135,12 +130,16 @@ namespace renderMe
 
 					const auto& x_pos{ p_time_aspect.getComponent<core::SyncVariable>("x_pos")->getPurpose() };
 					const auto& y_pos{ p_time_aspect.getComponent<core::SyncVariable>("y_pos")->getPurpose() };
+					const auto& z_rot{ p_time_aspect.getComponent<core::SyncVariable>("z_rot")->getPurpose() };
 
 					core::maths::Matrix positionmat;
 					positionmat.translation(x_pos.value, y_pos.value, 0.0);
 
+					core::maths::Matrix rotationmat;
+					rotationmat.rotation(core::maths::Real3Vector(0, 0, 1), z_rot.value);
+
 					transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
-					wp.local_pos = wp.local_pos * positionmat;
+					wp.local_pos = wp.local_pos * rotationmat * positionmat;
 				}
 			));
 
@@ -166,6 +165,17 @@ namespace renderMe
 
 			core::SyncVariable& y_pos{ time_aspect.getComponent< core::SyncVariable>("y_pos")->getPurpose() };
 			return y_pos;
+		}
+
+		core::SyncVariable& get2DSpriteZControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		{
+			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
+			const auto sprite2DEntity{ sprite2DNode.data() };
+
+			const auto& time_aspect{ sprite2DEntity->aspectAccess(core::timeAspect::id) };
+
+			core::SyncVariable& z_rot{ time_aspect.getComponent< core::SyncVariable>("z_rot")->getPurpose() };
+			return z_rot;
 		}
 	}
 }

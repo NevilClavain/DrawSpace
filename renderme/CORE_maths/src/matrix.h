@@ -33,6 +33,8 @@ namespace renderMe
 	{
         namespace maths
         {
+            static const double pi{ 3.141592653589793 };
+
             class Matrix
             {
             public:

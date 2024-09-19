@@ -53,6 +53,7 @@ namespace renderMe
 
 		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& get2DSpriteZControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 		
 	}
 }
