@@ -43,7 +43,7 @@ namespace renderMe
 {
 	namespace helpers
 	{
-		void plug2DSprite(renderMe::core::Entitygraph& p_entitygraph, 
+		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph, 
 							const std::string& p_parentid, 
 							const std::string& p_spriteEntityid,
 							const double p_spriteWidth,
@@ -143,6 +143,7 @@ namespace renderMe
 				}
 			));
 
+			return sprite2DEntity;
 		}
 
 		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)

@@ -298,7 +298,8 @@ void ModuleImpl::d3d11_system_events()
 
 					const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
-					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite00", 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", rs_list, 1000);
+					auto sprite{ helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite#0", 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", rs_list, 1000) };
+					m_sprites.push_back(sprite);
 
 				}
 				break;

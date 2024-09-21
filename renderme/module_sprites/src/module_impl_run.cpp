@@ -116,12 +116,13 @@ void ModuleImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-	auto& sprite2DNode{ m_entitygraph.node("sprite00") };
-	const auto sprite2DEntity{ sprite2DNode.data() };
 
-	manage_sprite_trajectory(sprite2DEntity);
-	
+	//manage_sprite_trajectory(sprite2DEntity);
 
+	for (auto sprite : m_sprites)
+	{
+		manage_sprite_trajectory(sprite);
+	}
 	/////////////////////////////////////////////////////
 
 	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };

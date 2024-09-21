@@ -33,13 +33,14 @@ namespace renderMe
 	// fwd decl
 	namespace core
 	{
+		class Entity;
 		class Entitygraph;
 		struct SyncVariable;
 	}
 
 	namespace helpers
 	{
-		void plug2DSprite(renderMe::core::Entitygraph& p_entitygraph, 
+		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph,
 							const std::string& p_parentid,
 							const std::string& p_spriteEntityid, 
 							const double p_spriteWidth,

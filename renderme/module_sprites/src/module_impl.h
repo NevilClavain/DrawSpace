@@ -107,6 +107,9 @@ private:
     std::uniform_int_distribution<int>*     m_rotation_speed_sign_distribution;
 
 
+    std::vector<renderMe::core::Entity*>    m_sprites;
+
+
 
 };
 
