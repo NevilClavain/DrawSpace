@@ -49,7 +49,7 @@ void WorldSystem::run()
 			auto& entity_worldposition_list { p_world_aspect.getComponentsByType<transform::WorldPosition>() };
 			if (0 == entity_worldposition_list.size())
 			{
-				_EXCEPTION("Eentity world aspect : missing world position " + p_entity->getId());
+				_EXCEPTION("Entity world aspect : missing world position " + p_entity->getId());
 			}
 
 			auto& entity_worldposition{ entity_worldposition_list.at(0)->getPurpose()};
