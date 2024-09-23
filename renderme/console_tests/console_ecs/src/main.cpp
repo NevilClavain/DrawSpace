@@ -100,7 +100,8 @@ int main( int argc, char* argv[] )
 			teapot_aspect.addComponent<Foo>("foo");
 		}
 
-		eg.add( eg.add(ent1, "ent11"), "ent111");
+		eg.add( eg.add(ent1, "ent11"), "ent111");		
+		eg.add(ent1, "ent12");
 
 
 		auto& ent2{ eg.node("ent2") };
@@ -109,6 +110,8 @@ int main( int argc, char* argv[] )
 
 		std::cout << "////////////////////////////////////\n\n";
 
+		std::cout << "root to leaf browsing\n";
+
 		// root to leaf browsing
 		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
 		{
@@ -116,6 +119,8 @@ int main( int argc, char* argv[] )
 			std::cout << currId << "\n";
 		}
 		std::cout << "\n";
+
+		std::cout << "leaf to root browsing\n";
 
 		// leaf to root browsing
 		for (auto it = eg.postBegin(); it != eg.postEnd(); ++it)
@@ -128,6 +133,7 @@ int main( int argc, char* argv[] )
 		// remove a node
 		eg.remove(eg.node("ent2"));
 
+		std::cout << "root to leaf browsing\n";
 		// root to leaf browsing
 		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
 		{
@@ -138,6 +144,7 @@ int main( int argc, char* argv[] )
 
 		eg.remove(eg.node("ent1"));
 
+		std::cout << "root to leaf browsing\n";
 		// root to leaf browsing
 		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
 		{

@@ -29,6 +29,7 @@
 #include "ecshelpers.h"
 #include "worldposition.h"
 #include "animatorfunc.h"
+#include "renderingqueue.h"
 
 
 using namespace renderMe;
@@ -40,6 +41,10 @@ WorldSystem::WorldSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 
 void WorldSystem::run()
 {
+	//////////////////////////////////////////////////////////
+	/// I : compute transformations
+	//////////////////////////////////////////////////////////
+
 	const auto forEachWorldAspect
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_world_aspect)
@@ -136,13 +141,144 @@ void WorldSystem::run()
 
 				///////////////////////
 
-
 				entity_worldposition.global_pos = entity_worldposition.local_pos;
-			}
-
-			
+			}			
 		}
 	};
 
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::worldAspect>(m_entitygraph, forEachWorldAspect);
+
+	//////////////////////////////////////////////////////////
+	/// II : compute 2D pos for each entity that requires it
+	//////////////////////////////////////////////////////////
+
+	// rebuid hierarchical structure to be browsed recursively
+
+	struct ENode
+	{
+		std::string					 id;
+		std::map<std::string, ENode> children;
+	};
+
+	ENode root;
+	// build node tree that will be dumped to log
+	for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
+	{
+		const renderMe::core::Entity* current_entity{ it->data() };
+		const std::string currId{ current_entity->getId() };
+
+		const std::function<void(ENode&, const std::string&, const std::string&)> search
+		{
+			[&](ENode& p_node, const std::string& p_parentId, const std::string& p_id)
+			{
+				if (p_node.id == p_parentId)
+				{
+					ENode child;
+					child.id = p_id;
+					// found parent
+					p_node.children[p_id] = child;
+				}
+
+				for (auto& e : p_node.children)
+				{
+					search(e.second, p_parentId, p_id);
+				}
+			}
+		};
+
+		const auto parent_entity{ current_entity->getParent() };
+		if (parent_entity)
+		{
+			const std::string parentId{ parent_entity->getId() };
+			search(root, parentId, currId);
+		}
+		else
+		{
+			// create root;
+			root.id = currId;
+		}
+	}
+
+	maths::Matrix current_cam;
+	maths::Matrix current_proj;
+
+	current_cam.identity();
+	// set a dummy default perspective
+	current_proj.perspective(1.0, 0.5, 1.0, 100000.0);
+
+
+
+	const std::function<void(const ENode&, int)> browseHierarchy
+	{
+		[&](const ENode& p_node, int depth)
+		{
+			const auto& eg_node { m_entitygraph.node(p_node.id) };
+
+			const core::Entity* curr_entity{ eg_node.data() };
+
+
+			///////////////
+			// find current view and current proj
+
+			if (curr_entity->hasAspect(core::renderingAspect::id))
+			{
+				const auto& rendering_aspect{ curr_entity->aspectAccess(core::renderingAspect::id) };
+
+				const auto rendering_queues_list{ rendering_aspect.getComponentsByType<rendering::Queue>() };
+				if (rendering_queues_list.size() > 0)
+				{
+					auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
+
+					const std::string current_view_entity_id{ renderingQueue.getCurrentView() };
+
+					if (current_view_entity_id != "")
+					{
+						auto& viewode{ m_entitygraph.node(current_view_entity_id) };
+						const auto view_entity{ viewode.data() };
+
+						// extract cam aspect
+						const auto& cam_aspect{ view_entity->aspectAccess(cameraAspect::id) };
+						const auto& cam_projs_list{ cam_aspect.getComponentsByType<maths::Matrix>() };
+
+						if (0 == cam_projs_list.size())
+						{
+							_EXCEPTION("entity view aspect : missing projection definition " + view_entity->getId());
+						}
+						else
+						{
+							current_proj = cam_projs_list.at(0)->getPurpose();
+						}
+
+						// extract world aspect
+
+						const auto& world_aspect{ view_entity->aspectAccess(worldAspect::id) };
+						const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+						if (0 == worldpositions_list.size())
+						{
+							_EXCEPTION("entity world aspect : missing world position " + view_entity->getId());
+						}
+						else
+						{
+							auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+							current_cam = entity_worldposition.global_pos;
+						}
+					}
+
+					maths::Matrix current_view = current_cam;
+					current_view.inverse();
+				}
+			}
+
+			///////////////
+
+			// recursive call
+			for (auto& e : p_node.children)
+			{
+				browseHierarchy(e.second, depth + 1);
+			}
+		}
+	};
+
+	browseHierarchy(root, 0);
 }

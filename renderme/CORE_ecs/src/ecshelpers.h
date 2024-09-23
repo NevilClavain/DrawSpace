@@ -37,12 +37,12 @@ namespace renderMe
 	namespace helpers
 	{		
 		template<typename AspectT>
-		void extractAspectsTopDown(core::Entitygraph& p_eg, const std::function<void(core::Entity* p_entity, const core::ComponentContainer& p_aspect)>& p_func)
+		inline void extractAspectsTopDown(core::Entitygraph& p_eg, const std::function<void(core::Entity* p_entity, const core::ComponentContainer& p_aspect)>& p_func)
 		{
 			for (auto it = p_eg.preBegin(); it != p_eg.preEnd(); ++it)
 			{
 				const auto current_entity{ it->data() };
-				const auto currId{ current_entity->getId() };
+				
 
 				if (current_entity->hasAspect(AspectT::id))
 				{
@@ -53,12 +53,11 @@ namespace renderMe
 		}
 
 		template<typename AspectT>
-		void extractAspectsDownTop(core::Entitygraph& p_eg, const std::function<void(core::Entity* p_entity, const core::ComponentContainer& p_aspect)>& p_func)
+		inline void extractAspectsDownTop(core::Entitygraph& p_eg, const std::function<void(core::Entity* p_entity, const core::ComponentContainer& p_aspect)>& p_func)
 		{
 			for (auto it = p_eg.postBegin(); it != p_eg.postEnd(); ++it)
 			{
 				const auto current_entity{ it->data() };
-				const auto currId{ current_entity->getId() };
 
 				if (current_entity->hasAspect(AspectT::id))
 				{

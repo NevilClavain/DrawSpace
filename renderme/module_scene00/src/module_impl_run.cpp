@@ -66,6 +66,14 @@ void ModuleImpl::run(void)
 
 
 	//////////////////////////////////////////////////////
+	if (m_quadEntity2_state)
+	{
+		const auto quadEntity{ m_entitygraph.node("quadEntity2").data() };
+		const auto& world_aspect{ quadEntity->aspectAccess(core::worldAspect::id) };
+		const auto screenposition{ world_aspect.getComponent<core::maths::Real3Vector>("screenposition")->getPurpose() };
+		dataCloud->updateDataValue<maths::Real3Vector>("quadEntity2_2Dposition", screenposition);
+	}
+	//////////////////////////////////////////////////////
 	// 	
 	// quadEntity0
 	
@@ -374,6 +382,11 @@ void ModuleImpl::run(void)
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
+		world_aspect.addComponent<core::maths::Real3Vector>("screenposition", core::maths::Real3Vector(0.1, 0.2, 0.4));
+
+		dataCloud->registerData<maths::Real3Vector>("quadEntity2_2Dposition");
+
+
 		world_aspect.addComponent<transform::WorldPosition>("position");
 
 		core::maths::Quaternion quat1;
@@ -423,11 +436,15 @@ void ModuleImpl::run(void)
 
 
 		m_quadEntity2_state = true;
+
+		
 	}
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
 	{
 		auto& quadNode{ m_entitygraph.node("quadEntity2") };
 		m_entitygraph.remove(quadNode);
+
+		dataCloud->removeData<maths::Real3Vector>("quadEntity2_2Dposition");
 
 		m_quadEntity2_state = false;
 	}
