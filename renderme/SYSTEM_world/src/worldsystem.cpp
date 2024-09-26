@@ -30,7 +30,8 @@
 #include "worldposition.h"
 #include "animatorfunc.h"
 #include "renderingqueue.h"
-
+#include "matrixchain.h"
+#include "datacloud.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -200,13 +201,14 @@ void WorldSystem::run()
 	}
 
 	maths::Matrix current_cam;
+	maths::Matrix current_view;
 	maths::Matrix current_proj;
 
 	current_cam.identity();
+	current_view.identity();
+
 	// set a dummy default perspective
 	current_proj.perspective(1.0, 0.5, 1.0, 100000.0);
-
-
 
 	const std::function<void(const ENode&, int)> browseHierarchy
 	{
@@ -215,7 +217,6 @@ void WorldSystem::run()
 			const auto& eg_node { m_entitygraph.node(p_node.id) };
 
 			const core::Entity* curr_entity{ eg_node.data() };
-
 
 			///////////////
 			// find current view and current proj
@@ -265,11 +266,59 @@ void WorldSystem::run()
 						}
 					}
 
-					maths::Matrix current_view = current_cam;
-					current_view.inverse();
+					current_view = current_cam;
+					current_view.inverse();					
 				}
 			}
 
+			if (curr_entity->hasAspect(core::worldAspect::id))
+			{
+				const auto& world_aspect{ curr_entity->aspectAccess(worldAspect::id) };
+				const auto screenposition_component{ world_aspect.getComponent<core::maths::FloatCoords2D>("screenposition") };
+
+				if (screenposition_component)
+				{
+					const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+					if (0 == worldpositions_list.size())
+					{
+						_EXCEPTION("entity world aspect : missing world position " + curr_entity->getId());
+					}
+					else
+					{
+						auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+						maths::Matrix entity_world = entity_worldposition.global_pos;
+
+						maths::Matrix inv;
+						inv.identity();
+						inv(2, 2) = -1.0;
+						const auto final_view{ current_view * inv };
+
+						transform::MatrixChain chain;
+						chain.pushMatrix(current_proj);
+						chain.pushMatrix(final_view);
+						chain.pushMatrix(entity_world);
+						chain.buildResult();
+						auto final_mat{ chain.getResultTransform() };
+
+						core::maths::Real4Vector point(0, 0, 0, 1);
+						core::maths::Real4Vector res_point;
+
+						final_mat.transform(&point, &res_point);
+
+						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+						const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
+
+
+						const float posx { static_cast<float>(res_point[0] / (res_point[2] + 1.0)) * 0.5f * viewport[0] };
+						const float posy { static_cast<float>(res_point[1] / (res_point[2] + 1.0)) * 0.5f * viewport[1] };
+
+						core::maths::FloatCoords2D pos2d(posx, posy);
+						world_aspect.getComponent<core::maths::FloatCoords2D>("screenposition")->getPurpose() = pos2d;
+					}
+
+				}
+			}	
 			///////////////
 
 			// recursive call
