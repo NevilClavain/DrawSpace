@@ -150,7 +150,7 @@ void WorldSystem::run()
 	renderMe::helpers::extractAspectsTopDown<renderMe::core::worldAspect>(m_entitygraph, forEachWorldAspect);
 
 	//////////////////////////////////////////////////////////
-	/// II : compute 2D pos for each entity that requires it
+	/// II : compute 2D pos (for entity that requires it)
 	//////////////////////////////////////////////////////////
 
 	// rebuid hierarchical structure to be browsed recursively
