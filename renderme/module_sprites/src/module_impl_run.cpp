@@ -116,16 +116,12 @@ void ModuleImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-
-	//manage_sprite_trajectory(sprite2DEntity);
-
 	for (auto sprite : m_sprites)
 	{
 		manage_sprite_trajectory(sprite);
 	}
 	/////////////////////////////////////////////////////
 
-	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
 	const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
 
 	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };
