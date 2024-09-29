@@ -47,7 +47,8 @@ namespace renderMe
             enum class TransformationComposition
             {
                 TRANSFORMATION_RELATIVE_FROM_PARENT,
-                TRANSFORMATION_ABSOLUTE
+                TRANSFORMATION_ABSOLUTE,
+                // ICI !!!
             };
 
             core::maths::Matrix local_pos;

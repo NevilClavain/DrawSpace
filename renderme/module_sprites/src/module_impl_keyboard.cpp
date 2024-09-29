@@ -75,7 +75,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 		const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
-		auto sprite{ helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "sprite#" + std::to_string(m_sprites.size()), 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", rs_list, 1000) };
+		auto sprite{ helpers::plug2DSpriteWithSyncVariables(m_entitygraph, "bufferRenderingEntity", "sprite#" + std::to_string(m_sprites.size()), 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", rs_list, 1000) };
 		m_sprites.push_back(sprite);
 	}
 }

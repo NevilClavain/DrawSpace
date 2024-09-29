@@ -43,7 +43,7 @@ namespace renderMe
 {
 	namespace helpers
 	{
-		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph, 
+		core::Entity* plug2DSpriteWithSyncVariables(renderMe::core::Entitygraph& p_entitygraph,
 							const std::string& p_parentid, 
 							const std::string& p_spriteEntityid,
 							const double p_spriteWidth,
@@ -102,7 +102,7 @@ namespace renderMe
 			////////// Drawing control
 
 			rendering::DrawingControl dc;
-			rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_square", dc);
+			rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_dc", dc);
 
 			rendering_aspect.addComponent<int>("renderingorder", p_rendering_order);
 
@@ -177,6 +177,113 @@ namespace renderMe
 
 			core::SyncVariable& z_rot{ time_aspect.getComponent< core::SyncVariable>("z_rot")->getPurpose() };
 			return z_rot;
+		}
+
+
+		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph,
+			const std::string& p_parentid,
+			const std::string& p_spriteEntityid,
+			const double p_spriteWidth,
+			const double p_spriteHeight,
+			const std::string& p_vshader,
+			const std::string& p_pshader,
+			const std::string& p_texture,
+			const std::vector<rendering::RenderState>& p_renderstates_list,
+			int p_rendering_order,
+			float p_xpos = 0,
+			float p_ypos = 0,
+			float p_rot_radians = 0)
+		{
+			auto& parentNodeNode{ p_entitygraph.node(p_parentid) };
+
+			auto& sprite2DNode{ p_entitygraph.add(parentNodeNode, p_spriteEntityid) };
+			const auto sprite2DEntity{ sprite2DNode.data() };
+
+			auto& resource_aspect{ sprite2DEntity->makeAspect(core::resourcesAspect::id) };
+
+			/////////// Add shaders
+
+			resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair(p_vshader, Shader(vertexShader)));
+			resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair(p_pshader, Shader(pixelShader)));
+
+			/////////// Add trianglemeshe
+			TriangleMeshe sprite2D_square;
+
+
+			sprite2D_square.push(Vertex(-p_spriteWidth / 2.0, -p_spriteHeight / 2.0, 0.0, 0.0f, 1.0f));
+			sprite2D_square.push(Vertex(p_spriteWidth / 2.0, -p_spriteHeight / 2.0, 0.0, 1.0f, 1.0f));
+			sprite2D_square.push(Vertex(p_spriteWidth / 2.0, p_spriteHeight / 2.0, 0.0, 1.0f, 0.0f));
+			sprite2D_square.push(Vertex(-p_spriteWidth / 2.0, p_spriteHeight / 2.0, 0.0, 0.0f, 0.0f));
+
+			const TrianglePrimitive<unsigned int> t1{ 0, 1, 2 };
+			sprite2D_square.push(t1);
+
+			const TrianglePrimitive<unsigned int> t2{ 0, 2, 3 };
+			sprite2D_square.push(t2);
+
+			sprite2D_square.computeResourceUID();
+			sprite2D_square.setSourceID("sprite2DEntity");
+			sprite2D_square.setSource(TriangleMeshe::Source::CONTENT_DYNAMIC_INIT);
+
+			sprite2D_square.setState(TriangleMeshe::State::BLOBLOADED);
+
+			resource_aspect.addComponent<TriangleMeshe>("sprite2D_square", sprite2D_square);
+
+			/////////// Add texture
+			resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair(p_texture, Texture())));
+
+
+			/////////// Add renderstate
+			auto& rendering_aspect{ sprite2DEntity->makeAspect(core::renderingAspect::id) };
+
+			rendering_aspect.addComponent<std::vector<rendering::RenderState>>("renderStates", p_renderstates_list);
+
+			////////// Drawing control
+
+			rendering::DrawingControl dc;
+			rendering_aspect.addComponent<rendering::DrawingControl>("sprite2D_dc", dc);
+
+			rendering_aspect.addComponent<int>("renderingorder", p_rendering_order);
+
+
+			///////// world aspect
+
+			auto& world_aspect{ sprite2DEntity->makeAspect(core::worldAspect::id) };
+			world_aspect.addComponent<transform::WorldPosition>("position");
+
+			world_aspect.addComponent<double>("x_pos", p_xpos);
+			world_aspect.addComponent<double>("y_pos", p_ypos);
+			world_aspect.addComponent<double>("z_rot", p_rot_radians);
+
+
+			/////////// time aspect
+			sprite2DEntity->makeAspect(core::timeAspect::id);
+
+			world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+			(
+				{},
+				[](const core::ComponentContainer& p_world_aspect,
+					const core::ComponentContainer& p_time_aspect,
+					const transform::WorldPosition& p_wp,
+					const std::unordered_map<std::string, std::string>&)
+				{
+
+					const auto& x_pos{ p_world_aspect.getComponent<double>("x_pos")->getPurpose() };
+					const auto& y_pos{ p_world_aspect.getComponent<double>("y_pos")->getPurpose() };
+					const auto& z_rot_rad{ p_world_aspect.getComponent<double>("z_rot")->getPurpose() };
+
+					core::maths::Matrix positionmat;
+					positionmat.translation(x_pos, y_pos, 0);
+
+					core::maths::Matrix rotationmat;
+					rotationmat.rotation(core::maths::Real3Vector(0, 0, 1), z_rot_rad);
+
+					transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+					wp.local_pos = wp.local_pos * rotationmat * positionmat;
+				}
+			));
+
+			return sprite2DEntity;
 		}
 	}
 }

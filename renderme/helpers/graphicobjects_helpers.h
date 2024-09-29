@@ -40,7 +40,7 @@ namespace renderMe
 
 	namespace helpers
 	{
-		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plug2DSpriteWithSyncVariables(renderMe::core::Entitygraph& p_entitygraph,
 							const std::string& p_parentid,
 							const std::string& p_spriteEntityid, 
 							const double p_spriteWidth,
@@ -51,6 +51,21 @@ namespace renderMe
 							const std::vector<rendering::RenderState>& p_renderstates_list,
 							int p_rendering_order
 						);
+
+		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph,
+			const std::string& p_parentid,
+			const std::string& p_spriteEntityid,
+			const double p_spriteWidth,
+			const double p_spriteHeight,
+			const std::string& p_vshader,
+			const std::string& p_pshader,
+			const std::string& p_texture,
+			const std::vector<rendering::RenderState>& p_renderstates_list,
+			int p_rendering_order,
+			float p_xpos = 0,
+			float p_ypos = 0,
+			float p_rot_radians = 0
+		);
 
 		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
