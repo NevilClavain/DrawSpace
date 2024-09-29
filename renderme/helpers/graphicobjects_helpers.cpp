@@ -117,7 +117,10 @@ namespace renderMe
 			///////// world aspect
 
 			auto& world_aspect{ sprite2DEntity->makeAspect(core::worldAspect::id) };
-			world_aspect.addComponent<transform::WorldPosition>("position");
+			transform::WorldPosition wp;
+			wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS; // specific for 2D sprites
+			world_aspect.addComponent<transform::WorldPosition>("position", wp);
+
 
 			world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 			(
@@ -249,8 +252,12 @@ namespace renderMe
 			///////// world aspect
 
 			auto& world_aspect{ sprite2DEntity->makeAspect(core::worldAspect::id) };
-			world_aspect.addComponent<transform::WorldPosition>("position");
 
+			transform::WorldPosition wp;
+			wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS; // specific for 2D sprites
+			world_aspect.addComponent<transform::WorldPosition>("position", wp);
+
+			
 			world_aspect.addComponent<double>("x_pos", p_xpos);
 			world_aspect.addComponent<double>("y_pos", p_ypos);
 			world_aspect.addComponent<double>("z_rot", p_rot_radians);

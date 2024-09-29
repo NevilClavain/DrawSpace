@@ -48,7 +48,7 @@ namespace renderMe
             {
                 TRANSFORMATION_RELATIVE_FROM_PARENT,
                 TRANSFORMATION_ABSOLUTE,
-                // ICI !!!
+                TRANSFORMATION_PARENT_PROJECTEDPOS 
             };
 
             core::maths::Matrix local_pos;

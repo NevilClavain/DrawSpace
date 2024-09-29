@@ -101,14 +101,40 @@ void WorldSystem::run()
 
 					///////////////////////
 
-					if (transform::WorldPosition::TransformationComposition::TRANSFORMATION_RELATIVE_FROM_PARENT == entity_worldposition.composition_operation)
+
+					switch (entity_worldposition.composition_operation)
 					{
-						entity_worldposition.global_pos = entity_worldposition.local_pos * parententity_worldposition.global_pos;
+						case transform::WorldPosition::TransformationComposition::TRANSFORMATION_RELATIVE_FROM_PARENT:
+
+							entity_worldposition.global_pos = entity_worldposition.local_pos * parententity_worldposition.global_pos;
+							break;
+
+						case transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE:
+
+							entity_worldposition.global_pos = entity_worldposition.local_pos;
+							break;
+
+						case transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS:
+							{
+								const auto comps{ parent_worldaspect.getComponentsByType<core::maths::FloatCoords2D>() };
+								if (comps.size() > 0)
+								{
+									const auto screenposition_component{ comps.at(0)->getPurpose() };
+
+									auto updated_local_pos{ entity_worldposition.local_pos };
+
+									updated_local_pos(3, 0) += screenposition_component[0];
+									updated_local_pos(3, 1) += screenposition_component[1];
+
+									entity_worldposition.global_pos = updated_local_pos;
+								}
+								else
+								{
+									_EXCEPTION("TRANSFORMATION_PARENT_PROJECTEDPOS mode require 2D projected pos from parent")
+								}
+							}
+							break;
 					}
-					else if (transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE == entity_worldposition.composition_operation)
-					{
-						entity_worldposition.global_pos = entity_worldposition.local_pos;
-					}					
 				}
 			}
 			else 
@@ -274,52 +300,48 @@ void WorldSystem::run()
 			if (curr_entity->hasAspect(core::worldAspect::id))
 			{
 				const auto& world_aspect{ curr_entity->aspectAccess(worldAspect::id) };
-				//const auto& screenposition_component{ world_aspect.getComponent<core::maths::FloatCoords2D>("screenposition") };
 
 				const auto comps{ world_aspect.getComponentsByType<core::maths::FloatCoords2D>() };
 				if (comps.size() > 0)
 				{
 					const auto& screenposition_component{ comps.at(0) };
-					if (screenposition_component)
+					const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+					if (0 == worldpositions_list.size())
 					{
-						const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+						_EXCEPTION("entity world aspect : missing world position " + curr_entity->getId());
+					}
+					else
+					{
+						auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+						maths::Matrix entity_world = entity_worldposition.global_pos;
 
-						if (0 == worldpositions_list.size())
-						{
-							_EXCEPTION("entity world aspect : missing world position " + curr_entity->getId());
-						}
-						else
-						{
-							auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
-							maths::Matrix entity_world = entity_worldposition.global_pos;
+						maths::Matrix inv;
+						inv.identity();
+						inv(2, 2) = -1.0;
+						const auto final_view{ current_view * inv };
 
-							maths::Matrix inv;
-							inv.identity();
-							inv(2, 2) = -1.0;
-							const auto final_view{ current_view * inv };
+						transform::MatrixChain chain;
+						chain.pushMatrix(current_proj);
+						chain.pushMatrix(final_view);
+						chain.pushMatrix(entity_world);
+						chain.buildResult();
+						auto final_mat{ chain.getResultTransform() };
 
-							transform::MatrixChain chain;
-							chain.pushMatrix(current_proj);
-							chain.pushMatrix(final_view);
-							chain.pushMatrix(entity_world);
-							chain.buildResult();
-							auto final_mat{ chain.getResultTransform() };
+						core::maths::Real4Vector point(0, 0, 0, 1);
+						core::maths::Real4Vector res_point;
 
-							core::maths::Real4Vector point(0, 0, 0, 1);
-							core::maths::Real4Vector res_point;
+						final_mat.transform(&point, &res_point);
 
-							final_mat.transform(&point, &res_point);
-
-							const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-							const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
+						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+						const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
 
 
-							const float posx{ static_cast<float>(res_point[0] / (res_point[2] + 1.0)) * 0.5f * viewport[0] };
-							const float posy{ static_cast<float>(res_point[1] / (res_point[2] + 1.0)) * 0.5f * viewport[1] };
+						const float posx{ static_cast<float>(res_point[0] / (res_point[2] + 1.0)) * 0.5f * viewport[0] };
+						const float posy{ static_cast<float>(res_point[1] / (res_point[2] + 1.0)) * 0.5f * viewport[1] };
 
-							core::maths::FloatCoords2D pos2d(posx, posy);
-							screenposition_component->getPurpose() = pos2d;
-						}
+						core::maths::FloatCoords2D pos2d(posx, posy);
+						screenposition_component->getPurpose() = pos2d;
 					}
 				}
 			}	

@@ -39,6 +39,7 @@
 #include "worldposition.h"
 #include "animatorfunc.h"
 #include "animators_helpers.h"
+#include "graphicobjects_helpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -435,8 +436,14 @@ void ModuleImpl::run(void)
 
 
 
-		m_quadEntity2_state = true;
+		///// sprite : collimator
 
+		const std::vector<rendering::RenderState> collimator_sprite_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+		const auto sprite_collimator{ helpers::plug2DSprite(m_entitygraph, "quadEntity2", "collimator_sprite", 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", collimator_sprite_rs_list, 1000) };
+		
+
+
+		m_quadEntity2_state = true;
 		
 	}
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
