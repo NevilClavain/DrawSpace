@@ -448,6 +448,11 @@ void ModuleImpl::run(void)
 	}
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
 	{
+
+		auto& sprite_collimator_node { m_entitygraph.node("collimator_sprite") };
+		m_entitygraph.remove(sprite_collimator_node);
+
+
 		auto& quadNode{ m_entitygraph.node("quadEntity2") };
 		m_entitygraph.remove(quadNode);
 

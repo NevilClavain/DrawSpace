@@ -85,6 +85,13 @@ Entitygraph::Node& Entitygraph::add(Node& p_parent, const std::string& p_entity_
 void Entitygraph::remove(Node& p_node)
 {
 	const auto& entity{ *p_node.data() };
+
+	if (!p_node.empty())
+	{
+		_EXCEPTION("Cant remove entity " + entity.getId() + " : it has children");
+	}
+
+
 	for (const auto& call : m_callbacks)
 	{
 		call(EntitygraphEvents::ENTITYGRAPHNODE_REMOVED, entity);

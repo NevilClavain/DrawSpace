@@ -131,6 +131,7 @@ int main( int argc, char* argv[] )
 		std::cout << "\n";
 		
 		// remove a node
+		eg.remove(eg.node("ent21"));
 		eg.remove(eg.node("ent2"));
 
 		std::cout << "root to leaf browsing\n";
@@ -140,18 +141,7 @@ int main( int argc, char* argv[] )
 			const auto currId{ it->data()->getId() };
 			std::cout << currId << "\n";
 		}
-		std::cout << "\n";
 
-		eg.remove(eg.node("ent1"));
-
-		std::cout << "root to leaf browsing\n";
-		// root to leaf browsing
-		for (auto it = eg.preBegin(); it != eg.preEnd(); ++it)
-		{
-			const auto currId{ it->data()->getId() };
-			std::cout << currId << "\n";
-		}
-		std::cout << "\n";	
 	}
     return 0;
 }
