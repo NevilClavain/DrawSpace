@@ -398,7 +398,7 @@ void ModuleImpl::d3d11_system_events()
 
 					////////////////////////////////////////////////////////////////////////////////////
 
-					/*
+					
 					rendering::RenderState rs_noculling(rendering::RenderState::Operation::SETCULLING, "cw");
 					rendering::RenderState rs_zbuffer(rendering::RenderState::Operation::ENABLEZBUFFER, "false");
 					rendering::RenderState rs_fill(rendering::RenderState::Operation::SETFILLMODE, "solid");
@@ -406,9 +406,9 @@ void ModuleImpl::d3d11_system_events()
 
 					const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
-					//const auto sprite_collimator{ helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "collimator_sprite", 0.05, 0.05, "sprite_vs", "sprite_ps", "tennis_ball.bmp", rs_list, 1000, 0.2, 0.1) };
-					//wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_ABSOLUTE;
-					*/
+					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "logo_sprite", 0.06, 0.06, "sprite_vs", "sprite_ps", "mage_hat.bmp", rs_list, 1000000, 0.2, 0.1);
+					
+					
 
 
 				}
