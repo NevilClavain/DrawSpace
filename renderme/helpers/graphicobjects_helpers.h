@@ -52,7 +52,11 @@ namespace renderMe
 							int p_rendering_order
 						);
 
-		core::Entity* plug2DSprite(renderMe::core::Entitygraph& p_entitygraph,
+		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& get2DSpriteZControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+
+		core::Entity* plug2DSpriteWithPosition(renderMe::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
 			const std::string& p_spriteEntityid,
 			const double p_spriteWidth,
@@ -67,9 +71,9 @@ namespace renderMe
 			float p_rot_radians = 0
 		);
 
-		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		core::SyncVariable& get2DSpriteZControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		
+		double& get2DSpriteXPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		double& get2DSpriteYPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		double& get2DSpriteZRot(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+
 	}
 }

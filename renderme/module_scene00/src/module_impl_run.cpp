@@ -439,7 +439,7 @@ void ModuleImpl::run(void)
 		///// sprite : collimator
 		
 		const std::vector<rendering::RenderState> collimator_sprite_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
-		const auto sprite_collimator{ helpers::plug2DSprite(m_entitygraph, "quadEntity2", "collimator_sprite", 0.025, 0.025, "sprite_vs", "sprite_ps", "target.bmp", collimator_sprite_rs_list, 1000) };
+		const auto sprite_collimator{ helpers::plug2DSpriteWithPosition(m_entitygraph, "quadEntity2", "collimator_sprite", 0.025, 0.025, "sprite_vs", "sprite_ps", "target.bmp", collimator_sprite_rs_list, 1000) };
 		
 
 

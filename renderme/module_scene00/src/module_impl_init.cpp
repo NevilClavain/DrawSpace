@@ -391,9 +391,9 @@ void ModuleImpl::d3d11_system_events()
 
 					m_bufferRenderingQueue = &renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose();
 
-					m_bufferRenderingQueue->setCurrentView("Camera01Entity");
+					//m_bufferRenderingQueue->setCurrentView("Camera01Entity");
 					//m_bufferRenderingQueue->setCurrentView("Camera02Entity");
-					//m_bufferRenderingQueue->setCurrentView("Camera03Entity");
+					m_bufferRenderingQueue->setCurrentView("Camera03Entity");
 
 
 					////////////////////////////////////////////////////////////////////////////////////
@@ -406,9 +406,10 @@ void ModuleImpl::d3d11_system_events()
 
 					const std::vector<rendering::RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 
-					helpers::plug2DSprite(m_entitygraph, "bufferRenderingEntity", "logo_sprite", 0.06, 0.06, "sprite_vs", "sprite_ps", "mage_hat.bmp", rs_list, 1000000, 0.2, 0.1);
+					helpers::plug2DSpriteWithPosition(m_entitygraph, "bufferRenderingEntity", "logo_sprite", 0.06, 0.06, "sprite_vs", "sprite_ps", "mage_hat.bmp", rs_list, 1000000);
 					
-					
+					helpers::get2DSpriteXPos(m_entitygraph, "logo_sprite") = 0.2;
+					helpers::get2DSpriteYPos(m_entitygraph, "logo_sprite") = 0.1;
 
 
 				}
