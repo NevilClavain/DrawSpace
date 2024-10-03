@@ -58,9 +58,9 @@ void ModuleImpl::run(void)
 	/////////////////////////////////////////////////////
 
 	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
-	const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
+	//const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
 
-	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };
+	//const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };
 
 	// resources system event
 	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
@@ -441,6 +441,15 @@ void ModuleImpl::run(void)
 		const std::vector<rendering::RenderState> collimator_sprite_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 		const auto sprite_collimator{ helpers::plug2DSpriteWithPosition(m_entitygraph, "quadEntity2", "collimator_sprite", 0.025, 0.025, "sprite_vs", "sprite_ps", "target.bmp", collimator_sprite_rs_list, 1000) };
 		
+		// colimator text
+
+		auto& collimatorTextNode{ m_entitygraph.add(quadNode, "collimator_text") };
+		const auto collimatorTextEntity{ collimatorTextNode.data() };
+
+		auto& collimator_text_rendering_aspect{ collimatorTextEntity->makeAspect(core::renderingAspect::id) };
+
+		Queue::Text queue_text = { "distance = ? ? ? ", "CourierNew.10.spritefont", { 100, 100, 255, 255 }, { 300, 300 }, 0.0};
+		collimator_text_rendering_aspect.addComponent<Queue::Text>("queue_text", queue_text);
 
 
 		m_quadEntity2_state = true;

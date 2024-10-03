@@ -55,9 +55,9 @@ namespace renderMe
 							int p_rendering_order
 						)
 		{			
-			auto& parentNodeNode{ p_entitygraph.node(p_parentid) };
+			auto& parentNode{ p_entitygraph.node(p_parentid) };
 
-			auto& sprite2DNode{ p_entitygraph.add(parentNodeNode, p_spriteEntityid) };
+			auto& sprite2DNode{ p_entitygraph.add(parentNode, p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
 
 			auto& resource_aspect{ sprite2DEntity->makeAspect(core::resourcesAspect::id) };
@@ -197,9 +197,9 @@ namespace renderMe
 			float p_ypos = 0,
 			float p_rot_radians = 0)
 		{
-			auto& parentNodeNode{ p_entitygraph.node(p_parentid) };
+			auto& parentNode{ p_entitygraph.node(p_parentid) };
 
-			auto& sprite2DNode{ p_entitygraph.add(parentNodeNode, p_spriteEntityid) };
+			auto& sprite2DNode{ p_entitygraph.add(parentNode, p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
 
 			auto& resource_aspect{ sprite2DEntity->makeAspect(core::resourcesAspect::id) };

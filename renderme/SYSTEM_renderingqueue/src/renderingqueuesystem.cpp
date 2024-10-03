@@ -377,20 +377,27 @@ void RenderingQueueSystem::manageRenderingQueue()
 
 			rendering::Queue* current_queue{ searchRenderingQueueInAncestors(current_entity) };
 
-			if (current_entity->hasAspect(renderMe::core::resourcesAspect::id) &&
-				current_entity->hasAspect(renderMe::core::renderingAspect::id) && current_queue)
+			if (current_entity->hasAspect(renderMe::core::renderingAspect::id) && current_queue)
 			{
-				const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
 				const auto& rendering_aspect{ current_entity->aspectAccess(renderMe::core::renderingAspect::id) };
 
-				if (current_queue)
+				if (current_entity->hasAspect(renderMe::core::resourcesAspect::id))
 				{
+					const auto& resource_aspect{ current_entity->aspectAccess(renderMe::core::resourcesAspect::id) };
 					checkEntityInsertion(currEntityId, resource_aspect, rendering_aspect, *current_queue);
+				}
+
+				// search for text rendering in rendering aspect
+
+				const auto texts{ rendering_aspect.getComponentsByType<rendering::Queue::Text>() };
+				if (texts.size() > 0)
+				{
+					auto& text{ texts.at(0)->getPurpose() };
+					current_queue->pushText(text);
 				}
 			}
 		}
-	}
-	
+	}	
 }
 
 void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, rendering::Queue& p_renderingQueue)
