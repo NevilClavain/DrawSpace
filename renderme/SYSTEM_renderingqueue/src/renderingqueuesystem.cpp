@@ -38,6 +38,8 @@
 #include "trianglemeshe.h"
 #include "texture.h"
 #include "exceptions.h"
+#include "worldposition.h"
+#include "datacloud.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -391,8 +393,21 @@ void RenderingQueueSystem::manageRenderingQueue()
 
 				const auto texts{ rendering_aspect.getComponentsByType<rendering::Queue::Text>() };
 				if (texts.size() > 0)
-				{
+				{			
 					auto& text{ texts.at(0)->getPurpose() };
+
+					if (current_entity->hasAspect(renderMe::core::worldAspect::id))
+					{
+						const auto& world_aspect{ current_entity->aspectAccess(renderMe::core::worldAspect::id) };
+						const auto wp{ world_aspect.getComponentsByType<renderMe::transform::WorldPosition>().at(0)->getPurpose() };
+
+						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+						const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
+						const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+
+						text.position[0] = ((wp.global_pos(3, 0) + (viewport[0] * 0.5f)) * window_dims[0]) / viewport[0];
+						text.position[1] = (((viewport[1] * 0.5f) - wp.global_pos(3, 1)) * window_dims[1]) / viewport[1];
+					}
 					current_queue->pushText(text);
 				}
 			}

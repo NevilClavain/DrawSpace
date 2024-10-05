@@ -442,14 +442,21 @@ void ModuleImpl::run(void)
 		const auto sprite_collimator{ helpers::plug2DSpriteWithPosition(m_entitygraph, "quadEntity2", "collimator_sprite", 0.025, 0.025, "sprite_vs", "sprite_ps", "target.bmp", collimator_sprite_rs_list, 1000) };
 		
 		// colimator text
+		// TODO : put in a HELPERS
+
 
 		auto& collimatorTextNode{ m_entitygraph.add(quadNode, "collimator_text") };
 		const auto collimatorTextEntity{ collimatorTextNode.data() };
 
 		auto& collimator_text_rendering_aspect{ collimatorTextEntity->makeAspect(core::renderingAspect::id) };
 
-		Queue::Text queue_text = { "distance = ? ? ? ", "CourierNew.10.spritefont", { 100, 100, 255, 255 }, { 300, 300 }, 0.0};
+		Queue::Text queue_text = { "distance = ? ? ? ", "CourierNew.10.spritefont", { 0, 255, 0, 255 }, { 1900, 1000 }, 0.0};
 		collimator_text_rendering_aspect.addComponent<Queue::Text>("queue_text", queue_text);
+
+		auto& collimator_world_aspect{ collimatorTextEntity->makeAspect(core::worldAspect::id) };
+		transform::WorldPosition wp;
+		wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS;
+		collimator_world_aspect.addComponent<transform::WorldPosition>("position", wp);
 
 
 		m_quadEntity2_state = true;
