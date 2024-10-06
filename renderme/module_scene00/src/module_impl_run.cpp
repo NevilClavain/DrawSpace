@@ -442,7 +442,11 @@ void ModuleImpl::run(void)
 		const auto sprite_collimator{ helpers::plug2DSpriteWithPosition(m_entitygraph, "quadEntity2", "collimator_sprite", 0.025, 0.025, "sprite_vs", "sprite_ps", "target.bmp", collimator_sprite_rs_list, 1000) };
 		
 		// colimator text
-		// TODO : put in a HELPERS
+		// TODO : 
+		//  - set local pos with animator
+		//	- put in a HELPERS
+		//    and check case not under another entity
+		//  - zneg bug
 
 
 		auto& collimatorTextNode{ m_entitygraph.add(quadNode, "collimator_text") };
@@ -458,12 +462,35 @@ void ModuleImpl::run(void)
 		wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS;
 		collimator_world_aspect.addComponent<transform::WorldPosition>("position", wp);
 
+		collimator_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+		(
+			{},
+			[](const core::ComponentContainer& p_world_aspect,
+				const core::ComponentContainer& p_time_aspect,
+				const transform::WorldPosition&,
+				const std::unordered_map<std::string, std::string>&)
+			{
+
+				maths::Matrix positionmat;
+				positionmat.translation(-0.02, -0.015, 0);
+
+				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+				wp.local_pos = wp.local_pos * positionmat;
+			}
+		));
+
+		collimatorTextEntity->makeAspect(core::timeAspect::id);
+
 
 		m_quadEntity2_state = true;
 		
 	}
 	else if (false == m_quadEntity2_state_request && true == m_quadEntity2_state)
 	{
+
+		auto& text_collimator_node{ m_entitygraph.node("collimator_text") };
+		m_entitygraph.remove(text_collimator_node);
+
 
 		auto& sprite_collimator_node { m_entitygraph.node("collimator_sprite") };
 		m_entitygraph.remove(sprite_collimator_node);
