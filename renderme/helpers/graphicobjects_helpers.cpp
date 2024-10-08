@@ -149,7 +149,7 @@ namespace renderMe
 			return sprite2DEntity;
 		}
 
-		core::SyncVariable& get2DSpriteXControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		core::SyncVariable& getXPosSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -160,7 +160,7 @@ namespace renderMe
 			return x_pos;
 		}
 
-		core::SyncVariable& get2DSpriteYControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		core::SyncVariable& getYPosSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -171,7 +171,7 @@ namespace renderMe
 			return y_pos;
 		}
 
-		core::SyncVariable& get2DSpriteZControl(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		core::SyncVariable& getZRotSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -181,7 +181,6 @@ namespace renderMe
 			core::SyncVariable& z_rot{ time_aspect.getComponent< core::SyncVariable>("z_rot")->getPurpose() };
 			return z_rot;
 		}
-
 
 		core::Entity* plug2DSpriteWithPosition(renderMe::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
@@ -293,7 +292,58 @@ namespace renderMe
 			return sprite2DEntity;
 		}
 
-		double& get2DSpriteXPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+
+		core::Entity* plugTextWithPosition(renderMe::core::Entitygraph& p_entitygraph,
+			const std::string& p_parentid,
+			const std::string& p_textEntityid, 
+			const renderMe::rendering::Queue::Text& p_queue_text,
+			float p_xpos = 0,
+			float p_ypos = 0)
+		{
+			auto& parentNode{ p_entitygraph.node(p_parentid) };
+
+			auto& textNode{ p_entitygraph.add(parentNode, p_textEntityid) };
+			const auto textEntity{ textNode.data() };
+
+			auto& rendering_aspect{ textEntity->makeAspect(core::renderingAspect::id) };
+		
+			rendering_aspect.addComponent<renderMe::rendering::Queue::Text>("queue_text", p_queue_text);
+
+			auto& world_aspect{ textEntity->makeAspect(core::worldAspect::id) };
+			transform::WorldPosition wp;
+			wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS;
+			world_aspect.addComponent<transform::WorldPosition>("position", wp);
+
+			world_aspect.addComponent<double>("x_pos", p_xpos);
+			world_aspect.addComponent<double>("y_pos", p_ypos);
+
+
+			world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+			(
+				{},
+				[](const core::ComponentContainer& p_world_aspect,
+					const core::ComponentContainer& p_time_aspect,
+					const transform::WorldPosition&,
+					const std::unordered_map<std::string, std::string>&)
+				{
+					const auto& x_pos{ p_world_aspect.getComponent<double>("x_pos")->getPurpose() };
+					const auto& y_pos{ p_world_aspect.getComponent<double>("y_pos")->getPurpose() };
+
+					core::maths::Matrix positionmat;
+					positionmat.translation(x_pos, y_pos, 0);
+
+					transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+					wp.local_pos = wp.local_pos * positionmat;
+				}
+			));
+
+			// time aspect
+			textEntity->makeAspect(core::timeAspect::id);
+
+			return textEntity;
+		}
+
+		double& getXPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -304,7 +354,7 @@ namespace renderMe
 			return x_pos;
 		}
 
-		double& get2DSpriteYPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		double& getYPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -315,7 +365,7 @@ namespace renderMe
 			return y_pos;
 		}
 
-		double& get2DSpriteZRot(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		double& getZRot(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };

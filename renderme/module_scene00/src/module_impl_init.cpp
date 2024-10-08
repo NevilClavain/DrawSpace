@@ -391,14 +391,15 @@ void ModuleImpl::d3d11_system_events()
 
 					m_bufferRenderingQueue = &renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose();
 
-					//m_bufferRenderingQueue->setCurrentView("Camera01Entity");
+					m_bufferRenderingQueue->setCurrentView("Camera01Entity");
 					//m_bufferRenderingQueue->setCurrentView("Camera02Entity");
-					m_bufferRenderingQueue->setCurrentView("Camera03Entity");
+					//m_bufferRenderingQueue->setCurrentView("Camera03Entity");
 
 
 					////////////////////////////////////////////////////////////////////////////////////
 
 					
+					/// test sprite entity
 					rendering::RenderState rs_noculling(rendering::RenderState::Operation::SETCULLING, "cw");
 					rendering::RenderState rs_zbuffer(rendering::RenderState::Operation::ENABLEZBUFFER, "false");
 					rendering::RenderState rs_fill(rendering::RenderState::Operation::SETFILLMODE, "solid");
@@ -408,8 +409,15 @@ void ModuleImpl::d3d11_system_events()
 
 					helpers::plug2DSpriteWithPosition(m_entitygraph, "bufferRenderingEntity", "logo_sprite", 0.06, 0.06, "sprite_vs", "sprite_ps", "mage_hat.bmp", rs_list, 1000000);
 					
-					helpers::get2DSpriteXPos(m_entitygraph, "logo_sprite") = 0.2;
-					helpers::get2DSpriteYPos(m_entitygraph, "logo_sprite") = 0.1;
+					helpers::getXPos(m_entitygraph, "logo_sprite") = 0.2;
+					helpers::getYPos(m_entitygraph, "logo_sprite") = 0.1;
+
+					// test text entity
+
+					helpers::plugTextWithPosition(m_entitygraph, "bufferRenderingEntity", "plop_text", { "plop !", "CourierNew.10.spritefont", { 255, 255, 255, 255 } });
+
+					helpers::getXPos(m_entitygraph, "plop_text") = 0.2;
+					helpers::getYPos(m_entitygraph, "plop_text") = 0.15;
 
 
 				}
