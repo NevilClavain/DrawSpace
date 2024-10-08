@@ -443,48 +443,10 @@ void ModuleImpl::run(void)
 		
 		// colimator text
 		// TODO : 
-		//	- put in a HELPERS
-		//    and check case not under another entity
 		//  - zneg bug
-		//	- update distance teext
+		//	- update distance text
 
-
-		/*
-		auto& collimatorTextNode{ m_entitygraph.add(quadNode, "collimator_text") };
-		const auto collimatorTextEntity{ collimatorTextNode.data() };
-
-		auto& collimator_text_rendering_aspect{ collimatorTextEntity->makeAspect(core::renderingAspect::id) };
-
-		Queue::Text queue_text = { "distance = ? ? ? ", "CourierNew.10.spritefont", { 0, 255, 0, 255 }, { 1900, 1000 }, 0.0};
-		collimator_text_rendering_aspect.addComponent<Queue::Text>("queue_text", queue_text);
-
-		auto& collimator_world_aspect{ collimatorTextEntity->makeAspect(core::worldAspect::id) };
-		transform::WorldPosition wp;
-		wp.composition_operation = transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS;
-		collimator_world_aspect.addComponent<transform::WorldPosition>("position", wp);
-
-		collimator_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
-		(
-			{},
-			[](const core::ComponentContainer& p_world_aspect,
-				const core::ComponentContainer& p_time_aspect,
-				const transform::WorldPosition&,
-				const std::unordered_map<std::string, std::string>&)
-			{
-
-				maths::Matrix positionmat;
-				positionmat.translation(-0.02, -0.015, 0);
-
-				transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
-				wp.local_pos = wp.local_pos * positionmat;
-			}
-		));
-
-		collimatorTextEntity->makeAspect(core::timeAspect::id);
-		*/
-
-		//renderMe::rendering::Queue::Text queue_text = ;
-
+		
 		helpers::plugTextWithPosition(m_entitygraph, "quadEntity2", "collimator_text", { "distance = ??? ", "CourierNew.10.spritefont", { 0, 200, 0, 255 }});
 
 

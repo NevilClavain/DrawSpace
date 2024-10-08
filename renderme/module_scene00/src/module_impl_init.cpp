@@ -391,8 +391,8 @@ void ModuleImpl::d3d11_system_events()
 
 					m_bufferRenderingQueue = &renderingAspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose();
 
-					m_bufferRenderingQueue->setCurrentView("Camera01Entity");
-					//m_bufferRenderingQueue->setCurrentView("Camera02Entity");
+					//m_bufferRenderingQueue->setCurrentView("Camera01Entity");
+					m_bufferRenderingQueue->setCurrentView("Camera02Entity");
 					//m_bufferRenderingQueue->setCurrentView("Camera03Entity");
 
 
