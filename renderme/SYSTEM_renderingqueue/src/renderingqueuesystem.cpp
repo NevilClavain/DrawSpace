@@ -396,14 +396,14 @@ void RenderingQueueSystem::manageRenderingQueue()
 				{			
 					auto& text{ texts.at(0)->getPurpose() };
 
-					bool clip_it{ false };
+					bool projected_z_neg{ false };
 
 					if (current_entity->hasAspect(renderMe::core::worldAspect::id))
 					{
 						const auto& world_aspect{ current_entity->aspectAccess(renderMe::core::worldAspect::id) };
 						const auto wp{ world_aspect.getComponentsByType<renderMe::transform::WorldPosition>().at(0)->getPurpose() };
 
-						clip_it = wp.clip_it;
+						projected_z_neg = wp.projected_z_neg;
 
 						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 						const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
@@ -412,7 +412,7 @@ void RenderingQueueSystem::manageRenderingQueue()
 						text.position[0] = ((wp.global_pos(3, 0) + (viewport[0] * 0.5f)) * window_dims[0]) / viewport[0];
 						text.position[1] = (((viewport[1] * 0.5f) - wp.global_pos(3, 1)) * window_dims[1]) / viewport[1];
 					}
-					if (!clip_it)
+					if (!projected_z_neg)
 					{
 						current_queue->pushText(text);
 					}

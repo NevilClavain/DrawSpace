@@ -54,7 +54,7 @@ namespace renderMe
             core::maths::Matrix local_pos;
             core::maths::Matrix global_pos;
 
-            bool                clip_it{ false };
+            bool                projected_z_neg{ false };
 
             TransformationComposition composition_operation{ TransformationComposition::TRANSFORMATION_RELATIVE_FROM_PARENT };
         };

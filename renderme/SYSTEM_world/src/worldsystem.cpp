@@ -126,7 +126,7 @@ void WorldSystem::run()
 									updated_local_pos(3, 0) += screenposition_component[0];
 									updated_local_pos(3, 1) += screenposition_component[1];
 
-									entity_worldposition.clip_it = (screenposition_component[2] < 0);
+									entity_worldposition.projected_z_neg = (screenposition_component[2] < 0);
 
 
 									entity_worldposition.global_pos = updated_local_pos;
