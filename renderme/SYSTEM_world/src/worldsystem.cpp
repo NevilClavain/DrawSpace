@@ -116,7 +116,7 @@ void WorldSystem::run()
 
 						case transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS:
 							{
-								const auto comps{ parent_worldaspect.getComponentsByType<core::maths::FloatCoords2D>() };
+								const auto comps{ parent_worldaspect.getComponentsByType<core::maths::Real3Vector>() };
 								if (comps.size() > 0)
 								{
 									const auto screenposition_component{ comps.at(0)->getPurpose() };
@@ -125,6 +125,9 @@ void WorldSystem::run()
 
 									updated_local_pos(3, 0) += screenposition_component[0];
 									updated_local_pos(3, 1) += screenposition_component[1];
+
+									entity_worldposition.clip_it = (screenposition_component[2] < 0);
+
 
 									entity_worldposition.global_pos = updated_local_pos;
 								}
@@ -301,7 +304,7 @@ void WorldSystem::run()
 			{
 				const auto& world_aspect{ curr_entity->aspectAccess(worldAspect::id) };
 
-				const auto comps{ world_aspect.getComponentsByType<core::maths::FloatCoords2D>() };
+				const auto comps{ world_aspect.getComponentsByType<core::maths::Real3Vector>() };
 				if (comps.size() > 0)
 				{
 					const auto& screenposition_component{ comps.at(0) };
@@ -337,11 +340,11 @@ void WorldSystem::run()
 						const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
 
 
-						const float posx{ static_cast<float>(res_point[0] / (res_point[2] + 1.0)) * 0.5f * viewport[0] };
-						const float posy{ static_cast<float>(res_point[1] / (res_point[2] + 1.0)) * 0.5f * viewport[1] };
+						const double posx{ static_cast<double>(res_point[0] / (res_point[2] + 1.0)) * 0.5 * viewport[0] };
+						const double posy{ static_cast<double>(res_point[1] / (res_point[2] + 1.0)) * 0.5 * viewport[1] };
 
-						core::maths::FloatCoords2D pos2d(posx, posy);
-						screenposition_component->getPurpose() = pos2d;
+						core::maths::Real3Vector projected_pos(posx, posy, res_point[2]);
+						screenposition_component->getPurpose() = projected_pos;
 					}
 				}
 			}	

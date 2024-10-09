@@ -71,8 +71,8 @@ void ModuleImpl::run(void)
 	{
 		const auto quadEntity{ m_entitygraph.node("quadEntity2").data() };
 		const auto& world_aspect{ quadEntity->aspectAccess(core::worldAspect::id) };
-		const auto screenposition{ world_aspect.getComponent<core::maths::FloatCoords2D>("screenposition")->getPurpose() };
-		dataCloud->updateDataValue<maths::FloatCoords2D>("quadEntity2_2Dposition", screenposition);
+		const auto screenposition{ world_aspect.getComponent<core::maths::Real3Vector>("screenposition")->getPurpose() };
+		dataCloud->updateDataValue<maths::Real3Vector>("quadEntity2_projected_position", screenposition);
 	}
 	//////////////////////////////////////////////////////
 	// 	
@@ -383,9 +383,9 @@ void ModuleImpl::run(void)
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
-		world_aspect.addComponent<core::maths::FloatCoords2D>("screenposition", core::maths::FloatCoords2D(0.0, 0.0));
+		world_aspect.addComponent<core::maths::Real3Vector>("screenposition", core::maths::Real3Vector(0.0, 0.0, 0.0));
 
-		dataCloud->registerData<maths::FloatCoords2D>("quadEntity2_2Dposition");
+		dataCloud->registerData<maths::Real3Vector>("quadEntity2_projected_position");
 
 
 		world_aspect.addComponent<transform::WorldPosition>("position");
@@ -467,7 +467,7 @@ void ModuleImpl::run(void)
 		auto& quadNode{ m_entitygraph.node("quadEntity2") };
 		m_entitygraph.remove(quadNode);
 
-		dataCloud->removeData<maths::FloatCoords2D>("quadEntity2_2Dposition");
+		dataCloud->removeData<maths::Real3Vector>("quadEntity2_projected_position");
 
 		m_quadEntity2_state = false;
 	}
