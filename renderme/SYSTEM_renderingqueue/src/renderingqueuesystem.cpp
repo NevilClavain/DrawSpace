@@ -584,6 +584,8 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMesheAndTexturesPayl
 			trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 			trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
 
+			trianglesQueueDrawingControl.projected_z_neg = &trianglesDrawingControl.projected_z_neg;
+
 			trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
 			trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
 			trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
@@ -624,6 +626,7 @@ static rendering::Queue::TriangleMeshePayload build_TriangleMesheAndTexturesPayl
 
 			rendering::QueueDrawingControl trianglesQueueDrawingControl;
 			trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
+			trianglesQueueDrawingControl.projected_z_neg = &trianglesDrawingControl.projected_z_neg;
 			trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
 			trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
 			trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
@@ -959,6 +962,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 													rendering::QueueDrawingControl trianglesQueueDrawingControl;
 													trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 													trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
+													trianglesQueueDrawingControl.projected_z_neg = &trianglesDrawingControl.projected_z_neg;
 													trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
 													trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
 													trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
@@ -1005,6 +1009,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 														rendering::QueueDrawingControl trianglesQueueDrawingControl;
 														trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 														trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
+														trianglesQueueDrawingControl.projected_z_neg = &trianglesDrawingControl.projected_z_neg;
 														trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
 														trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
 														trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;
@@ -1046,6 +1051,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 														rendering::QueueDrawingControl trianglesQueueDrawingControl;
 														trianglesQueueDrawingControl.owner_entity_id = trianglesDrawingControl.owner_entity_id;
 														trianglesQueueDrawingControl.world = &trianglesDrawingControl.world;
+														trianglesQueueDrawingControl.projected_z_neg = &trianglesDrawingControl.projected_z_neg;
 														trianglesQueueDrawingControl.setup = &trianglesDrawingControl.setup;
 														trianglesQueueDrawingControl.teardown = &trianglesDrawingControl.teardown;
 														trianglesQueueDrawingControl.wvpFilter = &trianglesDrawingControl.wvpFilter;

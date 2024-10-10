@@ -127,9 +127,21 @@ void WorldSystem::run()
 									updated_local_pos(3, 1) += screenposition_component[1];
 
 									entity_worldposition.projected_z_neg = (screenposition_component[2] < 0);
-
-
 									entity_worldposition.global_pos = updated_local_pos;
+
+									if (p_entity->hasAspect(core::renderingAspect::id))
+									{
+										const auto& entity_renderingaspect{ p_entity->aspectAccess(core::renderingAspect::id) };
+
+										auto& entity_dc_list{ entity_renderingaspect.getComponentsByType<rendering::DrawingControl>() };
+										if (entity_dc_list.size() > 0)
+										{
+											entity_dc_list.at(0)->getPurpose().projected_z_neg = (screenposition_component[2] < 0);
+										}
+									}
+
+
+
 								}
 								else
 								{

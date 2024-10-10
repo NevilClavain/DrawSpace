@@ -624,14 +624,17 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 									//////
 
-									// world view proj matrix customization (if required)
-									const auto wvpfilterfunc{ *tdc.second.wvpFilter };
-									const auto mod_wvp{ wvpfilterfunc(*tdc.second.world, current_view, current_proj) };
-									const auto mod_world{ std::get<0>(mod_wvp) };
-									const auto mod_view{ std::get<1>(mod_wvp) };
-									const auto mod_proj{ std::get<2>(mod_wvp) };
+									if (!(*tdc.second.projected_z_neg))
+									{
+										// world view proj matrix customization (if required)
+										const auto wvpfilterfunc{ *tdc.second.wvpFilter };
+										const auto mod_wvp{ wvpfilterfunc(*tdc.second.world, current_view, current_proj) };
+										const auto mod_world{ std::get<0>(mod_wvp) };
+										const auto mod_view{ std::get<1>(mod_wvp) };
+										const auto mod_proj{ std::get<2>(mod_wvp) };
 
-									d3dimpl->drawTriangleMeshe(mod_world, mod_view, mod_proj);
+										d3dimpl->drawTriangleMeshe(mod_world, mod_view, mod_proj);
+									}
 
 									//////
 
@@ -701,14 +704,17 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 
 									//////
 
-									// world view proj matrix customization (if required)
-									const auto wvpfilterfunc{ *tdc.second.wvpFilter };
-									const auto mod_wvp{ wvpfilterfunc(*tdc.second.world, current_view, current_proj) };
-									const auto mod_world{ std::get<0>(mod_wvp) };
-									const auto mod_view{ std::get<1>(mod_wvp) };
-									const auto mod_proj{ std::get<2>(mod_wvp) };
+									if (!(*tdc.second.projected_z_neg))
+									{
+										// world view proj matrix customization (if required)
+										const auto wvpfilterfunc{ *tdc.second.wvpFilter };
+										const auto mod_wvp{ wvpfilterfunc(*tdc.second.world, current_view, current_proj) };
+										const auto mod_world{ std::get<0>(mod_wvp) };
+										const auto mod_view{ std::get<1>(mod_wvp) };
+										const auto mod_proj{ std::get<2>(mod_wvp) };
 
-									d3dimpl->drawTriangleMeshe(mod_world, mod_view, mod_proj);
+										d3dimpl->drawTriangleMeshe(mod_world, mod_view, mod_proj);
+									}
 
 									//////
 									const auto teardown_func{ *tdc.second.setup };

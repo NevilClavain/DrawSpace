@@ -73,6 +73,8 @@ namespace renderMe
 
 			bool				ready{ false };
 
+			bool                projected_z_neg{ false }; // for objects that takes their pos from projected position (some 2d sprites...)
+
 			std::function<void()> setup{ [] {} };
 			std::function<void()> teardown{ [] {} };
 
@@ -107,6 +109,8 @@ namespace renderMe
 
 			// transformations to apply;
 			core::maths::Matrix* world{ nullptr };
+
+			bool* projected_z_neg{ nullptr };
 
 			std::function<void()>* setup{ nullptr };
 			std::function<void()>* teardown{ nullptr };
