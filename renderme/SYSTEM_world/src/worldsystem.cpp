@@ -116,11 +116,6 @@ void WorldSystem::run()
 
 						case transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS:
 							{
-								// ICI
-								
-								//const auto comps{ parent_worldaspect.getComponentsByType<core::maths::Real3Vector>() };
-								//if (comps.size() > 0)
-
 								auto screenposition_component{ parent_worldaspect.getComponent<core::maths::Real3Vector>("eg.std.projected_position") };
 								if (screenposition_component)
 								{
