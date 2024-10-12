@@ -66,7 +66,7 @@ void ModuleImpl::run(void)
 	{
 		const auto quadEntity{ m_entitygraph.node("quadEntity2").data() };
 		const auto& world_aspect{ quadEntity->aspectAccess(core::worldAspect::id) };
-		const auto screenposition{ world_aspect.getComponent<core::maths::Real3Vector>("screenposition")->getPurpose() };
+		const auto screenposition{ world_aspect.getComponent<core::maths::Real3Vector>("eg.std.projected_position")->getPurpose() };
 		dataCloud->updateDataValue<maths::Real3Vector>("quadEntity2_projected_position", screenposition);
 	}
 	//////////////////////////////////////////////////////
@@ -378,7 +378,7 @@ void ModuleImpl::run(void)
 
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
-		world_aspect.addComponent<core::maths::Real3Vector>("screenposition", core::maths::Real3Vector(0.0, 0.0, 0.0));
+		world_aspect.addComponent<core::maths::Real3Vector>("eg.std.projected_position", core::maths::Real3Vector(0.0, 0.0, 0.0));
 
 		dataCloud->registerData<maths::Real3Vector>("quadEntity2_projected_position");
 

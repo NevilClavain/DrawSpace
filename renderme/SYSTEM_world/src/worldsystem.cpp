@@ -116,17 +116,22 @@ void WorldSystem::run()
 
 						case transform::WorldPosition::TransformationComposition::TRANSFORMATION_PARENT_PROJECTEDPOS:
 							{
-								const auto comps{ parent_worldaspect.getComponentsByType<core::maths::Real3Vector>() };
-								if (comps.size() > 0)
+								// ICI
+								
+								//const auto comps{ parent_worldaspect.getComponentsByType<core::maths::Real3Vector>() };
+								//if (comps.size() > 0)
+
+								auto screenposition_component{ parent_worldaspect.getComponent<core::maths::Real3Vector>("eg.std.projected_position") };
+								if (screenposition_component)
 								{
-									const auto screenposition_component{ comps.at(0)->getPurpose() };
+									auto screenposition{ screenposition_component->getPurpose() };
 
 									auto updated_local_pos{ entity_worldposition.local_pos };
 
-									updated_local_pos(3, 0) += screenposition_component[0];
-									updated_local_pos(3, 1) += screenposition_component[1];
+									updated_local_pos(3, 0) += screenposition[0];
+									updated_local_pos(3, 1) += screenposition[1];
 
-									entity_worldposition.projected_z_neg = (screenposition_component[2] < 0);
+									entity_worldposition.projected_z_neg = (screenposition[2] < 0);
 									entity_worldposition.global_pos = updated_local_pos;
 
 									if (p_entity->hasAspect(core::renderingAspect::id))
@@ -136,17 +141,15 @@ void WorldSystem::run()
 										auto& entity_dc_list{ entity_renderingaspect.getComponentsByType<rendering::DrawingControl>() };
 										if (entity_dc_list.size() > 0)
 										{
-											entity_dc_list.at(0)->getPurpose().projected_z_neg = (screenposition_component[2] < 0);
+											entity_dc_list.at(0)->getPurpose().projected_z_neg = (screenposition[2] < 0);
 										}
 									}
-
-
-
 								}
 								else
 								{
 									_EXCEPTION("TRANSFORMATION_PARENT_PROJECTEDPOS mode require 2D projected pos from parent")
 								}
+								
 							}
 							break;
 					}
@@ -316,10 +319,9 @@ void WorldSystem::run()
 			{
 				const auto& world_aspect{ curr_entity->aspectAccess(worldAspect::id) };
 
-				const auto comps{ world_aspect.getComponentsByType<core::maths::Real3Vector>() };
-				if (comps.size() > 0)
+				const auto screenposition_component{ world_aspect.getComponent<core::maths::Real3Vector>("eg.std.projected_position") };
+				if (screenposition_component)
 				{
-					const auto& screenposition_component{ comps.at(0) };
 					const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
 
 					if (0 == worldpositions_list.size())
