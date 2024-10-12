@@ -100,10 +100,10 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 
 	// complete main window entity with renderer characteristics
-	mainwindows_rendering_aspect.addComponent<int>("widthResol", characteristics_width_resol);
-	mainwindows_rendering_aspect.addComponent<int>("heightResol", characteristics_height_resol);
-	mainwindows_rendering_aspect.addComponent<float>("viewportWidth", characteristics_v_width);
-	mainwindows_rendering_aspect.addComponent<float>("viewportHeight", characteristics_v_height);
+	mainwindows_rendering_aspect.addComponent<int>("eg.std.widthResol", characteristics_width_resol);
+	mainwindows_rendering_aspect.addComponent<int>("eg.std.heightResol", characteristics_height_resol);
+	mainwindows_rendering_aspect.addComponent<float>("eg.std.viewportWidth", characteristics_v_width);
+	mainwindows_rendering_aspect.addComponent<float>("eg.std.viewportHeight", characteristics_v_height);
 
 	dataCloud->registerData<renderMe::core::maths::IntCoords2D>("std.window_resol");
 	dataCloud->updateDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol", renderMe::core::maths::IntCoords2D(characteristics_width_resol, characteristics_height_resol));
