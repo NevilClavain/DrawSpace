@@ -260,7 +260,7 @@ namespace renderMe
 			/// RENDERING ASPECT
 			auto& quad_rendering_aspect{ screenRenderingQuadEntity->makeAspect(core::renderingAspect::id) };
 
-			quad_rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("renderingTarget", core::renderingAspect::renderingTarget::BUFFER_RENDERINGTARGET);
+			quad_rendering_aspect.addComponent<core::renderingAspect::renderingTarget>("eg.std.renderingTarget", core::renderingAspect::renderingTarget::BUFFER_RENDERINGTARGET);
 
 			/////////// render target Texture
 

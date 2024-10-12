@@ -56,7 +56,6 @@ void ModuleImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
 	const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
 
 	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };

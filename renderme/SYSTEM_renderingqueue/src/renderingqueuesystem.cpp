@@ -446,7 +446,7 @@ void RenderingQueueSystem::handleRenderingQueuesState(Entity* p_entity, renderin
 					if (parent_entity->hasAspect(core::renderingAspect::id))
 					{
 						const auto& parent_rendering_aspect{ parent_entity->aspectAccess(core::renderingAspect::id) };
-						auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("renderingTarget") };
+						auto parent_rendering_target_comp{ parent_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("eg.std.renderingTarget") };
 						if (parent_rendering_target_comp)
 						{
 							if (core::renderingAspect::renderingTarget::SCREEN_RENDERINGTARGET == parent_rendering_target_comp->getPurpose())

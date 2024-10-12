@@ -51,12 +51,6 @@ void TimeSystem::run()
 			[&](Entity* p_entity, const ComponentContainer& p_time_aspect)
 			{
 				// update FPS info
-				const auto fpsComp { p_time_aspect.getComponent<int>("framePerSeconds") };
-				if (fpsComp)
-				{
-					fpsComp->getPurpose() = tm->getFPS();
-				}
-
 				const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 				dataCloud->updateDataValue<long>("std.framesPerSecond", tm->getFPS());
 

@@ -57,11 +57,6 @@ void ModuleImpl::run(void)
 
 	/////////////////////////////////////////////////////
 
-	//const auto currentFPS { m_timeInfos_time_aspect->getComponent<int>("framePerSeconds")->getPurpose() };
-	//const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
-
-	//const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };
-
 	// resources system event
 	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
 
@@ -443,9 +438,7 @@ void ModuleImpl::run(void)
 		
 		// colimator text
 		// TODO : 
-		//  - zneg bug
 		//	- update distance text
-
 		
 		helpers::plugTextWithPosition(m_entitygraph, "quadEntity2", "collimator_text", { "distance = ??? ", "CourierNew.10.spritefont", { 0, 200, 0, 255 }});
 

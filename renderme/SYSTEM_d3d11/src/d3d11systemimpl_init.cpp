@@ -46,9 +46,9 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	RECT rect{ 0 }; // /!\ valid on ly if !fullscreen
 
-	const auto windowHWND{ mainwindows_rendering_aspect.getComponent<HWND>("windowHWND")->getPurpose() };
+	const auto windowHWND{ mainwindows_rendering_aspect.getComponent<HWND>("eg.std.windowHWND")->getPurpose() };
 
-	const auto fullscreen{ mainwindows_rendering_aspect.getComponent<bool>("fullscreen")->getPurpose() };
+	const auto fullscreen{ mainwindows_rendering_aspect.getComponent<bool>("eg.std.fullscreen")->getPurpose() };
 	if (fullscreen)
 	{
 		int         fullscreen_width;
@@ -301,7 +301,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	///////////////////////////////////////////////////
 
-	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("fonts")->getPurpose() };
+	const auto fonts{ mainwindows_rendering_aspect.getComponent<std::vector<std::string>>("eg.std.fonts")->getPurpose() };
 	for (const auto& fontname : fonts)
 	{
 		const std::wstring wfontname(fontname.begin(), fontname.end());
