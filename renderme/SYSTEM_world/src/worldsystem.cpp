@@ -314,7 +314,7 @@ void WorldSystem::run()
 			{
 				const auto& world_aspect{ curr_entity->aspectAccess(worldAspect::id) };
 
-				const auto distancetocamera_component{ world_aspect.getComponent<core::maths::Real3Vector>("eg.std.distance_to_camera") };
+				const auto distancetocamera_component{ world_aspect.getComponent<double>("eg.std.distance_to_camera") };
 				if (distancetocamera_component)
 				{
 					const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };

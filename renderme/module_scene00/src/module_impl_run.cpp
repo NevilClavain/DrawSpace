@@ -67,7 +67,23 @@ void ModuleImpl::run(void)
 		const auto quadEntity{ m_entitygraph.node("quadEntity2").data() };
 		const auto& world_aspect{ quadEntity->aspectAccess(core::worldAspect::id) };
 		const auto screenposition{ world_aspect.getComponent<core::maths::Real3Vector>("eg.std.projected_position")->getPurpose() };
+
+		
 		dataCloud->updateDataValue<maths::Real3Vector>("quadEntity2_projected_position", screenposition);
+
+
+		// update distance display
+		const auto distance_to_cam{ world_aspect.getComponent<double>("eg.std.distance_to_camera")->getPurpose() };
+
+
+
+		const auto collimator_text_node{ m_entitygraph.node("collimator_text") };
+		const auto collimator_text_entity{ collimator_text_node.data() };
+		const auto& rendering_aspect{ collimator_text_entity->aspectAccess(core::renderingAspect::id) };
+
+		auto& queue_text{ rendering_aspect.getComponent<renderMe::rendering::Queue::Text>("queue_text")->getPurpose() };
+
+		queue_text.text = std::to_string(distance_to_cam);
 	}
 	//////////////////////////////////////////////////////
 	// 	
@@ -379,7 +395,7 @@ void ModuleImpl::run(void)
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
 		world_aspect.addComponent<core::maths::Real3Vector>("eg.std.projected_position", core::maths::Real3Vector(0.0, 0.0, 0.0));
-		world_aspect.addComponent<core::maths::Real3Vector>("eg.std.distance_to_camera", core::maths::Real3Vector(0.0, 0.0, 0.0));
+		world_aspect.addComponent<double>("eg.std.distance_to_camera");
 
 		dataCloud->registerData<maths::Real3Vector>("quadEntity2_projected_position");
 
@@ -441,7 +457,7 @@ void ModuleImpl::run(void)
 		// TODO : 
 		//	- update distance text
 		
-		helpers::plugTextWithPosition(m_entitygraph, "quadEntity2", "collimator_text", { "distance = ??? ", "CourierNew.10.spritefont", { 0, 200, 0, 255 }});
+		helpers::plugTextWithPosition(m_entitygraph, "quadEntity2", "collimator_text", { "xxx", "CourierNew.10.spritefont", { 0, 200, 0, 255 }});
 
 
 		m_quadEntity2_state = true;
