@@ -314,6 +314,42 @@ void WorldSystem::run()
 			{
 				const auto& world_aspect{ curr_entity->aspectAccess(worldAspect::id) };
 
+				const auto distancetocamera_component{ world_aspect.getComponent<core::maths::Real3Vector>("eg.std.distance_to_camera") };
+				if (distancetocamera_component)
+				{
+					const auto& worldpositions_list{ world_aspect.getComponentsByType<transform::WorldPosition>() };
+
+					if (0 == worldpositions_list.size())
+					{
+						_EXCEPTION("entity world aspect : missing world position " + curr_entity->getId());
+					}
+					else
+					{
+						auto& entity_worldposition{ worldpositions_list.at(0)->getPurpose() };
+						maths::Matrix entity_world = entity_worldposition.global_pos;
+
+						maths::Matrix inv;
+						inv.identity();
+						inv(2, 2) = -1.0;
+						const auto final_view{ current_view * inv };
+
+						transform::MatrixChain chain;
+						chain.pushMatrix(final_view);
+						chain.pushMatrix(entity_world);
+						chain.buildResult();
+						auto final_mat{ chain.getResultTransform() };
+
+						core::maths::Real4Vector point(0, 0, 0, 1);
+						core::maths::Real4Vector res_point;
+
+						final_mat.transform(&point, &res_point);
+
+						const double distance_to_cam{ res_point.length() };
+
+						distancetocamera_component->getPurpose() = distance_to_cam;
+					}
+				}
+
 				const auto screenposition_component{ world_aspect.getComponent<core::maths::Real3Vector>("eg.std.projected_position") };
 				if (screenposition_component)
 				{

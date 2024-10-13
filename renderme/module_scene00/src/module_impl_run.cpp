@@ -379,6 +379,7 @@ void ModuleImpl::run(void)
 		auto& world_aspect{ quadEntity->makeAspect(core::worldAspect::id) };
 
 		world_aspect.addComponent<core::maths::Real3Vector>("eg.std.projected_position", core::maths::Real3Vector(0.0, 0.0, 0.0));
+		world_aspect.addComponent<core::maths::Real3Vector>("eg.std.distance_to_camera", core::maths::Real3Vector(0.0, 0.0, 0.0));
 
 		dataCloud->registerData<maths::Real3Vector>("quadEntity2_projected_position");
 
