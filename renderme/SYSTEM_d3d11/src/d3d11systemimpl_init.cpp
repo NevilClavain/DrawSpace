@@ -175,7 +175,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	hRes = r;
 	D3D11_CHECK(D3D11CreateDeviceAndSwapChain);
 
-	mainwindows_rendering_aspect.addComponent<std::string>("d3d11DriverDescr", driver_descr);
+	mainwindows_rendering_aspect.addComponent<std::string>("eg.std.d3d11DriverDescr", driver_descr);
 
 	m_lpd3ddevcontext = lpd3ddevcontext;
 	m_lpd3ddevice = lpd3ddevice;
@@ -208,7 +208,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	const std::string gpu_description(w_gpu_description.begin(), w_gpu_description.end());
 	dataCloud->updateDataValue<std::string>("std.gpu", gpu_description);
 
-	mainwindows_rendering_aspect.addComponent<std::string>("gpuName", gpu_description);
+	mainwindows_rendering_aspect.addComponent<std::string>("eg.std.gpuName", gpu_description);
 
 	// GPU driver version
 
@@ -224,7 +224,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	dataCloud->registerData<std::string>("std.gpu_driver");
 	dataCloud->updateDataValue<std::string>("std.gpu_driver", driver_version);
 
-	mainwindows_rendering_aspect.addComponent<std::string>("gpuDriver", driver_version);
+	mainwindows_rendering_aspect.addComponent<std::string>("eg.std.gpuDriver", driver_version);
 
 	///////////////////////////////////////////////////////////////////////
 
