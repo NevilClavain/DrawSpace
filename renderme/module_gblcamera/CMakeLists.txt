@@ -54,6 +54,7 @@ include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
 link_directories(${fw1fontwrapper_lib_dir})
 link_directories(${dxtk_lib_dir})
+link_directories(${assimp_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -67,6 +68,7 @@ file(
 add_library(module_gblcamera SHARED ${source_files})
 
 target_link_libraries(module_gblcamera 
+                                        assimp-vc140-mt
 										CORE_file 
 										CORE_filesystem 
 										CORE_buffer 

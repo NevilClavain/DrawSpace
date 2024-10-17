@@ -22,6 +22,10 @@
 */
 /* -*-LIC_END-*- */
 
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+
 #include "resourcesystem.h"
 #include "entity.h"
 #include "entitygraph.h"
@@ -34,6 +38,8 @@
 #include "shaders_service.h"
 #include "shader.h"
 #include "texture.h"
+#include "trianglemeshe.h"
+
 #include <utility>
 
 #include "datacloud.h"
@@ -216,6 +222,22 @@ void ResourceSystem::run()
 					texture.setState(Texture::State::BLOBLOADING);
 				}
 			}
+			////// Handle meshes //////////////
+			const auto m_list{ p_resource_aspect.getComponentsByType<std::pair<std::string, TriangleMeshe>>() };
+			for (auto& e : m_list)
+			{
+				auto& filemeshe{ e->getPurpose() };
+
+				TriangleMeshe& meshe{ filemeshe.second };
+				const auto filename{ filemeshe.first };
+
+				const auto state{ meshe.getState() };
+				if (TriangleMeshe::State::INIT == state)
+				{
+					handleTriangleMeshe(meshe, filename);
+					meshe.setState(TriangleMeshe::State::BLOBLOADING);
+				}
+			}
 		}
 	};
 
@@ -258,17 +280,6 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 				shaderInfos.setContent( shader_src_content.getData() );
 				shaderInfos.m_source_id = filename;
 				shaderInfos.compute_resource_uid();
-
-				/*
-				MD5 md5;
-				const std::string shaderMD5{ md5.digestMemory((BYTE*)shader_src_content.getData(), shader_src_content.getDataSize()) };
-				shaderInfos.setContentMD5( shaderMD5 );
-				*/
-
-				/*
-				const auto decomposed_shader_filename{ fileSystem::splitFilename(p_filename) };
-				const auto shaderCacheDirectory{ m_shadersCachePath + "/" + decomposed_shader_filename.first };
-				*/
 
 				const auto shaderCacheDirectory{ m_shadersCachePath + "/" + filename };
 
@@ -551,6 +562,13 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 	{
 		m_runnerIndex = 0;
 	}
+}
+
+void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename)
+{
+	const auto importer{ new Assimp::Importer() };
+
+	delete importer;
 }
 
 void ResourceSystem::killRunner()

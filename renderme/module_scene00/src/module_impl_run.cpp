@@ -328,6 +328,8 @@ void ModuleImpl::run(void)
 		quad_resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("texture_ps", Shader(pixelShader)));
 
 		/////////// Add trianglemeshe
+
+		/*
 		TriangleMeshe square;
 
 		square.push(Vertex(-0.9, -0.5, 0.0, 0.0f, 1.0f));
@@ -351,6 +353,11 @@ void ModuleImpl::run(void)
 		square.setSource(TriangleMeshe::Source::CONTENT_DYNAMIC_INIT);
 
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
+		*/
+
+		quad_resource_aspect.addComponent< std::pair<std::string, TriangleMeshe>>("cube", std::make_pair("tech.ac", TriangleMeshe()));
+
+		
 
 		/////////// Add texture
 

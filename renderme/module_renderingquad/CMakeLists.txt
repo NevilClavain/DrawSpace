@@ -56,6 +56,7 @@ include_directories(${jsonjsmn_include_dir})
 link_directories(${jsonjsmn_lib_dir})
 link_directories(${fw1fontwrapper_lib_dir})
 link_directories(${dxtk_lib_dir})
+link_directories(${assimp_lib_dir})
 
 file(
         GLOB_RECURSE
@@ -69,6 +70,7 @@ file(
 add_library(module_renderingquad SHARED ${source_files})
 
 target_link_libraries(module_renderingquad 
+										assimp-vc140-mt
 										CORE_file 
 										CORE_filesystem 
 										CORE_buffer 

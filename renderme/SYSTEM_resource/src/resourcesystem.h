@@ -44,6 +44,7 @@ namespace renderMe
     namespace core { class Entitygraph; }
     class Shader;
     class Texture;
+    class TriangleMeshe;
 
     enum class ResourceSystemEvent
     {
@@ -86,5 +87,6 @@ namespace renderMe
 
         void handleShader(Shader& shaderInfos, int p_shaderType, const std::string& p_filename);
         void handleTexture(Texture& textureInfos, const std::string& p_filename);
+        void handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename);
     };
 }
