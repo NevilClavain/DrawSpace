@@ -566,9 +566,88 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 
 void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename)
 {
-	const auto importer{ new Assimp::Importer() };
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle Meshe ") + p_filename);
 
-	delete importer;
+	const std::string mesheAction{ "load_meshe" };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(mesheAction, p_filename,
+		[&,
+			mesheAction = mesheAction,
+			currentIndex = m_runnerIndex,
+			filename = p_filename
+		]()
+		{
+			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading meshe ") + filename);
+
+			// build full path
+			const auto meshe_path{ m_meshesBasePath + "/" + filename };
+
+			try
+			{
+				auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
+
+				mesheInfos.m_source = TriangleMeshe::Source::CONTENT_FROM_FILE;
+				mesheInfos.m_source_id = filename;
+				//mesheInfos.compute_resource_uid(); TODO
+
+				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_BEGIN : " + filename);
+				for (const auto& call : m_callbacks)
+				{
+					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_BEGIN, filename);
+				}
+
+				renderMe::core::FileContent<const char> meshe_text(meshe_path);
+				meshe_text.load();
+
+				const auto importer{ new Assimp::Importer() };
+
+				const auto flags{ aiProcess_Triangulate |
+									aiProcess_JoinIdenticalVertices |
+									aiProcess_FlipUVs |
+									aiProcess_SortByPType };
+
+
+				const aiScene* scene{ importer->ReadFileFromMemory(meshe_text.getData(), meshe_text.getDataSize(), flags)};
+				if (scene)
+				{
+					// TO BE CONTINUED...
+				}
+				else
+				{
+					_RENDERME_WARN(m_localLoggerRunner, std::string("No scene in file : ") + filename);
+					// TODO : throw exception ???
+				}
+
+				delete importer;
+
+				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + filename);
+				for (const auto& call : m_callbacks)
+				{
+					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS, filename);
+				}
+				mesheInfos.setState(TriangleMeshe::State::BLOBLOADED);
+			}
+			catch (const std::exception& e)
+			{
+				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + meshe_path + " : reason = " + e.what());
+
+				// send error status to main thread and let terminate
+				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, filename, mesheAction };
+				m_runner[currentIndex].get()->m_mailbox_out.push(report);
+			}
+		}
+	) };
+
+	_RENDERME_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
+
+	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
+
+	m_runnerIndex++;
+	if (m_runnerIndex == nbRunners)
+	{
+		m_runnerIndex = 0;
+	}
+
 }
 
 void ResourceSystem::killRunner()

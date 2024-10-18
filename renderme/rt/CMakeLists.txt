@@ -53,7 +53,7 @@ install(TARGETS rt CONFIGURATIONS RelWithDebInfo RUNTIME DESTINATION ${CMAKE_SOU
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/config_deployment/rt_config DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 
-install(FILES ${assimp_lib_dir}/$<CONFIGURATION>/assimp-vc140-mt.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
 
 
 

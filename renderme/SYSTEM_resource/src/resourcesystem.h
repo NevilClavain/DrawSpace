@@ -56,7 +56,10 @@ namespace renderMe
         RESOURCE_SHADER_LOAD_SUCCESS,
 
         RESOURCE_TEXTURE_LOAD_BEGIN,
-        RESOURCE_TEXTURE_LOAD_SUCCESS
+        RESOURCE_TEXTURE_LOAD_SUCCESS,
+
+        RESOURCE_MESHE_LOAD_BEGIN,
+        RESOURCE_MESHE_LOAD_SUCCESS
 
     };
    
@@ -76,6 +79,7 @@ namespace renderMe
         renderMe::core::logger::Sink                            m_localLoggerRunner;
         const std::string                                       m_shadersBasePath{ "./shaders/resources" };
         const std::string                                       m_texturesBasePath{ "./textures" };
+        const std::string                                       m_meshesBasePath{ "./meshes" };
         const std::string                                       m_shadersCachePath{ "./bc_cache" };
 
         renderMe::core::Json<Shader>::Callback	                m_jsonparser_cb;

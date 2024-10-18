@@ -112,7 +112,12 @@ add_subdirectory(module_sprites)
 
 add_subdirectory(module_basic)
 
+install(FILES ${assimp_lib_dir}/$<CONFIGURATION>/assimp-vc140-mt.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/textures OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/meshes OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
+
+
 
 
 
