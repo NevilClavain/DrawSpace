@@ -94,6 +94,12 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 					// rethrow in current thread
 					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
 				}
+				if ("load_meshe" == p_action_descr)
+				{
+					// rethrow in current thread
+					_EXCEPTION(std::string("failed action ") + p_action_descr + " on target " + p_target_descr);
+				}
+
 			}
 			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
 			{
@@ -610,12 +616,63 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 				const aiScene* scene{ importer->ReadFileFromMemory(meshe_text.getData(), meshe_text.getDataSize(), flags)};
 				if (scene)
 				{
-					// TO BE CONTINUED...
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************SCENE INFOS BEGIN***********************************"));
+					_RENDERME_DEBUG(m_localLoggerRunner, "file = " + meshe_path);
+
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasMeshes " + std::to_string(scene->HasMeshes()));
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumMeshes " + std::to_string(scene->mNumMeshes));
+
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasTextures " + std::to_string(scene->HasTextures()));
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumTextures " + std::to_string(scene->mNumTextures));
+
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasMaterials " + std::to_string(scene->HasMaterials()));
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumMaterials " + std::to_string(scene->mNumMaterials));
+
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasLights " + std::to_string(scene->HasLights()));
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumLights " + std::to_string(scene->mNumLights));
+
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasCameras " + std::to_string(scene->HasCameras()));
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumCameras " + std::to_string(scene->mNumCameras));
+
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasAnimations " + std::to_string(scene->HasAnimations()));
+					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumAnimations " + std::to_string(scene->mNumAnimations));
+
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************SCENE INFOS END***********************************"));
+
+					const auto root{ scene->mRootNode };
+
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY BEGIN***********************************"));
+
+					const std::function<void(aiNode*, int)> dumpAssimpSceneNode
+					{
+						[&](aiNode* p_ai_node, int depth)
+						{
+							std::string spacing(depth, ' ');
+							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("node : ") + p_ai_node->mName.C_Str() + std::string(" nb children : ") + std::to_string(p_ai_node->mNumChildren));
+							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("nb meshes : ") + std::to_string(p_ai_node->mNumMeshes));
+
+							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1)
+							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2)
+							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3)
+							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4)
+
+
+							for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
+							{
+								dumpAssimpSceneNode(p_ai_node->mChildren[i], depth + 1);
+							}
+						}
+					};
+
+					dumpAssimpSceneNode(root, 1);
+
+
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY END***********************************"));
 				}
 				else
 				{
-					_RENDERME_WARN(m_localLoggerRunner, std::string("No scene in file : ") + filename);
-					// TODO : throw exception ???
+					const std::string msg(std::string("No scene in file : ") + filename);
+					throw std::exception(msg.c_str());
 				}
 
 				delete importer;
