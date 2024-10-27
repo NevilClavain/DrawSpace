@@ -229,18 +229,22 @@ void ResourceSystem::run()
 				}
 			}
 			////// Handle meshes //////////////
-			const auto m_list{ p_resource_aspect.getComponentsByType<std::pair<std::string, TriangleMeshe>>() };
+			const auto m_list{ p_resource_aspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
 			for (auto& e : m_list)
 			{
-				auto& filemeshe{ e->getPurpose() };
+				auto& meshe_descr{ e->getPurpose() };
 
-				TriangleMeshe& meshe{ filemeshe.second };
-				const auto filename{ filemeshe.first };
+				TriangleMeshe& meshe{ meshe_descr.second };
+
+				const auto& ids{ meshe_descr.first };
+
+				const std::string& file_path{ ids.second };
+				const std::string& meshe_id{ ids.first };
 
 				const auto state{ meshe.getState() };
 				if (TriangleMeshe::State::INIT == state)
 				{
-					handleTriangleMeshe(meshe, filename);
+					handleTriangleMeshe(meshe, file_path, meshe_id);
 					meshe.setState(TriangleMeshe::State::BLOBLOADING);
 				}
 			}
@@ -570,17 +574,20 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 	}
 }
 
-void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename)
+void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid)
 {
 	_RENDERME_DEBUG(m_localLogger, std::string("Handle Meshe ") + p_filename);
 
 	const std::string mesheAction{ "load_meshe" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(mesheAction, p_filename,
+	const std::string targetAction{ p_mesheid + "@" + p_filename };
+
+	const auto task{ new renderMe::core::SimpleAsyncTask<>(mesheAction, targetAction,
 		[&,
 			mesheAction = mesheAction,
 			currentIndex = m_runnerIndex,
-			filename = p_filename
+			filename = p_filename,
+			meshe_id = p_mesheid
 		]()
 		{
 			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading meshe ") + filename);
@@ -665,9 +672,19 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					};
 
 					dumpAssimpSceneNode(root, 1);
-
-
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY END***********************************"));
+
+					const auto meshe_node{ root->FindNode(meshe_id.c_str()) };
+					if (!meshe_node)
+					{
+						const std::string msg(std::string("cannot locate meshe id inside the .ac file : ") + meshe_id);
+						throw std::exception(msg.c_str());
+					}
+
+
+
+
+
 				}
 				else
 				{

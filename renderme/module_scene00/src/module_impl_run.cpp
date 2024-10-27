@@ -355,7 +355,7 @@ void ModuleImpl::run(void)
 		quad_resource_aspect.addComponent<TriangleMeshe>("square", square);
 		*/
 
-		quad_resource_aspect.addComponent< std::pair<std::string, TriangleMeshe>>("cube", std::make_pair("tech.ac", TriangleMeshe()));
+		quad_resource_aspect.addComponent< std::pair<std::pair<std::string,std::string>, TriangleMeshe>>("cube", std::make_pair(std::make_pair("box", "tech.ac") , TriangleMeshe()));
 
 		
 
