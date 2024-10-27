@@ -574,6 +574,7 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 	}
 }
 
+
 void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid)
 {
 	_RENDERME_DEBUG(m_localLogger, std::string("Handle Meshe ") + p_filename);
@@ -675,15 +676,55 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY END***********************************"));
 
 					const auto meshe_node{ root->FindNode(meshe_id.c_str()) };
+					const auto meshes{ scene->mMeshes };
+
 					if (!meshe_node)
 					{
 						const std::string msg(std::string("cannot locate meshe id inside the .ac file : ") + meshe_id);
 						throw std::exception(msg.c_str());
 					}
 
+					const auto nb_meshes{ meshe_node->mNumMeshes };
 
 
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS BEGIN***********************************"));
 
+					const auto name{ meshe_node->mName.C_Str() };
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("owner node = ") + name);
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("nb_meshes = ") << nb_meshes);
+
+					const auto indexes{ meshe_node->mMeshes };
+					for (unsigned int i = 0; i < nb_meshes; i++)
+					{
+						const auto meshe{ meshes[indexes[i]] };
+
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MESHE ") << i);
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("name = ") << meshe->mName.C_Str());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasPositions ") << meshe->HasPositions());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasFaces ") << meshe->HasFaces());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasNormals ") << meshe->HasNormals());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumUVChannels ") << meshe->GetNumUVChannels());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasBones ") << meshe->HasBones());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumBones ") << meshe->mNumBones);
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumFaces ") << meshe->mNumFaces);
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumVertices ") << meshe->mNumVertices);
+
+						for (size_t j = 0; j < meshe->mNumBones; j++)
+						{
+							const auto bone{ meshe->mBones[j] };
+
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("Bone ") << j);
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> name = ") << bone->mName.C_Str());
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> offsetMatrx"));
+
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
+						}
+					}
+					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS END***********************************"));
 
 				}
 				else
