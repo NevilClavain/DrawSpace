@@ -756,8 +756,12 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 			// search for lineMeshe
 			const auto lineMeshes{ p_resourceAspect.getComponentsByType<LineMeshe>() };
 
-			// search for triangleMeshe
+			// search for plain triangleMeshe
 			const auto triangleMeshes{ p_resourceAspect.getComponentsByType<TriangleMeshe>() };
+
+			// search for triangleMeshe loaded from files
+			//const auto fileTriangleMeshes{ p_resourceAspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+
 
 			// search rendering states
 			const auto rsStates{ p_renderingAspect.getComponentsByType<std::vector<renderMe::rendering::RenderState>>() };
@@ -836,6 +840,21 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 						}
 					}
 
+					/*
+					if (fileTriangleMeshes.size() > 0)
+					{
+						auto& meshe_descr{ fileTriangleMeshes.at(0)->getPurpose() };
+
+						TriangleMeshe& tm{ meshe_descr.second };
+						const auto state{ tm.getState() };
+
+						if (TriangleMeshe::State::RENDERERLOADED != state)
+						{
+							resources_D3D11ready = false;
+						}
+					}
+					*/
+
 					//////////////////////////////// check textures are D3D11 ready
 
 					for (const auto& e : texturesSet)
@@ -848,7 +867,7 @@ void RenderingQueueSystem::checkEntityInsertion(const std::string& p_entity_id, 
 						}
 					}
 
-					if (resources_D3D11ready && rsStates.size() > 0 && (lineMeshes.size() > 0 || triangleMeshes.size() > 0))
+					if (resources_D3D11ready && rsStates.size() > 0 && (lineMeshes.size() > 0 || triangleMeshes.size() > 0 /* || fileTriangleMeshes.size() > 0*/))
 					{
 						// ok, can update queue
 						

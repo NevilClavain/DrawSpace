@@ -602,7 +602,6 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 				mesheInfos.m_source = TriangleMeshe::Source::CONTENT_FROM_FILE;
 				mesheInfos.m_source_id = filename;
-				//mesheInfos.compute_resource_uid(); TODO
 
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
@@ -680,8 +679,12 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 					if (!meshe_node)
 					{
+						/*
 						const std::string msg(std::string("cannot locate meshe id inside the .ac file : ") + meshe_id);
 						throw std::exception(msg.c_str());
+						*/
+
+						_EXCEPTION(std::string("cannot locate meshe id inside the .ac file : ") + meshe_id);
 					}
 
 					const auto nb_meshes{ meshe_node->mNumMeshes };
@@ -726,11 +729,59 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					}
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS END***********************************"));
 
+
+					mesheInfos.clearTriangles();
+
+					int global_index = 0;
+					for (unsigned int i = 0; i < nb_meshes; i++)
+					{
+						const auto meshe{ meshes[indexes[i]] };
+
+						for (size_t j = 0; j < meshe->mNumFaces; j++)
+						{
+							const auto face{ meshe->mFaces[j] };
+
+							if (face.mNumIndices != 3)
+							{
+								_EXCEPTION("Face must have exactly 3 indices");
+							}
+
+							const auto i1{ face.mIndices[0] };
+							const auto i2{ face.mIndices[1] };
+							const auto i3{ face.mIndices[2] };
+
+							const TrianglePrimitive<unsigned int> t{ i1 + global_index, i2 + global_index, i3 + global_index };
+							mesheInfos.push(t);
+						}
+
+						const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
+
+						for (size_t j = 0; j < meshe->mNumVertices; j++)
+						{
+							const auto v_in{ meshe->mVertices[j] };
+
+							Vertex v_out(v_in[0], v_in[1], v_in[2]);
+
+							if (meshe->GetNumUVChannels() > 0)
+							{
+								const auto texCoord{ meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : zero3D };
+								v_out.tu[0] = texCoord[0];
+								v_out.tv[0] = texCoord[1];
+							}
+
+							mesheInfos.push(v_out);
+						}
+					}
+
 				}
 				else
 				{
+					/*
 					const std::string msg(std::string("No scene in file : ") + filename);
 					throw std::exception(msg.c_str());
+					*/
+
+					_EXCEPTION(std::string("No scene in file : ") + filename);
 				}
 
 				delete importer;
@@ -741,6 +792,9 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS, filename);
 				}
 				mesheInfos.setState(TriangleMeshe::State::BLOBLOADED);
+
+				mesheInfos.computeResourceUID();
+
 			}
 			catch (const std::exception& e)
 			{

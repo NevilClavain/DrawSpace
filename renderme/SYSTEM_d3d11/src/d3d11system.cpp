@@ -362,11 +362,33 @@ void D3D11System::manageResources()
 				}			
 			}
 
-			//search for triangle Meshes
+			//search for plain triangle Meshes
 			const auto tmeshes_list{ p_resource_aspect.getComponentsByType<TriangleMeshe>() };
 			for (auto& e : tmeshes_list)
 			{
 				auto& tm{ e->getPurpose() };
+				const auto state{ tm.getState() };
+
+				if (TriangleMeshe::State::BLOBLOADED == state)
+				{
+					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> D3D11_TRIANGLEMESHE_CREATION_BEGIN : " + tm.getSourceID());
+					for (const auto& call : m_callbacks)
+					{
+						call(D3D11SystemEvent::D3D11_TRIANGLEMESHE_CREATION_BEGIN, tm.getSourceID());
+					}
+
+					handleTrianglemesheCreation(tm);
+					tm.setState(TriangleMeshe::State::RENDERERLOADING);
+				}
+			}
+
+			//search for triangle Meshes from file			
+			const auto filetmeshes_list{ p_resource_aspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+			for (auto& e : filetmeshes_list)
+			{
+				auto& meshe_descr{ e->getPurpose() };
+
+				TriangleMeshe& tm{ meshe_descr.second };
 				const auto state{ tm.getState() };
 
 				if (TriangleMeshe::State::BLOBLOADED == state)

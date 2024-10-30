@@ -171,6 +171,12 @@ void ModuleImpl::resource_system_events()
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + p_resourceName);
 					m_resources_event = "Texture loaded :" + p_resourceName;
 					break;
+
+				case ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS:
+					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + p_resourceName);
+					m_resources_event = "Meshe loaded :" + p_resourceName;
+					break;
+
 			}
 		}
 	};
