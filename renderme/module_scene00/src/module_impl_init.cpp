@@ -122,6 +122,7 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
+	rendering_queue.enableTargetDepthClearing(true);
 
 	m_windowRenderingQueue = &rendering_queue;
 
@@ -233,6 +234,7 @@ void ModuleImpl::d3d11_system_events()
 					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
 					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
 					bufferRenderingQueue.enableTargetClearing(true);
+					bufferRenderingQueue.enableTargetDepthClearing(true);
 					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
 
 					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");

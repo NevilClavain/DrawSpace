@@ -561,6 +561,11 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 	{ 
 		d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
 	}
+
+	if (p_renderingQueue.getTargetDepthClearing())
+	{
+		d3dimpl->clearTargetDepth();
+	}
 	
 	{
 		auto qnodes{ p_renderingQueue.getQueueNodes() };

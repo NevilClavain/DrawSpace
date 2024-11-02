@@ -368,7 +368,7 @@ void ModuleImpl::run(void)
 
 		/////////// Add renderstate
 
-		RenderState rs_noculling(RenderState::Operation::SETCULLING, "cw");
+		RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 		RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
 		RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 		RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "point");

@@ -136,3 +136,13 @@ void Queue::setTargetStage(size_t p_stage)
 {
 	m_targetStage = p_stage;
 }
+
+void Queue::enableTargetDepthClearing(bool p_enable)
+{
+	m_clear_target_depth = p_enable;
+}
+
+bool Queue::getTargetDepthClearing() const
+{
+	return m_clear_target_depth;
+}

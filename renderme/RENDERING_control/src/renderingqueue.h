@@ -227,8 +227,13 @@ namespace renderMe
 			void						enableTargetClearing(bool p_enable);
 			void						setTargetClearColor(const core::maths::RGBAColor& p_color);
 
+			void						enableTargetDepthClearing(bool p_enable);
+
 			bool						getTargetClearing() const;
 			core::maths::RGBAColor		getTargetClearColor() const;
+
+
+			bool						getTargetDepthClearing() const;
 
 			void						pushText(const Text& p_text);
 			
@@ -249,8 +254,13 @@ namespace renderMe
 			std::string						m_name;
 			Purpose							m_purpose{ Purpose::UNDEFINED };
 			State							m_state{ State::WAIT_INIT };
+
+
 			bool							m_clear_target{ false };
 			core::maths::RGBAColor			m_target_clear_color;
+
+			bool							m_clear_target_depth{ false };
+
 			std::vector<Text>				m_texts;
 
 			QueueNodes						m_queueNodes;

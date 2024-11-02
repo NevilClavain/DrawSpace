@@ -205,6 +205,11 @@ void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clea
     m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);    
 }
 
+void D3D11SystemImpl::clearTargetDepth()
+{
+    m_lpd3ddevcontext->ClearDepthStencilView(m_currentView, D3D11_CLEAR_DEPTH, 1.0, 0);
+}
+
 void D3D11SystemImpl::flipScreen(void)
 {
     m_lpd3dswapchain->Present(0, 0);
@@ -220,9 +225,8 @@ void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::
     const DirectX::XMFLOAT2 pos{ (float)p_pos.x(), (float)p_pos.y() };
 
     const DirectX::FXMVECTOR color{ p_clear_color.r() / 255.0f, p_clear_color.g() / 255.0f, p_clear_color.b() / 255.0f, p_clear_color.a() / 255.0f };
-
+    
     spriteBatch->Begin();
     spriteFont->DrawString(spriteBatch, p_text.c_str(), pos, color, p_rotation);
     spriteBatch->End();
-
 }
