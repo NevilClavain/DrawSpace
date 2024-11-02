@@ -557,7 +557,11 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 		d3dimpl->beginTarget(p_renderingQueue.getTargetTextureUID());
 	}
 
-	d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());	
+	if(p_renderingQueue.getTargetClearing())
+	{ 
+		d3dimpl->clearTarget(p_renderingQueue.getTargetClearColor());
+	}
+	
 	{
 		auto qnodes{ p_renderingQueue.getQueueNodes() };
 		for (const auto& qnode : qnodes)

@@ -212,14 +212,6 @@ void D3D11SystemImpl::flipScreen(void)
 
 void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::maths::RGBAColor& p_clear_color, const renderMe::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
 {
-    /*
-    const unsigned long color32{ (
-                                    (((unsigned long)(p_clear_color.a())) << 24) |
-                                    (((unsigned long)(p_clear_color.b()) & 0xff) << 16) |
-                                    (((unsigned long)(p_clear_color.g()) & 0xff) << 8) |
-                                    ((unsigned long)(p_clear_color.r()) & 0xff)
-                                ) };
-                                */
     const auto fontData{ m_fontWrappers.at(p_font) };
 
     const auto spriteBatch{ fontData.spriteBatch.get() };
