@@ -61,7 +61,7 @@ namespace renderMe
 		public:
 
 			Component() = default;
-			virtual ~Component() = default;
+			~Component() = default;
 
 			template<class... Args>
 			void makePurpose(Args&&... p_args)
@@ -69,7 +69,7 @@ namespace renderMe
 				m_purpose = std::make_unique<T>((std::forward<Args>(p_args))...);
 			}
 
-			virtual T& getPurpose(void) const
+			T& getPurpose(void) const
 			{
 				return *(m_purpose.get());
 			}
