@@ -269,6 +269,10 @@ ALL_BUILD.vcxproj*
 /renderme/module_sprites/*.vcxproj*
 
 
+/renderme/module_openenv/CMakeFiles/
+/renderme/module_openenv/*.sln
+/renderme/module_openenv/*.vcxproj*
+
 
 /renderme/rt/CMakeFiles/
 /renderme/rt/*.sln

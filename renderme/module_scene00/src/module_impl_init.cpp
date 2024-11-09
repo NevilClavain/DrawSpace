@@ -122,7 +122,7 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
-	rendering_queue.enableTargetDepthClearing(true);
+	
 
 	m_windowRenderingQueue = &rendering_queue;
 

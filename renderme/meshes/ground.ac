@@ -1,0 +1,22 @@
+AC3Db
+MATERIAL "ac3dmat1" rgb 1 1 1  amb 0.2 0.2 0.2  emis 0 0 0  spec 0.2 0.2 0.2  shi 128  trans 0
+OBJECT world
+kids 1
+OBJECT poly
+name "rect"
+texture "D:/dev/DrawSpace/renderme/textures/grass08.jpg"
+crease 45.000000
+numvert 4
+-1250 0 -1250
+1250 0 -1250
+1250 0 1250
+-1250 0 1250
+numsurf 1
+SURF 0x30
+mat 0
+refs 4
+3 -14.5 -14.5
+2 15.5 -14.5
+1 15.5 15.5
+0 -14.5 15.5
+kids 0

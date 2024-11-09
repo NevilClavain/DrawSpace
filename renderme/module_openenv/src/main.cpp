@@ -24,41 +24,17 @@
 /* -*-LIC_END-*- */
 
 #include "module_impl.h"
-#include <string>
 
-#include "aspects.h"
-#include "datacloud.h"
-#include "sysengine.h"
-
-#include "trianglemeshe.h"
-#include "renderstate.h"
-#include "texture.h"
-
-#include "syncvariable.h"
-
-#include "worldposition.h"
-#include "animatorfunc.h"
-#include "animators_helpers.h"
-
-
-
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
-
-void ModuleImpl::run(void)
+extern "C"
 {
+    __declspec(dllexport) renderMe::interfaces::ModuleRoot* moduleFactory(void)
+    {
+        return new ModuleImpl;
+    }
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-
-	/////////////////////////////////////////////////////
-
-	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->run();
-
-	/////////////////////////////////////////////////////
-
-	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
-	
+    __declspec(dllexport) void moduleTrash(renderMe::interfaces::ModuleRoot* p_itf)
+    {
+        ModuleImpl* itf = static_cast<ModuleImpl*>(p_itf);
+        delete itf;
+    }
 }

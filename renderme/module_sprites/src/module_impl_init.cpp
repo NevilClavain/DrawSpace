@@ -252,6 +252,7 @@ void ModuleImpl::d3d11_system_events()
 					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
 					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
 					bufferRenderingQueue.enableTargetClearing(true);
+					bufferRenderingQueue.enableTargetDepthClearing(true);
 					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
 
 					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");

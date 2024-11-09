@@ -44,6 +44,9 @@
 #include "worldposition.h"
 #include "animatorfunc.h"
 
+#include "trianglemeshe.h"
+#include "renderstate.h"
+
 #include "syncvariable.h"
 #include "animators_helpers.h"
 
@@ -56,12 +59,13 @@
 
 using namespace renderMe;
 using namespace renderMe::core;
+using namespace renderMe::rendering;
 
 void ModuleImpl::init(const std::string p_appWindowsEntityName)
 {
 	/////////// logging conf
 
-	renderMe::core::FileContent<char> logConfFileContent("./module_gblcamera_config/logconf.json");
+	renderMe::core::FileContent<char> logConfFileContent("./module_openenv_config/logconf.json");
 	logConfFileContent.load();
 
 	const auto dataSize{ logConfFileContent.getDataSize() };
@@ -119,6 +123,7 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 	auto& rendering_queue{ screenRendering_rendering_aspect.getComponent<rendering::Queue>("renderingQueue")->getPurpose() };
 	rendering_queue.setTargetClearColor({ 0, 0, 64, 255 });
 	rendering_queue.enableTargetClearing(true);
+	
 
 	m_windowRenderingQueue = &rendering_queue;
 
@@ -238,9 +243,78 @@ void ModuleImpl::d3d11_system_events()
 					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");
 
 
+					auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+
+
+					///////////////	add ground
+
+					auto& groundNode{ m_entitygraph.add(bufferRenderingNode, "groundEntity") };
+
+					const auto groundEntity{ groundNode.data() };
+
+					auto& ground_resource_aspect{ groundEntity->makeAspect(core::resourcesAspect::id) };
+					auto& ground_rendering_aspect{ groundEntity->makeAspect(core::renderingAspect::id) };
+					auto& world_aspect{ groundEntity->makeAspect(core::worldAspect::id) };
+					groundEntity->makeAspect(core::timeAspect::id);
+
+					ground_resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("texture_vs", Shader(vertexShader)));
+					ground_resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("texture_ps", Shader(pixelShader)));
+
+					ground_resource_aspect.addComponent< std::pair<std::pair<std::string, std::string>, TriangleMeshe>>("ground", std::make_pair(std::make_pair("rect", "ground.ac"), TriangleMeshe()));
+
+
+					/////////// Add texture
+
+					ground_resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair("grass08.jpg", Texture())));
+
+					/////////// Add renderstate
+
+					RenderState rs_noculling(RenderState::Operation::SETCULLING, "cw");
+					RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
+					RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+					RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "anisotropic");
+
+					const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+
+					ground_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
+
+
+					/////////// Draw triangles
+					rendering::DrawingControl drawingControl;
+					ground_rendering_aspect.addComponent<rendering::DrawingControl>("drawingControl", drawingControl);
+
+
+					/////////// World position
+
+					
+
+					world_aspect.addComponent<transform::WorldPosition>("position");
+
+					world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+					(
+						{},
+						[](const core::ComponentContainer& p_world_aspect,
+							const core::ComponentContainer& p_time_aspect,
+							const transform::WorldPosition&,
+							const std::unordered_map<std::string, std::string>&)
+						{
+
+							maths::Matrix positionmat;
+							positionmat.translation(0.0, 0.0, 0.0);
+
+							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+							wp.local_pos = wp.local_pos * positionmat;
+						}
+					));
+
+
+
+
+
+
 					/////////////// add camera with gimbal lock jointure ////////////////
 
-					auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
+					
 
 					auto& gblJointEntityNode{ m_entitygraph.add(bufferRenderingNode, "gblJointEntity") };
 
@@ -254,7 +328,7 @@ void ModuleImpl::d3d11_system_events()
 					gbl_world_aspect.addComponent<double>("gbl_theta", 0);
 					gbl_world_aspect.addComponent<double>("gbl_phi", 0);
 					gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 0.0, 7.0));
+					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 1.0, 7.0));
 
 					gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 						{

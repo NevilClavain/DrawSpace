@@ -24,41 +24,23 @@
 /* -*-LIC_END-*- */
 
 #include "module_impl.h"
-#include <string>
 
-#include "aspects.h"
-#include "datacloud.h"
 #include "sysengine.h"
-
-#include "trianglemeshe.h"
-#include "renderstate.h"
-#include "texture.h"
-
-#include "syncvariable.h"
-
-#include "worldposition.h"
-#include "animatorfunc.h"
-#include "animators_helpers.h"
-
-
+#include "resourcesystem.h"
+#include "d3d11system.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
-using namespace renderMe::rendering;
 
-void ModuleImpl::run(void)
+void ModuleImpl::close(void)
 {
+	auto resourceSystem{ SystemEngine::getInstance()->getSystem(resourceSystemSlot) };
+	auto resourceSystemInstance{ dynamic_cast<renderMe::ResourceSystem*>(resourceSystem) };
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	resourceSystemInstance->killRunner();
 
-	/////////////////////////////////////////////////////
+	auto d3d11System{ SystemEngine::getInstance()->getSystem(d3d11SystemSlot) };
+	auto d3d11SystemInstance{ dynamic_cast<renderMe::D3D11System*>(d3d11System) };
 
-	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->run();
-
-	/////////////////////////////////////////////////////
-
-	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
-	
+	d3d11SystemInstance->killRunner();
 }
