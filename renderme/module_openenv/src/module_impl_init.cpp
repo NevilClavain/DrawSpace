@@ -272,7 +272,7 @@ void ModuleImpl::d3d11_system_events()
 														ground_textures,
 														ground_rs_list
 														) };
-
+						
 						auto& ground_world_aspect{ ground_entity->aspectAccess(core::worldAspect::id) };
 
 						ground_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
@@ -291,7 +291,7 @@ void ModuleImpl::d3d11_system_events()
 								wp.local_pos = wp.local_pos * positionmat;
 							}
 						));
-
+						
 
 					}
 
@@ -302,7 +302,7 @@ void ModuleImpl::d3d11_system_events()
 						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
 						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
-						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear_uvwrap");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "point");
 
 						const std::vector<RenderState> tree_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> tree_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("tree2_tex.bmp", Texture())) };
@@ -329,7 +329,7 @@ void ModuleImpl::d3d11_system_events()
 							{
 
 								maths::Matrix positionmat;
-								positionmat.translation(0.0, 0.0, 0.0);
+								positionmat.translation(0.0, 0.0, -30.0);
 
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * positionmat;
@@ -357,7 +357,7 @@ void ModuleImpl::d3d11_system_events()
 					gbl_world_aspect.addComponent<double>("gbl_theta", 0);
 					gbl_world_aspect.addComponent<double>("gbl_phi", 0);
 					gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 1.0, 7.0));
+					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 2.0, 0.0));
 
 					gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 						{

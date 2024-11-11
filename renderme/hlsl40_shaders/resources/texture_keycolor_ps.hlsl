@@ -43,7 +43,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
 {      
     float4 color = txDiffuse.Sample(sam, input.TexCoord0);
     
-    if (color.r == 0 && color.g == 1.0 && color.b == 0)
+    if (color.r == 0 && color.g == 0 && color.b == 0)
     {
         clip(-1);
     }
