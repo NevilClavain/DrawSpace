@@ -91,7 +91,4 @@ private:
     renderMe::rendering::Queue*             m_bufferRenderingQueue{ nullptr };
 
     std::string                             m_resources_event{ "..." };
-
-    bool                                    m_quadEntity_state_request{ true };
-    bool                                    m_quadEntity_state{ false };
 };

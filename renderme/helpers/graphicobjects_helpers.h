@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 
 namespace renderMe
 {
@@ -83,6 +84,16 @@ namespace renderMe
 		double& getXPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 		double& getYPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 		double& getZRot(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+
+		core::Entity* plugMesheWithPosition(renderMe::core::Entitygraph& p_entitygraph, 
+					const std::string& p_parentid,
+					const std::string& p_mesheEntityid,
+					const std::string& p_vshader,
+					const std::string& p_pshader,
+					const std::string& p_meshefile,
+					const std::string& p_mesheIdInfile,
+					const std::vector< std::pair<size_t, std::pair<std::string, Texture>>>& p_textures,
+					const std::vector<rendering::RenderState>& p_renderstates_list);
 
 	}
 }

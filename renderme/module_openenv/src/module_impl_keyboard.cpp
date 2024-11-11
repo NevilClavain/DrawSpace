@@ -126,17 +126,6 @@ void ModuleImpl::onEndKeyPress(long p_key)
 				call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
 			}
 		}
-		else if (VK_F3 == p_key)
-		{
-			if (true == m_quadEntity_state_request)
-			{
-				m_quadEntity_state_request = false;
-			}
-			else
-			{
-				m_quadEntity_state_request = true;
-			}
-		}
 
 		else if (VK_F8 == p_key)
 		{

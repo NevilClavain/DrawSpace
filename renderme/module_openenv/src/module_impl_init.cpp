@@ -25,6 +25,10 @@
 
 #include "module_impl.h"
 #include <string>
+#include <vector>
+#include <unordered_map>
+#include <utility>
+
 
 #include "aspects.h"
 
@@ -56,6 +60,7 @@
 #include "textures_service.h"
 
 #include "entitygraph_helpers.h"
+#include "graphicobjects_helpers.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -235,7 +240,7 @@ void ModuleImpl::d3d11_system_events()
 
 					// buffer rendering queue
 					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
-					bufferRenderingQueue.setTargetClearColor({ 50, 0, 20, 255 });
+					bufferRenderingQueue.setTargetClearColor({ 100, 150, 250, 255 });
 					bufferRenderingQueue.enableTargetClearing(true);
 					bufferRenderingQueue.enableTargetDepthClearing(true);
 					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
@@ -248,67 +253,91 @@ void ModuleImpl::d3d11_system_events()
 
 					///////////////	add ground
 
-					auto& groundNode{ m_entitygraph.add(bufferRenderingNode, "groundEntity") };
 
-					const auto groundEntity{ groundNode.data() };
+					{
+						RenderState rs_noculling(RenderState::Operation::SETCULLING, "cw");
+						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
+						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear_uvwrap");
 
-					auto& ground_resource_aspect{ groundEntity->makeAspect(core::resourcesAspect::id) };
-					auto& ground_rendering_aspect{ groundEntity->makeAspect(core::renderingAspect::id) };
-					auto& world_aspect{ groundEntity->makeAspect(core::worldAspect::id) };
-					groundEntity->makeAspect(core::timeAspect::id);
-
-					ground_resource_aspect.addComponent<std::pair<std::string, Shader>>("vertexShader", std::make_pair("texture_vs", Shader(vertexShader)));
-					ground_resource_aspect.addComponent<std::pair<std::string, Shader>>("pixelShader", std::make_pair("texture_ps", Shader(pixelShader)));
-
-					ground_resource_aspect.addComponent< std::pair<std::pair<std::string, std::string>, TriangleMeshe>>("ground", std::make_pair(std::make_pair("rect", "ground.ac"), TriangleMeshe()));
-
-
-					/////////// Add texture
-
-					ground_resource_aspect.addComponent<std::pair<size_t, std::pair<std::string, Texture>>>("texture", std::make_pair(Texture::STAGE_0, std::make_pair("grass08.jpg", Texture())));
-
-					/////////// Add renderstate
-
-					RenderState rs_noculling(RenderState::Operation::SETCULLING, "cw");
-					RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
-					RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
-					RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "anisotropic");
-
-					const std::vector<RenderState> rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
-
-					ground_rendering_aspect.addComponent<std::vector<RenderState>>("renderStates", rs_list);
-
-
-					/////////// Draw triangles
-					rendering::DrawingControl drawingControl;
-					ground_rendering_aspect.addComponent<rendering::DrawingControl>("drawingControl", drawingControl);
-
-
-					/////////// World position
-
-					
-
-					world_aspect.addComponent<transform::WorldPosition>("position");
-
-					world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
-					(
-						{},
-						[](const core::ComponentContainer& p_world_aspect,
-							const core::ComponentContainer& p_time_aspect,
-							const transform::WorldPosition&,
-							const std::unordered_map<std::string, std::string>&)
-						{
-
-							maths::Matrix positionmat;
-							positionmat.translation(0.0, 0.0, 0.0);
-
-							transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
-							wp.local_pos = wp.local_pos * positionmat;
-						}
-					));
+						const std::vector<RenderState> ground_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> ground_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("grass08.jpg", Texture())) };
 
 
 
+
+						const auto ground_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "groundEntity",
+														"texture_vs", "texture_ps",
+														"ground.ac", "rect",
+														ground_textures,
+														ground_rs_list
+														) };
+
+						auto& ground_world_aspect{ ground_entity->aspectAccess(core::worldAspect::id) };
+
+						ground_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						(
+							{},
+							[](const core::ComponentContainer& p_world_aspect,
+								const core::ComponentContainer& p_time_aspect,
+								const transform::WorldPosition&,
+								const std::unordered_map<std::string, std::string>&)
+							{
+
+								maths::Matrix positionmat;
+								positionmat.translation(0.0, 0.0, 0.0);
+
+								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+								wp.local_pos = wp.local_pos * positionmat;
+							}
+						));
+
+
+					}
+
+					///// add tree
+
+					{
+
+						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
+						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear_uvwrap");
+
+						const std::vector<RenderState> tree_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> tree_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("tree2_tex.bmp", Texture())) };
+
+
+
+
+						const auto ground_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "treeEntity",
+														"texture_keycolor_vs", "texture_keycolor_ps",
+														"tree0.ac", "Plane.001",
+														tree_textures,
+														tree_rs_list
+														) };
+
+						auto& ground_world_aspect{ ground_entity->aspectAccess(core::worldAspect::id) };
+
+						ground_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						(
+							{},
+							[](const core::ComponentContainer& p_world_aspect,
+								const core::ComponentContainer& p_time_aspect,
+								const transform::WorldPosition&,
+								const std::unordered_map<std::string, std::string>&)
+							{
+
+								maths::Matrix positionmat;
+								positionmat.translation(0.0, 0.0, 0.0);
+
+								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+								wp.local_pos = wp.local_pos * positionmat;
+							}
+						));
+
+
+					}
 
 
 
