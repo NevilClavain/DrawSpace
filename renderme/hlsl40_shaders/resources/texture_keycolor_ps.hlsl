@@ -40,10 +40,12 @@ struct PS_INTPUT
 
 
 float4 ps_main(PS_INTPUT input) : SV_Target
-{      
+{
+    float4 key_color = vec[0];
+    
     float4 color = txDiffuse.Sample(sam, input.TexCoord0);
     
-    if (color.r == 0 && color.g == 0 && color.b == 0)
+    if (color.r == key_color.r && color.g == key_color.g && color.b == key_color.b)
     {
         clip(-1);
     }

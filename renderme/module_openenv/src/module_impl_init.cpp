@@ -298,28 +298,31 @@ void ModuleImpl::d3d11_system_events()
 					///// add tree
 
 					{
+						dataCloud->registerData<maths::Real4Vector>("texture_keycolor_ps.key_color");
+						dataCloud->updateDataValue<maths::Real4Vector>("texture_keycolor_ps.key_color", maths::Real4Vector(0, 0, 0, 1));
+
+
+
 
 						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
 						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
-						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "point");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
 
 						const std::vector<RenderState> tree_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> tree_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("tree2_tex.bmp", Texture())) };
 
 
-
-
-						const auto ground_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "treeEntity",
+						const auto tree_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "treeEntity",
 														"texture_keycolor_vs", "texture_keycolor_ps",
 														"tree0.ac", "Plane.001",
 														tree_textures,
 														tree_rs_list
 														) };
 
-						auto& ground_world_aspect{ ground_entity->aspectAccess(core::worldAspect::id) };
+						auto& tree_world_aspect{ tree_entity->aspectAccess(core::worldAspect::id) };
 
-						ground_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						tree_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 						(
 							{},
 							[](const core::ComponentContainer& p_world_aspect,
@@ -335,6 +338,11 @@ void ModuleImpl::d3d11_system_events()
 								wp.local_pos = wp.local_pos * positionmat;
 							}
 						));
+
+						auto& tree_rendering_aspect{ tree_entity->aspectAccess(core::renderingAspect::id) };
+
+						rendering::DrawingControl& drawingControl { tree_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						drawingControl.pshaders_map.push_back(std::make_pair("texture_keycolor_ps.key_color", "key_color"));
 
 
 					}
