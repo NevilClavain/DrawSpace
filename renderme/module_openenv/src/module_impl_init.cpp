@@ -251,6 +251,13 @@ void ModuleImpl::d3d11_system_events()
 					auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
 
 
+					/////////// commons shaders params
+
+					dataCloud->registerData<maths::Real4Vector>("texture_keycolor_ps.key_color");
+					dataCloud->updateDataValue<maths::Real4Vector>("texture_keycolor_ps.key_color", maths::Real4Vector(0, 0, 0, 1));
+
+
+
 					///////////////	add ground
 
 
@@ -268,9 +275,10 @@ void ModuleImpl::d3d11_system_events()
 
 						const auto ground_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "groundEntity",
 														"texture_vs", "texture_ps",
-														"ground.ac", "rect",
-														ground_textures,
-														ground_rs_list
+														"ground.ac", "rect",													
+														ground_rs_list,
+														1000,
+														ground_textures
 														) };
 						
 						auto& ground_world_aspect{ ground_entity->aspectAccess(core::worldAspect::id) };
@@ -298,12 +306,6 @@ void ModuleImpl::d3d11_system_events()
 					///// add tree
 
 					{
-						dataCloud->registerData<maths::Real4Vector>("texture_keycolor_ps.key_color");
-						dataCloud->updateDataValue<maths::Real4Vector>("texture_keycolor_ps.key_color", maths::Real4Vector(0, 0, 0, 1));
-
-
-
-
 						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
 						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
@@ -316,8 +318,9 @@ void ModuleImpl::d3d11_system_events()
 						const auto tree_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "treeEntity",
 														"texture_keycolor_vs", "texture_keycolor_ps",
 														"tree0.ac", "Plane.001",
-														tree_textures,
-														tree_rs_list
+														tree_rs_list,
+														1000,
+														tree_textures														
 														) };
 
 						auto& tree_world_aspect{ tree_entity->aspectAccess(core::worldAspect::id) };
@@ -348,6 +351,49 @@ void ModuleImpl::d3d11_system_events()
 					}
 
 
+					///// skydome
+
+					{
+
+						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
+						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "line");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
+						
+						const std::vector<RenderState> skydome_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						
+
+						const auto skydome_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "skydomeEntity",
+														"color_vs", "color_ps",
+														"skydome.ac", "sphere",
+														skydome_rs_list, 999) };
+
+
+						auto& skydome_world_aspect{ skydome_entity->aspectAccess(core::worldAspect::id) };
+
+						skydome_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						(
+							{},
+							[](const core::ComponentContainer& p_world_aspect,
+								const core::ComponentContainer& p_time_aspect,
+								const transform::WorldPosition&,
+								const std::unordered_map<std::string, std::string>&)
+							{
+
+								maths::Matrix positionmat;
+								positionmat.translation(0.0, 0.0, 0.0);
+
+								maths::Matrix scalingmat;
+								scalingmat.scale(80000.0, 80000.0, 80000.0);
+
+
+
+								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+								wp.local_pos = wp.local_pos * scalingmat * positionmat;
+							}
+						));
+
+					}
 
 					/////////////// add camera with gimbal lock jointure ////////////////
 

@@ -387,8 +387,9 @@ namespace renderMe
 			const std::string& p_pshader,
 			const std::string& p_meshefile,
 			const std::string& p_mesheIdInfile,
-			const std::vector<std::pair<size_t, std::pair<std::string, Texture>>>& p_textures,
-			const std::vector<rendering::RenderState>& p_renderstates_list)
+			const std::vector<rendering::RenderState>& p_renderstates_list,
+			int p_rendering_order,
+			const std::vector<std::pair<size_t, std::pair<std::string, Texture>>>& p_textures)
 		{
 
 			auto& parentNode{ p_entitygraph.node(p_parentid) };
@@ -421,6 +422,9 @@ namespace renderMe
 			/////////// Draw triangles
 			rendering::DrawingControl drawingControl;
 			rendering_aspect.addComponent<renderMe::rendering::DrawingControl>("drawingControl", drawingControl);
+
+			/////////// Rendering Order
+			rendering_aspect.addComponent<int>("renderingOrder", p_rendering_order);
 
 
 			world_aspect.addComponent<transform::WorldPosition>("position");

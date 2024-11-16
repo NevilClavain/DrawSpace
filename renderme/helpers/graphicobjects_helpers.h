@@ -91,9 +91,10 @@ namespace renderMe
 					const std::string& p_vshader,
 					const std::string& p_pshader,
 					const std::string& p_meshefile,
-					const std::string& p_mesheIdInfile,
-					const std::vector< std::pair<size_t, std::pair<std::string, Texture>>>& p_textures,
-					const std::vector<rendering::RenderState>& p_renderstates_list);
+					const std::string& p_mesheIdInfile,					
+					const std::vector<rendering::RenderState>& p_renderstates_list,
+					int p_rendering_order,
+					const std::vector< std::pair<size_t, std::pair<std::string, Texture>>>& p_textures = {});
 
 	}
 }
