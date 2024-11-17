@@ -679,11 +679,6 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 					if (!meshe_node)
 					{
-						/*
-						const std::string msg(std::string("cannot locate meshe id inside the .ac file : ") + meshe_id);
-						throw std::exception(msg.c_str());
-						*/
-
 						_EXCEPTION(std::string("cannot locate meshe id inside the .ac file : ") + meshe_id);
 					}
 
@@ -772,29 +767,23 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 							mesheInfos.push(v_out);
 						}
 					}
-
 				}
 				else
 				{
-					/*
-					const std::string msg(std::string("No scene in file : ") + filename);
-					throw std::exception(msg.c_str());
-					*/
-
 					_EXCEPTION(std::string("No scene in file : ") + filename);
 				}
-
 				delete importer;
+
+				mesheInfos.computeResourceUID();
 
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS, filename);
 				}
+
+
 				mesheInfos.setState(TriangleMeshe::State::BLOBLOADED);
-
-				mesheInfos.computeResourceUID();
-
 			}
 			catch (const std::exception& e)
 			{
