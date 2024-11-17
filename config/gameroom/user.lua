@@ -12,7 +12,7 @@ local luaextensions_memallocs = {}
 
 
 
-local current_app = 'planet2'
+local current_app = 'water'
 
 
 
