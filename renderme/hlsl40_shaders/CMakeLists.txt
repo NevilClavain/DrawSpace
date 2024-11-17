@@ -37,6 +37,13 @@ file(
 
 file(
         GLOB_RECURSE
+        commons_source_files
+		${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources/mat_input_constants.hlsl
+		${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources/atmospheric_scattering.hlsl
+)
+
+file(
+        GLOB_RECURSE
         json_files
 		${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources/*.json
 )
@@ -55,6 +62,7 @@ set_property(SOURCE ${vs_source_files} PROPERTY VS_SHADER_ENTRYPOINT vs_main)
 
 add_custom_target(hlsl40_shaders SOURCES ${vs_source_files} ${ps_source_files})
 add_custom_target(hlsl40_shaders_metadata SOURCES ${json_files})
+add_custom_target(hlsl40_shaders_commons SOURCES ${commons_source_files})
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/hlsl40_shaders/resources OPTIONAL DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>/shaders)
 

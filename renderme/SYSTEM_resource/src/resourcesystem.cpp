@@ -134,23 +134,8 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 			case renderMe::core::JSONEvent::ARRAY_END:
 
+				section_name = "";
 				_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END : " + p_id);
-
-				if ("inputs" == section_name)
-				{
-					_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END on inputs section ");
-					section_name = "";
-				
-					if (s_argument.shader_register > -1 && s_argument.argument_id != "" && s_argument.argument_type != "")
-					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addArgument");
-						shader_dest->addArgument(s_argument);
-					}
-					else
-					{
-						_RENDERME_WARN(m_localLoggerRunner, "shaders json metadata parsing : cannot add argument, incomplete s_argument");
-					}
-				}
 				break;
 
 			case renderMe::core::JSONEvent::STRING:
@@ -180,7 +165,31 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 						s_argument.shader_register = std::atoi(p_value.c_str());
 					}
 				}
-				break;			
+				break;
+
+			case renderMe::core::JSONEvent::OBJECT_BEGIN:
+				break;
+
+			case renderMe::core::JSONEvent::OBJECT_END:
+
+				if ("inputs" == section_name)
+				{
+					_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END on inputs section ");
+					
+
+					if (s_argument.shader_register > -1 && s_argument.argument_id != "" && s_argument.argument_type != "")
+					{
+						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addArgument");
+						shader_dest->addArgument(s_argument);
+					}
+					else
+					{
+						_RENDERME_WARN(m_localLoggerRunner, "shaders json metadata parsing : cannot add argument, incomplete s_argument");
+					}
+				}
+
+				break;
+
 		}
 	};
 }

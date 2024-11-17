@@ -1,0 +1,53 @@
+{
+  "inputs": [
+
+    {
+      "argument_id": "light0_dir",
+      "type": "Real4Vector",
+      "register": 10,
+      "description": "light0 dir"
+    },
+
+    {
+      "argument_id": "atmo_scattering_flag_0",
+      "type": "Real4Vector",
+      "register": 18,
+      "description": "atmo_scattering_flag_0"
+    },
+
+    {
+      "argument_id": "atmo_scattering_flag_1",
+      "type": "Real4Vector",
+      "register": 19,
+      "description": "atmo_scattering_flag_1"
+    },
+
+    {
+      "argument_id": "atmo_scattering_flag_2",
+      "type": "Real4Vector",
+      "register": 20,
+      "description": "atmo_scattering_flag_2"
+    },
+
+    {
+      "argument_id": "atmo_scattering_flag_3",
+      "type": "Real4Vector",
+      "register": 21,
+      "description": "atmo_scattering_flag_3"
+    },
+
+    {
+      "argument_id": "atmo_scattering_flag_4",
+      "type": "Real4Vector",
+      "register": 23,
+      "description": "atmo_scattering_flag_4"
+    },
+
+    {
+      "argument_id": "atmo_scattering_flag_5",
+      "type": "Real4Vector",
+      "register": 24,
+      "description": "atmo_scattering_flag_5"
+    },
+  ]
+}

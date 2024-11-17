@@ -257,6 +257,28 @@ void ModuleImpl::d3d11_system_events()
 					dataCloud->updateDataValue<maths::Real4Vector>("texture_keycolor_ps.key_color", maths::Real4Vector(0, 0, 0, 1));
 
 
+					dataCloud->registerData<maths::Real4Vector>("std.light0_dir");
+					dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.25, 1, 1));
+
+					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_0");
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_0", maths::Real4Vector(0.1, 0.1, 0.1, 1));
+
+					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_1");
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_1", maths::Real4Vector(0.2, 0.2, 0.2, 1));
+
+					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_2");
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_2", maths::Real4Vector(0.3, 0.3, 0.3, 1));
+
+					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_3");
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_3", maths::Real4Vector(0.4, 0.4, 0.4, 1));
+
+					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_4");
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_4", maths::Real4Vector(0.5, 0.5, 0.5, 1));
+
+					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_5");
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_5", maths::Real4Vector(0.6, 0.6, 0.6, 1));
+
+
 
 					///////////////	add ground
 
@@ -347,7 +369,6 @@ void ModuleImpl::d3d11_system_events()
 						rendering::DrawingControl& drawingControl { tree_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
 						drawingControl.pshaders_map.push_back(std::make_pair("texture_keycolor_ps.key_color", "key_color"));
 
-
 					}
 
 
@@ -357,14 +378,14 @@ void ModuleImpl::d3d11_system_events()
 
 						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
 						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
-						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "line");
+						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
 						
 						const std::vector<RenderState> skydome_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
 						
 
 						const auto skydome_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "skydomeEntity",
-														"color_vs", "color_ps",
+														"skydome_vs", "skydome_ps",
 														"skydome.ac", "sphere",
 														skydome_rs_list, 999) };
 
@@ -386,12 +407,23 @@ void ModuleImpl::d3d11_system_events()
 								maths::Matrix scalingmat;
 								scalingmat.scale(80000.0, 80000.0, 80000.0);
 
-
-
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * scalingmat * positionmat;
 							}
 						));
+
+						auto& skydom_rendering_aspect{ skydome_entity->aspectAccess(core::renderingAspect::id) };
+
+						rendering::DrawingControl& drawingControl{ skydom_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						
+						drawingControl.pshaders_map.push_back(std::make_pair("std.light0_dir", "light0_dir"));
+						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_0", "atmo_scattering_flag_0"));
+						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_1", "atmo_scattering_flag_1"));
+						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_2", "atmo_scattering_flag_2"));
+						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_3", "atmo_scattering_flag_3"));
+						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_4", "atmo_scattering_flag_4"));
+						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_5", "atmo_scattering_flag_5"));
+
 
 					}
 
