@@ -39,14 +39,14 @@
     {
       "argument_id": "atmo_scattering_flag_4",
       "type": "Real4Vector",
-      "register": 23,
+      "register": 22,
       "description": "atmo_scattering_flag_4"
     },
 
     {
       "argument_id": "atmo_scattering_flag_5",
       "type": "Real4Vector",
-      "register": 24,
+      "register": 23,
       "description": "atmo_scattering_flag_5"
     },
   ]

@@ -83,6 +83,8 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float mag_factor;
     
     const float limit = 0.08;
+    
+    /*
     if (norm_light0_dir_global.y < limit)
     {
         mag_factor = 1.0;
@@ -92,6 +94,11 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     {
         mag_factor = lerp(1.0, mag_factor_max, clamp(norm_light0_dir_global.y - limit, 0.0, 1.0));
     }
+    */
+    
+    mag_factor = 1.0;
+    
+    color += mag_factor * compute_from_surface(input.t0, input.t1, norm_light0_dir_global);
     
     
     float4 final_color;
@@ -100,6 +107,5 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     // added S. O'Neil HDR correction
     final_color.xyz = 1.0 * (1.0 - exp(-0.91 * color.xyz));
     
-    return final_color;
-    
+    return final_color;    
  }

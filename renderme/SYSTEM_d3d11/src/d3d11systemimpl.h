@@ -385,6 +385,8 @@ private:
     std::string                                         m_currentMeshe;
 
 
+    bool                                                m_initialized{ false };
+
     ////////////////////////////////////////////////////////
 
 

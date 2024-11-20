@@ -130,6 +130,8 @@ void D3D11SystemImpl::drawTriangleMeshe(const renderMe::core::maths::Matrix& p_w
     world.transpose();
 
     auto view{ p_view };
+    auto cam{ p_view };
+
     view.transpose();
 
     setVertexshaderConstantsMat(8, world);
@@ -140,7 +142,7 @@ void D3D11SystemImpl::drawTriangleMeshe(const renderMe::core::maths::Matrix& p_w
 
     //////////////////////////////////////////////////////////////////////
 
-    auto cam{ view };
+    //auto cam{ view };
     cam.inverse();
     cam.transpose();
 
@@ -202,12 +204,18 @@ void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clea
     clearcolor[2] = p_clear_color.b() / 255.0f;
     clearcolor[3] = p_clear_color.a() / 255.0f;
 
-    m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);    
+    if (m_currentTarget) 
+    {
+        m_lpd3ddevcontext->ClearRenderTargetView(m_currentTarget, clearcolor);
+    }    
 }
 
 void D3D11SystemImpl::clearTargetDepth()
 {
-    m_lpd3ddevcontext->ClearDepthStencilView(m_currentView, D3D11_CLEAR_DEPTH, 1.0, 0);
+    if (m_currentView)
+    {
+        m_lpd3ddevcontext->ClearDepthStencilView(m_currentView, D3D11_CLEAR_DEPTH, 1.0, 0);
+    }    
 }
 
 void D3D11SystemImpl::flipScreen(void)

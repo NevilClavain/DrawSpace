@@ -240,7 +240,7 @@ void ModuleImpl::d3d11_system_events()
 
 					// buffer rendering queue
 					rendering::Queue bufferRenderingQueue("buffer_pass_queue");
-					bufferRenderingQueue.setTargetClearColor({ 100, 150, 250, 255 });
+					bufferRenderingQueue.setTargetClearColor({ 0, 0, 0, 255 });
 					bufferRenderingQueue.enableTargetClearing(true);
 					bufferRenderingQueue.enableTargetDepthClearing(true);
 					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
@@ -258,25 +258,46 @@ void ModuleImpl::d3d11_system_events()
 
 
 					dataCloud->registerData<maths::Real4Vector>("std.light0_dir");
-					dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.25, 1, 1));
+					//dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.39, 1, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.02, 1, 1));
+
+
+					constexpr double groundLevel{ 0 };
+
+					constexpr double skydomeSkyfromspace_ESun{ 8.7 };
+					constexpr double skydomeSkyfromatmo_ESun{ 70.0 };
+					constexpr double skydomeGroundfromspace_ESun{ 24.0 };
+					constexpr double skydomeGroundfromatmo_ESun{ 12.0 };
+
+					constexpr double skydomeAtmoThickness{ 1600.0 };
+					constexpr double skydomeOuterRadius{ 70000.0 };
+					constexpr double skydomeInnerRadius{ skydomeOuterRadius - skydomeAtmoThickness };
+
+					constexpr double skydomeWaveLength_x{ 0.650 };
+					constexpr double skydomeWaveLength_y{ 0.570 };
+					constexpr double skydomeWaveLength_z{ 0.475 };
+					constexpr double skydomeKm{ 0.0010 };
+					constexpr double skydomeKr{ 0.0033 };
+					constexpr double skydomeScaleDepth{ 0.25 };
+
 
 					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_0");
-					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_0", maths::Real4Vector(0.1, 0.1, 0.1, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_0", maths::Real4Vector(skydomeOuterRadius, skydomeInnerRadius, skydomeOuterRadius * skydomeOuterRadius, skydomeInnerRadius * skydomeInnerRadius));
 
 					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_1");
-					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_1", maths::Real4Vector(0.2, 0.2, 0.2, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_1", maths::Real4Vector(skydomeScaleDepth, 1.0 / skydomeScaleDepth, 1.0 / (skydomeOuterRadius - skydomeInnerRadius), (1.0 / (skydomeOuterRadius - skydomeInnerRadius)) / skydomeScaleDepth));
 
 					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_2");
-					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_2", maths::Real4Vector(0.3, 0.3, 0.3, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_2", maths::Real4Vector(1.0 / std::pow(skydomeWaveLength_x, 4.0), 1.0 / std::pow(skydomeWaveLength_y, 4.0), 1.0 / std::pow(skydomeWaveLength_z, 4.0), 0));
 
 					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_3");
-					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_3", maths::Real4Vector(0.4, 0.4, 0.4, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_3", maths::Real4Vector(skydomeKr, skydomeKm, 4.0 * skydomeKr * 3.1415927, 4.0 * skydomeKm * 3.1415927));
 
 					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_4");
-					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_4", maths::Real4Vector(0.5, 0.5, 0.5, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_4", maths::Real4Vector(skydomeSkyfromspace_ESun, skydomeSkyfromatmo_ESun, skydomeGroundfromspace_ESun, skydomeGroundfromatmo_ESun));
 
 					dataCloud->registerData<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_5");
-					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_5", maths::Real4Vector(0.6, 0.6, 0.6, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("skydome_ps.atmo_scattering_flag_5", maths::Real4Vector(0.0, 0.0, 0.0, 1));
 
 
 
@@ -308,14 +329,14 @@ void ModuleImpl::d3d11_system_events()
 						ground_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 						(
 							{},
-							[](const core::ComponentContainer& p_world_aspect,
+							[=](const core::ComponentContainer& p_world_aspect,
 								const core::ComponentContainer& p_time_aspect,
 								const transform::WorldPosition&,
 								const std::unordered_map<std::string, std::string>&)
 							{
 
 								maths::Matrix positionmat;
-								positionmat.translation(0.0, 0.0, 0.0);
+								positionmat.translation(0.0, skydomeInnerRadius + groundLevel, 0.0);
 
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * positionmat;
@@ -350,14 +371,14 @@ void ModuleImpl::d3d11_system_events()
 						tree_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 						(
 							{},
-							[](const core::ComponentContainer& p_world_aspect,
+							[=](const core::ComponentContainer& p_world_aspect,
 								const core::ComponentContainer& p_time_aspect,
 								const transform::WorldPosition&,
 								const std::unordered_map<std::string, std::string>&)
 							{
 
 								maths::Matrix positionmat;
-								positionmat.translation(0.0, 0.0, -30.0);
+								positionmat.translation(0.0, skydomeInnerRadius + groundLevel, -30.0);
 
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * positionmat;
@@ -380,8 +401,16 @@ void ModuleImpl::d3d11_system_events()
 						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
 						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
+
+						RenderState rs_alphablend(RenderState::Operation::ALPHABLENDENABLE, "true");
+						RenderState rs_alphablendop(RenderState::Operation::ALPHABLENDOP, "add");
+						RenderState rs_alphablendfunc(RenderState::Operation::ALPHABLENDFUNC, "always");
+						RenderState rs_alphablenddest(RenderState::Operation::ALPHABLENDDEST, "invsrcalpha");
+						RenderState rs_alphablendsrc(RenderState::Operation::ALPHABLENDSRC, "srcalpha");
 						
-						const std::vector<RenderState> skydome_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						const std::vector<RenderState> skydome_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling,
+																			rs_alphablend, rs_alphablendop, rs_alphablendfunc, rs_alphablenddest, rs_alphablendsrc
+																		};
 						
 
 						const auto skydome_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "skydomeEntity",
@@ -395,7 +424,7 @@ void ModuleImpl::d3d11_system_events()
 						skydome_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
 						(
 							{},
-							[](const core::ComponentContainer& p_world_aspect,
+							[=](const core::ComponentContainer& p_world_aspect,
 								const core::ComponentContainer& p_time_aspect,
 								const transform::WorldPosition&,
 								const std::unordered_map<std::string, std::string>&)
@@ -405,7 +434,7 @@ void ModuleImpl::d3d11_system_events()
 								positionmat.translation(0.0, 0.0, 0.0);
 
 								maths::Matrix scalingmat;
-								scalingmat.scale(80000.0, 80000.0, 80000.0);
+								scalingmat.scale(skydomeOuterRadius, skydomeOuterRadius, skydomeOuterRadius);
 
 								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
 								wp.local_pos = wp.local_pos * scalingmat * positionmat;
@@ -423,6 +452,8 @@ void ModuleImpl::d3d11_system_events()
 						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_3", "atmo_scattering_flag_3"));
 						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_4", "atmo_scattering_flag_4"));
 						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_5", "atmo_scattering_flag_5"));
+
+
 
 
 					}
@@ -443,7 +474,7 @@ void ModuleImpl::d3d11_system_events()
 					gbl_world_aspect.addComponent<double>("gbl_theta", 0);
 					gbl_world_aspect.addComponent<double>("gbl_phi", 0);
 					gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, 2.0, 0.0));
+					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, skydomeInnerRadius + groundLevel + 5, 0.0));
 
 					gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 						{

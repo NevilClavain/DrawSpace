@@ -138,11 +138,11 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	UINT createDeviceFlags{ 0 };
 
 	// not accepted by D3D11CreateDeviceAndSwapChain (wtf ?)
-/*
+
 #ifdef _DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
-*/
+
 
 	HRESULT r;
 	for (auto& e : driver_type)
@@ -506,5 +506,6 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 
 	_RENDERME_DEBUG(m_localLogger, std::string("init D3D SUCCESS"))
 
+	m_initialized = true;
 	return true;
 }
