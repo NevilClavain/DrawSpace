@@ -7,10 +7,10 @@ name "rect"
 texture "D:/dev/DrawSpace/renderme/textures/flatclouds.jpg"
 crease 45.000000
 numvert 4
--10000 0 -10000
-10000 0 -10000
-10000 0 10000
--10000 0 10000
+-20000 0 -20000
+20000 0 -20000
+20000 0 20000
+-20000 0 20000
 numsurf 1
 SURF 0x30
 mat 0
