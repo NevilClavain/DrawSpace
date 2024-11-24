@@ -258,8 +258,8 @@ void ModuleImpl::d3d11_system_events()
 
 
 					dataCloud->registerData<maths::Real4Vector>("std.light0_dir");
-					//dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.39, 1, 1));
-					dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.02, 1, 1));
+					dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.58, 0.6, 1));
+					//dataCloud->updateDataValue<maths::Real4Vector>("std.light0_dir", maths::Real4Vector(0, -0.02, 1, 1));
 
 
 					constexpr double groundLevel{ 0 };
@@ -310,7 +310,11 @@ void ModuleImpl::d3d11_system_events()
 						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear_uvwrap");
 
-						const std::vector<RenderState> ground_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						RenderState rs_alphablend(RenderState::Operation::ALPHABLENDENABLE, "false");
+
+						const std::vector<RenderState> ground_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling, rs_alphablend };
+
+
 						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> ground_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("grass08.jpg", Texture())) };
 
 
@@ -346,6 +350,61 @@ void ModuleImpl::d3d11_system_events()
 
 					}
 
+
+					/////////////////// add clouds
+
+					{
+						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "false");
+						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear_uvwrap");
+
+						RenderState rs_alphablend(RenderState::Operation::ALPHABLENDENABLE, "true");
+						RenderState rs_alphablendop(RenderState::Operation::ALPHABLENDOP, "add");
+						RenderState rs_alphablendfunc(RenderState::Operation::ALPHABLENDFUNC, "always");
+						RenderState rs_alphablenddest(RenderState::Operation::ALPHABLENDDEST, "invsrcalpha");
+						RenderState rs_alphablendsrc(RenderState::Operation::ALPHABLENDSRC, "srcalpha");
+
+						const std::vector<RenderState> clouds_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling, 
+																			rs_alphablend, rs_alphablendop, rs_alphablendfunc, rs_alphablenddest, rs_alphablendsrc
+																		};
+
+
+						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> ground_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("flatclouds.jpg", Texture())) };
+
+
+
+
+						const auto clouds_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "cloudsEntity",
+														"flatclouds_vs", "flatclouds_ps",
+														"flatclouds.ac", "rect",
+														clouds_rs_list,
+														999,
+														ground_textures
+														) };
+
+						auto& clouds_world_aspect{ clouds_entity->aspectAccess(core::worldAspect::id) };
+
+						clouds_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						(
+							{},
+							[=](const core::ComponentContainer& p_world_aspect,
+								const core::ComponentContainer& p_time_aspect,
+								const transform::WorldPosition&,
+								const std::unordered_map<std::string, std::string>&)
+							{
+
+								maths::Matrix positionmat;
+								positionmat.translation(0.0, skydomeInnerRadius + groundLevel + 400, 0.0);
+
+								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+								wp.local_pos = wp.local_pos * positionmat;
+							}
+						));
+
+
+					}
+
 					///// add tree
 
 					{
@@ -354,7 +413,10 @@ void ModuleImpl::d3d11_system_events()
 						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
 						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
 
-						const std::vector<RenderState> tree_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling };
+						RenderState rs_alphablend(RenderState::Operation::ALPHABLENDENABLE, "false");
+
+						const std::vector<RenderState> tree_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling, rs_alphablend };
+
 						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> tree_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("tree2_tex.bmp", Texture())) };
 
 
@@ -416,7 +478,7 @@ void ModuleImpl::d3d11_system_events()
 						const auto skydome_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "skydomeEntity",
 														"skydome_vs", "skydome_ps",
 														"skydome.ac", "sphere",
-														skydome_rs_list, 999) };
+														skydome_rs_list, 900) };
 
 
 						auto& skydome_world_aspect{ skydome_entity->aspectAccess(core::worldAspect::id) };
