@@ -321,7 +321,7 @@ void ModuleImpl::d3d11_system_events()
 
 
 						const auto ground_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "groundEntity",
-														"texture_vs", "texture_ps",
+														"ground_vs", "ground_ps",
 														"ground.ac", "rect",													
 														ground_rs_list,
 														1000,
