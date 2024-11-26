@@ -435,7 +435,7 @@ void ModuleImpl::d3d11_system_events()
 
 
 						const auto tree_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "treeEntity",
-														"texture_keycolor_vs", "texture_keycolor_ps",
+														"texture_fog_keycolor_vs", "texture_fog_keycolor_ps",
 														"tree0.ac", "Plane.001",
 														tree_rs_list,
 														1000,
@@ -465,6 +465,9 @@ void ModuleImpl::d3d11_system_events()
 
 						rendering::DrawingControl& drawingControl { tree_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
 						drawingControl.pshaders_map.push_back(std::make_pair("texture_keycolor_ps.key_color", "key_color"));
+						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_color", "fog_color"));
+						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_density", "fog_density"));
+
 
 					}
 

@@ -45,34 +45,23 @@ float ComputeExp2Fog(float depth, float density)
     return 1 / exp2(d * density);
 }
 
-float4 fractal_texture(Texture2D tex, SamplerState sam, float2 uv, float depth)
-{
-    float LOD = log(depth);
-    float LOD_floor = floor(LOD);
-    float LOD_fract = LOD - LOD_floor;
-    
-    float2 uv1 = uv / exp(LOD_floor - 1.0);
-    float2 uv2 = uv / exp(LOD_floor + 0.0);
-    float2 uv3 = uv / exp(LOD_floor + 1.0);
-    
-    float4 tex0 = tex.Sample(sam, uv1);
-    float4 tex1 = tex.Sample(sam, uv2);
-    float4 tex2 = tex.Sample(sam, uv3);
-    
-    return (tex1 + lerp(tex0, tex2, LOD_fract)) * 0.5;
-}
-
 float4 ps_main(PS_INTPUT input) : SV_Target
-{          
-    float4 vw_pos = input.TexCoord1;
+{
+    float4 vw_pos = input.TexCoord1;        
+    float pixel_depth = 0.04 * abs(vw_pos.z);    
     
-    float pixel_depth = 0.04 * abs(vw_pos.z);
-    float4 tex_color = fractal_texture(txDiffuse, sam, input.TexCoord0, pixel_depth);
+    float4 tex_color = txDiffuse.Sample(sam, input.TexCoord0);    
+    float4 key_color = vec[0];
     
-    float4 fog_color = vec[0];
-    float4 fog_density = vec[1].x;
+    if (tex_color.r == key_color.r && tex_color.g == key_color.g && tex_color.b == key_color.b)
+    {
+        clip(-1);
+    }    
+            
+    float4 fog_color = vec[1];
+    float4 fog_density = vec[2].x;
         
     float4 final_color = saturate(lerp(fog_color, tex_color, ComputeExp2Fog(vw_pos.z, fog_density)));
            
-    return final_color;   
+    return final_color;
 }
