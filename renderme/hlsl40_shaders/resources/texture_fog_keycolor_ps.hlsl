@@ -39,11 +39,7 @@ struct PS_INTPUT
     float4 TexCoord1    : TEXCOORD1;
 };
 
-float ComputeExp2Fog(float depth, float density)
-{
-    float4 d = abs(depth);
-    return 1 / exp2(d * density);
-}
+#include "commons.hlsl"
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {
@@ -61,7 +57,7 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float4 fog_color = vec[1];
     float4 fog_density = vec[2].x;
         
-    float4 final_color = saturate(lerp(fog_color, tex_color, ComputeExp2Fog(vw_pos.z, fog_density)));
+    float4 final_color = saturate(lerp(fog_color, tex_color, computeExp2Fog(vw_pos.z, fog_density)));
            
     return final_color;
 }

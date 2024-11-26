@@ -38,23 +38,7 @@ struct PS_INTPUT
 	float2 TexCoord0: TEXCOORD0;
 };
 
-float4 fractal_texture(Texture2D tex, SamplerState sam, float2 uv, float depth)
-{
-    float LOD = log(depth);
-    float LOD_floor = floor(LOD);
-    float LOD_fract = LOD - LOD_floor;
-    
-    float2 uv1 = uv / exp(LOD_floor - 1.0);
-    float2 uv2 = uv / exp(LOD_floor + 0.0);
-    float2 uv3 = uv / exp(LOD_floor + 1.0);
-    
-    float4 tex0 = tex.Sample(sam, uv1);
-    float4 tex1 = tex.Sample(sam, uv2);
-    float4 tex2 = tex.Sample(sam, uv3);
-    
-    return (tex1 + lerp(tex0, tex2, LOD_fract)) * 0.5;
-}
-
+#include "commons.hlsl"
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {      
