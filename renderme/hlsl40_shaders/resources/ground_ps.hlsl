@@ -34,11 +34,17 @@ SamplerState sam            : register(s0);
 
 struct PS_INTPUT 
 {
-    float4 Position : SV_POSITION;
-	float2 TexCoord0: TEXCOORD0;
-    float4 TexCoord1 : TEXCOORD1;
+    float4 Position     : SV_POSITION;
+	float2 TexCoord0    : TEXCOORD0;
+    float4 TexCoord1    : TEXCOORD1;
+    float  Fog          : FOG;
 };
 
+float ComputeExp2Fog(float depth, float density)
+{
+    float4 d = abs(depth);
+    return 1 / exp2(d * density);
+}
 
 float4 fractal_texture(Texture2D tex, SamplerState sam, float2 uv, float depth)
 {
@@ -59,8 +65,15 @@ float4 fractal_texture(Texture2D tex, SamplerState sam, float2 uv, float depth)
 
 float4 ps_main(PS_INTPUT input) : SV_Target
 {          
-    float pixel_depth = 0.04 * abs(input.TexCoord1.z);    
+    float4 vw_pos = input.TexCoord1;
+    
+    float pixel_depth = 0.04 * abs(vw_pos.z);
     float4 tex_color = fractal_texture(txDiffuse, sam, input.TexCoord0, pixel_depth);
+    
+    float4 fog_color = vec[0];
+    float4 fog_density = vec[1].x;
+        
+    float4 final_color = saturate(lerp(fog_color, tex_color, ComputeExp2Fog(vw_pos.z, fog_density)));
            
-    return tex_color;
+    return final_color;   
 }

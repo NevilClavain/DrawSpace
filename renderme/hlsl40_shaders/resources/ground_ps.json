@@ -1,3 +1,16 @@
 {
-  "inputs": []
+  "inputs": [
+    {
+      "argument_id": "fog_color",
+      "type": "Real4Vector",
+      "register": 0,
+      "description": "fog color value"
+    },
+    {
+      "argument_id": "fog_density",
+      "type": "Real4Vector",
+      "register": 1,
+      "description": "fog density value on .x"
+    }
+  ]
 }
