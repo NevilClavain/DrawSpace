@@ -107,12 +107,15 @@ add_subdirectory(console_tests/console_datacloud)
 
 add_subdirectory(module_scene00)
 add_subdirectory(module_sprites)
+add_subdirectory(module_anims)
 
 # basic templates
 add_subdirectory(module_gblcamera)
 add_subdirectory(module_renderingquad)
 add_subdirectory(module_basic)
 add_subdirectory(module_openenv)
+
+
 
 install(FILES ${assimp_lib_dir}/$<CONFIGURATION>/assimp-vc140-mt.dll DESTINATION ${CMAKE_SOURCE_DIR}/apps/$<CONFIGURATION>)
 

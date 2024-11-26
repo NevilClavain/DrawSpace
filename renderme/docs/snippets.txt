@@ -262,4 +262,55 @@
 		  ]
 		}
 		
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ : Create new App Module : steps ->
+ 
+	1/ duplicate from functional template the following files:
+		'src' folder
+		CMakeList.txt
+		
+	2/ open CMakeList.txt and update project : all module_xxx strings
+	
+	3/ declare new project in root CMakeList.txt : add_subdirectory(module_anims)
+	
+	4/ add new project in .gitignore file:
+	
+		/renderme/module_xxx/CMakeFiles/
+		/renderme/module_xxx/*.sln
+		/renderme/module_xxx/*.vcxproj*
+		
+	5/ add new 'module_xxx_config' folder under 'config' folder:
+		create and edit 'logconf.json' file (duplicate from existing examples)		
+		
+	6/ duplicate this new 'module_xxx_config' folder under config_deployment folder
+	
+	7/ edit module_impl.cpp :
+	
+		std::string ModuleImpl::getModuleName() const
+		{
+			return "xxx";
+		}
 
+		std::string ModuleImpl::getModuleDescr() const
+		{
+			return "xxx module example";
+		}	
+		
+	8/ edit module_impl_init.cpp and adapt : 
+	
+	void ModuleImpl::init(const std::string p_appWindowsEntityName)
+	{
+		/////////// logging conf
+
+		renderMe::core::FileContent<char> logConfFileContent("./module_xxx_config/logconf.json");	
+			
+		
+	
+	9/ run 'generate_vs2022.bat'
+	
+	and it's all set ! :)
+		
+		
