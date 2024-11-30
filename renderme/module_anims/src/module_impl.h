@@ -80,6 +80,7 @@ private:
     static constexpr int                    worldSystemSlot{ 3 };
     static constexpr int                    renderingQueueSystemSlot{ 4 };
     static constexpr int                    dataPrintSystemSlot{ 5 };
+    static constexpr int                    animationsSystemSlot{ 6 };
 
     bool                                    m_show_mouse_cursor{ false };
     bool                                    m_mouse_circular_mode{ true };

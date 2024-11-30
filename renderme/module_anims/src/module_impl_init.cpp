@@ -38,6 +38,7 @@
 #include "worldsystem.h"
 #include "dataprintsystem.h"
 #include "renderingqueuesystem.h"
+#include "animationssystem.h"
 
 #include "sysengine.h"
 #include "filesystem.h"
@@ -90,12 +91,13 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 
 	auto sysEngine{ SystemEngine::getInstance() };
 
-	sysEngine->makeSystem<renderMe::TimeSystem>(0, m_entitygraph);
-	sysEngine->makeSystem<renderMe::D3D11System>(1, m_entitygraph);
-	sysEngine->makeSystem<renderMe::ResourceSystem>(2, m_entitygraph);
-	sysEngine->makeSystem<renderMe::WorldSystem>(3, m_entitygraph);
-	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(4, m_entitygraph);
-	sysEngine->makeSystem<renderMe::DataPrintSystem>(5, m_entitygraph);
+	sysEngine->makeSystem<renderMe::TimeSystem>(timeSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::D3D11System>(d3d11SystemSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::ResourceSystem>(resourceSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::WorldSystem>(worldSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(renderingQueueSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<renderMe::AnimationsSystem>(animationsSystemSlot, m_entitygraph);
 
 	// D3D11 system provides compilation shader service : give access to this to resources sytem
 	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };

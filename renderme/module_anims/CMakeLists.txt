@@ -45,6 +45,7 @@ include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_resource/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_renderingqueue/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_world/src)
 include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_dataprint/src)
+include_directories(${CMAKE_SOURCE_DIR}/SYSTEM_animations/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/helpers)
 
@@ -90,6 +91,7 @@ target_link_libraries(module_anims
 										SYSTEM_renderingqueue 
 										SYSTEM_world 
 										SYSTEM_dataprint 
+										SYSTEM_animations
 										jsmn 
 										d3d11 
 										d3dcompiler 

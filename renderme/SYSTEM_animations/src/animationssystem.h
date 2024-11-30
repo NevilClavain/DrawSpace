@@ -25,49 +25,25 @@
 
 #pragma once
 
+#include <vector>
+#include <string>
+#include "system.h"
+
+
 namespace renderMe
 {
-	namespace core
-	{
-		struct teapotAspect // for test, debug
-		{
-			static constexpr int id{ 0x6000 };
-		};
+    namespace core { class Entity; }
+    namespace core { class Entitygraph; }
+   
+    class AnimationsSystem : public core::System
+    {
+    public:
+        AnimationsSystem() = delete;
+        AnimationsSystem(core::Entitygraph& p_entitygraph);
+        ~AnimationsSystem() = default;
 
-		struct renderingAspect
-		{
-			static constexpr int id{ 0x0001 };
+        void run();
 
-			enum class renderingTarget
-			{
-				SCREEN_RENDERINGTARGET,
-				BUFFER_RENDERINGTARGET
-			};
-		};
-
-		struct timeAspect
-		{
-			static constexpr int id{ 0x0002 };
-		};
-
-		struct resourcesAspect
-		{
-			static constexpr int id{ 0x0003 };
-		};
-
-		struct cameraAspect
-		{
-			static constexpr int id{ 0x0004 };
-		};
-
-		struct worldAspect
-		{
-			static constexpr int id{ 0x0005 };
-		};
-
-		struct animationsAspect
-		{
-			static constexpr int id{ 0x0006 };
-		};
-	}
+    private:
+    };
 }

@@ -1,4 +1,3 @@
-
 /* -*-LIC_BEGIN-*- */
 /*
 *
@@ -23,51 +22,22 @@
 */
 /* -*-LIC_END-*- */
 
-#pragma once
+#include <string>
+#include <unordered_map>
 
-namespace renderMe
+#include "animationssystem.h"
+#include "entity.h"
+#include "entitygraph.h"
+#include "aspects.h"
+#include "ecshelpers.h"
+
+using namespace renderMe;
+using namespace renderMe::core;
+
+AnimationsSystem::AnimationsSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
+{		
+}
+
+void AnimationsSystem::run()
 {
-	namespace core
-	{
-		struct teapotAspect // for test, debug
-		{
-			static constexpr int id{ 0x6000 };
-		};
-
-		struct renderingAspect
-		{
-			static constexpr int id{ 0x0001 };
-
-			enum class renderingTarget
-			{
-				SCREEN_RENDERINGTARGET,
-				BUFFER_RENDERINGTARGET
-			};
-		};
-
-		struct timeAspect
-		{
-			static constexpr int id{ 0x0002 };
-		};
-
-		struct resourcesAspect
-		{
-			static constexpr int id{ 0x0003 };
-		};
-
-		struct cameraAspect
-		{
-			static constexpr int id{ 0x0004 };
-		};
-
-		struct worldAspect
-		{
-			static constexpr int id{ 0x0005 };
-		};
-
-		struct animationsAspect
-		{
-			static constexpr int id{ 0x0006 };
-		};
-	}
 }
