@@ -729,6 +729,15 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
+
+							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> weights"));
+
+							/*
+							for (size_t k = 0; k < bone->mNumWeights; k++)
+							{
+								_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> vertex ") << bone->mWeights[k].mVertexId << " weight " << bone->mWeights[k].mWeight );
+							}
+							*/
 						}
 					}
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS END***********************************"));

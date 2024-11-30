@@ -471,6 +471,64 @@ void ModuleImpl::d3d11_system_events()
 
 					}
 
+					///// Raptor
+
+					{
+						RenderState rs_noculling(RenderState::Operation::SETCULLING, "none");
+						RenderState rs_zbuffer(RenderState::Operation::ENABLEZBUFFER, "true");
+						RenderState rs_fill(RenderState::Operation::SETFILLMODE, "solid");
+						RenderState rs_texturepointsampling(RenderState::Operation::SETTEXTUREFILTERTYPE, "linear");
+
+						RenderState rs_alphablend(RenderState::Operation::ALPHABLENDENABLE, "false");
+
+						const std::vector<RenderState> raptor_rs_list = { rs_noculling, rs_zbuffer, rs_fill, rs_texturepointsampling, rs_alphablend };
+
+						const std::vector< std::pair<size_t, std::pair<std::string, Texture>>> raptor_textures{ std::make_pair(Texture::STAGE_0, std::make_pair("raptorDif2.png", Texture())) };
+
+
+						const auto raptor_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "raptorEntity",
+														"texture_fog_keycolor_vs", "texture_fog_keycolor_ps",
+														"raptor.fbx", "raptorMesh",
+														raptor_rs_list,
+														1000,
+														raptor_textures
+														) };
+
+						auto& raptor_world_aspect{ raptor_entity->aspectAccess(core::worldAspect::id) };
+
+						raptor_world_aspect.addComponent<transform::Animator>("animator_positioning", transform::Animator
+						(
+							{},
+							[=](const core::ComponentContainer& p_world_aspect,
+								const core::ComponentContainer& p_time_aspect,
+								const transform::WorldPosition&,
+								const std::unordered_map<std::string, std::string>&)
+							{
+
+								maths::Matrix positionmat;
+								positionmat.translation(-40.0, skydomeInnerRadius + groundLevel, -30.0);
+
+								maths::Matrix scalemat;
+								scalemat.scale(0.03, 0.03, 0.03);
+
+
+								transform::WorldPosition& wp{ p_world_aspect.getComponent<transform::WorldPosition>("position")->getPurpose() };
+								wp.local_pos = /* wp.local_pos * */ scalemat * positionmat;
+							}
+						));
+
+						auto& raptor_rendering_aspect{ raptor_entity->aspectAccess(core::renderingAspect::id) };
+
+						rendering::DrawingControl& drawingControl{ raptor_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						drawingControl.pshaders_map.push_back(std::make_pair("texture_keycolor_ps.key_color", "key_color"));
+						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_color", "fog_color"));
+						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_density", "fog_density"));
+
+
+					}
+
+
+
 
 					///// skydome
 
@@ -553,7 +611,7 @@ void ModuleImpl::d3d11_system_events()
 					gbl_world_aspect.addComponent<double>("gbl_theta", 0);
 					gbl_world_aspect.addComponent<double>("gbl_phi", 0);
 					gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, skydomeInnerRadius + groundLevel + 5, 0.0));
+					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, skydomeInnerRadius + groundLevel + 5, 55.0));
 
 					gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 						{
