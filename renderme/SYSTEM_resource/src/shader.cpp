@@ -111,12 +111,12 @@ int Shader::getType() const
     return m_type;
 }
 
-void Shader::addArgument(const Argument& p_arg)
+void Shader::addArgument(const GenericArgument& p_arg)
 {
     m_arguments.push_back(p_arg);
 }
 
-std::vector<Shader::Argument> Shader::getArguments() const
+std::vector<Shader::GenericArgument> Shader::getArguments() const
 {
     return m_arguments;
 }

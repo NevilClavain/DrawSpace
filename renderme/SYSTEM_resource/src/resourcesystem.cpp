@@ -119,8 +119,8 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 	m_jsonparser_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>& p_shader_opt)
 	{
-		static			std::string			section_name;
-		thread_local	Shader::Argument	s_argument;
+		static			std::string				section_name;
+		thread_local	Shader::GenericArgument	s_argument;
 
 		Shader* shader_dest { p_shader_opt.value()};
 

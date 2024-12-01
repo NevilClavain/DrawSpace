@@ -51,7 +51,7 @@ namespace renderMe
     public:
 
 
-        struct Argument
+        struct GenericArgument
         {
         public:
             std::string                 argument_id;
@@ -112,28 +112,28 @@ namespace renderMe
         const core::Buffer<char>& getCode() const;
         
 
-        void addArgument(const Argument& p_arg);
+        void addArgument(const GenericArgument& p_arg);
 
-        std::vector<Argument> getArguments() const;
+        std::vector<GenericArgument> getArguments() const;
 
     private:
         
-        std::string             m_resource_uid;       // shader content source unique identifier
+        std::string                     m_resource_uid;       // shader content source unique identifier
 
-        std::string             m_source_id;
+        std::string                     m_source_id;
 
-        std::string             m_content;
+        std::string                     m_content;
 
-        size_t                  m_contentSize{ 0 };
+        size_t                          m_contentSize{ 0 };
 
-        int                     m_type; //0 = vertex shader, 1 = pixel shader
+        int                             m_type; //0 = vertex shader, 1 = pixel shader
 
-        core::Buffer<char>      m_code;
+        core::Buffer<char>              m_code;
 
-        mutable std::mutex	    m_state_mutex;
-        State                   m_state{ State::INIT };
+        mutable std::mutex	            m_state_mutex;
+        State                           m_state{ State::INIT };
 
-        std::vector<Argument>   m_arguments;
+        std::vector<GenericArgument>    m_arguments;
 
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!
