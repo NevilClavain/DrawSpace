@@ -23,19 +23,9 @@
 /* -*-LIC_END-*- */
 
 #define matWorldViewProjection      0
-#define matWorldViewProjection_ps   100
-
 #define matWorldView                4
-#define matWorldView_ps             104
-
 #define matWorld                    8
-#define matWorld_ps                 108
-
 #define matView                     12
-#define matView_ps                  112
-
 #define matCam                      16
-#define matCam_ps                   116
-
 #define matProj                     20
-#define matProj_ps                  120
+

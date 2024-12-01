@@ -46,7 +46,7 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     result.transpose();
 
     setVertexshaderConstantsMat(0, result);
-    setPixelshaderConstantsMat(100, result);
+    setPixelshaderConstantsMat(0, result);
 
     //////////////////////////////////////////////////////////////////////
     
@@ -54,7 +54,7 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     worldview.transpose();
 
     setVertexshaderConstantsMat(4, worldview);
-    setPixelshaderConstantsMat(104, worldview);
+    setPixelshaderConstantsMat(4, worldview);
 
     //////////////////////////////////////////////////////////////////////
 
@@ -67,8 +67,8 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     setVertexshaderConstantsMat(8, world);
     setVertexshaderConstantsMat(12, view);
 
-    setPixelshaderConstantsMat(108, world);
-    setPixelshaderConstantsMat(112, view);
+    setPixelshaderConstantsMat(8, world);
+    setPixelshaderConstantsMat(12, view);
 
     //////////////////////////////////////////////////////////////////////
 
@@ -77,13 +77,13 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     cam.transpose();
 
     setVertexshaderConstantsMat(16, cam);
-    setPixelshaderConstantsMat(116, cam);
+    setPixelshaderConstantsMat(16, cam);
 
     auto proj { p_proj };
 
     proj.transpose();
     setVertexshaderConstantsMat(20, proj);
-    setPixelshaderConstantsMat(120, proj);
+    setPixelshaderConstantsMat(20, proj);
 
     // update des shaders legacy constants buffers...
 
