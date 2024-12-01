@@ -97,8 +97,6 @@ namespace renderMe
 			std::vector<std::pair<std::string, std::string>> pshaders_map;
 
 
-			//shaders params as arrays of vector (useful for skinnig animations for example...)
-
 			std::string owner_entity_id; // to be completed by queue system
 
 		};
