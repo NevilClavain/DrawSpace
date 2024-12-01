@@ -3,7 +3,7 @@
     {
       "argument_id": "key_color",
       "type": "Real4Vector",
-      "register": 0,
+      "register": 24,
       "description": "key color value for pixels to clip"
     }
   ]

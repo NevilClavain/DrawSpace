@@ -3,7 +3,7 @@
     {
       "argument_id": "color",
       "type": "Real4Vector",
-      "register": 0,
+      "register": 24,
       "description": "color value"
     }
   ]

@@ -47,15 +47,15 @@ float4 ps_main(PS_INTPUT input) : SV_Target
     float pixel_depth = 0.04 * abs(vw_pos.z);    
     
     float4 tex_color = txDiffuse.Sample(sam, input.TexCoord0);    
-    float4 key_color = vec[0];
+    float4 key_color = vec[24];
     
     if (tex_color.r == key_color.r && tex_color.g == key_color.g && tex_color.b == key_color.b)
     {
         clip(-1);
     }    
             
-    float4 fog_color = vec[1];
-    float4 fog_density = vec[2].x;
+    float4 fog_color = vec[25];
+    float4 fog_density = vec[26].x;
         
     float4 final_color = saturate(lerp(fog_color, tex_color, computeExp2Fog(vw_pos.z, fog_density)));
            

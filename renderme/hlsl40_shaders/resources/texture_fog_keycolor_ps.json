@@ -3,19 +3,19 @@
     {
       "argument_id": "key_color",
       "type": "Real4Vector",
-      "register": 0,
+      "register": 24,
       "description": "key color value for pixels to clip"
     },
     {
       "argument_id": "fog_color",
       "type": "Real4Vector",
-      "register": 1,
+      "register": 25,
       "description": "fog color value"
     },
     {
       "argument_id": "fog_density",
       "type": "Real4Vector",
-      "register": 2,
+      "register": 26,
       "description": "fog density value on .x"
     }
   ]
