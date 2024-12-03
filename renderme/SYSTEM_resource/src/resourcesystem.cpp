@@ -180,7 +180,7 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 					if (s_argument.shader_register > -1 && s_argument.argument_id != "" && s_argument.argument_type != "")
 					{
 						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addArgument");
-						shader_dest->addArgument(s_argument);
+						shader_dest->addGenericArgument(s_argument);
 					}
 					else
 					{

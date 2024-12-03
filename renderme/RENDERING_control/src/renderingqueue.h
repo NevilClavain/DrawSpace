@@ -122,10 +122,14 @@ namespace renderMe
 				 const core::maths::Matrix&)>* wvpFilter{ nullptr };
 
 			
-			// shaders params to apply
+			// shaders generic params to apply
 			// dataCloud variable id/shader argument
 			std::vector<std::pair<std::string, renderMe::Shader::GenericArgument>> vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
 			std::vector<std::pair<std::string, renderMe::Shader::GenericArgument>> pshaders_map_cnx; // computed from pshaders_map and the queue current pshader
+
+			// shaders vector arrays to apply
+			std::vector<renderMe::Shader::VectorArrayArgument> vshaders_vector_array;
+			std::vector<renderMe::Shader::VectorArrayArgument> pshaders_vector_array;
 
 			std::string owner_entity_id;
 		};

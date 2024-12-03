@@ -50,10 +50,8 @@ namespace renderMe
     {
     public:
 
-
         struct GenericArgument
         {
-        public:
             std::string                 argument_id;
             
             std::string                 argument_type;
@@ -61,6 +59,13 @@ namespace renderMe
             core::maths::Real4Vector    real4vector;
 
             int                         shader_register{ -1 };
+        };
+
+
+        struct VectorArrayArgument
+        {
+            int                                     start_shader_register{ -1 };
+            std::vector<core::maths::Real4Vector>*  array{ nullptr };
         };
 
         Shader() = delete;
@@ -112,7 +117,7 @@ namespace renderMe
         const core::Buffer<char>& getCode() const;
         
 
-        void addArgument(const GenericArgument& p_arg);
+        void addGenericArgument(const GenericArgument& p_arg);
 
         std::vector<GenericArgument> getArguments() const;
 

@@ -489,7 +489,7 @@ void ModuleImpl::d3d11_system_events()
 
 
 						const auto raptor_entity{ helpers::plugMesheWithPosition(m_entitygraph, "bufferRenderingEntity", "raptorEntity",
-														"texture_fog_keycolor_vs", "texture_fog_keycolor_ps",
+														"texture_fog_keycolor_skanim_vs", "texture_fog_keycolor_skanim_ps",
 														"raptor.fbx", "raptorMesh",
 														raptor_rs_list,
 														1000,
