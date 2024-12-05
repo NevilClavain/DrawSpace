@@ -1,22 +1,28 @@
 {
   "inputs": [
     {
-      "argument_id": "key_color",
       "type": "Real4Vector",
-      "register": 24,
-      "description": "key color value for pixels to clip"
+      "body": {
+        "argument_id": "key_color",
+        "register": 24,
+        "description": "key color value for pixels to clip"
+      }
     },
     {
-      "argument_id": "fog_color",
       "type": "Real4Vector",
-      "register": 25,
-      "description": "fog color value"
+      "body": {
+        "argument_id": "fog_color",
+        "register": 25,
+        "description": "fog color value"
+      }
     },
     {
-      "argument_id": "fog_density",
       "type": "Real4Vector",
-      "register": 26,
-      "description": "fog density value on .x"
+      "body": {
+        "argument_id": "fog_density",
+        "register": 26,
+        "description": "fog density value on .x"
+      }
     }
   ]
 }

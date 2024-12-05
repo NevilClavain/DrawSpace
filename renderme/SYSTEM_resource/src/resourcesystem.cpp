@@ -119,10 +119,20 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 	m_jsonparser_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<Shader*>& p_shader_opt)
 	{
-		static			std::string				section_name;
-		thread_local	Shader::GenericArgument	s_argument;
+		enum class ArgumentTarget
+		{
+			IDLE,
+			FILL_GENERICARGUMENT,
+			FILL_VECTORARRAYARGUMENT
+		};
 
-		Shader* shader_dest { p_shader_opt.value()};
+
+		static			std::string	section_name;
+		static			ArgumentTarget arg_target{ ArgumentTarget::IDLE };
+
+		Shader*			shader_dest{ p_shader_opt.value() };
+
+		thread_local	Shader::GenericArgument	generic_argument;
 
 		switch (p_event)
 		{
@@ -130,12 +140,14 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 				section_name = p_id;
 				_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_BEGIN : " + p_id);
+
 				break;
 
 			case renderMe::core::JSONEvent::ARRAY_END:
 
 				section_name = "";
 				_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END : " + p_id);
+
 				break;
 
 			case renderMe::core::JSONEvent::STRING:
@@ -145,24 +157,35 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 					if ("type" == p_id)
 					{
 						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found type : " + p_value);
-						s_argument.argument_type = p_value;
+
+						if ("Real4Vector" == p_value)
+						{
+							arg_target = ArgumentTarget::FILL_GENERICARGUMENT;
+							generic_argument.argument_type = p_value;
+						}						
 					}
 					else if ("argument_id" == p_id)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found argument_id : " + p_value);
-						s_argument.argument_id = p_value;
+						if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
+						{
+							_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found argument_id : " + p_value);
+							generic_argument.argument_id = p_value;
+						}
 					}
 				}
 				break;
-			
+
 			case renderMe::core::JSONEvent::PRIMITIVE:
 
 				if ("inputs" == section_name)
 				{
 					if ("register" == p_id)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found register : " + p_value);
-						s_argument.shader_register = std::atoi(p_value.c_str());
+						if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
+						{
+							_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found register : " + p_value);
+							generic_argument.shader_register = std::atoi(p_value.c_str());
+						}
 					}
 				}
 				break;
@@ -175,16 +198,13 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 				if ("inputs" == section_name)
 				{
 					_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END on inputs section ");
-					
 
-					if (s_argument.shader_register > -1 && s_argument.argument_id != "" && s_argument.argument_type != "")
+					if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
 					{
 						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addArgument");
-						shader_dest->addGenericArgument(s_argument);
-					}
-					else
-					{
-						_RENDERME_WARN(m_localLoggerRunner, "shaders json metadata parsing : cannot add argument, incomplete s_argument");
+						shader_dest->addGenericArgument(generic_argument);
+
+						arg_target = ArgumentTarget::IDLE;
 					}
 				}
 

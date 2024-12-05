@@ -1,53 +1,60 @@
 {
   "inputs": [
-
     {
-      "argument_id": "light0_dir",
       "type": "Real4Vector",
-      "register": 24,
-      "description": "light0 dir"
+      "body": {
+        "argument_id": "light0_dir",
+        "register": 24,
+        "description": "light0 dir"
+      }
     },
-
     {
-      "argument_id": "atmo_scattering_flag_0",
       "type": "Real4Vector",
-      "register": 25,
-      "description": "atmo_scattering_flag_0"
+      "body": {
+        "argument_id": "atmo_scattering_flag_0",
+        "register": 25,
+        "description": "atmo_scattering_flag_0"
+      }
     },
-
     {
-      "argument_id": "atmo_scattering_flag_1",
       "type": "Real4Vector",
-      "register": 26,
-      "description": "atmo_scattering_flag_1"
+      "body": {
+        "argument_id": "atmo_scattering_flag_1",
+        "register": 26,
+        "description": "atmo_scattering_flag_1"
+      }
     },
-
     {
-      "argument_id": "atmo_scattering_flag_2",
       "type": "Real4Vector",
-      "register": 27,
-      "description": "atmo_scattering_flag_2"
+      "body": {
+        "argument_id": "atmo_scattering_flag_2",
+        "register": 27,
+        "description": "atmo_scattering_flag_2"
+      }
     },
-
     {
-      "argument_id": "atmo_scattering_flag_3",
       "type": "Real4Vector",
-      "register": 28,
-      "description": "atmo_scattering_flag_3"
+      "body": {
+        "argument_id": "atmo_scattering_flag_3",
+        "register": 28,
+        "description": "atmo_scattering_flag_3"
+      }
     },
-
     {
-      "argument_id": "atmo_scattering_flag_4",
       "type": "Real4Vector",
-      "register": 29,
-      "description": "atmo_scattering_flag_4"
+      "body": {
+        "argument_id": "atmo_scattering_flag_4",
+        "register": 29,
+        "description": "atmo_scattering_flag_4"
+      }
     },
-
     {
-      "argument_id": "atmo_scattering_flag_5",
       "type": "Real4Vector",
-      "register": 30,
-      "description": "atmo_scattering_flag_5"
+      "body": {
+        "argument_id": "atmo_scattering_flag_5",
+        "register": 30,
+        "description": "atmo_scattering_flag_5"
+      }
     },
   ]
 }

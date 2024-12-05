@@ -1,10 +1,12 @@
 {
   "inputs": [
     {
-      "argument_id": "color",
       "type": "Real4Vector",
-      "register": 24,
-      "description": "color value"
+      "body": {
+        "argument_id": "color",
+        "register": 24,
+        "description": "color value"
+      }
     }
   ]
 }

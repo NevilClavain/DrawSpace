@@ -1,10 +1,12 @@
 {
   "inputs": [
     {
-      "argument_id": "key_color",
       "type": "Real4Vector",
-      "register": 24,
-      "description": "key color value for pixels to clip"
+      "body": {
+        "argument_id": "key_color",
+        "register": 24,
+        "description": "key color value for pixels to clip"
+      }
     }
   ]
 }
