@@ -127,6 +127,11 @@ void Shader::addVectorArrayArgument(const VectorArrayArgument& p_arg)
     m_vectorarray_arguments.push_back(p_arg);
 }
 
+const std::vector<Shader::VectorArrayArgument>& Shader::getVectorArrayArguments() const
+{
+    return m_vectorarray_arguments;
+}
+
 void Shader::compute_resource_uid()
 {
     MD5 md5;

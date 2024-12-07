@@ -122,6 +122,8 @@ namespace renderMe
 
         void addVectorArrayArgument(const VectorArrayArgument& p_arg);
 
+        const std::vector<VectorArrayArgument>& getVectorArrayArguments() const;
+
     private:
         
         std::string                         m_resource_uid;       // shader content source unique identifier
