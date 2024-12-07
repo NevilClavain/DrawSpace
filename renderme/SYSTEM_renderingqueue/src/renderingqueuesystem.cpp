@@ -525,7 +525,7 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 	const renderMe::Shader& p_vshader, const renderMe::Shader& p_pshader)
 {
 	///////////////////// connect vertex shader args
-	const auto vshaders_current_args{ p_vshader.getArguments() };
+	const auto vshaders_current_args{ p_vshader.getGenericArguments() };
 
 	//vshader arguments id match loop
 	for (const auto& current_arg : vshaders_current_args)
@@ -544,7 +544,7 @@ static void const connect_shaders_args(renderMe::core::logger::Sink& p_localLogg
 	}
 
 	///////////////////// connect pixel shader args
-	const auto pshaders_current_args{ p_pshader.getArguments() };
+	const auto pshaders_current_args{ p_pshader.getGenericArguments() };
 
 	//pshader arguments id match loop
 	for (const auto& current_arg : pshaders_current_args)

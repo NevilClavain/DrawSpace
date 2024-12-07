@@ -48,7 +48,8 @@ Shader::Shader(const Shader& p_other)
     p_other.m_state_mutex.unlock();
     m_state_mutex.unlock();
 
-    m_arguments = p_other.m_arguments;
+    m_generic_arguments = p_other.m_generic_arguments;
+    m_vectorarray_arguments = p_other.m_vectorarray_arguments;
 }
 
 std::string Shader::getContent() const
@@ -113,12 +114,17 @@ int Shader::getType() const
 
 void Shader::addGenericArgument(const GenericArgument& p_arg)
 {
-    m_arguments.push_back(p_arg);
+    m_generic_arguments.push_back(p_arg);
 }
 
-std::vector<Shader::GenericArgument> Shader::getArguments() const
+std::vector<Shader::GenericArgument> Shader::getGenericArguments() const
 {
-    return m_arguments;
+    return m_generic_arguments;
+}
+
+void Shader::addVectorArrayArgument(const VectorArrayArgument& p_arg)
+{
+    m_vectorarray_arguments.push_back(p_arg);
 }
 
 void Shader::compute_resource_uid()

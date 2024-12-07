@@ -658,11 +658,13 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 										const renderMe::Shader::VectorArrayArgument& arg{ tdc.second.vshaders_vector_array[i] };
 										int curr_register{ arg.start_shader_register };
 
+										/*
 										for (int j = 0; j < arg.array->size(); j++)
 										{
 											d3dimpl->setVertexshaderConstantsVec(curr_register, (*arg.array)[j]);
 											curr_register++;
 										}
+										*/
 									}
 
 									for (int i = 0; i < tdc.second.pshaders_vector_array.size(); i++)
@@ -670,11 +672,13 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 										const renderMe::Shader::VectorArrayArgument& arg{ tdc.second.vshaders_vector_array[i] };
 										int curr_register{ arg.start_shader_register };
 
+										/*
 										for (int j = 0; j < arg.array->size(); j++)
 										{
 											d3dimpl->setPixelshaderConstantsVec(curr_register, (*arg.array)[j]);
 											curr_register++;
 										}
+										*/
 									}
 
 									//////
@@ -755,6 +759,34 @@ void D3D11System::renderQueue(const rendering::Queue& p_renderingQueue) const
 											const maths::Real4Vector rvector{ { dataCloud->readDataValue<maths::Real4Vector>(datacloud_data_id) } };
 											d3dimpl->setPixelshaderConstantsVec(shader_param.shader_register, rvector);
 										}
+									}
+
+									for (int i = 0; i < tdc.second.vshaders_vector_array.size(); i++)
+									{
+										const renderMe::Shader::VectorArrayArgument& arg{ tdc.second.vshaders_vector_array[i] };
+										int curr_register{ arg.start_shader_register };
+
+										/*
+										for (int j = 0; j < arg.array->size(); j++)
+										{
+											d3dimpl->setVertexshaderConstantsVec(curr_register, (*arg.array)[j]);
+											curr_register++;
+										}
+										*/
+									}
+
+									for (int i = 0; i < tdc.second.pshaders_vector_array.size(); i++)
+									{
+										const renderMe::Shader::VectorArrayArgument& arg{ tdc.second.vshaders_vector_array[i] };
+										int curr_register{ arg.start_shader_register };
+
+										/*
+										for (int j = 0; j < arg.array->size(); j++)
+										{
+											d3dimpl->setPixelshaderConstantsVec(curr_register, (*arg.array)[j]);
+											curr_register++;
+										}
+										*/
 									}
 
 									//////

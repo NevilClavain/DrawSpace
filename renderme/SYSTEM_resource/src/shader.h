@@ -65,7 +65,7 @@ namespace renderMe
         struct VectorArrayArgument
         {
             int                                     start_shader_register{ -1 };
-            std::vector<core::maths::Real4Vector>*  array{ nullptr };
+            std::vector<core::maths::Real4Vector>   array;
         };
 
         Shader() = delete;
@@ -87,7 +87,8 @@ namespace renderMe
             p_other.m_state_mutex.unlock();
             m_state_mutex.unlock();
 
-            m_arguments = p_other.m_arguments;
+            m_generic_arguments = p_other.m_generic_arguments;
+            m_vectorarray_arguments = p_other.m_vectorarray_arguments;
 
             return *this;
         }
@@ -116,29 +117,28 @@ namespace renderMe
 
         const core::Buffer<char>& getCode() const;
         
-
         void addGenericArgument(const GenericArgument& p_arg);
+        std::vector<GenericArgument> getGenericArguments() const;
 
-        std::vector<GenericArgument> getArguments() const;
+        void addVectorArrayArgument(const VectorArrayArgument& p_arg);
 
     private:
         
-        std::string                     m_resource_uid;       // shader content source unique identifier
+        std::string                         m_resource_uid;       // shader content source unique identifier
+        std::string                         m_source_id;
+        std::string                         m_content;
 
-        std::string                     m_source_id;
+        size_t                              m_contentSize{ 0 };
 
-        std::string                     m_content;
+        int                                 m_type; //0 = vertex shader, 1 = pixel shader
 
-        size_t                          m_contentSize{ 0 };
+        core::Buffer<char>                  m_code;
 
-        int                             m_type; //0 = vertex shader, 1 = pixel shader
+        mutable std::mutex	                m_state_mutex;
+        State                               m_state{ State::INIT };
 
-        core::Buffer<char>              m_code;
-
-        mutable std::mutex	            m_state_mutex;
-        State                           m_state{ State::INIT };
-
-        std::vector<GenericArgument>    m_arguments;
+        std::vector<GenericArgument>        m_generic_arguments;
+        std::vector<VectorArrayArgument>    m_vectorarray_arguments;
 
         // IF NEW MEMBERS HERE :
         // UPDATE COPY CTOR AND OPERATOR !!!!!!

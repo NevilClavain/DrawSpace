@@ -132,7 +132,8 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 		Shader*			shader_dest{ p_shader_opt.value() };
 
-		thread_local	Shader::GenericArgument	generic_argument;
+		thread_local	Shader::GenericArgument		generic_argument;
+		thread_local	Shader::VectorArrayArgument	vector_array_argument;
 
 		switch (p_event)
 		{
@@ -162,7 +163,11 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 						{
 							arg_target = ArgumentTarget::FILL_GENERICARGUMENT;
 							generic_argument.argument_type = p_value;
-						}						
+						}
+						else if("Real4VectorArray" == p_value)
+						{
+							arg_target = ArgumentTarget::FILL_VECTORARRAYARGUMENT;
+						}
 					}
 					else if ("argument_id" == p_id)
 					{
@@ -181,10 +186,22 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 				{
 					if ("register" == p_id)
 					{
+						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found register : " + p_value);
 						if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
-						{
-							_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found register : " + p_value);
+						{							
 							generic_argument.shader_register = std::atoi(p_value.c_str());
+						}
+						else if (ArgumentTarget::FILL_VECTORARRAYARGUMENT == arg_target)
+						{
+							vector_array_argument.start_shader_register = std::atoi(p_value.c_str());
+						}
+					}
+					else if ("length" == p_id)
+					{
+						if (ArgumentTarget::FILL_VECTORARRAYARGUMENT == arg_target)
+						{
+							const int length{ std::atoi(p_value.c_str()) };
+							vector_array_argument.array.resize(length);
 						}
 					}
 				}
@@ -201,11 +218,16 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 					if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addArgument");
+						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addGenericArgument");
 						shader_dest->addGenericArgument(generic_argument);
-
-						arg_target = ArgumentTarget::IDLE;
 					}
+					else if (ArgumentTarget::FILL_VECTORARRAYARGUMENT == arg_target)
+					{
+						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addGenericArgument");
+						shader_dest->addVectorArrayArgument(vector_array_argument);
+					}
+
+					arg_target = ArgumentTarget::IDLE;
 				}
 
 				break;
