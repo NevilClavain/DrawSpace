@@ -40,6 +40,7 @@
 #include "texture.h"
 #include "trianglemeshe.h"
 
+
 #include <utility>
 
 #include "datacloud.h"
@@ -249,10 +250,10 @@ void ResourceSystem::run()
 		{
 
 			////// Handle shaders ///////////
-			//const auto s_list{ p_resource_aspect.getComponentsByType<Shader>() };
+			//const auto shaders_list{ p_resource_aspect.getComponentsByType<Shader>() };
 
-			const auto s_list{ p_resource_aspect.getComponentsByType<std::pair<std::string, Shader>>() };
-			for (auto& e : s_list)
+			const auto shaders_list{ p_resource_aspect.getComponentsByType<std::pair<std::string, Shader>>() };
+			for (auto& e : shaders_list)
 			{
 				auto& shader{ e->getPurpose().second };
 				const auto filename{ e->getPurpose().first};
@@ -265,8 +266,8 @@ void ResourceSystem::run()
 				}
 			}
 			////// Handle textures ///////////
-			const auto t_list{ p_resource_aspect.getComponentsByType<std::pair<size_t, std::pair<std::string, Texture>>>() };
-			for (auto& e : t_list)
+			const auto textures_list{ p_resource_aspect.getComponentsByType<std::pair<size_t, std::pair<std::string, Texture>>>() };
+			for (auto& e : textures_list)
 			{
 				auto& staged_texture{ e->getPurpose() };
 				Texture& texture{ staged_texture.second.second };
@@ -280,11 +281,32 @@ void ResourceSystem::run()
 				}
 			}
 			////// Handle meshes //////////////
-			const auto m_list{ p_resource_aspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
-			for (auto& e : m_list)
+			const auto meshes_list{ p_resource_aspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+			
+			/*
+			for (auto& e : meshes_list)
 			{
 				auto& meshe_descr{ e->getPurpose() };
 
+				TriangleMeshe& meshe{ meshe_descr.second };
+
+				const auto& ids{ meshe_descr.first };
+
+				const std::string& file_path{ ids.second };
+				const std::string& meshe_id{ ids.first };
+
+				const auto state{ meshe.getState() };
+				if (TriangleMeshe::State::INIT == state)
+				{
+					handleTriangleMeshe(meshe, file_path, meshe_id);
+					meshe.setState(TriangleMeshe::State::BLOBLOADING);
+				}
+			}
+			*/
+
+			if (meshes_list.size() > 0)
+			{
+				auto& meshe_descr{ meshes_list.at(0)->getPurpose() };
 				TriangleMeshe& meshe{ meshe_descr.second };
 
 				const auto& ids{ meshe_descr.first };
