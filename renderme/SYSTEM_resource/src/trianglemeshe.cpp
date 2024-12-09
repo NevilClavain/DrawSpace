@@ -44,6 +44,8 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_n_gen_mode = p_other.m_n_gen_mode;
 	m_tb_gen_mode = p_other.m_tb_gen_mode;
 
+	m_animation_bones = p_other.m_animation_bones;
+
 	m_state_mutex.lock();
 	p_other.m_state_mutex.lock();
 	m_state = p_other.m_state;
@@ -115,6 +117,11 @@ void TriangleMeshe::clearTriangles(void)
 	m_triangles_for_vertex.clear();
 }
 
+void TriangleMeshe::clearAnimationBones(void)
+{
+	m_animation_bones.clear();
+}
+
 void TriangleMeshe::push(const Vertex& p_vertex)
 {
 	m_vertices.push_back(p_vertex);
@@ -127,7 +134,11 @@ void TriangleMeshe::push(const TrianglePrimitive<unsigned int>& p_triangle)
 	m_triangles_for_vertex[p_triangle[0]].push_back(p_triangle);
 	m_triangles_for_vertex[p_triangle[1]].push_back(p_triangle);
 	m_triangles_for_vertex[p_triangle[2]].push_back(p_triangle);
+}
 
+void TriangleMeshe::push(const AnimationBone& p_bone)
+{
+	m_animation_bones.push_back(p_bone);
 }
 
 void TriangleMeshe::computeNormales()
@@ -288,7 +299,16 @@ void TriangleMeshe::computeResourceUID()
 	const std::string hash_n_gen{ md5.digestMemory((BYTE*)&m_n_gen_mode, (int)(sizeof(m_n_gen_mode))) };
 	const std::string hash_tb_gen{ md5.digestMemory((BYTE*)&m_tb_gen_mode, (int)(sizeof(m_tb_gen_mode))) };
 
-	std::string hash{ hash_v + hash_t + hash_n_gen + hash_tb_gen };
+	std::string hash_bones;
+	for (int i = 0; i < m_animation_bones.size(); i++)
+	{
+		const double* content_array{ m_animation_bones.at(i).offset_matrix.getArray() };
+		const std::string hash_bone{ md5.digestMemory((BYTE*)&content_array, (int)(16 * sizeof(double))) };
+
+		hash_bones += hash_bone;
+	}
+
+	std::string hash{ hash_v + hash_t + hash_n_gen + hash_tb_gen + hash_bones };
 
 	m_resource_uid = hash;
 }

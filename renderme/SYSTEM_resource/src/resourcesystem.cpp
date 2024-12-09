@@ -22,11 +22,14 @@
 */
 /* -*-LIC_END-*- */
 
+#include "resourcesystem.h"
+
+#include <utility>
+
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
-#include "resourcesystem.h"
 #include "entity.h"
 #include "entitygraph.h"
 #include "aspects.h"
@@ -40,8 +43,10 @@
 #include "texture.h"
 #include "trianglemeshe.h"
 
+#include "matrix.h"
 
-#include <utility>
+
+
 
 #include "datacloud.h"
 
@@ -647,6 +652,29 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 	}
 }
 
+static renderMe::core::maths::Matrix convertFromAssimpMatrix(const aiMatrix4x4& p_in_mat)
+{
+	renderMe::core::maths::Matrix mat;
+	mat(0, 0) = p_in_mat.a1;
+	mat(0, 1) = p_in_mat.b1;
+	mat(0, 2) = p_in_mat.c1;
+	mat(0, 3) = p_in_mat.d1;
+	mat(1, 0) = p_in_mat.a2;
+	mat(1, 1) = p_in_mat.b2;
+	mat(1, 2) = p_in_mat.c2;
+	mat(1, 3) = p_in_mat.d2;
+	mat(2, 0) = p_in_mat.a3;
+	mat(2, 1) = p_in_mat.b3;
+	mat(2, 2) = p_in_mat.c3;
+	mat(2, 3) = p_in_mat.d3;
+	mat(3, 0) = p_in_mat.a4;
+	mat(3, 1) = p_in_mat.b4;
+	mat(3, 2) = p_in_mat.c4;
+	mat(3, 3) = p_in_mat.d4;
+
+	return mat;
+}
+
 
 void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid)
 {
@@ -795,6 +823,10 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
 
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> weights"));
+
+							AnimationBone bone_output;
+							bone_output.offset_matrix = convertFromAssimpMatrix(bone->mOffsetMatrix);
+							mesheInfos.push(bone_output);
 
 							/*
 							for (size_t k = 0; k < bone->mNumWeights; k++)

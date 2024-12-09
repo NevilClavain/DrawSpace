@@ -33,11 +33,24 @@
 #include "primitives.h"
 #include "matrix.h"
 #include "tvector.h"
+#include "matrix.h"
 
 namespace renderMe
 {
 	//fwd decl
 	class ResourceSystem;
+
+	struct AnimationBone
+	{
+		core::maths::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
+		core::maths::Matrix final_transformation;
+
+		AnimationBone(void)
+		{
+			offset_matrix.identity();
+			final_transformation.identity();
+		}
+	};
 
 	class TriangleMeshe
 	{
@@ -93,6 +106,8 @@ namespace renderMe
 			m_n_gen_mode = p_other.m_n_gen_mode;
 			m_tb_gen_mode = p_other.m_tb_gen_mode;
 
+			m_animation_bones = p_other.m_animation_bones;
+
 			m_state_mutex.lock();
 			p_other.m_state_mutex.lock();
 			m_state = p_other.m_state;
@@ -124,9 +139,12 @@ namespace renderMe
 
 		void											clearVertices(void);
 		void											clearTriangles(void);
+		void											clearAnimationBones(void);
 
 		void											push(const TrianglePrimitive<unsigned int>& p_triangle);
 		void											push(const Vertex& p_vertex);
+
+		void											push(const AnimationBone& p_bone);
 
 		void											computeNormales();
 		void											computeTB();
@@ -166,6 +184,8 @@ namespace renderMe
 
 		mutable std::mutex												m_state_mutex;
 		State															m_state{ State::INIT };
+
+		std::vector<AnimationBone>										m_animation_bones;
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!

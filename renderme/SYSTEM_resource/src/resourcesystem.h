@@ -36,7 +36,6 @@
 #include "buffer.h"
 #include "json.h"
 
-
 namespace renderMe
 {
     // fwd decls
@@ -92,6 +91,6 @@ namespace renderMe
         void handleShader(Shader& shaderInfos, int p_shaderType, const std::string& p_filename);
         void handleTexture(Texture& textureInfos, const std::string& p_filename);
         
-        void handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid);
+        void handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid);        
     };
 }
