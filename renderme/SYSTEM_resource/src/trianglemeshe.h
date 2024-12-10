@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 #include <mutex>
-#include <map>
+#include <unordered_map>
 
 #include "primitives.h"
 #include "matrix.h"
@@ -107,6 +107,7 @@ namespace renderMe
 			m_tb_gen_mode = p_other.m_tb_gen_mode;
 
 			m_animation_bones = p_other.m_animation_bones;
+			m_animation_bones_names_mapping = p_other.m_animation_bones_names_mapping;
 
 			m_state_mutex.lock();
 			p_other.m_state_mutex.lock();
@@ -144,7 +145,7 @@ namespace renderMe
 		void											push(const TrianglePrimitive<unsigned int>& p_triangle);
 		void											push(const Vertex& p_vertex);
 
-		void											push(const AnimationBone& p_bone);
+		void											push(const AnimationBone& p_bone, const std::string& p_boneId);
 
 		void											computeNormales();
 		void											computeTB();
@@ -164,28 +165,29 @@ namespace renderMe
 
 	private:
 
-		std::string														m_resource_uid;       // meshe content source unique identifier
+		std::string																m_resource_uid;       // meshe content source unique identifier
 
-		Source															m_source{ Source::CONTENT_FROM_FILE };
+		Source																	m_source{ Source::CONTENT_FROM_FILE };
 
-		std::string														m_source_id;
+		std::string																m_source_id;
 
 
-		std::vector<Vertex>												m_vertices;
-		std::vector<TrianglePrimitive<unsigned int>>					m_triangles;
+		std::vector<Vertex>														m_vertices;
+		std::vector<TrianglePrimitive<unsigned int>>							m_triangles;
 
 		// list of triangles for each vertex
-		std::map<long, std::vector<TrianglePrimitive<unsigned int>>>	m_triangles_for_vertex;
+		std::unordered_map<long, std::vector<TrianglePrimitive<unsigned int>>>	m_triangles_for_vertex;
 
-		NormalesGenerationMode											m_n_gen_mode{ NormalesGenerationMode::NORMALES_COMPUTED };
-		TangentBinormalesGenerationMode									m_tb_gen_mode{ TangentBinormalesGenerationMode::TB_DISCARDED };
+		NormalesGenerationMode													m_n_gen_mode{ NormalesGenerationMode::NORMALES_COMPUTED };
+		TangentBinormalesGenerationMode											m_tb_gen_mode{ TangentBinormalesGenerationMode::TB_DISCARDED };
 
-		core::maths::Matrix												m_normales_transformation;
+		core::maths::Matrix														m_normales_transformation;
 
-		mutable std::mutex												m_state_mutex;
-		State															m_state{ State::INIT };
+		mutable std::mutex														m_state_mutex;
+		State																	m_state{ State::INIT };
 
-		std::vector<AnimationBone>										m_animation_bones;
+		std::vector<AnimationBone>												m_animation_bones;
+		std::unordered_map<std::string, int>									m_animation_bones_names_mapping;
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!

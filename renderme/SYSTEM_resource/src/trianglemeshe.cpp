@@ -45,6 +45,7 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_tb_gen_mode = p_other.m_tb_gen_mode;
 
 	m_animation_bones = p_other.m_animation_bones;
+	m_animation_bones_names_mapping = p_other.m_animation_bones_names_mapping;
 
 	m_state_mutex.lock();
 	p_other.m_state_mutex.lock();
@@ -120,6 +121,7 @@ void TriangleMeshe::clearTriangles(void)
 void TriangleMeshe::clearAnimationBones(void)
 {
 	m_animation_bones.clear();
+	m_animation_bones_names_mapping.clear();
 }
 
 void TriangleMeshe::push(const Vertex& p_vertex)
@@ -136,9 +138,11 @@ void TriangleMeshe::push(const TrianglePrimitive<unsigned int>& p_triangle)
 	m_triangles_for_vertex[p_triangle[2]].push_back(p_triangle);
 }
 
-void TriangleMeshe::push(const AnimationBone& p_bone)
+void TriangleMeshe::push(const AnimationBone& p_bone, const std::string& p_boneId)
 {
+	int last_object_index = m_animation_bones.size();
 	m_animation_bones.push_back(p_bone);
+	m_animation_bones_names_mapping[p_boneId] = last_object_index;
 }
 
 void TriangleMeshe::computeNormales()

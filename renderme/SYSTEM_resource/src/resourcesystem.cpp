@@ -792,6 +792,8 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("owner node = ") + name);
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("nb_meshes = ") << nb_meshes);
 
+					mesheInfos.clearAnimationBones();
+
 					const auto indexes{ meshe_node->mMeshes };
 					for (unsigned int i = 0; i < nb_meshes; i++)
 					{
@@ -826,7 +828,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 							AnimationBone bone_output;
 							bone_output.offset_matrix = convertFromAssimpMatrix(bone->mOffsetMatrix);
-							mesheInfos.push(bone_output);
+							mesheInfos.push(bone_output, std::string(bone->mName.C_Str()));
 
 							/*
 							for (size_t k = 0; k < bone->mNumWeights; k++)
@@ -840,6 +842,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 
 					mesheInfos.clearTriangles();
+					mesheInfos.clearVertices();
 
 					int global_index = 0;
 					for (unsigned int i = 0; i < nb_meshes; i++)
