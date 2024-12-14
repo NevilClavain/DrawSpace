@@ -793,7 +793,6 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("nb_meshes = ") << nb_meshes);
 
 					mesheInfos.clearAnimationBones();
-
 					const auto indexes{ meshe_node->mMeshes };
 					for (unsigned int i = 0; i < nb_meshes; i++)
 					{
@@ -825,10 +824,6 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
 
 							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> weights"));
-
-							AnimationBone bone_output;
-							bone_output.offset_matrix = convertFromAssimpMatrix(bone->mOffsetMatrix);
-							mesheInfos.push(bone_output, std::string(bone->mName.C_Str()));
 
 							/*
 							for (size_t k = 0; k < bone->mNumWeights; k++)
@@ -882,6 +877,100 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 							}
 
 							mesheInfos.push(v_out);
+						}
+					}
+
+					for (unsigned int i = 0; i < nb_meshes; i++)
+					{
+						const auto meshe{ meshes[indexes[i]] };
+						for (size_t j = 0; j < meshe->mNumBones; j++)
+						{
+							const auto bone{ meshe->mBones[j] };
+
+							AnimationBone bone_output;
+							bone_output.offset_matrix = convertFromAssimpMatrix(bone->mOffsetMatrix);
+							mesheInfos.push(bone_output, std::string(bone->mName.C_Str()));
+
+							for (size_t k = 0; k < bone->mNumWeights; k++)
+							{
+								const auto weight{ bone->mWeights[k].mWeight };
+								const auto vert_index{ bone->mWeights[k].mVertexId };
+								auto vertex{ mesheInfos.getVertex(vert_index) };
+
+								// TO BE CONTINUED
+								// UPDATE HERE
+
+								if (vertex.tu[4] == -1.0)
+								{
+									vertex.tu[4] = j;       // j = bone index
+									vertex.tu[5] = weight;
+								}
+								else if (vertex.tv[4] == -1.0)
+								{
+									vertex.tv[4] = j;       // j = bone index
+									vertex.tv[5] = weight;
+
+								}
+								else if (vertex.tw[4] == -1.0)
+								{
+									vertex.tw[4] = j;       // j = bone index
+									vertex.tw[5] = weight;
+								}
+								else if (vertex.ta[4] == -1.0)
+								{
+									vertex.ta[4] = j;       // j = bone index
+									vertex.ta[5] = weight;
+								}
+
+								else if (vertex.tu[6] == -1.0)
+								{
+									vertex.tu[6] = j;       // j = bone index
+									vertex.tu[7] = weight;
+								}
+								else if (vertex.tv[6] == -1.0)
+								{
+									vertex.tv[6] = j;       // j = bone index
+									vertex.tv[7] = weight;
+								}
+								else if (vertex.tw[6] == -1.0)
+								{
+									vertex.tw[6] = j;       // j = bone index
+									vertex.tw[7] = weight;
+								}
+								else if (vertex.ta[6] == -1.0)
+								{
+									vertex.ta[6] = j;       // j = bone index
+									vertex.ta[7] = weight;
+								}
+
+								else if (vertex.tu[8] == -1.0)
+								{
+									vertex.tu[8] = j;       // j = bone index
+									vertex.tu[9] = weight;
+								}
+								else if (vertex.tv[8] == -1.0)
+								{
+									vertex.tv[8] = j;       // j = bone index
+									vertex.tv[9] = weight;
+								}
+								else if (vertex.tw[8] == -1.0)
+								{
+									vertex.tw[8] = j;       // j = bone index
+									vertex.tw[9] = weight;
+								}
+								else if (vertex.ta[8] == -1.0)
+								{
+									vertex.ta[8] = j;       // j = bone index
+									vertex.ta[9] = weight;
+								}
+								else
+								{
+									_EXCEPTION("A vertex cannot reference more than 12 bones");
+									//_RENDERME_WARN(m_localLoggerRunner, "A vertex cannot reference more than 12 bones, ignored. bone " + std::string(bone->mName.C_Str()));
+								}
+
+								mesheInfos.update(vert_index, vertex);
+							}
 						}
 					}
 				}

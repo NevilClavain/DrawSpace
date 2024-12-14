@@ -27,7 +27,7 @@
 #include <array>
 namespace renderMe
 {
-    static constexpr int nbUVCoordsPerVertex = 4;
+    static constexpr int nbUVCoordsPerVertex = 10;
 
     struct Vertex
     {
@@ -83,10 +83,10 @@ namespace renderMe
         {
             for (long i = 0; i < nbUVCoordsPerVertex; i++)
             {
-                tu[i] = 0.0;
-                tv[i] = 0.0;
-                tw[i] = 0.0;
-                ta[i] = 0.0;
+                tu[i] = -1.0;
+                tv[i] = -1.0;
+                tw[i] = -1.0;
+                ta[i] = -1.0;
             }
         }
     };

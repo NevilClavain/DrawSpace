@@ -144,8 +144,13 @@ namespace renderMe
 
 		void											push(const TrianglePrimitive<unsigned int>& p_triangle);
 		void											push(const Vertex& p_vertex);
-
 		void											push(const AnimationBone& p_bone, const std::string& p_boneId);
+
+
+		Vertex											getVertex(unsigned int p_index);
+		void											update(unsigned int p_index, const Vertex& p_vertex);
+
+
 
 		void											computeNormales();
 		void											computeTB();

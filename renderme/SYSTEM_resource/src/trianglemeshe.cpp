@@ -129,6 +129,17 @@ void TriangleMeshe::push(const Vertex& p_vertex)
 	m_vertices.push_back(p_vertex);
 }
 
+void TriangleMeshe::update(unsigned int p_index, const Vertex& p_vertex)
+{
+	m_vertices.at(p_index) = p_vertex;
+}
+
+Vertex TriangleMeshe::getVertex(unsigned int p_index)
+{
+	return m_vertices.at(p_index);
+
+}
+
 void TriangleMeshe::push(const TrianglePrimitive<unsigned int>& p_triangle)
 {
 	m_triangles.push_back(p_triangle);
