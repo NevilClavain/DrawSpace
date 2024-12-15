@@ -25,6 +25,7 @@
 #include "resourcesystem.h"
 
 #include <utility>
+#include <map>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -773,7 +774,39 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					};
 
 					dumpAssimpSceneNode(root, 1);
+
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY END***********************************"));
+
+
+					//// record scene nodes hierarchy
+					std::map<std::string, SceneNode> scene_nodes;
+
+					const std::function<void(aiNode*)> recordAssimpSceneNode
+					{
+						[&](aiNode* p_ai_node)
+						{
+							SceneNode node;
+							node.id = p_ai_node->mName.C_Str();
+							if (p_ai_node->mParent)
+							{
+								node.parent_id = p_ai_node->mParent->mName.C_Str();
+							}
+
+							node.locale_transform = convertFromAssimpMatrix(p_ai_node->mTransformation);
+							for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
+							{
+								node.children.push_back(p_ai_node->mChildren[i]->mName.C_Str());
+								recordAssimpSceneNode(p_ai_node->mChildren[i]);
+							}
+
+							scene_nodes.emplace(node.id, node);
+						}
+					};
+
+					recordAssimpSceneNode(root);
+					mesheInfos.setSceneNodes(scene_nodes);
+
+					///////////////////////////////////
 
 					const auto meshe_node{ root->FindNode(meshe_id.c_str()) };
 					const auto meshes{ scene->mMeshes };

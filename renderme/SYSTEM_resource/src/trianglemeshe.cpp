@@ -47,6 +47,8 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_animation_bones = p_other.m_animation_bones;
 	m_animation_bones_names_mapping = p_other.m_animation_bones_names_mapping;
 
+	m_scene_nodes = p_other.m_scene_nodes;
+
 	m_state_mutex.lock();
 	p_other.m_state_mutex.lock();
 	m_state = p_other.m_state;
@@ -346,4 +348,9 @@ void TriangleMeshe::setSourceID(const std::string& p_source_id)
 void TriangleMeshe::setSource(TriangleMeshe::Source p_source)
 {
 	m_source = p_source;
+}
+
+void TriangleMeshe::setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes)
+{
+	m_scene_nodes = p_scene_nodes;
 }

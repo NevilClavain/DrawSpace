@@ -26,6 +26,7 @@
 #pragma once
 
 #include <mutex>
+#include <string>
 
 #include "system.h"
 #include "logsink.h"
@@ -35,6 +36,7 @@
 #include "eventsource.h"
 #include "buffer.h"
 #include "json.h"
+#include "matrix.h"
 
 namespace renderMe
 {
@@ -61,7 +63,7 @@ namespace renderMe
         RESOURCE_MESHE_LOAD_SUCCESS
 
     };
-   
+
     class ResourceSystem : public core::System, public renderMe::property::EventSource<ResourceSystemEvent, const std::string&>
     {
     public:

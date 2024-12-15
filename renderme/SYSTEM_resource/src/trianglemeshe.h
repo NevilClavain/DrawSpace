@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <mutex>
 #include <unordered_map>
 
@@ -45,10 +46,23 @@ namespace renderMe
 		core::maths::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
 		core::maths::Matrix final_transformation;
 
-		AnimationBone(void)
+		AnimationBone()
 		{
 			offset_matrix.identity();
 			final_transformation.identity();
+		}
+	};
+
+	struct SceneNode
+	{
+		std::string				    id;			// -> can include AnimationBone name (see above)
+		std::string				    parent_id;
+		std::vector<std::string>	children;
+		core::maths::Matrix		    locale_transform;
+
+		SceneNode()
+		{
+			locale_transform.identity();
 		}
 	};
 
@@ -109,6 +123,8 @@ namespace renderMe
 			m_animation_bones = p_other.m_animation_bones;
 			m_animation_bones_names_mapping = p_other.m_animation_bones_names_mapping;
 
+			m_scene_nodes = p_other.m_scene_nodes;
+
 			m_state_mutex.lock();
 			p_other.m_state_mutex.lock();
 			m_state = p_other.m_state;
@@ -146,6 +162,7 @@ namespace renderMe
 		void											push(const Vertex& p_vertex);
 		void											push(const AnimationBone& p_bone, const std::string& p_boneId);
 
+		void											setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes);
 
 		Vertex											getVertex(unsigned int p_index);
 		void											update(unsigned int p_index, const Vertex& p_vertex);
@@ -193,6 +210,8 @@ namespace renderMe
 
 		std::vector<AnimationBone>												m_animation_bones;
 		std::unordered_map<std::string, int>									m_animation_bones_names_mapping;
+
+		std::map<std::string, SceneNode>										m_scene_nodes;  // note : no need to include it in md5 hash computing
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!
