@@ -335,9 +335,9 @@ void RenderingQueueSystem::manageRenderingQueue()
 	{
 		const auto forEachRenderingAspect
 		{
-			[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+			[&](Entity* p_entity, const ComponentContainer& p_rendering_components)
 			{
-				const auto rendering_queues_list{ p_rendering_aspect.getComponentsByType<rendering::Queue>() };
+				const auto rendering_queues_list{ p_rendering_components.getComponentsByType<rendering::Queue>() };
 				if (rendering_queues_list.size() > 0)
 				{
 					auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };

@@ -252,13 +252,13 @@ void ResourceSystem::run()
 {
 	const auto forEachResourceAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_resource_components)
 		{
 
 			////// Handle shaders ///////////
 			//const auto shaders_list{ p_resource_aspect.getComponentsByType<Shader>() };
 
-			const auto shaders_list{ p_resource_aspect.getComponentsByType<std::pair<std::string, Shader>>() };
+			const auto shaders_list{ p_resource_components.getComponentsByType<std::pair<std::string, Shader>>() };
 			for (auto& e : shaders_list)
 			{
 				auto& shader{ e->getPurpose().second };
@@ -272,7 +272,7 @@ void ResourceSystem::run()
 				}
 			}
 			////// Handle textures ///////////
-			const auto textures_list{ p_resource_aspect.getComponentsByType<std::pair<size_t, std::pair<std::string, Texture>>>() };
+			const auto textures_list{ p_resource_components.getComponentsByType<std::pair<size_t, std::pair<std::string, Texture>>>() };
 			for (auto& e : textures_list)
 			{
 				auto& staged_texture{ e->getPurpose() };
@@ -287,7 +287,7 @@ void ResourceSystem::run()
 				}
 			}
 			////// Handle meshes //////////////
-			const auto meshes_list{ p_resource_aspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+			const auto meshes_list{ p_resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
 			
 			/*
 			for (auto& e : meshes_list)
@@ -804,7 +804,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					};
 
 					recordAssimpSceneNode(root);
-					mesheInfos.setSceneNodes(scene_nodes);
+					mesheInfos.setSceneNodes(scene_nodes, root->mName.C_Str());
 
 					///////////////////////////////////
 

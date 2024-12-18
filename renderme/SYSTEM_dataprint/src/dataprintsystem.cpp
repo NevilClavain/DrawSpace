@@ -211,9 +211,9 @@ void DataPrintSystem::collectData()
 
 	const auto forEachTimeAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_time_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_time_components)
 		{
-			const auto comps { p_time_aspect.getComponentsIdList() };
+			const auto comps { p_time_components.getComponentsIdList() };
 			const size_t sv_hash{ typeid(core::SyncVariable).hash_code() };
 
 			for (const auto& e : comps)
@@ -222,7 +222,7 @@ void DataPrintSystem::collectData()
 				{
 					const std::string id{ e.first };
 
-					const auto& sync_var{ p_time_aspect.getComponent<core::SyncVariable>(id)->getPurpose() };
+					const auto& sync_var{ p_time_components.getComponent<core::SyncVariable>(id)->getPurpose() };
 
 					const std::string type { core::SyncVariable::Type::ANGLE == sync_var.type ? "ANGLE" : "POS" };
 
@@ -264,9 +264,9 @@ void DataPrintSystem::collectData()
 
 	const auto forEachRenderingAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_components)
 		{
-			const auto rendering_queues_list { p_rendering_aspect.getComponentsByType<rendering::Queue>() };
+			const auto rendering_queues_list { p_rendering_components.getComponentsByType<rendering::Queue>() };
 			if (rendering_queues_list.size() > 0)
 			{
 				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };				

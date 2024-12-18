@@ -48,11 +48,11 @@ void WorldSystem::run()
 
 	const auto forEachWorldAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_world_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_world_components)
 		{
 			///// compute matrix hierarchy
 
-			auto& entity_worldposition_list { p_world_aspect.getComponentsByType<transform::WorldPosition>() };
+			auto& entity_worldposition_list { p_world_components.getComponentsByType<transform::WorldPosition>() };
 			if (0 == entity_worldposition_list.size())
 			{
 				_EXCEPTION("Entity world aspect : missing world position " + p_entity->getId());
@@ -80,7 +80,7 @@ void WorldSystem::run()
 
 					///// compute animators -> result stored in local pos
 
-					auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::Animator>() };
+					auto& entity_animators_list{ p_world_components.getComponentsByType<transform::Animator>() };
 					if (entity_animators_list.size() > 0)
 					{
 						if (p_entity->hasAspect(core::timeAspect::id))
@@ -90,7 +90,7 @@ void WorldSystem::run()
 							for (const auto& animator_comp : entity_animators_list)
 							{
 								const auto& animator{ animator_comp->getPurpose() };
-								animator.func(p_world_aspect, time_aspect, parententity_worldposition, animator.component_keys);
+								animator.func(p_world_components, time_aspect, parententity_worldposition, animator.component_keys);
 							}
 						}
 						else
@@ -154,7 +154,7 @@ void WorldSystem::run()
 			{
 				///// compute animators -> result stored in local pos
 
-				auto& entity_animators_list{ p_world_aspect.getComponentsByType<transform::Animator>() };
+				auto& entity_animators_list{ p_world_components.getComponentsByType<transform::Animator>() };
 				if (entity_animators_list.size() > 0)
 				{
 					if (p_entity->hasAspect(core::timeAspect::id))
@@ -170,7 +170,7 @@ void WorldSystem::run()
 							fake_parent_pos.global_pos.identity();
 							fake_parent_pos.local_pos.identity();
 
-							animator.func(p_world_aspect, time_aspect, fake_parent_pos, animator.component_keys);
+							animator.func(p_world_components, time_aspect, fake_parent_pos, animator.component_keys);
 						}
 					}
 					else

@@ -124,6 +124,7 @@ namespace renderMe
 			m_animation_bones_names_mapping = p_other.m_animation_bones_names_mapping;
 
 			m_scene_nodes = p_other.m_scene_nodes;
+			m_scene_root_node_id = p_other.m_scene_root_node_id;
 
 			m_state_mutex.lock();
 			p_other.m_state_mutex.lock();
@@ -162,7 +163,7 @@ namespace renderMe
 		void											push(const Vertex& p_vertex);
 		void											push(const AnimationBone& p_bone, const std::string& p_boneId);
 
-		void											setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes);
+		void											setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes, const std::string& p_scene_root_node_id);
 
 		Vertex											getVertex(unsigned int p_index);
 		void											update(unsigned int p_index, const Vertex& p_vertex);
@@ -185,6 +186,13 @@ namespace renderMe
 		
 		void											computeResourceUID();
 
+		const std::vector<AnimationBone>&				getAnimationBones() const;
+		const std::unordered_map<std::string, int>&		getAnimationBonesNamesMapping() const;
+
+		std::string										getSceneRootNodeId() const;
+		const std::map<std::string, SceneNode>&			getSceneNodes() const;
+		
+
 	private:
 
 		std::string																m_resource_uid;       // meshe content source unique identifier
@@ -192,7 +200,6 @@ namespace renderMe
 		Source																	m_source{ Source::CONTENT_FROM_FILE };
 
 		std::string																m_source_id;
-
 
 		std::vector<Vertex>														m_vertices;
 		std::vector<TrianglePrimitive<unsigned int>>							m_triangles;
@@ -212,6 +219,7 @@ namespace renderMe
 		std::unordered_map<std::string, int>									m_animation_bones_names_mapping;
 
 		std::map<std::string, SceneNode>										m_scene_nodes;  // note : no need to include it in md5 hash computing
+		std::string																m_scene_root_node_id;
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!

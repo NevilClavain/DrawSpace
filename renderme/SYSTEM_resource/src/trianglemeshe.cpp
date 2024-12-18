@@ -48,6 +48,7 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_animation_bones_names_mapping = p_other.m_animation_bones_names_mapping;
 
 	m_scene_nodes = p_other.m_scene_nodes;
+	m_scene_root_node_id = p_other.m_scene_root_node_id;
 
 	m_state_mutex.lock();
 	p_other.m_state_mutex.lock();
@@ -350,7 +351,28 @@ void TriangleMeshe::setSource(TriangleMeshe::Source p_source)
 	m_source = p_source;
 }
 
-void TriangleMeshe::setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes)
+void TriangleMeshe::setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes, const std::string& p_scene_root_node_id)
 {
 	m_scene_nodes = p_scene_nodes;
+	m_scene_root_node_id = p_scene_root_node_id;
+}
+
+std::string	TriangleMeshe::getSceneRootNodeId() const
+{
+	return m_scene_root_node_id;
+}
+
+const std::map<std::string, SceneNode>& TriangleMeshe::getSceneNodes() const
+{
+	return m_scene_nodes;
+}
+
+const std::vector<AnimationBone>& TriangleMeshe::getAnimationBones() const
+{
+	return m_animation_bones;
+}
+
+const std::unordered_map<std::string, int>& TriangleMeshe::getAnimationBonesNamesMapping() const
+{
+	return m_animation_bones_names_mapping;
 }

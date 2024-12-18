@@ -48,7 +48,7 @@ void TimeSystem::run()
 	{
 		const auto forEachTimeAspect
 		{
-			[&](Entity* p_entity, const ComponentContainer& p_time_aspect)
+			[&](Entity* p_entity, const ComponentContainer& p_time_components)
 			{
 				// update FPS info
 				const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
@@ -56,7 +56,7 @@ void TimeSystem::run()
 
 				// search for TimeManager::Variable objects
 
-				const auto tm_var_list{ p_time_aspect.getComponentsByType<SyncVariable>() };
+				const auto tm_var_list{ p_time_components.getComponentsByType<SyncVariable>() };
 				if (tm_var_list.size())
 				{
 					for (auto& v : tm_var_list)

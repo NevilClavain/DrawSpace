@@ -241,12 +241,12 @@ void D3D11System::manageInitialization()
 
 	const auto forEachRenderingAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_components)
 		{
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			// manage D3D11 init
 
-			const auto rendering_target_comp{ p_rendering_aspect.getComponent<core::renderingAspect::renderingTarget>("eg.std.renderingTarget") };
+			const auto rendering_target_comp{ p_rendering_components.getComponent<core::renderingAspect::renderingTarget>("eg.std.renderingTarget") };
 			const bool isWindowsRenderingTarget{ rendering_target_comp != nullptr &&
 													core::renderingAspect::renderingTarget::SCREEN_RENDERINGTARGET == rendering_target_comp->getPurpose() };
 
@@ -297,9 +297,9 @@ void D3D11System::manageRenderingQueue()
 {
 	const auto forEachRenderingAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_rendering_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_rendering_components)
 		{
-			const auto rendering_queues_list { p_rendering_aspect.getComponentsByType<rendering::Queue>() };
+			const auto rendering_queues_list { p_rendering_components.getComponentsByType<rendering::Queue>() };
 			if (rendering_queues_list.size() > 0)
 			{
 				auto& renderingQueue{ rendering_queues_list.at(0)->getPurpose() };
@@ -317,12 +317,12 @@ void D3D11System::manageResources()
 {
 	const auto forEachResourcesAspect
 	{
-		[&](Entity* p_entity, const ComponentContainer& p_resource_aspect)
+		[&](Entity* p_entity, const ComponentContainer& p_resource_components)
 		{
 			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
 			{
-				const auto shaders_list{ p_resource_aspect.getComponentsByType<std::pair<std::string,Shader>>() };
+				const auto shaders_list{ p_resource_components.getComponentsByType<std::pair<std::string,Shader>>() };
 
 				for (auto& e : shaders_list)
 				{
@@ -344,7 +344,7 @@ void D3D11System::manageResources()
 			}
 			
 			//search for line Meshes
-			const auto lmeshes_list{ p_resource_aspect.getComponentsByType<LineMeshe>()};
+			const auto lmeshes_list{ p_resource_components.getComponentsByType<LineMeshe>()};
 			for (auto& e : lmeshes_list)
 			{
 				auto& lm{ e->getPurpose() };
@@ -363,7 +363,7 @@ void D3D11System::manageResources()
 			}
 
 			//search for plain triangle Meshes
-			const auto tmeshes_list{ p_resource_aspect.getComponentsByType<TriangleMeshe>() };
+			const auto tmeshes_list{ p_resource_components.getComponentsByType<TriangleMeshe>() };
 			for (auto& e : tmeshes_list)
 			{
 				auto& tm{ e->getPurpose() };
@@ -383,7 +383,7 @@ void D3D11System::manageResources()
 			}
 
 			//search for triangle Meshes from file			
-			const auto filetmeshes_list{ p_resource_aspect.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+			const auto filetmeshes_list{ p_resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
 			for (auto& e : filetmeshes_list)
 			{
 				auto& meshe_descr{ e->getPurpose() };
@@ -406,7 +406,7 @@ void D3D11System::manageResources()
 
 			//search for render-target-textures
 			{
-				const auto textures_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,Texture>>() };
+				const auto textures_list{ p_resource_components.getComponentsByType<std::pair<size_t,Texture>>() };
 
 				for (auto& e : textures_list)
 				{
@@ -430,7 +430,7 @@ void D3D11System::manageResources()
 
 			//search for textures-from-file
 			{
-				const auto textures_list{ p_resource_aspect.getComponentsByType<std::pair<size_t,std::pair<std::string, Texture>>>() };
+				const auto textures_list{ p_resource_components.getComponentsByType<std::pair<size_t,std::pair<std::string, Texture>>>() };
 
 				for (auto& e : textures_list)
 				{
