@@ -123,6 +123,7 @@ namespace renderMe
         void addVectorArrayArgument(const VectorArrayArgument& p_arg);
 
         const std::vector<VectorArrayArgument>& getVectorArrayArguments() const;
+        std::vector<VectorArrayArgument>& vectorArrayArgumentsAccess();
 
     private:
         

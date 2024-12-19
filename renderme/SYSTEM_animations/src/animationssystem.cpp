@@ -33,6 +33,7 @@
 #include "ecshelpers.h"
 #include "exceptions.h"
 #include "trianglemeshe.h"
+#include "shader.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -42,7 +43,7 @@ AnimationsSystem::AnimationsSystem(Entitygraph& p_entitygraph) : System(p_entity
 }
 
 
-void send_bones_to_shaders(TriangleMeshe& p_meshe)
+void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 {
 	auto& animationBones{ p_meshe.animationBonesAccess() };
 	const auto& animationBonesNamesMapping{ p_meshe.getAnimationBonesNamesMapping() };
@@ -87,6 +88,8 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe)
 		mid.identity();
 		readBonesHierarchy(scene_nodes, animationBones, animationBonesNamesMapping, scene_nodes.at(scene_nodes_root_id), mid);
 	}
+
+
 }
 
 
@@ -107,13 +110,20 @@ void AnimationsSystem::run()
 				{
 					const ComponentContainer& resource_components{ p_entity->aspectAccess(renderMe::core::resourcesAspect::id)};
 
+					// search triangle meshe
 					const auto meshes_list{ resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
-					if (meshes_list.size() > 0)
+
+					// search the shaders
+					const auto shaders_list{ resource_components.getComponentsByType<std::pair<std::string, Shader>>() };
+
+					if (meshes_list.size() > 0 && shaders_list.size() > 0)
 					{
 						auto& meshe_descr{ meshes_list.at(0)->getPurpose() };
 						TriangleMeshe& meshe{ meshe_descr.second };
 
-						send_bones_to_shaders(meshe);						
+						auto& vertex_shader{ shaders_list.at(0)->getPurpose().second };
+
+						send_bones_to_shaders(meshe, vertex_shader);
 					}
 				}
 			}
