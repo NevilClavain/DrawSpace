@@ -186,7 +186,7 @@ namespace renderMe
 		
 		void											computeResourceUID();
 
-		const std::vector<AnimationBone>&				getAnimationBones() const;
+		std::vector<AnimationBone>&						animationBonesAccess();
 		const std::unordered_map<std::string, int>&		getAnimationBonesNamesMapping() const;
 
 		std::string										getSceneRootNodeId() const;

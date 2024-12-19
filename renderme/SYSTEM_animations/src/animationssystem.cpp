@@ -41,6 +41,55 @@ AnimationsSystem::AnimationsSystem(Entitygraph& p_entitygraph) : System(p_entity
 {		
 }
 
+
+void send_bones_to_shaders(TriangleMeshe& p_meshe)
+{
+	auto& animationBones{ p_meshe.animationBonesAccess() };
+	const auto& animationBonesNamesMapping{ p_meshe.getAnimationBonesNamesMapping() };
+
+	const std::string& scene_nodes_root_id{ p_meshe.getSceneRootNodeId() };
+	const auto& scene_nodes{ p_meshe.getSceneNodes() };
+
+	const std::function<void(const std::map<std::string, SceneNode>&,
+		std::vector<AnimationBone>&,
+		const std::unordered_map<std::string, int>&,
+		const SceneNode&,
+		const core::maths::Matrix&)> readBonesHierarchy
+	{
+		[&](const std::map<std::string, SceneNode>& p_scene_nodes,
+			std::vector<AnimationBone>& p_animation_bones,
+			const std::unordered_map<std::string, int>& p_animation_bones_names_mapping,
+			const SceneNode& p_current_node,
+			const core::maths::Matrix& p_parent_transform)
+		{
+			const maths::Matrix locale_node_transform = p_current_node.locale_transform;
+			const maths::Matrix global_transformation{ locale_node_transform * p_parent_transform };
+
+			if (p_animation_bones_names_mapping.count(p_current_node.id))
+			{
+				AnimationBone& animation_bone{ p_animation_bones.at(p_animation_bones_names_mapping.at(p_current_node.id)) };
+				const maths::Matrix final_transformation{ animation_bone.offset_matrix * global_transformation };
+
+				animation_bone.final_transformation = final_transformation;
+			}
+
+			for (auto& id : p_current_node.children)
+			{
+				SceneNode child = p_scene_nodes.at(id);
+				readBonesHierarchy(p_scene_nodes, p_animation_bones, p_animation_bones_names_mapping, child, global_transformation);
+			}
+		}
+	};
+	
+	if (scene_nodes_root_id != "")
+	{
+		core::maths::Matrix mid;
+		mid.identity();
+		readBonesHierarchy(scene_nodes, animationBones, animationBonesNamesMapping, scene_nodes.at(scene_nodes_root_id), mid);
+	}
+}
+
+
 void AnimationsSystem::run()
 {
 	const auto forEachAnimationAspect
@@ -64,29 +113,7 @@ void AnimationsSystem::run()
 						auto& meshe_descr{ meshes_list.at(0)->getPurpose() };
 						TriangleMeshe& meshe{ meshe_descr.second };
 
-
-						const std::function<void(const std::map<std::string, SceneNode>&, 
-												 const SceneNode&, 
-												const core::maths::Matrix&)> readBonesHierarchy
-						{
-							[&](const std::map<std::string, SceneNode>& p_scene_nodes, 
-								const SceneNode& p_current_node, 
-								const core::maths::Matrix& p_parent_transform)
-							{
-								const maths::Matrix global_transformation;
-
-
-								for (auto& id : p_current_node.children)
-								{
-									SceneNode child = p_scene_nodes.at(id);
-									readBonesHierarchy(p_scene_nodes, child, global_transformation);
-								}
-							}
-						};
-
-
-
-						
+						send_bones_to_shaders(meshe);						
 					}
 				}
 			}

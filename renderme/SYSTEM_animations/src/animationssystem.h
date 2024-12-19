@@ -43,7 +43,5 @@ namespace renderMe
         ~AnimationsSystem() = default;
 
         void run();
-
-    private:
     };
 }
