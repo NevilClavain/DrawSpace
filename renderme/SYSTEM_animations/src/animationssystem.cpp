@@ -55,7 +55,7 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 		std::vector<AnimationBone>&,
 		const std::unordered_map<std::string, int>&,
 		const SceneNode&,
-		const core::maths::Matrix&)> readBonesHierarchy
+		const core::maths::Matrix&)> updateBonesFromNodeHierarchy
 	{
 		[&](const std::map<std::string, SceneNode>& p_scene_nodes,
 			std::vector<AnimationBone>& p_animation_bones,
@@ -77,7 +77,7 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 			for (auto& id : p_current_node.children)
 			{
 				SceneNode child = p_scene_nodes.at(id);
-				readBonesHierarchy(p_scene_nodes, p_animation_bones, p_animation_bones_names_mapping, child, global_transformation);
+				updateBonesFromNodeHierarchy(p_scene_nodes, p_animation_bones, p_animation_bones_names_mapping, child, global_transformation);
 			}
 		}
 	};
@@ -86,7 +86,7 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 	{
 		core::maths::Matrix mid;
 		mid.identity();
-		readBonesHierarchy(scene_nodes, animationBones, animationBonesNamesMapping, scene_nodes.at(scene_nodes_root_id), mid);
+		updateBonesFromNodeHierarchy(scene_nodes, animationBones, animationBonesNamesMapping, scene_nodes.at(scene_nodes_root_id), mid);
 	}
 
 
