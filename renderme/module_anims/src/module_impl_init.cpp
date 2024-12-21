@@ -527,7 +527,7 @@ void ModuleImpl::d3d11_system_events()
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_density", "fog_density"));
 
 						auto& raptor_animations_aspect{ raptor_entity->makeAspect(core::animationsAspect::id) };
-						raptor_animations_aspect.addComponent<int>("eg.std.animationbones_array_register_index", 27);
+						raptor_animations_aspect.addComponent<int>("eg.std.animationbones_array_arg_index", 0);
 						
 
 					}

@@ -34,6 +34,7 @@
 #include "exceptions.h"
 #include "trianglemeshe.h"
 #include "shader.h"
+#include "tvector.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -43,7 +44,7 @@ AnimationsSystem::AnimationsSystem(Entitygraph& p_entitygraph) : System(p_entity
 }
 
 
-void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
+void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader, int p_animationbones_array_arg_index)
 {
 	auto& animationBones{ p_meshe.animationBonesAccess() };
 	const auto& animationBonesNamesMapping{ p_meshe.getAnimationBonesNamesMapping() };
@@ -55,7 +56,7 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 		std::vector<AnimationBone>&,
 		const std::unordered_map<std::string, int>&,
 		const SceneNode&,
-		const core::maths::Matrix&)> updateBonesFromNodeHierarchy
+		const core::maths::Matrix&)> update_bones_from_nodes_hierarchy
 	{
 		[&](const std::map<std::string, SceneNode>& p_scene_nodes,
 			std::vector<AnimationBone>& p_animation_bones,
@@ -77,7 +78,7 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 			for (auto& id : p_current_node.children)
 			{
 				SceneNode child = p_scene_nodes.at(id);
-				updateBonesFromNodeHierarchy(p_scene_nodes, p_animation_bones, p_animation_bones_names_mapping, child, global_transformation);
+				update_bones_from_nodes_hierarchy(p_scene_nodes, p_animation_bones, p_animation_bones_names_mapping, child, global_transformation);
 			}
 		}
 	};
@@ -86,10 +87,30 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader)
 	{
 		core::maths::Matrix mid;
 		mid.identity();
-		updateBonesFromNodeHierarchy(scene_nodes, animationBones, animationBonesNamesMapping, scene_nodes.at(scene_nodes_root_id), mid);
+		update_bones_from_nodes_hierarchy(scene_nodes, animationBones, animationBonesNamesMapping, scene_nodes.at(scene_nodes_root_id), mid);
 	}
 
+	/////////////////////////////////////////////////////////
 
+	std::vector<maths::Real4Vector> bones_0;	
+	for (size_t i = 0; i < animationBones.size(); i++)
+	{
+		for (size_t col = 0; col < 3; col++)
+		{
+			core::maths::Real4Vector columns;
+			columns[0] = animationBones.at(i).final_transformation(0, col);
+			columns[1] = animationBones.at(i).final_transformation(1, col);
+			columns[2] = animationBones.at(i).final_transformation(2, col);
+			columns[3] = animationBones.at(i).final_transformation(3, col);
+
+			bones_0.push_back(columns);
+		}
+	}
+
+	if (Shader::State::RENDERERLOADED == p_vertex_shader.getState())
+	{
+		p_vertex_shader.vectorArrayArgumentsAccess().at(p_animationbones_array_arg_index).array = bones_0;
+	}	
 }
 
 
@@ -99,11 +120,11 @@ void AnimationsSystem::run()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_animation_components)
 		{
-			const auto animationbones_array_register_index_comp { p_animation_components.getComponent<int>("eg.std.animationbones_array_register_index") };
+			const auto animationbones_array_arg_index_comp { p_animation_components.getComponent<int>("eg.std.animationbones_array_arg_index") };
 
-			if (animationbones_array_register_index_comp)
+			if (animationbones_array_arg_index_comp)
 			{
-				const int animationbones_array_register_index{ animationbones_array_register_index_comp->getPurpose() };
+				const int animationbones_array_arg_index{ animationbones_array_arg_index_comp->getPurpose() };
 
 				// search for the triangle meshe to animate
 				if (p_entity->hasAspect(renderMe::core::resourcesAspect::id))
@@ -123,13 +144,13 @@ void AnimationsSystem::run()
 
 						auto& vertex_shader{ shaders_list.at(0)->getPurpose().second };
 
-						send_bones_to_shaders(meshe, vertex_shader);
+						send_bones_to_shaders(meshe, vertex_shader, animationbones_array_arg_index);
 					}
 				}
 			}
 			else
 			{
-				_EXCEPTION("missing animationbones_array_register_index");
+				_EXCEPTION("missing animationbones_array_arg_index");
 			}
 		}
 	};

@@ -1,4 +1,12 @@
 {
   "inputs": [
+    {
+      "type": "Real4VectorArray",
+      "body": {
+        "length": 220,
+        "register": 27,
+        "description": "fog density value on .x"
+      }
+    }
   ]
 }
