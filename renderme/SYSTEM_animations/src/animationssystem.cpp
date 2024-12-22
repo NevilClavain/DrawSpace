@@ -92,28 +92,6 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader, int 
 
 	/////////////////////////////////////////////////////////
 
-	/*
-	std::vector<maths::Real4Vector> bones_0;	
-	for (size_t i = 0; i < animationBones.size(); i++)
-	{
-		for (size_t col = 0; col < 3; col++)
-		{
-			core::maths::Real4Vector columns;
-			columns[0] = animationBones.at(i).final_transformation(0, col);
-			columns[1] = animationBones.at(i).final_transformation(1, col);
-			columns[2] = animationBones.at(i).final_transformation(2, col);
-			columns[3] = animationBones.at(i).final_transformation(3, col);
-
-			bones_0.push_back(columns);
-		}
-	}
-
-	if (Shader::State::RENDERERLOADED == p_vertex_shader.getState())
-	{
-		p_vertex_shader.vectorArrayArgumentsAccess().at(p_animationbones_array_arg_index).array = bones_0;
-	}
-	*/
-
 	if (Shader::State::RENDERERLOADED == p_vertex_shader.getState())
 	{
 		auto& dest_array{ p_vertex_shader.vectorArrayArgumentsAccess().at(p_animationbones_array_arg_index)};
