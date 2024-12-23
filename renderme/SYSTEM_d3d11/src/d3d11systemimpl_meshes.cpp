@@ -204,6 +204,18 @@ bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
                 v[i].pos.y = (float)vertex.y;
                 v[i].pos.z = (float)vertex.z;
 
+                v[i].normale.x = (float)vertex.nx;
+                v[i].normale.y = (float)vertex.ny;
+                v[i].normale.z = (float)vertex.nz;
+
+                v[i].tangent.x = (float)vertex.tx;
+                v[i].tangent.y = (float)vertex.ty;
+                v[i].tangent.z = (float)vertex.tz;
+
+                v[i].binormale.x = (float)vertex.bx;
+                v[i].binormale.y = (float)vertex.by;
+                v[i].binormale.z = (float)vertex.bz;
+
                 for (size_t j = 0; j < nbTextureStages; j++)
                 {
                     v[i].t[j].x = vertex.tu[j];

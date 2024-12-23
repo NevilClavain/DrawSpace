@@ -45,3 +45,38 @@ float4 fractal_texture(Texture2D tex, SamplerState sam, float2 uv, float depth)
     return (tex1 + lerp(tex0, tex2, LOD_fract)) * 0.5;
 }
 
+float4x4 getTransformationMatrixForBone(int boneid, int array_begin_offset, float4 vectors[512])
+{
+    float4x4 bone_transform;
+
+    int matrix_index = boneid * 3;    
+    matrix_index += array_begin_offset;
+
+    float4 col0 = vectors[matrix_index];
+    float4 col1 = vectors[matrix_index + 1];
+    float4 col2 = vectors[matrix_index + 2];
+
+    bone_transform[0][0] = col0[0];
+    bone_transform[1][0] = col0[1];
+    bone_transform[2][0] = col0[2];
+    bone_transform[3][0] = col0[3];
+
+    bone_transform[0][1] = col1[0];
+    bone_transform[1][1] = col1[1];
+    bone_transform[2][1] = col1[2];
+    bone_transform[3][1] = col1[3];
+
+    bone_transform[0][2] = col2[0];
+    bone_transform[1][2] = col2[1];
+    bone_transform[2][2] = col2[2];
+    bone_transform[3][2] = col2[3];
+
+    bone_transform[0][3] = 0.0;
+    bone_transform[1][3] = 0.0;
+    bone_transform[2][3] = 0.0;
+    bone_transform[3][3] = 1.0;
+
+    transpose(bone_transform);
+
+    return bone_transform;
+}

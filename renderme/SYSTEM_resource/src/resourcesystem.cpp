@@ -902,6 +902,27 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 							Vertex v_out(v_in[0], v_in[1], v_in[2]);
 
+							if (meshe->HasBones())
+							{
+								v_out.tu[4] = -1.0;
+								v_out.tv[4] = -1.0;
+								v_out.tw[4] = -1.0;
+								v_out.ta[4] = -1.0;
+								v_out.tu[5] = 0.0;
+								v_out.tv[5] = 0.0;
+								v_out.tw[5] = 0.0;
+								v_out.ta[5] = 0.0;
+
+								v_out.tu[6] = -1.0;
+								v_out.tv[6] = -1.0;
+								v_out.tw[6] = -1.0;
+								v_out.ta[6] = -1.0;
+								v_out.tu[7] = 0.0;
+								v_out.tv[7] = 0.0;
+								v_out.tw[7] = 0.0;
+								v_out.ta[7] = 0.0;
+							}
+
 							if (meshe->GetNumUVChannels() > 0)
 							{
 								const auto texCoord{ meshe->HasTextureCoords(0) ? meshe->mTextureCoords[0][j] : zero3D };
@@ -929,9 +950,6 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 								const auto weight{ bone->mWeights[k].mWeight };
 								const auto vert_index{ bone->mWeights[k].mVertexId };
 								auto vertex{ mesheInfos.getVertex(vert_index) };
-
-								// TO BE CONTINUED
-								// UPDATE HERE
 
 								if (vertex.tu[4] == -1.0)
 								{
@@ -975,31 +993,11 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 									vertex.ta[6] = j;       // j = bone index
 									vertex.ta[7] = weight;
 								}
-
-								else if (vertex.tu[8] == -1.0)
-								{
-									vertex.tu[8] = j;       // j = bone index
-									vertex.tu[9] = weight;
-								}
-								else if (vertex.tv[8] == -1.0)
-								{
-									vertex.tv[8] = j;       // j = bone index
-									vertex.tv[9] = weight;
-								}
-								else if (vertex.tw[8] == -1.0)
-								{
-									vertex.tw[8] = j;       // j = bone index
-									vertex.tw[9] = weight;
-								}
-								else if (vertex.ta[8] == -1.0)
-								{
-									vertex.ta[8] = j;       // j = bone index
-									vertex.ta[9] = weight;
-								}
+			
 								else
 								{
-									_EXCEPTION("A vertex cannot reference more than 12 bones");
-									//_RENDERME_WARN(m_localLoggerRunner, "A vertex cannot reference more than 12 bones, ignored. bone " + std::string(bone->mName.C_Str()));
+									_EXCEPTION("A vertex cannot reference more than 8 bones");
+									//_RENDERME_WARN(m_localLoggerRunner, "A vertex cannot reference more than 8 bones, ignored. bone " + std::string(bone->mName.C_Str()));
 								}
 
 								mesheInfos.update(vert_index, vertex);
