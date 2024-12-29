@@ -32,39 +32,13 @@
 #include <unordered_map>
 
 #include "primitives.h"
-#include "matrix.h"
-#include "tvector.h"
-#include "matrix.h"
+#include "animationbone.h"
+#include "scenenode.h"
 
 namespace renderMe
 {
 	//fwd decl
 	class ResourceSystem;
-
-	struct AnimationBone
-	{
-		core::maths::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
-		core::maths::Matrix final_transformation;
-
-		AnimationBone()
-		{
-			offset_matrix.identity();
-			final_transformation.identity();
-		}
-	};
-
-	struct SceneNode
-	{
-		std::string				    id;			// -> can include AnimationBone name (see above)
-		std::string				    parent_id;
-		std::vector<std::string>	children;
-		core::maths::Matrix		    locale_transform;
-
-		SceneNode()
-		{
-			locale_transform.identity();
-		}
-	};
 
 	class TriangleMeshe
 	{
