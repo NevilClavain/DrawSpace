@@ -25,7 +25,7 @@
 #include "resourcesystem.h"
 
 #include <utility>
-#include <map>
+
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -46,9 +46,6 @@
 #include "scenenode.h"
 
 #include "matrix.h"
-
-
-
 
 #include "datacloud.h"
 
@@ -290,7 +287,7 @@ void ResourceSystem::run()
 
 			////// Handle meshes //////////////
 			const auto meshes_list{ p_resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
-			const auto nodes_list{ p_resource_components.getComponentsByType<std::map<std::string, SceneNode>>() };
+			const auto& nodes_list{ p_resource_components.getComponentsByType<std::map<std::string, SceneNode>>() };
 			
 			if (meshes_list.size() > 0)
 			{
@@ -305,8 +302,7 @@ void ResourceSystem::run()
 				const auto state{ meshe.getState() };
 				if (TriangleMeshe::State::INIT == state)
 				{
-					//handleSceneFile(meshe, file_path, meshe_id, nodes_list);
-					handleSceneFile(file_path, meshe_id, meshe);
+					handleSceneFile(file_path, meshe_id, meshe, nodes_list);
 					meshe.setState(TriangleMeshe::State::BLOBLOADING);
 				}
 			}
@@ -660,7 +656,7 @@ static renderMe::core::maths::Matrix convertFromAssimpMatrix(const aiMatrix4x4& 
 }
 
 
-void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos)
+void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos, const core::ComponentList<std::map<std::string, SceneNode>>& p_nodes_hierarchy_list)
 {
 	_RENDERME_DEBUG(m_localLogger, std::string("Handle scene ") + p_filename);
 

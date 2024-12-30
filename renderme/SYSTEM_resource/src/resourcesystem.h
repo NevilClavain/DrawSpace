@@ -38,6 +38,7 @@
 #include "buffer.h"
 #include "json.h"
 #include "matrix.h"
+#include "component.h"
 
 namespace renderMe
 {
@@ -47,6 +48,7 @@ namespace renderMe
     class Shader;
     class Texture;
     class TriangleMeshe;
+    struct SceneNode;
 
     enum class ResourceSystemEvent
     {
@@ -94,6 +96,6 @@ namespace renderMe
         void handleShader(const std::string& p_filename, Shader& p_shaderInfos);
         void handleTexture(const std::string& p_filename, Texture& p_textureInfos );
         
-        void handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos);
+        void handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos, const core::ComponentList<std::map<std::string, SceneNode>>& p_nodes_hierarchy_list);
     };
 }
