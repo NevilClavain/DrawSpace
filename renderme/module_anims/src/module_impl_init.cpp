@@ -52,6 +52,10 @@
 #include "trianglemeshe.h"
 #include "renderstate.h"
 
+#include "animationbone.h"
+#include "scenenode.h"
+
+
 #include "syncvariable.h"
 #include "animators_helpers.h"
 
@@ -528,8 +532,9 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& raptor_animations_aspect{ raptor_entity->makeAspect(core::animationsAspect::id) };
 						raptor_animations_aspect.addComponent<int>("eg.std.animationbones_array_arg_index", 0);
-						
 
+						auto& raptor_resources_aspect{ raptor_entity->aspectAccess(core::resourcesAspect::id) };						
+						raptor_resources_aspect.addComponent<std::map<std::string, SceneNode>>("scenenode_hierarchy");
 					}
 
 

@@ -26,6 +26,7 @@
 #pragma once
 
 #include <mutex>
+#include <map>
 #include <string>
 
 #include "system.h"
@@ -90,9 +91,9 @@ namespace renderMe
         std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;
         int                                                     m_runnerIndex{ 0 };
 
-        void handleShader(Shader& shaderInfos, int p_shaderType, const std::string& p_filename);
-        void handleTexture(Texture& textureInfos, const std::string& p_filename);
+        void handleShader(const std::string& p_filename, Shader& p_shaderInfos);
+        void handleTexture(const std::string& p_filename, Texture& p_textureInfos );
         
-        void handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid);        
+        void handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos);
     };
 }

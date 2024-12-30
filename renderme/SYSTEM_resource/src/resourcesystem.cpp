@@ -43,6 +43,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "trianglemeshe.h"
+#include "scenenode.h"
 
 #include "matrix.h"
 
@@ -267,7 +268,7 @@ void ResourceSystem::run()
 				const auto state{ shader.getState() };
 				if (Shader::State::INIT == state)
 				{
-					handleShader(shader, shader.getType(), filename);
+					handleShader(filename, shader);
 					shader.setState(Shader::State::BLOBLOADING);
 				}
 			}
@@ -282,34 +283,15 @@ void ResourceSystem::run()
 				const auto state{ texture.getState() };
 				if (Texture::State::INIT == state)
 				{
-					handleTexture(texture, filename);
+					handleTexture(filename, texture);
 					texture.setState(Texture::State::BLOBLOADING);
 				}
 			}
+
 			////// Handle meshes //////////////
 			const auto meshes_list{ p_resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+			const auto nodes_list{ p_resource_components.getComponentsByType<std::map<std::string, SceneNode>>() };
 			
-			/*
-			for (auto& e : meshes_list)
-			{
-				auto& meshe_descr{ e->getPurpose() };
-
-				TriangleMeshe& meshe{ meshe_descr.second };
-
-				const auto& ids{ meshe_descr.first };
-
-				const std::string& file_path{ ids.second };
-				const std::string& meshe_id{ ids.first };
-
-				const auto state{ meshe.getState() };
-				if (TriangleMeshe::State::INIT == state)
-				{
-					handleTriangleMeshe(meshe, file_path, meshe_id);
-					meshe.setState(TriangleMeshe::State::BLOBLOADING);
-				}
-			}
-			*/
-
 			if (meshes_list.size() > 0)
 			{
 				auto& meshe_descr{ meshes_list.at(0)->getPurpose() };
@@ -323,7 +305,8 @@ void ResourceSystem::run()
 				const auto state{ meshe.getState() };
 				if (TriangleMeshe::State::INIT == state)
 				{
-					handleTriangleMeshe(meshe, file_path, meshe_id);
+					//handleSceneFile(meshe, file_path, meshe_id, nodes_list);
+					handleSceneFile(file_path, meshe_id, meshe);
 					meshe.setState(TriangleMeshe::State::BLOBLOADING);
 				}
 			}
@@ -338,9 +321,9 @@ void ResourceSystem::run()
 	}	
 }
 
-void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const std::string& p_filename)
+void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shaderInfos)
 {
-	const auto shaderType{ p_shaderType };
+	const auto shaderType{ p_shaderInfos.getType() };
 
 	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + p_filename + std::string(" shader type ") + std::to_string(shaderType));
 
@@ -365,10 +348,10 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 				shader_src_content.load();
 
 				// no mutex needed here (only this thread access it)
-				shaderInfos.setContentSize( shader_src_content.getDataSize() );
-				shaderInfos.setContent( shader_src_content.getData() );
-				shaderInfos.m_source_id = filename;
-				shaderInfos.compute_resource_uid();
+				p_shaderInfos.setContentSize( shader_src_content.getDataSize() );
+				p_shaderInfos.setContent( shader_src_content.getData() );
+				p_shaderInfos.m_source_id = filename;
+				p_shaderInfos.compute_resource_uid();
 
 				const auto shaderCacheDirectory{ m_shadersCachePath + "/" + filename };
 
@@ -438,7 +421,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 
 						// check if md5 are equals
 
-						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != shaderInfos.m_resource_uid)
+						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != p_shaderInfos.m_resource_uid)
 						{
 							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + filename);
 							generate_cache_entry = true;
@@ -490,13 +473,13 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 
 						// create cache md5 file
 						renderMe::core::FileContent<const char> shader_md5_content(shaderCacheDirectory + "/bc.md5");
-						const std::string shaderMD5{ shaderInfos.m_resource_uid };
+						const std::string shaderMD5{ p_shaderInfos.m_resource_uid };
 						shader_md5_content.save(shaderMD5.c_str(), shaderMD5.length());
 
-						// and transfer file content to shaderInfos 'code' buffer
+						// and transfer file content to p_shaderInfos 'code' buffer
 						core::Buffer<char> shaderCode;
 						shaderCode.fill(shaderBytes.get(), shaderBytesLength);
-						shaderInfos.setCode(shaderCode);
+						p_shaderInfos.setCode(shaderCode);
 					}
 					else
 					{
@@ -525,10 +508,10 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 					renderMe::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
 					cache_code_content.load();
 
-					// transfer file content to shaderInfos 'code' buffer
+					// transfer file content to p_shaderInfos 'code' buffer
 					core::Buffer<char> shaderCode;
 					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
-					shaderInfos.setCode(shaderCode);
+					p_shaderInfos.setCode(shaderCode);
 
 					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS : " + filename);
 					for (const auto& call : m_callbacks)
@@ -549,7 +532,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 				m_jsonparser_mutex.lock();
 				renderMe::core::Json<Shader> jsonParser;
 				jsonParser.registerSubscriber(m_jsonparser_cb);			
-				const auto logParseStatus{ jsonParser.parse(metadata, &shaderInfos) };
+				const auto logParseStatus{ jsonParser.parse(metadata, &p_shaderInfos) };
 				m_jsonparser_mutex.unlock();
 
 				if (logParseStatus < 0)
@@ -559,7 +542,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 
 				////////////////////////////////
 				
-				shaderInfos.setState(Shader::State::BLOBLOADED);
+				p_shaderInfos.setState(Shader::State::BLOBLOADED);
 			}
 			catch (const std::exception& e)
 			{
@@ -584,7 +567,7 @@ void ResourceSystem::handleShader(Shader& shaderInfos, int p_shaderType, const s
 	}
 }
 
-void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_filename)
+void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_textureInfos)
 {
 	_RENDERME_DEBUG(m_localLogger, std::string("Handle Texture ") + p_filename);
 
@@ -606,9 +589,9 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 			{
 				auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-				textureInfos.m_source = Texture::Source::CONTENT_FROM_FILE;
-				textureInfos.m_source_id = filename;
-				textureInfos.compute_resource_uid();
+				p_textureInfos.m_source = Texture::Source::CONTENT_FROM_FILE;
+				p_textureInfos.m_source_id = filename;
+				p_textureInfos.compute_resource_uid();
 
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
@@ -619,17 +602,17 @@ void ResourceSystem::handleTexture(Texture& textureInfos, const std::string& p_f
 				renderMe::core::FileContent<unsigned char> texture_content(texture_path);
 				texture_content.load();
 
-				// transfer file content to textureInfos buffer
+				// transfer file content to p_textureInfos buffer
 				core::Buffer<unsigned char> textureBytes;
 				textureBytes.fill(texture_content.getData(), texture_content.getDataSize());
-				textureInfos.m_file_content = textureBytes;
+				p_textureInfos.m_file_content = textureBytes;
 				
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS, filename);
 				}
-				textureInfos.setState(Texture::State::BLOBLOADED);
+				p_textureInfos.setState(Texture::State::BLOBLOADED);
 			}
 			catch (const std::exception& e)
 			{
@@ -677,11 +660,11 @@ static renderMe::core::maths::Matrix convertFromAssimpMatrix(const aiMatrix4x4& 
 }
 
 
-void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::string& p_filename, const std::string& p_mesheid)
+void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos)
 {
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle Meshe ") + p_filename);
+	_RENDERME_DEBUG(m_localLogger, std::string("Handle scene ") + p_filename);
 
-	const std::string mesheAction{ "load_meshe" };
+	const std::string mesheAction{ "load_scene" };
 
 	const std::string targetAction{ p_mesheid + "@" + p_filename };
 
@@ -702,8 +685,8 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 			{
 				auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-				mesheInfos.m_source = TriangleMeshe::Source::CONTENT_FROM_FILE;
-				mesheInfos.m_source_id = filename;
+				p_mesheInfos.m_source = TriangleMeshe::Source::CONTENT_FROM_FILE;
+				p_mesheInfos.m_source_id = filename;
 
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
@@ -804,7 +787,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					};
 
 					recordAssimpSceneNode(root);
-					mesheInfos.setSceneNodes(scene_nodes, root->mName.C_Str());
+					p_mesheInfos.setSceneNodes(scene_nodes, root->mName.C_Str());
 
 					///////////////////////////////////
 
@@ -825,7 +808,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("owner node = ") + name);
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("nb_meshes = ") << nb_meshes);
 
-					mesheInfos.clearAnimationBones();
+					p_mesheInfos.clearAnimationBones();
 					const auto indexes{ meshe_node->mMeshes };
 					for (unsigned int i = 0; i < nb_meshes; i++)
 					{
@@ -869,8 +852,8 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS END***********************************"));
 
 
-					mesheInfos.clearTriangles();
-					mesheInfos.clearVertices();
+					p_mesheInfos.clearTriangles();
+					p_mesheInfos.clearVertices();
 
 					int global_index = 0;
 					for (unsigned int i = 0; i < nb_meshes; i++)
@@ -891,7 +874,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 							const auto i3{ face.mIndices[2] };
 
 							const TrianglePrimitive<unsigned int> t{ i1 + global_index, i2 + global_index, i3 + global_index };
-							mesheInfos.push(t);
+							p_mesheInfos.push(t);
 						}
 
 						const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
@@ -930,7 +913,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 								v_out.tv[0] = texCoord[1];
 							}
 
-							mesheInfos.push(v_out);
+							p_mesheInfos.push(v_out);
 						}
 					}
 
@@ -943,13 +926,13 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 
 							AnimationBone bone_output;
 							bone_output.offset_matrix = convertFromAssimpMatrix(bone->mOffsetMatrix);
-							mesheInfos.push(bone_output, std::string(bone->mName.C_Str()));
+							p_mesheInfos.push(bone_output, std::string(bone->mName.C_Str()));
 
 							for (size_t k = 0; k < bone->mNumWeights; k++)
 							{
 								const auto weight{ bone->mWeights[k].mWeight };
 								const auto vert_index{ bone->mWeights[k].mVertexId };
-								auto vertex{ mesheInfos.getVertex(vert_index) };
+								auto vertex{ p_mesheInfos.getVertex(vert_index) };
 
 								if (vertex.tu[4] == -1.0)
 								{
@@ -1000,7 +983,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 									//_RENDERME_WARN(m_localLoggerRunner, "A vertex cannot reference more than 8 bones, ignored. bone " + std::string(bone->mName.C_Str()));
 								}
 
-								mesheInfos.update(vert_index, vertex);
+								p_mesheInfos.update(vert_index, vertex);
 							}
 						}
 					}
@@ -1011,7 +994,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 				}
 				delete importer;
 
-				mesheInfos.computeResourceUID();
+				p_mesheInfos.computeResourceUID();
 
 				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
@@ -1019,8 +1002,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS, filename);
 				}
 
-
-				mesheInfos.setState(TriangleMeshe::State::BLOBLOADED);
+				p_mesheInfos.setState(TriangleMeshe::State::BLOBLOADED);
 			}
 			catch (const std::exception& e)
 			{
@@ -1044,6 +1026,7 @@ void ResourceSystem::handleTriangleMeshe(TriangleMeshe& mesheInfos, const std::s
 	}
 
 }
+
 
 void ResourceSystem::killRunner()
 {
