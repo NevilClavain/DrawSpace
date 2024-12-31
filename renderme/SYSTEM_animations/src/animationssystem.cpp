@@ -43,7 +43,6 @@ AnimationsSystem::AnimationsSystem(Entitygraph& p_entitygraph) : System(p_entity
 {		
 }
 
-
 void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader, int p_animationbones_array_arg_index)
 {
 	auto& animationBones{ p_meshe.animationBonesAccess() };
@@ -92,24 +91,21 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader, int 
 
 	/////////////////////////////////////////////////////////
 
-	if (Shader::State::RENDERERLOADED == p_vertex_shader.getState())
-	{
-		auto& dest_array{ p_vertex_shader.vectorArrayArgumentsAccess().at(p_animationbones_array_arg_index)};
-		int dest_vector_index{ 0 };
+	auto& dest_array{ p_vertex_shader.vectorArrayArgumentsAccess().at(p_animationbones_array_arg_index)};
+	int dest_vector_index{ 0 };
 
-		for (size_t i = 0; i < animationBones.size(); i++)
-		{		
-			for (size_t col = 0; col < 3; col++)
-			{	
-				core::maths::Real4Vector columns;
+	for (size_t i = 0; i < animationBones.size(); i++)
+	{		
+		for (size_t col = 0; col < 3; col++)
+		{	
+			core::maths::Real4Vector columns;
 
-				columns[0] = animationBones.at(i).final_transformation(0, col);
-				columns[1] = animationBones.at(i).final_transformation(1, col);
-				columns[2] = animationBones.at(i).final_transformation(2, col);
-				columns[3] = animationBones.at(i).final_transformation(3, col);
+			columns[0] = animationBones.at(i).final_transformation(0, col);
+			columns[1] = animationBones.at(i).final_transformation(1, col);
+			columns[2] = animationBones.at(i).final_transformation(2, col);
+			columns[3] = animationBones.at(i).final_transformation(3, col);
 
-				dest_array.array[dest_vector_index++] = columns;
-			}
+			dest_array.array[dest_vector_index++] = columns;
 		}
 	}
 }
@@ -144,8 +140,10 @@ void AnimationsSystem::run()
 						TriangleMeshe& meshe{ meshe_descr.second };
 
 						auto& vertex_shader{ shaders_list.at(0)->getPurpose().second };
-
-						send_bones_to_shaders(meshe, vertex_shader, animationbones_array_arg_index);
+						if (Shader::State::RENDERERLOADED == vertex_shader.getState())
+						{
+							send_bones_to_shaders(meshe, vertex_shader, animationbones_array_arg_index);
+						}
 					}
 				}
 			}

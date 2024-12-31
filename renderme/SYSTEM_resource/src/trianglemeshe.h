@@ -189,6 +189,7 @@ namespace renderMe
 		mutable std::mutex														m_state_mutex;
 		State																	m_state{ State::INIT };
 
+		///////// keep those animation structures as TriangleMeshe members because it also get protection benefits from the mutex when loaded in the resource system threads
 		std::vector<AnimationBone>												m_animation_bones;
 		std::unordered_map<std::string, int>									m_animation_bones_names_mapping;
 
