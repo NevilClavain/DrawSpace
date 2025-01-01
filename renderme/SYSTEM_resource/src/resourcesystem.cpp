@@ -806,7 +806,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 						aiAnimation* ai_animation{ scene->mAnimations[i] };
 						AnimationKeys animation_keys;
 
-						animation_keys.duration_seconds = ai_animation->mDuration;
+						animation_keys.duration_ticks = ai_animation->mDuration;
 						animation_keys.ticks_per_seconds = ai_animation->mTicksPerSecond;
 						animation_keys.name = ai_animation->mName.C_Str();
 

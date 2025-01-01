@@ -61,7 +61,7 @@ namespace renderMe
 	{
 		std::string			name;
 		double				ticks_per_seconds{ 0 };
-		double				duration_seconds{ 0 };
+		double				duration_ticks{ 0 };
 		AnimationChannels	channels;
 	};
 }
