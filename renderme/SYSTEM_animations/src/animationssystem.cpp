@@ -134,7 +134,7 @@ void AnimationsSystem::run()
 					// search the shaders
 					const auto shaders_list{ resource_components.getComponentsByType<std::pair<std::string, Shader>>() };
 
-					if (meshes_list.size() > 0 && shaders_list.size() > 0)
+					if (meshes_list.size() > 0 && shaders_list.size() > 0 && meshes_list.size() > 0)
 					{
 						auto& meshe_descr{ meshes_list.at(0)->getPurpose() };
 						TriangleMeshe& meshe{ meshe_descr.second };

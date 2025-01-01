@@ -50,6 +50,8 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 	m_scene_nodes = p_other.m_scene_nodes;
 	m_scene_root_node_id = p_other.m_scene_root_node_id;
 
+	m_animations_keys = p_other.m_animations_keys;
+
 	m_state_mutex.lock();
 	p_other.m_state_mutex.lock();
 	m_state = p_other.m_state;
@@ -157,6 +159,11 @@ void TriangleMeshe::push(const AnimationBone& p_bone, const std::string& p_boneI
 	int last_object_index = m_animation_bones.size();
 	m_animation_bones.push_back(p_bone);
 	m_animation_bones_names_mapping[p_boneId] = last_object_index;
+}
+
+void TriangleMeshe::push(AnimationKeys p_animation_keys)
+{
+	m_animations_keys.emplace(p_animation_keys.name, p_animation_keys);
 }
 
 void TriangleMeshe::computeNormales()
@@ -376,3 +383,9 @@ const std::unordered_map<std::string, int>& TriangleMeshe::getAnimationBonesName
 {
 	return m_animation_bones_names_mapping;
 }
+
+const std::unordered_map<std::string, AnimationKeys>& TriangleMeshe::getAnimationsKeys() const
+{
+	return m_animations_keys;
+}
+

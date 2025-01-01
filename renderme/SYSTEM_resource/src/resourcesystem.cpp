@@ -785,7 +785,69 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 					recordAssimpSceneNode(root);
 					p_mesheInfos.setSceneNodes(scene_nodes, root->mName.C_Str());
 
-					///////////////////////////////////
+
+					/////////////////////////////////// Meshe animations
+
+					for (size_t i = 0; i < scene->mNumAnimations; i++)
+					{
+						//_DSTRACE((*rs_logger), dsstring("Animation ") << i);
+
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("Animation : ") + std::to_string(i));
+
+						const auto animation{ scene->mAnimations[i] };
+
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	Name = ") + animation->mName.C_Str());
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	TicksPerSeconds = ") + std::to_string(animation->mTicksPerSecond));
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	Duration (ticks) = ") + std::to_string(animation->mDuration));
+						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	Num Channels = ") + std::to_string(animation->mNumChannels));
+
+						/////////////////////////////////////////
+
+						aiAnimation* ai_animation{ scene->mAnimations[i] };
+						AnimationKeys animation_keys;
+
+						animation_keys.duration_seconds = ai_animation->mDuration;
+						animation_keys.ticks_per_seconds = ai_animation->mTicksPerSecond;
+						animation_keys.name = ai_animation->mName.C_Str();
+
+						for (size_t j = 0; j < ai_animation->mNumChannels; j++)
+						{
+							aiNodeAnim* ai_node_anim{ ai_animation->mChannels[j] };
+							NodeAnimation node_animation;
+
+							node_animation.node_name = ai_node_anim->mNodeName.C_Str();
+
+							for (size_t k = 0; k < ai_node_anim->mNumPositionKeys; k++)
+							{
+								aiVectorKey ai_key = ai_node_anim->mPositionKeys[k];
+								VectorKey pos_key{ ai_key.mTime, { ai_key.mValue[0], ai_key.mValue[1], ai_key.mValue[2], 1.0 } };
+
+								node_animation.position_keys.push_back(pos_key);
+							}
+
+							for (size_t k = 0; k < ai_node_anim->mNumScalingKeys; k++)
+							{
+								aiVectorKey ai_key = ai_node_anim->mScalingKeys[k];
+								VectorKey scaling_key{ ai_key.mTime, { ai_key.mValue[0], ai_key.mValue[1], ai_key.mValue[2], 1.0 } };
+
+								node_animation.scaling_keys.push_back(scaling_key);
+							}
+
+							for (size_t k = 0; k < ai_node_anim->mNumRotationKeys; k++)
+							{
+								aiQuatKey ai_key = ai_node_anim->mRotationKeys[k];
+								QuaternionKey quat_key{ ai_key.mTime, { ai_key.mValue.x, ai_key.mValue.y, ai_key.mValue.z, ai_key.mValue.w } };
+
+								node_animation.rotations_keys.push_back(quat_key);
+							}
+
+							animation_keys.channels.emplace(node_animation.node_name, node_animation);
+						}
+
+						p_mesheInfos.push(animation_keys);
+					}
+
+					/////////////////////////////////////////////////////
 
 					const auto meshe_node{ root->FindNode(meshe_id.c_str()) };
 					const auto meshes{ scene->mMeshes };

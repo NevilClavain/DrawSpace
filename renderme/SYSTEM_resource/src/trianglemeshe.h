@@ -28,12 +28,13 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <mutex>
 #include <unordered_map>
+#include <mutex>
 
 #include "primitives.h"
 #include "animationbone.h"
 #include "scenenode.h"
+#include "animations.h"
 
 namespace renderMe
 {
@@ -100,6 +101,8 @@ namespace renderMe
 			m_scene_nodes = p_other.m_scene_nodes;
 			m_scene_root_node_id = p_other.m_scene_root_node_id;
 
+			m_animations_keys = p_other.m_animations_keys;
+
 			m_state_mutex.lock();
 			p_other.m_state_mutex.lock();
 			m_state = p_other.m_state;
@@ -113,59 +116,58 @@ namespace renderMe
 
 		
 
-		std::vector<renderMe::Vertex>					getVertices(void) const;
-		size_t											getVerticesListSize() const;
+		std::vector<renderMe::Vertex>							getVertices(void) const;
+		size_t													getVerticesListSize() const;
 		
-		std::vector<TrianglePrimitive<unsigned int>>	getTriangles(void) const;
-		size_t											getTrianglesListSize() const;
+		std::vector<TrianglePrimitive<unsigned int>>			getTriangles(void) const;
+		size_t													getTrianglesListSize() const;
 
-		void											setNGenerationMode(NormalesGenerationMode p_mode);
-		void											setTBGenerationMode(TangentBinormalesGenerationMode p_mode);
+		void													setNGenerationMode(NormalesGenerationMode p_mode);
+		void													setTBGenerationMode(TangentBinormalesGenerationMode p_mode);
 
-		NormalesGenerationMode							getNGenerationMode(void) const;
-		TangentBinormalesGenerationMode					getTBGenerationMode(void) const;
+		NormalesGenerationMode									getNGenerationMode(void) const;
+		TangentBinormalesGenerationMode							getTBGenerationMode(void) const;
 
-		core::maths::Matrix								getNormalesTransf(void) const;
-		void											setNormalesTransf(const core::maths::Matrix& p_transf);
-
-
-		void											clearVertices(void);
-		void											clearTriangles(void);
-		void											clearAnimationBones(void);
-
-		void											push(const TrianglePrimitive<unsigned int>& p_triangle);
-		void											push(const Vertex& p_vertex);
-		void											push(const AnimationBone& p_bone, const std::string& p_boneId);
-
-		void											setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes, const std::string& p_scene_root_node_id);
-
-		Vertex											getVertex(unsigned int p_index);
-		void											update(unsigned int p_index, const Vertex& p_vertex);
+		core::maths::Matrix										getNormalesTransf(void) const;
+		void													setNormalesTransf(const core::maths::Matrix& p_transf);
 
 
+		void													clearVertices(void);
+		void													clearTriangles(void);
+		void													clearAnimationBones(void);
 
-		void											computeNormales();
-		void											computeTB();
+		void													push(const TrianglePrimitive<unsigned int>& p_triangle);
+		void													push(const Vertex& p_vertex);
+		void													push(const AnimationBone& p_bone, const std::string& p_boneId);
+		void													push(AnimationKeys p_animation_keys);
 
+		void													setSceneNodes(const std::map<std::string, SceneNode>& p_scene_nodes, const std::string& p_scene_root_node_id);
 
-		State											getState() const;
-		void											setState(State p_state);
+		Vertex													getVertex(unsigned int p_index);
+		void													update(unsigned int p_index, const Vertex& p_vertex);
 
-		std::string										getResourceUID() const;
+		void													computeNormales();
+		void													computeTB();
 
-		std::string										getSourceID() const;
+		State													getState() const;
+		void													setState(State p_state);
 
-		void											setSourceID(const std::string& p_source_id);
-		void											setSource(Source p_source);
+		std::string												getResourceUID() const;
+
+		std::string												getSourceID() const;
+
+		void													setSourceID(const std::string& p_source_id);
+		void													setSource(Source p_source);
 		
-		void											computeResourceUID();
+		void													computeResourceUID();
 
-		std::vector<AnimationBone>&						animationBonesAccess();
-		const std::unordered_map<std::string, int>&		getAnimationBonesNamesMapping() const;
+		std::vector<AnimationBone>&								animationBonesAccess();
+		const std::unordered_map<std::string, int>&				getAnimationBonesNamesMapping() const;
 
-		std::string										getSceneRootNodeId() const;
-		const std::map<std::string, SceneNode>&			getSceneNodes() const;
-		
+		std::string												getSceneRootNodeId() const;
+		const std::map<std::string, SceneNode>&					getSceneNodes() const;
+
+		const std::unordered_map<std::string, AnimationKeys>&	getAnimationsKeys() const;
 
 	private:
 
@@ -195,6 +197,8 @@ namespace renderMe
 
 		std::map<std::string, SceneNode>										m_scene_nodes;  // note : no need to include it in md5 hash computing
 		std::string																m_scene_root_node_id;
+
+		std::unordered_map<std::string, AnimationKeys>							m_animations_keys;
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!

@@ -31,6 +31,8 @@
 
 namespace renderMe
 {
+	// resource for TriangleMeshes : Nodes and Bones hierarchy for supporting Meshes Animation
+
 	struct SceneNode
 	{
 		std::string				    id;			// -> can include AnimationBone name (see above)

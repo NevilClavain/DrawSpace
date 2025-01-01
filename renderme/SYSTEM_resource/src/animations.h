@@ -23,22 +23,45 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "matrix.h"
+
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+#include "tvector.h"
+#include "quaternion.h"
 
 namespace renderMe
 {
-	// resource for TriangleMeshes : Bones supporting Meshes Animation
+	// resources for Meshes Animations controls
 
-	struct AnimationBone
+	struct VectorKey
 	{
-		core::maths::Matrix offset_matrix;         // transformation matrix for vertex : from model local space to bone local space
-		core::maths::Matrix final_transformation;
+		double							time_tick;
+		core::maths::Real4Vector		value;
+	};
 
-		AnimationBone()
-		{
-			offset_matrix.identity();
-			final_transformation.identity();
-		}
+	struct QuaternionKey
+	{
+		double							time_tick;
+		core::maths::Quaternion			value;
+	};
+
+	struct NodeAnimation
+	{
+		std::string						node_name;
+		std::vector<VectorKey>			position_keys;
+		std::vector<VectorKey>			scaling_keys;
+		std::vector<QuaternionKey>		rotations_keys;
+	};
+
+	using AnimationChannels = std::unordered_map<std::string, NodeAnimation>;
+
+	struct AnimationKeys
+	{
+		std::string			name;
+		double				ticks_per_seconds{ 0 };
+		double				duration_seconds{ 0 };
+		AnimationChannels	channels;
 	};
 }
-
