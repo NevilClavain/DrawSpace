@@ -56,7 +56,7 @@ namespace renderMe
 
         static constexpr int                    dcNbCols{ 2 };
         static constexpr int                    dcNbRows{ 10 };
-        static constexpr int                    dcColWidth{ 600 };
+        static constexpr int                    dcColWidth{ 620 };
         static constexpr int                    dcRowHeight{ 21 };
 
         static constexpr int                    svNbCols{ 3 };

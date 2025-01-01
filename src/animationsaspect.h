@@ -89,7 +89,7 @@ struct AnimationRoot
 	};
 
 	dsreal								ticksPerSeconds;
-	dsreal								duration;
+	dsreal								duration; // duration in ticks
 	bool								transition_animation;
 	std::map<dsstring, NodeAnimation>	channels;
 };
