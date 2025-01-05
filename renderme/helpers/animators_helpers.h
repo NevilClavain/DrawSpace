@@ -32,7 +32,7 @@
 #include "matrix.h"
 #include "quaternion.h"
 #include "syncvariable.h"
-#include "timemanager.h"
+#include "timecontrol.h"
 
 namespace renderMe
 {
@@ -174,7 +174,8 @@ namespace renderMe
 
 						// work variables
 						core::maths::Matrix orientation;
-						const auto tm{ core::TimeManager::getInstance() };
+						//const auto tm{ core::TimeManager::getInstance() };
+						const auto tc{ core::TimeControl::getInstance() };
 						double fps;
 						core::maths::Quaternion q_axis;
 
@@ -183,7 +184,7 @@ namespace renderMe
 
 						/////////////////Axe X /////////////////////////////
 
-						fps = tm->convertUnitPerSecFramePerSec(rspeed_x);
+						fps = tc->convertUnitPerSecFramePerSec(rspeed_x);
 						q_axis.rotationAxis(rot_axis_x, fps);
 						current_res = current_res * q_axis;
 
@@ -194,7 +195,7 @@ namespace renderMe
 
 						/////////////////Axe Y /////////////////////////////
 
-						fps = tm->convertUnitPerSecFramePerSec(rspeed_y);
+						fps = tc->convertUnitPerSecFramePerSec(rspeed_y);
 						q_axis.rotationAxis(rot_axis_y, fps);
 						current_res = current_res * q_axis;
 
@@ -205,7 +206,7 @@ namespace renderMe
 
 						/////////////////Axe Z /////////////////////////////
 
-						fps = tm->convertUnitPerSecFramePerSec(rspeed_z);
+						fps = tc->convertUnitPerSecFramePerSec(rspeed_z);
 						q_axis.rotationAxis(rot_axis_z, fps);
 						current_res = current_res * q_axis;
 

@@ -29,15 +29,9 @@
 #include <numbers>
 
 #include "timemanager.h"
-#include "syncvariable.h"
-
-
+//#include "syncvariable.h"
 
 using namespace renderMe::core;
-
-TimeManager::TimeManager()
-{
-}
 
 void TimeManager::reset(void)
 {
@@ -193,6 +187,7 @@ void TimeManager::translationSpeedDec(double* p_translation, double p_speed)
     *p_translation -= translationSpeedUnitPerFrame;
 }
 
+/*
 void TimeManager::manageVariable(SyncVariable& p_variable)
 {
     if (p_variable.state == SyncVariable::State::OFF)
@@ -327,3 +322,4 @@ void TimeManager::manageVariable(SyncVariable& p_variable)
         }
     }
 }
+*/

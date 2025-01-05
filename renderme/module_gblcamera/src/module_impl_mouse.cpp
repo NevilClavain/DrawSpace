@@ -28,7 +28,7 @@
 
 #include "datacloud.h"
 #include "aspects.h"
-#include "timemanager.h"
+#include "timecontrol.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -42,9 +42,10 @@ void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 
 		if ("cameraEntity" == current_view_entity_id)
 		{
-			const auto tm{ TimeManager::getInstance() };
-			if (tm->isReady())
+			const auto tc{ TimeControl::getInstance() };
+			if (tc->isReady())
 			{
+
 				auto& gblJointEntityNode{ m_entitygraph.node("gblJointEntity") };
 				const auto gblJointEntity{ gblJointEntityNode.data() };
 
@@ -53,9 +54,8 @@ void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 				double& fps_theta{ world_aspect.getComponent<double>("gbl_theta")->getPurpose() };
 				double& fps_phi{ world_aspect.getComponent<double>("gbl_phi")->getPurpose() };
 
-				tm->angleSpeedInc(&fps_theta, -p_dx);
-				tm->angleSpeedInc(&fps_phi, -p_dy);
-
+				tc->angleSpeedInc(&fps_theta, -p_dx);
+				tc->angleSpeedInc(&fps_phi, -p_dy);
 			}
 		}
 	}

@@ -28,40 +28,35 @@
 #include "aspects.h"
 #include "ecshelpers.h"
 #include "syncvariable.h"
-#include "timemanager.h"
-#include "datacloud.h"
+#include "timecontrol.h"
+
 
 using namespace renderMe;
 using namespace renderMe::core;
 
 TimeSystem::TimeSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	dataCloud->registerData<long>("std.framesPerSecond", -1);
 }
 
 void TimeSystem::run()
 {
-	auto tm{ TimeManager::getInstance() };
-	tm->update();
-	if (tm->isReady())
+	auto tc{ TimeControl::getInstance() };
+	tc->update();
+	if (tc->isReady())
 	{
+
 		const auto forEachTimeAspect
 		{
 			[&](Entity* p_entity, const ComponentContainer& p_time_components)
 			{
-				// update FPS info
-				const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-				dataCloud->updateDataValue<long>("std.framesPerSecond", tm->getFPS());
-
 				// search for TimeManager::Variable objects
 
-				const auto tm_var_list{ p_time_components.getComponentsByType<SyncVariable>() };
-				if (tm_var_list.size())
+				const auto syncvars_list{ p_time_components.getComponentsByType<SyncVariable>() };
+				if (syncvars_list.size())
 				{
-					for (auto& v : tm_var_list)
+					for (auto& v : syncvars_list)
 					{
-						tm->manageVariable(v->getPurpose());
+						tc->manageVariable(v->getPurpose());
 					}
 				}
 			}

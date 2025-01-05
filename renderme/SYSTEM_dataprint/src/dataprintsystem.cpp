@@ -130,6 +130,14 @@ void DataPrintSystem::collectData()
 				}
 			},
 			{
+				typeid(__time64_t).hash_code(),
+				[&](const std::string& p_id)
+				{
+					const auto value { dataCloud->readDataValue<__time64_t>(p_id) };
+					var_str_value = "dc." + p_id + " " + std::to_string(value);
+				}
+			},
+			{
 				typeid(float).hash_code(),
 				[&](const std::string& p_id)
 				{

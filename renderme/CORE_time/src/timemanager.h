@@ -23,26 +23,26 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-#include "singleton.h"
-
+//#include "singleton.h"
 
 namespace renderMe
 {
 	namespace core
 	{
-        struct SyncVariable;
+        //struct SyncVariable;
 
-        class TimeManager : public property::Singleton<TimeManager>
+        //class TimeManager : public property::Singleton<TimeManager>
+        class TimeManager
         {
         public:
-            TimeManager(void);
-            ~TimeManager(void) = default;
+            TimeManager() = default;
+            ~TimeManager() = default;
 
-            void    reset(void);
+            void    reset();
 
-            void    update(void);
+            void    update();
 
-            void    manageVariable(SyncVariable& p_variable);
+            //void    manageVariable(SyncVariable& p_variable);
 
             void    angleSpeedInc(double* p_angle, double p_angleSpeed);
             void    angleSpeedDec(double* p_angle, double p_angleSpeed);
@@ -51,10 +51,10 @@ namespace renderMe
 
             double  convertUnitPerSecFramePerSec(double p_speed);
 
-            bool    isReady(void) const;
-            long    getLastDeltaTime(void) const;
-            long    getCurrentTick(void) const;
-            long    getFPS(void) const;
+            bool    isReady() const;
+            long    getLastDeltaTime() const;
+            long    getCurrentTick() const;
+            long    getFPS() const;
 
         private:
             long    m_last_tick{ 0 };

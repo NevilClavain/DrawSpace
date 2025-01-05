@@ -28,7 +28,6 @@
 
 namespace renderMe
 {
-    namespace core { class Entity; }
     namespace core { class Entitygraph; }
    
     class TimeSystem : public core::System

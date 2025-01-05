@@ -25,6 +25,9 @@ project(CORE_time)
 
 include_directories(${CMAKE_SOURCE_DIR}/commons)
 
+include_directories(${CMAKE_SOURCE_DIR}/CORE_ecs/src)
+include_directories(${CMAKE_SOURCE_DIR}/RENDERING_control/src)
+
 file(
         GLOB_RECURSE
         source_files
