@@ -31,6 +31,44 @@
 using namespace renderMe;
 using namespace renderMe::core;
 
+TimeMark::TimeMark(TimeControl& p_tc)
+{
+    m_tm = &p_tc.m_tm;
+    m_timefactor = &p_tc.m_time_factor;
+    m_freeze = &p_tc.m_freeze;
+}
+
+TimeMark TimeControl::buildTimeMark()
+{
+    return TimeMark(*this);
+}
+
+void TimeMark::reset(void)
+{
+    m_previous_tick = 0;
+}
+
+long TimeMark::computeTimeMs()
+{
+    long ms_result = 0;
+
+    if (m_tm->isReady())
+    {
+        long last_tick = m_tm->getCurrentTick();
+        if (m_previous_tick != 0)
+        {
+            if (false == *m_freeze)
+            {
+                m_timecounter += (*m_timefactor) * (last_tick - m_previous_tick);
+            }
+            ms_result = m_timecounter;
+        }
+        m_previous_tick = last_tick;
+    }
+    return ms_result;
+}
+
+///////////////////////////////////////////////////////////////////
 
 TimeControl::TimeControl()
 {
@@ -42,11 +80,33 @@ TimeControl::TimeControl()
     dataCloud->registerData<std::string>("std.timeFactor", "");
     dataCloud->registerData<__time64_t>("std.currentTime");
 
-}
+    m_timer.registerSubscriber([this](TimerEvents p_event) 
+    {
+        if (TimerEvents::TIMER_EXPIRED == p_event)
+        {
+            if (0 == m_sub_sec_count_lim)
+            {
+                m_current_time += m_current_time_increment;
+            }
+            else
+            {
+                m_sub_sec_count++;
+                if (m_sub_sec_count == m_sub_sec_count_lim)
+                {
+                    m_sub_sec_count = 0;
+                    m_current_time++;
+                }
+            }
+        }
+    });
 
-// TODO :
-//      add TimeMark class
-//      integrate (set in time system, replace time manager, fix compils errors)
+
+    m_timer.setPeriod(m_time_period);
+    m_timer.setState(true);
+
+
+    m_tm.registerTimer(&m_timer);
+}
     
 void TimeControl::update(void)
 {
@@ -264,7 +324,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::MUL2_TIME:
@@ -280,7 +340,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 2;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::MUL4_TIME:
@@ -296,7 +356,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 4;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::MUL10_TIME:
@@ -312,7 +372,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::MUL100_TIME:
@@ -328,7 +388,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::MUL500_TIME:
@@ -344,7 +404,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::SEC_1HOUR_TIME:
@@ -360,7 +420,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::SEC_1DAY_TIME:
@@ -376,7 +436,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::SEC_30DAYS_TIME:
@@ -394,7 +454,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::SEC_1YEAR_TIME:
@@ -410,7 +470,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep * 10;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::DIV2_TIME:
@@ -427,7 +487,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::DIV4_TIME:
@@ -444,7 +504,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::DIV10_TIME:
@@ -461,7 +521,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_world_nbsteps = m_base_timestep;
 
             m_freeze = false;
-            //m_timer.suspend(false);
+            m_timer.suspend(false);
             break;
 
         case TimeScale::FREEZE:
@@ -469,7 +529,7 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
             m_mode_str = "FREEZE";
 
             m_freeze = true;
-            //m_timer.suspend(true);
+            m_timer.suspend(true);
             break;
     }
 

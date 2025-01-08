@@ -23,15 +23,42 @@
 /* -*-LIC_END-*- */
 
 #pragma once
-//#include "singleton.h"
+
+#include <set>
+#include "eventsource.h"
 
 namespace renderMe
 {
 	namespace core
 	{
-        //struct SyncVariable;
+        enum class TimerEvents
+        {
+            TIMER_EXPIRED
+        };
 
-        //class TimeManager : public property::Singleton<TimeManager>
+        class TimerDescr : public property::EventSource<TimerEvents>
+        {
+        public:
+            TimerDescr() = default;
+            ~TimerDescr() = default;
+
+            void    setState(bool p_state);
+            void    suspend(bool p_suspend);
+            void    setPeriod(long p_period);
+
+        private:
+
+            bool            m_state{ false };
+            long            m_period{ 1000 }; // ms
+            long            m_tick_count{ 0 };
+            long            m_prev_tick{ -1 };
+            bool            m_freeze{ false };
+
+            void            expired(void);
+
+            friend class TimeManager;
+        };
+
         class TimeManager
         {
         public:
@@ -41,8 +68,6 @@ namespace renderMe
             void    reset();
 
             void    update();
-
-            //void    manageVariable(SyncVariable& p_variable);
 
             void    angleSpeedInc(double* p_angle, double p_angleSpeed);
             void    angleSpeedDec(double* p_angle, double p_angleSpeed);
@@ -56,13 +81,17 @@ namespace renderMe
             long    getCurrentTick() const;
             long    getFPS() const;
 
+            void    registerTimer(TimerDescr* p_timer);
+
         private:
-            long    m_last_tick{ 0 };
-            long    m_frame_count{ 0 };
-            long    m_fps{ 0 };
-            bool    m_ready{ false };
-            long    m_last_deltatime{ 0 };
-            long    m_current_tick{ 0 };
+            long                        m_last_tick{ 0 };
+            long                        m_frame_count{ 0 };
+            long                        m_fps{ 0 };
+            bool                        m_ready{ false };
+            long                        m_last_deltatime{ 0 };
+            long                        m_current_tick{ 0 };
+
+            std::set<TimerDescr*>        m_timers;
 
         };
 

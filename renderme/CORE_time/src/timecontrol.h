@@ -35,6 +35,30 @@ namespace renderMe
     {
         struct SyncVariable;
 
+        // fwd decl
+        class TimeControl;
+
+        class TimeMark
+        {       
+        public:            
+            TimeMark(TimeControl& p_tc);            
+            ~TimeMark() = default;
+
+            void reset(void);
+            long computeTimeMs(void);
+
+        private:
+
+            TimeMark() = default;
+
+            TimeManager*    m_tm            { nullptr };
+            double*         m_timefactor    { nullptr };
+            bool*           m_freeze        { nullptr };
+
+            long            m_previous_tick { 0 };
+            long		    m_timecounter   { 0 };
+        };
+
         class TimeControl : public property::Singleton<TimeControl>
         {
         public:
@@ -75,29 +99,34 @@ namespace renderMe
             void    translationSpeedInc(double* p_translation, double p_speed);
             void    translationSpeedDec(double* p_translation, double p_speed);
 
+            TimeMark buildTimeMark();
 
         private:
 
-            static const int        m_base_timestep         { 8 };
+            static const int        m_base_timestep             { 8 };
 
-            TimeScale               m_mode                  { TimeScale::NORMAL_TIME };
-            std::string             m_mode_str              { "X1" };
+            TimeScale               m_mode                      { TimeScale::NORMAL_TIME };
+            std::string             m_mode_str                  { "X1" };
 
-            double                  m_time_factor           { 1.0 };  // calcul...
+            double                  m_time_factor               { 1.0 };  // calcul...
 
-            long                    m_time_period           { 1000 };
+            long                    m_time_period               { 1000 };
 
-            __time64_t              m_current_time;
-            long                    m_current_time_increment;
+            __time64_t              m_current_time              { 0 };
+            long                    m_current_time_increment    { 1 };
 
-            long                    m_sub_sec_count         { 0 };
-            long                    m_sub_sec_count_lim     { 0 };
+            long                    m_sub_sec_count             { 0 };
+            long                    m_sub_sec_count_lim         { 0 };
 
-            bool                    m_freeze                { false };
+            bool                    m_freeze                    { false };
 
-            int                     m_world_nbsteps         { m_base_timestep };
+            int                     m_world_nbsteps             { m_base_timestep };
 
-            TimeManager             m_tm;            
+            TimeManager             m_tm;
+
+            TimerDescr              m_timer;
+
+            friend class TimeMark;
 
         };
     }
