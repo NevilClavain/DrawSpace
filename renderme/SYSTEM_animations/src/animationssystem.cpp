@@ -25,6 +25,7 @@
 #include <string>
 #include <unordered_map>
 #include <map>
+#include <list>
 
 #include "animationssystem.h"
 #include "entity.h"
@@ -35,6 +36,7 @@
 #include "trianglemeshe.h"
 #include "shader.h"
 #include "tvector.h"
+#include "timecontrol.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -110,6 +112,29 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader, int 
 	}
 }
 
+bool AnimationsSystem::animation_step(core::TimeMark& p_tmk, const AnimationKeys& p_animationkeys)
+{
+	bool status = false;
+
+	const long tms = { p_tmk.computeTimeMs() };
+
+	const double nb_seconds{ (double)tms / 1000.0 };
+	double nb_ticks = p_animationkeys.ticks_per_seconds * nb_seconds;
+
+	const double duration_ticks{ p_animationkeys.duration_ticks };
+
+	if (nb_ticks < duration_ticks)
+	{
+		// animation continue
+	}
+	else
+	{
+		// animation ends
+		status = true;
+	}
+
+	return status;
+}
 
 void AnimationsSystem::run()
 {
@@ -117,40 +142,77 @@ void AnimationsSystem::run()
 	{
 		[&](Entity* p_entity, const ComponentContainer& p_animation_components)
 		{
-			const auto animationbones_array_arg_index_comp { p_animation_components.getComponent<int>("eg.std.animationbones_array_arg_index") };
-
-			if (animationbones_array_arg_index_comp)
+			// search for resources
+			if (p_entity->hasAspect(renderMe::core::resourcesAspect::id))
 			{
-				const int animationbones_array_arg_index{ animationbones_array_arg_index_comp->getPurpose() };
+				const ComponentContainer& resource_components{ p_entity->aspectAccess(renderMe::core::resourcesAspect::id)};
 
-				// search for the triangle meshe to animate
-				if (p_entity->hasAspect(renderMe::core::resourcesAspect::id))
+				// search triangle meshe
+				const auto meshes_list{ resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
+
+				// search the shaders
+				const auto shaders_list{ resource_components.getComponentsByType<std::pair<std::string, Shader>>() };
+
+				if (meshes_list.size() > 0 && shaders_list.size() > 0)
 				{
-					const ComponentContainer& resource_components{ p_entity->aspectAccess(renderMe::core::resourcesAspect::id)};
+					auto& meshe_comp{ meshes_list.at(0)->getPurpose() };
+					TriangleMeshe& meshe{ meshe_comp.second };
+					auto& vertex_shader{ shaders_list.at(0)->getPurpose().second };
 
-					// search triangle meshe
-					const auto meshes_list{ resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
-
-					// search the shaders
-					const auto shaders_list{ resource_components.getComponentsByType<std::pair<std::string, Shader>>() };
-
-					if (meshes_list.size() > 0 && shaders_list.size() > 0 && meshes_list.size() > 0)
+					if (Shader::State::RENDERERLOADED == vertex_shader.getState() && TriangleMeshe::State::RENDERERLOADED == meshe.getState())
 					{
-						auto& meshe_descr{ meshes_list.at(0)->getPurpose() };
-						TriangleMeshe& meshe{ meshe_descr.second };
-
-						auto& vertex_shader{ shaders_list.at(0)->getPurpose().second };
-						if (Shader::State::RENDERERLOADED == vertex_shader.getState())
+						const auto animationbones_array_arg_index_comp{ p_animation_components.getComponent<int>("eg.std.animationbonesArrayArgIndex") };
+						if (animationbones_array_arg_index_comp)
 						{
+							const int animationbones_array_arg_index{ animationbones_array_arg_index_comp->getPurpose() };
+
+							///////////////////////////////////////////////
+							
+							auto& animationIdList{ p_animation_components.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
+							auto& currentAnimationId{ p_animation_components.getComponent<std::string>("eg.std.currentAnimationId")->getPurpose() };
+							auto& animationsTimeMark{ p_animation_components.getComponent<core::TimeMark>("eg.std.animationsTimeMark")->getPurpose() };
+
+							if (animationIdList.size() > 0)
+							{
+								const auto& animationId = animationIdList.front();								
+								const auto& animationKeysList{ meshe.getAnimationsKeys() };
+
+								if (animationKeysList.count(animationId))
+								{
+									const AnimationKeys& animationkeys{ animationKeysList.at(animationId) };
+									if ("" == currentAnimationId)
+									{
+										currentAnimationId = animationId;
+										animationsTimeMark.reset();
+									}
+
+									bool animation_ends{ animation_step(animationsTimeMark, animationkeys) };
+									if (animation_ends)
+									{
+										// this animation ended
+										animationIdList.pop_front();
+
+										currentAnimationId = "";
+									}
+								}
+								else
+								{
+									_EXCEPTION("unknown animation : " + animationId);
+								}								
+							}
+
 							send_bones_to_shaders(meshe, vertex_shader, animationbones_array_arg_index);
+							
+							////////////////////////////////////////////////
+						}
+						else
+						{
+							_EXCEPTION("missing animationbones_array_arg_index");
 						}
 					}
 				}
 			}
-			else
-			{
-				_EXCEPTION("missing animationbones_array_arg_index");
-			}
+
 		}
 	};
 

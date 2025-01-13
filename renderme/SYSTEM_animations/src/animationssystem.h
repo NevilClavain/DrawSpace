@@ -34,6 +34,9 @@ namespace renderMe
 {
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
+    namespace core { class TimeMark; }
+
+    struct AnimationKeys;
    
     class AnimationsSystem : public core::System
     {
@@ -43,5 +46,8 @@ namespace renderMe
         ~AnimationsSystem() = default;
 
         void run();
+
+    private:
+        bool animation_step(core::TimeMark& p_tmk, const AnimationKeys& p_animationkeys);
     };
 }

@@ -41,16 +41,15 @@ namespace renderMe
         class TimeMark
         {       
         public:            
-            TimeMark(TimeControl& p_tc);            
+            TimeMark() = default;
+            TimeMark(TimeControl& p_tc);
             ~TimeMark() = default;
 
             void reset(void);
             long computeTimeMs(void);
 
         private:
-
-            TimeMark() = default;
-
+           
             TimeManager*    m_tm            { nullptr };
             double*         m_timefactor    { nullptr };
             bool*           m_freeze        { nullptr };

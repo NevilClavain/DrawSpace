@@ -127,6 +127,18 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			}
 		}
 
+		else if (VK_F3 == p_key)
+		{
+			// play animation
+
+			auto& raptorEntityNode{ m_entitygraph.node("raptorEntity") };
+			const auto raptorEntity{ raptorEntityNode.data() };
+			auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
+			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose()};
+
+			animationsIdList.push_back("walk");			
+		}
+
 		else if (VK_F8 == p_key)
 		{
 			auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };

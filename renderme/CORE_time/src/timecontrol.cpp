@@ -46,6 +46,7 @@ TimeMark TimeControl::buildTimeMark()
 void TimeMark::reset(void)
 {
     m_previous_tick = 0;
+    m_timecounter = 0;
 }
 
 long TimeMark::computeTimeMs()
