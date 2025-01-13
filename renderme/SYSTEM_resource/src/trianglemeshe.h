@@ -166,6 +166,8 @@ namespace renderMe
 
 		std::string												getSceneRootNodeId() const;
 		const std::map<std::string, SceneNode>&					getSceneNodes() const;
+		std::map<std::string, SceneNode>&						sceneNodesAccess();
+
 
 		const std::unordered_map<std::string, AnimationKeys>&	getAnimationsKeys() const;
 

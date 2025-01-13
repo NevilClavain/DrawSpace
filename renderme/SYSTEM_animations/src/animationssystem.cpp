@@ -27,7 +27,9 @@
 #include <map>
 #include <list>
 
+#include "animations.h"
 #include "animationssystem.h"
+#include "scenenode.h"
 #include "entity.h"
 #include "entitygraph.h"
 #include "aspects.h"
@@ -36,6 +38,8 @@
 #include "trianglemeshe.h"
 #include "shader.h"
 #include "tvector.h"
+#include "matrix.h"
+#include "quaternion.h"
 #include "timecontrol.h"
 
 using namespace renderMe;
@@ -112,7 +116,55 @@ void send_bones_to_shaders(TriangleMeshe& p_meshe, Shader& p_vertex_shader, int 
 	}
 }
 
-bool AnimationsSystem::animation_step(core::TimeMark& p_tmk, const AnimationKeys& p_animationkeys)
+void AnimationsSystem::compute_node_animationresult_matrix(const NodeAnimation& p_node, double p_current_tick, core::maths::Matrix& p_out_matrix) const
+{
+	//////////////////// translations interpolation
+
+	maths::Matrix translation;
+	translation.identity();
+
+	if (p_node.position_keys.size() > 0)
+	{
+		maths::Real4Vector v_interpolated;
+
+		v_interpolated = p_node.position_keys[p_node.position_keys.size() - 1].value;
+
+		translation.translation(v_interpolated);
+	}
+
+	//////////////////// rotations interpolation
+
+	maths::Matrix rotation;
+	rotation.identity();
+
+	if (p_node.rotations_keys.size() > 0)
+	{
+		maths::Matrix rot_interpolated;
+
+		maths::Quaternion q_interpolated = p_node.rotations_keys[p_node.rotations_keys.size() - 1].value;
+		q_interpolated.rotationMatFrom(rot_interpolated);
+
+		rotation = rot_interpolated;
+	}
+
+	//////////////////// scaling interpolation
+
+	maths::Matrix scaling;
+	scaling.identity();
+
+	if (p_node.scaling_keys.size() > 0)
+	{
+		maths::Real4Vector v_interpolated;
+
+		v_interpolated = p_node.scaling_keys[p_node.scaling_keys.size() - 1].value;
+
+		scaling.scale(v_interpolated);
+	}
+
+	p_out_matrix = scaling * rotation * translation;
+}
+
+bool AnimationsSystem::animation_step(core::TimeMark& p_tmk, const AnimationKeys& p_animationkeys, std::map<std::string, SceneNode>& p_nodes)
 {
 	bool status = false;
 
@@ -126,6 +178,21 @@ bool AnimationsSystem::animation_step(core::TimeMark& p_tmk, const AnimationKeys
 	if (nb_ticks < duration_ticks)
 	{
 		// animation continue
+
+		for (const auto& e : p_animationkeys.channels)
+		{
+			maths::Matrix bone_locale_transform;
+			compute_node_animationresult_matrix(e.second, nb_ticks, bone_locale_transform);
+
+			if (p_nodes.count(e.second.node_name))
+			{
+				p_nodes.at(e.second.node_name).locale_transform = bone_locale_transform;
+			}
+			else
+			{
+				_EXCEPTION("invalid node name : " + e.second.node_name);
+			}
+		}
 	}
 	else
 	{
@@ -186,7 +253,7 @@ void AnimationsSystem::run()
 										animationsTimeMark.reset();
 									}
 
-									bool animation_ends{ animation_step(animationsTimeMark, animationkeys) };
+									bool animation_ends{ animation_step(animationsTimeMark, animationkeys, meshe.sceneNodesAccess()) };
 									if (animation_ends)
 									{
 										// this animation ended

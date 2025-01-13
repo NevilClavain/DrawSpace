@@ -108,6 +108,21 @@ void Matrix::translation(const Real3Vector& p_pos)
 
 }
 
+void Matrix::translation(const Real4Vector& p_pos)
+{
+    identity();
+    m_matrix[3][0] = p_pos[0];
+    m_matrix[3][1] = p_pos[1];
+    m_matrix[3][2] = p_pos[2];
+
+    m_configinfos.type = ConfigurationType::CONFIG_TRANSLATION;
+    m_configinfos.values[0] = p_pos[0];
+    m_configinfos.values[1] = p_pos[1];
+    m_configinfos.values[2] = p_pos[2];
+    m_configinfos.values[3] = 1.0;
+
+}
+
 void Matrix::perspective(double p_w, double p_h, double p_zn, double p_zf)
 {
     zero();
@@ -164,6 +179,22 @@ void Matrix::scale(double p_sx, double p_sy, double p_sz)
 }
 
 void Matrix::scale(const Real3Vector& p_pos)
+{
+    zero();
+    m_matrix[0][0] = p_pos[0];
+    m_matrix[1][1] = p_pos[1];
+    m_matrix[2][2] = p_pos[2];
+    m_matrix[3][3] = 1.0;
+
+    m_configinfos.type = ConfigurationType::CONFIG_SCALING;
+    m_configinfos.values[0] = p_pos[0];
+    m_configinfos.values[1] = p_pos[1];
+    m_configinfos.values[2] = p_pos[2];
+    m_configinfos.values[3] = 1.0;
+
+}
+
+void Matrix::scale(const Real4Vector& p_pos)
 {
     zero();
     m_matrix[0][0] = p_pos[0];

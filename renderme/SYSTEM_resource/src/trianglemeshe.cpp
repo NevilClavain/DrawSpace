@@ -374,6 +374,11 @@ const std::map<std::string, SceneNode>& TriangleMeshe::getSceneNodes() const
 	return m_scene_nodes;
 }
 
+std::map<std::string, SceneNode>& TriangleMeshe::sceneNodesAccess()
+{
+	return m_scene_nodes;
+}
+
 std::vector<AnimationBone>& TriangleMeshe::animationBonesAccess()
 {
 	return m_animation_bones;

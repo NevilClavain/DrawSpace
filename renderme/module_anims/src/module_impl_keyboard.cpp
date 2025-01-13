@@ -136,7 +136,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
 			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose()};
 
-			animationsIdList.push_back("walk");			
+			animationsIdList.push_back("run");			
 		}
 
 		else if (VK_F8 == p_key)

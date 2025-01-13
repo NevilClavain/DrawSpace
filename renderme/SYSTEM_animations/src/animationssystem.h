@@ -26,6 +26,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <string>
 #include "system.h"
 
@@ -35,8 +36,11 @@ namespace renderMe
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
     namespace core { class TimeMark; }
+    namespace core { namespace maths { class Matrix; } }
 
+    struct NodeAnimation;
     struct AnimationKeys;
+    struct SceneNode;
    
     class AnimationsSystem : public core::System
     {
@@ -48,6 +52,7 @@ namespace renderMe
         void run();
 
     private:
-        bool animation_step(core::TimeMark& p_tmk, const AnimationKeys& p_animationkeys);
+        void compute_node_animationresult_matrix(const NodeAnimation& p_node, double p_current_tick, core::maths::Matrix& p_out_matrix) const;
+        bool animation_step(core::TimeMark& p_tmk, const AnimationKeys& p_animationkeys, std::map<std::string, SceneNode>& p_nodes);
     };
 }
