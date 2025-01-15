@@ -632,7 +632,7 @@ void ModuleImpl::d3d11_system_events()
 					gbl_world_aspect.addComponent<double>("gbl_theta", 0);
 					gbl_world_aspect.addComponent<double>("gbl_phi", 0);
 					gbl_world_aspect.addComponent<double>("gbl_speed", 0);
-					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(0.0, skydomeInnerRadius + groundLevel + 5, 55.0));
+					gbl_world_aspect.addComponent<maths::Real3Vector>("gbl_pos", maths::Real3Vector(-50.0, skydomeInnerRadius + groundLevel + 5, 1.0));
 
 					gbl_world_aspect.addComponent<transform::Animator>("animator", transform::Animator(
 						{

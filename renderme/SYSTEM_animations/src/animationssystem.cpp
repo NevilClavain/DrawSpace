@@ -127,7 +127,38 @@ void AnimationsSystem::compute_node_animationresult_matrix(const NodeAnimation& 
 	{
 		maths::Real4Vector v_interpolated;
 
-		v_interpolated = p_node.position_keys[p_node.position_keys.size() - 1].value;
+		//v_interpolated = p_node.position_keys[p_node.position_keys.size() - 1].value;
+
+		if (p_node.position_keys.size() < 2)
+		{
+			v_interpolated = p_node.position_keys[0].value;
+		}
+		else
+		{
+			if (p_current_tick < p_node.position_keys[0].time_tick)
+			{
+				v_interpolated = p_node.position_keys[0].value;				
+			}
+			else if (p_current_tick >= p_node.position_keys[p_node.position_keys.size() - 1].time_tick)
+			{
+				v_interpolated = p_node.position_keys[p_node.position_keys.size() - 1].value;				
+			}
+			else
+			{
+				for (size_t i = 0; i < p_node.position_keys.size() - 1; i++)
+				{
+					if (p_node.position_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.position_keys[i + 1].time_tick)
+					{
+						const VectorKey kA{ p_node.position_keys[i] };
+						const VectorKey kB{ p_node.position_keys[i + 1] };
+						const double blend { (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick) };
+						v_interpolated = maths::Vector<double, 4>::lerp(kA.value, kB.value, blend);
+						break;
+					}
+				}
+			}
+		}
+
 
 		translation.translation(v_interpolated);
 	}
@@ -141,8 +172,42 @@ void AnimationsSystem::compute_node_animationresult_matrix(const NodeAnimation& 
 	{
 		maths::Matrix rot_interpolated;
 
-		maths::Quaternion q_interpolated = p_node.rotations_keys[p_node.rotations_keys.size() - 1].value;
-		q_interpolated.rotationMatFrom(rot_interpolated);
+		if (p_node.rotations_keys.size() < 2)
+		{
+			p_node.rotations_keys[0].value.rotationMatFrom(rot_interpolated);
+
+		}
+		else
+		{
+			if (p_current_tick < p_node.rotations_keys[0].time_tick)
+			{
+				maths::Quaternion q_interpolated{ p_node.rotations_keys[0].value };
+				q_interpolated.rotationMatFrom(rot_interpolated);
+			}
+			else if (p_current_tick >= p_node.rotations_keys[p_node.rotations_keys.size() - 1].time_tick)
+			{
+				maths::Quaternion q_interpolated{ p_node.rotations_keys[p_node.rotations_keys.size() - 1].value };
+				q_interpolated.rotationMatFrom(rot_interpolated);
+			}
+			else
+			{
+				for (size_t i = 0; i < p_node.rotations_keys.size() - 1; i++)
+				{
+					if (p_node.rotations_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.rotations_keys[i + 1].time_tick)
+					{
+						const QuaternionKey kA{ p_node.rotations_keys[i] };
+						const QuaternionKey kB{ p_node.rotations_keys[i + 1] };
+
+						const double blend{ (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick) };
+
+						maths::Quaternion q_interpolated{ maths::Quaternion::lerp(kA.value, kB.value, blend) };
+						q_interpolated.rotationMatFrom(rot_interpolated);
+						break;
+					}
+
+				}
+			}
+		}
 
 		rotation = rot_interpolated;
 	}
@@ -156,7 +221,37 @@ void AnimationsSystem::compute_node_animationresult_matrix(const NodeAnimation& 
 	{
 		maths::Real4Vector v_interpolated;
 
-		v_interpolated = p_node.scaling_keys[p_node.scaling_keys.size() - 1].value;
+		if (p_node.scaling_keys.size() < 2)
+		{
+			v_interpolated = p_node.scaling_keys[0].value;
+		}
+		else
+		{
+			if (p_current_tick < p_node.scaling_keys[0].time_tick)
+			{
+				v_interpolated = p_node.scaling_keys[0].value;
+			}
+			else if (p_current_tick >= p_node.scaling_keys[p_node.scaling_keys.size() - 1].time_tick)
+			{
+				v_interpolated = p_node.scaling_keys[p_node.scaling_keys.size() - 1].value;
+			}
+			else
+			{
+				for (size_t i = 0; i < p_node.scaling_keys.size() - 1; i++)
+				{
+					if (p_node.scaling_keys[i].time_tick <= p_current_tick && p_current_tick < p_node.scaling_keys[i + 1].time_tick)
+					{
+						const VectorKey kA{ p_node.scaling_keys[i] };
+						const VectorKey kB{ p_node.scaling_keys[i + 1] };
+
+						const double blend{ (p_current_tick - kA.time_tick) / (kB.time_tick - kA.time_tick) };
+						v_interpolated = maths::Vector<double, 4>::lerp(kA.value, kB.value, blend);
+
+						break;
+					}
+				}
+			}
+		}
 
 		scaling.scale(v_interpolated);
 	}

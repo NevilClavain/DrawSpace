@@ -136,7 +136,43 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
 			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose()};
 
-			animationsIdList.push_back("run");			
+			animationsIdList.push_back("eat");			
+		}
+
+		else if (VK_F4 == p_key)
+		{
+			// play animation
+
+			auto& raptorEntityNode{ m_entitygraph.node("raptorEntity") };
+			const auto raptorEntity{ raptorEntityNode.data() };
+			auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
+			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
+
+			animationsIdList.push_back("walk");
+		}
+
+		else if (VK_F5 == p_key)
+		{
+			// play animation
+
+			auto& raptorEntityNode{ m_entitygraph.node("raptorEntity") };
+			const auto raptorEntity{ raptorEntityNode.data() };
+			auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
+			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
+
+			animationsIdList.push_back("idle");
+		}
+
+		else if (VK_F6 == p_key)
+		{
+			// play animation
+
+			auto& raptorEntityNode{ m_entitygraph.node("raptorEntity") };
+			const auto raptorEntity{ raptorEntityNode.data() };
+			auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
+			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
+
+			animationsIdList.push_back("Alert");
 		}
 
 		else if (VK_F8 == p_key)
