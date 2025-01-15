@@ -91,6 +91,14 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 		_EXCEPTION("Cannot parse logging configuration")
 	}
 
+	///////////////////////////
+
+	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
+	dataCloud->registerData<std::string>("resources_event");
+	dataCloud->updateDataValue<std::string>("resources_event", "...");
+
+
 	/////////// systems
 
 	auto sysEngine{ SystemEngine::getInstance() };
@@ -115,6 +123,8 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	//////////////////////////
 
 	createEntities(p_appWindowsEntityName);
+
+	//////////////////////////
 }
 
 
@@ -150,7 +160,7 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 void ModuleImpl::resource_system_events()
 {
 	const auto sysEngine{ SystemEngine::getInstance() };
-
+	
 	// register to resource system events
 	const ResourceSystem::Callback rs_cb
 	{
@@ -158,36 +168,50 @@ void ModuleImpl::resource_system_events()
 		{
 			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
+			const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+
 			switch (p_event)
 			{
 				case ResourceSystemEvent::RESOURCE_SHADER_CACHE_CREATED:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_CACHE_CREATED : " + p_resourceName);
-					m_resources_event = "Shader cache creation : " + p_resourceName;
+					//m_resources_event = "Shader cache creation : " + p_resourceName;
+
+					dataCloud->updateDataValue<std::string>("resources_event", "Shader cache creation : " + p_resourceName);
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + p_resourceName);
-					m_resources_event = "Shader compilation: " + p_resourceName + " BEGIN";
+					//m_resources_event = "Shader compilation: " + p_resourceName + " BEGIN";
+
+					dataCloud->updateDataValue<std::string>("resources_event", "Shader compilation: " + p_resourceName + " BEGIN");
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + p_resourceName);
-					m_resources_event = "Shader compilation " + p_resourceName + " SUCCESS";
+					//m_resources_event = "Shader compilation " + p_resourceName + " SUCCESS";
+
+					dataCloud->updateDataValue<std::string>("resources_event", "Shader compilation " + p_resourceName + " SUCCESS");
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + p_resourceName);
-					m_resources_event = "Shader compilation " + p_resourceName + " ERROR";
+					//m_resources_event = "Shader compilation " + p_resourceName + " ERROR";
+
+					dataCloud->updateDataValue<std::string>("resources_event", "Shader compilation " + p_resourceName + " ERROR");
 					break;
 
 				case ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + p_resourceName);
-					m_resources_event = "Texture loaded :" + p_resourceName;
+					//m_resources_event = "Texture loaded :" + p_resourceName;
+
+					dataCloud->updateDataValue<std::string>("resources_event", "Texture loaded :" + p_resourceName);
 					break;
 
 				case ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + p_resourceName);
-					m_resources_event = "Meshe loaded :" + p_resourceName;
+					//m_resources_event = "Meshe loaded :" + p_resourceName;
+
+					dataCloud->updateDataValue<std::string>("resources_event", "Meshe loaded :" + p_resourceName);
 					break;
 			}
 		}

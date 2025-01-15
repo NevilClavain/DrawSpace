@@ -321,23 +321,22 @@ void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base
 {
 	int curr_row{ 0 };
 	int curr_col{ 0 };
-	int index{ 0 };
 
 	for (const auto& e : p_list)
 	{
 		m_renderingQueue->pushText({ e, "CourierNew.10.spritefont", {255, 100, 100, 255}, {curr_col * p_colWidth + p_x_base, curr_row * p_rowHeight + p_y_base}, 0.0});
-		index++;
-
-		curr_col++;
-		if (p_nbCols == curr_col)
+		curr_row++;
+		if (p_nbRows == curr_row)
 		{
-			curr_col = 0;
-			curr_row++;
+			curr_row = 0;
 
-			if (p_nbRows == curr_row)
+			curr_col++;
+			if (p_nbCols == curr_col)
 			{
-				break;
+				//curr_col = 0;
+				break; // do not display more
 			}
+
 		}
 	}
 }

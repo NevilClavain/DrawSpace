@@ -47,7 +47,7 @@ using namespace renderMe::rendering;
 void ModuleImpl::run(void)
 {
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	//const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
 
 	/////////////////////////////////////////////////////
 
@@ -57,5 +57,5 @@ void ModuleImpl::run(void)
 	/////////////////////////////////////////////////////
 
 	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });	
+	//m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });	
 }

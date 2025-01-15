@@ -91,5 +91,5 @@ private:
 
     renderMe::rendering::Queue*             m_bufferRenderingQueue{ nullptr };
 
-    std::string                             m_resources_event{ "..." };
+    //std::string                             m_resources_event{ "..." };
 };

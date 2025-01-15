@@ -54,10 +54,10 @@ namespace renderMe
 
     private:
 
-        static constexpr int                    dcNbCols{ 2 };
-        static constexpr int                    dcNbRows{ 10 };
+        static constexpr int                    dcNbCols{ 1 };
+        static constexpr int                    dcNbRows{ 30 };
         static constexpr int                    dcColWidth{ 620 };
-        static constexpr int                    dcRowHeight{ 21 };
+        static constexpr int                    dcRowHeight{ 18 };
 
         static constexpr int                    svNbCols{ 3 };
         static constexpr int                    svNbRows{ 10 };
