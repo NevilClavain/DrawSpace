@@ -94,8 +94,6 @@ private:
 
     renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
 
-    std::string                             m_resources_event{ "..." };
-
     renderMe::Texture*                      m_rendering_quad_texture{ nullptr };
 
     std::default_random_engine*             m_generator;
@@ -108,9 +106,6 @@ private:
 
 
     std::vector<renderMe::core::Entity*>    m_sprites;
-
-
-
 };
 
 
