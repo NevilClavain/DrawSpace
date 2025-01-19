@@ -53,12 +53,6 @@ void ModuleImpl::run(void)
 
 	auto sysEngine{ SystemEngine::getInstance() };
 	sysEngine->run();
-
-	/////////////////////////////////////////////////////
-
-	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
-
 	
 	//////////////////////////////////////////////////////
 	// 	
@@ -66,8 +60,6 @@ void ModuleImpl::run(void)
 
 	if (true == m_quadEntity_state_request && false == m_quadEntity_state)
 	{
-
-
 		Entitygraph::Node& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
 		auto& quadNode{ m_entitygraph.add(bufferRenderingNode, "quadEntity2") };
 
