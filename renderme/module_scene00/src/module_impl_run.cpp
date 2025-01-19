@@ -55,12 +55,6 @@ void ModuleImpl::run(void)
 	auto sysEngine{ SystemEngine::getInstance() };
 	sysEngine->run();
 
-	/////////////////////////////////////////////////////
-
-	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
-
-
 	//////////////////////////////////////////////////////
 	if (m_quadEntity2_state)
 	{
