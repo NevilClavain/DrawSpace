@@ -48,17 +48,6 @@ using namespace renderMe::rendering;
 
 void ModuleImpl::run(void)
 {
-
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-
-	/////////////////////////////////////////////////////
-
 	auto sysEngine{ SystemEngine::getInstance() };
-	sysEngine->run();
-
-	/////////////////////////////////////////////////////
-
-	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
-	
+	sysEngine->run();	
 }
