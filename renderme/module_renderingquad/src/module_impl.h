@@ -89,17 +89,8 @@ private:
 
     renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
 
-    std::string                             m_resources_event{ "..." };
-
     renderMe::Texture*                      m_rendering_quad_texture{ nullptr };
 
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };
-
-
-
 };
-
-
-
-

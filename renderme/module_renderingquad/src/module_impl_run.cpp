@@ -57,15 +57,7 @@ void ModuleImpl::run(void)
 	sysEngine->run();
 
 	/////////////////////////////////////////////////////
-
-	const auto currentFPS{ dataCloud->readDataValue<long>("std.framesPerSecond") };
-
-	const std::string fpsText{ std::string("fps = ") + std::to_string(currentFPS) };
-
-	// resources system event
-	m_windowRenderingQueue->pushText({ m_resources_event, "CourierNew.10.spritefont", {255, 255, 255, 255}, {0, 120}, 0.0 });
-
-	
+	// 	
 	if (true == m_quadEntity_state_request && false == m_quadEntity_state)	
 	{
 
