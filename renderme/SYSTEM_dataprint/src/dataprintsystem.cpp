@@ -24,6 +24,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <sstream>  
 
 #include "dataprintsystem.h"
 #include "entity.h"
@@ -39,7 +40,9 @@ using namespace renderMe;
 using namespace renderMe::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
-{		
+{
+	//by default, enable std data display
+	m_display_filters.insert("std");
 }
 
 void DataPrintSystem::run()
@@ -71,6 +74,35 @@ void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
 	m_renderingQueue = p_queue;
 }
 
+std::vector<std::string> DataPrintSystem::splitString(const std::string& p_str, char p_delimiter)
+{
+	std::vector<std::string> result;
+	std::stringstream ss(p_str);
+	std::string item;
+
+	while (std::getline(ss, item, p_delimiter)) 
+	{
+		result.push_back(item);
+	}
+	return result;
+}
+
+bool DataPrintSystem::checkDcVar(const std::string& p_var_id) const
+{
+	bool status = false;
+	const std::vector<std::string> parts{ splitString(p_var_id, '.')};
+
+	if (parts.size() > 0)
+	{
+		const std::string sub_id{ parts.at(0) };
+		if (m_display_filters.count(sub_id))
+		{
+			status = true;
+		}
+	}
+	return status;
+}
+
 void DataPrintSystem::collectData()
 {
 	/////// collect datacloud vars
@@ -83,134 +115,137 @@ void DataPrintSystem::collectData()
 	for (const auto& e : dataCloudVariables)
 	{
 		const std::string var_id{ e.first };
-		const size_t type_id{ e.second };
-
-		std::string var_str_value;
-
-		std::unordered_map<size_t, std::function<void(const std::string&)>> conv_funcs
+		if (checkDcVar(var_id))
 		{
+			const size_t type_id{ e.second };
+
+			std::string var_str_value;
+
+			std::unordered_map<size_t, std::function<void(const std::string&)>> conv_funcs
 			{
-				typeid(long).hash_code(),
-				[&](const std::string& p_id)
 				{
-					const auto value { dataCloud->readDataValue<long>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
+					typeid(long).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<long>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(int).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<int>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(unsigned long).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<unsigned long>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(unsigned int).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<unsigned int>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(size_t).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<size_t>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(__time64_t).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<__time64_t>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(float).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<float>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(double).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<double>(p_id) };
+						var_str_value = p_id + " " + std::to_string(value);
+					}
+				},
+				{
+					typeid(core::maths::IntCoords2D).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<core::maths::IntCoords2D>(p_id) };
+						var_str_value = p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " ]";
+					}
+				},
+				{
+					typeid(core::maths::FloatCoords2D).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<core::maths::FloatCoords2D>(p_id) };
+						var_str_value = p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " ]";
+					}
+				},
+				{
+					typeid(core::maths::Real3Vector).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<core::maths::Real3Vector>(p_id) };
+						var_str_value = p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " ]";
+					}
+				},
+				{
+					typeid(core::maths::Real4Vector).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<core::maths::Real4Vector>(p_id) };
+						var_str_value = p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " " + std::to_string(value[3]) + " ]";
+					}
+				},
+				{
+					typeid(std::string).hash_code(),
+					[&](const std::string& p_id)
+					{
+						const auto value { dataCloud->readDataValue<std::string>(p_id) };
+						var_str_value = p_id + " " + value;
+					}
 				}
-			},
+
+			};
+
+
+			/////////////////////////////////////////////////////////////
+
+			if (conv_funcs.count(type_id))
 			{
-				typeid(int).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<int>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
+				conv_funcs.at(type_id)(var_id);
+			}
+			else
 			{
-				typeid(unsigned long).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<unsigned long>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
-			{
-				typeid(unsigned int).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<unsigned int>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
-			{
-				typeid(size_t).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<size_t>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
-			{
-				typeid(__time64_t).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<__time64_t>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
-			{
-				typeid(float).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<float>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
-			{
-				typeid(double).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<double>(p_id) };
-					var_str_value = "dc." + p_id + " " + std::to_string(value);
-				}
-			},
-			{
-				typeid(core::maths::IntCoords2D).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<core::maths::IntCoords2D>(p_id) };
-					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " ]";
-				}
-			},
-			{
-				typeid(core::maths::FloatCoords2D).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<core::maths::FloatCoords2D>(p_id) };
-					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " ]";
-				}
-			},
-			{
-				typeid(core::maths::Real3Vector).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<core::maths::Real3Vector>(p_id) };
-					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " ]";
-				}
-			},
-			{
-				typeid(core::maths::Real4Vector).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<core::maths::Real4Vector>(p_id) };
-					var_str_value = "dc." + p_id + " " + "[ " + std::to_string(value[0]) + " " + std::to_string(value[1]) + " " + std::to_string(value[2]) + " " + std::to_string(value[3]) + " ]";
-				}
-			},
-			{
-				typeid(std::string).hash_code(),
-				[&](const std::string& p_id)
-				{
-					const auto value { dataCloud->readDataValue<std::string>(p_id) };
-					var_str_value = "dc." + p_id + " " + value;
-				}
+				// cannot infer type
+
+				var_str_value = var_id + " <unknown type>";
 			}
 
-		};
-
-
-		/////////////////////////////////////////////////////////////
-
-		if (conv_funcs.count(type_id))
-		{
-			conv_funcs.at(type_id)(var_id);
+			m_dc_strings.push_back(var_str_value);
 		}
-		else
-		{
-			// cannot infer type
-
-			var_str_value = var_id + " <unknown type>";
-		}
-
-		m_dc_strings.push_back(var_str_value);
 	}
 
 	/////// collect sync vars
@@ -339,4 +374,9 @@ void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base
 
 		}
 	}
+}
+
+void DataPrintSystem::addDatacloudFilter(const std::string& p_filter)
+{
+	m_display_filters.insert(p_filter);
 }

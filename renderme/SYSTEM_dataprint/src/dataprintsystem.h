@@ -27,6 +27,7 @@
 
 #include <vector>
 #include <string>
+#include <set>
 #include "system.h"
 
 
@@ -51,6 +52,8 @@ namespace renderMe
         void run();
 
         void setRenderingQueue(renderMe::rendering::Queue* p_queue);
+
+        void addDatacloudFilter(const std::string& p_filter);
 
     private:
 
@@ -78,7 +81,12 @@ namespace renderMe
 
         std::vector<std::string>                m_rq_strings; // rendering queues display
 
+        std::set<std::string>                   m_display_filters;
+
         void collectData();
         void print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight);
+
+        static std::vector<std::string> splitString(const std::string& p_str, char p_delimiter);
+        bool checkDcVar(const std::string& p_var_id) const;        
     };
 }

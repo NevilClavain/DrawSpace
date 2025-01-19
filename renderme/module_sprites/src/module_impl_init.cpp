@@ -112,6 +112,11 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	services::TextureContentCopyService::getInstance()->registerSubscriber(d3d11System->getTextureContentCopyInvocationCallback());
 
 
+	// dataprint system filters
+	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot) };
+	dataPrintSystem->addDatacloudFilter("resources_event");
+
+
 	d3d11_system_events();
 	resource_system_events();
 
