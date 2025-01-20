@@ -99,6 +99,13 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	dataCloud->updateDataValue<std::string>("resources_event", "...");
 
 
+	dataCloud->registerData<std::string>("current_animation.id");
+	dataCloud->registerData<double>("current_animation.ticks_progress");
+	dataCloud->registerData<double>("current_animation.seconds_progress");
+	dataCloud->registerData<double>("current_animation.ticks_duration");
+	dataCloud->registerData<double>("current_animation.seconds_duration");
+
+
 	/////////// systems
 
 	auto sysEngine{ SystemEngine::getInstance() };
@@ -119,6 +126,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	// dataprint system filters
 	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot) };
 	dataPrintSystem->addDatacloudFilter("resources_event");
+	dataPrintSystem->addDatacloudFilter("current_animation");
 
 
 	d3d11_system_events();
@@ -562,6 +570,12 @@ void ModuleImpl::d3d11_system_events()
 
 						raptor_animations_aspect.addComponent<core::TimeMark>("eg.std.animationsTimeMark", TimeControl::getInstance()->buildTimeMark());
 						raptor_animations_aspect.addComponent<std::string>("eg.std.currentAnimationId");
+
+						raptor_animations_aspect.addComponent<double>("eg.std.currentAnimationTicksDuration");
+						raptor_animations_aspect.addComponent<double>("eg.std.currentAnimationSecondsDuration");
+
+						raptor_animations_aspect.addComponent<double>("eg.std.currentAnimationTicksProgress");
+						raptor_animations_aspect.addComponent<double>("eg.std.currentAnimationSecondsProgress");
 					}
 
 
