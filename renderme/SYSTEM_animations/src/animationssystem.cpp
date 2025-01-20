@@ -330,9 +330,17 @@ void AnimationsSystem::run()
 
 							///////////////////////////////////////////////
 							
-							auto& animationIdList{ p_animation_components.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
-							auto& currentAnimationId{ p_animation_components.getComponent<std::string>("eg.std.currentAnimationId")->getPurpose() };
+							auto& animationIdList{ p_animation_components.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };							
 							auto& animationsTimeMark{ p_animation_components.getComponent<core::TimeMark>("eg.std.animationsTimeMark")->getPurpose() };
+
+							auto& currentAnimationId{ p_animation_components.getComponent<std::string>("eg.std.currentAnimationId")->getPurpose() };
+
+							auto& currentAnimationTicksDuration{ p_animation_components.getComponent<double>("eg.std.currentAnimationTicksDuration")->getPurpose() };
+							auto& currentAnimationSecondsDuration{ p_animation_components.getComponent<double>("eg.std.currentAnimationSecondsDuration")->getPurpose() };
+
+							auto& currentAnimationTicksProgress{ p_animation_components.getComponent<double>("eg.std.currentAnimationTicksProgress")->getPurpose() };
+							auto& currentAnimationSecondsProgress{ p_animation_components.getComponent<double>("eg.std.currentAnimationSecondsProgress")->getPurpose() };
+
 
 							if (animationIdList.size() > 0)
 							{
@@ -344,9 +352,21 @@ void AnimationsSystem::run()
 									const AnimationKeys& animationkeys{ animationKeysList.at(animationId) };
 									if ("" == currentAnimationId)
 									{
+										// this animation begins
+
 										currentAnimationId = animationId;
+										currentAnimationTicksDuration = animationkeys.duration_ticks;
+										currentAnimationSecondsDuration = currentAnimationTicksDuration / animationkeys.ticks_per_seconds;										
+
 										animationsTimeMark.reset();
 									}
+
+									const long tms = { animationsTimeMark.computeTimeMs() };
+									const double nb_seconds{ (double)tms / 1000.0 };
+									currentAnimationSecondsProgress = nb_seconds;
+
+									double nb_ticks = animationkeys.ticks_per_seconds * nb_seconds;
+									currentAnimationTicksProgress = nb_ticks;
 
 									bool animation_ends{ animation_step(animationsTimeMark, animationkeys, meshe.sceneNodesAccess()) };
 									if (animation_ends)
@@ -355,6 +375,10 @@ void AnimationsSystem::run()
 										animationIdList.pop_front();
 
 										currentAnimationId = "";
+										currentAnimationTicksDuration = 0;
+										currentAnimationSecondsDuration = 0;
+										currentAnimationSecondsProgress = 0;
+										currentAnimationTicksProgress = 0;
 									}
 								}
 								else
