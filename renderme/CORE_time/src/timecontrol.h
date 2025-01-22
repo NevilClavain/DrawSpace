@@ -93,6 +93,8 @@ namespace renderMe
 
             void    setTimeFactor(TimeControl::TimeScale p_scale);
 
+            TimeControl::TimeScale getTimeFactor() const;
+
             void    angleSpeedInc(double* p_angle, double p_angleSpeed);
             void    angleSpeedDec(double* p_angle, double p_angleSpeed);
             void    translationSpeedInc(double* p_translation, double p_speed);

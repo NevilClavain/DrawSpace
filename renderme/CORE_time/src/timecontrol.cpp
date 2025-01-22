@@ -545,3 +545,8 @@ void TimeControl::setTimeFactor(TimeControl::TimeScale p_scale)
     }
     */
 }
+
+TimeControl::TimeScale TimeControl::getTimeFactor() const
+{
+    return m_mode;
+}

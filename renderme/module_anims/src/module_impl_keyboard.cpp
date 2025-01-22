@@ -34,6 +34,7 @@
 #include "aspects.h"
 #include "syncvariable.h"
 #include "entitygraph_helpers.h"
+#include "timecontrol.h"
 
 using namespace renderMe;
 using namespace renderMe::core;
@@ -173,6 +174,21 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
 
 			animationsIdList.push_back("Alert");
+		}
+
+		else if (VK_F7 == p_key)
+		{
+			auto tc{ TimeControl::getInstance() };
+
+			auto mode{ tc->getTimeFactor() };
+			if (TimeControl::TimeScale::DIV4_TIME == mode)
+			{
+				tc->setTimeFactor(TimeControl::TimeScale::NORMAL_TIME);
+			}
+			else if (TimeControl::TimeScale::NORMAL_TIME == mode)
+			{
+				tc->setTimeFactor(TimeControl::TimeScale::DIV4_TIME);
+			}
 		}
 
 		else if (VK_F8 == p_key)
