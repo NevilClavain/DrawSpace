@@ -394,3 +394,17 @@ const std::unordered_map<std::string, AnimationKeys>& TriangleMeshe::getAnimatio
 	return m_animations_keys;
 }
 
+AnimationKeys& TriangleMeshe::transitionAnimationAccess()
+{
+	return m_transition_animation;
+}
+
+std::string	TriangleMeshe::getPreviousAnimation() const
+{
+	return m_previous_animation;
+}
+
+void TriangleMeshe::setPreviousAnimation(const std::string& p_previous_animation)
+{
+	m_previous_animation = p_previous_animation;
+}

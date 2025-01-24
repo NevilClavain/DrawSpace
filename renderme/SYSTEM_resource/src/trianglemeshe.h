@@ -171,6 +171,11 @@ namespace renderMe
 
 		const std::unordered_map<std::string, AnimationKeys>&	getAnimationsKeys() const;
 
+		AnimationKeys&											transitionAnimationAccess();
+
+		std::string												getPreviousAnimation() const;
+		void													setPreviousAnimation(const std::string& p_previous_animation);
+
 	private:
 
 		std::string																m_resource_uid;       // meshe content source unique identifier
@@ -201,6 +206,8 @@ namespace renderMe
 		std::string																m_scene_root_node_id;
 
 		std::unordered_map<std::string, AnimationKeys>							m_animations_keys;
+		AnimationKeys															m_transition_animation;
+		std::string																m_previous_animation;
 
 		// IF NEW MEMBERS HERE :
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!

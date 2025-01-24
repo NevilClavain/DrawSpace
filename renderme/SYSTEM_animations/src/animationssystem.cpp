@@ -373,12 +373,13 @@ void AnimationsSystem::run()
 									{
 										// this animation ended
 										animationIdList.pop_front();
+										meshe.setPreviousAnimation(currentAnimationId);
 
 										currentAnimationId = "";
 										currentAnimationTicksDuration = 0;
 										currentAnimationSecondsDuration = 0;
 										currentAnimationSecondsProgress = 0;
-										currentAnimationTicksProgress = 0;
+										currentAnimationTicksProgress = 0;										
 									}
 								}
 								else
