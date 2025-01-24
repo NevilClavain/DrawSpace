@@ -344,7 +344,13 @@ void AnimationsSystem::run()
 
 							if (animationIdList.size() > 0)
 							{
-								const auto& animationId = animationIdList.front();								
+								const std::string prev_anim_id{ meshe.getPreviousAnimation() };
+								if (prev_anim_id != "")
+								{
+									// compute transition animation
+								}
+
+								const auto& animationId = animationIdList.front();						
 								const auto& animationKeysList{ meshe.getAnimationsKeys() };
 
 								if (animationKeysList.count(animationId))
