@@ -60,6 +60,7 @@ namespace renderMe
 	struct AnimationKeys
 	{
 		std::string			name;
+		bool				is_transition{ false };
 		double				ticks_per_seconds{ 0 };
 		double				duration_ticks{ 0 };
 		AnimationChannels	channels;

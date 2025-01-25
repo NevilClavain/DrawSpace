@@ -330,10 +330,12 @@ void AnimationsSystem::run()
 
 							///////////////////////////////////////////////
 							
-							auto& animationIdList{ p_animation_components.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };							
+							auto& animationIdList{ p_animation_components.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
+							auto& animationsList{ p_animation_components.getComponent<std::list<std::pair<std::string,AnimationKeys>>>("eg.std.animationsList")->getPurpose() };
+
 							auto& animationsTimeMark{ p_animation_components.getComponent<core::TimeMark>("eg.std.animationsTimeMark")->getPurpose() };
 
-							auto& currentAnimationId{ p_animation_components.getComponent<std::string>("eg.std.currentAnimationId")->getPurpose() };
+							//auto& currentAnimationId{ p_animation_components.getComponent<std::string>("eg.std.currentAnimationId")->getPurpose() };
 
 							auto& currentAnimationTicksDuration{ p_animation_components.getComponent<double>("eg.std.currentAnimationTicksDuration")->getPurpose() };
 							auto& currentAnimationSecondsDuration{ p_animation_components.getComponent<double>("eg.std.currentAnimationSecondsDuration")->getPurpose() };
@@ -341,13 +343,98 @@ void AnimationsSystem::run()
 							auto& currentAnimationTicksProgress{ p_animation_components.getComponent<double>("eg.std.currentAnimationTicksProgress")->getPurpose() };
 							auto& currentAnimationSecondsProgress{ p_animation_components.getComponent<double>("eg.std.currentAnimationSecondsProgress")->getPurpose() };
 
+							
+							if (0 == animationsList.size())
+							{
+								if (animationIdList.size() > 0)
+								{
+									/*
+									const std::string prev_anim_id{ meshe.getPreviousAnimation() };
+									if (prev_anim_id != "")
+									{
+										// compute and push transition animation here
+									}
+									*/
 
+									//////////////////////////////////////////////////////////////////
+									// take next input anim id, setup and push it
+
+									const auto& animationId{ animationIdList.front() };
+									const auto& animationKeysList{ meshe.getAnimationsKeys() };
+
+									if (animationKeysList.count(animationId))
+									{
+										const AnimationKeys& animationkeys{ animationKeysList.at(animationId) };
+										animationsList.push_back(std::make_pair(animationId, animationkeys));
+									}
+									else
+									{
+										_EXCEPTION("unknown animation : " + animationId);
+									}
+								}
+							}
+							else
+							{
+								// roll and play anims in animationsList
+
+								auto& currentAnimationId{ p_animation_components.getComponent<std::string>("eg.std.currentAnimationId")->getPurpose() };
+								auto& currentAnimationKey{ p_animation_components.getComponent<AnimationKeys>("eg.std.currentAnimation")->getPurpose() };
+								
+								if ("" == currentAnimationId)
+								{
+									// next animation begins
+
+									const auto& animation{ animationsList.front() };
+
+									const std::string& animationId{ animation.first };
+									const AnimationKeys& animationkeys{ animation.second };
+
+									currentAnimationId = animationId;
+									currentAnimationKey = animationkeys;
+
+									currentAnimationTicksDuration = animationkeys.duration_ticks;
+									currentAnimationSecondsDuration = currentAnimationTicksDuration / animationkeys.ticks_per_seconds;
+
+									animationsTimeMark.reset();									
+								}
+
+								const long tms = { animationsTimeMark.computeTimeMs() };
+								const double nb_seconds{ (double)tms / 1000.0 };
+								currentAnimationSecondsProgress = nb_seconds;
+
+								double nb_ticks = currentAnimationKey.ticks_per_seconds * nb_seconds;
+								currentAnimationTicksProgress = nb_ticks;
+
+								bool animation_ends{ animation_step(animationsTimeMark, currentAnimationKey, meshe.sceneNodesAccess()) };
+
+								if (animation_ends)
+								{
+									// this animation ended
+									if (!currentAnimationKey.is_transition)
+									{
+										animationIdList.pop_front();
+									}
+									
+									animationsList.pop_front();
+
+									// NOT FINISHED
+
+									currentAnimationId = "";
+									currentAnimationTicksDuration = 0;
+									currentAnimationSecondsDuration = 0;
+									currentAnimationSecondsProgress = 0;
+									currentAnimationTicksProgress = 0;
+								}
+							}
+							
+
+							/*
 							if (animationIdList.size() > 0)
 							{
 								const std::string prev_anim_id{ meshe.getPreviousAnimation() };
 								if (prev_anim_id != "")
 								{
-									// compute transition animation
+									// compute transition animation here ?
 								}
 
 								const auto& animationId = animationIdList.front();						
@@ -362,7 +449,7 @@ void AnimationsSystem::run()
 
 										currentAnimationId = animationId;
 										currentAnimationTicksDuration = animationkeys.duration_ticks;
-										currentAnimationSecondsDuration = currentAnimationTicksDuration / animationkeys.ticks_per_seconds;										
+										currentAnimationSecondsDuration = currentAnimationTicksDuration / animationkeys.ticks_per_seconds;
 
 										animationsTimeMark.reset();
 									}
@@ -393,6 +480,7 @@ void AnimationsSystem::run()
 									_EXCEPTION("unknown animation : " + animationId);
 								}								
 							}
+							*/
 
 							send_bones_to_shaders(meshe, vertex_shader, animationbones_array_arg_index);
 							
