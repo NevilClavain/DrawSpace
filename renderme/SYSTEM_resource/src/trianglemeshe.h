@@ -171,7 +171,7 @@ namespace renderMe
 
 		const std::unordered_map<std::string, AnimationKeys>&	getAnimationsKeys() const;
 
-		AnimationKeys&											transitionAnimationAccess();
+		//AnimationKeys&											transitionAnimationAccess();
 
 		std::string												getPreviousAnimation() const;
 		void													setPreviousAnimation(const std::string& p_previous_animation);
@@ -206,7 +206,8 @@ namespace renderMe
 		std::string																m_scene_root_node_id;
 
 		std::unordered_map<std::string, AnimationKeys>							m_animations_keys;
-		AnimationKeys															m_transition_animation;
+
+		//AnimationKeys															m_transition_animation;
 		std::string																m_previous_animation;
 
 		// IF NEW MEMBERS HERE :

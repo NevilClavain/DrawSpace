@@ -347,25 +347,91 @@ void AnimationsSystem::run()
 							if (0 == animationsList.size())
 							{
 								if (animationIdList.size() > 0)
-								{
-									/*
+								{			
+									const auto& animationId{ animationIdList.front() };
+
+									///////////////////////////////////////////////////////////////////
+									// manage transition animation
+
 									const std::string prev_anim_id{ meshe.getPreviousAnimation() };
 									if (prev_anim_id != "")
 									{
-										// compute and push transition animation here
-									}
-									*/
+										const auto& animationKeysList{ meshe.getAnimationsKeys() };
 
+										if (animationKeysList.count(prev_anim_id))
+										{
+											if (animationKeysList.count(animationId))
+											{
+												const AnimationKeys& prev_anim{ animationKeysList.at(prev_anim_id) };
+												const AnimationKeys& next_anim{ animationKeysList.at(animationId) };
+
+												// compute and push transition animation here
+
+												AnimationKeys transition_animation;
+												transition_animation.is_transition = true;
+
+												// 0.5 seconds
+												transition_animation.ticks_per_seconds = 30;
+												transition_animation.duration_ticks = 15;
+
+												transition_animation.name = "transition";
+
+												for (auto& e : prev_anim.channels)
+												{
+													if (next_anim.channels.count(e.second.node_name))
+													{
+														const NodeAnimation next_anim_node{ next_anim.channels.at(e.second.node_name) };
+														const NodeAnimation prev_anim_node{ e.second };
+
+														NodeAnimation transition_node_anim;
+														transition_node_anim.node_name = e.second.node_name;
+
+														transition_node_anim.position_keys.push_back(prev_anim_node.position_keys[prev_anim_node.position_keys.size() - 1]);
+														transition_node_anim.position_keys.push_back(next_anim_node.position_keys[0]);
+
+														transition_node_anim.position_keys[0].time_tick = 0;
+														transition_node_anim.position_keys[1].time_tick = transition_animation.duration_ticks;
+
+
+														transition_node_anim.rotations_keys.push_back(prev_anim_node.rotations_keys[prev_anim_node.rotations_keys.size() - 1]);
+														transition_node_anim.rotations_keys.push_back(next_anim_node.rotations_keys[0]);
+
+														transition_node_anim.rotations_keys[0].time_tick = 0;
+														transition_node_anim.rotations_keys[1].time_tick = transition_animation.duration_ticks;
+
+
+														transition_node_anim.scaling_keys.push_back(prev_anim_node.scaling_keys[prev_anim_node.scaling_keys.size() - 1]);
+														transition_node_anim.scaling_keys.push_back(next_anim_node.scaling_keys[0]);
+
+														transition_node_anim.scaling_keys[0].time_tick = 0;
+														transition_node_anim.scaling_keys[1].time_tick = transition_animation.duration_ticks;
+
+														transition_animation.channels[e.second.node_name] = transition_node_anim;
+													}
+												}
+
+												animationsList.push_back(std::make_pair(transition_animation.name, transition_animation));
+											}
+											else
+											{
+												_EXCEPTION("unknown animation : " + animationId);
+											}
+										}
+										else
+										{
+											_EXCEPTION("unknown prev animation : " + prev_anim_id);
+										}
+									}									
 									//////////////////////////////////////////////////////////////////
 									// take next input anim id, setup and push it
 
-									const auto& animationId{ animationIdList.front() };
+									
 									const auto& animationKeysList{ meshe.getAnimationsKeys() };
 
 									if (animationKeysList.count(animationId))
 									{
-										const AnimationKeys& animationkeys{ animationKeysList.at(animationId) };
-										animationsList.push_back(std::make_pair(animationId, animationkeys));
+										const AnimationKeys& next_animation{ animationKeysList.at(animationId) };
+										animationsList.push_back(std::make_pair(animationId, next_animation));
 									}
 									else
 									{
@@ -413,6 +479,7 @@ void AnimationsSystem::run()
 									if (!currentAnimationKey.is_transition)
 									{
 										animationIdList.pop_front();
+										meshe.setPreviousAnimation(currentAnimationId);
 									}
 									
 									animationsList.pop_front();
