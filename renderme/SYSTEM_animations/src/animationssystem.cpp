@@ -417,8 +417,6 @@ void AnimationsSystem::run()
 									
 									animationsList.pop_front();
 
-									// NOT FINISHED
-
 									currentAnimationId = "";
 									currentAnimationTicksDuration = 0;
 									currentAnimationSecondsDuration = 0;
@@ -427,61 +425,6 @@ void AnimationsSystem::run()
 								}
 							}
 							
-
-							/*
-							if (animationIdList.size() > 0)
-							{
-								const std::string prev_anim_id{ meshe.getPreviousAnimation() };
-								if (prev_anim_id != "")
-								{
-									// compute transition animation here ?
-								}
-
-								const auto& animationId = animationIdList.front();						
-								const auto& animationKeysList{ meshe.getAnimationsKeys() };
-
-								if (animationKeysList.count(animationId))
-								{
-									const AnimationKeys& animationkeys{ animationKeysList.at(animationId) };
-									if ("" == currentAnimationId)
-									{
-										// this animation begins
-
-										currentAnimationId = animationId;
-										currentAnimationTicksDuration = animationkeys.duration_ticks;
-										currentAnimationSecondsDuration = currentAnimationTicksDuration / animationkeys.ticks_per_seconds;
-
-										animationsTimeMark.reset();
-									}
-
-									const long tms = { animationsTimeMark.computeTimeMs() };
-									const double nb_seconds{ (double)tms / 1000.0 };
-									currentAnimationSecondsProgress = nb_seconds;
-
-									double nb_ticks = animationkeys.ticks_per_seconds * nb_seconds;
-									currentAnimationTicksProgress = nb_ticks;
-
-									bool animation_ends{ animation_step(animationsTimeMark, animationkeys, meshe.sceneNodesAccess()) };
-									if (animation_ends)
-									{
-										// this animation ended
-										animationIdList.pop_front();
-										meshe.setPreviousAnimation(currentAnimationId);
-
-										currentAnimationId = "";
-										currentAnimationTicksDuration = 0;
-										currentAnimationSecondsDuration = 0;
-										currentAnimationSecondsProgress = 0;
-										currentAnimationTicksProgress = 0;										
-									}
-								}
-								else
-								{
-									_EXCEPTION("unknown animation : " + animationId);
-								}								
-							}
-							*/
-
 							send_bones_to_shaders(meshe, vertex_shader, animationbones_array_arg_index);
 							
 							////////////////////////////////////////////////
