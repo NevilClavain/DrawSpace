@@ -29,7 +29,7 @@
 #include <map>
 #include <string>
 #include "system.h"
-
+#include "eventsource.h"
 
 namespace renderMe
 {
@@ -41,8 +41,14 @@ namespace renderMe
     struct NodeAnimation;
     struct AnimationKeys;
     struct SceneNode;
+
+    enum class AnimationSystemEvent
+    {
+        ANIMATION_START,
+        ANIMATION_END,
+    };
    
-    class AnimationsSystem : public core::System
+    class AnimationsSystem : public core::System, public renderMe::property::EventSource<AnimationSystemEvent, const std::string&>
     {
     public:
         AnimationsSystem() = delete;

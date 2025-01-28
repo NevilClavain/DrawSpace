@@ -25,11 +25,16 @@
 
 #pragma once
 
+#include <unordered_map>
+#include <random>
+
 #include "module_root.h"
 
 #include "entity.h"
 #include "entitygraph.h"
 #include "renderingqueue.h"
+
+#include "animations.h"
 
 class ModuleImpl : public renderMe::interfaces::ModuleRoot
 {
@@ -67,27 +72,34 @@ public:
 
     void                            resource_system_events();
     void                            d3d11_system_events();
-
+    void                            animation_system_events();
 
     //override
     void                            registerSubscriber(const Callback& p_callback);
 
+    void                            choose_animation();
+
 private:
 
-    static constexpr int                    timeSystemSlot{ 0 };
-    static constexpr int                    d3d11SystemSlot{ 1 };
-    static constexpr int                    resourceSystemSlot{ 2 };
-    static constexpr int                    worldSystemSlot{ 3 };
-    static constexpr int                    renderingQueueSystemSlot{ 4 };
-    static constexpr int                    dataPrintSystemSlot{ 5 };
-    static constexpr int                    animationsSystemSlot{ 6 };
+    static constexpr int                                        timeSystemSlot{ 0 };
+    static constexpr int                                        d3d11SystemSlot{ 1 };
+    static constexpr int                                        resourceSystemSlot{ 2 };
+    static constexpr int                                        worldSystemSlot{ 3 };
+    static constexpr int                                        renderingQueueSystemSlot{ 4 };
+    static constexpr int                                        dataPrintSystemSlot{ 5 };
+    static constexpr int                                        animationsSystemSlot{ 6 };
 
-    bool                                    m_show_mouse_cursor{ false };
-    bool                                    m_mouse_circular_mode{ true };
+    bool                                                        m_show_mouse_cursor{ false };
+    bool                                                        m_mouse_circular_mode{ true };
 
-    renderMe::core::Entitygraph             m_entitygraph;
+    renderMe::core::Entitygraph                                 m_entitygraph;
 
-    renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
+    renderMe::rendering::Queue*                                 m_windowRenderingQueue{ nullptr };
 
-    renderMe::rendering::Queue*             m_bufferRenderingQueue{ nullptr };
+    renderMe::rendering::Queue*                                 m_bufferRenderingQueue{ nullptr };
+
+    std::unordered_map<std::string, renderMe::AnimationKeys>    m_raptor_animations;
+
+    std::default_random_engine                                  m_random_engine;
+    std::uniform_int_distribution<int>*                         m_distribution;
 };

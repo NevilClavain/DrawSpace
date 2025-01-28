@@ -370,9 +370,8 @@ void AnimationsSystem::run()
 												AnimationKeys transition_animation;
 												transition_animation.is_transition = true;
 
-												// 0.5 seconds
 												transition_animation.ticks_per_seconds = 30;
-												transition_animation.duration_ticks = 15;
+												transition_animation.duration_ticks = 5;
 
 												transition_animation.name = "transition";
 
@@ -461,7 +460,15 @@ void AnimationsSystem::run()
 									currentAnimationTicksDuration = animationkeys.duration_ticks;
 									currentAnimationSecondsDuration = currentAnimationTicksDuration / animationkeys.ticks_per_seconds;
 
-									animationsTimeMark.reset();									
+									animationsTimeMark.reset();
+
+									if (!animationkeys.is_transition)
+									{
+										for (const auto& call : m_callbacks)
+										{
+											call(AnimationSystemEvent::ANIMATION_START, animationId);
+										}
+									}
 								}
 
 								const long tms = { animationsTimeMark.computeTimeMs() };
@@ -479,7 +486,12 @@ void AnimationsSystem::run()
 									if (!currentAnimationKey.is_transition)
 									{
 										animationIdList.pop_front();
+
 										meshe.setPreviousAnimation(currentAnimationId);
+										for (const auto& call : m_callbacks)
+										{
+											call(AnimationSystemEvent::ANIMATION_END, currentAnimationId);
+										}
 									}
 									
 									animationsList.pop_front();

@@ -131,6 +131,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 
 	d3d11_system_events();
 	resource_system_events();
+	animation_system_events();
 
 	//////////////////////////
 
@@ -167,12 +168,34 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 }
 
 
+void ModuleImpl::animation_system_events()
+{
+	// register to animation system events
+	const AnimationsSystem::Callback cb
+	{
+		[&, this](AnimationSystemEvent p_event, const std::string& p_animationName)
+		{
+			switch (p_event)
+			{
+				case AnimationSystemEvent::ANIMATION_START:
+					break;
+
+				case AnimationSystemEvent::ANIMATION_END:
+					choose_animation();
+					break;
+			}
+		}
+	};
+
+	const auto sysEngine{ SystemEngine::getInstance() };
+	const auto animationsSystem{ sysEngine->getSystem<renderMe::AnimationsSystem>(animationsSystemSlot) };
+	animationsSystem->registerSubscriber(cb);
+}
+
 
 
 void ModuleImpl::resource_system_events()
-{
-	const auto sysEngine{ SystemEngine::getInstance() };
-	
+{	
 	// register to resource system events
 	const ResourceSystem::Callback rs_cb
 	{
@@ -212,16 +235,54 @@ void ModuleImpl::resource_system_events()
 				case ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS:
 					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Meshe loaded :" + p_resourceName);
+
+					if ("raptor.fbx" == p_resourceName)
+					{
+						const auto raptor_entity{ m_entitygraph.node("raptorEntity").data() };
+
+						const auto& resources_aspect{ raptor_entity->aspectAccess(core::resourcesAspect::id) };
+
+						const auto& meshe_comp{ resources_aspect.getComponent<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>("meshe") };
+
+						const auto& meshe_descr{ meshe_comp->getPurpose() };
+						const TriangleMeshe& meshe{ meshe_descr.second };
+
+						std::unordered_map<std::string, AnimationKeys> animations_list{ meshe.getAnimationsKeys() };
+
+						m_raptor_animations = animations_list;
+						m_distribution = new std::uniform_int_distribution<int>(0, m_raptor_animations.size() - 1);
+						
+						choose_animation();
+					}
 					break;
 			}
 		}
 	};
 
+	const auto sysEngine{ SystemEngine::getInstance() };
 	const auto resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(resourceSystemSlot) };
 	resourceSystem->registerSubscriber(rs_cb);
 }
 
+void ModuleImpl::choose_animation()
+{
+	int anim_index = (*m_distribution)(m_random_engine);
+	std::vector<std::string> anims_names;
 
+	for (const auto& e : m_raptor_animations)
+	{
+		anims_names.push_back(e.first);
+	}
+
+	const std::string choosen_anim{ anims_names.at(anim_index) };
+
+	auto& raptorEntityNode{ m_entitygraph.node("raptorEntity") };
+	const auto raptorEntity{ raptorEntityNode.data() };
+	auto& anims_aspect{ raptorEntity->aspectAccess(core::animationsAspect::id) };
+	auto& animationsIdList{ anims_aspect.getComponent<std::list<std::string>>("eg.std.animationsIdList")->getPurpose() };
+
+	animationsIdList.push_back(choosen_anim);
+}
 
 
 void ModuleImpl::d3d11_system_events()
