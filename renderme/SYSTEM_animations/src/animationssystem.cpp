@@ -466,7 +466,7 @@ void AnimationsSystem::run()
 									{
 										for (const auto& call : m_callbacks)
 										{
-											call(AnimationSystemEvent::ANIMATION_START, animationId);
+											call(AnimationSystemEvent::ANIMATION_START, p_entity->getId(), animationId);
 										}
 									}
 								}
@@ -490,7 +490,7 @@ void AnimationsSystem::run()
 										meshe.setPreviousAnimation(currentAnimationId);
 										for (const auto& call : m_callbacks)
 										{
-											call(AnimationSystemEvent::ANIMATION_END, currentAnimationId);
+											call(AnimationSystemEvent::ANIMATION_END, p_entity->getId(), currentAnimationId);
 										}
 									}
 									

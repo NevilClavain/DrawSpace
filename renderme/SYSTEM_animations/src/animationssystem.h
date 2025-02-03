@@ -48,7 +48,7 @@ namespace renderMe
         ANIMATION_END,
     };
    
-    class AnimationsSystem : public core::System, public renderMe::property::EventSource<AnimationSystemEvent, const std::string&>
+    class AnimationsSystem : public core::System, public renderMe::property::EventSource<AnimationSystemEvent, const std::string&, const std::string&>
     {
     public:
         AnimationsSystem() = delete;

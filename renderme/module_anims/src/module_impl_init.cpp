@@ -183,7 +183,7 @@ void ModuleImpl::animation_system_events()
 	// register to animation system events
 	const AnimationsSystem::Callback cb
 	{
-		[&, this](AnimationSystemEvent p_event, const std::string& p_animationName)
+		[&, this](AnimationSystemEvent p_event, const std::string& /*p_entityId*/, const std::string& /*p_animationName*/)
 		{
 			switch (p_event)
 			{
