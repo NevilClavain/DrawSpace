@@ -30,6 +30,8 @@
 #include <utility>
 #include <list>
 
+#include <chrono>
+
 #include "aspects.h"
 
 #include "d3d11system.h"
@@ -128,6 +130,14 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 	dataPrintSystem->addDatacloudFilter("resources_event");
 	dataPrintSystem->addDatacloudFilter("current_animation");
 
+	///////////////////////////
+
+	auto now = std::chrono::system_clock::now();
+	auto now_c = std::chrono::system_clock::to_time_t(now);
+	const int time_based_seed{ static_cast<int>(now_c) };
+	m_random_engine.seed(time_based_seed);
+
+	///////////////////////////
 
 	d3d11_system_events();
 	resource_system_events();
