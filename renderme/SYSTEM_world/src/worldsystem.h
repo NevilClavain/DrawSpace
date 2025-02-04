@@ -27,7 +27,7 @@
 #include "system.h"
 #include "matrix.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core { class Entity; }
     namespace core { class Entitygraph; }

@@ -29,9 +29,9 @@
 
 #include "runner.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::property;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::property;
 
 void Runner::mainloop()
 {

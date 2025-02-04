@@ -29,7 +29,7 @@
 
 #pragma warning( disable : 4996 4244 )
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {

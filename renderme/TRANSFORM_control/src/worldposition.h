@@ -25,7 +25,7 @@
 #pragma once
 #include "matrix.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace transform
 	{

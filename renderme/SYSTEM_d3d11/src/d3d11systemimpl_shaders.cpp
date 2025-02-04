@@ -26,7 +26,7 @@
 #include <d3dcompiler.h>
 
 
-D3D10Include::D3D10Include(const std::string& p_basepath, renderMe::core::logger::Sink& p_logger) :
+D3D10Include::D3D10Include(const std::string& p_basepath, mage::core::logger::Sink& p_logger) :
 m_basepath(p_basepath),
 m_logger(p_logger)
 {
@@ -37,7 +37,7 @@ HRESULT __stdcall D3D10Include::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileN
     const std::string final_path{ m_basepath + "/" + pFileName};
     if (!m_fc)
     {
-        m_fc = new renderMe::core::FileContent<const char>(final_path);
+        m_fc = new mage::core::FileContent<const char>(final_path);
         m_fc->load();
         *pBytes = m_fc->getDataSize();
         *ppData = m_fc->getData();
@@ -63,7 +63,7 @@ HRESULT __stdcall D3D10Include::Close(LPCVOID pData)
 
 bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
     const std::string& p_includes_path,
-    const renderMe::core::FileContent<const char>& srcFile,
+    const mage::core::FileContent<const char>& srcFile,
     std::unique_ptr<char[]>& p_shaderBytes,
     size_t& p_shaderBytesLength)
 {
@@ -75,9 +75,9 @@ bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
 
     D3D10Include    include_mgmt(p_includes_path, m_localLogger);
 
-    _RENDERME_DEBUG(m_localLogger, std::string("Src Shader path : ") + srcFile.getPath());
-    _RENDERME_DEBUG(m_localLogger, std::string("With shader type : ") + std::to_string(p_shadertype));
-    _RENDERME_DEBUG(m_localLogger, std::string("include path : ") + p_includes_path);
+    _MAGE_DEBUG(m_localLogger, std::string("Src Shader path : ") + srcFile.getPath());
+    _MAGE_DEBUG(m_localLogger, std::string("With shader type : ") + std::to_string(p_shadertype));
+    _MAGE_DEBUG(m_localLogger, std::string("include path : ") + p_includes_path);
     
     hRes = compileShaderFromMem((void*)srcFile.getData(), srcFile.getDataSize(), 
                                     srcFile.getPath().c_str(), 
@@ -98,7 +98,7 @@ bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
 
             pErrBlob->Release();
 
-            _RENDERME_DEBUG(m_localLogger, "Shader compilation FAILED !");
+            _MAGE_DEBUG(m_localLogger, "Shader compilation FAILED !");
         }
     }
     else
@@ -112,7 +112,7 @@ bool D3D11SystemImpl::createShaderBytesOnFile(int p_shadertype,
         pBlob->Release();
 
         status = true;
-        _RENDERME_DEBUG(m_localLogger, "Shader compilation SUCCESS !");
+        _MAGE_DEBUG(m_localLogger, "Shader compilation SUCCESS !");
     }
     return status;
 }
@@ -144,10 +144,10 @@ HRESULT D3D11SystemImpl::compileShaderFromMem(void* p_data, int p_size, LPCTSTR 
     return hr;
 }
 
-bool D3D11SystemImpl::createVertexShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code)
+bool D3D11SystemImpl::createVertexShader(const std::string& p_resource_uid, const mage::core::Buffer<char>& p_code)
 {
     DECLARE_D3D11ASSERT_VARS
-    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Vertex Shader loading : " + p_resource_uid);
 
     const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
@@ -168,7 +168,7 @@ bool D3D11SystemImpl::createVertexShader(const std::string& p_resource_uid, cons
 
     if (m_vshaders.count(p_resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Vertex Shader already loaded : " + p_resource_uid);
+        _MAGE_DEBUG(m_localLogger, "Vertex Shader already loaded : " + p_resource_uid);
     }
     else
     {
@@ -185,15 +185,15 @@ bool D3D11SystemImpl::createVertexShader(const std::string& p_resource_uid, cons
 
         m_vshaders[p_resource_uid] = { vs, input_layout };
     }
-    _RENDERME_DEBUG(m_localLogger, "Vertex Shader loading SUCCESS : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Vertex Shader loading SUCCESS : " + p_resource_uid);
 
     return true;
 }
 
-bool D3D11SystemImpl::createPixelShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code)
+bool D3D11SystemImpl::createPixelShader(const std::string& p_resource_uid, const mage::core::Buffer<char>& p_code)
 {
     DECLARE_D3D11ASSERT_VARS
-    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Pixel Shader loading : " + p_resource_uid);
 
     const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
@@ -214,7 +214,7 @@ bool D3D11SystemImpl::createPixelShader(const std::string& p_resource_uid, const
 
     if (m_pshaders.count(p_resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Pixel Shader already loaded : " + p_resource_uid);
+        _MAGE_DEBUG(m_localLogger, "Pixel Shader already loaded : " + p_resource_uid);
     }
     else
     {
@@ -227,7 +227,7 @@ bool D3D11SystemImpl::createPixelShader(const std::string& p_resource_uid, const
 
         m_pshaders[p_resource_uid] = { ps };
     }
-    _RENDERME_DEBUG(m_localLogger, "Pixel Shader loading SUCCESS : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Pixel Shader loading SUCCESS : " + p_resource_uid);
 
     return true;
 }
@@ -296,7 +296,7 @@ void D3D11SystemImpl::destroyVertexShader(const std::string& p_resource_uid)
     shaderData.vertex_shader->Release();
 
     m_vshaders.erase(p_resource_uid);
-    _RENDERME_DEBUG(m_localLogger, "Vertex Shader release SUCCESS : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Vertex Shader release SUCCESS : " + p_resource_uid);
 }
 
 void D3D11SystemImpl::destroyPixelShader(const std::string& p_resource_uid)
@@ -310,11 +310,11 @@ void D3D11SystemImpl::destroyPixelShader(const std::string& p_resource_uid)
     shaderData.pixel_shader->Release();
 
     m_pshaders.erase(p_resource_uid);
-    _RENDERME_DEBUG(m_localLogger, "Pixel Shader release SUCCESS : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Pixel Shader release SUCCESS : " + p_resource_uid);
 }
 
 
-void D3D11SystemImpl::setVertexshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
+void D3D11SystemImpl::setVertexshaderConstantsVec(int p_startreg, const mage::core::maths::Real4Vector& p_vec)
 {
     m_vertexshader_args.vector[p_startreg].x = p_vec[0];
     m_vertexshader_args.vector[p_startreg].y = p_vec[1];
@@ -322,7 +322,7 @@ void D3D11SystemImpl::setVertexshaderConstantsVec(int p_startreg, const renderMe
     m_vertexshader_args.vector[p_startreg].w = p_vec[3];
 }
 
-void D3D11SystemImpl::setPixelshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec)
+void D3D11SystemImpl::setPixelshaderConstantsVec(int p_startreg, const mage::core::maths::Real4Vector& p_vec)
 {
     m_pixelshader_args.vector[p_startreg].x = p_vec[0];
     m_pixelshader_args.vector[p_startreg].y = p_vec[1];
@@ -330,7 +330,7 @@ void D3D11SystemImpl::setPixelshaderConstantsVec(int p_startreg, const renderMe:
     m_pixelshader_args.vector[p_startreg].w = p_vec[3];
 }
 
-void D3D11SystemImpl::setVertexshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat)
+void D3D11SystemImpl::setVertexshaderConstantsMat(int p_startreg, const mage::core::maths::Matrix& p_mat)
 {
     auto& dest{ m_vertexshader_args.matrix[p_startreg] };
 
@@ -357,7 +357,7 @@ void D3D11SystemImpl::setVertexshaderConstantsMat(int p_startreg, const renderMe
     
 }
 
-void D3D11SystemImpl::setPixelshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat)
+void D3D11SystemImpl::setPixelshaderConstantsMat(int p_startreg, const mage::core::maths::Matrix& p_mat)
 {
     auto& dest{ m_pixelshader_args.matrix[p_startreg] };
 

@@ -42,11 +42,11 @@
 
 #include "matrix.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace helpers
 	{
-		core::Entity* plug2DSpriteWithSyncVariables(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plug2DSpriteWithSyncVariables(mage::core::Entitygraph& p_entitygraph,
 							const std::string& p_parentid, 
 							const std::string& p_spriteEntityid,
 							const double p_spriteWidth,
@@ -152,7 +152,7 @@ namespace renderMe
 			return sprite2DEntity;
 		}
 
-		core::SyncVariable& getXPosSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		core::SyncVariable& getXPosSync(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -163,7 +163,7 @@ namespace renderMe
 			return x_pos;
 		}
 
-		core::SyncVariable& getYPosSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		core::SyncVariable& getYPosSync(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -174,7 +174,7 @@ namespace renderMe
 			return y_pos;
 		}
 
-		core::SyncVariable& getZRotSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		core::SyncVariable& getZRotSync(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -185,7 +185,7 @@ namespace renderMe
 			return z_rot;
 		}
 
-		core::Entity* plug2DSpriteWithPosition(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plug2DSpriteWithPosition(mage::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
 			const std::string& p_spriteEntityid,
 			const double p_spriteWidth,
@@ -296,10 +296,10 @@ namespace renderMe
 		}
 
 
-		core::Entity* plugTextWithPosition(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plugTextWithPosition(mage::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
 			const std::string& p_textEntityid, 
-			const renderMe::rendering::Queue::Text& p_queue_text,
+			const mage::rendering::Queue::Text& p_queue_text,
 			float p_xpos = 0,
 			float p_ypos = 0)
 		{
@@ -310,7 +310,7 @@ namespace renderMe
 
 			auto& rendering_aspect{ textEntity->makeAspect(core::renderingAspect::id) };
 		
-			rendering_aspect.addComponent<renderMe::rendering::Queue::Text>("queue_text", p_queue_text);
+			rendering_aspect.addComponent<mage::rendering::Queue::Text>("queue_text", p_queue_text);
 
 			auto& world_aspect{ textEntity->makeAspect(core::worldAspect::id) };
 			transform::WorldPosition wp;
@@ -346,7 +346,7 @@ namespace renderMe
 			return textEntity;
 		}
 
-		double& getXPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		double& getXPos(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -357,7 +357,7 @@ namespace renderMe
 			return x_pos;
 		}
 
-		double& getYPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		double& getYPos(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -368,7 +368,7 @@ namespace renderMe
 			return y_pos;
 		}
 
-		double& getZRot(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
+		double& getZRot(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid)
 		{
 			auto& sprite2DNode{ p_entitygraph.node(p_spriteEntityid) };
 			const auto sprite2DEntity{ sprite2DNode.data() };
@@ -380,7 +380,7 @@ namespace renderMe
 		}
 
 
-		core::Entity* plugMesheWithPosition(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plugMesheWithPosition(mage::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
 			const std::string& p_mesheEntityid,
 			const std::string& p_vshader,
@@ -417,11 +417,11 @@ namespace renderMe
 			}
 
 			/////////// Add renderstate
-			rendering_aspect.addComponent<std::vector<renderMe::rendering::RenderState>>("renderStates", p_renderstates_list);
+			rendering_aspect.addComponent<std::vector<mage::rendering::RenderState>>("renderStates", p_renderstates_list);
 
 			/////////// Draw triangles
 			rendering::DrawingControl drawingControl;
-			rendering_aspect.addComponent<renderMe::rendering::DrawingControl>("drawingControl", drawingControl);
+			rendering_aspect.addComponent<mage::rendering::DrawingControl>("drawingControl", drawingControl);
 
 			/////////// Rendering Order
 			rendering_aspect.addComponent<int>("renderingOrder", p_rendering_order);

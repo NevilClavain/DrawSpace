@@ -37,7 +37,7 @@
 
 
 
-namespace renderMe
+namespace mage
 {
     //fwd decl
     class ResourceSystem;
@@ -153,8 +153,8 @@ namespace renderMe
 
         void compute_resource_uid();
 
-        friend class renderMe::ResourceSystem;
-        friend class renderMe::D3D11System;
+        friend class mage::ResourceSystem;
+        friend class mage::D3D11System;
     };
 }
 

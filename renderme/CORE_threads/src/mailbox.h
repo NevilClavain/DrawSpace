@@ -28,7 +28,7 @@
 #include <mutex>
 #include <type_traits>
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

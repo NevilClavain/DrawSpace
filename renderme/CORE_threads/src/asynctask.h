@@ -26,7 +26,7 @@
 #include <string>
 #include <functional>
 
-namespace renderMe
+namespace mage
 {
 	// fwd decl
 	namespace core
@@ -81,7 +81,7 @@ namespace renderMe
 	namespace core
 	{
 		template <typename... Args>
-		class SimpleAsyncTask : public renderMe::property::AsyncTask
+		class SimpleAsyncTask : public mage::property::AsyncTask
 		{
 		public:
 
@@ -96,7 +96,7 @@ namespace renderMe
 			{
 			}
 
-			void execute(renderMe::core::Runner* p_runner)
+			void execute(mage::core::Runner* p_runner)
 			{
 				m_bind();
 			}

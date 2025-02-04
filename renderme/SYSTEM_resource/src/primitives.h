@@ -25,7 +25,7 @@
 #pragma once
 
 #include <array>
-namespace renderMe
+namespace mage
 {
     static constexpr int nbUVCoordsPerVertex = 9;
 
@@ -104,4 +104,4 @@ namespace renderMe
     template<typename T>
     using LinePrimitive = std::array<T, 2>;
 
-} // renderMe
+} // mage

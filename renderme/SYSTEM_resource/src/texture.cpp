@@ -25,7 +25,7 @@
 #include <md5.h>
 #include "texture.h"
 
-using namespace renderMe;
+using namespace mage;
 
 Texture::Texture(Format p_format, size_t p_width, size_t p_height, ContentAccessMode p_content_access_mode) :
 m_format(p_format),

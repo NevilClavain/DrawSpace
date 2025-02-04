@@ -31,7 +31,7 @@
 #include "system.h"
 
 
-namespace renderMe
+namespace mage
 {
     //fwd decl
     namespace rendering
@@ -51,7 +51,7 @@ namespace renderMe
 
         void run();
 
-        void setRenderingQueue(renderMe::rendering::Queue* p_queue);
+        void setRenderingQueue(mage::rendering::Queue* p_queue);
 
         void addDatacloudFilter(const std::string& p_filter);
 
@@ -73,7 +73,7 @@ namespace renderMe
         static constexpr int                    rqRowHeight{ 21 };
 
 
-        renderMe::rendering::Queue*             m_renderingQueue{ nullptr };
+        mage::rendering::Queue*             m_renderingQueue{ nullptr };
 
         std::vector<std::string>                m_dc_strings; // dataclouds display inputs
 

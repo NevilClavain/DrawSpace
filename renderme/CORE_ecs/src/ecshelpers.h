@@ -32,7 +32,7 @@
 #include "entity.h"
 #include "entitygraph.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace helpers
 	{		

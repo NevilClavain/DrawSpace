@@ -26,19 +26,19 @@
 #include "d3d11systemimpl.h"
 #include "aspects.h"
 
-bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
+bool D3D11SystemImpl::init(mage::core::Entity* p_mainWindow)
 {
 	DECLARE_D3D11ASSERT_VARS
 
-	_RENDERME_DEBUG(m_localLogger, std::string("init D3D startup"))
+	_MAGE_DEBUG(m_localLogger, std::string("init D3D startup"))
 
 	DXGI_SWAP_CHAIN_DESC swap_chain;
 	ZeroMemory(&swap_chain, sizeof(swap_chain));
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
 	//get main windows infos
-	auto& mainwindows_rendering_aspect{ p_mainWindow->aspectAccess(renderMe::core::renderingAspect::id) };
+	auto& mainwindows_rendering_aspect{ p_mainWindow->aspectAccess(mage::core::renderingAspect::id) };
 
 	int characteristics_width_resol{ 0 };
 	int characteristics_height_resol{ 0 };
@@ -65,7 +65,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 		characteristics_v_width = 1.0;
 		characteristics_v_height = characteristics_v_width * fullscreen_height / fullscreen_width;
 
-		_RENDERME_TRACE(m_localLogger, std::string("full screen resol : ") + std::to_string(fullscreen_width) + "x" + std::to_string(fullscreen_height))
+		_MAGE_TRACE(m_localLogger, std::string("full screen resol : ") + std::to_string(fullscreen_width) + "x" + std::to_string(fullscreen_height))
 
 		swap_chain.BufferDesc.Format = fullscreen_format;
 		swap_chain.BufferDesc.RefreshRate.Numerator = fullscreen_refresh_rate_num;
@@ -93,7 +93,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	}
 
 
-	_RENDERME_TRACE(m_localLogger, std::string("renderer characteristics : width_resol = ") + std::to_string(characteristics_width_resol) +
+	_MAGE_TRACE(m_localLogger, std::string("renderer characteristics : width_resol = ") + std::to_string(characteristics_width_resol) +
 		std::string(" height_resol = ") + std::to_string(characteristics_height_resol) +
 		std::string(" v_width = ") + std::to_string(characteristics_v_width) +
 		std::string(" v_height = ") + std::to_string(characteristics_v_height))
@@ -105,11 +105,11 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	mainwindows_rendering_aspect.addComponent<float>("eg.std.viewportWidth", characteristics_v_width);
 	mainwindows_rendering_aspect.addComponent<float>("eg.std.viewportHeight", characteristics_v_height);
 
-	dataCloud->registerData<renderMe::core::maths::IntCoords2D>("std.window_resol");
-	dataCloud->updateDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol", renderMe::core::maths::IntCoords2D(characteristics_width_resol, characteristics_height_resol));
+	dataCloud->registerData<mage::core::maths::IntCoords2D>("std.window_resol");
+	dataCloud->updateDataValue<mage::core::maths::IntCoords2D>("std.window_resol", mage::core::maths::IntCoords2D(characteristics_width_resol, characteristics_height_resol));
 
-	dataCloud->registerData<renderMe::core::maths::FloatCoords2D>("std.viewport");
-	dataCloud->updateDataValue<renderMe::core::maths::FloatCoords2D>("std.viewport", renderMe::core::maths::FloatCoords2D(characteristics_v_width, characteristics_v_height));
+	dataCloud->registerData<mage::core::maths::FloatCoords2D>("std.viewport");
+	dataCloud->updateDataValue<mage::core::maths::FloatCoords2D>("std.viewport", mage::core::maths::FloatCoords2D(characteristics_v_width, characteristics_v_height));
 
 
 	swap_chain.BufferDesc.Width = characteristics_width_resol;
@@ -163,12 +163,12 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 		{
 			driver_descr = e.second;
 
-			_RENDERME_TRACE(m_localLogger, "D3D11CreateDeviceAndSwapChain is OK for " + driver_descr)
+			_MAGE_TRACE(m_localLogger, "D3D11CreateDeviceAndSwapChain is OK for " + driver_descr)
 			break;
 		}
 		else
 		{
-			_RENDERME_WARN(m_localLogger, "D3D11CreateDeviceAndSwapChain is KO for " + driver_descr + ", switching to next")
+			_MAGE_WARN(m_localLogger, "D3D11CreateDeviceAndSwapChain is KO for " + driver_descr + ", switching to next")
 		}
 	}
 
@@ -504,7 +504,7 @@ bool D3D11SystemImpl::init(renderMe::core::Entity* p_mainWindow)
 	D3D11_CHECK(CoInitializeEx);
 	
 
-	_RENDERME_DEBUG(m_localLogger, std::string("init D3D SUCCESS"))
+	_MAGE_DEBUG(m_localLogger, std::string("init D3D SUCCESS"))
 
 	m_initialized = true;
 	return true;

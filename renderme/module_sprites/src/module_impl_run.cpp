@@ -41,9 +41,9 @@
 #include "animators_helpers.h"
 
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::rendering;
 
 
 void ModuleImpl::manage_sprite_trajectory(core::Entity* p_entity)
@@ -69,7 +69,7 @@ void ModuleImpl::manage_sprite_trajectory(core::Entity* p_entity)
 
 	// sprite collisions management
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 	const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
 
 	if (x_pos.value > viewport.x() * 0.5)

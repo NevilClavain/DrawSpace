@@ -34,7 +34,7 @@
 #include "renderingqueue.h"
 #include "texture.h"
 
-class ModuleImpl : public renderMe::interfaces::ModuleRoot
+class ModuleImpl : public mage::interfaces::ModuleRoot
 {
 public:
     ModuleImpl();
@@ -48,7 +48,7 @@ public:
     std::string                     getModuleName() const;
     std::string                     getModuleDescr() const;
 
-    renderMe::core::Entitygraph*    entitygraph();
+    mage::core::Entitygraph*    entitygraph();
 
     void                            onKeyPress(long p_key);
     void                            onEndKeyPress(long p_key);
@@ -72,7 +72,7 @@ public:
     void                            d3d11_system_events();
 
 
-    void                            manage_sprite_trajectory(renderMe::core::Entity* p_entity);
+    void                            manage_sprite_trajectory(mage::core::Entity* p_entity);
 
 
     //override
@@ -90,11 +90,11 @@ private:
     bool                                    m_show_mouse_cursor{ true };
     bool                                    m_mouse_circular_mode{ false };
 
-    renderMe::core::Entitygraph             m_entitygraph;
+    mage::core::Entitygraph             m_entitygraph;
 
-    renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
+    mage::rendering::Queue*             m_windowRenderingQueue{ nullptr };
 
-    renderMe::Texture*                      m_rendering_quad_texture{ nullptr };
+    mage::Texture*                      m_rendering_quad_texture{ nullptr };
 
     std::default_random_engine*             m_generator;
     
@@ -105,7 +105,7 @@ private:
     std::uniform_int_distribution<int>*     m_rotation_speed_sign_distribution;
 
 
-    std::vector<renderMe::core::Entity*>    m_sprites;
+    std::vector<mage::core::Entity*>    m_sprites;
 };
 
 

@@ -30,7 +30,7 @@
 #include "st_tree.h"
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

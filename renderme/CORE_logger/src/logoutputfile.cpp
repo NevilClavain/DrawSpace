@@ -24,7 +24,7 @@
 
 #include "logoutputfile.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 logger::OutputFile::OutputFile( const std::string& p_filename ) :
 m_flush_period( 0 ),

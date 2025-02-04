@@ -31,7 +31,7 @@
 #include "timemanager.h"
 //#include "syncvariable.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 
 /////////////////////////////////////////////////

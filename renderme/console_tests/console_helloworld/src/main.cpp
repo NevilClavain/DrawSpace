@@ -27,6 +27,6 @@
 
 int main( int argc, char* argv[] )
 {    
-	std::cout << "Hello from renderMe !\n";
+	std::cout << "Hello from mage !\n";
     return 0;
 }

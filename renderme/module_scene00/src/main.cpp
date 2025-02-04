@@ -27,12 +27,12 @@
 
 extern "C"
 {
-    __declspec(dllexport) renderMe::interfaces::ModuleRoot* moduleFactory(void)
+    __declspec(dllexport) mage::interfaces::ModuleRoot* moduleFactory(void)
     {
         return new ModuleImpl;
     }
 
-    __declspec(dllexport) void moduleTrash(renderMe::interfaces::ModuleRoot* p_itf)
+    __declspec(dllexport) void moduleTrash(mage::interfaces::ModuleRoot* p_itf)
     {
         ModuleImpl* itf = static_cast<ModuleImpl*>(p_itf);
         delete itf;

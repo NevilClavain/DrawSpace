@@ -54,9 +54,9 @@
 #include "animators_helpers.h"
 
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::rendering;
 
 
 ModuleImpl::ModuleImpl()
@@ -76,7 +76,7 @@ std::string ModuleImpl::getModuleDescr() const
 	return "Sprites demo module";
 }
 
-renderMe::core::Entitygraph* ModuleImpl::entitygraph()
+mage::core::Entitygraph* ModuleImpl::entitygraph()
 {
 	return &m_entitygraph;
 }
@@ -87,18 +87,18 @@ void ModuleImpl::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 
 void ModuleImpl::registerSubscriber(const Callback& p_callback)
 {
-	renderMe::property::EventSource<renderMe::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);
+	mage::property::EventSource<mage::interfaces::ModuleEvents, int>::registerSubscriber(p_callback);
 
 	// send immediately m_show_mouse_cursor value
 	for (const auto& call : m_callbacks)
 	{
-		call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
+		call(mage::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
 	}
 
 	// send immediately m_mouse_circular_mode value
 	for (const auto& call : m_callbacks)
 	{
-		call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
+		call(mage::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
 	}
 }
 

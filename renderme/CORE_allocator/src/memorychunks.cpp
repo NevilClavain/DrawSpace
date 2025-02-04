@@ -28,19 +28,19 @@
 #include "logconf.h"
 #include "logging.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 static logger::Sink memAllocLogger("MemAlloc", logger::Configuration::getInstance());
 
 void MemoryChunks::dumpContent(void)
 {
-    _RENDERME_DEBUG(memAllocLogger, std::string("Allocations total size : ") + std::to_string(m_totalSize) + std::string (" byte(s)"))
+    _MAGE_DEBUG(memAllocLogger, std::string("Allocations total size : ") + std::to_string(m_totalSize) + std::string (" byte(s)"))
 
     long count{ 1 };
 
     for(auto e : m_chunks)
     {
-        _RENDERME_DEBUG(memAllocLogger, 
+        _MAGE_DEBUG(memAllocLogger, 
                         std::string("--> ") << count 
                                         
                         << std::string("/ ptr = ") << e.first 
@@ -62,7 +62,7 @@ void MemoryChunks::unregisterChunk(void* p_ptr)
 {
     if (m_chunks.count(p_ptr) > 0)
     {
-        _RENDERME_TRACE(memAllocLogger, 
+        _MAGE_TRACE(memAllocLogger, 
                         std::string("ptr = ") << p_ptr << 
                         std::string(" size = ") << m_chunks[p_ptr].size <<
                         std::string(" object = ") << m_chunks[p_ptr].item.c_str() << 
@@ -74,7 +74,7 @@ void MemoryChunks::unregisterChunk(void* p_ptr)
     }
     else
     {
-        _RENDERME_WARN(memAllocLogger, std::string("no mem bloc ") << p_ptr << std::string("(already unallocated ?)"))
+        _MAGE_WARN(memAllocLogger, std::string("no mem bloc ") << p_ptr << std::string("(already unallocated ?)"))
     }
 }
 
@@ -89,6 +89,6 @@ void MemoryChunks::register_bloc(void* p_ptr, size_t p_size, const std::string& 
     m_chunks[p_ptr] = c;
     m_totalSize += p_size;
 
-    _RENDERME_TRACE(memAllocLogger, std::string("ptr = ") << p_ptr << std::string(" size = ") << p_size << std::string(" object = ") << p_item.c_str() << std::string(" in function : ") << p_funcname.c_str()
+    _MAGE_TRACE(memAllocLogger, std::string("ptr = ") << p_ptr << std::string(" size = ") << p_size << std::string(" object = ") << p_item.c_str() << std::string(" in function : ") << p_funcname.c_str()
         << std::string(" ") << p_filename.c_str() << std::string(", line ") << p_line)
 }

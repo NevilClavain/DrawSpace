@@ -25,7 +25,7 @@
 
 #include "quaternion.h"
 
-using namespace renderMe::core::maths;
+using namespace mage::core::maths;
 
 Quaternion::Quaternion()
 {
@@ -200,7 +200,7 @@ Quaternion Quaternion::lookRotation(const Real3Vector& p_forward, const Real3Vec
 }
 
 
-Quaternion renderMe::core::maths::operator* (const Quaternion& p_qA, const Quaternion& p_qB)
+Quaternion mage::core::maths::operator* (const Quaternion& p_qA, const Quaternion& p_qB)
 {
 	Quaternion res;
 

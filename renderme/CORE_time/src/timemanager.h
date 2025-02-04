@@ -27,7 +27,7 @@
 #include <set>
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{
@@ -96,4 +96,4 @@ namespace renderMe
         };
 
 	} // core
-} //renderMe
+} //mage

@@ -32,7 +32,7 @@
 #include "renderingqueue.h"
 #include "texture.h"
 
-class ModuleImpl : public renderMe::interfaces::ModuleRoot
+class ModuleImpl : public mage::interfaces::ModuleRoot
 {
 public:
     ModuleImpl();
@@ -46,7 +46,7 @@ public:
     std::string                     getModuleName() const;
     std::string                     getModuleDescr() const;
 
-    renderMe::core::Entitygraph*    entitygraph();
+    mage::core::Entitygraph*    entitygraph();
 
     void                            onKeyPress(long p_key);
     void                            onEndKeyPress(long p_key);
@@ -85,11 +85,11 @@ private:
     bool                                    m_show_mouse_cursor{ true };
     bool                                    m_mouse_circular_mode{ false };
 
-    renderMe::core::Entitygraph             m_entitygraph;
+    mage::core::Entitygraph             m_entitygraph;
 
-    renderMe::rendering::Queue*             m_windowRenderingQueue{ nullptr };
+    mage::rendering::Queue*             m_windowRenderingQueue{ nullptr };
 
-    renderMe::Texture*                      m_rendering_quad_texture{ nullptr };
+    mage::Texture*                      m_rendering_quad_texture{ nullptr };
 
     bool                                    m_quadEntity_state_request{ true };
     bool                                    m_quadEntity_state{ false };

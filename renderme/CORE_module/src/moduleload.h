@@ -26,7 +26,7 @@
 
 #include <string>
 
-namespace renderMe
+namespace mage
 {
     // fwd decl
 
@@ -41,8 +41,8 @@ namespace renderMe
         namespace module
         {
         
-            bool load(const std::string& p_file, const std::string& p_module_instance_id, renderMe::interfaces::ModuleRoot** p_module_root);
-            bool unload(const std::string& p_file, renderMe::interfaces::ModuleRoot* p_module_root);
+            bool load(const std::string& p_file, const std::string& p_module_instance_id, mage::interfaces::ModuleRoot** p_module_root);
+            bool unload(const std::string& p_file, mage::interfaces::ModuleRoot* p_module_root);
         
         }
     }

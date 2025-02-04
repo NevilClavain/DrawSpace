@@ -32,7 +32,7 @@
 #include "logging.h"
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
@@ -47,7 +47,7 @@ namespace renderMe
         TRIANGLEDRAWING_REMOVED
     };
 
-    class RenderingQueueSystem : public core::System, public renderMe::property::EventSource<RenderingQueueSystemEvent, const std::string&>
+    class RenderingQueueSystem : public core::System, public mage::property::EventSource<RenderingQueueSystemEvent, const std::string&>
     {
     public:
 
@@ -61,7 +61,7 @@ namespace renderMe
 
     private:
 
-        mutable renderMe::core::logger::Sink        m_localLogger;
+        mutable mage::core::logger::Sink        m_localLogger;
 
         std::unordered_set<std::string>             m_queuesToLog;
 
@@ -70,18 +70,18 @@ namespace renderMe
 
         void checkEntityInsertion(
                                     const std::string& p_entity_id, 
-                                    const renderMe::core::ComponentContainer& p_resourceAspect,
-                                    const renderMe::core::ComponentContainer& p_renderingAspect, 
-                                    renderMe::rendering::Queue& p_renderingQueue
+                                    const mage::core::ComponentContainer& p_resourceAspect,
+                                    const mage::core::ComponentContainer& p_renderingAspect, 
+                                    mage::rendering::Queue& p_renderingQueue
                                 );
 
         void removeFromRenderingQueue(
                                     const std::string& p_entity_id, 
-                                    renderMe::rendering::Queue& p_renderingQueue
+                                    mage::rendering::Queue& p_renderingQueue
                                 );
 
 
-        void logRenderingqueue(const std::string& p_entity_id, renderMe::rendering::Queue& p_renderingQueue) const;
+        void logRenderingqueue(const std::string& p_entity_id, mage::rendering::Queue& p_renderingQueue) const;
 
     };
 }

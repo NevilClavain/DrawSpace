@@ -31,8 +31,8 @@
 #include "timecontrol.h"
 
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 TimeSystem::TimeSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
@@ -62,6 +62,6 @@ void TimeSystem::run()
 			}
 		};
 
-		renderMe::helpers::extractAspectsTopDown<renderMe::core::timeAspect>(m_entitygraph, forEachTimeAspect);
+		mage::helpers::extractAspectsTopDown<mage::core::timeAspect>(m_entitygraph, forEachTimeAspect);
 	}
 }

@@ -26,10 +26,10 @@
 #include "matrixchain.h"
 
 
-using namespace renderMe::core::maths;
-using namespace renderMe::transform;
+using namespace mage::core::maths;
+using namespace mage::transform;
 
-void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj)
+void D3D11SystemImpl::drawLineMeshe(const mage::core::maths::Matrix& p_world, const mage::core::maths::Matrix& p_view, const mage::core::maths::Matrix& p_proj)
 {   
     // setting transformation    
     Matrix inv;    
@@ -97,7 +97,7 @@ void D3D11SystemImpl::drawLineMeshe(const renderMe::core::maths::Matrix& p_world
     m_lpd3ddevcontext->DrawIndexed(m_next_nblines * 2, 0, 0);
 }
 
-void D3D11SystemImpl::drawTriangleMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj)
+void D3D11SystemImpl::drawTriangleMeshe(const mage::core::maths::Matrix& p_world, const mage::core::maths::Matrix& p_view, const mage::core::maths::Matrix& p_proj)
 {
     // setting transformation    
     Matrix inv;
@@ -195,7 +195,7 @@ void D3D11SystemImpl::beginTarget(const std::string& p_targetName)
     }
 }
 
-void D3D11SystemImpl::clearTarget(const renderMe::core::maths::RGBAColor& p_clear_color)
+void D3D11SystemImpl::clearTarget(const mage::core::maths::RGBAColor& p_clear_color)
 {
     FLOAT clearcolor[4];
 
@@ -223,7 +223,7 @@ void D3D11SystemImpl::flipScreen(void)
     m_lpd3dswapchain->Present(0, 0);
 }
 
-void D3D11SystemImpl::drawText(const std::string& p_font, const renderMe::core::maths::RGBAColor& p_clear_color, const renderMe::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
+void D3D11SystemImpl::drawText(const std::string& p_font, const mage::core::maths::RGBAColor& p_clear_color, const mage::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text)
 {
     const auto fontData{ m_fontWrappers.at(p_font) };
 

@@ -26,11 +26,11 @@
 #include "aspects.h"
 
 D3D11SystemImpl::D3D11SystemImpl() :
-m_localLogger("D3D11System", renderMe::core::logger::Configuration::getInstance())
+m_localLogger("D3D11System", mage::core::logger::Configuration::getInstance())
 {
 }
 
-renderMe::core::logger::Sink& D3D11SystemImpl::logger()
+mage::core::logger::Sink& D3D11SystemImpl::logger()
 {
 	return m_localLogger;
 }

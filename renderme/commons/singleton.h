@@ -29,7 +29,7 @@
 #pragma once
 #include <memory>
 
-namespace renderMe
+namespace mage
 {
     namespace property
     {
@@ -56,4 +56,4 @@ namespace renderMe
 }
 
 template <class T>
-std::unique_ptr<T> renderMe::property::Singleton<T>::m_instance;
+std::unique_ptr<T> mage::property::Singleton<T>::m_instance;

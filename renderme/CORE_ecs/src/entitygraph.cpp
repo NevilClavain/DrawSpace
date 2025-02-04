@@ -26,7 +26,7 @@
 #include "entity.h"
 #include "exceptions.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 Entitygraph::Node& Entitygraph::makeRoot(const std::string& p_entity_id)
 {

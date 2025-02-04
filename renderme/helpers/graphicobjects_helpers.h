@@ -29,7 +29,7 @@
 #include <vector>
 #include <utility>
 
-namespace renderMe
+namespace mage
 {
 	// fwd decl
 	namespace core
@@ -41,7 +41,7 @@ namespace renderMe
 
 	namespace helpers
 	{
-		core::Entity* plug2DSpriteWithSyncVariables(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plug2DSpriteWithSyncVariables(mage::core::Entitygraph& p_entitygraph,
 							const std::string& p_parentid,
 							const std::string& p_spriteEntityid, 
 							const double p_spriteWidth,
@@ -53,11 +53,11 @@ namespace renderMe
 							int p_rendering_order
 						);
 
-		core::SyncVariable& getXPosSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		core::SyncVariable& getYPosSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		core::SyncVariable& getZRotSync(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& getXPosSync(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& getYPosSync(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		core::SyncVariable& getZRotSync(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 
-		core::Entity* plug2DSpriteWithPosition(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plug2DSpriteWithPosition(mage::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
 			const std::string& p_spriteEntityid,
 			const double p_spriteWidth,
@@ -73,19 +73,19 @@ namespace renderMe
 		);
 
 
-		core::Entity* plugTextWithPosition(renderMe::core::Entitygraph& p_entitygraph,
+		core::Entity* plugTextWithPosition(mage::core::Entitygraph& p_entitygraph,
 			const std::string& p_parentid,
 			const std::string& p_textEntityid,
-			const renderMe::rendering::Queue::Text& p_queue_text,
+			const mage::rendering::Queue::Text& p_queue_text,
 			float p_xpos = 0,
 			float p_ypos = 0);
 
 
-		double& getXPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		double& getYPos(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
-		double& getZRot(renderMe::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		double& getXPos(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		double& getYPos(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
+		double& getZRot(mage::core::Entitygraph& p_entitygraph, const std::string& p_spriteEntityid);
 
-		core::Entity* plugMesheWithPosition(renderMe::core::Entitygraph& p_entitygraph, 
+		core::Entity* plugMesheWithPosition(mage::core::Entitygraph& p_entitygraph, 
 					const std::string& p_parentid,
 					const std::string& p_mesheEntityid,
 					const std::string& p_vshader,

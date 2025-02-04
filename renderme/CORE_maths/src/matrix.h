@@ -27,7 +27,7 @@
 
 #include "tvector.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{
@@ -110,4 +110,4 @@ namespace renderMe
 	}
 }
 
-renderMe::core::maths::Matrix operator* (renderMe::core::maths::Matrix p_mA, renderMe::core::maths::Matrix p_mB);
+mage::core::maths::Matrix operator* (mage::core::maths::Matrix p_mA, mage::core::maths::Matrix p_mB);

@@ -29,7 +29,7 @@
 #include <string>
 #include <tuple>
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{      
@@ -216,4 +216,4 @@ namespace renderMe
             
         }
 	} // core
-} // renderMe
+} // mage

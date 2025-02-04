@@ -29,7 +29,7 @@
 #include <vector>
 #include "matrix.h"
 
-namespace renderMe
+namespace mage
 {
 	// resource for TriangleMeshes : Nodes and Bones hierarchy for supporting Meshes Animation
 

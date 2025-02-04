@@ -24,7 +24,7 @@
 
 #include "textures_service.h"
 
-using namespace renderMe::core::services;
+using namespace mage::core::services;
 
 void TextureContentCopyService::readTextureContent(const std::string& p_textureId, void** p_data, size_t* p_dataSize) const
 {

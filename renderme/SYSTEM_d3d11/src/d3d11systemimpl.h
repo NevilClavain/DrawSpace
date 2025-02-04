@@ -63,7 +63,7 @@
 #include "tvector.h"
 #include "matrix.h"
 
-static constexpr int nbTextureStages = renderMe::nbUVCoordsPerVertex;
+static constexpr int nbTextureStages = mage::nbUVCoordsPerVertex;
 
 #define DECLARE_D3D11ASSERT_VARS HRESULT hRes; \
                                  std::string d3dErrStr;
@@ -75,7 +75,7 @@ static constexpr int nbTextureStages = renderMe::nbUVCoordsPerVertex;
         std::string dstr = " "#p_mName" -> "; \
         dstr += d3dErrStr; \
         dstr += "\n"; \
-        _RENDERME_ERROR( m_localLogger, dstr.c_str() ); \
+        _MAGE_ERROR( m_localLogger, dstr.c_str() ); \
         return false; \
     }
 
@@ -105,50 +105,50 @@ struct D3D10Include : public ID3D10Include
 {
 public:
 
-    D3D10Include(const std::string& p_basepath, renderMe::core::logger::Sink& p_logger);
+    D3D10Include(const std::string& p_basepath, mage::core::logger::Sink& p_logger);
     ~D3D10Include() = default;
 
     HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes);
     HRESULT __stdcall Close(LPCVOID pData);
 
 private:
-    renderMe::core::FileContent<const char>*    m_fc{ nullptr };
+    mage::core::FileContent<const char>*    m_fc{ nullptr };
     const std::string                           m_basepath;
-    renderMe::core::logger::Sink&               m_logger;
+    mage::core::logger::Sink&               m_logger;
 };
 
-class D3D11SystemImpl : public renderMe::property::Singleton<D3D11SystemImpl>
+class D3D11SystemImpl : public mage::property::Singleton<D3D11SystemImpl>
 {
 public:
 
     D3D11SystemImpl();
     ~D3D11SystemImpl() = default;
 
-    renderMe::core::logger::Sink& logger();
+    mage::core::logger::Sink& logger();
 
-    bool init(renderMe::core::Entity* p_mainWindow);
+    bool init(mage::core::Entity* p_mainWindow);
 
     void beginScreen();
     void beginTarget(const std::string& p_targetName);
 
 
 
-    void clearTarget(const renderMe::core::maths::RGBAColor& p_clear_color);
+    void clearTarget(const mage::core::maths::RGBAColor& p_clear_color);
     void clearTargetDepth();
 
 
     void flipScreen(void);
 
-    void drawText(const std::string& p_font, const renderMe::core::maths::RGBAColor& p_clear_color, const renderMe::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text);
+    void drawText(const std::string& p_font, const mage::core::maths::RGBAColor& p_clear_color, const mage::core::maths::IntCoords2D& p_pos, float p_rotation, const std::string& p_text);
 
     bool createShaderBytesOnFile(int p_shadertype,
                                     const std::string& p_includes_path,
-                                    const renderMe::core::FileContent<const char>& srcFile,
+                                    const mage::core::FileContent<const char>& srcFile,
                                     std::unique_ptr<char[]>& p_shaderBytes,
                                     size_t& p_shaderBytesLength);
 
-    bool createVertexShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code);
-    bool createPixelShader(const std::string& p_resource_uid, const renderMe::core::Buffer<char>& p_code);
+    bool createVertexShader(const std::string& p_resource_uid, const mage::core::Buffer<char>& p_code);
+    bool createPixelShader(const std::string& p_resource_uid, const mage::core::Buffer<char>& p_code);
           
     void setVertexShader(const std::string& p_resource_uid);
     void setPixelShader(const std::string& p_resource_uid);
@@ -159,17 +159,17 @@ public:
     void destroyVertexShader(const std::string& p_resource_uid);
     void destroyPixelShader(const std::string& p_resource_uid);
 
-    bool createLineMeshe(const renderMe::LineMeshe& p_lm);
+    bool createLineMeshe(const mage::LineMeshe& p_lm);
     void setLineMeshe(const std::string& p_resource_uid);
     void destroyLineMeshe(const std::string& p_resource_uid);
 
-    bool createTriangleMeshe(const renderMe::TriangleMeshe& p_tm);
+    bool createTriangleMeshe(const mage::TriangleMeshe& p_tm);
     void setTriangleMeshe(const std::string& p_resource_uid);
     void destroyTriangleMeshe(const std::string& p_resource_uid);
 
     void forceCurrentMeshe();
 
-    bool createTexture(renderMe::Texture& p_texture);
+    bool createTexture(mage::Texture& p_texture);
 
     void bindTextureStage(const std::string& p_resource_uid, size_t p_stage);
     void unbindTextureStage(size_t p_stage);
@@ -179,17 +179,17 @@ public:
     void destroyTexture(const std::string& p_resource_uid);
 
    
-    void prepareRenderState(const renderMe::rendering::RenderState& p_renderstate); // update struct
+    void prepareRenderState(const mage::rendering::RenderState& p_renderstate); // update struct
     bool setCacheRS(bool p_force = false); // apply
 
-    void prepareBlendState(const renderMe::rendering::RenderState& p_renderstate); // update struct    
+    void prepareBlendState(const mage::rendering::RenderState& p_renderstate); // update struct    
     bool setCacheBlendstate(bool p_force = false); // apply
 
-    void setDepthStenciState(const renderMe::rendering::RenderState& p_renderstate);
+    void setDepthStenciState(const mage::rendering::RenderState& p_renderstate);
     void forceCurrentDepthStenciState();    
 
-    void setPSSamplers(const renderMe::rendering::RenderState& p_renderstate);
-    void setVSSamplers(const renderMe::rendering::RenderState& p_renderstate);
+    void setPSSamplers(const mage::rendering::RenderState& p_renderstate);
+    void setVSSamplers(const mage::rendering::RenderState& p_renderstate);
 
     void forceCurrentPSSamplers();
     void forceCurrentVSSamplers();
@@ -201,19 +201,19 @@ public:
 
     void forceCurrentTopology();
 
-    void drawLineMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
-    void drawTriangleMeshe(const renderMe::core::maths::Matrix& p_world, const renderMe::core::maths::Matrix& p_view, const renderMe::core::maths::Matrix& p_proj);
+    void drawLineMeshe(const mage::core::maths::Matrix& p_world, const mage::core::maths::Matrix& p_view, const mage::core::maths::Matrix& p_proj);
+    void drawTriangleMeshe(const mage::core::maths::Matrix& p_world, const mage::core::maths::Matrix& p_view, const mage::core::maths::Matrix& p_proj);
 
-    void setVertexshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
-    void setPixelshaderConstantsVec(int p_startreg, const renderMe::core::maths::Real4Vector& p_vec);
-    void setVertexshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
-    void setPixelshaderConstantsMat(int p_startreg, const renderMe::core::maths::Matrix& p_mat);
+    void setVertexshaderConstantsVec(int p_startreg, const mage::core::maths::Real4Vector& p_vec);
+    void setPixelshaderConstantsVec(int p_startreg, const mage::core::maths::Real4Vector& p_vec);
+    void setVertexshaderConstantsMat(int p_startreg, const mage::core::maths::Matrix& p_mat);
+    void setPixelshaderConstantsMat(int p_startreg, const mage::core::maths::Matrix& p_mat);
 
 
 
     struct TextureData
     {
-        renderMe::Texture::Source           source;
+        mage::Texture::Source           source;
         D3D11_TEXTURE2D_DESC                desc;
 
         // common
@@ -296,7 +296,7 @@ private:
     using TextureList =             std::unordered_map<std::string, TextureData>;
 
 
-    renderMe::core::logger::Sink                        m_localLogger;
+    mage::core::logger::Sink                        m_localLogger;
 
     size_t                                              m_next_nbvertices{ 0 };
     size_t                                              m_next_nbtriangles{ 0 };

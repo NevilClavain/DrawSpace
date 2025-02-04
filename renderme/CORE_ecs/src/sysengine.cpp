@@ -24,7 +24,7 @@
 
 #include "sysengine.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 void SystemEngine::run()
 {

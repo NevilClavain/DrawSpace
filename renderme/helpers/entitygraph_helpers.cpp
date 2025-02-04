@@ -48,15 +48,15 @@
 
 #include "animatorfunc.h"
 
-extern renderMe::core::logger::Sink localLogger("Helpers", renderMe::core::logger::Configuration::getInstance());
+extern mage::core::logger::Sink localLogger("Helpers", mage::core::logger::Configuration::getInstance());
 
-namespace renderMe
+namespace mage
 {
 	namespace helpers
 	{
 		void logEntitygraph(core::Entitygraph& p_eg)
 		{
-			_RENDERME_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP BEGIN <<<<<<<<<<<<<<<<<<<<<<<<");
+			_MAGE_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP BEGIN <<<<<<<<<<<<<<<<<<<<<<<<");
 
 			struct ENode
 			{
@@ -69,7 +69,7 @@ namespace renderMe
 			// build node tree that will be dumped to log
 			for (auto it = p_eg.preBegin(); it != p_eg.preEnd(); ++it)
 			{
-				const renderMe::core::Entity* current_entity { it->data() };
+				const mage::core::Entity* current_entity { it->data() };
 				const std::string currId{ current_entity->getId() };
 
 				const std::function<void(ENode&, const std::string&, const std::string&)> search
@@ -167,7 +167,7 @@ namespace renderMe
 					}
 
 
-					_RENDERME_DEBUG(localLogger, logstr);
+					_MAGE_DEBUG(localLogger, logstr);
 
 					for (auto& e : p_node.children)
 					{
@@ -178,17 +178,17 @@ namespace renderMe
 
 			logMe(root, 0);	
 
-			_RENDERME_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP END <<<<<<<<<<<<<<<<<<<<<<<<");
+			_MAGE_DEBUG(localLogger, ">>>>>>>>>>>>>>> ENTITY GRAPH DUMP END <<<<<<<<<<<<<<<<<<<<<<<<");
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		void plugRenderingQuadView(renderMe::core::Entitygraph& p_entitygraph,
+		void plugRenderingQuadView(mage::core::Entitygraph& p_entitygraph,
 			                                float p_characteristics_v_width, float p_characteristics_v_height,
 											const std::string& p_parentid,
 											const std::string& p_quadEntityid,
 											const std::string& p_viewEntityid,
-											renderMe::rendering::Queue* p_windowQueue,
+											mage::rendering::Queue* p_windowQueue,
 											const std::string& p_vshader,
 											const std::string& p_pshader,
 											const std::vector<std::pair<size_t, Texture>>& p_renderTargets
@@ -323,7 +323,7 @@ namespace renderMe
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-		void plugRenderingQueue(renderMe::core::Entitygraph& p_entitygraph, const rendering::Queue& p_renderingqueue, const std::string& p_parentid, const std::string& p_entityid)
+		void plugRenderingQueue(mage::core::Entitygraph& p_entitygraph, const rendering::Queue& p_renderingqueue, const std::string& p_parentid, const std::string& p_entityid)
 		{
 			core::Entitygraph::Node& parentNode{ p_entitygraph.node(p_parentid) };
 			auto& renderingQueueNode{ p_entitygraph.add(parentNode, p_entityid) };
@@ -336,7 +336,7 @@ namespace renderMe
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		void plugView(renderMe::core::Entitygraph& p_entitygraph,
+		void plugView(mage::core::Entitygraph& p_entitygraph,
 			const core::maths::Matrix& p_projection,
 			const std::string& p_parentid, const std::string& p_entityid)
 		{

@@ -26,8 +26,8 @@
 #include <iostream>
 #include "tvector.h"
 
-using namespace renderMe::core;
-using namespace renderMe::core::maths;
+using namespace mage::core;
+using namespace mage::core::maths;
 
 int main( int argc, char* argv[] )
 {    

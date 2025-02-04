@@ -36,7 +36,7 @@
 #include "scenenode.h"
 #include "animations.h"
 
-namespace renderMe
+namespace mage
 {
 	//fwd decl
 	class ResourceSystem;
@@ -116,7 +116,7 @@ namespace renderMe
 
 		
 
-		std::vector<renderMe::Vertex>							getVertices(void) const;
+		std::vector<mage::Vertex>							getVertices(void) const;
 		size_t													getVerticesListSize() const;
 		
 		std::vector<TrianglePrimitive<unsigned int>>			getTriangles(void) const;
@@ -216,7 +216,7 @@ namespace renderMe
 		void compute_TBN(const Vertex& p_v1, const Vertex& p_v2, const Vertex& p_v3, int p_stage,
 							core::maths::Real4Vector& p_T, core::maths::Real4Vector& p_B, core::maths::Real4Vector& p_N);	
 
-		friend class renderMe::ResourceSystem;
+		friend class mage::ResourceSystem;
 
 	};
 }

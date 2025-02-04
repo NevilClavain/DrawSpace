@@ -24,10 +24,10 @@
 
 #include "shaders_service.h"
 
-using namespace renderMe::core::services;
+using namespace mage::core::services;
 
 void ShadersCompilationService::requestVertexCompilationShader(const std::string& p_includePath, 
-																const renderMe::core::FileContent<const char>& p_shaderSource, 
+																const mage::core::FileContent<const char>& p_shaderSource, 
 																std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
 																bool& p_status) const
 {
@@ -39,7 +39,7 @@ void ShadersCompilationService::requestVertexCompilationShader(const std::string
 }
 
 void ShadersCompilationService::requestPixelCompilationShader(const std::string& p_includePath, 
-																const renderMe::core::FileContent<const char>& p_shaderSource, 
+																const mage::core::FileContent<const char>& p_shaderSource, 
 																std::unique_ptr<char[]>& shaderBytes, size_t& shaderBytesLength,
 																bool& p_status) const
 {

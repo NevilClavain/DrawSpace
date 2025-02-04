@@ -69,21 +69,21 @@
 #include "entitygraph_helpers.h"
 #include "graphicobjects_helpers.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::rendering;
 
 void ModuleImpl::init(const std::string p_appWindowsEntityName)
 {
 	/////////// logging conf
 
-	renderMe::core::FileContent<char> logConfFileContent("./module_anims_config/logconf.json");
+	mage::core::FileContent<char> logConfFileContent("./module_anims_config/logconf.json");
 	logConfFileContent.load();
 
 	const auto dataSize{ logConfFileContent.getDataSize() };
 	const std::string data(logConfFileContent.getData(), dataSize);
 
-	renderMe::core::Json<> jsonParser;
+	mage::core::Json<> jsonParser;
 	jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
 	const auto logParseStatus{ jsonParser.parse(data) };
@@ -95,7 +95,7 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 
 	///////////////////////////
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
 	dataCloud->registerData<std::string>("resources_event");
 	dataCloud->updateDataValue<std::string>("resources_event", "...");
@@ -112,21 +112,21 @@ void ModuleImpl::init(const std::string p_appWindowsEntityName)
 
 	auto sysEngine{ SystemEngine::getInstance() };
 
-	sysEngine->makeSystem<renderMe::TimeSystem>(timeSystemSlot, m_entitygraph);
-	sysEngine->makeSystem<renderMe::D3D11System>(d3d11SystemSlot, m_entitygraph);
-	sysEngine->makeSystem<renderMe::ResourceSystem>(resourceSystemSlot, m_entitygraph);
-	sysEngine->makeSystem<renderMe::WorldSystem>(worldSystemSlot, m_entitygraph);
-	sysEngine->makeSystem<renderMe::RenderingQueueSystem>(renderingQueueSystemSlot, m_entitygraph);
-	sysEngine->makeSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot, m_entitygraph);
-	sysEngine->makeSystem<renderMe::AnimationsSystem>(animationsSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::TimeSystem>(timeSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::D3D11System>(d3d11SystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::ResourceSystem>(resourceSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::WorldSystem>(worldSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::RenderingQueueSystem>(renderingQueueSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::DataPrintSystem>(dataPrintSystemSlot, m_entitygraph);
+	sysEngine->makeSystem<mage::AnimationsSystem>(animationsSystemSlot, m_entitygraph);
 
 	// D3D11 system provides compilation shader service : give access to this to resources sytem
-	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
+	const auto d3d11System{ sysEngine->getSystem<mage::D3D11System>(d3d11SystemSlot) };
 	services::ShadersCompilationService::getInstance()->registerSubscriber(d3d11System->getShaderCompilationInvocationCallback());
 	services::TextureContentCopyService::getInstance()->registerSubscriber(d3d11System->getTextureContentCopyInvocationCallback());
 
 	// dataprint system filters
-	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot) };
+	const auto dataPrintSystem{ sysEngine->getSystem<mage::DataPrintSystem>(dataPrintSystemSlot) };
 	dataPrintSystem->addDatacloudFilter("resources_event");
 	dataPrintSystem->addDatacloudFilter("current_animation");
 
@@ -172,7 +172,7 @@ void ModuleImpl::createEntities(const std::string p_appWindowsEntityName)
 	m_windowRenderingQueue = &rendering_queue;
 
 	auto sysEngine{ SystemEngine::getInstance() };
-	const auto dataPrintSystem{ sysEngine->getSystem<renderMe::DataPrintSystem>(dataPrintSystemSlot) };
+	const auto dataPrintSystem{ sysEngine->getSystem<mage::DataPrintSystem>(dataPrintSystemSlot) };
 
 	dataPrintSystem->setRenderingQueue(m_windowRenderingQueue);
 }
@@ -198,7 +198,7 @@ void ModuleImpl::animation_system_events()
 	};
 
 	const auto sysEngine{ SystemEngine::getInstance() };
-	const auto animationsSystem{ sysEngine->getSystem<renderMe::AnimationsSystem>(animationsSystemSlot) };
+	const auto animationsSystem{ sysEngine->getSystem<mage::AnimationsSystem>(animationsSystemSlot) };
 	animationsSystem->registerSubscriber(cb);
 }
 
@@ -213,37 +213,37 @@ void ModuleImpl::resource_system_events()
 		{
 			auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-			const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+			const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
 			switch (p_event)
 			{
 				case ResourceSystemEvent::RESOURCE_SHADER_CACHE_CREATED:
-					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_CACHE_CREATED : " + p_resourceName);
+					_MAGE_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_CACHE_CREATED : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Shader cache creation : " + p_resourceName);
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN:
-					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + p_resourceName);
+					_MAGE_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Shader compilation: " + p_resourceName + " BEGIN");
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS:
-					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + p_resourceName);
+					_MAGE_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Shader compilation " + p_resourceName + " SUCCESS");
 					break;
 
 				case ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR:
-					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + p_resourceName);
+					_MAGE_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Shader compilation " + p_resourceName + " ERROR");
 					break;
 
 				case ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS:
-					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + p_resourceName);
+					_MAGE_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Texture loaded :" + p_resourceName);
 					break;
 
 				case ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS:
-					_RENDERME_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + p_resourceName);
+					_MAGE_DEBUG(eventsLogger, "RECV EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + p_resourceName);
 					dataCloud->updateDataValue<std::string>("resources_event", "Meshe loaded :" + p_resourceName);
 
 					if ("raptor.fbx" == p_resourceName)
@@ -270,7 +270,7 @@ void ModuleImpl::resource_system_events()
 	};
 
 	const auto sysEngine{ SystemEngine::getInstance() };
-	const auto resourceSystem{ sysEngine->getSystem<renderMe::ResourceSystem>(resourceSystemSlot) };
+	const auto resourceSystem{ sysEngine->getSystem<mage::ResourceSystem>(resourceSystemSlot) };
 	resourceSystem->registerSubscriber(rs_cb);
 }
 
@@ -298,7 +298,7 @@ void ModuleImpl::choose_animation()
 void ModuleImpl::d3d11_system_events()
 {
 	const auto sysEngine{ SystemEngine::getInstance() };
-	const auto d3d11System{ sysEngine->getSystem<renderMe::D3D11System>(d3d11SystemSlot) };
+	const auto d3d11System{ sysEngine->getSystem<mage::D3D11System>(d3d11SystemSlot) };
 
 	const D3D11System::Callback d3d11_cb
 	{
@@ -311,22 +311,22 @@ void ModuleImpl::d3d11_system_events()
 					auto& appwindowNode{ m_entitygraph.node(p_id) };
 					const auto appwindow{ appwindowNode.data() };
 
-					const auto& mainwindows_rendering_aspect{ appwindow->aspectAccess(renderMe::core::renderingAspect::id) };
+					const auto& mainwindows_rendering_aspect{ appwindow->aspectAccess(mage::core::renderingAspect::id) };
 
 					const float characteristics_v_width{ mainwindows_rendering_aspect.getComponent<float>("eg.std.viewportWidth")->getPurpose()};
 					const float characteristics_v_height{ mainwindows_rendering_aspect.getComponent<float>("eg.std.viewportHeight")->getPurpose()};
 
 
-					const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+					const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
-					const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+					const auto window_dims{ dataCloud->readDataValue<mage::core::maths::IntCoords2D>("std.window_resol") };
 
 					const int w_width{ window_dims.x() };
 					const int w_height{ window_dims.y() };
 
 					const auto rendering_quad_texture{ Texture(Texture::Format::TEXTURE_RGB, w_width, w_height) };
 
-					renderMe::helpers::plugRenderingQuadView(m_entitygraph,
+					mage::helpers::plugRenderingQuadView(m_entitygraph,
 						characteristics_v_width, characteristics_v_height,
 						"screenRenderingEntity",
 						"screenRenderingQuadEntity",
@@ -346,7 +346,7 @@ void ModuleImpl::d3d11_system_events()
 					bufferRenderingQueue.enableTargetDepthClearing(true);
 					bufferRenderingQueue.setTargetStage(Texture::STAGE_0);
 
-					renderMe::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");
+					mage::helpers::plugRenderingQueue(m_entitygraph, bufferRenderingQueue, "screenRenderingQuadEntity", "bufferRenderingEntity");
 
 
 					auto& bufferRenderingNode{ m_entitygraph.node("bufferRenderingEntity") };
@@ -456,7 +456,7 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& ground_rendering_aspect{ ground_entity->aspectAccess(core::renderingAspect::id) };
 
-						rendering::DrawingControl& drawingControl{ ground_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						rendering::DrawingControl& drawingControl{ ground_rendering_aspect.getComponent<mage::rendering::DrawingControl>("drawingControl")->getPurpose() };
 
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_color", "fog_color"));
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_density", "fog_density"));
@@ -564,7 +564,7 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& tree_rendering_aspect{ tree_entity->aspectAccess(core::renderingAspect::id) };
 
-						rendering::DrawingControl& drawingControl { tree_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						rendering::DrawingControl& drawingControl { tree_rendering_aspect.getComponent<mage::rendering::DrawingControl>("drawingControl")->getPurpose() };
 						drawingControl.pshaders_map.push_back(std::make_pair("texture_keycolor_ps.key_color", "key_color"));
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_color", "fog_color"));
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_density", "fog_density"));
@@ -620,7 +620,7 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& raptor_rendering_aspect{ raptor_entity->aspectAccess(core::renderingAspect::id) };
 
-						rendering::DrawingControl& drawingControl{ raptor_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						rendering::DrawingControl& drawingControl{ raptor_rendering_aspect.getComponent<mage::rendering::DrawingControl>("drawingControl")->getPurpose() };
 						drawingControl.pshaders_map.push_back(std::make_pair("texture_keycolor_ps.key_color", "key_color"));
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_color", "fog_color"));
 						drawingControl.pshaders_map.push_back(std::make_pair("std.fog_density", "fog_density"));
@@ -698,7 +698,7 @@ void ModuleImpl::d3d11_system_events()
 
 						auto& skydom_rendering_aspect{ skydome_entity->aspectAccess(core::renderingAspect::id) };
 
-						rendering::DrawingControl& drawingControl{ skydom_rendering_aspect.getComponent<renderMe::rendering::DrawingControl>("drawingControl")->getPurpose() };
+						rendering::DrawingControl& drawingControl{ skydom_rendering_aspect.getComponent<mage::rendering::DrawingControl>("drawingControl")->getPurpose() };
 						
 						drawingControl.pshaders_map.push_back(std::make_pair("std.light0_dir", "light0_dir"));
 						drawingControl.pshaders_map.push_back(std::make_pair("skydome_ps.atmo_scattering_flag_0", "atmo_scattering_flag_0"));

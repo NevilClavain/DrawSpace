@@ -30,8 +30,8 @@
 #include "aspects.h"
 #include "timecontrol.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 
 void ModuleImpl::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)

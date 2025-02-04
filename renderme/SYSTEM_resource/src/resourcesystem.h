@@ -40,7 +40,7 @@
 #include "matrix.h"
 #include "component.h"
 
-namespace renderMe
+namespace mage
 {
     // fwd decls
     namespace core { class Entity; }
@@ -67,7 +67,7 @@ namespace renderMe
 
     };
 
-    class ResourceSystem : public core::System, public renderMe::property::EventSource<ResourceSystemEvent, const std::string&>
+    class ResourceSystem : public core::System, public mage::property::EventSource<ResourceSystemEvent, const std::string&>
     {
     public:
 
@@ -79,18 +79,18 @@ namespace renderMe
         void killRunner();
 
     private:
-        renderMe::core::logger::Sink                            m_localLogger;
-        renderMe::core::logger::Sink                            m_localLoggerRunner;
+        mage::core::logger::Sink                            m_localLogger;
+        mage::core::logger::Sink                            m_localLoggerRunner;
         const std::string                                       m_shadersBasePath{ "./shaders/resources" };
         const std::string                                       m_texturesBasePath{ "./textures" };
         const std::string                                       m_meshesBasePath{ "./meshes" };
         const std::string                                       m_shadersCachePath{ "./bc_cache" };
 
-        renderMe::core::Json<Shader>::Callback	                m_jsonparser_cb;
+        mage::core::Json<Shader>::Callback	                m_jsonparser_cb;
         std::mutex                                              m_jsonparser_mutex;
 
         static constexpr unsigned int                           nbRunners{ 2 };
-        std::vector<std::unique_ptr<renderMe::core::Runner>>    m_runner;
+        std::vector<std::unique_ptr<mage::core::Runner>>    m_runner;
         int                                                     m_runnerIndex{ 0 };
 
         void handleShader(const std::string& p_filename, Shader& p_shaderInfos);

@@ -35,10 +35,10 @@
 #include "entity.h"
 #include "aspects.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
-static renderMe::core::logger::Sink localLogger("App", renderMe::core::logger::Configuration::getInstance());
+static mage::core::logger::Sink localLogger("App", mage::core::logger::Configuration::getInstance());
 
 #define TRAD_EVT_COORD_MOUSE( __pLParam__, __x__, __y__ ) \
     __x__ = (WORD)( __pLParam__ & 0x0000ffff ); \
@@ -48,11 +48,11 @@ static renderMe::core::logger::Sink localLogger("App", renderMe::core::logger::C
 
 App::App()
 {
-    m_json_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<renderMe::core::DefaultUserData*>&)
+    m_json_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<mage::core::DefaultUserData*>&)
     {
         switch (p_event)
         {
-            case renderMe::core::JSONEvent::PRIMITIVE:
+            case mage::core::JSONEvent::PRIMITIVE:
 
                 if (JSONParsingMode::ON_ROOT == m_json_parsing_mode)
                 {
@@ -71,7 +71,7 @@ App::App()
                 }
                 break;
 
-            case renderMe::core::JSONEvent::STRING:
+            case mage::core::JSONEvent::STRING:
 
                 if (JSONParsingMode::ON_FONTS == m_json_parsing_mode)
                 {
@@ -82,7 +82,7 @@ App::App()
                 }
                 break;
 
-            case renderMe::core::JSONEvent::ARRAY_BEGIN:
+            case mage::core::JSONEvent::ARRAY_BEGIN:
 
                 if ("fonts" == p_id)
                 {
@@ -91,7 +91,7 @@ App::App()
                 }                
                 break;
 
-            case renderMe::core::JSONEvent::ARRAY_END:
+            case mage::core::JSONEvent::ARRAY_END:
 
                 if ("fonts" == p_id)
                 {
@@ -122,7 +122,7 @@ App::App()
     };
 }
 
-void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, renderMe::interfaces::ModuleRoot* p_root)
+void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const std::string& p_rtconfig_path, mage::interfaces::ModuleRoot* p_root)
 {
     m_module_root = p_root;
     m_module_root->registerSubscriber(m_module_events_cb);
@@ -130,14 +130,14 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
     // load logging config
     {
         // set static to spare some space on stack // compiler message
-        static renderMe::core::FileContent<char> logConfFileContent(p_logconfig_path);
+        static mage::core::FileContent<char> logConfFileContent(p_logconfig_path);
         logConfFileContent.load();
 
         const auto dataSize{ logConfFileContent.getDataSize() };
         const std::string data(logConfFileContent.getData(), dataSize);
 
         // set static to spare some space on stack // compiler message
-        static renderMe::core::Json<> jsonParser;
+        static mage::core::Json<> jsonParser;
         jsonParser.registerSubscriber(logger::Configuration::getInstance()->getCallback());
 
         const auto logParseStatus{ jsonParser.parse(data) };
@@ -152,14 +152,14 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
     // load RT window config
     {
         // set static to spare some space on stack // compiler message
-        static renderMe::core::FileContent<char> rtConfFileContent(p_rtconfig_path);
+        static mage::core::FileContent<char> rtConfFileContent(p_rtconfig_path);
         rtConfFileContent.load();
 
         const auto dataSize{ rtConfFileContent.getDataSize() };
         const std::string data(rtConfFileContent.getData(), dataSize);
 
         // set static to spare some space on stack // compiler message
-        static renderMe::core::Json<> jsonParser;
+        static mage::core::Json<> jsonParser;
         jsonParser.registerSubscriber(m_json_cb);
 
         const auto rtParseStatus{ jsonParser.parse(data) };
@@ -171,7 +171,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
     }
 
 
-	_RENDERME_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
+	_MAGE_DEBUG(localLogger, std::string("app config is : ") << m_w_width << std::string(" x ") << m_w_height << std::string(" fullscreen : ") << m_w_fullscreen);
 
     // set static to spare some space on stack // compiler message
 	static WNDCLASSA wc;
@@ -184,13 +184,13 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
 	wc.hCursor = nullptr;
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = nullptr;
-	wc.lpszClassName = "renderMeAppWnd";
+	wc.lpszClassName = "mageAppWnd";
 
 	wc.lpfnWndProc = (WNDPROC)winProc;
 
     if (!RegisterClassA(&wc))
     {
-        _RENDERME_FATAL(localLogger, "RegisterClass FAIL")
+        _MAGE_FATAL(localLogger, "RegisterClass FAIL")
         _EXCEPTION("RegisterClass FAIL")
     }
     else
@@ -208,21 +208,21 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             m_w_width = fsw;
             m_w_height = fsh;
 
-            _RENDERME_DEBUG(localLogger, std::string("Fullscreen mode : CreateWindowExA ") << fsw << std::string(" x ") << fsh)
+            _MAGE_DEBUG(localLogger, std::string("Fullscreen mode : CreateWindowExA ") << fsw << std::string(" x ") << fsh)
             m_hwnd = CreateWindowExA(WS_EX_TOPMOST, wc.lpszClassName, "", WS_POPUP, 0, 0, fsw, fsh, nullptr, nullptr, p_hInstance, nullptr);
         }
         else
         {
             // mode fenetre
-            _RENDERME_DEBUG(localLogger, std::string("Windowed mode : CreateWindowA ") << m_w_width << std::string(" x ") << m_w_height)
+            _MAGE_DEBUG(localLogger, std::string("Windowed mode : CreateWindowA ") << m_w_width << std::string(" x ") << m_w_height)
 
-            static const std::string wTitle{ "renderMe" };
+            static const std::string wTitle{ "mage" };
             m_hwnd = CreateWindowA(wc.lpszClassName, (LPCSTR)wTitle.c_str(), WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZE, CW_USEDEFAULT, CW_USEDEFAULT, m_w_width, m_w_height, nullptr, nullptr, p_hInstance, nullptr);
         }
 
         if (!m_hwnd)
         {
-            _RENDERME_FATAL(localLogger, "CreateWindow FAIL")
+            _MAGE_FATAL(localLogger, "CreateWindow FAIL")
             _EXCEPTION("CreateWindowA FAIL")
         }
         else
@@ -260,7 +260,7 @@ void App::init(HINSTANCE p_hInstance, const std::string& p_logconfig_path, const
             }
             else
             {
-                _RENDERME_WARN(localLogger, "no entity graph in attached module")
+                _MAGE_WARN(localLogger, "no entity graph in attached module")
             }
         }
     }
@@ -414,7 +414,7 @@ bool App::loopAppInit()
 {
     // MODULE stuff init HERE 
 
-    std::string win_title{ "renderMe Runtime - " };
+    std::string win_title{ "MaGE Runtime - " };
     win_title += m_module_root->getModuleDescr();
     ::SetWindowText(m_hwnd, win_title.c_str());
 
@@ -432,7 +432,7 @@ void App::loop(void)
             {
                 if (WM_QUIT == msg.message)
                 {
-                    _RENDERME_DEBUG(localLogger, "WM_QUIT, calling OnClose()")
+                    _MAGE_DEBUG(localLogger, "WM_QUIT, calling OnClose()")
                     onClose();
                     break;
                 }
@@ -469,7 +469,7 @@ void App::onRenderFrame(void)
 
 void App::onClose(void)
 {
-    _RENDERME_DEBUG(localLogger, std::string("shutdown..."));
+    _MAGE_DEBUG(localLogger, std::string("shutdown..."));
 
     if (m_module_root)
     {
@@ -479,25 +479,25 @@ void App::onClose(void)
 
 void App::onKeyPress(long p_key)
 {
-    _RENDERME_TRACE(localLogger, std::string("onKeyPress :") << p_key);
+    _MAGE_TRACE(localLogger, std::string("onKeyPress :") << p_key);
     m_module_root->onKeyPress(p_key);
 }
 
 void App::onEndKeyPress(long p_key)
 {
-    _RENDERME_TRACE(localLogger, std::string("onEndKeyPress :") << p_key);
+    _MAGE_TRACE(localLogger, std::string("onEndKeyPress :") << p_key);
     m_module_root->onEndKeyPress(p_key);
 }
 
 void App::onKeyPulse(long p_key)
 {
-    _RENDERME_TRACE(localLogger, std::string("onKeyPulse :") << p_key);
+    _MAGE_TRACE(localLogger, std::string("onKeyPulse :") << p_key);
     m_module_root->onKeyPulse(p_key);
 }
 
 void App::onChar(long p_char, long p_scan)
 {
-    _RENDERME_TRACE(localLogger, std::string("onChar :") << p_char << std::string(" ") << p_scan);
+    _MAGE_TRACE(localLogger, std::string("onChar :") << p_char << std::string(" ") << p_scan);
     m_module_root->onChar(p_char, p_scan);
 }
 
@@ -508,37 +508,37 @@ void App::onMouseMove(long p_xm, long p_ym, long p_dx, long p_dy)
 
 void App::onMouseWheel(long p_distance)
 {
-    _RENDERME_TRACE(localLogger, std::string("onMouseWheel :") << p_distance);
+    _MAGE_TRACE(localLogger, std::string("onMouseWheel :") << p_distance);
     m_module_root->onMouseWheel(p_distance);
 }
 
 void App::onMouseLeftButtonDown(long p_xm, long p_ym)
 {
-    _RENDERME_TRACE(localLogger, std::string("onMouseLeftButtonDown :") << p_xm << std::string(" ") << p_ym);
+    _MAGE_TRACE(localLogger, std::string("onMouseLeftButtonDown :") << p_xm << std::string(" ") << p_ym);
     m_module_root->onMouseLeftButtonDown(p_xm, p_ym);
 }
 
 void App::onMouseLeftButtonUp(long p_xm, long p_ym)
 {
-    _RENDERME_TRACE(localLogger, std::string("onMouseLeftButtonUp :") << p_xm << std::string(" ") << p_ym);
+    _MAGE_TRACE(localLogger, std::string("onMouseLeftButtonUp :") << p_xm << std::string(" ") << p_ym);
     m_module_root->onMouseLeftButtonUp(p_xm, p_ym);
 }
 
 void App::onMouseRightButtonDown(long p_xm, long p_ym)
 {
-    _RENDERME_TRACE(localLogger, std::string("onMouseRightButtonDown :") << p_xm << std::string(" ") << p_ym);
+    _MAGE_TRACE(localLogger, std::string("onMouseRightButtonDown :") << p_xm << std::string(" ") << p_ym);
     m_module_root->onMouseRightButtonDown(p_xm, p_ym);
 }
 
 void App::onMouseRightButtonUp(long p_xm, long p_ym)
 {
-    _RENDERME_TRACE(localLogger, std::string("onMouseRightButtonUp :") << p_xm << std::string(" ") << p_ym);
+    _MAGE_TRACE(localLogger, std::string("onMouseRightButtonUp :") << p_xm << std::string(" ") << p_ym);
     m_module_root->onMouseRightButtonUp(p_xm, p_ym);
 }
 
 void App::onAppEvent(WPARAM p_wParam, LPARAM p_lParam)
 {
-    _RENDERME_TRACE(localLogger, std::string("onAppEvent :") + std::to_string(p_wParam) + std::string(" ") + std::to_string(p_lParam));
+    _MAGE_TRACE(localLogger, std::string("onAppEvent :") + std::to_string(p_wParam) + std::string(" ") + std::to_string(p_lParam));
     m_module_root->onAppEvent(p_wParam, p_lParam);
 }
 
@@ -657,7 +657,7 @@ LRESULT CALLBACK App::winProc(HWND pHwnd, UINT pMsg, WPARAM pWParam, LPARAM pLPa
         case WM_QUIT:
         case WM_DESTROY:
 
-            _RENDERME_DEBUG(localLogger, "PostQuitMessage");
+            _MAGE_DEBUG(localLogger, "PostQuitMessage");
             PostQuitMessage(0);
             break;
 

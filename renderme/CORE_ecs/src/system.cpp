@@ -25,7 +25,7 @@
 #include "system.h"
 #include "entitygraph.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 System::System(Entitygraph& p_entitygraph) :
 m_entitygraph(p_entitygraph)

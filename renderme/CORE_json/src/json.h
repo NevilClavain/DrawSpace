@@ -33,7 +33,7 @@
 
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {
@@ -50,7 +50,7 @@ namespace renderMe
         class DefaultUserData {};
 
         template<typename UserDataT=class DefaultUserData>
-        class Json : public renderMe::property::EventSource<JSONEvent, const std::string&, int, const std::string&, const std::optional<UserDataT*>&>
+        class Json : public mage::property::EventSource<JSONEvent, const std::string&, int, const std::string&, const std::optional<UserDataT*>&>
         {
         public:
 

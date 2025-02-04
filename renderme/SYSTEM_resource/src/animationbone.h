@@ -25,7 +25,7 @@
 #pragma once
 #include "matrix.h"
 
-namespace renderMe
+namespace mage
 {
 	// resource for TriangleMeshes : Bones supporting Meshes Animation
 

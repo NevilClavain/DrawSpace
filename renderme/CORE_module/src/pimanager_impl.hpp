@@ -25,7 +25,7 @@
 
 #pragma once
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 template <typename base>
 inline typename PlugInManager<base>::Status PlugInManager<base>::loadPlugin(const std::string& p_path, Handle& p_handle)

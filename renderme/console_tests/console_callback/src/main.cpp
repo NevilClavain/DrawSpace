@@ -30,7 +30,7 @@
 #include "eventsource.h"
 
 
-class Processing : public renderMe::property::EventSource<const std::string&, int, double>
+class Processing : public mage::property::EventSource<const std::string&, int, double>
 {
 public:
 	Processing() = default;

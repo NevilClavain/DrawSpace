@@ -28,22 +28,22 @@
 #include "pimanager.h"
 #include "module_root.h"
 
-bool renderMe::core::module::load(const std::string& p_file, const std::string& p_module_instance_id, renderMe::interfaces::ModuleRoot** p_module_root)
+bool mage::core::module::load(const std::string& p_file, const std::string& p_module_instance_id, mage::interfaces::ModuleRoot** p_module_root)
 {
     auto complete_path{ p_file };
     complete_path += ".dll";
 
-    PlugInManager<renderMe::interfaces::ModuleRoot>::Handle pihandle{ nullptr };
-    auto piManager{ PlugInManager<renderMe::interfaces::ModuleRoot>::getInstance() };
+    PlugInManager<mage::interfaces::ModuleRoot>::Handle pihandle{ nullptr };
+    auto piManager{ PlugInManager<mage::interfaces::ModuleRoot>::getInstance() };
 
     const auto pistatus{ piManager->loadPlugin(complete_path, pihandle) };
-    if (pistatus != PlugInManager<renderMe::interfaces::ModuleRoot>::Status::PIM_OK && pistatus != PlugInManager<renderMe::interfaces::ModuleRoot>::Status::PIM_OK_PIALREADYLOADED)
+    if (pistatus != PlugInManager<mage::interfaces::ModuleRoot>::Status::PIM_OK && pistatus != PlugInManager<mage::interfaces::ModuleRoot>::Status::PIM_OK_PIALREADYLOADED)
     {
         return false;
     }
 
-    renderMe::interfaces::ModuleRoot* module_root{ nullptr };
-    if (piManager->instanciate(pihandle, &module_root) != PlugInManager<renderMe::interfaces::ModuleRoot>::Status::PIM_OK)
+    mage::interfaces::ModuleRoot* module_root{ nullptr };
+    if (piManager->instanciate(pihandle, &module_root) != PlugInManager<mage::interfaces::ModuleRoot>::Status::PIM_OK)
     {
         return false;
     }
@@ -52,19 +52,19 @@ bool renderMe::core::module::load(const std::string& p_file, const std::string& 
 	return true;
 }
 
-bool renderMe::core::module::unload(const std::string& p_file, renderMe::interfaces::ModuleRoot* p_module_root)
+bool mage::core::module::unload(const std::string& p_file, mage::interfaces::ModuleRoot* p_module_root)
 {
     auto complete_path{ p_file };
     complete_path += ".dll";
 
-    auto piManager{ PlugInManager<renderMe::interfaces::ModuleRoot>::getInstance() };
+    auto piManager{ PlugInManager<mage::interfaces::ModuleRoot>::getInstance() };
 
-    if (piManager->trashInstance(complete_path, p_module_root) != PlugInManager<renderMe::interfaces::ModuleRoot>::Status::PIM_OK)
+    if (piManager->trashInstance(complete_path, p_module_root) != PlugInManager<mage::interfaces::ModuleRoot>::Status::PIM_OK)
     {
         return false;
     }
 
-    if (piManager->unloadPlugin(complete_path) != PlugInManager<renderMe::interfaces::ModuleRoot>::Status::PIM_OK)
+    if (piManager->unloadPlugin(complete_path) != PlugInManager<mage::interfaces::ModuleRoot>::Status::PIM_OK)
     {
         return false;
     }

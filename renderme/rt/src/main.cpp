@@ -36,14 +36,14 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     {
         if (strcmp(lpCmdLine, ""))
         {
-            renderMe::interfaces::ModuleRoot* module_root{ nullptr };
+            mage::interfaces::ModuleRoot* module_root{ nullptr };
 
-            if (!renderMe::core::module::load(std::string(lpCmdLine), "main_appmodule", &module_root))
+            if (!mage::core::module::load(std::string(lpCmdLine), "main_appmodule", &module_root))
             {
                 _EXCEPTION("cannot load " + std::string(lpCmdLine) + " module");
             }
 
-            const auto app{ renderMe::core::App::getInstance() };
+            const auto app{ mage::core::App::getInstance() };
             app->init(hInstance, "./rt_config/logrt.json", "./rt_config/windows_settings.json", module_root);
             app->loop();
 
@@ -59,7 +59,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     catch (const std::exception& e)
     {
         const auto what{ e.what() };
-        ::MessageBoxA(nullptr, what, "renderMe Exception", MB_OK | MB_ICONERROR);
+        ::MessageBoxA(nullptr, what, "mage Exception", MB_OK | MB_ICONERROR);
     }
     return 0;
 }

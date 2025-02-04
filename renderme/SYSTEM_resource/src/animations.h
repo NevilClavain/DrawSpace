@@ -31,7 +31,7 @@
 #include "tvector.h"
 #include "quaternion.h"
 
-namespace renderMe
+namespace mage
 {
 	// resources for Meshes Animations controls
 

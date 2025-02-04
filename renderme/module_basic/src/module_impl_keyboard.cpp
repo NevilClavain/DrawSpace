@@ -35,8 +35,8 @@
 #include "syncvariable.h"
 #include "entitygraph_helpers.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
@@ -48,10 +48,10 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 	if (VK_ESCAPE == p_key)
 	{
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
+		_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
 		for (const auto& call : m_callbacks)
 		{
-			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
+			call(mage::interfaces::ModuleEvents::CLOSE_APP, 0);
 		}
 	}
 }

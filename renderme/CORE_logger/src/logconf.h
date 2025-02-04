@@ -33,7 +33,7 @@
 #include "logsink.h"
 #include "json.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {

@@ -31,7 +31,7 @@
 #include "system.h"
 #include "sysengine.h"
 
-using namespace renderMe;
+using namespace mage;
 
 
 class Foo

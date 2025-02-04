@@ -34,45 +34,45 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		renderMe::core::FileContent<char> fc("./console_jsonparser_assets/log.json");
+		mage::core::FileContent<char> fc("./console_jsonparser_assets/log.json");
 		fc.load();
 
 		const auto dataSize{ fc.getDataSize() };
 		const std::string data(fc.getData(), dataSize);
 
-		renderMe::core::Json<> jsonParser;
+		mage::core::Json<> jsonParser;
 
-		jsonParser.registerSubscriber([] (renderMe::core::JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<renderMe::core::DefaultUserData*>&)
+		jsonParser.registerSubscriber([] (mage::core::JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<mage::core::DefaultUserData*>&)
 		{
 			switch (p_event)
 			{
-				case renderMe::core::JSONEvent::OBJECT_BEGIN:
+				case mage::core::JSONEvent::OBJECT_BEGIN:
 
 					std::cout << ">> begin object of id : " << p_id << "\n";
 					break;
 
-				case renderMe::core::JSONEvent::OBJECT_END:
+				case mage::core::JSONEvent::OBJECT_END:
 
 					std::cout << ">> end object of id : " << p_id << "\n";
 					break;
 
 
-				case renderMe::core::JSONEvent::ARRAY_BEGIN:
+				case mage::core::JSONEvent::ARRAY_BEGIN:
 
 					std::cout << ">> begin array of id : " << p_id << "\n";
 					break;
 
-				case renderMe::core::JSONEvent::ARRAY_END:
+				case mage::core::JSONEvent::ARRAY_END:
 
 					std::cout << ">> end array of id : " << p_id << "\n";
 					break;
 
-				case renderMe::core::JSONEvent::STRING:
+				case mage::core::JSONEvent::STRING:
 
 					std::cout << "	>> string of id : " << p_id <<  " with value = " << p_value << "\n";
 					break;
 
-				case renderMe::core::JSONEvent::PRIMITIVE:
+				case mage::core::JSONEvent::PRIMITIVE:
 
 					std::cout << "	>> primitive of id : " << p_id << " with value = " << p_value << "\n";
 					break;

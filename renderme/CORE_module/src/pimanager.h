@@ -30,7 +30,7 @@
 #include <unordered_map>
 #include "singleton.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

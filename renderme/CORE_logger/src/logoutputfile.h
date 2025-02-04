@@ -29,7 +29,7 @@
 #include "logoutput.h"
 #include "file.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {

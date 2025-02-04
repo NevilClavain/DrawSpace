@@ -26,9 +26,9 @@
 #include "component.h"
 #include "exceptions.h"
 
-using namespace renderMe::rendering;
-using namespace renderMe::core;
-using namespace renderMe::core::maths;
+using namespace mage::rendering;
+using namespace mage::core;
+using namespace mage::core::maths;
 
 Queue::Queue(const std::string& p_name) :
 m_name(p_name)
@@ -59,7 +59,7 @@ void Queue::setScreenRenderingPurpose()
 	m_purpose = Purpose::SCREEN_RENDERING;
 }
 
-void Queue::setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, renderMe::Texture>> p_textures_list)
+void Queue::setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, mage::Texture>> p_textures_list)
 {
 	if (m_targetStage < p_textures_list.size())
 	{

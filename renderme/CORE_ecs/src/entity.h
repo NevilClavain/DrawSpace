@@ -29,7 +29,7 @@
 #include "componentcontainer.h"
 #include "st_tree.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

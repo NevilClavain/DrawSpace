@@ -27,4 +27,4 @@
 #include "logging.h"
 #include "animators_helpers.h"
 
-renderMe::core::logger::Sink localLogger("Helpers", renderMe::core::logger::Configuration::getInstance());
+mage::core::logger::Sink localLogger("Helpers", mage::core::logger::Configuration::getInstance());

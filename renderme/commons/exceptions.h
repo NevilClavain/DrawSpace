@@ -28,7 +28,7 @@
 #include <string>
 #include <exception>
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {
@@ -40,5 +40,5 @@ namespace renderMe
     }
 }
 
-#define _EXCEPTION( _msg ) renderMe::core::throwException(_msg, __FUNCTION__);
+#define _EXCEPTION( _msg ) mage::core::throwException(_msg, __FUNCTION__);
 

@@ -30,8 +30,8 @@
 #include "worldposition.h"
 
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 ViewSystem::ViewSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {

@@ -26,7 +26,7 @@
 #include "filesystem.h"
 #include "exceptions.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 bool fileSystem::exists(const std::string& p_path)
 {

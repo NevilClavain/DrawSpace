@@ -41,14 +41,14 @@
 #include "animators_helpers.h"
 #include "graphicobjects_helpers.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::rendering;
 
 void ModuleImpl::run(void)
 {
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
 	/////////////////////////////////////////////////////
 
@@ -75,7 +75,7 @@ void ModuleImpl::run(void)
 		const auto collimator_text_entity{ collimator_text_node.data() };
 		const auto& rendering_aspect{ collimator_text_entity->aspectAccess(core::renderingAspect::id) };
 
-		auto& queue_text{ rendering_aspect.getComponent<renderMe::rendering::Queue::Text>("queue_text")->getPurpose() };
+		auto& queue_text{ rendering_aspect.getComponent<mage::rendering::Queue::Text>("queue_text")->getPurpose() };
 
 		queue_text.text = std::to_string(distance_to_cam);
 	}
@@ -495,7 +495,7 @@ void ModuleImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad0_color")->getPurpose() };
+		mage::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<mage::core::SyncVariable>("quad0_color")->getPurpose() };
 
 		maths::Real4Vector mycolor;
 
@@ -515,7 +515,7 @@ void ModuleImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad1_color")->getPurpose() };
+		mage::core::SyncVariable& mycolor_r{ quad_time_aspect.getComponent<mage::core::SyncVariable>("quad1_color")->getPurpose() };
 
 		maths::Real4Vector mycolor;
 
@@ -535,7 +535,7 @@ void ModuleImpl::run(void)
 		const auto quadEntity{ quadNode.data() };
 		auto& quad_time_aspect{ quadEntity->aspectAccess(core::timeAspect::id) };
 
-		renderMe::core::SyncVariable& osc1{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation1")->getPurpose() };
+		mage::core::SyncVariable& osc1{ quad_time_aspect.getComponent<mage::core::SyncVariable>("quad2_oscillation1")->getPurpose() };
 		if (osc1.value == 1.0)
 		{
 			osc1.step = m_distribution(m_generator);
@@ -548,7 +548,7 @@ void ModuleImpl::run(void)
 
 
 
-		renderMe::core::SyncVariable& osc2{ quad_time_aspect.getComponent<renderMe::core::SyncVariable>("quad2_oscillation2")->getPurpose() };
+		mage::core::SyncVariable& osc2{ quad_time_aspect.getComponent<mage::core::SyncVariable>("quad2_oscillation2")->getPurpose() };
 		if (osc2.value == 1.0)
 		{
 			osc2.step = m_distribution(m_generator);

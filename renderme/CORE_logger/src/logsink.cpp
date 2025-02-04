@@ -29,7 +29,7 @@
 #include "logsink.h"
 #include "logconf.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 logger::Sink::Sink( const std::string& p_name, logger::Configuration* p_conf ) :
 m_name( p_name ),

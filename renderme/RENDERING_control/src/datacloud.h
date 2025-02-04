@@ -27,7 +27,7 @@
 #include "componentcontainer.h"
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
     namespace rendering
     {
@@ -38,7 +38,7 @@ namespace renderMe
             DATA_UPDATED
         };
 
-        class Datacloud : public property::Singleton<Datacloud>, public renderMe::property::EventSource<DatacloudEvent, const std::string&, const std::string&>
+        class Datacloud : public property::Singleton<Datacloud>, public mage::property::EventSource<DatacloudEvent, const std::string&, const std::string&>
         {
         public:
             Datacloud(void) = default;

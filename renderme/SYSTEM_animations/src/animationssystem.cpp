@@ -42,8 +42,8 @@
 #include "quaternion.h"
 #include "timecontrol.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 AnimationsSystem::AnimationsSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {		
@@ -305,9 +305,9 @@ void AnimationsSystem::run()
 		[&](Entity* p_entity, const ComponentContainer& p_animation_components)
 		{
 			// search for resources
-			if (p_entity->hasAspect(renderMe::core::resourcesAspect::id))
+			if (p_entity->hasAspect(mage::core::resourcesAspect::id))
 			{
-				const ComponentContainer& resource_components{ p_entity->aspectAccess(renderMe::core::resourcesAspect::id)};
+				const ComponentContainer& resource_components{ p_entity->aspectAccess(mage::core::resourcesAspect::id)};
 
 				// search triangle meshe
 				const auto meshes_list{ resource_components.getComponentsByType<std::pair<std::pair<std::string, std::string>, TriangleMeshe>>() };
@@ -519,6 +519,6 @@ void AnimationsSystem::run()
 		}
 	};
 
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::animationsAspect>(m_entitygraph, forEachAnimationAspect);
+	mage::helpers::extractAspectsTopDown<mage::core::animationsAspect>(m_entitygraph, forEachAnimationAspect);
 
 }

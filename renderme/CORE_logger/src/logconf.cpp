@@ -29,17 +29,17 @@
 #include "logoutputfile.h"
 #include "exceptions.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 logger::Configuration::Configuration( void )
 {
     m_baseTick = ::GetTickCount();
 
-    m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<renderMe::core::DefaultUserData*>&)
+    m_cb = [&, this](JSONEvent p_event, const std::string& p_id, int p_index, const std::string& p_value, const std::optional<mage::core::DefaultUserData*>&)
     {
         switch (p_event)
         {
-            case renderMe::core::JSONEvent::OBJECT_BEGIN:
+            case mage::core::JSONEvent::OBJECT_BEGIN:
 
                 if ("outputs" == p_id)
                 {
@@ -51,7 +51,7 @@ logger::Configuration::Configuration( void )
                 }
                 break;
 
-            case renderMe::core::JSONEvent::OBJECT_END:
+            case mage::core::JSONEvent::OBJECT_END:
 
                 if ("outputs" == p_id)
                 {
@@ -93,16 +93,16 @@ logger::Configuration::Configuration( void )
                 break;
 
                 /* not ussed
-                case renderMe::core::json::Event::ARRAY_BEGIN:
+                case mage::core::json::Event::ARRAY_BEGIN:
 
                     break;
 
-                case renderMe::core::json::Event::ARRAY_END:
+                case mage::core::json::Event::ARRAY_END:
 
                     break;
                 */
 
-            case renderMe::core::JSONEvent::STRING:
+            case mage::core::JSONEvent::STRING:
 
                 if (ParsingState::RECORD_CONFIG == this->m_parsing_state)
                 {
@@ -156,7 +156,7 @@ logger::Configuration::Configuration( void )
                 break;
 
                 /* not used
-                    case renderMe::core::json::Event::PRIMITIVE:
+                    case mage::core::json::Event::PRIMITIVE:
                         break;
                 */
         }

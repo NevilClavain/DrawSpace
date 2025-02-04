@@ -26,7 +26,7 @@
 #include <iostream>
 #include "componentcontainer.h"
 
-using namespace renderMe;
+using namespace mage;
 
 class Foo 
 {

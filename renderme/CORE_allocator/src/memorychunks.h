@@ -29,7 +29,7 @@
 
 #include "singleton.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {

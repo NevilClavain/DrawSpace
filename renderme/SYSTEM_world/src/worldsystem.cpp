@@ -33,8 +33,8 @@
 #include "matrixchain.h"
 #include "datacloud.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 WorldSystem::WorldSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
@@ -186,7 +186,7 @@ void WorldSystem::run()
 		}
 	};
 
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::worldAspect>(m_entitygraph, forEachWorldAspect);
+	mage::helpers::extractAspectsTopDown<mage::core::worldAspect>(m_entitygraph, forEachWorldAspect);
 
 	//////////////////////////////////////////////////////////
 	/// II : compute 2D pos (for entity that requires it)
@@ -204,7 +204,7 @@ void WorldSystem::run()
 	// build node tree that will be dumped to log
 	for (auto it = m_entitygraph.preBegin(); it != m_entitygraph.preEnd(); ++it)
 	{
-		const renderMe::core::Entity* current_entity{ it->data() };
+		const mage::core::Entity* current_entity{ it->data() };
 		const std::string currId{ current_entity->getId() };
 
 		const std::function<void(ENode&, const std::string&, const std::string&)> search
@@ -381,7 +381,7 @@ void WorldSystem::run()
 
 						final_mat.transform(&point, &res_point);
 
-						const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+						const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 						const auto viewport{ dataCloud->readDataValue<maths::FloatCoords2D>("std.viewport") };
 
 

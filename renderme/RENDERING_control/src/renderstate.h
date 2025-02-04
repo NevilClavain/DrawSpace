@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-namespace renderMe
+namespace mage
 {
     namespace rendering
     {

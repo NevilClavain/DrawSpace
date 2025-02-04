@@ -28,31 +28,31 @@
 #include "datacloud.h"
 #include "tvector.h"
 
-using namespace renderMe;
-using namespace renderMe::core::maths;
+using namespace mage;
+using namespace mage::core::maths;
 
 int main( int argc, char* argv[] )
 {    
 	std::cout << "Datacloud tests\n";
 
-	const auto dataCloud { renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud { mage::rendering::Datacloud::getInstance() };
 
 	const auto cb{
-		[](renderMe::rendering::DatacloudEvent p_event, const std::string& p_id, const std::string& p_typeid)
+		[](mage::rendering::DatacloudEvent p_event, const std::string& p_id, const std::string& p_typeid)
 		{
 			switch (p_event)
 			{
-				case renderMe::rendering::DatacloudEvent::DATA_ADDED:
+				case mage::rendering::DatacloudEvent::DATA_ADDED:
 
 					std::cout << "DATA_ADDED : " << p_id << " of type " << p_typeid << "\n";
 					break;
 
-				case renderMe::rendering::DatacloudEvent::DATA_REMOVED:
+				case mage::rendering::DatacloudEvent::DATA_REMOVED:
 
 					std::cout << "DATA_REMOVED : " << p_id << " of type " << p_typeid << "\n";
 					break;
 
-				case renderMe::rendering::DatacloudEvent::DATA_UPDATED:
+				case mage::rendering::DatacloudEvent::DATA_UPDATED:
 
 					std::cout << "DATA_UPDATED : " << p_id << " of type " << p_typeid << "\n";
 					break;

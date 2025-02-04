@@ -28,7 +28,7 @@
 #include "singleton.h"
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

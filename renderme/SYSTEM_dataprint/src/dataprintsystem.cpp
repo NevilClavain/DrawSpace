@@ -36,8 +36,8 @@
 #include "renderingqueue.h"
 #include "syncvariable.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 DataPrintSystem::DataPrintSystem(Entitygraph& p_entitygraph) : System(p_entitygraph)
 {
@@ -52,8 +52,8 @@ void DataPrintSystem::run()
 
 	print(m_dc_strings, 0, 0, dcNbCols, dcNbRows, dcColWidth, dcRowHeight);
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
-	const auto window_dims{ dataCloud->readDataValue<renderMe::core::maths::IntCoords2D>("std.window_resol") };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
+	const auto window_dims{ dataCloud->readDataValue<mage::core::maths::IntCoords2D>("std.window_resol") };
 
 
 	// positioning sync vars print bloc at bottomo of the window : compute y position
@@ -69,7 +69,7 @@ void DataPrintSystem::run()
 
 }
 
-void DataPrintSystem::setRenderingQueue(renderMe::rendering::Queue* p_queue)
+void DataPrintSystem::setRenderingQueue(mage::rendering::Queue* p_queue)
 {
 	m_renderingQueue = p_queue;
 }
@@ -109,7 +109,7 @@ void DataPrintSystem::collectData()
 
 	m_dc_strings.clear();
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 	const auto dataCloudVariables{ dataCloud->getVarsIdsList() };
 
 	for (const auto& e : dataCloudVariables)
@@ -299,7 +299,7 @@ void DataPrintSystem::collectData()
 		}
 	};
 
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::timeAspect>(m_entitygraph, forEachTimeAspect);
+	mage::helpers::extractAspectsTopDown<mage::core::timeAspect>(m_entitygraph, forEachTimeAspect);
 
 	/////// collect rendering queues
 
@@ -349,7 +349,7 @@ void DataPrintSystem::collectData()
 		}
 	};
 
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
+	mage::helpers::extractAspectsTopDown<mage::core::renderingAspect>(m_entitygraph, forEachRenderingAspect);
 }
 
 void DataPrintSystem::print(const std::vector<std::string>& p_list, int p_x_base, int p_y_base, int p_nbCols, int p_nbRows, int p_colWidth, int p_rowHeight)

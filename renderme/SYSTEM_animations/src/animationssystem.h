@@ -31,7 +31,7 @@
 #include "system.h"
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core { class Entity; }
     namespace core { class Entitygraph; }
@@ -48,7 +48,7 @@ namespace renderMe
         ANIMATION_END,
     };
    
-    class AnimationsSystem : public core::System, public renderMe::property::EventSource<AnimationSystemEvent, const std::string&, const std::string&>
+    class AnimationsSystem : public core::System, public mage::property::EventSource<AnimationSystemEvent, const std::string&, const std::string&>
     {
     public:
         AnimationsSystem() = delete;

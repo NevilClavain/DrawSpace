@@ -33,7 +33,7 @@
 #include "logconf.h"
 #include "logging.h"
 
-static renderMe::core::logger::Sink appLogger("MyTestApp", renderMe::core::logger::Configuration::getInstance());
+static mage::core::logger::Sink appLogger("MyTestApp", mage::core::logger::Configuration::getInstance());
 
 int main( int argc, char* argv[] )
 {    
@@ -41,26 +41,26 @@ int main( int argc, char* argv[] )
 
 	try
 	{
-		renderMe::core::FileContent<char> fc("./console_logger_assets/log_conf.json");
+		mage::core::FileContent<char> fc("./console_logger_assets/log_conf.json");
 		fc.load();
 
 		const auto dataSize{ fc.getDataSize() };
 		const std::string data(fc.getData(), dataSize);
 
-		renderMe::core::Json jsonParser;
+		mage::core::Json jsonParser;
 
 		// init logger
 
-		jsonParser.registerSubscriber(renderMe::core::logger::Configuration::getInstance()->getCallback());
+		jsonParser.registerSubscriber(mage::core::logger::Configuration::getInstance()->getCallback());
 		const auto parseStatus{ jsonParser.parse(data) };
 		std::cout << "Parser status = " << (parseStatus > -1 ? "OK" : "KO") << "\n";
 
-		_RENDERME_DEBUG(appLogger, "hello from logger test !");
-		_RENDERME_TRACE(appLogger, "trace log with a value : " + std::to_string(666));
+		_MAGE_DEBUG(appLogger, "hello from logger test !");
+		_MAGE_TRACE(appLogger, "trace log with a value : " + std::to_string(666));
 
-		_RENDERME_TRACE(appLogger, "trace log with another value : " << 42 );
+		_MAGE_TRACE(appLogger, "trace log with another value : " << 42 );
 
-		_RENDERME_WARN(appLogger, "this is a warning : " << 3.1415 );
+		_MAGE_WARN(appLogger, "this is a warning : " << 3.1415 );
 	}
 	catch (const std::exception& e)
 	{

@@ -26,7 +26,7 @@
 #pragma once
 #include "system.h"
 
-namespace renderMe
+namespace mage
 {
     namespace core { class Entitygraph; }
    

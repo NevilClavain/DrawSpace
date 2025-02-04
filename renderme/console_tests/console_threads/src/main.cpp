@@ -30,7 +30,7 @@
 #include "filesystem.h"
 
 
-class Loader : public renderMe::property::AsyncTask
+class Loader : public mage::property::AsyncTask
 {
 public:
 	Loader(const std::string& p_path, std::string& p_dest): AsyncTask("loading text", "std::string"),
@@ -43,9 +43,9 @@ private:
 	std::string m_path;
 	std::string& m_dest;
 
-	void execute(renderMe::core::Runner* p_runner)
+	void execute(mage::core::Runner* p_runner)
 	{
-		renderMe::core::FileContent<const char> reader(m_path);
+		mage::core::FileContent<const char> reader(m_path);
 		reader.load();
 
 		const std::string textIn(reader.getData(), reader.getDataSize());
@@ -63,7 +63,7 @@ int main( int argc, char* argv[] )
 	std::string text1;
 	std::string text2;
 
-	renderMe::core::RunnerKiller runnerKiller;
+	mage::core::RunnerKiller runnerKiller;
 
 	class NotCopyConstructible
 	{
@@ -75,12 +75,12 @@ int main( int argc, char* argv[] )
 
 	std::cout << std::is_copy_constructible<int>::value << "\n";
 	std::cout << std::is_copy_constructible<NotCopyConstructible>::value << "\n";
-	std::cout << std::is_copy_constructible<renderMe::core::SimpleAsyncTask<>>::value << "\n";
-	std::cout << std::is_copy_constructible<renderMe::core::RunnerKiller>::value << "\n";
+	std::cout << std::is_copy_constructible<mage::core::SimpleAsyncTask<>>::value << "\n";
+	std::cout << std::is_copy_constructible<mage::core::RunnerKiller>::value << "\n";
 	
 
 	
-	renderMe::core::SimpleAsyncTask<const std::string&> it( "Say hello from path", "stdout",
+	mage::core::SimpleAsyncTask<const std::string&> it( "Say hello from path", "stdout",
 		[&text1](const std::string& p_path)
 		{
 			std::cout << "Hello from path : " << p_path << "\n";
@@ -89,7 +89,7 @@ int main( int argc, char* argv[] )
 		"./console_threads_assets/gmreadme.txt"
 	);
 	
-	renderMe::core::SimpleAsyncTask<> it2("Say hello from nobody", "stdout",
+	mage::core::SimpleAsyncTask<> it2("Say hello from nobody", "stdout",
 
 		[](void)
 		{
@@ -104,17 +104,17 @@ int main( int argc, char* argv[] )
 	Loader loader2("./console_threads_assets/title.txt", text2);
 
 
-	renderMe::core::Runner runner;
+	mage::core::Runner runner;
 
 	/*
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it);	
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&it2);
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader);	
-	runner.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
+	runner.m_mailbox_in.push<mage::property::AsyncTask*>(&it);	
+	runner.m_mailbox_in.push<mage::property::AsyncTask*>(&it2);
+	runner.m_mailbox_in.push<mage::property::AsyncTask*>(&loader);	
+	runner.m_mailbox_in.push<mage::property::AsyncTask*>(&runnerKiller);
 
-	renderMe::core::Runner runner2;
-	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&loader2);
-	runner2.m_mailbox_in.push<renderMe::property::AsyncTask*>(&runnerKiller);
+	mage::core::Runner runner2;
+	runner2.m_mailbox_in.push<mage::property::AsyncTask*>(&loader2);
+	runner2.m_mailbox_in.push<mage::property::AsyncTask*>(&runnerKiller);
 	*/
 
 	runner.m_mailbox_in.push(&it);
@@ -122,15 +122,15 @@ int main( int argc, char* argv[] )
 	runner.m_mailbox_in.push(&loader);
 	runner.m_mailbox_in.push(&runnerKiller);
 
-	renderMe::core::Runner runner2;
+	mage::core::Runner runner2;
 	runner2.m_mailbox_in.push(&loader2);
 	runner2.m_mailbox_in.push(&runnerKiller);
 
 	
 	const auto runnerEventHandler{
-		[](renderMe::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
+		[](mage::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
 		{
-			if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
+			if (mage::core::RunnerEvent::TASK_DONE == p_event)
 			{
 				std::cout << "TASK_DONE " << p_target_descr << " " << p_action_descr << "\n";
 			}

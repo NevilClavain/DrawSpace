@@ -29,18 +29,18 @@
 #include "resourcesystem.h"
 #include "d3d11system.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 void ModuleImpl::close(void)
 {
 	auto resourceSystem{ SystemEngine::getInstance()->getSystem(resourceSystemSlot) };
-	auto resourceSystemInstance{ dynamic_cast<renderMe::ResourceSystem*>(resourceSystem) };
+	auto resourceSystemInstance{ dynamic_cast<mage::ResourceSystem*>(resourceSystem) };
 
 	resourceSystemInstance->killRunner();
 
 	auto d3d11System{ SystemEngine::getInstance()->getSystem(d3d11SystemSlot) };
-	auto d3d11SystemInstance{ dynamic_cast<renderMe::D3D11System*>(d3d11System) };
+	auto d3d11SystemInstance{ dynamic_cast<mage::D3D11System*>(d3d11System) };
 
 	d3d11SystemInstance->killRunner();
 }

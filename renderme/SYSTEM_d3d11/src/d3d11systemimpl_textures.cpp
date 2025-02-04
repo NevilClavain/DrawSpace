@@ -26,21 +26,21 @@
 #include "WICTextureLoader.h"
 #include "exception"
 
-bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
+bool D3D11SystemImpl::createTexture(mage::Texture& p_texture)
 {
 	DECLARE_D3D11ASSERT_VARS
 
 	const auto resource_uid{ p_texture.getResourceUID()};
 
-	_RENDERME_DEBUG(m_localLogger, "Texture loading : " + resource_uid);
+	_MAGE_DEBUG(m_localLogger, "Texture loading : " + resource_uid);
 
     if (m_textures.count(resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Texture already loaded : " + resource_uid);
+        _MAGE_DEBUG(m_localLogger, "Texture already loaded : " + resource_uid);
     }
     else
     {
-        if (renderMe::Texture::Source::CONTENT_FROM_RENDERINGQUEUE == p_texture.getSource())
+        if (mage::Texture::Source::CONTENT_FROM_RENDERINGQUEUE == p_texture.getSource())
         {
             // render target
 
@@ -51,31 +51,31 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
             switch (p_texture.getFormat())
             {
-                case renderMe::Texture::Format::TEXTURE_RGB:
+                case mage::Texture::Format::TEXTURE_RGB:
 
                     format = DXGI_FORMAT_B8G8R8A8_UNORM;
                     bpp = 4;
                     break;
 
-                case renderMe::Texture::Format::TEXTURE_FLOAT:
+                case mage::Texture::Format::TEXTURE_FLOAT:
 
                     format = DXGI_FORMAT_R16_FLOAT;
                     bpp = 2;
                     break;
 
-                case renderMe::Texture::Format::TEXTURE_FLOAT32:
+                case mage::Texture::Format::TEXTURE_FLOAT32:
 
                     format = DXGI_FORMAT_R32_FLOAT;
                     bpp = 4;
                     break;
 
-                case renderMe::Texture::Format::TEXTURE_FLOATVECTOR:
+                case mage::Texture::Format::TEXTURE_FLOATVECTOR:
 
                     format = DXGI_FORMAT_R16G16B16A16_FLOAT;
                     bpp = 8;
                     break;
 
-                case renderMe::Texture::Format::TEXTURE_FLOATVECTOR32:
+                case mage::Texture::Format::TEXTURE_FLOATVECTOR32:
 
                     format = DXGI_FORMAT_R32G32B32A32_FLOAT;
                     bpp = 16;
@@ -136,7 +136,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
 
             /////////////////////// creation texture "clone", pour lire le contenu d'une render target
 
-            if (renderMe::Texture::ContentAccessMode::CONTENT_ACCESS == p_texture.getContentAccessMode())
+            if (mage::Texture::ContentAccessMode::CONTENT_ACCESS == p_texture.getContentAccessMode())
             {
                 
                 textureDesc.Usage = D3D11_USAGE_STAGING;
@@ -166,7 +166,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
             // store texture data
 
             
-            texture_data.source = renderMe::Texture::Source::CONTENT_FROM_RENDERINGQUEUE;
+            texture_data.source = mage::Texture::Source::CONTENT_FROM_RENDERINGQUEUE;
 
 
             texture_data.shaderResourceView = rendertextureResourceView;
@@ -226,12 +226,12 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                 
                 pTextureInterface->GetDesc(&desc);
 
-                _RENDERME_DEBUG(m_localLogger, "Texture infos : " + std::to_string(desc.Width) + "x" + std::to_string(desc.Height) + " format : " + std::to_string(desc.Format));
+                _MAGE_DEBUG(m_localLogger, "Texture infos : " + std::to_string(desc.Width) + "x" + std::to_string(desc.Height) + " format : " + std::to_string(desc.Format));
 
                 p_texture.m_width = desc.Width;
                 p_texture.m_height = desc.Height;
 
-                renderMe::Texture::Format format;
+                mage::Texture::Format format;
 
                 switch(desc.Format)
                 {
@@ -259,7 +259,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                     case DXGI_FORMAT_R8G8B8A8_SNORM:
                     case DXGI_FORMAT_R8G8B8A8_SINT:
 
-                        format = renderMe::Texture::Format::TEXTURE_RGB;
+                        format = mage::Texture::Format::TEXTURE_RGB;
                         break;
 
                     default:
@@ -271,7 +271,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
                 p_texture.m_format = format;
 
                 TextureData texture_data;
-                texture_data.source = renderMe::Texture::Source::CONTENT_FROM_FILE;
+                texture_data.source = mage::Texture::Source::CONTENT_FROM_FILE;
 
                 texture_data.textureResource = d3dt11;
                 texture_data.shaderResourceView = textureResourceView;
@@ -288,7 +288,7 @@ bool D3D11SystemImpl::createTexture(renderMe::Texture& p_texture)
         }
     }
 
-	_RENDERME_DEBUG(m_localLogger, "Texture loading SUCCESS : " + resource_uid);
+	_MAGE_DEBUG(m_localLogger, "Texture loading SUCCESS : " + resource_uid);
 	return true;
 
 }
@@ -370,7 +370,7 @@ void D3D11SystemImpl::destroyTexture(const std::string& p_resource_uid)
 
     m_textures.erase(p_resource_uid);
 
-    _RENDERME_DEBUG(m_localLogger, "texture release SUCCESS : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "texture release SUCCESS : " + p_resource_uid);
 }
 
 void D3D11SystemImpl::forceTexturesBinding()

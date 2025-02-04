@@ -35,8 +35,8 @@
 #include "syncvariable.h"
 #include "entitygraph_helpers.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
@@ -222,10 +222,10 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 	if (VK_SPACE == p_key)
 	{
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
+		_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
 		for (const auto& call : m_callbacks)
 		{
-			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
+			call(mage::interfaces::ModuleEvents::CLOSE_APP, 0);
 		}
 	}
 	else if (VK_F1 == p_key)
@@ -239,10 +239,10 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			m_show_mouse_cursor = true;
 		}
 
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_DISPLAY_CHANGED");
+		_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_DISPLAY_CHANGED");
 		for (const auto& call : m_callbacks)
 		{
-			call(renderMe::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
+			call(mage::interfaces::ModuleEvents::MOUSE_DISPLAY_CHANGED, (int)m_show_mouse_cursor);
 		}
 	}
 	else if (VK_F2 == p_key)
@@ -256,10 +256,10 @@ void ModuleImpl::onEndKeyPress(long p_key)
 			m_mouse_circular_mode = true;
 		}
 
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_CIRCULARMODE_CHANGED");
+		_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> MOUSE_CIRCULARMODE_CHANGED");
 		for (const auto& call : m_callbacks)
 		{
-			call(renderMe::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
+			call(mage::interfaces::ModuleEvents::MOUSE_CIRCULARMODE_CHANGED, (int)m_mouse_circular_mode);
 		}
 	}
 	else if (VK_F3 == p_key)
@@ -305,7 +305,7 @@ void ModuleImpl::onEndKeyPress(long p_key)
 	else if (VK_F8 == p_key)
 	{
 		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
-		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
+		auto renderingQueueSystemInstance{ dynamic_cast<mage::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");		
 	}

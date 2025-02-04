@@ -31,7 +31,7 @@
 #include "asynctask.h"
 #include "eventsource.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{
@@ -43,7 +43,7 @@ namespace renderMe
 		};
 
 
-		class Runner : public renderMe::property::EventSource<const RunnerEvent&, const std::string&, const std::string&>
+		class Runner : public mage::property::EventSource<const RunnerEvent&, const std::string&, const std::string&>
 		{
 
 		public:

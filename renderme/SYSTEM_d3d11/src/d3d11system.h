@@ -34,7 +34,7 @@
 
 
 
-namespace renderMe
+namespace mage
 {   
     // fwd decls
     namespace core { class Entity; }
@@ -67,7 +67,7 @@ namespace renderMe
         D3D11_TEXTURE_RELEASE_SUCCESS
     };
                
-    class D3D11System : public core::System, public renderMe::property::EventSource<D3D11SystemEvent, const std::string&>
+    class D3D11System : public core::System, public mage::property::EventSource<D3D11SystemEvent, const std::string&>
     {
     public:
 
@@ -92,7 +92,7 @@ namespace renderMe
         core::services::ShadersCompilationService::Callback     m_shadercompilation_invocation_cb;
         core::services::TextureContentCopyService::Callback     m_texturecontentcopy_invocation_cb;
 
-        renderMe::core::Runner                                  m_runner;
+        mage::core::Runner                                  m_runner;
 
         void    manageInitialization();       
         void    manageResources();

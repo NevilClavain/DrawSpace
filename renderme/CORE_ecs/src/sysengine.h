@@ -32,7 +32,7 @@
 #include "system.h"
 #include "exceptions.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

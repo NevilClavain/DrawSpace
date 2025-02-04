@@ -26,7 +26,7 @@
 #include <md5.h>
 #include "shader.h"
 
-using namespace renderMe;
+using namespace mage;
 
 Shader::Shader(int p_type) :
 m_type(p_type)

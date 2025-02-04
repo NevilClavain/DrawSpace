@@ -28,7 +28,7 @@
 #include <memory>
 #include <vector>
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

@@ -26,7 +26,7 @@
 #include <md5.h>
 #include "linemeshe.h"
 
-using namespace renderMe;
+using namespace mage;
 
 LineMeshe::LineMeshe(const LineMeshe& p_other)
 {
@@ -44,7 +44,7 @@ LineMeshe::LineMeshe(const LineMeshe& p_other)
 }
 
 
-std::vector<renderMe::Vertex>LineMeshe::getVertices(void) const
+std::vector<mage::Vertex>LineMeshe::getVertices(void) const
 {
 	return m_vertices;
 }

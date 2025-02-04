@@ -37,8 +37,8 @@
 #include "entitygraph_helpers.h"
 #include "graphicobjects_helpers.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 void ModuleImpl::onKeyPress(long p_key)
 {
@@ -50,17 +50,17 @@ void ModuleImpl::onEndKeyPress(long p_key)
 
 	if (VK_ESCAPE == p_key)
 	{
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
+		_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> CLOSE_APP");
 		for (const auto& call : m_callbacks)
 		{
-			call(renderMe::interfaces::ModuleEvents::CLOSE_APP, 0);
+			call(mage::interfaces::ModuleEvents::CLOSE_APP, 0);
 		}
 	}
 
 	else if (VK_F8 == p_key)
 	{
 		auto renderingQueueSystem{ SystemEngine::getInstance()->getSystem(renderingQueueSystemSlot) };
-		auto renderingQueueSystemInstance{ dynamic_cast<renderMe::RenderingQueueSystem*>(renderingQueueSystem) };
+		auto renderingQueueSystemInstance{ dynamic_cast<mage::RenderingQueueSystem*>(renderingQueueSystem) };
 
 		renderingQueueSystemInstance->requestRenderingqueueLogging("screenRenderingEntity");
 		renderingQueueSystemInstance->requestRenderingqueueLogging("bufferRenderingEntity");		

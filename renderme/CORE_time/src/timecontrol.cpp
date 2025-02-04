@@ -28,8 +28,8 @@
 #include "datacloud.h"
 #include "syncvariable.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 TimeMark::TimeMark(TimeControl& p_tc)
 {
@@ -73,7 +73,7 @@ long TimeMark::computeTimeMs()
 
 TimeControl::TimeControl()
 {
-    const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+    const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
     dataCloud->registerData<long>("std.framesPerSecond", 0);
     dataCloud->registerData<std::string>("std.date", "");
@@ -113,7 +113,7 @@ void TimeControl::update(void)
 {
 	m_tm.update();
 
-    const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+    const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
     // put current formated date/time in component string[0]
     

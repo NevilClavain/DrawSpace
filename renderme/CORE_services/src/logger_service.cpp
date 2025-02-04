@@ -29,13 +29,13 @@
 #include "logconf.h"
 
 
-using namespace renderMe::core::services;
+using namespace mage::core::services;
 
 void LoggerSharing::createLogger(const std::string& p_id)
 {
 	if (!m_loggers.count(p_id))
 	{
-		m_loggers[p_id] = std::make_unique<renderMe::core::logger::Sink>(p_id, renderMe::core::logger::Configuration::getInstance());
+		m_loggers[p_id] = std::make_unique<mage::core::logger::Sink>(p_id, mage::core::logger::Configuration::getInstance());
 	}
 	else
 	{
@@ -43,7 +43,7 @@ void LoggerSharing::createLogger(const std::string& p_id)
 	}
 }
 
-renderMe::core::logger::Sink& LoggerSharing::getLogger(const std::string& p_id)
+mage::core::logger::Sink& LoggerSharing::getLogger(const std::string& p_id)
 {
 	if (m_loggers.count(p_id) > 0)
 	{

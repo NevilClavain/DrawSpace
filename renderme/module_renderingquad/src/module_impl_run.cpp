@@ -42,14 +42,14 @@
 
 
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::rendering;
 
 void ModuleImpl::run(void)
 {
 
-	const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 
 	/////////////////////////////////////////////////////
 

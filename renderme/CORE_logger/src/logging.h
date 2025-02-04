@@ -28,11 +28,11 @@
 #include <string>
 #include "logconf.h"
 
-#define _RENDERME_TRACE( _logger, _message ) _logger.logIt( renderMe::core::logger::Sink::Level::LEVEL_TRACE, std::string(__FUNCTION__) + std::string( " " ) + _message );
-#define _RENDERME_DEBUG( _logger, _message ) _logger.logIt( renderMe::core::logger::Sink::Level::LEVEL_DEBUG, std::string(__FUNCTION__) + std::string( " " ) + _message );
-#define _RENDERME_WARN( _logger, _message )  _logger.logIt( renderMe::core::logger::Sink::Level::LEVEL_WARN, std::string(__FUNCTION__) + std::string( " " ) + _message );
-#define _RENDERME_ERROR( _logger, _message ) _logger.logIt( renderMe::core::logger::Sink::Level::LEVEL_ERROR, std::string(__FUNCTION__) + std::string( " " ) + _message );
-#define _RENDERME_FATAL( _logger, _message ) _logger.logIt( renderMe::core::logger::Sink::Level::LEVEL_FATAL, std::string(__FUNCTION__) + std::string( " " ) + _message );
+#define _MAGE_TRACE( _logger, _message ) _logger.logIt( mage::core::logger::Sink::Level::LEVEL_TRACE, std::string(__FUNCTION__) + std::string( " " ) + _message );
+#define _MAGE_DEBUG( _logger, _message ) _logger.logIt( mage::core::logger::Sink::Level::LEVEL_DEBUG, std::string(__FUNCTION__) + std::string( " " ) + _message );
+#define _MAGE_WARN( _logger, _message )  _logger.logIt( mage::core::logger::Sink::Level::LEVEL_WARN, std::string(__FUNCTION__) + std::string( " " ) + _message );
+#define _MAGE_ERROR( _logger, _message ) _logger.logIt( mage::core::logger::Sink::Level::LEVEL_ERROR, std::string(__FUNCTION__) + std::string( " " ) + _message );
+#define _MAGE_FATAL( _logger, _message ) _logger.logIt( mage::core::logger::Sink::Level::LEVEL_FATAL, std::string(__FUNCTION__) + std::string( " " ) + _message );
 
 std::string operator<< (const std::string& p_s1, const std::string& p_s2);
 std::string operator<< (const std::string& p_s1, const char* p_s2);

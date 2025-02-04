@@ -25,7 +25,7 @@
 
 #pragma once
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

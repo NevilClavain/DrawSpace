@@ -37,7 +37,7 @@
 #include "shader.h"
 #include "texture.h"
 
-namespace renderMe
+namespace mage
 {
 	class RenderingQueueSystem;
 
@@ -124,12 +124,12 @@ namespace renderMe
 			
 			// shaders generic params to apply
 			// dataCloud variable id/shader argument
-			std::vector<std::pair<std::string, renderMe::Shader::GenericArgument>>	vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
-			std::vector<std::pair<std::string, renderMe::Shader::GenericArgument>>	pshaders_map_cnx; // computed from pshaders_map and the queue current pshader
+			std::vector<std::pair<std::string, mage::Shader::GenericArgument>>	vshaders_map_cnx; // computed from vshaders_map and the queue current vshader
+			std::vector<std::pair<std::string, mage::Shader::GenericArgument>>	pshaders_map_cnx; // computed from pshaders_map and the queue current pshader
 
 			// shaders vector arrays to apply
-			const std::vector<renderMe::Shader::VectorArrayArgument>* vshaders_vector_array{ nullptr };
-			const std::vector<renderMe::Shader::VectorArrayArgument>* pshaders_vector_array{ nullptr };
+			const std::vector<mage::Shader::VectorArrayArgument>* vshaders_vector_array{ nullptr };
+			const std::vector<mage::Shader::VectorArrayArgument>* pshaders_vector_array{ nullptr };
 
 		
 			std::string owner_entity_id;
@@ -157,8 +157,8 @@ namespace renderMe
 			{
 				std::string							text;
 				std::string							font;
-				renderMe::core::maths::RGBAColor	color{ 255, 255, 255, 255 };
-				renderMe::core::maths::IntCoords2D	position;
+				mage::core::maths::RGBAColor	color{ 255, 255, 255, 255 };
+				mage::core::maths::IntCoords2D	position;
 				float								rotation_rad{ 0.0 };
 			};
 
@@ -283,12 +283,12 @@ namespace renderMe
 			void							setState(State p_newstate);
 
 			void							setScreenRenderingPurpose();
-			void							setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, renderMe::Texture>> p_textures_list);
+			void							setBufferRenderingPurpose(core::ComponentList<std::pair<size_t, mage::Texture>> p_textures_list);
 
 			
 
-			friend class renderMe::RenderingQueueSystem;
-			friend class renderMe::D3D11System;
+			friend class mage::RenderingQueueSystem;
+			friend class mage::D3D11System;
 
 		};
 	}

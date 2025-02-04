@@ -25,7 +25,7 @@
 
 #include "matrix.h"
 
-using namespace renderMe::core::maths;
+using namespace mage::core::maths;
 
 Matrix::Matrix(void)
 {

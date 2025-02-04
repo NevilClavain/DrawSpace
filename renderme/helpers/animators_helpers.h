@@ -34,7 +34,7 @@
 #include "syncvariable.h"
 #include "timecontrol.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace helpers
 	{

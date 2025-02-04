@@ -29,7 +29,7 @@
 #include <vector>
 #include <functional>
 
-namespace renderMe
+namespace mage
 {
     namespace property
     {

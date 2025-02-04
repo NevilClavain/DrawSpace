@@ -28,7 +28,7 @@
 #include "tvector.h"
 #include "matrix.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{
@@ -72,4 +72,4 @@ namespace renderMe
 	}
 }
 
-//renderMe::core::maths::Quaternion operator* (const renderMe::core::maths::Quaternion& p_qA, const renderMe::core::maths::Quaternion& p_qB);
+//mage::core::maths::Quaternion operator* (const mage::core::maths::Quaternion& p_qA, const mage::core::maths::Quaternion& p_qB);

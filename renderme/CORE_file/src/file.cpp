@@ -26,7 +26,7 @@
 #include "file.h"
 #include "exceptions.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 
 File::File( const std::string& p_filename, Mode p_mode )
 {

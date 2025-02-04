@@ -40,9 +40,9 @@
 #include "animatorfunc.h"
 #include "animators_helpers.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
-using namespace renderMe::rendering;
+using namespace mage;
+using namespace mage::core;
+using namespace mage::rendering;
 
 void ModuleImpl::run(void)
 {
@@ -63,7 +63,7 @@ void ModuleImpl::run(void)
 	const auto currentAnimationTicksProgress{ animations_aspect.getComponent<double>("eg.std.currentAnimationTicksProgress")->getPurpose() };
 	const auto currentAnimationSecondsProgress{ animations_aspect.getComponent<double>("eg.std.currentAnimationSecondsProgress")->getPurpose() };
 
-	auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+	auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 	dataCloud->updateDataValue<std::string>("current_animation.id", currentAnimationId);
 
 	dataCloud->updateDataValue<double>("current_animation.ticks_duration", currentAnimationTicksDuration);

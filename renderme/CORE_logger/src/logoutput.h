@@ -26,7 +26,7 @@
 
 #include <string>
 
-namespace renderMe
+namespace mage
 {
     namespace core
     {

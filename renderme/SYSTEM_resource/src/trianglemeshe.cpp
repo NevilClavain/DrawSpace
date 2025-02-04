@@ -27,8 +27,8 @@
 #include "trianglemeshe.h"
 
 
-using namespace renderMe;
-using namespace renderMe::core::maths;
+using namespace mage;
+using namespace mage::core::maths;
 
 TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 {
@@ -60,7 +60,7 @@ TriangleMeshe::TriangleMeshe(const TriangleMeshe& p_other)
 }
 
 
-std::vector<renderMe::Vertex>TriangleMeshe::getVertices(void) const
+std::vector<mage::Vertex>TriangleMeshe::getVertices(void) const
 {
 	return m_vertices;
 }

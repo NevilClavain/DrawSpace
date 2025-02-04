@@ -28,7 +28,7 @@
 #include <functional>
 #include <unordered_map>
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{

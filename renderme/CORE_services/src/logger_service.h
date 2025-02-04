@@ -29,7 +29,7 @@
 #include <memory>
 #include "singleton.h"
 
-namespace renderMe
+namespace mage
 {
 	namespace core
 	{
@@ -45,10 +45,10 @@ namespace renderMe
 				~LoggerSharing() = default;
 
 				void createLogger(const std::string& p_id);
-				renderMe::core::logger::Sink& getLogger(const std::string& p_id);
+				mage::core::logger::Sink& getLogger(const std::string& p_id);
 
 			private:				
-				std::unordered_map<std::string, std::unique_ptr<renderMe::core::logger::Sink>> m_loggers;
+				std::unordered_map<std::string, std::unique_ptr<mage::core::logger::Sink>> m_loggers;
 			};
 		}
 	}

@@ -25,8 +25,8 @@
 #include "matrixchain.h"
 #include "exceptions.h"
 
-using namespace renderMe::transform;
-using namespace renderMe::core::maths;
+using namespace mage::transform;
+using namespace mage::core::maths;
 
 MatrixChain::MatrixChain()
 {
@@ -44,12 +44,12 @@ MatrixChain::MatrixChain(int p_nbmat)
     }
 }
 
-void MatrixChain::pushMatrix(const renderMe::core::maths::Matrix& p_matrix)
+void MatrixChain::pushMatrix(const mage::core::maths::Matrix& p_matrix)
 {
     m_matrix_chain.push_back(p_matrix);
 }
 
-void MatrixChain::updateMatrix(size_t p_index, const renderMe::core::maths::Matrix& p_mat)
+void MatrixChain::updateMatrix(size_t p_index, const mage::core::maths::Matrix& p_mat)
 {
     if (p_index >= m_matrix_chain.size())
     {
@@ -85,7 +85,7 @@ void MatrixChain::buildResult(void)
     }
 }
 
-renderMe::core::maths::Matrix MatrixChain::getResultTransform() const
+mage::core::maths::Matrix MatrixChain::getResultTransform() const
 {
     return m_result;
 }

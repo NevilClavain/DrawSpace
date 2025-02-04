@@ -31,7 +31,7 @@
 
 #include "primitives.h"
 
-namespace renderMe
+namespace mage
 {
 	class LineMeshe
 	{
@@ -68,7 +68,7 @@ namespace renderMe
 
 		~LineMeshe() = default;
 
-		std::vector<renderMe::Vertex>				getVertices(void) const;
+		std::vector<mage::Vertex>				getVertices(void) const;
 		std::vector<LinePrimitive<unsigned int>>	getLines(void) const;
 
 		size_t		getLinesListSize() const;
@@ -107,4 +107,4 @@ namespace renderMe
 		// UPDATE COPY CTOR AND OPERATOR !!!!!!
 	};
 
-} // renderMe
+} // mage

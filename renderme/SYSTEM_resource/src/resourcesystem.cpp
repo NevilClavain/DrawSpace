@@ -49,31 +49,31 @@
 
 #include "datacloud.h"
 
-using namespace renderMe;
-using namespace renderMe::core;
+using namespace mage;
+using namespace mage::core;
 
 
 
 ResourceSystem::ResourceSystem(Entitygraph& p_entitygraph) : System(p_entitygraph),
-m_localLogger("ResourceSystem", renderMe::core::logger::Configuration::getInstance()),
-m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuration::getInstance())
+m_localLogger("ResourceSystem", mage::core::logger::Configuration::getInstance()),
+m_localLoggerRunner("ResourceSystemRunner", mage::core::logger::Configuration::getInstance())
 {
 	m_runner.reserve(nbRunners);
 
 	for (int i = 0; i < nbRunners; i++)
 	{
-		m_runner.push_back(std::make_unique< renderMe::core::Runner>());
+		m_runner.push_back(std::make_unique< mage::core::Runner>());
 	}
 	
 	///////// check & create shader cache if needed
 
 	if (!fileSystem::exists(m_shadersCachePath))
 	{
-		_RENDERME_DEBUG(m_localLogger, std::string("Shader cache missing, creating it..."));
+		_MAGE_DEBUG(m_localLogger, std::string("Shader cache missing, creating it..."));
 		fileSystem::createDirectory(m_shadersCachePath);
 
 		auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
-		_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_CACHE_CREATED");
+		_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_CACHE_CREATED");
 
 		for (const auto& call : m_callbacks)
 		{
@@ -85,9 +85,9 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 	const Runner::Callback cb
 	{
-		[&, this](renderMe::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
+		[&, this](mage::core::RunnerEvent p_event, const std::string& p_target_descr, const std::string& p_action_descr)
 		{
-			if (renderMe::core::RunnerEvent::TASK_ERROR == p_event)
+			if (mage::core::RunnerEvent::TASK_ERROR == p_event)
 			{
 				if ("load_shader" == p_action_descr)
 				{
@@ -106,9 +106,9 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 				}
 
 			}
-			else if (renderMe::core::RunnerEvent::TASK_DONE == p_event)
+			else if (mage::core::RunnerEvent::TASK_DONE == p_event)
 			{
-				_RENDERME_DEBUG(m_localLoggerRunner, std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
+				_MAGE_DEBUG(m_localLoggerRunner, std::string("TASK_DONE ") + p_target_descr + " " + p_action_descr);
 			}
 
 		}
@@ -142,27 +142,27 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 		switch (p_event)
 		{
-			case renderMe::core::JSONEvent::ARRAY_BEGIN:
+			case mage::core::JSONEvent::ARRAY_BEGIN:
 
 				section_name = p_id;
-				_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_BEGIN : " + p_id);
+				_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_BEGIN : " + p_id);
 
 				break;
 
-			case renderMe::core::JSONEvent::ARRAY_END:
+			case mage::core::JSONEvent::ARRAY_END:
 
 				section_name = "";
-				_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END : " + p_id);
+				_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END : " + p_id);
 
 				break;
 
-			case renderMe::core::JSONEvent::STRING:
+			case mage::core::JSONEvent::STRING:
 
 				if ("inputs" == section_name)
 				{
 					if ("type" == p_id)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found type : " + p_value);
+						_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found type : " + p_value);
 
 						if ("Real4Vector" == p_value)
 						{
@@ -178,20 +178,20 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 					{
 						if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
 						{
-							_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found argument_id : " + p_value);
+							_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found argument_id : " + p_value);
 							generic_argument.argument_id = p_value;
 						}
 					}
 				}
 				break;
 
-			case renderMe::core::JSONEvent::PRIMITIVE:
+			case mage::core::JSONEvent::PRIMITIVE:
 
 				if ("inputs" == section_name)
 				{
 					if ("register" == p_id)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found register : " + p_value);
+						_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : found register : " + p_value);
 						if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
 						{							
 							generic_argument.shader_register = std::atoi(p_value.c_str());
@@ -212,23 +212,23 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 				}
 				break;
 
-			case renderMe::core::JSONEvent::OBJECT_BEGIN:
+			case mage::core::JSONEvent::OBJECT_BEGIN:
 				break;
 
-			case renderMe::core::JSONEvent::OBJECT_END:
+			case mage::core::JSONEvent::OBJECT_END:
 
 				if ("inputs" == section_name)
 				{
-					_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END on inputs section ");
+					_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : ARRAY_END on inputs section ");
 
 					if (ArgumentTarget::FILL_GENERICARGUMENT == arg_target)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addGenericArgument");
+						_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addGenericArgument");
 						shader_dest->addGenericArgument(generic_argument);
 					}
 					else if (ArgumentTarget::FILL_VECTORARRAYARGUMENT == arg_target)
 					{
-						_RENDERME_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addGenericArgument");
+						_MAGE_DEBUG(m_localLoggerRunner, "shaders json metadata parsing : SUCCESS, addGenericArgument");
 						shader_dest->addVectorArrayArgument(vector_array_argument);
 					}
 
@@ -243,7 +243,7 @@ m_localLoggerRunner("ResourceSystemRunner", renderMe::core::logger::Configuratio
 
 ResourceSystem::~ResourceSystem()
 {
-	_RENDERME_DEBUG(m_localLogger, std::string("Exiting..."));
+	_MAGE_DEBUG(m_localLogger, std::string("Exiting..."));
 }
 
 void ResourceSystem::run()
@@ -309,7 +309,7 @@ void ResourceSystem::run()
 		}
 	};
 
-	renderMe::helpers::extractAspectsTopDown<renderMe::core::resourcesAspect>(m_entitygraph, forEachResourceAspect);
+	mage::helpers::extractAspectsTopDown<mage::core::resourcesAspect>(m_entitygraph, forEachResourceAspect);
 
 	for (int i = 0; i < nbRunners; i++)
 	{
@@ -321,11 +321,11 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 {
 	const auto shaderType{ p_shaderInfos.getType() };
 
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle shader ") + p_filename + std::string(" shader type ") + std::to_string(shaderType));
+	_MAGE_DEBUG(m_localLogger, std::string("Handle shader ") + p_filename + std::string(" shader type ") + std::to_string(shaderType));
 
 	const std::string shaderAction{ "load_shader" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(shaderAction, p_filename,
+	const auto task{ new mage::core::SimpleAsyncTask<>(shaderAction, p_filename,
 		[&,
 			shaderType=shaderType,
 			shaderAction=shaderAction,
@@ -333,14 +333,14 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 			filename = p_filename
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading ") + filename + " shader type = " + std::to_string(shaderType));
+			_MAGE_DEBUG(m_localLoggerRunner, std::string("loading ") + filename + " shader type = " + std::to_string(shaderType));
 
 			// build full path
 			const auto shader_path{ m_shadersBasePath + "/" + filename + ".hlsl"};
 			const auto shader_metadata_path{ m_shadersBasePath + "/" + filename + ".json" };
 			try
 			{
-				renderMe::core::FileContent<const char> shader_src_content(shader_path);
+				mage::core::FileContent<const char> shader_src_content(shader_path);
 				shader_src_content.load();
 
 				// no mutex needed here (only this thread access it)
@@ -356,7 +356,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 				///////// check driver version change...
 
 				// get current driver version
-				const auto dataCloud{ renderMe::rendering::Datacloud::getInstance() };
+				const auto dataCloud{ mage::rendering::Datacloud::getInstance() };
 				const auto current_driver{ dataCloud->readDataValue<std::string>("std.gpu_driver") };
 
 				bool update_driver_text{ false };
@@ -364,7 +364,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 				if (fileSystem::exists(m_shadersCachePath + "/driverversion.text"))
 				{
 					// file exists
-					renderMe::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
+					mage::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
 					driverversion_content.load();
 
 					const std::string last_driverversion(driverversion_content.getData(), driverversion_content.getDataSize());
@@ -381,7 +381,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 				
 				if(update_driver_text) // update driver text and so rebuild shaders
 				{
-					renderMe::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
+					mage::core::FileContent<const char> driverversion_content(m_shadersCachePath + "/driverversion.text");
 					driverversion_content.save(current_driver.c_str(), current_driver.length());
 
 					generate_cache_entry = true;
@@ -391,7 +391,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 
 				if (!fileSystem::exists(shaderCacheDirectory))
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory missing : ") + shaderCacheDirectory);
+					_MAGE_TRACE(m_localLoggerRunner, std::string("cache directory missing : ") + shaderCacheDirectory);
 
 					// create all
 					fileSystem::createDirectory(shaderCacheDirectory);
@@ -399,47 +399,47 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 				}
 				else
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("cache directory exists : ") + shaderCacheDirectory);
+					_MAGE_TRACE(m_localLoggerRunner, std::string("cache directory exists : ") + shaderCacheDirectory);
 
 					// check if cache md5 file exists AND compiled shader exists
 					if (!fileSystem::exists(shaderCacheDirectory + "/bc.md5") || !fileSystem::exists(shaderCacheDirectory + "/bc.code"))
 					{
-						_RENDERME_TRACE(m_localLoggerRunner, std::string("cache file missing !"));
+						_MAGE_TRACE(m_localLoggerRunner, std::string("cache file missing !"));
 						generate_cache_entry = true;
 					}
 					else
 					{
-						_RENDERME_TRACE(m_localLoggerRunner, std::string("cache md5 file exists : ") + shaderCacheDirectory + "/bc.md5");
+						_MAGE_TRACE(m_localLoggerRunner, std::string("cache md5 file exists : ") + shaderCacheDirectory + "/bc.md5");
 
 						// load cache md5 file
-						renderMe::core::FileContent<char> cache_md5_content(shaderCacheDirectory + "/bc.md5");
+						mage::core::FileContent<char> cache_md5_content(shaderCacheDirectory + "/bc.md5");
 						cache_md5_content.load();
 
 						// check if md5 are equals
 
 						if (std::string(cache_md5_content.getData(), cache_md5_content.getDataSize()) != p_shaderInfos.m_resource_uid)
 						{
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + filename);
+							_MAGE_TRACE(m_localLoggerRunner, std::string("MD5 not matching ! : ") + filename);
 							generate_cache_entry = true;
 						}
 						else
 						{
 							// load bc.code file
-							_RENDERME_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + filename);
+							_MAGE_TRACE(m_localLoggerRunner, std::string("MD5 matches ! : ") + filename);
 						}
 					}
 				}
 
 				if (generate_cache_entry)
 				{
-					_RENDERME_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + filename);
+					_MAGE_TRACE(m_localLoggerRunner, std::string("generating cache entry : ") + filename);
 
 					std::unique_ptr<char[]> shaderBytes;
 					size_t shaderBytesLength;
 
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + filename);
+					_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_BEGIN : " + filename);
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_BEGIN, filename);
@@ -458,17 +458,17 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 
 					if (compilationStatus)
 					{
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + filename);
+						_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_SUCCESS : " + filename);
 						for (const auto& call : m_callbacks)
 						{
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_SUCCESS, filename);
 						}
 
-						renderMe::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
+						mage::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
 						cache_code_content.save(shaderBytes.get(), shaderBytesLength);
 
 						// create cache md5 file
-						renderMe::core::FileContent<const char> shader_md5_content(shaderCacheDirectory + "/bc.md5");
+						mage::core::FileContent<const char> shader_md5_content(shaderCacheDirectory + "/bc.md5");
 						const std::string shaderMD5{ p_shaderInfos.m_resource_uid };
 						shader_md5_content.save(shaderMD5.c_str(), shaderMD5.length());
 
@@ -480,7 +480,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 					else
 					{
 
-						_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + filename);
+						_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_COMPILATION_ERROR : " + filename);
 						for (const auto& call : m_callbacks)
 						{
 							call(ResourceSystemEvent::RESOURCE_SHADER_COMPILATION_ERROR, filename);
@@ -494,14 +494,14 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 				{
 					auto& eventsLogger{ services::LoggerSharing::getInstance()->getLogger("Events") };
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN : " + filename);
+					_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_BEGIN : " + filename);
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_BEGIN, filename);
 					}
 
 					// load bc.code file
-					renderMe::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
+					mage::core::FileContent<char> cache_code_content(shaderCacheDirectory + "/bc.code");
 					cache_code_content.load();
 
 					// transfer file content to p_shaderInfos 'code' buffer
@@ -509,7 +509,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 					shaderCode.fill(cache_code_content.getData(), cache_code_content.getDataSize());
 					p_shaderInfos.setCode(shaderCode);
 
-					_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS : " + filename);
+					_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_SHADER_LOAD_SUCCESS : " + filename);
 					for (const auto& call : m_callbacks)
 					{
 						call(ResourceSystemEvent::RESOURCE_SHADER_LOAD_SUCCESS, filename);
@@ -518,7 +518,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 
 				///// manage metadata json file
 
-				renderMe::core::FileContent<const char> shadermetadata_src_content(shader_metadata_path);
+				mage::core::FileContent<const char> shadermetadata_src_content(shader_metadata_path);
 				shadermetadata_src_content.load();
 
 				const auto metadataSize{ shadermetadata_src_content.getDataSize() };
@@ -526,7 +526,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 
 				// json parser seem to be not thread-safe -> enter critical section
 				m_jsonparser_mutex.lock();
-				renderMe::core::Json<Shader> jsonParser;
+				mage::core::Json<Shader> jsonParser;
 				jsonParser.registerSubscriber(m_jsonparser_cb);			
 				const auto logParseStatus{ jsonParser.parse(metadata, &p_shaderInfos) };
 				m_jsonparser_mutex.unlock();
@@ -542,7 +542,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + shader_path + " : reason = " + e.what());
+				_MAGE_ERROR(m_localLoggerRunner, std::string("failed to manage ") + shader_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, filename, shaderAction };
@@ -552,7 +552,7 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 		}
 	)};
 
-	_RENDERME_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
+	_MAGE_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
 
 	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
 
@@ -565,18 +565,18 @@ void ResourceSystem::handleShader(const std::string& p_filename, Shader& p_shade
 
 void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_textureInfos)
 {
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle Texture ") + p_filename);
+	_MAGE_DEBUG(m_localLogger, std::string("Handle Texture ") + p_filename);
 
 	const std::string textureAction{ "load_texture" };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(textureAction, p_filename,
+	const auto task{ new mage::core::SimpleAsyncTask<>(textureAction, p_filename,
 		[&,
 			textureAction = textureAction,
 			currentIndex = m_runnerIndex,
 			filename = p_filename
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading texture ") + filename);
+			_MAGE_DEBUG(m_localLoggerRunner, std::string("loading texture ") + filename);
 
 			// build full path
 			const auto texture_path{ m_texturesBasePath + "/" + filename };
@@ -589,13 +589,13 @@ void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_tex
 				p_textureInfos.m_source_id = filename;
 				p_textureInfos.compute_resource_uid();
 
-				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_BEGIN : " + filename);
+				_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_BEGIN, filename);
 				}
 
-				renderMe::core::FileContent<unsigned char> texture_content(texture_path);
+				mage::core::FileContent<unsigned char> texture_content(texture_path);
 				texture_content.load();
 
 				// transfer file content to p_textureInfos buffer
@@ -603,7 +603,7 @@ void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_tex
 				textureBytes.fill(texture_content.getData(), texture_content.getDataSize());
 				p_textureInfos.m_file_content = textureBytes;
 				
-				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + filename);
+				_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_TEXTURE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_TEXTURE_LOAD_SUCCESS, filename);
@@ -612,7 +612,7 @@ void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_tex
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + texture_path + " : reason = " + e.what());
+				_MAGE_ERROR(m_localLoggerRunner, std::string("failed to manage ") + texture_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, filename, textureAction };
@@ -621,7 +621,7 @@ void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_tex
 		}
 	)};
 
-	_RENDERME_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
+	_MAGE_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
 
 	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
 
@@ -632,9 +632,9 @@ void ResourceSystem::handleTexture(const std::string& p_filename, Texture& p_tex
 	}
 }
 
-static renderMe::core::maths::Matrix convertFromAssimpMatrix(const aiMatrix4x4& p_in_mat)
+static mage::core::maths::Matrix convertFromAssimpMatrix(const aiMatrix4x4& p_in_mat)
 {
-	renderMe::core::maths::Matrix mat;
+	mage::core::maths::Matrix mat;
 	mat(0, 0) = p_in_mat.a1;
 	mat(0, 1) = p_in_mat.b1;
 	mat(0, 2) = p_in_mat.c1;
@@ -658,13 +658,13 @@ static renderMe::core::maths::Matrix convertFromAssimpMatrix(const aiMatrix4x4& 
 
 void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::string& p_mesheid, TriangleMeshe& p_mesheInfos, const core::ComponentList<std::map<std::string, SceneNode>>& p_nodes_hierarchy_list)
 {
-	_RENDERME_DEBUG(m_localLogger, std::string("Handle scene ") + p_filename);
+	_MAGE_DEBUG(m_localLogger, std::string("Handle scene ") + p_filename);
 
 	const std::string mesheAction{ "load_scene" };
 
 	const std::string targetAction{ p_mesheid + "@" + p_filename };
 
-	const auto task{ new renderMe::core::SimpleAsyncTask<>(mesheAction, targetAction,
+	const auto task{ new mage::core::SimpleAsyncTask<>(mesheAction, targetAction,
 		[&,
 			mesheAction = mesheAction,
 			currentIndex = m_runnerIndex,
@@ -672,7 +672,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 			meshe_id = p_mesheid
 		]()
 		{
-			_RENDERME_DEBUG(m_localLoggerRunner, std::string("loading meshe ") + filename);
+			_MAGE_DEBUG(m_localLoggerRunner, std::string("loading meshe ") + filename);
 
 			// build full path
 			const auto meshe_path{ m_meshesBasePath + "/" + filename };
@@ -684,13 +684,13 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 				p_mesheInfos.m_source = TriangleMeshe::Source::CONTENT_FROM_FILE;
 				p_mesheInfos.m_source_id = filename;
 
-				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_BEGIN : " + filename);
+				_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_BEGIN : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_BEGIN, filename);
 				}
 
-				renderMe::core::FileContent<const char> meshe_text(meshe_path);
+				mage::core::FileContent<const char> meshe_text(meshe_path);
 				meshe_text.load();
 
 				const auto importer{ new Assimp::Importer() };
@@ -704,45 +704,45 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 				const aiScene* scene{ importer->ReadFileFromMemory(meshe_text.getData(), meshe_text.getDataSize(), flags)};
 				if (scene)
 				{
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************SCENE INFOS BEGIN***********************************"));
-					_RENDERME_DEBUG(m_localLoggerRunner, "file = " + meshe_path);
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("************************************SCENE INFOS BEGIN***********************************"));
+					_MAGE_DEBUG(m_localLoggerRunner, "file = " + meshe_path);
 
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasMeshes " + std::to_string(scene->HasMeshes()));
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumMeshes " + std::to_string(scene->mNumMeshes));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene HasMeshes " + std::to_string(scene->HasMeshes()));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene mNumMeshes " + std::to_string(scene->mNumMeshes));
 
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasTextures " + std::to_string(scene->HasTextures()));
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumTextures " + std::to_string(scene->mNumTextures));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene HasTextures " + std::to_string(scene->HasTextures()));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene mNumTextures " + std::to_string(scene->mNumTextures));
 
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasMaterials " + std::to_string(scene->HasMaterials()));
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumMaterials " + std::to_string(scene->mNumMaterials));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene HasMaterials " + std::to_string(scene->HasMaterials()));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene mNumMaterials " + std::to_string(scene->mNumMaterials));
 
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasLights " + std::to_string(scene->HasLights()));
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumLights " + std::to_string(scene->mNumLights));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene HasLights " + std::to_string(scene->HasLights()));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene mNumLights " + std::to_string(scene->mNumLights));
 
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasCameras " + std::to_string(scene->HasCameras()));
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumCameras " + std::to_string(scene->mNumCameras));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene HasCameras " + std::to_string(scene->HasCameras()));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene mNumCameras " + std::to_string(scene->mNumCameras));
 
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene HasAnimations " + std::to_string(scene->HasAnimations()));
-					_RENDERME_DEBUG(m_localLoggerRunner, "scene mNumAnimations " + std::to_string(scene->mNumAnimations));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene HasAnimations " + std::to_string(scene->HasAnimations()));
+					_MAGE_DEBUG(m_localLoggerRunner, "scene mNumAnimations " + std::to_string(scene->mNumAnimations));
 
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************SCENE INFOS END***********************************"));
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("************************************SCENE INFOS END***********************************"));
 
 					const auto root{ scene->mRootNode };
 
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY BEGIN***********************************"));
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY BEGIN***********************************"));
 
 					const std::function<void(aiNode*, int)> dumpAssimpSceneNode
 					{
 						[&](aiNode* p_ai_node, int depth)
 						{
 							std::string spacing(depth, ' ');
-							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("node : ") + p_ai_node->mName.C_Str() + std::string(" nb children : ") + std::to_string(p_ai_node->mNumChildren));
-							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("nb meshes : ") + std::to_string(p_ai_node->mNumMeshes));
+							_MAGE_DEBUG(m_localLoggerRunner, spacing + std::string("node : ") + p_ai_node->mName.C_Str() + std::string(" nb children : ") + std::to_string(p_ai_node->mNumChildren));
+							_MAGE_DEBUG(m_localLoggerRunner, spacing + std::string("nb meshes : ") + std::to_string(p_ai_node->mNumMeshes));
 
-							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1)
-							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2)
-							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3)
-							_RENDERME_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4)
+							_MAGE_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a1 << " " << p_ai_node->mTransformation.b1 << " " << p_ai_node->mTransformation.c1 << " " << p_ai_node->mTransformation.d1)
+							_MAGE_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a2 << " " << p_ai_node->mTransformation.b2 << " " << p_ai_node->mTransformation.c2 << " " << p_ai_node->mTransformation.d2)
+							_MAGE_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a3 << " " << p_ai_node->mTransformation.b3 << " " << p_ai_node->mTransformation.c3 << " " << p_ai_node->mTransformation.d3)
+							_MAGE_DEBUG(m_localLoggerRunner, spacing + std::string("  -> ") << p_ai_node->mTransformation.a4 << " " << p_ai_node->mTransformation.b4 << " " << p_ai_node->mTransformation.c4 << " " << p_ai_node->mTransformation.d4)
 
 
 							for (size_t i = 0; i < p_ai_node->mNumChildren; i++)
@@ -754,7 +754,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 
 					dumpAssimpSceneNode(root, 1);
 
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY END***********************************"));
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("************************************NODE HIERARCHY END***********************************"));
 
 
 					//// record scene nodes hierarchy
@@ -792,14 +792,14 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 					{
 						//_DSTRACE((*rs_logger), dsstring("Animation ") << i);
 
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("Animation : ") + std::to_string(i));
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("Animation : ") + std::to_string(i));
 
 						const auto animation{ scene->mAnimations[i] };
 
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	Name = ") + animation->mName.C_Str());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	TicksPerSeconds = ") + std::to_string(animation->mTicksPerSecond));
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	Duration (ticks) = ") + std::to_string(animation->mDuration));
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("	Num Channels = ") + std::to_string(animation->mNumChannels));
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("	Name = ") + animation->mName.C_Str());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("	TicksPerSeconds = ") + std::to_string(animation->mTicksPerSecond));
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("	Duration (ticks) = ") + std::to_string(animation->mDuration));
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("	Num Channels = ") + std::to_string(animation->mNumChannels));
 
 						/////////////////////////////////////////
 
@@ -860,11 +860,11 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 					const auto nb_meshes{ meshe_node->mNumMeshes };
 
 
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS BEGIN***********************************"));
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS BEGIN***********************************"));
 
 					const auto name{ meshe_node->mName.C_Str() };
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("owner node = ") + name);
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("nb_meshes = ") << nb_meshes);
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("owner node = ") + name);
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("nb_meshes = ") << nb_meshes);
 
 					p_mesheInfos.clearAnimationBones();
 					const auto indexes{ meshe_node->mMeshes };
@@ -872,42 +872,42 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 					{
 						const auto meshe{ meshes[indexes[i]] };
 
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MESHE ") << i);
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("name = ") << meshe->mName.C_Str());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasPositions ") << meshe->HasPositions());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasFaces ") << meshe->HasFaces());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasNormals ") << meshe->HasNormals());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumUVChannels ") << meshe->GetNumUVChannels());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe HasBones ") << meshe->HasBones());
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumBones ") << meshe->mNumBones);
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumFaces ") << meshe->mNumFaces);
-						_RENDERME_DEBUG(m_localLoggerRunner, std::string("meshe NumVertices ") << meshe->mNumVertices);
+						_MAGE_DEBUG(m_localLoggerRunner, std::string(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MESHE ") << i);
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("name = ") << meshe->mName.C_Str());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe HasPositions ") << meshe->HasPositions());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe HasFaces ") << meshe->HasFaces());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe HasNormals ") << meshe->HasNormals());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe HasTangentsAndBitangents ") << meshe->HasTangentsAndBitangents());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe NumUVChannels ") << meshe->GetNumUVChannels());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe HasBones ") << meshe->HasBones());
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe NumBones ") << meshe->mNumBones);
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe NumFaces ") << meshe->mNumFaces);
+						_MAGE_DEBUG(m_localLoggerRunner, std::string("meshe NumVertices ") << meshe->mNumVertices);
 
 						for (size_t j = 0; j < meshe->mNumBones; j++)
 						{
 							const auto bone{ meshe->mBones[j] };
 
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("Bone ") << j);
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> name = ") << bone->mName.C_Str());
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> offsetMatrx"));
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("Bone ") << j);
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> name = ") << bone->mName.C_Str());
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> offsetMatrx"));
 
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a1 << " " << bone->mOffsetMatrix.b1 << " " << bone->mOffsetMatrix.c1 << " " << bone->mOffsetMatrix.d1);
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a2 << " " << bone->mOffsetMatrix.b2 << " " << bone->mOffsetMatrix.c2 << " " << bone->mOffsetMatrix.d2);
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a3 << " " << bone->mOffsetMatrix.b3 << " " << bone->mOffsetMatrix.c3 << " " << bone->mOffsetMatrix.d3);
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> ") << bone->mOffsetMatrix.a4 << " " << bone->mOffsetMatrix.b4 << " " << bone->mOffsetMatrix.c4 << " " << bone->mOffsetMatrix.d4);
 
-							_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> weights"));
+							_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> weights"));
 
 							/*
 							for (size_t k = 0; k < bone->mNumWeights; k++)
 							{
-								_RENDERME_DEBUG(m_localLoggerRunner, std::string("  -> vertex ") << bone->mWeights[k].mVertexId << " weight " << bone->mWeights[k].mWeight );
+								_MAGE_DEBUG(m_localLoggerRunner, std::string("  -> vertex ") << bone->mWeights[k].mVertexId << " weight " << bone->mWeights[k].mWeight );
 							}
 							*/
 						}
 					}
-					_RENDERME_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS END***********************************"));
+					_MAGE_DEBUG(m_localLoggerRunner, std::string("************************************MESHE INFOS END***********************************"));
 
 
 					p_mesheInfos.clearTriangles();
@@ -1038,7 +1038,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 								else
 								{
 									_EXCEPTION("A vertex cannot reference more than 8 bones");
-									//_RENDERME_WARN(m_localLoggerRunner, "A vertex cannot reference more than 8 bones, ignored. bone " + std::string(bone->mName.C_Str()));
+									//_MAGE_WARN(m_localLoggerRunner, "A vertex cannot reference more than 8 bones, ignored. bone " + std::string(bone->mName.C_Str()));
 								}
 
 								p_mesheInfos.update(vert_index, vertex);
@@ -1054,7 +1054,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 
 				p_mesheInfos.computeResourceUID();
 
-				_RENDERME_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + filename);
+				_MAGE_DEBUG(eventsLogger, "EMIT EVENT -> RESOURCE_MESHE_LOAD_SUCCESS : " + filename);
 				for (const auto& call : m_callbacks)
 				{
 					call(ResourceSystemEvent::RESOURCE_MESHE_LOAD_SUCCESS, filename);
@@ -1064,7 +1064,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 			}
 			catch (const std::exception& e)
 			{
-				_RENDERME_ERROR(m_localLoggerRunner, std::string("failed to manage ") + meshe_path + " : reason = " + e.what());
+				_MAGE_ERROR(m_localLoggerRunner, std::string("failed to manage ") + meshe_path + " : reason = " + e.what());
 
 				// send error status to main thread and let terminate
 				const Runner::TaskReport report{ RunnerEvent::TASK_ERROR, filename, mesheAction };
@@ -1073,7 +1073,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 		}
 	) };
 
-	_RENDERME_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
+	_MAGE_DEBUG(m_localLogger, "Pushing to runner number : " + std::to_string(m_runnerIndex));
 
 	m_runner[m_runnerIndex].get()->m_mailbox_in.push(task);
 
@@ -1088,7 +1088,7 @@ void ResourceSystem::handleSceneFile(const std::string& p_filename, const std::s
 
 void ResourceSystem::killRunner()
 {
-	renderMe::core::RunnerKiller runnerKiller;
+	mage::core::RunnerKiller runnerKiller;
 
 	for (int i = 0; i < nbRunners; i++)
 	{

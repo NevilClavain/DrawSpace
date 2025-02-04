@@ -30,7 +30,7 @@
 #include <vector>
 #include <utility>
 
-namespace renderMe
+namespace mage
 {
 	// fwd decl
 	namespace core
@@ -52,21 +52,21 @@ namespace renderMe
 	{
 		void logEntitygraph(core::Entitygraph& p_eg);
 
-		void plugRenderingQuadView( renderMe::core::Entitygraph& p_entitygraph,
+		void plugRenderingQuadView( mage::core::Entitygraph& p_entitygraph,
 										float p_characteristics_v_width, float p_characteristics_v_height, 
 										const std::string& p_parentid,
 										const std::string& p_quadEntityid,
 										const std::string& p_viewEntityid,
-										renderMe::rendering::Queue* p_windowQueue,
+										mage::rendering::Queue* p_windowQueue,
 										const std::string& p_vshader,
 										const std::string& p_pshader,
 										const std::vector<std::pair<size_t, Texture>>& p_renderTargets);
 
-		void plugRenderingQueue( renderMe::core::Entitygraph& p_entitygraph, 
+		void plugRenderingQueue( mage::core::Entitygraph& p_entitygraph, 
 									const rendering::Queue& p_renderingqueue, 
 									const std::string& p_parentid, const std::string& p_entityid);
 
-		void plugView(renderMe::core::Entitygraph& p_entitygraph,
+		void plugView(mage::core::Entitygraph& p_entitygraph,
 						const core::maths::Matrix& p_projection,
 						const std::string& p_parentid, const std::string& p_entityid);
 	}

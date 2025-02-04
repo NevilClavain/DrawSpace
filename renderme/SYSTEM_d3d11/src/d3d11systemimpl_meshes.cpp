@@ -25,17 +25,17 @@
 
 #include "d3d11systemimpl.h"
 
-bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
+bool D3D11SystemImpl::createLineMeshe(const mage::LineMeshe& p_lm)
 {
     DECLARE_D3D11ASSERT_VARS
 
     const auto resource_uid{ p_lm.getResourceUID() };
 
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading : " + resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Line meshe loading : " + resource_uid);
 
     if (m_lines.count(resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Line meshe already loaded : " + resource_uid);
+        _MAGE_DEBUG(m_localLogger, "Line meshe already loaded : " + resource_uid);
     }
     else
     {
@@ -125,7 +125,7 @@ bool D3D11SystemImpl::createLineMeshe(const renderMe::LineMeshe& p_lm)
         m_lines[resource_uid] = { vertex_buffer, index_buffer, nb_vertices, nb_lines };
     }
 
-    _RENDERME_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Line meshe loading SUCCESS : " + resource_uid);
 	return true;
 }
 
@@ -165,20 +165,20 @@ void D3D11SystemImpl::destroyLineMeshe(const std::string& p_md5)
     lmData.index_buffer->Release();
 
     m_lines.erase(p_md5);
-    _RENDERME_DEBUG(m_localLogger, "Line meshe release SUCCESS : " + p_md5);
+    _MAGE_DEBUG(m_localLogger, "Line meshe release SUCCESS : " + p_md5);
 }
 
-bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
+bool D3D11SystemImpl::createTriangleMeshe(const mage::TriangleMeshe& p_tm)
 {
     DECLARE_D3D11ASSERT_VARS
 
     const auto resource_uid{ p_tm.getResourceUID()};
 
-    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading : " + resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Triangle meshe loading : " + resource_uid);
 
     if (m_triangles.count(resource_uid))
     {
-        _RENDERME_DEBUG(m_localLogger, "Triangle meshe already loaded : " + resource_uid);
+        _MAGE_DEBUG(m_localLogger, "Triangle meshe already loaded : " + resource_uid);
     }
     else
     {
@@ -281,7 +281,7 @@ bool D3D11SystemImpl::createTriangleMeshe(const renderMe::TriangleMeshe& p_tm)
         m_triangles[resource_uid] = { vertex_buffer, index_buffer, nb_vertices, nb_triangles };
     }
 
-    _RENDERME_DEBUG(m_localLogger, "Triangle meshe loading SUCCESS : " + resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Triangle meshe loading SUCCESS : " + resource_uid);
     return true;
 
 }
@@ -322,7 +322,7 @@ void D3D11SystemImpl::destroyTriangleMeshe(const std::string& p_resource_uid)
     tmData.index_buffer->Release();
 
     m_triangles.erase(p_resource_uid);
-    _RENDERME_DEBUG(m_localLogger, "Triangle meshe release SUCCESS : " + p_resource_uid);
+    _MAGE_DEBUG(m_localLogger, "Triangle meshe release SUCCESS : " + p_resource_uid);
 }
 
 

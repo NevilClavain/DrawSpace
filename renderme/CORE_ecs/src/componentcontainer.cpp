@@ -25,6 +25,6 @@
 
 #include "componentcontainer.h"
 
-using namespace renderMe::core;
+using namespace mage::core;
 int ComponentContainer::m_uid_count{ 0 };
 

@@ -37,7 +37,7 @@
 //fwd decl
 class D3D11SystemImpl;
 
-namespace renderMe
+namespace mage
 {
     //fwd decl
     class ResourceSystem;
@@ -139,7 +139,7 @@ namespace renderMe
         std::string                         getSourceID() const;
         
         template<typename T>
-        void                                getTextureContent(renderMe::core::Buffer<T>& p_destbuffer);
+        void                                getTextureContent(mage::core::Buffer<T>& p_destbuffer);
 
     private:
 
@@ -167,15 +167,15 @@ namespace renderMe
         void setState(Texture::State p_state);
         void compute_resource_uid();
         
-        friend class renderMe::ResourceSystem;
-        friend class renderMe::D3D11System;
+        friend class mage::ResourceSystem;
+        friend class mage::D3D11System;
         friend class D3D11SystemImpl;
 
-        friend struct renderMe::rendering::Queue;
+        friend struct mage::rendering::Queue;
     };
 
     template<typename T>
-    void Texture::getTextureContent(renderMe::core::Buffer<T>& p_destbuffer)
+    void Texture::getTextureContent(mage::core::Buffer<T>& p_destbuffer)
     {
         void* buffer;
         size_t bufferSize;
